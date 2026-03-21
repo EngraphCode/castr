@@ -7,6 +7,9 @@
 
 import { validate } from '@scalar/openapi-parser';
 import type { ValidationError } from '../load-openapi-document/validation-errors.js';
+import { preflightValidate } from './preflight-validator.js';
+import type { PreflightValidationError } from './preflight-validator.js';
+import { extractPropertyName, traverseInstancePath, traversePointerPath } from './pointer-utils.js';
 
 type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
 
@@ -14,12 +17,12 @@ export interface NonStandardPropertyRescueDiagnostics {
   retryCount: number;
 }
 
-import { extractPropertyName, unescapePointerSegment } from './pointer-utils.js';
-
 const X_NONSTANDARD_PREFIX = 'x-nonstandard-';
+const UNEVALUATED_PROPERTIES_KEYWORD = 'unevaluatedProperties';
 const SLASH = '/';
 const EMPTY_STRING = '';
 const UNKNOWN_ERROR = 'Unknown error';
+const MAX_FALLBACK_RETRIES = 20;
 
 function extractSafeErrors(validationResult: ScalarValidationResult): readonly ValidationError[] {
   const rawErrors = validationResult.valid ? [] : (validationResult.errors ?? []);
@@ -36,122 +39,35 @@ function extractSafeErrors(validationResult: ScalarValidationResult): readonly V
   });
 }
 
-function processPointerSegment(
-  currentObj: unknown,
-  currentSegment: string,
-): { readonly nextObj: unknown; readonly shouldReturn: boolean } {
-  const decodedSegment = unescapePointerSegment(currentSegment);
-
-  if (typeof currentObj !== 'object' || currentObj === null) {
-    return { nextObj: undefined, shouldReturn: true };
-  }
-
-  if (!(decodedSegment in currentObj)) {
-    return { nextObj: undefined, shouldReturn: true };
-  }
-
-  // Safe traversal since we proved it's an object and has the key
-  const nextObj: unknown = Reflect.get(currentObj, decodedSegment);
-  return { nextObj, shouldReturn: false };
-}
-
-function processPathChar(
-  char: string,
-  isEnd: boolean,
-  currentObj: unknown,
-  currentSegment: string,
-): { readonly nextObj: unknown; readonly nextSegment: string; readonly shouldReturn: boolean } {
-  if (char === SLASH) {
-    const result = processPointerSegment(currentObj, currentSegment);
-    return {
-      nextObj: result.nextObj,
-      nextSegment: EMPTY_STRING,
-      shouldReturn: result.shouldReturn,
-    };
-  }
-
-  if (isEnd) {
-    const finalSegment = currentSegment + char;
-    if (finalSegment === EMPTY_STRING) {
-      return { nextObj: currentObj, nextSegment: EMPTY_STRING, shouldReturn: false };
-    }
-    const result = processPointerSegment(currentObj, finalSegment);
-    return {
-      nextObj: result.nextObj,
-      nextSegment: EMPTY_STRING,
-      shouldReturn: result.shouldReturn,
-    };
-  }
-
-  return {
-    nextObj: currentObj,
-    nextSegment: currentSegment + char,
-    shouldReturn: false,
-  };
-}
-
-/**
- * Returns the parent node or undefined if traversal fails.
- * Internal helper to safely traverse to the parent of an offending property.
- */
-function getParentNodeUnsafe(
-  root: unknown,
-  path: string,
-): { readonly parent: unknown | undefined } {
-  let currentObj: unknown = root;
-  let currentSegment: string = EMPTY_STRING;
-
-  // Start from index 1 to skip the initial '/'
-  // The loop goes up to path.length - 1 to process all segments *except* the last one.
-  // The last segment is handled by traversePointerPath to get the parent.
-  let i = 1;
-  while (i < path.length) {
-    const char = path[i] ?? EMPTY_STRING;
-    const isEndOfPath = i === path.length - 1; // This is the end of the *parent* path traversal
-
-    const step = processPathChar(char, isEndOfPath, currentObj, currentSegment);
-    if (step.shouldReturn) {
-      return { parent: undefined };
-    }
-
-    currentObj = step.nextObj;
-    currentSegment = step.nextSegment;
-    i++;
-  }
-
-  // After the loop, currentObj should be the parent of the final segment
-  return { parent: currentObj };
-}
-
-/**
- * Custom object traversal to satisfy ADR-026 string bans (no split).
- */
-function traversePointerPath(document: unknown, path: string): { readonly parent: unknown } {
-  if (path === EMPTY_STRING || path === SLASH) {
-    return { parent: document };
-  }
-  return getParentNodeUnsafe(document, path);
-}
-
-/**
- * Assigns a property and removes the old one.
- */
 function assignAndRemove(parent: object, oldPropName: string, newPropName: string): boolean {
   if (!(oldPropName in parent)) {
     return false;
   }
-
   const originalValue: unknown = Reflect.get(parent, oldPropName);
-
   Object.defineProperty(parent, newPropName, {
     value: originalValue,
     enumerable: true,
     writable: true,
     configurable: true,
   });
-
   Reflect.deleteProperty(parent, oldPropName);
   return true;
+}
+
+function prefixProperty(
+  parent: object,
+  propName: string,
+  path: string,
+  warnings: { readonly message: string }[],
+): boolean {
+  const newPropName = X_NONSTANDARD_PREFIX + propName;
+  if (assignAndRemove(parent, propName, newPropName)) {
+    warnings.push({
+      message: `Auto-prefixed non-standard property '${propName}' at '${path || SLASH}' to '${newPropName}'`,
+    });
+    return true;
+  }
+  return false;
 }
 
 function processSingleErrorPrefixing(
@@ -163,22 +79,44 @@ function processSingleErrorPrefixing(
   if (propName === undefined) {
     return false;
   }
-
   const { parent } = traversePointerPath(bundledDocument, error.path);
   if (typeof parent !== 'object' || parent === null) {
     return false;
   }
+  return prefixProperty(parent, propName, error.path, warnings);
+}
 
-  const newPropName = X_NONSTANDARD_PREFIX + propName;
-  if (assignAndRemove(parent, propName, newPropName)) {
-    const pathSuffix = error.path || SLASH;
-    warnings.push({
-      message: `Auto-prefixed non-standard property '${propName}' at '${pathSuffix}' to '${newPropName}'`,
-    });
-    return true;
+function tryPrefixPreflightError(
+  document: unknown,
+  error: PreflightValidationError,
+  warnings: { readonly message: string }[],
+): boolean {
+  if (error.keyword !== UNEVALUATED_PROPERTIES_KEYWORD) {
+    return false;
   }
+  const propName: unknown = error.params['unevaluatedProperty'];
+  if (typeof propName !== 'string') {
+    return false;
+  }
+  const parent = traverseInstancePath(document, error.instancePath);
+  if (typeof parent !== 'object' || parent === null) {
+    return false;
+  }
+  return prefixProperty(parent, propName, error.instancePath, warnings);
+}
 
-  return false;
+function processPreflightBatch(
+  document: unknown,
+  errors: readonly PreflightValidationError[],
+  warnings: { readonly message: string }[],
+): number {
+  let prefixedCount = 0;
+  for (const error of errors) {
+    if (tryPrefixPreflightError(document, error, warnings)) {
+      prefixedCount++;
+    }
+  }
+  return prefixedCount;
 }
 
 function processErrorBatch(
@@ -188,19 +126,49 @@ function processErrorBatch(
 ): boolean {
   const safeErrors = extractSafeErrors(validationResult);
   let modified = false;
-
   for (const error of safeErrors) {
     if (processSingleErrorPrefixing(bundledDocument, error, warnings)) {
       modified = true;
     }
   }
-
   return modified;
 }
 
+async function runPreflightRescue(
+  bundledDocument: object,
+  warnings: { readonly message: string }[],
+): Promise<number> {
+  const preflight = await preflightValidate(bundledDocument);
+  if (preflight.valid) {
+    return 0;
+  }
+  return processPreflightBatch(bundledDocument, preflight.errors, warnings);
+}
+
+async function runScalarFallback(
+  bundledDocument: object,
+  validationResult: ScalarValidationResult,
+  warnings: { readonly message: string }[],
+): Promise<{ readonly result: ScalarValidationResult; readonly fallbackCount: number }> {
+  let currentResult = validationResult;
+  let fallbackCount = 0;
+  while (!currentResult.valid && fallbackCount < MAX_FALLBACK_RETRIES) {
+    if (!processErrorBatch(bundledDocument, currentResult, warnings)) {
+      break;
+    }
+    currentResult = await validate(bundledDocument);
+    fallbackCount++;
+  }
+  return { result: currentResult, fallbackCount };
+}
+
 /**
- * Higher order function to retry validation after prefixing errors.
- * Encapsulated here to satisfy strict complexity limits in orchestrator.ts
+ * Batch-preflight rescue strategy for non-standard property errors.
+ *
+ * 1. Run repo-local AJV `allErrors: true` validator to harvest ALL errors in one pass.
+ * 2. Batch-prefix all identified non-standard properties.
+ * 3. Confirm with Scalar `validate()` once.
+ * 4. If Scalar still reports fixable errors (safety net), do bounded Scalar-based passes.
  */
 export async function attemptNonStandardPropertyRescue(
   bundledDocument: unknown,
@@ -211,30 +179,20 @@ export async function attemptNonStandardPropertyRescue(
   if (diagnostics) {
     diagnostics.retryCount = 0;
   }
-
   if (typeof bundledDocument !== 'object' || bundledDocument === null) {
     return initialValidationResult;
   }
 
-  let validationResult = initialValidationResult;
-  let retryCount = 0;
-  // Documents like Finnhub have ~850 non-standard properties and AJV truncates to 1 error per pass.
-  // 2000 validation passes take ~20s on massive documents, which is acceptable for codegen build-time repair.
-  const MAX_RETRIES = 2000;
-
-  while (!validationResult.valid && retryCount < MAX_RETRIES) {
-    const modified = processErrorBatch(bundledDocument, validationResult, warnings);
-    if (!modified) {
-      break;
-    }
-
-    validationResult = await validate(bundledDocument);
-    retryCount++;
-  }
+  const prefixedCount = await runPreflightRescue(bundledDocument, warnings);
+  const scalarResult = await validate(bundledDocument);
+  const { result, fallbackCount } = await runScalarFallback(
+    bundledDocument,
+    scalarResult,
+    warnings,
+  );
 
   if (diagnostics) {
-    diagnostics.retryCount = retryCount;
+    diagnostics.retryCount = (prefixedCount > 0 ? 1 : 0) + fallbackCount;
   }
-
-  return validationResult;
+  return result;
 }

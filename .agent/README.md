@@ -34,18 +34,20 @@ Then use:
 ## 🎯 Current State (March 2026)
 
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep and `pnpm check:ci`: green on Friday, 13 March 2026
-  - The completed `int64` / `bigint` closure slice also reran the full Definition of Done chain green on Friday, 13 March 2026
-  - The completed doctor runtime-characterisation slice also reran the full Definition of Done chain green on Friday, 13 March 2026
-  - Immediate priority in a fresh session is to reproduce any user-reported failures first, then implement doctor rescue-loop runtime redesign from the active plan
+  - Last reproduced full repo-root sweep: green on Thursday, 20 March 2026
+  - The completed doctor rescue-loop redesign slice reran the full Definition of Done chain green on Thursday, 20 March 2026
+  - Immediate priority in a fresh session is to reproduce any user-reported failures first, then select the next honest atomic slice from the paused investigations
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** doctor rescue-loop runtime redesign
+- **Primary Active Work:** next-slice selection (rescue-loop redesign complete)
   - Plan of record: `.agent/plans/roadmap.md`
-  - Primary active plan: `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`
-  - The completed immediate predecessor is `.agent/plans/current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`
-  - That completed slice proved `nonStandardRescue` dominates doctor runtime, recorded the `14` / `23.76s` / `25.88s` / `45.73s` measurement table, and selected rescue-loop redesign as the next honest slice
+  - Completed plan: `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`
+  - The rescue-loop redesign (All-Errors Preflight Batch Rescue) landed on Thursday, 20 March 2026:
+    - `rescueRetryCount` reduced from `1,159` to `1`
+    - `nonStandardRescue` reduced from `20,770ms` to `31.79ms`
+    - `pnpm test:transforms` reduced from `25.88s` to `6.92s` real
+    - doctor-proof timeout reduced from `60s` to `10s`
   - The earlier adjacent predecessor `.agent/plans/current/complete/int64-bigint-semantics-investigation.md` remains complete and green
-  - Review closure for both completed slices was performed manually in-session using the reviewer templates, not nested reviewer runs
+  - Review closure for completed slices was performed manually in-session using the reviewer templates, not nested reviewer runs
   - Paused umbrella context: `.agent/plans/current/paused/zod-limitations-architecture-investigation.md`
   - Paused supporting investigations:
     - `.agent/plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md`

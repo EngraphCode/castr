@@ -77,13 +77,13 @@ This contract is governed by `.agent/directives/testing-strategy.md` and impleme
 
 - It remains inside the canonical `pnpm test:transforms` gate rather than being split out or weakened.
 - Use `pnpm --dir lib doctor:profile` when you need phase-level runtime evidence for the problematic fixture.
-- Current Friday, 13 March 2026 baseline:
-  - isolated `doctor.integration.test.ts`: `23.76s real`
-  - full `pnpm test:transforms`: `25.88s real`
-  - full transform suite with `--maxWorkers=1`: `45.73s real`
-  - doctor profile: `20.77s` of `20.88s` total inside `nonStandardRescue`, with `1159` rescue retries
-- The test currently carries an explicit `60s` local timeout because the proof exceeds the default `30s` ceiling under full-suite contention.
-- The active fix family is doctor rescue-loop redesign, not harness lane splitting.
+- Post rescue-loop redesign (Thursday, 20 March 2026):
+  - isolated `doctor.integration.test.ts`: `0.53s real` (was `23.76s` before redesign)
+  - full `pnpm test:transforms`: `6.92s real` (was `25.88s` before redesign)
+  - doctor profile: `31.79ms` nonStandardRescue with `1` rescue retry (was `20,770ms`, `1,159` retries)
+  - `warningCount`: `1,954` (was `1,159`) because the batch preflight finds more properties
+- The test carries an explicit `10s` local timeout, which provides ample headroom given the ~0.5s proof runtime.
+- The rescue-loop redesign (All-Errors Preflight Batch Rescue) is complete.
 
 ---
 

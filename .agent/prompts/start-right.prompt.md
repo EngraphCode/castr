@@ -60,6 +60,7 @@ These rules are absolute.
 9. **No Tolerance Paths:** rules apply everywhere or they are not rules.
 10. **Generated Output Rule:** when inspecting generated files, inspect the generator code as well.
 11. **TDD At All Levels:** write failing tests first and prove behavior at the smallest seam that can honestly carry the change.
+12. **Explicit Dependencies Only:** every package used in product or test code must be declared explicitly in the consuming `package.json`. Relying on transitive dependencies is forbidden.
 
 ## Working Posture
 

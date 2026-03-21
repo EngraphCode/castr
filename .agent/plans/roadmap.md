@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 13, 2026)  
+**Date:** January 24, 2026 (Updated March 20, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,7 +33,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, and doctor runtime-characterisation slice are complete. The repo's active next-work track is now doctor rescue-loop runtime redesign.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, and doctor rescue-loop runtime redesign slice are complete. The repo's active next-work track is now selecting the next honest atomic slice.
 
 Current status of that track:
 
@@ -41,7 +41,7 @@ Current status of that track:
 - `as const` remains allowed literal-preservation infrastructure
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
-- the full repo-root gate sweep and `pnpm check:ci` were green on Friday, 13 March 2026
+- the full repo-root gate sweep was green on Thursday, 20 March 2026
 - the completed `int64` / `bigint` closure slice fixed three real correctness gaps:
   - preserved raw OpenAPI components now survive IR validation and deserialisation
   - raw OpenAPI schema objects with `$ref` plus sibling integer-format fields now fail fast for OpenAPI 3.1 capability checks
@@ -49,18 +49,20 @@ Current status of that track:
 - the final manual in-session review, using the local reviewer templates rather than nested reviewer runs, surfaced one additional discriminator-validator hole:
   - inherited object keys such as `toString` could masquerade as valid IR component types
   - that issue was fixed and re-verified in the same closure session
-- current runtime diagnosis is now explicit:
-  - `pnpm --dir lib doctor:profile` shows `20.77s` of `20.88s` total runtime inside `nonStandardRescue`
-  - the problematic doctor fixture currently requires `1159` rescue retries and produces `1159` warnings
-  - isolated `doctor.integration.test.ts` is `23.76s real`
-  - full `pnpm test:transforms` is `25.88s real`
-  - full suite with `--maxWorkers=1` is `45.73s real`
-  - the canonical doctor proof now carries a `60s` test-local timeout so the gate reflects measured runtime while redesign is pending
-  - the completed implementation record for that diagnosis now lives in `current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`
+- doctor rescue-loop runtime redesign is complete (2026-03-20):
+  - Family 1 (All-Errors Preflight Batch Rescue) was implemented using a repo-local AJV `allErrors: true` validator
+  - `rescueRetryCount` reduced from `1,159` to `1`
+  - `nonStandardRescue` reduced from `20,770ms` to `31.79ms`
+  - isolated `doctor.integration.test.ts` reduced from `23.76s` to `0.53s` real
+  - full `pnpm test:transforms` reduced from `25.88s` to `6.92s` real
+  - the doctor-proof timeout has been reduced from `60s` to `10s`
+  - `warningCount` increased from `1,159` to `1,954` because the preflight finds more properties
+  - the completed plan is recorded in `active/zod-limitations-next-atomic-slice-planning.md`
 - current next-session priority is therefore:
   - reproduce any user-reported issue first
-  - implement doctor rescue-loop runtime redesign from the active plan
-  - leave transform harness scheduling unchanged unless new evidence disproves the rescue-loop diagnosis
+  - select the next honest atomic slice from the paused investigations
+  - the doctor-proof timeout has already been reduced from `60s` to `10s`
+  - leave transform harness scheduling unchanged unless new evidence disproves the current state
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - the Characterisation boundary cluster is complete
@@ -87,7 +89,7 @@ Current status of that track:
   - ADR-041 now records the reusable native-capability seam pattern for future type-specific format gaps
 - remaining closure / platform work now remains:
   - reproduce any user-reported gate failures first
-  - redesign the doctor rescue loop so the transform gate cost reflects real proof value rather than one-error-per-pass repair churn
+  - the doctor-proof timeout has been reduced from `60s` to `10s` since the rescue-loop redesign made the proof run in under 1s
   - keep the now-recorded standards-based native-capability matrix, roadmap, and prompts aligned
   - keep ADR-041, the matrix, and seam-specific docs aligned when similar future seams appear
   - keep the JS/TS Temporal-first date-time doctrine as a separate follow-on plan outside the active slice

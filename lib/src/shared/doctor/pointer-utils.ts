@@ -1,5 +1,6 @@
 /**
- * Utilities for extracting properties and unescaping pointers strictly following ADR-026.
+ * Utilities for extracting properties, unescaping pointers, and traversing JSON Pointer
+ * paths strictly following ADR-026.
  *
  * @module
  * @internal
@@ -50,7 +51,6 @@ export function extractPropertyName(message: string): string | undefined {
     return undefined;
   }
 
-  // Extract the inner property name character by character
   let propName = '';
   for (let i = PROPERTY_PREFIX.length; i < suffixStart; i++) {
     propName += message[i];
@@ -97,4 +97,90 @@ export function unescapePointerSegment(segment: string): string {
     }
   }
   return result;
+}
+
+function processPointerSegment(
+  currentObj: unknown,
+  currentSegment: string,
+): { readonly nextObj: unknown; readonly shouldReturn: boolean } {
+  const decodedSegment = unescapePointerSegment(currentSegment);
+  if (typeof currentObj !== 'object' || currentObj === null) {
+    return { nextObj: undefined, shouldReturn: true };
+  }
+  if (!(decodedSegment in currentObj)) {
+    return { nextObj: undefined, shouldReturn: true };
+  }
+  const nextObj: unknown = Reflect.get(currentObj, decodedSegment);
+  return { nextObj, shouldReturn: false };
+}
+
+function processPathChar(
+  char: string,
+  isEnd: boolean,
+  currentObj: unknown,
+  currentSegment: string,
+): { readonly nextObj: unknown; readonly nextSegment: string; readonly shouldReturn: boolean } {
+  if (char === SLASH) {
+    const result = processPointerSegment(currentObj, currentSegment);
+    return {
+      nextObj: result.nextObj,
+      nextSegment: EMPTY_STRING,
+      shouldReturn: result.shouldReturn,
+    };
+  }
+  if (isEnd) {
+    const finalSegment = currentSegment + char;
+    if (finalSegment === EMPTY_STRING) {
+      return { nextObj: currentObj, nextSegment: EMPTY_STRING, shouldReturn: false };
+    }
+    const result = processPointerSegment(currentObj, finalSegment);
+    return {
+      nextObj: result.nextObj,
+      nextSegment: EMPTY_STRING,
+      shouldReturn: result.shouldReturn,
+    };
+  }
+  return { nextObj: currentObj, nextSegment: currentSegment + char, shouldReturn: false };
+}
+
+function getParentNodeUnsafe(
+  root: unknown,
+  path: string,
+): { readonly parent: unknown | undefined } {
+  let currentObj: unknown = root;
+  let currentSegment: string = EMPTY_STRING;
+  let i = 1;
+  while (i < path.length) {
+    const char = path[i] ?? EMPTY_STRING;
+    const step = processPathChar(char, i === path.length - 1, currentObj, currentSegment);
+    if (step.shouldReturn) {
+      return { parent: undefined };
+    }
+    currentObj = step.nextObj;
+    currentSegment = step.nextSegment;
+    i++;
+  }
+  return { parent: currentObj };
+}
+
+/**
+ * Traverse a JSON pointer path to reach the parent node of the final segment.
+ */
+export function traversePointerPath(document: unknown, path: string): { readonly parent: unknown } {
+  if (path === EMPTY_STRING || path === SLASH) {
+    return { parent: document };
+  }
+  return getParentNodeUnsafe(document, path);
+}
+
+/**
+ * Traverse an AJV instancePath to reach the object that contains the offending property.
+ * AJV instancePath is "" for root or "/foo/bar" for nested locations.
+ */
+export function traverseInstancePath(document: unknown, instancePath: string): unknown {
+  if (instancePath === EMPTY_STRING) {
+    return document;
+  }
+  const { parent } = getParentNodeUnsafe(document, instancePath + '/');
+  return parent;
 }

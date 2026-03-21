@@ -33,9 +33,9 @@ Notes:
 
 ---
 
-## Next Session: Doctor Rescue-Loop Runtime Redesign
+## This Session: Post Rescue-Loop Redesign — Next Slice Selection
 
-### Plan Of Record
+### Plan Of Record (Completed 2026-03-20)
 
 - [zod-limitations-next-atomic-slice-planning.md](../plans/active/zod-limitations-next-atomic-slice-planning.md)
 
@@ -53,7 +53,7 @@ Notes:
 - [ADR-039](../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 - [ADR-041](../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
-## Current Repo Truth (Friday, 13 March 2026)
+## Current Repo Truth (Thursday, 20 March 2026)
 
 Recent completed slices:
 
@@ -62,6 +62,7 @@ Recent completed slices:
   - `pnpm --dir lib doctor:profile` now provides a stable JSON runtime snapshot for the pathological fixture
   - the slice ended with one clear decision: doctor rescue-loop redesign is next; harness splitting is not
   - the full repo-root Definition of Done chain completed green during that slice on Friday, 13 March 2026
+  - no repo changes have occurred between 13 March and 20 March 2026; working tree is clean
   - manual `code-reviewer`, `test-reviewer`, and `type-reviewer` coverage for that slice is complete
 - the earlier `int64` / `bigint` remediation slice remains complete:
   - IR keeps first-class `integerSemantics`
@@ -71,7 +72,7 @@ Recent completed slices:
   - JSON Schema `$ref` plus sibling `int64` / `bigint` schemas now reject before the plain-ref early return
   - closure review for that slice was also completed manually in-session on Friday, 13 March 2026
 
-The current active entrypoint is the concrete doctor rescue-loop runtime-redesign slice.
+The current active entrypoint is next-slice selection after the completed doctor rescue-loop runtime redesign. The plan was completed, implemented, and verified on 2026-03-20.
 
 User-reported issue rule:
 
@@ -81,19 +82,18 @@ User-reported issue rule:
 
 ### Current runtime context
 
-Doctor runtime characterisation completed in-session on Friday, 13 March 2026 and produced a concrete next slice.
+Doctor rescue-loop redesign was completed in-session on Thursday, 20 March 2026. The implementation used Family 1 (All-Errors Preflight Batch Rescue) with a repo-local AJV `allErrors: true` validator.
 
-Key findings:
+Post-implementation results:
 
-- the new `pnpm --dir lib doctor:profile` seam shows `20.77s` of `20.88s` total runtime inside `nonStandardRescue`
-- the problematic fixture currently requires `1159` rescue retries and produces `1159` warning entries
+- `pnpm --dir lib doctor:profile` now shows `31.79ms` nonStandardRescue (was `20,770ms`)
+- `rescueRetryCount` is now `1` (was `1,159`)
+- `warningCount` is now `1,954` (was `1,159`) because the preflight finds more properties
 - refreshed timings now show:
-  - isolated `doctor.integration.test.ts`: `23.76s real`
-  - full `pnpm test:transforms`: `25.88s real`
-  - full suite with `--maxWorkers=1`: `45.73s real`
-- default concurrency remains materially better than serialized execution
-- harness splitting is therefore not the next honest response
-- the canonical doctor transform proof now has a `60s` test-local timeout because full-suite contention currently pushes it beyond the previous `30s` default ceiling
+  - isolated `doctor.integration.test.ts`: `0.53s real` (was `23.76s`)
+  - full `pnpm test:transforms`: `6.92s real` (was `25.88s`)
+- the doctor-proof timeout has been reduced from `60s` to `10s` (the proof runs in ~0.5s)
+- harness splitting remains unnecessary
 - recursive preserving-mode emission remains historical under ADR-040 and is not the active candidate
 
 The paused umbrella and supporting investigations still matter:
@@ -104,29 +104,27 @@ The paused umbrella and supporting investigations still matter:
 
 ## Immediate Priority
 
-The immediate priority in the next session is redesigning the doctor's non-standard-property rescue loop.
+The rescue-loop redesign is complete. The next session should select the next honest atomic slice from the paused investigations.
 
 Do this:
 
 1. reproduce any fresh user-reported issue immediately
-2. if no fresher issue supersedes this work, read the active plan and the paused runtime investigation
-3. use `pnpm --dir lib doctor:profile` and the recorded timing table only as guardrails, not as a substitute for TDD
-4. implement the rescue-loop redesign from the active plan
-5. keep the transform harness unchanged unless new evidence disproves the current diagnosis
+2. if no fresher issue supersedes, review the paused investigations and select the next slice
+3. the doctor-proof timeout has already been reduced from `60s` to `10s`
+4. keep the transform harness unchanged unless new evidence disproves the current state
 
-## What The Next Session Should Do
+## What This Session Should Do
 
-1. Read the active plan and the paused runtime context.
+1. Read the completed plan and the paused context.
 2. Re-read the durable doctrine sources named above.
-3. Do not reopen the completed `int64` / `bigint` slice unless new evidence disproves the now-green closure state.
+3. Do not reopen the completed `int64` / `bigint` or rescue-loop slices unless new evidence disproves their green closure state.
 4. If the user reports a fresh gate or runtime issue, reproduce it first.
 5. Otherwise:
-   1. confirm the recorded runtime baseline with the profiler or targeted doctor proof if needed
-   2. add failing-first coverage for batch rescue behavior
-   3. redesign the rescue loop
-   4. refresh the timing table and keep this prompt and the roadmap aligned with the result
+   1. review the paused investigations for the next honest atomic slice
+   2. plan and propose the next concrete entrypoint
+   3. keep this prompt and the roadmap aligned with the result
 6. Start from:
-   - `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`
+   - `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md` (completed 2026-03-20)
    - `.agent/plans/current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`
    - `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
    - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
@@ -164,11 +162,11 @@ Treat every failure as blocking.
 
 Current honest state:
 
+- the doctor rescue-loop redesign slice is complete (implemented and verified 2026-03-20)
+- the full repo-root Definition of Done chain was verified green on 2026-03-20
 - the doctor runtime-characterisation slice review is complete
-- review was performed manually in-session on 2026-03-13 using the local reviewer templates instead of nested reviewer runs
-- `code-reviewer`, `test-reviewer`, and `type-reviewer` all landed clean for that slice
 - the earlier `int64` / `bigint` closure review is also complete
-- the next session does not owe reviewer closure before starting rescue-loop redesign
+- the next session does not owe reviewer closure before selecting the next slice
 
 ## Paused Context That Still Matters
 

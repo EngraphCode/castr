@@ -236,3 +236,29 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-core/incoming/` still contains only `.gitkeep`
   - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
+
+## 2026-03-20
+
+- Doctor rescue-loop runtime redesign completed using Family 1 (All-Errors Preflight Batch Rescue):
+  - `rescueRetryCount`: 1,159 → 1 (1,159x fewer)
+  - `nonStandardRescue`: 20,770ms → 31.79ms (653x faster)
+  - `pnpm test:transforms`: 25.88s → 6.92s real (3.7x faster)
+  - `warningCount`: 1,159 → 1,954 (more properties found because preflight reaches deeper nesting)
+- Key implementation discovery: the OpenAPI 3.1 schema uses JSON Schema 2020-12's `unevaluatedProperties: false`, not `additionalProperties: false`. AJV reports these as `keyword: 'unevaluatedProperties'` with `params.unevaluatedProperty` (not `additionalProperty`). This is important context for any future work involving schema validation error shapes.
+- Schema loading discovery: the Scalar schema file (`dist/schemas/v3.1/schema.js`) uses ESM `export default` and is not exposed via the package `exports` map. Loading it requires `import(pathToFileURL(...))` to bypass pnpm strict mode — neither `createRequire().require()` nor `import()` with a bare package specifier work.
+- ESM/CJS interop pattern for AJV in this repo: use `AjvFactory.default` for the constructor and `addFormatsFactory.default()` for formats, matching the existing pattern in `mcp-type-guards.ts`.
+- New repo rule added (principle 8 in `principles.md`): Explicit dependencies only — every import must resolve to a dependency listed in the consuming package's own `package.json`. No transitive dependency reliance allowed.
+- The `60s` doctor-proof timeout has been reduced to `10s` since the proof runs in ~0.5s.
+- Family 2 (parent-object batch rescue from Scalar error shapes) was not needed.
+- A `jc-consolidate-docs` pass after implementation closure updated status markers across six documents:
+  - `.agent/README.md` updated from "doctor rescue-loop redesign active" to "next-slice selection (rescue-loop complete)" with post-redesign metrics
+  - `.agent/prompts/session-entry.prompt.md` updated with post-implementation runtime context and next-session guidance
+  - `.agent/plans/roadmap.md` updated with completed rescue-loop entries and refreshed timeline
+  - `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md` updated to completion status with full results table
+  - `lib/tests-transforms/README.md` updated with post-redesign pathological proof metrics and `10s` timeout
+  - all forward-looking `60s` timeout references updated to reflect the implemented `10s` timeout
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No structural learning cleared the bar for Practice Core evolution in this pass; the batch-preflight AJV pattern is repo-specific rather than portable.

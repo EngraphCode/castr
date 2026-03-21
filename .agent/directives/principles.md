@@ -2,7 +2,7 @@
 
 This file MUST NOT be edited without prior and explicit user approval.
 
-**Date:** October 2025 (Updated: 2026-02-13)  
+**Date:** October 2025 (Updated: 2026-03-20)  
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
 
@@ -813,6 +813,37 @@ function parseOpenAPI(input: string): OpenAPIObject | null {
   }
 }
 ```
+
+#### 8. **Explicit dependencies only — no transitive dependency reliance**
+
+Every package used in product code or test code must be declared as an explicit dependency in the consuming `package.json`. Relying on a transitive dependency (a package that happens to be installed because another dependency pulls it in) is **forbidden**.
+
+**Why:**
+
+- Transitive dependencies can disappear or change version when the direct dependency updates, breaking code silently.
+- Explicit declarations keep the dependency graph honest and auditable.
+- `pnpm` strict mode and `knip` can only validate what is declared.
+
+**Good:**
+
+```jsonc
+// package.json
+{
+  "dependencies": {
+    "ajv": "^8.12.0", // Used directly in product code
+    "ajv-formats": "^3.0.1", // Used directly in product code
+  },
+}
+```
+
+**Bad:**
+
+```typescript
+// ❌ Importing a package only available because @scalar/openapi-parser depends on it
+import Ajv from 'ajv'; // Not in our package.json! Relies on transitive install.
+```
+
+**Rule:** if you `import` it, you must `declare` it.
 
 ---
 

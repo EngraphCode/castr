@@ -29,5 +29,5 @@ describe('Doctor Reparation Pipeline', () => {
     expect(diagnostics.timingsMs.total).toBeGreaterThanOrEqual(
       diagnostics.timingsMs.nonStandardRescue,
     );
-  }, 60000); // The pathological doctor proof remains in the canonical gate while rescue-loop redesign is pending.
+  }, 10000); // Post rescue-loop redesign: proof runs in ~0.5s; 10s provides ample headroom.
 });

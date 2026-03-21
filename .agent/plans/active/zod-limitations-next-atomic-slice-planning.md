@@ -1,50 +1,43 @@
-# Plan (Active): Doctor Rescue-Loop Runtime Redesign
+# Plan (Complete): Doctor Rescue-Loop Runtime Redesign
 
-**Status:** Active  
-**Created:** 2026-03-13  
-**Last Updated:** 2026-03-13  
-**Predecessor:** [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)  
-**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)  
+**Status:** Complete — Implemented and verified 2026-03-20
+**Created:** 2026-03-13
+**Last Updated:** 2026-03-20
+**Predecessor:** [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
+**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 **Related:** [int64-bigint-semantics-investigation.md](../current/complete/int64-bigint-semantics-investigation.md), [zod-limitations-architecture-investigation.md](../current/paused/zod-limitations-architecture-investigation.md), [recursive-unknown-key-preserving-zod-emission-investigation.md](../current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md), [zod-round-trip-limitations.md](../../../docs/architecture/zod-round-trip-limitations.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
 ---
 
-This file is the active implementation follow-on to the completed doctor runtime-characterisation slice.
+This file records the completed doctor rescue-loop runtime redesign. Family 1 (All-Errors Preflight Batch Rescue) was implemented and verified.
 
-The next smallest honest atomic slice is now clear: redesign the doctor's non-standard-property rescue loop. The completed runtime-characterisation record in [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md) proved that current transform-suite cost is dominated by rescue-loop revalidation, not by Vitest scheduling and not by the superseded recursive preserving-mode seam.
+## Results
 
-## Summary
+| Metric                      | Before      | After          | Improvement             |
+| --------------------------- | ----------- | -------------- | ----------------------- |
+| `rescueRetryCount`          | 1,159       | **1**          | 1,159x fewer            |
+| `nonStandardRescue`         | 20,770ms    | **31.79ms**    | 653x faster             |
+| `doctor:profile` total      | 20,880ms    | **69.49ms**    | 300x faster             |
+| Isolated doctor proof       | 23.76s real | **0.53s** real | 45x faster              |
+| Full `pnpm test:transforms` | 25.88s real | **6.92s** real | 3.7x faster             |
+| Warning count               | 1,159       | **1,954**      | More properties rescued |
 
-Current runtime evidence captured on Friday, 13 March 2026:
+Warning count increased because the preflight AJV `allErrors: true` pass discovers non-standard properties that Scalar's one-error-at-a-time approach never reached (deep nesting, properties shadowed by earlier errors).
 
-| Metric                                     | Value                                   |
-| ------------------------------------------ | --------------------------------------- |
-| Available worker parallelism               | `14`                                    |
-| Isolated `doctor.integration.test.ts`      | `23.76s real`, `22.88s` Vitest duration |
-| Full `pnpm test:transforms`                | `25.88s real`, `24.07s` Vitest duration |
-| Full transform suite, `--maxWorkers=1`     | `45.73s real`, `45.26s` Vitest duration |
-| Problematic fixture size                   | `549,935` bytes                         |
-| `doctor:profile` total runtime             | `20.88s`                                |
-| `doctor:profile` `nonStandardRescue` phase | `20.77s`                                |
-| `doctor:profile` `rescueRetryCount`        | `1159`                                  |
-| `doctor:profile` warning count             | `1159`                                  |
+## Implementation Summary
 
-Interpretation locked for this slice:
+**Family 1: All-Errors Preflight Batch Rescue** was chosen and implemented:
 
-- the doctor proof still dominates the transform gate
-- default concurrency remains materially better than serialized execution
-- the bottleneck is the one-error-per-pass rescue loop
-- the canonical doctor transform proof now carries a `60s` test-local timeout because full-suite contention pushes it beyond the previous `30s` ceiling
-- harness splitting is not the next honest fix family
-- recursive `.passthrough()` / `.catchall()` work remains historical under ADR-040 and must not be reopened here
+1. **New module: `lib/src/shared/doctor/preflight-validator.ts`** — repo-local AJV 2020-12 validator with `allErrors: true`, loading the same OpenAPI 3.1 schema that `@scalar/openapi-parser` bundles internally.
+2. **Redesigned `attemptNonStandardPropertyRescue`** in `prefix-nonstandard.ts` — preflight batch harvest of all `unevaluatedProperties` errors → batch prefix → Scalar confirmation → bounded fallback.
+3. **Extracted pointer traversal** to `pointer-utils.ts` for complexity compliance.
+4. **New repo rule** (principle 8): Explicit dependencies only — no transitive dependency reliance.
 
-## User Impact To Optimise For
+**Key discovery:** The OpenAPI 3.1 schema uses JSON Schema 2020-12's `unevaluatedProperties: false`, not `additionalProperties: false`. AJV reports these as `keyword: 'unevaluatedProperties'` with `params.unevaluatedProperty`. The schema file uses ESM `export default` and must be loaded via `import(pathToFileURL(...))` to bypass the package exports map.
 
-- keep `pnpm test:transforms` strict, trustworthy, and explainable
-- reduce doctor runtime by fixing the actual cost centre instead of hiding it with harness changes
-- leave the next session with one concrete runtime-redesign entrypoint instead of a stale candidate list
+Family 2 (parent-object batch rescue from Scalar error shapes) was not needed.
 
-## Scope
+## Scope (Unchanged)
 
 In scope:
 
@@ -61,96 +54,49 @@ Out of scope:
 - broad doctor-pipeline redesign outside the rescue loop
 - general public option/doc cleanup around `additionalPropertiesDefaultValue` or `strictObjects`
 
-## Locked Constraints
+## Locked Constraints (All Met)
 
-1. `repairOpenApiDocument(inputDocument)` behavior and `DoctorDiagnosis` semantics must remain unchanged.
-2. Root `pnpm test:transforms` remains the canonical outer gate.
-3. Final accept/reject must still come from authoritative Scalar validation before and after repair.
-4. Warning messages must remain human-readable and tied to the properties actually prefixed.
-5. No public package export, CLI option, or external API contract change is allowed in this slice.
-6. The existing `60s` doctor-proof timeout is a temporary reflection of current measured runtime; no further timeout inflation, skips, or quarantines are allowed as substitutes for the redesign.
+1. ✅ `repairOpenApiDocument(inputDocument)` behavior and `DoctorDiagnosis` semantics remain unchanged.
+2. ✅ Root `pnpm test:transforms` remains the canonical outer gate.
+3. ✅ Final accept/reject still comes from authoritative Scalar validation before and after repair.
+4. ✅ Warning messages remain human-readable and tied to the properties actually prefixed.
+5. ✅ No public package export, CLI option, or external API contract change.
+6. ✅ The existing `60s` doctor-proof timeout has been reduced to `10s`; the proof runs in under 1s.
 
-## Primary Code Surfaces
+## Success Metrics (All Exceeded)
 
-- `lib/src/shared/doctor/index.ts`
-- `lib/src/shared/doctor/prefix-nonstandard.ts`
-- `lib/src/shared/doctor/runtime-diagnostics.ts`
-- `lib/scripts/profile-doctor-runtime.mts`
-- `lib/tests-transforms/__tests__/doctor.integration.test.ts`
-- `lib/src/shared/doctor/index.unit.test.ts`
-- `lib/src/shared/doctor/prefix-nonstandard.unit.test.ts`
+1. ✅ `rescueRetryCount`: 1 (target was ≤ 10)
+2. ✅ `nonStandardRescue`: 31.79ms (target was < 5s)
+3. ✅ Isolated doctor proof: 0.53s real (target was < 12s)
+4. ✅ `pnpm test:transforms`: 6.92s real, 532 tests green
+5. ✅ Diagnosis semantics unchanged — valid docs, simple repair docs, and the problematic fixture all behave correctly
 
-## Candidate Families To Compare In Order
+## Quality Gates (All Green, 2026-03-20)
 
-1. **All-errors preflight batch rescue** — preferred
-   - compile a repo-local AJV validator with `allErrors: true` against the same OpenAPI schema version Scalar uses
-   - harvest all prefixable `"Property X is not expected to be here"` errors in one pass
-   - batch prefix them using the existing pointer utilities
-   - keep Scalar validation authoritative before and after the batch rewrite
+- `pnpm build` ✅
+- `pnpm type-check` ✅
+- `pnpm lint` ✅
+- `pnpm format:check` ✅
+- `pnpm test` (1,476 tests) ✅
+- `pnpm character` (152 tests) ✅
+- `pnpm test:snapshot` (152 tests) ✅
+- `pnpm test:gen` (20 tests) ✅
+- `pnpm test:transforms` (532 tests) ✅
 
-2. **Parent-object batch rescue from current error shapes** — fallback only
-   - use current Scalar error paths plus parent-node traversal to batch-prefix sibling non-standard properties at the affected parent
-   - use this only if family 1 cannot be made semantically equivalent without brittle dependency coupling
+## Primary Code Surfaces (Final)
 
-3. **Harness or timeout changes** — rejected for this slice
-   - current measurements already prove that rescue-loop cost, not scheduling, is the dominant problem
+- `lib/src/shared/doctor/preflight-validator.ts` — **NEW**: AJV `allErrors: true` validator
+- `lib/src/shared/doctor/prefix-nonstandard.ts` — redesigned rescue loop
+- `lib/src/shared/doctor/pointer-utils.ts` — extracted pointer traversal
+- `lib/src/shared/doctor/preflight-validator.unit.test.ts` — **NEW**: 3 preflight tests
+- `lib/src/shared/doctor/prefix-nonstandard.unit.test.ts` — updated: 6 batch-rescue tests
+- `lib/src/shared/doctor/index.unit.test.ts` — unchanged: 2 tests
+- `lib/src/shared/doctor/runtime-diagnostics.ts` — unchanged
+- `lib/scripts/profile-doctor-runtime.mts` — unchanged
+- `lib/tests-transforms/__tests__/doctor.integration.test.ts` — unchanged
 
-## Success Metrics
+## Follow-On Considerations
 
-1. On the problematic fixture, `rescueRetryCount` drops from `1159` to `<= 10`.
-2. On the problematic fixture, `nonStandardRescue` drops from `20.77s` to `< 5s` in `pnpm --dir lib doctor:profile`.
-3. The isolated doctor proof drops materially below the current `23.76s real` baseline; target `< 12s real` on this machine.
-4. `pnpm test:transforms` remains green and lands materially below the current `25.88s real` baseline.
-5. Diagnosis semantics remain unchanged for valid docs, simple repair docs, and the problematic fixture.
-
-## TDD Order
-
-### Stage 1: Characterise the batch-rescue target
-
-Add failing-first coverage for:
-
-- multiple unexpected properties under the root object
-- multiple unexpected properties under the same nested parent
-- the problematic fixture proving that the redesign meaningfully bounds `rescueRetryCount`
-
-### Stage 2: Implement family 1 first
-
-- keep the existing diagnostics seam in place
-- implement all-errors preflight batch rescue
-- prove that diagnosis output remains unchanged while retry count and rescue time fall sharply
-
-### Stage 3: Use the fallback only if family 1 is proven unworkable
-
-- record the blocker honestly in this plan and `.agent/memory/napkin.md`
-- then switch to family 2 without widening scope into harness work or other doctor phases
-
-### Stage 4: Re-measure and close honestly
-
-Re-run:
-
-- `pnpm --dir lib doctor:profile`
-- `/usr/bin/time -p pnpm --dir lib exec vitest run --config vitest.transforms.config.ts tests-transforms/__tests__/doctor.integration.test.ts`
-- `/usr/bin/time -p pnpm test:transforms`
-- the full repo-root Definition of Done
-
-## Test Cases And Scenarios
-
-- already-valid docs remain zero-rescue fast paths
-- simple root-level non-standard properties still prefix correctly
-- nested escaped JSON-pointer paths still prefix correctly
-- multiple unexpected properties under one parent are fixed in one rescue phase
-- the problematic fixture still reports `originalIsValid: false`, still produces warnings, still exposes defined `finalErrors`, and still avoids unhandled throws
-- the profiling script continues to emit stable JSON keys and write no repo-tracked artefacts
-
-## Documentation Outputs
-
-- keep this file as the active plan of record
-- keep `.agent/prompts/session-entry.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/memory/napkin.md` aligned with this runtime-redesign entrypoint
-- update `ADR-035` and `lib/tests-transforms/README.md` only if the redesign changes durable proof-budget expectations
-
-## Completion Criteria
-
-- this active plan, the session-entry prompt, the roadmap, and the napkin all name doctor rescue-loop redesign as the next session's entrypoint
-- one rescue-loop redesign family lands, or one is rejected with precise evidence and the fallback family is activated explicitly
-- the refreshed profile and timing table are recorded honestly after implementation
-- required reviewer outcomes are applied and recorded with no hidden handoff debt
+- The doctor-proof timeout has been reduced from `60s` to `10s` since the proof runs in ~0.5s.
+- The `warningCount` increase from 1,159 to 1,954 is correct behavior — the preflight now finds properties that the one-error-at-a-time approach could never reach.
+- The stale public docs/options around `additionalPropertiesDefaultValue` and `strictObjects` remain deferred.
