@@ -24,12 +24,13 @@ Notes:
 
 1. After parsing, input is discarded. Only the IR matters.
 2. No content loss by default. Lossy behaviour must be explicit and governed.
-3. Unsupported or invalid behaviour must fail fast with a helpful error.
-4. Output must be deterministic.
-5. Parsers and writers must stay in lockstep around canonical supported patterns.
-6. No escape hatches in product code: no non-const assertions, `any`, `!`, or lint-disables to hide architecture problems.
-7. TDD at all levels.
-8. All quality-gate failures are blocking.
+3. Strict and complete everywhere, all the time: partial support, partial validation, partial docs, or partial proofs do not count as done.
+4. Unsupported or invalid behaviour must fail fast with a helpful error.
+5. Output must be deterministic.
+6. Parsers and writers must stay in lockstep around canonical supported patterns.
+7. No escape hatches in product code: no non-const assertions, `any`, `!`, or lint-disables to hide architecture problems.
+8. TDD at all levels.
+9. All quality-gate failures are blocking.
 
 ---
 
@@ -63,7 +64,7 @@ Notes:
 - [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)
 - [ADR-041](../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
-## Current Repo Truth (Saturday, 21 March 2026)
+## Current Repo Truth (Sunday, 22 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -77,7 +78,10 @@ IDENTITY doctrine alignment is complete:
 
 The next honest work is not new implementation. It is a bounded architecture review sweep:
 
+- strict and complete everywhere, all the time remains the live rule: if a claimed surface is only partially implemented, validated, proven, or documented, treat that as blocking drift
 - the review packs must validate the repo's actual direction against code, not assumption
+- Pack 1 is complete with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
+- Pack 2 is complete with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
 - the paused JSON Schema parser plan must not reactivate until the review packs say it is architecturally fit
 - one review note per pack should be written under `.agent/research/architecture-review-packs/`
 
@@ -96,7 +100,7 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-Execute the architecture review packs in order. Start with Pack 1 and do not blend packs.
+Execute the architecture review packs in order. Packs 1 and 2 are complete; continue with Pack 3 and do not blend packs.
 
 1. **Read the active plan and dedicated review prompt** — this sweep is review-first, not implementation-first.
 2. **Write one note per completed pack** — use `.agent/research/architecture-review-packs/pack-<n>-<slug>.md`.
@@ -111,7 +115,7 @@ Execute the architecture review packs in order. Start with Pack 1 and do not ble
    - `.agent/IDENTITY.md`
    - `.agent/plans/current/paused/json-schema-parser.md`
 2. If the user reports a fresh gate or runtime issue, reproduce it first.
-3. Otherwise, start with Pack 1 and complete one pack note before moving to the next.
+3. Otherwise, continue with Pack 3 and complete one pack note before moving to the next.
 4. Keep findings evidence-backed and file-referenced; do not fix product code mid-sweep unless the user redirects.
 5. Record review-state and consolidation outcomes in `.agent/memory/napkin.md`.
 
@@ -150,7 +154,9 @@ Treat every failure as blocking.
 Current honest state:
 
 - the full repo-root Definition of Done chain was green on Saturday, 21 March 2026
-- the architecture review-pack sweep has not started yet
+- Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict; see `.agent/research/architecture-review-packs/pack-1-boundary-integrity-and-public-surface.md`
+- Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict; see `.agent/research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md`
+- Pack 3 is now the next review pack
 - the paused JSON Schema parser plan remains blocked on Pack 4's verdict
 - the next implementation slice must come from review findings rather than assumption
 

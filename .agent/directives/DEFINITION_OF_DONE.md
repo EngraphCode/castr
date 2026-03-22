@@ -1,9 +1,11 @@
 # Definition of Done
 
-**Last Updated:** 2026-02-13  
-**Purpose:** The canonical, strict quality gate definition for this repository.
+**Last Updated:** 2026-03-22  
+**Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
+
+Done means strict and complete everywhere, all the time: claimed supported behaviour, proofs, and live execution surfaces must agree, or the work is not done.
 
 ---
 
@@ -72,6 +74,7 @@ pnpm test:transforms
 ## Acceptance Metrics (Measurable)
 
 - **0 tolerance paths**: invalid/unsupported inputs fail fast with explicit errors
+- **Claimed-support completeness**: every claimed supported behaviour is parser/IR/writer/runtime-validator/test/doc consistent, or explicitly marked unsupported or paused
 - **Determinism**: repeated runs produce byte-for-byte identical output for all fixtures
 - **IR coverage**: all OpenAPI 3.0/3.1 fields from `.agent/directives/requirements.md` are representable at the IR boundary
 

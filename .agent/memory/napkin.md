@@ -340,3 +340,60 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - The bounded review-pack pattern is useful here, but it does not yet clear the bar for Practice Core evolution. Keep it local until it is proven outside this repo.
+- Pack 1 of the architecture review sweep is now complete with a `yellow` verdict:
+  - physically, the package boundary is disciplined: `lib/package.json` exposes only `.`, `./cli`, and `./parsers/zod`, and `lib/.dependency-cruiser.cjs` enforces barrel-only seams across `schema-processing/*`
+  - the main breakage is public-surface honesty, not internal leakage: `README.md` and `docs/API-REFERENCE.md` still advertise `openApiFilePath`, `exportSchemas`, `exportTypes`, `schemas-with-client`, `createApiClient`, and `validationMode`, but the implemented generator accepts `input` or `openApiDoc`, only supports `schemas-only` / `schemas-with-metadata`, and uses `shouldExportAllSchemas` / `shouldExportAllTypes` on the programmatic options layer
+  - the CLI help text still says `data-descriptions-tooling` even though the published bin is `castr`, and `cli.char.test.ts` currently protects that stale identity
+  - `public-api-preservation.test.ts` overstates its coverage; it checks only a small subset of the runtime root exports
+- Handoff correction after Pack 1:
+  - `session-entry.prompt.md` and `roadmap.md` now record the Pack 1 `yellow` verdict and point the next session at Pack 2
+  - `json-schema-parser.md` remains blocked exactly as before; Pack 4 still owns its reactivation decision
+- Pack 2 of the architecture review sweep is now complete with a `red` verdict:
+  - `isCastrSchema()` currently validates only a narrow subset of schema shape, so malformed schemas such as `type: 'wat'` can still cross the runtime boundary and survive `deserializeIR()` if the surrounding document is otherwise valid
+  - Pack 2 still contains object-ontology drift after IDENTITY: the IR model, validators, parser seams, writer seams, and proof artefacts still preserve or accept schema-valued `additionalProperties` and `unevaluatedProperties` openness even though closed-world-only semantics are now the canonical identity
+  - the runtime operation validator omits `trace` even though the IR model, OpenAPI parser, OpenAPI writer, and requirements surface all support it
+- Handoff correction after Pack 2:
+  - `session-entry.prompt.md` and `roadmap.md` now record the Pack 2 `red` verdict and point the next session at Pack 3
+  - the paused `json-schema-parser.md` plan remains blocked until Pack 4 decides whether it still fits the architecture under review
+
+## 2026-03-22
+
+- Consolidation pass promoted a new live shorthand into the doctrine stack: **strict and complete everywhere, all the time**.
+  - The durable meaning is now explicit: a support claim is only honest when parser, IR, runtime validation, writers, proofs, and docs all agree.
+  - Partial implementation, partial validation, partial proof, or partially updated handoff docs are drift, not acceptable steady state.
+- Updated live doctrine and entrypoint surfaces to carry that rule consistently:
+  - `IDENTITY.md`
+  - `directives/AGENT.md`
+  - `directives/VISION.md`
+  - `directives/principles.md`
+  - `directives/requirements.md`
+  - `directives/testing-strategy.md`
+  - `directives/DEFINITION_OF_DONE.md`
+  - `prompts/start-right.prompt.md`
+  - `prompts/session-entry.prompt.md`
+  - `prompts/architecture-review-packs.prompt.md`
+  - `plans/roadmap.md`
+  - `plans/active/README.md`
+  - `plans/active/architecture-review-packs.md`
+  - `plans/current/paused/README.md`
+  - `plans/current/paused/json-schema-parser.md`
+  - `.agent/README.md`
+  - `practice-index.md`
+- The same consolidation pass corrected one important current-state drift while touching those docs:
+  - `VISION.md` no longer claims JSON Schema support is fully deferred
+  - `roadmap.md` no longer claims the standalone JSON Schema parser is already complete
+  - the honest state is now consistent: JSON Schema writer exists, standalone parser remains paused behind the review-pack sweep
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No new portable Practice evolution clears the bar yet.
+  - The phrase is useful here because Pack 2 exposed partial-support drift directly, but the framing is still repo-specific doctrine rather than a portable Core rule.
+- The next consolidation pass exposed a second durable-doc drift family outside the `.agent/` stack:
+  - `README.md`, `docs/API-REFERENCE.md`, and `docs/USAGE.md` still advertised removed surfaces such as `openApiFilePath`, `schemas-with-client`, `createApiClient()`, and `validationMode`
+  - `docs/OPENAPI-FETCH-INTEGRATION.md`, `docs/MIGRATION.md`, and `docs/EXAMPLES.md` had the same stale client-template story, so fixing only the top-level entry docs would have left the public doc surface only partially honest
+- Consolidation corrected that by rewriting the core public docs to the current repo truth:
+  - two built-in templates only: `schemas-with-metadata` and `schemas-only`
+  - programmatic generation uses `input` / `openApiDoc` and `shouldExportAllSchemas` / `shouldExportAllTypes`
+  - no built-in HTTP client or `createApiClient()` in the current public surface
+  - `openapi-fetch` is now documented as a composition pattern, not a generated template

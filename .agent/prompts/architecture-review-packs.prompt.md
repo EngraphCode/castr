@@ -15,7 +15,8 @@ The purpose is to validate the repo's actual architectural direction against the
 3. One pack at a time.
 4. Findings come before summaries.
 5. Architectural excellence over expediency.
-6. Strictness doctrine remains the governing identity unless code evidence disproves it.
+6. Strictness and completeness doctrine remain the governing identity unless code evidence disproves it.
+7. A surface is not green if it is only partially implemented, partially validated, partially proven, or partially documented.
 
 ## Read First
 
@@ -81,6 +82,7 @@ Use this exact structure:
 - Do not collapse into one giant "architecture review". The pack boundaries matter.
 - Do not hide uncertainty. If a doctrine source and the code disagree, say so explicitly.
 - Do not fix product code mid-review unless the user redirects the session into an implementation slice.
+- Do not treat partial support as acceptable steady state. If the repo claims a surface, the review must check the whole surface end to end.
 - If a pack makes the active roadmap or prompt dishonest, update those handoff artefacts before closing the pack.
 
 ## Completion Condition

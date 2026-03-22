@@ -1,236 +1,161 @@
 # Castr
 
-> Transform schemas between formats losslessly using a canonical internal representation.
+> Transform schemas through a canonical IR with strict, closed-world semantics.
 
-**Castr** (pronounced "caster") generates SDK building blocks from OpenAPI specs:
+Castr is a schema compiler. Its public surface today focuses on:
 
-- ✅ **Zod schemas** with full runtime validation
-- ✅ **TypeScript types** inferred from schemas
-- ✅ **MCP tools** for AI assistant integration
-- ✅ **Endpoint metadata** for building SDKs
+- OpenAPI input to generated Zod schemas and endpoint metadata
+- Zod source parsing to canonical IR
+- IR utilities, validation helpers, MCP helpers, and OpenAPI writing
 
-## Quick Start
+It does not ship a built-in HTTP client. The standard path is to generate schemas and metadata, then compose your own transport layer.
 
-```typescript
-import { generateZodClientFromOpenAPI } from '@engraph/castr';
-
-const result = await generateZodClientFromOpenAPI({
-  openApiFilePath: './openapi.yaml',
-  disableWriteToFile: true,
-  options: {
-    exportSchemas: true,
-    exportTypes: true,
-  },
-});
-
-console.log(result); // Generated Zod schemas + endpoint metadata
-```
-
-Install:
+## Install
 
 ```bash
-pnpm add @engraph/castr
+pnpm add @engraph/castr zod
 ```
 
-## What Castr Does
+If you want to compose Castr output with `openapi-fetch` or another HTTP client, install that separately.
 
-**Provides:**
+## CLI
 
-- Building blocks for SDK creation (schemas, validation, metadata)
-- Runtime validation using Zod
-- Flexible HTTP client integration — use fetch, axios, ky, or any client
-- MCP-ready tool definitions for AI integration
-- Lossless, deterministic transformations via the canonical IR
+After installation, use the published binary:
 
-**Does NOT provide:**
+```bash
+castr ./openapi.yaml -o ./src/api.ts
+```
 
-- Complete HTTP client implementation (bring your own)
+Two built-in templates are currently supported:
 
-## Programmatic API
+| Template                | Output                             | Use case                   |
+| ----------------------- | ---------------------------------- | -------------------------- |
+| `schemas-with-metadata` | Zod schemas plus endpoint metadata | SDK building blocks, MCP   |
+| `schemas-only`          | Zod schemas only                   | Validation-only generation |
 
-### Basic Generation
+Examples:
+
+```bash
+# Default: schemas + endpoint metadata
+castr ./openapi.yaml -o ./src/api.ts
+
+# Schemas only
+castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
+
+# Emit an MCP manifest alongside generated TypeScript
+castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
+```
+
+## Programmatic Generation
+
+Use `input` for a file path or URL, or `openApiDoc` for an in-memory document.
 
 ```typescript
-import { generateZodClientFromOpenAPI } from '@engraph/castr';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '@engraph/castr';
 
 const result = await generateZodClientFromOpenAPI({
-  openApiFilePath: './openapi.yaml',
-  distPath: './generated/api.ts',
+  input: './openapi.yaml',
+  disableWriteToFile: true,
+  template: 'schemas-with-metadata',
   options: {
-    template: 'schemas-with-metadata',
-    exportSchemas: true,
-    exportTypes: true,
+    withAlias: true,
+    shouldExportAllSchemas: true,
+    shouldExportAllTypes: true,
   },
 });
+
+if (isSingleFileResult(result)) {
+  console.log(result.content);
+}
 ```
 
-### In-Memory Generation
+In-memory input works too:
 
 ```typescript
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '@engraph/castr';
 
-const result = await generateZodClientFromOpenAPI({
-  openApiFilePath: './openapi.yaml',
-  disableWriteToFile: true, // Returns string instead of writing
-});
+const openApiDoc: OpenAPIObject = {
+  openapi: '3.1.0',
+  info: { title: 'Pets', version: '1.0.0' },
+  paths: {},
+};
 
-// Use result directly
-eval(result); // Or process further
+await generateZodClientFromOpenAPI({
+  openApiDoc,
+  distPath: './src/api.ts',
+});
 ```
 
-### Template Context Access
+Important current API truth:
+
+- `openApiFilePath` is no longer a valid argument; use `input`
+- `exportSchemas` / `exportTypes` are no longer the programmatic option names; use `shouldExportAllSchemas` / `shouldExportAllTypes`
+- `schemas-with-client`, `createApiClient()`, and `validationMode` are not part of the current public surface
+
+## Template Context And IR Access
+
+If you want the structured metadata rather than rendered TypeScript, use the template-context and IR exports directly:
 
 ```typescript
-import { getZodClientTemplateContext } from '@engraph/castr';
+import { getZodClientTemplateContext, buildIR, writeOpenApi } from '@engraph/castr';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-// Get full template context for custom rendering
-const ctx = await getZodClientTemplateContext(openApiDoc, options);
+const doc: OpenAPIObject = {
+  openapi: '3.1.0',
+  info: { title: 'Pets', version: '1.0.0' },
+  paths: {},
+};
+
+const context = getZodClientTemplateContext(doc, {
+  withAlias: true,
+  shouldExportAllSchemas: true,
+});
+
+const ir = buildIR(doc);
+const roundTripped = writeOpenApi(ir);
+
+console.log(context.endpoints);
+console.log(roundTripped.openapi);
 ```
 
-### Options
+## Zod To OpenAPI
 
-| Option            | Type      | Description                     |
-| ----------------- | --------- | ------------------------------- |
-| `template`        | `string`  | Output template (see below)     |
-| `exportSchemas`   | `boolean` | Export all #/components/schemas |
-| `exportTypes`     | `boolean` | Generate TypeScript types       |
-| `withDescription` | `boolean` | Add descriptions via .meta()    |
-| `withDocs`        | `boolean` | Add JSDoc comments              |
-| `allReadonly`     | `boolean` | Make objects/arrays readonly    |
-
-Object schemas are strict by default. Castr emits closed-world object output without a `strictObjects` option.
-
-## Templates
-
-| Template                | Output                        | Use Case               |
-| ----------------------- | ----------------------------- | ---------------------- |
-| `schemas-with-metadata` | Schemas + endpoints (default) | Building SDKs, tooling |
-| `schemas-only`          | Pure Zod schemas              | Validation only        |
-| `schemas-with-client`   | Client with openapi-fetch     | Quick prototypes       |
-
-## Zod → OpenAPI (Code-First)
-
-Parse Zod schemas and generate OpenAPI specs:
+The `./parsers/zod` subpath parses supported Zod 4 source into Castr's IR.
 
 ```typescript
 import { parseZodSource } from '@engraph/castr/parsers/zod';
 import { writeOpenApi } from '@engraph/castr';
 
-const zodSource = `
-  export const UserSchema = z.object({
+const { ir } = await parseZodSource(`
+  import { z } from 'zod';
+
+  export const UserSchema = z.strictObject({
     id: z.uuid(),
     email: z.email(),
-    createdAt: z.iso.datetime(),
-  }).meta({ description: 'A user in the system' });
-`;
+  });
+`);
 
-const { ir } = parseZodSource(zodSource);
 const openApiDoc = writeOpenApi(ir);
+console.log(openApiDoc.openapi);
 ```
 
-**Requirements:**
+## Strictness
 
-- Zod 4 syntax only (Zod 3 is rejected with actionable errors)
-- Static schemas (no dynamic/computed properties)
-- Getter-based recursion (not `z.lazy()`)
-- Standalone `z.undefined()` is rejected (use `.optional()` on the parent field/parameter)
+Castr is strict and closed-world by design:
 
-See [ADR-032](./docs/architectural_decision_records/ADR-032-zod-input-strategy.md) for details.
+- object schemas are emitted as strict / closed-world
+- unsupported behaviour fails fast
+- support claims are only honest when code, proofs, and docs agree
 
-## Example
+There is no public strictness toggle for object openness.
 
-**Input** (OpenAPI):
+## Build Your Own Client
 
-```yaml
-paths:
-  /pets/{petId}:
-    get:
-      operationId: getPetById
-      parameters:
-        - name: petId
-          in: path
-          schema: { type: string }
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
-components:
-  schemas:
-    Pet:
-      type: object
-      required: [id, name]
-      properties:
-        id: { type: integer }
-        name: { type: string }
-```
+The supported pattern is:
 
-**Output**:
+1. generate `schemas-with-metadata`
+2. use the generated schemas and endpoint metadata
+3. compose transport with `fetch`, `openapi-fetch`, `axios`, `ky`, or your own wrapper
 
-```typescript
-import { z } from 'zod';
-
-export const Pet = z.object({
-  id: z.number().int(),
-  name: z.string(),
-});
-
-export const endpoints = [
-  {
-    method: 'get',
-    path: '/pets/:petId',
-    operationId: 'getPetById',
-    parameters: [{ name: 'petId', type: 'Path', schema: z.string() }],
-    response: Pet,
-  },
-];
-```
-
-## CLI
-
-For scripts and CI pipelines:
-
-```bash
-castr <input> -o <output> [options]
-
-# Examples
-castr ./openapi.yaml -o ./api.ts
-castr ./openapi.yaml -o ./schemas.ts --template schemas-only
-castr https://api.example.com/openapi.json -o ./api.ts
-```
-
-Run `castr --help` for all options.
-
-## OpenAPI Support
-
-- ✅ **OpenAPI 2.0 (Swagger)** — supported as input only (auto-upgraded to 3.1)
-- ✅ **OpenAPI 3.0.x** (3.0.0–3.0.3)
-- ✅ **OpenAPI 3.1.x** including type arrays, null types
-
-## Architecture
-
-Castr uses a **Caster Model architecture** where all inputs are parsed into a canonical representation:
-
-```text
-OpenAPI → CastrDocument → Zod, TypeScript, MCP tools
-```
-
-The canonical model (`CastrDocument`, `CastrSchema`) is the single source of truth. See [lib/README.md](./lib/README.md) for internals.
-
-## Contributing
-
-```bash
-pnpm install
-pnpm test
-```
-
-See `.agent/directives/principles.md` for engineering standards.
-
-## Origins
-
-Castr was inspired by [openapi-zod-client](https://github.com/astahmer/openapi-zod-client) -- it started as a fork of that project, and has been completely rewritten since then.
-
-## License
-
-MIT
+See [docs/USAGE.md](./docs/USAGE.md), [docs/API-REFERENCE.md](./docs/API-REFERENCE.md), and [docs/OPENAPI-FETCH-INTEGRATION.md](./docs/OPENAPI-FETCH-INTEGRATION.md) for current examples.

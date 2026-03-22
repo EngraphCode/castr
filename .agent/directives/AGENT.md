@@ -26,7 +26,7 @@
 - IR is the source of truth after parsing
 - OpenAPI output is a typed object model
 - TypeScript/Zod code generation uses `ts-morph`
-- Product doctrine is strict, fail-fast, deterministic, and lossless by default
+- Product doctrine is strict and complete everywhere, all the time: fail-fast, deterministic, lossless by default, and never only partially supported
 
 ## Principles
 

@@ -19,6 +19,16 @@ If any conflict exists, **this requirements document is the source of truth**.
 
 ---
 
+## Cross-Cutting Support Rule
+
+Castr must be strict and complete everywhere, all the time.
+
+- A feature counts as supported only when parser, IR, runtime validation, writers, tests, and docs agree on it.
+- Partial implementation, stale docs, or incomplete proof coverage are drift, not support.
+- If a surface is not complete yet, mark it unsupported or paused rather than treating it as partially done.
+
+---
+
 ## OpenAPI Compliance (Non-negotiable)
 
 The system is NOT ready for production until these criteria are met.

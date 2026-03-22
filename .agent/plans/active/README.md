@@ -17,6 +17,8 @@ Permanent truth belongs in:
 
 Active plans exist only to drive the **next atomic slice of work**.
 
+Live plan surfaces must also stay strict and complete everywhere, all the time: no half-updated status markers, hidden exceptions, or stranded context.
+
 ---
 
 ## What Belongs In `active/`

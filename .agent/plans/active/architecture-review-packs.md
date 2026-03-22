@@ -10,6 +10,8 @@
 
 This plan runs the full post-implementation architecture review sweep after the IDENTITY closure. The goal is not to keep moving; it is to verify that the repo is actually pointed in the right architectural direction before the next implementation slice reactivates.
 
+This sweep evaluates not only strictness but completeness: a surface is not healthy if code, runtime validation, proofs, and docs only agree on part of what the repo claims.
+
 ## Why This Slice Is Next
 
 - IDENTITY doctrine alignment is complete and the full repo-root Definition of Done chain was green on Saturday, 21 March 2026.
@@ -38,6 +40,7 @@ Out of scope:
 4. Findings must be evidence-backed and file-referenced.
 5. Architectural excellence over expediency at every turn.
 6. The paused JSON Schema parser plan stays paused until the review sweep says it is fit to reactivate.
+7. Strict and complete everywhere, all the time: no pack should clear a surface that is only partially implemented, partially validated, partially proven, or partially documented.
 
 ## Review Note Location
 
@@ -187,6 +190,7 @@ Interpret verdicts as:
 3. The paused JSON Schema parser plan is either revalidated or explicitly rewritten before reactivation.
 4. The next implementation slice is chosen from findings rather than assumption.
 5. No architectural truth remains stranded only in the napkin.
+6. No pack goes green while a claimed supported surface remains only partially aligned across code, proofs, and docs.
 
 ## Completion Rule
 

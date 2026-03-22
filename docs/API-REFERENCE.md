@@ -1,582 +1,242 @@
 # API Reference
 
-Complete API documentation for `@engraph/castr`
+Current public API reference for `@engraph/castr`.
 
-## Architecture
+This page documents the public surface that exists today. If a symbol or template is not listed here, treat it as unsupported or historical rather than assumed current.
 
-This library uses an **Intermediate Representation (IR) architecture** where all input formats (OpenAPI, Zod, JSON Schema) are parsed into a canonical internal representation, and all outputs are transforms from that representation. See `.agent/directives/VISION.md` for the strategic vision.
+## Package Exports
 
-## Table of Contents
+The package currently publishes:
 
-- [CLI Commands](#cli-commands)
-- [Generated Exports](#generated-exports)
-- [Configuration Types](#configuration-types)
-- [Validation Modes](#validation-modes)
-- [Error Types](#error-types)
-- [Programmatic API](#programmatic-api)
+- `@engraph/castr`
+- `@engraph/castr/cli`
+- `@engraph/castr/parsers/zod`
 
----
+## CLI
 
-## CLI Commands
-
-### `@engraph/castr`
-
-Generate TypeScript code from OpenAPI specifications.
+Published binary:
 
 ```bash
-@engraph/castr [input] [options]
+castr <input> -o <output> [options]
 ```
 
-#### Arguments
-
-| Argument | Description                                | Required |
-| -------- | ------------------------------------------ | -------- |
-| `input`  | Path to OpenAPI spec (YAML or JSON) or URL | Yes      |
-
-#### Options
-
-| Option             | Alias | Type      | Default                 | Description                                                                      |
-| ------------------ | ----- | --------- | ----------------------- | -------------------------------------------------------------------------------- |
-| `--output`         | `-o`  | `string`  | stdout                  | Output file path                                                                 |
-| `--template`       |       | `string`  | `schemas-with-metadata` | Template to use (`schemas-only`, `schemas-with-metadata`, `schemas-with-client`) |
-| `--base-url`       |       | `string`  | `''`                    | Base URL for API requests                                                        |
-| `--with-alias`     |       | `boolean` | `false`                 | Include operationId as alias                                                     |
-| `--no-with-alias`  |       | `boolean` |                         | Disable operationId aliases                                                      |
-| `--export-schemas` |       | `boolean` | `false`                 | Export all schemas (not just referenced)                                         |
-| `--help`           | `-h`  |           |                         | Show help                                                                        |
-| `--version`        | `-v`  |           |                         | Show version                                                                     |
-
-#### Examples
-
-```bash
-# Generate from local file
-@engraph/castr ./openapi.yaml -o ./src/api.ts
-
-# Generate from URL
-@engraph/castr https://petstore.swagger.io/v2/swagger.json -o ./src/api.ts
-
-# Use specific template
-@engraph/castr ./openapi.yaml -o ./src/api.ts --template schemas-with-client
-
-# Include operationIds
-@engraph/castr ./openapi.yaml -o ./src/api.ts --with-alias
-
-# Object schemas are strict by default
-@engraph/castr ./openapi.yaml -o ./src/api.ts
-```
-
----
-
-## Generated Exports
-
-### `schemas-only` Template
-
-#### Zod Schemas
-
-```typescript
-export const SchemaName = z
-  .object({
-    // ... properties
-  })
-  .strict();
-```
-
-Exported for every schema in `components/schemas`.
-
----
-
-### `schemas-with-metadata` Template
-
-#### Zod Schemas
-
-Same as `schemas-only`.
-
-#### `endpoints`
-
-```typescript
-export const endpoints: readonly [
-  {
-    method: "get" | "post" | "put" | "patch" | "delete";
-    path: string;
-    operationId?: string; // If --with-alias is enabled
-    description?: string;
-    request: {
-      pathParams?: z.ZodObject<...>;
-      queryParams?: z.ZodObject<...>;
-      headerParams?: z.ZodObject<...>;
-      body?: z.ZodType<...>;
-    };
-    responses: {
-      [statusCode: string]: {
-        schema: z.ZodType<...>;
-        description?: string;
-      };
-    };
-  },
-  // ... more endpoints
-] as const;
-```
-
----
-
-### `schemas-with-client` Template
-
-#### Zod Schemas
-
-Same as above.
-
-#### `endpoints`
-
-Same as above.
-
-#### `ApiClientConfig`
-
-```typescript
-export type ApiClientConfig = {
-  /** Base URL for all API requests */
-  baseUrl: string;
-
-  /** Optional fetch configuration (headers, credentials, etc.) */
-  fetchOptions?: RequestInit;
-
-  /**
-   * Validation mode:
-   * - 'strict': Throw ZodError on validation failures (default)
-   * - 'loose': Log validation errors but continue
-   * - 'none': Skip validation entirely
-   * @default 'strict'
-   */
-  validationMode?: 'strict' | 'loose' | 'none';
-};
-```
-
-#### `createApiClient()`
-
-```typescript
-export function createApiClient(config: ApiClientConfig): ApiClient;
-```
-
-Factory function that creates a type-safe, runtime-validated API client.
-
-**Parameters:**
-
-- `config`: `ApiClientConfig` - Client configuration
-
-**Returns:**
-
-- `ApiClient` - API client instance with methods for each endpoint
-
-**Example:**
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'strict',
-  fetchOptions: {
-    headers: {
-      Authorization: 'Bearer token',
-    },
-  },
-});
-```
-
-#### `ApiClient`
-
-```typescript
-export type ApiClient = ReturnType<typeof createApiClient>;
-```
-
-The return type of `createApiClient()`. Contains:
-
-- One async method for each operation (named after `operationId` if available)
-- `_raw`: Direct access to the underlying `openapi-fetch` client
-
-**Methods:**
-
-Each method corresponds to an operation in the OpenAPI spec:
-
-```typescript
-async operationName(params?: {
-  [paramName: string]: any; // Path, query, or header params
-  body?: any; // Request body (for POST/PUT/PATCH)
-}): Promise<ResponseType>;
-```
-
-**Example:**
-
-```typescript
-// GET /pets/{id}
-// operationId: getPet
-const pet = await api.getPet({ id: '123' });
-
-// POST /pets
-// operationId: createPet
-const newPet = await api.createPet({
-  name: 'Fluffy',
-  species: 'cat',
-  age: 3,
-});
-```
-
-#### `_raw`
-
-Direct access to the underlying `openapi-fetch` client:
-
-```typescript
-const api = createApiClient({ baseUrl: 'https://api.example.com' });
-
-// Access raw client
-const { data, error, response } = await api._raw.get('/custom-endpoint');
-```
-
-**Use cases:**
-
-- Custom endpoints not in the OpenAPI spec
-- Streaming responses
-- File downloads with progress
-- Advanced `openapi-fetch` features (middleware, interceptors)
-
----
-
-## Configuration Types
-
-### `GenerateZodClientFromOpenApiArgs`
-
-```typescript
-export type GenerateZodClientFromOpenApiArgs<TOptions = TemplateContext['options']> = {
-  /** OpenAPI document (object or JSON string) */
-  openApiDoc: OpenAPIObject | string;
-
-  /** Template name to use for generation */
-  template?: 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
-
-  /** Disable writing to file (return string instead) */
-  disableWriteToFile?: boolean;
-
-  /** Output file path (if not disableWriteToFile) */
-  distPath?: string;
-
-  /** Custom Handlebars instance */
-  handlebars?: typeof Handlebars;
-
-  /** Custom template path (overrides 'template' option) */
-  templatePath?: string;
-
-  /** Additional template options */
-  options?: TOptions;
-};
-```
-
-### `TemplateContextOptions`
-
-```typescript
-export type TemplateContextOptions = {
-  /**
-   * Include operationId for each endpoint
-   * @default false
-   */
-  withAlias?: boolean | ((path: string, method: string, operation: OperationObject) => string);
-
-  /**
-   * Base URL for the API
-   * @default ''
-   */
-  baseUrl?: string;
-
-  /**
-   * Export all schemas (not just referenced ones)
-   * @default false
-   */
-  exportSchemas?: boolean;
-
-  /**
-   * Validation mode for generated client
-   * @default 'strict'
-   */
-  validationMode?: 'strict' | 'loose' | 'none';
-
-  /**
-   * Whether to use implicit required (mark as optional only if explicitly optional)
-   * @default false
-   */
-  withImplicitRequired?: boolean;
-
-  /**
-   * Whether to include deprecated endpoints
-   * @default true
-   */
-  withDeprecated?: boolean;
-
-  /**
-   * Whether to include description in JSDoc
-   * @default true
-   */
-  withDocs?: boolean;
-
-  /**
-   * How to handle default status in responses
-   * - `'auto-correct'`: Add default status where needed
-   * - `'spec-compliant'`: Follow spec exactly
-   * @default 'spec-compliant'
-   */
-  defaultStatusBehavior?: 'auto-correct' | 'spec-compliant';
-};
-```
-
----
-
-## Validation Modes
-
-### `strict` (default, recommended)
-
-**Behavior:**
-
-- Validates all request parameters before making HTTP requests
-- Validates all response data after receiving HTTP responses
-- Throws `ZodError` on any validation failure
-
-**Use cases:**
-
-- Development
-- Production (when you want guaranteed type safety)
-- Critical operations
-
-**Example:**
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'strict',
-});
-
-try {
-  const pet = await api.getPet({ id: '123' });
-} catch (error) {
-  if (error instanceof z.ZodError) {
-    console.error('Validation failed:', error.issues);
-  }
-}
-```
-
-### `loose`
-
-**Behavior:**
-
-- Validates all requests and responses
-- Logs warnings to console on validation failures
-- Returns unvalidated data (doesn't throw)
-
-**Use cases:**
-
-- Gradual migration from unvalidated to validated code
-- Non-critical operations
-- Debugging API changes
-
-**Example:**
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'loose',
-});
-
-// Logs warning but doesn't throw
-const pet = await api.getPet({ id: '123' });
-// Warning: Validation failed for getPet response: ...
-```
-
-### `none`
-
-**Behavior:**
-
-- Skips all validation
-- Maximum performance
-- No type guarantees at runtime
-
-**Use cases:**
-
-- Production after thorough testing
-- Performance-critical paths
-- When you trust the API 100%
-
-**Example:**
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'none',
-});
-
-// No validation overhead
-const pet = await api.getPet({ id: '123' });
-```
-
----
-
-## Error Types
-
-### `ZodError`
-
-Thrown by Zod when validation fails (in `strict` mode).
-
-```typescript
-import { z } from 'zod';
-
-try {
-  const pet = await api.createPet({ name: 123 }); // Invalid
-} catch (error) {
-  if (error instanceof z.ZodError) {
-    console.error('Validation errors:');
-    error.issues.forEach((issue) => {
-      console.error(`  ${issue.path.join('.')}: ${issue.message}`);
-      // code: 'invalid_type' | 'custom' | ...
-      // expected: 'string'
-      // received: 'number'
-    });
-  }
-}
-```
-
-**Properties:**
-
-- `issues`: Array of validation issues
-  - `path`: Path to the invalid field (e.g., `['body', 'name']`)
-  - `message`: Human-readable error message
-  - `code`: Error code (e.g., `'invalid_type'`, `'too_small'`)
-
-### API Errors
-
-Thrown when HTTP requests fail (non-2xx status codes).
-
-```typescript
-try {
-  const pet = await api.getPet({ id: 'nonexistent' });
-} catch (error) {
-  if (error instanceof Error) {
-    console.error(error.message);
-    // "API error (get /pets/{id}): 404 Not Found"
-  }
-}
-```
-
-**Properties:**
-
-- `message`: Formatted error message with method, path, status, and status text
-
----
-
-## Programmatic API
+`<input>` may be a local OpenAPI/Swagger file path or a URL.
+
+### Core Options
+
+| Option                       | Meaning                                                 |
+| ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| `-o, --output <path>`        | Output file path                                        |
+| `-t, --template <name        | path>`                                                  | `schemas-only`, `schemas-with-metadata`, or a custom template path |
+| `-p, --prettier <path>`      | Prettier config path                                    |
+| `-a, --with-alias`           | Include operation aliases derived from `operationId`    |
+| `--no-with-alias`            | Disable alias generation                                |
+| `--export-schemas`           | Export all component schemas                            |
+| `--export-types`             | Export all object-derived TypeScript types              |
+| `--with-docs`                | Emit JSDoc comments                                     |
+| `--with-description`         | Emit description metadata                               |
+| `--all-readonly`             | Emit readonly objects/arrays                            |
+| `--with-validation-helpers`  | Emit `validateRequest()` / `validateResponse()` helpers |
+| `--with-schema-registry`     | Emit schema registry helpers                            |
+| `--emit-mcp-manifest <path>` | Emit MCP manifest JSON                                  |
+
+### Advanced Options
+
+| Option                            | Meaning                                                                 |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| `--group-strategy <strategy>`     | `none`, `tag`, `method`, `tag-file`, or `method-file`                   |
+| `--complexity-threshold <number>` | Controls schema hoisting thresholds during generation                   |
+| `--default-status <behavior>`     | Status handling behaviour for default-only responses                    |
+| `--implicit-required`             | Treat properties as required by default unless `required` overrides     |
+| `--with-deprecated`               | Keep deprecated endpoints in generated output                           |
+| `--base-url <url>`                | Advanced template-context option retained for custom-template workflows |
+| `--api-client-name <name>`        | Advanced naming option retained for template compatibility              |
+| `--error-expr <expr>`             | Custom error-status expression                                          |
+| `--success-expr <expr>`           | Custom primary-success-status expression                                |
+| `--media-type-expr <expr>`        | Custom media-type filter expression                                     |
+| `--no-client`                     | Convenience flag that selects the metadata-focused generation path      |
+
+### Templates
+
+| Template                | Output                             |
+| ----------------------- | ---------------------------------- |
+| `schemas-with-metadata` | Zod schemas plus endpoint metadata |
+| `schemas-only`          | Zod schemas only                   |
+
+`schemas-with-client` is not part of the current public surface.
+
+## Programmatic Generation
 
 ### `generateZodClientFromOpenAPI()`
 
 ```typescript
-export async function generateZodClientFromOpenAPI<TOptions = TemplateContext['options']>(
-  args: GenerateZodClientFromOpenApiArgs<TOptions>,
-): Promise<GenerationResult>;
+generateZodClientFromOpenAPI(args): Promise<GenerationResult>
 ```
 
-Generate TypeScript code from an OpenAPI specification.
+Accepted input modes:
 
-**Parameters:**
+- `input: string | URL`
+- `openApiDoc: OpenAPIObject`
 
-- `args`: `GenerateZodClientFromOpenApiArgs` - Generation options
+Output modes:
 
-**Returns:**
+- `disableWriteToFile: true` for in-memory generation
+- `distPath: string` for file output
 
-- `Promise<GenerationResult>` - Discriminated union:
-  - `type: 'single'` → `{ content: string, path?: string }`
-  - `type: 'grouped'` → `{ files: Record<string, string>, paths: string[] }`
-- For grouped output, `paths` is canonical sorted file order and equals sorted `Object.keys(files)`.
+### Top-Level Arguments
 
-**Example:**
+| Field                   | Meaning                                                |
+| ----------------------- | ------------------------------------------------------ |
+| `input`                 | File path or URL to an OpenAPI document                |
+| `openApiDoc`            | In-memory OpenAPI object                               |
+| `distPath`              | Output path when writing files                         |
+| `disableWriteToFile`    | Return generated output instead of writing it          |
+| `template`              | `schemas-only` or `schemas-with-metadata`              |
+| `templatePath`          | Custom template path                                   |
+| `noClient`              | Metadata-generation convenience path                   |
+| `withValidationHelpers` | Emit `validateRequest()` / `validateResponse()`        |
+| `withSchemaRegistry`    | Emit schema registry helpers                           |
+| `debugIR`               | Emit serialised IR alongside output when writing files |
+| `prettierConfig`        | Optional Prettier config object                        |
+| `options`               | `TemplateContextOptions`                               |
+
+Important current truth:
+
+- use `input`, not `openApiFilePath`
+- use `shouldExportAllSchemas`, not `exportSchemas`, in `options`
+- use `shouldExportAllTypes`, not `exportTypes`, in `options`
+
+### `TemplateContextOptions`
+
+Common options:
+
+| Field                     | Meaning                                          |
+| ------------------------- | ------------------------------------------------ |
+| `withAlias`               | Include operation aliases                        |
+| `shouldExportAllSchemas`  | Export all component schemas                     |
+| `shouldExportAllTypes`    | Export all object-derived types                  |
+| `withDocs`                | Emit JSDoc comments                              |
+| `withDescription`         | Emit description metadata                        |
+| `allReadonly`             | Emit readonly objects/arrays                     |
+| `groupStrategy`           | Grouping strategy                                |
+| `complexityThreshold`     | Complexity threshold for extraction/hoisting     |
+| `defaultStatusBehavior`   | Behaviour for default-only responses             |
+| `withDeprecatedEndpoints` | Keep deprecated endpoints                        |
+| `baseUrl`                 | Advanced template-context metadata field         |
+| `apiClientName`           | Advanced naming field retained for compatibility |
+
+## Generation Results
+
+### `GenerationResult`
+
+Discriminated union:
 
 ```typescript
-import {
-  generateZodClientFromOpenAPI,
-  isGroupedFileResult,
-  isSingleFileResult,
-} from '@engraph/castr';
-import { readFileSync, writeFileSync } from 'fs';
-
-const openApiDoc = JSON.parse(readFileSync('./openapi.json', 'utf8'));
-
-const result = await generateZodClientFromOpenAPI({
-  openApiDoc,
-  template: 'schemas-with-metadata',
-  disableWriteToFile: true,
-  options: {
-    withAlias: true,
-  },
-});
-
-if (isSingleFileResult(result)) {
-  writeFileSync('./src/api-client.ts', result.content);
-}
-
-if (isGroupedFileResult(result)) {
-  for (const path of result.paths) {
-    const content = result.files[path];
-    if (content !== undefined) {
-      writeFileSync(`./src/generated/${path}`, content);
-    }
-  }
-}
+type GenerationResult =
+  | { type: 'single'; content: string; path?: string }
+  | { type: 'grouped'; files: Record<string, string>; paths: string[] };
 ```
 
----
+Type guards:
 
-## Type Utilities
+- `isSingleFileResult(result)`
+- `isGroupedFileResult(result)`
 
-### Extract Types from Zod Schemas
+## Context And IR APIs
+
+### `getZodClientTemplateContext()`
+
+Builds the structured generation context from an OpenAPI document.
+
+Useful when you want:
+
+- endpoint metadata
+- ordered schema names
+- MCP tool metadata
+- the canonical IR document attached as `_ir`
+
+### `buildIR()`
+
+Builds a canonical `CastrDocument` from an OpenAPI input document.
+
+### `writeOpenApi()`
+
+Writes an OpenAPI document from IR.
+
+### IR Serialisation And Validation
+
+Available from the root package:
+
+- `serializeIR()`
+- `deserializeIR()`
+- `isCastrDocument()`
+- `isIRComponent()`
+- `isCastrOperation()`
+- `isCastrSchema()`
+- `isCastrSchemaNode()`
+
+### MCP Helpers
+
+Available from the root package:
+
+- `buildMcpToolsFromIR()`
+- `getMcpToolName()`
+- `getMcpToolHints()`
+- `buildInputSchemaObject()`
+- `buildOutputSchemaObject()`
+
+## Endpoint Types
+
+Available from the root package:
+
+- `EndpointDefinition`
+- `EndpointParameter`
+- `EndpointResponse`
+- `EndpointError`
+- `HttpMethod`
+- `RequestFormat`
+- `ParameterType`
+- `SchemaConstraints`
+- `extractParameterMetadata()`
+- `extractSchemaConstraints()`
+
+## Zod Parser Subpath
+
+### `@engraph/castr/parsers/zod`
+
+Primary exports:
+
+- `parseZodSource()`
+- `extractSchemaName()`
+- Zod parse result/error types
+- AST helpers and supported parser utilities
+
+Typical usage:
 
 ```typescript
-import { z } from 'zod';
-import { Pet, CreatePetRequest } from './api-client';
+import { parseZodSource } from '@engraph/castr/parsers/zod';
 
-// Extract TypeScript type from Zod schema
-type PetType = z.infer<typeof Pet>;
-// { id: string; name: string; species: string; age: number }
+const result = await parseZodSource(`
+  import { z } from 'zod';
+  export const UserSchema = z.strictObject({ id: z.uuid() });
+`);
 
-type CreatePetRequestType = z.infer<typeof CreatePetRequest>;
-// { name: string; species: string; age: number }
+console.log(result.ir.components);
 ```
 
-### Extract Endpoint Types
+## Not Current Public Surface
 
-```typescript
-import type { endpoints } from './api-client';
+The following are not current public APIs and should not be documented as supported:
 
-// Get type of a specific endpoint
-type GetPetEndpoint = (typeof endpoints)[0];
-// {
-//   method: "get";
-//   path: "/pets/{id}";
-//   operationId: "getPet";
-//   request: { ... };
-//   responses: { ... };
-// }
+- `schemas-with-client`
+- `createApiClient()`
+- `validationMode`
+- `openApiFilePath`
+- programmatic `exportSchemas` / `exportTypes`
 
-// Extract request params type
-type GetPetParams = z.infer<(typeof endpoints)[0]['request']['pathParams']>;
-// { id: string }
+## Related Docs
 
-// Extract response type
-type GetPetResponse = z.infer<(typeof endpoints)[0]['responses'][200]['schema']>;
-// { id: string; name: string; ... }
-```
-
----
-
-## Next Steps
-
-- [Usage Guide](./USAGE.md) - Complete usage documentation
-- [OpenAPI-Fetch Integration](./OPENAPI-FETCH-INTEGRATION.md) - Deep dive into the client template
-- [Examples](./EXAMPLES.md) - Real-world examples
-
----
-
-**Architecture:** See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture.
-
-**Questions or issues?** Please [open an issue](https://github.com/jimcresswell/openapi-zod-validation/issues) on GitHub.
-
-**Last Updated:** January 2026
+- [Usage Guide](./USAGE.md)
+- [Examples](./EXAMPLES.md)
+- [Using Castr With openapi-fetch](./OPENAPI-FETCH-INTEGRATION.md)
+- [Migration Guide](./MIGRATION.md)

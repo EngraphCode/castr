@@ -35,6 +35,7 @@ Then use:
 ## 🎯 Current State (March 2026)
 
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
+- **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
   - Last reproduced full repo-root sweep: green on Saturday, 21 March 2026
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
@@ -45,6 +46,7 @@ Then use:
   - Immediate predecessor: [`.agent/plans/current/complete/identity-doctrine-alignment.md`](plans/current/complete/identity-doctrine-alignment.md)
   - Paused successor: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
+- **Current Review State:** Pack 1 is `yellow`, Pack 2 is `red`, Pack 3 is next, and new implementation remains blocked pending the review matrix
 - **Latest Completed Slice:** IDENTITY Doctrine Alignment (verified 2026-03-21)
   - `unknownKeyBehavior` removed from IR, parsers, and writers
   - parser-layer `additionalProperties` honesty restored for non-object schemas

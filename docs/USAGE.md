@@ -1,519 +1,193 @@
 # Usage Guide
 
-Complete guide to using `@engraph/castr` for generating type-safe API clients with runtime validation.
+Practical usage for `@engraph/castr` as it exists today.
 
-This library uses an **Intermediate Representation (IR) architecture** - all input formats are parsed into a canonical internal representation, enabling N×M format conversion. See `.agent/directives/VISION.md` for details.
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Template Options](#template-options)
-- [Configuration](#configuration)
-- [Error Handling](#error-handling)
-- [Advanced Use Cases](#advanced-use-cases)
-
----
-
-## Installation
-
-### Core Package
+## Install
 
 ```bash
-npm install @engraph/castr
-# or
-pnpm add @engraph/castr
-# or
-yarn add @engraph/castr
+pnpm add @engraph/castr zod
 ```
 
-### Peer Dependencies
-
-Depending on which template you use, you'll need different peer dependencies:
-
-#### For `schemas-only` or `schemas-with-metadata` templates
-
-```bash
-npm install zod
-```
-
-#### For `schemas-with-client` template
-
-```bash
-npm install zod openapi-fetch openapi-typescript
-```
-
----
+If you want to compose the generated output with `openapi-fetch`, `axios`, or another HTTP client, install that separately.
 
 ## Quick Start
 
-### CLI Usage
+### CLI
 
 Generate schemas and endpoint metadata:
 
 ```bash
-npx @engraph/castr ./openapi.yaml -o ./src/api-client.ts
+castr ./openapi.yaml -o ./src/api.ts
 ```
 
-Generate a full client with openapi-fetch:
+Generate schemas only:
 
 ```bash
-npx @engraph/castr ./openapi.yaml -o ./src/api-client.ts --template schemas-with-client
+castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 ```
 
-### Programmatic Usage
+Emit an MCP manifest:
+
+```bash
+castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
+```
+
+### Programmatic
 
 ```typescript
-import { generateZodClientFromOpenAPI } from '@engraph/castr';
-import { readFileSync } from 'fs';
-
-const openApiDoc = JSON.parse(readFileSync('./openapi.json', 'utf8'));
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '@engraph/castr';
 
 const result = await generateZodClientFromOpenAPI({
-  openApiDoc,
+  input: './openapi.yaml',
   disableWriteToFile: true,
+  template: 'schemas-with-metadata',
   options: {
     withAlias: true,
+    shouldExportAllSchemas: true,
   },
 });
 
-console.log(result); // Generated TypeScript code
-```
-
----
-
-## Template Options
-
-`@engraph/castr` offers three templates for different use cases:
-
-### 1. `schemas-only` - Pure Zod Schemas
-
-**Use when:** You only need validation schemas without endpoint metadata.
-
-**Output:**
-
-- Zod schemas for all OpenAPI components
-- No endpoint metadata
-- No client generation
-
-**Example:**
-
-```bash
-npx @engraph/castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
-```
-
-**Generated code:**
-
-```typescript
-import { z } from 'zod';
-
-export const Pet = z
-  .object({
-    id: z.number().int(),
-    name: z.string(),
-    status: z.enum(['available', 'pending', 'sold']),
-  })
-  .strict();
-
-export const CreatePetRequest = z
-  .object({
-    name: z.string(),
-    status: z.enum(['available', 'pending', 'sold']).optional(),
-  })
-  .strict();
-```
-
-### 2. `schemas-with-metadata` - Schemas + Endpoint Metadata (Default)
-
-**Use when:** You want validation schemas AND endpoint metadata for custom client implementations.
-
-**Output:**
-
-- Zod schemas for all components
-- Endpoint metadata array with request/response schemas
-- No client (bring your own HTTP library)
-
-**Example:**
-
-```bash
-npx @engraph/castr ./openapi.yaml -o ./src/api.ts
-# or explicitly:
-npx @engraph/castr ./openapi.yaml -o ./src/api.ts --template schemas-with-metadata
-```
-
-**Generated code:**
-
-```typescript
-import { z } from 'zod';
-
-// Schemas
-export const Pet = z
-  .object({
-    id: z.number().int(),
-    name: z.string(),
-  })
-  .strict();
-
-// Endpoint metadata
-export const endpoints = [
-  {
-    method: 'get' as const,
-    path: '/pets/{id}',
-    operationId: 'getPet',
-    request: {
-      pathParams: z.object({ id: z.string() }),
-    },
-    responses: {
-      200: { schema: Pet, description: 'Success' },
-      404: { schema: z.void(), description: 'Not found' },
-    },
-  },
-] as const;
-```
-
-### 3. `schemas-with-client` - Full Client with openapi-fetch
-
-**Use when:** You want a ready-to-use, type-safe client with runtime validation.
-
-**Output:**
-
-- Zod schemas
-- Endpoint metadata
-- `createApiClient()` factory function
-- Runtime validation wrapper around openapi-fetch
-
-**Prerequisites:**
-
-- `openapi-fetch`: ^0.10.0
-- `openapi-typescript`: ^7.0.0
-
-**Example:**
-
-```bash
-# Step 1: Generate OpenAPI TypeScript types
-npx openapi-typescript ./openapi.yaml -o ./src/schema.d.ts
-
-# Step 2: Generate validated client
-npx @engraph/castr ./openapi.yaml -o ./src/api-client.ts --template schemas-with-client
-```
-
-**Generated code:**
-
-```typescript
-import { z } from 'zod';
-import createClient from 'openapi-fetch';
-import type { paths } from './schema.js';
-
-// ... schemas ...
-// ... endpoint metadata ...
-
-export function createApiClient(config: ApiClientConfig) {
-  const { baseUrl, fetchOptions, validationMode = 'strict' } = config;
-
-  const client = createClient<paths>({ baseUrl, ...fetchOptions });
-
-  return {
-    async getPet(params: { id: string }) {
-      // Validate request
-      const validated = validate(pathParamsSchema, params, 'getPet request params', validationMode);
-
-      // Call openapi-fetch (type-safe!)
-      const { data, error, response } = await client.get('/pets/{id}', {
-        params: { path: validated },
-      });
-
-      if (error) throw new Error(`API error: ${response.statusText}`);
-
-      // Validate response
-      return validate(PetSchema, data, 'getPet response', validationMode);
-    },
-
-    // ... more methods ...
-
-    _raw: client, // Access raw client for advanced use
-  };
+if (isSingleFileResult(result)) {
+  console.log(result.content);
 }
 ```
 
-**Usage:**
+You can also pass an in-memory OpenAPI document:
 
 ```typescript
-import { createApiClient } from './api-client';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { generateZodClientFromOpenAPI } from '@engraph/castr';
 
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-});
-
-// Type-safe + runtime validated!
-const pet = await api.getPet({ id: '123' });
-console.log(pet.name); // Fully typed
-```
-
----
-
-## Configuration
-
-### CLI Options
-
-| Option             | Description                                                                      | Default                 |
-| ------------------ | -------------------------------------------------------------------------------- | ----------------------- |
-| `--output`, `-o`   | Output file path                                                                 | `stdout`                |
-| `--template`       | Template to use (`schemas-only`, `schemas-with-metadata`, `schemas-with-client`) | `schemas-with-metadata` |
-| `--base-url`       | Base URL for API requests                                                        | `''`                    |
-| `--with-alias`     | Include operationId as alias                                                     | `false`                 |
-| `--export-schemas` | Export all schemas (not just referenced ones)                                    | `false`                 |
-
-### Programmatic Options
-
-```typescript
-export type GenerateZodClientFromOpenApiArgs = {
-  /** OpenAPI document (object or JSON string) */
-  openApiDoc: OpenAPIObject | string;
-
-  /** Template name */
-  template?: 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
-
-  /** Disable writing to file (return string instead) */
-  disableWriteToFile?: boolean;
-
-  /** Output file path (if not disableWriteToFile) */
-  distPath?: string;
-
-  /** Additional options */
-  options?: {
-    /** Include operationId for each endpoint */
-    withAlias?: boolean | ((path: string, method: string, operation: OperationObject) => string);
-
-    /** Base URL for the API */
-    baseUrl?: string;
-
-    /** Export all schemas */
-    exportSchemas?: boolean;
-
-    /** Validation mode for generated client */
-    validationMode?: 'strict' | 'loose' | 'none';
-
-    // ... more options
-  };
+const doc: OpenAPIObject = {
+  openapi: '3.1.0',
+  info: { title: 'Pets', version: '1.0.0' },
+  paths: {},
 };
-```
 
-Object schemas are strict by default. There is no CLI or programmatic strictness toggle.
-
----
-
-## Error Handling
-
-### Validation Errors (Zod)
-
-When using `schemas-with-client` template, validation errors throw `ZodError`:
-
-```typescript
-import { z } from 'zod';
-import { createApiClient } from './api-client';
-
-const api = createApiClient({ baseUrl: 'https://api.example.com' });
-
-try {
-  const pet = await api.createPet({ name: 123 }); // Invalid type
-} catch (error) {
-  if (error instanceof z.ZodError) {
-    console.error('Validation failed:', error.issues);
-    // [
-    //   {
-    //     path: ['name'],
-    //     message: 'Expected string, received number',
-    //     code: 'invalid_type',
-    //     ...
-    //   }
-    // ]
-  }
-}
-```
-
-### API Errors (HTTP)
-
-API errors (non-2xx status codes) throw standard errors:
-
-```typescript
-try {
-  const pet = await api.getPet({ id: 'nonexistent' });
-} catch (error) {
-  if (error instanceof Error) {
-    console.error('API error:', error.message);
-    // "API error (get /pets/{id}): 404 Not Found"
-  }
-}
-```
-
-### Validation Modes
-
-Control validation behavior with `validationMode`:
-
-#### Strict Mode (default)
-
-Throws on any validation failure:
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'strict', // default
-});
-
-await api.getPet({ id: '123' }); // Throws if response doesn't match schema
-```
-
-#### Loose Mode
-
-Logs warnings but continues:
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'loose',
-});
-
-await api.getPet({ id: '123' }); // Logs warning if invalid, returns data anyway
-```
-
-#### None Mode
-
-Skips validation entirely (for performance):
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  validationMode: 'none',
-});
-
-await api.getPet({ id: '123' }); // No validation, maximum performance
-```
-
----
-
-## Advanced Use Cases
-
-### Custom Fetch Configuration
-
-Add headers, credentials, and other fetch options:
-
-```typescript
-const api = createApiClient({
-  baseUrl: 'https://api.example.com',
-  fetchOptions: {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'X-Custom-Header': 'value',
-    },
-    credentials: 'include',
-  },
+await generateZodClientFromOpenAPI({
+  openApiDoc: doc,
+  distPath: './src/api.ts',
 });
 ```
 
-### Accessing Raw Client
+## Templates
 
-For operations not covered by generated methods:
+Two built-in templates are supported:
 
-```typescript
-const api = createApiClient({ baseUrl: 'https://api.example.com' });
+### `schemas-with-metadata`
 
-// Use raw openapi-fetch client
-const { data, error } = await api._raw.get('/custom-endpoint');
-```
+Default template.
 
-### Per-Request Configuration
+Use it when you want:
 
-Override fetch options for specific requests:
-
-```typescript
-// With schemas-with-metadata template, build your own wrapper:
-import { endpoints } from './api';
-
-async function getPetWithCustomAuth(id: string, token: string) {
-  const endpoint = endpoints.find((e) => e.operationId === 'getPet');
-
-  const response = await fetch(`https://api.example.com/pets/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  // Validate with Zod
-  return endpoint.responses[200].schema.parse(data);
-}
-```
-
-### Using with React Query
-
-```typescript
-import { useQuery } from '@tanstack/react-query';
-import { createApiClient } from './api-client';
-
-const api = createApiClient({ baseUrl: 'https://api.example.com' });
-
-function usePet(id: string) {
-  return useQuery({
-    queryKey: ['pet', id],
-    queryFn: () => api.getPet({ id }),
-  });
-}
-
-// In component:
-const { data: pet, error, isLoading } = usePet('123');
-```
-
-### TypeScript Type Extraction
-
-Extract types from Zod schemas:
-
-```typescript
-import { z } from 'zod';
-import { Pet, CreatePetRequest } from './api-client';
-
-type PetType = z.infer<typeof Pet>;
-// { id: number; name: string; status: "available" | "pending" | "sold" }
-
-type CreatePetRequestType = z.infer<typeof CreatePetRequest>;
-// { name: string; status?: "available" | "pending" | "sold" }
-```
-
-### Multiple API Clients
-
-Generate separate clients for different services:
+- generated Zod schemas
+- endpoint metadata
+- optional validation helper functions
+- optional schema registry helpers
 
 ```bash
-# Generate client for users service
-npx @engraph/castr ./users-api.yaml -o ./src/users-client.ts --template schemas-with-client
-
-# Generate client for orders service
-npx @engraph/castr ./orders-api.yaml -o ./src/orders-client.ts --template schemas-with-client
+castr ./openapi.yaml -o ./src/api.ts --with-validation-helpers --with-schema-registry
 ```
+
+### `schemas-only`
+
+Use it when you only need generated Zod schemas:
+
+```bash
+castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
+```
+
+## Build Your Own HTTP Client
+
+Castr does not generate a built-in client factory.
+
+The intended workflow is:
+
+1. generate `schemas-with-metadata`
+2. use the exported schemas and endpoint metadata
+3. compose transport yourself
+
+That transport can be:
+
+- native `fetch`
+- `openapi-fetch`
+- `axios`
+- `ky`
+- a repo-specific wrapper
+
+See [OPENAPI-FETCH-INTEGRATION.md](./OPENAPI-FETCH-INTEGRATION.md) for a current composition pattern.
+
+## Template Context Access
+
+If you want metadata rather than rendered TypeScript, use the template-context API:
 
 ```typescript
-import { createApiClient as createUsersClient } from './users-client';
-import { createApiClient as createOrdersClient } from './orders-client';
+import { getZodClientTemplateContext } from '@engraph/castr';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const users = createUsersClient({ baseUrl: 'https://users.example.com' });
-const orders = createOrdersClient({ baseUrl: 'https://orders.example.com' });
+const doc: OpenAPIObject = {
+  openapi: '3.1.0',
+  info: { title: 'Pets', version: '1.0.0' },
+  paths: {},
+};
 
-const user = await users.getUser({ id: '123' });
-const order = await orders.getOrder({ id: '456' });
+const context = getZodClientTemplateContext(doc, {
+  withAlias: true,
+  shouldExportAllSchemas: true,
+});
+
+console.log(context.sortedSchemaNames);
+console.log(context.endpoints);
+console.log(context.mcpTools);
+console.log(context._ir);
 ```
 
----
+## Zod To OpenAPI
 
-## Next Steps
+Use the Zod parser subpath for code-first workflows:
 
-- [OpenAPI-Fetch Integration Guide](./OPENAPI-FETCH-INTEGRATION.md) - Deep dive into the `schemas-with-client` template
-- [Examples](./EXAMPLES.md) - Extensive real-world examples
-- [API Reference](./API-REFERENCE.md) - Complete API documentation
+```typescript
+import { parseZodSource } from '@engraph/castr/parsers/zod';
+import { writeOpenApi } from '@engraph/castr';
 
----
+const { ir } = await parseZodSource(`
+  import { z } from 'zod';
 
-**Architecture:** See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture.
+  export const UserSchema = z.strictObject({
+    id: z.uuid(),
+    email: z.email(),
+  });
+`);
 
-**Questions or issues?** Please [open an issue](https://github.com/jimcresswell/openapi-zod-validation/issues) on GitHub.
+const openApiDoc = writeOpenApi(ir);
+console.log(openApiDoc.paths);
+```
 
-**Last Updated:** January 2026
+## Strictness And Object Semantics
+
+Castr is strict by design:
+
+- object schemas are treated as closed-world
+- unsupported or ambiguous behaviour fails fast
+- there is no public strictness toggle for object openness
+
+Support claims are also expected to be complete: if a surface is not implemented and proven end to end, the honest state is unsupported or paused rather than “partially supported”.
+
+## Common Current Migrations
+
+If you are coming from older docs or older generated examples:
+
+| Old surface                             | Current surface                                           |
+| --------------------------------------- | --------------------------------------------------------- |
+| `openApiFilePath`                       | `input`                                                   |
+| `exportSchemas` in programmatic options | `shouldExportAllSchemas`                                  |
+| `exportTypes` in programmatic options   | `shouldExportAllTypes`                                    |
+| `schemas-with-client`                   | removed; use `schemas-with-metadata` plus your own client |
+| `createApiClient()`                     | removed from current public surface                       |
+| `validationMode`                        | removed from current public surface                       |
+
+## Related Docs
+
+- [API Reference](./API-REFERENCE.md)
+- [Examples](./EXAMPLES.md)
+- [Migration Guide](./MIGRATION.md)

@@ -1,10 +1,11 @@
 # Vision: Universal Schema Conversion
 
-**Last Updated:** 2026-02-13
+**Last Updated:** 2026-03-22
 
-Castr is **strict by default** and **fails fast and hard**.
+Castr is **strict and complete everywhere, all the time**. It **fails fast and hard**.
 
 - No silent information loss, no partial success, no swallowed errors, no permissive fallback output.
+- No partial support claims: a feature is only honestly supported when parser, IR, runtime validation, writers, proofs, and docs agree.
 - No type-system escape hatches in product code (non-const type assertions, `any`, `!`, `eslint-disable`); fix architecture or fix the rule.
 - Normalization/canonicalization is allowed only when it is **lossless** and **deterministic**, and the rule is explicit (example: documented OpenAPI 3.0 → 3.1 upgrade semantics in requirements).
 
@@ -14,7 +15,7 @@ If something is wrong, the pipeline stops and reports exactly what happened and 
 
 ## The Goal
 
-Transform data definitions **between any supported format**, losslessly, deterministically, and **strictly**, via an internal **Intermediate Representation (IR)** as the canonical source.
+Transform data definitions **between any supported format**, losslessly, deterministically, **strictly**, and **completely**, via an internal **Intermediate Representation (IR)** as the canonical source.
 
 ```text
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
@@ -119,13 +120,13 @@ With this principle:
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                             |
-| ----------- | :-----------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | OpenAPI ↔ OpenAPI transform validation is proven; full spec completeness is tracked in `.agent/directives/requirements.md`.       |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; full Zod-layer transform proofs (including round-trip/idempotence checks) are in progress (Session 3.3). |
-| JSON Schema |      🔲       |      🔲       | Deferred (internal conversions exist for MCP only).                                                                               |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                      |
-| tRPC        |      🔲       |      🔲       | Planned.                                                                                                                          |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                       |
+| ----------- | :-----------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | OpenAPI ↔ OpenAPI transform validation is proven; full spec completeness is tracked in `.agent/directives/requirements.md`. |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                    |
+| JSON Schema |      🔲       |      ✅       | Writer exists; standalone parser remains paused behind the architecture review-pack sweep.                                  |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                |
+| tRPC        |      🔲       |      🔲       | Planned.                                                                                                                    |
 
 ---
 
@@ -189,7 +190,7 @@ One tool that speaks all schema languages fluently.
 ## Principles
 
 1. **IR is Truth** - The internal IR is authoritative; inputs are ingestion, outputs are views
-2. **Strict Conversion** - No silent coercion, no data loss without explicit handling
+2. **Strict And Complete Conversion** - No silent coercion, no partial support claims, and no data loss without explicit handling
 3. **Type Safety** - TypeScript types flow through the entire pipeline
 4. **Fail Fast** - Invalid input rejected immediately with helpful errors
 5. **Format Agnostic Core** - The IR knows nothing about OpenAPI, Zod, or JSON Schema

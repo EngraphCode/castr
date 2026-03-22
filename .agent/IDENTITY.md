@@ -37,6 +37,14 @@ Corollaries:
 - No backend-specific interpretation is allowed to alter meaning
 - No “best effort” interpretation exists
 
+### 2.1 Strict And Complete Everywhere, All The Time
+
+Castr's strictness is inseparable from completeness.
+
+- A feature is part of Castr only when parser, IR, runtime validation, writers, proofs, and docs all agree on it.
+- Partial validation, partial proof, partial documentation, or partially updated support claims are architecture drift, not an acceptable steady state.
+- If a surface is not complete yet, the honest state is unsupported, paused, or blocked until the gap is closed.
+
 ---
 
 ## 3. Ontology

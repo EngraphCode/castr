@@ -43,12 +43,16 @@ Current status of that sweep:
 - `as const` remains allowed literal-preservation infrastructure
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
+- strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
 - the full repo-root gate sweep was green on Saturday, 21 March 2026
 - IDENTITY doctrine alignment is complete:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed
   - `CastrSchemaProperties` runtime detection hardened across realms
 - the next honest work is not new implementation; it is to validate the repo's architecture pack by pack against the code on disk
+- Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
+- Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
+- Pack 3 is now the next review pack
 - the paused JSON Schema parser plan must stay paused until the review sweep explicitly says it is fit to reactivate
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
@@ -318,13 +322,13 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 ## Supported Formats (Current)
 
-| Format          | Input | Output | Status / Notes                                  |
-| --------------- | :---: | :----: | ----------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output (proven) |
-| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4    |
-| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)              |
-| **JSON Schema** |  ✅   |   ✅   | Writer complete; Parser complete (2020-12)      |
-| **tRPC**        |  🔲   |   🔲   | Planned                                         |
+| Format          | Input | Output | Status / Notes                                                             |
+| --------------- | :---: | :----: | -------------------------------------------------------------------------- |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output (proven)                            |
+| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                               |
+| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                         |
+| **JSON Schema** |  🔲   |   ✅   | Writer complete; standalone parser remains paused behind review-pack truth |
+| **tRPC**        |  🔲   |   🔲   | Planned                                                                    |
 
 ---
 
@@ -332,6 +336,7 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 - **Zod 4 Only:** No Zod 3 support — reject with clear errors
 - **Strict-by-Default:** `.strict()`, throw on unknown
+- **Complete-by-Default:** a claimed supported surface is end to end or not yet supported
 - **Fail-Fast:** Informative errors, never silent fallbacks
 - **No Escape Hatches:** No non-const type assertions, `any`, `!`, or `eslint-disable` workarounds in product code. `as const` remains allowed infrastructure.
 - **TDD:** Failing tests first

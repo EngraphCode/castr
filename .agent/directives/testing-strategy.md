@@ -17,6 +17,7 @@ If/when this repo adds these layers, document the concrete tooling in the same P
 
 - ALWAYS test behaviour, NEVER test implementation
 - **Strictness:** No permissive fallbacks and no partial success. If behavior is unsupported, tests must assert a fail-fast error with helpful context.
+- **Completeness:** If we claim a supported surface, tests must prove the whole claimed contract at the seam that owns it. Happy-path subsets and partial proof coverage do not count as done.
 - **Prove System Behaviour**: Tests must prove that the system behaves correctly from the user's or caller's perspective, rather than verifying that specific code paths are executed.
 - **Never Constrain Implementation**: Tests must never be coupled to the internal implementation details. Refactoring internals should never break a test if the external behaviour remains the same.
 - **Tests Must Be Useful**: Every test must provide value by proving a specific requirement or preventing a specific regression. If a test doesn't prove anything useful, delete it.
@@ -38,6 +39,7 @@ If/when this repo adds these layers, document the concrete tooling in the same P
 - **Test real behaviour, not implementation details** - We should be able to change _how_ something works without breaking the test that proves _that_ it works.
 - **Test to interfaces, not internals** - Tests should be written to the interfaces, not the internals. Closely related to test behaviour not implementation.
 - **No useless tests** - Each test must prove something useful about the product code. If a test is only testing the test or mocks, delete it.
+- **No partial proof posture** - If the repo claims a feature or surface is supported, the proof suite must cover that claim end to end rather than leaving known gaps unproven.
 - **Do not test types** - Tests are for logic, types are explored through creating tests, but types cannot be tested. If test only tests types, delete it.
 - **KISS: No complex logic in tests** - Complexity in tests is a signal that we need to step back and simplify, the code and the test.
 - **KISS: No complex mocks** - Mocks should be simple and focused, no complex logic in mocks, or we risk testing the mocks rather than the code. Complex mocks are a signal that we need to step back and simplify the code or our approach.

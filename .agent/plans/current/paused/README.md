@@ -18,6 +18,8 @@ They are:
 
 Paused workstreams live under `.agent/plans/current/paused/` until they are reactivated, completed, or explicitly re-scoped into `future/`.
 
+Paused does not mean vague: the stored context must stay complete enough to resume honestly without hidden commentary.
+
 ---
 
 ## What Belongs Here

@@ -2,21 +2,27 @@
 
 This file MUST NOT be edited without prior and explicit user approval.
 
-**Date:** October 2025 (Updated: 2026-03-20)  
+**Date:** October 2025 (Updated: 2026-03-22)  
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
 
 No fallbacks, no escape hatches, no compromises, no "pragmatic" solutions, no "good enough" solutions; only architecturally excellent, long-term sustainable solutions.
 
-All code, processes, pipelines and checks must be STRICT at all times. Fail fast.
+All code, processes, pipelines, docs, and checks must be strict and complete everywhere, all the time. Fail fast.
 
 ---
 
 ## 🎯 Core Philosophy: Engineering Excellence Over Speed
 
-> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable. Fail fast, fail hard, be strict at all times.
+> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable. Fail fast, fail hard, and be strict and complete everywhere, all the time.
 
 Types are our friend - they reveal architectural problems that need solving, not nuisances to bypass with escape hatches.
+
+### Strict And Complete Everywhere, All The Time
+
+- Strictness must hold at every boundary, not just most of them.
+- Completeness means a claimed supported surface is implemented, validated, documented, and proven end to end.
+- Partial implementation, partial validation, partial docs, or partial tests do not count as done; they are drift that must be closed or stated honestly.
 
 **Key Principles:**
 

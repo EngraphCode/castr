@@ -5,6 +5,8 @@ It is **not** part of the travelling practice-core package.
 
 For the portable Core, see [practice-core/index.md](practice-core/index.md).
 
+Local shorthand for this repo: strict and complete everywhere, all the time. Code, doctrine, plans, prompts, and proofs must agree before a support claim is honest.
+
 ## Directives
 
 | Directive                                                                                   | Purpose                                   |

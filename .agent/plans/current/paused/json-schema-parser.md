@@ -2,7 +2,7 @@
 
 **Status:** Paused — queued behind [architecture-review-packs.md](../../active/architecture-review-packs.md)
 **Created:** 2026-03-21
-**Last Updated:** 2026-03-21
+**Last Updated:** 2026-03-22
 **Predecessor:** [identity-doctrine-alignment.md](../complete/identity-doctrine-alignment.md)
 **Related:** [phase-4-json-schema-and-parity.md](../complete/phase-4-json-schema-and-parity.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
@@ -12,11 +12,14 @@ This plan implements the JSON Schema 2020-12 parser, completing bidirectional JS
 
 Activation is intentionally paused until the post-IDENTITY architecture review-pack sweep completes. Pack 4 of that sweep must explicitly decide whether this plan is still architecturally sound as written or needs to be rewritten before reactivation.
 
+Reactivation requires a strict-and-complete path, not a partially aligned one: parser shape, IR fit, runtime validation, proofs, and docs must all agree on the supported JSON Schema surface.
+
 ## Current Pause Truth
 
 - The IDENTITY doctrine-alignment slice is complete and the full repo-root Definition of Done chain was green on 2026-03-21.
 - The next honest work is a bounded architecture review sweep, not immediate parser implementation.
 - This plan remains the queued implementation context, but it is not the active session entrypoint.
+- Pack 2 established the live philosophy explicitly: strict and complete everywhere, all the time. This plan must be revalidated against that bar before any code resumes.
 
 ## Scope
 
@@ -47,6 +50,7 @@ Activation is intentionally paused until the post-IDENTITY architecture review-p
 3. Fail-fast with helpful errors for unsupported features.
 4. No escape hatches in product code.
 5. All quality gates green.
+6. No partially supported JSON Schema surface may be treated as complete; parser, writer, runtime validation, proof, and docs must stay aligned.
 
 ## Primary Code Surfaces
 
@@ -77,7 +81,8 @@ Follow the existing parser pattern (see `parsers/openapi/`, `parsers/zod/`):
 2. Scenario 5 (JSON Schema → IR → JSON Schema) round-trip proof is green for all supported patterns.
 3. Scenario 6 (Zod → IR → JSON Schema → IR → Zod) uses the real parser and remains green.
 4. Unsupported features (`if`/`then`/`else`, `$dynamicRef`, Draft-07) fail fast with helpful errors.
-5. All quality gates pass.
+5. Claimed supported JSON Schema features are complete end to end across parser, IR, runtime validation, proofs, and docs.
+6. All quality gates pass.
 
 ## Quality Gates
 

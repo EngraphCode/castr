@@ -10,7 +10,7 @@ Before doing substantial work, re-establish all of the following:
 2. the real current entry point for the workstream
 3. whether the session should investigate, design, or execute
 4. the architectural layer where the problem should be solved
-5. the evidence that will prove the work is correct
+5. the evidence and completeness bar that will prove the work is correct
 
 The standing question is:
 
@@ -44,6 +44,7 @@ Ask and answer these before committing to an approach:
 3. Is the issue a standards gap, IR gap, parser/writer contract issue, canonicalization choice, or upstream runtime/dependency issue?
 4. Is the current workstream in investigation mode or execution mode?
 5. What measurable evidence will prove success?
+6. What surface must become complete end to end before this work is honestly done?
 
 ## Non-Negotiable Principles
 
@@ -51,7 +52,7 @@ These rules are absolute.
 
 1. **Cardinal Rule:** after parsing, input is discarded; the IR is the source of truth.
 2. **No Content Loss:** format may change, content may not.
-3. **Strict By Default:** do not relax constraints to "make things work."
+3. **Strict And Complete Everywhere, All The Time:** do not relax constraints to "make things work," and do not claim support until parser, IR, runtime validation, writers, proofs, and docs agree.
 4. **Fail Fast And Hard:** unsupported patterns must throw with helpful errors. No silent fallbacks, degraded output, or swallowed failures.
 5. **Deterministic Output:** identical input must produce byte-for-byte identical output.
 6. **No Escape Hatches:** no `as` (except `as const` where governed), `any`, `!`, or `eslint-disable` in product code.
