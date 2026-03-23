@@ -6,6 +6,16 @@
 > [!IMPORTANT]
 > [IDENTITY.md](../../.agent/IDENTITY.md) establishes strict-only object output. The strip-normalization compatibility mode from ADR-040 has been removed. Object output is always `z.strictObject({...})`.
 
+> [!IMPORTANT]
+> Current implementation note (2026-03-22): Pack 5 and Pack 7 both closed `red`.
+> The writer direction remains coherent, but the live writer/proof surface is narrower than the full contract below:
+>
+> - metadata preservation is not yet proven for every row in the metadata table
+> - helper-format support is wider in doctrine than the parser/writer/proof lockstep currently proves
+> - generated-code and transform suites do not yet prove every semantic claim below end to end
+>
+> Treat this file as target doctrine unless a proof suite or review note says the current surface is narrower.
+
 ---
 
 ## Scope
@@ -122,6 +132,8 @@ Union semantics MUST be preserved (see requirements section 8).
 
 Zod output MUST preserve schema metadata using `.meta()` (idiomatic Zod 4).
 Description MUST be emitted via `.meta({ description })`; `.describe()` is not used.
+
+Current implementation note: Pack 5 found the live metadata surface narrower than the full table below. Do not treat every row here as currently proven support until the Pack 5 / Pack 7 remediation closes.
 
 | IR Field       | Zod 4 Output                   |
 | -------------- | ------------------------------ |

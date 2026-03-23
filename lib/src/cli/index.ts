@@ -51,7 +51,7 @@ program
   )
   .option(
     '-t, --template <name|path>',
-    'Template to use: "schemas-only", "schemas-with-metadata" (default), or path to custom .hbs file',
+    'Template selector: "schemas-only" or "schemas-with-metadata" (default). Non-built-in values are currently accepted for compatibility but ignored by the renderer.',
   )
   .option(
     '-p, --prettier <path>',

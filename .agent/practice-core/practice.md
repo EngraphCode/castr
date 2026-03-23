@@ -32,6 +32,10 @@ provenance:
     repo: castr
     date: 2026-03-09
     purpose: 'IR-based schema transformation library: integrated portable Practice Core into a mature local doctrine via clean-break principles naming, canonical-first restructuring, knowledge-flow installation, and paused-workstream lifecycle'
+  - index: 8
+    repo: castr
+    date: 2026-03-22
+    purpose: 'IR-based schema transformation library: tightened consolidation wording so portable docs reference the command by name instead of brittle step ordinals'
 fitness_ceiling: 250
 attribution: 'created by [Jim Cresswell](https://www.jimcresswell.net/), evolved by many people and agents in many repos'
 ---
@@ -213,7 +217,7 @@ The mechanism is documented in [practice-lineage.md](practice-lineage.md), which
 `.agent/practice-core/incoming/` is the canonical location for incoming Practice Core files. It is normally empty. When files arrive:
 
 - **At session start** (via start-right), agents alert the user.
-- **At consolidation** (via `/jc-consolidate-docs` step 8), agents perform the full integration flow: check the provenance chain, compare against the full local Practice system (not just `practice.md` — also rules, skills, commands, prompts, and directives), apply the three-part bar, propose specific changes, and clear the box after integration.
+- **At consolidation** (via `jc-consolidate-docs`), agents perform the full integration flow: check the provenance chain, compare against the full local Practice system (not just `practice.md` — also rules, skills, commands, prompts, and directives), apply the three-part bar, propose specific changes, and clear the box after integration.
 
 ### Meta-Principles
 

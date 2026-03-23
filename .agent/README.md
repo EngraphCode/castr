@@ -37,17 +37,20 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep: green on Saturday, 21 March 2026
+  - Last reproduced full repo-root sweep: green on Monday, 23 March 2026
+  - Off-chain proof status on Monday, 23 March 2026: `vitest.e2e` still red in `ir-fidelity.test.ts`; `test:scalar-guard` green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** Architecture Review Packs — post-IDENTITY bounded audit before any new implementation
-  - Active plan: [`.agent/plans/active/architecture-review-packs.md`](plans/active/architecture-review-packs.md)
+- **Current Review Sweep Record:** Architecture Review Packs — post-IDENTITY bounded audit
+  - Sweep record: [`.agent/plans/active/architecture-review-packs.md`](plans/active/architecture-review-packs.md)
   - Dedicated prompt: [`.agent/prompts/architecture-review-packs.prompt.md`](prompts/architecture-review-packs.prompt.md)
   - Immediate predecessor: [`.agent/plans/current/complete/identity-doctrine-alignment.md`](plans/current/complete/identity-doctrine-alignment.md)
   - Paused successor: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
-- **Current Review State:** Pack 1 is `yellow`, Pack 2 is `red`, Pack 3 is next, and new implementation remains blocked pending the review matrix
-- **Latest Completed Slice:** IDENTITY Doctrine Alignment (verified 2026-03-21)
+- **Most Recent Review Note:** [`.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`](research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md)
+- **Historical Final-Pack Prompt:** [`.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md`](prompts/pack-7-proof-system-and-durable-doctrine.prompt.md)
+- **Current Review State:** Pack 1 is `yellow`; Packs 2, 3, 4, 5, 6, and 7 are closed; Pack 7 closed `red`; the seven-pack sweep is complete; new implementation remains blocked pending proof-system and durable-doctrine remediation
+- **Latest Completed Implementation Slice:** IDENTITY Doctrine Alignment (verified 2026-03-21)
   - `unknownKeyBehavior` removed from IR, parsers, and writers
   - parser-layer `additionalProperties` honesty restored for non-object schemas
   - public strictness/compatibility surfaces removed
@@ -78,10 +81,13 @@ Then use:
 │
 ├── acceptance-criteria/   ← Formal acceptance criteria (checklists)
 │   ├── openapi-acceptance-criteria.md
+│   ├── json-schema-and-parity-acceptance-criteria.md
 │   ├── zod-output-acceptance-criteria.md
 │   └── zod-parser-acceptance-criteria.md
 │
 ├── prompts/
+│   ├── architecture-review-packs.prompt.md ← Review-sweep operating prompt
+│   ├── pack-7-proof-system-and-durable-doctrine.prompt.md ← Historical final-pack prompt
 │   ├── session-entry.prompt.md  ← Current session entrypoint
 │   └── start-right.prompt.md    ← Re-anchor on doctrine and architecture
 │

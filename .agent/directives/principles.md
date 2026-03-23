@@ -1303,7 +1303,7 @@ if (Object.keys(schema).length === 0) continue;
  *
  * @param openApiDoc - The OpenAPI document to convert (JSON or programmatic object)
  * @param options - Configuration options for generation behavior
- * @param options.template - Template to use: "default", "schemas-only", or "schemas-with-metadata"
+ * @param options.template - Template selector to use: "schemas-with-metadata" or "schemas-only"
  * @param options.distPath - Output file path (required unless disableWriteToFile is true)
  * @param options.disableWriteToFile - When true, returns string instead of writing file
  * @param options.prettierConfig - Prettier configuration for output formatting
@@ -1311,7 +1311,7 @@ if (Object.keys(schema).length === 0) continue;
  *
  * @throws {Error} When OpenAPI document is invalid or missing required fields
  * @throws {Error} When template is not found or invalid
- * @throws {ValidationError} When MCP validation fails (if enabled)
+ * @throws {ValidationError} When validation fails at a documented runtime boundary
  *
  * @example Basic usage with schemas and metadata
  * ```typescript
@@ -1338,15 +1338,15 @@ if (Object.keys(schema).length === 0) continue;
  * // Generates schemas + validation helpers for custom HTTP clients
  * ```
  *
- * @example MCP tool generation
+ * @example MCP-oriented generation
  * ```typescript
- * const result = await generateZodClientFromOpenAPI({
+ * await generateZodClientFromOpenAPI({
  *   openApiDoc,
- *   distPath: "./src/mcp-tools.ts",
- *   template: "schemas-with-metadata",
- *   validateMcpReadiness: true,
+ *   distPath: "./src/api.ts",
+ *   noClient: true,
+ *   withValidationHelpers: true,
  * });
- * // Generates MCP-compatible tool definitions with JSON Schema
+ * // Generates schemas plus metadata; derive MCP tools from the template context or IR APIs
  * ```
  *
  * @see {@link TemplateContext} for available template variables
@@ -1354,7 +1354,8 @@ if (Object.keys(schema).length === 0) continue;
  *
  * @remarks
  * - Auto-enables certain options when using schemas-with-metadata template
- * - MCP validation is automatic with --no-client flag
+ * - `schemas-only` is currently only an accepted selector, not a guaranteed metadata-free boundary
+ * - custom template paths may still appear in compatibility types, but they are not an honest supported renderer surface
  * - Uses .strict() for objects by default (reject unknown keys)
  * - All validation uses .parse() for fail-fast behavior
  *
@@ -1413,7 +1414,7 @@ function sanitizeSchemaKey(key: string): string {
  * @example Default template with custom base URL
  * ```typescript
  * const options: GenerateZodClientOptions = {
- *   template: "default",
+ *   template: "schemas-with-metadata",
  *   baseUrl: "https://api.example.com",
  *   withAlias: true,
  * };
@@ -1424,7 +1425,7 @@ function sanitizeSchemaKey(key: string): string {
  * const options: GenerateZodClientOptions = {
  *   noClient: true,
  *   withValidationHelpers: true,
- *   strictMcpValidation: true,
+ *   withSchemaRegistry: true,
  * };
  * ```
  *
@@ -1435,28 +1436,27 @@ export interface GenerateZodClientOptions {
   /**
    * Template to use for code generation.
    *
-   * - `"schemas-with-metadata"` - Schemas + endpoint metadata (default)
-   * - `"schemas-only"` - Pure Zod schemas without metadata
-   * - `"schemas-with-client"` - Full openapi-fetch HTTP client with validation
+   * - `"schemas-with-metadata"` - Stable current path: schemas plus endpoint metadata
+   * - `"schemas-only"` - Accepted selector, but not yet a metadata-free writer boundary
    *
    * @defaultValue "schemas-with-metadata"
    */
-  template?: 'default' | 'schemas-only' | 'schemas-with-metadata';
+  template?: 'schemas-only' | 'schemas-with-metadata';
 
   /**
    * Base URL for API requests.
    *
-   * Only used with default template. Becomes default baseURL in generated client.
+   * Template-context metadata field retained for compatible downstream generation.
    *
    * @example "https://api.example.com"
    */
   baseUrl?: string;
 
   /**
-   * Skip HTTP client generation (auto-switches to schemas-with-metadata template).
+   * Select schemas-with-metadata generation explicitly.
    *
-   * Perfect for using your own HTTP client (fetch, axios, ky) while maintaining
-   * full Zod validation. Automatically enables MCP validation.
+   * Useful when pairing generated schemas and endpoint metadata with your own
+   * transport layer.
    *
    * @defaultValue false
    */

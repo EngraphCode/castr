@@ -4,6 +4,10 @@
 > the requirements document is the source of truth.
 > Reference schemas: `.agent/reference/openapi_schema/openapi_3_0_x_schema.json` and
 > `.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json`.
+>
+> Current implementation note (2026-03-22): Pack 3 found reusable `components.requestBodies`
+> are parsed into IR but still dropped on OpenAPI egress. This file remains the target
+> acceptance checklist, not evidence that the live implementation already clears it.
 
 ---
 

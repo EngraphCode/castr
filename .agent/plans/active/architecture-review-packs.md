@@ -1,6 +1,6 @@
 # Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
 
-**Status:** Active — review-first architecture sweep before any new implementation
+**Status:** Complete — seven-pack review matrix closed; successor remediation plan still pending
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
 **Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
@@ -17,6 +17,19 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 - IDENTITY doctrine alignment is complete and the full repo-root Definition of Done chain was green on Saturday, 21 March 2026.
 - That slice touched the IR, validators, parsers, writers, CLI, context generation, MCP helpers, tests, snapshots, and doctrine docs.
 - The queued JSON Schema parser work should not resume on assumption. It should resume only after the architecture passes a bounded review sweep.
+
+## Review Progress To Date
+
+- Pack 1 completed on Saturday, 21 March 2026 with a `yellow` verdict: public-boundary discipline is reasonably strong, but CLI identity and public docs still drift from the implemented surface.
+- Pack 2 completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation and object-ontology enforcement still drift from canonical doctrine.
+- Pack 3 completed on Sunday, 22 March 2026 with a `red` verdict: reusable OpenAPI `components.requestBodies` are parsed into IR, dropped on egress, and not asserted by the current output-coverage proof suite.
+- Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict: JSON Schema parser/writer/proof code exists, but the public document-parser contract is incomplete, unsupported surfaces are not rejected explicitly enough, and the proof matrix over-claims the supported surface.
+- Pack 5 completed on Sunday, 22 March 2026 with a `red` verdict: the Zod surface remains directionally strong, but contradictory strict-object chains are still accepted, unsupported nested members can be silently dropped, parser/writer helper coverage is out of lockstep, and the proof/docs story over-claims semantic parity.
+- Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict: template selection and custom-template public surfaces are not honest, MCP schemas bypass the governed Draft 07 contract, and the generated-code proof suite over-claims runtime coverage.
+- Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
+- Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
+- The seven-pack review sweep is now complete.
+- The next honest implementation slice is proof-system and durable-doctrine remediation; the paused `json-schema-parser.md` file remains remediation context rather than a ready-to-run parser-build plan.
 
 ## Scope
 
@@ -194,7 +207,10 @@ Interpret verdicts as:
 
 ## Completion Rule
 
-This plan is complete when the full pack matrix is finished and one of these is true:
+This plan completed on 2026-03-22 when Pack 7 closed and the full pack matrix was written down.
 
-- the repo is cleared to reactivate a concrete implementation slice
-- the repo has a new highest-priority remediation plan based on review findings
+Current close-out state:
+
+- the repo is not cleared to reactivate general implementation
+- the highest-priority next slice is proof-system and durable-doctrine remediation
+- keep this file in place as the sweep record until the successor remediation plan is opened

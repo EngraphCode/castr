@@ -46,6 +46,8 @@ pnpm test:gen
 pnpm test:transforms
 ```
 
+Current scope note (2026-03-22): the canonical chain above still does **not** include `vitest.e2e.config.ts` or `pnpm --dir lib test:scalar-guard`. Pack 7 closed `red` in part because those suites remain off-chain today, even though they are repo-owned proof surfaces.
+
 ---
 
 ## Quick Reference

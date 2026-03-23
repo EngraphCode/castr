@@ -20,7 +20,7 @@ Generate schemas and endpoint metadata:
 castr ./openapi.yaml -o ./src/api.ts
 ```
 
-Generate schemas only:
+Select the `schemas-only` defaults:
 
 ```bash
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
@@ -70,9 +70,11 @@ await generateZodClientFromOpenAPI({
 });
 ```
 
+`generateZodClientFromOpenAPI()` returns generated files only. It does not expose `mcpTools` or a manifest payload.
+
 ## Templates
 
-Two built-in templates are supported:
+Two built-in template selectors are currently exposed:
 
 ### `schemas-with-metadata`
 
@@ -91,11 +93,19 @@ castr ./openapi.yaml -o ./src/api.ts --with-validation-helpers --with-schema-reg
 
 ### `schemas-only`
 
-Use it when you only need generated Zod schemas:
+The selector is still accepted, but it is not yet an honest metadata-free boundary. Pack 6 found that the current writer still emits `endpoints` and `mcpTools` for this path.
+
+Treat it as an option preset under remediation rather than a guaranteed output mode:
 
 ```bash
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 ```
+
+### Current Caveats
+
+- prefer `schemas-with-metadata` as the stable public generation path
+- do not rely on `schemas-only` to suppress metadata exports yet
+- do not rely on custom template paths; non-built-in `--template` values are currently ignored by the renderer
 
 ## Build Your Own HTTP Client
 
@@ -142,6 +152,8 @@ console.log(context.mcpTools);
 console.log(context._ir);
 ```
 
+This is the current programmatic MCP surface. If you need an MCP manifest payload, derive it from `context.mcpTools` or from `buildIR()` plus `buildMcpToolsFromIR()`.
+
 ## Zod To OpenAPI
 
 Use the Zod parser subpath for code-first workflows:
@@ -185,6 +197,7 @@ If you are coming from older docs or older generated examples:
 | `schemas-with-client`                   | removed; use `schemas-with-metadata` plus your own client |
 | `createApiClient()`                     | removed from current public surface                       |
 | `validationMode`                        | removed from current public surface                       |
+| custom template path                    | exposed for compatibility, but currently ignored          |
 
 ## Related Docs
 

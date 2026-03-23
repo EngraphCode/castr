@@ -4,6 +4,8 @@ Current public API reference for `@engraph/castr`.
 
 This page documents the public surface that exists today. If a symbol or template is not listed here, treat it as unsupported or historical rather than assumed current.
 
+Where a public type is currently wider than the honest supported contract, this page says so explicitly.
+
 ## Package Exports
 
 The package currently publishes:
@@ -24,46 +26,47 @@ castr <input> -o <output> [options]
 
 ### Core Options
 
-| Option                       | Meaning                                                 |
-| ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
-| `-o, --output <path>`        | Output file path                                        |
-| `-t, --template <name        | path>`                                                  | `schemas-only`, `schemas-with-metadata`, or a custom template path |
-| `-p, --prettier <path>`      | Prettier config path                                    |
-| `-a, --with-alias`           | Include operation aliases derived from `operationId`    |
-| `--no-with-alias`            | Disable alias generation                                |
-| `--export-schemas`           | Export all component schemas                            |
-| `--export-types`             | Export all object-derived TypeScript types              |
-| `--with-docs`                | Emit JSDoc comments                                     |
-| `--with-description`         | Emit description metadata                               |
-| `--all-readonly`             | Emit readonly objects/arrays                            |
-| `--with-validation-helpers`  | Emit `validateRequest()` / `validateResponse()` helpers |
-| `--with-schema-registry`     | Emit schema registry helpers                            |
-| `--emit-mcp-manifest <path>` | Emit MCP manifest JSON                                  |
+| Option                       | Meaning                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `-o, --output <path>`        | Output file path                                                                |
+| `-t, --template <name        | path>`                                                                          | Built-in template selector; non-built-in values are currently parsed then ignored |
+| `-p, --prettier <path>`      | Prettier config path                                                            |
+| `-a, --with-alias`           | Include operation aliases derived from `operationId`                            |
+| `--no-with-alias`            | Disable alias generation                                                        |
+| `--export-schemas`           | Export all component schemas                                                    |
+| `--export-types`             | Export all object-derived TypeScript types                                      |
+| `--with-docs`                | Emit JSDoc comments                                                             |
+| `--with-description`         | Emit description metadata                                                       |
+| `--all-readonly`             | Emit readonly objects/arrays                                                    |
+| `--with-validation-helpers`  | Emit `validateRequest()` / `validateResponse()` helpers                         |
+| `--with-schema-registry`     | Emit schema registry helpers                                                    |
+| `--emit-mcp-manifest <path>` | Emit an MCP manifest sidecar JSON array alongside the generated TypeScript file |
 
 ### Advanced Options
 
-| Option                            | Meaning                                                                 |
-| --------------------------------- | ----------------------------------------------------------------------- |
-| `--group-strategy <strategy>`     | `none`, `tag`, `method`, `tag-file`, or `method-file`                   |
-| `--complexity-threshold <number>` | Controls schema hoisting thresholds during generation                   |
-| `--default-status <behavior>`     | Status handling behaviour for default-only responses                    |
-| `--implicit-required`             | Treat properties as required by default unless `required` overrides     |
-| `--with-deprecated`               | Keep deprecated endpoints in generated output                           |
-| `--base-url <url>`                | Advanced template-context option retained for custom-template workflows |
-| `--api-client-name <name>`        | Advanced naming option retained for template compatibility              |
-| `--error-expr <expr>`             | Custom error-status expression                                          |
-| `--success-expr <expr>`           | Custom primary-success-status expression                                |
-| `--media-type-expr <expr>`        | Custom media-type filter expression                                     |
-| `--no-client`                     | Convenience flag that selects the metadata-focused generation path      |
+| Option                            | Meaning                                                             |
+| --------------------------------- | ------------------------------------------------------------------- |
+| `--group-strategy <strategy>`     | `none`, `tag`, `method`, `tag-file`, or `method-file`               |
+| `--complexity-threshold <number>` | Controls schema hoisting thresholds during generation               |
+| `--default-status <behavior>`     | Status handling behaviour for default-only responses                |
+| `--implicit-required`             | Treat properties as required by default unless `required` overrides |
+| `--with-deprecated`               | Keep deprecated endpoints in generated output                       |
+| `--base-url <url>`                | Advanced template-context metadata field                            |
+| `--api-client-name <name>`        | Advanced naming option retained for template compatibility          |
+| `--error-expr <expr>`             | Custom error-status expression                                      |
+| `--success-expr <expr>`           | Custom primary-success-status expression                            |
+| `--media-type-expr <expr>`        | Custom media-type filter expression                                 |
+| `--no-client`                     | Convenience flag that selects the metadata-focused generation path  |
 
 ### Templates
 
-| Template                | Output                             |
-| ----------------------- | ---------------------------------- |
-| `schemas-with-metadata` | Zod schemas plus endpoint metadata |
-| `schemas-only`          | Zod schemas only                   |
+| Template                | Honest current status                                              |
+| ----------------------- | ------------------------------------------------------------------ |
+| `schemas-with-metadata` | Stable current generation path: Zod schemas plus endpoint metadata |
+| `schemas-only`          | Accepted selector, but it does not yet suppress metadata exports   |
 
 `schemas-with-client` is not part of the current public surface.
+Custom template paths are also not part of the honest supported surface even though CLI/programmatic plumbing still exposes a compatibility field for them.
 
 ## Programmatic Generation
 
@@ -85,26 +88,28 @@ Output modes:
 
 ### Top-Level Arguments
 
-| Field                   | Meaning                                                |
-| ----------------------- | ------------------------------------------------------ |
-| `input`                 | File path or URL to an OpenAPI document                |
-| `openApiDoc`            | In-memory OpenAPI object                               |
-| `distPath`              | Output path when writing files                         |
-| `disableWriteToFile`    | Return generated output instead of writing it          |
-| `template`              | `schemas-only` or `schemas-with-metadata`              |
-| `templatePath`          | Custom template path                                   |
-| `noClient`              | Metadata-generation convenience path                   |
-| `withValidationHelpers` | Emit `validateRequest()` / `validateResponse()`        |
-| `withSchemaRegistry`    | Emit schema registry helpers                           |
-| `debugIR`               | Emit serialised IR alongside output when writing files |
-| `prettierConfig`        | Optional Prettier config object                        |
-| `options`               | `TemplateContextOptions`                               |
+| Field                   | Meaning                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| `input`                 | File path or URL to an OpenAPI document                                        |
+| `openApiDoc`            | In-memory OpenAPI object                                                       |
+| `distPath`              | Output path when writing files                                                 |
+| `disableWriteToFile`    | Return generated output instead of writing it                                  |
+| `template`              | `schemas-only` or `schemas-with-metadata`; `schemas-only` still emits metadata |
+| `templatePath`          | Compatibility field only; currently ignored by the renderer                    |
+| `noClient`              | Convenience selector for `schemas-with-metadata`                               |
+| `withValidationHelpers` | Emit `validateRequest()` / `validateResponse()`                                |
+| `withSchemaRegistry`    | Emit schema registry helpers                                                   |
+| `debugIR`               | Emit serialised IR alongside output when writing files                         |
+| `prettierConfig`        | Optional Prettier config object                                                |
+| `options`               | `TemplateContextOptions`                                                       |
 
 Important current truth:
 
 - use `input`, not `openApiFilePath`
 - use `shouldExportAllSchemas`, not `exportSchemas`, in `options`
 - use `shouldExportAllTypes`, not `exportTypes`, in `options`
+- `generateZodClientFromOpenAPI()` returns `GenerationResult` only; it does not return `mcpTools`
+- `templatePath` remains in the type for compatibility, but current rendering ignores it
 
 ### `TemplateContextOptions`
 
@@ -155,6 +160,8 @@ Useful when you want:
 - MCP tool metadata
 - the canonical IR document attached as `_ir`
 
+This is the current programmatic source for MCP manifest data from an OpenAPI document.
+
 ### `buildIR()`
 
 Builds a canonical `CastrDocument` from an OpenAPI input document.
@@ -184,6 +191,8 @@ Available from the root package:
 - `getMcpToolHints()`
 - `buildInputSchemaObject()`
 - `buildOutputSchemaObject()`
+
+`buildMcpToolsFromIR()` returns `TemplateContextMcpTool[]`, where manifest security metadata lives alongside `tool` on each entry rather than under `tool.annotations.security`.
 
 ## Endpoint Types
 

@@ -1,5 +1,7 @@
 # Castr vs OpenAPI-TS: Comparative Analysis
 
+> Historical research note: this comparison captures the repo state at the time of investigation, not the live Pack 6 public-surface verdict. For current truth, prefer `README.md`, `docs/API-REFERENCE.md`, and `.agent/research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md`.
+
 ## Executive Summary
 
 - Castr is a canonical IR-first transformer focused on schema building blocks, validation, and MCP tooling; OpenAPI-TS is a plugin-first SDK/codegen system optimized for client output breadth and ecosystem integrations.
@@ -24,30 +26,30 @@
 
 ## Feature Matrix
 
-| Category                 | Castr (@engraph/castr)                                                            | OpenAPI-TS (@hey-api/openapi-ts)                                    | Notes                                                                         |
-| ------------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Primary intent           | Canonical IR for N×M schema transformation + building blocks + MCP                | Plugin-driven OpenAPI codegen for SDKs, types, schemas, frameworks  | Distinct product goals shape architecture                                     |
-| Default output           | Zod schemas + endpoint metadata                                                   | TS types + SDK + client scaffolding                                 | Castr is building-blocks; OpenAPI-TS is output-first                          |
-| OpenAPI output           | Yes (IR → OpenAPI writer)                                                         | Yes (serialized spec output via output.source)                      | Castr writes OpenAPI from IR; OpenAPI-TS emits source spec                    |
-| Supported OAS versions   | 2.0/3.0/3.1 inputs via Scalar (auto-upgraded to 3.1)                              | 2.0, 3.0, 3.1                                                       | Castr treats 2.0 as input-only and normalizes to 3.1                          |
-| JSON Schema handling     | Planned as another writer on the same IR pipeline                                 | Schema outputs via plugins (format varies by plugin)                | Castr does not plan a separate JSON Schema handling path                      |
-| Input sources            | File, URL, object                                                                 | File, URL, registry shorthand, object; watch mode                   | OpenAPI-TS adds registry + watch                                              |
-| Bundling / normalization | Scalar pipeline bundles external refs, preserves internal $refs, upgrades to 3.1  | json-schema-ref-parser bundles; patch/transform/filter before parse | Castr emphasizes $ref preservation for graphs                                 |
-| Parser transforms        | Strict normalization only (e.g., 3.0 → 3.1), no patching                          | Extensive: patch, filters, transforms, hooks, pagination keywords   | OpenAPI-TS is more configurable pre-parse                                     |
-| IR model                 | Canonical CastrDocument + CastrSchema with rich metadata                          | IR.Model with JSON Schema-ish objects + graph metadata              | Both have IR; depth and shape differ                                          |
-| Schema metadata          | Embedded CastrSchemaNode (required, nullable, zodChain, dependency graph)         | Access scopes and graph metadata; no zod-specific chain in IR       | Castr IR is generation-aware for Zod                                          |
-| Dependency graph         | Component-level dependency graph for ordering and circular refs                   | JSON-pointer graph with scope propagation                           | Different granularity and use cases                                           |
-| Code generation          | ts-morph writers + templates                                                      | @hey-api/codegen-core Project/renderer + plugins                    | Both structured, different tooling                                            |
-| Extensibility            | Template selection + custom template path                                         | First-class plugin system with dependency ordering, tags, hooks     | OpenAPI-TS is more extensible at output layer                                 |
-| Client generation        | Optional openapi-fetch client template                                            | Client plugins (fetch, axios, angular, nuxt, etc.)                  | Castr avoids client coupling by default                                       |
-| Validators               | MCP input/output guards + Zod validation; AJV for spec validation                 | Validator plugins (zod/valibot; ajv planned)                        | Different scope: Castr validates specs; OpenAPI-TS validates runtime payloads |
-| Spec validation          | Strict-by-default, fail-fast + AJV compliance tests                               | Optional/experimental validate_EXPERIMENTAL with limited rules      | Castr is stricter; OpenAPI-TS is lighter                                      |
-| Transform correctness    | Explicitly targeted with sample-input tests (incl. round-trip/idempotence checks) | Not a stated goal                                                   | Castr’s IR is designed for losslessness                                       |
-| Output layout            | Single file or grouped files                                                      | Generated folder tree with client/core/sdk/types                    | OpenAPI-TS scaffolds runtime                                                  |
-| Registry integration     | None                                                                              | Yes (Hey API, Scalar, ReadMe)                                       | OpenAPI-TS has platform integrations                                          |
-| MCP tooling              | First-class output + error formatting                                             | None                                                                | Unique to Castr                                                               |
-| Test strategy            | Unit + snapshot + transform-sample + characterisation + e2e                       | Snapshot-heavy + plugin outputs + CLI tests                         | Both extensive; different emphases                                            |
-| License                  | MIT (package.json)                                                                | MIT (LICENSE.md)                                                    | OpenAPI-TS includes LICENSE files                                             |
+| Category                 | Castr (@engraph/castr)                                                             | OpenAPI-TS (@hey-api/openapi-ts)                                    | Notes                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Primary intent           | Canonical IR for N×M schema transformation + building blocks + MCP                 | Plugin-driven OpenAPI codegen for SDKs, types, schemas, frameworks  | Distinct product goals shape architecture                                     |
+| Default output           | Zod schemas + endpoint metadata                                                    | TS types + SDK + client scaffolding                                 | Castr is building-blocks; OpenAPI-TS is output-first                          |
+| OpenAPI output           | Yes (IR → OpenAPI writer)                                                          | Yes (serialized spec output via output.source)                      | Castr writes OpenAPI from IR; OpenAPI-TS emits source spec                    |
+| Supported OAS versions   | 2.0/3.0/3.1 inputs via Scalar (auto-upgraded to 3.1)                               | 2.0, 3.0, 3.1                                                       | Castr treats 2.0 as input-only and normalizes to 3.1                          |
+| JSON Schema handling     | Planned as another writer on the same IR pipeline                                  | Schema outputs via plugins (format varies by plugin)                | Castr does not plan a separate JSON Schema handling path                      |
+| Input sources            | File, URL, object                                                                  | File, URL, registry shorthand, object; watch mode                   | OpenAPI-TS adds registry + watch                                              |
+| Bundling / normalization | Scalar pipeline bundles external refs, preserves internal $refs, upgrades to 3.1   | json-schema-ref-parser bundles; patch/transform/filter before parse | Castr emphasizes $ref preservation for graphs                                 |
+| Parser transforms        | Strict normalization only (e.g., 3.0 → 3.1), no patching                           | Extensive: patch, filters, transforms, hooks, pagination keywords   | OpenAPI-TS is more configurable pre-parse                                     |
+| IR model                 | Canonical CastrDocument + CastrSchema with rich metadata                           | IR.Model with JSON Schema-ish objects + graph metadata              | Both have IR; depth and shape differ                                          |
+| Schema metadata          | Embedded CastrSchemaNode (required, nullable, zodChain, dependency graph)          | Access scopes and graph metadata; no zod-specific chain in IR       | Castr IR is generation-aware for Zod                                          |
+| Dependency graph         | Component-level dependency graph for ordering and circular refs                    | JSON-pointer graph with scope propagation                           | Different granularity and use cases                                           |
+| Code generation          | ts-morph writers + templates                                                       | @hey-api/codegen-core Project/renderer + plugins                    | Both structured, different tooling                                            |
+| Extensibility            | Template selection; custom template paths remain exposed but are currently ignored | First-class plugin system with dependency ordering, tags, hooks     | OpenAPI-TS is more extensible at output layer                                 |
+| Client generation        | No built-in client generation; compose your own transport                          | Client plugins (fetch, axios, angular, nuxt, etc.)                  | Castr avoids client coupling by default                                       |
+| Validators               | MCP input/output guards + Zod validation; AJV for spec validation                  | Validator plugins (zod/valibot; ajv planned)                        | Different scope: Castr validates specs; OpenAPI-TS validates runtime payloads |
+| Spec validation          | Strict-by-default, fail-fast + AJV compliance tests                                | Optional/experimental validate_EXPERIMENTAL with limited rules      | Castr is stricter; OpenAPI-TS is lighter                                      |
+| Transform correctness    | Explicitly targeted with sample-input tests (incl. round-trip/idempotence checks)  | Not a stated goal                                                   | Castr’s IR is designed for losslessness                                       |
+| Output layout            | Single file or grouped files                                                       | Generated folder tree with client/core/sdk/types                    | OpenAPI-TS scaffolds runtime                                                  |
+| Registry integration     | None                                                                               | Yes (Hey API, Scalar, ReadMe)                                       | OpenAPI-TS has platform integrations                                          |
+| MCP tooling              | First-class output + error formatting                                              | None                                                                | Unique to Castr                                                               |
+| Test strategy            | Unit + snapshot + transform-sample + characterisation + e2e                        | Snapshot-heavy + plugin outputs + CLI tests                         | Both extensive; different emphases                                            |
+| License                  | MIT (package.json)                                                                 | MIT (LICENSE.md)                                                    | OpenAPI-TS includes LICENSE files                                             |
 
 ## IR Field Comparison
 
@@ -546,7 +548,7 @@ Dependency graph (component ordering + direct dependencies):
 
 ### Extensibility Model
 
-- Castr: template selection + custom template paths; writers are ts-morph based.
+- Castr: template selection; Pack 6 later found custom template paths are still exposed but ignored by the current renderer, so treat them as unsupported; writers are ts-morph based.
 - OpenAPI-TS: plugin graph with dependencies, tags, hooks, and custom plugins (`tmp/openapi-ts/packages/openapi-ts/src/config/plugins.ts`, `tmp/openapi-ts/docs/openapi-ts/core.md`).
 - Implication: OpenAPI-TS is more extensible at the output layer; Castr is more rigid but provides a stable IR core.
 

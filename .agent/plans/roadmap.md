@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 21, 2026)  
+**Date:** January 24, 2026 (Updated March 22, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -35,7 +35,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, and IDENTITY doctrine-alignment slice are complete.
 
-The primary active work is now a bounded post-implementation architecture review sweep.
+The bounded post-implementation architecture review sweep is now complete.
 
 Current status of that sweep:
 
@@ -44,27 +44,34 @@ Current status of that sweep:
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
 - strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
-- the full repo-root gate sweep was green on Saturday, 21 March 2026
+- the full repo-root gate sweep was green again on Monday, 23 March 2026
 - IDENTITY doctrine alignment is complete:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed
   - `CastrSchemaProperties` runtime detection hardened across realms
-- the next honest work is not new implementation; it is to validate the repo's architecture pack by pack against the code on disk
+- the next honest work is not new feature implementation; it is proof-system and durable-doctrine remediation based on the completed pack matrix
 - Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
 - Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
-- Pack 3 is now the next review pack
-- the paused JSON Schema parser plan must stay paused until the review sweep explicitly says it is fit to reactivate
+- Pack 3 (`openapi-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: reusable `components.requestBodies` are parsed into IR, dropped on OpenAPI egress, and not asserted by the current output-coverage proof suite
+- Pack 4 (`json-schema-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: JSON Schema parser/writer/proof code exists, but the public document-parser contract is incomplete, unsupported surfaces are not rejected explicitly enough, and the proof/docs story over-claims the supported surface
+- Pack 5 (`zod-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: contradictory strict-object chains are still accepted, unsupported nested Zod members can be silently dropped, helper-format support is wider than the writer/proof lockstep, and the proof/docs story over-claims semantic parity
+- Pack 6 (`context-mcp-rendering-and-generated-surface`) completed on Sunday, 22 March 2026 with a `red` verdict: `schemas-only` and custom-template entrypoints are not honest public surfaces, MCP schema generation bypasses the governed Draft 07 contract, and the generated-output proof story over-claims runtime coverage
+- Pack 7 (`proof-system-and-durable-doctrine`) completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while dedicated proof suites remain off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass
+- final consolidation rerun on Monday, 23 March 2026 kept the Pack 7 truth unchanged: `pnpm check:ci` green, off-chain `vitest.e2e` red, `test:scalar-guard` green
+- the seven-pack architecture review sweep is complete
+- the paused `json-schema-parser.md` file has been rewritten as paused remediation context and must not reactivate unchanged
+- the next implementation slice remains blocked; the next honest slice is proof-system and durable-doctrine remediation before any Pack 4-6 product remediation resumes
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work
 
-Primary active atomic plan:
+Current sweep record:
 
-- [architecture-review-packs.md](./active/architecture-review-packs.md) — post-IDENTITY bounded architecture review sweep
+- [architecture-review-packs.md](./active/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep; keep as handoff context until the successor remediation plan is opened
 
 Paused successor:
 
-- [json-schema-parser.md](./current/paused/json-schema-parser.md) — queued implementation context; blocked on review-pack verdicts
+- [json-schema-parser.md](./current/paused/json-schema-parser.md) — paused JSON Schema remediation context after Pack 4; blocked until the review sweep chooses it as the next implementation slice
 
 Paused supporting context that remains important:
 
@@ -97,6 +104,12 @@ Completed plan:
 This completed slice installed the canonical reviewer/domain-expert layer under `.agent/sub-agents/`, added the reviewer invocation contract in `.agent/rules/invoke-reviewers.md`, and registered the first Codex reviewer/domain-expert project agents under `.codex/config.toml` and `.codex/agents/`.
 
 ---
+
+## Historical Milestones
+
+The completion sections below record what closed at the time.
+
+Packs 4-7 later found that the repo's current support and proof posture is narrower than some of the historical "complete" language below implies, especially for JSON Schema, Zod parity, generated output, and transform proof breadth. Use **Current Active Workstream** above plus the pack notes for current truth.
 
 ## Priority: Production-Ready Core Path
 
@@ -322,13 +335,13 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 ## Supported Formats (Current)
 
-| Format          | Input | Output | Status / Notes                                                             |
-| --------------- | :---: | :----: | -------------------------------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output (proven)                            |
-| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                               |
-| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                         |
-| **JSON Schema** |  🔲   |   ✅   | Writer complete; standalone parser remains paused behind review-pack truth |
-| **tRPC**        |  🔲   |   🔲   | Planned                                                                    |
+| Format          | Input | Output | Status / Notes                                                                                                                           |
+| --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output, but Pack 3 found reusable `components.requestBodies` output incompleteness                       |
+| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                             |
+| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                       |
+| **JSON Schema** |  🔲   |   🔲   | Parser and writer code exist on disk, but Pack 4 found no honest standalone-document parser contract and under-proven egress normal form |
+| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                                                  |
 
 ---
 

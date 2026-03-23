@@ -25,6 +25,11 @@ reconstruct IR for lossless transform validation with sample input.
 > - there is no strip-normalization compatibility mode in the core pipeline
 > - `unknownKeyBehavior` has been removed from the IR entirely
 
+> [!IMPORTANT]
+> Current implementation note (2026-03-22): Pack 5 and Pack 7 both closed `red`.
+> The live parser accepts a narrower, partially compatibility-oriented subset than the full target contract below, including analyzable `z.lazy()` input in some paths while writer output remains getter-based.
+> Treat helper-format rows and recursive edge cases here as target doctrine unless current proof or review notes explicitly say they are proven today.
+
 ---
 
 ## Part 1: Zod 4 Syntax Recognition
@@ -197,9 +202,9 @@ Array constraints:
 | ------------------------------------------- | ------------------------------ |
 | `get prop() { return z.array(SameSchema) }` | `$ref` with circular detection |
 
-`z.lazy(() => ...)` is accepted only when the callback is statically analyzable and lossless.
+`z.lazy(() => ...)` is accepted only as compatibility input when the callback is statically analyzable and lossless.
 
-Dynamic or non-analyzable `z.lazy()` patterns MUST be rejected with actionable errors.
+Generated output remains getter-based, and dynamic or non-analyzable `z.lazy()` patterns MUST be rejected with actionable errors.
 
 ### 1.14 Defaults
 
@@ -237,12 +242,12 @@ All rejection errors MUST include:
 
 The parser MUST reject patterns that cannot be statically analyzed:
 
-| Pattern                           | Error Code              | Required Message                                        |
-| --------------------------------- | ----------------------- | ------------------------------------------------------- |
-| `z.object({ [key]: z.string() })` | `DYNAMIC_SCHEMA`        | "Computed property keys cannot be statically analyzed"  |
-| `z.object({ ...otherSchema })`    | `DYNAMIC_SCHEMA`        | "Spread operators cannot be statically analyzed"        |
-| `someVariable` (reference)        | `UNRESOLVED_REF`        | "Cannot resolve variable reference"                     |
-| `z.lazy(() => ...)`               | `UNSUPPORTED_RECURSION` | "Use getter-based recursion; z.lazy() is not supported" |
+| Pattern                            | Error Code              | Required Message                                                |
+| ---------------------------------- | ----------------------- | --------------------------------------------------------------- |
+| `z.object({ [key]: z.string() })`  | `DYNAMIC_SCHEMA`        | "Computed property keys cannot be statically analyzed"          |
+| `z.object({ ...otherSchema })`     | `DYNAMIC_SCHEMA`        | "Spread operators cannot be statically analyzed"                |
+| `someVariable` (reference)         | `UNRESOLVED_REF`        | "Cannot resolve variable reference"                             |
+| non-analyzable `z.lazy(() => ...)` | `UNSUPPORTED_RECURSION` | "Use getter-based recursion; dynamic z.lazy() is not supported" |
 
 ---
 

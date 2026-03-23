@@ -1,6 +1,17 @@
-# JSON Schema & Parity Acceptance Criteria (Phase 4)
+# JSON Schema & Parity Acceptance Criteria
 
-> Detailed acceptance criteria for the Phase 4 JSON Schema support and Parity workstream. Refers to `.agent/plans/future/phase-4-json-schema-and-parity.md` and ecosystem analysis research.
+> Durable target-state acceptance criteria for the JSON Schema and parity workstream.
+> Historical planning context lives in `.agent/plans/current/complete/phase-4-json-schema-and-parity.md`.
+
+> [!IMPORTANT]
+> Current implementation note (2026-03-22): Pack 4 and Pack 7 both closed `red`.
+> The live repo does not yet satisfy the full contract below:
+>
+> - `parseJsonSchemaDocument()` is not yet a full Draft 07 / 2020-12 document parser
+> - unsupported JSON Schema surfaces are not rejected explicitly enough in every path
+> - the transform-proof matrix is narrower than the full parity story below
+>
+> Treat this file as target doctrine, not as the current proven support surface.
 
 ---
 
@@ -35,7 +46,7 @@ The test suite MUST include explicit test fixtures that prove idempotence and co
 
 - **Composition & Discriminators:** Complex `oneOf`/`anyOf` structures, specifically proving that Zod's `z.discriminatedUnion` and `z.union` are correctly inferred back into standard JSON schema constraints.
 - **Nullability & Optionality:** Exact mapping of Zod `.nullable().optional()` vs JSON Schema `type: ["...", "null"]` without losing intent.
-- **Recursion:** Complex circular `$ref` cycles MUST be handled gracefully (e.g., generating `z.lazy(() => ...)` and valid `$dynamicRef` / `$ref` graphs) or throw explicitly with cycle paths.
+- **Recursion:** Complex circular `$ref` cycles MUST be handled gracefully (e.g., generating canonical getter-based recursion for Zod output and valid `$dynamicRef` / `$ref` graphs) or throw explicitly with cycle paths.
 
 ### Transform Validation
 

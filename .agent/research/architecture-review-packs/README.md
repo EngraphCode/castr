@@ -4,6 +4,9 @@ This directory holds the per-pack review notes for the post-IDENTITY architectur
 
 Use one file per completed pack.
 
+Current status: the seven-pack sweep closed on 2026-03-22.
+Use these notes as the historical review record, then carry any still-live truth into prompts, roadmap, doctrine docs, and the successor remediation plan.
+
 ## Naming Convention
 
 - `pack-1-boundary-integrity-and-public-surface.md`
@@ -25,4 +28,4 @@ Every note should include:
 5. required follow-on slices
 6. unblock decision
 
-These notes are review artefacts, not permanent architecture docs. Extract durable truths into ADRs, architecture docs, prompts, or the roadmap before the sweep is closed.
+These notes are review artefacts, not permanent architecture docs. Durable truths that still matter after closure should also exist in ADRs, architecture docs, prompts, the roadmap, or the successor remediation plan.

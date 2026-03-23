@@ -261,6 +261,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-core/incoming/` contains only `.gitkeep`
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
+- Pack 4 of the architecture review sweep is now complete with a `red` verdict:
+  - JSON Schema parser, writer, and transform-proof code already exist on disk, so the blocking problem is contract honesty rather than missing baseline implementation
+  - `parseJsonSchemaDocument()` is not yet an honest standalone document parser: it currently extracts non-reference `$defs` entries and drops any root-schema semantics
+  - the parser boundary is still too implicit for strict doctrine: Draft 07 is normalized rather than rejected, object-closure and integer-capability rejection exist, but unsupported-keyword, dialect, boolean-schema, and external-ref policy is still not explicit enough
+  - the proof matrix is green locally on Sunday, 22 March 2026, but it proves a narrower subset than adjacent docs still claim: Scenario 5 and Scenario 6 stay on the `$defs` bundle loop, Scenario 7 never reparses JSON Schema, and neighbouring JSON-Schema-shaped surfaces disagree about canonical nullability form
+- Handoff correction after Pack 4:
+  - `session-entry.prompt.md`, `roadmap.md`, and `architecture-review-packs.md` now record the Pack 4 `red` verdict and point the next session at Pack 5
+  - `json-schema-parser.md` has been rewritten in place as paused remediation context rather than left as a stale parser-build plan
 - No structural learning cleared the bar for Practice Core evolution in this pass; the batch-preflight AJV pattern is repo-specific rather than portable.
 
 ## 2026-03-21
@@ -355,6 +363,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - Handoff correction after Pack 2:
   - `session-entry.prompt.md` and `roadmap.md` now record the Pack 2 `red` verdict and point the next session at Pack 3
   - the paused `json-schema-parser.md` plan remains blocked until Pack 4 decides whether it still fits the architecture under review
+- Pack 3 of the architecture review sweep is now complete with a `red` verdict:
+  - the strict core OpenAPI path remains physically clean: `prepareOpenApiDocument()` calls `loadOpenApiDocument()`, the loader owns bundle/validate/upgrade, and the doctor remains an opt-in repair seam rather than a parser or writer dependency
+  - the blocking defect is OpenAPI egress completeness, not loader tolerance: reusable `components.requestBodies` are parsed into IR as first-class components and covered by parser field-coverage proofs, but `openapi-writer.components.ts` still drops them entirely on output
+  - the current proof matrix all passed locally on Sunday, 22 March 2026, which makes the gap worse rather than better: the output-coverage suite never asserts reusable request-body components, so a claimed supported surface is silently missing from both writer behaviour and proof coverage
+  - secondary drift remains in documentation rather than runtime code: Scalar pipeline docs and some characterisation commentary still describe the loader seam with stale SwaggerParser-era or stage-order language
+- Handoff correction after Pack 3:
+  - `session-entry.prompt.md`, `roadmap.md`, and `architecture-review-packs.md` now record the Pack 3 `red` verdict and point the next session at Pack 4
+  - the paused `json-schema-parser.md` plan remains blocked exactly as before until Pack 4 explicitly revalidates or rewrites it
 
 ## 2026-03-22
 
@@ -397,3 +413,78 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - programmatic generation uses `input` / `openApiDoc` and `shouldExportAllSchemas` / `shouldExportAllTypes`
   - no built-in HTTP client or `createApiClient()` in the current public surface
   - `openapi-fetch` is now documented as a composition pattern, not a generated template
+- A later `jc-consolidate-docs` pass after the Pack 3 closeout and Pack 4 prompt creation extracted two more durable truths:
+  - `.agent/README.md` was still pointing cold-start readers at Pack 3 even though Pack 3 had already closed `red` and Pack 4 was the next review pack
+  - durable architecture docs still needed to distinguish target support claims from live review truth: OpenAPI still has a Pack 3 egress-completeness gap, and JSON Schema parser code is on disk even though honest input-support status remains under Pack 4 review
+- Consolidation corrected that by updating:
+  - `.agent/README.md` to point at the most recent Pack 3 note and the Pack 4 prompt, and to state the live review matrix accurately
+  - `directives/VISION.md`, `plans/roadmap.md`, `ADR-030-full-openapi-syntax-support.md`, and `acceptance-criteria/openapi-acceptance-criteria.md` so they no longer overstate current OpenAPI completeness or imply the JSON Schema parser is simply absent
+- Practice cohesion produced one portable learning worth promoting into the travelling Practice Core:
+  - command workflows evolve, so durable Practice docs should reference commands by name rather than by brittle ordinal step numbers
+  - `practice.md`, `practice-lineage.md`, and the Practice Core changelog now reflect that rule
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- Pack 5 of the architecture review sweep closed `red` on Sunday, 22 March 2026:
+  - the strongest positive is still real: strict closed-world Zod objects, canonical recursive getter emission, and the implemented helper subset remain directionally coherent
+  - the blocking drift is contract honesty, not missing infrastructure:
+    - contradictory strict-object chains like `.strict().passthrough()` still parse as if they were strict
+    - unsupported nested members can still disappear instead of failing fast
+    - parser-side admitted helper formats are wider than writer/proof lockstep
+    - transform proofs are green on a narrower matrix than the semantic-parity language in docs and ADRs implies
+- Useful durable review lesson from Pack 5:
+  - a green transform suite is not enough evidence for a claimed supported surface when the dominant assertions are schema counts, schema names, or a narrow payload sample
+  - if the repo claims semantic parity or metadata preservation, the proof suite must exercise those exact properties directly
+- Handoff correction after Pack 5:
+  - `.agent/research/architecture-review-packs/pack-5-zod-architecture.md` now records the evidence-backed `red` verdict
+  - `session-entry.prompt.md`, `roadmap.md`, and `active/architecture-review-packs.md` now point the next session at Pack 6
+  - the paused `json-schema-parser.md` workstream stays paused; Pack 5 did not justify reactivating any implementation slice
+- Pack 6 of the architecture review sweep closed `red` on Sunday, 22 March 2026:
+  - the strongest positive is still real: the context/MCP/rendering surface is mostly IR-first in shape, and the focused Pack 6 suites stayed green locally
+  - the blocking drift is contract honesty, not missing infrastructure:
+    - `schemas-only` still emits endpoint and MCP metadata
+    - `templatePath` is publicly exposed but ignored
+    - MCP Draft 07 output is hand-built from raw IR fields rather than one governed JSON Schema normal form
+    - generated-code "runtime" proof is still a structural smoke check rather than execution
+- Useful durable review lesson from Pack 6:
+  - downstream generator packs need us to review both output content and option honesty; a green writer test is not enough if the named generation modes are not actually distinct
+  - generated-code validation should be named after what it really proves; if a harness only checks imports and parser/type/lint structure, calling it "runtime-executable" creates drift immediately
+- Handoff correction after Pack 6:
+  - `.agent/research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md` now records the evidence-backed `red` verdict
+  - `session-entry.prompt.md`, `roadmap.md`, and `active/architecture-review-packs.md` now point the next session at Pack 7
+  - the paused `json-schema-parser.md` workstream stays paused; Pack 6 did not justify reactivating any implementation slice
+- A later `jc-consolidate-docs` pass after the Pack 6 closeout pulled the remaining Pack 6 drift into durable docs:
+  - `README.md`, `docs/USAGE.md`, `docs/API-REFERENCE.md`, `docs/EXAMPLES.md`, `docs/MIGRATION.md`, and `docs/MCP_INTEGRATION_GUIDE.md` now say plainly that `schemas-with-metadata` is the stable generation path, `schemas-only` is still accepted but not yet a metadata-free boundary, custom template paths are currently ignored, and MCP manifest data comes from CLI sidecar emission or context / IR APIs rather than `generateZodClientFromOpenAPI()` results
+  - `lib/src/characterisation/README.md`, `lib/src/cli/index.ts`, `lib/src/rendering/generate-from-context.ts`, and `.agent/directives/principles.md` were tightened so internal docs and help text no longer over-claim template or proof surfaces
+  - `.agent/README.md` and `session-entry.prompt.md` now point cold-start sessions at the Pack 7 prompt
+  - `.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md` now exists as the dedicated next-pack prompt
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No additional Practice evolution cleared the bar in this pass; the useful work was doc honesty, prompt wiring, and keeping Pack 6 review truth out of limbo.
+- Pack 7 of the architecture review sweep closed `red` on Sunday, 22 March 2026:
+  - the strongest positive is still real: the canonical repo-root gate chain is reproducible, the focused generated/character/snapshot/transform spot checks were green locally, and the proof drift is mostly about honesty and scope rather than missing test infrastructure
+  - the blocking drift is proof-system honesty, not just missing assertions:
+    - `vitest.e2e` is off-chain and currently red in `ir-fidelity.test.ts`
+    - `src/tests-e2e/openapi-fidelity.test.ts` still rides inside `pnpm test` even though the testing doctrine says E2E suites live separately
+    - generated-code "runtime" and "lint" proofs still mean smoke checks and harness success, not actual execution or hard lint enforcement
+    - Scenario 6 and Scenario 7 still prove narrower supported subsets than the transform README and ADR-035 historically imply
+- Useful durable review lesson from Pack 7:
+  - a green canonical gate chain is not enough evidence if repo-owned proof suites sit off-chain or are misclassified into a different suite
+  - every proof doc and config comment should name the exact property being asserted; "runtime", "fidelity", and "complete pipeline" language drifts fast if the assertions underneath are structural subsets
+- Handoff correction after Pack 7:
+  - `.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md` now records the evidence-backed `red` verdict
+  - `session-entry.prompt.md`, `roadmap.md`, and `active/architecture-review-packs.md` now say the seven-pack sweep is complete and the next honest slice is proof-system and durable-doctrine remediation
+  - acceptance criteria, `DEFINITION_OF_DONE.md`, `testing-strategy.md`, `ADR-035`, and the proof-suite READMEs/config comments now carry current-state caveats instead of over-claiming the live proof surface
+- Final consolidation rerun on Monday, 23 March 2026:
+  - `pnpm check:ci` was green again
+  - `pnpm --dir lib exec vitest run --config vitest.e2e.config.ts` was still red in `ir-fidelity.test.ts`
+  - `pnpm --dir lib exec vitest run --config vitest.scalar-guard.config.ts` was green
+  - this matters because the repo now records both truths durably: canonical gates are green, and the off-chain Pack 7 proof remains red
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No additional Practice evolution cleared the bar in this pass; the useful work was proof/doctrine honesty, handoff closure, and keeping the next implementation slice evidence-backed.

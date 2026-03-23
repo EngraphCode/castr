@@ -38,11 +38,11 @@ export type GenerateZodClientFromOpenApiArgs<
 > = {
   /**
    * Template name to use for generation
-   * - "schemas-only": Pure Zod schemas
    * - "schemas-with-metadata": Schemas + endpoint metadata (default)
+   * - "schemas-only": Accepted selector, but not yet an honest metadata-free boundary
    */
   template?: 'schemas-only' | 'schemas-with-metadata';
-  /** Path to a custom template file (overrides template name) */
+  /** Compatibility field only. Current rendering ignores custom template paths. */
   templatePath?: string;
   /**
    * When true, automatically uses schemas-with-metadata template (no HTTP client)

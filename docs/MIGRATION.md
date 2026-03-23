@@ -14,14 +14,15 @@ Current Castr is centred on:
 
 ### Programmatic Generation
 
-| Older docs / older examples          | Current API                                   |
-| ------------------------------------ | --------------------------------------------- |
-| `openApiFilePath`                    | `input`                                       |
-| `openApiDoc` only for prepared input | still supported for in-memory OpenAPI objects |
-| `exportSchemas` in `options`         | `shouldExportAllSchemas`                      |
-| `exportTypes` in `options`           | `shouldExportAllTypes`                        |
-| `template: 'schemas-with-client'`    | removed                                       |
-| `validationMode`                     | removed                                       |
+| Older docs / older examples          | Current API                                      |
+| ------------------------------------ | ------------------------------------------------ |
+| `openApiFilePath`                    | `input`                                          |
+| `openApiDoc` only for prepared input | still supported for in-memory OpenAPI objects    |
+| `exportSchemas` in `options`         | `shouldExportAllSchemas`                         |
+| `exportTypes` in `options`           | `shouldExportAllTypes`                           |
+| `template: 'schemas-with-client'`    | removed                                          |
+| `validationMode`                     | removed                                          |
+| `templatePath` / custom `--template` | currently exposed for compatibility, but ignored |
 
 Current shape:
 
@@ -52,6 +53,11 @@ Supported built-in templates:
 
 - `schemas-with-metadata`
 - `schemas-only`
+
+Current Pack 6 caveat:
+
+- `schemas-only` is still accepted, but it does not yet suppress metadata exports
+- custom template paths are not an honest supported extension seam yet
 
 ## If You Previously Used The Client Template
 

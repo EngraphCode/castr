@@ -8,11 +8,13 @@ Current examples for `@engraph/castr`.
 castr ./openapi.yaml -o ./src/api.ts
 ```
 
-## 2. Generate Schemas Only
+## 2. Select The `schemas-only` Defaults
 
 ```bash
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 ```
+
+Current caveat: Pack 6 found that this selector still emits metadata exports. Treat it as an accepted option preset, not a guaranteed metadata-free output mode.
 
 ## 3. Emit An MCP Manifest
 
@@ -91,6 +93,8 @@ console.log(context.mcpTools);
 console.log(context._ir);
 ```
 
+This is the current programmatic path for MCP manifest data. `generateZodClientFromOpenAPI()` does not expose `result.mcpTools`.
+
 ## 7. Build IR And Write OpenAPI
 
 ```typescript
@@ -158,3 +162,4 @@ These belong to older docs, not the current public surface:
 - `createApiClient()`
 - `validationMode`
 - `openApiFilePath`
+- custom template paths

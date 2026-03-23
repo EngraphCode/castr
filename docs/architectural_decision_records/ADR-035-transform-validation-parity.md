@@ -3,6 +3,14 @@
 **Date:** 2026-02-20
 **Status:** Accepted
 
+> [!IMPORTANT]
+> Current implementation note (2026-03-22): this ADR remains the historical transform-proof doctrine, but Pack 7 found that the live suite does not yet discharge every claim below at the same strength.
+>
+> - Scenario 6 currently proves a narrower supported subset than the full cross-format semantic story below
+> - Scenario 7 currently proves cross-output structural consistency for a limited subset, not full three-format behavioural equivalence
+>
+> Use the current pack notes and suite READMEs for live proof posture.
+
 ## Context
 
 As part of the 3.3b release cycle, we recognized the need to strictly govern how the library proves losslessness and functional equivalence across multiple input and output formats. While AST structural checks and textual output snapshots are helpful, they cannot dynamically guarantee that a transformed schema enforces exact behavioral constraints (e.g., matching `.multipleOf()`, `.gt()`, `.lt()`, formatting) identically to the original input.

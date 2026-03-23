@@ -26,12 +26,12 @@ After installation, use the published binary:
 castr ./openapi.yaml -o ./src/api.ts
 ```
 
-Two built-in templates are currently supported:
+Two built-in template selectors are currently exposed:
 
-| Template                | Output                             | Use case                   |
-| ----------------------- | ---------------------------------- | -------------------------- |
-| `schemas-with-metadata` | Zod schemas plus endpoint metadata | SDK building blocks, MCP   |
-| `schemas-only`          | Zod schemas only                   | Validation-only generation |
+| Template                | Output                                                         | Use case                                   |
+| ----------------------- | -------------------------------------------------------------- | ------------------------------------------ |
+| `schemas-with-metadata` | Zod schemas plus endpoint metadata                             | Stable current generation path             |
+| `schemas-only`          | Narrower option defaults, but not a metadata-free boundary yet | Accepted selector under Pack 6 remediation |
 
 Examples:
 
@@ -39,12 +39,18 @@ Examples:
 # Default: schemas + endpoint metadata
 castr ./openapi.yaml -o ./src/api.ts
 
-# Schemas only
+# `schemas-only` selector
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 
 # Emit an MCP manifest alongside generated TypeScript
 castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
 ```
+
+Current Pack 6 truth:
+
+- prefer `schemas-with-metadata` as the stable output mode
+- `schemas-only` is still accepted, but the current writer still emits `endpoints` and `mcpTools`
+- custom template paths are not a supported surface; non-built-in `--template` values are currently ignored by the renderer
 
 ## Programmatic Generation
 
@@ -68,6 +74,8 @@ if (isSingleFileResult(result)) {
   console.log(result.content);
 }
 ```
+
+`generateZodClientFromOpenAPI()` returns generated code only. It does not return an MCP manifest payload; use the template-context or IR APIs below for MCP tool data.
 
 In-memory input works too:
 
@@ -116,6 +124,7 @@ const ir = buildIR(doc);
 const roundTripped = writeOpenApi(ir);
 
 console.log(context.endpoints);
+console.log(context.mcpTools);
 console.log(roundTripped.openapi);
 ```
 

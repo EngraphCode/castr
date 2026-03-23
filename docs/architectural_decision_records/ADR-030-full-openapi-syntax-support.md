@@ -1,7 +1,7 @@
 # ADR-030: Full OpenAPI Syntax Support
 
 **Date:** January 13, 2026  
-**Status:** Accepted
+**Status:** Accepted — implementation target; Pack 3 review on 2026-03-22 found reusable `components.requestBodies` are still dropped on OpenAPI egress, so full support is not yet honestly cleared in the live code
 
 ---
 

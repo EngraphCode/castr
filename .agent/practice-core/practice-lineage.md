@@ -32,6 +32,10 @@ provenance:
     repo: castr
     date: 2026-03-09
     purpose: 'IR-based schema transformation library: integrated portable Practice Core into a mature local doctrine via clean-break principles naming, canonical-first restructuring, knowledge-flow installation, and paused-workstream lifecycle'
+  - index: 8
+    repo: castr
+    date: 2026-03-22
+    purpose: 'IR-based schema transformation library: tightened consolidation wording so portable docs reference the command by name instead of brittle step ordinals'
 fitness_ceiling: 320
 attribution: 'created by [Jim Cresswell](https://www.jimcresswell.net/), evolved by many people and agents in many repos'
 ---
@@ -202,7 +206,7 @@ These are soft ceilings, not hard limits. Exceeding them triggers tightening; it
 
 ### Beyond the Trinity
 
-Fitness functions extend to all key documents in the knowledge flow cycle. Agent-facing documents (directives, memory files) and contributor-facing documents (governance, troubleshooting, CONTRIBUTING) carry `fitness_ceiling` and `split_strategy` in their YAML frontmatter. Only shallow-browsing entry points (root README, quickstart, VISION) are exempt — to avoid scaring casual browsers. The consolidation command (step 8) checks all ceilings alongside the trinity.
+Fitness functions extend to all key documents in the knowledge flow cycle. Agent-facing documents (directives, memory files) and contributor-facing documents (governance, troubleshooting, CONTRIBUTING) carry `fitness_ceiling` and `split_strategy` in their YAML frontmatter. Only shallow-browsing entry points (root README, quickstart, VISION) are exempt — to avoid scaring casual browsers. The consolidation command checks all ceilings alongside the trinity.
 
 ### Tightening Process
 
@@ -219,7 +223,7 @@ Every repo with a Practice has a canonical location for incoming material: **`.a
 The Practice Box is checked at two points:
 
 1. **Session start** (via the `start-right` prompt) — alert the user if files are present.
-2. **Consolidation** (via the `jc-consolidate-docs` command step 8) — perform the full integration flow.
+2. **Consolidation** (via the `jc-consolidate-docs` command) — perform the full integration flow.
 
 ### Integration Flow
 

@@ -1,5 +1,7 @@
 # Replacing Handlebars with a Typed Emitter (ts‑morph) in `@engraph/castr`
 
+> Historical design reference: this document records a migration design direction, not the live public contract. For current template and renderer truth after Pack 6, prefer `README.md`, `docs/API-REFERENCE.md`, and `.agent/research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md`.
+
 **Goals:**
 
 - Remove Handlebars templates and introduce a typed _Emitter layer_ that converts the Caster Model (schemas, endpoints, types) into TypeScript using **ts‑morph**.

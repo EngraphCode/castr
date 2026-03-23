@@ -340,6 +340,7 @@ it('produces correct result', () => {
   - Unit tests live next to the pure function file containing the functions they test. They MUST end in `*.unit.test.ts`
   - Integration tests live next to the integration point file containing the integration points they test. They MUST end in `*.integration.test.ts`
   - E2E tests are an exception and live in the `e2e-tests` directory. This is because they test a running _system_ rather than importing code to test. They MUST end in `*.e2e.test.ts`
+  - Current repo drift note (2026-03-22): legacy proof files still exist under `lib/tests-e2e/*.test.ts` and `lib/src/tests-e2e/openapi-fidelity.test.ts`. Pack 7 treats those as naming/location debt, not as the target policy above.
 
 ## When Behaviour Changes
 

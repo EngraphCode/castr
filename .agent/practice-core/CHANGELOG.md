@@ -4,6 +4,11 @@ Changes to the Practice Core files, newest first. Each entry records the repo
 that made the change and what was changed. This file travels with the
 Practice Core package.
 
+## [castr] 2026-03-22
+
+- Replaced brittle `jc-consolidate-docs` step-number references in the portable trinity with command-name references
+- Clarified that Practice Box integration and fitness checks happen during the consolidation command, not at a hard-coded ordinal that can drift as the workflow evolves
+
 ## [castr] 2026-03-09
 
 - Integrated portable Practice Core into a mature local repo Practice rather than a blank-slate hydration
