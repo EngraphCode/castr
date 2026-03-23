@@ -40,11 +40,11 @@ Notes:
 
 - [architecture-review-packs.md](../plans/active/architecture-review-packs.md)
 
-### Architecture Review Prompt
+### Historical Architecture Review Prompt
 
 - [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md)
 
-### Pack 7 Prompt
+### Historical Pack 7 Prompt
 
 - [pack-7-proof-system-and-durable-doctrine.prompt.md](./pack-7-proof-system-and-durable-doctrine.prompt.md)
 

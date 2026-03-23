@@ -488,6 +488,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - that triage must preserve pack provenance while clustering findings by root cause, dependency, and leverage
   - execution should still stay bounded to one successor remediation slice at a time
   - the default first slice remains proof-system and durable-doctrine remediation unless fresh evidence shows a more foundational blocker
+- A further docs-consolidation pass on Monday, 23 March 2026 cleaned up the remaining historical-prompt drift:
+  - `architecture-review-packs.prompt.md`, `pack-3-openapi-architecture.prompt.md`, and `pack-4-json-schema-architecture.prompt.md` now carry the same explicit historical framing already used by the Pack 7 prompt
+  - `session-entry.prompt.md`, `.agent/README.md`, and `active/architecture-review-packs.md` now label the sweep prompts as historical provenance rather than live entrypoints
+  - the Pack 6 note now says plainly that "Pack 7 is next" was true at Pack 6 close, not current repo state
 - Practice box check in this consolidation pass:
   - `.agent/practice-core/incoming/` contains only `.gitkeep`
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`

@@ -43,7 +43,7 @@ Then use:
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
 - **Current Review Sweep Record:** Architecture Review Packs — post-IDENTITY bounded audit
   - Sweep record: [`.agent/plans/active/architecture-review-packs.md`](plans/active/architecture-review-packs.md)
-  - Dedicated prompt: [`.agent/prompts/architecture-review-packs.prompt.md`](prompts/architecture-review-packs.prompt.md)
+  - Historical sweep prompt: [`.agent/prompts/architecture-review-packs.prompt.md`](prompts/architecture-review-packs.prompt.md)
   - Immediate predecessor: [`.agent/plans/current/complete/identity-doctrine-alignment.md`](plans/current/complete/identity-doctrine-alignment.md)
   - Paused successor: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
@@ -86,7 +86,7 @@ Then use:
 │   └── zod-parser-acceptance-criteria.md
 │
 ├── prompts/
-│   ├── architecture-review-packs.prompt.md ← Review-sweep operating prompt
+│   ├── architecture-review-packs.prompt.md ← Historical review-sweep prompt
 │   ├── pack-7-proof-system-and-durable-doctrine.prompt.md ← Historical final-pack prompt
 │   ├── session-entry.prompt.md  ← Current session entrypoint
 │   └── start-right.prompt.md    ← Re-anchor on doctrine and architecture

@@ -1,6 +1,11 @@
 # Prompt: Architecture Review Packs — Post-IDENTITY Sweep
 
-Use this prompt when the active workstream is the post-IDENTITY architecture review sweep.
+> [!IMPORTANT]
+> Historical review prompt.
+> The seven-pack post-IDENTITY sweep closed on Sunday, 22 March 2026.
+> Keep this file as provenance for how the sweep was run; use [session-entry.prompt.md](./session-entry.prompt.md) and [architecture-review-packs.md](../plans/active/architecture-review-packs.md) for current-state handoff.
+
+Use this prompt only if you need to reconstruct or audit the original review-sweep workflow.
 
 ## Mission
 

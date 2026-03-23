@@ -217,7 +217,7 @@ Interpret verdicts as:
 
 ## Execution Method
 
-- Use [architecture-review-packs.prompt.md](../../prompts/architecture-review-packs.prompt.md) as the operating prompt for review sessions.
+- Use [architecture-review-packs.prompt.md](../../prompts/architecture-review-packs.prompt.md) for historical review-sweep reconstruction or audit sessions.
 - Apply the in-session reviewer-template method where useful:
   - `code-reviewer.md`
   - `type-reviewer.md`

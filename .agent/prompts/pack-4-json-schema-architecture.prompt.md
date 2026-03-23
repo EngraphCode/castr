@@ -1,10 +1,15 @@
 # Prompt: Pack 4 — JSON Schema Architecture
 
-Use this prompt to start a fresh session whose sole goal is to complete Pack 4 of the post-IDENTITY architecture review sweep.
+> [!IMPORTANT]
+> Historical review prompt.
+> Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict.
+> Keep this file as provenance for how Pack 4 was run; use [session-entry.prompt.md](./session-entry.prompt.md) and [pack-4-json-schema-architecture.md](../research/architecture-review-packs/pack-4-json-schema-architecture.md) for current-state handoff.
+
+Use this prompt only if you need to reconstruct or audit the original Pack 4 review workflow.
 
 ## Start Position
 
-As of Sunday, 22 March 2026:
+Pre-close Pack 4 start position, as of Sunday, 22 March 2026:
 
 - Pack 1 completed on Saturday, 21 March 2026 with a `yellow` verdict.
 - Pack 2 completed on Saturday, 21 March 2026 with a `red` verdict.
