@@ -55,7 +55,8 @@ Notes:
 ### Next Honest Slice
 
 - Proof-system and durable-doctrine remediation.
-- Use [pack-7-proof-system-and-durable-doctrine.md](../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) and [architecture-review-packs.md](../plans/active/architecture-review-packs.md) to open the successor plan before any new feature or format implementation resumes.
+- Use [architecture-review-packs.md](../plans/active/architecture-review-packs.md) as the seven-pack triage record and [pack-7-proof-system-and-durable-doctrine.md](../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff.
+- The next session should triage findings from all seven packs together, preserve pack provenance, and open one bounded successor remediation plan before any new feature or format implementation resumes.
 
 ### Canonical Identity
 
@@ -124,27 +125,37 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-The review sweep is complete. Before any new feature implementation, convert the Pack 7 findings into the next honest remediation slice.
+The review sweep is complete. Before any new feature implementation, convert the seven-pack findings into one honest successor remediation slice.
 
 1. **Read the sweep record and Pack 7 note first** — the review matrix is finished, and the next slice must come from that evidence.
 2. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-3. **Otherwise, open or execute the proof-system / doctrine remediation slice** — do not jump straight to new format or feature work.
-4. **Keep the JSON Schema remediation context paused** — the sweep did not reopen the verdict that the old parser-build plan is stale.
-5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
+3. **Otherwise, triage all seven packs together** — group findings by root cause, dependency, and leverage, while keeping every grouped item tied back to its source pack note.
+4. **Open one bounded successor remediation plan from that triage** — the default first slice is proof-system / durable-doctrine remediation unless fresh evidence shows a more foundational blocker.
+5. **Execute only that chosen slice** — do not jump straight to new format or feature work.
+6. **Keep the JSON Schema remediation context paused** — the sweep did not reopen the verdict that the old parser-build plan is stale.
+7. **Update handoff docs when truth changes** — roadmap, session-entry, architecture-review-packs, and napkin must stay honest.
 
 ## What This Session Should Do
 
 1. Read:
-   - `.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`
    - `.agent/plans/active/architecture-review-packs.md`
+   - `.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`
+   - `.agent/research/architecture-review-packs/pack-1-boundary-integrity-and-public-surface.md`
+   - `.agent/research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md`
+   - `.agent/research/architecture-review-packs/pack-3-openapi-architecture.md`
+   - `.agent/research/architecture-review-packs/pack-4-json-schema-architecture.md`
+   - `.agent/research/architecture-review-packs/pack-5-zod-architecture.md`
+   - `.agent/research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md`
    - `.agent/plans/roadmap.md`
    - `.agent/IDENTITY.md`
    - `.agent/directives/testing-strategy.md`
    - `.agent/directives/DEFINITION_OF_DONE.md`
 2. If the user reports a fresh gate or runtime issue, reproduce it first.
-3. Otherwise, open or execute the proof-system and durable-doctrine remediation slice named by Pack 7.
-4. Keep findings evidence-backed and file-referenced; do not reopen general feature work until the proof/doctrine contract is honest.
-5. Record handoff and consolidation outcomes in `.agent/memory/napkin.md`.
+3. Otherwise, triage findings from all seven pack notes together, clustering them into remediation buckets by root cause, dependency, and leverage.
+4. Preserve pack provenance during triage: every bucket and every chosen action should still cite the originating pack note.
+5. Open one bounded successor remediation plan from that triage; default to proof-system and durable-doctrine remediation unless fresh evidence shows a more foundational blocker.
+6. Execute only that chosen slice; do not reopen general feature work until the proof/doctrine contract is honest.
+7. Record handoff and consolidation outcomes in `.agent/memory/napkin.md`.
 
 ## Quality Gates
 

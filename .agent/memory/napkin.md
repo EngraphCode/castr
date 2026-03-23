@@ -483,6 +483,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `pnpm --dir lib exec vitest run --config vitest.e2e.config.ts` was still red in `ir-fidelity.test.ts`
   - `pnpm --dir lib exec vitest run --config vitest.scalar-guard.config.ts` was green
   - this matters because the repo now records both truths durably: canonical gates are green, and the off-chain Pack 7 proof remains red
+- A follow-up handoff-tightening pass on Monday, 23 March 2026 made the next-session contract explicit in both `session-entry.prompt.md` and `active/architecture-review-packs.md`:
+  - the next session should triage findings from all seven completed packs together rather than rediscover the sweep
+  - that triage must preserve pack provenance while clustering findings by root cause, dependency, and leverage
+  - execution should still stay bounded to one successor remediation slice at a time
+  - the default first slice remains proof-system and durable-doctrine remediation unless fresh evidence shows a more foundational blocker
 - Practice box check in this consolidation pass:
   - `.agent/practice-core/incoming/` contains only `.gitkeep`
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
