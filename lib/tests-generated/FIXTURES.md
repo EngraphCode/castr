@@ -4,12 +4,14 @@ This document describes the representative fixtures used to validate generated T
 
 ## Purpose
 
-These fixtures exercise all code generation paths to ensure that generated code is:
+These fixtures exercise a representative single-file generation path to ensure that generated code is:
 
 1. **Syntactically valid** - Parses without TypeScript syntax errors
-2. **Type-safe** - Passes `tsc --noEmit` type checking
-3. **Lint-compliant** - Passes ESLint validation
-4. **Runtime-executable** - Can be imported and executed
+2. **Type-check clean under the generated harness** - Semantic diagnostics are checked with known isolation-time module-resolution filters
+3. **Lint-checked** - ESLint is run when configuration loads successfully
+4. **Runtime smoke-checked** - File exists, is non-empty, and includes the expected Zod import
+
+Current implementation note: this suite does **not** currently import or execute generated modules, and it does **not** cover grouped output or every writer branch.
 
 ## Representative Fixtures
 
@@ -89,7 +91,7 @@ Each fixture is validated through 4 independent test suites in separate files:
 1. **Syntax validation** (`syntax-validation.gen.test.ts`) - TypeScript parser checks
 2. **Type-check validation** (`type-check-validation.gen.test.ts`) - TypeScript compiler semantic checks
 3. **Lint validation** (`lint-validation.gen.test.ts`) - ESLint rule compliance
-4. **Runtime validation** (`runtime-validation.gen.test.ts`) - File executability checks
+4. **Runtime validation** (`runtime-validation.gen.test.ts`) - File sanity checks only
 
 This modular structure allows:
 
@@ -97,6 +99,7 @@ This modular structure allows:
 - Reusable validation harness (`validation-harness.ts`) for other generated code
 - Clearer test failure identification
 - Easier maintenance and extension
+- Honest current scope: the suites currently hard-require `SingleFileResult`, so grouped output remains outside this proof surface
 
 ## Adding New Fixtures
 

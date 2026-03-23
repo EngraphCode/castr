@@ -8,11 +8,11 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
 /**
  * Runtime Validation Test Suite for Generated Code
  *
- * This suite validates that generated TypeScript/Zod code from OpenAPI specs
- * meets runtime execution requirements: non-empty, contains required imports,
- * and is suitable for execution.
+ * This suite validates that representative single-file generated
+ * TypeScript/Zod output from OpenAPI specs passes runtime smoke checks:
+ * non-empty, contains required imports, and looks structurally runnable.
  *
- * Representative fixtures exercise all code generation paths:
+ * Representative fixtures exercise a representative single-file path:
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
  * - petstore: Complex objects with nested structures, allOf compositions
  * - non-oauth: References ($ref) and security metadata extraction
@@ -90,7 +90,7 @@ describe('Generated Code - Runtime Validation', () => {
         }
       });
 
-      it('generates executable Zod schemas', async () => {
+      it('passes runtime smoke checks for generated Zod output', async () => {
         if (generationError || !tempFilePath) {
           throw new Error(
             `Code generation failed for ${name}: ${generationError?.message ?? 'Unknown error'}`,

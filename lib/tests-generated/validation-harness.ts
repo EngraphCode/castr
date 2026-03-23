@@ -161,7 +161,7 @@ function isRelevantError(error: string): boolean {
 }
 
 /**
- * Run TypeScript type checking on generated file (equivalent to `tsc --noEmit`).
+ * Run TypeScript type checking on a generated file using the local validation harness.
  *
  * This function creates a TypeScript program and runs semantic analysis to detect
  * type errors. It filters out "Cannot find module" errors for known dependencies
@@ -202,7 +202,7 @@ export async function validateTypeCheck(filepath: string): Promise<TypeCheckVali
  * This function runs ESLint with the project's configuration on the generated
  * file. It returns both warnings (severity 1) and errors (severity 2), but
  * only errors cause validation to fail. If ESLint configuration fails to load,
- * the validation passes with a warning.
+ * the current harness skips lint enforcement and reports a warning instead.
  *
  * @param filepath - Absolute path to the TypeScript file to lint
  * @returns Promise resolving to validation result with warnings and errors

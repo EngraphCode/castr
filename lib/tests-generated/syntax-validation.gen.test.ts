@@ -8,11 +8,10 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
 /**
  * Syntax Validation Test Suite for Generated Code
  *
- * This suite validates that generated TypeScript/Zod code from OpenAPI specs
- * is syntactically valid and can be parsed by the TypeScript compiler without
- * syntax errors.
+ * This suite validates that representative single-file generated
+ * TypeScript/Zod output from OpenAPI specs parses without syntax errors.
  *
- * Representative fixtures exercise all code generation paths:
+ * Representative fixtures exercise a representative single-file path:
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
  * - petstore: Complex objects with nested structures, allOf compositions
  * - non-oauth: References ($ref) and security metadata extraction

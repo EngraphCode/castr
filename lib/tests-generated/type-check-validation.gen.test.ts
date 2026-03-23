@@ -8,11 +8,11 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
 /**
  * Type-Check Validation Test Suite for Generated Code
  *
- * This suite validates that generated TypeScript/Zod code from OpenAPI specs
- * is type-safe and passes TypeScript's semantic analysis (equivalent to
- * running `tsc --noEmit`).
+ * This suite validates that representative single-file generated
+ * TypeScript/Zod output from OpenAPI specs passes the generated
+ * type-check validation harness.
  *
- * Representative fixtures exercise all code generation paths:
+ * Representative fixtures exercise a representative single-file path:
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
  * - petstore: Complex objects with nested structures, allOf compositions
  * - non-oauth: References ($ref) and security metadata extraction
@@ -89,7 +89,7 @@ describe('Generated Code - Type-Check Validation', () => {
       }
     });
 
-    it('generates type-safe code (no type errors)', async () => {
+    it('passes the type-check validation harness without remaining diagnostics', async () => {
       if (generationError || !tempFilePath) {
         throw new Error(
           `Code generation failed for ${name}: ${generationError?.message ?? 'Unknown error'}`,

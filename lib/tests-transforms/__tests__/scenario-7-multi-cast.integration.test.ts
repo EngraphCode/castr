@@ -1,8 +1,8 @@
 /**
  * Transform Scenario 7: Multi-Cast (Single IR → Zod + JSON Schema + OpenAPI)
  *
- * Proves that a single IR simultaneously produces valid output in
- * all three formats and that the outputs are consistent with each other.
+ * Proves that a single IR can produce structurally aligned output across the
+ * currently supported subset of Zod, JSON Schema, and OpenAPI paths.
  *
  * Pipeline: Single CastrDocument IR → simultaneously:
  *   1. writeOpenApi → generateZodFromOpenAPI → Zod source

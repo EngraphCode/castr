@@ -4,9 +4,12 @@ import { resolve } from 'path';
 /**
  * Vitest Configuration for Generated Code Validation Tests
  *
- * These tests validate that generated TypeScript/Zod code is syntactically valid,
- * type-safe, lint-compliant, and runtime-executable. They exercise all code
- * generation paths using representative OpenAPI fixtures.
+ * These tests validate representative single-file generated TypeScript/Zod
+ * output for syntax, type-check, lint, and runtime-sanity checks.
+ *
+ * Current Pack 7 scope note:
+ * - runtime validation is a smoke check, not module execution
+ * - grouped output and every writer branch are not covered here
  *
  * Run with: `pnpm test:gen`
  */

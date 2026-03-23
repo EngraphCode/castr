@@ -1,11 +1,12 @@
 /**
  * Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod (Cross-Format Round-Trip)
  *
- * Proves that Zod schemas survive a cross-format trip through JSON Schema.
+ * Proves that a supported subset of Zod schemas survives a cross-format trip
+ * through JSON Schema.
  * Pipeline: parseZodSource → IR → writeJsonSchemaBundle → parseJsonSchemaDocument
  *           → IR (with components swapped) → writeOpenApi → generateZodFromOpenAPI
  *
- * Uses ALL Zod fixtures (objects, string-formats, constraints).
+ * Uses the current supported fixture set from `transform-helpers.ts`.
  *
  * @see ADR-027 Transform Validation with Sample Input as Correctness Proof
  * @see ADR-035 Transform Validation Parity
@@ -110,9 +111,9 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
     );
   });
 
-  describe('Semantic equivalence: IR matches through JSON Schema detour', () => {
+  describe('Supported-subset consistency: schema names survive the JSON Schema detour', () => {
     it.each(ZOD_JSON_SCHEMA_SUPPORTED_FIXTURES)(
-      '$name: IR component schemas match after JSON Schema round-trip',
+      '$name: schema component names match after JSON Schema round-trip',
       async (fixture) => {
         // Zod → IR
         const source = await readZodFixture(fixture.path);

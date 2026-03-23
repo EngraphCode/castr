@@ -1,6 +1,8 @@
 # Snapshot Tests
 
-Snapshot tests validate generated output against saved snapshots. These tests verify the complete code generation pipeline from OpenAPI specs to TypeScript/Zod code.
+Snapshot tests validate generated output against saved snapshots across a broad set of rendering and conversion cases.
+
+They are useful regression coverage, but they do **not** by themselves prove the complete generation contract or the whole end-to-end pipeline.
 
 **Run with:** `pnpm test:snapshot`
 
@@ -8,7 +10,7 @@ Snapshot tests validate generated output against saved snapshots. These tests ve
 
 ```
 tests-snapshot/
-├── integration/          # E2E / Full pipeline tests (4 files)
+├── integration/          # Broad integration-style snapshot cases (3 files)
 ├── schemas/              # Schema handling tests
 │   ├── composition/      # allOf, anyOf, oneOf (8 files)
 │   ├── references/       # $ref handling (7 files)
@@ -26,12 +28,11 @@ tests-snapshot/
 
 ## Test Categories
 
-### Integration (4 files)
+### Integration (3 files)
 
-End-to-end tests that exercise the complete generation pipeline:
+Broad integration-style snapshot cases:
 
 - **`generateZodClientFromOpenAPI.test.ts`** - Full pipeline with petstore spec
-- **`getEndpointDefinitionList.test.ts`** - Endpoint list generation
 - **`getOpenApiDependencyGraph.test.ts`** - Dependency graph generation
 - **`samples.test.ts`** - Official OpenAPI examples (8 specs from OAI)
 
@@ -165,6 +166,7 @@ pnpm test:snapshot -- -u
 - **Use real OpenAPI specs** where possible
 - **Keep tests focused** - one concern per file
 - **Name files descriptively** - name should explain what's being tested
+- `SNAPSHOT-FIX-SUMMARY.md` and `SNAPSHOT-TEST-ANALYSIS.md` are historical maintenance notes, not the current suite inventory
 
 ## Examples
 

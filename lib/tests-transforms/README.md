@@ -1,15 +1,17 @@
 # Transform Test Suite (Sample Input)
 
-This directory contains integration tests that verify specifications survive complete transformation pipelines:
+This directory contains integration tests that verify representative transform pipelines against sample input.
+
+It is an important proof layer, but Scenarios 6 and 7 currently prove narrower structural subsets than their broadest historical labels imply.
 
 ```text
-          OpenAPI → IR → OpenAPI (Scenario 1) ✅
-              Zod → IR → Zod     (Scenario 2) ✅
-    OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) ✅
-        Zod → IR → OpenAPI → IR → Zod (Scenario 4) ✅
-  JSON Schema → IR → JSON Schema     (Scenario 5) ✅
-Zod → IR → JSON Schema → IR → Zod   (Scenario 6) ✅
-   Single IR → Zod + JSON Schema + OpenAPI (Scenario 7) ✅
+          OpenAPI → IR → OpenAPI (Scenario 1) structural round-trip proof
+              Zod → IR → Zod     (Scenario 2) round-trip + validation parity
+    OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) structural cross-format proof
+        Zod → IR → OpenAPI → IR → Zod (Scenario 4) cross-format proof + parity subset
+  JSON Schema → IR → JSON Schema     (Scenario 5) structural round-trip proof
+Zod → IR → JSON Schema → IR → Zod   (Scenario 6) supported-subset proof, narrower than full semantic equivalence
+   Single IR → Zod + JSON Schema + OpenAPI (Scenario 7) cross-output consistency smoke check for a limited supported subset
 ```
 
 ---
@@ -32,7 +34,7 @@ Transform tests in this suite use two validation categories:
 - Castr-normalized input MUST produce byte-identical output
 - Uses byte-level comparison (string equality)
 
-Some transform tests are explicit round-trip proofs. Those round-trip assertions are used to prove properties such as losslessness and idempotence.
+Some transform tests are explicit round-trip proofs. Those round-trip assertions are used to prove properties such as losslessness and idempotence, but not every scenario currently discharges both properties at full fixture scope.
 
 ---
 
@@ -49,25 +51,25 @@ This contract is governed by `.agent/directives/testing-strategy.md` and impleme
 
 ## Test Files
 
-| File / Pattern                                                   | Purpose                                                 |
-| ---------------------------------------------------------------- | ------------------------------------------------------- |
-| `input-coverage.integration.test.ts`                             | Verifies OpenAPI syntax is parsed to IR                 |
-| `output-coverage.integration.test.ts`                            | Verifies IR fields are written to OpenAPI               |
-| `__tests__/scenario-1-openapi-roundtrip.integration.test.ts`     | Scenario 1: OpenAPI ↔ IR losslessness + idempotency     |
-| `__tests__/scenario-2-zod-roundtrip.integration.test.ts`         | Scenario 2: Zod → IR → Zod round-trip                   |
-| `__tests__/scenario-3-openapi-via-zod.integration.test.ts`       | Scenario 3: OpenAPI → Zod → OpenAPI                     |
-| `__tests__/scenario-4-zod-via-openapi.integration.test.ts`       | Scenario 4: Zod → OpenAPI → Zod                         |
-| `__tests__/scenario-5-json-schema-roundtrip.integration.test.ts` | Scenario 5: JSON Schema ↔ IR idempotence + losslessness |
-| `__tests__/scenario-6-zod-via-json-schema.integration.test.ts`   | Scenario 6: Zod → JSON Schema → Zod cross-format        |
-| `__tests__/scenario-7-multi-cast.integration.test.ts`            | Scenario 7: Single IR → Zod + JSON Schema + OpenAPI     |
-| `__tests__/validation-parity*.integration.test.ts`               | Functional validation-parity for transform scenarios    |
-| `__tests__/version-validation.integration.test.ts`               | Version-specific validation rules                       |
-| `__tests__/scalar-behavior.integration.test.ts`                  | Documents Scalar validator behavior                     |
-| `__tests__/parser-field-coverage.integration.test.ts`            | Parser field extraction verification                    |
-| `__tests__/writer-field-coverage.integration.test.ts`            | Writer field output verification                        |
-| `__tests__/content-preservation.unit.test.ts`                    | Regression checks for known content-loss bugs           |
-| `__tests__/zod-format-functions.integration.test.ts`             | Zod helper/function output coverage checks              |
-| `utils/transform-helpers.ts`                                     | Shared helpers and fixture constants for scenario tests |
+| File / Pattern                                                   | Purpose                                                                                |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `input-coverage.integration.test.ts`                             | Verifies OpenAPI syntax is parsed to IR                                                |
+| `output-coverage.integration.test.ts`                            | Verifies IR fields are written to OpenAPI                                              |
+| `__tests__/scenario-1-openapi-roundtrip.integration.test.ts`     | Scenario 1: OpenAPI ↔ IR losslessness + idempotency                                    |
+| `__tests__/scenario-2-zod-roundtrip.integration.test.ts`         | Scenario 2: Zod → IR → Zod round-trip                                                  |
+| `__tests__/scenario-3-openapi-via-zod.integration.test.ts`       | Scenario 3: OpenAPI → Zod → OpenAPI                                                    |
+| `__tests__/scenario-4-zod-via-openapi.integration.test.ts`       | Scenario 4: Zod → OpenAPI → Zod                                                        |
+| `__tests__/scenario-5-json-schema-roundtrip.integration.test.ts` | Scenario 5: JSON Schema ↔ IR idempotence + losslessness                                |
+| `__tests__/scenario-6-zod-via-json-schema.integration.test.ts`   | Scenario 6: Zod → JSON Schema → Zod supported-subset proof                             |
+| `__tests__/scenario-7-multi-cast.integration.test.ts`            | Scenario 7: Single IR → Zod + JSON Schema + OpenAPI structural consistency smoke check |
+| `__tests__/validation-parity*.integration.test.ts`               | Functional validation-parity for transform scenarios                                   |
+| `__tests__/version-validation.integration.test.ts`               | Version-specific validation rules                                                      |
+| `__tests__/scalar-behavior.integration.test.ts`                  | Documents Scalar validator behavior                                                    |
+| `__tests__/parser-field-coverage.integration.test.ts`            | Parser field extraction verification                                                   |
+| `__tests__/writer-field-coverage.integration.test.ts`            | Writer field output verification                                                       |
+| `__tests__/content-preservation.unit.test.ts`                    | Regression checks for known content-loss bugs                                          |
+| `__tests__/zod-format-functions.integration.test.ts`             | Zod helper/function output coverage checks                                             |
+| `utils/transform-helpers.ts`                                     | Shared helpers and fixture constants for scenario tests                                |
 
 ---
 
