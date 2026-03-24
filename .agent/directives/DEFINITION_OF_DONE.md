@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-03-22  
+**Last Updated:** 2026-03-23  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -44,32 +44,36 @@ pnpm character
 pnpm test:snapshot
 pnpm test:gen
 pnpm test:transforms
+pnpm test:e2e
 ```
 
-Current scope note (2026-03-22): the canonical chain above still does **not** include `vitest.e2e.config.ts` or `pnpm --dir lib test:scalar-guard`. Pack 7 closed `red` in part because those suites remain off-chain today, even though they are repo-owned proof surfaces.
+Off-chain development aids (not in the canonical gate, green, documented honestly):
+
+- `pnpm --dir lib test:scalar-guard` — Scalar legacy import guard. Runs via `vitest.scalar-guard.config.ts`. Not in the canonical chain because it tests a single narrow vendor-specific invariant; it is useful for targeted regression checks but does not contribute to broader proof coverage.
 
 ---
 
 ## Quick Reference
 
-| Gate            | Command                          | Purpose                                   |
-| --------------- | -------------------------------- | ----------------------------------------- |
-| Clean           | `pnpm clean`                     | Remove build artifacts                    |
-| Install         | `pnpm install --frozen-lockfile` | Install deps without lockfile drift       |
-| Build           | `pnpm build`                     | Build all packages                        |
-| Format          | `pnpm format:check`              | Enforce formatting (non-mutating)         |
-| Type-check      | `pnpm type-check`                | TypeScript strict mode                    |
-| Lint            | `pnpm lint`                      | ESLint rules enforcement                  |
-| Madge Circular  | `pnpm madge:circular`            | Check for circular dependencies           |
-| Madge Orphans   | `pnpm madge:orphans`             | Check for orphaned files (warnings)       |
-| Dep Cruiser     | `pnpm depcruise`                 | Architecture boundaries validation        |
-| Knip            | `pnpm knip`                      | Find unused exports/dead code             |
-| Portability     | `pnpm portability:check`         | Validate canonical agent/adapter cohesion |
-| Unit tests      | `pnpm test`                      | Primary test suite                        |
-| Character tests | `pnpm character`                 | Public API behavior                       |
-| Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                       |
-| Generated tests | `pnpm test:gen`                  | Tests on generated code                   |
-| Transform tests | `pnpm test:transforms`           | End-to-end transform pipeline proofs      |
+| Gate            | Command                          | Purpose                                      |
+| --------------- | -------------------------------- | -------------------------------------------- |
+| Clean           | `pnpm clean`                     | Remove build artifacts                       |
+| Install         | `pnpm install --frozen-lockfile` | Install deps without lockfile drift          |
+| Build           | `pnpm build`                     | Build all packages                           |
+| Format          | `pnpm format:check`              | Enforce formatting (non-mutating)            |
+| Type-check      | `pnpm type-check`                | TypeScript strict mode                       |
+| Lint            | `pnpm lint`                      | ESLint rules enforcement                     |
+| Madge Circular  | `pnpm madge:circular`            | Check for circular dependencies              |
+| Madge Orphans   | `pnpm madge:orphans`             | Check for orphaned files (warnings)          |
+| Dep Cruiser     | `pnpm depcruise`                 | Architecture boundaries validation           |
+| Knip            | `pnpm knip`                      | Find unused exports/dead code                |
+| Portability     | `pnpm portability:check`         | Validate canonical agent/adapter cohesion    |
+| Unit tests      | `pnpm test`                      | Primary test suite                           |
+| Character tests | `pnpm character`                 | Public API behavior                          |
+| Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                          |
+| Generated tests | `pnpm test:gen`                  | Tests on generated code                      |
+| Transform tests | `pnpm test:transforms`           | End-to-end transform pipeline proofs         |
+| E2E tests       | `pnpm test:e2e`                  | IR fidelity, OpenAPI round-trip, persistence |
 
 ---
 

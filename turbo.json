@@ -49,6 +49,10 @@
       "cache": false,
       "outputs": []
     },
+    "test:e2e": {
+      "cache": false,
+      "outputs": []
+    },
     "madge:circular": {
       "cache": false,
       "outputs": []

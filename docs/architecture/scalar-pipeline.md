@@ -2,6 +2,9 @@
 
 ## Overview
 
+> [!IMPORTANT]
+> Current implementation note (2026-03-23): the `makeSchemaResolver()` function described below was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model rather than a resolver function wrapping the raw OpenAPI document. This document remains valuable as architectural history for the bundling/validation pipeline and `$ref` preservation rationale.
+
 The `@engraph/castr` library migrated from `@apidevtools/swagger-parser` to `@scalar/*` packages for OpenAPI document processing. This architectural shift brings significant improvements in type safety, validation, and reference handling while maintaining backward compatibility.
 
 **Key Packages:**

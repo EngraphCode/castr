@@ -88,14 +88,14 @@ Each ADR follows this structure:
 
 ### Additional Architecture Records
 
-| ADR                                                                               | Title                                                                | Status   | Date       |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------- | -------- | ---------- |
-| [036](./ADR-036-limit-directory-complexity.md)                                    | Limit Directory Complexity                                           | Accepted | 2026-02-21 |
-| [037](./ADR-037-strict-architectural-domain-boundaries.md)                        | Strict Architectural Domain Boundaries                               | Accepted | 2026-02-21 |
-| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics                                         | Accepted | 2026-03-09 |
-| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics and Native-Only Emission                      | Accepted | 2026-03-10 |
-| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict-By-Default Object Semantics With Optional Strip Normalization | Accepted | 2026-03-11 |
-| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams, Governed Widening, and Early Rejection      | Accepted | 2026-03-12 |
+| ADR                                                                               | Title                                                           | Status   | Date       |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------- | ---------- |
+| [036](./ADR-036-limit-directory-complexity.md)                                    | Limit Directory Complexity                                      | Accepted | 2026-02-21 |
+| [037](./ADR-037-strict-architectural-domain-boundaries.md)                        | Strict Architectural Domain Boundaries                          | Accepted | 2026-02-21 |
+| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics                                    | Accepted | 2026-03-09 |
+| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics and Native-Only Emission                 | Accepted | 2026-03-10 |
+| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Semantics and Non-Strict Ingest Rejection         | Accepted | 2026-03-11 |
+| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams, Governed Widening, and Early Rejection | Accepted | 2026-03-12 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -190,7 +190,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 039)
+2. **Number sequentially** (next is 042)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -233,5 +233,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-03-10  
-**Next ADR:** 040
+**Last Updated:** 2026-03-23  
+**Next ADR:** 042

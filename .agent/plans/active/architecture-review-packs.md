@@ -1,6 +1,6 @@
 # Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
 
-**Status:** Complete — seven-pack review matrix closed; use this file as the cross-pack triage record until the successor remediation plan is opened
+**Status:** Complete — seven-pack review matrix closed; successor remediation plan (RC-1/RC-2) opened and completed on Monday, 23 March 2026
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
 **Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
@@ -28,8 +28,8 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 - Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict: template selection and custom-template public surfaces are not honest, MCP schemas bypass the governed Draft 07 contract, and the generated-code proof suite over-claims runtime coverage.
 - Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
 - Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
-- The seven-pack review sweep is now complete.
-- The next honest implementation slice is proof-system and durable-doctrine remediation; the paused `json-schema-parser.md` file remains remediation context rather than a ready-to-run parser-build plan.
+- The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
+- The next honest slice is **RC-3 (IR and runtime validator gaps)** or **RC-4 (format-specific drift)**; the paused `json-schema-parser.md` remains remediation context.
 
 ## Next Session Entry Contract
 
@@ -41,20 +41,10 @@ Start from the written evidence:
 - use the seven pack notes under `.agent/research/architecture-review-packs/` as the source findings
 - treat [pack-7-proof-system-and-durable-doctrine.md](../../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff
 
-Execution order for the next session:
-
-1. Reproduce any user-reported gate or runtime failure first.
-2. Otherwise, triage findings from all seven packs together.
-3. Group those findings into remediation buckets by root cause, dependency, and leverage.
-4. Preserve provenance while grouping: every bucket item should still cite its source pack note.
-5. Open one bounded successor remediation plan from that triage.
-6. Execute only that chosen slice; do not reopen general feature implementation in the same pass.
-
-Default triage outcome unless fresh evidence disproves it:
-
-- the first successor slice should be proof-system and durable-doctrine remediation
-- that slice should cover gate-chain honesty, suite taxonomy, proof naming/scope honesty, and any cross-pack doc/doctrine drift that would keep support claims dishonest
-- Packs 2 through 6 should be treated as source inputs to that remediation plan where their findings depend on proof or doctrine honesty
+1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md).
+2. Choose the next successor slice: **RC-3 (IR and runtime validator gaps)** or **RC-4 (format-specific drift)**.
+3. Open one bounded successor remediation plan from that choice.
+4. Execute only that chosen slice; do not reopen general feature implementation in the same pass.
 
 Explicit non-goals for the next session:
 

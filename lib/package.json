@@ -44,6 +44,7 @@
     "test:gen": "vitest run --config vitest.generated.config.ts",
     "test:gen:watch": "vitest --config vitest.generated.config.ts",
     "test:scalar-guard": "vitest run --config vitest.scalar-guard.config.ts",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "test:transforms": "vitest run --config vitest.transforms.config.ts",

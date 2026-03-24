@@ -1,21 +1,14 @@
 /**
- * Tests for Information Retrieval (IR) type guards and validators
+ * Tests for isCastrDocument, isIRComponent, and isCastrOperation validators.
  *
- * Following TDD: These tests are written FIRST (RED phase)
- * Implementation in ir-validators.ts will follow (GREEN phase)
+ * Schema-level tests (isCastrSchema, isCastrSchemaNode) are in
+ * validators.schema.unit.test.ts.
  */
 
 import { describe, expect, it } from 'vitest';
-import type { CastrSchema, CastrSchemaNode } from '../models/schema.js';
-import { CastrSchemaProperties } from '../models/schema.js';
+import type { CastrSchema } from '../models/schema.js';
 import { createMockRawOpenApiComponents } from '../test-helpers.js';
-import {
-  isIRComponent,
-  isCastrDocument,
-  isCastrOperation,
-  isCastrSchema,
-  isCastrSchemaNode,
-} from './validators.js';
+import { isIRComponent, isCastrDocument, isCastrOperation } from './validators.js';
 import type { CastrDocument } from '../models/schema-document.js';
 import type { IRComponent } from '../models/schema.components.js';
 import type { CastrOperation } from '../models/schema.operations.js';
@@ -420,36 +413,6 @@ describe('isCastrOperation', () => {
     expect(isCastrOperation(fullOperation)).toBe(true);
   });
 
-  it('should return true for all HTTP methods', () => {
-    const methods: ('get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options')[] = [
-      'get',
-      'post',
-      'put',
-      'patch',
-      'delete',
-      'head',
-      'options',
-    ];
-
-    methods.forEach((method) => {
-      const operation: CastrOperation = {
-        operationId: `${method}User`,
-        method,
-        path: '/users',
-        parameters: [],
-        parametersByLocation: {
-          query: [],
-          path: [],
-          header: [],
-          cookie: [],
-        },
-        responses: [],
-      };
-
-      expect(isCastrOperation(operation)).toBe(true);
-    });
-  });
-
   it('should return false for null and undefined', () => {
     expect(isCastrOperation(null)).toBe(false);
     expect(isCastrOperation(undefined)).toBe(false);
@@ -515,337 +478,44 @@ describe('isCastrOperation', () => {
 
     expect(isCastrOperation(invalidOperation)).toBe(false);
   });
-});
-
-describe('isCastrSchema', () => {
-  it('should return true for primitive schema', () => {
-    const schema: CastrSchema = {
-      type: 'string',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
+  it('should return true for trace HTTP method', () => {
+    const traceOperation: CastrOperation = {
+      operationId: 'traceRequest',
+      method: 'trace',
+      path: '/debug',
+      parameters: [],
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
       },
+      responses: [],
     };
 
-    expect(isCastrSchema(schema)).toBe(true);
+    expect(isCastrOperation(traceOperation)).toBe(true);
   });
 
-  it('should return true for object schema', () => {
-    const schema: CastrSchema = {
-      type: 'object',
-      properties: new CastrSchemaProperties({
-        name: {
-          type: 'string',
-          metadata: {
-            required: true,
-            nullable: false,
-            zodChain: { presence: '', validations: [], defaults: [] },
-            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-            circularReferences: [],
-          },
+  it('should return true for all HTTP methods including trace', () => {
+    const methods: ('get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'trace')[] =
+      ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace'];
+
+    methods.forEach((method) => {
+      const operation: CastrOperation = {
+        operationId: `${method}User`,
+        method,
+        path: '/users',
+        parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
         },
-      }),
-      required: ['name'],
-      additionalProperties: false,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
+        responses: [],
+      };
 
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for object schema with catchall unknown-key behavior', () => {
-    const catchallSchema: CastrSchema = {
-      type: 'string',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    const schema: CastrSchema = {
-      type: 'object',
-      properties: new CastrSchemaProperties({
-        name: {
-          type: 'string',
-          metadata: {
-            required: true,
-            nullable: false,
-            zodChain: { presence: '', validations: [], defaults: [] },
-            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-            circularReferences: [],
-          },
-        },
-      }),
-      required: ['name'],
-      additionalProperties: catchallSchema,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for array schema', () => {
-    const schema: CastrSchema = {
-      type: 'array',
-      items: {
-        type: 'string',
-        metadata: {
-          required: false,
-          nullable: false,
-          zodChain: { presence: '', validations: [], defaults: [] },
-          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-          circularReferences: [],
-        },
-      },
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for composition schema (allOf)', () => {
-    const schema: CastrSchema = {
-      allOf: [
-        {
-          type: 'object',
-          metadata: {
-            required: false,
-            nullable: false,
-            zodChain: { presence: '', validations: [], defaults: [] },
-            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-            circularReferences: [],
-          },
-        },
-      ],
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for reference schema', () => {
-    const schema: CastrSchema = {
-      $ref: '#/components/schemas/User',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: ['#/components/schemas/User'], referencedBy: [], depth: 1 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for UUID subtype semantics on UUID string schemas', () => {
-    const schema: CastrSchema = {
-      type: 'string',
-      format: 'uuid',
-      uuidVersion: 4,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return true for int64 semantics on integer schemas', () => {
-    const schema: CastrSchema = {
-      type: 'integer',
-      format: 'int64',
-      integerSemantics: 'int64',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(true);
-  });
-
-  it('should return false when int64 semantics does not carry format int64', () => {
-    const schema = {
-      type: 'integer',
-      format: 'int32',
-      integerSemantics: 'int64',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when bigint semantics carries a conflicting integer format', () => {
-    const schema = {
-      type: 'integer',
-      format: 'int64',
-      integerSemantics: 'bigint',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false for null and undefined', () => {
-    expect(isCastrSchema(null)).toBe(false);
-    expect(isCastrSchema(undefined)).toBe(false);
-  });
-
-  it('should return false for non-object types', () => {
-    expect(isCastrSchema('string')).toBe(false);
-    expect(isCastrSchema(123)).toBe(false);
-    expect(isCastrSchema([])).toBe(false);
-  });
-
-  it('should return false for object missing metadata field', () => {
-    const schemaWithoutMetadata = {
-      type: 'string',
-    };
-
-    expect(isCastrSchema(schemaWithoutMetadata)).toBe(false);
-  });
-
-  it('should return false for primitive schemas polluted with additionalProperties', () => {
-    const pollutedPrimitive = {
-      type: 'integer',
-      additionalProperties: false,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(pollutedPrimitive)).toBe(false);
-  });
-});
-
-describe('isCastrSchemaNode', () => {
-  it('should return true for valid schema node', () => {
-    const node: CastrSchemaNode = {
-      required: true,
-      nullable: false,
-      zodChain: {
-        presence: '.optional()',
-        validations: ['.min(1)'],
-        defaults: [],
-      },
-      dependencyGraph: {
-        references: [],
-        referencedBy: [],
-        depth: 0,
-      },
-      circularReferences: [],
-    };
-
-    expect(isCastrSchemaNode(node)).toBe(true);
-  });
-
-  it('should return true for schema node with all optional fields', () => {
-    const node: CastrSchemaNode = {
-      required: false,
-      nullable: true,
-      description: 'User ID',
-      default: 'unknown',
-      zodChain: {
-        presence: '.optional().nullable()',
-        validations: ['.uuid()'],
-        defaults: ['.default("unknown")'],
-      },
-      dependencyGraph: {
-        references: ['#/components/schemas/Address'],
-        referencedBy: ['#/components/schemas/User'],
-        depth: 1,
-      },
-      inheritance: {
-        parent: '#/components/schemas/Base',
-        compositionType: 'allOf',
-        siblings: ['#/components/schemas/Base', '#/components/schemas/Mixin'],
-      },
-      circularReferences: ['#/components/schemas/Node'],
-    };
-
-    expect(isCastrSchemaNode(node)).toBe(true);
-  });
-
-  it('should return false for null and undefined', () => {
-    expect(isCastrSchemaNode(null)).toBe(false);
-    expect(isCastrSchemaNode(undefined)).toBe(false);
-  });
-
-  it('should return false for non-object types', () => {
-    expect(isCastrSchemaNode('string')).toBe(false);
-    expect(isCastrSchemaNode(123)).toBe(false);
-    expect(isCastrSchemaNode([])).toBe(false);
-  });
-
-  it('should return false for object missing required fields', () => {
-    expect(isCastrSchemaNode({})).toBe(false);
-    expect(isCastrSchemaNode({ required: true })).toBe(false);
-    expect(isCastrSchemaNode({ required: true, nullable: false })).toBe(false);
-  });
-
-  it('should return false for object with wrong field types', () => {
-    const invalidNode = {
-      required: 'yes', // Should be boolean
-      nullable: false,
-      zodChain: {},
-      dependencyGraph: {},
-      circularReferences: [],
-    };
-
-    expect(isCastrSchemaNode(invalidNode)).toBe(false);
+      expect(isCastrOperation(operation)).toBe(true);
+    });
   });
 });

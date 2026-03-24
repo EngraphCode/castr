@@ -1,12 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { join } from 'path';
-import { buildIR } from '../schema-processing/parsers/openapi/index.js';
-import { writeOpenApi, validateOpenAPI } from '../schema-processing/writers/openapi/index.js';
-import { loadOpenApiDocument } from '../shared/load-openapi-document/orchestrator.js';
+import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
+import { writeOpenApi, validateOpenAPI } from '../src/schema-processing/writers/openapi/index.js';
+import { loadOpenApiDocument } from '../src/shared/load-openapi-document/orchestrator.js';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('OpenAPI Fidelity', () => {
   it('should preserve semantics for TicTacToe spec', async () => {
-    const specPath = join(__dirname, '../../examples/openapi/v3.1/tictactoe.yaml');
+    const specPath = join(__dirname, '../examples/openapi/v3.1/tictactoe.yaml');
     const loaded = await loadOpenApiDocument(specPath);
     const originalDoc = loaded.document;
 

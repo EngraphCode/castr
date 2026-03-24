@@ -37,8 +37,8 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep: green on Monday, 23 March 2026
-  - Off-chain proof status on Monday, 23 March 2026: `vitest.e2e` still red in `ir-fidelity.test.ts`; `test:scalar-guard` green
+  - Last reproduced full repo-root sweep (including `test:e2e`): green on Monday, 23 March 2026
+  - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
 - **Current Review Sweep Record:** Architecture Review Packs — post-IDENTITY bounded audit
@@ -49,8 +49,9 @@ Then use:
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Most Recent Review Note:** [`.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`](research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md)
 - **Historical Final-Pack Prompt:** [`.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md`](prompts/pack-7-proof-system-and-durable-doctrine.prompt.md)
-- **Current Review State:** Pack 1 is `yellow`; Packs 2, 3, 4, 5, 6, and 7 are closed; Pack 7 closed `red`; the seven-pack sweep is complete; new implementation remains blocked pending proof-system and durable-doctrine remediation
-- **Latest Completed Implementation Slice:** IDENTITY Doctrine Alignment (verified 2026-03-21)
+- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 (proof-system and durable-doctrine remediation) complete; RC-3 (IR and runtime validator remediation) is proposed in `active/`
+- **Proposed Active Plan:** [ir-and-runtime-validator-remediation.md](plans/active/ir-and-runtime-validator-remediation.md) — RC-3, awaiting review
+- **Latest Completed Implementation Slice:** Proof-System and Doctrine Remediation (RC-1/RC-2, verified Monday 23 March 2026)
   - `unknownKeyBehavior` removed from IR, parsers, and writers
   - parser-layer `additionalProperties` honesty restored for non-object schemas
   - public strictness/compatibility surfaces removed

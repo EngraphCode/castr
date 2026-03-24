@@ -114,7 +114,7 @@ describe('Characterisation: CLI Behavior', () => {
       const result = runCli(['--help']);
 
       expect(result.stdout).toContain('Usage:');
-      expect(result.stdout).toContain('data-descriptions-tooling');
+      expect(result.stdout).toContain('castr');
       expect(result.stdout).toContain('Options:');
       expect(result.exitCode).toBe(0);
     });

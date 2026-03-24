@@ -41,7 +41,7 @@ function writeCliMessage(message: string): void {
 }
 
 program
-  .name('data-descriptions-tooling')
+  .name('castr')
   .description('Generate a type-safe API client with Zod validation from an OpenAPI specification')
   .version(getPackageVersion())
   .argument('<input>', 'path/url to OpenAPI/Swagger document as json/yaml')

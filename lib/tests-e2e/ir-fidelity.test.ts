@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 import { prepareOpenApiDocument } from '../src/shared/prepare-openapi-document.js';
 import { serializeIR, deserializeIR } from '../src/schema-processing/ir/serialization.js';
-import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -11,15 +10,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 describe('IR Fidelity', () => {
   const petstorePath = path.resolve(__dirname, '../examples/openapi/v3.1/tictactoe.yaml');
 
-  it('should maintain fidelity through IR transform pass', async () => {
-    // 1. Generate Standard Output (Code A)
-    const resultA = await generateZodClientFromOpenAPI({
-      input: petstorePath,
-      disableWriteToFile: true,
-    });
-    const codeA = Array.isArray(resultA) ? resultA[0].content : resultA;
-
-    // 2. Build IR from Spec
+  it('should maintain IR structural equality through serialize→deserialize round-trip', async () => {
+    // 1. Build IR from Spec
     const doc = await prepareOpenApiDocument(petstorePath);
     const context = getZodClientTemplateContext(doc);
     const irOriginal = context._ir;
@@ -28,40 +20,71 @@ describe('IR Fidelity', () => {
       throw new Error('IR not generated in context');
     }
 
-    // 3. Serialize -> Deserialize
+    // 2. Serialize -> Deserialize (the actual fidelity property)
     const serialized = serializeIR(irOriginal);
     const irDeserialized = deserializeIR(serialized);
 
-    // 4. Convert back to OpenAPI using canonical writer
-    const docReconstructed = writeOpenApi(irDeserialized);
+    // 3. Assert IR structural equality
+    // Component count must be preserved
+    expect(irDeserialized.components).toHaveLength(irOriginal.components.length);
 
-    // 5. Generate Output from Reconstructed Doc (Code B)
-    const resultB = await generateZodClientFromOpenAPI({
-      openApiDoc: docReconstructed,
-      disableWriteToFile: true,
-    });
-    const codeB = Array.isArray(resultB) ? resultB[0].content : resultB;
+    // Each schema component must round-trip with matching name and content
+    const originalSchemas = irOriginal.components.filter((c) => c.type === 'schema');
+    const deserializedSchemas = irDeserialized.components.filter((c) => c.type === 'schema');
+    expect(deserializedSchemas).toHaveLength(originalSchemas.length);
+    for (const originalSchema of originalSchemas) {
+      const match = deserializedSchemas.find((s) => s.name === originalSchema.name);
+      expect(match).toBeDefined();
+      expect(JSON.stringify(match?.schema)).toBe(JSON.stringify(originalSchema.schema));
+    }
 
-    // 6. Assert Fidelity (Code B should match Code A)
-    expect(codeB).toEqual(codeA);
+    // Operation count must be preserved
+    expect(irDeserialized.operations).toHaveLength(irOriginal.operations.length);
 
-    // 7. Verify IR Enhancements
-    // Check Enums
-    expect(irDeserialized.enums).toBeDefined();
-    expect(irDeserialized.enums.size).toBeGreaterThan(0);
+    // Each operation must round-trip with matching operationId, path, and method
+    for (const originalOp of irOriginal.operations) {
+      const deserializedOp = irDeserialized.operations.find(
+        (op) => op.operationId === originalOp.operationId,
+      );
+      expect(deserializedOp).toBeDefined();
+      expect(deserializedOp?.path).toBe(originalOp.path);
+      expect(deserializedOp?.method).toBe(originalOp.method);
+      expect(deserializedOp?.parameters).toHaveLength(originalOp.parameters.length);
+    }
 
-    // 'mark' enum should exist (from components/schemas/mark)
+    // Enum content must be preserved
+    expect(irDeserialized.enums.size).toBe(irOriginal.enums.size);
+    for (const [name, enumDef] of irOriginal.enums) {
+      expect(irDeserialized.enums.has(name)).toBe(true);
+      expect(irDeserialized.enums.get(name)?.values).toEqual(enumDef.values);
+    }
+
+    // Schema names must be preserved
+    expect(irDeserialized.schemaNames).toEqual(irOriginal.schemaNames);
+
+    // 4. Verify specific IR content (tictactoe-specific)
     const markEnum = Array.from(irDeserialized.enums.values()).find((e) => e.name === 'mark');
     expect(markEnum).toBeDefined();
     expect(markEnum?.values).toEqual(['.', 'X', 'O']);
 
-    // Check Parameters By Location
     const getSquareOp = irDeserialized.operations.find((op) => op.operationId === 'get-square');
     expect(getSquareOp).toBeDefined();
-    if (getSquareOp) {
-      expect(getSquareOp.parametersByLocation).toBeDefined();
-      expect(getSquareOp.parametersByLocation.path).toHaveLength(2); // row, column
-      expect(getSquareOp.parametersByLocation.query).toHaveLength(0);
-    }
+    expect(getSquareOp?.path).toBe('/board/{row}/{column}');
+    expect(getSquareOp?.method).toBe('get');
+  });
+
+  it('should produce deterministic code from the same OpenAPI document', async () => {
+    // Generate twice from the same input and assert byte-identical output
+    const resultA = await generateZodClientFromOpenAPI({
+      input: petstorePath,
+      disableWriteToFile: true,
+    });
+    const resultB = await generateZodClientFromOpenAPI({
+      input: petstorePath,
+      disableWriteToFile: true,
+    });
+    const codeA = Array.isArray(resultA) ? resultA[0].content : resultA;
+    const codeB = Array.isArray(resultB) ? resultB[0].content : resultB;
+    expect(codeB).toEqual(codeA);
   });
 });

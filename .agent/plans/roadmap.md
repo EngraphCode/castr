@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 22, 2026)  
+**Date:** January 24, 2026 (Updated March 23, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -49,7 +49,7 @@ Current status of that sweep:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed
   - `CastrSchemaProperties` runtime detection hardened across realms
-- the next honest work is not new feature implementation; it is proof-system and durable-doctrine remediation based on the completed pack matrix
+- proof-system and durable-doctrine remediation (Slice 1) is complete (see below)
 - Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
 - Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
 - Pack 3 (`openapi-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: reusable `components.requestBodies` are parsed into IR, dropped on OpenAPI egress, and not asserted by the current output-coverage proof suite
@@ -58,16 +58,22 @@ Current status of that sweep:
 - Pack 6 (`context-mcp-rendering-and-generated-surface`) completed on Sunday, 22 March 2026 with a `red` verdict: `schemas-only` and custom-template entrypoints are not honest public surfaces, MCP schema generation bypasses the governed Draft 07 contract, and the generated-output proof story over-claims runtime coverage
 - Pack 7 (`proof-system-and-durable-doctrine`) completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while dedicated proof suites remain off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass
 - final consolidation rerun on Monday, 23 March 2026 kept the Pack 7 truth unchanged: `pnpm check:ci` green, off-chain `vitest.e2e` red, `test:scalar-guard` green
+- proof-system and durable-doctrine remediation (Slice 1) completed on Monday, 23 March 2026:
+  - `vitest.e2e` fixed (`ir-fidelity.test.ts` now asserts IR structural equality) and promoted to canonical chain
+  - `openapi-fidelity.test.ts` relocated to `tests-e2e/`
+  - `test:scalar-guard` documented as off-chain development aid
+  - CLI identity changed from `data-descriptions-tooling` to `castr`
+  - acceptance criteria, ADR-035, transform README caveats verified and confirmed
+  - `pnpm qg` green with the new `test:e2e` gate
 - the seven-pack architecture review sweep is complete
-- the paused `json-schema-parser.md` file has been rewritten as paused remediation context and must not reactivate unchanged
-- the next implementation slice remains blocked; the next honest slice is proof-system and durable-doctrine remediation before any Pack 4-6 product remediation resumes
+- **RC-3 (IR and runtime validator gaps)** has a proposed plan at [ir-and-runtime-validator-remediation.md](./active/ir-and-runtime-validator-remediation.md) — review and confirm before execution
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work
 
 Current sweep record:
 
-- [architecture-review-packs.md](./active/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep; keep as handoff context until the successor remediation plan is opened
+- [architecture-review-packs.md](./active/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep; RC-1/RC-2 remediation plan completed
 
 Paused successor:
 
@@ -82,6 +88,7 @@ Recently completed adjacent remediation:
 - [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [identity-doctrine-alignment.md](./current/complete/identity-doctrine-alignment.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
+- [proof-system-and-doctrine-remediation.md](./current/complete/proof-system-and-doctrine-remediation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
 - [type-safety-remediation-follow-up.md](./current/complete/type-safety-remediation-follow-up.md)

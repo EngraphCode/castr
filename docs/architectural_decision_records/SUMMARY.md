@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** 2026-03-12  
+**Last Updated:** 2026-03-23  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 

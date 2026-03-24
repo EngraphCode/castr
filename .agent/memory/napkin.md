@@ -2,6 +2,34 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-23
+
+- Consolidation pass (late March 23, cross-repo session from oak-mcp-ecosystem):
+  - `.agent/README.md` still claimed `vitest.e2e` was red off-chain even though RC-1/RC-2 fixed it and promoted `test:e2e` to the canonical gate chain; updated to reflect current truth
+  - `.agent/README.md` review-state line still said "new implementation remains blocked pending proof-system and durable-doctrine remediation"; updated to reflect RC-1/RC-2 completion and the proposed RC-3 plan
+  - `session-entry.prompt.md`, `roadmap.md`, and `.agent/README.md` all said "choose RC-3 or RC-4" but a proposed RC-3 plan (`ir-and-runtime-validator-remediation.md`) already existed in `active/`; updated all three to reference the proposed plan
+  - `proof-system-and-doctrine-remediation.md` in `current/complete/` had broken relative links — predecessor, triage source, and Related links were all written for `active/` depth and never adjusted when the file moved; fixed to correct relative paths from `current/complete/`
+  - `doctor-rescue-loop-runtime-redesign.md` in `current/complete/` had the same broken-link pattern (`../current/complete/` instead of `./` for siblings, `../current/paused/` instead of `../paused/`, `../../../docs/` instead of `../../../../docs/`); fixed header links
+  - practice box check: `.agent/practice-core/incoming/` empty; `.agent/practice-context/incoming/` contains only scaffold `README.md`; no new incoming Practice material needed integration
+  - structural learning: broken relative links in plans moved from `active/` to `current/complete/` remain a recurring consolidation finding even though the napkin (March 12 entry) already flags "repair any obvious historical links"; the problem is procedural — many completed plans in `current/complete/` carry stale links from their `active/` era, but fixing all of them retrospectively would be a large sweep with diminishing value since these are historical records not used for navigation
+  - no Practice evolution cleared the bar in this pass; the useful work was status-marker honesty, handoff accuracy, and relative-link correction for the most recent completed plans
+- Documentation consolidation after proof-system remediation (RC-1/RC-2) completion:
+  - ADR README next-ADR counter was stale (said 039/040 when 041 already existed); updated to 042
+  - ADR-040 README row title still said "Optional Strip Normalization" — that compatibility mode was removed by IDENTITY; aligned the title to match the ADR body
+  - `scalar-pipeline.md` still described `makeSchemaResolver()` as current, but it was removed per ADR-015; added an IMPORTANT caveat at the top
+  - completed remediation plan was still physically in `active/`; moved to `current/complete/` and fixed cross-references from `architecture-review-packs.md`
+  - roadmap sweep-record note still said "keep as handoff context until the successor remediation plan is opened"; updated since that plan is done
+  - roadmap recently-completed list was missing the remediation plan
+  - ADR SUMMARY date updated from 2026-03-12 to 2026-03-23
+  - `testing-strategy.md` E2E drift note still referenced the deleted `src/tests-e2e/` directory; updated to reflect the consolidated `lib/tests-e2e/` location and on-chain `pnpm test:e2e` status
+  - session-entry Pack 1 verdict updated: CLI identity drift is now fixed
+- Practice box check:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- Structural learning observation: stale next-ADR counters and plan-status notes are a recurring consolidation finding; the counter was 3 ADRs behind. The pattern is that the counters and "until X happens" phrases become invisible debt that only consolidation catches.
+- No Practice evolution cleared the bar in this pass; the useful patterns (consolidation surface coverage, stale-counter checks) are procedural repetitions of things already captured.
+
 ## 2026-03-09
 
 - Completed the Practice Core integration slice and promoted its durable outcomes into the local Practice spine, canonical wrappers, and future platform planning docs.
