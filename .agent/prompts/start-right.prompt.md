@@ -139,6 +139,7 @@ pnpm character
 pnpm test:snapshot
 pnpm test:gen
 pnpm test:transforms
+pnpm test:e2e
 ```
 
 Rules:
@@ -148,7 +149,7 @@ Rules:
 3. do not analyze failures until the full sequence completes
 4. after the sequence completes, ask whether any failure points to a deeper architectural issue rather than a local bug
 
-For one non-mutating aggregate command, use `pnpm check:ci`.
+For one non-mutating aggregate command, use `pnpm check:ci` (or the local `pnpm check` which also auto-fixes formatting).
 
 ## Session Close-Out
 

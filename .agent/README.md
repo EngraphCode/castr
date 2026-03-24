@@ -37,7 +37,7 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep (including `test:e2e`): green on Monday, 23 March 2026
+  - Last reproduced full repo-root sweep (including `test:e2e`): green on Monday, 24 March 2026
   - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
@@ -49,14 +49,19 @@ Then use:
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Most Recent Review Note:** [`.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`](research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md)
 - **Historical Final-Pack Prompt:** [`.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md`](prompts/pack-7-proof-system-and-durable-doctrine.prompt.md)
-- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 (proof-system and durable-doctrine remediation) complete; RC-3 (IR and runtime validator remediation) is proposed in `active/`
-- **Proposed Active Plan:** [ir-and-runtime-validator-remediation.md](plans/active/ir-and-runtime-validator-remediation.md) — RC-3, awaiting review
-- **Latest Completed Implementation Slice:** Proof-System and Doctrine Remediation (RC-1/RC-2, verified Monday 23 March 2026)
+- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 complete; RC-3 complete; **RC-4 (format-specific drift) is the next unblocked slice**
+- **Latest Completed Implementation Slice:** IR and Runtime Validator Remediation (RC-3, verified Monday 24 March 2026)
+  - `isCastrSchema` validates all schema fields honestly and completely
+  - `additionalProperties` enforced as boolean-only per IDENTITY doctrine
+  - schema-valued `unevaluatedProperties` kept (active OpenAPI 3.1 / JSON Schema 2020-12 parser dependency)
+  - `trace` added to `VALID_HTTP_METHODS`
+  - test file split for lint compliance
+  - Completed plan: [ir-and-runtime-validator-remediation.md](plans/current/complete/ir-and-runtime-validator-remediation.md)
+- **Prior Completed Slice:** Proof-System and Doctrine Remediation (RC-1/RC-2, verified Monday 23 March 2026)
   - `unknownKeyBehavior` removed from IR, parsers, and writers
   - parser-layer `additionalProperties` honesty restored for non-object schemas
   - public strictness/compatibility surfaces removed
   - `CastrSchemaProperties` runtime detection made brand-based and cross-realm safe
-  - full repo-root Definition of Done chain green
   - Completed predecessor slices:
     - `.agent/plans/current/complete/doctor-rescue-loop-runtime-redesign.md`
     - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`

@@ -1,6 +1,6 @@
 # Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
 
-**Status:** Complete — seven-pack review matrix closed; successor remediation plan (RC-1/RC-2) opened and completed on Monday, 23 March 2026
+**Status:** Complete — seven-pack review matrix closed; RC-1/RC-2 remediation completed Monday, 23 March 2026; RC-3 remediation completed Monday, 24 March 2026
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
 **Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
@@ -29,7 +29,8 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 - Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
 - Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
 - The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
-- The next honest slice is **RC-3 (IR and runtime validator gaps)** or **RC-4 (format-specific drift)**; the paused `json-schema-parser.md` remains remediation context.
+- The IR and runtime validator remediation plan (RC-3) was completed on Monday, 24 March 2026. See [ir-and-runtime-validator-remediation.md](../current/complete/ir-and-runtime-validator-remediation.md).
+- The next honest slice is **RC-4 (format-specific drift)**; the paused `json-schema-parser.md` remains remediation context.
 
 ## Next Session Entry Contract
 
@@ -41,8 +42,8 @@ Start from the written evidence:
 - use the seven pack notes under `.agent/research/architecture-review-packs/` as the source findings
 - treat [pack-7-proof-system-and-durable-doctrine.md](../../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff
 
-1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md).
-2. Choose the next successor slice: **RC-3 (IR and runtime validator gaps)** or **RC-4 (format-specific drift)**.
+1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed remediation plans: [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [ir-and-runtime-validator-remediation.md](../current/complete/ir-and-runtime-validator-remediation.md).
+2. The next successor slice is **RC-4 (format-specific drift)**.
 3. Open one bounded successor remediation plan from that choice.
 4. Execute only that chosen slice; do not reopen general feature implementation in the same pass.
 
@@ -233,6 +234,8 @@ This plan completed on 2026-03-22 when Pack 7 closed and the full pack matrix wa
 Current close-out state:
 
 - the repo is not cleared to reactivate general implementation
-- the highest-priority next slice is proof-system and durable-doctrine remediation
+- RC-1/RC-2 (proof-system and durable-doctrine remediation) is complete
+- RC-3 (IR and runtime validator gaps) is complete
+- the highest-priority next slice is **RC-4 (format-specific drift)**
 - triage should now happen across all seven packs together, but execution should stay bounded to one successor remediation slice at a time
 - keep this file in place as the sweep record until the successor remediation plan is opened

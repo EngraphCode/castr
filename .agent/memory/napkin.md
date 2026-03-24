@@ -2,6 +2,24 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-24
+
+- RC-3 (IR and runtime validator gaps) remediation completed and committed:
+  - `isCastrSchema` now validates type, items, composition, required, additionalProperties (boolean-only), unevaluatedProperties (boolean or valid CastrSchema), and metadata (full CastrSchemaNode)
+  - `trace` added to `VALID_HTTP_METHODS`
+  - test file split: `validators.schema.unit.test.ts` for schema/node tests, `validators.unit.test.ts` for document/operation tests
+  - deviation from original plan: schema-valued `unevaluatedProperties` kept because OpenAPI 3.1 and JSON Schema 2020-12 parsers actively use it; TypeScript interface narrowing deferred
+- Documentation consolidation pass (`jc-consolidate-docs`):
+  - `architecture-review-packs.md`: RC-3 completion recorded, close-out state updated to point at RC-4 as next slice
+  - `session-entry.prompt.md`: RC-3 marked complete, RC-4 flagged as next, reading list updated to Pack 3/5 sources, repo truth date updated to 24 March 2026
+  - `roadmap.md`: RC-3 completion recorded, date updated, added to recently-completed list, RC-4 flagged as next
+  - `cross-pack-triage.md`: all three RC-3 findings marked ✅ resolved with status column and deviation note
+  - `start-right.prompt.md`: `test:e2e` added to quality gates (was missing after RC-1/RC-2 promotion); aggregate command reference updated to mention both `pnpm check:ci` and `pnpm check`
+  - RC-3 plan moved from `active/` to `current/complete/` with completion deviation note
+  - Pack 3/4/7 prompts: correctly marked as historical provenance, no changes needed
+  - Practice box check: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only scaffold `README.md`; no new incoming Practice material needed integration
+- No structural learning clears the bar for Practice Core evolution in this pass; the useful work was status-marker honesty and handoff accuracy.
+
 ## 2026-03-23
 
 - Consolidation pass (late March 23, cross-repo session from oak-mcp-ecosystem):
