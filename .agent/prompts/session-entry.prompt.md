@@ -34,7 +34,7 @@ Notes:
 
 ---
 
-## Current State: Proof-System Remediation Complete — RC-3/RC-4 Next
+## Current State: RC-3 Complete — RC-4 Next
 
 ### Completed Predecessor Plans
 
@@ -48,7 +48,8 @@ Notes:
 ### Next Honest Slice
 
 - Proof-system and durable-doctrine remediation (RC-1 / RC-2) is complete.
-- **RC-3 (IR and runtime validator gaps)** has a proposed plan at [ir-and-runtime-validator-remediation.md](../plans/active/ir-and-runtime-validator-remediation.md) — review and confirm before execution.
+- **RC-3 (IR and runtime validator gaps) is complete** — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md).
+- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded successor plan from the [cross-pack triage](../research/architecture-review-packs/cross-pack-triage.md) before execution.
 - The paused JSON Schema parser plan remains paused.
 
 ### Canonical Identity
@@ -71,7 +72,7 @@ Notes:
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Monday, 23 March 2026)
+## Current Repo Truth (Monday, 24 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -81,7 +82,14 @@ IDENTITY doctrine alignment is complete:
 - non-strict object input is rejected at parser boundaries
 - writers emit strict-only object output (`additionalProperties: false`, `z.strictObject()`)
 - `CastrSchemaProperties` detection is now brand-based and cross-realm safe
-- the full repo-root Definition of Done chain was rerun green on Monday, 23 March 2026
+- the full repo-root Definition of Done chain was rerun green on Monday, 24 March 2026
+
+RC-3 (IR and runtime validator gaps) is complete:
+
+- `isCastrSchema` validates type, items, composition, required, additionalProperties (boolean-only), unevaluatedProperties (boolean or valid CastrSchema), and metadata (full CastrSchemaNode)
+- `additionalProperties` enforced as boolean-only per IDENTITY doctrine; schema-valued `unevaluatedProperties` kept as it is actively used by OpenAPI 3.1 / JSON Schema 2020-12 parsers
+- `trace` added to `VALID_HTTP_METHODS`
+- test file split: `validators.schema.unit.test.ts` for schema/node tests, `validators.unit.test.ts` for document/operation tests
 
 Proof-system and durable-doctrine remediation (Slice 1) is complete:
 
@@ -119,10 +127,10 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1/RC-2 (proof-system and durable-doctrine remediation) is complete. A proposed RC-3 plan exists at [ir-and-runtime-validator-remediation.md](../plans/active/ir-and-runtime-validator-remediation.md).
+RC-1/RC-2 (proof-system and durable-doctrine remediation) and RC-3 (IR and runtime validator gaps) are both complete. The next unblocked slice is **RC-4 (format-specific drift)**.
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Otherwise, review the proposed RC-3 plan** — it targets schema type validation, object-ontology closure, and `trace` HTTP method support.
+2. **Open a bounded RC-4 plan** from the [cross-pack triage](../research/architecture-review-packs/cross-pack-triage.md) — it targets parser/writer lockstep fixes for OpenAPI, JSON Schema, and Zod.
 3. **Confirm or revise the plan scope** before starting TDD execution.
 4. **Execute only the confirmed slice** — do not jump to new feature work or reactivate the paused JSON Schema parser plan.
 5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
@@ -130,16 +138,16 @@ RC-1/RC-2 (proof-system and durable-doctrine remediation) is complete. A propose
 ## What This Session Should Do
 
 1. Read:
-   - [ir-and-runtime-validator-remediation.md](../plans/active/ir-and-runtime-validator-remediation.md) — proposed RC-3 plan
-   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context
+   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context (RC-4 is next)
    - [architecture-review-packs.md](../plans/active/architecture-review-packs.md) — sweep record
-   - [Pack 2 Note](../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md) — primary RC-3 source
+   - [Pack 3 Note](../research/architecture-review-packs/pack-3-openapi-architecture.md) — primary RC-4 source (OpenAPI)
+   - [Pack 5 Note](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary RC-4 source (Zod)
    - [roadmap.md](../plans/roadmap.md)
    - [IDENTITY.md](../IDENTITY.md)
    - [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)
    - [testing-strategy.md](../directives/testing-strategy.md)
 2. If the user reports a fresh gate or runtime issue, reproduce it first.
-3. Otherwise, review and confirm the proposed RC-3 plan scope.
+3. Otherwise, open and confirm a bounded RC-4 plan.
 4. Execute the confirmed slice with TDD and honest scope.
 5. Record handoff and consolidation outcomes in `.agent/memory/napkin.md`.
 
@@ -180,10 +188,11 @@ Treat every failure as blocking.
 
 Current honest state:
 
-- `pnpm qg` was green on Monday, 23 March 2026 (including `test:e2e`)
+- `pnpm qg` was green on Monday, 24 March 2026 (including `test:e2e`)
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) completed on Monday, 23 March 2026
+- RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)
 - the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md)
-- **RC-3 (IR and runtime validator gaps)** has a proposed plan at [ir-and-runtime-validator-remediation.md](../plans/active/ir-and-runtime-validator-remediation.md) — review and confirm before execution
+- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded plan from the triage before execution
 - RC-5 (downstream surface drift) depends on RC-4 and is Slice 3 or later
 - the paused `json-schema-parser.md` holds paused remediation context; it must not reactivate unchanged
 

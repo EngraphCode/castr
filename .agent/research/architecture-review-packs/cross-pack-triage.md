@@ -57,15 +57,18 @@ Multiple durable documents still describe broader support, richer metadata, or s
 
 ---
 
-### RC-3: IR and Runtime Validator Gaps
+### RC-3: IR and Runtime Validator Gaps (✅ Resolved — Monday, 24 March 2026)
 
 The runtime IR boundary still admits shapes that are outside the canonical ontology (e.g., invalid `type`, schema-valued `additionalProperties`), and omits supported shapes (`trace` operations).
 
-| #   | Finding                                                                                                      | Source Pack | Evidence                                                                                                                       |
-| --- | ------------------------------------------------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | `isCastrSchema()` does not validate core schema shape (`type`, `items`, composition)                         | Pack 2.1    | [validators.schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.schema.ts)     |
-| 2   | Object-ontology drift: IR model still carries schema-valued `additionalProperties` / `unevaluatedProperties` | Pack 2.2    | [schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/models/schema.ts)                               |
-| 3   | `trace` missing from runtime `VALID_HTTP_METHODS`                                                            | Pack 2.3    | [validators.document.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.document.ts) |
+> [!NOTE]
+> All three findings resolved in [ir-and-runtime-validator-remediation.md](../../plans/current/complete/ir-and-runtime-validator-remediation.md). `unevaluatedProperties` was kept as `boolean | CastrSchema` (deviation — see plan completion note).
+
+| #   | Finding                                                                                                      | Source Pack | Status | Evidence                                                                                                                       |
+| --- | ------------------------------------------------------------------------------------------------------------ | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `isCastrSchema()` does not validate core schema shape (`type`, `items`, composition)                         | Pack 2.1    | ✅     | [validators.schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.schema.ts)     |
+| 2   | Object-ontology drift: IR model still carries schema-valued `additionalProperties` / `unevaluatedProperties` | Pack 2.2    | ✅     | [schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/models/schema.ts)                               |
+| 3   | `trace` missing from runtime `VALID_HTTP_METHODS`                                                            | Pack 2.3    | ✅     | [validators.document.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.document.ts) |
 
 **Dependency:** RC-3 items are foundational — they affect trust in all downstream writer/proof paths. However, they can be addressed in parallel with RC-1 since they are disjoint file sets.
 

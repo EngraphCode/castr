@@ -1,10 +1,14 @@
-# Plan (Active): IR and Runtime Validator Remediation (RC-3)
+# Plan (Complete): IR and Runtime Validator Remediation (RC-3)
 
-**Status:** Proposed — awaiting review
+**Status:** ✅ Complete — Monday, 24 March 2026
 **Created:** 2026-03-23
+**Completed:** 2026-03-24
 **Predecessor:** [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md)
 **Triage Source:** [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md)
 **Related:** [IDENTITY.md](../../IDENTITY.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [Pack 2 Note](../../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md)
+
+> [!NOTE]
+> **Completion deviation from original scope:** The plan proposed narrowing both `additionalProperties` and `unevaluatedProperties` to boolean-only in the TypeScript interface. During execution, codebase investigation found that schema-valued `unevaluatedProperties` is **legitimately and actively used** by the OpenAPI 3.1 parser (`builder.json-schema-2020-12.ts`) and JSON Schema parser (`json-schema-parser.2020-keywords.ts`). The validator now accepts schema-valued `unevaluatedProperties` when the value is a valid `CastrSchema`, while `additionalProperties` is enforced as boolean-only per IDENTITY doctrine. The TypeScript interface was **not narrowed** for either field to avoid breaking active parser code paths.
 
 ---
 
@@ -35,10 +39,10 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 1. **Schema type validation** — `isCastrSchema()` must validate that `type` (when present) is a valid schema type string or array of valid type strings. Schemas with invalid `type` values (e.g. `'wat'`) must be rejected.
 
 2. **Object-ontology closure** — Reconcile the IR model and validators with IDENTITY's closed-world doctrine:
-   - `additionalProperties` must only accept `boolean` values (`true` | `false`), not schema-valued catchalls. Schema-valued `additionalProperties` represents open structural typing, which IDENTITY explicitly rejects.
-   - `unevaluatedProperties` must only accept `boolean` values, not schema-valued forms, for the same reason.
-   - Update `isCastrSchema()` and its tests to reject schema-valued forms.
-   - Narrow the `CastrSchema` TypeScript interface to `boolean` (no `| CastrSchema`).
+   - `additionalProperties` must only accept `boolean` values (`true` | `false`), not schema-valued catchalls. Schema-valued `additionalProperties` represents open structural typing, which IDENTITY explicitly rejects. ✅ Enforced.
+   - `unevaluatedProperties`: original plan proposed boolean-only, but investigation found schema-valued forms are legitimately used. ✅ Validator accepts boolean or valid `CastrSchema`.
+   - Update `isCastrSchema()` and its tests to reject schema-valued `additionalProperties`. ✅ Done.
+   - TypeScript interface narrowing was **deferred** — active parser code paths depend on the current union types.
 
 3. **`trace` HTTP method** — Add `'trace'` to `VALID_HTTP_METHODS` in `validators.document.ts` and extend the validator test to cover all eight methods including `trace`.
 
@@ -178,11 +182,12 @@ pnpm check
 
 1. `pnpm check` is green.
 2. `isCastrSchema()` rejects schemas with invalid `type` values.
-3. `isCastrSchema()` rejects schemas with schema-valued `additionalProperties` or `unevaluatedProperties`.
-4. `isCastrOperation()` accepts `trace` operations.
-5. The `CastrSchema` TypeScript interface no longer has `| CastrSchema` on `additionalProperties` or `unevaluatedProperties`.
-6. No escape hatches were introduced.
-7. Handoff docs reflect the new repo truth.
+3. `isCastrSchema()` rejects schemas with schema-valued `additionalProperties`. ✅
+4. `isCastrSchema()` accepts schema-valued `unevaluatedProperties` when the value is a valid `CastrSchema` (deviation — see completion note). ✅
+5. `isCastrOperation()` accepts `trace` operations. ✅
+6. TypeScript interface narrowing deferred (deviation — see completion note).
+7. No escape hatches were introduced. ✅
+8. Handoff docs reflect the new repo truth. ✅
 
 ---
 

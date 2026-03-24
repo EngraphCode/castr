@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 23, 2026)  
+**Date:** January 24, 2026 (Updated March 24, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -44,7 +44,7 @@ Current status of that sweep:
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
 - strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
-- the full repo-root gate sweep was green again on Monday, 23 March 2026
+- the full repo-root gate sweep was green again on Monday, 24 March 2026
 - IDENTITY doctrine alignment is complete:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed
@@ -66,7 +66,8 @@ Current status of that sweep:
   - acceptance criteria, ADR-035, transform README caveats verified and confirmed
   - `pnpm qg` green with the new `test:e2e` gate
 - the seven-pack architecture review sweep is complete
-- **RC-3 (IR and runtime validator gaps)** has a proposed plan at [ir-and-runtime-validator-remediation.md](./active/ir-and-runtime-validator-remediation.md) — review and confirm before execution
+- **RC-3 (IR and runtime validator gaps)** completed Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
+- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded plan from the triage before execution
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work
@@ -88,6 +89,7 @@ Recently completed adjacent remediation:
 - [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [identity-doctrine-alignment.md](./current/complete/identity-doctrine-alignment.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
+- [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
 - [proof-system-and-doctrine-remediation.md](./current/complete/proof-system-and-doctrine-remediation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
