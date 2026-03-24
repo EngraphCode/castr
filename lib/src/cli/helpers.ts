@@ -102,10 +102,7 @@ export function buildGenerationArgs(
     distPath,
     options: generationOptions,
     ...(prettierConfig && { prettierConfig }),
-    ...(options.template &&
-      (isTemplateName(options.template)
-        ? { template: options.template }
-        : { templatePath: options.template })),
+    ...(options.template && isTemplateName(options.template) && { template: options.template }),
     ...(options.noClient && { noClient: options.noClient }),
     ...(options.withValidationHelpers && {
       withValidationHelpers: options.withValidationHelpers,

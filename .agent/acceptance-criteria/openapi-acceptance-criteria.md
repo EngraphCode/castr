@@ -5,8 +5,8 @@
 > Reference schemas: `.agent/reference/openapi_schema/openapi_3_0_x_schema.json` and
 > `.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json`.
 >
-> Current implementation note (2026-03-22): Pack 3 found reusable `components.requestBodies`
-> are parsed into IR but still dropped on OpenAPI egress. This file remains the target
+> Current implementation note (2026-03-24): Pack 3 `components.requestBodies` egress gap fixed in RC-4.1;
+> output-coverage proof assertion for reusable request bodies not yet added. This file remains the target
 > acceptance checklist, not evidence that the live implementation already clears it.
 
 ---

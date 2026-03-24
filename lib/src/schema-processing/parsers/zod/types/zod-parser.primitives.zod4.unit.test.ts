@@ -128,4 +128,14 @@ describe('Zod 4 Primitive Parsing', () => {
       expect(result?.contentEncoding).toBe('base64url');
     });
   });
+
+  describe('unadmitted methods (no writer lockstep)', () => {
+    it.each(['cidrv4', 'cidrv6', 'jwt', 'e164'])(
+      'does not parse z.%s() (not in admitted surface)',
+      (method) => {
+        const result = parsePrimitiveZod(`z.${method}()`);
+        expect(result).toBeUndefined();
+      },
+    );
+  });
 });

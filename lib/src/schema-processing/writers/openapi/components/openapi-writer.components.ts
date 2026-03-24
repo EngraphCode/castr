@@ -10,6 +10,7 @@
 import type { ComponentsObject, ParameterObject, ResponseObject } from 'openapi3-ts/oas31';
 import { compareComponentsForDeterminism } from './openapi-writer.components.ordering.js';
 import { writeOpenApiSchema } from '../schema/openapi-writer.schema.js';
+import { writeRequestBodyComponent } from './openapi-writer.request-body.js';
 import type {
   IRComponent,
   CastrSchemaComponent,
@@ -22,6 +23,7 @@ const COMPONENT_TYPE_SCHEMA = 'schema';
 const COMPONENT_TYPE_SECURITY_SCHEME = 'securityScheme';
 const COMPONENT_TYPE_PARAMETER = 'parameter';
 const COMPONENT_TYPE_RESPONSE = 'response';
+const COMPONENT_TYPE_REQUEST_BODY = 'requestBody';
 const COMPONENT_TYPE_HEADER = 'header';
 const COMPONENT_TYPE_LINK = 'link';
 const COMPONENT_TYPE_CALLBACK = 'callback';
@@ -312,8 +314,13 @@ const COMPONENT_TYPE_HANDLERS: Record<
       addExampleComponent(result, component);
     }
   },
-  requestBody: () => {
-    // requestBody components are not yet surfaced in OpenAPI output
+  requestBody: (result, component) => {
+    if (component.type === COMPONENT_TYPE_REQUEST_BODY) {
+      if (result.requestBodies === undefined) {
+        result.requestBodies = {};
+      }
+      result.requestBodies[component.name] = writeRequestBodyComponent(component);
+    }
   },
 };
 

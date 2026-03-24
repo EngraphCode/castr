@@ -37,10 +37,14 @@ export interface LintValidationResult {
 }
 
 /**
- * Validation result for runtime execution.
+ * Validation result for file structure checks.
+ *
+ * NOTE: This validates file-level structure (existence, non-empty, required imports),
+ * NOT actual runtime execution. Syntax and type-check validations cover compilation
+ * correctness; this function verifies basic structural prerequisites.
  */
-export interface RuntimeValidationResult {
-  /** Whether the code is valid for runtime execution */
+export interface FileStructureValidationResult {
+  /** Whether the file meets structural requirements */
   valid: boolean;
   /** Error message if validation failed */
   error?: string;
@@ -257,29 +261,31 @@ export async function validateLint(filepath: string): Promise<LintValidationResu
 }
 
 /**
- * Validate that generated file meets runtime execution requirements.
+ * Validate that generated file meets structural requirements.
  *
- * This function performs basic sanity checks to ensure the generated code
- * is suitable for runtime execution:
+ * This function performs structural sanity checks to ensure the generated code
+ * has the basic prerequisites for execution:
  * - File exists and is non-empty
  * - File contains required Zod imports
  *
- * Note: This does not actually execute the code or import it as a module,
- * since TypeScript files cannot be directly imported without compilation.
- * The syntax and type-check validations already cover most runtime concerns.
+ * Note: This does NOT actually execute the code, compile it, or import it.
+ * Syntax validation (`validateSyntax`) and type-check validation (`validateTypeCheck`)
+ * cover compilation correctness. This function only verifies file-level prerequisites.
  *
  * @param filepath - Absolute path to the TypeScript file to validate
  * @returns Promise resolving to validation result with error if any
  *
  * @example
  * ```typescript
- * const result = await validateRuntime('/path/to/generated.ts');
+ * const result = await validateFileStructure('/path/to/generated.ts');
  * if (!result.valid) {
- *   console.error('Runtime validation failed:', result.error);
+ *   console.error('File structure validation failed:', result.error);
  * }
  * ```
  */
-export async function validateRuntime(filepath: string): Promise<RuntimeValidationResult> {
+export async function validateFileStructure(
+  filepath: string,
+): Promise<FileStructureValidationResult> {
   try {
     // Verify file exists and is non-empty
     const stats = await fs.stat(filepath);

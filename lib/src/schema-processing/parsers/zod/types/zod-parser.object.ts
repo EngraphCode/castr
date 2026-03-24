@@ -18,6 +18,9 @@ import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { applyMetaToSchema, extractMetaFromChain } from '../modifiers/zod-parser.meta.js';
 import {
   ZOD_METHOD_STRICT,
+  ZOD_METHOD_PASSTHROUGH,
+  ZOD_METHOD_STRIP,
+  ZOD_METHOD_CATCHALL,
   ZOD_STRICT_OBJECT_METHOD,
   ZOD_SCHEMA_TYPE_OBJECT,
   isZodObjectBaseMethod,
@@ -49,6 +52,42 @@ function isStrictObjectSchema(
 }
 
 /**
+ * Object-mode widening modifiers that contradict a strict base.
+ * @internal
+ */
+const WIDENING_MODIFIERS = new Set([ZOD_METHOD_PASSTHROUGH, ZOD_METHOD_STRIP, ZOD_METHOD_CATCHALL]);
+
+/**
+ * Reject contradictory strict-object chains.
+ *
+ * A chain is contradictory when a strict base (or `.strict()` modifier) is
+ * followed by a widening modifier (`.passthrough()`, `.strip()`, `.catchall()`).
+ * This produces ambiguous runtime behaviour and violates IDENTITY doctrine.
+ *
+ * @internal
+ */
+function rejectContradictoryChains(
+  baseMethod: string,
+  chainedMethods: { name: string; argNodes: Node[] }[],
+  isStrict: boolean,
+): void {
+  if (!isStrict) {
+    return;
+  }
+
+  const widener = chainedMethods.find((m) => WIDENING_MODIFIERS.has(m.name));
+  if (!widener) {
+    return;
+  }
+
+  const strictSource = baseMethod === ZOD_STRICT_OBJECT_METHOD ? 'z.strictObject()' : '.strict()';
+  throw new Error(
+    `Contradictory object chain: ${strictSource} followed by .${widener.name}(). ` +
+      'A strict object cannot be widened. Remove the conflicting modifier.',
+  );
+}
+
+/**
  * Extract properties from object node.
  * @internal
  */
@@ -66,7 +105,10 @@ function extractPropertiesFromNode(
   for (const [name, propNode] of propertyNodes) {
     const propSchema = parseSchema(propNode);
     if (!propSchema) {
-      continue;
+      throw new Error(
+        `Failed to parse property "${name}": unsupported expression. ` +
+          'All object properties must be valid Zod schema expressions.',
+      );
     }
     properties[name] = propSchema;
     if (propSchema.metadata?.required) {
@@ -109,6 +151,7 @@ export function parseObjectZodFromNode(
   }
 
   const isStrict = isStrictObjectSchema(baseMethod, chainedMethods);
+  rejectContradictoryChains(baseMethod, chainedMethods, isStrict);
   const propertyNodes = extractObjectProperties(baseCallNode, resolver);
   const { properties, required } = extractPropertiesFromNode(propertyNodes, parseSchema);
 

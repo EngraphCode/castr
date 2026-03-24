@@ -39,18 +39,6 @@ export const Ipv4Schema = z.ipv4();
 /** z.ipv6() - IPv6 address validation */
 export const Ipv6Schema = z.ipv6();
 
-/** z.cidrv4() - IPv4 CIDR block validation */
-export const Cidrv4Schema = z.cidrv4();
-
-/** z.cidrv6() - IPv6 CIDR block validation */
-export const Cidrv6Schema = z.cidrv6();
-
-/** z.jwt() - JWT validation */
-export const JwtSchema = z.jwt();
-
-/** z.e164() - E.164 phone number format */
-export const E164Schema = z.e164();
-
 /** z.hostname() - Hostname validation */
 export const HostnameSchema = z.hostname();
 

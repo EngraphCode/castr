@@ -120,13 +120,13 @@ With this principle:
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                                                                     |
-| ----------- | :-----------: | :-----------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist, but Pack 3 found reusable `components.requestBodies` output incompleteness; full support remains blocked pending remediation. |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                                                                  |
-| JSON Schema |      🔲       |      ✅       | Writer exists; parser code is on disk, but honest JSON Schema input support remains under Pack 4 review.                                                                  |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                                                              |
-| tRPC        |      🔲       |      🔲       | Planned.                                                                                                                                                                  |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                    |
+| ----------- | :-----------: | :-----------: | -------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; `components.requestBodies` egress implemented in RC-4.1.     |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                 |
+| JSON Schema |      🔲       |      ✅       | Writer exists; parser code is on disk, but honest JSON Schema input support remains under Pack 4 review. |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                             |
+| tRPC        |      🔲       |      🔲       | Planned.                                                                                                 |
 
 ---
 

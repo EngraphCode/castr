@@ -38,8 +38,24 @@ const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/';
  * @internal
  */
 function getIdentifierRef(node: Identifier): string | undefined {
-  const symbolName = node.getSymbol()?.getName();
+  const symbol = node.getSymbol();
+  const symbolName = symbol?.getName();
   if (!symbolName) {
+    return undefined;
+  }
+
+  // Declaration proof: verify the identifier's declaration site has a call expression
+  // initializer (i.e., it looks like a Zod schema constructor call, not a bare value).
+  const declarations = symbol?.getDeclarations() ?? [];
+  const hasCallInitializer = declarations.some((decl) => {
+    if (!Node.isVariableDeclaration(decl)) {
+      return false;
+    }
+    const init = decl.getInitializer();
+    return init !== undefined && Node.isCallExpression(init);
+  });
+
+  if (!hasCallInitializer) {
     return undefined;
   }
 

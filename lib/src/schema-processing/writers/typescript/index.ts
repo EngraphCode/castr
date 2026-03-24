@@ -13,6 +13,7 @@ import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibi
 export { writeTypeDefinition } from './type-writer.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema';
+const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
 
 function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
   return Object.entries(groupNames).sort(([leftApiName], [rightApiName]) =>
@@ -21,8 +22,19 @@ function getSortedGroupEntries(groupNames: Record<string, string>): [string, str
 }
 
 /**
+ * Whether the effective template is schemas-only.
+ * When true, the writer suppresses endpoints, MCP tools, and helpers.
+ */
+function isSchemasOnly(context: TemplateContext): boolean {
+  return context.options?.template === TEMPLATE_SCHEMAS_ONLY;
+}
+
+/**
  * Generate TypeScript code from TemplateContext using ts-morph.
  * Replaces the legacy Handlebars templates.
+ *
+ * When `options.template === 'schemas-only'`, only schema types and Zod
+ * declarations are emitted — endpoints, MCP tools, and helpers are suppressed.
  */
 export function writeTypeScript(context: TemplateContext): string {
   if (context._ir) {
@@ -41,9 +53,12 @@ export function writeTypeScript(context: TemplateContext): string {
     sourceFile.addStatements('// Error: CastrDocument missing from context');
   }
 
-  addEndpointsArray(sourceFile, context);
-  addMcpToolsArray(sourceFile, context);
-  addHelpers(sourceFile, context);
+  // Schemas-only template: suppress all non-schema output
+  if (!isSchemasOnly(context)) {
+    addEndpointsArray(sourceFile, context);
+    addMcpToolsArray(sourceFile, context);
+    addHelpers(sourceFile, context);
+  }
 
   return sourceFile.getFullText();
 }

@@ -37,13 +37,11 @@ export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
 > = {
   /**
-   * Template name to use for generation
+   * Template name to use for generation.
    * - "schemas-with-metadata": Schemas + endpoint metadata (default)
-   * - "schemas-only": Accepted selector, but not yet an honest metadata-free boundary
+   * - "schemas-only": Schemas and types only — no endpoints, MCP, or helpers
    */
   template?: 'schemas-only' | 'schemas-with-metadata';
-  /** Compatibility field only. Current rendering ignores custom template paths. */
-  templatePath?: string;
   /**
    * When true, automatically uses schemas-with-metadata template (no HTTP client)
    * Overrides template parameter if set
@@ -141,6 +139,7 @@ export function buildEffectiveOptions<TOptions extends TemplateContext['options'
     return {
       ...baseDefaults,
       ...options,
+      template: effectiveTemplate,
       withAllResponses: true,
       withAlias: true,
       shouldExportAllSchemas: true,
@@ -152,6 +151,7 @@ export function buildEffectiveOptions<TOptions extends TemplateContext['options'
   return {
     ...baseDefaults,
     ...options,
+    template: effectiveTemplate,
   };
 }
 
@@ -160,7 +160,6 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   input,
   distPath,
   template,
-
   noClient,
   withValidationHelpers,
   withSchemaRegistry,

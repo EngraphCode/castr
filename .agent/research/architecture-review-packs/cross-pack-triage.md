@@ -74,43 +74,49 @@ The runtime IR boundary still admits shapes that are outside the canonical ontol
 
 ---
 
-### RC-4: Format-Specific Ingest/Egress Drift
+### RC-4: Format-Specific Ingest/Egress Drift (✅ Resolved — Monday, 24 March 2026)
 
 Parser and writer seams in each format still disagree about what is admitted vs emitted vs proven.
 
-| #   | Finding                                                                                   | Source Pack | Evidence                                                                                                                                                                                                                                                          |
-| --- | ----------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | OpenAPI: `components.requestBodies` parsed into IR but dropped on egress                  | Pack 3.1    | [openapi-writer.components.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/openapi/components/openapi-writer.components.ts)                                                                                                           |
-| 2   | JSON Schema: `parseJsonSchemaDocument()` is only a `$defs` extractor                      | Pack 4.1    | [parsers/json-schema/index.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/json-schema/index.ts)                                                                                                                                      |
-| 3   | JSON Schema: no explicit unsupported-surface rejection seam                               | Pack 4.2    | [json-schema-parser.core.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts)                                                                                                                      |
-| 4   | JSON Schema: writer/proof layers disagree on canonical nullability and `contains` support | Pack 4.3    | [json-schema-object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/shared/json-schema-object.ts)                                                                                                                                     |
-| 5   | Zod: contradictory strict-object chains (`.strict().passthrough()`) not rejected          | Pack 5.1    | [zod-parser.object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts)                                                                                                                                    |
-| 6   | Zod: unsupported nested members silently dropped                                          | Pack 5.2    | [zod-parser.object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts), composition modules                                                                                                               |
-| 7   | Zod: identifier-rooted expressions promoted to `$ref` with insufficient proof             | Pack 5.3    | [zod-parser.references.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/registry/zod-parser.references.ts)                                                                                                                         |
-| 8   | Zod: helper format surface wider than writer/proof lockstep                               | Pack 5.4    | [zod-parser.zod4-formats.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts), [primitives.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/zod/generators/primitives.ts) |
+> [!NOTE]
+> 5 of 8 findings resolved in [format-specific-drift-remediation.md](../../plans/current/complete/format-specific-drift-remediation.md). Remaining 3 findings (RC-4.2/4.3/4.4 — JSON Schema parser contract) deferred to a later slice pending the paused JSON Schema parser plan.
 
-**Dependency:** RC-4 items depend on honest proofs (RC-1) to verify their fixes. They are the _next_ remediation slice after proof/doctrine, not the first.
+| #   | Finding                                                                                   | Source Pack | Status   | Evidence                                                                                                                                                                                                                                                          |
+| --- | ----------------------------------------------------------------------------------------- | ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | OpenAPI: `components.requestBodies` parsed into IR but dropped on egress                  | Pack 3.1    | ✅       | [openapi-writer.components.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/openapi/components/openapi-writer.components.ts)                                                                                                           |
+| 2   | JSON Schema: `parseJsonSchemaDocument()` is only a `$defs` extractor                      | Pack 4.1    | Deferred | [parsers/json-schema/index.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/json-schema/index.ts)                                                                                                                                      |
+| 3   | JSON Schema: no explicit unsupported-surface rejection seam                               | Pack 4.2    | Deferred | [json-schema-parser.core.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts)                                                                                                                      |
+| 4   | JSON Schema: writer/proof layers disagree on canonical nullability and `contains` support | Pack 4.3    | Deferred | [json-schema-object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/shared/json-schema-object.ts)                                                                                                                                     |
+| 5   | Zod: contradictory strict-object chains (`.strict().passthrough()`) not rejected          | Pack 5.1    | ✅       | [zod-parser.object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts)                                                                                                                                    |
+| 6   | Zod: unsupported nested members silently dropped                                          | Pack 5.2    | ✅       | [zod-parser.object.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts), composition modules                                                                                                               |
+| 7   | Zod: identifier-rooted expressions promoted to `$ref` with insufficient proof             | Pack 5.3    | ✅       | [zod-parser.references.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/registry/zod-parser.references.ts)                                                                                                                         |
+| 8   | Zod: helper format surface wider than writer/proof lockstep                               | Pack 5.4    | ✅       | [zod-parser.zod4-formats.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts), [primitives.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/writers/zod/generators/primitives.ts) |
+
+**Dependency:** RC-4 items depend on honest proofs (RC-1) to verify their fixes. 5 of 8 findings resolved; 3 JSON Schema findings deferred pending paused parser plan.
 
 ---
 
-### RC-5: Downstream Surface Drift (context, MCP, rendering, generated-code)
+### RC-5: Downstream Surface Drift (✅ Resolved — Monday, 24 March 2026)
 
 Template selection, MCP schema generation, and generated-code proof surfaces either over-promise or bypass governed contracts.
 
-| #   | Finding                                                        | Source Pack | Evidence                                                                                                                                                                                                                                   |
-| --- | -------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | `schemas-only` template still emits endpoints and MCP metadata | Pack 6.1    | [generate-from-context.ts](file:///Users/jim/code/personal/castr/lib/src/rendering/generate-from-context.ts)                                                                                                                               |
-| 2   | `templatePath` is documented but silently ignored              | Pack 6.2    | [helpers.ts](file:///Users/jim/code/personal/castr/lib/src/cli/helpers.ts)                                                                                                                                                                 |
-| 3   | MCP tool schemas bypass governed Draft 07 contract             | Pack 6.3    | [template-context.mcp.schemas.from-ir.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.from-ir.ts)                                                                     |
-| 4   | Template-context layer reintroduces post-IR repair logic       | Pack 6.5    | [template-context.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/template-context.ts), [inline-schemas.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/schemas/inline-schemas.ts) |
+> [!NOTE]
+> All four findings resolved in RC-5 session on Monday, 24 March 2026: `schemas-only` made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist implemented, generated-surface proof naming made honest, template-context post-IR mutation fixed.
 
-**Dependency:** RC-5 items depend on both RC-1 (proof honesty) and RC-4 (format lockstep). They are remediation Slice 3 or later.
+| #   | Finding                                                        | Source Pack | Status | Evidence                                                                                                                                                                                                                                   |
+| --- | -------------------------------------------------------------- | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `schemas-only` template still emits endpoints and MCP metadata | Pack 6.1    | ✅     | [generate-from-context.ts](file:///Users/jim/code/personal/castr/lib/src/rendering/generate-from-context.ts)                                                                                                                               |
+| 2   | `templatePath` is documented but silently ignored              | Pack 6.2    | ✅     | [helpers.ts](file:///Users/jim/code/personal/castr/lib/src/cli/helpers.ts)                                                                                                                                                                 |
+| 3   | MCP tool schemas bypass governed Draft 07 contract             | Pack 6.3    | ✅     | [template-context.mcp.schemas.from-ir.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.from-ir.ts)                                                                     |
+| 4   | Template-context layer reintroduces post-IR repair logic       | Pack 6.5    | ✅     | [template-context.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/template-context.ts), [inline-schemas.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/context/schemas/inline-schemas.ts) |
+
+**Dependency:** All remediation slices through RC-5 are now complete. Remaining unremediated findings are in RC-1/RC-2 (durable-doc over-claims) and residual Pack 1/3/4/5/7 findings.
 
 ---
 
 ## Dependency Graph
 
-```
+```text
 RC-1 (proof-system honesty)
   │
   ╠══ RC-2 (durable-doc over-claims)   [parallel with RC-1]

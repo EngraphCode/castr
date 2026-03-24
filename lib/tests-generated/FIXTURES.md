@@ -9,7 +9,7 @@ These fixtures exercise a representative single-file generation path to ensure t
 1. **Syntactically valid** - Parses without TypeScript syntax errors
 2. **Type-check clean under the generated harness** - Semantic diagnostics are checked with known isolation-time module-resolution filters
 3. **Lint-checked** - ESLint is run when configuration loads successfully
-4. **Runtime smoke-checked** - File exists, is non-empty, and includes the expected Zod import
+4. **File-structure checked** - File exists, is non-empty, and includes the expected Zod import
 
 Current implementation note: this suite does **not** currently import or execute generated modules, and it does **not** cover grouped output or every writer branch.
 

@@ -63,10 +63,9 @@ castr <input> -o <output> [options]
 | Template                | Honest current status                                              |
 | ----------------------- | ------------------------------------------------------------------ |
 | `schemas-with-metadata` | Stable current generation path: Zod schemas plus endpoint metadata |
-| `schemas-only`          | Accepted selector, but it does not yet suppress metadata exports   |
+| `schemas-only`          | Schemas and types only — no endpoints, MCP, or helpers             |
 
-`schemas-with-client` is not part of the current public surface.
-Custom template paths are also not part of the honest supported surface even though CLI/programmatic plumbing still exposes a compatibility field for them.
+`schemas-with-client` and custom template paths are not part of the current public surface.
 
 ## Programmatic Generation
 
@@ -88,20 +87,19 @@ Output modes:
 
 ### Top-Level Arguments
 
-| Field                   | Meaning                                                                        |
-| ----------------------- | ------------------------------------------------------------------------------ |
-| `input`                 | File path or URL to an OpenAPI document                                        |
-| `openApiDoc`            | In-memory OpenAPI object                                                       |
-| `distPath`              | Output path when writing files                                                 |
-| `disableWriteToFile`    | Return generated output instead of writing it                                  |
-| `template`              | `schemas-only` or `schemas-with-metadata`; `schemas-only` still emits metadata |
-| `templatePath`          | Compatibility field only; currently ignored by the renderer                    |
-| `noClient`              | Convenience selector for `schemas-with-metadata`                               |
-| `withValidationHelpers` | Emit `validateRequest()` / `validateResponse()`                                |
-| `withSchemaRegistry`    | Emit schema registry helpers                                                   |
-| `debugIR`               | Emit serialised IR alongside output when writing files                         |
-| `prettierConfig`        | Optional Prettier config object                                                |
-| `options`               | `TemplateContextOptions`                                                       |
+| Field                   | Meaning                                                |
+| ----------------------- | ------------------------------------------------------ |
+| `input`                 | File path or URL to an OpenAPI document                |
+| `openApiDoc`            | In-memory OpenAPI object                               |
+| `distPath`              | Output path when writing files                         |
+| `disableWriteToFile`    | Return generated output instead of writing it          |
+| `template`              | `schemas-only` or `schemas-with-metadata`              |
+| `noClient`              | Convenience selector for `schemas-with-metadata`       |
+| `withValidationHelpers` | Emit `validateRequest()` / `validateResponse()`        |
+| `withSchemaRegistry`    | Emit schema registry helpers                           |
+| `debugIR`               | Emit serialised IR alongside output when writing files |
+| `prettierConfig`        | Optional Prettier config object                        |
+| `options`               | `TemplateContextOptions`                               |
 
 Important current truth:
 
@@ -109,7 +107,6 @@ Important current truth:
 - use `shouldExportAllSchemas`, not `exportSchemas`, in `options`
 - use `shouldExportAllTypes`, not `exportTypes`, in `options`
 - `generateZodClientFromOpenAPI()` returns `GenerationResult` only; it does not return `mcpTools`
-- `templatePath` remains in the type for compatibility, but current rendering ignores it
 
 ### `TemplateContextOptions`
 

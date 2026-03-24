@@ -132,4 +132,61 @@ describe('Zod Object Parsing', () => {
       `),
     ).toThrow(/closed-world object semantics/);
   });
+
+  describe('contradictory strict-object chains', () => {
+    it('rejects z.object().strict().passthrough() as contradictory', () => {
+      expect(() =>
+        parseObjectZod(`
+          z.object({
+            id: z.string()
+          }).strict().passthrough()
+        `),
+      ).toThrow(/contradictory/i);
+    });
+
+    it('rejects z.strictObject().catchall() as contradictory', () => {
+      expect(() =>
+        parseObjectZod(`
+          z.strictObject({
+            id: z.string()
+          }).catchall(z.string())
+        `),
+      ).toThrow(/contradictory/i);
+    });
+
+    it('rejects z.object().strict().strip() as contradictory', () => {
+      expect(() =>
+        parseObjectZod(`
+          z.object({
+            id: z.string()
+          }).strict().strip()
+        `),
+      ).toThrow(/contradictory/i);
+    });
+
+    it('accepts z.strictObject().strict() (redundant, but not contradictory)', () => {
+      const result = parseObjectZod(`
+        z.strictObject({
+          id: z.string()
+        }).strict()
+      `);
+
+      expect(result?.type).toBe('object');
+      expect(result?.additionalProperties).toBe(false);
+    });
+  });
+
+  describe('unsupported nested member fail-fast', () => {
+    it('rejects object with unsupported nested property expression', () => {
+      // A numeric literal (42) is not a Zod schema - should throw, not silently drop
+      expect(() =>
+        parseObjectZod(`
+          z.strictObject({
+            name: z.string(),
+            bad: 42
+          })
+        `),
+      ).toThrow(/unsupported.*property|failed.*parse/i);
+    });
+  });
 });

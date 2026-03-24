@@ -47,10 +47,19 @@ function extractFromPropertyAssignment(prop: Node): [string, Node] | undefined {
   const name = prop.getName();
   const init = prop.getInitializer();
 
-  if (init && (Node.isCallExpression(init) || Node.isIdentifier(init))) {
+  if (!init) {
+    return undefined;
+  }
+
+  if (Node.isCallExpression(init) || Node.isIdentifier(init)) {
     return [name, init];
   }
-  return undefined;
+
+  throw new Error(
+    `Unsupported property "${name}": expected a Zod schema expression ` +
+      `(call or identifier), got ${init.getKindName()}. ` +
+      'All object properties must be valid Zod schema expressions.',
+  );
 }
 
 /**

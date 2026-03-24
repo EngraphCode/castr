@@ -52,10 +52,10 @@ Current status of that sweep:
 - proof-system and durable-doctrine remediation (Slice 1) is complete (see below)
 - Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
 - Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
-- Pack 3 (`openapi-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: reusable `components.requestBodies` are parsed into IR, dropped on OpenAPI egress, and not asserted by the current output-coverage proof suite
+- Pack 3 (`openapi-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4.1: `components.requestBodies` egress implemented; remaining output-coverage proof assertion not yet added
 - Pack 4 (`json-schema-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: JSON Schema parser/writer/proof code exists, but the public document-parser contract is incomplete, unsupported surfaces are not rejected explicitly enough, and the proof/docs story over-claims the supported surface
-- Pack 5 (`zod-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: contradictory strict-object chains are still accepted, unsupported nested Zod members can be silently dropped, helper-format support is wider than the writer/proof lockstep, and the proof/docs story over-claims semantic parity
-- Pack 6 (`context-mcp-rendering-and-generated-surface`) completed on Sunday, 22 March 2026 with a `red` verdict: `schemas-only` and custom-template entrypoints are not honest public surfaces, MCP schema generation bypasses the governed Draft 07 contract, and the generated-output proof story over-claims runtime coverage
+- Pack 5 (`zod-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4: contradictory chain rejection, nested member fail-fast, reference declaration proof, and format lockstep closure implemented; remaining proof/doc over-claims deferred
+- Pack 6 (`context-mcp-rendering-and-generated-surface`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-5: `schemas-only` template now genuinely schemas-only, dead `templatePath` removed, MCP schemas normalised to Draft 07 allowlist, generated-surface proof naming made honest, template-context post-IR mutation fixed
 - Pack 7 (`proof-system-and-durable-doctrine`) completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while dedicated proof suites remain off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass
 - final consolidation rerun on Monday, 23 March 2026 kept the Pack 7 truth unchanged: `pnpm check:ci` green, off-chain `vitest.e2e` red, `test:scalar-guard` green
 - proof-system and durable-doctrine remediation (Slice 1) completed on Monday, 23 March 2026:
@@ -67,7 +67,9 @@ Current status of that sweep:
   - `pnpm qg` green with the new `test:e2e` gate
 - the seven-pack architecture review sweep is complete
 - **RC-3 (IR and runtime validator gaps)** completed Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
-- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded plan from the triage before execution
+- **RC-4 (format-specific drift)** completed Monday, 24 March 2026 — [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md); 3 JSON Schema findings deferred pending paused parser plan
+- **RC-5 (downstream surface drift)** completed Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
+- the next unblocked slice is **RC-6 (durable-doc over-claims)** or a consolidation pass to decide the next remediation target from the remaining Pack 1/3/4/5/7 findings
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work
@@ -90,6 +92,8 @@ Recently completed adjacent remediation:
 - [identity-doctrine-alignment.md](./current/complete/identity-doctrine-alignment.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
+- [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md)
+- [downstream-surface-drift-remediation — RC-5 completed in-session 2026-03-24]
 - [proof-system-and-doctrine-remediation.md](./current/complete/proof-system-and-doctrine-remediation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
@@ -346,7 +350,7 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 | Format          | Input | Output | Status / Notes                                                                                                                           |
 | --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output, but Pack 3 found reusable `components.requestBodies` output incompleteness                       |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                          |
 | **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                             |
 | **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                       |
 | **JSON Schema** |  🔲   |   🔲   | Parser and writer code exist on disk, but Pack 4 found no honest standalone-document parser contract and under-proven egress normal form |

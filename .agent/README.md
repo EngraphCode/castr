@@ -49,15 +49,17 @@ Then use:
   - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Most Recent Review Note:** [`.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`](research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md)
 - **Historical Final-Pack Prompt:** [`.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md`](prompts/pack-7-proof-system-and-durable-doctrine.prompt.md)
-- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 complete; RC-3 complete; **RC-4 (format-specific drift) is the next unblocked slice**
-- **Latest Completed Implementation Slice:** IR and Runtime Validator Remediation (RC-3, verified Monday 24 March 2026)
-  - `isCastrSchema` validates all schema fields honestly and completely
-  - `additionalProperties` enforced as boolean-only per IDENTITY doctrine
-  - schema-valued `unevaluatedProperties` kept (active OpenAPI 3.1 / JSON Schema 2020-12 parser dependency)
-  - `trace` added to `VALID_HTTP_METHODS`
-  - test file split for lint compliance
-  - Completed plan: [ir-and-runtime-validator-remediation.md](plans/current/complete/ir-and-runtime-validator-remediation.md)
-- **Prior Completed Slice:** Proof-System and Doctrine Remediation (RC-1/RC-2, verified Monday 23 March 2026)
+- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 complete; RC-3 complete; RC-4 complete; **RC-5 (downstream surface drift) complete** — next slice requires triage of remaining Pack 1/3/4/5/7 findings
+- **Latest Completed Implementation Slice:** Downstream Surface Drift Remediation (RC-5, verified Monday 24 March 2026)
+  - `schemas-only` template now genuinely schemas-only (endpoints and MCP suppressed)
+  - dead `templatePath` removed from public API
+  - MCP Draft 07 allowlist (40 safe keys) replaces generic IR-key iteration
+  - generated-surface proof naming made honest (`validateRuntime` → `validateFileStructure`)
+  - template-context IR immutability enforced via shallow copy
+  - 26 new unit tests; `pnpm qg` green
+- **Prior Completed Slices:**
+  - RC-4 (format-specific drift, Monday 24 March 2026): OpenAPI requestBody egress, contradictory chain rejection, nested member fail-fast, reference declaration proof, format lockstep closure
+  - RC-3 (IR and runtime validator, Monday 24 March 2026): `isCastrSchema` validates all schema fields honestly, `trace` added to VALID_HTTP_METHODS, test file split
   - `unknownKeyBehavior` removed from IR, parsers, and writers
   - parser-layer `additionalProperties` honesty restored for non-object schemas
   - public strictness/compatibility surfaces removed

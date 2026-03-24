@@ -4,11 +4,51 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-03-24
 
+- RC-5 (downstream surface drift) remediation completed with all five Pack 6 findings resolved:
+  - RC-5.1: `schemas-only` now genuinely schemas-only — `isSchemasOnly()` gate added to writer, upstream endpoint/MCP suppression in template-context, 10 new TDD tests
+  - RC-5.2: dead `templatePath` removed from public API type, CLI helpers, API-REFERENCE.md, and MIGRATION.md
+  - RC-5.3: MCP Draft 07 normalisation — explicit `DRAFT_07_ALLOWLIST` (40 keys) replaces generic IR-key iteration; IR-only fields silently stripped; 16 new TDD tests
+  - RC-5.4: generated-surface proof honesty — `validateRuntime` → `validateFileStructure`, `RuntimeValidationResult` → `FileStructureValidationResult`, FIXTURES.md updated
+  - RC-5.5: template-context post-IR cleanup — IR immutability via shallow copy (done in RC-5.1), `shouldExportAllSchemas` JSDoc added documenting writer-only scope
+  - `pnpm qg` green (506 transform tests, 4 e2e, 26 new unit tests)
+- Key design decisions:
+  - MCP schema hardening uses an allowlist (deny-all-by-default) rather than a blocklist, ensuring new IR-only fields are automatically excluded from MCP output
+  - `templatePath` was removed entirely rather than deprecated, since it was already silently ignored and the `template` selector is the supported API
+- Type error discovery during verification: `IRIntegerSemantics` is a string union (`'int64' | 'bigint'`), not an object — test mocks needed correction
+- Handoff docs updated: `roadmap.md`, `session-entry.prompt.md`, `cross-pack-triage.md`, `architecture-review-packs.md`, `napkin.md`
+- Next slice is TBD — remaining unremediated findings from Packs 1/3/4/5/7 need triage to select the next target
+- Documentation consolidation pass (`jc-consolidate-docs`) after RC-5:
+  - `.agent/README.md`: review state updated from "RC-4 next" to "RC-5 complete, next slice TBD"; latest-completed-slice updated from RC-3 to RC-5; prior slices restructured
+  - `json-schema-parser.md`: added `test:e2e` to quality gates list (was missing since RC-1/RC-2 promoted it to the canonical chain)
+  - Prompts audited: `start-right.prompt.md` (doctrine only, no drift), `session-entry.prompt.md` (already updated), `architecture-review-packs.prompt.md` / `pack-3` / `pack-4` / `pack-7` prompts (historical, no drift)
+  - `practice-index.md`: reference table only, no drift
+  - `active/README.md`: lifecycle contract, no status markers, no drift
+  - `architecture-review-packs.md`: already updated
+  - Practice box check: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only scaffold `README.md`; no new incoming Practice material needed integration
+- No structural learning clears the bar for Practice Core evolution in this pass; the useful work was status-marker honesty and gate-list completeness across handoff surfaces.
+
 - RC-3 (IR and runtime validator gaps) remediation completed and committed:
   - `isCastrSchema` now validates type, items, composition, required, additionalProperties (boolean-only), unevaluatedProperties (boolean or valid CastrSchema), and metadata (full CastrSchemaNode)
   - `trace` added to `VALID_HTTP_METHODS`
   - test file split: `validators.schema.unit.test.ts` for schema/node tests, `validators.unit.test.ts` for document/operation tests
   - deviation from original plan: schema-valued `unevaluatedProperties` kept because OpenAPI 3.1 and JSON Schema 2020-12 parsers actively use it; TypeScript interface narrowing deferred
+- RC-4 (format-specific drift) remediation completed with 5 of 8 findings resolved, 3 JSON Schema findings deferred pending paused parser plan:
+  - RC-4.1: OpenAPI requestBody egress implemented (`writeRequestBodyComponent` extracted to `openapi-writer.request-body.ts`; ADR-036 compliant)
+  - RC-4.5: contradictory strict-object chain rejection (`.strict().passthrough()`, `.strictObject().catchall()`, `.strict().strip()`)
+  - RC-4.6: nested member fail-fast (unsupported property initializers now throw instead of silently continuing)
+  - RC-4.7: reference declaration proof (non-Zod identifiers no longer promoted to `$ref`)
+  - RC-4.8: format lockstep closure (`cidrv4`, `cidrv6`, `jwt`, `e164` removed from `ZOD_FLAT_PRIMITIVES`)
+  - 14 new tests across 5 test files; `pnpm qg` green
+- Documentation consolidation pass (`jc-consolidate-docs`) after RC-4:
+  - `format-specific-drift-remediation.md`: marked complete and moved from `active/` to `current/complete/`
+  - `cross-pack-triage.md`: RC-4 header marked ✅ Resolved, status column added to findings table (5 ✅, 3 Deferred), fixed pre-existing MD040 lint
+  - `session-entry.prompt.md`: state header updated to RC-4 Complete / RC-5 Next; Pack 3 and Pack 5 verdicts updated to partially remediated; reading list repointed to Pack 6; review state and immediate priority updated
+  - `roadmap.md`: RC-4 completion recorded with date, RC-5 flagged as next, Pack 3 and Pack 5 verdicts updated, OpenAPI format status updated, plan added to recently-completed list
+  - `VISION.md`: OpenAPI format status updated to reflect requestBody egress fix
+  - `architecture-review-packs.md`: Pack 3 and Pack 5 verdicts updated to partially remediated
+  - `openapi-acceptance-criteria.md`: implementation note date and status updated
+  - Practice box check: `.agent/practice-core/incoming/` empty; `.agent/practice-context/incoming/` contains only scaffold `README.md`; no new incoming Practice material needed integration
+- No structural learning clears the bar for Practice Core evolution in this pass; the useful work was status-marker honesty and verdict-language alignment across all handoff surfaces.
 - Documentation consolidation pass (`jc-consolidate-docs`):
   - `architecture-review-packs.md`: RC-3 completion recorded, close-out state updated to point at RC-4 as next slice
   - `session-entry.prompt.md`: RC-3 marked complete, RC-4 flagged as next, reading list updated to Pack 3/5 sources, repo truth date updated to 24 March 2026

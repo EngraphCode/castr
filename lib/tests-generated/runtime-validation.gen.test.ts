@@ -2,15 +2,15 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { generateZodClientFromOpenAPI } from './test-utils.js';
 import { isSingleFileResult } from '../src/rendering/generation-result.js';
 import { join } from 'path';
-import { validateRuntime } from './validation-harness.js';
+import { validateFileStructure } from './validation-harness.js';
 import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './temp-file-utils.js';
 
 /**
  * Runtime Validation Test Suite for Generated Code
  *
  * This suite validates that representative single-file generated
- * TypeScript/Zod output from OpenAPI specs passes runtime smoke checks:
- * non-empty, contains required imports, and looks structurally runnable.
+ * TypeScript/Zod output from OpenAPI specs passes file-structure checks:
+ * non-empty, contains required imports, and has valid file structure.
  *
  * Representative fixtures exercise a representative single-file path:
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
@@ -90,17 +90,17 @@ describe('Generated Code - Runtime Validation', () => {
         }
       });
 
-      it('passes runtime smoke checks for generated Zod output', async () => {
+      it('passes file-structure checks for generated Zod output', async () => {
         if (generationError || !tempFilePath) {
           throw new Error(
             `Code generation failed for ${name}: ${generationError?.message ?? 'Unknown error'}`,
           );
         }
 
-        const result = await validateRuntime(tempFilePath);
+        const result = await validateFileStructure(tempFilePath);
 
         if (!result.valid) {
-          console.error(`\nRuntime error in ${name}:`, result.error);
+          console.error(`\nFile structure error in ${name}:`, result.error);
         }
 
         expect(result.valid).toBe(true);

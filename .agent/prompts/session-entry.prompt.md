@@ -34,7 +34,7 @@ Notes:
 
 ---
 
-## Current State: RC-3 Complete — RC-4 Next
+## Current State: RC-5 Complete — Next Slice TBD
 
 ### Completed Predecessor Plans
 
@@ -49,7 +49,9 @@ Notes:
 
 - Proof-system and durable-doctrine remediation (RC-1 / RC-2) is complete.
 - **RC-3 (IR and runtime validator gaps) is complete** — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md).
-- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded successor plan from the [cross-pack triage](../research/architecture-review-packs/cross-pack-triage.md) before execution.
+- **RC-4 (format-specific drift) is complete** — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md). 3 JSON Schema findings deferred pending paused parser plan.
+- **RC-5 (downstream surface drift) is complete** — all five Pack 6 findings resolved in-session on Monday, 24 March 2026.
+- The next unblocked slice is TBD — remaining findings from Packs 1/3/4/5/7 need triage to select the next remediation target.
 - The paused JSON Schema parser plan remains paused.
 
 ### Canonical Identity
@@ -105,14 +107,16 @@ Pack verdicts from the architecture review sweep:
 
 - Pack 1 (`yellow`): package entrypoints and dependency boundaries are disciplined; CLI identity drift fixed (now `castr`); public docs may still drift on some claims
 - Pack 2 (`red`): runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
-- Pack 3 (`red`): reusable `components.requestBodies` are parsed into IR, dropped on OpenAPI egress, and not asserted by the output-coverage proof suite
+- Pack 3 (`red` → partially remediated): `components.requestBodies` egress implemented in RC-4.1; remaining output-coverage proof assertion not yet added
 - Pack 4 (`red`): JSON Schema parser/writer/proof code exists, but `parseJsonSchemaDocument()` is only a `$defs` extractor, unsupported surfaces are not rejected explicitly enough, and the proof/doc story over-claims the supported contract
-- Pack 5 (`red`): contradictory strict-object chains are still accepted, unsupported nested Zod members can be silently dropped, helper-format support is wider than the writer/proof lockstep, and the proof/docs story still over-claims semantic parity
-- Pack 6 (`red`): `schemas-only` and custom-template entrypoints are not honest public surfaces, MCP schemas bypass the governed Draft 07 contract, and the generated-output proof story still over-claims runtime coverage
-- Pack 7 (`red` → partially remediated): proof gate-chain honesty restored; remaining doc/proof over-claims in Packs 2–6 are tracked by RC-3/RC-4/RC-5
+- Pack 5 (`red` → partially remediated): contradictory strict-object chain rejection, nested member fail-fast, reference declaration proof, and format lockstep closure all implemented in RC-4; remaining over-claim drift deferred
+- Pack 6 (`red` → partially remediated): `schemas-only` made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist, proof-suite honest naming, and template-context post-IR mutation fixed in RC-5
+- Pack 7 (`red` → partially remediated): proof gate-chain honesty restored; remaining doc/proof over-claims tracked by remaining pack findings
 
 Recent completed slices (all gates green, all reviews closed):
 
+- RC-5 downstream surface drift remediation (2026-03-24): `schemas-only` genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist, proof-suite honest naming, template-context immutability
+- RC-4 format-specific drift remediation (2026-03-24): OpenAPI requestBody egress, contradictory chain rejection, nested member fail-fast, reference declaration proof, format lockstep closure
 - Proof-system and durable-doctrine remediation RC-1/RC-2 (2026-03-23): `test:e2e` promoted to canonical chain, CLI identity fixed, proof-suite naming and doc-scope honesty restored
 - IDENTITY doctrine alignment (2026-03-21): parser honesty restored, dead strictness surfaces removed, cross-realm-safe runtime detection hardened
 - Doctor rescue-loop redesign (2026-03-20): `rescueRetryCount` 1,159 → 1, `nonStandardRescue` 20,770ms → 31ms, `pnpm test:transforms` 25.88s → 6.92s
@@ -127,27 +131,25 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1/RC-2 (proof-system and durable-doctrine remediation) and RC-3 (IR and runtime validator gaps) are both complete. The next unblocked slice is **RC-4 (format-specific drift)**.
+RC-1/RC-2 (proof-system and durable-doctrine remediation), RC-3 (IR and runtime validator gaps), RC-4 (format-specific drift), and RC-5 (downstream surface drift) are all complete. The next slice requires triage of remaining findings from Packs 1/3/4/5/7.
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Open a bounded RC-4 plan** from the [cross-pack triage](../research/architecture-review-packs/cross-pack-triage.md) — it targets parser/writer lockstep fixes for OpenAPI, JSON Schema, and Zod.
+2. **Triage remaining findings** from Packs 1/3/4/5/7 to select the next remediation target (e.g., RC-6 for durable-doc over-claims, or JSON Schema parser reactivation).
 3. **Confirm or revise the plan scope** before starting TDD execution.
-4. **Execute only the confirmed slice** — do not jump to new feature work or reactivate the paused JSON Schema parser plan.
+4. **Execute only the confirmed slice** — do not jump to new feature work or reactivate the paused JSON Schema parser plan without evidence.
 5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
 ## What This Session Should Do
 
 1. Read:
-   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context (RC-4 is next)
+   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context
    - [architecture-review-packs.md](../plans/active/architecture-review-packs.md) — sweep record
-   - [Pack 3 Note](../research/architecture-review-packs/pack-3-openapi-architecture.md) — primary RC-4 source (OpenAPI)
-   - [Pack 5 Note](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary RC-4 source (Zod)
    - [roadmap.md](../plans/roadmap.md)
    - [IDENTITY.md](../IDENTITY.md)
    - [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)
    - [testing-strategy.md](../directives/testing-strategy.md)
 2. If the user reports a fresh gate or runtime issue, reproduce it first.
-3. Otherwise, open and confirm a bounded RC-4 plan.
+3. Otherwise, triage remaining findings and confirm the next bounded slice.
 4. Execute the confirmed slice with TDD and honest scope.
 5. Record handoff and consolidation outcomes in `.agent/memory/napkin.md`.
 
@@ -191,9 +193,10 @@ Current honest state:
 - `pnpm qg` was green on Monday, 24 March 2026 (including `test:e2e`)
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) completed on Monday, 23 March 2026
 - RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)
+- RC-4 (format-specific drift) completed on Monday, 24 March 2026 — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md)
+- RC-5 (downstream surface drift) completed on Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
 - the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md)
-- **RC-4 (format-specific drift)** is the next unblocked slice — open a bounded plan from the triage before execution
-- RC-5 (downstream surface drift) depends on RC-4 and is Slice 3 or later
+- the next slice requires triage of remaining findings from Packs 1/3/4/5/7
 - the paused `json-schema-parser.md` holds paused remediation context; it must not reactivate unchanged
 
 ## Closed-Out Context

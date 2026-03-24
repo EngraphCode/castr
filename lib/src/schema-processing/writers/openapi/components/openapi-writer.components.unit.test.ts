@@ -15,6 +15,7 @@ import type {
   IRSecuritySchemeComponent,
   CastrParameterComponent,
   CastrResponseComponent,
+  IRRequestBodyComponent,
   IRComponent,
 } from '../../../ir/index.js';
 
@@ -215,6 +216,97 @@ describe('writeOpenApiComponents', () => {
       const notFoundResponse = result.responses?.['NotFound'];
       expect(notFoundResponse).toBeDefined();
       expect(notFoundResponse?.description).toBe('Resource not found');
+    });
+  });
+
+  describe('requestBody components', () => {
+    it('converts requestBody component with JSON content', () => {
+      const components: IRComponent[] = [
+        {
+          type: 'requestBody',
+          name: 'UserBody',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', metadata: createMetadata() },
+              },
+            },
+          },
+        } satisfies IRRequestBodyComponent,
+      ];
+
+      const result = writeOpenApiComponents(components);
+
+      expect(result.requestBodies).toBeDefined();
+      expect(result.requestBodies?.['UserBody']).toBeDefined();
+      const body = result.requestBodies?.['UserBody'];
+      expect(body).toEqual({
+        required: true,
+        content: {
+          'application/json': {
+            schema: { type: 'object', additionalProperties: false },
+          },
+        },
+      });
+    });
+
+    it('preserves requestBody description', () => {
+      const components: IRComponent[] = [
+        {
+          type: 'requestBody',
+          name: 'CreateUser',
+          requestBody: {
+            required: false,
+            description: 'User creation payload',
+            content: {
+              'application/json': {
+                schema: { type: 'object', metadata: createMetadata() },
+              },
+            },
+          },
+        } satisfies IRRequestBodyComponent,
+      ];
+
+      const result = writeOpenApiComponents(components);
+
+      const body = result.requestBodies?.['CreateUser'];
+      expect(body).toBeDefined();
+      expect(body).toMatchObject({
+        description: 'User creation payload',
+        required: false,
+      });
+    });
+
+    it('converts requestBody with multiple media types', () => {
+      const components: IRComponent[] = [
+        {
+          type: 'requestBody',
+          name: 'MultiBody',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', metadata: createMetadata() },
+              },
+              'application/xml': {
+                schema: { type: 'string', metadata: createMetadata() },
+              },
+            },
+          },
+        } satisfies IRRequestBodyComponent,
+      ];
+
+      const result = writeOpenApiComponents(components);
+
+      const body = result.requestBodies?.['MultiBody'];
+      expect(body).toBeDefined();
+      expect(body).toMatchObject({
+        content: {
+          'application/json': { schema: { type: 'object', additionalProperties: false } },
+          'application/xml': { schema: { type: 'string' } },
+        },
+      });
     });
   });
 

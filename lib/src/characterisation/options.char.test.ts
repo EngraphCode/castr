@@ -106,7 +106,13 @@ describe('Characterisation: Options & Configuration', () => {
         template: 'schemas-only',
       });
 
+      // Schemas must be present
       expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).toContain('export const User');
+
+      // Endpoints and MCP tools must NOT be present (honest schemas-only boundary)
+      expect(extractContent(result)).not.toContain('export const endpoints');
+      expect(extractContent(result)).not.toContain('export const mcpTools');
     });
 
     it('should use schemas-with-metadata template when specified', async () => {

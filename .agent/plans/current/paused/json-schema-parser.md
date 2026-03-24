@@ -143,3 +143,4 @@ From repo root, one command at a time:
 - `pnpm test:snapshot`
 - `pnpm test:gen`
 - `pnpm test:transforms`
+- `pnpm test:e2e`

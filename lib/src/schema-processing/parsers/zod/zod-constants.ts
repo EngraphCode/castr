@@ -43,10 +43,6 @@ export const ZOD_FLAT_PRIMITIVES = [
   'uuid',
   'ipv4',
   'ipv6',
-  'cidrv4',
-  'cidrv6',
-  'jwt',
-  'e164',
   'hostname',
   'literal',
 ] as const;

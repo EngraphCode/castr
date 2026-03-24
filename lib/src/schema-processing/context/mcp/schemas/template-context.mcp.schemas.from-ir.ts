@@ -26,7 +26,6 @@ import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-s
 import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 
 const SCHEMA_TYPE_OBJECT = 'object';
-const SCHEMA_KEY_METADATA = 'metadata';
 const SCHEMA_KEY_REF = '$ref';
 const INPUT_SECTION_PATH = 'path';
 const INPUT_SECTION_QUERY = 'query';
@@ -176,15 +175,57 @@ function getRecordEntries(value: unknown): [string, unknown][] {
 }
 
 /**
+ * Draft 07 compatible keys that are safe to emit in MCP tool schemas.
+ * Keys not in this set are IR-only and must be stripped.
+ */
+const DRAFT_07_ALLOWLIST = new Set([
+  'type',
+  'format',
+  'description',
+  'title',
+  'default',
+  'example',
+  'examples',
+  'enum',
+  'const',
+  'properties',
+  'required',
+  'additionalProperties',
+  'items',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'minimum',
+  'maximum',
+  'exclusiveMinimum',
+  'exclusiveMaximum',
+  'multipleOf',
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'not',
+  'discriminator',
+  '$ref',
+  'readOnly',
+  'writeOnly',
+  'deprecated',
+]);
+
+/**
  * Convert CastrSchema to MutableJsonSchema for MCP output.
- * Strips IR metadata while preserving schema structure.
+ * Uses an explicit Draft 07 allowlist to strip IR-only fields
+ * (integerSemantics, uuidVersion, contentEncoding, unevaluatedProperties, etc.)
+ * while preserving schema structure.
  * Handles CastrSchemaProperties (Map) for properties field.
  */
 const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema => {
   const result: MutableJsonSchema = {};
 
   for (const [key, value] of getRecordEntries(schema)) {
-    if (key !== SCHEMA_KEY_METADATA && value !== undefined) {
+    if (DRAFT_07_ALLOWLIST.has(key) && value !== undefined) {
       result[key] = convertSchemaFieldValue(value);
     }
   }

@@ -158,4 +158,37 @@ describe('Zod Reference Parsing', () => {
       }
     });
   });
+
+  describe('declaration proof', () => {
+    it('does not promote a non-Zod identifier to $ref', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const notASchema = 42;
+        const Result = notASchema;
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+        // Should NOT generate a $ref for a non-Zod value
+        expect(result?.$ref).toBeUndefined();
+      }
+    });
+
+    it('still promotes a valid Zod schema identifier to $ref', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const UserSchema = z.strictObject({ name: z.string() });
+        const Result = UserSchema;
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+        expect(result?.$ref).toBe('#/components/schemas/User');
+      }
+    });
+  });
 });

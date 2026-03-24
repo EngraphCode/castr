@@ -1,6 +1,6 @@
 # Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
 
-**Status:** Complete — seven-pack review matrix closed; RC-1/RC-2 remediation completed Monday, 23 March 2026; RC-3 remediation completed Monday, 24 March 2026
+**Status:** Complete — seven-pack review matrix closed; RC-1/RC-2 remediation completed Monday, 23 March 2026; RC-3 remediation completed Monday, 24 March 2026; RC-4 remediation completed Monday, 24 March 2026; RC-5 remediation completed Monday, 24 March 2026
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
 **Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
@@ -22,15 +22,17 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 
 - Pack 1 completed on Saturday, 21 March 2026 with a `yellow` verdict: public-boundary discipline is reasonably strong, but CLI identity and public docs still drift from the implemented surface.
 - Pack 2 completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation and object-ontology enforcement still drift from canonical doctrine.
-- Pack 3 completed on Sunday, 22 March 2026 with a `red` verdict: reusable OpenAPI `components.requestBodies` are parsed into IR, dropped on egress, and not asserted by the current output-coverage proof suite.
+- Pack 3 completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4.1: `components.requestBodies` egress implemented; remaining output-coverage proof assertion not yet added.
 - Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict: JSON Schema parser/writer/proof code exists, but the public document-parser contract is incomplete, unsupported surfaces are not rejected explicitly enough, and the proof matrix over-claims the supported surface.
-- Pack 5 completed on Sunday, 22 March 2026 with a `red` verdict: the Zod surface remains directionally strong, but contradictory strict-object chains are still accepted, unsupported nested members can be silently dropped, parser/writer helper coverage is out of lockstep, and the proof/docs story over-claims semantic parity.
-- Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict: template selection and custom-template public surfaces are not honest, MCP schemas bypass the governed Draft 07 contract, and the generated-code proof suite over-claims runtime coverage.
+- Pack 5 completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4: contradictory chain rejection, nested member fail-fast, reference declaration proof, and format lockstep closure implemented; remaining proof/doc over-claims deferred.
+- Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-5: `schemas-only` template made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist implemented, generated-surface proof naming made honest, template-context post-IR mutation fixed.
 - Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
 - Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
 - The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
 - The IR and runtime validator remediation plan (RC-3) was completed on Monday, 24 March 2026. See [ir-and-runtime-validator-remediation.md](../current/complete/ir-and-runtime-validator-remediation.md).
-- The next honest slice is **RC-4 (format-specific drift)**; the paused `json-schema-parser.md` remains remediation context.
+- The format-specific drift remediation plan (RC-4) was completed on Monday, 24 March 2026. See [format-specific-drift-remediation.md](../current/complete/format-specific-drift-remediation.md).
+- The downstream surface drift remediation (RC-5) was completed on Monday, 24 March 2026, in-session.
+- The next honest slice requires triage of remaining findings from Packs 1/3/4/5/7.
 
 ## Next Session Entry Contract
 
@@ -42,9 +44,9 @@ Start from the written evidence:
 - use the seven pack notes under `.agent/research/architecture-review-packs/` as the source findings
 - treat [pack-7-proof-system-and-durable-doctrine.md](../../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff
 
-1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed remediation plans: [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [ir-and-runtime-validator-remediation.md](../current/complete/ir-and-runtime-validator-remediation.md).
-2. The next successor slice is **RC-4 (format-specific drift)**.
-3. Open one bounded successor remediation plan from that choice.
+1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed remediation plans.
+2. The next slice requires triage of remaining findings from Packs 1/3/4/5/7.
+3. Open one bounded successor remediation plan from that triage.
 4. Execute only that chosen slice; do not reopen general feature implementation in the same pass.
 
 Explicit non-goals for the next session:
@@ -236,6 +238,8 @@ Current close-out state:
 - the repo is not cleared to reactivate general implementation
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) is complete
 - RC-3 (IR and runtime validator gaps) is complete
-- the highest-priority next slice is **RC-4 (format-specific drift)**
+- RC-4 (format-specific drift) is complete (5/8 findings; 3 JSON Schema deferred)
+- RC-5 (downstream surface drift) is complete (all 5 Pack 6 findings)
+- the next slice requires triage of remaining findings from Packs 1/3/4/5/7
 - triage should now happen across all seven packs together, but execution should stay bounded to one successor remediation slice at a time
-- keep this file in place as the sweep record until the successor remediation plan is opened
+- keep this file in place as the sweep record until all remediation slices are closed
