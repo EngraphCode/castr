@@ -138,30 +138,25 @@ describe('parseJsonSchemaDocument', () => {
     expect(components).toEqual([]);
   });
 
-  it('rejects documents with unsupported top-level keywords', () => {
-    expect(() =>
-      parseJsonSchemaDocument({
-        type: 'object',
-        additionalProperties: false,
-      }),
-    ).toThrow(UnsupportedJsonSchemaKeywordError);
+  it('now parses documents with schema keywords as root components', () => {
+    const components = parseJsonSchemaDocument({
+      type: 'object',
+      additionalProperties: false,
+    });
+
+    expect(components).toHaveLength(1);
+    expect(components[0]?.name).toBe('Root');
+    expect(components[0]?.schema.type).toBe('object');
   });
 
-  it('includes unsupported keyword names in error', () => {
-    try {
-      parseJsonSchemaDocument({
-        type: 'object',
-        properties: { name: { type: 'string' } },
-      });
-      expect.fail('Expected UnsupportedJsonSchemaKeywordError');
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnsupportedJsonSchemaKeywordError);
-      if (error instanceof UnsupportedJsonSchemaKeywordError) {
-        expect(error.unsupportedKeywords).toContain('type');
-        expect(error.unsupportedKeywords).toContain('properties');
-        expect(error.message).toContain('$defs-focused extractor');
-      }
-    }
+  it('still rejects truly unsupported keywords', () => {
+    const unsupportedInput = {
+      if: { type: 'string' },
+      then: { minLength: 1 },
+    };
+    expect(() => parseJsonSchemaDocument(unsupportedInput)).toThrow(
+      UnsupportedJsonSchemaKeywordError,
+    );
   });
 
   it('allows title and description alongside $defs', () => {
@@ -240,5 +235,165 @@ describe('parseJsonSchemaDocument', () => {
         },
       }),
     ).toThrow(/additionalProperties: true.*rejected/);
+  });
+
+  // ── Phase 1: Standalone document parsing ──────────────────────────
+
+  describe('standalone document parsing (root schema)', () => {
+    it('parses a standalone object schema as a root component', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          name: { type: 'string' },
+        },
+      });
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('Root');
+      expect(components[0]?.schema.type).toBe('object');
+      expect(components[0]?.schema.properties).toBeInstanceOf(CastrSchemaProperties);
+    });
+
+    it('uses title as component name when present', () => {
+      const components = parseJsonSchemaDocument({
+        title: 'UserProfile',
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          email: { type: 'string', format: 'email' },
+        },
+      });
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('UserProfile');
+    });
+
+    it('uses $id as component name when title is absent', () => {
+      const input = {
+        $id: 'https://example.com/schemas/Status',
+        enum: ['active', 'inactive'],
+      };
+      const components = parseJsonSchemaDocument(input);
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('https://example.com/schemas/Status');
+    });
+
+    it('parses mixed document: root schema + $defs', () => {
+      const components = parseJsonSchemaDocument({
+        title: 'Order',
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          item: { $ref: '#/$defs/Item' },
+        },
+        $defs: {
+          Item: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              name: { type: 'string' },
+            },
+          },
+        },
+      });
+
+      expect(components).toHaveLength(2);
+      expect(components[0]?.name).toBe('Order');
+      expect(components[1]?.name).toBe('Item');
+    });
+
+    it('parses standalone composition schema', () => {
+      const components = parseJsonSchemaDocument({
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      });
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('Root');
+      expect(components[0]?.schema.oneOf).toHaveLength(2);
+    });
+
+    it('parses standalone string schema', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'string',
+        minLength: 1,
+        format: 'email',
+      });
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('Root');
+      expect(components[0]?.schema.type).toBe('string');
+      expect(components[0]?.schema.format).toBe('email');
+    });
+
+    it('parses standalone enum schema', () => {
+      const components = parseJsonSchemaDocument({
+        enum: ['active', 'inactive', 'pending'],
+      });
+
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.enum).toEqual(['active', 'inactive', 'pending']);
+    });
+  });
+
+  // ── Phase 3: Unsupported keyword rejection ────────────────────────
+
+  describe('unsupported keyword rejection', () => {
+    it('rejects if/then/else conditional applicators', () => {
+      const input = {
+        if: { type: 'string' },
+        then: { minLength: 1 },
+        else: { type: 'number' },
+      };
+      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    });
+
+    it('rejects $dynamicRef', () => {
+      const input = {
+        $dynamicRef: '#meta',
+      };
+      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    });
+
+    it('rejects patternProperties', () => {
+      const input = {
+        patternProperties: {
+          '^S_': { type: 'string' },
+        },
+      };
+      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    });
+
+    it('rejects propertyNames', () => {
+      const input = {
+        propertyNames: { minLength: 1 },
+      };
+      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    });
+
+    it('rejects contains at document level', () => {
+      const input = {
+        contains: { type: 'number' },
+      };
+      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    });
+
+    it('includes unsupported keyword names in error message', () => {
+      const input = {
+        if: { type: 'string' },
+        then: { minLength: 1 },
+      };
+      try {
+        parseJsonSchemaDocument(input);
+        expect.fail('Expected UnsupportedJsonSchemaKeywordError');
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnsupportedJsonSchemaKeywordError);
+        if (error instanceof UnsupportedJsonSchemaKeywordError) {
+          expect(error.unsupportedKeywords).toContain('if');
+          expect(error.unsupportedKeywords).toContain('then');
+        }
+      }
+    });
   });
 });

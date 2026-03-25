@@ -4,6 +4,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-03-25
 
+- JSON Schema parser expansion completed:
+  - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
+  - Root schema parsing: documents with schema keywords (type, properties, allOf, oneOf, etc.) now parsed as root component
+  - Root naming: `title` > `$id` > `"Root"` — `$id` used as-is per ADR-026 (no string manipulation for basename extraction)
+  - Mixed documents: root component first, then `$defs` components
+  - Unsupported keyword blocklist: `if`/`then`/`else`, `$dynamicRef`/`$dynamicAnchor`/`$anchor`, `patternProperties`, `propertyNames`, `contains`
+  - Added `$id` to `JsonSchema2020` type interface
+  - Module and function JSDoc updated to reflect expanded capabilities
+  - 13 new unit tests, all 29 total passing, all quality gates green
+- Architecture insight: ADR-026 string-manipulation ban is extremely strict — `split()`, `lastIndexOf()`, `slice()`, regex literals ALL banned. Forced `$id` naming to use raw value instead of basename extraction. This is an honest trade-off: users who want clean component names should set `title`.
+- TypeScript insight: `SchemaObjectType` narrowing in untyped object literals is a pain point. `type: 'object'` in an untyped literal widens to `string`, not `'object'`. Worked around by avoiding `type` in test inputs where possible.
+- RC-7 (close remaining findings) completed — architecture review remediation arc fully closed (earlier in session)
+- Documentation consolidation pass (`jc-consolidate-docs`) — also earlier in session
+
 - RC-7 (close remaining findings) completed — architecture review remediation arc fully closed:
   - Workstream A: scenario 2/4 JSDocs verified already honest (no change needed)
   - Workstream B: all RC-1 and RC-2 findings marked ✅ with resolution references in cross-pack triage

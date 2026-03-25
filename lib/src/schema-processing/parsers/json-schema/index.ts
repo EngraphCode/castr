@@ -1,20 +1,23 @@
 /**
  * JSON Schema parser module — parses JSON Schema (Draft 07 + 2020-12) into IR.
  *
- * > [!IMPORTANT]
- * > `parseJsonSchemaDocument()` is a **`$defs`-focused extractor**. It extracts
- * > named component schemas from `$defs` / `definitions` but does not parse
- * > the root schema itself as a standalone document. Top-level keywords outside
- * > the governed allowlist are rejected with an actionable error. Full document
- * > ingestion is a planned future capability.
+ * `parseJsonSchemaDocument()` parses both root-level schemas and `$defs`
+ * bundles. Documents may contain a root schema, `$defs`, or both.
+ * Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`,
+ * `propertyNames`, `contains`) are rejected with an actionable error.
  *
  * @example
  * ```typescript
  * import { parseJsonSchema, parseJsonSchemaDocument } from '@engraph/castr';
  *
  * const irSchema = parseJsonSchema({ type: 'object', properties: { ... } });
+ *
+ * // Standalone schema, $defs bundle, or both:
  * const components = parseJsonSchemaDocument({
- *   $defs: { Address: { type: 'object', ... } },
+ *   title: 'Order',
+ *   type: 'object',
+ *   properties: { item: { $ref: '#/$defs/Item' } },
+ *   $defs: { Item: { type: 'object', ... } },
  * });
  * ```
  *
@@ -48,22 +51,32 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
 }
 
 /**
- * Parse a JSON Schema document with `$defs` into IR components.
+ * Parse a JSON Schema document into IR components.
  *
- * This function is a `$defs`-focused extractor: it extracts named component
- * schemas from `$defs` (or Draft 07 `definitions`) but does not parse the
- * root schema as a standalone document. Top-level keywords outside the
- * governed allowlist are rejected with an actionable error.
+ * Supports standalone schemas, `$defs` bundles, and mixed documents.
+ * Root schema naming: `title` > `$id` > `"Root"`.
+ * Unsupported keywords are rejected with an actionable error.
  *
- * @param input - A JSON Schema document with $defs
- * @returns Array of IR schema components
+ * @param input - A JSON Schema document (Draft 07 or 2020-12)
+ * @returns Array of IR schema components (root first if present, then `$defs`)
  * @throws {UnsupportedJsonSchemaKeywordError} if unsupported top-level keywords are present
  * @public
  */
 export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
   rejectUnsupportedDocumentKeywords(normalized);
-  return extractDefsAsComponents(normalized);
+
+  const components: CastrSchemaComponent[] = [];
+
+  const rootSchema = extractRootSchema(normalized);
+  if (rootSchema !== undefined) {
+    const name = deriveRootName(normalized);
+    const schema = parseJsonSchemaObject(rootSchema);
+    components.push(buildComponent(name, schema));
+  }
+
+  components.push(...extractDefsAsComponents(normalized));
+  return components;
 }
 
 function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaComponent[] {
@@ -95,27 +108,130 @@ function buildComponent(name: string, schema: CastrSchema): CastrSchemaComponent
 }
 
 // ---------------------------------------------------------------------------
+// Root schema extraction
+// ---------------------------------------------------------------------------
+
+/**
+ * Keywords that indicate the document contains a root-level schema
+ * (beyond just `$defs` and meta keywords).
+ *
+ * @internal
+ */
+const ROOT_SCHEMA_KEYWORDS = new Set([
+  // Type and structure
+  'type',
+  'properties',
+  'required',
+  'additionalProperties',
+  '$ref',
+
+  // Array
+  'items',
+  'prefixItems',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+
+  // Composition
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'not',
+
+  // Validation constraints
+  'enum',
+  'const',
+  'minimum',
+  'maximum',
+  'exclusiveMinimum',
+  'exclusiveMaximum',
+  'multipleOf',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'contentEncoding',
+  'format',
+  'default',
+
+  // Metadata (as schema content, not just document meta)
+  'example',
+  'examples',
+  'deprecated',
+  'readOnly',
+  'writeOnly',
+
+  // 2020-12 keywords
+  'unevaluatedProperties',
+  'unevaluatedItems',
+  'dependentSchemas',
+  'dependentRequired',
+  'minContains',
+  'maxContains',
+]);
+
+/**
+ * If the document has any root-level schema keywords, build a schema
+ * object from the non-meta, non-`$defs` keywords and return it for parsing.
+ * Returns `undefined` if the document is `$defs`-only.
+ *
+ * @internal
+ */
+function extractRootSchema(doc: JsonSchema2020): JsonSchema2020 | undefined {
+  const hasRootKeyword = Object.keys(doc).some((k) => ROOT_SCHEMA_KEYWORDS.has(k));
+  if (!hasRootKeyword) {
+    return undefined;
+  }
+
+  // The input document IS the root schema — parseJsonSchemaObject will
+  // consume only the keywords it recognises and ignore meta/$defs.
+  return doc;
+}
+
+/**
+ * Derive a component name for the root schema.
+ * Priority: `title` > `$id` basename > `"Root"`.
+ *
+ * @internal
+ */
+function deriveRootName(doc: JsonSchema2020): string {
+  if (typeof doc.title === 'string' && doc.title.length > 0) {
+    return doc.title;
+  }
+
+  if (typeof doc.$id === 'string' && doc.$id.length > 0) {
+    return doc.$id;
+  }
+
+  return 'Root';
+}
+
+// ---------------------------------------------------------------------------
 // Unsupported keyword rejection
 // ---------------------------------------------------------------------------
 
 /**
- * Keywords allowed at the top level of a JSON Schema document passed to
- * `parseJsonSchemaDocument()`. Any keyword not in this set triggers a
- * governed rejection with an actionable error message.
+ * Keywords that are explicitly unsupported at the document level.
+ * Documents containing these keywords are rejected with an actionable error.
  *
  * @internal
  */
-const SUPPORTED_DOCUMENT_KEYWORDS = new Set([
-  // Document-level meta
-  '$schema',
-  '$id',
-  '$comment',
-  'title',
-  'description',
+const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set([
+  // Conditional applicators
+  'if',
+  'then',
+  'else',
 
-  // Definition containers (the only actively ingested content)
-  '$defs',
-  'definitions', // Draft 07 — normalized to $defs by normalizeDraft07()
+  // Dynamic references
+  '$dynamicRef',
+  '$dynamicAnchor',
+  '$anchor',
+
+  // Pattern-keyed properties
+  'patternProperties',
+  'propertyNames',
+
+  // Array contains (parser side — writer emits minContains/maxContains)
+  'contains',
 ]);
 
 /**
@@ -131,8 +247,7 @@ export class UnsupportedJsonSchemaKeywordError extends Error {
     const list = keywords.map((k) => `"${k}"`).join(', ');
     super(
       `parseJsonSchemaDocument() encountered unsupported top-level keywords: ${list}. ` +
-        'This function is a $defs-focused extractor and does not parse root-level schema content. ' +
-        'Use parseJsonSchema() for individual schema objects, or remove the unsupported keywords.',
+        'These keywords are not yet supported. See the JSON Schema parser module docs for the current supported surface.',
     );
     this.name = 'UnsupportedJsonSchemaKeywordError';
     this.unsupportedKeywords = keywords;
@@ -142,7 +257,7 @@ export class UnsupportedJsonSchemaKeywordError extends Error {
 function rejectUnsupportedDocumentKeywords(schema: JsonSchema2020): void {
   const unsupported: string[] = [];
   for (const key of Object.keys(schema)) {
-    if (!SUPPORTED_DOCUMENT_KEYWORDS.has(key)) {
+    if (UNSUPPORTED_DOCUMENT_KEYWORDS.has(key)) {
       unsupported.push(key);
     }
   }

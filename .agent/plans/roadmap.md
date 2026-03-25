@@ -67,7 +67,7 @@ Current status of that sweep:
   - `pnpm qg` green with the new `test:e2e` gate
 - the seven-pack architecture review sweep is complete
 - **RC-3 (IR and runtime validator gaps)** completed Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
-- **RC-4 (format-specific drift)** completed Monday, 24 March 2026 — [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md); 3 JSON Schema findings deferred pending paused parser plan
+- **RC-4 (format-specific drift)** completed Monday, 24 March 2026 — [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md); formerly-deferred JSON Schema findings resolved by parser expansion (see below)
 - **RC-5 (downstream surface drift)** completed Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
 - **RC-6 (durable-doc over-claims)** completed Monday, 24 March 2026 — `public-api-preservation.test.ts` expanded to full current surface, `scalar-pipeline.md` stale `makeSchemaResolver` references reframed as historical
 - **RC-7 (close remaining findings)** completed Tuesday, 25 March 2026 — all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema fail-fast rejection seam, writer scope caveats
@@ -78,11 +78,16 @@ Current status of that sweep:
 
 Current sweep record:
 
-- [architecture-review-packs.md](./active/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep; RC-1/RC-2 remediation plan completed
+- [architecture-review-packs.md](./current/complete/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep (archived)
 
-Paused successor:
+**JSON Schema parser expansion** completed Tuesday, 25 March 2026:
 
-- [json-schema-parser.md](./current/paused/json-schema-parser.md) — paused JSON Schema remediation context after Pack 4; blocked until the review sweep chooses it as the next implementation slice
+- `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
+- Supports standalone schemas, `$defs` bundles, and mixed documents
+- Root schema naming: `title` > `$id` > `"Root"`
+- Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected
+- 13 new unit tests, all quality gates green
+- Paused plan ([json-schema-parser.md](./current/paused/json-schema-parser.md)) scope significantly addressed
 
 Paused supporting context that remains important:
 

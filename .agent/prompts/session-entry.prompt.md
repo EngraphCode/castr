@@ -34,27 +34,27 @@ Notes:
 
 ---
 
-## Current State: RC-7 Complete — All Cross-Pack Findings Closed
+## Current State: JSON Schema Parser Expansion Complete
 
 ### Completed Predecessor Plans
 
 - [proof-system-and-doctrine-remediation.md](../plans/current/complete/proof-system-and-doctrine-remediation.md) — RC-1/RC-2 closed on Monday, 23 March 2026
-- [architecture-review-packs.md](../plans/active/architecture-review-packs.md) — seven-pack sweep record
+- [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) — seven-pack sweep record (archived)
 
 ### Cross-Pack Triage (Start Here)
 
 - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause clusters, dependency graph, and the slice ordering
 
-### Next Honest Slice
+### Recent Work
 
-- Proof-system and durable-doctrine remediation (RC-1 / RC-2) is complete.
-- **RC-3 (IR and runtime validator gaps) is complete** — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md).
-- **RC-4 (format-specific drift) is complete** — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md). 3 JSON Schema findings deferred pending paused parser plan.
-- **RC-5 (downstream surface drift) is complete** — all five Pack 6 findings resolved in-session on Monday, 24 March 2026.
-- **RC-6 (durable-doc over-claims) is complete** — `public-api-preservation.test.ts` expanded to full current surface, `scalar-pipeline.md` stale `makeSchemaResolver` references reframed as historical.
-- **RC-7 (close remaining findings) is complete** — all RC-1/RC-2 findings verified resolved, JSON Schema fail-fast rejection seam added, writer caveats documented.
-- All seven-pack architecture review findings are now closed. The 3 deferred JSON Schema parser findings (RC-4.2/4.3/4.4) are addressed by the new fail-fast rejection seam and doc caveats; full parser expansion remains a future capability.
-- The paused JSON Schema parser plan remains paused.
+- All seven-pack architecture review findings (RC-1 through RC-7) are durably closed.
+- **JSON Schema parser expansion** completed Tuesday, 25 March 2026:
+  - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
+  - Supports standalone schemas, `$defs` bundles, and mixed documents
+  - Root schema naming: `title` > `$id` > `"Root"`
+  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected
+  - 13 new unit tests, all quality gates green
+- The paused JSON Schema parser plan scope is significantly addressed. Remaining future work: `if`/`then`/`else` support, `patternProperties`, `$dynamicRef`, `contains` parser support, and standalone document round-trip integration fixtures.
 
 ### Canonical Identity
 
@@ -147,7 +147,7 @@ RC-1 through RC-7 are all complete. All seven-pack architecture review findings 
 
 1. Read:
    - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context
-   - [architecture-review-packs.md](../plans/active/architecture-review-packs.md) — sweep record
+   - [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) — sweep record (archived)
    - [roadmap.md](../plans/roadmap.md)
    - [IDENTITY.md](../IDENTITY.md)
    - [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)

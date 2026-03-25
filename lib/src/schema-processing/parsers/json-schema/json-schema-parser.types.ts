@@ -22,6 +22,7 @@ import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
  * @public
  */
 export interface JsonSchema2020 extends SchemaObject {
+  $id?: string;
   $defs?: Record<string, JsonSchema2020 | ReferenceObject>;
   unevaluatedProperties?: JsonSchema2020 | ReferenceObject | boolean;
   unevaluatedItems?: JsonSchema2020 | ReferenceObject | boolean;
