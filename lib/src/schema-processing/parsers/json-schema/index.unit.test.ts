@@ -9,7 +9,11 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { parseJsonSchema, parseJsonSchemaDocument } from './index.js';
+import {
+  parseJsonSchema,
+  parseJsonSchemaDocument,
+  UnsupportedJsonSchemaKeywordError,
+} from './index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
 
 describe('parseJsonSchema', () => {
@@ -125,13 +129,52 @@ describe('parseJsonSchemaDocument', () => {
     expect(tag?.schema.minLength).toBe(1);
   });
 
-  it('returns empty array when no $defs present', () => {
+  it('returns empty array when only meta keywords present', () => {
     const components = parseJsonSchemaDocument({
-      type: 'object',
-      additionalProperties: false,
+      title: 'Empty Document',
+      description: 'A document with no $defs',
     });
 
     expect(components).toEqual([]);
+  });
+
+  it('rejects documents with unsupported top-level keywords', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+      }),
+    ).toThrow(UnsupportedJsonSchemaKeywordError);
+  });
+
+  it('includes unsupported keyword names in error', () => {
+    try {
+      parseJsonSchemaDocument({
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      });
+      expect.fail('Expected UnsupportedJsonSchemaKeywordError');
+    } catch (error) {
+      expect(error).toBeInstanceOf(UnsupportedJsonSchemaKeywordError);
+      if (error instanceof UnsupportedJsonSchemaKeywordError) {
+        expect(error.unsupportedKeywords).toContain('type');
+        expect(error.unsupportedKeywords).toContain('properties');
+        expect(error.message).toContain('$defs-focused extractor');
+      }
+    }
+  });
+
+  it('allows title and description alongside $defs', () => {
+    const components = parseJsonSchemaDocument({
+      title: 'My Schema',
+      description: 'A document',
+      $defs: {
+        Simple: { type: 'string' },
+      },
+    });
+
+    expect(components).toHaveLength(1);
+    expect(components[0]?.name).toBe('Simple');
   });
 
   it('skips $ref entries in $defs', () => {

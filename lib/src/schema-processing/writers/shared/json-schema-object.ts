@@ -6,6 +6,13 @@
  * (which has `[key: string]: any` via `ISpecificationExtension`) so
  * OpenAPI writer consumers can use it directly.
  *
+ * > **Current scope caveat:** The writer emits `contains`, `minContains`,
+ * > and `maxContains` keywords from the IR, but the round-trip parser does
+ * > not yet reingest `contains` — only `minContains` / `maxContains` survive.
+ * > Nullability is represented via `type: [T, 'null']` arrays; the writer
+ * > does not emit standalone `null` schemas for non-nullable `type: 'null'`
+ * > IR nodes. These are known gaps, not bugs.
+ *
  * @module writers/shared/json-schema-object
  * @internal
  */

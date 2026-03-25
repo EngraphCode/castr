@@ -34,7 +34,7 @@ Notes:
 
 ---
 
-## Current State: RC-5 Complete — Next Slice TBD
+## Current State: RC-7 Complete — All Cross-Pack Findings Closed
 
 ### Completed Predecessor Plans
 
@@ -51,7 +51,9 @@ Notes:
 - **RC-3 (IR and runtime validator gaps) is complete** — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md).
 - **RC-4 (format-specific drift) is complete** — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md). 3 JSON Schema findings deferred pending paused parser plan.
 - **RC-5 (downstream surface drift) is complete** — all five Pack 6 findings resolved in-session on Monday, 24 March 2026.
-- The next unblocked slice is TBD — remaining findings from Packs 1/3/4/5/7 need triage to select the next remediation target.
+- **RC-6 (durable-doc over-claims) is complete** — `public-api-preservation.test.ts` expanded to full current surface, `scalar-pipeline.md` stale `makeSchemaResolver` references reframed as historical.
+- **RC-7 (close remaining findings) is complete** — all RC-1/RC-2 findings verified resolved, JSON Schema fail-fast rejection seam added, writer caveats documented.
+- All seven-pack architecture review findings are now closed. The 3 deferred JSON Schema parser findings (RC-4.2/4.3/4.4) are addressed by the new fail-fast rejection seam and doc caveats; full parser expansion remains a future capability.
 - The paused JSON Schema parser plan remains paused.
 
 ### Canonical Identity
@@ -115,6 +117,8 @@ Pack verdicts from the architecture review sweep:
 
 Recent completed slices (all gates green, all reviews closed):
 
+- RC-7 close remaining findings (2026-03-25): all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema `parseJsonSchemaDocument()` fail-fast rejection seam for unsupported keywords, writer scope caveats
+- RC-6 durable-doc over-claims remediation (2026-03-24): `public-api-preservation.test.ts` expanded from 6 legacy exports to full ~30 current surface, `scalar-pipeline.md` reframed eliminated `makeSchemaResolver()` as historical
 - RC-5 downstream surface drift remediation (2026-03-24): `schemas-only` genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist, proof-suite honest naming, template-context immutability
 - RC-4 format-specific drift remediation (2026-03-24): OpenAPI requestBody egress, contradictory chain rejection, nested member fail-fast, reference declaration proof, format lockstep closure
 - Proof-system and durable-doctrine remediation RC-1/RC-2 (2026-03-23): `test:e2e` promoted to canonical chain, CLI identity fixed, proof-suite naming and doc-scope honesty restored
@@ -131,11 +135,11 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1/RC-2 (proof-system and durable-doctrine remediation), RC-3 (IR and runtime validator gaps), RC-4 (format-specific drift), and RC-5 (downstream surface drift) are all complete. The next slice requires triage of remaining findings from Packs 1/3/4/5/7.
+RC-1 through RC-7 are all complete. All seven-pack architecture review findings are closed. The 3 deferred JSON Schema parser findings are addressed by fail-fast rejection and doc caveats; full parser expansion remains a future capability.
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Triage remaining findings** from Packs 1/3/4/5/7 to select the next remediation target (e.g., RC-6 for durable-doc over-claims, or JSON Schema parser reactivation).
-3. **Confirm or revise the plan scope** before starting TDD execution.
+2. **The architecture review remediation arc is complete** — no remaining findings.
+3. **Confirm or revise the plan scope** before starting any new feature work.
 4. **Execute only the confirmed slice** — do not jump to new feature work or reactivate the paused JSON Schema parser plan without evidence.
 5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
@@ -195,8 +199,10 @@ Current honest state:
 - RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)
 - RC-4 (format-specific drift) completed on Monday, 24 March 2026 — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md)
 - RC-5 (downstream surface drift) completed on Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
-- the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md)
-- the next slice requires triage of remaining findings from Packs 1/3/4/5/7
+- RC-6 (durable-doc over-claims) completed on Monday, 24 March 2026 — `public-api-preservation.test.ts` expanded, `scalar-pipeline.md` reframed
+- RC-7 (close remaining findings) completed on Tuesday, 25 March 2026 — JSON Schema fail-fast seam, all triage rows marked resolved
+- the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — all findings ✅
+- the architecture review remediation arc is complete
 - the paused `json-schema-parser.md` holds paused remediation context; it must not reactivate unchanged
 
 ## Closed-Out Context

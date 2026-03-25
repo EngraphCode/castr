@@ -1,49 +1,83 @@
 /**
  * Public API Preservation Tests
  *
- * These tests ensure that the directory reorganisation does not change
- * the public API surface. All exports from lib/src/index.ts must remain
- * identical after migration.
- *
- * @see .agent/plans/LIB-SRC-REORGANISATION.md
+ * Proves that the full current public surface exported from lib/src/index.ts
+ * is present and has the expected runtime shape. Type-only exports are
+ * validated by the type-check gate and are not asserted here.
  */
 
 import { describe, expect, test } from 'vitest';
 import * as publicApi from './index.js';
 
 describe('Public API Preservation', () => {
-  test('all expected exports are present', () => {
-    // Note: Type-only exports (CodeMeta, CodeMetaData, etc.) are not runtime-accessible
-    // They are validated by TypeScript compilation and will be checked via type-check gate
+  test('all expected function exports are present', () => {
+    const expectedFunctions = [
+      // Rendering
+      'generateZodClientFromOpenAPI',
 
-    // Functions
-    expect(publicApi).toHaveProperty('generateZodClientFromOpenAPI');
-    expect(typeof publicApi.generateZodClientFromOpenAPI).toBe('function');
+      // Generation result type guards
+      'isSingleFileResult',
+      'isGroupedFileResult',
 
-    expect(publicApi).toHaveProperty('getOpenApiDependencyGraph');
-    expect(typeof publicApi.getOpenApiDependencyGraph).toBe('function');
-    // validateOpenApiSpec removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)
-    // getEndpointDefinitionList removed - legacy-compat.js module deleted
-    expect(publicApi).toHaveProperty('maybePretty');
-    expect(typeof publicApi.maybePretty).toBe('function');
-    expect(publicApi).toHaveProperty('getZodSchema');
-    expect(typeof publicApi.getZodSchema).toBe('function');
-    expect(publicApi).toHaveProperty('getZodClientTemplateContext');
-    expect(typeof publicApi.getZodClientTemplateContext).toBe('function');
+      // Shared utilities
+      'getOpenApiDependencyGraph',
+      'maybePretty',
+      'loadOpenApiDocument',
 
-    // ValidationError removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)
+      // Zod schema generation
+      'getZodSchema',
 
-    // Note: Type-only exports (EndpointDefinition, TemplateContext, etc.) are validated
-    // by TypeScript compilation. Type-check gate ensures they remain exported.
+      // Template context and IR
+      'getZodClientTemplateContext',
+      'extractSchemaNamesFromDoc',
+      'buildIR',
 
-    // Objects
-    expect(publicApi).toHaveProperty('logger');
-    expect(typeof publicApi.logger).toBe('object');
+      // OpenAPI writer
+      'writeOpenApi',
+      'generateOpenAPI',
+
+      // MCP helpers
+      'getMcpToolName',
+      'getMcpToolHints',
+      'buildInputSchemaObject',
+      'buildOutputSchemaObject',
+      'buildMcpToolsFromIR',
+
+      // MCP type guards
+      'isMcpTool',
+      'isMcpToolInput',
+      'isMcpToolOutput',
+
+      // MCP error formatting
+      'formatMcpValidationError',
+
+      // Endpoint utilities
+      'extractParameterMetadata',
+      'extractSchemaConstraints',
+
+      // IR serialisation and validation
+      'serializeIR',
+      'deserializeIR',
+      'isCastrDocument',
+      'isIRComponent',
+      'isCastrOperation',
+      'isCastrSchema',
+      'isCastrSchemaNode',
+    ];
+
+    for (const name of expectedFunctions) {
+      expect(publicApi, `missing export: ${name}`).toHaveProperty(name, expect.any(Function));
+    }
   });
 
-  // ValidationError test removed - class no longer exported (removed in Phase 1 Part 5)
+  test('CastrSchemaProperties brand is exported', () => {
+    expect(publicApi).toHaveProperty('CastrSchemaProperties', expect.any(Function));
+  });
 
-  test('logger has expected methods', () => {
+  test('logger is exported with expected methods', () => {
+    expect(publicApi).toHaveProperty('logger');
+    expect(typeof publicApi.logger).toBe('object');
+
     expect(publicApi.logger).toHaveProperty('info');
     expect(typeof publicApi.logger.info).toBe('function');
     expect(publicApi.logger).toHaveProperty('warn');

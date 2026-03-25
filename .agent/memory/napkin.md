@@ -2,6 +2,23 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-25
+
+- RC-7 (close remaining findings) completed — architecture review remediation arc fully closed:
+  - Workstream A: scenario 2/4 JSDocs verified already honest (no change needed)
+  - Workstream B: all RC-1 and RC-2 findings marked ✅ with resolution references in cross-pack triage
+  - Workstream C: `UnsupportedJsonSchemaKeywordError` and governed keyword allowlist added to `parseJsonSchemaDocument()`, writer scope caveats added to `json-schema-object.ts`, 4 new unit tests
+  - RC-4 deferred findings (4.2/4.3/4.4) addressed via fail-fast seam and doc caveats — full parser expansion remains future capability
+  - `pnpm qg` green
+- Documentation consolidation pass (`jc-consolidate-docs`):
+  - `architecture-review-packs.md` archived from `active/` to `current/complete/` with final close-out state
+  - `session-entry.prompt.md` updated: RC-7 completion, arc closure, cleared for new feature work
+  - `roadmap.md` updated: RC-7 entry, arc closure
+  - `cross-pack-triage.md` updated: all findings ✅ including the 3 formerly-deferred RC-4 items
+  - ADR SUMMARY and practice-index both current — no drift found
+  - Practice box check: `.agent/practice-core/incoming/` empty; `.agent/practice-context/incoming/` contains only scaffold `README.md`
+- No structural learning clears the bar for Practice Core evolution in this pass; the value was arc-level closure bookkeeping.
+
 ## 2026-03-24
 
 - RC-5 (downstream surface drift) remediation completed with all five Pack 6 findings resolved:

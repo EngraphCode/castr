@@ -78,7 +78,7 @@ components:
 - ✅ **Pro:** Circular references stay as `$refs` (prevents stack overflows)
 - ✅ **Pro:** Enables topological sorting of schemas
 - ✅ **Pro:** Cleaner generated code (references instead of inline schemas)
-- ❌ **Con:** Requires `makeSchemaResolver()` to handle `$refs` during code generation
+- ❌ **Con:** Required `makeSchemaResolver()` to handle `$refs` during code generation (since eliminated per ADR-015)
 
 ## Pipeline Flow
 
@@ -315,9 +315,10 @@ export const UserSchema = z.object({
 });
 ```
 
-### How makeSchemaResolver Works
+### How makeSchemaResolver Worked (Historical)
 
-To handle preserved `$refs`, the library uses `makeSchemaResolver()`:
+> [!NOTE]
+> `makeSchemaResolver()` was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model. This section is preserved as architectural history.
 
 ```typescript
 /**

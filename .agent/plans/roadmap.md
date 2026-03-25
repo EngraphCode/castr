@@ -69,7 +69,9 @@ Current status of that sweep:
 - **RC-3 (IR and runtime validator gaps)** completed Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
 - **RC-4 (format-specific drift)** completed Monday, 24 March 2026 — [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md); 3 JSON Schema findings deferred pending paused parser plan
 - **RC-5 (downstream surface drift)** completed Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
-- the next unblocked slice is **RC-6 (durable-doc over-claims)** or a consolidation pass to decide the next remediation target from the remaining Pack 1/3/4/5/7 findings
+- **RC-6 (durable-doc over-claims)** completed Monday, 24 March 2026 — `public-api-preservation.test.ts` expanded to full current surface, `scalar-pipeline.md` stale `makeSchemaResolver` references reframed as historical
+- **RC-7 (close remaining findings)** completed Tuesday, 25 March 2026 — all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema fail-fast rejection seam, writer scope caveats
+- the architecture review remediation arc is complete — all seven-pack findings are closed
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work

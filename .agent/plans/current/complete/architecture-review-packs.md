@@ -1,6 +1,6 @@
 # Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
 
-**Status:** Complete — seven-pack review matrix closed; RC-1/RC-2 remediation completed Monday, 23 March 2026; RC-3 remediation completed Monday, 24 March 2026; RC-4 remediation completed Monday, 24 March 2026; RC-5 remediation completed Monday, 24 March 2026
+**Status:** Complete — seven-pack review matrix closed; all remediation slices (RC-1 through RC-7) completed Tuesday, 25 March 2026; architecture review arc fully closed
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
 **Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
@@ -235,11 +235,8 @@ This plan completed on 2026-03-22 when Pack 7 closed and the full pack matrix wa
 
 Current close-out state:
 
-- the repo is not cleared to reactivate general implementation
-- RC-1/RC-2 (proof-system and durable-doctrine remediation) is complete
-- RC-3 (IR and runtime validator gaps) is complete
-- RC-4 (format-specific drift) is complete (5/8 findings; 3 JSON Schema deferred)
-- RC-5 (downstream surface drift) is complete (all 5 Pack 6 findings)
-- the next slice requires triage of remaining findings from Packs 1/3/4/5/7
-- triage should now happen across all seven packs together, but execution should stay bounded to one successor remediation slice at a time
-- keep this file in place as the sweep record until all remediation slices are closed
+- the architecture review remediation arc is fully closed
+- RC-1 through RC-7 are all complete
+- all findings in the cross-pack triage are marked ✅
+- the repo is cleared for new feature implementation
+- the paused JSON Schema parser plan is the natural next candidate
