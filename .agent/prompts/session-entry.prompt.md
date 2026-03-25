@@ -52,9 +52,19 @@ Notes:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Supports standalone schemas, `$defs` bundles, and mixed documents
   - Root schema naming: `title` > `$id` > `"Root"`
-  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected
-  - 13 new unit tests, all quality gates green
-- The paused JSON Schema parser plan scope is significantly addressed. Remaining future work: `if`/`then`/`else` support, `patternProperties`, `$dynamicRef`, `contains` parser support, and standalone document round-trip integration fixtures.
+  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
+  - 13 new unit tests, standalone fixture, 11 new integration round-trip proofs (scenario 5)
+  - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added
+
+### Remaining Planned Capabilities (Not Currently Active)
+
+- `if`/`then`/`else` conditional applicator parser support
+- `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
+- `patternProperties`/`propertyNames` parser support
+- `contains` parser support
+- Canonical JSON-Schema-shaped egress normal form alignment
+- External `$ref` resolution
+- Boolean schema support (`true`/`false` as schema)
 
 ### Canonical Identity
 

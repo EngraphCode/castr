@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UserProfile",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "username": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "role": {
+      "oneOf": [
+        { "type": "string", "const": "admin" },
+        { "type": "string", "const": "user" },
+        { "type": "string", "const": "guest" }
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 0,
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["createdAt"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["id", "username", "email", "role", "active"],
+  "additionalProperties": false
+}

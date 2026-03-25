@@ -4,6 +4,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-03-25
 
+- **DOCTRINAL CORRECTION**: "stretch goals" is not valid in this repo. Strict-and-complete-everywhere means ALL remaining work is either a strict requirement or explicitly deferred with justification. Removed stretch language from session-entry and roadmap.
+- Standalone fixture + scenario 5 proof completed: 50 integration tests (was 36)
+- `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added — closes Pack 4 finding
+- `UnsupportedJsonSchemaKeywordError` exported from public barrel (`schema-processing/index.ts`)
+- Paused plan updated with explicit resolved/remaining finding status
 - JSON Schema parser expansion completed:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Root schema parsing: documents with schema keywords (type, properties, allOf, oneOf, etc.) now parsed as root component

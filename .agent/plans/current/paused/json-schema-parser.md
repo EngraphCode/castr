@@ -1,18 +1,33 @@
-# Plan (Paused): JSON Schema Architecture Remediation (Post-Pack 4)
+# Plan (Partially Resolved): JSON Schema Architecture Remediation (Post-Pack 4)
 
-**Status:** Paused — rewritten after Pack 4 `red` verdict on 2026-03-22
+**Status:** Partially resolved — rewritten after Pack 4 `red` verdict on 2026-03-22, significantly addressed on 2026-03-25
 **Created:** 2026-03-21
-**Last Updated:** 2026-03-22
+**Last Updated:** 2026-03-25
 **Predecessor:** [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
-**Related:** [architecture-review-packs.md](../../active/architecture-review-packs.md), [phase-4-json-schema-and-parity.md](../complete/phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
+**Related:** [architecture-review-packs.md](../../current/complete/architecture-review-packs.md), [phase-4-json-schema-and-parity.md](../complete/phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
 ---
 
-This file keeps the historical `json-schema-parser.md` path for continuity, but it no longer describes a future parser-build slice. Pack 4 established that JSON Schema parser, writer, and proof code already exist on disk, and that the honest next work is remediation of the JSON Schema architecture contract rather than resuming a stale implementation plan.
+## Resolution Status (2026-03-25)
 
-Activation remains intentionally paused until the post-IDENTITY architecture review-pack sweep chooses JSON Schema remediation as the next implementation slice. Pack 4 did not revalidate the old plan; it rewrote it.
+The following Pack 4 findings have been resolved by the parser expansion:
 
-Reactivation requires a strict-and-complete path: parser contract, IR fit, runtime validation, writer behavior, proofs, and docs must all agree on one explicit JSON Schema support surface before any new code work resumes.
+- ✅ **Public contract of `parseJsonSchemaDocument()` is unclear** — resolved. Now parses standalone schemas, `$defs` bundles, and mixed documents. JSDoc updated.
+- ✅ **Unsupported-keyword policy is unclear** — resolved. Explicit `UNSUPPORTED_DOCUMENT_KEYWORDS` blocklist with `UnsupportedJsonSchemaKeywordError`. Covers `if`/`then`/`else`, `$dynamicRef`/`$dynamicAnchor`/`$anchor`, `patternProperties`, `propertyNames`, `contains`.
+- ✅ **`writeJsonSchemaDocument()` exists but no standalone-document round-trip proof** — resolved. Scenario 5 now includes standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs.
+- ✅ **`UnsupportedJsonSchemaKeywordError` not in public barrel** — resolved. Exported from `schema-processing/index.ts`.
+
+Remaining open findings (future work, not currently planned):
+
+- `if`/`then`/`else` conditional applicator parser support
+- `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
+- `patternProperties`/`propertyNames` parser support
+- `contains` parser support
+- Canonical JSON-Schema-shaped egress normal form alignment (nullability form, `$ref` sibling policy, `contains` vs `minContains`/`maxContains`, `example`/`examples`)
+- External `$ref` resolution
+- Boolean schema support (`true`/`false` as schema)
+
+This file remains as historical context. It no longer blocks any current work.
 
 ## Current Pause Truth
 

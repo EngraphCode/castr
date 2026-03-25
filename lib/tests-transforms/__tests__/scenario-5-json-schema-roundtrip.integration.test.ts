@@ -16,7 +16,10 @@ import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 
 import { parseJsonSchemaDocument } from '../../src/schema-processing/parsers/json-schema/index.js';
-import { writeJsonSchemaBundle } from '../../src/schema-processing/writers/json-schema/index.js';
+import {
+  writeJsonSchemaBundle,
+  writeJsonSchemaDocument,
+} from '../../src/schema-processing/writers/json-schema/index.js';
 import type { Draft07Input } from '../../src/schema-processing/parsers/json-schema/index.js';
 
 // ============================================================================
@@ -28,6 +31,9 @@ const JSON_SCHEMA_FIXTURES_DIR = resolve(__dirname, '../__fixtures__/json-schema
 /**
  * JSON Schema 2020-12 fixtures for round-trip testing.
  * Format: [displayName, absolutePath]
+ *
+ * All fixtures are tested through losslessness, schema-count preservation,
+ * and idempotency. The `$defs key preservation` test uses only bundle fixtures.
  */
 const JSON_SCHEMA_FIXTURES: [string, string][] = [
   ['objects', `${JSON_SCHEMA_FIXTURES_DIR}/objects.json`],
@@ -39,7 +45,15 @@ const JSON_SCHEMA_FIXTURES: [string, string][] = [
   ['unions', `${JSON_SCHEMA_FIXTURES_DIR}/unions.json`],
   ['intersections', `${JSON_SCHEMA_FIXTURES_DIR}/intersections.json`],
   ['recursion', `${JSON_SCHEMA_FIXTURES_DIR}/recursion.json`],
+  ['standalone', `${JSON_SCHEMA_FIXTURES_DIR}/standalone.json`],
 ];
+
+/**
+ * Subset: only fixtures that contain `$defs` bundles.
+ * Standalone documents don't have input `$defs`, so `$defs`-key-preservation
+ * is not meaningful for them (the bundle writer legitimately creates `$defs`).
+ */
+const DEFS_BUNDLE_FIXTURES = JSON_SCHEMA_FIXTURES.filter(([name]) => name !== 'standalone');
 
 function assertDraft07Input(value: unknown, context: string): asserts value is Draft07Input {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
@@ -125,7 +139,7 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
   });
 
   describe('$defs key preservation', () => {
-    it.each(JSON_SCHEMA_FIXTURES)(
+    it.each(DEFS_BUNDLE_FIXTURES)(
       '%s: all $defs keys preserved through round-trip',
       async (_name, path) => {
         const fixture = await loadJsonSchemaFixture(path);
@@ -160,6 +174,84 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
 
         // Byte-identical comparison
         expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
+      },
+    );
+  });
+
+  // ============================================================================
+  // Standalone Document Round-Trip (writeJsonSchemaDocument ↔ parseJsonSchemaDocument)
+  // ============================================================================
+
+  describe('Standalone document round-trip: writeJsonSchemaDocument ↔ parseJsonSchemaDocument', () => {
+    it('standalone fixture: parse → writeDocument → re-parse yields equivalent IR', async () => {
+      const fixture = await loadJsonSchemaFixture(`${JSON_SCHEMA_FIXTURES_DIR}/standalone.json`);
+
+      // Parse standalone document → IR component(s)
+      const components = parseJsonSchemaDocument(fixture);
+      expect(components.length).toBeGreaterThan(0);
+
+      // Write root component as standalone document
+      const rootComponent = components[0];
+      if (!rootComponent) {
+        throw new Error('Expected at least one component from standalone fixture');
+      }
+      const standaloneOutput = writeJsonSchemaDocument(rootComponent.schema);
+
+      // Re-parse the standalone output
+      const roundTripped = parseJsonSchemaDocument(standaloneOutput);
+      expect(roundTripped.length).toBe(1);
+
+      // IR schemas must be equal
+      const roundTrippedRoot = roundTripped[0];
+      if (!roundTrippedRoot) {
+        throw new Error('Expected one component after standalone round-trip');
+      }
+      expect(roundTrippedRoot.schema).toEqual(rootComponent.schema);
+    });
+
+    it('standalone fixture: writeDocument → parse → writeDocument is idempotent', async () => {
+      const fixture = await loadJsonSchemaFixture(`${JSON_SCHEMA_FIXTURES_DIR}/standalone.json`);
+
+      // First pass
+      const components1 = parseJsonSchemaDocument(fixture);
+      const root1 = components1[0];
+      if (!root1) {
+        throw new Error('Expected at least one component from standalone fixture');
+      }
+      const output1 = writeJsonSchemaDocument(root1.schema);
+
+      // Second pass
+      const components2 = parseJsonSchemaDocument(output1);
+      const root2 = components2[0];
+      if (!root2) {
+        throw new Error('Expected one component after first round-trip');
+      }
+      const output2 = writeJsonSchemaDocument(root2.schema);
+
+      // Byte-identical
+      expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
+    });
+
+    it.each(DEFS_BUNDLE_FIXTURES)(
+      '%s: each $defs component survives writeDocument → parse round-trip',
+      async (_name, path) => {
+        const fixture = await loadJsonSchemaFixture(path);
+        const components = parseJsonSchemaDocument(fixture);
+
+        for (const component of components) {
+          // Write each component as a standalone document
+          const standaloneDoc = writeJsonSchemaDocument(component.schema);
+
+          // Re-parse as standalone
+          const roundTripped = parseJsonSchemaDocument(standaloneDoc);
+          expect(roundTripped).toHaveLength(1);
+
+          const rt = roundTripped[0];
+          if (!rt) {
+            throw new Error(`Component '${component.name}' missing after standalone round-trip`);
+          }
+          expect(rt.schema).toEqual(component.schema);
+        }
       },
     );
   });
