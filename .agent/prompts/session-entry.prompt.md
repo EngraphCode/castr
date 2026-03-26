@@ -156,17 +156,22 @@ RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete
 
 ## What This Session Should Do
 
-1. Read:
-   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — root-cause context
-   - [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) — sweep record (archived)
-   - [roadmap.md](../plans/roadmap.md)
-   - [IDENTITY.md](../IDENTITY.md)
-   - [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)
-   - [testing-strategy.md](../directives/testing-strategy.md)
-2. If the user reports a fresh gate or runtime issue, reproduce it first.
-3. Otherwise, triage remaining findings and confirm the next bounded slice.
-4. Execute the confirmed slice with TDD and honest scope.
-5. Record handoff and consolidation outcomes in `.agent/memory/napkin.md`.
+This is a **discovery and planning session**. There is no active remediation or outstanding debt. The goal is to identify, evaluate, and plan the next capability slice.
+
+1. Read the discovery metaplan:
+   - [discovery-and-prioritisation.md](../plans/active/discovery-and-prioritisation.md) — the structured session guide
+2. Read the context it references:
+   - [session-entry.prompt.md](.) (this file) — current state and remaining planned capabilities
+   - [roadmap.md](../plans/roadmap.md) — plan of record
+   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — resolved findings (historical context)
+   - [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) — partially resolved, remaining open findings
+   - [json-schema-and-parity-acceptance-criteria.md](../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md) — unchecked acceptance boxes
+3. Survey the open capability landscape — identify all candidate work.
+4. Evaluate each candidate on user impact, proof gap, dependency, and complexity.
+5. Prioritise and select the top 1–3 candidates.
+6. Use `jc-plan` to create a decision-complete plan for the first slice.
+7. **Do not start implementation** until the plan is approved.
+8. Record decisions and rationale in `.agent/memory/napkin.md`.
 
 ## Quality Gates
 

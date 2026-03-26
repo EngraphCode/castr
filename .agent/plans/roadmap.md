@@ -35,7 +35,9 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, and IDENTITY doctrine-alignment slice are complete.
 
-The bounded post-implementation architecture review sweep is now complete.
+The bounded post-implementation architecture review sweep is now complete. The JSON Schema parser expansion is complete with standalone round-trip proofs.
+
+**Next active plan:** [discovery-and-prioritisation.md](./active/discovery-and-prioritisation.md) — structured discovery and planning session to identify the next capability slice.
 
 Current status of that sweep:
 
@@ -44,7 +46,7 @@ Current status of that sweep:
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
 - strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
-- the full repo-root gate sweep was green again on Monday, 24 March 2026
+- the full repo-root gate sweep was green on Tuesday, 25 March 2026
 - IDENTITY doctrine alignment is complete:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed

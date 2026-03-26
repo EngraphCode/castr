@@ -2,6 +2,13 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-26
+
+- Discovery and prioritisation metaplan created as active plan (`plans/active/discovery-and-prioritisation.md`)
+- Second `jc-consolidate-docs` pass: session-entry `What This Session Should Do` rewritten for discovery session, roadmap and README updated with active plan reference, gate date updated to 25 March 2026
+- Practice boxes empty, no Practice evolution needed
+- Pack prompts stale `plans/active/` links noted as low-priority historical artifacts
+
 ## 2026-03-25
 
 - **DOCTRINAL CORRECTION**: "stretch goals" is not valid in this repo. Strict-and-complete-everywhere means ALL remaining work is either a strict requirement or explicitly deferred with justification. Removed stretch language from session-entry and roadmap.

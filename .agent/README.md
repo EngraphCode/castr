@@ -52,6 +52,7 @@ Then use:
   - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
   - 29 unit tests, 520 transform tests, 4 E2E tests — all green
   - Paused plan partially resolved: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
+- **Next active plan:** [`.agent/plans/active/discovery-and-prioritisation.md`](plans/active/discovery-and-prioritisation.md) — discovery and planning for the next capability slice
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 
