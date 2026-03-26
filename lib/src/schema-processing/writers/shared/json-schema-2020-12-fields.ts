@@ -88,6 +88,9 @@ export function writeJsonSchema2020RecursiveFields(
   if (schema.prefixItems !== undefined) {
     result.prefixItems = schema.prefixItems.map((item) => writeSchema(item));
   }
+  if (schema.contains !== undefined) {
+    result['contains'] = writeSchema(schema.contains);
+  }
   writeUnevaluatedFields(schema, result, writeSchema);
   if (schema.dependentSchemas !== undefined) {
     const deps: Record<string, JsonSchemaObject> = {};
@@ -96,4 +99,46 @@ export function writeJsonSchema2020RecursiveFields(
     }
     result.dependentSchemas = deps;
   }
+  writePatternProperties(schema, result, writeSchema);
+  writePropertyNames(schema, result, writeSchema);
+}
+
+// ---------------------------------------------------------------------------
+// patternProperties / propertyNames
+// ---------------------------------------------------------------------------
+
+/**
+ * Write `patternProperties` from IR to JSON Schema output.
+ * @internal
+ */
+function writePatternProperties(
+  schema: CastrSchema,
+  result: JsonSchemaObject,
+  writeSchema: WriteSchemaFn,
+): void {
+  if (schema.patternProperties === undefined) {
+    return;
+  }
+
+  const output: Record<string, JsonSchemaObject> = {};
+  for (const [pattern, patternSchema] of getSortedRecordEntries(schema.patternProperties)) {
+    output[pattern] = writeSchema(patternSchema);
+  }
+  result.patternProperties = output;
+}
+
+/**
+ * Write `propertyNames` from IR to JSON Schema output.
+ * @internal
+ */
+function writePropertyNames(
+  schema: CastrSchema,
+  result: JsonSchemaObject,
+  writeSchema: WriteSchemaFn,
+): void {
+  if (schema.propertyNames === undefined) {
+    return;
+  }
+
+  result.propertyNames = writeSchema(schema.propertyNames);
 }

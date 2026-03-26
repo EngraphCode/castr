@@ -26,6 +26,9 @@ export type ExtendedSchemaObject = SchemaObject & {
   dependentSchemas?: Record<string, SchemaObject | ReferenceObject>;
   minContains?: number;
   maxContains?: number;
+  patternProperties?: Record<string, SchemaObject | ReferenceObject>;
+  propertyNames?: SchemaObject | ReferenceObject;
+  contains?: SchemaObject | ReferenceObject;
 };
 
 /**
@@ -75,6 +78,9 @@ export function addOpenAPIExtensions(
   addUnevaluatedProperties(schema, context, irSchema, buildFn);
   addUnevaluatedItems(schema, context, irSchema, buildFn);
   addDependentSchemas(schema, context, irSchema, buildFn);
+  addPatternProperties(schema, context, irSchema, buildFn);
+  addPropertyNames(schema, context, irSchema, buildFn);
+  addContains(schema, context, irSchema, buildFn);
 }
 
 /**
@@ -179,4 +185,76 @@ function addDependentSchemas(
   }
 
   irSchema.dependentSchemas = result;
+}
+
+/**
+ * Add patternProperties (JSON Schema 2020-12).
+ * @internal
+ */
+function addPatternProperties(
+  schema: ExtendedSchemaObject,
+  context: IRBuildContext,
+  irSchema: CastrSchema,
+  buildFn: BuildCastrSchemaFn,
+): void {
+  if (!schema.patternProperties) {
+    return;
+  }
+
+  const result: Record<string, CastrSchema> = {};
+
+  for (const [pattern, patternSchema] of Object.entries(schema.patternProperties)) {
+    const patternContext: IRBuildContext = {
+      ...context,
+      path: [...context.path, 'patternProperties', pattern],
+      required: false,
+    };
+    result[pattern] = buildFn(patternSchema, patternContext);
+  }
+
+  irSchema.patternProperties = result;
+}
+
+/**
+ * Add propertyNames (JSON Schema 2020-12).
+ * @internal
+ */
+function addPropertyNames(
+  schema: ExtendedSchemaObject,
+  context: IRBuildContext,
+  irSchema: CastrSchema,
+  buildFn: BuildCastrSchemaFn,
+): void {
+  if (schema.propertyNames === undefined) {
+    return;
+  }
+
+  const propNamesContext: IRBuildContext = {
+    ...context,
+    path: [...context.path, 'propertyNames'],
+    required: false,
+  };
+  irSchema.propertyNames = buildFn(schema.propertyNames, propNamesContext);
+}
+
+/**
+ * Add contains (JSON Schema 2020-12).
+ * @internal
+ */
+function addContains(
+  schema: ExtendedSchemaObject,
+  context: IRBuildContext,
+  irSchema: CastrSchema,
+  buildFn: BuildCastrSchemaFn,
+): void {
+  if (schema.contains === undefined) {
+    return;
+  }
+
+  const containsContext: IRBuildContext = {
+    ...context,
+    path: [...context.path, 'contains'],
+    required: false,
+  };
+  irSchema.contains = buildFn(schema.contains, containsContext);
 }

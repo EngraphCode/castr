@@ -1,8 +1,8 @@
 # Plan (Partially Resolved): JSON Schema Architecture Remediation (Post-Pack 4)
 
-**Status:** Partially resolved — rewritten after Pack 4 `red` verdict on 2026-03-22, significantly addressed on 2026-03-25
+**Status:** Partially resolved — rewritten after Pack 4 `red` verdict on 2026-03-22, significantly addressed on 2026-03-25, `patternProperties`/`propertyNames` resolved on 2026-03-26, `prefixItems`/`contains` resolved on 2026-03-26
 **Created:** 2026-03-21
-**Last Updated:** 2026-03-25
+**Last Updated:** 2026-03-26
 **Predecessor:** [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
 **Related:** [architecture-review-packs.md](../../current/complete/architecture-review-packs.md), [phase-4-json-schema-and-parity.md](../complete/phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
@@ -13,17 +13,18 @@
 The following Pack 4 findings have been resolved by the parser expansion:
 
 - ✅ **Public contract of `parseJsonSchemaDocument()` is unclear** — resolved. Now parses standalone schemas, `$defs` bundles, and mixed documents. JSDoc updated.
-- ✅ **Unsupported-keyword policy is unclear** — resolved. Explicit `UNSUPPORTED_DOCUMENT_KEYWORDS` blocklist with `UnsupportedJsonSchemaKeywordError`. Covers `if`/`then`/`else`, `$dynamicRef`/`$dynamicAnchor`/`$anchor`, `patternProperties`, `propertyNames`, `contains`.
+- ✅ **Unsupported-keyword policy is unclear** — resolved. Explicit `UNSUPPORTED_DOCUMENT_KEYWORDS` blocklist with `UnsupportedJsonSchemaKeywordError`. Covers `if`/`then`/`else`, `$dynamicRef`/`$dynamicAnchor`/`$anchor`. (`contains` subsequently resolved on 2026-03-26.)
+- ✅ **`patternProperties`/`propertyNames` parser support** — resolved on 2026-03-26. Full-stack implementation: IR model, JSON Schema parser/writer, OpenAPI parser, Zod/TS fail-fast, round-trip proofs. See [pattern-properties-and-property-names.md](../../active/pattern-properties-and-property-names.md).
 - ✅ **`writeJsonSchemaDocument()` exists but no standalone-document round-trip proof** — resolved. Scenario 5 now includes standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs.
+- ✅ **`prefixItems` tuple writer bug** — resolved on 2026-03-26. Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types. See [prefixitems-tuple-and-contains.md](../../active/prefixitems-tuple-and-contains.md).
+- ✅ **`contains` parser support** — resolved on 2026-03-26. Full-stack: IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast. See [prefixitems-tuple-and-contains.md](../../active/prefixitems-tuple-and-contains.md).
 - ✅ **`UnsupportedJsonSchemaKeywordError` not in public barrel** — resolved. Exported from `schema-processing/index.ts`.
 
 Remaining open findings (future work, not currently planned):
 
 - `if`/`then`/`else` conditional applicator parser support
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
-- `patternProperties`/`propertyNames` parser support
-- `contains` parser support
-- Canonical JSON-Schema-shaped egress normal form alignment (nullability form, `$ref` sibling policy, `contains` vs `minContains`/`maxContains`, `example`/`examples`)
+- Canonical JSON-Schema-shaped egress normal form alignment (nullability form, `$ref` sibling policy, `example`/`examples`)
 - External `$ref` resolution
 - Boolean schema support (`true`/`false` as schema)
 
@@ -52,7 +53,7 @@ This file remains as historical context. It no longer blocks any current work.
 ### Implemented But Under-Proven
 
 - `writeJsonSchemaDocument()` exists, but Pack 4 found no equivalent standalone-document round-trip proof.
-- Parser and writer support for `unevaluatedProperties`, `unevaluatedItems`, `dependentSchemas`, `dependentRequired`, `minContains`, and `maxContains` exists, but the proof matrix does not yet prove that surface as a complete public contract.
+- Parser and writer support for `unevaluatedProperties`, `unevaluatedItems`, `dependentSchemas`, `dependentRequired`, `minContains`, `maxContains`, `patternProperties`, `propertyNames`, `prefixItems`, and `contains` exists, but the proof matrix does not yet prove that surface as a complete public contract.
 
 ### Silently Ignored Or Unclear
 
@@ -66,7 +67,6 @@ This file remains as historical context. It no longer blocks any current work.
 - Canonical JSON-Schema-shaped egress normal form is unclear across writer and neighbouring conversion surfaces.
   - nullability form
   - `$ref` sibling policy
-  - `contains` versus `minContains` / `maxContains`
   - `example` / `examples` in the pure JSON Schema path
 
 ### Unsupported And Explicitly Rejected

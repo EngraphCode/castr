@@ -556,6 +556,144 @@ describe('isCastrSchema rejection', () => {
 
     expect(isCastrSchema(booleanUnevaluated)).toBe(true);
   });
+  it('should return true for object schema with valid patternProperties', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      patternProperties: {
+        '^x-': {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            zodChain: { presence: '', validations: [], defaults: [] },
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            circularReferences: [],
+          },
+        },
+      },
+      additionalProperties: false,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return false when patternProperties is present on a non-object schema', () => {
+    const invalidSchema = {
+      type: 'string',
+      patternProperties: {
+        '^x-': {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            zodChain: { presence: '', validations: [], defaults: [] },
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            circularReferences: [],
+          },
+        },
+      },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+
+  it('should return false when patternProperties contains non-CastrSchema values', () => {
+    const invalidSchema = {
+      type: 'object',
+      patternProperties: { '^x-': { bogus: true } },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+
+  it('should return true for object schema with valid propertyNames', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      propertyNames: {
+        type: 'string',
+        minLength: 2,
+        metadata: {
+          required: false,
+          nullable: false,
+          zodChain: { presence: '', validations: [], defaults: [] },
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: [],
+        },
+      },
+      additionalProperties: false,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return false when propertyNames is present on a non-object schema', () => {
+    const invalidSchema = {
+      type: 'array',
+      propertyNames: {
+        type: 'string',
+        metadata: {
+          required: false,
+          nullable: false,
+          zodChain: { presence: '', validations: [], defaults: [] },
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: [],
+        },
+      },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+
+  it('should return false when propertyNames is not a valid CastrSchema', () => {
+    const invalidSchema = {
+      type: 'object',
+      propertyNames: { bogus: true },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
 });
 
 describe('isCastrSchemaNode', () => {

@@ -41,6 +41,31 @@
         "y": { "type": "number" }
       },
       "unevaluatedProperties": false
+    },
+    "PatternPropertiesSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "patternProperties": {
+        "^x-": { "type": "string" },
+        "^i-": { "type": "integer" }
+      }
+    },
+    "PropertyNamesSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 50,
+        "pattern": "^[a-z]"
+      }
+    },
+    "ContainsSchema": {
+      "type": "array",
+      "contains": { "type": "string", "minLength": 1 }
     }
   }
 }

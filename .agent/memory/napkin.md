@@ -4,6 +4,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-03-26
 
+- **`prefixItems` tuple writer fix + `contains` keyword support** completed in a single session:
+  - Part A: Zod writer emits `z.tuple([...])`, TS writer emits `[A, B]` tuple types; dedup resolve functions extracted from `type-writer.ts` to `type-writer.fail-fast.ts` to satisfy `max-lines` (220) and `max-files-per-dir` (6) lint constraints
+  - Part B: `contains` added to IR model, JSON Schema 2020-keywords parser, JSON Schema writer (bracket notation for index-sig property), OpenAPI builder (`addContains()`), Zod/TS fail-fast guards — placed in `parse2020Keywords()` alongside `minContains`/`maxContains` to avoid `parseArrayFields` complexity violation
+  - Existing test that expected `contains` rejection updated to acceptance test
+  - `pnpm qg` exit 0 after both parts
+- Complexity management learning: when adding a new keyword to `parseArrayFields`, hitting the function complexity limit (8) is predictable; routing new recursive-schema keywords through `parse2020Keywords()` in the companion module is the established escape hatch
+- Stale ESLint cache can report false-positive `max-files-per-dir` violations; `rm .eslintcache` before re-running resolves it
 - Discovery and prioritisation metaplan created as active plan (`plans/active/discovery-and-prioritisation.md`)
 - Second `jc-consolidate-docs` pass: session-entry `What This Session Should Do` rewritten for discovery session, roadmap and README updated with active plan reference, gate date updated to 25 March 2026
 - Practice boxes empty, no Practice evolution needed

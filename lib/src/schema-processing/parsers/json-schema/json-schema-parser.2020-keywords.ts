@@ -42,6 +42,9 @@ export function parse2020Keywords(
   if (input.maxContains !== undefined) {
     result.maxContains = input.maxContains;
   }
+  if (input.contains !== undefined) {
+    result.contains = parseSingleSchemaOrRef(input.contains, parseSchema);
+  }
 }
 
 function parseBoolOrSchema(

@@ -418,6 +418,20 @@ export interface CastrSchema {
   dependentRequired?: Record<string, string[]>;
 
   /**
+   * Schema that at least one array item must match.
+   *
+   * @example
+   * ```typescript
+   * // At least one item must be a string
+   * contains: { type: 'string', metadata: { ... } }
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  contains?: CastrSchema;
+
+  /**
    * Minimum number of array items that must match the `contains` schema.
    * Only meaningful when `contains` is also specified.
    *
@@ -448,6 +462,39 @@ export interface CastrSchema {
    * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   maxContains?: number;
+
+  /**
+   * Pattern-based property schemas (for type: 'object').
+   * Keys are regex patterns; values are schemas that properties with
+   * matching names must satisfy.
+   *
+   * @example
+   * ```typescript
+   * // Any property starting with 'x-' must be a string
+   * patternProperties: {
+   *   '^x-': { type: 'string', metadata: { ... } },
+   * }
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  patternProperties?: Record<string, CastrSchema>;
+
+  /**
+   * Schema applied to all property names (for type: 'object').
+   * Constrains which property names are valid (e.g. minLength, pattern, enum).
+   *
+   * @example
+   * ```typescript
+   * // All property names must be at least 2 characters
+   * propertyNames: { type: 'string', minLength: 2, metadata: { ... } }
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  propertyNames?: CastrSchema;
 
   /**
    * Rich metadata for code generation.

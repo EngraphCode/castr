@@ -335,6 +335,78 @@ describe('parseJsonSchemaDocument', () => {
       expect(components).toHaveLength(1);
       expect(components[0]?.schema.enum).toEqual(['active', 'inactive', 'pending']);
     });
+
+    it('parses patternProperties with multiple patterns', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        patternProperties: {
+          '^x-': { type: 'string' },
+          '^i-': { type: 'integer' },
+        },
+      });
+
+      expect(components).toHaveLength(1);
+      const schema = components[0]?.schema;
+      expect(schema?.patternProperties).toBeDefined();
+      expect(Object.keys(schema?.patternProperties ?? {})).toHaveLength(2);
+      expect(schema?.patternProperties?.['^x-']?.type).toBe('string');
+      expect(schema?.patternProperties?.['^i-']?.type).toBe('integer');
+    });
+
+    it('parses patternProperties alongside regular properties', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          name: { type: 'string' },
+        },
+        patternProperties: {
+          '^meta_': { type: 'string' },
+        },
+      });
+
+      expect(components).toHaveLength(1);
+      const schema = components[0]?.schema;
+      expect(schema?.properties?.get('name')?.type).toBe('string');
+      expect(schema?.patternProperties?.['^meta_']?.type).toBe('string');
+    });
+
+    it('parses propertyNames with string constraints', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        propertyNames: {
+          type: 'string',
+          minLength: 2,
+          maxLength: 50,
+          pattern: '^[a-z]',
+        },
+      });
+
+      expect(components).toHaveLength(1);
+      const propNames = components[0]?.schema.propertyNames;
+      expect(propNames).toBeDefined();
+      expect(propNames?.type).toBe('string');
+      expect(propNames?.minLength).toBe(2);
+      expect(propNames?.maxLength).toBe(50);
+      expect(propNames?.pattern).toBe('^[a-z]');
+    });
+
+    it('parses propertyNames as a $ref', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        propertyNames: { $ref: '#/$defs/NamePattern' },
+        $defs: {
+          NamePattern: { type: 'string', pattern: '^[a-z]' },
+        },
+      });
+
+      expect(components).toHaveLength(2);
+      const root = components[0];
+      expect(root?.schema.propertyNames?.$ref).toBe('#/$defs/NamePattern');
+    });
   });
 
   // ── Phase 3: Unsupported keyword rejection ────────────────────────
@@ -356,27 +428,39 @@ describe('parseJsonSchemaDocument', () => {
       expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
     });
 
-    it('rejects patternProperties', () => {
-      const input = {
+    it('accepts patternProperties (now supported)', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
         patternProperties: {
           '^S_': { type: 'string' },
         },
-      };
-      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.patternProperties).toBeDefined();
+      expect(components[0]?.schema.patternProperties?.['^S_']?.type).toBe('string');
     });
 
-    it('rejects propertyNames', () => {
-      const input = {
-        propertyNames: { minLength: 1 },
-      };
-      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+    it('accepts propertyNames (now supported)', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        propertyNames: { type: 'string', minLength: 1 },
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.propertyNames).toBeDefined();
+      expect(components[0]?.schema.propertyNames?.type).toBe('string');
+      expect(components[0]?.schema.propertyNames?.minLength).toBe(1);
     });
 
-    it('rejects contains at document level', () => {
-      const input = {
+    it('accepts contains (now supported)', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'array',
         contains: { type: 'number' },
-      };
-      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.contains).toBeDefined();
+      expect(components[0]?.schema.contains?.type).toBe('number');
     });
 
     it('includes unsupported keyword names in error message', () => {

@@ -28,13 +28,21 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
 function hasValidSchemaStructure(value: UnknownRecord): boolean {
   return (
     hasValidSchemaType(value) &&
-    hasValidSchemaAdditionalProperties(value) &&
-    hasValidSchemaUnevaluatedProperties(value) &&
-    hasValidSchemaProperties(value) &&
-    hasValidSchemaRequired(value) &&
+    hasValidSchemaObjectStructure(value) &&
     hasValidSchemaItems(value) &&
     hasValidSchemaComposition(value) &&
     hasValidSchemaMetadata(value)
+  );
+}
+
+function hasValidSchemaObjectStructure(value: UnknownRecord): boolean {
+  return (
+    hasValidSchemaAdditionalProperties(value) &&
+    hasValidSchemaUnevaluatedProperties(value) &&
+    hasValidSchemaProperties(value) &&
+    hasValidSchemaPatternProperties(value) &&
+    hasValidSchemaPropertyNames(value) &&
+    hasValidSchemaRequired(value)
   );
 }
 
@@ -115,6 +123,39 @@ function hasValidSchemaProperties(value: UnknownRecord): boolean {
   }
 
   return isCastrSchemaProperties(value['properties']);
+}
+
+// ── patternProperties (record of string → CastrSchema, only on object schemas) ──
+
+function hasValidSchemaPatternProperties(value: UnknownRecord): boolean {
+  if (!('patternProperties' in value) || value['patternProperties'] === undefined) {
+    return true;
+  }
+
+  if (!isObjectSchemaRecord(value)) {
+    return false;
+  }
+
+  const patternProps = value['patternProperties'];
+  if (!isRecord(patternProps)) {
+    return false;
+  }
+
+  return Object.values(patternProps).every((entry) => isCastrSchema(entry));
+}
+
+// ── propertyNames (single CastrSchema, only on object schemas) ──
+
+function hasValidSchemaPropertyNames(value: UnknownRecord): boolean {
+  if (!('propertyNames' in value) || value['propertyNames'] === undefined) {
+    return true;
+  }
+
+  if (!isObjectSchemaRecord(value)) {
+    return false;
+  }
+
+  return isCastrSchema(value['propertyNames']);
 }
 
 // ── required (string array, only on object schemas) ──

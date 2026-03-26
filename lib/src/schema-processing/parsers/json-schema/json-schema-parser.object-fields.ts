@@ -44,6 +44,39 @@ export function parseObjectFields(
     result.required = input.required;
   }
   parseAdditionalProps(input, result);
+  parsePatternProperties(input, result, parseSchema);
+  parsePropertyNames(input, result, parseSchema);
+}
+
+function parsePatternProperties(
+  input: JsonSchema2020,
+  result: CastrSchema,
+  parseSchema: ParseSchemaFn,
+): void {
+  const patternProps = input.patternProperties;
+  if (patternProps === undefined) {
+    return;
+  }
+
+  const parsed: Record<string, CastrSchema> = {};
+  for (const [pattern, value] of Object.entries(patternProps)) {
+    parsed[pattern] = parseSingleSchemaOrRef(value, parseSchema);
+  }
+
+  result.patternProperties = parsed;
+}
+
+function parsePropertyNames(
+  input: JsonSchema2020,
+  result: CastrSchema,
+  parseSchema: ParseSchemaFn,
+): void {
+  const propNames = input.propertyNames;
+  if (propNames === undefined) {
+    return;
+  }
+
+  result.propertyNames = parseSingleSchemaOrRef(propNames, parseSchema);
 }
 
 function parseProperties(

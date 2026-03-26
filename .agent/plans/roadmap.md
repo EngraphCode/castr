@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 24, 2026)  
+**Date:** January 24, 2026 (Updated March 26, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -37,7 +37,7 @@ The Practice integration slice, core agent-system installation slice, type-safet
 
 The bounded post-implementation architecture review sweep is now complete. The JSON Schema parser expansion is complete with standalone round-trip proofs.
 
-**Next active plan:** [discovery-and-prioritisation.md](./active/discovery-and-prioritisation.md) — structured discovery and planning session to identify the next capability slice.
+**Next active plan:** New discovery and prioritisation session — the previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) ✅) and the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) ✅).
 
 Current status of that sweep:
 
@@ -46,7 +46,7 @@ Current status of that sweep:
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
 - strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
-- the full repo-root gate sweep was green on Tuesday, 25 March 2026
+- the full repo-root gate sweep was green on Wednesday, 26 March 2026
 - IDENTITY doctrine alignment is complete:
   - parser honesty restored for non-object `additionalProperties`
   - public strictness/compatibility surfaces removed
@@ -87,9 +87,22 @@ Current sweep record:
 - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
 - Supports standalone schemas, `$defs` bundles, and mixed documents
 - Root schema naming: `title` > `$id` > `"Root"`
-- Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected
+- Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`) explicitly rejected
 - 13 new unit tests, all quality gates green
 - Paused plan ([json-schema-parser.md](./current/paused/json-schema-parser.md)) scope significantly addressed
+
+**`patternProperties`/`propertyNames` implementation** completed Wednesday, 26 March 2026:
+
+- Full-stack: IR model, JSON Schema parser/writer, OpenAPI parser, Zod/TS fail-fast
+- Round-trip proofs in Scenario 5 (losslessness, idempotency, schema-count, $defs-key preservation)
+- Plan: [pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) (✅ complete)
+
+**`prefixItems` tuple writer fix + `contains` keyword support** completed Wednesday, 26 March 2026:
+
+- Part A: Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types for `prefixItems`
+- Part B: `contains` added to IR, JSON Schema parser (types + 2020-keywords), JSON Schema writer, OpenAPI builder, Zod/TS fail-fast
+- Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json` fixture
+- Plan: [prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) (✅ complete)
 
 Paused supporting context that remains important:
 

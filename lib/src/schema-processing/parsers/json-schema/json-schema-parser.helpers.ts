@@ -174,7 +174,6 @@ export function parseArrayFields(
     result.uniqueItems = input.uniqueItems;
   }
 }
-
 // ── Composition ───────────────────────────────────────────────────────────
 
 /** @internal */

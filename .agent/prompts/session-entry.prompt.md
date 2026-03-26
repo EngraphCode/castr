@@ -31,10 +31,11 @@ Notes:
 7. No escape hatches in product code: no non-const assertions, `any`, `!`, or lint-disables to hide architecture problems.
 8. TDD at all levels.
 9. All quality-gate failures are blocking.
+10. **All supported keywords must be fully supported.** Once a keyword is parsed into the IR, every downstream surface must either emit it losslessly or fail fast with an actionable error. Silent omission is a doctrine violation.
 
 ---
 
-## Current State: JSON Schema Parser Expansion Complete
+## Current State: `prefixItems` Tuple + `contains` Keyword Complete
 
 ### Completed Predecessor Plans
 
@@ -52,19 +53,54 @@ Notes:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Supports standalone schemas, `$defs` bundles, and mixed documents
   - Root schema naming: `title` > `$id` > `"Root"`
-  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
+  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
   - 13 new unit tests, standalone fixture, 11 new integration round-trip proofs (scenario 5)
   - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added
+- **`patternProperties`/`propertyNames` full-stack implementation** completed Wednesday, 26 March 2026:
+  - IR model extended with both fields + runtime validator updated (6 new tests)
+  - JSON Schema parser: keywords parsed from both JSON Schema and OpenAPI 3.1 input
+  - JSON Schema writer: both keywords emitted to output
+  - OpenAPI parser: `addPatternProperties()`/`addPropertyNames()` in 2020-12 builder
+  - Zod + TypeScript writers: fail-fast with actionable error messages (2 new fail-fast tests)
+  - Round-trip proof: `2020-12-keywords.json` fixture extended, Scenario 5 50/50 green
+  - All quality gates green (`pnpm qg` exit 0)
+  - Plan: [pattern-properties-and-property-names.md](../plans/active/pattern-properties-and-property-names.md)
+- **`prefixItems` tuple writer fix + `contains` keyword support** completed Wednesday, 26 March 2026:
+  - Part A: Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types
+  - Part B: `contains` added to IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast
+  - Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json`, Scenario 5 green
+  - All quality gates green (`pnpm qg` exit 0)
+  - Plan: [prefixitems-tuple-and-contains.md](../plans/active/prefixitems-tuple-and-contains.md)
 
 ### Remaining Planned Capabilities (Not Currently Active)
 
 - `if`/`then`/`else` conditional applicator parser support
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
-- `patternProperties`/`propertyNames` parser support
-- `contains` parser support
 - Canonical JSON-Schema-shaped egress normal form alignment
 - External `$ref` resolution
 - Boolean schema support (`true`/`false` as schema)
+
+### Format Tensions: IR Keywords vs Output Format Capabilities
+
+The IR is format-neutral, but not all output formats can express every keyword. Support is defined by the **parser-writer pair**: a keyword may be unsupported in Zod but fully supported in OpenAPI. When a supported IR keyword reaches a writer that cannot handle it, the writer **must fail fast** — silent omission is a doctrine violation.
+
+Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | ❌ inherent limitation | ⚠️ partial | 🔲 not yet in IR
+
+| IR Keyword                  | JSON Schema | OpenAPI 3.1 |      Zod       |  TypeScript  | Category                                                 |
+| --------------------------- | :---------: | :---------: | :------------: | :----------: | -------------------------------------------------------- |
+| `patternProperties`         |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `propertyNames`             |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `dependentSchemas`          |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `dependentRequired`         |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `unevaluatedProperties`     |     ✅      |     ✅      |   ⚠️ partial   |  ⚠️ partial  | Boolean → `z.strictObject`; schema form = fail-fast      |
+| `prefixItems`               |     ✅      |     ✅      | ✅ `z.tuple()` | ✅ `[A, B]`  | Fully supported — Zod emits tuples, TS emits tuple types |
+| `unevaluatedItems`          |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `contains`                  |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `minContains`/`maxContains` |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `if`/`then`/`else`          | 🔲 not yet  | 🔲 not yet  |  ❌ no equiv   | ❌ no equiv  | Not yet in IR                                            |
+
+> [!IMPORTANT]
+> Each new keyword added to the IR must include fail-fast guards in every writer that cannot express it. All rows now show accurate support status. No rows are marked 🐛 (bug).
 
 ### Canonical Identity
 
@@ -86,7 +122,7 @@ Notes:
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Monday, 24 March 2026)
+## Current Repo Truth (Wednesday, 26 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -145,12 +181,12 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. There is zero outstanding debt — the next work is new capability.
+RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. The `patternProperties`/`propertyNames` implementation is complete. The `prefixItems` tuple writer fix and `contains` keyword support are complete. There is zero outstanding debt — the next work is new capability.
 
-**Next session: [Discovery and Prioritisation](../plans/active/discovery-and-prioritisation.md)**
+**Next session: new discovery and planning** — survey candidates, evaluate, prioritise, plan the first slice.
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Follow the discovery metaplan** — survey candidates, evaluate, prioritise, plan the first slice.
+2. **Survey the remaining planned capabilities** for the next slice.
 3. **Do not start implementation until a decision-complete plan exists.**
 4. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
@@ -210,7 +246,7 @@ Treat every failure as blocking.
 
 Current honest state:
 
-- `pnpm qg` was green on Monday, 24 March 2026 (including `test:e2e`)
+- `pnpm qg` was green on Wednesday, 26 March 2026 (including `test:e2e`, after `prefixItems`/`contains` completion)
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) completed on Monday, 23 March 2026
 - RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)
 - RC-4 (format-specific drift) completed on Monday, 24 March 2026 — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md)

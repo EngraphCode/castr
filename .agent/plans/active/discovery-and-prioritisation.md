@@ -1,8 +1,9 @@
 # Metaplan: Discovery and Prioritisation Session
 
-**Status:** Pending — entry point for the next session
+**Status:** ✅ Executed — first slice (`patternProperties`/`propertyNames`) selected, planned, implemented, and verified (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** JSON Schema parser expansion (completed 2026-03-25)
+**Successor:** [pattern-properties-and-property-names.md](./pattern-properties-and-property-names.md) (✅ complete), [prefixitems-tuple-and-contains.md](./prefixitems-tuple-and-contains.md) (✅ complete)
 
 ---
 
@@ -22,14 +23,14 @@ Produce a **prioritised short-list** of the next 1–3 implementation slices, wi
 
 Audit the following for candidate work:
 
-| Source | What to look for |
-| --- | --- |
-| Remaining Planned Capabilities (session-entry) | `if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`, egress normal form, external `$ref`, boolean schemas |
-| Paused plan (json-schema-parser.md) | Open findings not yet addressed |
-| Pack 4 research (pack-4-json-schema-architecture.md) | "Silently Ignored Or Unclear" section |
-| Acceptance criteria (`json-schema-and-parity-acceptance-criteria.md`, `zod-output-acceptance-criteria.md`) | Unchecked boxes |
-| User requests / external feedback | Anything the user brings to the session |
-| Roadmap Phase 4+ / future plans | Any deferred capability from the original Phase 4 plan |
+| Source                                                                                                     | What to look for                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Remaining Planned Capabilities (session-entry)                                                             | `if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`, egress normal form, external `$ref`, boolean schemas |
+| Paused plan (json-schema-parser.md)                                                                        | Open findings not yet addressed                                                                                                           |
+| Pack 4 research (pack-4-json-schema-architecture.md)                                                       | "Silently Ignored Or Unclear" section                                                                                                     |
+| Acceptance criteria (`json-schema-and-parity-acceptance-criteria.md`, `zod-output-acceptance-criteria.md`) | Unchecked boxes                                                                                                                           |
+| User requests / external feedback                                                                          | Anything the user brings to the session                                                                                                   |
+| Roadmap Phase 4+ / future plans                                                                            | Any deferred capability from the original Phase 4 plan                                                                                    |
 
 ### 2. Evaluate Each Candidate
 

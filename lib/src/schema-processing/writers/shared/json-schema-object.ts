@@ -101,6 +101,8 @@ export interface JsonSchemaObject {
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
   maxContains?: number;
+  patternProperties?: Record<string, JsonSchemaObject>;
+  propertyNames?: JsonSchemaObject;
 
   // JSON Schema document-level
   $defs?: Record<string, JsonSchemaObject>;

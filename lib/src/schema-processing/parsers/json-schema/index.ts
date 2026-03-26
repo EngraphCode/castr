@@ -3,8 +3,8 @@
  *
  * `parseJsonSchemaDocument()` parses both root-level schemas and `$defs`
  * bundles. Documents may contain a root schema, `$defs`, or both.
- * Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`, `patternProperties`,
  * `propertyNames`, `contains`) are rejected with an actionable error.
+ * `patternProperties` and `propertyNames` are supported.
  *
  * @example
  * ```typescript
@@ -167,6 +167,8 @@ const ROOT_SCHEMA_KEYWORDS = new Set([
   'dependentRequired',
   'minContains',
   'maxContains',
+  'patternProperties',
+  'propertyNames',
 ]);
 
 /**
@@ -225,13 +227,6 @@ const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set([
   '$dynamicRef',
   '$dynamicAnchor',
   '$anchor',
-
-  // Pattern-keyed properties
-  'patternProperties',
-  'propertyNames',
-
-  // Array contains (parser side — writer emits minContains/maxContains)
-  'contains',
 ]);
 
 /**

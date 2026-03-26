@@ -30,4 +30,7 @@ export interface JsonSchema2020 extends SchemaObject {
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
   maxContains?: number;
+  contains?: JsonSchema2020 | ReferenceObject;
+  patternProperties?: Record<string, JsonSchema2020 | ReferenceObject>;
+  propertyNames?: JsonSchema2020 | ReferenceObject;
 }

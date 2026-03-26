@@ -201,4 +201,111 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(generate(context)).toBe('z.array(z.unknown())');
     });
   });
+
+  // ============================================================================
+  // patternProperties / propertyNames - MUST throw (no Zod equivalent)
+  // ============================================================================
+
+  describe('patternProperties and propertyNames fail-fast', () => {
+    it('throws for object schema with patternProperties', () => {
+      const schema = createMockSchema('object');
+      schema.patternProperties = {
+        '^x-': createMockSchema('string'),
+      };
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/patternProperties cannot be represented in Zod/);
+    });
+
+    it('throws for object schema with propertyNames', () => {
+      const schema = createMockSchema('object');
+      schema.propertyNames = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/propertyNames cannot be represented in Zod/);
+    });
+  });
+
+  // ============================================================================
+  // 2020-12 keywords with no Zod equivalent - MUST throw
+  // ============================================================================
+
+  describe('2020-12 object keywords fail-fast', () => {
+    it('throws for dependentSchemas', () => {
+      const schema = createMockSchema('object');
+      schema.dependentSchemas = { role: createMockSchema('object') };
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/dependentSchemas cannot be represented in Zod/);
+    });
+
+    it('throws for dependentRequired', () => {
+      const schema = createMockSchema('object');
+      schema.dependentRequired = { email: ['emailVerified'] };
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/dependentRequired cannot be represented in Zod/);
+    });
+
+    it('throws for schema-valued unevaluatedProperties', () => {
+      const schema = createMockSchema('object');
+      schema.unevaluatedProperties = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(
+        /schema-valued unevaluatedProperties cannot be represented in Zod/,
+      );
+    });
+
+    it('does NOT throw for boolean unevaluatedProperties', () => {
+      const schema = createMockSchema('object');
+      schema.unevaluatedProperties = false;
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).not.toThrow();
+    });
+  });
+
+  describe('2020-12 array keywords fail-fast', () => {
+    it('emits z.tuple() for prefixItems', () => {
+      const schema = createMockSchema('array');
+      schema.prefixItems = [createMockSchema('string'), createMockSchema('number')];
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).not.toThrow();
+      expect(generate(context)).toBe('z.tuple([z.string(), z.number()])');
+    });
+
+    it('throws for unevaluatedItems', () => {
+      const schema = createMockSchema('array');
+      schema.unevaluatedItems = false;
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/unevaluatedItems cannot be represented in Zod/);
+    });
+
+    it('throws for minContains', () => {
+      const schema = createMockSchema('array');
+      schema.minContains = 2;
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/minContains cannot be represented in Zod/);
+    });
+
+    it('throws for maxContains', () => {
+      const schema = createMockSchema('array');
+      schema.maxContains = 5;
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/maxContains cannot be represented in Zod/);
+    });
+
+    it('throws for contains', () => {
+      const schema = createMockSchema('array');
+      schema.contains = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/contains cannot be represented in Zod/);
+    });
+  });
 });
