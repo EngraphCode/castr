@@ -37,41 +37,22 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep (including `test:e2e`): green on Monday, 24 March 2026
+  - Last reproduced full repo-root sweep (including `test:e2e`): green on Tuesday, 25 March 2026
   - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Current Review Sweep Record:** Architecture Review Packs — post-IDENTITY bounded audit
-  - Sweep record: [`.agent/plans/active/architecture-review-packs.md`](plans/active/architecture-review-packs.md)
-  - Historical sweep prompt: [`.agent/prompts/architecture-review-packs.prompt.md`](prompts/architecture-review-packs.prompt.md)
-  - Immediate predecessor: [`.agent/plans/current/complete/identity-doctrine-alignment.md`](plans/current/complete/identity-doctrine-alignment.md)
-  - Paused successor: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
-  - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
-- **Most Recent Review Note:** [`.agent/research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md`](research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md)
-- **Historical Final-Pack Prompt:** [`.agent/prompts/pack-7-proof-system-and-durable-doctrine.prompt.md`](prompts/pack-7-proof-system-and-durable-doctrine.prompt.md)
-- **Current Review State:** Seven-pack sweep complete (Pack 1 `yellow`; Packs 2–7 `red`); RC-1/RC-2 complete; RC-3 complete; RC-4 complete; **RC-5 (downstream surface drift) complete** — next slice requires triage of remaining Pack 1/3/4/5/7 findings
-- **Latest Completed Implementation Slice:** Downstream Surface Drift Remediation (RC-5, verified Monday 24 March 2026)
-  - `schemas-only` template now genuinely schemas-only (endpoints and MCP suppressed)
-  - dead `templatePath` removed from public API
-  - MCP Draft 07 allowlist (40 safe keys) replaces generic IR-key iteration
-  - generated-surface proof naming made honest (`validateRuntime` → `validateFileStructure`)
-  - template-context IR immutability enforced via shallow copy
-  - 26 new unit tests; `pnpm qg` green
-- **Prior Completed Slices:**
-  - RC-4 (format-specific drift, Monday 24 March 2026): OpenAPI requestBody egress, contradictory chain rejection, nested member fail-fast, reference declaration proof, format lockstep closure
-  - RC-3 (IR and runtime validator, Monday 24 March 2026): `isCastrSchema` validates all schema fields honestly, `trace` added to VALID_HTTP_METHODS, test file split
-  - `unknownKeyBehavior` removed from IR, parsers, and writers
-  - parser-layer `additionalProperties` honesty restored for non-object schemas
-  - public strictness/compatibility surfaces removed
-  - `CastrSchemaProperties` runtime detection made brand-based and cross-realm safe
-  - Completed predecessor slices:
-    - `.agent/plans/current/complete/doctor-rescue-loop-runtime-redesign.md`
-    - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
-    - `.agent/plans/current/complete/strict-object-semantics-enforcement.md`
-    - `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
-    - `.agent/plans/current/complete/zod-limitations-architecture-investigation.md`
-    - `.agent/plans/current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md`
-    - `.agent/plans/current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md`
+- **Architecture Review Sweep:** Seven-pack post-IDENTITY bounded audit — all findings closed
+  - Sweep record (archived): [`.agent/plans/current/complete/architecture-review-packs.md`](plans/current/complete/architecture-review-packs.md)
+  - Cross-pack triage: [`.agent/research/architecture-review-packs/cross-pack-triage.md`](research/architecture-review-packs/cross-pack-triage.md)
+  - RC-1 through RC-7: all resolved
+- **JSON Schema Parser Expansion** (completed Tuesday, 25 March 2026):
+  - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
+  - Supports standalone schemas, `$defs` bundles, and mixed documents
+  - Unsupported keywords explicitly rejected with `UnsupportedJsonSchemaKeywordError`
+  - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
+  - 29 unit tests, 520 transform tests, 4 E2E tests — all green
+  - Paused plan partially resolved: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
+- **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 
 ---

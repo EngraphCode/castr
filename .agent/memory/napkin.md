@@ -9,6 +9,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added — closes Pack 4 finding
 - `UnsupportedJsonSchemaKeywordError` exported from public barrel (`schema-processing/index.ts`)
 - Paused plan updated with explicit resolved/remaining finding status
+- Documentation consolidation pass (`jc-consolidate-docs`):
+  - `.agent/README.md` current state section rewritten: RC-5 detail removed, parser expansion + RC-7 closure added, stale `plans/active/` link fixed, gate sweep date updated
+  - Cross-pack triage RC-4.2/4.3 findings updated from `RC-7 caveat+seam` to `✅ (parser expansion)`; note updated to remove "future capability" language
+  - Session-entry `Immediate Priority` section fixed: parser expansion no longer a future capability
+  - Napkin historical entry (line 30) corrected from "remains future capability" to "subsequently fully resolved"
+  - Practice boxes checked: both empty, no incoming items
+  - Practice index reviewed: no gaps
+  - Directives and AGENT.md: no drift
+  - Pack prompts (pack-3/4/7) have stale `plans/active/` links but are historical sweep artifacts (low value to update)
+  - No structural learning clears the bar for Practice evolution
 - JSON Schema parser expansion completed:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Root schema parsing: documents with schema keywords (type, properties, allOf, oneOf, etc.) now parsed as root component
@@ -27,7 +37,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - Workstream A: scenario 2/4 JSDocs verified already honest (no change needed)
   - Workstream B: all RC-1 and RC-2 findings marked ✅ with resolution references in cross-pack triage
   - Workstream C: `UnsupportedJsonSchemaKeywordError` and governed keyword allowlist added to `parseJsonSchemaDocument()`, writer scope caveats added to `json-schema-object.ts`, 4 new unit tests
-  - RC-4 deferred findings (4.2/4.3/4.4) addressed via fail-fast seam and doc caveats — full parser expansion remains future capability
+  - RC-4 deferred findings (4.2/4.3/4.4) addressed via fail-fast seam and doc caveats — subsequently fully resolved by parser expansion on 25 March 2026
   - `pnpm qg` green
 - Documentation consolidation pass (`jc-consolidate-docs`):
   - `architecture-review-packs.md` archived from `active/` to `current/complete/` with final close-out state

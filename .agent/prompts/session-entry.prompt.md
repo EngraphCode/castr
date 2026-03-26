@@ -145,12 +145,12 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1 through RC-7 are all complete. All seven-pack architecture review findings are closed. The 3 deferred JSON Schema parser findings are addressed by fail-fast rejection and doc caveats; full parser expansion remains a future capability.
+RC-1 through RC-7 are all complete. All seven-pack architecture review findings are closed. The JSON Schema parser expansion is complete: `parseJsonSchemaDocument()` is a full document parser with standalone round-trip proofs. The paused JSON Schema plan has been partially resolved.
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
 2. **The architecture review remediation arc is complete** — no remaining findings.
 3. **Confirm or revise the plan scope** before starting any new feature work.
-4. **Execute only the confirmed slice** — do not jump to new feature work or reactivate the paused JSON Schema parser plan without evidence.
+4. **Execute only the confirmed slice** — do not jump to new feature work without evidence.
 5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
 ## What This Session Should Do
