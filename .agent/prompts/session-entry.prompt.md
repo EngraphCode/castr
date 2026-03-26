@@ -145,13 +145,14 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1 through RC-7 are all complete. All seven-pack architecture review findings are closed. The JSON Schema parser expansion is complete: `parseJsonSchemaDocument()` is a full document parser with standalone round-trip proofs. The paused JSON Schema plan has been partially resolved.
+RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. There is zero outstanding debt — the next work is new capability.
+
+**Next session: [Discovery and Prioritisation](../plans/active/discovery-and-prioritisation.md)**
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **The architecture review remediation arc is complete** — no remaining findings.
-3. **Confirm or revise the plan scope** before starting any new feature work.
-4. **Execute only the confirmed slice** — do not jump to new feature work without evidence.
-5. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
+2. **Follow the discovery metaplan** — survey candidates, evaluate, prioritise, plan the first slice.
+3. **Do not start implementation until a decision-complete plan exists.**
+4. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
 ## What This Session Should Do
 
