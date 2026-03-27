@@ -26,7 +26,7 @@ Remaining open findings (future work, not currently planned):
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
 - Canonical JSON-Schema-shaped egress normal form alignment (nullability form, `$ref` sibling policy, `example`/`examples`)
 - External `$ref` resolution
-- Boolean schema support (`true`/`false` as schema)
+- ✅ **Boolean schema support** (`true`/`false` as schema) — resolved on 2026-03-27. `booleanSchema` added to IR model, parser handles boolean input, JSON Schema writer round-trips, Zod/TS emit `z.never()`/`never` for `false`, fail-fast for `true`, OpenAPI fail-fast.
 
 This file remains as historical context. It no longer blocks any current work.
 
@@ -62,7 +62,7 @@ This file remains as historical context. It no longer blocks any current work.
   - `if` / `then` / `else`
   - `$dynamicRef` / `$dynamicAnchor`
   - external `$ref`
-  - boolean schemas
+  - ~~boolean schemas~~ (resolved 2026-03-27)
   - unknown keywords outside the declared typed subset
 - Canonical JSON-Schema-shaped egress normal form is unclear across writer and neighbouring conversion surfaces.
   - nullability form

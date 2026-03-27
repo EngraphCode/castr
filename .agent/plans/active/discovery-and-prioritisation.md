@@ -3,7 +3,7 @@
 **Status:** ✅ Executed — first slice (`patternProperties`/`propertyNames`) selected, planned, implemented, and verified (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** JSON Schema parser expansion (completed 2026-03-25)
-**Successor:** [pattern-properties-and-property-names.md](./pattern-properties-and-property-names.md) (✅ complete), [prefixitems-tuple-and-contains.md](./prefixitems-tuple-and-contains.md) (✅ complete)
+**Successor:** [pattern-properties-and-property-names.md](./pattern-properties-and-property-names.md) (✅ complete), [prefixitems-tuple-and-contains.md](./prefixitems-tuple-and-contains.md) (✅ complete), boolean schema support (✅ complete, 2026-03-27)
 
 ---
 

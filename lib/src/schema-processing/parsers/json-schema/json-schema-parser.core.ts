@@ -38,9 +38,16 @@ const NULL_TYPE = 'null';
 
 /**
  * Parse a normalized JSON Schema 2020-12 object into CastrSchema IR.
+ *
+ * Boolean schemas (`true`/`false`) are accepted and converted to
+ * `CastrSchema` nodes with the `booleanSchema` discriminator set.
+ *
  * @public
  */
-export function parseJsonSchemaObject(input: JsonSchema2020): CastrSchema {
+export function parseJsonSchemaObject(input: JsonSchema2020 | boolean): CastrSchema {
+  if (typeof input === 'boolean') {
+    return { booleanSchema: input, metadata: createDefaultMetadata() };
+  }
   return parseJsonSchemaObjectInternal(input);
 }
 

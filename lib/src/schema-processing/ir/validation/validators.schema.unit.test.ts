@@ -696,6 +696,53 @@ describe('isCastrSchema rejection', () => {
   });
 });
 
+describe('isCastrSchema booleanSchema field', () => {
+  it('should return true for boolean schema false', () => {
+    const schema: CastrSchema = {
+      booleanSchema: false,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return true for boolean schema true', () => {
+    const schema: CastrSchema = {
+      booleanSchema: true,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return false when booleanSchema is a non-boolean value', () => {
+    const invalidSchema = {
+      booleanSchema: 'yes',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+});
+
 describe('isCastrSchemaNode', () => {
   it('should return true for valid schema node', () => {
     const node: CastrSchemaNode = {

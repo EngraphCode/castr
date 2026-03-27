@@ -78,7 +78,6 @@ Notes:
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
 - Canonical JSON-Schema-shaped egress normal form alignment
 - External `$ref` resolution
-- Boolean schema support (`true`/`false` as schema)
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
@@ -86,18 +85,19 @@ The IR is format-neutral, but not all output formats can express every keyword. 
 
 Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | ❌ inherent limitation | ⚠️ partial | 🔲 not yet in IR
 
-| IR Keyword                  | JSON Schema | OpenAPI 3.1 |      Zod       |  TypeScript  | Category                                                 |
-| --------------------------- | :---------: | :---------: | :------------: | :----------: | -------------------------------------------------------- |
-| `patternProperties`         |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `propertyNames`             |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `dependentSchemas`          |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `dependentRequired`         |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `unevaluatedProperties`     |     ✅      |     ✅      |   ⚠️ partial   |  ⚠️ partial  | Boolean → `z.strictObject`; schema form = fail-fast      |
-| `prefixItems`               |     ✅      |     ✅      | ✅ `z.tuple()` | ✅ `[A, B]`  | Fully supported — Zod emits tuples, TS emits tuple types |
-| `unevaluatedItems`          |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `contains`                  |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `minContains`/`maxContains` |     ✅      |     ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `if`/`then`/`else`          | 🔲 not yet  | 🔲 not yet  |  ❌ no equiv   | ❌ no equiv  | Not yet in IR                                            |
+| IR Keyword                  | JSON Schema | OpenAPI 3.1  |      Zod       |  TypeScript  | Category                                                 |
+| --------------------------- | :---------: | :----------: | :------------: | :----------: | -------------------------------------------------------- |
+| `patternProperties`         |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `propertyNames`             |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `dependentSchemas`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `dependentRequired`         |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `unevaluatedProperties`     |     ✅      |      ✅      |   ⚠️ partial   |  ⚠️ partial  | Boolean → `z.strictObject`; schema form = fail-fast      |
+| `prefixItems`               |     ✅      |      ✅      | ✅ `z.tuple()` | ✅ `[A, B]`  | Fully supported — Zod emits tuples, TS emits tuple types |
+| `unevaluatedItems`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `contains`                  |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `minContains`/`maxContains` |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| `booleanSchema`             |     ✅      | ❌ fail-fast |   ⚠️ partial   |  ⚠️ partial  | `false` → `z.never()`/`never`; `true` → fail-fast        |
+| `if`/`then`/`else`          | 🔲 not yet  |  🔲 not yet  |  ❌ no equiv   | ❌ no equiv  | Not yet in IR                                            |
 
 > [!IMPORTANT]
 > Each new keyword added to the IR must include fail-fast guards in every writer that cannot express it. All rows now show accurate support status. No rows are marked 🐛 (bug).
@@ -122,7 +122,7 @@ Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | 
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Wednesday, 26 March 2026)
+## Current Repo Truth (Thursday, 27 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -163,6 +163,8 @@ Pack verdicts from the architecture review sweep:
 
 Recent completed slices (all gates green, all reviews closed):
 
+- Silent keyword drop fix + Boolean schema support (2026-03-27): all 2020-12 IR keywords now emit losslessly or fail-fast, `booleanSchema` added to IR/parser/writers, `false` → `z.never()`/`never`, `true` → fail-fast, OpenAPI fail-fast, format tensions table updated
+
 - RC-7 close remaining findings (2026-03-25): all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema `parseJsonSchemaDocument()` fail-fast rejection seam for unsupported keywords, writer scope caveats
 - RC-6 durable-doc over-claims remediation (2026-03-24): `public-api-preservation.test.ts` expanded from 6 legacy exports to full ~30 current surface, `scalar-pipeline.md` reframed eliminated `makeSchemaResolver()` as historical
 - RC-5 downstream surface drift remediation (2026-03-24): `schemas-only` genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist, proof-suite honest naming, template-context immutability
@@ -181,7 +183,7 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. The `patternProperties`/`propertyNames` implementation is complete. The `prefixItems` tuple writer fix and `contains` keyword support are complete. There is zero outstanding debt — the next work is new capability.
+RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. The `patternProperties`/`propertyNames` implementation is complete. The `prefixItems` tuple writer fix and `contains` keyword support are complete. Silent keyword drops are fixed and boolean schema support is implemented. There is zero outstanding debt — the next work is new capability.
 
 **Next session: new discovery and planning** — survey candidates, evaluate, prioritise, plan the first slice.
 

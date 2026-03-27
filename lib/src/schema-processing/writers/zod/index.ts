@@ -20,6 +20,29 @@ import { getNullableReferenceCompositionBaseSchema } from './properties.js';
 
 const SCHEMA_TYPE_NULL = 'null';
 
+/**
+ * Handle boolean schemas. Returns `true` if the schema was written.
+ *
+ * - `false` schema → `z.never()` (nothing validates)
+ * - `true` schema → fail-fast (violates closed-world semantics)
+ *
+ * @internal
+ */
+function writeBooleanSchema(schema: CastrSchema, writer: CodeBlockWriter): boolean {
+  if (schema.booleanSchema === undefined) {
+    return false;
+  }
+  if (schema.booleanSchema === false) {
+    writer.write('z.never()');
+    return true;
+  }
+  throw new Error(
+    'Unsupported IR pattern: boolean schema `true` cannot be represented in Zod. ' +
+      'A schema that accepts any value violates closed-world object semantics. ' +
+      'Use an explicit type instead.',
+  );
+}
+
 export function writeZodSchema(
   context: CastrSchemaContext,
   options?: TemplateContextOptions,
@@ -36,20 +59,11 @@ function writeSchemaBody(
   return (writer) => {
     const schema = context.schema;
 
-    const nullableReferenceBaseSchema = getNullableReferenceCompositionBaseSchema(schema);
-    if (nullableReferenceBaseSchema) {
-      const baseContext: CastrSchemaContext = {
-        ...context,
-        schema: nullableReferenceBaseSchema,
-      };
+    if (writeBooleanSchema(schema, writer)) {
+      return;
+    }
 
-      writeSchemaType(baseContext, writer, options);
-      if (isOptionalSchemaContext(context)) {
-        writer.write('.nullish()');
-      } else {
-        writer.write('.nullable()');
-      }
-      writeMetadata(schema, writer);
+    if (writeNullableReference(context, schema, writer, options)) {
       return;
     }
 
@@ -67,6 +81,38 @@ function writeSchemaBody(
     // Apply metadata via .meta() (Zod 4)
     writeMetadata(schema, writer);
   };
+}
+
+/**
+ * Handle nullable reference schemas (e.g. `{ anyOf: [$ref, null] }`).
+ * Returns `true` if the pattern was matched and written.
+ *
+ * @internal
+ */
+function writeNullableReference(
+  context: CastrSchemaContext,
+  schema: CastrSchema,
+  writer: CodeBlockWriter,
+  options?: TemplateContextOptions,
+): boolean {
+  const nullableReferenceBaseSchema = getNullableReferenceCompositionBaseSchema(schema);
+  if (!nullableReferenceBaseSchema) {
+    return false;
+  }
+
+  const baseContext: CastrSchemaContext = {
+    ...context,
+    schema: nullableReferenceBaseSchema,
+  };
+
+  writeSchemaType(baseContext, writer, options);
+  if (isOptionalSchemaContext(context)) {
+    writer.write('.nullish()');
+  } else {
+    writer.write('.nullable()');
+  }
+  writeMetadata(schema, writer);
+  return true;
 }
 
 function writeSchemaType(

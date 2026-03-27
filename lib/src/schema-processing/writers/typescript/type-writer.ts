@@ -83,6 +83,9 @@ function writePrimitiveType(schema: CastrSchema, writer: CodeBlockWriter): void 
 
 function writeTypeBody(schema: CastrSchema): WriterFunction {
   return (writer) => {
+    if (writeBooleanSchemaType(schema, writer)) {
+      return;
+    }
     if (writeRefType(schema, writer)) {
       return;
     }
@@ -91,6 +94,30 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
     }
     writePrimitiveType(schema, writer);
   };
+}
+
+/**
+ * Handle boolean schemas in TypeScript output.
+ * Returns `true` if the schema was written.
+ *
+ * - `false` schema → `never` (nothing validates)
+ * - `true` schema → fail-fast (violates closed-world semantics)
+ *
+ * @internal
+ */
+function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWriter): boolean {
+  if (schema.booleanSchema === undefined) {
+    return false;
+  }
+  if (schema.booleanSchema === false) {
+    writer.write('never');
+    return true;
+  }
+  throw new Error(
+    'Unsupported IR pattern: boolean schema `true` cannot be represented in TypeScript. ' +
+      'A schema that accepts any value violates closed-world object semantics. ' +
+      'Use an explicit type instead.',
+  );
 }
 
 /** Write intersection type. allOf: [A, B] → A & B */

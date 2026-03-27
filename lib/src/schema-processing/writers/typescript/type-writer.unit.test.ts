@@ -424,4 +424,36 @@ describe('TypeWriter', () => {
       expect(generate(schema)).toBe('{ base: string; } & ({ a: number; } | { b: boolean; })');
     });
   });
+
+  describe('Boolean Schemas', () => {
+    it('generates never type for boolean schema false', () => {
+      const schema: CastrSchema = {
+        booleanSchema: false,
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(generate(schema)).toBe('never');
+    });
+
+    it('throws for boolean schema true (violates closed-world)', () => {
+      const schema: CastrSchema = {
+        booleanSchema: true,
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(() => generate(schema)).toThrow(
+        /boolean schema `true` cannot be represented in TypeScript/,
+      );
+    });
+  });
 });

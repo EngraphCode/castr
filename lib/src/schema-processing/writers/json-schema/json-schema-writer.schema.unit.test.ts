@@ -11,7 +11,20 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
+import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
+
+/**
+ * Test-local wrapper that narrows `writeJsonSchema` return to `JsonSchemaObject`.
+ * Existing tests never exercise boolean schemas, so the assertion is safe.
+ */
+function writeJsonSchemaAsObject(schema: CastrSchema): JsonSchemaObject {
+  const result = writeJsonSchema(schema);
+  if (typeof result === 'boolean') {
+    throw new Error(`Expected JsonSchemaObject but got boolean: ${String(result)}`);
+  }
+  return result;
+}
 
 /**
  * Creates a minimal valid CastrSchemaNode for testing.
@@ -42,7 +55,7 @@ describe('writeJsonSchema', () => {
     it('converts string type', () => {
       const schema = createSchema({ type: 'string' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ type: 'string' });
     });
@@ -50,7 +63,7 @@ describe('writeJsonSchema', () => {
     it('converts number type', () => {
       const schema = createSchema({ type: 'number' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ type: 'number' });
     });
@@ -58,7 +71,7 @@ describe('writeJsonSchema', () => {
     it('converts integer type', () => {
       const schema = createSchema({ type: 'integer' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ type: 'integer' });
     });
@@ -66,7 +79,7 @@ describe('writeJsonSchema', () => {
     it('converts boolean type', () => {
       const schema = createSchema({ type: 'boolean' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ type: 'boolean' });
     });
@@ -74,7 +87,7 @@ describe('writeJsonSchema', () => {
     it('converts null type', () => {
       const schema = createSchema({ type: 'null' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ type: 'null' });
     });
@@ -87,7 +100,7 @@ describe('writeJsonSchema', () => {
         metadata: createMetadata({ nullable: true }),
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.type).toEqual(['string', 'null']);
     });
@@ -97,7 +110,7 @@ describe('writeJsonSchema', () => {
         anyOf: [createSchema({ $ref: '#/$defs/LinkedListNode' }), createSchema({ type: 'null' })],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.anyOf).toEqual([{ $ref: '#/$defs/LinkedListNode' }, { type: 'null' }]);
     });
@@ -110,7 +123,7 @@ describe('writeJsonSchema', () => {
         type: 'object',
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result).toEqual({ $ref: '#/$defs/Address' });
     });
@@ -120,7 +133,7 @@ describe('writeJsonSchema', () => {
     it('writes format', () => {
       const schema = createSchema({ type: 'string', format: 'email' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.format).toBe('email');
     });
@@ -133,7 +146,7 @@ describe('writeJsonSchema', () => {
         pattern: UUID_V4_PATTERN,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.format).toBe('uuid');
       expect(result.pattern).toBe(UUID_V4_PATTERN);
@@ -143,7 +156,7 @@ describe('writeJsonSchema', () => {
     it('writes minLength and maxLength', () => {
       const schema = createSchema({ type: 'string', minLength: 1, maxLength: 100 });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.minLength).toBe(1);
       expect(result.maxLength).toBe(100);
@@ -152,7 +165,7 @@ describe('writeJsonSchema', () => {
     it('writes pattern', () => {
       const schema = createSchema({ type: 'string', pattern: '^[a-z]+$' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.pattern).toBe('^[a-z]+$');
     });
@@ -162,7 +175,7 @@ describe('writeJsonSchema', () => {
     it('writes minimum and maximum', () => {
       const schema = createSchema({ type: 'number', minimum: 0, maximum: 100 });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.minimum).toBe(0);
       expect(result.maximum).toBe(100);
@@ -175,7 +188,7 @@ describe('writeJsonSchema', () => {
         exclusiveMaximum: 100,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.exclusiveMinimum).toBe(0);
       expect(result.exclusiveMaximum).toBe(100);
@@ -184,7 +197,7 @@ describe('writeJsonSchema', () => {
     it('writes multipleOf', () => {
       const schema = createSchema({ type: 'number', multipleOf: 5 });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.multipleOf).toBe(5);
     });
@@ -194,7 +207,7 @@ describe('writeJsonSchema', () => {
     it('writes enum values', () => {
       const schema = createSchema({ type: 'string', enum: ['a', 'b', 'c'] });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.enum).toEqual(['a', 'b', 'c']);
     });
@@ -202,7 +215,7 @@ describe('writeJsonSchema', () => {
     it('writes const value', () => {
       const schema = createSchema({ type: 'string', const: 'fixed' });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.const).toBe('fixed');
     });
@@ -218,7 +231,7 @@ describe('writeJsonSchema', () => {
         }),
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(Object.keys(result.properties ?? {})).toEqual(['alpha', 'zeta']);
     });
@@ -232,7 +245,7 @@ describe('writeJsonSchema', () => {
         required: ['id'],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.required).toEqual(['id']);
     });
@@ -243,7 +256,7 @@ describe('writeJsonSchema', () => {
         additionalProperties: false,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.additionalProperties).toBe(false);
     });
@@ -256,7 +269,7 @@ describe('writeJsonSchema', () => {
         items: createSchema({ type: 'string' }),
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.items).toEqual({ type: 'string' });
     });
@@ -267,7 +280,7 @@ describe('writeJsonSchema', () => {
         items: [createSchema({ type: 'string' }), createSchema({ type: 'number' })],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.prefixItems).toEqual([{ type: 'string' }, { type: 'number' }]);
     });
@@ -281,7 +294,7 @@ describe('writeJsonSchema', () => {
         uniqueItems: true,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.minItems).toBe(1);
       expect(result.maxItems).toBe(10);
@@ -295,7 +308,7 @@ describe('writeJsonSchema', () => {
         allOf: [createSchema({ type: 'object' }), createSchema({ type: 'object' })],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.allOf).toHaveLength(2);
       expect(result.allOf?.[0]).toEqual({ type: 'object', additionalProperties: false });
@@ -306,7 +319,7 @@ describe('writeJsonSchema', () => {
         oneOf: [createSchema({ type: 'string' }), createSchema({ type: 'number' })],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.oneOf).toHaveLength(2);
     });
@@ -316,7 +329,7 @@ describe('writeJsonSchema', () => {
         anyOf: [createSchema({ type: 'string' }), createSchema({ type: 'null' })],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.anyOf).toHaveLength(2);
     });
@@ -326,7 +339,7 @@ describe('writeJsonSchema', () => {
         not: createSchema({ type: 'string' }),
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.not).toEqual({ type: 'string' });
     });
@@ -340,7 +353,7 @@ describe('writeJsonSchema', () => {
         description: 'User email address',
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.title).toBe('Email');
       expect(result.description).toBe('User email address');
@@ -352,7 +365,7 @@ describe('writeJsonSchema', () => {
         default: 'unknown',
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.default).toBe('unknown');
     });
@@ -364,7 +377,7 @@ describe('writeJsonSchema', () => {
         examples: ['alice@test.com', 'bob@test.com'],
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.example).toBe('user@example.com');
       expect(result.examples).toEqual(['alice@test.com', 'bob@test.com']);
@@ -378,7 +391,7 @@ describe('writeJsonSchema', () => {
         writeOnly: false,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.deprecated).toBe(true);
       expect(result.readOnly).toBe(true);
@@ -393,7 +406,7 @@ describe('writeJsonSchema', () => {
         unevaluatedProperties: false,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.unevaluatedProperties).toBe(false);
     });
@@ -404,7 +417,7 @@ describe('writeJsonSchema', () => {
         unevaluatedProperties: createSchema({ type: 'string' }),
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.unevaluatedProperties).toEqual({ type: 'string' });
     });
@@ -415,7 +428,7 @@ describe('writeJsonSchema', () => {
         unevaluatedItems: false,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.unevaluatedItems).toBe(false);
     });
@@ -428,7 +441,7 @@ describe('writeJsonSchema', () => {
         },
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.dependentSchemas?.['creditCard']).toEqual({
         type: 'object',
@@ -444,7 +457,7 @@ describe('writeJsonSchema', () => {
         },
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.dependentRequired).toEqual({ email: ['emailVerified'] });
     });
@@ -456,7 +469,7 @@ describe('writeJsonSchema', () => {
         maxContains: 5,
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result.minContains).toBe(1);
       expect(result.maxContains).toBe(5);
@@ -470,7 +483,7 @@ describe('writeJsonSchema', () => {
         xml: { name: 'tag' },
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result['xml']).toBeUndefined();
     });
@@ -481,7 +494,7 @@ describe('writeJsonSchema', () => {
         externalDocs: { url: 'https://example.com' },
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result['externalDocs']).toBeUndefined();
     });
@@ -492,9 +505,27 @@ describe('writeJsonSchema', () => {
         discriminator: { propertyName: 'type' },
       });
 
-      const result = writeJsonSchema(schema);
+      const result = writeJsonSchemaAsObject(schema);
 
       expect(result['discriminator']).toBeUndefined();
+    });
+  });
+
+  describe('boolean schemas', () => {
+    it('writes boolean schema false as literal false', () => {
+      const schema = createSchema({ booleanSchema: false });
+
+      const result = writeJsonSchema(schema);
+
+      expect(result).toBe(false);
+    });
+
+    it('writes boolean schema true as literal true', () => {
+      const schema = createSchema({ booleanSchema: true });
+
+      const result = writeJsonSchema(schema);
+
+      expect(result).toBe(true);
     });
   });
 });

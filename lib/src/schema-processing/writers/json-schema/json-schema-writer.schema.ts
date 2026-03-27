@@ -40,7 +40,23 @@ import { writeAllJsonSchemaFields } from '../shared/json-schema-fields.js';
  *
  * @public
  */
-export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject {
+export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean {
+  if (schema.booleanSchema !== undefined) {
+    return schema.booleanSchema;
+  }
+  return writeJsonSchemaObject(schema);
+}
+
+/**
+ * Internal writer that satisfies the `WriteSchemaFn` signature.
+ *
+ * Used as the recursive callback for `writeAllJsonSchemaFields`. Boolean
+ * schemas are handled at the public `writeJsonSchema` boundary, so this
+ * function only needs to handle object schemas.
+ *
+ * @internal
+ */
+function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
   assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
 
   const result: JsonSchemaObject = {};
@@ -50,7 +66,7 @@ export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject {
     return result;
   }
 
-  writeAllJsonSchemaFields(schema, result, writeJsonSchema);
+  writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject);
 
   return result;
 }

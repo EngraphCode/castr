@@ -27,6 +27,7 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
 
 function hasValidSchemaStructure(value: UnknownRecord): boolean {
   return (
+    hasValidSchemaBooleanSchema(value) &&
     hasValidSchemaType(value) &&
     hasValidSchemaObjectStructure(value) &&
     hasValidSchemaItems(value) &&
@@ -48,6 +49,16 @@ function hasValidSchemaObjectStructure(value: UnknownRecord): boolean {
 
 function hasValidSchemaSemantics(value: UnknownRecord): boolean {
   return hasValidSchemaIntegerSemantics(value) && hasValidSchemaUuidVersion(value);
+}
+
+// ── booleanSchema (optional boolean discriminator) ───────────────────
+
+function hasValidSchemaBooleanSchema(value: UnknownRecord): boolean {
+  if (!('booleanSchema' in value) || value['booleanSchema'] === undefined) {
+    return true;
+  }
+
+  return typeof value['booleanSchema'] === 'boolean';
 }
 
 // ── type ──────────────────────────────────────────────────────────────

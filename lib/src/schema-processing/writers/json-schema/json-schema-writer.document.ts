@@ -47,6 +47,16 @@ const JSON_SCHEMA_2020_12_DIALECT = 'https://json-schema.org/draft/2020-12/schem
  */
 export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaObject {
   const result = writeJsonSchema(schema);
+  if (typeof result === 'boolean') {
+    // Boolean schemas at the document level: wrap in an object with $schema.
+    // JSON Schema documents are always objects, so we use the canonical
+    // equivalent: true → {} and false → { not: {} }.
+    const doc: JsonSchemaObject = { $schema: JSON_SCHEMA_2020_12_DIALECT };
+    if (!result) {
+      doc.not = {};
+    }
+    return doc;
+  }
   result.$schema = JSON_SCHEMA_2020_12_DIALECT;
   return result;
 }
@@ -92,7 +102,16 @@ export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonS
   const defs: Record<string, JsonSchemaObject> = {};
 
   for (const component of sorted) {
-    defs[component.name] = writeJsonSchema(component.schema);
+    const written = writeJsonSchema(component.schema);
+    // Boolean schemas at the $defs level are valid JSON Schema 2020-12 but
+    // the shared JsonSchemaObject type uses Record<string, JsonSchemaObject>.
+    // Components with boolean schemas should be rare; if encountered, represent
+    // as the canonical JSON Schema equivalent: true → {}, false → { not: {} }.
+    if (typeof written === 'boolean') {
+      defs[component.name] = written ? {} : { not: {} };
+    } else {
+      defs[component.name] = written;
+    }
   }
 
   result.$defs = defs;

@@ -497,6 +497,22 @@ export interface CastrSchema {
   propertyNames?: CastrSchema;
 
   /**
+   * Boolean schema marker (JSON Schema 2020-12).
+   *
+   * When present, this schema represents a JSON Schema boolean schema:
+   * - `true`: accept any value (equivalent to `{}`)
+   * - `false`: reject all values (equivalent to `{ not: {} }`)
+   *
+   * All other `CastrSchema` fields should be ignored when this is set.
+   *
+   * @remarks
+   * Boolean schemas are a JSON Schema 2020-12 primitive. They appear in
+   * positions like `additionalProperties`, `not`, `items`, `if`/`then`/`else`,
+   * and as standalone schemas.
+   */
+  booleanSchema?: boolean;
+
+  /**
    * Rich metadata for code generation.
    * This is what replaces CodeMetaData and provides enhanced information.
    */

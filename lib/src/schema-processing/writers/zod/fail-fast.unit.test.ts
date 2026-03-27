@@ -308,4 +308,37 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(() => generate(context)).toThrow(/contains cannot be represented in Zod/);
     });
   });
+  describe('boolean schema handling', () => {
+    it('emits z.never() for boolean schema false', () => {
+      const schema: CastrSchema = {
+        booleanSchema: false,
+        metadata: {
+          required: true,
+          nullable: false,
+          zodChain: { presence: '', validations: [], defaults: [] },
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: [],
+        },
+      };
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).toBe('z.never()');
+    });
+
+    it('throws for boolean schema true (violates closed-world)', () => {
+      const schema: CastrSchema = {
+        booleanSchema: true,
+        metadata: {
+          required: true,
+          nullable: false,
+          zodChain: { presence: '', validations: [], defaults: [] },
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: [],
+        },
+      };
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/boolean schema `true` cannot be represented in Zod/);
+    });
+  });
 });

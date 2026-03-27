@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 26, 2026)  
+**Date:** January 24, 2026 (Updated March 27, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -37,7 +37,7 @@ The Practice integration slice, core agent-system installation slice, type-safet
 
 The bounded post-implementation architecture review sweep is now complete. The JSON Schema parser expansion is complete with standalone round-trip proofs.
 
-**Next active plan:** New discovery and prioritisation session — the previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) ✅) and the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) ✅).
+**Next active plan:** New discovery and prioritisation session — the previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) ✅), the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) ✅), and the boolean schema support slice (see below).
 
 Current status of that sweep:
 
@@ -103,6 +103,16 @@ Current sweep record:
 - Part B: `contains` added to IR, JSON Schema parser (types + 2020-keywords), JSON Schema writer, OpenAPI builder, Zod/TS fail-fast
 - Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json` fixture
 - Plan: [prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) (✅ complete)
+
+**Silent keyword drop fix + Boolean schema support** completed Thursday, 27 March 2026:
+
+- All 2020-12 IR keywords now either emit losslessly or fail-fast in Zod/TS writers
+- `booleanSchema` added to IR model (`CastrSchema.booleanSchema?: boolean`)
+- JSON Schema parser accepts boolean input, JSON Schema writer emits `true`/`false` directly
+- Zod writer: `false` → `z.never()`, `true` → fail-fast (closed-world)
+- TypeScript writer: `false` → `never`, `true` → fail-fast (closed-world)
+- OpenAPI writer: fail-fast (boolean schemas are a pure JSON Schema 2020-12 concept)
+- Format tensions table updated with `booleanSchema` row
 
 Paused supporting context that remains important:
 
