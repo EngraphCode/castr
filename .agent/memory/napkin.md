@@ -2,6 +2,18 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-27
+
+- **`if`/`then`/`else` conditional applicator support** completed:
+  - `parseConditionalApplicators()` + `parseBoolOrSchemaOrRef()` added to `json-schema-parser.2020-keywords.ts`; boolean schemas use inline metadata factory to avoid circular dependency with `core.ts`
+  - `writeConditionalApplicators()` in `json-schema-2020-12-fields.ts` follows the established single-field recursive write pattern
+  - Zod fail-fast: `rejectConditionalApplicators()` extracted as shared helper with format parameter; called from `rejectUnsupportedObjectKeywords` in both `collections.ts` and `type-writer.fail-fast.ts`
+  - Pre-existing `sonarjs/use-type-alias` lint fixed by extracting `JsonSchemaOrBool` type alias in `json-schema-parser.types.ts` — triggered by adding 3 more fields with the same `JsonSchema2020 | ReferenceObject | boolean` union
+  - `validators.schema.ts` max-lines (220 code lines) constraint required compacting: inlined keys array directly into `for-of` loop
+  - Round-trip proof: `ConditionalApplicatorSchema` fixture added to `2020-12-keywords.json`, passes all Scenario 5 losslessness, idempotency, and $defs-key-preservation tests
+- Consolidation sweep: roadmap JSON Schema row updated from 🔲 to ✅, acceptance criteria implementation note updated, format-tensions row updated, session-entry remaining capabilities list trimmed
+- Practice boxes empty, no Practice evolution needed
+
 ## 2026-03-26
 
 - **`prefixItems` tuple writer fix + `contains` keyword support** completed in a single session:

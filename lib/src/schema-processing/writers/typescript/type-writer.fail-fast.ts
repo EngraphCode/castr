@@ -21,6 +21,7 @@ import { parseComponentRef } from '../../../shared/ref-resolution.js';
  * @internal
  */
 export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
+  rejectConditionalApplicators(schema);
   if (schema.patternProperties !== undefined) {
     throw new Error(
       'Unsupported IR pattern: patternProperties cannot be represented in TypeScript. ' +
@@ -52,6 +53,15 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
     throw new Error(
       'Unsupported IR pattern: schema-valued unevaluatedProperties cannot be represented in TypeScript. ' +
         'Only boolean unevaluatedProperties is supported.',
+    );
+  }
+}
+
+function rejectConditionalApplicators(schema: CastrSchema): void {
+  if (schema.if !== undefined || schema.then !== undefined || schema.else !== undefined) {
+    throw new Error(
+      'Unsupported IR pattern: if/then/else conditional applicators cannot be represented in TypeScript. ' +
+        'TypeScript has no equivalent for JSON Schema conditional validation.',
     );
   }
 }

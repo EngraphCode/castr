@@ -151,8 +151,7 @@ describe('parseJsonSchemaDocument', () => {
 
   it('still rejects truly unsupported keywords', () => {
     const unsupportedInput = {
-      if: { type: 'string' },
-      then: { minLength: 1 },
+      $dynamicRef: '#meta',
     };
     expect(() => parseJsonSchemaDocument(unsupportedInput)).toThrow(
       UnsupportedJsonSchemaKeywordError,
@@ -412,13 +411,20 @@ describe('parseJsonSchemaDocument', () => {
   // ── Phase 3: Unsupported keyword rejection ────────────────────────
 
   describe('unsupported keyword rejection', () => {
-    it('rejects if/then/else conditional applicators', () => {
-      const input = {
+    it('accepts if/then/else conditional applicators (now supported)', () => {
+      const components = parseJsonSchemaDocument({
         if: { type: 'string' },
         then: { minLength: 1 },
         else: { type: 'number' },
-      };
-      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.name).toBe('Root');
+      expect(components[0]?.schema.if).toBeDefined();
+      expect(components[0]?.schema.if?.type).toBe('string');
+      expect(components[0]?.schema.then).toBeDefined();
+      expect(components[0]?.schema.then?.minLength).toBe(1);
+      expect(components[0]?.schema.else).toBeDefined();
+      expect(components[0]?.schema.else?.type).toBe('number');
     });
 
     it('rejects $dynamicRef', () => {
@@ -465,8 +471,8 @@ describe('parseJsonSchemaDocument', () => {
 
     it('includes unsupported keyword names in error message', () => {
       const input = {
-        if: { type: 'string' },
-        then: { minLength: 1 },
+        $dynamicRef: '#meta',
+        $dynamicAnchor: 'meta',
       };
       try {
         parseJsonSchemaDocument(input);
@@ -474,8 +480,8 @@ describe('parseJsonSchemaDocument', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(UnsupportedJsonSchemaKeywordError);
         if (error instanceof UnsupportedJsonSchemaKeywordError) {
-          expect(error.unsupportedKeywords).toContain('if');
-          expect(error.unsupportedKeywords).toContain('then');
+          expect(error.unsupportedKeywords).toContain('$dynamicRef');
+          expect(error.unsupportedKeywords).toContain('$dynamicAnchor');
         }
       }
     });

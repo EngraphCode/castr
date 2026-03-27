@@ -104,6 +104,11 @@ export interface JsonSchemaObject {
   patternProperties?: Record<string, JsonSchemaObject>;
   propertyNames?: JsonSchemaObject;
 
+  // Conditional applicators (JSON Schema 2020-12)
+  if?: JsonSchemaObject;
+  then?: JsonSchemaObject;
+  else?: JsonSchemaObject;
+
   // JSON Schema document-level
   $defs?: Record<string, JsonSchemaObject>;
   $schema?: string;

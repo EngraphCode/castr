@@ -13,6 +13,9 @@
 
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 
+/** Schema or `$ref`, optionally a boolean (for unevaluated / conditional forms). */
+type JsonSchemaOrBool = JsonSchema2020 | ReferenceObject | boolean;
+
 /**
  * JSON Schema 2020-12 with keywords not modelled by openapi3-ts.
  *
@@ -24,8 +27,8 @@ import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 export interface JsonSchema2020 extends SchemaObject {
   $id?: string;
   $defs?: Record<string, JsonSchema2020 | ReferenceObject>;
-  unevaluatedProperties?: JsonSchema2020 | ReferenceObject | boolean;
-  unevaluatedItems?: JsonSchema2020 | ReferenceObject | boolean;
+  unevaluatedProperties?: JsonSchemaOrBool;
+  unevaluatedItems?: JsonSchemaOrBool;
   dependentSchemas?: Record<string, JsonSchema2020 | ReferenceObject>;
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
@@ -33,4 +36,7 @@ export interface JsonSchema2020 extends SchemaObject {
   contains?: JsonSchema2020 | ReferenceObject;
   patternProperties?: Record<string, JsonSchema2020 | ReferenceObject>;
   propertyNames?: JsonSchema2020 | ReferenceObject;
+  if?: JsonSchemaOrBool;
+  then?: JsonSchemaOrBool;
+  else?: JsonSchemaOrBool;
 }

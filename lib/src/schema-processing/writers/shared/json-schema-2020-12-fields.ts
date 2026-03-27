@@ -101,6 +101,7 @@ export function writeJsonSchema2020RecursiveFields(
   }
   writePatternProperties(schema, result, writeSchema);
   writePropertyNames(schema, result, writeSchema);
+  writeConditionalApplicators(schema, result, writeSchema);
 }
 
 // ---------------------------------------------------------------------------
@@ -141,4 +142,28 @@ function writePropertyNames(
   }
 
   result.propertyNames = writeSchema(schema.propertyNames);
+}
+
+// ---------------------------------------------------------------------------
+// if / then / else conditional applicators
+// ---------------------------------------------------------------------------
+
+/**
+ * Write `if`/`then`/`else` conditional applicators from IR to JSON Schema output.
+ * @internal
+ */
+function writeConditionalApplicators(
+  schema: CastrSchema,
+  result: JsonSchemaObject,
+  writeSchema: WriteSchemaFn,
+): void {
+  if (schema.if !== undefined) {
+    result.if = writeSchema(schema.if);
+  }
+  if (schema.then !== undefined) {
+    result.then = writeSchema(schema.then);
+  }
+  if (schema.else !== undefined) {
+    result.else = writeSchema(schema.else);
+  }
 }

@@ -341,4 +341,40 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(() => generate(context)).toThrow(/boolean schema `true` cannot be represented in Zod/);
     });
   });
+
+  // ============================================================================
+  // if/then/else conditional applicators - MUST throw (no Zod equivalent)
+  // ============================================================================
+
+  describe('if/then/else conditional applicators fail-fast', () => {
+    it('throws for object schema with if keyword', () => {
+      const schema = createMockSchema('object');
+      schema.if = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(
+        /if\/then\/else conditional applicators cannot be represented in Zod/,
+      );
+    });
+
+    it('throws for object schema with then keyword', () => {
+      const schema = createMockSchema('object');
+      schema.then = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(
+        /if\/then\/else conditional applicators cannot be represented in Zod/,
+      );
+    });
+
+    it('throws for object schema with else keyword', () => {
+      const schema = createMockSchema('object');
+      schema.else = createMockSchema('number');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(
+        /if\/then\/else conditional applicators cannot be represented in Zod/,
+      );
+    });
+  });
 });

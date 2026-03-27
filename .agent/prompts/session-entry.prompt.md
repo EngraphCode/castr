@@ -71,10 +71,17 @@ Notes:
   - Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json`, Scenario 5 green
   - All quality gates green (`pnpm qg` exit 0)
   - Plan: [prefixitems-tuple-and-contains.md](../plans/active/prefixitems-tuple-and-contains.md)
+- **`if`/`then`/`else` conditional applicator support** completed Thursday, 27 March 2026:
+  - IR model extended with `if`, `then`, `else` fields + runtime validator updated
+  - JSON Schema parser: `parseConditionalApplicators()` with boolean schema support
+  - JSON Schema writer: `writeConditionalApplicators()` in 2020-12 fields
+  - Zod + TypeScript writers: fail-fast with actionable error messages (3 new tests)
+  - Round-trip proof: `ConditionalApplicatorSchema` in `2020-12-keywords.json`, Scenario 5 green
+  - All quality gates green (`pnpm qg` exit 0)
+  - Plan: [if-then-else-conditional-applicators.md](../plans/active/if-then-else-conditional-applicators.md)
 
 ### Remaining Planned Capabilities (Not Currently Active)
 
-- `if`/`then`/`else` conditional applicator parser support
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
 - Canonical JSON-Schema-shaped egress normal form alignment
 - External `$ref` resolution
@@ -97,7 +104,7 @@ Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | 
 | `contains`                  |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
 | `minContains`/`maxContains` |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
 | `booleanSchema`             |     ✅      | ❌ fail-fast |   ⚠️ partial   |  ⚠️ partial  | `false` → `z.never()`/`never`; `true` → fail-fast        |
-| `if`/`then`/`else`          | 🔲 not yet  |  🔲 not yet  |  ❌ no equiv   | ❌ no equiv  | Not yet in IR                                            |
+| `if`/`then`/`else`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
 
 > [!IMPORTANT]
 > Each new keyword added to the IR must include fail-fast guards in every writer that cannot express it. All rows now show accurate support status. No rows are marked 🐛 (bug).

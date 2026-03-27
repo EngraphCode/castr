@@ -137,6 +137,7 @@ function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
         'Only boolean unevaluatedProperties (strict object semantics) is supported.',
     );
   }
+  rejectConditionalApplicators(schema, 'Zod');
 }
 
 function rejectUnsupportedArrayKeywords(schema: CastrSchema): void {
@@ -162,6 +163,27 @@ function rejectUnsupportedArrayKeywords(schema: CastrSchema): void {
     throw new Error(
       'Unsupported IR pattern: contains cannot be represented in Zod. ' +
         'Zod has no native equivalent for contains-based array validation.',
+    );
+  }
+}
+
+function rejectConditionalApplicators(schema: CastrSchema, format: string): void {
+  if (schema.if !== undefined) {
+    throw new Error(
+      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
+        `${format} has no native equivalent for JSON Schema conditional validation.`,
+    );
+  }
+  if (schema.then !== undefined) {
+    throw new Error(
+      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
+        `${format} has no native equivalent for JSON Schema conditional validation.`,
+    );
+  }
+  if (schema.else !== undefined) {
+    throw new Error(
+      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
+        `${format} has no native equivalent for JSON Schema conditional validation.`,
     );
   }
 }

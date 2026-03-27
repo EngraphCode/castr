@@ -37,7 +37,7 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep (including `test:e2e`): green on Tuesday, 25 March 2026
+  - Last reproduced full repo-root sweep (including `test:e2e`): green on Thursday, 27 March 2026
   - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
@@ -52,7 +52,7 @@ Then use:
   - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
   - 29 unit tests, 520 transform tests, 4 E2E tests — all green
   - Paused plan partially resolved: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
-- **Next active plan:** [`.agent/plans/active/discovery-and-prioritisation.md`](plans/active/discovery-and-prioritisation.md) — discovery and planning for the next capability slice
+- **Next active plan:** Next discovery and prioritisation session — `if`/`then`/`else`, `patternProperties`/`propertyNames`, `prefixItems`/`contains`, and boolean schema slices are all complete
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

@@ -497,6 +497,37 @@ export interface CastrSchema {
   propertyNames?: CastrSchema;
 
   /**
+   * Conditional applicator: schema to test against (JSON Schema 2020-12).
+   *
+   * When `if` is present, the instance is validated against this sub-schema.
+   * If it validates, `then` applies; otherwise `else` applies.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  if?: CastrSchema;
+
+  /**
+   * Conditional applicator: schema to apply when `if` validates (JSON Schema 2020-12).
+   *
+   * Only meaningful when `if` is also specified.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  then?: CastrSchema;
+
+  /**
+   * Conditional applicator: schema to apply when `if` does not validate (JSON Schema 2020-12).
+   *
+   * Only meaningful when `if` is also specified.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  else?: CastrSchema;
+
+  /**
    * Boolean schema marker (JSON Schema 2020-12).
    *
    * When present, this schema represents a JSON Schema boolean schema:

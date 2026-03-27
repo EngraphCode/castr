@@ -87,7 +87,7 @@ Current sweep record:
 - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
 - Supports standalone schemas, `$defs` bundles, and mixed documents
 - Root schema naming: `title` > `$id` > `"Root"`
-- Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`) explicitly rejected
+- Unsupported keywords (`$dynamicRef`, `$dynamicAnchor`, `$anchor`) explicitly rejected
 - 13 new unit tests, all quality gates green
 - Paused plan ([json-schema-parser.md](./current/paused/json-schema-parser.md)) scope significantly addressed
 
@@ -113,6 +113,15 @@ Current sweep record:
 - TypeScript writer: `false` → `never`, `true` → fail-fast (closed-world)
 - OpenAPI writer: fail-fast (boolean schemas are a pure JSON Schema 2020-12 concept)
 - Format tensions table updated with `booleanSchema` row
+
+**`if`/`then`/`else` conditional applicator support** completed Thursday, 27 March 2026:
+
+- IR model extended with `if`, `then`, `else` fields + runtime validator updated
+- JSON Schema parser: `parseConditionalApplicators()` with boolean schema support
+- JSON Schema writer: `writeConditionalApplicators()` for lossless round-trip
+- Zod + TypeScript writers: fail-fast with actionable error messages (3 new tests)
+- Round-trip proof: `ConditionalApplicatorSchema` in `2020-12-keywords.json`
+- Plan: [if-then-else-conditional-applicators.md](./active/if-then-else-conditional-applicators.md) (✅ complete)
 
 Paused supporting context that remains important:
 
@@ -380,13 +389,13 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 ## Supported Formats (Current)
 
-| Format          | Input | Output | Status / Notes                                                                                                                           |
-| --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                          |
-| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                             |
-| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                       |
-| **JSON Schema** |  🔲   |   🔲   | Parser and writer code exist on disk, but Pack 4 found no honest standalone-document parser contract and under-proven egress normal form |
-| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                                                  |
+| Format          | Input | Output | Status / Notes                                                                                                    |
+| --------------- | :---: | :----: | ----------------------------------------------------------------------------------------------------------------- |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                   |
+| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                      |
+| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                |
+| **JSON Schema** |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; only `$dynamicRef` unsupported |
+| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                           |
 
 ---
 

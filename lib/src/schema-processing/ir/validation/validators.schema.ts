@@ -32,6 +32,7 @@ function hasValidSchemaStructure(value: UnknownRecord): boolean {
     hasValidSchemaObjectStructure(value) &&
     hasValidSchemaItems(value) &&
     hasValidSchemaComposition(value) &&
+    hasValidSchemaConditionalApplicators(value) &&
     hasValidSchemaMetadata(value)
   );
 }
@@ -232,6 +233,16 @@ function hasValidSchemaComposition(value: UnknownRecord): boolean {
     }
   }
   return !('not' in value && value['not'] !== undefined && !isCastrSchema(value['not']));
+}
+
+// ── if / then / else ──
+function hasValidSchemaConditionalApplicators(value: UnknownRecord): boolean {
+  for (const key of ['if', 'then', 'else'] as const) {
+    if (key in value && value[key] !== undefined && !isCastrSchema(value[key])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // ── metadata (must be a valid CastrSchemaNode) ──

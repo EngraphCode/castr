@@ -3,8 +3,8 @@
  *
  * `parseJsonSchemaDocument()` parses both root-level schemas and `$defs`
  * bundles. Documents may contain a root schema, `$defs`, or both.
- * `propertyNames`, `contains`) are rejected with an actionable error.
  * `patternProperties` and `propertyNames` are supported.
+ * `if`/`then`/`else` conditional applicators are supported.
  *
  * @example
  * ```typescript
@@ -169,6 +169,11 @@ const ROOT_SCHEMA_KEYWORDS = new Set([
   'maxContains',
   'patternProperties',
   'propertyNames',
+
+  // Conditional applicators (2020-12)
+  'if',
+  'then',
+  'else',
 ]);
 
 /**
@@ -218,11 +223,6 @@ function deriveRootName(doc: JsonSchema2020): string {
  * @internal
  */
 const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set([
-  // Conditional applicators
-  'if',
-  'then',
-  'else',
-
   // Dynamic references
   '$dynamicRef',
   '$dynamicAnchor',
