@@ -27,6 +27,7 @@
 - OpenAPI output is a typed object model
 - TypeScript/Zod code generation uses `ts-morph`
 - Product doctrine is strict and complete everywhere, all the time: fail-fast, deterministic, lossless by default, and never only partially supported
+- **Input-output pair compatibility**: feature support is defined by input-output pairs, constrained by the output format; the IR is the format-independent superset; fail-fast is reserved for genuinely impossible output mappings (see [principles.md](./principles.md) § Input-Output Pair Compatibility Model)
 
 ## Principles
 

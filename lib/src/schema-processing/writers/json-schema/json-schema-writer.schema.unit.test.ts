@@ -370,7 +370,7 @@ describe('writeJsonSchema', () => {
       expect(result.default).toBe('unknown');
     });
 
-    it('writes example and examples', () => {
+    it('emits examples but not example (OAS-only) in pure JSON Schema output', () => {
       const schema = createSchema({
         type: 'string',
         example: 'user@example.com',
@@ -379,7 +379,31 @@ describe('writeJsonSchema', () => {
 
       const result = writeJsonSchemaAsObject(schema);
 
-      expect(result.example).toBe('user@example.com');
+      expect(result.example).toBeUndefined();
+      expect(result.examples).toEqual(['alice@test.com', 'bob@test.com']);
+    });
+
+    it('folds example-only into examples array for JSON Schema 2020-12', () => {
+      const schema = createSchema({
+        type: 'string',
+        example: 'user@example.com',
+      });
+
+      const result = writeJsonSchemaAsObject(schema);
+
+      expect(result.example).toBeUndefined();
+      expect(result.examples).toEqual(['user@example.com']);
+    });
+
+    it('emits examples when only examples is set', () => {
+      const schema = createSchema({
+        type: 'string',
+        examples: ['alice@test.com', 'bob@test.com'],
+      });
+
+      const result = writeJsonSchemaAsObject(schema);
+
+      expect(result.example).toBeUndefined();
       expect(result.examples).toEqual(['alice@test.com', 'bob@test.com']);
     });
 
@@ -475,57 +499,57 @@ describe('writeJsonSchema', () => {
       expect(result.maxContains).toBe(5);
     });
   });
+});
 
-  describe('OAS-only fields are NOT emitted', () => {
-    it('does not emit xml', () => {
-      const schema = createSchema({
-        type: 'string',
-        xml: { name: 'tag' },
-      });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result['xml']).toBeUndefined();
+describe('writeJsonSchema — OAS-only fields are NOT emitted', () => {
+  it('does not emit xml', () => {
+    const schema = createSchema({
+      type: 'string',
+      xml: { name: 'tag' },
     });
 
-    it('does not emit externalDocs', () => {
-      const schema = createSchema({
-        type: 'string',
-        externalDocs: { url: 'https://example.com' },
-      });
+    const result = writeJsonSchemaAsObject(schema);
 
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result['externalDocs']).toBeUndefined();
-    });
-
-    it('does not emit discriminator', () => {
-      const schema = createSchema({
-        oneOf: [createSchema({ type: 'object' })],
-        discriminator: { propertyName: 'type' },
-      });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result['discriminator']).toBeUndefined();
-    });
+    expect(result['xml']).toBeUndefined();
   });
 
-  describe('boolean schemas', () => {
-    it('writes boolean schema false as literal false', () => {
-      const schema = createSchema({ booleanSchema: false });
-
-      const result = writeJsonSchema(schema);
-
-      expect(result).toBe(false);
+  it('does not emit externalDocs', () => {
+    const schema = createSchema({
+      type: 'string',
+      externalDocs: { url: 'https://example.com' },
     });
 
-    it('writes boolean schema true as literal true', () => {
-      const schema = createSchema({ booleanSchema: true });
+    const result = writeJsonSchemaAsObject(schema);
 
-      const result = writeJsonSchema(schema);
+    expect(result['externalDocs']).toBeUndefined();
+  });
 
-      expect(result).toBe(true);
+  it('does not emit discriminator', () => {
+    const schema = createSchema({
+      oneOf: [createSchema({ type: 'object' })],
+      discriminator: { propertyName: 'type' },
     });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result['discriminator']).toBeUndefined();
+  });
+});
+
+describe('writeJsonSchema — boolean schemas', () => {
+  it('writes boolean schema false as literal false', () => {
+    const schema = createSchema({ booleanSchema: false });
+
+    const result = writeJsonSchema(schema);
+
+    expect(result).toBe(false);
+  });
+
+  it('writes boolean schema true as literal true', () => {
+    const schema = createSchema({ booleanSchema: true });
+
+    const result = writeJsonSchema(schema);
+
+    expect(result).toBe(true);
   });
 });

@@ -2,6 +2,66 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-29
+
+- Deep consolidation pass (`jc-consolidate-docs`) — second pass after Phase 1 closure:
+  - ADR SUMMARY.md: date updated from 2026-03-23 to 2026-03-28, JSON Schema input layer changed from `(future)` to `Parser`
+  - ADR README.md: ADR-042 added to index, next-ADR counter corrected from 042 to 043, date updated
+  - Three completed plans moved from `active/` to `current/complete/`: `pattern-properties-and-property-names.md`, `prefixitems-tuple-and-contains.md`, `if-then-else-conditional-applicators.md`
+  - Stale `active/` links fixed in roadmap (4 links), session-entry (3 links), and paused json-schema-parser.md (3 links)
+  - Practice-index: `input-output-pair-compatibility` rule added (was missing)
+  - Paused parser plan: booleanSchema entry updated from "fail-fast for true" to "Zod `z.any()`, TS `unknown`"
+  - OpenAPI writer: booleanSchema error prefix changed from "Unsupported IR pattern" to "Genuinely impossible" for consistency with the compatibility model
+  - Practice boxes: both empty (`.gitkeep` and scaffold `README.md` only)
+  - No structural learning clears the bar for Practice evolution; the completed-plans-left-in-active/ and ADR-counter-drift patterns are both documented in prior napkin entries
+
+- **CORRECTION: "optional enhancement" language was dishonest.** User correctly identified that the project doctrine has no "optional" category. Work is either on the critical path or it is irrelevant. The four ⚠️ markers in the TS column of the format tensions table were labelled "partial (future enhancement possible)" — this hid the real question: are these keywords genuinely impossible in TypeScript, or are they implementation gaps? Until that question is answered, the format tensions table is not honest.
+  - Purged all "optional enhancement" / "not blocking" / "⚠️ partial" language from: session-entry.prompt.md, roadmap.md, .agent/README.md, walkthrough.md
+  - Replaced ⚠️ with ❓ unresolved — each marker is now an explicit question that must be answered
+  - Added Phase 1.5 to the Schema Completeness Arc: resolve the ❓ markers before Phase 2
+  - **Root cause**: I treated "complex to implement" as equivalent to "optional". Complexity is not a reason to defer — it's a reason to investigate whether the mapping is genuinely impossible. The compatibility model is clear: if the output format can express it, it's on the critical path.
+
+## 2026-03-28
+
+- **Canonical egress normal form alignment** completed:
+  - Audit found scope narrower than expected: nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already canonical
+  - `example`/`examples` emission fixed: `normaliseExampleForJsonSchema()` added to `json-schema-writer.schema.ts`; suppresses OAS-only `example`, folds into `examples` when only `example` is present
+  - 3 new TDD unit tests (44 total); test file restructured to fix `max-lines-per-function` lint violation by promoting two describe blocks to top level
+  - ADR-042 documents the canonical egress normal form across all three dimensions
+  - `pnpm qg` exit 0
+- Consolidation sweep (`jc-consolidate-docs`):
+  - ADR SUMMARY.md: ADR-042 added, Library Philosophy table column alignment widened
+  - Practice-index: ADR-042 row added
+  - Roadmap: date updated to March 28, egress normal form completion entry added, successor chain expanded with `if`/`then`/`else` and egress
+  - Discovery metaplan: successor list updated with `if`/`then`/`else` and egress
+  - Session-entry: title changed, recent work added, remaining capabilities trimmed, unsupported keyword list updated
+  - Paused JSON Schema plan: `if`/`then`/`else` and egress marked ✅ resolved with date and ADR reference
+  - `json-schema-object.ts`: stale caveat about `contains` not surviving round-trip replaced with current egress normal form note referencing ADR-042
+  - Acceptance criteria: already current (no change needed)
+  - Practice incoming boxes: empty (`.gitkeep` and scaffold `README.md` only)
+  - No structural learning clears the bar for Practice evolution; egress normalisation is a product-specific writer detail, not a portable Practice pattern
+- **Unsupported keyword blocklist narrowed** — `if`/`then`/`else` removed from session-entry unsupported keyword list since they are now fully supported; only `$dynamicRef`/`$dynamicAnchor`/`$anchor` remain
+- **Input-Output Pair Compatibility Model** established:
+  - New governing doctrine enshrined across `principles.md`, `requirements.md`, `AGENT.md`, and `.agent/rules/input-output-pair-compatibility.md`
+  - Reclassified many Zod/TS fail-fast guards as implementation gaps requiring semantic output
+- **Schema Completeness Arc — Phase 1** completed:
+  - All 9 Zod fail-fast guards upgraded to semantic `.refine()` runtime validation closures in new `refinements/` subdirectory
+  - File structure: `refinements/object.ts` (patternProperties, propertyNames, dependentSchemas, dependentRequired, unevaluatedProperties, if/then/else) and `refinements/array.ts` (contains/minContains/maxContains, unevaluatedItems) with barrel `refinements/index.ts`
+  - `booleanSchema: true` upgraded: Zod → `z.any()`, TS → `unknown`
+  - TS fail-fast error messages audited: changed prefix from "Unsupported IR pattern" to "Genuinely impossible" with detailed type-system explanations
+  - ADR-026 compliance: character-code constants (`BACKSLASH_CHAR`, `SINGLE_QUOTE_CHAR`) used for string escaping — no regex/replace patterns
+  - 41/41 Zod tests passing, 14/14 TS tests passing, all quality gates green
+  - Format tensions table: zero 🐛 markers remaining in the Zod column
+- ESLint cache gotcha (recurring): stale `.eslintcache` can report false-positive `max-files-per-dir` violations after file moves; `rm .eslintcache` before re-running lint resolves it (also noted 2026-03-26)
+- Consolidation pass (`jc-consolidate-docs`) after Schema Completeness Arc Phase 1:
+  - Roadmap: Schema Completeness Arc Phase 1 marked ✅ complete, booleanSchema Zod/TS entries updated
+  - Discovery metaplan: successor list expanded with Schema Completeness Arc Phase 1
+  - Session-entry: Phase 1 completion entry added, Active Arc section updated, format tensions legend updated (removed 🐛 category)
+  - Principles.md: stale compatibility model examples fixed (booleanSchema and patternProperties examples updated to reflect current reality)
+  - Zod acceptance criteria: fail-fast section rewritten as "Fail-Fast and Semantic Output Requirements" per compatibility model
+  - Practice boxes: both empty (`.gitkeep` and scaffold `README.md` only)
+  - No structural learning clears the bar for Practice evolution; the refinements subdirectory pattern is repo-specific architecture, not a portable Practice pattern
+
 ## 2026-03-27
 
 - **`if`/`then`/`else` conditional applicator support** completed:

@@ -24,7 +24,7 @@ const SCHEMA_TYPE_NULL = 'null';
  * Handle boolean schemas. Returns `true` if the schema was written.
  *
  * - `false` schema → `z.never()` (nothing validates)
- * - `true` schema → fail-fast (violates closed-world semantics)
+ * - `true` schema → `z.any()` (accept everything)
  *
  * @internal
  */
@@ -36,11 +36,10 @@ function writeBooleanSchema(schema: CastrSchema, writer: CodeBlockWriter): boole
     writer.write('z.never()');
     return true;
   }
-  throw new Error(
-    'Unsupported IR pattern: boolean schema `true` cannot be represented in Zod. ' +
-      'A schema that accepts any value violates closed-world object semantics. ' +
-      'Use an explicit type instead.',
-  );
+  // booleanSchema: true — accept any value.
+  // z.any() preserves the semantics: no validation applied, any value passes.
+  writer.write('z.any()');
+  return true;
 }
 
 export function writeZodSchema(

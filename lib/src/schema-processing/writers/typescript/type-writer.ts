@@ -101,7 +101,7 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
  * Returns `true` if the schema was written.
  *
  * - `false` schema → `never` (nothing validates)
- * - `true` schema → fail-fast (violates closed-world semantics)
+ * - `true` schema → `unknown` (accept everything)
  *
  * @internal
  */
@@ -113,11 +113,10 @@ function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWriter): b
     writer.write('never');
     return true;
   }
-  throw new Error(
-    'Unsupported IR pattern: boolean schema `true` cannot be represented in TypeScript. ' +
-      'A schema that accepts any value violates closed-world object semantics. ' +
-      'Use an explicit type instead.',
-  );
+  // booleanSchema: true — accept any value.
+  // `unknown` is the TypeScript type that accepts all values while remaining type-safe.
+  writer.write('unknown');
+  return true;
 }
 
 /** Write intersection type. allOf: [A, B] → A & B */

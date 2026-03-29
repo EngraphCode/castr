@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** 2026-03-23  
+**Last Updated:** 2026-03-28  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 
@@ -21,7 +21,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 │                           INPUT LAYER                                │
 │  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐              │
 │  │ OpenAPI Parser│ │  Zod Parser   │ │ JSON Schema   │              │
-│  │  (3.0, 3.1)   │ │    (v4)      │ │   (future)    │              │
+│  │  (3.0, 3.1)   │ │    (v4)       │ │   Parser      │              │
 │  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘              │
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
@@ -96,20 +96,21 @@ This library implements an **Intermediate Representation (IR) architecture** for
 
 ### Library Philosophy (Current)
 
-| ADR                                                                               | Title                         | Status      |
-| --------------------------------------------------------------------------------- | ----------------------------- | ----------- |
-| [022](./ADR-022-building-blocks-no-http-client.md)                                | Building-Blocks Architecture  | ✅ Accepted |
-| [023](./ADR-023-ir-based-architecture.md)                                         | IR-Based Architecture         | ✅ Accepted |
-| [024](./ADR-024-complete-ir-alignment.md)                                         | Complete IR Alignment         | 📋 Proposed |
-| [031](./ADR-031-zod-output-strategy.md)                                           | Zod 4 Output Strategy         | ✅ Accepted |
-| [032](./ADR-032-zod-input-strategy.md)                                            | Zod 4 Input Strategy          | ✅ Accepted |
-| [033](./ADR-033-two-pass-semantic-parsing.md)                                     | Two-Pass Semantic Parsing     | ✅ Accepted |
-| [034](./ADR-034-writer-separation.md)                                             | Separation of Writer Concerns | ✅ Accepted |
-| [035](./ADR-035-transform-validation-parity.md)                                   | Transform Validation Parity   | ✅ Accepted |
-| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics  | ✅ Accepted |
-| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics        | ✅ Accepted |
-| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Doctrine        | ✅ Accepted |
-| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams       | ✅ Accepted |
+| ADR                                                                               | Title                          | Status      |
+| --------------------------------------------------------------------------------- | ------------------------------ | ----------- |
+| [022](./ADR-022-building-blocks-no-http-client.md)                                | Building-Blocks Architecture   | ✅ Accepted |
+| [023](./ADR-023-ir-based-architecture.md)                                         | IR-Based Architecture          | ✅ Accepted |
+| [024](./ADR-024-complete-ir-alignment.md)                                         | Complete IR Alignment          | 📋 Proposed |
+| [031](./ADR-031-zod-output-strategy.md)                                           | Zod 4 Output Strategy          | ✅ Accepted |
+| [032](./ADR-032-zod-input-strategy.md)                                            | Zod 4 Input Strategy           | ✅ Accepted |
+| [033](./ADR-033-two-pass-semantic-parsing.md)                                     | Two-Pass Semantic Parsing      | ✅ Accepted |
+| [034](./ADR-034-writer-separation.md)                                             | Separation of Writer Concerns  | ✅ Accepted |
+| [035](./ADR-035-transform-validation-parity.md)                                   | Transform Validation Parity    | ✅ Accepted |
+| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics   | ✅ Accepted |
+| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics         | ✅ Accepted |
+| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Doctrine         | ✅ Accepted |
+| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams        | ✅ Accepted |
+| [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form | ✅ Accepted |
 
 ### Additional Architecture Records
 

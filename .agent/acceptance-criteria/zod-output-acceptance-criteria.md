@@ -166,14 +166,15 @@ and NOT `z.lazy()`.
 
 ---
 
-## 9. Fail-Fast Requirements
+## 9. Fail-Fast and Semantic Output Requirements
 
-The writer MUST throw (not emit broken code) for:
+Per the [Input-Output Pair Compatibility Model](../directives/principles.md), the writer must handle IR keywords as follows:
 
-- Unsupported IR patterns with no Zod equivalent
-- Invalid constraint combinations (e.g., `min > max`)
-- Unknown schema types
-- Composition edge cases that cannot be represented safely
+- **Genuinely impossible patterns** (no Zod mechanism exists) → throw with "Genuinely impossible" prefix
+- **Semantically expressible patterns** → emit `.refine()` runtime validation closures (e.g., `patternProperties`, `contains`)
+- Invalid constraint combinations (e.g., `min > max`) → throw with actionable error
+- Unknown schema types → throw
+- Composition edge cases that cannot be represented safely → throw
 
 ---
 

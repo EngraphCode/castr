@@ -2,15 +2,20 @@
 
 > Durable target-state acceptance criteria for the JSON Schema and parity workstream.
 > Historical planning context lives in `.agent/plans/current/complete/phase-4-json-schema-and-parity.md`.
-
+>
 > [!IMPORTANT]
+> **Governing principle**: Feature support follows the [Input-Output Pair Compatibility Model](../directives/principles.md).
+> "Supported" means **semantic preservation through a round-trip** for each input-output pair,
+> constrained by what the output format can represent. Fail-fast is only acceptable for genuinely
+> impossible output mappings.
+>
 > Current implementation note (2026-03-27): Pack 4 and Pack 7 both closed `red`, but subsequent work has
 > significantly addressed the gaps:
 >
 > - `parseJsonSchemaDocument()` is now a full Draft 07 / 2020-12 document parser with standalone round-trip proofs
 > - Unsupported keywords are explicitly rejected via `UnsupportedJsonSchemaKeywordError`
-> - `patternProperties`, `propertyNames`, `prefixItems`, `contains`, `if`/`then`/`else`, and `booleanSchema` are fully supported in the IR and all relevant writers
-> - Only `$dynamicRef`/`$dynamicAnchor`/`$anchor` remain unsupported
+> - `patternProperties`, `propertyNames`, `prefixItems`, `contains`, `if`/`then`/`else`, and `booleanSchema` are in the IR and JSON Schema writer round-trip; Zod/TS writers currently fail-fast (pending semantic mapping evaluation per the compatibility model)
+> - Only `$dynamicRef`/`$dynamicAnchor`/`$anchor` remain unparsed
 >
 > Treat this file as target doctrine, with significant progress toward full coverage.
 

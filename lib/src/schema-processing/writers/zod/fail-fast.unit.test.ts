@@ -1,10 +1,12 @@
 /**
- * Fail-Fast Behavior Tests - Zod Writer
+ * Semantic Output Tests - Zod Writer
  *
- * PROVES that the Zod writer fails fast on unsupported patterns.
- * Per principles.md: "Unsupported patterns MUST throw—Never fall back to z.unknown()"
+ * PROVES that the Zod writer produces semantic .refine() output for
+ * JSON Schema 2020-12 keywords that have no native Zod equivalent.
  *
- * These tests verify the fail-fast principle is enforced.
+ * Per the Input-Output Pair Compatibility Model: Zod CAN express these
+ * keywords via .refine() runtime validation closures. Fail-fast was
+ * an implementation gap, not a genuine impossibility.
  *
  * @module
  */
@@ -78,7 +80,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
   }
 
   // ============================================================================
-  // Fail-Fast Tests - Unsupported Patterns MUST Throw
+  // Fail-Fast Tests - Truly Unsupported Patterns MUST Throw
   // ============================================================================
 
   describe('unsupported schema types throw errors', () => {
@@ -203,70 +205,79 @@ describe('Zod Writer Fail-Fast Behavior', () => {
   });
 
   // ============================================================================
-  // patternProperties / propertyNames - MUST throw (no Zod equivalent)
+  // patternProperties / propertyNames — semantic .refine() output
   // ============================================================================
 
-  describe('patternProperties and propertyNames fail-fast', () => {
-    it('throws for object schema with patternProperties', () => {
+  describe('patternProperties and propertyNames semantic output', () => {
+    it('emits .refine() for object schema with patternProperties', () => {
       const schema = createMockSchema('object');
       schema.patternProperties = {
         '^x-': createMockSchema('string'),
       };
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/patternProperties cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('patternProperties');
     });
 
-    it('throws for object schema with propertyNames', () => {
+    it('emits .refine() for object schema with propertyNames', () => {
       const schema = createMockSchema('object');
       schema.propertyNames = createMockSchema('string');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/propertyNames cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('propertyNames');
     });
   });
 
   // ============================================================================
-  // 2020-12 keywords with no Zod equivalent - MUST throw
+  // 2020-12 keywords — semantic .refine() output
   // ============================================================================
 
-  describe('2020-12 object keywords fail-fast', () => {
-    it('throws for dependentSchemas', () => {
+  describe('2020-12 object keywords semantic output', () => {
+    it('emits .refine() for dependentSchemas', () => {
       const schema = createMockSchema('object');
       schema.dependentSchemas = { role: createMockSchema('object') };
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/dependentSchemas cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('dependentSchemas');
     });
 
-    it('throws for dependentRequired', () => {
+    it('emits .refine() for dependentRequired', () => {
       const schema = createMockSchema('object');
       schema.dependentRequired = { email: ['emailVerified'] };
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/dependentRequired cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('dependentRequired');
     });
 
-    it('throws for schema-valued unevaluatedProperties', () => {
+    it('emits .refine() for schema-valued unevaluatedProperties', () => {
       const schema = createMockSchema('object');
       schema.unevaluatedProperties = createMockSchema('string');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(
-        /schema-valued unevaluatedProperties cannot be represented in Zod/,
-      );
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('unevaluatedProperties');
     });
 
-    it('does NOT throw for boolean unevaluatedProperties', () => {
+    it('does NOT emit .refine() for boolean unevaluatedProperties', () => {
       const schema = createMockSchema('object');
       schema.unevaluatedProperties = false;
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).not.toThrow();
+      const output = generate(context);
+      expect(output).not.toContain('unevaluatedProperties');
     });
   });
 
-  describe('2020-12 array keywords fail-fast', () => {
+  describe('2020-12 array keywords semantic output', () => {
     it('emits z.tuple() for prefixItems', () => {
       const schema = createMockSchema('array');
       schema.prefixItems = [createMockSchema('string'), createMockSchema('number')];
@@ -276,36 +287,46 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(generate(context)).toBe('z.tuple([z.string(), z.number()])');
     });
 
-    it('throws for unevaluatedItems', () => {
+    it('emits .refine() for unevaluatedItems', () => {
       const schema = createMockSchema('array');
       schema.unevaluatedItems = false;
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/unevaluatedItems cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('unevaluatedItems');
     });
 
-    it('throws for minContains', () => {
+    it('emits .refine() for minContains with contains', () => {
       const schema = createMockSchema('array');
+      schema.contains = createMockSchema('string');
       schema.minContains = 2;
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/minContains cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('contains');
     });
 
-    it('throws for maxContains', () => {
+    it('emits .refine() for maxContains with contains', () => {
       const schema = createMockSchema('array');
+      schema.contains = createMockSchema('string');
       schema.maxContains = 5;
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/maxContains cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('contains');
     });
 
-    it('throws for contains', () => {
+    it('emits .refine() for contains', () => {
       const schema = createMockSchema('array');
       schema.contains = createMockSchema('string');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/contains cannot be represented in Zod/);
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('contains');
     });
   });
   describe('boolean schema handling', () => {
@@ -325,7 +346,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(generate(context)).toBe('z.never()');
     });
 
-    it('throws for boolean schema true (violates closed-world)', () => {
+    it('emits z.any() for boolean schema true (accept-everything)', () => {
       const schema: CastrSchema = {
         booleanSchema: true,
         metadata: {
@@ -338,43 +359,43 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       };
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(/boolean schema `true` cannot be represented in Zod/);
+      expect(generate(context)).toBe('z.any()');
     });
   });
 
   // ============================================================================
-  // if/then/else conditional applicators - MUST throw (no Zod equivalent)
+  // if/then/else conditional applicators — semantic .refine() output
   // ============================================================================
 
-  describe('if/then/else conditional applicators fail-fast', () => {
-    it('throws for object schema with if keyword', () => {
+  describe('if/then/else conditional applicators semantic output', () => {
+    it('emits .refine() for object schema with if keyword', () => {
       const schema = createMockSchema('object');
       schema.if = createMockSchema('string');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(
-        /if\/then\/else conditional applicators cannot be represented in Zod/,
-      );
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('if/then/else');
     });
 
-    it('throws for object schema with then keyword', () => {
+    it('emits .refine() for object schema with then keyword', () => {
       const schema = createMockSchema('object');
       schema.then = createMockSchema('string');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(
-        /if\/then\/else conditional applicators cannot be represented in Zod/,
-      );
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('if/then/else');
     });
 
-    it('throws for object schema with else keyword', () => {
+    it('emits .refine() for object schema with else keyword', () => {
       const schema = createMockSchema('object');
       schema.else = createMockSchema('number');
       const context = createComponentContext(schema);
 
-      expect(() => generate(context)).toThrow(
-        /if\/then\/else conditional applicators cannot be represented in Zod/,
-      );
+      const output = generate(context);
+      expect(output).toContain('.refine(');
+      expect(output).toContain('if/then/else');
     });
   });
 });

@@ -14,19 +14,19 @@ The following Pack 4 findings have been resolved by the parser expansion:
 
 - ✅ **Public contract of `parseJsonSchemaDocument()` is unclear** — resolved. Now parses standalone schemas, `$defs` bundles, and mixed documents. JSDoc updated.
 - ✅ **Unsupported-keyword policy is unclear** — resolved. Explicit `UNSUPPORTED_DOCUMENT_KEYWORDS` blocklist with `UnsupportedJsonSchemaKeywordError`. Covers `if`/`then`/`else`, `$dynamicRef`/`$dynamicAnchor`/`$anchor`. (`contains` subsequently resolved on 2026-03-26.)
-- ✅ **`patternProperties`/`propertyNames` parser support** — resolved on 2026-03-26. Full-stack implementation: IR model, JSON Schema parser/writer, OpenAPI parser, Zod/TS fail-fast, round-trip proofs. See [pattern-properties-and-property-names.md](../../active/pattern-properties-and-property-names.md).
+- ✅ **`patternProperties`/`propertyNames` parser support** — resolved on 2026-03-26. Full-stack implementation: IR model, JSON Schema parser/writer, OpenAPI parser, Zod/TS fail-fast, round-trip proofs. See [pattern-properties-and-property-names.md](../complete/pattern-properties-and-property-names.md).
 - ✅ **`writeJsonSchemaDocument()` exists but no standalone-document round-trip proof** — resolved. Scenario 5 now includes standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs.
-- ✅ **`prefixItems` tuple writer bug** — resolved on 2026-03-26. Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types. See [prefixitems-tuple-and-contains.md](../../active/prefixitems-tuple-and-contains.md).
-- ✅ **`contains` parser support** — resolved on 2026-03-26. Full-stack: IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast. See [prefixitems-tuple-and-contains.md](../../active/prefixitems-tuple-and-contains.md).
+- ✅ **`prefixItems` tuple writer bug** — resolved on 2026-03-26. Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types. See [prefixitems-tuple-and-contains.md](../complete/prefixitems-tuple-and-contains.md).
+- ✅ **`contains` parser support** — resolved on 2026-03-26. Full-stack: IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast. See [prefixitems-tuple-and-contains.md](../complete/prefixitems-tuple-and-contains.md).
 - ✅ **`UnsupportedJsonSchemaKeywordError` not in public barrel** — resolved. Exported from `schema-processing/index.ts`.
 
 Remaining open findings (future work, not currently planned):
 
-- `if`/`then`/`else` conditional applicator parser support
+- ✅ **`if`/`then`/`else` conditional applicator support** — resolved on 2026-03-27. Full-stack: IR model, parser, JSON Schema writer (round-trip), Zod/TS fail-fast, runtime validator.
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
-- Canonical JSON-Schema-shaped egress normal form alignment (nullability form, `$ref` sibling policy, `example`/`examples`)
+- ✅ **Canonical JSON-Schema-shaped egress normal form alignment** — resolved on 2026-03-28. Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already correct. `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples`. See [ADR-042](../../../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md).
 - External `$ref` resolution
-- ✅ **Boolean schema support** (`true`/`false` as schema) — resolved on 2026-03-27. `booleanSchema` added to IR model, parser handles boolean input, JSON Schema writer round-trips, Zod/TS emit `z.never()`/`never` for `false`, fail-fast for `true`, OpenAPI fail-fast.
+- ✅ **Boolean schema support** (`true`/`false` as schema) — resolved on 2026-03-27, upgraded on 2026-03-28. `booleanSchema` added to IR model, parser handles boolean input, JSON Schema writer round-trips, Zod emits `z.never()`/`z.any()`, TS emits `never`/`unknown`, OpenAPI fail-fast.
 
 This file remains as historical context. It no longer blocks any current work.
 

@@ -7,6 +7,7 @@ import {
   shouldUseGetterSyntax,
   getSortedPropertyEntries,
 } from '../properties.js';
+import { writeObjectRefinements, writeArrayRefinements } from '../refinements/index.js';
 
 export function writeArraySchema(
   context: CastrSchemaContext,
@@ -19,12 +20,10 @@ export function writeArraySchema(
 ): void {
   const schema = context.schema;
 
-  // FAIL-FAST: Reject 2020-12 array keywords with no Zod equivalent.
-  rejectUnsupportedArrayKeywords(schema);
-
   // Tuple: prefixItems maps to z.tuple([...])
   if (schema.prefixItems !== undefined) {
     writeTupleSchema(schema, writer, writeZodSchemaFn, options);
+    writeArrayRefinements(schema, writer);
     return;
   }
 
@@ -39,6 +38,7 @@ export function writeArraySchema(
     writer.write('z.unknown()');
   }
   writer.write(')');
+  writeArrayRefinements(schema, writer);
 }
 
 /**
@@ -87,10 +87,6 @@ export function writeObjectSchema(
 ): void {
   const schema = context.schema;
 
-  // FAIL-FAST: Zod has no native equivalent for patternProperties or propertyNames.
-  // These IR keywords cannot be represented losslessly in Zod output.
-  rejectUnsupportedObjectKeywords(schema);
-
   writer
     .write('z.strictObject(')
     .inlineBlock(() => {
@@ -99,93 +95,7 @@ export function writeObjectSchema(
       }
     })
     .write(')');
-}
-
-function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
-  if (schema.patternProperties !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: patternProperties cannot be represented in Zod. ' +
-        'Zod has no native equivalent for regex-keyed property schemas.',
-    );
-  }
-  if (schema.propertyNames !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: propertyNames cannot be represented in Zod. ' +
-        'Zod has no native equivalent for property name validation schemas.',
-    );
-  }
-  if (schema.dependentSchemas !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: dependentSchemas cannot be represented in Zod. ' +
-        'Zod has no native equivalent for conditional schema requirements.',
-    );
-  }
-  if (schema.dependentRequired !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: dependentRequired cannot be represented in Zod. ' +
-        'Zod has no native equivalent for conditional required properties.',
-    );
-  }
-  // unevaluatedProperties: boolean `false` maps to z.strictObject() semantics
-  // (already the default). Only schema-valued form is unsupported.
-  if (
-    schema.unevaluatedProperties !== undefined &&
-    typeof schema.unevaluatedProperties !== 'boolean'
-  ) {
-    throw new Error(
-      'Unsupported IR pattern: schema-valued unevaluatedProperties cannot be represented in Zod. ' +
-        'Only boolean unevaluatedProperties (strict object semantics) is supported.',
-    );
-  }
-  rejectConditionalApplicators(schema, 'Zod');
-}
-
-function rejectUnsupportedArrayKeywords(schema: CastrSchema): void {
-  if (schema.unevaluatedItems !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: unevaluatedItems cannot be represented in Zod. ' +
-        'Zod has no native equivalent for unevaluated item validation.',
-    );
-  }
-  if (schema.minContains !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: minContains cannot be represented in Zod. ' +
-        'Zod has no native equivalent for contains-based validation.',
-    );
-  }
-  if (schema.maxContains !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: maxContains cannot be represented in Zod. ' +
-        'Zod has no native equivalent for contains-based array validation.',
-    );
-  }
-  if (schema.contains !== undefined) {
-    throw new Error(
-      'Unsupported IR pattern: contains cannot be represented in Zod. ' +
-        'Zod has no native equivalent for contains-based array validation.',
-    );
-  }
-}
-
-function rejectConditionalApplicators(schema: CastrSchema, format: string): void {
-  if (schema.if !== undefined) {
-    throw new Error(
-      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
-        `${format} has no native equivalent for JSON Schema conditional validation.`,
-    );
-  }
-  if (schema.then !== undefined) {
-    throw new Error(
-      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
-        `${format} has no native equivalent for JSON Schema conditional validation.`,
-    );
-  }
-  if (schema.else !== undefined) {
-    throw new Error(
-      `Unsupported IR pattern: if/then/else conditional applicators cannot be represented in ${format}. ` +
-        `${format} has no native equivalent for JSON Schema conditional validation.`,
-    );
-  }
+  writeObjectRefinements(schema, writer);
 }
 
 export function writeProperties(

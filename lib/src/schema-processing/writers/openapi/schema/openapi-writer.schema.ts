@@ -53,9 +53,9 @@ function writeSchemaFields(schema: CastrSchema, result: JsonSchemaObject): void 
 export function writeOpenApiSchema(schema: CastrSchema): JsonSchemaObject {
   if (schema.booleanSchema !== undefined) {
     throw new Error(
-      `Unsupported IR pattern: boolean schema \`${String(schema.booleanSchema)}\` cannot be ` +
+      `Genuinely impossible: boolean schema \`${String(schema.booleanSchema)}\` cannot be ` +
         'represented in OpenAPI 3.1 output. Boolean schemas are a pure JSON Schema 2020-12 ' +
-        'concept. Use an explicit type instead.',
+        'concept with no OpenAPI equivalent. Use an explicit type instead.',
     );
   }
 

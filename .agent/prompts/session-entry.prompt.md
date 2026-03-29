@@ -35,7 +35,7 @@ Notes:
 
 ---
 
-## Current State: `prefixItems` Tuple + `contains` Keyword Complete
+## Current State: Schema Completeness Arc Phase 1 Complete
 
 ### Completed Predecessor Plans
 
@@ -53,7 +53,7 @@ Notes:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Supports standalone schemas, `$defs` bundles, and mixed documents
   - Root schema naming: `title` > `$id` > `"Root"`
-  - Unsupported keywords (`if`/`then`/`else`, `$dynamicRef`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
+  - Unsupported keywords (`$dynamicRef`/`$dynamicAnchor`/`$anchor`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
   - 13 new unit tests, standalone fixture, 11 new integration round-trip proofs (scenario 5)
   - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added
 - **`patternProperties`/`propertyNames` full-stack implementation** completed Wednesday, 26 March 2026:
@@ -64,13 +64,13 @@ Notes:
   - Zod + TypeScript writers: fail-fast with actionable error messages (2 new fail-fast tests)
   - Round-trip proof: `2020-12-keywords.json` fixture extended, Scenario 5 50/50 green
   - All quality gates green (`pnpm qg` exit 0)
-  - Plan: [pattern-properties-and-property-names.md](../plans/active/pattern-properties-and-property-names.md)
+  - Plan: [pattern-properties-and-property-names.md](../plans/current/complete/pattern-properties-and-property-names.md)
 - **`prefixItems` tuple writer fix + `contains` keyword support** completed Wednesday, 26 March 2026:
   - Part A: Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types
   - Part B: `contains` added to IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast
   - Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json`, Scenario 5 green
   - All quality gates green (`pnpm qg` exit 0)
-  - Plan: [prefixitems-tuple-and-contains.md](../plans/active/prefixitems-tuple-and-contains.md)
+  - Plan: [prefixitems-tuple-and-contains.md](../plans/current/complete/prefixitems-tuple-and-contains.md)
 - **`if`/`then`/`else` conditional applicator support** completed Thursday, 27 March 2026:
   - IR model extended with `if`, `then`, `else` fields + runtime validator updated
   - JSON Schema parser: `parseConditionalApplicators()` with boolean schema support
@@ -78,36 +78,64 @@ Notes:
   - Zod + TypeScript writers: fail-fast with actionable error messages (3 new tests)
   - Round-trip proof: `ConditionalApplicatorSchema` in `2020-12-keywords.json`, Scenario 5 green
   - All quality gates green (`pnpm qg` exit 0)
-  - Plan: [if-then-else-conditional-applicators.md](../plans/active/if-then-else-conditional-applicators.md)
+  - Plan: [if-then-else-conditional-applicators.md](../plans/current/complete/if-then-else-conditional-applicators.md)
+- **Canonical egress normal form alignment** completed Friday, 28 March 2026:
+  - Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already canonical
+  - `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples` (3 new unit tests)
+  - ADR-042 documents the canonical normal form
+  - All quality gates green (`pnpm qg` exit 0)
+- **Input-Output Pair Compatibility Model** established Friday, 28 March 2026:
+  - New governing doctrine enshrined in `principles.md`, `requirements.md`, `AGENT.md`, and `.agent/rules/input-output-pair-compatibility.md`
+  - Feature support defined by input-output pairs, constrained by the output format
+  - IR is the format-independent superset; fail-fast is only for genuinely impossible output mappings
+  - Many existing Zod/TS fail-fast guards reclassified as **implementation gaps** requiring semantic output (not impossibilities)
+- **Schema Completeness Arc — Phase 1** completed Friday, 28 March 2026:
+  - All 9 Zod fail-fast guards upgraded to semantic `.refine()` runtime validation closures
+  - `booleanSchema: true` upgraded: Zod → `z.any()`, TS → `unknown`
+  - TS fail-fast error messages audited: "Genuinely impossible" prefix with detailed type-system explanations
+  - New `refinements/` subdirectory: `object.ts` and `array.ts` — ADR-026 compliant (character-code constants, no regex/replace)
+  - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
+  - Format tensions table: **zero 🐛 markers remaining** in the Zod column
 
-### Remaining Planned Capabilities (Not Currently Active)
+### Active: Schema Completeness Arc
 
-- `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
-- Canonical JSON-Schema-shaped egress normal form alignment
-- External `$ref` resolution
+- **Phase 1**: ✅ COMPLETE — All 9 Zod fail-fast guards upgraded to semantic `.refine()` output. TS `booleanSchema` upgraded. TS error messages audited.
+- **Phase 1.5**: ❓ UNRESOLVED — TS conditional types for `dependentSchemas`/`dependentRequired`/`unevaluatedProperties`/`if-then-else`: genuinely impossible or implementation gap? Must investigate before the format tensions table is honest.
+- **Phase 2**: Expand IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor` — IR Rule 3 violation (features exist in supported input formats but are missing from the IR).
+- **Deferred**: OAS 3.2 operational features, external `$ref` resolution (separate future arcs)
+
+### Remaining Planned Capabilities (Deferred to Future Arcs)
+
+- OAS 3.2 operational features: `QUERY` method, `additionalOperations`, hierarchical tags, `itemSchema` streaming, etc.
+- External `$ref` resolution (separate infrastructure arc)
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
-The IR is format-neutral, but not all output formats can express every keyword. Support is defined by the **parser-writer pair**: a keyword may be unsupported in Zod but fully supported in OpenAPI. When a supported IR keyword reaches a writer that cannot handle it, the writer **must fail fast** — silent omission is a doctrine violation.
+The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings.
 
-Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | ❌ inherent limitation | ⚠️ partial | 🔲 not yet in IR
+Legend: ✅ supported | ❌ genuinely impossible | ❓ unresolved (must investigate) | 🔲 not yet in IR
 
-| IR Keyword                  | JSON Schema | OpenAPI 3.1  |      Zod       |  TypeScript  | Category                                                 |
-| --------------------------- | :---------: | :----------: | :------------: | :----------: | -------------------------------------------------------- |
-| `patternProperties`         |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `propertyNames`             |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `dependentSchemas`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `dependentRequired`         |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `unevaluatedProperties`     |     ✅      |      ✅      |   ⚠️ partial   |  ⚠️ partial  | Boolean → `z.strictObject`; schema form = fail-fast      |
-| `prefixItems`               |     ✅      |      ✅      | ✅ `z.tuple()` | ✅ `[A, B]`  | Fully supported — Zod emits tuples, TS emits tuple types |
-| `unevaluatedItems`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `contains`                  |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `minContains`/`maxContains` |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
-| `booleanSchema`             |     ✅      | ❌ fail-fast |   ⚠️ partial   |  ⚠️ partial  | `false` → `z.never()`/`never`; `true` → fail-fast        |
-| `if`/`then`/`else`          |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast | Inherent — no Zod/TS equivalent                          |
+| IR Keyword                  | JSON Schema | OpenAPI 3.1  |      Zod       |  TypeScript   | Category                                                            |
+| --------------------------- | :---------: | :----------: | :------------: | :-----------: | ------------------------------------------------------------------- |
+| `patternProperties`         |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
+| `propertyNames`             |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
+| `dependentSchemas`          |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
+| `dependentRequired`         |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
+| `unevaluatedProperties`     |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
+| `prefixItems`               |     ✅      |      ✅      | ✅ `z.tuple()` |  ✅ `[A, B]`  | Fully supported.                                                    |
+| `unevaluatedItems`          |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
+| `contains`                  |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
+| `minContains`/`maxContains` |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
+| `booleanSchema`             |     ✅      | ❌ fail-fast |  ✅ `z.any()`  | ✅ `unknown`  | Zod: `z.any()`. TS: `unknown`. OAS: genuinely impossible.           |
+| `if`/`then`/`else`          |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
+| `$anchor`                   |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
+| `$dynamicRef`               |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
+| `$dynamicAnchor`            |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
 
 > [!IMPORTANT]
-> Each new keyword added to the IR must include fail-fast guards in every writer that cannot express it. All rows now show accurate support status. No rows are marked 🐛 (bug).
+> **The format tensions table has four ❓ unresolved markers.** Each one represents a question that must be answered before the table is honest: can TypeScript's type system express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties`, and `if`/`then`/`else`? If yes, the current fail-fast guards are implementation gaps. If no, they should be ❌ genuinely impossible. This investigation is on the critical path.
+>
+> **The table has three 🔲 markers.** These are IR Rule 3 violations — features that exist in JSON Schema 2020-12 input but are not yet carried in the IR. This is also critical-path work.
 
 ### Canonical Identity
 
@@ -129,7 +157,7 @@ Legend: ✅ supported | 🐛 writer bug (format supports, writer doesn't yet) | 
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Thursday, 27 March 2026)
+## Current Repo Truth (Friday, 28 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -170,7 +198,9 @@ Pack verdicts from the architecture review sweep:
 
 Recent completed slices (all gates green, all reviews closed):
 
-- Silent keyword drop fix + Boolean schema support (2026-03-27): all 2020-12 IR keywords now emit losslessly or fail-fast, `booleanSchema` added to IR/parser/writers, `false` → `z.never()`/`never`, `true` → fail-fast, OpenAPI fail-fast, format tensions table updated
+- Schema Completeness Arc Phase 1 (2026-03-28): all 9 Zod fail-fast guards upgraded to semantic `.refine()` closures, TS `booleanSchema` upgraded, TS error messages audited — zero 🐛 markers remaining
+- Silent keyword drop fix + Boolean schema support (2026-03-27): all 2020-12 IR keywords now emit losslessly or fail-fast, `booleanSchema` added to IR/parser/writers
+- Input-Output Pair Compatibility Model (2026-03-28): governing doctrine for feature support defined by input-output pairs
 
 - RC-7 close remaining findings (2026-03-25): all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema `parseJsonSchemaDocument()` fail-fast rejection seam for unsupported keywords, writer scope caveats
 - RC-6 durable-doc over-claims remediation (2026-03-24): `public-api-preservation.test.ts` expanded from 6 legacy exports to full ~30 current surface, `scalar-pipeline.md` reframed eliminated `makeSchemaResolver()` as historical
@@ -190,33 +220,30 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-RC-1 through RC-7 are all complete. The JSON Schema parser expansion is complete with standalone round-trip proofs. The `patternProperties`/`propertyNames` implementation is complete. The `prefixItems` tuple writer fix and `contains` keyword support are complete. Silent keyword drops are fixed and boolean schema support is implemented. There is zero outstanding debt — the next work is new capability.
+The format tensions table is not honest. It has four ❓ markers and three 🔲 markers. Until those are resolved, the Schema Completeness Arc is incomplete.
 
-**Next session: new discovery and planning** — survey candidates, evaluate, prioritise, plan the first slice.
+**Critical path, in order:**
+
+1. **Resolve the ❓ markers** — investigate whether TypeScript can express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties`, and `if`/`then`/`else` via conditional types or other type-system features. For each keyword, the answer is either ❌ genuinely impossible (update the table) or it's an implementation gap (implement it).
+2. **Resolve the 🔲 markers** — expand the IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor`. These are valid JSON Schema 2020-12 features missing from the IR, violating Rule 3 of the compatibility model.
+3. **OAS 3.2 operational features and external `$ref` resolution** are separate future arcs and not on the current critical path.
+
+**Rules:**
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Survey the remaining planned capabilities** for the next slice.
-3. **Do not start implementation until a decision-complete plan exists.**
-4. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
+2. **Do not start implementation until a decision-complete plan exists.**
+3. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
 
 ## What This Session Should Do
 
-This is a **discovery and planning session**. There is no active remediation or outstanding debt. The goal is to identify, evaluate, and plan the next capability slice.
+The format tensions table has unresolved questions. The next session must answer them.
 
-1. Read the discovery metaplan:
-   - [discovery-and-prioritisation.md](../plans/active/discovery-and-prioritisation.md) — the structured session guide
-2. Read the context it references:
-   - [session-entry.prompt.md](.) (this file) — current state and remaining planned capabilities
-   - [roadmap.md](../plans/roadmap.md) — plan of record
-   - [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — resolved findings (historical context)
-   - [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) — partially resolved, remaining open findings
-   - [json-schema-and-parity-acceptance-criteria.md](../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md) — unchecked acceptance boxes
-3. Survey the open capability landscape — identify all candidate work.
-4. Evaluate each candidate on user impact, proof gap, dependency, and complexity.
-5. Prioritise and select the top 1–3 candidates.
-6. Use `jc-plan` to create a decision-complete plan for the first slice.
-7. **Do not start implementation** until the plan is approved.
-8. Record decisions and rationale in `.agent/memory/napkin.md`.
+1. **Investigate the four ❓ TS keywords**: can TypeScript's type system express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties` (schema-valued), and `if`/`then`/`else`? For each:
+   - If genuinely impossible → mark ❌ and document why.
+   - If expressible → it’s an implementation gap; plan and implement the semantic output.
+2. **Plan Phase 2 (IR expansion)**: create a decision-complete plan for `$anchor`, `$dynamicRef`, `$dynamicAnchor` using `jc-plan`.
+3. **Do not start implementation** until the plan is approved.
+4. Record decisions and rationale in `.agent/memory/napkin.md`.
 
 ## Quality Gates
 

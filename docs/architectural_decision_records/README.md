@@ -96,6 +96,7 @@ Each ADR follows this structure:
 | [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics and Native-Only Emission                 | Accepted | 2026-03-10 |
 | [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Semantics and Non-Strict Ingest Rejection         | Accepted | 2026-03-11 |
 | [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams, Governed Widening, and Early Rejection | Accepted | 2026-03-12 |
+| [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form                                  | Accepted | 2026-03-28 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -190,7 +191,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 042)
+2. **Number sequentially** (next is 043)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -233,5 +234,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-03-23  
-**Next ADR:** 042
+**Last Updated:** 2026-03-28  
+**Next ADR:** 043

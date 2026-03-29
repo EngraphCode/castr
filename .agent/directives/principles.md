@@ -87,6 +87,55 @@ graph LR
 
 ---
 
+## 🔀 Input-Output Pair Compatibility Model
+
+> **GOVERNING PRINCIPLE**: Feature support is defined by **input-output pairs**, and the constraints are primarily set by what the **output format** can represent. The IR is a format-independent superset.
+
+### The Model
+
+Castr transforms data between format pairs: `Input Format → IR → Output Format`. Each pair has its own compatibility surface:
+
+```text
+OpenAPI → Zod       (constrained by what Zod can express)
+OpenAPI → JSON Schema   (constrained by what JSON Schema can express)
+JSON Schema → OpenAPI   (constrained by what OpenAPI can express)
+Zod → TypeScript    (constrained by what TypeScript can express)
+```
+
+### The Four Rules
+
+1. **ALL features valid in Input Format X MUST be parseable into the IR.** The input constraint is simply "valid for that format." If an input document is valid per its specification, the parser must accept it.
+
+2. **Feature support for a given input-output pair is defined by what the output format can represent.** "Supported" means semantic preservation through a round-trip — not necessarily a one-to-one mapping, but the meaning must be preserved. The output format is the binding constraint.
+
+3. **The IR MUST be capable of representing ALL valid features from ANY supported format.** The IR is the superset. It must never be the bottleneck — if a feature exists in any supported input format, the IR must be able to carry it, regardless of which output format will ultimately consume it.
+
+4. **When the output format CANNOT represent a feature present in the IR, the writer MUST fail fast with a helpful, actionable error.** Fail-fast is reserved for genuinely impossible output mappings — features that the target format has no way to express. It is NOT acceptable as a placeholder for "not yet implemented."
+
+### What "Supported" Means
+
+"Supported" does **not** require a one-to-one keyword mapping. It means **semantic preservation**:
+
+- `if`/`then`/`else` in JSON Schema → might become a union with refinements in Zod → must preserve the conditional semantics
+- `patternProperties` in JSON Schema → might become `z.record()` with a `.refine()` in Zod → must preserve the pattern constraint semantics
+- `$anchor` in JSON Schema → must resolve references correctly in any output format
+
+### What Fail-Fast Means Under This Model
+
+Fail-fast is for **genuinely impossible** output mappings:
+
+- ✅ **Correct fail-fast**: `int64` semantics → JSON Schema has no native carrier → fail-fast with "JSON Schema cannot express int64 semantics"
+- ✅ **Correct fail-fast**: `patternProperties` → TypeScript → "genuinely impossible" — TypeScript has no regex-keyed index signatures; property names are static, not pattern-matched.
+- ✅ **Correct semantic output**: `patternProperties` → Zod → `.refine()` with runtime regex validation — Zod CAN express this semantically.
+- ✅ **Correct semantic output**: `booleanSchema: true` → Zod → `z.any()` — the accept-everything schema maps to z.any().
+- ❌ **Incorrect fail-fast**: Any IR keyword → Zod → "unsupported" when `.refine()` could express the semantics. This is an implementation gap, not an impossibility.
+
+### Implications for the IR
+
+The IR must never be designed around the limitations of any single output format. If JSON Schema has `$dynamicRef` and Zod cannot express it, the IR must still carry `$dynamicRef` — the Zod writer will fail-fast, but the JSON Schema writer will round-trip it.
+
+---
+
 ## ❓ The First Question
 
 Before any work, always ask:

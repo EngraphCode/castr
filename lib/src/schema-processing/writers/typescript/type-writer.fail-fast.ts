@@ -1,8 +1,12 @@
 /**
- * TypeScript Writer - Unsupported Keyword Guards.
+ * TypeScript Writer - Genuinely Impossible Keyword Guards.
  *
- * Fail-fast rejection for IR keywords that cannot be represented
- * in TypeScript output. Silent omission is a doctrine violation.
+ * Fail-fast rejection for IR keywords that CANNOT be represented
+ * in TypeScript output. These are genuine impossibilities — the
+ * TypeScript type system has no mechanism for these semantics.
+ *
+ * Per the Input-Output Pair Compatibility Model: fail-fast is
+ * reserved for genuinely impossible output mappings only.
  *
  * @module type-writer.fail-fast
  * @internal
@@ -13,7 +17,7 @@ import { getIntegerSemantics } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 /**
- * Reject unsupported 2020-12 object keywords.
+ * Reject genuinely impossible 2020-12 object keywords.
  *
  * Called before writing an object type to ensure no IR keywords
  * are silently dropped from the output.
@@ -24,26 +28,30 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
   rejectConditionalApplicators(schema);
   if (schema.patternProperties !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: patternProperties cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for regex-keyed property schemas.',
+      'Genuinely impossible: patternProperties cannot be represented in TypeScript. ' +
+        'TypeScript has no regex-keyed index signatures — property names are ' +
+        'statically declared, not dynamically matched by pattern.',
     );
   }
   if (schema.propertyNames !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: propertyNames cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for property name validation schemas.',
+      'Genuinely impossible: propertyNames cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for constraining property name values ' +
+        '(e.g., minLength, pattern, enum) at the type level.',
     );
   }
   if (schema.dependentSchemas !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: dependentSchemas cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for conditional schema requirements.',
+      'Genuinely impossible: dependentSchemas cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "when property X is present, apply schema Y" ' +
+        'conditional validation at the type level.',
     );
   }
   if (schema.dependentRequired !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: dependentRequired cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for conditional required properties.',
+      'Genuinely impossible: dependentRequired cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "when property X is present, properties [Y, Z] ' +
+        'become required" conditional requirements at the type level.',
     );
   }
   if (
@@ -51,8 +59,9 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
     typeof schema.unevaluatedProperties !== 'boolean'
   ) {
     throw new Error(
-      'Unsupported IR pattern: schema-valued unevaluatedProperties cannot be represented in TypeScript. ' +
-        'Only boolean unevaluatedProperties is supported.',
+      'Genuinely impossible: schema-valued unevaluatedProperties cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for tracking which properties were "evaluated" by ' +
+        'composition keywords and validating the remainder against a schema.',
     );
   }
 }
@@ -60,14 +69,15 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
 function rejectConditionalApplicators(schema: CastrSchema): void {
   if (schema.if !== undefined || schema.then !== undefined || schema.else !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: if/then/else conditional applicators cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for JSON Schema conditional validation.',
+      'Genuinely impossible: if/then/else conditional applicators cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "validate against sub-schema A; if it passes apply B, ' +
+        'otherwise apply C" runtime conditional logic at the type level.',
     );
   }
 }
 
 /**
- * Reject unsupported 2020-12 array keywords.
+ * Reject genuinely impossible 2020-12 array keywords.
  *
  * Called before writing an array type to ensure no IR keywords
  * are silently dropped from the output.
@@ -77,26 +87,30 @@ function rejectConditionalApplicators(schema: CastrSchema): void {
 export function rejectUnsupportedArrayKeywords(schema: CastrSchema): void {
   if (schema.unevaluatedItems !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: unevaluatedItems cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for unevaluated item validation.',
+      'Genuinely impossible: unevaluatedItems cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for tracking which array items were "evaluated" by ' +
+        'prefixItems/items and validating the remainder.',
     );
   }
   if (schema.minContains !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: minContains cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for contains-based validation.',
+      'Genuinely impossible: minContains cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "at least N items must match schema X" ' +
+        'count-based array validation at the type level.',
     );
   }
   if (schema.maxContains !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: maxContains cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for contains-based validation.',
+      'Genuinely impossible: maxContains cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "at most N items must match schema X" ' +
+        'count-based array validation at the type level.',
     );
   }
   if (schema.contains !== undefined) {
     throw new Error(
-      'Unsupported IR pattern: contains cannot be represented in TypeScript. ' +
-        'TypeScript has no equivalent for contains-based validation.',
+      'Genuinely impossible: contains cannot be represented in TypeScript. ' +
+        'TypeScript has no mechanism for "at least one array element must match schema X" ' +
+        'existential validation at the type level.',
     );
   }
 }

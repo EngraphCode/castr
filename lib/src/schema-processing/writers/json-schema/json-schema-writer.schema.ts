@@ -67,6 +67,30 @@ function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
   }
 
   writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject);
+  normaliseExampleForJsonSchema(result);
 
   return result;
+}
+
+/**
+ * Normalise `example`/`examples` for pure JSON Schema 2020-12 output.
+ *
+ * JSON Schema 2020-12 defines `examples` (array) as the standard keyword.
+ * The singular `example` keyword is an OAS extension and must not appear in
+ * pure JSON Schema output. If only `example` is present, fold it into
+ * `examples`. If both are present, `examples` takes precedence and `example`
+ * is suppressed.
+ *
+ * @internal
+ */
+function normaliseExampleForJsonSchema(result: JsonSchemaObject): void {
+  if (result.example === undefined) {
+    return;
+  }
+
+  if (result.examples === undefined) {
+    result.examples = [result.example];
+  }
+
+  delete result.example;
 }

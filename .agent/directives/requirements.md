@@ -27,6 +27,14 @@ Castr must be strict and complete everywhere, all the time.
 - Partial implementation, stale docs, or incomplete proof coverage are drift, not support.
 - If a surface is not complete yet, mark it unsupported or paused rather than treating it as partially done.
 
+**Input-Output Pair Compatibility** (see [principles.md § Input-Output Pair Compatibility Model](principles.md)):
+
+- Feature support is defined by **input-output pairs**, constrained primarily by the **output format**.
+- The IR MUST be a superset: capable of representing ALL valid features from ANY supported input format.
+- "Supported" means **semantic preservation through a round-trip** — not necessarily a 1:1 keyword mapping.
+- Fail-fast is ONLY acceptable when the output format **genuinely cannot** represent the semantics. It is NOT a placeholder for "not yet implemented."
+- When evaluating whether a feature needs implementation, always ask: "Can the output format express this semantics?" If yes, it must be implemented. If no, it must fail fast with a helpful error.
+
 ---
 
 ## OpenAPI Compliance (Non-negotiable)

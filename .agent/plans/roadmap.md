@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 27, 2026)  
+**Date:** January 24, 2026 (Updated March 28, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -37,7 +37,7 @@ The Practice integration slice, core agent-system installation slice, type-safet
 
 The bounded post-implementation architecture review sweep is now complete. The JSON Schema parser expansion is complete with standalone round-trip proofs.
 
-**Next active plan:** New discovery and prioritisation session — the previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) ✅), the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) ✅), and the boolean schema support slice (see below).
+**Next active plan:** Choose the next arc — Schema Completeness Arc Phase 1 is complete. The previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./current/complete/pattern-properties-and-property-names.md) ✅), the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./current/complete/prefixitems-tuple-and-contains.md) ✅), the boolean schema support slice, the `if`/`then`/`else` conditional applicator slice ([if-then-else-conditional-applicators.md](./current/complete/if-then-else-conditional-applicators.md) ✅), the canonical egress normal form alignment, and Schema Completeness Arc Phase 1.
 
 Current status of that sweep:
 
@@ -95,22 +95,22 @@ Current sweep record:
 
 - Full-stack: IR model, JSON Schema parser/writer, OpenAPI parser, Zod/TS fail-fast
 - Round-trip proofs in Scenario 5 (losslessness, idempotency, schema-count, $defs-key preservation)
-- Plan: [pattern-properties-and-property-names.md](./active/pattern-properties-and-property-names.md) (✅ complete)
+- Plan: [pattern-properties-and-property-names.md](./current/complete/pattern-properties-and-property-names.md) (✅ complete)
 
 **`prefixItems` tuple writer fix + `contains` keyword support** completed Wednesday, 26 March 2026:
 
 - Part A: Zod writer emits `z.tuple([...])`, TypeScript writer emits `[A, B]` tuple types for `prefixItems`
 - Part B: `contains` added to IR, JSON Schema parser (types + 2020-keywords), JSON Schema writer, OpenAPI builder, Zod/TS fail-fast
 - Round-trip proofs: `ContainsSchema` in `2020-12-keywords.json` fixture
-- Plan: [prefixitems-tuple-and-contains.md](./active/prefixitems-tuple-and-contains.md) (✅ complete)
+- Plan: [prefixitems-tuple-and-contains.md](./current/complete/prefixitems-tuple-and-contains.md) (✅ complete)
 
 **Silent keyword drop fix + Boolean schema support** completed Thursday, 27 March 2026:
 
 - All 2020-12 IR keywords now either emit losslessly or fail-fast in Zod/TS writers
 - `booleanSchema` added to IR model (`CastrSchema.booleanSchema?: boolean`)
 - JSON Schema parser accepts boolean input, JSON Schema writer emits `true`/`false` directly
-- Zod writer: `false` → `z.never()`, `true` → fail-fast (closed-world)
-- TypeScript writer: `false` → `never`, `true` → fail-fast (closed-world)
+- Zod writer: `false` → `z.never()`, `true` → `z.any()` (semantic completeness)
+- TypeScript writer: `false` → `never`, `true` → `unknown` (semantic completeness)
 - OpenAPI writer: fail-fast (boolean schemas are a pure JSON Schema 2020-12 concept)
 - Format tensions table updated with `booleanSchema` row
 
@@ -121,7 +121,42 @@ Current sweep record:
 - JSON Schema writer: `writeConditionalApplicators()` for lossless round-trip
 - Zod + TypeScript writers: fail-fast with actionable error messages (3 new tests)
 - Round-trip proof: `ConditionalApplicatorSchema` in `2020-12-keywords.json`
-- Plan: [if-then-else-conditional-applicators.md](./active/if-then-else-conditional-applicators.md) (✅ complete)
+- Plan: [if-then-else-conditional-applicators.md](./current/complete/if-then-else-conditional-applicators.md) (✅ complete)
+
+**Canonical egress normal form alignment** completed Friday, 28 March 2026:
+
+- Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already canonical
+- `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples`
+- ADR-042 documents the canonical normal form
+- All quality gates green (`pnpm qg` exit 0)
+
+**Input-Output Pair Compatibility Model** established Friday, 28 March 2026:
+
+- New governing doctrine: feature support is defined by input-output pairs, constrained by the output format
+- The IR is the format-independent superset — capable of carrying features from ANY supported format
+- "Supported" means semantic preservation through a round-trip, not necessarily 1:1 keyword mapping
+- Fail-fast is reserved for genuinely impossible output mappings, not implementation gaps
+- Enshrined in: `principles.md`, `requirements.md`, `AGENT.md`, `.agent/rules/input-output-pair-compatibility.md`, acceptance criteria
+
+**Schema Completeness Arc** — Phase 1 complete, started Friday, 28 March 2026:
+
+- **Phase 1: Close existing semantic gaps** ✅ — All 9 Zod fail-fast guards that were implementation gaps upgraded to semantic `.refine()` runtime validation closures. TS `booleanSchema: true` upgraded to `unknown`. All TS genuinely impossible fail-fast error messages audited and improved with "Genuinely impossible" prefix and detailed explanations.
+  - New `refinements/` subdirectory: `object.ts` (patternProperties, propertyNames, dependentSchemas, dependentRequired, unevaluatedProperties, if/then/else) and `array.ts` (contains/minContains/maxContains, unevaluatedItems)
+  - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
+- **Phase 1.5: TS ❓ resolution** — investigate whether TypeScript can express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties` (schema-valued), and `if`/`then`/`else` via conditional types or other features. For each: genuinely impossible → mark ❌ and document why; implementation gap → implement the semantic output. Critical path — the format tensions table is not honest until these are resolved.
+- **Phase 2: IR expansion** — `$anchor`, `$dynamicRef`, `$dynamicAnchor` added to IR and parsers; writers fail-fast only where genuinely impossible. Critical path — IR Rule 3 violation (features exist in input formats but not in the IR).
+
+**Deferred: OAS 3.2 Operational Features** (separate future arc):
+
+- `QUERY` HTTP method (trivial enum addition)
+- `additionalOperations` for custom HTTP methods
+- Hierarchical tags (`parent`, `kind`, `summary` on Tag)
+- `itemSchema` streaming support on Media Type
+- OAuth 2.0 Device Authorization flow
+- XML `nodeType` field
+- Example Object `dataValue`/`serializedValue` semantics
+- External `$ref` resolution (separate infrastructure arc)
+- OAS `3.2.0` version acceptance audit
 
 Paused supporting context that remains important:
 

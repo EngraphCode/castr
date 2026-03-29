@@ -440,7 +440,7 @@ describe('TypeWriter', () => {
       expect(generate(schema)).toBe('never');
     });
 
-    it('throws for boolean schema true (violates closed-world)', () => {
+    it('generates unknown type for boolean schema true (accept-everything)', () => {
       const schema: CastrSchema = {
         booleanSchema: true,
         metadata: {
@@ -451,9 +451,7 @@ describe('TypeWriter', () => {
           zodChain: { presence: '', validations: [], defaults: [] },
         },
       };
-      expect(() => generate(schema)).toThrow(
-        /boolean schema `true` cannot be represented in TypeScript/,
-      );
+      expect(generate(schema)).toBe('unknown');
     });
   });
 });

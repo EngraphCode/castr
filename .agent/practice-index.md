@@ -32,23 +32,25 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [ADR-039](../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID subtype semantics               |
 | [ADR-040](../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict object ingest/output doctrine |
 | [ADR-041](../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-capability seam doctrine      |
+| [ADR-042](../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema egress normal form       |
 
 ## Tools and Workflows
 
-| Tool                                                    | Purpose                                                                 |
-| ------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [jc-start-right](commands/jc-start-right.md)            | Re-anchor on doctrine, context, and the current entrypoint              |
-| [jc-gates](commands/jc-gates.md)                        | Run the full canonical quality-gate chain                               |
-| [jc-plan](commands/jc-plan.md)                          | Create or revise a decision-complete plan                               |
-| [jc-consolidate-docs](commands/jc-consolidate-docs.md)  | Promote durable truth, audit cohesion, and integrate practice learnings |
-| [castr-start-right](skills/castr-start-right/SKILL.md)  | Repo-specific start-right bootstrap skill                               |
-| [napkin](skills/napkin/SKILL.md)                        | Continuous capture stage of the knowledge flow                          |
-| [distillation](skills/distillation/SKILL.md)            | Distill the napkin into durable high-signal learnings                   |
-| [invoke-reviewers](rules/invoke-reviewers.md)           | Installed reviewer and domain-expert invocation contract                |
-| [quality-gate-failures](rules/quality-gate-failures.md) | All gate failures are blocking                                          |
-| [tdd](rules/tdd.md)                                     | TDD applies at all levels                                               |
-| [napkin](rules/napkin.md)                               | Keep the learning loop's capture stage active                           |
-| [`.codex/config.toml`](../.codex/config.toml)           | Codex project-agent registration for installed reviewers and experts    |
+| Tool                                                                        | Purpose                                                                 |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [jc-start-right](commands/jc-start-right.md)                                | Re-anchor on doctrine, context, and the current entrypoint              |
+| [jc-gates](commands/jc-gates.md)                                            | Run the full canonical quality-gate chain                               |
+| [jc-plan](commands/jc-plan.md)                                              | Create or revise a decision-complete plan                               |
+| [jc-consolidate-docs](commands/jc-consolidate-docs.md)                      | Promote durable truth, audit cohesion, and integrate practice learnings |
+| [castr-start-right](skills/castr-start-right/SKILL.md)                      | Repo-specific start-right bootstrap skill                               |
+| [napkin](skills/napkin/SKILL.md)                                            | Continuous capture stage of the knowledge flow                          |
+| [distillation](skills/distillation/SKILL.md)                                | Distill the napkin into durable high-signal learnings                   |
+| [invoke-reviewers](rules/invoke-reviewers.md)                               | Installed reviewer and domain-expert invocation contract                |
+| [quality-gate-failures](rules/quality-gate-failures.md)                     | All gate failures are blocking                                          |
+| [tdd](rules/tdd.md)                                                         | TDD applies at all levels                                               |
+| [napkin](rules/napkin.md)                                                   | Keep the learning loop's capture stage active                           |
+| [input-output-pair-compatibility](rules/input-output-pair-compatibility.md) | Feature support is defined by the input-output pair                     |
+| [`.codex/config.toml`](../.codex/config.toml)                               | Codex project-agent registration for installed reviewers and experts    |
 
 ## Artefact Directories
 
