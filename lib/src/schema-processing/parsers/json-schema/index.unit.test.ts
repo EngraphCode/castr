@@ -9,11 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import {
-  parseJsonSchema,
-  parseJsonSchemaDocument,
-  UnsupportedJsonSchemaKeywordError,
-} from './index.js';
+import { parseJsonSchema, parseJsonSchemaDocument } from './index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
 
 describe('parseJsonSchema', () => {
@@ -149,13 +145,14 @@ describe('parseJsonSchemaDocument', () => {
     expect(components[0]?.schema.type).toBe('object');
   });
 
-  it('still rejects truly unsupported keywords', () => {
-    const unsupportedInput = {
+  it('accepts $dynamicRef as root schema keyword (now supported)', () => {
+    const components = parseJsonSchemaDocument({
+      type: 'object',
+      additionalProperties: false,
       $dynamicRef: '#meta',
-    };
-    expect(() => parseJsonSchemaDocument(unsupportedInput)).toThrow(
-      UnsupportedJsonSchemaKeywordError,
-    );
+    });
+    expect(components).toHaveLength(1);
+    expect(components[0]?.schema.$dynamicRef).toBe('#meta');
   });
 
   it('allows title and description alongside $defs', () => {
@@ -427,11 +424,13 @@ describe('parseJsonSchemaDocument', () => {
       expect(components[0]?.schema.else?.type).toBe('number');
     });
 
-    it('rejects $dynamicRef', () => {
-      const input = {
+    it('accepts $dynamicRef (now supported)', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'string',
         $dynamicRef: '#meta',
-      };
-      expect(() => parseJsonSchemaDocument(input)).toThrow(UnsupportedJsonSchemaKeywordError);
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.$dynamicRef).toBe('#meta');
     });
 
     it('accepts patternProperties (now supported)', () => {
@@ -469,21 +468,18 @@ describe('parseJsonSchemaDocument', () => {
       expect(components[0]?.schema.contains?.type).toBe('number');
     });
 
-    it('includes unsupported keyword names in error message', () => {
-      const input = {
-        $dynamicRef: '#meta',
-        $dynamicAnchor: 'meta',
-      };
-      try {
-        parseJsonSchemaDocument(input);
-        expect.fail('Expected UnsupportedJsonSchemaKeywordError');
-      } catch (error) {
-        expect(error).toBeInstanceOf(UnsupportedJsonSchemaKeywordError);
-        if (error instanceof UnsupportedJsonSchemaKeywordError) {
-          expect(error.unsupportedKeywords).toContain('$dynamicRef');
-          expect(error.unsupportedKeywords).toContain('$dynamicAnchor');
-        }
-      }
+    it('accepts $anchor, $dynamicRef, $dynamicAnchor (now supported)', () => {
+      const components = parseJsonSchemaDocument({
+        type: 'object',
+        additionalProperties: false,
+        $anchor: 'mySchema',
+        $dynamicRef: '#node',
+        $dynamicAnchor: 'node',
+      });
+      expect(components).toHaveLength(1);
+      expect(components[0]?.schema.$anchor).toBe('mySchema');
+      expect(components[0]?.schema.$dynamicRef).toBe('#node');
+      expect(components[0]?.schema.$dynamicAnchor).toBe('node');
     });
   });
 });

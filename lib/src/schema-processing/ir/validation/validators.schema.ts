@@ -3,7 +3,7 @@ import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.
 import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
 import { isObjectSchemaType } from '../unknown-key-behavior.js';
 import { hasValidSchemaIntegerSemantics } from './validators.integer.js';
-import { hasValidSchemaUuidVersion } from './validators.uuid.js';
+import { hasValidSchemaUuidVersion, hasValidSchemaAnchorKeywords } from './validators.uuid.js';
 
 const VALID_SCHEMA_TYPES: readonly NonNullable<Extract<CastrSchema['type'], string>>[] = [
   'string',
@@ -22,7 +22,11 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
     return false;
   }
 
-  return hasValidSchemaStructure(value) && hasValidSchemaSemantics(value);
+  return (
+    hasValidSchemaStructure(value) &&
+    hasValidSchemaIntegerSemantics(value) &&
+    hasValidSchemaUuidVersion(value)
+  );
 }
 
 function hasValidSchemaStructure(value: UnknownRecord): boolean {
@@ -33,6 +37,7 @@ function hasValidSchemaStructure(value: UnknownRecord): boolean {
     hasValidSchemaItems(value) &&
     hasValidSchemaComposition(value) &&
     hasValidSchemaConditionalApplicators(value) &&
+    hasValidSchemaAnchorKeywords(value) &&
     hasValidSchemaMetadata(value)
   );
 }
@@ -46,10 +51,6 @@ function hasValidSchemaObjectStructure(value: UnknownRecord): boolean {
     hasValidSchemaPropertyNames(value) &&
     hasValidSchemaRequired(value)
   );
-}
-
-function hasValidSchemaSemantics(value: UnknownRecord): boolean {
-  return hasValidSchemaIntegerSemantics(value) && hasValidSchemaUuidVersion(value);
 }
 
 // ── booleanSchema (optional boolean discriminator) ───────────────────
@@ -78,24 +79,18 @@ function isSchemaTypeEntry(
   if (typeof value !== 'string') {
     return false;
   }
-
   for (const schemaType of VALID_SCHEMA_TYPES) {
     if (value === schemaType) {
       return true;
     }
   }
-
   return false;
 }
 
 function isSchemaTypeArray(
   value: unknown,
 ): value is NonNullable<Extract<CastrSchema['type'], unknown[]>> {
-  if (!Array.isArray(value)) {
-    return false;
-  }
-
-  return value.every(isSchemaTypeEntry);
+  return Array.isArray(value) && value.every(isSchemaTypeEntry);
 }
 
 function isSchemaTypeValue(value: unknown): value is CastrSchema['type'] {
@@ -108,11 +103,9 @@ function hasValidSchemaAdditionalProperties(value: UnknownRecord): boolean {
   if (!('additionalProperties' in value) || value['additionalProperties'] === undefined) {
     return true;
   }
-
   if (!isObjectSchemaRecord(value)) {
     return false;
   }
-
   return typeof value['additionalProperties'] === 'boolean';
 }
 
@@ -122,7 +115,6 @@ function hasValidSchemaUnevaluatedProperties(value: UnknownRecord): boolean {
   if (!('unevaluatedProperties' in value) || value['unevaluatedProperties'] === undefined) {
     return true;
   }
-
   const unevaluated = value['unevaluatedProperties'];
   return typeof unevaluated === 'boolean' || isCastrSchema(unevaluated);
 }
@@ -133,7 +125,6 @@ function hasValidSchemaProperties(value: UnknownRecord): boolean {
   if (!('properties' in value) || value['properties'] === undefined) {
     return true;
   }
-
   return isCastrSchemaProperties(value['properties']);
 }
 
@@ -143,16 +134,13 @@ function hasValidSchemaPatternProperties(value: UnknownRecord): boolean {
   if (!('patternProperties' in value) || value['patternProperties'] === undefined) {
     return true;
   }
-
   if (!isObjectSchemaRecord(value)) {
     return false;
   }
-
   const patternProps = value['patternProperties'];
   if (!isRecord(patternProps)) {
     return false;
   }
-
   return Object.values(patternProps).every((entry) => isCastrSchema(entry));
 }
 
@@ -162,11 +150,9 @@ function hasValidSchemaPropertyNames(value: UnknownRecord): boolean {
   if (!('propertyNames' in value) || value['propertyNames'] === undefined) {
     return true;
   }
-
   if (!isObjectSchemaRecord(value)) {
     return false;
   }
-
   return isCastrSchema(value['propertyNames']);
 }
 
@@ -191,32 +177,21 @@ function hasValidSchemaRequired(value: UnknownRecord): boolean {
 
 function schemaTypeIncludesArray(value: UnknownRecord): boolean {
   const type = value['type'];
-  if (type === ARRAY_SCHEMA_TYPE) {
-    return true;
-  }
-
-  if (Array.isArray(type)) {
-    return type.some((entry) => entry === ARRAY_SCHEMA_TYPE);
-  }
-
-  return false;
+  return (
+    type === ARRAY_SCHEMA_TYPE ||
+    (Array.isArray(type) && type.some((entry) => entry === ARRAY_SCHEMA_TYPE))
+  );
 }
 
 function hasValidSchemaItems(value: UnknownRecord): boolean {
   if (!('items' in value) || value['items'] === undefined) {
     return true;
   }
-
   if (!schemaTypeIncludesArray(value)) {
     return false;
   }
-
   const items = value['items'];
-  if (Array.isArray(items)) {
-    return items.every((item) => isCastrSchema(item));
-  }
-
-  return isCastrSchema(items);
+  return Array.isArray(items) ? items.every((item) => isCastrSchema(item)) : isCastrSchema(items);
 }
 
 // ── composition (allOf / oneOf / anyOf / not) ──
@@ -236,6 +211,7 @@ function hasValidSchemaComposition(value: UnknownRecord): boolean {
 }
 
 // ── if / then / else ──
+
 function hasValidSchemaConditionalApplicators(value: UnknownRecord): boolean {
   for (const key of ['if', 'then', 'else'] as const) {
     if (key in value && value[key] !== undefined && !isCastrSchema(value[key])) {

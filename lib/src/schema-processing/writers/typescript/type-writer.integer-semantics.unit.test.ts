@@ -1,6 +1,6 @@
 import { Project } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import { writeTypeDefinition } from './type-writer.js';
+import { writeTypeDefinition } from './type-writer/index.js';
 import {
   createMockCastrSchema,
   createMockCastrSchemaNode,

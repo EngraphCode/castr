@@ -4,13 +4,13 @@ import { createEndpointWriter } from './endpoints.js';
 import { createMcpToolWriter } from './mcp.js';
 import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
 import { writeZodSchema } from '../zod/index.js';
-import { writeTypeDefinition } from './type-writer.js';
+import { writeTypeDefinition } from './type-writer/index.js';
 import type { CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 
-export { writeTypeDefinition } from './type-writer.js';
+export { writeTypeDefinition } from './type-writer/index.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema';
 const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';

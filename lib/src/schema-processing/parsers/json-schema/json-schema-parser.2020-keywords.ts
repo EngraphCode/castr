@@ -46,6 +46,7 @@ export function parse2020Keywords(
     result.contains = parseSingleSchemaOrRef(input.contains, parseSchema);
   }
   parseConditionalApplicators(input, result, parseSchema);
+  parseAnchorKeywords(input, result);
 }
 
 function parseBoolOrSchema(
@@ -130,4 +131,18 @@ function parseSingleSchemaOrRef(
     return parseSchema({ $ref: value.$ref });
   }
   return parseSchema(value);
+}
+
+// ── $anchor / $dynamicRef / $dynamicAnchor ────────────────────────────────
+
+function parseAnchorKeywords(input: JsonSchema2020, result: CastrSchema): void {
+  if (input.$anchor !== undefined) {
+    result.$anchor = input.$anchor;
+  }
+  if (input.$dynamicRef !== undefined) {
+    result.$dynamicRef = input.$dynamicRef;
+  }
+  if (input.$dynamicAnchor !== undefined) {
+    result.$dynamicAnchor = input.$dynamicAnchor;
+  }
 }

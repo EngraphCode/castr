@@ -16,3 +16,17 @@ function isValidUuidVersion(schema: UnknownRecord, value: unknown): boolean {
     isIRUuidVersion(value)
   );
 }
+
+// ── $anchor / $dynamicRef / $dynamicAnchor (optional strings) ──
+
+function hasOptionalStringField(value: UnknownRecord, key: string): boolean {
+  return !(key in value && value[key] !== undefined && typeof value[key] !== 'string');
+}
+
+export function hasValidSchemaAnchorKeywords(value: UnknownRecord): boolean {
+  return (
+    hasOptionalStringField(value, '$anchor') &&
+    hasOptionalStringField(value, '$dynamicRef') &&
+    hasOptionalStringField(value, '$dynamicAnchor')
+  );
+}

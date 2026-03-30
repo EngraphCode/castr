@@ -1,26 +1,26 @@
 import { Project } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import { writeTypeDefinition } from './type-writer.js';
+import { writeTypeDefinition } from './type-writer/index.js';
 import type { CastrSchema } from '../../ir/index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
 
+const project = new Project({ useInMemoryFileSystem: true });
+
+function generate(schema: CastrSchema): string {
+  const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
+  sourceFile.addTypeAlias({
+    name: 'TestType',
+    type: writeTypeDefinition(schema),
+  });
+  return sourceFile
+    .getTypeAliasOrThrow('TestType')
+    .getTypeNodeOrThrow()
+    .getText()
+    .replace(/\s+/g, ' ')
+    .replace(/, }/g, ' }');
+}
+
 describe('TypeWriter', () => {
-  const project = new Project({ useInMemoryFileSystem: true });
-
-  function generate(schema: CastrSchema): string {
-    const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
-    sourceFile.addTypeAlias({
-      name: 'TestType',
-      type: writeTypeDefinition(schema),
-    });
-    return sourceFile
-      .getTypeAliasOrThrow('TestType')
-      .getTypeNodeOrThrow()
-      .getText()
-      .replace(/\s+/g, ' ')
-      .replace(/, }/g, ' }');
-  }
-
   it('generates string type', () => {
     const schema: CastrSchema = {
       type: 'string',
@@ -453,5 +453,227 @@ describe('TypeWriter', () => {
       };
       expect(generate(schema)).toBe('unknown');
     });
+  });
+});
+
+describe('Dependent Required — discriminated union output', () => {
+  it('generates union for single trigger property', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        name: {
+          type: 'string',
+          metadata: {
+            required: true,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+        email: {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+        emailVerified: {
+          type: 'boolean',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+      }),
+      dependentRequired: {
+        email: ['emailVerified'],
+      },
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    const result = generate(schema);
+    // Must contain intersection of base object with discriminated union
+    expect(result).toContain('email: string');
+    expect(result).toContain('emailVerified: boolean');
+    expect(result).toContain('email?: never');
+  });
+
+  it('generates intersected unions for multiple trigger properties', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        email: {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+        emailVerified: {
+          type: 'boolean',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+        phone: {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+        phoneVerified: {
+          type: 'boolean',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+      }),
+      dependentRequired: {
+        email: ['emailVerified'],
+        phone: ['phoneVerified'],
+      },
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    const result = generate(schema);
+    // Must contain two independent union groups intersected
+    expect(result).toContain('email?: never');
+    expect(result).toContain('phone?: never');
+    expect(result).toContain('&');
+  });
+});
+
+describe('Dependent Schemas — discriminated union output', () => {
+  it('generates union with dependent schema intersection for single trigger', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        creditCard: {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+      }),
+      dependentSchemas: {
+        creditCard: {
+          type: 'object',
+          properties: new CastrSchemaProperties({
+            billingAddress: {
+              type: 'string',
+              metadata: {
+                required: true,
+                nullable: false,
+                circularReferences: [],
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                zodChain: { presence: '', validations: [], defaults: [] },
+              },
+            },
+          }),
+          metadata: {
+            required: true,
+            nullable: false,
+            circularReferences: [],
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '', validations: [], defaults: [] },
+          },
+        },
+      },
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    const result = generate(schema);
+    // Must contain dependent schema properties in the "present" branch
+    expect(result).toContain('billingAddress: string');
+    expect(result).toContain('creditCard?: never');
+  });
+});
+
+describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
+  it('throws for schema with $dynamicRef', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      $dynamicRef: '#node',
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    expect(() => generate(schema)).toThrow(/\$dynamicRef/);
+  });
+
+  it('throws for schema with $dynamicAnchor', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      $dynamicAnchor: 'node',
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    expect(() => generate(schema)).toThrow(/\$dynamicAnchor/);
+  });
+
+  it('does NOT throw for schema with $anchor (reference marker only)', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      $anchor: 'address',
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+    expect(() => generate(schema)).not.toThrow();
+    expect(generate(schema)).toBe('string');
   });
 });

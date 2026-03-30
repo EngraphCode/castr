@@ -39,4 +39,7 @@ export interface JsonSchema2020 extends SchemaObject {
   if?: JsonSchemaOrBool;
   then?: JsonSchemaOrBool;
   else?: JsonSchemaOrBool;
+  $anchor?: string;
+  $dynamicRef?: string;
+  $dynamicAnchor?: string;
 }

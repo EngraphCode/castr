@@ -743,6 +743,104 @@ describe('isCastrSchema booleanSchema field', () => {
   });
 });
 
+describe('isCastrSchema $anchor/$dynamicRef/$dynamicAnchor fields', () => {
+  it('should return true for schema with valid $anchor string', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      $anchor: 'address',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return true for schema with valid $dynamicRef string', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      $dynamicRef: '#node',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return true for schema with valid $dynamicAnchor string', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      $dynamicAnchor: 'node',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return false when $anchor is a non-string value', () => {
+    const invalidSchema = {
+      type: 'string',
+      $anchor: 42,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+
+  it('should return false when $dynamicRef is a non-string value', () => {
+    const invalidSchema = {
+      type: 'string',
+      $dynamicRef: true,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+
+  it('should return false when $dynamicAnchor is a non-string value', () => {
+    const invalidSchema = {
+      type: 'string',
+      $dynamicAnchor: ['node'],
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(invalidSchema)).toBe(false);
+  });
+});
+
 describe('isCastrSchemaNode', () => {
   it('should return true for valid schema node', () => {
     const node: CastrSchemaNode = {

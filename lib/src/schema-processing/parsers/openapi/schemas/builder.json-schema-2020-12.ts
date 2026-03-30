@@ -29,6 +29,9 @@ export type ExtendedSchemaObject = SchemaObject & {
   patternProperties?: Record<string, SchemaObject | ReferenceObject>;
   propertyNames?: SchemaObject | ReferenceObject;
   contains?: SchemaObject | ReferenceObject;
+  $anchor?: string;
+  $dynamicRef?: string;
+  $dynamicAnchor?: string;
 };
 
 /**
@@ -81,6 +84,26 @@ export function addOpenAPIExtensions(
   addPatternProperties(schema, context, irSchema, buildFn);
   addPropertyNames(schema, context, irSchema, buildFn);
   addContains(schema, context, irSchema, buildFn);
+
+  // Anchor/dynamic reference keywords (simple string pass-through)
+  addAnchorKeywords(schema, irSchema);
+}
+
+/**
+ * Add $anchor, $dynamicRef, $dynamicAnchor (JSON Schema 2020-12).
+ * Simple string pass-through — no recursion needed.
+ * @internal
+ */
+function addAnchorKeywords(schema: ExtendedSchemaObject, irSchema: CastrSchema): void {
+  if (schema.$anchor !== undefined) {
+    irSchema.$anchor = schema.$anchor;
+  }
+  if (schema.$dynamicRef !== undefined) {
+    irSchema.$dynamicRef = schema.$dynamicRef;
+  }
+  if (schema.$dynamicAnchor !== undefined) {
+    irSchema.$dynamicAnchor = schema.$dynamicAnchor;
+  }
 }
 
 /**

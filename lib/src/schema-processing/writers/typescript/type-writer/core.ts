@@ -1,14 +1,16 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
-import type { CastrSchema } from '../../ir/index.js';
-import { getIntegerSemantics } from '../../ir/index.js';
-import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
-import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
+import type { CastrSchema } from '../../../ir/index.js';
+import { getIntegerSemantics } from '../../../ir/index.js';
+import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
+import { parseComponentRef } from '../../../../shared/ref-resolution.js';
+import { isValidJsIdentifier } from '../../../../shared/utils/identifier-utils.js';
 import {
+  rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
   resolveSchemaTypeString,
-} from './type-writer.fail-fast.js';
+} from './fail-fast.js';
+import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
@@ -86,6 +88,7 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
     if (writeBooleanSchemaType(schema, writer)) {
       return;
     }
+    rejectDynamicReferenceKeywords(schema);
     if (writeRefType(schema, writer)) {
       return;
     }
@@ -193,6 +196,23 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
 
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   rejectUnsupportedObjectKeywords(schema);
+  const hasDependentRequired = schema.dependentRequired !== undefined;
+  const hasDependentSchemas = schema.dependentSchemas !== undefined;
+  if (!hasDependentRequired && !hasDependentSchemas) {
+    writeObjectInlineBlock(schema, writer);
+    return;
+  }
+  // Emit: BaseObject & (PresentBranch | AbsentBranch) & ...
+  writeObjectInlineBlock(schema, writer);
+  if (hasDependentRequired) {
+    writeDependentRequiredUnions(schema, writer, writeProperty);
+  }
+  if (hasDependentSchemas) {
+    writeDependentSchemasUnions(schema, writer, writeProperty);
+  }
+}
+
+function writeObjectInlineBlock(schema: CastrSchema, writer: CodeBlockWriter): void {
   writer.inlineBlock(() => {
     for (const [key, prop] of getSortedPropertyEntries(schema)) {
       writeProperty(key, prop, writer);

@@ -53,7 +53,7 @@ Notes:
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Supports standalone schemas, `$defs` bundles, and mixed documents
   - Root schema naming: `title` > `$id` > `"Root"`
-  - Unsupported keywords (`$dynamicRef`/`$dynamicAnchor`/`$anchor`) explicitly rejected with `UnsupportedJsonSchemaKeywordError` (public barrel export)
+  - `$anchor`/`$dynamicRef`/`$dynamicAnchor` supported: parsed into IR, lossless round-trip, Zod/TS fail-fast for dynamic keywords
   - 13 new unit tests, standalone fixture, 11 new integration round-trip proofs (scenario 5)
   - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added
 - **`patternProperties`/`propertyNames` full-stack implementation** completed Wednesday, 26 March 2026:
@@ -100,42 +100,42 @@ Notes:
 ### Active: Schema Completeness Arc
 
 - **Phase 1**: ✅ COMPLETE — All 9 Zod fail-fast guards upgraded to semantic `.refine()` output. TS `booleanSchema` upgraded. TS error messages audited.
-- **Phase 1.5**: ❓ UNRESOLVED — TS conditional types for `dependentSchemas`/`dependentRequired`/`unevaluatedProperties`/`if-then-else`: genuinely impossible or implementation gap? Must investigate before the format tensions table is honest.
-- **Phase 2**: Expand IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor` — IR Rule 3 violation (features exist in supported input formats but are missing from the IR).
-- **Deferred**: OAS 3.2 operational features, external `$ref` resolution (separate future arcs)
+- **Phase 1.5**: ✅ COMPLETE — All four ❓ markers resolved. `dependentRequired` and `dependentSchemas` implemented as discriminated union types (were implementation gaps). `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible.
+- **Phase 2**: ✅ COMPLETE — `$anchor`, `$dynamicRef`, `$dynamicAnchor` integrated into IR, parser, JSON Schema writer, OAS parser, IR validator. TS/Zod fail-fast wired for `$dynamicRef`/`$dynamicAnchor`. Full test coverage, round-trip proofs. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md).
+- **Deferred**: OAS 3.2 operational features, reference resolution enhancements (`$anchor`-based resolution, `$dynamicRef`/`$dynamicAnchor` runtime semantics, external `$ref`) — see [roadmap.md](../plans/roadmap.md) deferred sections
 
 ### Remaining Planned Capabilities (Deferred to Future Arcs)
 
 - OAS 3.2 operational features: `QUERY` method, `additionalOperations`, hierarchical tags, `itemSchema` streaming, etc.
-- External `$ref` resolution (separate infrastructure arc)
+- Reference resolution enhancements: external `$ref` resolution, `$anchor`-based reference resolution (`$ref: "#myAnchor"`), `$dynamicRef`/`$dynamicAnchor` runtime scope resolution
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
 The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings.
 
-Legend: ✅ supported | ❌ genuinely impossible | ❓ unresolved (must investigate) | 🔲 not yet in IR
+Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
 | IR Keyword                  | JSON Schema | OpenAPI 3.1  |      Zod       |  TypeScript   | Category                                                            |
 | --------------------------- | :---------: | :----------: | :------------: | :-----------: | ------------------------------------------------------------------- |
 | `patternProperties`         |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
 | `propertyNames`             |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
-| `dependentSchemas`          |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
-| `dependentRequired`         |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
-| `unevaluatedProperties`     |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
+| `dependentSchemas`          |     ✅      |      ✅      | ✅ `.refine()` | ✅ union type | TS: discriminated union with `never` markers for absent triggers.   |
+| `dependentRequired`         |     ✅      |      ✅      | ✅ `.refine()` | ✅ union type | TS: discriminated union with `never` markers for absent triggers.   |
+| `unevaluatedProperties`     |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | TS: genuinely impossible (no "unevaluated" concept in type system). |
 | `prefixItems`               |     ✅      |      ✅      | ✅ `z.tuple()` |  ✅ `[A, B]`  | Fully supported.                                                    |
 | `unevaluatedItems`          |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
 | `contains`                  |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
 | `minContains`/`maxContains` |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
 | `booleanSchema`             |     ✅      | ❌ fail-fast |  ✅ `z.any()`  | ✅ `unknown`  | Zod: `z.any()`. TS: `unknown`. OAS: genuinely impossible.           |
-| `if`/`then`/`else`          |     ✅      |      ✅      | ✅ `.refine()` | ❓ unresolved | TS: genuinely impossible or implementation gap? Must investigate.   |
-| `$anchor`                   |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
-| `$dynamicRef`               |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
-| `$dynamicAnchor`            |     🔲      |      🔲      |       🔲       |      🔲       | Not yet in IR — violates Rule 3 (IR must carry all input features). |
+| `if`/`then`/`else`          |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | TS: genuinely impossible (arbitrary runtime predicates).            |
+| `$anchor`                   |     ✅      |      ✅      |  ✅ (ignored)  | ✅ (ignored)  | Reference marker only — no code-gen impact, preserved in round-trip |
+| `$dynamicRef`               |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast  | Genuinely impossible: dynamic scope resolution has no static equiv. |
+| `$dynamicAnchor`            |     ✅      |      ✅      |  ❌ fail-fast  | ❌ fail-fast  | Genuinely impossible: dynamic scope resolution has no static equiv. |
 
 > [!IMPORTANT]
-> **The format tensions table has four ❓ unresolved markers.** Each one represents a question that must be answered before the table is honest: can TypeScript's type system express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties`, and `if`/`then`/`else`? If yes, the current fail-fast guards are implementation gaps. If no, they should be ❌ genuinely impossible. This investigation is on the critical path.
+> **Phase 1.5 complete: all four ❓ markers resolved.** `dependentRequired` and `dependentSchemas` are now ✅ (expressed as discriminated union types). `unevaluatedProperties` (schema-valued) and `if/then/else` are ❌ genuinely impossible.
 >
-> **The table has three 🔲 markers.** These are IR Rule 3 violations — features that exist in JSON Schema 2020-12 input but are not yet carried in the IR. This is also critical-path work.
+> **Phase 2 complete: all three 🔲 markers resolved.** `$anchor`, `$dynamicRef`, `$dynamicAnchor` are now in the IR and all downstream surfaces. Zero 🔲 markers remain.
 
 ### Canonical Identity
 
@@ -157,7 +157,7 @@ Legend: ✅ supported | ❌ genuinely impossible | ❓ unresolved (must investig
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Friday, 28 March 2026)
+## Current Repo Truth (Sunday, 30 March 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -220,11 +220,11 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-The format tensions table is not honest. It has four ❓ markers and three 🔲 markers. Until those are resolved, the Schema Completeness Arc is incomplete.
+The format tensions table has three 🔲 markers remaining. Until those are resolved, the Schema Completeness Arc is incomplete.
 
 **Critical path, in order:**
 
-1. **Resolve the ❓ markers** — investigate whether TypeScript can express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties`, and `if`/`then`/`else` via conditional types or other type-system features. For each keyword, the answer is either ❌ genuinely impossible (update the table) or it's an implementation gap (implement it).
+1. ~~**Resolve the ❓ markers**~~ ✅ DONE — `dependentRequired` and `dependentSchemas` implemented as discriminated unions; `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible.
 2. **Resolve the 🔲 markers** — expand the IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor`. These are valid JSON Schema 2020-12 features missing from the IR, violating Rule 3 of the compatibility model.
 3. **OAS 3.2 operational features and external `$ref` resolution** are separate future arcs and not on the current critical path.
 
@@ -236,14 +236,11 @@ The format tensions table is not honest. It has four ❓ markers and three 🔲 
 
 ## What This Session Should Do
 
-The format tensions table has unresolved questions. The next session must answer them.
+Phase 2: expand the IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor`.
 
-1. **Investigate the four ❓ TS keywords**: can TypeScript's type system express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties` (schema-valued), and `if`/`then`/`else`? For each:
-   - If genuinely impossible → mark ❌ and document why.
-   - If expressible → it’s an implementation gap; plan and implement the semantic output.
-2. **Plan Phase 2 (IR expansion)**: create a decision-complete plan for `$anchor`, `$dynamicRef`, `$dynamicAnchor` using `jc-plan`.
-3. **Do not start implementation** until the plan is approved.
-4. Record decisions and rationale in `.agent/memory/napkin.md`.
+1. **Implement Phase 2 (IR expansion)** per the approved plan.
+2. **Update the format tensions table** — 🔲→✅ for all three keywords.
+3. **Run quality gates** — `pnpm qg` must be green after Phase 2.
 
 ## Quality Gates
 

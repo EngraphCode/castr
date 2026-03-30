@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 28, 2026)  
+**Date:** January 24, 2026 (Updated March 30, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -87,7 +87,7 @@ Current sweep record:
 - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
 - Supports standalone schemas, `$defs` bundles, and mixed documents
 - Root schema naming: `title` > `$id` > `"Root"`
-- Unsupported keywords (`$dynamicRef`, `$dynamicAnchor`, `$anchor`) explicitly rejected
+- `$anchor`/`$dynamicRef`/`$dynamicAnchor` now supported: parsed into IR, lossless round-trip, Zod/TS fail-fast for dynamic keywords
 - 13 new unit tests, all quality gates green
 - Paused plan ([json-schema-parser.md](./current/paused/json-schema-parser.md)) scope significantly addressed
 
@@ -138,13 +138,13 @@ Current sweep record:
 - Fail-fast is reserved for genuinely impossible output mappings, not implementation gaps
 - Enshrined in: `principles.md`, `requirements.md`, `AGENT.md`, `.agent/rules/input-output-pair-compatibility.md`, acceptance criteria
 
-**Schema Completeness Arc** — Phase 1 complete, started Friday, 28 March 2026:
+**Schema Completeness Arc** — Phase 2 complete, Sunday 30 March 2026:
 
 - **Phase 1: Close existing semantic gaps** ✅ — All 9 Zod fail-fast guards that were implementation gaps upgraded to semantic `.refine()` runtime validation closures. TS `booleanSchema: true` upgraded to `unknown`. All TS genuinely impossible fail-fast error messages audited and improved with "Genuinely impossible" prefix and detailed explanations.
   - New `refinements/` subdirectory: `object.ts` (patternProperties, propertyNames, dependentSchemas, dependentRequired, unevaluatedProperties, if/then/else) and `array.ts` (contains/minContains/maxContains, unevaluatedItems)
   - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
-- **Phase 1.5: TS ❓ resolution** — investigate whether TypeScript can express `dependentSchemas`, `dependentRequired`, `unevaluatedProperties` (schema-valued), and `if`/`then`/`else` via conditional types or other features. For each: genuinely impossible → mark ❌ and document why; implementation gap → implement the semantic output. Critical path — the format tensions table is not honest until these are resolved.
-- **Phase 2: IR expansion** — `$anchor`, `$dynamicRef`, `$dynamicAnchor` added to IR and parsers; writers fail-fast only where genuinely impossible. Critical path — IR Rule 3 violation (features exist in input formats but not in the IR).
+- **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
+- **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
 **Deferred: OAS 3.2 Operational Features** (separate future arc):
 
@@ -155,8 +155,13 @@ Current sweep record:
 - OAuth 2.0 Device Authorization flow
 - XML `nodeType` field
 - Example Object `dataValue`/`serializedValue` semantics
-- External `$ref` resolution (separate infrastructure arc)
 - OAS `3.2.0` version acceptance audit
+
+**Deferred: Reference Resolution Enhancements** (separate future arc):
+
+- External `$ref` resolution (cross-document references — separate infrastructure arc)
+- `$anchor`-based reference resolution (`$ref: "#myAnchor"` — the IR carries `$anchor` after Phase 2, but resolving anchor-based references to their target schemas is not implemented)
+- `$dynamicRef`/`$dynamicAnchor` runtime resolution semantics (the IR carries the markers after Phase 2; Zod/TS writers fail-fast; JSON Schema/OAS writers round-trip the values; but actual dynamic scope resolution is not implemented)
 
 Paused supporting context that remains important:
 
@@ -424,13 +429,13 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 ## Supported Formats (Current)
 
-| Format          | Input | Output | Status / Notes                                                                                                    |
-| --------------- | :---: | :----: | ----------------------------------------------------------------------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                   |
-| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                      |
-| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                |
-| **JSON Schema** |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; only `$dynamicRef` unsupported |
-| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                           |
+| Format          | Input | Output | Status / Notes                                                                                                                     |
+| --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **OpenAPI**      |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                   |
+| **Zod**          |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                       |
+| **TypeScript**   |   —   |   ✅   | Writer available (types + helpers)                                                                                                 |
+| **JSON Schema**  |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; `$dynamicRef`/`$dynamicAnchor` Zod/TS fail-fast |
+| **tRPC**         |  🔲   |   🔲   | Planned                                                                                                                            |
 
 ---
 

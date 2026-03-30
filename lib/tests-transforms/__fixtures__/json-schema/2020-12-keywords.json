@@ -89,6 +89,27 @@
         },
         "required": ["firstName"]
       }
+    },
+    "AnchorSchema": {
+      "type": "object",
+      "$anchor": "address",
+      "properties": {
+        "street": { "type": "string" }
+      }
+    },
+    "DynamicRefSchema": {
+      "type": "object",
+      "$dynamicRef": "#node",
+      "properties": {
+        "value": { "type": "string" }
+      }
+    },
+    "DynamicAnchorSchema": {
+      "type": "object",
+      "$dynamicAnchor": "node",
+      "properties": {
+        "children": { "type": "array" }
+      }
     }
   }
 }

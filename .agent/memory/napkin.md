@@ -2,6 +2,22 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-03-30
+
+- **Schema Completeness Arc — Phase 2 started** (~60% implementation complete, no tests yet):
+  - IR model: `$anchor`, `$dynamicRef`, `$dynamicAnchor` added to `CastrSchema` interface in `ir/models/schema.ts`
+  - JSON Schema parser: three keywords added to `JsonSchema2020` type, removed from `UNSUPPORTED_DOCUMENT_KEYWORDS`, added to `ROOT_SCHEMA_KEYWORDS`, `parseAnchorKeywords()` implemented in `json-schema-parser.2020-keywords.ts`
+  - JSON Schema writer: emission added in `writeJsonSchema2020SimpleFields()` — simple string pass-through via bracket notation (`result['$anchor']`)
+  - Zod fail-fast: `rejectDynamicReferenceKeywords()` added in `zod/index.ts`, called from `writeSchemaBody()`
+  - TS fail-fast: `rejectDynamicReferenceKeywords()` added and exported in `type-writer/fail-fast.ts` but **NOT YET WIRED** into `core.ts`
+  - OpenAPI parser: NOT YET UPDATED (needs `ExtendedSchemaObject` + `addOpenAPIExtensions()`)
+  - IR validator: NOT YET UPDATED
+  - Tests: NONE WRITTEN YET
+  - QG: NOT YET RUN
+- **Design decision: `$anchor` is NOT fail-fast** in Zod/TS — it's a reference marker consumed at parse time, not a validation keyword. The Zod/TS writers just ignore it. Only `$dynamicRef` and `$dynamicAnchor` have no static code-gen equivalent and require fail-fast guards.
+- **ESLint cache gotcha (recurring)**: stale `.eslintcache` caused false-positive `max-files-per-dir` violation after the Phase 1.5 `type-writer/` directory restructure. `rm .eslintcache` resolved it. This is the third time this has been observed (also 2026-03-26, 2026-03-29).
+- Active plan created at `plans/active/anchor-and-dynamic-references.md` with per-file resume checklist
+
 ## 2026-03-29
 
 - Deep consolidation pass (`jc-consolidate-docs`) — second pass after Phase 1 closure:

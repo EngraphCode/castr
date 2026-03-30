@@ -174,6 +174,11 @@ const ROOT_SCHEMA_KEYWORDS = new Set([
   'if',
   'then',
   'else',
+
+  // Reference/anchor keywords (2020-12)
+  '$anchor',
+  '$dynamicRef',
+  '$dynamicAnchor',
 ]);
 
 /**
@@ -222,11 +227,8 @@ function deriveRootName(doc: JsonSchema2020): string {
  *
  * @internal
  */
-const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set([
-  // Dynamic references
-  '$dynamicRef',
-  '$dynamicAnchor',
-  '$anchor',
+const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set<string>([
+  // All previously unsupported keywords are now handled by the IR.
 ]);
 
 /**

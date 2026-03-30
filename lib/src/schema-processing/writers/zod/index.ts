@@ -62,6 +62,8 @@ function writeSchemaBody(
       return;
     }
 
+    rejectDynamicReferenceKeywords(schema);
+
     if (writeNullableReference(context, schema, writer, options)) {
       return;
     }
@@ -282,5 +284,36 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   // Skip if type is 'null' - we never want z.null().nullable()
   if (schema.metadata.nullable && !Array.isArray(schema.type) && schema.type !== SCHEMA_TYPE_NULL) {
     writer.write('.nullable()');
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dynamic reference fail-fast
+// ---------------------------------------------------------------------------
+
+/**
+ * Reject schemas with dynamic reference keywords that cannot be expressed
+ * in static Zod code generation.
+ *
+ * `$anchor` is NOT rejected — it's a reference marker consumed at parse time.
+ * `$dynamicRef` and `$dynamicAnchor` require runtime scope resolution that
+ * has no static code-gen equivalent.
+ *
+ * @internal
+ */
+function rejectDynamicReferenceKeywords(schema: CastrSchema): void {
+  if (schema.$dynamicRef !== undefined) {
+    throw new Error(
+      'Genuinely impossible: $dynamicRef cannot be represented in Zod. ' +
+        '$dynamicRef requires runtime resolution against a dynamic scope chain — ' +
+        'there is no static code-gen equivalent.',
+    );
+  }
+  if (schema.$dynamicAnchor !== undefined) {
+    throw new Error(
+      'Genuinely impossible: $dynamicAnchor cannot be represented in Zod. ' +
+        '$dynamicAnchor declares an override point for runtime schema extension — ' +
+        'there is no static code-gen equivalent.',
+    );
   }
 }

@@ -543,6 +543,52 @@ export interface CastrSchema {
    */
   booleanSchema?: boolean;
 
+  // ========== JSON Schema 2020-12 Reference/Anchor Keywords ==========
+
+  /**
+   * Named anchor for URI fragment reference resolution (JSON Schema 2020-12).
+   *
+   * Assigns a stable identifier to a schema that can be referenced via
+   * `$ref: "#myAnchor"` from anywhere in the document. Unlike JSON Pointer
+   * `$ref` paths, anchors are location-independent.
+   *
+   * @example '$anchor: "address"' enables `$ref: "#address"`
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   */
+  $anchor?: string;
+
+  /**
+   * Dynamic reference for schema extension patterns (JSON Schema 2020-12).
+   *
+   * References a schema by dynamic anchor name. Resolution depends on the
+   * runtime evaluation path — outer scopes can override the target schema
+   * via `$dynamicAnchor`.
+   *
+   * @example '$dynamicRef: "#node"' resolves to the nearest `$dynamicAnchor: "node"`
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Has no static code-gen equivalent (Zod/TS writers fail-fast).
+   */
+  $dynamicRef?: string;
+
+  /**
+   * Dynamic anchor for schema override patterns (JSON Schema 2020-12).
+   *
+   * Declares a dynamic anchor that can be overridden by consuming schemas
+   * via `$dynamicRef`. Enables extensible schema patterns where inner schemas
+   * reference points that outer schemas can redefine.
+   *
+   * @example '$dynamicAnchor: "node"' marks this schema as overridable
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Has no static code-gen equivalent (Zod/TS writers fail-fast).
+   */
+  $dynamicAnchor?: string;
+
   /**
    * Rich metadata for code generation.
    * This is what replaces CodeMetaData and provides enhanced information.

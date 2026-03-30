@@ -12,9 +12,9 @@
  * @internal
  */
 
-import type { CastrSchema } from '../../ir/index.js';
-import { getIntegerSemantics } from '../../ir/index.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import type { CastrSchema } from '../../../ir/index.js';
+import { getIntegerSemantics } from '../../../ir/index.js';
+import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 
 /**
  * Reject genuinely impossible 2020-12 object keywords.
@@ -38,20 +38,6 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
       'Genuinely impossible: propertyNames cannot be represented in TypeScript. ' +
         'TypeScript has no mechanism for constraining property name values ' +
         '(e.g., minLength, pattern, enum) at the type level.',
-    );
-  }
-  if (schema.dependentSchemas !== undefined) {
-    throw new Error(
-      'Genuinely impossible: dependentSchemas cannot be represented in TypeScript. ' +
-        'TypeScript has no mechanism for "when property X is present, apply schema Y" ' +
-        'conditional validation at the type level.',
-    );
-  }
-  if (schema.dependentRequired !== undefined) {
-    throw new Error(
-      'Genuinely impossible: dependentRequired cannot be represented in TypeScript. ' +
-        'TypeScript has no mechanism for "when property X is present, properties [Y, Z] ' +
-        'become required" conditional requirements at the type level.',
     );
   }
   if (
@@ -111,6 +97,33 @@ export function rejectUnsupportedArrayKeywords(schema: CastrSchema): void {
       'Genuinely impossible: contains cannot be represented in TypeScript. ' +
         'TypeScript has no mechanism for "at least one array element must match schema X" ' +
         'existential validation at the type level.',
+    );
+  }
+}
+
+/**
+ * Reject schemas with dynamic reference keywords that cannot be expressed
+ * in TypeScript's static type system.
+ *
+ * `$anchor` is NOT rejected — it's a reference marker consumed at parse time.
+ * `$dynamicRef` and `$dynamicAnchor` require runtime scope resolution that
+ * has no static type-system equivalent.
+ *
+ * @internal
+ */
+export function rejectDynamicReferenceKeywords(schema: CastrSchema): void {
+  if (schema.$dynamicRef !== undefined) {
+    throw new Error(
+      'Genuinely impossible: $dynamicRef cannot be represented in TypeScript. ' +
+        '$dynamicRef requires runtime resolution against a dynamic scope chain — ' +
+        'there is no static type-system equivalent.',
+    );
+  }
+  if (schema.$dynamicAnchor !== undefined) {
+    throw new Error(
+      'Genuinely impossible: $dynamicAnchor cannot be represented in TypeScript. ' +
+        '$dynamicAnchor declares an override point for runtime schema extension — ' +
+        'there is no static type-system equivalent.',
     );
   }
 }

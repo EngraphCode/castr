@@ -46,6 +46,15 @@ export function writeJsonSchema2020SimpleFields(
   if (schema.maxContains !== undefined) {
     result.maxContains = schema.maxContains;
   }
+  if (schema.$anchor !== undefined) {
+    result['$anchor'] = schema.$anchor;
+  }
+  if (schema.$dynamicRef !== undefined) {
+    result['$dynamicRef'] = schema.$dynamicRef;
+  }
+  if (schema.$dynamicAnchor !== undefined) {
+    result['$dynamicAnchor'] = schema.$dynamicAnchor;
+  }
 }
 
 // ---------------------------------------------------------------------------

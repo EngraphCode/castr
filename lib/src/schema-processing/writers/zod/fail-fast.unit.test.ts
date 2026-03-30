@@ -398,4 +398,35 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(output).toContain('if/then/else');
     });
   });
+
+  // ============================================================================
+  // Dynamic reference keywords — fail-fast for $dynamicRef/$dynamicAnchor
+  // ============================================================================
+
+  describe('dynamic reference keyword handling', () => {
+    it('throws for schema with $dynamicRef', () => {
+      const schema = createMockSchema('string');
+      schema.$dynamicRef = '#node';
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/\$dynamicRef/);
+    });
+
+    it('throws for schema with $dynamicAnchor', () => {
+      const schema = createMockSchema('string');
+      schema.$dynamicAnchor = 'node';
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/\$dynamicAnchor/);
+    });
+
+    it('does NOT throw for schema with $anchor (reference marker only)', () => {
+      const schema = createMockSchema('string');
+      schema.$anchor = 'address';
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).not.toThrow();
+      expect(generate(context)).toBe('z.string()');
+    });
+  });
 });
