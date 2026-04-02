@@ -69,6 +69,7 @@ export function parseComponentNameForType(
   } catch (error) {
     throw new Error(
       `Invalid ${componentLabel} reference "${refPath}" at ${location}. ${describeUnknownError(error)}`,
+      { cause: error },
     );
   }
 

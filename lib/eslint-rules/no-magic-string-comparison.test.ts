@@ -1,19 +1,18 @@
 /**
  * @file Tests for the no-magic-string-comparison ESLint rule.
  *
- * Uses @typescript-eslint/rule-tester with Vitest to verify:
+ * Uses eslint's RuleTester with Vitest to verify:
  * - String literal comparisons are reported (magic strings)
  * - typeof narrowing is not reported
  * - Numeric, boolean, and null literals are not reported
  *
  * @see lib/eslint-rules/no-magic-string-comparison.ts
  */
-import { RuleTester } from '@typescript-eslint/rule-tester';
-import { afterAll, describe, it } from 'vitest';
+import { RuleTester } from 'eslint';
+import { describe, it } from 'vitest';
 import { noMagicStringComparison } from './no-magic-string-comparison.js';
 
 // Wire Vitest into RuleTester lifecycle
-RuleTester.afterAll = afterAll;
 RuleTester.describe = describe;
 RuleTester.it = it;
 

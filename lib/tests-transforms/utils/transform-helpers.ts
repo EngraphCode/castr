@@ -153,24 +153,24 @@ export function expectNoParseErrors(
 export async function loadDynamicZodSchemas(
   zodSourceCode: string,
 ): Promise<Record<string, Zod1.ZodTypeAny>> {
+  const vm = await import('node:vm');
   // Transpile the generated Zod TS source (which contains top-level exports) into executable code
   const ts = await import('typescript');
   const compiled = ts.default.transpile(zodSourceCode, { module: ts.default.ModuleKind.CommonJS });
 
-  // Safely execute the compiled module with a stubbed require
-  const module: { exports: Record<string, Zod1.ZodTypeAny> } = { exports: {} };
-  const requireHook = (id: string) => {
+  // Execute in an isolated context with a stubbed require
+  const moduleShim: { exports: Record<string, Zod1.ZodTypeAny> } = { exports: {} };
+  const requireHook = (id: string): typeof Zod1 => {
     if (id === 'zod') {
       return Zod1;
     }
     throw new Error(`Unexpected require in generated code: ${id}`);
   };
 
-  // eslint-disable-next-line sonarjs/code-eval -- Allowed in test harness for dynamic schema evaluation
-  const executableFn = new Function('require', 'module', 'exports', compiled);
-  executableFn(requireHook, module, module.exports);
+  const sandbox = { require: requireHook, module: moduleShim, exports: moduleShim.exports };
+  vm.runInNewContext(compiled, sandbox);
 
-  return module.exports;
+  return moduleShim.exports;
 }
 
 /**

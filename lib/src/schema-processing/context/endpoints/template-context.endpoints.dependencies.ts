@@ -129,6 +129,7 @@ function parseSchemaDependencyRef(
     throw new Error(
       `Invalid schema dependency reference "${ref}" in endpoint ${endpointContext} ` +
         `at ${sourceContext}. ${describeUnknownError(error)}`,
+      { cause: error },
     );
   }
 

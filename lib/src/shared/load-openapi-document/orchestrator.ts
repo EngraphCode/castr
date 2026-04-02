@@ -82,6 +82,8 @@ export async function loadOpenApiDocument(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const descriptor = formatDescriptor(originalDescriptor, entrypoint.uri);
-    throw new Error(`Failed to load OpenAPI document (${descriptor}): ${message}`);
+    throw new Error(`Failed to load OpenAPI document (${descriptor}): ${message}`, {
+      cause: error,
+    });
   }
 }

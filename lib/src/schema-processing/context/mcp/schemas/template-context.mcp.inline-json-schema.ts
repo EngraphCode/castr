@@ -201,6 +201,7 @@ const extractSchemaNameFromRef = (ref: string): string | undefined => {
   } catch (error) {
     throw new Error(
       `[mcp-inline-json-schema] Invalid schema reference "${ref}". ${describeUnknownError(error)}`,
+      { cause: error },
     );
   }
 

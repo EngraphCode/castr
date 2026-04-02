@@ -1,12 +1,12 @@
 /**
  * @file Tests for the max-files-per-dir ESLint rule.
  *
- * Uses @typescript-eslint/rule-tester with Vitest and fs.mkdtempSync to
+ * Uses eslint's RuleTester with Vitest and fs.mkdtempSync to
  * test the Anchor File pattern under real I/O conditions in isolation.
  *
  * @see lib/eslint-rules/max-files-per-dir.ts
  */
-import { RuleTester } from '@typescript-eslint/rule-tester';
+import { RuleTester } from 'eslint';
 import { afterAll, describe, it } from 'vitest';
 import { maxFilesPerDir } from './max-files-per-dir.js';
 import fs from 'fs';
@@ -14,7 +14,6 @@ import path from 'path';
 import os from 'os';
 
 // Wire Vitest into RuleTester lifecycle
-RuleTester.afterAll = afterAll;
 RuleTester.describe = describe;
 RuleTester.it = it;
 
@@ -56,7 +55,7 @@ ruleTester.run('max-files-per-dir', maxFilesPerDir, {
     ...compliantPaths.map((filePath) => ({
       code: `// Test code`,
       filename: filePath,
-      options: [{ maxFiles: 5 }] as const,
+      options: [{ maxFiles: 5 }],
     })),
     // Other files in the breached directory should NOT report errors
     {

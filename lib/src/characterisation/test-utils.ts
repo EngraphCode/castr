@@ -47,7 +47,9 @@ export function assertAndExtractContent(result: GenerationResult, context?: stri
   try {
     return extractContent(result);
   } catch (error) {
-    throw new Error(`Expected single file GenerationResult${contextPart}: ${error}`);
+    throw new Error(`Expected single file GenerationResult${contextPart}: ${error}`, {
+      cause: error,
+    });
   }
 }
 

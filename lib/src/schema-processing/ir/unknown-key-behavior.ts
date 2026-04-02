@@ -18,7 +18,6 @@ export function isObjectSchemaType(type: CastrSchema['type'] | undefined): boole
   return false;
 }
 
-// eslint-disable-next-line sonarjs/function-return-type -- jc: legitimate return union
 export function ensureObjectTypeForObjectKeywords(
   type: CastrSchema['type'] | undefined,
   options: {
@@ -39,7 +38,6 @@ function usesObjectKeywords(options: {
   return options.hasProperties || options.hasRequired || options.hasAdditionalProperties;
 }
 
-// eslint-disable-next-line sonarjs/function-return-type -- jc: legitimate return union
 function resolveObjectKeywordSchemaType(
   type: CastrSchema['type'] | undefined,
 ): CastrSchema['type'] | undefined {

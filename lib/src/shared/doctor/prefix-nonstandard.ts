@@ -32,9 +32,17 @@ function extractSafeErrors(validationResult: ScalarValidationResult): readonly V
     }
     const msg: unknown = Reflect.get(e, 'message');
     const pth: unknown = Reflect.get(e, 'path');
+
+    let pathString = EMPTY_STRING;
+    if (typeof pth === 'string') {
+      pathString = pth;
+    } else if (Array.isArray(pth)) {
+      pathString = pth.length > 0 ? SLASH + pth.join(SLASH) : EMPTY_STRING;
+    }
+
     return {
       message: typeof msg === 'string' ? msg : UNKNOWN_ERROR,
-      path: typeof pth === 'string' ? pth : EMPTY_STRING,
+      path: pathString,
     };
   });
 }

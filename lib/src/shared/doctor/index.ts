@@ -100,14 +100,7 @@ function createDoctorDiagnosis(
   finalErrors: readonly unknown[],
   document: unknown,
 ): DoctorDiagnosis {
-  return {
-    originalIsValid,
-    repairedIsValid,
-    warnings,
-    originalErrors,
-    finalErrors,
-    document,
-  };
+  return { originalIsValid, repairedIsValid, warnings, originalErrors, finalErrors, document };
 }
 
 function cloneDoctorInput(inputDocument: unknown): DoctorCloneResult {
@@ -123,10 +116,21 @@ function cloneDoctorInput(inputDocument: unknown): DoctorCloneResult {
   };
 }
 
+async function safeValidate(doc: UnknownRecord): Promise<Awaited<ReturnType<typeof validate>>> {
+  try {
+    return await validate(doc);
+  } catch (e) {
+    return {
+      valid: false,
+      errors: [{ message: `Validation threw: ${e instanceof Error ? e.message : String(e)}` }],
+    };
+  }
+}
+
 async function measureInitialValidation(
   workingDocument: UnknownRecord,
 ): Promise<DoctorInitialValidationResult> {
-  const initialValidationResult = await measureAsync(() => validate(workingDocument));
+  const initialValidationResult = await measureAsync(() => safeValidate(workingDocument));
   const initialValidation = initialValidationResult.result;
 
   return {
@@ -175,7 +179,9 @@ async function runRepairPhases(
   );
   const warnings = rawWarnings.map((warning) => warning.message);
   const upgradedDocumentResult = measureSync(() => performUpgrade(workingDocument, warnings));
-  const finalValidationResult = await measureAsync(() => validate(upgradedDocumentResult.result));
+  const finalValidationResult = await measureAsync(() =>
+    safeValidate(upgradedDocumentResult.result),
+  );
 
   return {
     warnings,

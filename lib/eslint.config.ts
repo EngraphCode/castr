@@ -1,5 +1,5 @@
 // eslint.config.ts
-import type { Linter } from 'eslint';
+import type { ESLint, Linter } from 'eslint';
 import { defineConfig } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,7 +12,27 @@ import { importX } from 'eslint-plugin-import-x';
 import globals from 'globals';
 import { noMagicStringComparison } from './eslint-rules/no-magic-string-comparison.js';
 import { maxFilesPerDir } from './eslint-rules/max-files-per-dir.js';
-import eslintPluginBoundaries from 'eslint-plugin-boundaries';
+import * as eslintPluginBoundariesNs from 'eslint-plugin-boundaries';
+
+/**
+ * Minimal structural type for third-party ESLint plugins whose CJS interop
+ * produces a module-namespace type that TS cannot structurally match to Plugin.
+ */
+interface ThirdPartyPlugin {
+  rules?: ESLint.Plugin['rules'];
+  [key: string]: unknown;
+}
+
+/**
+ * Type-safe identity function for third-party ESLint plugins.
+ * Validates the plugin has a `rules` property at runtime.
+ */
+function asPlugin(plugin: ThirdPartyPlugin): ESLint.Plugin {
+  if (!('rules' in plugin)) {
+    throw new Error('Invalid ESLint plugin: missing rules property');
+  }
+  return plugin;
+}
 
 const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -65,6 +85,18 @@ const baseConfig = [
   importX.flatConfigs.recommended,
   sonarjsConfigs.recommended,
   prettierRecommended,
+  {
+    settings: {
+      'import-x/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+        },
+        node: {
+          extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        },
+      },
+    },
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -183,7 +215,6 @@ const testRules: Linter.RulesRecord = {
 export default defineConfig(
   { ignores: baseIgnores },
 
-  // @ts-expect-error temporary type gap between ESLint 9 and TS-ESLint 8
   ...baseConfig,
 
   { languageOptions: baseLanguageOptions, rules: baseRules },
@@ -381,7 +412,7 @@ export default defineConfig(
           'no-magic-string-comparison': noMagicStringComparison,
           'max-files-per-dir': maxFilesPerDir,
         },
-      },
+      } satisfies ESLint.Plugin,
     },
     rules: {
       'castr/no-magic-string-comparison': 'error',
@@ -397,7 +428,7 @@ export default defineConfig(
     files: ['src/**/*.ts'],
     ignores: [...testGlobs],
     plugins: {
-      boundaries: eslintPluginBoundaries,
+      boundaries: asPlugin(eslintPluginBoundariesNs),
     },
     settings: {
       'boundaries/elements': [
@@ -412,21 +443,56 @@ export default defineConfig(
       'boundaries/include': ['src/**/*.ts'],
     },
     rules: {
-      'boundaries/element-types': [
+      'boundaries/dependencies': [
         'error',
         {
           default: 'disallow',
           rules: [
-            { from: 'shared', allow: ['shared'] },
+            { from: { type: 'shared' }, allow: [{ to: { type: 'shared' } }] },
             {
-              from: 'cli',
-              allow: ['cli', 'shared', 'context', 'parsers', 'writers', 'ir', 'conversion'],
+              from: { type: 'cli' },
+              allow: [
+                { to: { type: 'cli' } },
+                { to: { type: 'shared' } },
+                { to: { type: 'context' } },
+                { to: { type: 'parsers' } },
+                { to: { type: 'writers' } },
+                { to: { type: 'ir' } },
+                { to: { type: 'conversion' } },
+              ],
             },
-            { from: 'ir', allow: ['ir', 'shared'] },
-            { from: 'context', allow: ['context', 'shared', 'ir', 'conversion'] },
-            { from: 'conversion', allow: ['conversion', 'shared'] },
-            { from: 'parsers', allow: ['parsers', 'shared', 'ir', 'conversion'] },
-            { from: 'writers', allow: ['writers', 'shared', 'ir', 'conversion'] },
+            { from: { type: 'ir' }, allow: [{ to: { type: 'ir' } }, { to: { type: 'shared' } }] },
+            {
+              from: { type: 'context' },
+              allow: [
+                { to: { type: 'context' } },
+                { to: { type: 'shared' } },
+                { to: { type: 'ir' } },
+                { to: { type: 'conversion' } },
+              ],
+            },
+            {
+              from: { type: 'conversion' },
+              allow: [{ to: { type: 'conversion' } }, { to: { type: 'shared' } }],
+            },
+            {
+              from: { type: 'parsers' },
+              allow: [
+                { to: { type: 'parsers' } },
+                { to: { type: 'shared' } },
+                { to: { type: 'ir' } },
+                { to: { type: 'conversion' } },
+              ],
+            },
+            {
+              from: { type: 'writers' },
+              allow: [
+                { to: { type: 'writers' } },
+                { to: { type: 'shared' } },
+                { to: { type: 'ir' } },
+                { to: { type: 'conversion' } },
+              ],
+            },
           ],
         },
       ],

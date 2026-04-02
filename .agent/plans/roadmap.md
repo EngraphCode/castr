@@ -431,11 +431,11 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 | Format          | Input | Output | Status / Notes                                                                                                                     |
 | --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **OpenAPI**      |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                   |
-| **Zod**          |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                       |
-| **TypeScript**   |   —   |   ✅   | Writer available (types + helpers)                                                                                                 |
-| **JSON Schema**  |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; `$dynamicRef`/`$dynamicAnchor` Zod/TS fail-fast |
-| **tRPC**         |  🔲   |   🔲   | Planned                                                                                                                            |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                    |
+| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                       |
+| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                 |
+| **JSON Schema** |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; `$dynamicRef`/`$dynamicAnchor` Zod/TS fail-fast |
+| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                                            |
 
 ---
 

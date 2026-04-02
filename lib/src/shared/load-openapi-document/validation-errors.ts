@@ -78,10 +78,12 @@ function isResponsePath(path: string): boolean {
 }
 
 /**
- * Check if message contains "required property" (case insensitive)
+ * Check if message contains 'required property' or 'oneOf' validation error
+ * (Missing description in responses triggers a oneOf error in OpenAPI 3.0 schemas)
  */
-function isRequiredPropertyError(message: string): boolean {
-  return containsNormalizedToken(message, REQUIRED_PROPERTY_TOKEN);
+function isRequiredPropertyOrOneOfError(message: string): boolean {
+  const norm = normalizeMessage(message);
+  return includes(norm, REQUIRED_PROPERTY_TOKEN) || includes(norm, 'oneof');
 }
 
 /**
@@ -140,17 +142,17 @@ const VALIDATION_HINTS: readonly {
   },
   {
     pathMatcher: isResponsePath,
-    messageMatcher: isRequiredPropertyError,
+    messageMatcher: isRequiredPropertyOrOneOfError,
     hint: "Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)",
   },
   {
     pathMatcher: (path) => endsWith(path, INFO_SUFFIX),
-    messageMatcher: isRequiredPropertyError,
+    messageMatcher: isRequiredPropertyOrOneOfError,
     hint: "The 'info' object requires 'title' and 'version' fields",
   },
   {
     pathMatcher: (path) => path === PATHS_PATH,
-    messageMatcher: isRequiredPropertyError,
+    messageMatcher: isRequiredPropertyOrOneOfError,
     hint: "The 'paths' field is required in OpenAPI 3.0.x (optional in 3.1.x if webhooks or components present)",
   },
   {
@@ -270,7 +272,7 @@ export function formatValidationErrors(
  */
 interface ScalarValidationError {
   readonly message: string;
-  readonly path?: string;
+  readonly path?: string | readonly string[];
 }
 
 /**
@@ -289,6 +291,19 @@ function extractOpenApiVersion(document: unknown): string | undefined {
   return undefined;
 }
 
+function getPathString(path: string | readonly string[] | undefined): string {
+  if (typeof path === 'string') {
+    return path;
+  }
+  if (Array.isArray(path)) {
+    return join(path, PATH_SEPARATOR);
+  }
+  if (path != null) {
+    return String(path);
+  }
+  return ROOT_EMPTY_PATH;
+}
+
 /**
  * Create formatted validation error message from Scalar validation result.
  */
@@ -299,7 +314,7 @@ export function createValidationErrorMessage(
   const errors: readonly ValidationError[] =
     scalarErrors?.map((e) => ({
       message: e.message,
-      path: e.path ?? ROOT_EMPTY_PATH,
+      path: getPathString(e.path),
     })) ?? [];
 
   const version = extractOpenApiVersion(bundledDocument);

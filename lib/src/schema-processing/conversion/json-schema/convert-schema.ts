@@ -28,7 +28,7 @@ export function convertOpenApiSchemaToJsonSchema(schema: OpenApiSchema): Mutable
   try {
     return convertSchemaInternal(schema);
   } catch (error) {
-    throw new Error(createConversionFailureMessage(schema, error));
+    throw new Error(createConversionFailureMessage(schema, error), { cause: error });
   }
 }
 
@@ -162,6 +162,7 @@ function rewriteComponentRef(ref: string, refField: '$ref' | '$dynamicRef'): str
     throw new Error(
       `[json-schema] Invalid schema component reference "${ref}" found in ${refField}. ` +
         describeUnknownError(error),
+      { cause: error },
     );
   }
 

@@ -10,8 +10,7 @@
  *
  * @see .agent/directives/directory-complexity.md
  */
-import type { TSESTree } from '@typescript-eslint/utils';
-import { ESLintUtils } from '@typescript-eslint/utils';
+import type { Rule } from 'eslint';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -19,12 +18,8 @@ import path from 'node:path';
 // Keys are absolute directory paths; values are sorted arrays of file basenames.
 const dirFileCache = new Map<string, string[]>();
 
-const createRule = ESLintUtils.RuleCreator(
-  () => `https://github.com/engraph/castr/blob/main/.agent/directives/directory-complexity.md`,
-);
-
-type Options = [{ maxFiles: number; ignoreSuffixes?: string[] }];
-type MessageIds = 'directoryComplexitySupportive';
+const DEFAULT_IGNORE_SUFFIXES = ['.test.ts', '.spec.ts', '.d.ts', '.map', '.integration.ts'];
+const DEFAULT_MAX_FILES = 8;
 
 /**
  * Reads a directory, filters for source files, sorts alphabetically, and caches the result.
@@ -57,8 +52,25 @@ function getSortedFilesForDirectory(dirPath: string, ignoreSuffixes: string[]): 
   }
 }
 
-export const maxFilesPerDir = createRule<Options, MessageIds>({
-  name: 'max-files-per-dir',
+interface ParsedOptions {
+  maxFiles: number;
+  ignoreSuffixes: string[];
+}
+
+function parseOptions(rawOptions: unknown): ParsedOptions {
+  const optObj = typeof rawOptions === 'object' && rawOptions !== null ? rawOptions : {};
+  const maxFiles =
+    'maxFiles' in optObj && typeof optObj.maxFiles === 'number'
+      ? optObj.maxFiles
+      : DEFAULT_MAX_FILES;
+  const ignoreSuffixes =
+    'ignoreSuffixes' in optObj && Array.isArray(optObj.ignoreSuffixes)
+      ? optObj.ignoreSuffixes.filter((s): s is string => typeof s === 'string')
+      : DEFAULT_IGNORE_SUFFIXES;
+  return { maxFiles, ignoreSuffixes };
+}
+
+export const maxFilesPerDir: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
     docs: {
@@ -87,11 +99,8 @@ export const maxFilesPerDir = createRule<Options, MessageIds>({
       },
     ],
   },
-  defaultOptions: [
-    { maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', '.integration.ts'] },
-  ],
   create(context) {
-    const currentFilePath = context.filename || context.physicalFilename;
+    const currentFilePath = context.filename ?? context.physicalFilename;
 
     if (!currentFilePath || currentFilePath === '<input>') {
       return {};
@@ -99,24 +108,14 @@ export const maxFilesPerDir = createRule<Options, MessageIds>({
 
     const dirPath = path.dirname(currentFilePath);
     const fileName = path.basename(currentFilePath);
-    const options = context.options[0] ?? {
-      maxFiles: 8,
-      ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', '.integration.ts'],
-    };
-    const ignoreSuffixes = options.ignoreSuffixes ?? [
-      '.test.ts',
-      '.spec.ts',
-      '.d.ts',
-      '.map',
-      '.integration.ts',
-    ];
+    const { maxFiles, ignoreSuffixes } = parseOptions(context.options[0]);
 
     return {
-      Program(node: TSESTree.Program): void {
+      Program(node): void {
         const sortedFiles = getSortedFilesForDirectory(dirPath, ignoreSuffixes);
 
         // If this directory is within limits, do nothing
-        if (sortedFiles.length <= options.maxFiles) {
+        if (sortedFiles.length <= maxFiles) {
           return;
         }
 
@@ -130,12 +129,12 @@ export const maxFilesPerDir = createRule<Options, MessageIds>({
             messageId: 'directoryComplexitySupportive',
             data: {
               dirName: dirBaseName,
-              actual: sortedFiles.length,
-              max: options.maxFiles,
+              actual: String(sortedFiles.length),
+              max: String(maxFiles),
             },
           });
         }
       },
     };
   },
-});
+};

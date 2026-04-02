@@ -8,7 +8,7 @@ test('param-with-content', async () => {
     openapi: '3.0.3',
     info: { title: 'Swagger Petstore - OpenAPI 3.0', version: '1.0.11' },
     paths: {
-      '/pet': {
+      '/pet/{store}': {
         put: {
           parameters: [
             {
@@ -85,7 +85,7 @@ test('param-with-content', async () => {
     export const endpoints = [
       {
         method: "put",
-        path: "/pet",
+        path: "/pet/{store}",
         requestFormat: "json",
         parameters: [
           {
@@ -143,8 +143,8 @@ test('param-with-content', async () => {
     export const mcpTools = [
       {
         tool: {
-          name: "put_pet",
-          description: "PUT /pet",
+          name: "put_pet_store",
+          description: "PUT /pet/{store}",
           inputSchema: {
             type: "object",
             properties: {
@@ -193,8 +193,8 @@ test('param-with-content', async () => {
         },
         httpOperation: {
           method: "put",
-          path: "/pet",
-          originalPath: "/pet",
+          path: "/pet/{store}",
+          originalPath: "/pet/{store}",
         },
         security: {
           isPublic: true,

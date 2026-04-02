@@ -16,8 +16,7 @@
     "rootDir": ".",
     "lib": ["ES2022"],
     "allowSyntheticDefaultImports": true,
-    "strictPropertyInitialization": false,
-    "baseUrl": "./"
+    "strictPropertyInitialization": false
   },
   "include": [
     "src/**/*",

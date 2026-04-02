@@ -17,29 +17,28 @@
  *
  * @see docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md
  */
-import type { TSESTree } from '@typescript-eslint/utils';
-import { ESLintUtils } from '@typescript-eslint/utils';
-
-const createRule = ESLintUtils.RuleCreator(
-  (name) =>
-    `https://github.com/engraph/castr/blob/main/docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md#${name}`,
-);
-
-type MessageIds = 'noMagicStringComparison';
+import type { Rule } from 'eslint';
 
 const EQUALITY_OPERATORS = new Set(['===', '!==', '==', '!=']);
+
+/** Structural type for AST nodes received from BinaryExpression.left / .right */
+interface ExpressionNode {
+  type: string;
+  value?: string | number | boolean | RegExp | bigint | null | undefined;
+  operator?: string;
+}
 
 /**
  * Returns true if the given node is a string literal (not numeric, boolean, or null).
  */
-function isStringLiteral(node: TSESTree.BinaryExpression['left']): boolean {
+function isStringLiteral(node: ExpressionNode): boolean {
   return node.type === 'Literal' && typeof node.value === 'string';
 }
 
 /**
  * Returns true if the given node is a `typeof` unary expression.
  */
-function isTypeofExpression(node: TSESTree.BinaryExpression['left']): boolean {
+function isTypeofExpression(node: ExpressionNode): boolean {
   return node.type === 'UnaryExpression' && node.operator === 'typeof';
 }
 
@@ -47,18 +46,14 @@ function isTypeofExpression(node: TSESTree.BinaryExpression['left']): boolean {
  * Returns true if this is a legitimate `typeof x === 'string'` narrowing pattern.
  * One side must be a string literal and the other must be a typeof expression.
  */
-function isTypeofNarrowing(
-  left: TSESTree.BinaryExpression['left'],
-  right: TSESTree.BinaryExpression['right'],
-): boolean {
+function isTypeofNarrowing(left: ExpressionNode, right: ExpressionNode): boolean {
   return (
     (isStringLiteral(left) && isTypeofExpression(right)) ||
     (isStringLiteral(right) && isTypeofExpression(left))
   );
 }
 
-export const noMagicStringComparison = createRule<[], MessageIds>({
-  name: 'no-magic-string-comparison',
+export const noMagicStringComparison: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
@@ -71,7 +66,6 @@ export const noMagicStringComparison = createRule<[], MessageIds>({
     },
     schema: [],
   },
-  defaultOptions: [],
   create(context) {
     return {
       BinaryExpression(node): void {
@@ -92,4 +86,4 @@ export const noMagicStringComparison = createRule<[], MessageIds>({
       },
     };
   },
-});
+};

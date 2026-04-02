@@ -23,7 +23,7 @@ describe('prefix-nonstandard', () => {
 
     const initialResult = {
       valid: false,
-      errors: [{ message: 'Property extraDocs is not expected to be here', path: '' }],
+      errors: [{ message: 'Property extraDocs is not expected to be here', path: [] }],
     };
 
     const warnings: { message: string }[] = [];
@@ -62,7 +62,7 @@ describe('prefix-nonstandard', () => {
       errors: [
         {
           message: 'Property customFlag is not expected to be here',
-          path: '/paths/~1my~0path~1with~01slashes/get/responses/200',
+          path: ['paths', '~1my~0path~1with~01slashes', 'get', 'responses', '200'],
         },
       ],
     };
@@ -91,7 +91,7 @@ describe('prefix-nonstandard', () => {
 
     const initialResult = {
       valid: false,
-      errors: [{ message: 'Property propA is not expected to be here', path: '' }],
+      errors: [{ message: 'Property propA is not expected to be here', path: [] }],
     };
 
     const warnings: { message: string }[] = [];
@@ -141,7 +141,7 @@ describe('prefix-nonstandard', () => {
       errors: [
         {
           message: 'Property nestedA is not expected to be here',
-          path: '/paths/~1test/get/responses/200',
+          path: ['paths', '~1test', 'get', 'responses', '200'],
         },
       ],
     };
