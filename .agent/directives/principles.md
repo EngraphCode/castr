@@ -1403,8 +1403,8 @@ if (Object.keys(schema).length === 0) continue;
  *
  * @remarks
  * - Auto-enables certain options when using schemas-with-metadata template
- * - `schemas-only` is currently only an accepted selector, not a guaranteed metadata-free boundary
- * - custom template paths may still appear in compatibility types, but they are not an honest supported renderer surface
+ * - `schemas-only` genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
+ * - custom template paths are not a supported extension seam; non-built-in CLI `--template` values are accepted for compatibility but ignored by the renderer
  * - Uses .strict() for objects by default (reject unknown keys)
  * - All validation uses .parse() for fail-fast behavior
  *
@@ -1486,7 +1486,7 @@ export interface GenerateZodClientOptions {
    * Template to use for code generation.
    *
    * - `"schemas-with-metadata"` - Stable current path: schemas plus endpoint metadata
-   * - `"schemas-only"` - Accepted selector, but not yet a metadata-free writer boundary
+   * - `"schemas-only"` - Genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
    *
    * @defaultValue "schemas-with-metadata"
    */

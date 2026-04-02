@@ -1,12 +1,24 @@
-# Enhancement Scope (Depth-First)
+# Enhancement Scope (Layered)
 
-This scope is organized as "must for parity", "should for replacement viability", and "nice-to-have". It synthesizes Oak contract requirements, openapi-ts best practices, and oak-openapi dependency replacement needs.
+This scope is organized by architectural layer so it stays aligned with `.agent/plans/roadmap.md`, `.agent/plans/future/phase-5-ecosystem-expansion.md`, and `docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md`.
 
-## Must for Oak Phase 1 enablement (blocking)
+## Already aligned in core
 
-1. **Strict-by-default output profile**
-   - Enforce `.strict()` on all object schemas for Oak outputs.
-   - Remove implicit `.passthrough()` unless explicitly requested.
+1. **Strict-by-default output**
+   - Strict object emission is already core doctrine.
+   - No Oak-specific strictness preset should be introduced.
+
+2. **Rule-compliant generation**
+   - Core outputs should stay IR-first.
+   - No `as` assertions (except `as const`), no `Object.*` / `Reflect.*`, and no stringified schema APIs.
+
+3. **No compatibility layers**
+   - Core should enable Oak workflows without mirroring legacy adapter shapes.
+
+## Must for the core compiler boundary
+
+1. **OAS 3.2 canonical target**
+   - Complete version plumbing so OpenAPI output, docs, and validation criteria target 3.2.0.
 
 2. **Path format option (colon vs curly)**
    - Add a boolean switch for colon paths; default stays **curly**. Apply consistently to endpoints, helpers, and maps.
@@ -15,54 +27,44 @@ This scope is organized as "must for parity", "should for replacement viability"
    - Emit `operationId` on endpoints.
    - Provide **either** explicit maps **or** Zod-first enablement (option TBD; revisit when Oak workflow is clearer).
 
-4. **Schema rendering without string-first APIs (preferred)**
-   - Provide IR-first exports; keep code emission separate and handled via ts-morph writers/AST when generating TypeScript.
-   - Avoid string-based schema APIs; if strings are unavoidable, generate via ts-morph printers only.
-
-5. **Rule-compliant generation**
-   - No `as` assertions (except `as const`), no `Object.*` / `Reflect.*`, no stringified schema outputs.
-
-6. **Strict failure on missing schemas**
+4. **Strict failure on missing schemas**
    - Replace `createEmptySchema()` fallback in strict mode with explicit errors and context.
 
-7. **Bundle manifest output**
-   - TBD — validate whether a manifest adds material value before committing to a shape.
-
-## Should for Oak Phase 2 and broader replacement viability
-
-1. **JSON Schema emission for MCP/response maps**
+5. **JSON Schema emission for MCP / response maps**
    - Provide fully inlined JSON Schema for responses and parameters.
-   - Align schema dialect with MCP spec requirements (currently 2020-12 default).
+   - Align schema dialect with MCP requirements while keeping the IR canonical.
 
-2. **Deterministic ordering guarantees**
+6. **Deterministic ordering guarantees**
    - Stabilize sorting for endpoints, responses, and property order in writers.
 
-3. **Schema registry + naming hooks**
-   - Stable registry of component schemas and named response schemas.
-   - Naming hooks for sanitization and output compatibility.
+7. **Schema registry + naming hooks**
+   - Provide stable registry surfaces for component and response schemas.
+   - Support sanitization / naming hooks where downstream tooling depends on stable names.
 
-4. **Media-type selection policy**
-   - Configurable choice for primary response schema when multiple content types exist.
+8. **Bundle manifest output**
+   - TBD — validate whether a manifest adds material value before promoting it into a core promise.
 
-## Must for `tmp/oak-openapi` replacement (trpc-to-openapi / zod-openapi)
+## Must for companion workspaces / code-first publishing
 
-1. **tRPC -> IR parser**
-   - Parse tRPC routers with `meta.openapi` into IR operations.
-   - Extract Zod input/output and security metadata.
+1. **Authored-operation ingestion**
+   - Parse tRPC or equivalent authored-operation sources with `meta.openapi`-style metadata into IR operations.
+   - Extract Zod input/output and security metadata there rather than redefining tRPC as a core format.
 
-2. **OpenAPI writer coverage for tRPC-derived IR**
-   - Generate OpenAPI 3.1 docs from IR.
+2. **OpenAPI publishing from companion inputs**
+   - Feed the core OpenAPI writer from that companion layer.
+   - Keep the published document target aligned with the core OAS 3.2 output surface.
 
-3. **HTTP handler integration (thin wrapper)**
-   - Provide a minimal adapter to replace `createOpenApiFetchHandler` or document a composition path.
+3. **Runtime exposure decision**
+   - Either provide a lightweight companion adapter to replace `createOpenApiFetchHandler`-style value, or document a clean composition path with external runtime tooling.
 
-4. **Zod metadata ingestion**
-   - Parse `.meta()` / `.openapi()` from Zod to IR metadata for docs, but expose it via IR outputs instead of prescribing a public API shape.
+4. **Zod metadata ingestion for code-first flows**
+   - Parse `.meta()` / `.openapi()` when they are part of a code-first publishing flow.
+   - Keep the public contract centred on IR and emitted artefacts, not ad-hoc framework APIs.
 
 ## Should for openapi-ts best parts (ethically inspired)
 
 1. **Plugin-style output orchestration**
-   - Allow multiple outputs from a single run (Zod + TS + OpenAPI + MCP).
+   - Allow multiple outputs from a single run (Zod + TS + OpenAPI + MCP) without widening the core package into a runtime framework.
 
 2. **Watch mode**
    - CLI watch regeneration for fast iteration in large repos.

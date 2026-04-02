@@ -1,6 +1,6 @@
 # Vision: Universal Schema Conversion
 
-**Last Updated:** 2026-03-22
+**Last Updated:** 2026-04-02
 
 Castr is **strict and complete everywhere, all the time**. It **fails fast and hard**.
 
@@ -104,11 +104,33 @@ With this principle:
 
 ---
 
+## Workspace Model
+
+`lib` / `@engraph/castr` is the **core compiler workspace**. Its scope is:
+
+- parsers and document loading
+- canonical IR types and runtime validation
+- writers / emitters
+- metadata outputs needed to consume generated schemas and documents honestly
+
+Operational or framework-specific capabilities that consume Castr output but add transport, runtime, or authoring concerns belong in **companion workspaces**, not in core `@engraph/castr`.
+
+Examples of companion-workspace directions:
+
+- typed fetch harnesses and HTTP adapters
+- runtime handler generation and framework bindings
+- code-first / framework ingestion layers such as tRPC
+- end-to-end SDK or reference-implementation workspaces
+
+Companion workspaces may be strategically important, but they are **not** core-format promises for `lib`.
+
+---
+
 ## The Roadmap
 
 > **Rule:** ALL formats MUST be supported as both **input** and **output**, unless explicitly marked as an exception.
 
-### Target Formats (Vision)
+### Core Target Formats (Vision)
 
 | #   | Format          | Input | Output | Notes                                                    |
 | --- | --------------- | :---: | :----: | -------------------------------------------------------- |
@@ -116,17 +138,31 @@ With this principle:
 | 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                |
 | 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                            |
 | 4   | **TypeScript**  |   —   |   ✅   | **Exception:** output-only (too broad for input parsing) |
-| 5   | **tRPC**        |  ✅   |   ✅   | Extract Zod from routers; generate routers               |
+
+Companion-workspace directions such as tRPC ingestion or runtime handler generation may sit on top of these core formats, but they are not part of the core `lib` format contract.
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                    |
-| ----------- | :-----------: | :-----------: | -------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; `components.requestBodies` egress implemented in RC-4.1.     |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                 |
-| JSON Schema |      🔲       |      ✅       | Writer exists; parser code is on disk, but honest JSON Schema input support remains under Pack 4 review. |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                             |
-| tRPC        |      🔲       |      🔲       | Planned.                                                                                                 |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                                 |
+| ----------- | :-----------: | :-----------: | ------------------------------------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; live output still targets 3.1.x while OAS 3.2 version plumbing is the next planned slice. |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                              |
+| JSON Schema |      ✅       |      ✅       | Full Draft 07 / 2020-12 parser and writer support now exist with explicit fail-fast boundaries.                                       |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                          |
+
+### Companion Workspace Roadmap
+
+Companion workspaces are the place for higher-level integrations that should not widen core `@engraph/castr`:
+
+- **Code-first / framework ingestion**
+  - tRPC or similar authored-operation ingestion for OpenAPI generation
+  - Zod metadata ingestion needed for code-first publishing flows
+- **Transport / runtime helpers**
+  - typed fetch harnesses
+  - framework handlers and middleware adapters
+  - lightweight runtime exposure packages
+- **Reference implementations**
+  - Oak-style replacement workspaces that prove end-to-end adoption paths
 
 ---
 
@@ -134,8 +170,9 @@ With this principle:
 
 To be practically useful in production pipelines, Castr targets replacement of existing schema tooling dependencies and workflows:
 
-- Replace **openapi-zod-client-style adapters** with native Zod v4 output.
-- Replace **trpc-to-openapi** and **zod-openapi** in `tmp/oak-openapi` with IR-driven generation.
+- Replace **openapi-zod-client-style adapters** with native Zod v4 output from core Castr.
+- Replace wider **OpenAPI build boundaries** with core Castr plus companion workspaces where runtime or framework concerns arise.
+- Replace **code-first OpenAPI generation stacks** through companion-workspace ingestion layers that feed the IR.
 - Incorporate the **best practices of openapi-ts** (plugin surface, DX), with ethical reuse and attribution when code is reused.
 
 ### Same-Format Normalization
@@ -147,19 +184,18 @@ Once both parser and writer exist for a format, same-format conversions enable:
 | OpenAPI → OpenAPI         | Canonicalize, validate, bundle |
 | Zod → Zod                 | Optimize, deduplicate          |
 | JSON Schema → JSON Schema | Upgrade draft versions         |
-| tRPC → tRPC               | Normalize router structure     |
 
 ### Implementation Order
 
-The order of format support is **deliberate** — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
+The order of **core format** support is deliberate — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
 
-| Order | Transform                | Rationale                                                              |
-| ----- | ------------------------ | ---------------------------------------------------------------------- |
-| 1     | **OpenAPI → Zod**        | Established baseline (current)                                         |
-| 2     | **Zod → OpenAPI**        | Complete Zod transform validation; understand input/output commonality |
-| 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats                      |
-| 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                                     |
-| 5     | **tRPC ↔ IR**            | Additional formats as needed                                           |
+| Order | Transform                  | Rationale                                                                        |
+| ----- | -------------------------- | -------------------------------------------------------------------------------- |
+| 1     | **OpenAPI → Zod**          | Established baseline (current)                                                   |
+| 2     | **Zod → OpenAPI**          | Complete Zod transform validation; understand input/output commonality           |
+| 3     | **JSONSchema ↔ OpenAPI**   | Cross-format bridges with well-understood formats                                |
+| 4     | **JSONSchema ↔ Zod**       | Complete JSON Schema triangulation                                               |
+| 5     | **Companion integrations** | Layer code-first, runtime, and framework concerns on top of settled core formats |
 
 > **Note:** Roadmap _phases_ (delivery milestones) are tracked in `.agent/plans/roadmap.md`. The ordering above is a conceptual sequencing for format support, not a roadmap phase number.
 

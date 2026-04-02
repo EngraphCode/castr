@@ -1,5 +1,7 @@
 # ADR-022: Building-Blocks Architecture - No HTTP Client Generation
 
+> **Update 2026-04-02:** This ADR remains aligned as the foundation for the repo's no-built-in-client stance. The older "separate SDK workspace" wording is now generalised into a broader companion-workspace model: transport, runtime, framework, and code-first integrations live outside core `@engraph/castr` and consume Castr outputs. See [ADR-043](./ADR-043-core-vs-companion-workspaces.md).
+
 ## Status
 
 **Accepted** - November 29, 2025  

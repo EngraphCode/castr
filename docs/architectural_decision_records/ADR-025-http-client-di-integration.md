@@ -1,5 +1,7 @@
 # ADR-025: HTTP Client Integration via Dependency Injection
 
+> **Update 2026-04-02:** Preserved as a historical proposal. It is **not** the plan of record for core `@engraph/castr`. The chosen direction is the companion-workspace model in [ADR-043](./ADR-043-core-vs-companion-workspaces.md): any typed client factory, HTTP adapter, or runtime harness belongs in a separate companion workspace rather than the core compiler package.
+
 ## Status
 
 **Proposed** - January 9, 2026  

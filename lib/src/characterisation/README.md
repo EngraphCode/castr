@@ -48,8 +48,7 @@ It is useful protection against regressions, but it is not the whole proof story
 
 ## Important Limits
 
-- template-selection checks are currently presence-based, not full contract proofs
-  - Pack 6 found that the `schemas-only` selector is still accepted even though the writer continues to emit metadata exports
+- template-selection checks cover the honest `schemas-only` boundary, but they are still not a complete generated-surface proof
 - generated-output proof remains broader than these characterisation tests alone
   - grouped output, manifest emission, and runtime-execution claims depend on other suites and are still under architecture-review scrutiny
 - support claims must still be checked against transform, generated-code, unit, and review-pack evidence

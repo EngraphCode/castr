@@ -1,15 +1,17 @@
 # Oak Support Plan (Negotiated Enablement)
 
 **Date:** 2026-01-24  
-**Status:** Phase 0 in progress (requires owner input), Phase 1 planned  
+**Status:** Historical negotiation note — superseded for current strategy by `oak-castr-integration-report.md`; retained for requirement detail and early option framing  
 **Scope:** Enable Oak use cases without matching exact legacy adapter outputs.  
 **Constraints:** No compatibility layers, no string-based schema outputs.
 
+> **Update 2026-04-02:** Owner input has since clarified the first three Oak use cases, the near-term OAS 3.2 requirement, and the ADR-043 core-vs-companion boundary. Treat [oak-castr-integration-report.md](./oak-castr-integration-report.md) as the current durable discovery/strategy record. This file remains the earlier negotiation note and should be read alongside that report, not instead of it.
+
 ---
 
-## Phase 0 — Alignment & Negotiation (In Progress)
+## Phase 0 — Alignment & Negotiation (Historical draft)
 
-### Proposed outcomes (pending owner input)
+### Proposed outcomes (historical draft before owner input stabilised)
 
 - **Contract stance:** Castr will **enable Oak’s use cases** without mirroring Oak’s current adapter shapes.
 - **No compatibility layers:** we will not ship legacy wrappers or stringified schema outputs.
@@ -21,7 +23,7 @@
 1. **SDK generation** — needs strongly typed endpoints + schema registry (as real Zod objects).
 2. **Runtime validation** — needs strict Zod schemas and clear errors.
 3. **Metadata access** — needs operationId, response status map, and per-endpoint metadata.
-4. **OpenAPI round-trip** — needs lossless IR and valid OpenAPI 3.1 output (not byte-identical).
+4. **OpenAPI round-trip** — needs lossless IR and valid OpenAPI 3.2 output (not byte-identical).
 
 ### Negotiation positions (draft)
 
@@ -148,7 +150,7 @@ export function isKeyStage(value: string): value is KeyStage {
 
 ---
 
-## Phase 1 — Enablement Plan (Planned, pending Phase 0 sign-off)
+## Phase 1 — Enablement Plan (Historical proposal, not the live roadmap)
 
 ### Goal
 
@@ -232,8 +234,7 @@ export const PATHS = {
 export type RawPaths = Schema['paths'];
 
 export function isValidPath(value: string): value is ValidPath {
-  const paths = Object.keys(schema.paths);
-  return paths.includes(value);
+  return value in PATHS;
 }
 export const apiPaths: RawPaths = schema.paths;
 ```

@@ -9,6 +9,7 @@ Current Castr is centred on:
 - canonical IR as the source of truth
 - strict, closed-world object semantics
 - generated schemas and metadata rather than a built-in HTTP client
+- a narrow core package, with any future transport/runtime/framework helpers living in separate companion workspaces
 
 ## Public API Renames And Removals
 
@@ -22,7 +23,8 @@ Current Castr is centred on:
 | `exportTypes` in `options`           | `shouldExportAllTypes`                        |
 | `template: 'schemas-with-client'`    | removed                                       |
 | `validationMode`                     | removed                                       |
-| `templatePath` / custom `--template` | removed                                       |
+| `templatePath`                       | removed                                       |
+| custom CLI `--template` path         | accepted for compatibility, but ignored       |
 
 Current shape:
 
@@ -57,7 +59,7 @@ Supported built-in templates:
 Current notes:
 
 - `schemas-only` genuinely suppresses endpoints, MCP, and helpers
-- custom template paths are not a supported extension seam
+- custom template paths are not a supported extension seam; non-built-in CLI `--template` values are accepted for compatibility but ignored
 
 ## If You Previously Used The Client Template
 
@@ -74,6 +76,8 @@ Migrate to:
 1. `schemas-with-metadata`
 2. generated Zod schemas and endpoint metadata
 3. your own transport wrapper
+
+If first-party transport helpers are added later, expect them in companion workspaces rather than new core `@engraph/castr` exports.
 
 See [OPENAPI-FETCH-INTEGRATION.md](./OPENAPI-FETCH-INTEGRATION.md) for a current composition pattern.
 

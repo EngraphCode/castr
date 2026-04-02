@@ -17,6 +17,7 @@ Notes:
 - TypeScript and Zod code generation use `ts-morph`
 - OpenAPI output is produced as a typed object model
 - JSON Schema output is produced as plain JSON Schema 2020-12 objects
+- `lib` / `@engraph/castr` is the core compiler package; transport/runtime/framework helpers belong in separate companion workspaces if they are added
 
 ---
 
@@ -35,12 +36,13 @@ Notes:
 
 ---
 
-## Current State: Schema Completeness Arc Phase 1 Complete
+## Current State: Schema Completeness Arc Complete; OAS 3.2 Version Plumbing Next
 
 ### Completed Predecessor Plans
 
 - [proof-system-and-doctrine-remediation.md](../plans/current/complete/proof-system-and-doctrine-remediation.md) — RC-1/RC-2 closed on Monday, 23 March 2026
-- [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) — seven-pack sweep record (archived)
+- [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) — seven-pack sweep staged completion record
+- [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md) — Schema Completeness Arc Phase 2 completed on Sunday, 30 March 2026
 
 ### Cross-Pack Triage (Start Here)
 
@@ -97,21 +99,22 @@ Notes:
   - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
   - Format tensions table: **zero 🐛 markers remaining** in the Zod column
 
-### Active: Schema Completeness Arc
+### Current Successor Workstream
 
-- **Phase 1**: ✅ COMPLETE — All 9 Zod fail-fast guards upgraded to semantic `.refine()` output. TS `booleanSchema` upgraded. TS error messages audited.
-- **Phase 1.5**: ✅ COMPLETE — All four ❓ markers resolved. `dependentRequired` and `dependentSchemas` implemented as discriminated union types (were implementation gaps). `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible.
-- **Phase 2**: ✅ COMPLETE — `$anchor`, `$dynamicRef`, `$dynamicAnchor` integrated into IR, parser, JSON Schema writer, OAS parser, IR validator. TS/Zod fail-fast wired for `$dynamicRef`/`$dynamicAnchor`. Full test coverage, round-trip proofs. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md).
-- **Deferred**: OAS 3.2 operational features, reference resolution enhancements (`$anchor`-based resolution, `$dynamicRef`/`$dynamicAnchor` runtime semantics, external `$ref`) — see [roadmap.md](../plans/roadmap.md) deferred sections
+- **Schema Completeness Arc**: ✅ COMPLETE — Phase 1, Phase 1.5, and Phase 2 are all closed. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md) for the final phase.
+- **Primary active plan**: [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md) — READY; this is the next atomic slice.
+- **Companion active plan**: [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) — planned successor once version plumbing lands.
+- **Paused workstreams**:
+  - [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) — historical parser context only; do not reactivate unchanged.
 
-### Remaining Planned Capabilities (Deferred to Future Arcs)
+### Deferred Future Threads
 
-- OAS 3.2 operational features: `QUERY` method, `additionalOperations`, hierarchical tags, `itemSchema` streaming, etc.
 - Reference resolution enhancements: external `$ref` resolution, `$anchor`-based reference resolution (`$ref: "#myAnchor"`), `$dynamicRef`/`$dynamicAnchor` runtime scope resolution
+- Parked research note: [multiformat-target-support.md](../research/multiformat-target-support.md)
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
-The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings.
+The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings. This table records the completed schema-completeness state against the current OpenAPI 3.1 output target; the planned OAS 3.2 version migration is tracked separately in the active plans.
 
 Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
@@ -145,7 +148,19 @@ Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
 - [identity-doctrine-alignment.md](../plans/current/complete/identity-doctrine-alignment.md)
 
-### Paused Successor
+### Primary Active Plan
+
+- [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)
+
+### Companion Active Plan
+
+- [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md)
+
+### Parked Research Note
+
+- [multiformat-target-support.md](../research/multiformat-target-support.md)
+
+### Paused Workstreams
 
 - [json-schema-parser.md](../plans/current/paused/json-schema-parser.md)
 
@@ -157,7 +172,7 @@ Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 - [pack-5-zod-architecture.md](../research/architecture-review-packs/pack-5-zod-architecture.md) — primary source for RC-4
 - [pack-6-context-mcp-rendering-and-generated-surface.md](../research/architecture-review-packs/pack-6-context-mcp-rendering-and-generated-surface.md) — primary source for RC-5
 
-## Current Repo Truth (Sunday, 30 March 2026)
+## Current Repo Truth (Thursday, 2 April 2026)
 
 IDENTITY doctrine alignment is complete:
 
@@ -167,7 +182,14 @@ IDENTITY doctrine alignment is complete:
 - non-strict object input is rejected at parser boundaries
 - writers emit strict-only object output (`additionalProperties: false`, `z.strictObject()`)
 - `CastrSchemaProperties` detection is now brand-based and cross-realm safe
-- the full repo-root Definition of Done chain was rerun green on Monday, 24 March 2026
+- the full repo-root Definition of Done chain was last recorded green on Sunday, 30 March 2026
+
+Current OpenAPI and generation truth:
+
+- live code still targets OpenAPI 3.1.x today; OAS 3.2 version plumbing is the current active slice
+- `schemas-only` now genuinely suppresses `endpoints`, `mcpTools`, and helper exports
+- MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
+- runtime clients, handler generation, framework bindings, and tRPC-style code-first integrations are companion-workspace concerns, not core `@engraph/castr` promises
 
 RC-3 (IR and runtime validator gaps) is complete:
 
@@ -186,18 +208,15 @@ Proof-system and durable-doctrine remediation (Slice 1) is complete:
 - acceptance criteria, ADR-035, and transform README already had current-state caveats from prior sessions
 - `pnpm qg` is green with the new `test:e2e` gate
 
-Pack verdicts from the architecture review sweep:
+Pack verdict provenance:
 
-- Pack 1 (`yellow`): package entrypoints and dependency boundaries are disciplined; CLI identity drift fixed (now `castr`); public docs may still drift on some claims
-- Pack 2 (`red`): runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
-- Pack 3 (`red` → partially remediated): `components.requestBodies` egress implemented in RC-4.1; remaining output-coverage proof assertion not yet added
-- Pack 4 (`red`): JSON Schema parser/writer/proof code exists, but `parseJsonSchemaDocument()` is only a `$defs` extractor, unsupported surfaces are not rejected explicitly enough, and the proof/doc story over-claims the supported contract
-- Pack 5 (`red` → partially remediated): contradictory strict-object chain rejection, nested member fail-fast, reference declaration proof, and format lockstep closure all implemented in RC-4; remaining over-claim drift deferred
-- Pack 6 (`red` → partially remediated): `schemas-only` made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist, proof-suite honest naming, and template-context post-IR mutation fixed in RC-5
-- Pack 7 (`red` → partially remediated): proof gate-chain honesty restored; remaining doc/proof over-claims tracked by remaining pack findings
+- Packs 1 through 7 closed on Sunday, 22 March 2026 with point-in-time `yellow` / `red` review verdicts.
+- Those verdicts are historical review snapshots, not current unresolved state.
+- Current truth is the cross-pack triage record: all findings are resolved.
 
 Recent completed slices (all gates green, all reviews closed):
 
+- Core-vs-companion wording closure (2026-04-02): feature-parity planning inputs, Oak negotiation docs, and handoff surfaces now align with ADR-043; no live planning input still treats tRPC/runtime helpers as core `lib` promises
 - Schema Completeness Arc Phase 1 (2026-03-28): all 9 Zod fail-fast guards upgraded to semantic `.refine()` closures, TS `booleanSchema` upgraded, TS error messages audited — zero 🐛 markers remaining
 - Silent keyword drop fix + Boolean schema support (2026-03-27): all 2020-12 IR keywords now emit losslessly or fail-fast, `booleanSchema` added to IR/parser/writers
 - Input-Output Pair Compatibility Model (2026-03-28): governing doctrine for feature support defined by input-output pairs
@@ -220,27 +239,28 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-The format tensions table has three 🔲 markers remaining. Until those are resolved, the Schema Completeness Arc is incomplete.
+The schema-completeness work is no longer the critical path. That arc is complete. The current next atomic slice is OAS 3.2 version plumbing.
 
 **Critical path, in order:**
 
-1. ~~**Resolve the ❓ markers**~~ ✅ DONE — `dependentRequired` and `dependentSchemas` implemented as discriminated unions; `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible.
-2. **Resolve the 🔲 markers** — expand the IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor`. These are valid JSON Schema 2020-12 features missing from the IR, violating Rule 3 of the compatibility model.
-3. **OAS 3.2 operational features and external `$ref` resolution** are separate future arcs and not on the current critical path.
+1. **Execute [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)** — this is the primary active plan.
+2. **Keep docs honest while that work is pending** — current product output is still OpenAPI 3.1.x until the plumbing slice lands.
+3. **Treat [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) as the successor arc** — do not blur it into the version-plumbing slice.
 
 **Rules:**
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Do not start implementation until a decision-complete plan exists.**
-3. **Update handoff docs when truth changes** — roadmap, session-entry, and napkin must stay honest.
+2. **Do not start implementation until a decision-complete plan exists.** The current one is `oas-3.2-version-plumbing.md`.
+3. **Update handoff docs when truth changes** — roadmap, session-entry, active-plan markers, and napkin must stay honest.
 
 ## What This Session Should Do
 
-Phase 2: expand the IR with `$anchor`, `$dynamicRef`, `$dynamicAnchor`.
+OAS 3.2 version plumbing.
 
-1. **Implement Phase 2 (IR expansion)** per the approved plan.
-2. **Update the format tensions table** — 🔲→✅ for all three keywords.
-3. **Run quality gates** — `pnpm qg` must be green after Phase 2.
+1. **Read the primary active plan first** — [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md).
+2. **If implementation is requested, keep the slice to version acceptance, normalisation, output, and handoff plumbing only.**
+3. **Leave OAS 3.2 feature expansion to the companion successor plan unless the user explicitly redirects the work.**
+4. **For doc-only or review-only work, keep the current 3.1 product truth explicit while pointing the next session at the 3.2 plan stack.**
 
 ## Quality Gates
 
@@ -279,7 +299,8 @@ Treat every failure as blocking.
 
 Current honest state:
 
-- `pnpm qg` was green on Wednesday, 26 March 2026 (including `test:e2e`, after `prefixItems`/`contains` completion)
+- `pnpm qg` was last recorded green on Sunday, 30 March 2026 (including `test:e2e`, after Schema Completeness Arc Phase 2)
+- Schema Completeness Arc Phase 2 completed on Sunday, 30 March 2026 — [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md)
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) completed on Monday, 23 March 2026
 - RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)
 - RC-4 (format-specific drift) completed on Monday, 24 March 2026 — [format-specific-drift-remediation.md](../plans/current/complete/format-specific-drift-remediation.md)
@@ -288,7 +309,7 @@ Current honest state:
 - RC-7 (close remaining findings) completed on Tuesday, 25 March 2026 — JSON Schema fail-fast seam, all triage rows marked resolved
 - the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — all findings ✅
 - the architecture review remediation arc is complete
-- the paused `json-schema-parser.md` holds paused remediation context; it must not reactivate unchanged
+- the paused `json-schema-parser.md` holds historical parser context; it must not reactivate unchanged
 
 ## Closed-Out Context
 

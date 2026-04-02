@@ -2,7 +2,7 @@
 
 Current MCP guidance for `@engraph/castr`.
 
-This page is intentionally narrow and honest about the live surface on Sunday, 22 March 2026.
+This page is intentionally narrow and honest about the live surface as it exists today.
 
 ## Current Contract
 
@@ -11,8 +11,9 @@ This page is intentionally narrow and honest about the live surface on Sunday, 2
 - `generateZodClientFromOpenAPI()` does not return `mcpTools` or a manifest payload
 - the programmatic MCP surface is `getZodClientTemplateContext()` or `buildIR()` plus `buildMcpToolsFromIR()`
 - manifest entries are JSON arrays of `{ tool, httpOperation, security }`
+- tool input/output schemas are normalised to a governed Draft 07-compatible key set before AJV validation
 
-Pack 6 of the architecture review sweep closed `red` on this surface. The current implementation is useful, but it does not yet prove a fully governed Draft 07 contract end to end. In particular, the review found that MCP schema generation can still copy raw IR keys into JSON-Schema-shaped output. Treat that as a known limitation until the remediation slice lands.
+Manifest generation is IR-first: Castr derives tool metadata and schemas from the canonical IR rather than from post-render repair logic.
 
 ## CLI Usage
 
@@ -21,6 +22,8 @@ Generate TypeScript plus an MCP manifest sidecar:
 ```bash
 castr ./petstore.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
 ```
+
+Use the default template or `schemas-with-metadata` when you need manifest data. Selecting `schemas-only` suppresses MCP tool generation upstream and will therefore emit an empty manifest.
 
 The manifest file is a JSON array. Each element contains:
 
@@ -234,13 +237,12 @@ Each manifest entry carries resolved upstream API security information:
 - `requirementSets`
 
 The `requirementSets` array models the resolved OpenAPI security requirement sets that apply to the operation. Keep in mind that Pack 6 found this surface is directionally useful but not yet fully proven against every edge case.
+The `requirementSets` array models the resolved OpenAPI security requirement sets that apply to the operation.
 
 ## Known Limitations
 
-- `schemas-only` and custom-template entrypoints are separate Pack 6 findings and do not change MCP manifest generation into a separate renderer path
 - the CLI has no manifest-only mode; you must still provide `-o`
 - `generateZodClientFromOpenAPI()` does not return manifest data
-- Pack 6 found Draft 07 normalisation gaps in MCP schema generation, so do not over-claim standards completeness from the current helper surface alone
 
 ## Related Docs
 

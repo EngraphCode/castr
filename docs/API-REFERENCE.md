@@ -14,6 +14,8 @@ The package currently publishes:
 - `@engraph/castr/cli`
 - `@engraph/castr/parsers/zod`
 
+`@engraph/castr` is the core compiler package. If typed transport, runtime, or framework helpers ship later, they will live in separate companion workspaces rather than as new root exports here.
+
 ## CLI
 
 Published binary:
@@ -26,21 +28,21 @@ castr <input> -o <output> [options]
 
 ### Core Options
 
-| Option                       | Meaning                                                                         |
-| ---------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `-o, --output <path>`        | Output file path                                                                |
-| `-t, --template <name        | path>`                                                                          | Built-in template selector; non-built-in values are currently parsed then ignored |
-| `-p, --prettier <path>`      | Prettier config path                                                            |
-| `-a, --with-alias`           | Include operation aliases derived from `operationId`                            |
-| `--no-with-alias`            | Disable alias generation                                                        |
-| `--export-schemas`           | Export all component schemas                                                    |
-| `--export-types`             | Export all object-derived TypeScript types                                      |
-| `--with-docs`                | Emit JSDoc comments                                                             |
-| `--with-description`         | Emit description metadata                                                       |
-| `--all-readonly`             | Emit readonly objects/arrays                                                    |
-| `--with-validation-helpers`  | Emit `validateRequest()` / `validateResponse()` helpers                         |
-| `--with-schema-registry`     | Emit schema registry helpers                                                    |
-| `--emit-mcp-manifest <path>` | Emit an MCP manifest sidecar JSON array alongside the generated TypeScript file |
+| Option                        | Meaning                                                                                                        |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `-o, --output <path>`         | Output file path                                                                                               |
+| `-t, --template <name\|path>` | Built-in template selector; non-built-in CLI values are accepted for compatibility but ignored by the renderer |
+| `-p, --prettier <path>`       | Prettier config path                                                                                           |
+| `-a, --with-alias`            | Include operation aliases derived from `operationId`                                                           |
+| `--no-with-alias`             | Disable alias generation                                                                                       |
+| `--export-schemas`            | Export all component schemas                                                                                   |
+| `--export-types`              | Export all object-derived TypeScript types                                                                     |
+| `--with-docs`                 | Emit JSDoc comments                                                                                            |
+| `--with-description`          | Emit description metadata                                                                                      |
+| `--all-readonly`              | Emit readonly objects/arrays                                                                                   |
+| `--with-validation-helpers`   | Emit `validateRequest()` / `validateResponse()` helpers                                                        |
+| `--with-schema-registry`      | Emit schema registry helpers                                                                                   |
+| `--emit-mcp-manifest <path>`  | Emit an MCP manifest sidecar JSON array alongside the generated TypeScript file                                |
 
 ### Advanced Options
 
@@ -65,7 +67,9 @@ castr <input> -o <output> [options]
 | `schemas-with-metadata` | Stable current generation path: Zod schemas plus endpoint metadata |
 | `schemas-only`          | Schemas and types only — no endpoints, MCP, or helpers             |
 
-`schemas-with-client` and custom template paths are not part of the current public surface.
+`schemas-with-client` is not part of the current public surface. Custom template paths are not a supported extension seam; on the CLI, non-built-in `--template` values are accepted for compatibility but ignored.
+
+Any future typed fetch/runtime/framework helpers will be documented as companion workspaces, not as additional core templates.
 
 ## Programmatic Generation
 

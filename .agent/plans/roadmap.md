@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 30, 2026)  
+**Date:** January 24, 2026 (Updated April 2, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,54 +33,51 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, and IDENTITY doctrine-alignment slice are complete.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, and Schema Completeness Arc are complete.
 
-The bounded post-implementation architecture review sweep is now complete. The JSON Schema parser expansion is complete with standalone round-trip proofs.
+Current product truth:
 
-**Next active plan:** Choose the next arc — Schema Completeness Arc Phase 1 is complete. The previous discovery session produced and completed the `patternProperties`/`propertyNames` slice ([pattern-properties-and-property-names.md](./current/complete/pattern-properties-and-property-names.md) ✅), the `prefixItems` tuple + `contains` keyword slice ([prefixitems-tuple-and-contains.md](./current/complete/prefixitems-tuple-and-contains.md) ✅), the boolean schema support slice, the `if`/`then`/`else` conditional applicator slice ([if-then-else-conditional-applicators.md](./current/complete/if-then-else-conditional-applicators.md) ✅), the canonical egress normal form alignment, and Schema Completeness Arc Phase 1.
+- live code still targets OpenAPI 3.1.x today
+- `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
+- MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
+- the full repo-root gate sweep was last recorded green on Sunday, 30 March 2026
+- if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
+- `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
-Current status of that sweep:
+Primary active plan:
+
+- [oas-3.2-version-plumbing.md](./active/oas-3.2-version-plumbing.md) — READY; immediate execution slice
+
+Companion active plan:
+
+- [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — planned successor after version plumbing lands
+
+Recent staged completion records:
+
+- [discovery-and-prioritisation.md](./current/complete/discovery-and-prioritisation.md) — executed metaplan that selected the schema-completeness slices
+- [anchor-and-dynamic-references.md](./current/complete/anchor-and-dynamic-references.md) — Schema Completeness Arc Phase 2 close-out
+- [core-vs-companion-workspaces-plan-alignment.md](./current/complete/core-vs-companion-workspaces-plan-alignment.md) — repo-wide plan-surface alignment to ADR-043
+- [feature-parity-planning-input-alignment.md](./current/complete/feature-parity-planning-input-alignment.md) — residual feature-parity planning-input wording gap closed
+
+Architecture-review provenance:
+
+- Packs 1 through 7 closed on Sunday, 22 March 2026 with point-in-time `yellow` / `red` verdicts
+- current resolved state lives in [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md)
+- sweep record: [architecture-review-packs.md](./current/complete/architecture-review-packs.md) — staged completion record
+
+Supporting rules that remain locked in:
 
 - doctrinal alignment remains locked in
 - `as const` remains allowed literal-preservation infrastructure
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
 - strict and complete everywhere, all the time: claimed supported surfaces must align across parser, IR, runtime validation, writers, proofs, and live docs
-- the full repo-root gate sweep was green on Wednesday, 26 March 2026
-- IDENTITY doctrine alignment is complete:
-  - parser honesty restored for non-object `additionalProperties`
-  - public strictness/compatibility surfaces removed
-  - `CastrSchemaProperties` runtime detection hardened across realms
-- proof-system and durable-doctrine remediation (Slice 1) is complete (see below)
-- Pack 1 (`boundary-integrity-and-public-surface`) completed on Saturday, 21 March 2026 with a `yellow` verdict: package entrypoints and dependency boundaries are disciplined, but the CLI identity and public docs still drift from the implemented surface
-- Pack 2 (`canonical-ir-truth-and-runtime-validation`) completed on Saturday, 21 March 2026 with a `red` verdict: runtime IR validation still accepts malformed schema shapes, object-closure doctrine is not enforced consistently, and the runtime validator rejects supported `trace` operations
-- Pack 3 (`openapi-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4.1: `components.requestBodies` egress implemented; remaining output-coverage proof assertion not yet added
-- Pack 4 (`json-schema-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict: JSON Schema parser/writer/proof code exists, but the public document-parser contract is incomplete, unsupported surfaces are not rejected explicitly enough, and the proof/docs story over-claims the supported surface
-- Pack 5 (`zod-architecture`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-4: contradictory chain rejection, nested member fail-fast, reference declaration proof, and format lockstep closure implemented; remaining proof/doc over-claims deferred
-- Pack 6 (`context-mcp-rendering-and-generated-surface`) completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-5: `schemas-only` template now genuinely schemas-only, dead `templatePath` removed, MCP schemas normalised to Draft 07 allowlist, generated-surface proof naming made honest, template-context post-IR mutation fixed
-- Pack 7 (`proof-system-and-durable-doctrine`) completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while dedicated proof suites remain off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass
-- final consolidation rerun on Monday, 23 March 2026 kept the Pack 7 truth unchanged: `pnpm check:ci` green, off-chain `vitest.e2e` red, `test:scalar-guard` green
-- proof-system and durable-doctrine remediation (Slice 1) completed on Monday, 23 March 2026:
-  - `vitest.e2e` fixed (`ir-fidelity.test.ts` now asserts IR structural equality) and promoted to canonical chain
-  - `openapi-fidelity.test.ts` relocated to `tests-e2e/`
-  - `test:scalar-guard` documented as off-chain development aid
-  - CLI identity changed from `data-descriptions-tooling` to `castr`
-  - acceptance criteria, ADR-035, transform README caveats verified and confirmed
-  - `pnpm qg` green with the new `test:e2e` gate
-- the seven-pack architecture review sweep is complete
-- **RC-3 (IR and runtime validator gaps)** completed Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](./current/complete/ir-and-runtime-validator-remediation.md)
-- **RC-4 (format-specific drift)** completed Monday, 24 March 2026 — [format-specific-drift-remediation.md](./current/complete/format-specific-drift-remediation.md); formerly-deferred JSON Schema findings resolved by parser expansion (see below)
-- **RC-5 (downstream surface drift)** completed Monday, 24 March 2026 — all five Pack 6 findings resolved in-session
-- **RC-6 (durable-doc over-claims)** completed Monday, 24 March 2026 — `public-api-preservation.test.ts` expanded to full current surface, `scalar-pipeline.md` stale `makeSchemaResolver` references reframed as historical
-- **RC-7 (close remaining findings)** completed Tuesday, 25 March 2026 — all RC-1/RC-2 findings verified and marked resolved in cross-pack triage, JSON Schema fail-fast rejection seam, writer scope caveats
-- the architecture review remediation arc is complete — all seven-pack findings are closed
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
-- if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - custom portable types remain deliberately unsupported for now and are not currently planned work
 
 Current sweep record:
 
-- [architecture-review-packs.md](./current/complete/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep (archived)
+- [architecture-review-packs.md](./current/complete/architecture-review-packs.md) — completed post-IDENTITY architecture review sweep (staged completion record)
 
 **JSON Schema parser expansion** completed Tuesday, 25 March 2026:
 
@@ -146,7 +143,9 @@ Current sweep record:
 - **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
 - **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
-**Deferred: OAS 3.2 Operational Features** (separate future arc):
+**Active Companion Plan: OAS 3.2 Full Feature Support**
+
+Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md):
 
 - `QUERY` HTTP method (trivial enum addition)
 - `additionalOperations` for custom HTTP methods
@@ -155,7 +154,6 @@ Current sweep record:
 - OAuth 2.0 Device Authorization flow
 - XML `nodeType` field
 - Example Object `dataValue`/`serializedValue` semantics
-- OAS `3.2.0` version acceptance audit
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 
@@ -165,7 +163,11 @@ Current sweep record:
 
 Paused supporting context that remains important:
 
-- None currently active
+- [json-schema-parser.md](./current/paused/json-schema-parser.md) — historical parser-remediation context only; do not reactivate unchanged
+
+Parked research note:
+
+- [multiformat-target-support.md](../research/multiformat-target-support.md)
 
 Recently completed adjacent remediation:
 
@@ -390,11 +392,19 @@ Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/pha
 
 Residual future threads: [zod-and-transform-future-investigations.md](./future/zod-and-transform-future-investigations.md)
 
-## Phase 5: Ecosystem Expansion (Planned)
+## Phase 5: Companion Workspace Expansion (Planned)
 
-- tRPC ↔ IR parsing/writing (extract Zod from routers; emit OpenAPI and helpers)
-- Optional HTTP client adapter interfaces and examples (building-blocks philosophy; see ADR-022/ADR-025)
-- SDK workspace/reference implementation to demonstrate end-to-end integration (separate from the core library)
+- Companion code-first integrations
+  - tRPC or equivalent authored-operation ingestion for OpenAPI generation
+  - Zod metadata ingestion for code-first publishing flows
+- Companion transport/runtime workspaces
+  - typed fetch harnesses
+  - framework handlers / middleware adapters
+  - lightweight runtime exposure packages
+- Reference implementations and adoption proofs
+  - replace Oak's `openapi-zod-client` adapter boundary
+  - replace Oak's wider OpenAPI third-party stack
+  - replace Oak's `oak-openapi` generation stack
 
 Plan: [phase-5-ecosystem-expansion.md](./future/phase-5-ecosystem-expansion.md)
 
@@ -423,7 +433,7 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 - IR‑first metadata outputs (maps/helpers), optional path formatting, and bundle manifest
 - JSON Schema outputs for response/parameter validation where needed
 - Zod metadata ingestion for OpenAPI generation
-- tRPC → IR parsing for OpenAPI emission (Oak integration target)
+- companion code-first ingestion for OpenAPI emission (Oak integration target)
 
 ---
 
@@ -435,7 +445,8 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 | **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                       |
 | **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                 |
 | **JSON Schema** |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; `$dynamicRef`/`$dynamicAnchor` Zod/TS fail-fast |
-| **tRPC**        |  🔲   |   🔲   | Planned                                                                                                                            |
+
+Companion-workspace directions such as tRPC ingestion or runtime handler generation may consume or emit these core surfaces, but they are not part of the current `lib` format-support table.
 
 ---
 

@@ -2,22 +2,23 @@
 
 > [!IMPORTANT]
 > This is a historical research document. Its "Phase N" labels are NOT the same as the roadmap phases in `.agent/plans/roadmap.md`.
-> For canonical phases and execution, see `.agent/plans/roadmap.md` and `.agent/plans/future/*`.
+> For canonical phases and execution, see `.agent/plans/roadmap.md`, `.agent/plans/future/phase-5-ecosystem-expansion.md`, and `docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md`.
 
-## Enablement Step 0: Alignment and instrumentation
+## Enablement Step 0: Alignment and boundary hygiene
 
-- Document current goals (README + VISION updates).
-- Add a dedicated "Oak profile" or config preset for strictness + determinism.
-- Define bundle manifest shape and CLI output path.
+- Keep the roadmap, Phase 5 companion-workspace plan, and ADR-043 explicit as the source of truth.
+- Do not introduce an Oak-specific strictness profile; strictness and determinism are core doctrine, not target-specific presets.
+- Keep the bundle-manifest question explicit and subordinate to proven need.
 
 Exit criteria:
 
 - Goals documented and aligned.
-- Bundle manifest spec agreed.
+- Boundary placement is explicit.
+- Bundle manifest scope is either agreed or clearly parked as TBD.
 
-## Enablement Step 1: Oak enablement (blocking)
+## Enablement Step 1: Core compiler enablement for Oak adapter replacement
 
-- Strict-by-default Zod output.
+- Preserve the already-aligned strict-by-default output posture in core.
 - Path format option with colon format support (default curly; no compatibility adapters).
 - Emit operationId field + required metadata (maps or helper APIs), pending final option choice.
 - IR-first outputs; TypeScript code rendering handled via ts-morph AST (separate from IR). Avoid string-first APIs; only print strings via ts-morph when unavoidable.
@@ -30,31 +31,33 @@ Exit criteria:
 - Oak fixtures pass `verify-castr-fixtures.ts`.
 - Deterministic output across runs.
 
-## Enablement Step 2: Zod -> OpenAPI + JSON Schema outputs
+## Enablement Step 2: Core output completion around settled formats
 
-- Extend Zod parser to ingest `.meta()` / `.openapi()` annotations.
-- Build Zod source -> IR document (schemas + endpoints) pipeline.
-- Emit OpenAPI 3.1 output from Zod-derived IR.
+- Land OAS 3.2 version plumbing as the canonical OpenAPI target.
 - Emit JSON Schema for response maps (inline refs) without exposing brittle public API contracts.
+- Stabilize deterministic ordering and schema registry / naming hooks where Oak consumption depends on them.
 
 Exit criteria:
 
 - OpenAPI output from Zod passes validation.
 - Response map JSON Schemas validated.
+- OAS 3.2 target truth is consistent across the live plan stack.
 
-## Enablement Step 3: tRPC -> IR integration (oak-openapi parity)
+## Enablement Step 3: Companion code-first/workspace enablement (oak-openapi parity)
 
-- Build tRPC router parser with `meta.openapi` extraction.
-- Provide minimal HTTP adapter (or documented pattern) replacing `createOpenApiFetchHandler`.
-- Map security metadata and tags into OpenAPI output.
+- Build a companion tRPC or equivalent authored-operation ingestion layer with `meta.openapi` extraction.
+- Decide whether runtime route exposure stays external or moves into a lightweight companion workspace.
+- Feed the core OpenAPI writer from that companion layer rather than turning code-first authoring into a core `lib` format promise.
+- Map security metadata and tags into OpenAPI output through that companion layer.
 
 Exit criteria:
 
-- `tmp/oak-openapi` can generate and serve OpenAPI without trpc-to-openapi.
+- An `oak-openapi`-style codebase can publish OpenAPI without `trpc-to-openapi`.
+- Runtime exposure is either documented as composition or owned by a companion workspace.
 
 ## Enablement Step 4: openapi-ts best parts (optional enhancements)
 
-- Plugin-style output orchestration and watch mode.
+- Plugin-style output orchestration and watch mode where they help core and companion workflows without widening core scope.
 - Registry input adapters.
 - Media-type selection policies.
 

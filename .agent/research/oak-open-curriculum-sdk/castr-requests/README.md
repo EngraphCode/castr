@@ -2,7 +2,9 @@
 
 ## Intent
 
-Provide canonical inputs for validating `@engraph/castr` against a real, schema-first pipeline. These OpenAPI fixtures are the ground truth for the Oak Open Curriculum API: every generated type, validator, and MCP tool ultimately flows from them. The SDK-decorated schema is the input passed to castr; the original schema is retained for provenance and upstream feedback. Castr should treat the SDK-decorated input as standard OpenAPI with no Oak-specific parsing or logic. OpenAPI 3.0 inputs are preserved alongside OpenAPI 3.1 upgrades used for stricter, fully valid checks. These fixtures define the contract Castr must satisfy for the current systems, not an implementation detail of the harness.
+Provide canonical inputs for validating `@engraph/castr` against a real, schema-first pipeline. These OpenAPI fixtures are the ground truth for the Oak Open Curriculum API: every generated type, validator, and MCP tool ultimately flows from them. The SDK-decorated schema is the input passed to castr; the original schema is retained for provenance and upstream feedback. Castr should treat the SDK-decorated input as standard OpenAPI with no Oak-specific parsing or logic. OpenAPI 3.0 inputs are preserved alongside transitional OpenAPI 3.1 upgrade artefacts used for stricter, fully valid checks while the canonical output target moves to OAS 3.2.0. These fixtures define the contract Castr must satisfy for the current systems, not an implementation detail of the harness.
+
+> **Update 2026-04-02:** The canonical target version for core OpenAPI output is now OAS 3.2.0. The `*-3.1.json` fixtures remain useful bridge artefacts because the current Scalar-driven upgrade path still normalises 3.0 input to 3.1 before final 3.2 target output is applied.
 
 ## Negotiation Context
 
@@ -314,8 +316,8 @@ Castr could provide utilities or structured data to construct this collection, b
 
 - `api-schema-original.json` - Upstream OpenAPI schema as returned by the Oak API (no local decoration)
 - `api-schema-sdk.json` - SDK-enhanced OpenAPI schema with `canonicalUrl` fields and legitimate 404 responses documented
-- `api-schema-original-3.1.json` - OpenAPI 3.1 version of the upstream schema (no local decoration)
-- `api-schema-sdk-3.1.json` - OpenAPI 3.1 version of the SDK-enhanced schema
+- `api-schema-original-3.1.json` - Transitional OpenAPI 3.1 upgrade artefact for the upstream schema (no local decoration)
+- `api-schema-sdk-3.1.json` - Transitional OpenAPI 3.1 upgrade artefact for the SDK-enhanced schema
 
 ### Contract Schemas
 
@@ -356,14 +358,14 @@ The SDK schema applies Oak-specific enhancements to the original:
 
 These enhancements are applied programmatically; castr receives the already-enhanced `api-schema-sdk.json`.
 
-### OpenAPI 3.1 fixtures (castr upgrade expectations)
+### OpenAPI 3.1 transition fixtures (Scalar upgrade expectations)
 
-`api-schema-original-3.1.json` and `api-schema-sdk-3.1.json` are the strict counterparts to the 3.0 fixtures. They reflect the required castr upgrade step:
+`api-schema-original-3.1.json` and `api-schema-sdk-3.1.json` are transitional upgrade artefacts. They capture the current Scalar-driven 3.0 -> 3.1 normalisation step that Castr must still tolerate while the canonical output target moves to OAS 3.2.0:
 
 - `openapi` is upgraded to `3.1.0` and `jsonSchemaDialect` is set to draft 2020-12.
 - `nullable: true` is replaced with JSON Schema null unions (for example, `type: ["object", "null"]`).
 - No other semantic changes are applied; these are behavioural expectations, not formatting or ordering constraints.
-  The verification harness does not attempt upgrades or normalisation; castr is responsible for producing these 3.1 outputs.
+  The verification harness does not attempt upgrades or normalisation; Castr is responsible for producing or validating against these 3.1 bridge artefacts where the transition flow still uses them.
 
 ## Potential avenues for use (automated checks)
 
@@ -382,11 +384,11 @@ These enhancements are applied programmatically; castr receives the already-enha
 ### Input Requirements
 
 - Castr consumes the SDK-decorated schema (`api-schema-sdk.json`), not the upstream original.
-- OpenAPI 3.0.x is allowed as input, but castr must upgrade to fully valid OpenAPI 3.1.x internally.
+- OpenAPI 3.0.x is allowed as input. The current transition flow may pass through a valid 3.1 bridge because Scalar upgrades to 3.1 first, but the canonical target output is OAS 3.2.0.
 
 ### Output Requirements
 
-- OpenAPI output must be valid 3.1.x; normalisation is expected, byte equivalence is not.
+- Canonical OpenAPI output should target OAS 3.2.0. Until version plumbing lands, the existing 3.1 bridge artefacts remain valid upgrade checkpoints for this fixture pack.
 - Output must be strict: object schemas reject unknown keys and fail fast with explicit errors.
 - Output must preserve schema semantics and operation coverage (no data loss).
 - Ordering must be deterministic for schema and endpoint registries.

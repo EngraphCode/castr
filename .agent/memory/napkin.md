@@ -2,6 +2,55 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-04-02
+
+- Core-vs-companion workspace boundary was promoted into durable repo truth:
+  - new ADR-043 (`docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md`) codifies `lib` / `@engraph/castr` as the core compiler package and moves transport/runtime/framework/code-first integrations into companion workspaces
+  - strategy and handoff docs (`.agent/directives/VISION.md`, `.agent/plans/roadmap.md`, `.agent/prompts/session-entry.prompt.md`, `.agent/README.md`) now describe the same boundary and no longer present tRPC or typed runtime helpers as core `lib` promises
+  - public docs (`README.md`, `docs/USAGE.md`, `docs/API-REFERENCE.md`, `docs/MIGRATION.md`, `docs/OPENAPI-FETCH-INTEGRATION.md`) now say the same thing publicly: current core package stays schema/compiler-focused; any future transport/framework helpers would live in separate companion workspaces
+  - follow-on `jc-consolidate-docs` pass tightened the remaining durable surfaces:
+    - `.agent/practice-index.md` now links ADR-043 so the local Practice bridge points at the new boundary of record
+    - `docs/EXAMPLES.md` now explicitly frames `openapi-fetch` as a composition example and keeps the companion-workspace boundary visible outside the core reference pages
+    - practice-box check stayed clean: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no further Practice evolution clears the bar here; the useful outcome was keeping the durable bridge docs and public examples in step with the new boundary
+  - historical ADR hygiene repaired: ADR-022 now reads as the aligned foundation, ADR-023 carries an explicit historical note about tRPC no longer being a core format promise, and ADR-025 is clearly marked as a historical proposal rather than the plan of record for core
+  - paused strategic cleanup plan added at `.agent/plans/current/paused/core-vs-companion-workspaces-plan-alignment.md` to classify remaining plan/research artefacts and keep the residual wording work visible without displacing the active OAS 3.2 slice
+  - that meta-plan is now updated as partially resolved and points at a narrower successor slice: `.agent/plans/current/paused/feature-parity-planning-input-alignment.md`, which owns the three still-misaligned feature-parity planning inputs (`plan-overview.md`, `plans-review.md`, `enhancement-scope.md`)
+- Oak-facing durable reports were aligned to the chosen boundary:
+  - `.agent/research/oak-open-curriculum-sdk/oak-castr-integration-report.md` now treats `openapi-fetch` / runtime-harness work as an external-vs-companion-workspace decision instead of an open question about core scope
+  - `.agent/research/oak-openapi/oak-openapi-castr-replacement-report.md` now frames runtime exposure and direct tRPC support as companion-workspace directions rather than possible core `@engraph/castr` features
+  - `.agent/research/feature-parity/gap-matrix.md` now marks tRPC/router ingestion and HTTP handler work as companion-workspace directions, while the new paused meta-plan records that `plan-overview.md`, `plans-review.md`, and `enhancement-scope.md` still need wording cleanup
+- `oak-openapi` replacement review captured durably at `.agent/research/oak-openapi/oak-openapi-castr-replacement-report.md`:
+  - confirms that `oak-openapi` is a code-first OpenAPI publishing system, not merely a repo that emits a schema
+  - current third-party value comes from the combined stack of `trpc-to-openapi`, `zod-openapi`, custom Babel-based schema/example generation, runtime route exposure, Swagger JSON serving, and docs-page introspection of the generated document
+  - core replacement need is similar value, not drop-in shape: code-first ingestion, Zod-aware metadata/examples, stable refs, trustworthy OAS 3.2 output, and some docs-facing surface
+  - biggest open boundary is runtime exposure: Castr may need to compose with another handler layer, or ship a lightweight adapter / second workspace, but that should be treated as a deliberate decision rather than smuggled into core by accident
+  - useful pain-point evidence to retain: request-schema authoring workarounds in the current generator, custom AST rewrite pipeline, `unknown` cast in the route adapter, and mutable shared-document filtering in `/swagger.json`
+- `.agent/research/oak-openapi/notes.md` now points future sessions at the new report, and the broader Oak integration report now links to it under Use Case 3.
+- Oak/Castr durable capture added at `.agent/research/oak-open-curriculum-sdk/oak-castr-integration-report.md`:
+  - locks the newly clarified owner input that Oak needs OAS 3.2 shortly
+  - records the three concrete use cases now visible for Castr:
+    - first: replace `packages/core/openapi-zod-client-adapter` and remove the Zod 3 island
+    - second: replace the wider OpenAPI third-party stack in `oak-mcp-ecosystem`, with `openapi-fetch` still explicitly TBD
+    - third: replace the OpenAPI generation libraries in `oak-openapi` ahead of migration into `oak-mcp-ecosystem`
+  - captures the code-backed finding that Oak's first replacement target is a build-time compatibility boundary with two consumed surfaces (generated Zod output and endpoint metadata), not merely a generic schema emitter
+  - captures the product-shape implication that Castr likely needs a clearer split between core schema/compiler capabilities and any future lightweight HTTP harness or second workspace
+- `oak-support-plan.md` now carries a pointer note to the new report so future sessions do not stop at the older "requires owner input" state.
+- Residual non-archive wording gap closed across the live planning surface:
+  - `.agent/research/feature-parity/plan-overview.md`, `.agent/research/feature-parity/plans-review.md`, and `.agent/research/feature-parity/enhancement-scope.md` now all separate core compiler work from companion-workspace directions
+  - `.agent/prompts/session-entry.prompt.md` now treats OAS 3.2 version plumbing as the active slice rather than a successor-only idea
+  - Oak negotiation / fixture inputs now keep the canonical OAS 3.2 target explicit while still documenting the current 3.1 bridge artefacts honestly
+  - the two paused strategic-cleanup plans were updated as complete and are ready to move into `.agent/plans/current/complete/`
+- Deep non-archive documentation consolidation completed:
+  - Public package docs (`README.md`, `docs/USAGE.md`, `docs/EXAMPLES.md`, `docs/API-REFERENCE.md`, `docs/MIGRATION.md`) now match the live template truth: `schemas-only` is a genuine schema-only boundary, while non-built-in CLI `--template` values are accepted for compatibility but ignored by the renderer.
+  - `docs/MCP_INTEGRATION_GUIDE.md` updated to current IR-first / Draft 07 truth and now explicitly notes that `schemas-only` suppresses manifest data upstream.
+  - `lib/src/characterisation/README.md` and `.agent/directives/principles.md` were still carrying the older Pack 6-era `schemas-only` warning; both were corrected.
+  - Handoff docs (`.agent/README.md`, `.agent/prompts/session-entry.prompt.md`, `.agent/plans/roadmap.md`) now point cold-start sessions at the OAS 3.2 plan stack while keeping current product truth honest: OpenAPI output remains 3.1.x until version plumbing lands.
+  - Active-plan hygiene repaired: executed `discovery-and-prioritisation.md` moved from `.agent/plans/active/` to `.agent/plans/current/complete/`; stray `multiformat-target-support.md` scratch note promoted into `.agent/research/multiformat-target-support.md` so `active/` now contains only the real primary/companion plans plus its README.
+  - Practice boxes checked: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only the scaffold `README.md`.
+  - Verification: `pnpm format:check` green, `pnpm portability:check` green.
+- No new Practice evolution clears the bar here. The useful lesson is repo-local lifecycle hygiene: once an execution note stops being a real active plan, either move it to `current/complete/` or rewrite it into a research note instead of leaving it stranded in `active/`.
+
 ## 2026-03-30
 
 - **Schema Completeness Arc — Phase 2 started** (~60% implementation complete, no tests yet):
@@ -731,3 +780,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - No additional Practice evolution cleared the bar in this pass; the useful work was proof/doctrine honesty, handoff closure, and keeping the next implementation slice evidence-backed.
+- A `jc-consolidate-docs` pass after remediating OpenAPI validation test failures extracted the following durable truths:
+  - `@scalar/openapi-parser` emits `oneof` validation errors instead of standard required property missing errors when certain mandatory OpenAPI elements (like response `description` in 3.1) are omitted. Our internal hinting engines must explicitly anticipate this token layout.
+  - The `@scalar/openapi-parser` `validate()` function can aggressively throw unhandled `TypeError` exceptions instead of returning a validation result payload when parsing fundamentally broken structures (like missing properties or mismatched primitives). The `Doctor` pipeline now correctly wraps this via `safeValidate` to execute aggressively broken models gracefully.
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- Practice evolution: handling of dependency crashes should be codified as a wrapper pattern in repo knowledge rather than general practice.

@@ -14,7 +14,7 @@ castr ./openapi.yaml -o ./src/api.ts
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 ```
 
-Current caveat: Pack 6 found that this selector still emits metadata exports. Treat it as an accepted option preset, not a guaranteed metadata-free output mode.
+Current truth: this selector suppresses endpoint metadata, MCP tool exports, and helper exports. Use the default template when you need manifest data or endpoint metadata.
 
 ## 3. Emit An MCP Manifest
 
@@ -131,6 +131,8 @@ console.log(result.ir.components);
 ```
 
 ## 9. Compose Your Own HTTP Client
+
+This is a composition example, not a hidden core-client surface. If first-party transport helpers are added later, they should live in separate companion workspaces rather than inside core `@engraph/castr`.
 
 ```typescript
 import createClient from 'openapi-fetch';

@@ -10,6 +10,8 @@ pnpm add @engraph/castr zod
 
 If you want to compose the generated output with `openapi-fetch`, `axios`, or another HTTP client, install that separately.
 
+If first-party transport or framework helpers are added later, they will live in separate companion workspaces rather than inside core `@engraph/castr`.
+
 ## Quick Start
 
 ### CLI
@@ -93,9 +95,13 @@ castr ./openapi.yaml -o ./src/api.ts --with-validation-helpers --with-schema-reg
 
 ### `schemas-only`
 
-The selector is still accepted, but it is not yet an honest metadata-free boundary. Pack 6 found that the current writer still emits `endpoints` and `mcpTools` for this path.
+Use it when you want:
 
-Treat it as an option preset under remediation rather than a guaranteed output mode:
+- generated Zod schemas
+- exported TypeScript types
+- no endpoint metadata
+- no MCP tool exports
+- no validation or schema-registry helpers
 
 ```bash
 castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
@@ -103,9 +109,9 @@ castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 
 ### Current Caveats
 
-- prefer `schemas-with-metadata` as the stable public generation path
-- do not rely on `schemas-only` to suppress metadata exports yet
-- do not rely on custom template paths; non-built-in `--template` values are currently ignored by the renderer
+- prefer `schemas-with-metadata` when you need endpoint metadata, validation helpers, schema registry helpers, or MCP manifest data
+- `schemas-only` now suppresses `endpoints`, `mcpTools`, and helper exports
+- do not rely on custom template paths; non-built-in `--template` values are accepted for compatibility but ignored by the renderer
 
 ## Build Your Own HTTP Client
 
@@ -124,6 +130,8 @@ That transport can be:
 - `axios`
 - `ky`
 - a repo-specific wrapper
+
+That separation is intentional. If Castr grows typed transport or framework helpers later, they will ship as separate companion workspaces rather than inside core `@engraph/castr`.
 
 See [OPENAPI-FETCH-INTEGRATION.md](./OPENAPI-FETCH-INTEGRATION.md) for a current composition pattern.
 
@@ -197,7 +205,7 @@ If you are coming from older docs or older generated examples:
 | `schemas-with-client`                   | removed; use `schemas-with-metadata` plus your own client |
 | `createApiClient()`                     | removed from current public surface                       |
 | `validationMode`                        | removed from current public surface                       |
-| custom template path                    | exposed for compatibility, but currently ignored          |
+| custom template path                    | accepted for compatibility, but ignored by the renderer   |
 
 ## Related Docs
 

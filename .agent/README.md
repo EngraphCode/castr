@@ -1,7 +1,7 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Documentation and planning for @engraph/castr  
-**Last Updated:** March 2026
+**Last Updated:** April 2026
 
 ---
 
@@ -32,17 +32,18 @@ Then use:
 
 ---
 
-## 🎯 Current State (March 2026)
+## 🎯 Current State (April 2026)
 
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep (including `test:e2e`): green on Friday, 28 March 2026
+  - Last recorded full repo-root sweep (including `test:e2e`): green on Sunday, 30 March 2026
   - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
+- **Workspace boundary:** `lib` / `@engraph/castr` is the core compiler surface (parsers, IR, writers, validation, metadata). Any future typed fetch, runtime handler, framework, or code-first integrations belong in companion workspaces, not core exports.
 - **Architecture Review Sweep:** Seven-pack post-IDENTITY bounded audit — all findings closed
-  - Sweep record (archived): [`.agent/plans/current/complete/architecture-review-packs.md`](plans/current/complete/architecture-review-packs.md)
+  - Sweep record (staged completion record): [`.agent/plans/current/complete/architecture-review-packs.md`](plans/current/complete/architecture-review-packs.md)
   - Cross-pack triage: [`.agent/research/architecture-review-packs/cross-pack-triage.md`](research/architecture-review-packs/cross-pack-triage.md)
   - RC-1 through RC-7: all resolved
 - **JSON Schema Parser Expansion** (completed Tuesday, 25 March 2026):
@@ -51,12 +52,14 @@ Then use:
   - Unsupported keywords explicitly rejected with `UnsupportedJsonSchemaKeywordError`
   - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
   - 29 unit tests, 520 transform tests, 4 E2E tests — all green
-  - Paused plan partially resolved: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
-- **Schema Completeness Arc Phase 1** (completed Friday, 28 March 2026):
-  - All 9 Zod fail-fast guards upgraded to semantic `.refine()` closures; zero 🐛 markers remaining
-  - TS `booleanSchema: true` upgraded to `unknown`; all TS fail-fast error messages audited
+  - Paused plan remains as historical parser context: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
+- **Schema Completeness Arc** (completed Sunday, 30 March 2026):
+  - Phase 1: all 9 Zod implementation-gap fail-fast guards upgraded to semantic `.refine()` closures
+  - Phase 1.5: all four TypeScript ❓ markers resolved
+  - Phase 2: `$anchor`, `$dynamicRef`, and `$dynamicAnchor` added to the IR with parser/writer coverage and fail-fast handling where genuinely impossible
   - Input-Output Pair Compatibility Model established as governing doctrine
-- **Next critical-path work:** Phase 1.5 (resolve four ❓ TS markers in format tensions table) then Phase 2 (expand IR for `$anchor`, `$dynamicRef`, `$dynamicAnchor`)
+- **Current OpenAPI truth:** live code still targets OpenAPI 3.1.x today; OAS 3.2 support is the next planned slice, not landed product truth
+- **Next critical-path work:** primary active plan [`.agent/plans/active/oas-3.2-version-plumbing.md`](plans/active/oas-3.2-version-plumbing.md), followed by companion successor [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md)
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 
@@ -136,4 +139,4 @@ pnpm portability:check
 
 ---
 
-**Cardinal Rule:** The IR is the single source of truth. After parsing, input documents are conceptually discarded—only the Caster Model matters.
+**Cardinal Rule:** The IR is the single source of truth. After parsing, input documents are conceptually discarded — only the IR matters.

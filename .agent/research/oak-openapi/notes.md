@@ -1,5 +1,7 @@
 # oak-openapi (consumer repo) - Research Notes
 
+> **Update 2026-04-02:** Treat [oak-openapi-castr-replacement-report.md](./oak-openapi-castr-replacement-report.md) as the current durable high-level replacement analysis. This file remains the earlier scratch summary.
+
 ## Scope and sources
 
 - Repo path: [tmp/oak-openapi](../../../tmp/oak-openapi)

@@ -2,6 +2,8 @@
 
 Legend: ✅ supported, ⚠️ partial, ❌ missing
 
+> **Update 2026-04-02:** Companion-workspace boundary now chosen. Rows in sections C and D that involve tRPC, HTTP handlers, or runtime adapters describe companion-workspace directions, not core `lib` promises.
+
 ## A. Oak Open Curriculum SDK (Phase 1 enablement)
 
 Source: `.agent/research/oak-open-curriculum-sdk/castr-requests/*`
@@ -28,26 +30,26 @@ Source: `.agent/research/oak-open-curriculum-sdk/castr-requests/*`
 
 Sources: `.agent/research/openapi-ts/*` + web docs
 
-| Feature / practice                                                  | Castr status   | Evidence (local)                                         | Gap / Notes                                                         | Enhancement scope                                                  |
-| ------------------------------------------------------------------- | -------------- | -------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Plugin-based output surface (multiple targets, composable pipeline) | ⚠️ Partial     | Writers exist, no plugin orchestration                   | Castr uses templates/writers but not a first-class plugin pipeline. | Introduce optional plugin layer (pre/post hooks, multi-output).    |
-| Output scaffolding for SDKs (folder tree, clients)                  | ❌ (by design) | ADR-022                                                  | Castr intentionally avoids HTTP clients.                            | Keep as non-goal; offer building blocks and optional integrations. |
-| Watch mode + incremental regeneration                               | ❌             | N/A                                                      | OpenAPI-TS offers watch; Castr lacks.                               | Add CLI watch mode for DX.                                         |
-| Registry integration (Hey API/Scalar/ReadMe)                        | ❌             | N/A                                                      | OpenAPI-TS supports registry inputs.                                | Add input adapters or a registry plugin.                           |
-| Pre-parse transforms/filters/hydration                              | ❌             | N/A                                                      | Castr currently strict-by-default, no transforms.                   | Add opt-in transforms (with explicit provenance).                  |
-| Plugin-specific media type selection                                | ⚠️ Partial     | `template-context.endpoints.from-ir.ts` picks JSON/first | Selection is fixed; no policy.                                      | Add media-type selection policy hook.                              |
-| Rich plugin ecosystem docs                                          | ⚠️ Partial     | Docs exist but not plugin-focused                        | Needs updated docs for modular outputs.                             | Expand docs with integration patterns.                             |
+| Feature / practice                                                  | Castr status   | Evidence (local)                                         | Gap / Notes                                                         | Enhancement scope                                                                   |
+| ------------------------------------------------------------------- | -------------- | -------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Plugin-based output surface (multiple targets, composable pipeline) | ⚠️ Partial     | Writers exist, no plugin orchestration                   | Castr uses templates/writers but not a first-class plugin pipeline. | Introduce optional plugin layer (pre/post hooks, multi-output).                     |
+| Output scaffolding for SDKs (folder tree, clients)                  | ❌ (by design) | ADR-022                                                  | Castr intentionally avoids HTTP clients in core.                    | Keep as non-goal for core; offer building blocks and optional companion workspaces. |
+| Watch mode + incremental regeneration                               | ❌             | N/A                                                      | OpenAPI-TS offers watch; Castr lacks.                               | Add CLI watch mode for DX.                                                          |
+| Registry integration (Hey API/Scalar/ReadMe)                        | ❌             | N/A                                                      | OpenAPI-TS supports registry inputs.                                | Add input adapters or a registry plugin.                                            |
+| Pre-parse transforms/filters/hydration                              | ❌             | N/A                                                      | Castr currently strict-by-default, no transforms.                   | Add opt-in transforms (with explicit provenance).                                   |
+| Plugin-specific media type selection                                | ⚠️ Partial     | `template-context.endpoints.from-ir.ts` picks JSON/first | Selection is fixed; no policy.                                      | Add media-type selection policy hook.                                               |
+| Rich plugin ecosystem docs                                          | ⚠️ Partial     | Docs exist but not plugin-focused                        | Needs updated docs for modular outputs.                             | Expand docs with integration patterns.                                              |
 
 ## C. Replacement for `trpc-to-openapi` in `tmp/oak-openapi`
 
 Sources: `tmp/trpc-to-openapi`, `tmp/oak-openapi/*`, npm docs
 
-| Feature required in Oak                            | Castr status | Evidence (local)                         | Gap / Notes                                                                              | Enhancement scope                                                             |
-| -------------------------------------------------- | ------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Generate OpenAPI from tRPC router + `meta.openapi` | ❌ Missing   | N/A                                      | Castr has no tRPC parser.                                                                | Build tRPC parser -> IR, then OpenAPI writer.                                 |
-| HTTP handlers / adapters (Next.js fetch handler)   | ❌ Missing   | N/A                                      | `createOpenApiFetchHandler` used in `tmp/oak-openapi/src/app/api/v0/[...trpc]/route.ts`. | Provide a lightweight adapter package or a guide to wire Castr + tRPC router. |
-| Security scheme + `protect` metadata in OpenAPI    | ⚠️ Partial   | MCP security extraction from IR exists   | Needs tRPC meta mapping to OpenAPI security.                                             | Extend IR + tRPC parser to map security metadata.                             |
-| Operation input/output inferred from Zod           | ⚠️ Partial   | Zod parser exists, but not wired to tRPC | Needs extraction from router procedures and meta.                                        | Build tRPC-to-IR extraction with Zod schema resolution.                       |
+| Feature required in Oak                            | Castr status | Evidence (local)                         | Gap / Notes                                                                              | Enhancement scope                                                                                                     |
+| -------------------------------------------------- | ------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Generate OpenAPI from tRPC router + `meta.openapi` | ❌ Missing   | N/A                                      | Castr has no tRPC parser.                                                                | Build a companion code-first ingestion workspace that parses tRPC routers into IR, then uses the core OpenAPI writer. |
+| HTTP handlers / adapters (Next.js fetch handler)   | ❌ Missing   | N/A                                      | `createOpenApiFetchHandler` used in `tmp/oak-openapi/src/app/api/v0/[...trpc]/route.ts`. | Provide a companion runtime adapter package or a guide to wire Castr + tRPC router.                                   |
+| Security scheme + `protect` metadata in OpenAPI    | ⚠️ Partial   | MCP security extraction from IR exists   | Needs tRPC meta mapping to OpenAPI security.                                             | Extend IR + a companion tRPC ingestion layer to map security metadata.                                                |
+| Operation input/output inferred from Zod           | ⚠️ Partial   | Zod parser exists, but not wired to tRPC | Needs extraction from router procedures and meta.                                        | Build companion tRPC-to-IR extraction with Zod schema resolution.                                                     |
 
 ## D. Replacement for `zod-openapi` in `tmp/oak-openapi`
 

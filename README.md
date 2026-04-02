@@ -10,6 +10,8 @@ Castr is a schema compiler. Its public surface today focuses on:
 
 It does not ship a built-in HTTP client. The standard path is to generate schemas and metadata, then compose your own transport layer.
 
+If typed transport or framework helpers are added later, they will ship as separate companion workspaces rather than inside core `@engraph/castr`.
+
 ## Install
 
 ```bash
@@ -28,10 +30,10 @@ castr ./openapi.yaml -o ./src/api.ts
 
 Two built-in template selectors are currently exposed:
 
-| Template                | Output                                                         | Use case                                   |
-| ----------------------- | -------------------------------------------------------------- | ------------------------------------------ |
-| `schemas-with-metadata` | Zod schemas plus endpoint metadata                             | Stable current generation path             |
-| `schemas-only`          | Narrower option defaults, but not a metadata-free boundary yet | Accepted selector under Pack 6 remediation |
+| Template                | Output                              | Use case                           |
+| ----------------------- | ----------------------------------- | ---------------------------------- |
+| `schemas-with-metadata` | Zod schemas plus endpoint metadata  | Stable current generation path     |
+| `schemas-only`          | Zod schemas and exported types only | Honest schema-only generation path |
 
 Examples:
 
@@ -46,11 +48,11 @@ castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
 ```
 
-Current Pack 6 truth:
+Current template truth:
 
-- prefer `schemas-with-metadata` as the stable output mode
-- `schemas-only` is still accepted, but the current writer still emits `endpoints` and `mcpTools`
-- custom template paths are not a supported surface; non-built-in `--template` values are currently ignored by the renderer
+- prefer `schemas-with-metadata` when you need endpoint metadata or MCP manifest data
+- `schemas-only` now suppresses `endpoints`, `mcpTools`, and helper exports
+- custom template paths are not a supported extension seam; the CLI accepts non-built-in `--template` values for compatibility, but the renderer ignores them
 
 ## Programmatic Generation
 
@@ -166,5 +168,7 @@ The supported pattern is:
 1. generate `schemas-with-metadata`
 2. use the generated schemas and endpoint metadata
 3. compose transport with `fetch`, `openapi-fetch`, `axios`, `ky`, or your own wrapper
+
+That boundary is deliberate: future fetch/runtime/framework helpers, if shipped, belong in companion workspaces rather than new core exports.
 
 See [docs/USAGE.md](./docs/USAGE.md), [docs/API-REFERENCE.md](./docs/API-REFERENCE.md), and [docs/OPENAPI-FETCH-INTEGRATION.md](./docs/OPENAPI-FETCH-INTEGRATION.md) for current examples.

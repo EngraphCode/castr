@@ -4,6 +4,8 @@ This guide documents the current supported pattern.
 
 `@engraph/castr` does not ship a built-in `schemas-with-client` template or a generated `createApiClient()` helper. The supported approach is to compose `openapi-fetch` yourself around Castr's generated schemas and metadata.
 
+That boundary is deliberate. If first-party transport or framework helpers are added later, they will ship as separate companion workspaces rather than inside core `@engraph/castr`.
+
 ## Recommended Flow
 
 1. generate `schemas-with-metadata`
@@ -60,6 +62,8 @@ Keeping generation and transport separate means:
 - Castr stays focused on canonical schema transformation
 - transport choice remains yours
 - strict validation stays explicit instead of being hidden in a generated client layer
+
+Any future typed transport helpers would follow the same boundary: separate companion workspaces consuming Castr output, not new core exports.
 
 ## Historical Note
 

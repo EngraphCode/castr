@@ -1,133 +1,83 @@
 # Existing Plans Review (Deep)
 
-This review covers all active plans under `.agent/plans` plus archival plans in `.agent/plans/archive`. It focuses on overlap with the new **enablement** goals (Oak use cases + openapi-ts best practices + oak-openapi dependency replacement).
+This review audits the live and non-archive planning surface against the current repo vision: core `@engraph/castr` stays the schema/compiler/IR product, while transport, runtime, framework, and code-first publishing concerns move into companion workspaces. Use `.agent/plans/roadmap.md`, `.agent/plans/future/phase-5-ecosystem-expansion.md`, and `docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md` as the canonical references.
 
 > [!IMPORTANT]
-> Canonical execution is tracked in `.agent/plans/roadmap.md` plus atomic steps under `.agent/plans/current/`.
-> This document is advisory only and may lag behind the current roadmap.
+> Canonical execution is tracked in `.agent/plans/roadmap.md` plus atomic steps under `.agent/plans/active/` and `.agent/plans/current/`.
+> Archive plans are still useful as historical inputs, but they are not the live roadmap and must not override ADR-043 or the current active plan stack.
 
-## 1) Active Plans Summary
+## 1) Live Plan Stack Summary
 
 ### `roadmap.md`
 
-- **Primary focus:** OpenAPI ↔ Zod core path + transform validation with sample input.
-- **Current milestone:** Session 3.3 (3.3a strictness remediation + 3.3b strict Zod-layer transform proofs, including round-trip/idempotence checks). Session 3.2 is complete.
-- **Core principles:** strict-by-default, fail-fast, deterministic output, AST-only generation.
-- **Relevance:** aligns with Oak strictness/determinism; does not explicitly cover metadata maps or bundle manifests required by Oak.
+- **Primary focus:** OAS 3.2 version plumbing in core, with companion OAS 3.2 feature expansion queued behind it.
+- **Architectural posture:** `lib` stays the compiler boundary; code-first, transport, runtime, and framework work is explicitly parked in companion workspaces.
+- **Relevance:** this is now the canonical place to read current truth about what is core versus companion.
 
-### Session 3.3a (Roadmap)
+### `oas-3.2-version-plumbing.md`
 
-- **Primary focus:** ADR-026 enforcement + repo-wide strictness remediation (no escape hatches, no fallbacks).
-- **Relevance:** unblocks strict transform proofs (including round-trip/idempotence assertions) by removing heuristic parsing and permissive behavior.
+- **Primary focus:** make OAS 3.2.0 the canonical target version in output, error messages, docs, and validation criteria.
+- **Relevance:** Oak now has a near-term 3.2 need, so this is not housekeeping; it is the next core compiler slice.
 
-### Session 3.3b (Roadmap)
+### `oas-3.2-full-feature-support.md`
 
-- **Primary focus:** strict, lossless Zod-layer transform proofs with sample input (Scenario 3 is the remaining blocker).
-- **Relevance:** this is the proof that the Zod layer participates in strict transforms (or rejects with helpful errors).
+- **Primary focus:** follow-on core support for OAS 3.2 features once version plumbing lands.
+- **Relevance:** still a core OpenAPI surface expansion, not a runtime/framework plan.
 
-### `castr-strict-test-plan-INTEGRATED.md` (archive)
+### `phase-5-ecosystem-expansion.md`
 
-- **Primary focus:** strict-only, fail-fast tests keyed to Oak contract + OpenAPI-TS-inspired fixture categories.
-- **Includes:** determinism, strict validation, IR completeness, and Oak harness integration.
-- **Relevance:** directly aligns with Oak Phase 1 criteria and fixture validation pipeline. Mentions `castr-bundle` as temporary but required when harness expects it.
+- **Primary focus:** future companion-workspace expansion once the core compiler stack is settled.
+- **Relevance:** this is where tRPC ingestion, typed fetch/runtime helpers, and reference implementations now belong.
 
-### `zod4-parser-plan-3.2-complete.md` (archive)
+### `json-schema-parser.md` (paused)
 
-- **Primary focus:** Zod 4 → IR parsing to enable strict transform-sample validation.
-- **Includes:** reject Zod 3 syntax, parse `.meta()`, `.strict()`, getter recursion, constraints, etc.
-- **Relevance:** foundational for Zod → IR; partially overlaps with Zod-OpenAPI replacement (but does **not** cover `.openapi()`/`.meta()` as full OpenAPI doc metadata for endpoints).
+- **Primary focus:** historical parser-remediation context only.
+- **Relevance:** useful background, but explicitly not the next execution entrypoint.
 
-### `zod4-advanced-features-research.md` (reference)
+## 2) Strong Alignment Already In Place
 
-- **Primary focus:** research-only on Zod 4 capabilities and future enhancements (codecs, prefaults, zod mini).
-- **Relevance:** informs long-term enhancements; not required for immediate Oak parity.
+- **Strict-by-default, fail-fast, deterministic output** are already core doctrine, not Oak-specific add-ons.
+- **IR-first architecture** is already locked in across the live plan stack and ADR layer.
+- **Companion-workspace boundary** is already established in the roadmap, Phase 5 plan, VISION, session-entry prompt, and ADR-043.
+- **Archive plans about artefact expansion** remain useful references, but their ideas now need to be routed through the core-vs-companion boundary rather than copied back into the live roadmap verbatim.
 
-### `eslint-plugin-standards-plan.md`
+## 3) Remaining Gaps By Architectural Layer
 
-- **Primary focus:** separate linting plugin project.
-- **Relevance:** not directly tied to schema transformation parity; helpful for org-wide lint consistency.
+### Core compiler / `lib`
 
-## 2) Archive Plans Summary (Still Relevant)
+- **OAS 3.2 version plumbing** remains the immediate active slice.
+- **Path format configuration** is still needed for Oak-facing endpoint surfaces.
+- **`operationId` visibility and helper maps** still need a canonical core answer.
+- **Missing-schema fallbacks** should be eliminated wherever Oak-facing outputs still tolerate them.
+- **JSON Schema emission for response / parameter maps** still needs a durable output shape.
+- **Deterministic ordering and schema naming hooks** need to be explicit anywhere downstream tooling depends on stable registries.
+- **Bundle manifest scope** remains explicitly TBD and should not be promoted into a core promise without proven need.
 
-### `future-artefact-expansion.md`
+### Companion workspaces / ecosystem layer
 
-- **Core idea:** multi-artefact generation from a single IR with a writer registry + manifest.
-- **Notable artefacts planned:**
-  - **2.11 Metadata maps** (operation metadata, parameter schema maps)
-  - **2.12 JSON Schema output** (request/response schemas)
-  - **2.14 MCP tooling** (tool summaries, naming utilities)
-- **Relevance:** directly overlaps with Oak contract requirements (maps, JSON Schema, manifest). This plan already outlines most of the missing outputs in the current gap matrix.
+- **Authored-operation ingestion** such as tRPC belongs here, not as a new core format promise.
+- **Runtime route exposure / thin HTTP adapters** belong here or stay external; they should not be smuggled back into core.
+- **Zod metadata ingestion for code-first publishing flows** belongs here when it exists to publish operations or docs, not just parse schemas.
+- **`openapi-fetch` replacement or interop** is a companion/external decision, not a core compiler requirement.
 
-### `openapi-compliance-plan-2.6-2.7-complete.md`
+## 4) Risks To Keep Out Of The Roadmap
 
-- **Scope:** OpenAPI 3.0/3.1 input/output completeness, strict validation, transform-sample prep.
-- **Relevance:** foundational; enables lossless OpenAPI output. No explicit OpenAPI 2.0 mention (input-only support exists in code but not in the plan).
+1. **Do not add a direct tRPC -> IR execution slice to the core roadmap.**
+   That belongs under the companion-workspace / Phase 5 lane unless the repo deliberately creates a companion active plan for it.
 
-### `phase-1-completion-plan.md`
+2. **Do not invent an Oak-specific strictness profile.**
+   Oak benefits from repo-wide doctrine that is already universal in core: strictness, determinism, fail-fast, and IR honesty.
 
-- **Scope:** enforce IR as sole source of truth + MCP IR-only path.
-- **Relevance:** already implemented; underpins strictness and IR integrity.
+3. **Do not let archive plans masquerade as the live plan stack.**
+   Historical plans such as `future-artefact-expansion.md` are useful source material, but the live product boundary is now set by the roadmap, Phase 5, and ADR-043.
 
-### `session-2.9-polish-plan.md`
+## 5) Concrete Recommendations To Keep The Stack Honest
 
-- **Scope:** harden OpenAPI → Zod output tests (format functions, fail-fast coverage, fixtures).
-- **Relevance:** aligns with strict output goals and deterministic behavior.
-
-### `ir-semantic-audit-plan-3.1a-complete.md`
-
-- **Scope:** format-agnostic IR docs.
-- **Relevance:** ensures IR remains neutral and extensible for Zod/OpenAPI/JSON Schema parity.
-
-## 3) Alignment vs New Enablement Goals
-
-### Already Planned (Strong Alignment)
-
-- **Strict-by-default + fail-fast** (roadmap + strict test plan)
-- **Determinism** (strict test plan + transform-sample validation plan, including round-trip/idempotence proofs)
-- **Metadata maps + JSON Schema output** (future-artefact-expansion)
-- **Writer registry + manifest** (future-artefact-expansion)
-
-### Partially Planned
-
-- **Zod → IR parsing** (Session 3.2, archived). This enables Zod-based workflows but not full Zod-OpenAPI parity yet.
-- **MCP output** (already present) but needs JSON Schema alignment for Oak response maps.
-
-### Not Planned (Gaps to Add)
-
-- **Path format configuration** (default **curly**, boolean switch for colon) for endpoints and maps.
-- **Explicit `operationId` field in endpoint output** (currently `alias`).
-- **Metadata output options** (Option A: metadata TS emitter, Option B: Zod-first enablement).
-- **Bundle manifest output** is **TBD** and should be validated with Oak before committing to a shape.
-- **tRPC → IR parser / adapters** (needed to replace `trpc-to-openapi`).
-- **Zod-OpenAPI metadata ingestion** (`.openapi()` / `.meta()` mapping to OpenAPI fields).
-- **Watch mode / plugin surface** (openapi-ts best-practice alignment; not in roadmap).
-
-## 4) Potential Plan Conflicts / Risks
-
-1. **ADR-026 scope vs legitimate string operations**
-   - ADR-026 forbids string/regex heuristics used to infer semantics from TypeScript source text when AST + semantic APIs exist.
-   - Data-string parsing (OpenAPI `$ref`, media types, URL templates) is allowed but must be centralized, validated, tested, and fail-fast.
-   - Mitigation: enforce ADR-026 only in TS-source parsing modules; centralize data-string parsing utilities; continue to avoid string templates for code generation (use ts-morph printers).
-
-2. **Historical strictness drift is now resolved, but must stay resolved**
-   - Plans used to emphasize strict-by-default while the Zod writer still defaulted to permissive object output.
-   - IDENTITY closure removed that mismatch: object emission now uses `z.strictObject(...)` and the `strictObjects` option surface is gone.
-   - Mitigation: future plans and Oak-oriented work must preserve unconditional strictness rather than reintroducing target-specific toggles.
-
-3. **Zod parser accept/reject patterns**
-   - Parser plan has a strict accept list that must match the current Zod writer output.
-   - Mitigation: align parser acceptance with writer output and update the Zod 4 pattern table as needed.
-
-## 5) Concrete Recommendations to Incorporate into Plans
-
-- Extend `future-artefact-expansion.md` with **Oak enablement outputs** explicitly:
-  - operationId maps, path format switch, metadata output options (A/B), bundle manifest **TBD**.
-- Add a short **tRPC → IR plan** (parser + security mapping) to the roadmap.
-- Add **Zod-OpenAPI metadata ingestion** as a Session in the roadmap (post-3.3 parity track; likely Roadmap Phase 4).
-- Add a **strict profile** concept to the roadmap to enforce Oak defaults.
-
-**Update given Oak flexibility:** prefer IR-first outputs and helper APIs over prescriptive string-based public APIs. Output artifacts must be rule-compliant (no `as` except `as const`, no `Object.*`, no stringified schema APIs).
+- Keep the live roadmap centred on **OAS 3.2 version plumbing first**, then core compiler follow-on gaps such as metadata surfaces, JSON Schema outputs, and deterministic registry behaviour.
+- Route **code-first ingestion, runtime adapters, and transport helpers** through `phase-5-ecosystem-expansion.md` or a later companion active plan, not the core roadmap.
+- Keep Oak requirement discussions explicit about **core versus companion** placement whenever they mention `openapi-fetch`, runtime exposure, or tRPC.
+- Treat archive plans as **reference inputs only**; extract reusable ideas, but do not copy their old phase structure back into current execution docs.
 
 ## 6) Key Takeaway
 
-The existing plan set is strong on IR correctness, strict validation, and determinism, and already anticipates multi-artefact output (including metadata maps and JSON Schema). The main missing pieces are integration-specific: path formatting, operationId maps, metadata output options (A/B), tRPC and Zod-OpenAPI ingestion, and a concrete bundle manifest **if** Oak validates the need.
+The live plan stack is already aligned on the new vision. The remaining work is not "add tRPC to the roadmap"; it is to finish the current core compiler slices honestly and then pursue code-first, runtime, and transport capabilities through explicitly labelled companion-workspace tracks.

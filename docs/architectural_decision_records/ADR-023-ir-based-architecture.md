@@ -1,5 +1,7 @@
 # ADR-023: Intermediate Representation (IR) Architecture for Schema Generation
 
+> **Update 2026-04-02:** The IR architecture remains current. One historical detail has changed: higher-level authoring/runtime surfaces such as tRPC are no longer treated as core `lib` format commitments. They are companion-workspace directions that may consume or emit Castr IR without widening core `@engraph/castr`. See [ADR-043](./ADR-043-core-vs-companion-workspaces.md).
+
 ## Status
 
 Accepted
