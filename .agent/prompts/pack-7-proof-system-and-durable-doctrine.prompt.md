@@ -19,7 +19,7 @@ Pre-close Pack 7 start position, as of Sunday, 22 March 2026:
 - Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict.
 - Pack 7 is the next review pack in this historical snapshot.
 - New implementation remains blocked pending the review matrix.
-- The paused [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) file remains remediation context rather than a ready-to-run implementation plan.
+- The historical [json-schema-parser.md](../plans/current/complete/json-schema-parser.md) file remains remediation context rather than a ready-to-run implementation plan.
 
 ## First Rule
 
@@ -37,7 +37,7 @@ This is a review-and-consolidation session, not a product implementation session
 
 1. [IDENTITY.md](../IDENTITY.md)
 2. [session-entry.prompt.md](./session-entry.prompt.md)
-3. [architecture-review-packs.md](../plans/active/architecture-review-packs.md)
+3. [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md)
 4. [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md)
 5. [roadmap.md](../plans/roadmap.md)
 6. [pack-1-boundary-integrity-and-public-surface.md](../research/architecture-review-packs/pack-1-boundary-integrity-and-public-surface.md)
@@ -115,7 +115,7 @@ Before closing the session:
 
 1. Write one evidence-backed note at [pack-7-proof-system-and-durable-doctrine.md](../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md).
 2. Use the required note structure from [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md).
-3. Update [session-entry.prompt.md](./session-entry.prompt.md), [roadmap.md](../plans/roadmap.md), [architecture-review-packs.md](../plans/active/architecture-review-packs.md), and [napkin.md](../memory/napkin.md) immediately if Pack 7 changes review truth.
+3. Update [session-entry.prompt.md](./session-entry.prompt.md), [roadmap.md](../plans/roadmap.md), [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md), and [napkin.md](../memory/napkin.md) immediately if Pack 7 changes review truth.
 4. Update durable user docs, acceptance criteria, or local doctrine docs in the same pass if Pack 7 finds that they still over-claim the proof system or supported surface.
 5. Name the next implementation slice from the evidence, not from historical momentum.
 

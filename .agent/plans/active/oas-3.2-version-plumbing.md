@@ -34,6 +34,21 @@ OAS 3.2 is **fully backwards-compatible** with 3.1 — every valid 3.1 document 
 - Users with OAS 3.2 documents can use Castr immediately (currently rejected by the `isBundledOpenApiDocument` type guard)
 - Output documents claim `3.2.0`, which is current and correct since we don't emit any 3.1-only deprecated patterns
 
+## Characterisation Note (Thursday, 2 April 2026)
+
+- `pnpm test:gen` is green in the current checkout, but that does **not** yet prove native OAS 3.2 ingest
+- Direct characterisation shows `upgradeAndValidate({ openapi: '3.2.0', ... })` still throws `Failed to produce valid OpenAPI 3.1 document`
+- Root cause is the shared OpenAPI preparation boundary: `upgrade-validate.ts` still hard-requires minor version `1`, and every generated-code case flows through that seam before syntax/type/lint/file checks run
+- Therefore this slice must include **proof expansion**, not only version-string replacement: native 3.2 acceptance needs explicit unit and generation-level coverage
+
+---
+
+## Assumptions To Validate
+
+- Scalar's `upgrade()` tolerates native 3.2 input and the only blocking seam here is our version guard plus downstream normalisation
+- `openapi3-ts/oas31` remains sufficient for the plumbing slice because new OAS 3.2 features are still out of scope
+- The generated-code validation surface can gain a native 3.2 proof seam without redesigning the harness or expanding grouped-output scope
+
 ---
 
 ## Scope
@@ -46,7 +61,7 @@ OAS 3.2 is **fully backwards-compatible** with 3.1 — every valid 3.1 document 
 4. **Error messages** — all version-related errors reference 3.2 as the target
 5. **Type dependency** — verify `openapi3-ts` types are compatible; if not, add thin type extensions
 6. **Scalar upgrade** — verify `@scalar/openapi-parser` `upgrade()` handles 3.2 input (research: it does)
-7. **Tests** — update all hardcoded `'3.1.0'` version strings in test fixtures to `'3.2.0'`
+7. **Tests** — update hardcoded `'3.1.0'` version strings where 3.2 is now canonical, and add explicit native 3.2 acceptance proofs at the shared prep boundary and generation seam
 8. **Documentation** — update roadmap, session-entry, supported formats table, and all TSDoc
 
 ### Out of Scope
@@ -60,6 +75,10 @@ All new OAS 3.2 features — see companion plan `oas-3.2-full-feature-support.md
 ### 1. Input Validation (`upgrade-validate.ts`)
 
 The input guard must accept both `3.1.x` (from Scalar `upgrade()`) and `3.2.x` (native 3.2 input). 3.1.x acceptance is a **bridge**, not a target.
+
+Current verified symptom:
+
+- Native `{ openapi: '3.2.0' }` input still fails at this guard today with `Failed to produce valid OpenAPI 3.1 document`
 
 ```
 upgrade-validate.ts:
@@ -87,9 +106,16 @@ Files:
 - New 3.2 fields (`itemSchema`, `additionalOperations`, tag `parent`/`kind`) are not handled yet and will be passed through as unknown extensions
 - **No type changes needed for this slice** — existing `oas31` types work
 
-### 4. Test Fixture Updates
+### 4. Test And Proof Expansion
 
-All test fixtures that hardcode `'3.1.0'` need updating to `'3.2.0'`:
+Version-string replacement is necessary but not sufficient. The active slice also needs native 3.2 proof seams that would have caught the current shared-boundary rejection.
+
+- `upgrade-validate.test.ts`: add native 3.2 acceptance proof and keep explicit 3.1 bridge proof
+- add end-to-end generation proof for `generateZodClientFromOpenAPI({ openApiDoc: { openapi: '3.2.0', ... } })`
+- expand `test:gen` representative coverage with at least one native 3.2 case that flows through the same preparation boundary
+- if the generated-suite fixture roster changes, update `tests-generated/FIXTURES.md` so the documented proof scope stays honest
+
+All test fixtures that hardcode `'3.1.0'` and should now be canonical 3.2 need updating:
 
 - `lib/src/schema-processing/ir/test-helpers.ts`
 - `lib/src/schema-processing/ir/serialization.unit.test.ts`
@@ -105,17 +131,40 @@ Use `grep -r "openApiVersion: '3.1.0'" --include='*.ts'` to find all.
 - `session-entry.prompt.md`: update supported formats, current state
 - `roadmap.md`: update supported formats table, mark version plumbing as complete
 - `schema-document.ts`: update TSDoc example from `'3.1.0'` to `'3.2.0'`
+- `tests-generated/FIXTURES.md`: update fixture-scope documentation if native 3.2 proof coverage is added there
 
 ---
 
 ## TDD Order
 
-1. **RED**: Update `upgrade-validate.test.ts` to expect 3.2.0 acceptance alongside 3.1.x
-2. **RED**: Add test: output from OpenAPI writer emits `"openapi": "3.2.0"`
-3. **GREEN**: Update `upgrade-validate.ts` to accept `3.2.x`
-4. **GREEN**: Update parser version normalisation
-5. **UPDATE**: Fix all hardcoded `'3.1.0'` in test fixtures
-6. **VERIFY**: `pnpm check` green
+1. **RED**: Update `upgrade-validate.test.ts` to expect native 3.2.0 acceptance alongside explicit 3.1.x bridge acceptance
+2. **RED**: Add direct generation proof for native 3.2 input through `generateZodClientFromOpenAPI`
+3. **RED**: Expand `test:gen` representative coverage with a native 3.2 case so the shared prep boundary is exercised there
+4. **RED**: Add test: output from OpenAPI writer emits `"openapi": "3.2.0"`
+5. **GREEN**: Update `upgrade-validate.ts` to accept `3.2.x` and report 3.2-targeted errors
+6. **GREEN**: Update parser version normalisation
+7. **UPDATE**: Fix all hardcoded `'3.1.0'` in fixtures, docs, and TSDoc where 3.2 is now canonical
+8. **VERIFY**: `pnpm check` green
+
+---
+
+## Success Criteria
+
+- Native OAS 3.2 input is accepted end to end through the shared preparation boundary
+- 3.1.x remains accepted only as the documented Scalar compatibility bridge
+- After parsing, IR documents carry `openApiVersion: '3.2.0'` only
+- OpenAPI writer emits `"openapi": "3.2.0"` deterministically
+- `test:gen` includes an explicit native 3.2 proof seam instead of relying only on 3.0/3.1 representative fixtures
+- Handoff docs and proof-scope docs are updated so the current validation story is honest
+
+---
+
+## Documentation Outputs
+
+- revise this active plan with the native-3.2 proof obligations and completion criteria
+- update `session-entry.prompt.md` and `roadmap.md` when the verified repo truth changes
+- update TSDoc and durable comments that still present 3.1 as the canonical target
+- update generated-suite proof-scope docs if the fixture roster or guarantees change
 
 ---
 

@@ -1,9 +1,9 @@
-# Plan (Active): Architecture Review Packs — Post-IDENTITY Audit
+# Plan (Complete): Architecture Review Packs — Post-IDENTITY Audit
 
 **Status:** Complete — seven-pack review matrix closed; all remediation slices (RC-1 through RC-7) completed Tuesday, 25 March 2026; architecture review arc fully closed
 **Created:** 2026-03-21
-**Predecessor:** [identity-doctrine-alignment.md](../current/complete/identity-doctrine-alignment.md)
-**Paused Successor:** [json-schema-parser.md](../current/paused/json-schema-parser.md)
+**Predecessor:** [identity-doctrine-alignment.md](./identity-doctrine-alignment.md)
+**Historical Parser Context:** [json-schema-parser.md](./json-schema-parser.md)
 **Related:** [IDENTITY.md](../../IDENTITY.md), [principles.md](../../directives/principles.md), [architecture-review-packs.prompt.md](../../prompts/architecture-review-packs.prompt.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
 ---
@@ -28,9 +28,9 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 - Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-5: `schemas-only` template made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist implemented, generated-surface proof naming made honest, template-context post-IR mutation fixed.
 - Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
 - Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
-- The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
-- The IR and runtime validator remediation plan (RC-3) was completed on Monday, 24 March 2026. See [ir-and-runtime-validator-remediation.md](../current/complete/ir-and-runtime-validator-remediation.md).
-- The format-specific drift remediation plan (RC-4) was completed on Monday, 24 March 2026. See [format-specific-drift-remediation.md](../current/complete/format-specific-drift-remediation.md).
+- The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](./proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
+- The IR and runtime validator remediation plan (RC-3) was completed on Monday, 24 March 2026. See [ir-and-runtime-validator-remediation.md](./ir-and-runtime-validator-remediation.md).
+- The format-specific drift remediation plan (RC-4) was completed on Monday, 24 March 2026. See [format-specific-drift-remediation.md](./format-specific-drift-remediation.md).
 - The downstream surface drift remediation (RC-5) was completed on Monday, 24 March 2026, in-session.
 - The next honest slice requires triage of remaining findings from Packs 1/3/4/5/7.
 
@@ -52,7 +52,7 @@ Start from the written evidence:
 Explicit non-goals for the next session:
 
 - do not rerun the pack-by-pack review sweep from scratch
-- do not reactivate `json-schema-parser.md` unchanged
+- do not treat `json-schema-parser.md` as a ready-to-run implementation plan
 - do not resume new format or feature implementation before the successor remediation plan exists
 
 ## Scope
@@ -76,7 +76,7 @@ Out of scope:
 3. One pack at a time. Do not blur findings across packs.
 4. Findings must be evidence-backed and file-referenced.
 5. Architectural excellence over expediency at every turn.
-6. The paused JSON Schema parser plan stays paused until the review sweep says it is fit to reactivate.
+6. The JSON Schema parser remediation record remains historical context unless a new bounded plan supersedes it.
 7. Strict and complete everywhere, all the time: no pack should clear a surface that is only partially implemented, partially validated, partially proven, or partially documented.
 
 ## Review Note Location
@@ -142,11 +142,11 @@ Focus:
 - normalization
 - parser shape and writer lockstep
 - standards coverage and rejection boundaries
-- paused successor plan fitness
+- historical parser-remediation record fitness
 
 Questions:
 
-- Is the paused JSON Schema parser plan still architecturally sound?
+- Is the historical JSON Schema parser remediation record still architecturally sound?
 - What must change before reactivation?
 - Which standards boundaries are locked, and which remain assumptions?
 
@@ -224,7 +224,7 @@ Interpret verdicts as:
 
 1. Every pack has a written verdict and evidence-backed findings list.
 2. The active roadmap and session prompt reflect the verdict matrix truthfully.
-3. The paused JSON Schema parser plan is either revalidated or explicitly rewritten before reactivation.
+3. The historical JSON Schema parser remediation record is either revalidated or explicitly rewritten before any new slice is planned.
 4. The next implementation slice is chosen from findings rather than assumption.
 5. No architectural truth remains stranded only in the napkin.
 6. No pack goes green while a claimed supported surface remains only partially aligned across code, proofs, and docs.
@@ -239,4 +239,4 @@ Current close-out state:
 - RC-1 through RC-7 are all complete
 - all findings in the cross-pack triage are marked ✅
 - the repo is cleared for new feature implementation
-- the paused JSON Schema parser plan is the natural next candidate
+- the historical JSON Schema parser remediation record is the natural planning input for any later JSON Schema follow-on slice

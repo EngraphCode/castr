@@ -2,6 +2,12 @@
 
 This scope is organized by architectural layer so it stays aligned with `.agent/plans/roadmap.md`, `.agent/plans/future/phase-5-ecosystem-expansion.md`, and `docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md`.
 
+Oak-specific future execution homes are now explicit:
+
+- `.agent/plans/future/oak-adapter-boundary-replacement.md` for Use Case 1
+- `.agent/plans/future/oak-wider-openapi-stack-replacement.md` for Use Case 2
+- `.agent/plans/future/oak-code-first-openapi-generation-replacement.md` for Use Case 3
+
 ## Already aligned in core
 
 1. **Strict-by-default output**

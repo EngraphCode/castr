@@ -46,7 +46,7 @@
 
 - The main drift is temporal and contractual rather than purely implementational. [phase-4-json-schema-and-parity.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/phase-4-json-schema-and-parity.md#L43) still says the parser and parity rig are complete and green, and [json-schema-and-parity-acceptance-criteria.md](/Users/jim/code/personal/castr/.agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md#L3) still points at a nonexistent future-plan path.
 - The acceptance criteria also overstate or contradict live doctrine in several places: they still allow metadata-directed lossy fallback and `components.schemas` bundle language in [json-schema-and-parity-acceptance-criteria.md](/Users/jim/code/personal/castr/.agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md#L20), which conflicts with ADR-041's custom-rescue rule and the live `$defs` writer surface.
-- Pack 4 closeout rewrote [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md#L1) from a stale parser-build plan into paused remediation context so the next implementation slice cannot accidentally resume the wrong story.
+- Pack 4 closeout rewrote [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md#L1) from a stale parser-build plan into a historical remediation-context record so the next implementation slice cannot accidentally resume the wrong story.
 - The targeted Pack 4 executable proofs reproduced green locally on 2026-03-22:
   - `pnpm --dir lib exec vitest run --config vitest.transforms.config.ts tests-transforms/__tests__/scenario-5-json-schema-roundtrip.integration.test.ts tests-transforms/__tests__/scenario-6-zod-via-json-schema.integration.test.ts tests-transforms/__tests__/scenario-7-multi-cast.integration.test.ts`
   - `pnpm --dir lib exec vitest run --config vitest.characterisation.config.ts src/characterisation/json-schema.char.test.ts`
@@ -57,10 +57,10 @@
 
 - JSON Schema ingest hardening: define one honest public document-parser contract, decide the explicit policy for standalone root schemas, boolean schemas, external refs, and unsupported keywords, and make unsupported semantics fail fast instead of remaining implicit.
 - JSON Schema egress and proof alignment: decide the canonical JSON-Schema-shaped nullability and reference form, reconcile `contains` with the existing `minContains` / `maxContains` support claim, and add proof coverage that validates the actual egress contract rather than only shared bundle loops.
-- JSON Schema handoff and doctrine cleanup: rewrite the paused JSON Schema plan and adjacent handoff docs so future sessions do not resume a stale parser-build plan that no longer matches code truth.
+- JSON Schema handoff and doctrine cleanup: rewrite the JSON Schema parser remediation record and adjacent handoff docs so future sessions do not resume a stale parser-build plan that no longer matches code truth.
 
 ## Unblock Decision
 
 - Pack 5 is unblocked and should be the next review pack.
 - The next implementation slice remains blocked because Pack 4 found that the JSON Schema public contract, proof matrix, and successor plan still over-claim the supported surface.
-- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md) must not reactivate unchanged; it has been rewritten as paused remediation context rather than treated as a ready-to-run parser implementation plan.
+- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md) must not be resumed as if it were a ready-to-run parser implementation plan; it now stands as a historical remediation-context record.

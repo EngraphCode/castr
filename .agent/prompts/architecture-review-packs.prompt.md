@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Historical review prompt.
 > The seven-pack post-IDENTITY sweep closed on Sunday, 22 March 2026.
-> Keep this file as provenance for how the sweep was run; use [session-entry.prompt.md](./session-entry.prompt.md) and [architecture-review-packs.md](../plans/active/architecture-review-packs.md) for current-state handoff.
+> Keep this file as provenance for how the sweep was run; use [session-entry.prompt.md](./session-entry.prompt.md) and [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) for current-state handoff.
 
 Use this prompt only if you need to reconstruct or audit the original review-sweep workflow.
 
@@ -26,10 +26,10 @@ The purpose is to validate the repo's actual architectural direction against the
 ## Read First
 
 1. [IDENTITY.md](../IDENTITY.md)
-2. [architecture-review-packs.md](../plans/active/architecture-review-packs.md)
+2. [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md)
 3. [session-entry.prompt.md](./session-entry.prompt.md)
 4. [roadmap.md](../plans/roadmap.md)
-5. [json-schema-parser.md](../plans/current/paused/json-schema-parser.md)
+5. [json-schema-parser.md](../plans/current/complete/json-schema-parser.md)
 6. [napkin.md](../memory/napkin.md)
 7. Relevant ADRs for the current pack
 

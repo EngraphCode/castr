@@ -1,6 +1,6 @@
-# Future Investigation: Zod and Transform Architecture Threads
+# Research Note: Zod and Transform Future Investigation Threads
 
-**Status:** Future — no immediate action required
+**Status:** Durable residual-thread ledger
 **Created:** 2026-03-21
 **Related:** [ADR-038](../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-041](../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
@@ -10,9 +10,9 @@ This file consolidates residual investigation threads from three closed-out work
 
 Closed-out plans that produced these threads:
 
-- [zod-limitations-architecture-investigation.md](../current/complete/zod-limitations-architecture-investigation.md)
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](../current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [zod-limitations-architecture-investigation.md](../plans/archive/zod-limitations-historical-cluster/zod-limitations-architecture-investigation.md)
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/archive/zod-limitations-historical-cluster/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/archive/zod-limitations-historical-cluster/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 ---
 

@@ -49,4 +49,4 @@
 
 - Pack 2 is unblocked and should be the next review pack.
 - Product implementation remains blocked pending the rest of the review sweep.
-- [`json-schema-parser.md`](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md) stays paused until Pack 4 explicitly revalidates or rewrites it.
+- [`json-schema-parser.md`](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md) remains historical remediation context; Pack 4 still owns its revalidation decision.

@@ -3,7 +3,7 @@
 **Status:** ✅ Complete — Monday, 24 March 2026
 **Created:** 2026-03-23
 **Completed:** 2026-03-24
-**Predecessor:** [proof-system-and-doctrine-remediation.md](../current/complete/proof-system-and-doctrine-remediation.md)
+**Predecessor:** [proof-system-and-doctrine-remediation.md](./proof-system-and-doctrine-remediation.md)
 **Triage Source:** [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md)
 **Related:** [IDENTITY.md](../../IDENTITY.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [Pack 2 Note](../../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md)
 
@@ -51,7 +51,7 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 - Format-specific parser/writer lockstep fixes (RC-4) — separate bounded plan.
 - Downstream surface drift (RC-5) — separate bounded plan.
 - New feature or format implementation.
-- Reactivation of the paused JSON Schema parser plan.
+- Planning a new JSON Schema parser-remediation slice from the historical record.
 
 ---
 
@@ -61,7 +61,7 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 2. TDD at all levels — write failing tests first.
 3. No escape hatches.
 4. All quality-gate failures remain blocking.
-5. The paused JSON Schema parser plan stays paused.
+5. The historical JSON Schema parser remediation record remains context only during this slice.
 
 ---
 

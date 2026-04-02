@@ -4,6 +4,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-02
 
+- High-level Oak use-case planning gap closed:
+  - added explicit future plan homes for the three Oak proving-ladder use cases:
+    - `.agent/plans/future/oak-adapter-boundary-replacement.md`
+    - `.agent/plans/future/oak-wider-openapi-stack-replacement.md`
+    - `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`
+  - threaded those plans back into the umbrella and handoff surfaces so the same ladder now appears in `.agent/plans/future/phase-5-ecosystem-expansion.md`, `.agent/plans/roadmap.md`, `.agent/directives/VISION.md`, `.agent/prompts/session-entry.prompt.md`, and the feature-parity planning inputs
+  - updated the Oak strategy reports so they no longer speak as if those high-level plans do not exist; the remaining truth is narrower and honest: the plans now exist, but none of the Oak use-case tracks are active atomic execution slices yet
+  - no Practice evolution was needed here; this was plan-stack completion and cross-link hygiene, not a new portable-practice lesson
+- Post-commit `jc-consolidate-docs` audit confirmed the durable surface stayed aligned after `ec1efca`:
+  - live handoff, roadmap, ADR, feature-parity, and Oak-facing docs still agree on the current product split: core `@engraph/castr` is the schema/compiler/IR product, while transport, runtime, framework, and code-first work belongs in companion workspaces
+  - `.agent/practice-index.md`, `.agent/README.md`, and the practice-box scaffolds remain cohesive; no additional bridge or Practice-structure edits were needed
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - the only stale references to the earlier paused-plan paths now live in this napkin as historical capture from before those plans were moved to `current/complete/`; no live non-archive planning surface still points at the paused locations
+  - no new Practice evolution clears the bar from this pass; the value was confirming that the previous alignment work held together cleanly after commit
 - Core-vs-companion workspace boundary was promoted into durable repo truth:
   - new ADR-043 (`docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md`) codifies `lib` / `@engraph/castr` as the core compiler package and moves transport/runtime/framework/code-first integrations into companion workspaces
   - strategy and handoff docs (`.agent/directives/VISION.md`, `.agent/plans/roadmap.md`, `.agent/prompts/session-entry.prompt.md`, `.agent/README.md`) now describe the same boundary and no longer present tRPC or typed runtime helpers as core `lib` promises
@@ -50,6 +64,29 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - Practice boxes checked: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only the scaffold `README.md`.
   - Verification: `pnpm format:check` green, `pnpm portability:check` green.
 - No new Practice evolution clears the bar here. The useful lesson is repo-local lifecycle hygiene: once an execution note stops being a real active plan, either move it to `current/complete/` or rewrite it into a research note instead of leaving it stranded in `active/`.
+- Planning-taxonomy recategorisation sweep closed the remaining non-archive drift across active/current/future:
+  - moved `.agent/plans/active/oas-3.2-full-feature-support.md` to `.agent/plans/future/oas-3.2-full-feature-support.md` so `active/` again holds only the genuinely live atomic slice
+  - moved `.agent/plans/current/paused/json-schema-parser.md` to `.agent/plans/current/complete/json-schema-parser.md` and rewired prompts, research notes, and completed follow-on plans to treat it as historical remediation context rather than a resumable paused workstream
+  - archived the old `current/session-3.3a/` and `current/session-3.3b/` queue-mirror stubs under `.agent/plans/archive/session-3.3-queue-mirrors/`, then repointed the surviving successor chain to the canonical `current/complete/` records
+  - moved `.agent/plans/future/zod-and-transform-future-investigations.md` to `.agent/research/zod-and-transform-future-investigations.md` because it is a residual-thread ledger, not a future implementation plan
+  - archived the superseded Zod limitations historical cluster and the two non-canonical structural planning stubs (`3.3a-06-architectural-enforcement.md`, `3.3a-09-directory-complexity-limits.md`) so `current/complete/` now only contains actual completion records
+  - corrected stale status markers in `3.3b.05`, `3.3b.06`, and `3.3b.07` so they match the roadmap and the current code/test surface
+  - targeted grep verification now comes back clean for the moved non-archive paths; only older napkin entries still mention the superseded locations as historical capture
+- Practice box check in this recategorisation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No additional Practice evolution clears the bar from this pass; the useful work was lifecycle honesty, successor-chain repair, and making the non-archive planning surface match the taxonomy it claims to use.
+- Follow-up `jc-consolidate-docs` pass after the recategorisation sweep found only narrow residual drift:
+  - `roadmap.md` and `session-entry.prompt.md` still had one "closed-out Zod context" block pointing at files that had already been moved into `.agent/plans/archive/zod-limitations-historical-cluster/`
+  - several provenance prompts and completed remediation plans still described `json-schema-parser.md` as a paused plan even though it now lives as a historical completion record in `.agent/plans/current/complete/`
+  - those wording/link mismatches are now corrected; the live handoff surface distinguishes active plans, planned successors, historical completion records, research notes, and archive-only context cleanly
+  - targeted grep now shows no remaining non-archive references to the superseded plan paths; only older napkin capture still mentions them as historical state
+- Practice box check in this follow-up consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No new Practice evolution clears the bar here either; the useful lesson stayed repo-local: once a planning artefact is recategorised, sweep the handoff language as well as the links or the old bucket semantics survive in prose.
 
 ## 2026-03-30
 

@@ -103,14 +103,19 @@ Notes:
 
 - **Schema Completeness Arc**: ✅ COMPLETE — Phase 1, Phase 1.5, and Phase 2 are all closed. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md) for the final phase.
 - **Primary active plan**: [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md) — READY; this is the next atomic slice.
-- **Companion active plan**: [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) — planned successor once version plumbing lands.
-- **Paused workstreams**:
-  - [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) — historical parser context only; do not reactivate unchanged.
+- **Planned successor plan**: [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) — successor arc once version plumbing lands.
+- **Paused workstreams**: none currently.
 
 ### Deferred Future Threads
 
 - Reference resolution enhancements: external `$ref` resolution, `$anchor`-based reference resolution (`$ref: "#myAnchor"`), `$dynamicRef`/`$dynamicAnchor` runtime scope resolution
 - Parked research note: [multiformat-target-support.md](../research/multiformat-target-support.md)
+
+### Planned Companion Use-Case Tracks
+
+- [oak-adapter-boundary-replacement.md](../plans/future/oak-adapter-boundary-replacement.md) — future high-level plan for Use Case 1 (replace Oak's `openapi-zod-client-adapter` boundary)
+- [oak-wider-openapi-stack-replacement.md](../plans/future/oak-wider-openapi-stack-replacement.md) — future high-level plan for Use Case 2 (replace Oak's wider OpenAPI third-party stack, with `openapi-fetch` explicitly unresolved until decided)
+- [oak-code-first-openapi-generation-replacement.md](../plans/future/oak-code-first-openapi-generation-replacement.md) — future high-level plan for Use Case 3 (replace `oak-openapi` through companion-workspace/code-first layering)
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
@@ -152,17 +157,17 @@ Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
 - [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)
 
-### Companion Active Plan
+### Planned Successor Plan
 
-- [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md)
+- [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md)
 
 ### Parked Research Note
 
 - [multiformat-target-support.md](../research/multiformat-target-support.md)
 
-### Paused Workstreams
+### Historical Parser-Remediation Context
 
-- [json-schema-parser.md](../plans/current/paused/json-schema-parser.md)
+- [json-schema-parser.md](../plans/current/complete/json-schema-parser.md)
 
 ### Pack Notes (Reference)
 
@@ -187,6 +192,8 @@ IDENTITY doctrine alignment is complete:
 Current OpenAPI and generation truth:
 
 - live code still targets OpenAPI 3.1.x today; OAS 3.2 version plumbing is the current active slice
+- `pnpm test:gen` is green locally on Thursday, 2 April 2026, but it still exercises only 3.0/3.1 representative fixtures and does not yet prove native OAS 3.2 ingest
+- direct characterisation on Thursday, 2 April 2026 confirmed that native `{ openapi: '3.2.0' }` input still fails at the shared upgrade/validate boundary with `Failed to produce valid OpenAPI 3.1 document`
 - `schemas-only` now genuinely suppresses `endpoints`, `mcpTools`, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - runtime clients, handler generation, framework bindings, and tRPC-style code-first integrations are companion-workspace concerns, not core `@engraph/castr` promises
@@ -245,7 +252,7 @@ The schema-completeness work is no longer the critical path. That arc is complet
 
 1. **Execute [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)** — this is the primary active plan.
 2. **Keep docs honest while that work is pending** — current product output is still OpenAPI 3.1.x until the plumbing slice lands.
-3. **Treat [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) as the successor arc** — do not blur it into the version-plumbing slice.
+3. **Treat [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) as the successor arc** — do not blur it into the version-plumbing slice.
 
 **Rules:**
 
@@ -309,24 +316,23 @@ Current honest state:
 - RC-7 (close remaining findings) completed on Tuesday, 25 March 2026 — JSON Schema fail-fast seam, all triage rows marked resolved
 - the cross-pack triage is done and lives at [cross-pack-triage.md](../research/architecture-review-packs/cross-pack-triage.md) — all findings ✅
 - the architecture review remediation arc is complete
-- the paused `json-schema-parser.md` holds historical parser context; it must not reactivate unchanged
+- the historical `json-schema-parser.md` record lives under `current/complete/`; it must not be treated as a resumable paused workstream
 
 ## Closed-Out Context
 
-All three Zod/transform investigations are now closed:
+All three older Zod/transform investigations are now closed and archived:
 
-- [zod-limitations-architecture-investigation.md](../plans/current/complete/zod-limitations-architecture-investigation.md)
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [zod-limitations-architecture-investigation.md](../plans/archive/zod-limitations-historical-cluster/zod-limitations-architecture-investigation.md)
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/archive/zod-limitations-historical-cluster/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/archive/zod-limitations-historical-cluster/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
-Residual future threads consolidated in:
+Residual research threads consolidated in:
 
-- [zod-and-transform-future-investigations.md](../plans/future/zod-and-transform-future-investigations.md)
+- [zod-and-transform-future-investigations.md](../research/zod-and-transform-future-investigations.md)
 
 ## Follow-On Work, Not A Blocker Here
 
 - [temporal-first-js-ts-date-time-doctrine.md](../plans/future/temporal-first-js-ts-date-time-doctrine.md)
-- [zod-and-transform-future-investigations.md](../plans/future/zod-and-transform-future-investigations.md)
 
 Custom portable types remain deliberately unsupported for now and are not a planned workstream.
 

@@ -6,6 +6,8 @@
 
 This report complements the older [notes.md](./notes.md) scratch file and the broader Oak integration view in `../oak-open-curriculum-sdk/oak-castr-integration-report.md`.
 
+Its future planning home is now `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`.
+
 ---
 
 ## Scope
@@ -463,7 +465,7 @@ This would preserve the current value while simplifying the architecture:
 
 This review confirms that Use Case 3 is real, but it is a different kind of work from replacing `openapi-zod-client-adapter`.
 
-It should remain a separate arc, even if the repos eventually converge.
+It should remain a separate arc, even if the repos eventually converge. The high-level plan home for that arc is `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`.
 
 ### 2. Decide the runtime boundary early
 

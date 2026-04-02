@@ -26,7 +26,7 @@ Audit the following for candidate work:
 | Source                                                                                                     | What to look for                                                                                                                          |
 | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Remaining Planned Capabilities (session-entry)                                                             | `if`/`then`/`else`, `$dynamicRef`, `patternProperties`, `propertyNames`, `contains`, egress normal form, external `$ref`, boolean schemas |
-| Paused plan (json-schema-parser.md)                                                                        | Open findings not yet addressed                                                                                                           |
+| Historical parser-remediation record (`json-schema-parser.md`)                                             | Open findings not yet addressed                                                                                                           |
 | Pack 4 research (pack-4-json-schema-architecture.md)                                                       | "Silently Ignored Or Unclear" section                                                                                                     |
 | Acceptance criteria (`json-schema-and-parity-acceptance-criteria.md`, `zod-output-acceptance-criteria.md`) | Unchecked boxes                                                                                                                           |
 | User requests / external feedback                                                                          | Anything the user brings to the session                                                                                                   |
@@ -67,5 +67,5 @@ Start by reading:
 - [session-entry.prompt.md](../../prompts/session-entry.prompt.md)
 - [roadmap.md](../../roadmap.md)
 - [cross-pack-triage.md](../../../research/architecture-review-packs/cross-pack-triage.md)
-- [json-schema-parser.md (paused plan)](../paused/json-schema-parser.md)
+- [json-schema-parser.md (historical remediation context)](./json-schema-parser.md)
 - [json-schema-and-parity-acceptance-criteria.md](../../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md)

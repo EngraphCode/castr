@@ -3,7 +3,7 @@
 **Status:** ✅ Complete — implemented and verified, all quality gates green (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** [pattern-properties-and-property-names.md](./pattern-properties-and-property-names.md), [discovery-and-prioritisation.md](./discovery-and-prioritisation.md)
-**Related:** [json-schema-parser.md (paused)](../current/paused/json-schema-parser.md), [session-entry.prompt.md](../../prompts/session-entry.prompt.md)
+**Related:** [json-schema-parser.md (historical remediation context)](./json-schema-parser.md), [session-entry.prompt.md](../../prompts/session-entry.prompt.md)
 
 ---
 

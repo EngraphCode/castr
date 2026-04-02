@@ -31,6 +31,15 @@ Expand beyond the strict core compiler into companion workspaces and reference i
   - demonstrate end-to-end composition without widening core `@engraph/castr`
   - prove the Oak adoption ladder: adapter replacement, wider OpenAPI-stack replacement, then `oak-openapi` generation-stack replacement
 
+## Planned Use-Case Tracks
+
+- [oak-adapter-boundary-replacement.md](./oak-adapter-boundary-replacement.md)
+  - Use Case 1 high-level plan: replace Oak's `openapi-zod-client-adapter` boundary with honest core Castr outputs and downstream proof.
+- [oak-wider-openapi-stack-replacement.md](./oak-wider-openapi-stack-replacement.md)
+  - Use Case 2 high-level plan: replace the wider OpenAPI third-party stack in `oak-mcp-ecosystem`, including an explicit `openapi-fetch` decision gate.
+- [oak-code-first-openapi-generation-replacement.md](./oak-code-first-openapi-generation-replacement.md)
+  - Use Case 3 high-level plan: replace `oak-openapi`'s code-first OpenAPI generation stack through companion-workspace layering.
+
 ## Out Of Scope
 
 - adding typed clients, HTTP adapters, runtime handlers, or framework bindings directly to core `@engraph/castr`
@@ -48,3 +57,6 @@ Expand beyond the strict core compiler into companion workspaces and reference i
 - `docs/architectural_decision_records/ADR-025-http-client-di-integration.md`
 - `.agent/research/oak-open-curriculum-sdk/oak-castr-integration-report.md`
 - `.agent/research/oak-openapi/oak-openapi-castr-replacement-report.md`
+- `.agent/plans/future/oak-adapter-boundary-replacement.md`
+- `.agent/plans/future/oak-wider-openapi-stack-replacement.md`
+- `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`

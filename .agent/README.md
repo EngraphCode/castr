@@ -52,14 +52,14 @@ Then use:
   - Unsupported keywords explicitly rejected with `UnsupportedJsonSchemaKeywordError`
   - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
   - 29 unit tests, 520 transform tests, 4 E2E tests — all green
-  - Paused plan remains as historical parser context: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
+  - Historical remediation context record: [`.agent/plans/current/complete/json-schema-parser.md`](plans/current/complete/json-schema-parser.md)
 - **Schema Completeness Arc** (completed Sunday, 30 March 2026):
   - Phase 1: all 9 Zod implementation-gap fail-fast guards upgraded to semantic `.refine()` closures
   - Phase 1.5: all four TypeScript ❓ markers resolved
   - Phase 2: `$anchor`, `$dynamicRef`, and `$dynamicAnchor` added to the IR with parser/writer coverage and fail-fast handling where genuinely impossible
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** live code still targets OpenAPI 3.1.x today; OAS 3.2 support is the next planned slice, not landed product truth
-- **Next critical-path work:** primary active plan [`.agent/plans/active/oas-3.2-version-plumbing.md`](plans/active/oas-3.2-version-plumbing.md), followed by companion successor [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md)
+- **Next critical-path work:** primary active plan [`.agent/plans/active/oas-3.2-version-plumbing.md`](plans/active/oas-3.2-version-plumbing.md), followed by planned successor [`.agent/plans/future/oas-3.2-full-feature-support.md`](plans/future/oas-3.2-full-feature-support.md)
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

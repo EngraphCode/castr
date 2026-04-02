@@ -57,4 +57,4 @@
 
 - Pack 3 is unblocked and should be the next review pack.
 - The next implementation slice remains blocked because Pack 2 found runtime-boundary and ontology drift in canonical IR itself.
-- [`json-schema-parser.md`](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md) stays paused until Pack 4 explicitly decides whether that workstream still fits the corrected architecture.
+- [`json-schema-parser.md`](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md) remains historical remediation context until Pack 4 decides whether that workstream still fits the corrected architecture.

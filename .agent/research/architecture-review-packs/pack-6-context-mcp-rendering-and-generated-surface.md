@@ -85,4 +85,4 @@
 
 - At the time of Pack 6 closure, Pack 7 was unblocked and was the next review pack.
 - The next implementation slice remains blocked because Pack 6 found contract drift across template selection, MCP schema generation, generated-output proofs, and durable public docs.
-- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md) remains paused remediation context; the review sweep still decides the next implementation slice rather than reactivating any queued implementation story on assumption.
+- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md) remains historical remediation context; the review sweep still decides the next implementation slice rather than reactivating any queued implementation story on assumption.

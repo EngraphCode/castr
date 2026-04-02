@@ -38,4 +38,4 @@
 
 - Pack 4 is unblocked and should be the next review pack.
 - The next implementation slice remains blocked because Pack 3 found silent OpenAPI output incompleteness on a claimed supported surface.
-- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/paused/json-schema-parser.md) stays paused until Pack 4 explicitly decides whether that workstream still fits the reviewed architecture.
+- [json-schema-parser.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/json-schema-parser.md) remains historical remediation context until Pack 4 explicitly decides whether that workstream still fits the reviewed architecture.

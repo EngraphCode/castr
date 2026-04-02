@@ -51,7 +51,7 @@
 
 ## Doctrine Or Doc Drift
 
-- This session corrected the handoff layer so [session-entry.prompt.md](/Users/jim/code/personal/castr/.agent/prompts/session-entry.prompt.md), [roadmap.md](/Users/jim/code/personal/castr/.agent/plans/roadmap.md), [architecture-review-packs.md](/Users/jim/code/personal/castr/.agent/plans/active/architecture-review-packs.md), and [napkin.md](/Users/jim/code/personal/castr/.agent/memory/napkin.md) now say plainly that Pack 7 closed `red`, the seven-pack sweep is complete, and the next honest slice is proof/doctrine remediation rather than new feature work.
+- This session corrected the handoff layer so [session-entry.prompt.md](/Users/jim/code/personal/castr/.agent/prompts/session-entry.prompt.md), [roadmap.md](/Users/jim/code/personal/castr/.agent/plans/roadmap.md), [architecture-review-packs.md](/Users/jim/code/personal/castr/.agent/plans/current/complete/architecture-review-packs.md), and [napkin.md](/Users/jim/code/personal/castr/.agent/memory/napkin.md) now say plainly that Pack 7 closed `red`, the seven-pack sweep is complete, and the next honest slice is proof/doctrine remediation rather than new feature work.
 - The acceptance-criteria stack now carries current-state caveats and no longer contradicts itself on recursion or removed planning paths.
 - [testing-strategy.md](/Users/jim/code/personal/castr/.agent/directives/testing-strategy.md) and [DEFINITION_OF_DONE.md](/Users/jim/code/personal/castr/.agent/directives/DEFINITION_OF_DONE.md) now record the current off-chain status of `vitest.e2e` and `test:scalar-guard` rather than implying the canonical chain already covers them.
 - Final consolidation rerun on Monday, 23 March 2026 kept the Pack 7 verdict unchanged:

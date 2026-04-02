@@ -1,6 +1,6 @@
-# Plan (Active): Phase 4 — JSON Schema + Post‑3.3 Parity
+# Plan (Complete): Phase 4 — JSON Schema + Post‑3.3 Parity
 
-**Status:** ✅ Components 1–4 complete (see Remaining Work)  
+**Status:** ✅ Complete record — components 1–4 landed historically, and later follow-on slices closed the remaining gaps  
 **Created:** 2026-02-13  
 **Last Updated:** 2026-03-08
 
@@ -83,10 +83,12 @@ Test infrastructure refactored and expanded with 3 new scenario test files:
 
 ---
 
-## Remaining Work
+## Historical Follow-On Work
 
-- **Zod defect remediation:** 15 tests remain skipped in scenarios 2 and 4 (unions, intersections, recursion). See `.agent/plans/active/zod-defect-quarantine-remediation.md`.
-- **Documentation:** Update `tests-transforms/README.md` with scenarios 5–7.
+The remaining work recorded when this phase closed was later handled in subsequent slices:
+
+- **Zod defect remediation:** resolved in [zod-defect-quarantine-remediation.md](./zod-defect-quarantine-remediation.md).
+- **Documentation alignment:** completed in later proof/doctrine and consolidation passes.
 
 ---
 

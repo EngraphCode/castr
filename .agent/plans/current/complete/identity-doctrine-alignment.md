@@ -5,8 +5,8 @@
 **Last Updated:** 2026-03-21
 **Predecessor:** [doctor-rescue-loop-runtime-redesign.md](./doctor-rescue-loop-runtime-redesign.md)
 **Related:** [IDENTITY.md](../../IDENTITY.md), [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)
-**Successor:** [architecture-review-packs.md](../../active/architecture-review-packs.md)
-**Paused Successor:** [json-schema-parser.md](../paused/json-schema-parser.md)
+**Successor:** [architecture-review-packs.md](./architecture-review-packs.md)
+**Historical Parser Context:** [json-schema-parser.md](./json-schema-parser.md)
 
 ---
 
@@ -156,7 +156,7 @@ This plan enforces IDENTITY.md's canonical doctrine: Castr has **one object mode
 
 ### Plans and investigations
 
-- [MODIFY] `.agent/plans/future/zod-and-transform-future-investigations.md` — reframe Thread 1 (recursive passthrough) as intentional, not a limitation; remove "Reopen Trigger" framing
+- [MODIFY] `.agent/research/zod-and-transform-future-investigations.md` — reframe Thread 1 (recursive passthrough) as intentional, not a limitation; remove "Reopen Trigger" framing
 - [MODIFY] `.agent/memory/napkin.md` line 43 — update preserving-mode investigation note
 
 ### Research

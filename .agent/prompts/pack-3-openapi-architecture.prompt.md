@@ -15,7 +15,7 @@ Pre-close Pack 3 start position, as of Sunday, 22 March 2026:
 - Pack 2 completed on Saturday, 21 March 2026 with a `red` verdict.
 - Pack 3 is the next review pack.
 - New implementation remains blocked pending the review matrix.
-- The paused JSON Schema parser plan stays blocked until Pack 4 says otherwise.
+- The historical JSON Schema parser remediation record stays blocked until Pack 4 says otherwise.
 
 ## First Rule
 
@@ -33,12 +33,12 @@ This is a review session, not an implementation session. Do not edit product cod
 
 1. [IDENTITY.md](../IDENTITY.md)
 2. [session-entry.prompt.md](./session-entry.prompt.md)
-3. [architecture-review-packs.md](../plans/active/architecture-review-packs.md)
+3. [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md)
 4. [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md)
 5. [roadmap.md](../plans/roadmap.md)
 6. [pack-1-boundary-integrity-and-public-surface.md](../research/architecture-review-packs/pack-1-boundary-integrity-and-public-surface.md)
 7. [pack-2-canonical-ir-truth-and-runtime-validation.md](../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md)
-8. [json-schema-parser.md](../plans/current/paused/json-schema-parser.md)
+8. [json-schema-parser.md](../plans/current/complete/json-schema-parser.md)
 9. Relevant durable OpenAPI doctrine:
    - [native-capability-matrix.md](../../docs/architecture/native-capability-matrix.md)
    - [scalar-pipeline.md](../../docs/architecture/scalar-pipeline.md)
@@ -100,9 +100,9 @@ Before closing the session:
 
 1. Write one evidence-backed note at [pack-3-openapi-architecture.md](../research/architecture-review-packs/pack-3-openapi-architecture.md).
 2. Use the required note structure from [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md).
-3. Update [session-entry.prompt.md](./session-entry.prompt.md), [roadmap.md](../plans/roadmap.md), and [architecture-review-packs.md](../plans/active/architecture-review-packs.md) immediately if Pack 3 changes review truth.
+3. Update [session-entry.prompt.md](./session-entry.prompt.md), [roadmap.md](../plans/roadmap.md), and [architecture-review-packs.md](../plans/current/complete/architecture-review-packs.md) immediately if Pack 3 changes review truth.
 4. Update [napkin.md](../memory/napkin.md) with the Pack 3 outcome.
-5. Keep [json-schema-parser.md](../plans/current/paused/json-schema-parser.md) blocked until Pack 4 explicitly decides whether that workstream is still fit.
+5. Keep [json-schema-parser.md](../plans/current/complete/json-schema-parser.md) blocked until Pack 4 explicitly decides whether that workstream is still fit.
 
 ## Guardrails
 

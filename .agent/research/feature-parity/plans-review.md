@@ -22,23 +22,30 @@ This review audits the live and non-archive planning surface against the current
 ### `oas-3.2-full-feature-support.md`
 
 - **Primary focus:** follow-on core support for OAS 3.2 features once version plumbing lands.
-- **Relevance:** still a core OpenAPI surface expansion, not a runtime/framework plan.
+- **Relevance:** still a core OpenAPI surface expansion, not a runtime/framework plan. It is now correctly parked in `future/` as a planned successor rather than in `active/`.
 
 ### `phase-5-ecosystem-expansion.md`
 
 - **Primary focus:** future companion-workspace expansion once the core compiler stack is settled.
 - **Relevance:** this is where tRPC ingestion, typed fetch/runtime helpers, and reference implementations now belong.
 
-### `json-schema-parser.md` (paused)
+### Oak future use-case plans
+
+- **`oak-adapter-boundary-replacement.md`:** explicit high-level home for Use Case 1, the first Oak adoption wedge.
+- **`oak-wider-openapi-stack-replacement.md`:** explicit high-level home for Use Case 2, including the `openapi-fetch` decision gate.
+- **`oak-code-first-openapi-generation-replacement.md`:** explicit high-level home for Use Case 3, kept separate from the adapter replacement arc.
+
+### `json-schema-parser.md` (historical complete record)
 
 - **Primary focus:** historical parser-remediation context only.
-- **Relevance:** useful background, but explicitly not the next execution entrypoint.
+- **Relevance:** useful background, but explicitly not the next execution entrypoint and no longer misclassified as a resumable paused workstream.
 
 ## 2) Strong Alignment Already In Place
 
 - **Strict-by-default, fail-fast, deterministic output** are already core doctrine, not Oak-specific add-ons.
 - **IR-first architecture** is already locked in across the live plan stack and ADR layer.
 - **Companion-workspace boundary** is already established in the roadmap, Phase 5 plan, VISION, session-entry prompt, and ADR-043.
+- **Oak proving ladder** now has explicit future plan homes rather than living only as research intent.
 - **Archive plans about artefact expansion** remain useful references, but their ideas now need to be routed through the core-vs-companion boundary rather than copied back into the live roadmap verbatim.
 
 ## 3) Remaining Gaps By Architectural Layer
@@ -75,9 +82,10 @@ This review audits the live and non-archive planning surface against the current
 
 - Keep the live roadmap centred on **OAS 3.2 version plumbing first**, then core compiler follow-on gaps such as metadata surfaces, JSON Schema outputs, and deterministic registry behaviour.
 - Route **code-first ingestion, runtime adapters, and transport helpers** through `phase-5-ecosystem-expansion.md` or a later companion active plan, not the core roadmap.
+- Use the explicit Oak future-plan trio as the planning home for Use Cases 1, 2, and 3 instead of reopening the same boundary discussion in ad hoc notes.
 - Keep Oak requirement discussions explicit about **core versus companion** placement whenever they mention `openapi-fetch`, runtime exposure, or tRPC.
 - Treat archive plans as **reference inputs only**; extract reusable ideas, but do not copy their old phase structure back into current execution docs.
 
 ## 6) Key Takeaway
 
-The live plan stack is already aligned on the new vision. The remaining work is not "add tRPC to the roadmap"; it is to finish the current core compiler slices honestly and then pursue code-first, runtime, and transport capabilities through explicitly labelled companion-workspace tracks.
+The live plan stack is already aligned on the new vision. The remaining work is not "add tRPC to the roadmap"; it is to finish the current core compiler slices honestly and then pursue code-first, runtime, and transport capabilities through explicitly labelled companion-workspace tracks, with the three Oak use cases now given explicit future plan homes.

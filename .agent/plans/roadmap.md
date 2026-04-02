@@ -38,6 +38,8 @@ The Practice integration slice, core agent-system installation slice, type-safet
 Current product truth:
 
 - live code still targets OpenAPI 3.1.x today
+- `pnpm test:gen` is green locally on Thursday, 2 April 2026, but the representative generated-suite fixtures are still 3.0/3.1 only, so native OAS 3.2 ingest remains unproven there
+- direct characterisation on Thursday, 2 April 2026 confirmed that native `{ openapi: '3.2.0' }` input still fails at the shared upgrade/validate boundary with `Failed to produce valid OpenAPI 3.1 document`
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - the full repo-root gate sweep was last recorded green on Sunday, 30 March 2026
@@ -48,9 +50,9 @@ Primary active plan:
 
 - [oas-3.2-version-plumbing.md](./active/oas-3.2-version-plumbing.md) — READY; immediate execution slice
 
-Companion active plan:
+Planned successor plan:
 
-- [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — planned successor after version plumbing lands
+- [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md) — planned successor after version plumbing lands
 
 Recent staged completion records:
 
@@ -86,7 +88,7 @@ Current sweep record:
 - Root schema naming: `title` > `$id` > `"Root"`
 - `$anchor`/`$dynamicRef`/`$dynamicAnchor` now supported: parsed into IR, lossless round-trip, Zod/TS fail-fast for dynamic keywords
 - 13 new unit tests, all quality gates green
-- Paused plan ([json-schema-parser.md](./current/paused/json-schema-parser.md)) scope significantly addressed
+- Historical remediation record ([json-schema-parser.md](./current/complete/json-schema-parser.md)) captures the parser-contract review context and what remained deferred
 
 **`patternProperties`/`propertyNames` implementation** completed Wednesday, 26 March 2026:
 
@@ -143,9 +145,9 @@ Current sweep record:
 - **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
 - **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
-**Active Companion Plan: OAS 3.2 Full Feature Support**
+**Planned Successor Plan: OAS 3.2 Full Feature Support**
 
-Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md):
+Tracked in [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md):
 
 - `QUERY` HTTP method (trivial enum addition)
 - `additionalOperations` for custom HTTP methods
@@ -161,9 +163,9 @@ Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-suppo
 - `$anchor`-based reference resolution (`$ref: "#myAnchor"` — the IR carries `$anchor` after Phase 2, but resolving anchor-based references to their target schemas is not implemented)
 - `$dynamicRef`/`$dynamicAnchor` runtime resolution semantics (the IR carries the markers after Phase 2; Zod/TS writers fail-fast; JSON Schema/OAS writers round-trip the values; but actual dynamic scope resolution is not implemented)
 
-Paused supporting context that remains important:
+Historical supporting context that remains important:
 
-- [json-schema-parser.md](./current/paused/json-schema-parser.md) — historical parser-remediation context only; do not reactivate unchanged
+- [json-schema-parser.md](./current/complete/json-schema-parser.md) — historical parser-remediation context only; do not treat it as a resumable paused workstream
 
 Parked research note:
 
@@ -339,7 +341,7 @@ Prove that the Zod layer participates in strict, lossless transform validation w
 
 ## Session 3.3 Execution Flow (Atomic Plans)
 
-Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans under `./current/session-3.3a/` and `./current/session-3.3b/`.
+Session 3.3 was executed as a linear sequence of smaller atomic plans. The canonical completed records now live under `./current/complete/`, and the old queue-mirror stubs have been moved to archive.
 
 | Step | Plan                                                                                                           | Status      |
 | ---- | -------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -376,21 +378,22 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 - ✅ Component 1: Shared JSON Schema field logic extracted from OpenAPI writer into `writers/shared/`
 - ✅ Component 2: JSON Schema Writer (`writers/json-schema/`) — standalone, document, and bundled modes
 - ✅ **IDENTITY Alignment: Strict-Only Object Semantics** — [complete plan](./current/complete/identity-doctrine-alignment.md)
-- ⏸️ Component 3: JSON Schema Parser — [paused plan](./current/paused/json-schema-parser.md) pending architecture review-pack verdicts
-- 🔲 Component 4: Multi-Cast Parity Rig
+- ✅ Component 3: JSON Schema Parser — complete; historical remediation context recorded in [json-schema-parser.md](./current/complete/json-schema-parser.md)
+- ✅ Component 4: Multi-Cast Parity Rig — complete; see [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
 Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
 - [doctor-rescue-loop-runtime-redesign.md](./current/complete/doctor-rescue-loop-runtime-redesign.md)
 - [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
-- [zod-limitations-architecture-investigation.md](./current/complete/zod-limitations-architecture-investigation.md)
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
+- Older exploratory Zod-limitation context now lives in archive:
+  - [zod-limitations-architecture-investigation.md](./archive/zod-limitations-historical-cluster/zod-limitations-architecture-investigation.md)
+  - [recursive-unknown-key-preserving-zod-emission-investigation.md](./archive/zod-limitations-historical-cluster/recursive-unknown-key-preserving-zod-emission-investigation.md)
+  - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./archive/zod-limitations-historical-cluster/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
-Residual future threads: [zod-and-transform-future-investigations.md](./future/zod-and-transform-future-investigations.md)
+Residual research threads: [zod-and-transform-future-investigations.md](../research/zod-and-transform-future-investigations.md)
 
 ## Phase 5: Companion Workspace Expansion (Planned)
 
@@ -407,6 +410,12 @@ Residual future threads: [zod-and-transform-future-investigations.md](./future/z
   - replace Oak's `oak-openapi` generation stack
 
 Plan: [phase-5-ecosystem-expansion.md](./future/phase-5-ecosystem-expansion.md)
+
+Oak proving ladder (explicit future plan homes):
+
+- [oak-adapter-boundary-replacement.md](./future/oak-adapter-boundary-replacement.md) — Use Case 1 high-level plan for the first concrete Oak adoption wedge
+- [oak-wider-openapi-stack-replacement.md](./future/oak-wider-openapi-stack-replacement.md) — Use Case 2 high-level plan for the broader `oak-mcp-ecosystem` replacement arc, including the `openapi-fetch` decision gate
+- [oak-code-first-openapi-generation-replacement.md](./future/oak-code-first-openapi-generation-replacement.md) — Use Case 3 high-level plan for the `oak-openapi` replacement programme
 
 Agentic infrastructure platform expansion is tracked separately in:
 

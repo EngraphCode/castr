@@ -6,6 +6,12 @@
 
 This report complements [oak-support-plan.md](./oak-support-plan.md). That file remains useful as the earlier negotiation note. This report should be treated as the current strategy and discovery record as of Thursday, 2 April 2026.
 
+The high-level planning homes for the three Oak use cases now live in:
+
+- `.agent/plans/future/oak-adapter-boundary-replacement.md`
+- `.agent/plans/future/oak-wider-openapi-stack-replacement.md`
+- `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`
+
 ---
 
 ## Scope
@@ -25,7 +31,7 @@ Also reviewed existing Castr-side research and plans under:
 - `.agent/directives/VISION.md`
 - `.agent/plans/roadmap.md`
 - `.agent/plans/active/oas-3.2-version-plumbing.md`
-- `.agent/plans/active/oas-3.2-full-feature-support.md`
+- `.agent/plans/future/oas-3.2-full-feature-support.md`
 
 ---
 
@@ -340,11 +346,11 @@ This does **not** mean Oak-specific work should be blocked on every medium-term 
 
 ### Active-plan gap
 
-There is still no active, decision-complete plan whose explicit goal is:
+There is still no active atomic plan whose explicit goal is:
 
 > replace Oak's adapter workspace end-to-end and prove it with a real downstream acceptance suite
 
-The Oak need is recognised in research, but it is not yet promoted to the active execution path.
+The high-level planning home now exists at `.agent/plans/future/oak-adapter-boundary-replacement.md`, but the work is not yet promoted to the active execution path.
 
 ### Output-contract gap
 
@@ -422,9 +428,10 @@ This looks like a distinct companion-workspace / product decision rather than ju
 
 ## Recommended Sequencing
 
-### 1. Open a dedicated Oak adapter replacement plan
+### 1. Use the dedicated Oak adapter replacement plan as the high-level home
 
-This should become an explicit atomic plan, not just research.
+The future-plan home now exists at `.agent/plans/future/oak-adapter-boundary-replacement.md`.
+When the repo is ready to execute it, promote it into an explicit atomic plan rather than reopening the same strategy question from scratch.
 
 Minimum acceptance target:
 
@@ -451,6 +458,8 @@ After the first use case is proven, the next arc should cover:
 
 This is the point where "replace all OpenAPI-related third-party libraries" becomes the operative goal.
 
+Its high-level planning home is now `.agent/plans/future/oak-wider-openapi-stack-replacement.md`.
+
 ### 4. Make an explicit decision about `openapi-fetch`
 
 Do not let this stay implicit.
@@ -460,11 +469,13 @@ Decision options:
 - retain `openapi-fetch` and interoperate
 - replace it with a lightweight Castr companion workspace
 
-### 5. Open a separate arc for `oak-openapi`
+### 5. Keep `oak-openapi` as a separate arc
 
 The third use case should be treated as a separate, code-first/OpenAPI-generation programme.
 
 It is connected to the Oak ecosystem strategy, but it should not be allowed to muddy the definition of the first replacement surface.
+
+Its high-level planning home is now `.agent/plans/future/oak-code-first-openapi-generation-replacement.md`.
 
 ---
 
@@ -488,6 +499,8 @@ The repo now has a real first-customer shape:
 - Phase 1: replace Oak's OpenAPI -> Zod compatibility boundary
 - Phase 2: replace Oak's wider OpenAPI third-party dependency stack
 - Phase 3: replace Oak's code-first OpenAPI generation stack
+
+Those three rungs now have explicit future plan homes in the Castr plan stack.
 
 That is a much more concrete strategy ladder than the repo had before this review.
 
@@ -541,4 +554,4 @@ That is a much more concrete strategy ladder than the repo had before this revie
 - `.agent/directives/VISION.md`
 - `.agent/plans/roadmap.md`
 - `.agent/plans/active/oas-3.2-version-plumbing.md`
-- `.agent/plans/active/oas-3.2-full-feature-support.md`
+- `.agent/plans/future/oas-3.2-full-feature-support.md`

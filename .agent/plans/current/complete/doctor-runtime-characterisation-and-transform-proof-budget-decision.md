@@ -4,9 +4,9 @@
 **Created:** 2026-03-13  
 **Last Updated:** 2026-03-13  
 **Predecessor:** [int64-bigint-semantics-investigation.md](./int64-bigint-semantics-investigation.md)  
-**Successor Active Slice:** [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)  
-**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](../paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)  
-**Related:** [zod-limitations-architecture-investigation.md](../paused/zod-limitations-architecture-investigation.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [README.md](../../../../lib/tests-transforms/README.md)
+**Successor Slice:** [doctor-rescue-loop-runtime-redesign.md](./doctor-rescue-loop-runtime-redesign.md)  
+**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](../../archive/zod-limitations-historical-cluster/transform-proof-budgeting-and-runtime-architecture-investigation.md)  
+**Related:** [zod-limitations-architecture-investigation.md](../../archive/zod-limitations-historical-cluster/zod-limitations-architecture-investigation.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [README.md](../../../../lib/tests-transforms/README.md)
 
 ---
 
@@ -99,14 +99,14 @@ That review found no blocking issues in the final runtime-characterisation diff.
 
 This completed slice promoted its main conclusions out of temporary session notes and into the active handoff set:
 
-- the next repo entrypoint is now the active rescue-loop redesign plan
-- the paused transform-proof budgeting investigation remains context, but tranche-zero runtime diagnosis no longer needs to be rediscovered
+- the next repo entrypoint after this slice was the rescue-loop redesign slice
+- the historical transform-proof budgeting investigation remains context, but tranche-zero runtime diagnosis no longer needs to be rediscovered
 - the active prompt, roadmap, and napkin now all carry the measured runtime table and the explicit non-harness outcome
 
 ## Follow-On Context
 
-The next repo entrypoint is the active rescue-loop redesign plan:
+The next repo entrypoint after this slice was the rescue-loop redesign slice:
 
-- [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)
+- [doctor-rescue-loop-runtime-redesign.md](./doctor-rescue-loop-runtime-redesign.md)
 
-Only pull the broader paused transform-proof budgeting investigation forward again if new evidence shows that scheduling, setup churn, or another non-doctor runtime concern has become the highest-leverage blocker.
+Only pull the broader historical transform-proof budgeting investigation forward again if new evidence shows that scheduling, setup churn, or another non-doctor runtime concern has become the highest-leverage blocker.

@@ -163,6 +163,10 @@ Companion workspaces are the place for higher-level integrations that should not
   - lightweight runtime exposure packages
 - **Reference implementations**
   - Oak-style replacement workspaces that prove end-to-end adoption paths
+  - an explicit Oak proving ladder:
+    - adapter boundary replacement first
+    - wider OpenAPI-stack replacement second
+    - code-first OpenAPI generation replacement as a distinct third programme
 
 ---
 

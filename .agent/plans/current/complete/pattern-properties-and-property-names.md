@@ -3,7 +3,7 @@
 **Status:** ✅ Complete — implemented and verified, all quality gates green (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** [discovery-and-prioritisation.md](./discovery-and-prioritisation.md)
-**Related:** [json-schema-parser.md (paused)](../current/paused/json-schema-parser.md), [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
+**Related:** [json-schema-parser.md (historical remediation context)](./json-schema-parser.md), [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
 
 ---
 
@@ -44,7 +44,7 @@ This creates explicit **format tensions** that must be documented honestly:
 8. Zod writer: fail fast with a helpful error — Zod has no native `patternProperties` or `propertyNames` equivalent
 9. TypeScript writer: fail fast — TypeScript interfaces cannot express these constraints
 10. Round-trip proofs (JSON Schema and OpenAPI)
-11. Update acceptance criteria, paused plan, session-entry, roadmap
+11. Update acceptance criteria, the historical parser-remediation record, session-entry, and roadmap
 
 **Out of scope:**
 
@@ -153,7 +153,7 @@ propertyNames?: JsonSchemaObject;
 ### Phase 7: Doc + Handoff
 
 1. Update `json-schema-and-parity-acceptance-criteria.md`
-2. Update paused `json-schema-parser.md` (mark both keywords as resolved)
+2. Update historical `json-schema-parser.md` remediation record (mark both keywords as resolved)
 3. Update `session-entry.prompt.md` (move from "Remaining Planned Capabilities")
 4. Update `roadmap.md`
 5. Record decisions in napkin
@@ -174,7 +174,7 @@ propertyNames?: JsonSchemaObject;
 - TSDoc on new `CastrSchema` fields
 - TSDoc on new parser/writer functions
 - Updated acceptance criteria
-- Updated session-entry, roadmap, paused plan
+- Updated session-entry, roadmap, and the historical remediation record
 - Napkin entries for design decisions
 
 ## Quality Gates

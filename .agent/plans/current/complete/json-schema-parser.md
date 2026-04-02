@@ -1,10 +1,10 @@
-# Plan (Partially Resolved): JSON Schema Architecture Remediation (Post-Pack 4)
+# Plan (Complete Record): JSON Schema Architecture Remediation (Post-Pack 4)
 
-**Status:** Partially resolved — rewritten after Pack 4 `red` verdict on 2026-03-22, significantly addressed on 2026-03-25, `patternProperties`/`propertyNames` resolved on 2026-03-26, `prefixItems`/`contains` resolved on 2026-03-26
+**Status:** Complete record — rewritten after Pack 4 `red` verdict on 2026-03-22, substantially addressed by follow-on work, and retained as historical parser-remediation context after recategorisation on 2026-04-02
 **Created:** 2026-03-21
-**Last Updated:** 2026-03-26
+**Last Updated:** 2026-04-02
 **Predecessor:** [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
-**Related:** [architecture-review-packs.md](../../current/complete/architecture-review-packs.md), [phase-4-json-schema-and-parity.md](../complete/phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
+**Related:** [architecture-review-packs.md](./architecture-review-packs.md), [phase-4-json-schema-and-parity.md](./phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
 ---
 
@@ -20,7 +20,7 @@ The following Pack 4 findings have been resolved by the parser expansion:
 - ✅ **`contains` parser support** — resolved on 2026-03-26. Full-stack: IR model, JSON Schema parser/writer, OpenAPI builder, Zod/TS fail-fast. See [prefixitems-tuple-and-contains.md](../complete/prefixitems-tuple-and-contains.md).
 - ✅ **`UnsupportedJsonSchemaKeywordError` not in public barrel** — resolved. Exported from `schema-processing/index.ts`.
 
-Remaining open findings (future work, not currently planned):
+Remaining open findings (future work tracked elsewhere or intentionally deferred):
 
 - ✅ **`if`/`then`/`else` conditional applicator support** — resolved on 2026-03-27. Full-stack: IR model, parser, JSON Schema writer (round-trip), Zod/TS fail-fast, runtime validator.
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
@@ -28,14 +28,14 @@ Remaining open findings (future work, not currently planned):
 - External `$ref` resolution
 - ✅ **Boolean schema support** (`true`/`false` as schema) — resolved on 2026-03-27, upgraded on 2026-03-28. `booleanSchema` added to IR model, parser handles boolean input, JSON Schema writer round-trips, Zod emits `z.never()`/`z.any()`, TS emits `never`/`unknown`, OpenAPI fail-fast.
 
-This file remains as historical context. It no longer blocks any current work.
+This file is now a completed historical remediation-context record. It no longer blocks any current work and should not be treated as a resumable paused workstream.
 
-## Current Pause Truth
+## Historical Context
 
 - Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict. See [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md).
 - JSON Schema parser, writer, and transform-proof code already exist in `lib/src/schema-processing/parsers/json-schema/`, `lib/src/schema-processing/writers/json-schema/`, and `lib/tests-transforms/__tests__/scenario-{5,6,7}-*.test.ts`.
 - The next honest work is not "build the parser". It is to remediate the public contract and proof gaps Pack 4 identified.
-- Pack 2's live philosophy still governs this paused workstream explicitly: strict and complete everywhere, all the time.
+- Pack 2's live philosophy still governs this workstream explicitly: strict and complete everywhere, all the time.
 
 ## Pack 4 Review Truth
 
@@ -81,7 +81,7 @@ This file remains as historical context. It no longer blocks any current work.
 - define one honest JSON Schema document-parser contract
 - define explicit fail-fast rejection boundaries for unsupported JSON Schema input
 - align writer output, neighbouring JSON-Schema-shaped surfaces, and proof artefacts around one canonical egress contract
-- update acceptance criteria, handoff docs, and this paused plan so they match the reviewed architecture
+- update acceptance criteria, handoff docs, and this remediation record so they match the reviewed architecture
 
 **Out of scope:**
 
@@ -128,12 +128,12 @@ This file remains as historical context. It no longer blocks any current work.
 2. Unsupported JSON Schema semantics are rejected explicitly rather than remaining silent or ambiguous.
 3. The JSON Schema writer and neighbouring conversion surfaces share one documented normal form for the supported surface.
 4. Scenario 5, Scenario 6, Scenario 7, and the JSON Schema characterisation surface prove the architecture the repo claims.
-5. Acceptance criteria, roadmap, session-entry, and this paused plan all match the reviewed architecture.
+5. Acceptance criteria, roadmap, session-entry, and this remediation record all match the reviewed architecture.
 6. All quality gates pass when implementation resumes.
 
 ## Activation Trigger
 
-This paused workstream may reactivate only when:
+A new JSON Schema remediation slice should draw from this historical record only when:
 
 - the remaining review-pack sweep says JSON Schema remediation is the next implementation slice, and
 - the implementation slice starts from the Pack 4 findings rather than from the superseded parser-build story.

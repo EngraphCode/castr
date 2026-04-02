@@ -1,9 +1,9 @@
-# Plan (Active): Zod Transform Defect Quarantine Remediation
+# Plan (Complete): Zod Transform Defect Quarantine Remediation
 
 **Status:** ✅ Complete  
 **Created:** 2026-03-08  
 **Last Updated:** 2026-03-08  
-**Predecessor:** Phase 4 — JSON Schema + Post-3.3 Parity (complete, archived)
+**Predecessor:** [phase-4-json-schema-and-parity.md](./phase-4-json-schema-and-parity.md)
 
 ---
 

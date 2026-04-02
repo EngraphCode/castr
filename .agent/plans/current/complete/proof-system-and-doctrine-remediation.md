@@ -1,8 +1,8 @@
-# Plan (Active): Proof-System and Durable-Doctrine Remediation
+# Plan (Complete): Proof-System and Durable-Doctrine Remediation
 
 **Status:** Complete — first successor slice from the seven-pack triage (closed Monday, 23 March 2026)  
 **Created:** 2026-03-23  
-**Predecessor:** [architecture-review-packs.md](../../active/architecture-review-packs.md)
+**Predecessor:** [architecture-review-packs.md](./architecture-review-packs.md)
 **Triage Source:** [cross-pack-triage.md](../../../research/architecture-review-packs/cross-pack-triage.md)
 **Related:** [IDENTITY.md](../../../IDENTITY.md), [DEFINITION_OF_DONE.md](../../../directives/DEFINITION_OF_DONE.md), [testing-strategy.md](../../../directives/testing-strategy.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
@@ -39,7 +39,7 @@ Rationale:
 - Format-specific parser/writer/lockstep fixes (RC-4) — separate bounded plan.
 - Downstream surface drift (RC-5) — separate bounded plan.
 - New feature or format implementation.
-- Reactivation of paused JSON Schema parser plan.
+- Planning a new JSON Schema parser-remediation slice from the historical record.
 
 ## Locked Constraints
 
@@ -48,7 +48,7 @@ Rationale:
 3. TDD at all levels.
 4. No escape hatches.
 5. All quality-gate failures remain blocking at all times.
-6. The paused JSON Schema parser plan stays paused.
+6. The historical JSON Schema parser remediation record remains context only during this slice.
 
 ## Execution Plan
 

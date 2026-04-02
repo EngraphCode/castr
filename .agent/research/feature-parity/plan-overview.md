@@ -25,6 +25,7 @@ Exit criteria:
 - Replace missing-schema fallbacks with errors in strict mode.
 - Bundle manifest output for fixture verification (schema internal and flexible) — **TBD**, needs validation with Oak.
 - All generated outputs must be **rule-compliant** (no `as` except `as const`, no `Object.*`, no stringified schema APIs).
+- Planning home for this use case: `.agent/plans/future/oak-adapter-boundary-replacement.md`.
 
 Exit criteria:
 
@@ -49,6 +50,9 @@ Exit criteria:
 - Decide whether runtime route exposure stays external or moves into a lightweight companion workspace.
 - Feed the core OpenAPI writer from that companion layer rather than turning code-first authoring into a core `lib` format promise.
 - Map security metadata and tags into OpenAPI output through that companion layer.
+- Planning homes:
+  - `.agent/plans/future/oak-wider-openapi-stack-replacement.md` for the wider Oak ecosystem replacement arc.
+  - `.agent/plans/future/oak-code-first-openapi-generation-replacement.md` for the distinct `oak-openapi` programme.
 
 Exit criteria:
 

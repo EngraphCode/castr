@@ -9,7 +9,7 @@
 
 ## Problem
 
-Parser and writer seams in each format still disagree about what is admitted vs emitted vs proven. The cross-pack triage identifies 8 findings. This plan scopes a bounded first sub-slice targeting the 5 findings that are actionable without the paused JSON Schema parser plan.
+Parser and writer seams in each format still disagree about what is admitted vs emitted vs proven. The cross-pack triage identifies 8 findings. This plan scopes a bounded first sub-slice targeting the 5 findings that were actionable without reopening the historical JSON Schema parser remediation record.
 
 ---
 
@@ -25,7 +25,7 @@ Parser and writer seams in each format still disagree about what is admitted vs 
 | 7   | Zod: identifier-rooted expressions promoted to `$ref` without proof   | Pack 5.3    |
 | 8   | Zod: helper format surface wider than writer/proof lockstep           | Pack 5.4    |
 
-### Deferred (JSON Schema parser contract — needs paused plan)
+### Deferred (JSON Schema parser contract — needs a fresh slice grounded in the historical remediation record)
 
 | #   | Finding                                                              | Source Pack |
 | --- | -------------------------------------------------------------------- | ----------- |

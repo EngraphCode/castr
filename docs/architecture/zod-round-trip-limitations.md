@@ -174,7 +174,7 @@ See:
 - [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md)
 - [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 - [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md)
-- [zod-and-transform-future-investigations.md](../../.agent/plans/future/zod-and-transform-future-investigations.md) — consolidated reopen triggers and `z.looseObject()` candidate analysis
+- [zod-and-transform-future-investigations.md](../../.agent/research/zod-and-transform-future-investigations.md) — consolidated reopen triggers and `z.looseObject()` candidate analysis
 
 ---
 
