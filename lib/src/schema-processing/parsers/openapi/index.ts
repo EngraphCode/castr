@@ -20,6 +20,7 @@ import { buildCastrSchemas, extractEnums } from './schemas/index.js';
 import { buildCastrOperations, buildIRSecurity } from './operations/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
 import { cloneAndValidateOpenApiDocumentObjectSemantics } from './openapi-document.object-semantics.js';
 
@@ -63,7 +64,7 @@ function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument>
  * Extracts all schemas, operations, and metadata into a lossless IR structure
  * optimized for code generation. Preserves all OpenAPI information without loss.
  *
- * @param doc - OpenAPI document (OAS 3.1.0)
+ * @param doc - Canonical OpenAPI document (OAS 3.2.0 after the shared preparation boundary)
  * @returns Complete IR document with schemas, operations, and dependency graph
  *
  * @example
@@ -91,7 +92,7 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
 
   return {
     version: '1.0.0',
-    openApiVersion: document.openapi,
+    openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: document.info,
     servers: document.servers ?? [],
     components,
@@ -219,7 +220,7 @@ function extractExamples(components: ComponentsObject, result: IRComponent[]): v
 }
 
 /**
- * Extract webhooks from OpenAPI 3.1.x document.
+ * Extract webhooks from OpenAPI 3.1+ document.
  *
  * Webhooks are PathItem objects keyed by webhook name.
  *
@@ -229,7 +230,7 @@ function extractExamples(components: ComponentsObject, result: IRComponent[]): v
  * @internal
  */
 function extractWebhooks(doc: OpenAPIObject): Map<string, PathItemObject> | undefined {
-  // Webhooks only exist in OpenAPI 3.1.x
+  // Webhooks only exist in OpenAPI 3.1+
   if (!('webhooks' in doc) || !doc.webhooks) {
     return undefined;
   }

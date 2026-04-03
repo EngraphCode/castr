@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.1",
+  "openApiVersion": "3.2.0",
   "info": {
     "version": "1.0.0",
     "title": "Swagger Petstore",
@@ -14,6 +14,87 @@
     }
   ],
   "components": [
+    {
+      "type": "schema",
+      "name": "Error",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "code": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [".int()"],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int32"
+            },
+            "message": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            }
+          }
+        },
+        "required": ["code", "message"],
+        "additionalProperties": false
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
     {
       "type": "schema",
       "name": "Pet",
@@ -54,7 +135,8 @@
                 "circularReferences": []
               },
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "integerSemantics": "int64"
             },
             "name": {
               "metadata": {
@@ -94,7 +176,8 @@
             }
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -163,86 +246,6 @@
         "zodChain": {
           "presence": "",
           "validations": [".max(100)"],
-          "defaults": []
-        },
-        "circularReferences": []
-      }
-    },
-    {
-      "type": "schema",
-      "name": "Error",
-      "schema": {
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "type": "object",
-        "properties": {
-          "dataType": "CastrSchemaProperties",
-          "value": {
-            "code": {
-              "metadata": {
-                "required": true,
-                "nullable": false,
-                "dependencyGraph": {
-                  "references": [],
-                  "referencedBy": [],
-                  "depth": 0
-                },
-                "zodChain": {
-                  "presence": "",
-                  "validations": [".int()"],
-                  "defaults": []
-                },
-                "circularReferences": []
-              },
-              "type": "integer",
-              "format": "int32"
-            },
-            "message": {
-              "metadata": {
-                "required": true,
-                "nullable": false,
-                "dependencyGraph": {
-                  "references": [],
-                  "referencedBy": [],
-                  "depth": 0
-                },
-                "zodChain": {
-                  "presence": "",
-                  "validations": [],
-                  "defaults": []
-                },
-                "circularReferences": []
-              },
-              "type": "string"
-            }
-          }
-        },
-        "required": ["code", "message"]
-      },
-      "metadata": {
-        "required": true,
-        "nullable": false,
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "zodChain": {
-          "presence": "",
-          "validations": [],
           "defaults": []
         },
         "circularReferences": []
@@ -647,6 +650,13 @@
   ],
   "dependencyGraph": {
     "nodes": {
+      "#/components/schemas/Error": {
+        "ref": "#/components/schemas/Error",
+        "dependencies": [],
+        "dependents": [],
+        "depth": 0,
+        "isCircular": false
+      },
       "#/components/schemas/Pet": {
         "ref": "#/components/schemas/Pet",
         "dependencies": [],
@@ -660,22 +670,15 @@
         "dependents": [],
         "depth": 1,
         "isCircular": false
-      },
-      "#/components/schemas/Error": {
-        "ref": "#/components/schemas/Error",
-        "dependencies": [],
-        "dependents": [],
-        "depth": 0,
-        "isCircular": false
       }
     },
     "topologicalOrder": [
+      "#/components/schemas/Error",
       "#/components/schemas/Pet",
-      "#/components/schemas/Pets",
-      "#/components/schemas/Error"
+      "#/components/schemas/Pets"
     ],
     "circularReferences": []
   },
-  "schemaNames": ["Pet", "Pets", "Error"],
+  "schemaNames": ["Error", "Pet", "Pets"],
   "enums": {}
 }

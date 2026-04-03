@@ -4,6 +4,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-02
 
+- OAS 3.2 version-plumbing close-out consolidation completed:
+  - `.agent/plans/active/oas-3.2-version-plumbing.md` moved to `.agent/plans/current/complete/oas-3.2-version-plumbing.md` once the fresh repo-root `pnpm check:ci` rerun was green
+  - live handoff surfaces (`.agent/plans/roadmap.md`, `.agent/prompts/session-entry.prompt.md`, `.agent/README.md`) and live successor plans now stop describing the slice as current `active/` work or as "next"
+  - Practice box check stayed clean: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new Practice evolution clears the bar here; the useful lesson remains repo-local lifecycle hygiene: once a slice is fully verified, move it out of `active/` promptly or the handoff prose drifts back toward "next" language
 - High-level Oak use-case planning gap closed:
   - added explicit future plan homes for the three Oak proving-ladder use cases:
     - `.agent/plans/future/oak-adapter-boundary-replacement.md`

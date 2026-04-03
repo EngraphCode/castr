@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.0",
+  "openApiVersion": "3.2.0",
   "info": {
     "title": "Oak OpenAPI",
     "version": "0.5.0-18a779a213d24096ecd2d73eec530f1679ab3e54"
@@ -343,7 +343,8 @@
                                       }
                                     }
                                   },
-                                  "required": ["unitTitle", "unitSlug"]
+                                  "required": ["unitTitle", "unitSlug"],
+                                  "additionalProperties": false
                                 }
                               },
                               "categories": {
@@ -427,7 +428,8 @@
                                       }
                                     }
                                   },
-                                  "required": ["categoryTitle"]
+                                  "required": ["categoryTitle"],
+                                  "additionalProperties": false
                                 }
                               },
                               "threads": {
@@ -531,12 +533,14 @@
                                       }
                                     }
                                   },
-                                  "required": ["threadTitle", "threadSlug", "order"]
+                                  "required": ["threadTitle", "threadSlug", "order"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["unitTitle", "unitOrder", "unitOptions"]
+                          "required": ["unitTitle", "unitOrder", "unitOptions"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -693,7 +697,8 @@
                                       }
                                     }
                                   },
-                                  "required": ["categoryTitle"]
+                                  "required": ["categoryTitle"],
+                                  "additionalProperties": false
                                 }
                               },
                               "threads": {
@@ -795,19 +800,22 @@
                                       }
                                     }
                                   },
-                                  "required": ["threadTitle", "threadSlug", "order"]
+                                  "required": ["threadTitle", "threadSlug", "order"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["unitTitle", "unitOrder", "unitSlug"]
+                          "required": ["unitTitle", "unitOrder", "unitSlug"],
+                          "additionalProperties": false
                         }
                       ]
                     }
                   }
                 }
               },
-              "required": ["year", "units"]
+              "required": ["year", "units"],
+              "additionalProperties": false
             },
             {
               "metadata": {
@@ -1205,7 +1213,8 @@
                                                           }
                                                         }
                                                       },
-                                                      "required": ["unitTitle", "unitSlug"]
+                                                      "required": ["unitTitle", "unitSlug"],
+                                                      "additionalProperties": false
                                                     }
                                                   },
                                                   "categories": {
@@ -1289,7 +1298,8 @@
                                                           }
                                                         }
                                                       },
-                                                      "required": ["categoryTitle"]
+                                                      "required": ["categoryTitle"],
+                                                      "additionalProperties": false
                                                     }
                                                   },
                                                   "threads": {
@@ -1397,12 +1407,14 @@
                                                         "threadTitle",
                                                         "threadSlug",
                                                         "order"
-                                                      ]
+                                                      ],
+                                                      "additionalProperties": false
                                                     }
                                                   }
                                                 }
                                               },
-                                              "required": ["unitTitle", "unitOrder", "unitOptions"]
+                                              "required": ["unitTitle", "unitOrder", "unitOptions"],
+                                              "additionalProperties": false
                                             },
                                             {
                                               "metadata": {
@@ -1559,7 +1571,8 @@
                                                           }
                                                         }
                                                       },
-                                                      "required": ["categoryTitle"]
+                                                      "required": ["categoryTitle"],
+                                                      "additionalProperties": false
                                                     }
                                                   },
                                                   "threads": {
@@ -1665,24 +1678,28 @@
                                                         "threadTitle",
                                                         "threadSlug",
                                                         "order"
-                                                      ]
+                                                      ],
+                                                      "additionalProperties": false
                                                     }
                                                   }
                                                 }
                                               },
-                                              "required": ["unitTitle", "unitOrder", "unitSlug"]
+                                              "required": ["unitTitle", "unitOrder", "unitSlug"],
+                                              "additionalProperties": false
                                             }
                                           ]
                                         }
                                       }
                                     }
                                   },
-                                  "required": ["tierTitle", "tierSlug", "units"]
+                                  "required": ["tierTitle", "tierSlug", "units"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["examSubjectTitle", "tiers"]
+                          "required": ["examSubjectTitle", "tiers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -1911,7 +1928,8 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["unitTitle", "unitSlug"]
+                                              "required": ["unitTitle", "unitSlug"],
+                                              "additionalProperties": false
                                             }
                                           },
                                           "categories": {
@@ -1995,7 +2013,8 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["categoryTitle"]
+                                              "required": ["categoryTitle"],
+                                              "additionalProperties": false
                                             }
                                           },
                                           "threads": {
@@ -2099,12 +2118,14 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["threadTitle", "threadSlug", "order"]
+                                              "required": ["threadTitle", "threadSlug", "order"],
+                                              "additionalProperties": false
                                             }
                                           }
                                         }
                                       },
-                                      "required": ["unitTitle", "unitOrder", "unitOptions"]
+                                      "required": ["unitTitle", "unitOrder", "unitOptions"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -2261,7 +2282,8 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["categoryTitle"]
+                                              "required": ["categoryTitle"],
+                                              "additionalProperties": false
                                             }
                                           },
                                           "threads": {
@@ -2363,26 +2385,30 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["threadTitle", "threadSlug", "order"]
+                                              "required": ["threadTitle", "threadSlug", "order"],
+                                              "additionalProperties": false
                                             }
                                           }
                                         }
                                       },
-                                      "required": ["unitTitle", "unitOrder", "unitSlug"]
+                                      "required": ["unitTitle", "unitOrder", "unitSlug"],
+                                      "additionalProperties": false
                                     }
                                   ]
                                 }
                               }
                             }
                           },
-                          "required": ["examSubjectTitle", "units"]
+                          "required": ["examSubjectTitle", "units"],
+                          "additionalProperties": false
                         }
                       ]
                     }
                   }
                 }
               },
-              "required": ["year", "examSubjects"]
+              "required": ["year", "examSubjects"],
+              "additionalProperties": false
             },
             {
               "metadata": {
@@ -2688,7 +2714,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["unitTitle", "unitSlug"]
+                                          "required": ["unitTitle", "unitSlug"],
+                                          "additionalProperties": false
                                         }
                                       },
                                       "categories": {
@@ -2772,7 +2799,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["categoryTitle"]
+                                          "required": ["categoryTitle"],
+                                          "additionalProperties": false
                                         }
                                       },
                                       "threads": {
@@ -2876,12 +2904,14 @@
                                               }
                                             }
                                           },
-                                          "required": ["threadTitle", "threadSlug", "order"]
+                                          "required": ["threadTitle", "threadSlug", "order"],
+                                          "additionalProperties": false
                                         }
                                       }
                                     }
                                   },
-                                  "required": ["unitTitle", "unitOrder", "unitOptions"]
+                                  "required": ["unitTitle", "unitOrder", "unitOptions"],
+                                  "additionalProperties": false
                                 },
                                 {
                                   "metadata": {
@@ -3038,7 +3068,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["categoryTitle"]
+                                          "required": ["categoryTitle"],
+                                          "additionalProperties": false
                                         }
                                       },
                                       "threads": {
@@ -3140,24 +3171,28 @@
                                               }
                                             }
                                           },
-                                          "required": ["threadTitle", "threadSlug", "order"]
+                                          "required": ["threadTitle", "threadSlug", "order"],
+                                          "additionalProperties": false
                                         }
                                       }
                                     }
                                   },
-                                  "required": ["unitTitle", "unitOrder", "unitSlug"]
+                                  "required": ["unitTitle", "unitOrder", "unitSlug"],
+                                  "additionalProperties": false
                                 }
                               ]
                             }
                           }
                         }
                       },
-                      "required": ["tierTitle", "tierSlug", "units"]
+                      "required": ["tierTitle", "tierSlug", "units"],
+                      "additionalProperties": false
                     }
                   }
                 }
               },
-              "required": ["year", "tiers"]
+              "required": ["year", "tiers"],
+              "additionalProperties": false
             }
           ]
         }
@@ -3247,7 +3282,8 @@
             }
           }
         },
-        "required": ["transcript", "vtt"]
+        "required": ["transcript", "vtt"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -3392,7 +3428,8 @@
               }
             }
           },
-          "required": ["lessonTitle", "lessonSlug"]
+          "required": ["lessonTitle", "lessonSlug"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -3663,12 +3700,14 @@
                       }
                     }
                   },
-                  "required": ["type", "label", "url"]
+                  "required": ["type", "label", "url"],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["lessonSlug", "lessonTitle", "assets"]
+          "required": ["lessonSlug", "lessonTitle", "assets"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -3939,12 +3978,14 @@
                       }
                     }
                   },
-                  "required": ["type", "label", "url"]
+                  "required": ["type", "label", "url"],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["lessonSlug", "lessonTitle", "assets"]
+          "required": ["lessonSlug", "lessonTitle", "assets"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -4155,12 +4196,14 @@
                     }
                   }
                 },
-                "required": ["type", "label", "url"]
+                "required": ["type", "label", "url"],
+                "additionalProperties": false
               }
             }
           }
         },
-        "required": []
+        "required": [],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -4534,7 +4577,8 @@
                               }
                             }
                           },
-                          "required": ["keyStageTitle", "keyStageSlug"]
+                          "required": ["keyStageTitle", "keyStageSlug"],
+                          "additionalProperties": false
                         }
                       },
                       "phaseSlug": {
@@ -4637,7 +4681,8 @@
                             }
                           }
                         },
-                        "required": ["title", "slug"]
+                        "required": ["title", "slug"],
+                        "additionalProperties": false
                       }
                     }
                   },
@@ -4648,7 +4693,8 @@
                     "phaseSlug",
                     "phaseTitle",
                     "ks4Options"
-                  ]
+                  ],
+                  "additionalProperties": false
                 }
               },
               "years": {
@@ -4770,12 +4816,14 @@
                       }
                     }
                   },
-                  "required": ["keyStageTitle", "keyStageSlug"]
+                  "required": ["keyStageTitle", "keyStageSlug"],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["subjectTitle", "subjectSlug", "sequenceSlugs", "years", "keyStages"]
+          "required": ["subjectTitle", "subjectSlug", "sequenceSlugs", "years", "keyStages"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -5094,7 +5142,8 @@
                             }
                           }
                         },
-                        "required": ["keyStageTitle", "keyStageSlug"]
+                        "required": ["keyStageTitle", "keyStageSlug"],
+                        "additionalProperties": false
                       }
                     },
                     "phaseSlug": {
@@ -5197,7 +5246,8 @@
                           }
                         }
                       },
-                      "required": ["title", "slug"]
+                      "required": ["title", "slug"],
+                      "additionalProperties": false
                     }
                   }
                 },
@@ -5208,7 +5258,8 @@
                   "phaseSlug",
                   "phaseTitle",
                   "ks4Options"
-                ]
+                ],
+                "additionalProperties": false
               }
             },
             "years": {
@@ -5330,12 +5381,14 @@
                     }
                   }
                 },
-                "required": ["keyStageTitle", "keyStageSlug"]
+                "required": ["keyStageTitle", "keyStageSlug"],
+                "additionalProperties": false
               }
             }
           }
         },
-        "required": ["subjectTitle", "subjectSlug", "sequenceSlugs", "years", "keyStages"]
+        "required": ["subjectTitle", "subjectSlug", "sequenceSlugs", "years", "keyStages"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -5568,7 +5621,8 @@
                       }
                     }
                   },
-                  "required": ["keyStageTitle", "keyStageSlug"]
+                  "required": ["keyStageTitle", "keyStageSlug"],
+                  "additionalProperties": false
                 }
               },
               "phaseSlug": {
@@ -5671,7 +5725,8 @@
                     }
                   }
                 },
-                "required": ["title", "slug"]
+                "required": ["title", "slug"],
+                "additionalProperties": false
               }
             }
           },
@@ -5682,7 +5737,8 @@
             "phaseSlug",
             "phaseTitle",
             "ks4Options"
-          ]
+          ],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -5803,7 +5859,8 @@
               }
             }
           },
-          "required": ["keyStageTitle", "keyStageSlug"]
+          "required": ["keyStageTitle", "keyStageSlug"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -5972,7 +6029,8 @@
               }
             }
           },
-          "required": ["slug", "title"]
+          "required": ["slug", "title"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -6182,12 +6240,14 @@
                       }
                     }
                   },
-                  "required": ["lessonSlug", "lessonTitle"]
+                  "required": ["lessonSlug", "lessonTitle"],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["unitSlug", "unitTitle", "lessons"]
+          "required": ["unitSlug", "unitTitle", "lessons"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -6381,12 +6441,14 @@
                       }
                     }
                   },
-                  "required": ["unitSlug", "unitTitle"]
+                  "required": ["unitSlug", "unitTitle"],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["yearSlug", "yearTitle", "units"]
+          "required": ["yearSlug", "yearTitle", "units"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -6791,11 +6853,13 @@
                               }
                             }
                           },
-                          "required": ["url", "width", "height"]
+                          "required": ["url", "width", "height"],
+                          "additionalProperties": false
                         }
                       }
                     },
-                    "required": ["question", "questionType"]
+                    "required": ["question", "questionType"],
+                    "additionalProperties": false
                   },
                   {
                     "metadata": {
@@ -6929,7 +6993,8 @@
                                         }
                                       }
                                     },
-                                    "required": ["distractor"]
+                                    "required": ["distractor"],
+                                    "additionalProperties": false
                                   },
                                   {
                                     "metadata": {
@@ -7011,7 +7076,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       {
                                         "metadata": {
@@ -7184,11 +7250,13 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["url", "width", "height"]
+                                              "required": ["url", "width", "height"],
+                                              "additionalProperties": false
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     ]
                                   }
@@ -7197,7 +7265,8 @@
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -7318,12 +7387,14 @@
                                     }
                                   }
                                 },
-                                "required": ["type", "content"]
+                                "required": ["type", "content"],
+                                "additionalProperties": false
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -7466,7 +7537,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     },
                                     "correctChoice": {
                                       "metadata": {
@@ -7533,16 +7605,19 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   }
                                 },
-                                "required": ["matchOption", "correctChoice"]
+                                "required": ["matchOption", "correctChoice"],
+                                "additionalProperties": false
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -7659,7 +7734,8 @@
                                         }
                                       }
                                     },
-                                    "required": ["order"]
+                                    "required": ["order"],
+                                    "additionalProperties": false
                                   },
                                   {
                                     "metadata": {
@@ -7724,14 +7800,16 @@
                                         }
                                       }
                                     },
-                                    "required": ["type", "content"]
+                                    "required": ["type", "content"],
+                                    "additionalProperties": false
                                   }
                                 ]
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       }
                     ]
                   }
@@ -8043,11 +8121,13 @@
                               }
                             }
                           },
-                          "required": ["url", "width", "height"]
+                          "required": ["url", "width", "height"],
+                          "additionalProperties": false
                         }
                       }
                     },
-                    "required": ["question", "questionType"]
+                    "required": ["question", "questionType"],
+                    "additionalProperties": false
                   },
                   {
                     "metadata": {
@@ -8181,7 +8261,8 @@
                                         }
                                       }
                                     },
-                                    "required": ["distractor"]
+                                    "required": ["distractor"],
+                                    "additionalProperties": false
                                   },
                                   {
                                     "metadata": {
@@ -8263,7 +8344,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       {
                                         "metadata": {
@@ -8436,11 +8518,13 @@
                                                   }
                                                 }
                                               },
-                                              "required": ["url", "width", "height"]
+                                              "required": ["url", "width", "height"],
+                                              "additionalProperties": false
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     ]
                                   }
@@ -8449,7 +8533,8 @@
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -8570,12 +8655,14 @@
                                     }
                                   }
                                 },
-                                "required": ["type", "content"]
+                                "required": ["type", "content"],
+                                "additionalProperties": false
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -8718,7 +8805,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     },
                                     "correctChoice": {
                                       "metadata": {
@@ -8785,16 +8873,19 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   }
                                 },
-                                "required": ["matchOption", "correctChoice"]
+                                "required": ["matchOption", "correctChoice"],
+                                "additionalProperties": false
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       },
                       {
                         "metadata": {
@@ -8911,7 +9002,8 @@
                                         }
                                       }
                                     },
-                                    "required": ["order"]
+                                    "required": ["order"],
+                                    "additionalProperties": false
                                   },
                                   {
                                     "metadata": {
@@ -8976,14 +9068,16 @@
                                         }
                                       }
                                     },
-                                    "required": ["type", "content"]
+                                    "required": ["type", "content"],
+                                    "additionalProperties": false
                                   }
                                 ]
                               }
                             }
                           }
                         },
-                        "required": ["questionType", "answers"]
+                        "required": ["questionType", "answers"],
+                        "additionalProperties": false
                       }
                     ]
                   }
@@ -8992,7 +9086,8 @@
             }
           }
         },
-        "required": ["starterQuiz", "exitQuiz"]
+        "required": ["starterQuiz", "exitQuiz"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -9452,11 +9547,13 @@
                                 }
                               }
                             },
-                            "required": ["url", "width", "height"]
+                            "required": ["url", "width", "height"],
+                            "additionalProperties": false
                           }
                         }
                       },
-                      "required": ["question", "questionType"]
+                      "required": ["question", "questionType"],
+                      "additionalProperties": false
                     },
                     {
                       "metadata": {
@@ -9590,7 +9687,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["distractor"]
+                                      "required": ["distractor"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -9672,7 +9770,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         },
                                         {
                                           "metadata": {
@@ -9845,11 +9944,13 @@
                                                     }
                                                   }
                                                 },
-                                                "required": ["url", "width", "height"]
+                                                "required": ["url", "width", "height"],
+                                                "additionalProperties": false
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         }
                                       ]
                                     }
@@ -9858,7 +9959,8 @@
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -9979,12 +10081,14 @@
                                       }
                                     }
                                   },
-                                  "required": ["type", "content"]
+                                  "required": ["type", "content"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -10127,7 +10231,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       "correctChoice": {
                                         "metadata": {
@@ -10194,16 +10299,19 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     }
                                   },
-                                  "required": ["matchOption", "correctChoice"]
+                                  "required": ["matchOption", "correctChoice"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -10320,7 +10428,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["order"]
+                                      "required": ["order"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -10385,14 +10494,16 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   ]
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -10704,11 +10815,13 @@
                                 }
                               }
                             },
-                            "required": ["url", "width", "height"]
+                            "required": ["url", "width", "height"],
+                            "additionalProperties": false
                           }
                         }
                       },
-                      "required": ["question", "questionType"]
+                      "required": ["question", "questionType"],
+                      "additionalProperties": false
                     },
                     {
                       "metadata": {
@@ -10842,7 +10955,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["distractor"]
+                                      "required": ["distractor"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -10924,7 +11038,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         },
                                         {
                                           "metadata": {
@@ -11097,11 +11212,13 @@
                                                     }
                                                   }
                                                 },
-                                                "required": ["url", "width", "height"]
+                                                "required": ["url", "width", "height"],
+                                                "additionalProperties": false
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         }
                                       ]
                                     }
@@ -11110,7 +11227,8 @@
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -11231,12 +11349,14 @@
                                       }
                                     }
                                   },
-                                  "required": ["type", "content"]
+                                  "required": ["type", "content"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -11379,7 +11499,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       "correctChoice": {
                                         "metadata": {
@@ -11446,16 +11567,19 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     }
                                   },
-                                  "required": ["matchOption", "correctChoice"]
+                                  "required": ["matchOption", "correctChoice"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -11572,7 +11696,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["order"]
+                                      "required": ["order"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -11637,14 +11762,16 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   ]
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -11653,7 +11780,8 @@
               }
             }
           },
-          "required": ["lessonSlug", "lessonTitle", "starterQuiz", "exitQuiz"]
+          "required": ["lessonSlug", "lessonTitle", "starterQuiz", "exitQuiz"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -12179,11 +12307,13 @@
                                 }
                               }
                             },
-                            "required": ["url", "width", "height"]
+                            "required": ["url", "width", "height"],
+                            "additionalProperties": false
                           }
                         }
                       },
-                      "required": ["question", "questionType"]
+                      "required": ["question", "questionType"],
+                      "additionalProperties": false
                     },
                     {
                       "metadata": {
@@ -12317,7 +12447,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["distractor"]
+                                      "required": ["distractor"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -12399,7 +12530,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         },
                                         {
                                           "metadata": {
@@ -12572,11 +12704,13 @@
                                                     }
                                                   }
                                                 },
-                                                "required": ["url", "width", "height"]
+                                                "required": ["url", "width", "height"],
+                                                "additionalProperties": false
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         }
                                       ]
                                     }
@@ -12585,7 +12719,8 @@
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -12706,12 +12841,14 @@
                                       }
                                     }
                                   },
-                                  "required": ["type", "content"]
+                                  "required": ["type", "content"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -12854,7 +12991,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       "correctChoice": {
                                         "metadata": {
@@ -12921,16 +13059,19 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     }
                                   },
-                                  "required": ["matchOption", "correctChoice"]
+                                  "required": ["matchOption", "correctChoice"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -13047,7 +13188,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["order"]
+                                      "required": ["order"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -13112,14 +13254,16 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   ]
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -13431,11 +13575,13 @@
                                 }
                               }
                             },
-                            "required": ["url", "width", "height"]
+                            "required": ["url", "width", "height"],
+                            "additionalProperties": false
                           }
                         }
                       },
-                      "required": ["question", "questionType"]
+                      "required": ["question", "questionType"],
+                      "additionalProperties": false
                     },
                     {
                       "metadata": {
@@ -13569,7 +13715,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["distractor"]
+                                      "required": ["distractor"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -13651,7 +13798,8 @@
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         },
                                         {
                                           "metadata": {
@@ -13824,11 +13972,13 @@
                                                     }
                                                   }
                                                 },
-                                                "required": ["url", "width", "height"]
+                                                "required": ["url", "width", "height"],
+                                                "additionalProperties": false
                                               }
                                             }
                                           },
-                                          "required": ["type", "content"]
+                                          "required": ["type", "content"],
+                                          "additionalProperties": false
                                         }
                                       ]
                                     }
@@ -13837,7 +13987,8 @@
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -13958,12 +14109,14 @@
                                       }
                                     }
                                   },
-                                  "required": ["type", "content"]
+                                  "required": ["type", "content"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -14106,7 +14259,8 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       },
                                       "correctChoice": {
                                         "metadata": {
@@ -14173,16 +14327,19 @@
                                             }
                                           }
                                         },
-                                        "required": ["type", "content"]
+                                        "required": ["type", "content"],
+                                        "additionalProperties": false
                                       }
                                     }
                                   },
-                                  "required": ["matchOption", "correctChoice"]
+                                  "required": ["matchOption", "correctChoice"],
+                                  "additionalProperties": false
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         },
                         {
                           "metadata": {
@@ -14299,7 +14456,8 @@
                                           }
                                         }
                                       },
-                                      "required": ["order"]
+                                      "required": ["order"],
+                                      "additionalProperties": false
                                     },
                                     {
                                       "metadata": {
@@ -14364,14 +14522,16 @@
                                           }
                                         }
                                       },
-                                      "required": ["type", "content"]
+                                      "required": ["type", "content"],
+                                      "additionalProperties": false
                                     }
                                   ]
                                 }
                               }
                             }
                           },
-                          "required": ["questionType", "answers"]
+                          "required": ["questionType", "answers"],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -14380,7 +14540,8 @@
               }
             }
           },
-          "required": ["lessonSlug", "lessonTitle", "starterQuiz", "exitQuiz"]
+          "required": ["lessonSlug", "lessonTitle", "starterQuiz", "exitQuiz"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -14698,7 +14859,8 @@
                     }
                   }
                 },
-                "required": ["keyword", "description"]
+                "required": ["keyword", "description"],
+                "additionalProperties": false
               }
             },
             "keyLearningPoints": {
@@ -14762,7 +14924,8 @@
                     }
                   }
                 },
-                "required": ["keyLearningPoint"]
+                "required": ["keyLearningPoint"],
+                "additionalProperties": false
               }
             },
             "misconceptionsAndCommonMistakes": {
@@ -14844,7 +15007,8 @@
                     }
                   }
                 },
-                "required": ["misconception", "response"]
+                "required": ["misconception", "response"],
+                "additionalProperties": false
               }
             },
             "pupilLessonOutcome": {
@@ -14928,7 +15092,8 @@
                     }
                   }
                 },
-                "required": ["teacherTip"]
+                "required": ["teacherTip"],
+                "additionalProperties": false
               }
             },
             "contentGuidance": {
@@ -15074,7 +15239,8 @@
                       "supervisionlevel_id",
                       "contentGuidanceLabel",
                       "contentGuidanceDescription"
-                    ]
+                    ],
+                    "additionalProperties": false
                   }
                 },
                 {
@@ -15191,7 +15357,8 @@
           "contentGuidance",
           "supervisionLevel",
           "downloadsAvailable"
-        ]
+        ],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -15513,12 +15680,14 @@
                     "examBoardTitle",
                     "keyStageSlug",
                     "subjectSlug"
-                  ]
+                  ],
+                  "additionalProperties": false
                 }
               }
             }
           },
-          "required": ["lessonSlug", "lessonTitle", "similarity", "units"]
+          "required": ["lessonSlug", "lessonTitle", "similarity", "units"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -16032,7 +16201,8 @@
                     }
                   }
                 },
-                "required": ["slug", "title", "order"]
+                "required": ["slug", "title", "order"],
+                "additionalProperties": false
               }
             },
             "categories": {
@@ -16112,7 +16282,8 @@
                     }
                   }
                 },
-                "required": ["categoryTitle"]
+                "required": ["categoryTitle"],
+                "additionalProperties": false
               }
             },
             "unitLessons": {
@@ -16241,7 +16412,8 @@
                     }
                   }
                 },
-                "required": ["lessonSlug", "lessonTitle", "state"]
+                "required": ["lessonSlug", "lessonTitle", "state"],
+                "additionalProperties": false
               }
             }
           }
@@ -16257,7 +16429,8 @@
           "priorKnowledgeRequirements",
           "nationalCurriculumContent",
           "unitLessons"
-        ]
+        ],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -16363,7 +16536,8 @@
               }
             }
           },
-          "required": ["title", "slug"]
+          "required": ["title", "slug"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -16496,7 +16670,8 @@
               }
             }
           },
-          "required": ["unitTitle", "unitSlug", "unitOrder"]
+          "required": ["unitTitle", "unitSlug", "unitOrder"],
+          "additionalProperties": false
         }
       },
       "metadata": {
@@ -16608,7 +16783,8 @@
             }
           }
         },
-        "required": ["limit", "remaining", "reset"]
+        "required": ["limit", "remaining", "reset"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -21835,7 +22011,8 @@
                       }
                     }
                   },
-                  "required": ["version", "date", "changes"]
+                  "required": ["version", "date", "changes"],
+                  "additionalProperties": false
                 }
               }
             }
@@ -21971,7 +22148,8 @@
                     }
                   }
                 },
-                "required": ["version", "date", "changes"]
+                "required": ["version", "date", "changes"],
+                "additionalProperties": false
               }
             }
           }

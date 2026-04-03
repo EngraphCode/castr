@@ -5,13 +5,14 @@
  *
  * Architecture Note:
  * This module orchestrates the complete code generation pipeline:
- * 1. Input Processing: prepareOpenApiDocument() (Scalar bundling + upgrade to 3.1)
+ * 1. Input Processing: prepareOpenApiDocument() (Scalar bundling + declared-version validation + canonical 3.2.0 boundary)
  * 2. Context Building: getZodClientTemplateContext() (dependency graph, type conversion)
  * 3. Template Rendering: ts-morph based generation with grouped/single file output
  * 4. Post-Processing: Prettier formatting
  *
- * All input specs are guaranteed to be OpenAPI 3.1 by the time they reach the
- * template context builder, thanks to Scalar's auto-upgrade behavior.
+ * All input specs are guaranteed to be canonical OpenAPI 3.2.0 by the time they
+ * reach the template context builder, with OpenAPI 3.1.x retained only as an
+ * internal Scalar bridge for older input versions.
  *
  * See:
  * - .agent/architecture/SCALAR-PIPELINE.md (input processing)

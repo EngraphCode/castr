@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.0",
+  "openApiVersion": "3.2.0",
   "info": {
     "title": "Tic Tac Toe",
     "description": "This API allows writing down marks on a Tic Tac Toe board\nand requesting the state of the board or of individual squares.\n",
@@ -8,129 +8,6 @@
   },
   "servers": [],
   "components": [
-    {
-      "type": "schema",
-      "name": "errorMessage",
-      "schema": {
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "description": "A text message describing an error",
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [".max(256)"],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "type": "string",
-        "description": "A text message describing an error",
-        "maxLength": 256
-      },
-      "metadata": {
-        "required": true,
-        "nullable": false,
-        "description": "A text message describing an error",
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "zodChain": {
-          "presence": "",
-          "validations": [".max(256)"],
-          "defaults": []
-        },
-        "circularReferences": []
-      }
-    },
-    {
-      "type": "schema",
-      "name": "coordinate",
-      "schema": {
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [".min(1)", ".max(3)", ".int()"],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "type": "integer",
-        "example": 1,
-        "minimum": 1,
-        "maximum": 3
-      },
-      "metadata": {
-        "required": true,
-        "nullable": false,
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "zodChain": {
-          "presence": "",
-          "validations": [".min(1)", ".max(3)", ".int()"],
-          "defaults": []
-        },
-        "circularReferences": []
-      }
-    },
-    {
-      "type": "schema",
-      "name": "mark",
-      "schema": {
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "description": "Possible values for a board square. `.` means empty square.",
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "type": "string",
-        "description": "Possible values for a board square. `.` means empty square.",
-        "example": ".",
-        "enum": [".", "X", "O"]
-      },
-      "metadata": {
-        "required": true,
-        "nullable": false,
-        "description": "Possible values for a board square. `.` means empty square.",
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "zodChain": {
-          "presence": "",
-          "validations": [],
-          "defaults": []
-        },
-        "circularReferences": []
-      }
-    },
     {
       "type": "schema",
       "name": "board",
@@ -210,6 +87,209 @@
     },
     {
       "type": "schema",
+      "name": "coordinate",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [".min(1)", ".max(3)", ".int()"],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "integer",
+        "example": 1,
+        "minimum": 1,
+        "maximum": 3
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(1)", ".max(3)", ".int()"],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
+      "name": "errorMessage",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "description": "A text message describing an error",
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [".max(256)"],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "string",
+        "description": "A text message describing an error",
+        "maxLength": 256
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "description": "A text message describing an error",
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(256)"],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
+      "name": "mark",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "description": "Possible values for a board square. `.` means empty square.",
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "string",
+        "description": "Possible values for a board square. `.` means empty square.",
+        "example": ".",
+        "enum": [".", "X", "O"]
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "description": "Possible values for a board square. `.` means empty square.",
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
+      "name": "status",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "board": {
+              "$ref": "#/components/schemas/board",
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              }
+            },
+            "winner": {
+              "$ref": "#/components/schemas/winner",
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              }
+            }
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
       "name": "winner",
       "schema": {
         "metadata": {
@@ -251,92 +331,18 @@
       }
     },
     {
-      "type": "schema",
-      "name": "status",
-      "schema": {
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "type": "object",
-        "properties": {
-          "dataType": "CastrSchemaProperties",
-          "value": {
-            "winner": {
-              "$ref": "#/components/schemas/winner",
-              "metadata": {
-                "required": false,
-                "nullable": false,
-                "dependencyGraph": {
-                  "references": [],
-                  "referencedBy": [],
-                  "depth": 0
-                },
-                "zodChain": {
-                  "presence": ".optional()",
-                  "validations": [],
-                  "defaults": []
-                },
-                "circularReferences": []
-              }
-            },
-            "board": {
-              "$ref": "#/components/schemas/board",
-              "metadata": {
-                "required": false,
-                "nullable": false,
-                "dependencyGraph": {
-                  "references": [],
-                  "referencedBy": [],
-                  "depth": 0
-                },
-                "zodChain": {
-                  "presence": ".optional()",
-                  "validations": [],
-                  "defaults": []
-                },
-                "circularReferences": []
-              }
+      "type": "securityScheme",
+      "name": "app2AppOauth",
+      "scheme": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://learn.openapis.org/oauth/2.0/token",
+            "scopes": {
+              "board:read": "Read the board"
             }
           }
-        },
-        "required": []
-      },
-      "metadata": {
-        "required": true,
-        "nullable": false,
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "zodChain": {
-          "presence": "",
-          "validations": [],
-          "defaults": []
-        },
-        "circularReferences": []
-      }
-    },
-    {
-      "type": "securityScheme",
-      "name": "defaultApiKey",
-      "scheme": {
-        "description": "API key provided in console",
-        "type": "apiKey",
-        "name": "api-key",
-        "in": "header"
+        }
       }
     },
     {
@@ -360,17 +366,12 @@
     },
     {
       "type": "securityScheme",
-      "name": "app2AppOauth",
+      "name": "defaultApiKey",
       "scheme": {
-        "type": "oauth2",
-        "flows": {
-          "clientCredentials": {
-            "tokenUrl": "https://learn.openapis.org/oauth/2.0/token",
-            "scopes": {
-              "board:read": "Read the board"
-            }
-          }
-        }
+        "description": "API key provided in console",
+        "type": "apiKey",
+        "name": "api-key",
+        "in": "header"
       }
     },
     {
@@ -388,49 +389,6 @@
             }
           }
         }
-      }
-    },
-    {
-      "type": "parameter",
-      "name": "rowParam",
-      "parameter": {
-        "name": "row",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "$ref": "#/components/schemas/coordinate",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "circularReferences": []
-          }
-        },
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "circularReferences": []
-        },
-        "description": "Board row (vertical coordinate)"
       }
     },
     {
@@ -474,6 +432,49 @@
           "circularReferences": []
         },
         "description": "Board column (horizontal coordinate)"
+      }
+    },
+    {
+      "type": "parameter",
+      "name": "rowParam",
+      "parameter": {
+        "name": "row",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/coordinate",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "circularReferences": []
+          }
+        },
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "description": "Board row (vertical coordinate)"
       }
     }
   ],
@@ -521,12 +522,12 @@
       "description": "Retrieves the current state of the board and the winner.",
       "security": [
         {
-          "schemeName": "defaultApiKey",
-          "scopes": []
-        },
-        {
           "schemeName": "app2AppOauth",
           "scopes": ["board:read"]
+        },
+        {
+          "schemeName": "defaultApiKey",
+          "scopes": []
         }
       ],
       "tags": ["Gameplay"]
@@ -737,15 +738,22 @@
   ],
   "dependencyGraph": {
     "nodes": {
-      "#/components/schemas/errorMessage": {
-        "ref": "#/components/schemas/errorMessage",
+      "#/components/schemas/board": {
+        "ref": "#/components/schemas/board",
+        "dependencies": ["#/components/schemas/mark"],
+        "dependents": ["#/components/schemas/status"],
+        "depth": 1,
+        "isCircular": false
+      },
+      "#/components/schemas/coordinate": {
+        "ref": "#/components/schemas/coordinate",
         "dependencies": [],
         "dependents": [],
         "depth": 0,
         "isCircular": false
       },
-      "#/components/schemas/coordinate": {
-        "ref": "#/components/schemas/coordinate",
+      "#/components/schemas/errorMessage": {
+        "ref": "#/components/schemas/errorMessage",
         "dependencies": [],
         "dependents": [],
         "depth": 0,
@@ -758,11 +766,11 @@
         "depth": 0,
         "isCircular": false
       },
-      "#/components/schemas/board": {
-        "ref": "#/components/schemas/board",
-        "dependencies": ["#/components/schemas/mark"],
-        "dependents": ["#/components/schemas/status"],
-        "depth": 1,
+      "#/components/schemas/status": {
+        "ref": "#/components/schemas/status",
+        "dependencies": ["#/components/schemas/board", "#/components/schemas/winner"],
+        "dependents": [],
+        "depth": 2,
         "isCircular": false
       },
       "#/components/schemas/winner": {
@@ -771,26 +779,19 @@
         "dependents": ["#/components/schemas/status"],
         "depth": 0,
         "isCircular": false
-      },
-      "#/components/schemas/status": {
-        "ref": "#/components/schemas/status",
-        "dependencies": ["#/components/schemas/winner", "#/components/schemas/board"],
-        "dependents": [],
-        "depth": 2,
-        "isCircular": false
       }
     },
     "topologicalOrder": [
-      "#/components/schemas/errorMessage",
-      "#/components/schemas/coordinate",
       "#/components/schemas/mark",
       "#/components/schemas/board",
+      "#/components/schemas/coordinate",
+      "#/components/schemas/errorMessage",
       "#/components/schemas/winner",
       "#/components/schemas/status"
     ],
     "circularReferences": []
   },
-  "schemaNames": ["errorMessage", "coordinate", "mark", "board", "winner", "status"],
+  "schemaNames": ["board", "coordinate", "errorMessage", "mark", "status", "winner"],
   "enums": {
     "mark": {
       "name": "mark",

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.0",
+  "openApiVersion": "3.2.0",
   "info": {
     "title": "Webhook Example",
     "version": "1.0.0"
@@ -47,7 +47,8 @@
                 "circularReferences": []
               },
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "integerSemantics": "int64"
             },
             "name": {
               "metadata": {
@@ -87,7 +88,8 @@
             }
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,

@@ -1,8 +1,8 @@
 /**
- * OpenAPI writer module — generates OpenAPI 3.1 from IR.
+ * OpenAPI writer module — generates canonical OpenAPI 3.2.0 from IR.
  *
  * This module provides the `writeOpenApi` function that converts a CastrDocument
- * (the canonical intermediate representation) to a valid OpenAPI 3.1 specification.
+ * (the canonical intermediate representation) to a valid OpenAPI 3.2.0 specification.
  *
  * @example
  * ```typescript

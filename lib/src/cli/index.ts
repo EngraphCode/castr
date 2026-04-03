@@ -5,8 +5,9 @@
  * The CLI uses prepareOpenApiDocument() for input processing, which ensures
  * consistent behavior with the programmatic API. All specs are:
  * 1. Bundled via Scalar (external $refs resolved, internal $refs preserved)
- * 2. Auto-upgraded to OpenAPI 3.1 (2.0 and 3.0.x specs are transparently upgraded)
- * 3. Type-validated at boundaries (no casting)
+ * 2. Strictly validated against the declared OpenAPI version
+ * 3. Canonicalised to OpenAPI 3.2.0 at the shared preparation boundary
+ * 4. Type-validated at boundaries (no casting)
  *
  * This provides a unified pipeline for all input sources (file, URL, object).
  *

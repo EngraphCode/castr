@@ -201,7 +201,7 @@ function addBasicOperationFields(
 }
 
 function addExtendedOperationFields(irOperation: CastrOperation, operation: OperationObject): void {
-  // Check deprecated status - property is part of OpenAPI 3.1 spec
+  // Check deprecated status - property is part of OpenAPI 3.1+ spec
   // Using Reflect to avoid false-positive deprecation linter warnings
   const deprecatedKey = 'deprecated';
   if (Object.hasOwn(operation, deprecatedKey)) {

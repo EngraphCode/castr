@@ -3,14 +3,14 @@
 ## Overview
 
 > [!IMPORTANT]
-> Current implementation note (2026-03-23): the `makeSchemaResolver()` function described below was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model rather than a resolver function wrapping the raw OpenAPI document. This document remains valuable as architectural history for the bundling/validation pipeline and `$ref` preservation rationale.
+> Current implementation note (2026-04-02): the `makeSchemaResolver()` function described below was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model rather than a resolver function wrapping the raw OpenAPI document. The shared OpenAPI load boundary now validates against the declared version first, bridges older input through Scalar's 3.1 upgrade semantics where needed, and returns canonical `openapi: 3.2.0` documents. This document remains valuable as architectural history for the bundling/validation pipeline and `$ref` preservation rationale.
 
 The `@engraph/castr` library migrated from `@apidevtools/swagger-parser` to `@scalar/*` packages for OpenAPI document processing. This architectural shift brings significant improvements in type safety, validation, and reference handling while maintaining backward compatibility.
 
 **Key Packages:**
 
 - `@scalar/json-magic`: JSON/YAML parsing and validation
-- `@scalar/openapi-parser`: Bundling and OpenAPI 3.1 upgrading
+- `@scalar/openapi-parser`: Bundling, declared-version validation, and OpenAPI 3.1 bridge upgrading
 
 ## Key Architectural Difference: Bundling vs Dereferencing
 
@@ -122,10 +122,11 @@ The Scalar pipeline consists of three distinct stages:
 - Auto-upgrade OpenAPI versions
 - Ensure type safety
 
-**Auto-Upgrade Behavior:**
+**Upgrade / Canonicalisation Behavior:**
 
-- OpenAPI 2.0 (Swagger) → OpenAPI 3.1.x (automatic)
-- OpenAPI 3.0.x → OpenAPI 3.1.x (automatic)
+- OpenAPI 2.0 (Swagger) → OpenAPI 3.1.x bridge syntax (automatic), then canonical `3.2.0`
+- OpenAPI 3.0.x → OpenAPI 3.1.x bridge syntax (automatic), then canonical `3.2.0`
+- Native OpenAPI 3.2.x input is accepted and preserved as canonical `3.2.0`
 
 **Rationale for Auto-Upgrade:**
 
@@ -134,7 +135,7 @@ The Scalar pipeline consists of three distinct stages:
 - Simplifies internal code (single type system to handle)
 - Preserves semantic meaning during upgrade
 
-**Output:** Validated OpenAPI 3.1 document
+**Output:** Declared-version-valid OpenAPI document ready for canonical 3.2.0 boundary normalisation
 
 ### 3. Bundle Stage (`@scalar/openapi-parser`)
 
@@ -188,13 +189,13 @@ paths:
                 $ref: '#/components/schemas/User'  # Preserved!
 ```
 
-**Output:** Bundled OpenAPI 3.1 document with internal `$refs` preserved
+**Output:** Bundled OpenAPI document with internal `$refs` preserved and canonicalised to `openapi: 3.2.0`
 
-## Auto-Upgrade Behavior
+## Upgrade / Canonicalisation Behavior
 
-The Scalar pipeline automatically upgrades older OpenAPI versions to 3.1:
+The Scalar-backed pipeline automatically bridges older OpenAPI versions through 3.1 semantics, then returns canonical `3.2.0` documents:
 
-### OpenAPI 2.0 → 3.1
+### OpenAPI 2.0 → 3.2.0
 
 ```yaml
 # Input: OpenAPI 2.0 (Swagger)
@@ -203,15 +204,15 @@ definitions:
   User:
     type: object
 
-# Output: OpenAPI 3.1
-openapi: 3.1.0
+# Output: canonical OpenAPI 3.2.0
+openapi: 3.2.0
 components:
   schemas:
     User:
       type: object
 ```
 
-### OpenAPI 3.0 → 3.1
+### OpenAPI 3.0 → 3.2.0
 
 Key changes during upgrade:
 
@@ -219,7 +220,7 @@ Key changes during upgrade:
 - `exclusiveMinimum: true` → `exclusiveMinimum: numericValue`
 - `exclusiveMaximum: true` → `exclusiveMaximum: numericValue`
 
-See [OpenAPI 3.1 Migration Guide](../guides/openapi-3.1-migration.md) for full details.
+See [OpenAPI 3.1 Migration Guide](../guides/openapi-3.1-migration.md) for the bridge semantics inherited from Scalar's upgrade path.
 
 ## Design Decisions
 

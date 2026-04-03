@@ -348,7 +348,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   prefixItems?: CastrSchema[];
 
@@ -363,7 +363,7 @@ export interface CastrSchema {
    * properties need strict validation.
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   unevaluatedProperties?: boolean | CastrSchema;
 
@@ -377,7 +377,7 @@ export interface CastrSchema {
    * but trailing items need validation.
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   unevaluatedItems?: boolean | CastrSchema;
 
@@ -395,7 +395,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   dependentSchemas?: Record<string, CastrSchema>;
 
@@ -413,7 +413,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   dependentRequired?: Record<string, string[]>;
 
@@ -427,7 +427,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   contains?: CastrSchema;
 
@@ -443,7 +443,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   minContains?: number;
 
@@ -459,7 +459,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   maxContains?: number;
 
@@ -477,7 +477,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   patternProperties?: Record<string, CastrSchema>;
 
@@ -492,7 +492,7 @@ export interface CastrSchema {
    * ```
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   propertyNames?: CastrSchema;
 
@@ -503,7 +503,7 @@ export interface CastrSchema {
    * If it validates, `then` applies; otherwise `else` applies.
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   if?: CastrSchema;
 
@@ -513,7 +513,7 @@ export interface CastrSchema {
    * Only meaningful when `if` is also specified.
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   then?: CastrSchema;
 
@@ -523,7 +523,7 @@ export interface CastrSchema {
    * Only meaningful when `if` is also specified.
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   else?: CastrSchema;
 
@@ -555,7 +555,7 @@ export interface CastrSchema {
    * @example '$anchor: "address"' enables `$ref: "#address"`
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    */
   $anchor?: string;
 
@@ -569,7 +569,7 @@ export interface CastrSchema {
    * @example '$dynamicRef: "#node"' resolves to the nearest `$dynamicAnchor: "node"`
    *
    * @remarks
-   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
    * Has no static code-gen equivalent (Zod/TS writers fail-fast).
    */
   $dynamicRef?: string;
@@ -608,7 +608,7 @@ export interface CastrSchema {
  * - `CodeMetaData.isRequired` → `CastrSchemaNode.required`
  * - `CodeMetaData.referencedBy` → `CastrSchemaNode.dependencyGraph.referencedBy`
  * - `CodeMetaData.parent` → `CastrSchemaNode.inheritance.parent`
- * - NEW: `nullable` (computed from OAS 3.1.0 type arrays)
+ * - NEW: `nullable` (computed from OAS 3.1+/3.2 type arrays)
  * - NEW: `zodChain` (presence, validations, defaults)
  * - NEW: `circularReferences` (detected circular refs)
  *

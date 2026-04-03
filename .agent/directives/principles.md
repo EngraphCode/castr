@@ -1346,7 +1346,7 @@ if (Object.keys(schema).length === 0) continue;
 /**
  * Generates Zod schemas from an OpenAPI specification.
  *
- * Supports OpenAPI 3.0.x and 3.1.x specifications, converting JSON Schema
+ * Supports OpenAPI 3.0.x, 3.1.x, and native 3.2.x specifications, converting JSON Schema
  * definitions to runtime-validated Zod schemas with TypeScript type inference.
  * Uses fail-fast validation and strict types by default.
  *
@@ -1533,7 +1533,7 @@ export interface GenerateZodClientOptions {
 /**
  * HTTP methods supported by OpenAPI specifications.
  *
- * Covers all standard HTTP methods defined in OpenAPI 3.0.x and 3.1.x specs.
+ * Covers all standard HTTP methods defined in OpenAPI 3.0.x, 3.1.x, and 3.2.x specs.
  * Used for endpoint definition and validation.
  *
  * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}

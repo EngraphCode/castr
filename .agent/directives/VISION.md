@@ -132,23 +132,23 @@ Companion workspaces may be strategically important, but they are **not** core-f
 
 ### Core Target Formats (Vision)
 
-| #   | Format          | Input | Output | Notes                                                    |
-| --- | --------------- | :---: | :----: | -------------------------------------------------------- |
-| 1   | **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.0 → 3.1 auto-upgrade                   |
-| 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                |
-| 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                            |
-| 4   | **TypeScript**  |   —   |   ✅   | **Exception:** output-only (too broad for input parsing) |
+| #   | Format          | Input | Output | Notes                                                                                |
+| --- | --------------- | :---: | :----: | ------------------------------------------------------------------------------------ |
+| 1   | **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; older input bridges through 3.1 semantics, canonical target is 3.2.0 |
+| 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                                            |
+| 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                                                        |
+| 4   | **TypeScript**  |   —   |   ✅   | **Exception:** output-only (too broad for input parsing)                             |
 
 Companion-workspace directions such as tRPC ingestion or runtime handler generation may sit on top of these core formats, but they are not part of the core `lib` format contract.
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                                 |
-| ----------- | :-----------: | :-----------: | ------------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; live output still targets 3.1.x while OAS 3.2 version plumbing is the next planned slice. |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                              |
-| JSON Schema |      ✅       |      ✅       | Full Draft 07 / 2020-12 parser and writer support now exist with explicit fail-fast boundaries.                                       |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                          |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                                   |
+| ----------- | :-----------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; the live canonical output target is now 3.2.0, with 3.1.x retained only as an input bridge. |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                                |
+| JSON Schema |      ✅       |      ✅       | Full Draft 07 / 2020-12 parser and writer support now exist with explicit fail-fast boundaries.                                         |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                            |
 
 ### Companion Workspace Roadmap
 

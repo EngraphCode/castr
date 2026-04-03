@@ -58,7 +58,10 @@ export interface CastrDocument {
   /**
    * OpenAPI specification version from source document.
    *
-   * @example '3.1.0'
+   * This is the canonical OpenAPI target version carried by the IR after the
+   * shared preparation boundary, not necessarily the exact declared input version.
+   *
+   * @example '3.2.0'
    */
   openApiVersion: string;
 
@@ -130,7 +133,7 @@ export interface CastrDocument {
   externalDocs?: ExternalDocumentationObject;
 
   /**
-   * Webhooks defined in the document (OpenAPI 3.1.x only).
+   * Webhooks defined in the document (OpenAPI 3.1+; canonical target 3.2.0).
    * Key is the webhook name, value is the path item defining the webhook operations.
    *
    * @see {@link https://spec.openapis.org/oas/v3.1.0#fixed-fields OpenAPI Webhooks}
@@ -138,7 +141,7 @@ export interface CastrDocument {
   webhooks?: Map<string, PathItemObject>;
 
   /**
-   * JSON Schema dialect URI (OpenAPI 3.1.x only).
+   * JSON Schema dialect URI (OpenAPI 3.1+; canonical target 3.2.0).
    * Specifies the default JSON Schema dialect for all schemas in the document.
    *
    * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-dialects OpenAPI Schema Dialects}

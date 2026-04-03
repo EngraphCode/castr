@@ -6,13 +6,9 @@
 
 import { upgrade } from '@scalar/openapi-parser';
 import type { AnyObject, Filesystem } from '@scalar/openapi-parser';
-import { split } from 'lodash-es';
 import { isOpenAPIObject } from '../../validation/cli-type-guards.js';
+import { CANONICAL_OPENAPI_VERSION, isSupportedBundledOpenApiVersion } from '../openapi/version.js';
 import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
-
-const OPENAPI_VERSION_SEPARATOR = '.';
-const OPENAPI_VERSION_MAJOR_3 = '3';
-const OPENAPI_VERSION_MINOR_1 = '1';
 
 /**
  * Type guard for BundledOpenApiDocument (intersection type).
@@ -24,7 +20,7 @@ const OPENAPI_VERSION_MINOR_1 = '1';
  *
  * Validation checks:
  * 1. Basic OpenAPI structure (info, openapi, paths)
- * 2. Version is 3.1.x (upgrade() should guarantee this)
+ * 2. Version is 3.1.x or 3.2.x (Scalar's upgrade bridge currently returns 3.1.x)
  *
  * @param value - Value to validate
  * @returns True if value is valid BundledOpenApiDocument
@@ -35,16 +31,8 @@ export function isBundledOpenApiDocument(value: unknown): value is BundledOpenAp
     return false;
   }
 
-  // Ensure it's 3.1.x (upgrade() should guarantee this)
   const version = value.openapi;
-  const versionSegments = split(version, OPENAPI_VERSION_SEPARATOR);
-  const major = versionSegments[0];
-  const minor = versionSegments[1];
-  if (
-    typeof version !== 'string' ||
-    major !== OPENAPI_VERSION_MAJOR_3 ||
-    minor !== OPENAPI_VERSION_MINOR_1
-  ) {
+  if (typeof version !== 'string' || !isSupportedBundledOpenApiVersion(version)) {
     return false;
   }
 
@@ -52,13 +40,13 @@ export function isBundledOpenApiDocument(value: unknown): value is BundledOpenAp
 }
 
 /**
- * Upgrade bundled document to OpenAPI 3.1 and validate.
+ * Upgrade bundled document to the canonical OpenAPI 3.2 target and validate.
  *
- * Uses Scalar's upgrade() to convert OpenAPI 2.0/3.0 → 3.1,
+ * Uses Scalar's upgrade() to convert OpenAPI 2.0/3.0 → 3.1 bridge syntax,
  * then validates the result with type guard.
  *
  * @param bundledDocument - Document from bundleDocument()
- * @returns Validated OpenAPI 3.1 document (intersection of Scalar and openapi3-ts types)
+ * @returns Validated OpenAPI document canonicalised to OpenAPI 3.2.0
  * @throws Error if upgrade fails or result is invalid
  * @public
  */
@@ -68,8 +56,11 @@ export function upgradeAndValidate(
   const { specification: upgraded } = upgrade(bundledDocument);
 
   if (!isBundledOpenApiDocument(upgraded)) {
-    throw new Error('Failed to produce valid OpenAPI 3.1 document');
+    throw new Error('Failed to produce valid OpenAPI 3.2 document');
   }
 
-  return upgraded;
+  return {
+    ...upgraded,
+    openapi: CANONICAL_OPENAPI_VERSION,
+  };
 }

@@ -4,7 +4,7 @@ import { isBundledOpenApiDocument, upgradeAndValidate } from './upgrade-validate
 
 describe('upgrade-validate', () => {
   describe('isBundledOpenApiDocument', () => {
-    it('should return true for valid OpenAPI 3.1 document', () => {
+    it('should return true for valid OpenAPI 3.1 document bridge input', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -17,6 +17,16 @@ describe('upgrade-validate', () => {
     it('should return true for OpenAPI 3.1.x versions', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.1',
+        info: { title: 'Test', version: '1.0' },
+        paths: {},
+      };
+
+      expect(isBundledOpenApiDocument(doc)).toBe(true);
+    });
+
+    it('should return true for OpenAPI 3.2.x versions', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.2.0',
         info: { title: 'Test', version: '1.0' },
         paths: {},
       };
@@ -69,7 +79,7 @@ describe('upgrade-validate', () => {
   });
 
   describe('upgradeAndValidate', () => {
-    it('should upgrade and validate OpenAPI 3.0 document', () => {
+    it('canonicalises upgraded OpenAPI 3.0 documents to OpenAPI 3.2.0', () => {
       const doc = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -78,11 +88,11 @@ describe('upgrade-validate', () => {
 
       const result = upgradeAndValidate(doc);
 
-      expect(result.openapi).toMatch(/^3\.1\./);
+      expect(result.openapi).toBe('3.2.0');
       expect(result.info.title).toBe('Test API');
     });
 
-    it('should pass through OpenAPI 3.1 documents', () => {
+    it('canonicalises OpenAPI 3.1 bridge documents to OpenAPI 3.2.0', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -91,7 +101,20 @@ describe('upgrade-validate', () => {
 
       const result = upgradeAndValidate(doc);
 
-      expect(result.openapi).toMatch(/^3\.1\./);
+      expect(result.openapi).toBe('3.2.0');
+      expect(result).toBeDefined();
+    });
+
+    it('accepts native OpenAPI 3.2 documents and keeps the canonical 3.2.0 version', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.2.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+      };
+
+      const result = upgradeAndValidate(doc);
+
+      expect(result.openapi).toBe('3.2.0');
       expect(result).toBeDefined();
     });
 
@@ -101,7 +124,7 @@ describe('upgrade-validate', () => {
       const invalidInput = { invalid: 'doc' };
 
       expect(() => upgradeAndValidate(invalidInput)).toThrow(
-        'Failed to produce valid OpenAPI 3.1 document',
+        'Failed to produce valid OpenAPI 3.2 document',
       );
     });
   });

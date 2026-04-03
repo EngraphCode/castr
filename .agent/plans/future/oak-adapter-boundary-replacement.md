@@ -45,7 +45,7 @@ This is the first external proving ladder for Castr, but it must still remain a 
 
 ## Dependencies
 
-- [oas-3.2-version-plumbing.md](../active/oas-3.2-version-plumbing.md) must land first so the core OpenAPI target is honest for Oak's near-term 3.2 move.
+- [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) is already complete; keep Oak boundary work aligned to that canonical 3.2.0 baseline instead of reopening version-plumbing questions.
 - Any additional OAS 3.2 feature work should be pulled in only when a concrete Oak fixture requires it.
 
 ---
@@ -92,7 +92,7 @@ This is the first external proving ladder for Castr, but it must still remain a 
 
 Promote this future plan into `current/` only after:
 
-- OAS 3.2 version plumbing is complete, and
+- the OAS 3.2 version-plumbing slice remains closed rather than being reopened inside the Oak boundary track, and
 - the user explicitly chooses to start the Oak adapter replacement arc.
 
 If Oak proves it needs more than one atomic slice, break that execution into smaller current plans while keeping this file as the high-level use-case home.

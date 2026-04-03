@@ -11,6 +11,7 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../../ir/index.js';
 import { CastrSchemaProperties, UUID_V7_PATTERN } from '../../../ir/index.js';
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../../../shared/openapi/version.js';
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 
@@ -81,7 +82,9 @@ describe('primitive types', () => {
     };
 
     expect(() => writeOpenApiSchema(schema)).toThrow(
-      /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+      new RegExp(
+        `${CANONICAL_OPENAPI_TARGET_LABEL} cannot represent arbitrary-precision bigint natively`,
+      ),
     );
   });
 
@@ -93,7 +96,9 @@ describe('primitive types', () => {
     };
 
     expect(() => writeOpenApiSchema(schema)).toThrow(
-      /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+      new RegExp(
+        `${CANONICAL_OPENAPI_TARGET_LABEL} cannot represent arbitrary-precision bigint natively`,
+      ),
     );
   });
 });

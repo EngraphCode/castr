@@ -23,12 +23,12 @@ After parsing, the input document is **conceptually discarded**—only the IR ma
 
 `CastrDocument` has two version fields:
 
-| Field            | Example   | Meaning                                |
-| ---------------- | --------- | -------------------------------------- |
-| `version`        | `"1.0.0"` | IR schema version (Castr-defined)      |
-| `openApiVersion` | `"3.1.1"` | From Scalar `upgrade()` — always 3.1.x |
+| Field            | Example   | Meaning                           |
+| ---------------- | --------- | --------------------------------- |
+| `version`        | `"1.0.0"` | IR schema version (Castr-defined) |
+| `openApiVersion` | `"3.2.0"` | Canonical OpenAPI target version  |
 
-> **Note:** OpenAPI 3.1.1 was released October 2024. Scalar upgrades all input documents to latest 3.1.x semantics.
+> **Note:** The shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`. Scalar may still bridge older input through 3.1 semantics internally, but that bridge version is not retained in the IR.
 
 ## NO CONTENT LOSS Principle
 

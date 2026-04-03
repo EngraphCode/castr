@@ -12,7 +12,7 @@ Input → bundle() → validate() → upgrade() → Output
 
 1. **Bundle** — Resolves `$ref` references, flattens external files
 2. **Validate** — Enforces OpenAPI schema compliance (version-specific)
-3. **Upgrade** — Converts 3.0.x to 3.1.0 for consistent internal representation
+3. **Upgrade + Canonicalise** — Older inputs bridge through 3.1 semantics, then return as canonical `openapi: 3.2.0`
 
 ---
 
@@ -53,7 +53,7 @@ Invalid OpenAPI 3.0.3 document:
 ❌ Error 1:
   Location: paths → /test → get → responses → 200
   Issue: must have required property
-  Hint: Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)
+  Hint: Response objects require a 'description' field (OpenAPI 3.0.x, 3.1.x, and 3.2.x)
 ```
 
 ### Contextual Hints
@@ -65,7 +65,7 @@ The module provides hints for common errors:
 | Missing description in response | "Response objects require a 'description' field"                               |
 | Missing info fields             | "The 'info' object requires 'title' and 'version'"                             |
 | Invalid type value              | "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string" |
-| 3.1.x-only fields in 3.0.x      | Specific hint about version compatibility                                      |
+| 3.1+/3.2-only fields in 3.0.x   | Specific hint about version compatibility                                      |
 
 ---
 

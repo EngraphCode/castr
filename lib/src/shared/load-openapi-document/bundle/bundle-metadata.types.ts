@@ -1,24 +1,30 @@
 import type { OpenAPIV3_1 } from '@scalar/openapi-types';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
+type BundledOpenApiVersion = `3.1.${number}` | `3.2.${number}`;
+
 /**
- * A bundled and upgraded OpenAPI 3.1 document combining Scalar and openapi3-ts types.
+ * A bundled and canonicalised OpenAPI 3.2 document combining Scalar and openapi3-ts types.
  *
  * **NOT prefixed with OTT** - This is a pure intersection of library types.
  *
  * This intersection type provides:
  * - Scalar's extension-friendly structure (x-ext, x-ext-urls, etc.)
- * - openapi3-ts strict typing for OpenAPI 3.1 standard fields
+ * - openapi3-ts strict typing for the current OpenAPI 3.1-compatible field surface
  *
- * All documents are upgraded to OpenAPI 3.1 after bundling, regardless of input version.
+ * All documents are returned as canonical OpenAPI 3.2.0 after the shared load boundary,
+ * even though older inputs may bridge through Scalar's OpenAPI 3.1 upgrade semantics.
  *
  * @remarks
  * The intersection ensures:
- * - Strict typing for standard OpenAPI 3.1 fields (paths, components, etc.)
+ * - Strict typing for the current standard OpenAPI field surface (paths, components, etc.)
  * - Preserved Scalar bundling metadata (x-ext, x-ext-urls)
  * - No casting required - validated at runtime boundary via type guards
  */
-export type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
+export type BundledOpenApiDocument = Omit<OpenAPIV3_1.Document, 'openapi'> &
+  Omit<OpenAPIObject, 'openapi'> & {
+    openapi: BundledOpenApiVersion;
+  };
 
 /**
  * Describes the source supplied to {@link loadOpenApiDocument} and how it was resolved.
@@ -132,22 +138,25 @@ export interface OTTBundleMetadata {
 }
 
 /**
- * Output of {@link loadOpenApiDocument}: bundled, upgraded 3.1 document plus metadata.
+ * Output of {@link loadOpenApiDocument}: bundled, canonical OpenAPI 3.2.0 document plus metadata.
  *
  * **OTT Domain Type** - Represents our loader's return value.
  *
  * @remarks
  * The pipeline:
  * 1. Bundles via @scalar/json-magic (resolves $refs, adds x-ext)
- * 2. Upgrades to OpenAPI 3.1 via @scalar/openapi-parser
- * 3. Validates and types as intersection of Scalar + openapi3-ts
+ * 2. Validates against the declared OpenAPI version via @scalar/openapi-parser
+ * 3. Bridges older specs through OpenAPI 3.1 semantics where needed
+ * 4. Canonicalises the final document to OpenAPI 3.2.0
+ * 5. Validates and types as intersection of Scalar + openapi3-ts
  *
- * Input specs can be OpenAPI 3.0.x or 3.1.x - all are normalized to 3.1.
+ * Input specs can be OpenAPI 3.0.x, 3.1.x, or native 3.2.x. The shared boundary
+ * returns all accepted documents as canonical 3.2.0.
  */
 export interface OTTLoadedOpenApiDocument {
   /**
-   * Bundled and upgraded OpenAPI 3.1 document.
-   * Strictly typed for 3.1 fields, with preserved Scalar extensions.
+   * Bundled and canonical OpenAPI 3.2.0 document.
+   * Strictly typed for the current openapi3-ts/oas31 field surface, with preserved Scalar extensions.
    */
   readonly document: BundledOpenApiDocument;
   /** Metadata detailing how the bundle was assembled. */

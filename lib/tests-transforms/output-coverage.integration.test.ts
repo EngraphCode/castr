@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../src/shared/openapi/version.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import { assertOpenApiObject, assertSchemaObject } from '../tests-helpers/openapi-assertions.js';
@@ -57,7 +58,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
   describe('Output format', () => {
     it('outputs OpenAPI 3.1.x version (flows from IR)', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
-      expect(output.openapi).toMatch(/^3\.1\./);
+      expect(output.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('outputs valid JSON (serializable object)', async () => {
@@ -70,7 +71,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       // Should parse back to identical object
       const parsed = JSON.parse(jsonString);
       assertOpenApiObject(parsed, 'serialized OpenAPI output');
-      expect(parsed.openapi).toMatch(/^3\.1\./);
+      expect(parsed.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
   });
 
@@ -301,16 +302,14 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       // We need to verify this is handled correctly
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      // Verify output is valid 3.1.x format
-      expect(output.openapi).toMatch(/^3\.1\./);
+      expect(output.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('handles 3.0 → 3.1 upgrade correctly', async () => {
       // When a 3.0 spec is loaded, it should be upgraded to 3.1.x by scalar parser
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.0/petstore.yaml`);
 
-      // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
-      expect(output.openapi).toMatch(/^3\.1\./);
+      expect(output.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
   });
 });

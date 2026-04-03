@@ -1,14 +1,12 @@
 # Native Capability Matrix
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-12  
+**Last Updated:** 2026-04-02  
 **Related:** [ADR-041](../architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 
 ---
 
 This matrix records the standards-first native-capability rules that govern Castr's parser and writer behavior.
-
-The OpenAPI 3.2.0 row is a standards comparison note only. Current product output support remains OpenAPI 3.1.x.
 
 Legend:
 
@@ -22,8 +20,8 @@ Legend:
 | Format              | `number`                | `integer`             | `int64`                | `bigint`                | `date`                             | `date-time` / timestamp                          | Notes                                                                                 |
 | ------------------- | ----------------------- | --------------------- | ---------------------- | ----------------------- | ---------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | JSON (RFC 8259)     | `native`                | `partial`             | `none`                 | `none`                  | `none`                             | `none`                                           | JSON has only one numeric carrier: `number`                                           |
-| OpenAPI 3.1.x       | `native`                | `native`              | `native`               | `none`                  | `native`                           | `native`                                         | `int64` is native via the OAS format registry                                         |
-| OpenAPI 3.2.0       | `native`                | `native`              | `native`               | `none`                  | `native`                           | `native`                                         | Comparison note only; Castr does not currently emit OpenAPI 3.2.x                     |
+| OpenAPI 3.1.x       | `native`                | `native`              | `native`               | `none`                  | `native`                           | `native`                                         | Accepted as a bridge input surface                                                    |
+| OpenAPI 3.2.0       | `native`                | `native`              | `native`               | `none`                  | `native`                           | `native`                                         | Current canonical OpenAPI output target                                               |
 | JSON Schema 2020-12 | `native`                | `native`              | `none`                 | `none`                  | `custom-only`                      | `custom-only`                                    | `format` is annotation-based; Castr does not treat `int64` / `bigint` as native here  |
 | Zod 4               | `native` (`z.number()`) | `partial` (`z.int()`) | `native` (`z.int64()`) | `native` (`z.bigint()`) | `native` (`z.iso.date()`)          | `native` (`z.iso.datetime()`)                    | `z.int()` is safe-integer runtime, not an unbounded integer carrier                   |
 | TypeScript          | `native` (`number`)     | `partial` (`number`)  | `partial` (`bigint`)   | `native` (`bigint`)     | `partial` (`string` / custom type) | `partial` (`string` / custom type)               | TypeScript has no distinct built-in `int64` or date-time semantic type                |
@@ -31,9 +29,9 @@ Legend:
 
 ## Castr Doctrine Consequences
 
-- OpenAPI 3.1.x can carry native `int64`, so Castr preserves `int64` semantics there.
+- OpenAPI 3.2.0 can carry native `int64`, so Castr preserves `int64` semantics there.
+- OpenAPI 3.1.x remains accepted as a bridge input surface for the same `int64` semantics.
 - OpenAPI 3.1.x and 3.2.0 cannot carry native arbitrary-precision `bigint`, so Castr rejects `bigint` -> OpenAPI.
-- The OpenAPI 3.2.0 row is comparison-only architecture context, not a statement of current product support.
 - JSON Schema 2020-12 does not have native `int64` or `bigint`, so Castr rejects both `int64` and `bigint` -> JSON Schema.
 - Zod 4 natively supports both `z.int64()` and `z.bigint()`, so Castr preserves both there.
 - TypeScript output uses `bigint` for both `int64` and `bigint` IR semantics because that is the only native carrier that can preserve the full signed-64 domain honestly.

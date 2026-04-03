@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ComponentsObject } from 'openapi3-ts/oas31';
 import { buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../../shared/openapi/version.js';
 
 describe('buildCastrSchemas integer semantics', () => {
   it('preserves int64 semantics distinctly in IR', () => {
@@ -50,7 +51,9 @@ describe('buildCastrSchemas integer semantics', () => {
     };
 
     expect(() => buildCastrSchemas(components)).toThrow(
-      /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+      new RegExp(
+        `${CANONICAL_OPENAPI_TARGET_LABEL} cannot represent arbitrary-precision bigint natively`,
+      ),
     );
   });
 });

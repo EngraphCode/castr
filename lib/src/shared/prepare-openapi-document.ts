@@ -9,8 +9,9 @@
  *
  * The pipeline uses Scalar's json-magic and openapi-parser to:
  * 1. Bundle specs (resolves external $refs, adds x-ext metadata)
- * 2. Upgrade all specs to OpenAPI 3.1 (3.0 specs transparently upgraded)
- * 3. Validate and type as intersection of Scalar + openapi3-ts types
+ * 2. Validate against the declared OpenAPI version before upgrade/canonicalisation
+ * 3. Bridge older specs through Scalar's OpenAPI 3.1 upgrade path, then canonicalise to 3.2.0
+ * 4. Type and return the canonical document as the current openapi3-ts/oas31-compatible surface
  *
  * **Why Bundle Mode (Not Dereference)?**
  *
@@ -48,8 +49,9 @@ type FilePathInput = string;
  *
  * The pipeline performs:
  * 1. Bundling via @scalar/json-magic (validates structure, resolves external $refs, keeps internal ones)
- * 2. Upgrade to OpenAPI 3.1 via @scalar/openapi-parser (3.0 specs transparently upgraded)
- * 3. Type boundary validation to ensure openapi3-ts/oas31 compatibility
+ * 2. Strict declared-version validation via @scalar/openapi-parser
+ * 3. Upgrade/canonicalisation to OpenAPI 3.2.0 via the shared preparation boundary
+ * 4. Type boundary validation to ensure openapi3-ts/oas31 compatibility
  *
  * **Processing Strategy:**
  * The function uses Scalar's bundle() which resolves external $refs but preserves
@@ -58,10 +60,11 @@ type FilePathInput = string;
  *
  * **Error Handling:**
  * - All errors include actionable messages with file paths/URLs when available
- * - Supports OpenAPI 3.0.x and 3.1.x specifications (all normalized to 3.1)
+ * - Supports OpenAPI 3.0.x, 3.1.x, and native 3.2.x specifications
+ * - Returns a canonical OpenAPI 3.2.0 document after the shared preparation boundary
  *
  * @param input - OpenAPI document source: file path string, URL object, or in-memory OpenAPIObject
- * @returns Validated, bundled, and upgraded OpenAPIObject (3.1) with internal $refs preserved
+ * @returns Validated, bundled, and canonicalised OpenAPIObject (3.2.0) with internal $refs preserved
  *
  * @throws {Error} When input cannot be loaded (file not found, network error, etc.)
  * @throws {Error} When OpenAPI document fails validation (structural errors)
@@ -71,7 +74,7 @@ type FilePathInput = string;
  * import { prepareOpenApiDocument } from '@engraph/castr';
  *
  * const spec = await prepareOpenApiDocument('./api.yaml');
- * // spec is now a validated, bundled OpenAPI 3.1 document ready for code generation
+ * // spec is now a validated, bundled OpenAPI 3.2.0 document ready for code generation
  * ```
  *
  * @example URL input
@@ -87,7 +90,7 @@ type FilePathInput = string;
  *   paths: {}
  * };
  * const spec = await prepareOpenApiDocument(mySpec);
- * // Returns OpenAPI 3.1 document (automatically upgraded from 3.0)
+ * // Returns an OpenAPI 3.2.0 document (automatically upgraded from 3.0 bridge syntax)
  * ```
  *
  * @public

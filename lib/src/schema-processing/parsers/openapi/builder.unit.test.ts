@@ -10,6 +10,7 @@ import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
 import { buildIR, buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 
 describe('buildCastrSchemas', () => {
   describe('primitive schemas', () => {
@@ -393,7 +394,7 @@ describe('buildIR', () => {
 
     expect(result).toMatchObject({
       version: '1.0.0',
-      openApiVersion: '3.1.0',
+      openApiVersion: CANONICAL_OPENAPI_VERSION,
       info: {
         title: 'Test API',
         version: '1.0.0',

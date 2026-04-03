@@ -23,7 +23,7 @@ export function getSchemaComplexity({
     return handleReferenceSchema(current);
   }
 
-  // Handle type array (OpenAPI 3.1 feature)
+  // Handle type array (OpenAPI 3.1+ feature)
   if (Array.isArray(schema.type)) {
     return calculateTypeArrayComplexity(
       schema.type,

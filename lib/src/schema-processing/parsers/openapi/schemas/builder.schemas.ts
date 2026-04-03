@@ -18,6 +18,7 @@ import type { IRBuildContext } from '../builder.types.js';
 import type { IRComponentSchemaContext, IRComponent } from '../../../ir/index.js';
 import { buildCastrSchema } from '../builder.core.js';
 import { detectCircularReferences } from '../components/builder.circular.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../../shared/openapi/version.js';
 
 /**
  * Build IR components from OpenAPI components object.
@@ -118,9 +119,9 @@ function buildSchemaComponents(
   // However, buildCastrSchemas doesn't take the doc either.
   // For now, we'll use the dummy doc as before, but ideally we should update the signature.
   // Wait, the original code used a dummy doc:
-  // doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+  // doc: { openapi: '3.2.0', info: { title: '', version: '' }, paths: {} },
   const dummyDoc: OpenAPIObject = {
-    openapi: '3.1.0',
+    openapi: CANONICAL_OPENAPI_VERSION,
     info: { title: '', version: '' },
     paths: {},
   };

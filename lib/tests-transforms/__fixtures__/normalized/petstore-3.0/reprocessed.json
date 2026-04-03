@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.1",
+  "openapi": "3.2.0",
   "info": {
     "version": "1.0.0",
     "title": "Swagger Petstore",
@@ -136,6 +136,20 @@
   ],
   "components": {
     "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["code", "message"],
+        "additionalProperties": false
+      },
       "Pet": {
         "type": "object",
         "properties": {
@@ -150,7 +164,8 @@
             "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name"],
+        "additionalProperties": false
       },
       "Pets": {
         "type": "array",
@@ -158,19 +173,6 @@
           "$ref": "#/components/schemas/Pet"
         },
         "maxItems": 100
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": ["code", "message"]
       }
     }
   }

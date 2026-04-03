@@ -137,13 +137,13 @@ const VALIDATION_HINTS: readonly {
     pathMatcher: isSchemaPath,
     messageMatcher: isMissingRefError,
     hint:
-      "This often means the schema uses OpenAPI 3.1 syntax (like 'type: null' in anyOf) in a 3.0.x document. " +
-      "Either upgrade to 'openapi: 3.1.0' or use 'nullable: true' instead of 'type: null'.",
+      "This often means the schema uses OpenAPI 3.1+ syntax (like 'type: null' in anyOf) in a 3.0.x document. " +
+      "Either upgrade to \"openapi: '3.2.0'\" or use 'nullable: true' instead of 'type: null'.",
   },
   {
     pathMatcher: isResponsePath,
     messageMatcher: isRequiredPropertyOrOneOfError,
-    hint: "Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)",
+    hint: "Response objects require a 'description' field (OpenAPI 3.0.x, 3.1.x, and 3.2.x)",
   },
   {
     pathMatcher: (path) => endsWith(path, INFO_SUFFIX),
@@ -153,22 +153,22 @@ const VALIDATION_HINTS: readonly {
   {
     pathMatcher: (path) => path === PATHS_PATH,
     messageMatcher: isRequiredPropertyOrOneOfError,
-    hint: "The 'paths' field is required in OpenAPI 3.0.x (optional in 3.1.x if webhooks or components present)",
+    hint: "The 'paths' field is required in OpenAPI 3.0.x (optional in OpenAPI 3.1.x and 3.2.x if webhooks or components are present)",
   },
   {
     pathMatcher: (path) => endsWith(path, TYPE_SUFFIX),
     messageMatcher: isTypeValueError,
-    hint: "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string. 'null' is 3.1.x only",
+    hint: "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string. 'null' is only valid in OpenAPI 3.1.x and 3.2.x",
   },
   {
     pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, JSON_SCHEMA_DIALECT_TOKEN),
     messageMatcher: isNotAllowedError,
-    hint: "'jsonSchemaDialect' is only valid in OpenAPI 3.1.x",
+    hint: "'jsonSchemaDialect' is only valid in OpenAPI 3.1.x and 3.2.x",
   },
   {
     pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, WEBHOOKS_TOKEN),
     messageMatcher: isNotAllowedError,
-    hint: "'webhooks' is only valid in OpenAPI 3.1.x",
+    hint: "'webhooks' is only valid in OpenAPI 3.1.x and 3.2.x",
   },
 ];
 
@@ -206,7 +206,7 @@ export function formatValidationPath(path: string): string {
  *
  * @example
  * getValidationHint('must have required property', '/paths/~1test/get/responses/200')
- * // => "Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)"
+ * // => "Response objects require a 'description' field (OpenAPI 3.0.x, 3.1.x, and 3.2.x)"
  */
 export function getValidationHint(message: string, path: string): string | undefined {
   for (const { pathMatcher, messageMatcher, hint } of VALIDATION_HINTS) {

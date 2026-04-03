@@ -1,6 +1,6 @@
 # OAS 3.2 Version Plumbing
 
-**Status:** READY — Immediate execution slice
+**Status:** ✅ COMPLETE — Thursday 2 April 2026 (staged completion record)
 **Created:** 2026-03-31
 **Predecessor:** Schema Completeness Arc Phase 2 (✅ complete, 2026-03-30)
 
@@ -34,12 +34,14 @@ OAS 3.2 is **fully backwards-compatible** with 3.1 — every valid 3.1 document 
 - Users with OAS 3.2 documents can use Castr immediately (currently rejected by the `isBundledOpenApiDocument` type guard)
 - Output documents claim `3.2.0`, which is current and correct since we don't emit any 3.1-only deprecated patterns
 
-## Characterisation Note (Thursday, 2 April 2026)
+## Completion Note (Thursday, 2 April 2026)
 
-- `pnpm test:gen` is green in the current checkout, but that does **not** yet prove native OAS 3.2 ingest
-- Direct characterisation shows `upgradeAndValidate({ openapi: '3.2.0', ... })` still throws `Failed to produce valid OpenAPI 3.1 document`
-- Root cause is the shared OpenAPI preparation boundary: `upgrade-validate.ts` still hard-requires minor version `1`, and every generated-code case flows through that seam before syntax/type/lint/file checks run
-- Therefore this slice must include **proof expansion**, not only version-string replacement: native 3.2 acceptance needs explicit unit and generation-level coverage
+- Native `{ openapi: '3.2.0' }` input now succeeds through the shared preparation boundary
+- `upgradeAndValidate()` accepts both `3.1.x` bridge input and `3.2.x` native input, then returns canonical `openapi: '3.2.0'`
+- `pnpm test:gen` now includes representative native OAS 3.2 fixture coverage
+- Repo-local doctor preflight now dispatches to Scalar's bundled `v3.1` or `v3.2` schema for supported versions and skips local preflight for 2.0/3.0
+- the full repo-root Definition of Done chain now passes via `pnpm check:ci`
+- The remaining successor arc is 3.2-only feature expansion, not version-string plumbing
 
 ---
 
@@ -76,9 +78,10 @@ All new OAS 3.2 features — see companion plan `oas-3.2-full-feature-support.md
 
 The input guard must accept both `3.1.x` (from Scalar `upgrade()`) and `3.2.x` (native 3.2 input). 3.1.x acceptance is a **bridge**, not a target.
 
-Current verified symptom:
+Landed result:
 
-- Native `{ openapi: '3.2.0' }` input still fails at this guard today with `Failed to produce valid OpenAPI 3.1 document`
+- Native `{ openapi: '3.2.0' }` input is accepted at this guard
+- `3.1.x` remains accepted as the documented bridge version
 
 ```
 upgrade-validate.ts:
@@ -170,7 +173,7 @@ Use `grep -r "openApiVersion: '3.1.0'" --include='*.ts'` to find all.
 
 ## Quality Gates
 
-- `pnpm check` exit 0
+- `pnpm check:ci` exit 0
 - All existing round-trip and transform proofs continue passing with 3.2.0 version
 - OAS 3.2.0 input document accepted end-to-end
 

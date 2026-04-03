@@ -14,6 +14,18 @@ describe('preflight-validator', () => {
     expect(result.errors).toHaveLength(0);
   });
 
+  it('returns valid for a well-formed OpenAPI 3.2 document', async () => {
+    const document = {
+      openapi: '3.2.0',
+      info: { title: 'Valid API', version: '1.0.0' },
+      paths: {},
+    };
+
+    const result = await preflightValidate(document);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
   it('returns all unevaluatedProperties errors in a single pass', async () => {
     const document = {
       openapi: '3.1.0',

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.0",
+  "openApiVersion": "3.2.0",
   "info": {
     "title": "Tic Tac Toe",
     "description": "This API allows writing down marks on a Tic Tac Toe board\nand requesting the state of the board or of individual squares.\n",
@@ -311,7 +311,8 @@
             }
           }
         },
-        "required": []
+        "required": [],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,

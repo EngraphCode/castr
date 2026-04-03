@@ -2,7 +2,7 @@
  * OpenAPI components writer — converts IR components to OpenAPI ComponentsObject.
  *
  * This module handles the conversion of IR component definitions (schemas,
- * security schemes, parameters, responses) to valid OpenAPI 3.1 ComponentsObject.
+ * security schemes, parameters, responses) to valid canonical OpenAPI 3.2 ComponentsObject.
  *
  * @module
  */
@@ -331,7 +331,7 @@ const COMPONENT_TYPE_HANDLERS: Record<
  * and converts each to the appropriate OpenAPI structure.
  *
  * @param components - The IR components to convert
- * @returns A valid OpenAPI 3.1 ComponentsObject
+ * @returns A valid canonical OpenAPI 3.2 ComponentsObject
  *
  * @example
  * ```typescript

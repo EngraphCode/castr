@@ -12,15 +12,15 @@ import {
   visitSchemaChildren,
 } from './integer-target-capabilities.traversal.js';
 
-const INTEGER_CAPABILITY_TARGET_OPENAPI_31 = 'OpenAPI 3.1';
+const INTEGER_CAPABILITY_TARGET_OPENAPI_32 = 'OpenAPI 3.2';
 const INTEGER_CAPABILITY_TARGET_JSON_SCHEMA_2020_12 = 'JSON Schema 2020-12';
 
 type PortableIntegerInputTarget =
-  | typeof INTEGER_CAPABILITY_TARGET_OPENAPI_31
+  | typeof INTEGER_CAPABILITY_TARGET_OPENAPI_32
   | typeof INTEGER_CAPABILITY_TARGET_JSON_SCHEMA_2020_12;
 
 export type IntegerCapabilityTarget =
-  | typeof INTEGER_CAPABILITY_TARGET_OPENAPI_31
+  | typeof INTEGER_CAPABILITY_TARGET_OPENAPI_32
   | typeof INTEGER_CAPABILITY_TARGET_JSON_SCHEMA_2020_12
   | 'Zod 4'
   | 'TypeScript';
@@ -30,7 +30,7 @@ function createUnsupportedBigIntMessage(target: IntegerCapabilityTarget): string
 }
 
 function createUnsupportedInt64Message(target: IntegerCapabilityTarget): string {
-  return `${target} cannot represent signed 64-bit integer semantics natively. Castr deliberately does not support custom types for this case. Consider generic integer if the 64-bit contract does not matter, or use OpenAPI 3.1 when native int64 support is required.`;
+  return `${target} cannot represent signed 64-bit integer semantics natively. Castr deliberately does not support custom types for this case. Consider generic integer if the 64-bit contract does not matter, or use OpenAPI 3.2 when native int64 support is required.`;
 }
 
 function assertIntegerSemanticsSupported(
@@ -44,7 +44,7 @@ function assertIntegerSemanticsSupported(
 
   if (integerSemantics === INTEGER_SEMANTICS_BIGINT) {
     if (
-      target === INTEGER_CAPABILITY_TARGET_OPENAPI_31 ||
+      target === INTEGER_CAPABILITY_TARGET_OPENAPI_32 ||
       target === INTEGER_CAPABILITY_TARGET_JSON_SCHEMA_2020_12
     ) {
       throw new Error(createUnsupportedBigIntMessage(target));
@@ -108,13 +108,13 @@ export function assertDocumentSupportsIntegerTargetCapabilities(
     visitSchema(schema, target, childSeen),
   );
 
-  if (target !== INTEGER_CAPABILITY_TARGET_OPENAPI_31) {
+  if (target !== INTEGER_CAPABILITY_TARGET_OPENAPI_32) {
     return;
   }
 
   visitDocumentOpenApiSchemas(document, new WeakSet<object>(), (schema) =>
     assertPortableIntegerInputSemanticsSupported(
-      INTEGER_CAPABILITY_TARGET_OPENAPI_31,
+      INTEGER_CAPABILITY_TARGET_OPENAPI_32,
       schema.type,
       schema.format,
     ),

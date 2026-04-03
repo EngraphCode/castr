@@ -19,6 +19,7 @@ import { buildSingleParameter } from '../operations/builder.parameters.js';
 import { buildSingleResponse } from '../operations/builder.responses.js';
 import { buildIRRequestBody } from '../operations/builder.request-body.js';
 import type { IRComponent, IRSecuritySchemeComponent } from '../../../ir/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../../shared/openapi/version.js';
 
 export function buildSecurityComponents(
   securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
@@ -38,7 +39,7 @@ export function buildParameterComponents(
   return Object.entries(parameters).map(([name, param]) => {
     // Create a temporary context for the parameter
     const context: IRBuildContext = {
-      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      doc: { openapi: CANONICAL_OPENAPI_VERSION, info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'parameters', name],
       required: false,
     };
@@ -56,7 +57,7 @@ export function buildResponseComponents(
   return Object.entries(responses).map(([name, response]) => {
     // Create a temporary context for the response
     const context: IRBuildContext = {
-      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      doc: { openapi: CANONICAL_OPENAPI_VERSION, info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'responses', name],
       required: false,
     };
@@ -76,7 +77,7 @@ export function buildRequestBodyComponents(
   return Object.entries(requestBodies).map(([name, requestBody]) => {
     // Create a temporary context for the requestBody
     const context: IRBuildContext = {
-      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      doc: { openapi: CANONICAL_OPENAPI_VERSION, info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'requestBodies', name],
       required: false,
     };

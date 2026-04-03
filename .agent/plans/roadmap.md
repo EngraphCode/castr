@@ -33,26 +33,24 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, and Schema Completeness Arc are complete.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
+
+There is currently no promoted primary active atomic plan. Until the next slice is activated, use the most recent staged completion record plus its planned successor as the OpenAPI handoff chain.
 
 Current product truth:
 
-- live code still targets OpenAPI 3.1.x today
-- `pnpm test:gen` is green locally on Thursday, 2 April 2026, but the representative generated-suite fixtures are still 3.0/3.1 only, so native OAS 3.2 ingest remains unproven there
-- direct characterisation on Thursday, 2 April 2026 confirmed that native `{ openapi: '3.2.0' }` input still fails at the shared upgrade/validate boundary with `Failed to produce valid OpenAPI 3.1 document`
+- the shared preparation boundary now accepts native `{ openapi: '3.2.0' }` input and canonicalises accepted 3.0/3.1/3.2 documents to `3.2.0`
+- `pnpm test:gen` now includes representative native OAS 3.2 fixture coverage alongside the existing 3.0/3.1 fixtures
+- OpenAPI 3.1.x remains a documented Scalar bridge input, not a peer output target
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
-- the full repo-root gate sweep was last recorded green on Sunday, 30 March 2026
+- the full repo-root gate sweep was last recorded green on Thursday, 2 April 2026 via `pnpm check:ci`
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
-Primary active plan:
+Next planned successor plan:
 
-- [oas-3.2-version-plumbing.md](./active/oas-3.2-version-plumbing.md) — READY; immediate execution slice
-
-Planned successor plan:
-
-- [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md) — planned successor after version plumbing lands
+- [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md) — next arc for 3.2-only feature fields beyond the landed version plumbing
 
 Recent staged completion records:
 
@@ -60,6 +58,7 @@ Recent staged completion records:
 - [anchor-and-dynamic-references.md](./current/complete/anchor-and-dynamic-references.md) — Schema Completeness Arc Phase 2 close-out
 - [core-vs-companion-workspaces-plan-alignment.md](./current/complete/core-vs-companion-workspaces-plan-alignment.md) — repo-wide plan-surface alignment to ADR-043
 - [feature-parity-planning-input-alignment.md](./current/complete/feature-parity-planning-input-alignment.md) — residual feature-parity planning-input wording gap closed
+- [oas-3.2-version-plumbing.md](./current/complete/oas-3.2-version-plumbing.md) — canonical target version migration is implemented and verified through the full repo-root sweep; shared-boundary, writer, generated-suite, and doctor-preflight coverage now target 3.2.0
 
 Architecture-review provenance:
 

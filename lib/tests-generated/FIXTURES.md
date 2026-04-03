@@ -15,7 +15,7 @@ Current implementation note: this suite does **not** currently import or execute
 
 ## Representative Fixtures
 
-### 1. tictactoe (Simple Schema)
+### 1. tictactoe (3.1 Bridge Fixture)
 
 **Path:** `examples/openapi/v3.1/tictactoe.yaml`
 
@@ -27,9 +27,21 @@ Current implementation note: this suite does **not** currently import or execute
 - Enum values
 - Basic validation constraints
 
-**Why selected:** Covers fundamental code generation for common OpenAPI patterns.
+**Why selected:** Covers fundamental code generation for common OpenAPI patterns while keeping explicit 3.1 bridge-input coverage.
 
-### 2. petstore-expanded (Complex Objects)
+### 2. tictactoe-3.2 (Native OAS 3.2 Fixture)
+
+**Path:** `examples/openapi/v3.2/tictactoe.yaml`
+
+**Coverage:**
+
+- Native `openapi: 3.2.0` ingest at the shared preparation boundary
+- Direct generation seam coverage for canonical 3.2 input
+- Same representative schema surface as the 3.1 bridge fixture for like-for-like comparison
+
+**Why selected:** Proves that native OAS 3.2 input survives the boundary and generated-suite harness without relying on Scalar's 3.1 bridge version.
+
+### 3. petstore-expanded (Complex Objects)
 
 **Path:** `examples/openapi/v3.0/petstore-expanded.yaml`
 
@@ -43,7 +55,7 @@ Current implementation note: this suite does **not** currently import or execute
 
 **Why selected:** Exercises composition logic and deep nesting scenarios.
 
-### 3. non-oauth-scopes (References & Security)
+### 4. non-oauth-scopes (References & Security)
 
 **Path:** `examples/openapi/v3.1/non-oauth-scopes.yaml`
 
@@ -56,7 +68,7 @@ Current implementation note: this suite does **not** currently import or execute
 
 **Why selected:** Validates reference resolution and security metadata extraction.
 
-### 4. multi-file (External References)
+### 5. multi-file (External References)
 
 **Path:** `examples/openapi/multi-file/main.yaml`
 
@@ -69,7 +81,7 @@ Current implementation note: this suite does **not** currently import or execute
 
 **Why selected:** Exercises Scalar bundling and external reference resolution using the `x-ext` vendor extension pattern for preserving file provenance in multi-file specifications.
 
-### 5. api-with-examples (Constraints)
+### 6. api-with-examples (Constraints)
 
 **Path:** `examples/openapi/v3.0/api-with-examples.yaml`
 

@@ -43,9 +43,9 @@ The system is NOT ready for production until these criteria are met.
 
 ### 1. Internal Representation (IR)
 
-- **Version**: OpenAPI 3.1.x (Source of Truth)
-- **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation but fully capable of expressing all 3.1 concepts.
-- **Completeness**: MUST support every concept in the OpenAPI 3.1 Specification.
+- **Version**: OpenAPI 3.2.0 (canonical target version)
+- **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation, with OpenAPI 3.1.x accepted only as a Scalar bridge input and `3.2.0` retained as the canonical IR/output target.
+- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; 3.2-only feature expansion remains a separately tracked slice.
 
 ### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
 
@@ -141,7 +141,7 @@ The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specificatio
 
 ### 3. Input Support: ALL Valid OpenAPI 3.1.x Syntax
 
-In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x additions:
+In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x additions. Native 3.2.x documents using this same field surface MUST also be accepted and canonicalised to `3.2.0`.
 
 **Document Root (3.1 changes)**
 
@@ -183,7 +183,7 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 - `mutualTLS` security scheme
 - `pathItems` in components
 
-**REJECT 3.1 specs with 3.0-only syntax:**
+**REJECT 3.1/3.2 specs with 3.0-only syntax:**
 
 - `nullable: true` (MUST use `type: [..., "null"]`)
 - `exclusiveMinimum`/`exclusiveMaximum` as booleans
@@ -196,9 +196,14 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 - Invalid HTTP methods
 - Missing REQUIRED fields
 
-### 5. Automatic Upgrade (3.0 → 3.1)
+### 5. Automatic Upgrade / Canonicalisation (3.0 → 3.2 target)
 
-ALL 3.0.x input MUST be normalized to 3.1 IR:
+ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as canonical `3.2.0`:
+
+- OpenAPI 2.0 / 3.0.x input may bridge through Scalar's 3.1 upgrade semantics
+- OpenAPI 3.1.x input is accepted as a bridge version
+- Native OpenAPI 3.2.x input is accepted directly
+- The final IR and writer target version is always `3.2.0`
 
 **Type System Upgrades**
 
@@ -210,11 +215,11 @@ ALL 3.0.x input MUST be normalized to 3.1 IR:
 **Example/Examples Normalization**
 
 - Preserve both `example` and `examples` in IR
-- Write to 3.1 using preferred `examples` format
+- Write to canonical 3.2 output using preferred `examples` format
 
-### 6. IR Completeness: Support ALL OpenAPI 3.1 Concepts
+### 6. IR Completeness: Support ALL currently claimed OpenAPI 3.1-era concepts under a 3.2.0 target
 
-The IR MUST be capable of representing EVERY field listed in sections 2 and 3.
+The IR MUST be capable of representing EVERY field listed in sections 2 and 3 while carrying `openApiVersion: '3.2.0'` as the canonical target marker.
 
 **Regression-critical fields (implemented):** these fields exist in IR and MUST remain supported end-to-end (parse → IR → write) with tests proving preservation.
 
@@ -242,14 +247,14 @@ The IR MUST be capable of representing EVERY field listed in sections 2 and 3.
 - ✅ `externalDocs` — at document/operation level
 - ✅ All basic JSON Schema keywords — type, format, validation, composition
 
-### 7. Output: ALL Valid OpenAPI 3.1.x Syntax
+### 7. Output: ALL Valid OpenAPI 3.2.x Syntax
 
-The writer MUST produce valid 3.1.x output containing ALL fields from the IR, including:
+The writer MUST produce valid canonical 3.2.0 output containing ALL fields from the IR, including:
 
 - All document, component, operation, parameter, response, schema fields
 - All OAS extensions: `discriminator`, `xml`, `externalDocs`, `example`
 - All 3.1 additions: `webhooks`, `jsonSchemaDialect`, `mutualTLS`, etc.
-- **NO content loss** during 3.0 → 3.1 transformation
+- **NO content loss** during 3.0/3.1 bridge normalization or final 3.2 canonicalisation
 
 ---
 

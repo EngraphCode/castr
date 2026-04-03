@@ -4,6 +4,7 @@ import type { LoaderPlugin, ResolveResult, bundle } from '@scalar/json-magic/bun
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document/index.js';
 import type { UnknownRecord } from './type-utils/types.js';
+import { CANONICAL_OPENAPI_VERSION } from './openapi/version.js';
 
 // Interface for bundle result (Scalar returns loose object types)
 // Architecture: Scalar's bundle() returns Record<string, unknown> which we then
@@ -104,7 +105,10 @@ describe('loadOpenApiDocument', () => {
 
     const result = await loadOpenApiDocument(entrypoint);
 
-    expect(result.document).toStrictEqual(scalarDocument);
+    expect(result.document).toStrictEqual({
+      ...scalarDocument,
+      openapi: CANONICAL_OPENAPI_VERSION,
+    });
     expect(result.metadata.entrypoint).toStrictEqual({ kind: 'file', uri: absoluteEntrypoint });
     expect(result.metadata.files).toHaveLength(1);
     expect(result.metadata.files[0]?.absolutePath).toBe(absoluteEntrypoint);
@@ -198,7 +202,10 @@ describe('loadOpenApiDocument', () => {
       paths: {},
     });
 
-    expect(result.document).toStrictEqual(scalarDocument);
+    expect(result.document).toStrictEqual({
+      ...scalarDocument,
+      openapi: CANONICAL_OPENAPI_VERSION,
+    });
   });
 
   it('collects bundler warnings for conflicting component names', async () => {

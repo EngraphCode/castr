@@ -2,6 +2,7 @@ import { CodeBlockWriter } from 'ts-morph';
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import { buildCastrSchema, type IRBuildContext } from '../../parsers/openapi/index.js';
 import { writeTypeDefinition } from '../../writers/typescript/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 
 /**
  * Convert an OpenAPI schema to TypeScript type definition.
@@ -46,7 +47,7 @@ export function getTypescriptFromOpenApi({
   meta?: { name: string; $ref?: string };
 }): string {
   const context: IRBuildContext = {
-    doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+    doc: { openapi: CANONICAL_OPENAPI_VERSION, info: { title: '', version: '' }, paths: {} },
     path: [],
     required: false,
   };

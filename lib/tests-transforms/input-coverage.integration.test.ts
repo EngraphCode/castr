@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 
 import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../src/shared/openapi/version.js';
 import type { CastrDocument } from '../src/schema-processing/ir/models/schema-document.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -120,7 +121,7 @@ describe('Input Coverage: OpenAPI → IR', () => {
   describe('Document-level fields', () => {
     it('parses openapi version correctly', async () => {
       const ir = await loadAndBuildIR(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
-      expect(ir.openApiVersion).toBe('3.1.0');
+      expect(ir.openApiVersion).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('parses info object complete', async () => {

@@ -1,5 +1,5 @@
 /**
- * OpenAPI document writer — converts CastrDocument (IR) to OpenAPI 3.1.
+ * OpenAPI document writer — converts CastrDocument (IR) to canonical OpenAPI 3.2.0.
  *
  * This is the main entry point for generating OpenAPI specifications from
  * the canonical Intermediate Representation. Assembles all document sections
@@ -13,10 +13,14 @@ import { writeOpenApiComponents } from './components/openapi-writer.components.j
 import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
 import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
+import {
+  CANONICAL_OPENAPI_TARGET_LABEL,
+  CANONICAL_OPENAPI_VERSION,
+} from '../../../shared/openapi/version.js';
 
 /**
- * Extended OpenAPI 3.1 object type that includes fields missing from the library types.
- * jsonSchemaDialect is a valid OAS 3.1.0 field but not included in openapi3-ts types.
+ * Extended OpenAPI object type that includes fields missing from the library types.
+ * `jsonSchemaDialect` remains valid in the canonical 3.2.0 target but is not included in openapi3-ts types.
  */
 type OpenAPIObjectExtended = OpenAPIObject & {
   jsonSchemaDialect?: string;
@@ -49,14 +53,14 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
 }
 
 /**
- * Generates an OpenAPI 3.1 document from the canonical IR.
+ * Generates a canonical OpenAPI 3.2.0 document from the canonical IR.
  *
  * This is the main entry point for the OpenAPI writer. It takes a CastrDocument
- * (the canonical intermediate representation) and produces a valid OpenAPI 3.1.0
+ * (the canonical intermediate representation) and produces a valid OpenAPI 3.2.0
  * specification object.
  *
  * @param ir - The CastrDocument intermediate representation
- * @returns A valid OpenAPI 3.1 document object
+ * @returns A valid OpenAPI 3.2.0 document object
  *
  * @example
  * ```typescript
@@ -66,8 +70,8 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  * const ir = buildIR(openApiDoc);
  * const regenerated = writeOpenApi(ir);
  *
- * // regenerated is a valid OpenAPI 3.1.0 document
- * console.log(regenerated.openapi); // '3.1.0'
+ * // regenerated is a valid OpenAPI 3.2.0 document
+ * console.log(regenerated.openapi); // '3.2.0'
  * ```
  *
  * @see {@link writeOpenApiComponents} for component conversion
@@ -77,10 +81,10 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  * @public
  */
 export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
-  assertDocumentSupportsIntegerTargetCapabilities(ir, 'OpenAPI 3.1');
+  assertDocumentSupportsIntegerTargetCapabilities(ir, CANONICAL_OPENAPI_TARGET_LABEL);
 
   const result: OpenAPIObjectExtended = {
-    openapi: ir.openApiVersion,
+    openapi: CANONICAL_OPENAPI_VERSION,
     info: ir.info,
     paths: writeOpenApiPaths(ir.operations),
   };

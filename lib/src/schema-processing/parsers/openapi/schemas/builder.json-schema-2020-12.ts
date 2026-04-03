@@ -1,7 +1,7 @@
 /**
  * IR Builder - JSON Schema 2020-12 Keywords
  *
- * Extracts JSON Schema 2020-12 keywords that are valid in OpenAPI 3.1
+ * Extracts JSON Schema 2020-12 keywords that are valid in OpenAPI 3.1+
  * but not yet included in openapi3-ts types.
  *
  * @module ir-builder.json-schema-2020-12
@@ -16,7 +16,7 @@ import type { IRBuildContext } from '../builder.types.js';
  * Extended SchemaObject with JSON Schema 2020-12 keywords.
  *
  * The openapi3-ts/oas31 types don't include all JSON Schema 2020-12 keywords
- * that are valid in OpenAPI 3.1. This type extends SchemaObject with the
+ * that are valid in OpenAPI 3.1+. This type extends SchemaObject with the
  * missing keywords for runtime extraction.
  *
  * @internal

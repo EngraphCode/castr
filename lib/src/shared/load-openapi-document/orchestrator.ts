@@ -21,18 +21,19 @@ import { createValidationErrorMessage } from './validation-errors.js';
  * 1. Normalize Input: Accept string/URL/object, determine entry point
  * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
  * 3. **Validate**: Strict validation against declared version schema (FAIL FAST)
- * 4. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via @scalar/openapi-parser
+ * 4. Upgrade/Canonicalise: Bridge older specs through 3.1 semantics, then stamp 3.2.0
  * 5. Type Guard: Ensure BundledOpenApiDocument (intersection type)
  *
  * **Architecture Notes:**
  * - Replaces legacy SwaggerParser approach (ADR-019)
  * - bundle() preserves internal $refs (doesn't fully dereference)
  * - validate() STRICTLY validates against declared version BEFORE upgrade
- * - upgrade() automatically converts old specs to 3.1
+ * - upgrade() automatically converts old specs to 3.1 bridge syntax
+ * - the shared boundary returns canonical OpenAPI 3.2.0 documents
  * - Type-safe at boundaries (no casting except Scalar interface)
  *
  * @param input - String path/URL, URL object, or in-memory OpenAPI document
- * @returns Loaded document with OpenAPI 3.1 spec and bundle metadata
+ * @returns Loaded document with canonical OpenAPI 3.2.0 spec and bundle metadata
  * @throws Error if validation, bundling, upgrading, or type guard fails
  *
  * @see {@link https://github.com/scalar/scalar Scalar OpenAPI Parser}

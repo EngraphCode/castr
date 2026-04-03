@@ -16,6 +16,7 @@ import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import type { JsonSchema2020 } from '../../src/schema-processing/parsers/json-schema/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/openapi-writer.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../src/shared/openapi/version.js';
 import { assertSchemaObject } from '../../tests-helpers/openapi-assertions.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -41,7 +42,7 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 
   describe('Root Object', () => {
     it('writes openapi version as 3.1.x', () => {
-      expect(output.openapi).toMatch(/^3\.1\./);
+      expect(output.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('writes info object', () => {
@@ -334,8 +335,7 @@ describe('Writer Output - Version Validation', () => {
     const ir30 = buildIR(result30.document);
     const output30 = writeOpenApi(ir30);
 
-    // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
-    expect(output30.openapi).toMatch(/^3\.1\./);
+    expect(output30.openapi).toBe(CANONICAL_OPENAPI_VERSION);
   });
 
   it('does NOT output 3.1.x-only fields from 3.0.x input', async () => {

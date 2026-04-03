@@ -1,5 +1,6 @@
 import type { HeaderObject, PathItemObject } from 'openapi3-ts/oas31';
 import { describe, expect, it } from 'vitest';
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../shared/openapi/version.js';
 import {
   CastrSchemaProperties,
   createMockCastrDocument,
@@ -214,7 +215,10 @@ describe('assertSchemaSupportsIntegerTargetCapabilities', () => {
     'rejects nested bigint semantics in %s when OpenAPI cannot represent them',
     ({ wrap }) => {
       expect(() =>
-        assertSchemaSupportsIntegerTargetCapabilities(wrap(createBigIntSchema()), 'OpenAPI 3.1'),
+        assertSchemaSupportsIntegerTargetCapabilities(
+          wrap(createBigIntSchema()),
+          CANONICAL_OPENAPI_TARGET_LABEL,
+        ),
       ).toThrow(BIGINT_ERROR);
     },
   );
@@ -297,9 +301,9 @@ describe('component and document traversal', () => {
       ],
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects unsupported bigint semantics in raw header components before OpenAPI emission', () => {
@@ -313,9 +317,9 @@ describe('component and document traversal', () => {
       ],
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects unsupported bigint semantics in raw header components when schema uses $ref siblings', () => {
@@ -329,9 +333,9 @@ describe('component and document traversal', () => {
       ],
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects unsupported bigint semantics in raw webhook path items before OpenAPI emission', () => {
@@ -339,9 +343,9 @@ describe('component and document traversal', () => {
       webhooks: new Map([['newCount', createBigIntWebhookPathItem()]]),
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects unsupported bigint semantics in raw webhook path items when schema uses $ref siblings', () => {
@@ -349,9 +353,9 @@ describe('component and document traversal', () => {
       webhooks: new Map([['newCount', createRefSiblingBigIntWebhookPathItem('integer')]]),
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects unsupported bigint semantics in raw webhook path items when nullable type arrays use $ref siblings', () => {
@@ -359,9 +363,9 @@ describe('component and document traversal', () => {
       webhooks: new Map([['newCount', createRefSiblingBigIntWebhookPathItem(['integer', 'null'])]]),
     });
 
-    expect(() => assertDocumentSupportsIntegerTargetCapabilities(document, 'OpenAPI 3.1')).toThrow(
-      BIGINT_ERROR,
-    );
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 
   it('does not reject OpenAPI-only raw webhook bigint surfaces for TypeScript emission', () => {
@@ -378,19 +382,31 @@ describe('component and document traversal', () => {
 describe('assertPortableIntegerInputSemanticsSupported', () => {
   it('accepts native OpenAPI int64 input', () => {
     expect(() =>
-      assertPortableIntegerInputSemanticsSupported('OpenAPI 3.1', 'integer', 'int64'),
+      assertPortableIntegerInputSemanticsSupported(
+        CANONICAL_OPENAPI_TARGET_LABEL,
+        'integer',
+        'int64',
+      ),
     ).not.toThrow();
   });
 
   it('rejects non-native OpenAPI bigint input', () => {
     expect(() =>
-      assertPortableIntegerInputSemanticsSupported('OpenAPI 3.1', 'integer', 'bigint'),
+      assertPortableIntegerInputSemanticsSupported(
+        CANONICAL_OPENAPI_TARGET_LABEL,
+        'integer',
+        'bigint',
+      ),
     ).toThrow(BIGINT_ERROR);
   });
 
   it('rejects non-native OpenAPI bigint input when integer is part of a nullable type array', () => {
     expect(() =>
-      assertPortableIntegerInputSemanticsSupported('OpenAPI 3.1', ['integer', 'null'], 'bigint'),
+      assertPortableIntegerInputSemanticsSupported(
+        CANONICAL_OPENAPI_TARGET_LABEL,
+        ['integer', 'null'],
+        'bigint',
+      ),
     ).toThrow(BIGINT_ERROR);
   });
 

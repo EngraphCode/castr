@@ -36,7 +36,7 @@ Notes:
 
 ---
 
-## Current State: Schema Completeness Arc Complete; OAS 3.2 Version Plumbing Next
+## Current State: OAS 3.2 Version Plumbing Complete; OAS 3.2 Feature Expansion Next
 
 ### Completed Predecessor Plans
 
@@ -60,7 +60,7 @@ Notes:
   - `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` standalone round-trip proof added
 - **`patternProperties`/`propertyNames` full-stack implementation** completed Wednesday, 26 March 2026:
   - IR model extended with both fields + runtime validator updated (6 new tests)
-  - JSON Schema parser: keywords parsed from both JSON Schema and OpenAPI 3.1 input
+  - JSON Schema parser: keywords parsed from both JSON Schema and OpenAPI 3.1+/canonical 3.2 input
   - JSON Schema writer: both keywords emitted to output
   - OpenAPI parser: `addPatternProperties()`/`addPropertyNames()` in 2020-12 builder
   - Zod + TypeScript writers: fail-fast with actionable error messages (2 new fail-fast tests)
@@ -102,8 +102,9 @@ Notes:
 ### Current Successor Workstream
 
 - **Schema Completeness Arc**: ✅ COMPLETE — Phase 1, Phase 1.5, and Phase 2 are all closed. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md) for the final phase.
-- **Primary active plan**: [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md) — READY; this is the next atomic slice.
-- **Planned successor plan**: [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) — successor arc once version plumbing lands.
+- **Primary active atomic plan**: none currently promoted.
+- **Most recent staged completion record**: [oas-3.2-version-plumbing.md](../plans/current/complete/oas-3.2-version-plumbing.md) — canonical OpenAPI target version is now 3.2.0 and the shared boundary, writer, generated-suite, and doctor seams are verified.
+- **Next planned successor plan**: [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) — follow-on arc for 3.2-only feature expansion.
 - **Paused workstreams**: none currently.
 
 ### Deferred Future Threads
@@ -119,11 +120,11 @@ Notes:
 
 ### Format Tensions: IR Keywords vs Output Format Capabilities
 
-The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings. This table records the completed schema-completeness state against the current OpenAPI 3.1 output target; the planned OAS 3.2 version migration is tracked separately in the active plans.
+The IR is format-neutral, but not all output formats can express every keyword. Support is defined by **input-output pairs**, constrained by the **output format** ([Input-Output Pair Compatibility Model](../directives/principles.md)). "Supported" means semantic preservation — not necessarily 1:1 mapping. Fail-fast is only for genuinely impossible output mappings. This table records the completed schema-completeness state against the current canonical OpenAPI 3.2 output target.
 
 Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
-| IR Keyword                  | JSON Schema | OpenAPI 3.1  |      Zod       |  TypeScript   | Category                                                            |
+| IR Keyword                  | JSON Schema | OpenAPI 3.2  |      Zod       |  TypeScript   | Category                                                            |
 | --------------------------- | :---------: | :----------: | :------------: | :-----------: | ------------------------------------------------------------------- |
 | `patternProperties`         |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
 | `propertyNames`             |     ✅      |      ✅      | ✅ `.refine()` | ❌ fail-fast  | Zod: semantic `.refine()`. TS: genuinely impossible.                |
@@ -153,9 +154,9 @@ Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
 - [identity-doctrine-alignment.md](../plans/current/complete/identity-doctrine-alignment.md)
 
-### Primary Active Plan
+### Landed Version Baseline
 
-- [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)
+- [oas-3.2-version-plumbing.md](../plans/current/complete/oas-3.2-version-plumbing.md)
 
 ### Planned Successor Plan
 
@@ -187,13 +188,13 @@ IDENTITY doctrine alignment is complete:
 - non-strict object input is rejected at parser boundaries
 - writers emit strict-only object output (`additionalProperties: false`, `z.strictObject()`)
 - `CastrSchemaProperties` detection is now brand-based and cross-realm safe
-- the full repo-root Definition of Done chain was last recorded green on Sunday, 30 March 2026
+- the full repo-root Definition of Done chain was last recorded green on Thursday, 2 April 2026
 
 Current OpenAPI and generation truth:
 
-- live code still targets OpenAPI 3.1.x today; OAS 3.2 version plumbing is the current active slice
-- `pnpm test:gen` is green locally on Thursday, 2 April 2026, but it still exercises only 3.0/3.1 representative fixtures and does not yet prove native OAS 3.2 ingest
-- direct characterisation on Thursday, 2 April 2026 confirmed that native `{ openapi: '3.2.0' }` input still fails at the shared upgrade/validate boundary with `Failed to produce valid OpenAPI 3.1 document`
+- the shared preparation boundary now accepts native `{ openapi: '3.2.0' }` input and canonicalises accepted 3.0/3.1/3.2 documents to `3.2.0`
+- `pnpm test:gen` now includes representative native OAS 3.2 fixture coverage alongside the existing 3.0/3.1 fixtures
+- OpenAPI 3.1.x remains accepted only as a documented Scalar bridge input
 - `schemas-only` now genuinely suppresses `endpoints`, `mcpTools`, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - runtime clients, handler generation, framework bindings, and tRPC-style code-first integrations are companion-workspace concerns, not core `@engraph/castr` promises
@@ -201,7 +202,7 @@ Current OpenAPI and generation truth:
 RC-3 (IR and runtime validator gaps) is complete:
 
 - `isCastrSchema` validates type, items, composition, required, additionalProperties (boolean-only), unevaluatedProperties (boolean or valid CastrSchema), and metadata (full CastrSchemaNode)
-- `additionalProperties` enforced as boolean-only per IDENTITY doctrine; schema-valued `unevaluatedProperties` kept as it is actively used by OpenAPI 3.1 / JSON Schema 2020-12 parsers
+- `additionalProperties` enforced as boolean-only per IDENTITY doctrine; schema-valued `unevaluatedProperties` kept as it is actively used by the OpenAPI 3.1+/3.2 and JSON Schema 2020-12 parsers
 - `trace` added to `VALID_HTTP_METHODS`
 - test file split: `validators.schema.unit.test.ts` for schema/node tests, `validators.unit.test.ts` for document/operation tests
 
@@ -246,28 +247,30 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-The schema-completeness work is no longer the critical path. That arc is complete. The current next atomic slice is OAS 3.2 version plumbing.
+The schema-completeness work is no longer the critical path. That arc is complete. The OpenAPI version-plumbing slice has landed; the next planned expansion arc is OAS 3.2 full feature support.
+
+No primary active atomic plan is currently promoted. Treat the staged completion record for version plumbing as the baseline until the next slice is explicitly activated.
 
 **Critical path, in order:**
 
-1. **Execute [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md)** — this is the primary active plan.
-2. **Keep docs honest while that work is pending** — current product output is still OpenAPI 3.1.x until the plumbing slice lands.
-3. **Treat [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) as the successor arc** — do not blur it into the version-plumbing slice.
+1. **Treat canonical OpenAPI output as 3.2.0 everywhere** — 3.1.x is a bridge input, not a peer target.
+2. **Use [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) for the next OpenAPI expansion arc** — keep 3.2-only feature work separate from the now-landed version plumbing.
+3. **Keep docs honest whenever truth changes** — roadmap, session-entry, plan-state markers, and napkin must stay aligned.
 
 **Rules:**
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Do not start implementation until a decision-complete plan exists.** The current one is `oas-3.2-version-plumbing.md`.
-3. **Update handoff docs when truth changes** — roadmap, session-entry, active-plan markers, and napkin must stay honest.
+2. **Do not start implementation until a decision-complete plan exists.** For new OpenAPI feature work, the next one is `oas-3.2-full-feature-support.md`.
+3. **Update handoff docs when truth changes** — roadmap, session-entry, plan-state markers, and napkin must stay honest.
 
 ## What This Session Should Do
 
-OAS 3.2 version plumbing.
+Honor the landed OpenAPI 3.2.0 canonical target.
 
-1. **Read the primary active plan first** — [oas-3.2-version-plumbing.md](../plans/active/oas-3.2-version-plumbing.md).
-2. **If implementation is requested, keep the slice to version acceptance, normalisation, output, and handoff plumbing only.**
-3. **Leave OAS 3.2 feature expansion to the companion successor plan unless the user explicitly redirects the work.**
-4. **For doc-only or review-only work, keep the current 3.1 product truth explicit while pointing the next session at the 3.2 plan stack.**
+1. **Read the most relevant completion or successor plan first** — `oas-3.2-version-plumbing.md` for version-baseline context, `oas-3.2-full-feature-support.md` for new 3.2 feature work.
+2. **If implementation is requested, do not regress the 3.2.0 boundary, writer, doctor, or generated-suite acceptance proofs.**
+3. **Leave 3.2-only feature expansion to the dedicated successor plan unless the user explicitly requests that slice.**
+4. **For doc-only or review-only work, keep the current 3.2.0 product truth explicit and describe 3.1.x only as bridge input compatibility.**
 
 ## Quality Gates
 
@@ -306,7 +309,7 @@ Treat every failure as blocking.
 
 Current honest state:
 
-- `pnpm qg` was last recorded green on Sunday, 30 March 2026 (including `test:e2e`, after Schema Completeness Arc Phase 2)
+- `pnpm qg` was last recorded green on Thursday, 2 April 2026 (via `pnpm check:ci`, including `test:e2e`, after OAS 3.2 version plumbing verification)
 - Schema Completeness Arc Phase 2 completed on Sunday, 30 March 2026 — [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md)
 - RC-1/RC-2 (proof-system and durable-doctrine remediation) completed on Monday, 23 March 2026
 - RC-3 (IR and runtime validator gaps) completed on Monday, 24 March 2026 — [ir-and-runtime-validator-remediation.md](../plans/current/complete/ir-and-runtime-validator-remediation.md)

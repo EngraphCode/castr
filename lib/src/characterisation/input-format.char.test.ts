@@ -24,6 +24,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
+import { CANONICAL_OPENAPI_VERSION } from '../shared/openapi/version.js';
 import {
   extractContent,
   assertSingleFileResult,
@@ -44,7 +45,7 @@ describe('Input Format Support', () => {
       const spec = await parseSpec('./examples/openapi/v3.0/petstore.json');
 
       // Verify spec was parsed correctly
-      expect(spec.openapi).toMatch(/^3\.1\./);
+      expect(spec.openapi).toBe(CANONICAL_OPENAPI_VERSION);
       expect(spec.info.title).toBe('Swagger Petstore');
       expect(spec.paths).toBeDefined();
 
@@ -80,7 +81,7 @@ describe('Input Format Support', () => {
       const spec = await parseSpec('./examples/openapi/v3.0/petstore.yaml');
 
       // Verify spec was parsed correctly
-      expect(spec.openapi).toMatch(/^3\.1\./);
+      expect(spec.openapi).toBe(CANONICAL_OPENAPI_VERSION);
       expect(spec.info.title).toBe('Swagger Petstore');
       expect(spec.paths).toBeDefined();
 

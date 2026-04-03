@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.1",
+  "openApiVersion": "3.2.0",
   "info": {
     "version": "1.0.0",
     "title": "Swagger Petstore",
@@ -97,11 +97,13 @@
                     "circularReferences": []
                   },
                   "type": "integer",
-                  "format": "int64"
+                  "format": "int64",
+                  "integerSemantics": "int64"
                 }
               }
             },
-            "required": ["id"]
+            "required": ["id"],
+            "additionalProperties": false
           }
         ]
       },
@@ -182,7 +184,8 @@
             }
           }
         },
-        "required": ["name"]
+        "required": ["name"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -262,7 +265,8 @@
             }
           }
         },
-        "required": ["code", "message"]
+        "required": ["code", "message"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -684,7 +688,8 @@
               "circularReferences": []
             },
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "integerSemantics": "int64"
           },
           "metadata": {
             "required": true,
@@ -728,7 +733,8 @@
                 "circularReferences": []
               },
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "integerSemantics": "int64"
             },
             "metadata": {
               "required": true,
@@ -833,7 +839,8 @@
               "circularReferences": []
             },
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "integerSemantics": "int64"
           },
           "metadata": {
             "required": true,
@@ -877,7 +884,8 @@
                 "circularReferences": []
               },
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "integerSemantics": "int64"
             },
             "metadata": {
               "required": true,

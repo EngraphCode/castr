@@ -66,12 +66,20 @@ function createDocument(overrides: Partial<CastrDocument> = {}): CastrDocument {
 
 describe('writeOpenApi', () => {
   describe('document structure', () => {
-    it('returns valid OpenAPI 3.1.0 document', () => {
+    it('returns canonical OpenAPI 3.2.0 document', () => {
       const ir = createDocument();
 
       const result = writeOpenApi(ir);
 
-      expect(result.openapi).toBe('3.1.0');
+      expect(result.openapi).toBe('3.2.0');
+    });
+
+    it('keeps OpenAPI 3.2.0 canonical even when IR still carries 3.1.0', () => {
+      const ir = createDocument({ openApiVersion: '3.1.0' });
+
+      const result = writeOpenApi(ir);
+
+      expect(result.openapi).toBe('3.2.0');
     });
 
     it('preserves info object', () => {
@@ -184,7 +192,7 @@ describe('writeOpenApi', () => {
 
       const result = writeOpenApi(ir);
 
-      expect(result.openapi).toBe('3.1.0');
+      expect(result.openapi).toBe('3.2.0');
       expect(result.info).toBeDefined();
       expect(result.paths).toEqual({});
     });

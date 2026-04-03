@@ -80,7 +80,7 @@ function hasRequiredOpenApiFields(obj: object): boolean {
 
 /**
  * Checks that the document has at least one content section (paths, webhooks, or components).
- * OAS 3.1: Either paths or webhooks must be present (or both). Components-only is also valid.
+ * OAS 3.1+: Either paths or webhooks must be present (or both). Components-only is also valid.
  * @internal
  */
 function hasDocumentContent(obj: object): boolean {
@@ -96,7 +96,7 @@ function hasDocumentContent(obj: object): boolean {
  * Performs minimal structural validation to distinguish SwaggerParser's OpenAPI type
  * from openapi3-ts's OpenAPIObject. Both are structurally compatible.
  *
- * Note: In OpenAPI 3.1, `paths` is optional if `webhooks` is present. A valid
+ * Note: In OpenAPI 3.1+, `paths` is optional if `webhooks` is present. A valid
  * document can have just `webhooks` (e.g., webhook-example.yaml).
  *
  * @param obj - Object to check (typically from SwaggerParser.bundle())

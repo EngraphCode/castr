@@ -10,6 +10,7 @@
 import type { CastrSchema, CastrSchemaNode } from './models/schema.js';
 import type { IRComponent, CastrSchemaComponent } from './models/schema.components.js';
 import type { CastrDocument } from './models/schema-document.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../shared/openapi/version.js';
 import { isCastrSchemaProperties } from '../../shared/type-utils/type-guards.js';
 
 // ============================================================================
@@ -28,7 +29,7 @@ import { isCastrSchemaProperties } from '../../shared/type-utils/type-guards.js'
 export function createMockCastrDocument(overrides: Partial<CastrDocument> = {}): CastrDocument {
   return {
     version: '1.0.0',
-    openApiVersion: '3.1.0',
+    openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: { title: 'Test API', version: '1.0.0' },
     servers: [],
     components: [],

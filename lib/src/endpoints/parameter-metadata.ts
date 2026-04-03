@@ -73,7 +73,7 @@ function extractDefaultExample(
     return undefined;
   }
 
-  // In OpenAPI 3.1, examples is an object with string keys
+  // In OpenAPI 3.1+, examples is an object with string keys
   // Access the 'default' property if it exists
   if (typeof examplesObj === 'object' && 'default' in examplesObj) {
     const defaultEntry = examplesObj['default'];
@@ -92,7 +92,7 @@ function extractDefaultExample(
 /**
  * Extract example value from parameter or schema.
  *
- * OpenAPI 3.1 supports both `example` (single value) and `examples` (named examples).
+ * OpenAPI 3.1+ supports both `example` (single value) and `examples` (named examples).
  * Scalar's upgrade converts all examples to the `examples` object format with a 'default' key.
  *
  * Priority order:

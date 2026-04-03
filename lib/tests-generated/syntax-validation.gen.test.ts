@@ -13,6 +13,7 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
  *
  * Representative fixtures exercise a representative single-file path:
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
+ * - tictactoe-3.2: Native OpenAPI 3.2 ingest through the shared preparation boundary
  * - petstore: Complex objects with nested structures, allOf compositions
  * - non-oauth: References ($ref) and security metadata extraction
  * - multi-file: External $ref resolution across multiple files with x-ext vendor extension
@@ -24,6 +25,11 @@ describe('Generated Code - Syntax Validation', () => {
       name: 'tictactoe',
       path: 'examples/openapi/v3.1/tictactoe.yaml',
       reason: 'Simple schema with basic types (primitives, objects, arrays)',
+    },
+    {
+      name: 'tictactoe-3.2',
+      path: 'examples/openapi/v3.2/tictactoe.yaml',
+      reason: 'Native OpenAPI 3.2 ingest through the shared preparation boundary',
     },
     {
       name: 'petstore',

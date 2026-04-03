@@ -6,6 +6,7 @@ import {
   INTEGER_SEMANTICS_INT64,
 } from '../../../ir/index.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../../compatibility/integer-target-capabilities.js';
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../../../shared/openapi/version.js';
 
 export function applyIntegerFormatSemantics(
   schema: SchemaObject,
@@ -16,7 +17,11 @@ export function applyIntegerFormatSemantics(
     return false;
   }
 
-  assertPortableIntegerInputSemanticsSupported('OpenAPI 3.1', inferredType, schema.format);
+  assertPortableIntegerInputSemanticsSupported(
+    CANONICAL_OPENAPI_TARGET_LABEL,
+    inferredType,
+    schema.format,
+  );
 
   if (inferredType === INTEGER_SCHEMA_TYPE && schema.format === INTEGER_SEMANTICS_INT64) {
     applyExplicitIntegerSemantics(irSchema, INTEGER_SEMANTICS_INT64);

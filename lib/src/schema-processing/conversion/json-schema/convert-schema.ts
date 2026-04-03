@@ -21,7 +21,7 @@ const REF_FIELD_SCHEMA = '$ref';
 const REF_FIELD_DYNAMIC = '$dynamicRef';
 
 /**
- * Convert an OpenAPI 3.1 schema object (Scalar-upgraded) into a JSON Schema Draft 07 representation.
+ * Convert a canonical OpenAPI 3.2 schema object (or 3.1 bridge equivalent) into a JSON Schema Draft 07 representation.
  * This initial implementation focuses on primitive schemas and shared metadata, expanding via TDD.
  */
 export function convertOpenApiSchemaToJsonSchema(schema: OpenApiSchema): MutableJsonSchema {

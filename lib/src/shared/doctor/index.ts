@@ -226,7 +226,7 @@ function createProfileFromRepair(
 }
 
 /**
- * Attempts aggressive reparations on an OpenAPI document to produce a valid OpenAPI 3.1.x spec.
+ * Attempts aggressive reparations on an OpenAPI document to produce a valid canonical OpenAPI 3.2.0 spec.
  *
  * @param inputDocument The parsed (but potentially invalid) OpenAPI document object
  * @returns A diagnosis report containing the repaired document and its validation status.

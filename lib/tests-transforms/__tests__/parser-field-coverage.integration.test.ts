@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../src/shared/openapi/version.js';
 import type { CastrDocument } from '../../src/schema-processing/ir/models/schema-document.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,7 +34,7 @@ describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
 
   describe('Root Object', () => {
     it('extracts openapi version', () => {
-      expect(ir.openApiVersion).toMatch(/^3\.1/);
+      expect(ir.openApiVersion).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('extracts info object', () => {

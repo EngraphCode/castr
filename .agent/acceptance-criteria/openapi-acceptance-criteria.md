@@ -4,6 +4,7 @@
 > the requirements document is the source of truth.
 > Reference schemas: `.agent/reference/openapi_schema/openapi_3_0_x_schema.json` and
 > `.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json`.
+> Native OpenAPI 3.2 runtime validation uses Scalar's bundled `v3.2` schema.
 >
 > Current implementation note (2026-03-24): Pack 3 `components.requestBodies` egress gap fixed in RC-4.1;
 > output-coverage proof assertion for reusable request bodies not yet added. This file remains the target
@@ -13,10 +14,11 @@
 
 ## Scope
 
-- Input: OpenAPI 3.0.x and 3.1.x (all valid fields)
-- Output: OpenAPI 3.1.x only
-- Internal: IR is normalized to 3.1.x
-- OpenAPI 3.2.x is not supported
+- Input: OpenAPI 3.0.x and 3.1.x (all valid fields), plus native OpenAPI 3.2.x for the currently supported 3.1-equivalent field surface
+- Output: OpenAPI 3.2.x only
+- Internal: IR is normalized to `3.2.0`
+- OpenAPI 3.1.x remains accepted as a documented Scalar bridge input
+- OpenAPI 3.2-only feature expansion remains separately tracked work
 
 ---
 
@@ -180,7 +182,7 @@ This section is the detailed checklist.
 
 ---
 
-## Part 2: Input Coverage (OpenAPI 3.1.x Additions)
+## Part 2: Input Coverage (OpenAPI 3.1.x Additions, Also Accepted in Native 3.2.x)
 
 The parser MUST accept and preserve ALL fields listed in requirements section 3.
 These are added on top of 3.0.x input.
@@ -217,7 +219,7 @@ These are added on top of 3.0.x input.
 - `dependentSchemas`, `dependentRequired`
 - `minContains`, `maxContains`
 - `exclusiveMinimum` and `exclusiveMaximum` are numbers
-- `nullable` is NOT allowed in 3.1 input
+- `nullable` is NOT allowed in 3.1/3.2 input
 
 ---
 
@@ -233,13 +235,13 @@ Derived from requirements section 4.
 - `mutualTLS` security scheme
 - `pathItems` in components
 
-### Reject 3.1 specs that include 3.0-only syntax
+### Reject 3.1/3.2 specs that include 3.0-only syntax
 
 - `nullable: true`
 - `exclusiveMinimum`/`exclusiveMaximum` as booleans
 - `items` as array (tuples MUST use `prefixItems`)
 
-### Reject invalid syntax (both versions)
+### Reject invalid syntax (all supported versions)
 
 - Invalid `openapi` semver
 - Unresolvable `$ref` pointers
@@ -248,24 +250,27 @@ Derived from requirements section 4.
 
 ---
 
-## Part 4: Automatic Upgrade (3.0 -> 3.1)
+## Part 4: Automatic Upgrade / Canonicalisation (3.0 -> 3.2.0)
 
 Derived from requirements section 5.
 
+- OpenAPI 2.0 / 3.0.x bridge through Scalar's 3.1 upgrade semantics before final canonicalisation
+- OpenAPI 3.1.x is accepted as a bridge input and canonicalised to `3.2.0`
+- Native OpenAPI 3.2.x input is accepted directly and retained as `3.2.0`
 - `nullable: true` + `type: "string"` -> `type: ["string", "null"]`
 - `exclusiveMinimum: true` + `minimum: 10` -> `exclusiveMinimum: 10`
 - `exclusiveMaximum: true` + `maximum: 100` -> `exclusiveMaximum: 100`
 - `items: [SchemaA, SchemaB]` -> `prefixItems: [SchemaA, SchemaB]`
-- Preserve both `example` and `examples` in IR; prefer `examples` in 3.1 output
+- Preserve both `example` and `examples` in IR; prefer `examples` in canonical 3.2 output
 
 ---
 
-## Part 5: Output Requirements (OpenAPI 3.1.x)
+## Part 5: Output Requirements (OpenAPI 3.2.x)
 
 All output documents MUST:
 
-1. Validate against the 3.1 JSON schema
-2. Emit `openapi` as 3.1.x (prefer `3.1.0` unless configured)
+1. Validate against the 3.2 JSON schema
+2. Emit `openapi` as canonical `3.2.0`
 3. Preserve ALL information from the IR (no content loss)
 4. Avoid 3.0-only constructs (`nullable`, boolean exclusive bounds, tuple `items` arrays)
 
@@ -302,11 +307,11 @@ Allowed methods for input and output:
 ### Version Rejection Tests
 
 - 3.0 input with 3.1-only syntax MUST throw
-- 3.1 input with 3.0-only syntax MUST throw
+- 3.1/3.2 input with 3.0-only syntax MUST throw
 
 ### Upgrade Tests
 
-- 3.0 -> 3.1 transformations MUST be verified for each rule in Part 4
+- 3.0 bridge transformations and final 3.2 canonicalisation MUST be verified for each rule in Part 4
 
 ### Transform Tests (Sample Input)
 

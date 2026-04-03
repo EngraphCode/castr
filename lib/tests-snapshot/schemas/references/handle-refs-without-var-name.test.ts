@@ -91,7 +91,7 @@ test('handle-refs-without-var-name', () => {
                 "title": "Example API",
                 "version": "1",
             },
-            "openApiVersion": "3.0.3",
+            "openApiVersion": "3.2.0",
             "operations": [
                 {
                     "method": "get",

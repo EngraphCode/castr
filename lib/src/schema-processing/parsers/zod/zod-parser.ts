@@ -37,6 +37,7 @@ import {
   findZodSchemaDeclarations,
   type ZodProjectResult,
 } from './ast/zod-ast.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 
 // Import parser modules to trigger their registerParser side-effects
 // These modules register themselves with the core dispatcher on import
@@ -82,7 +83,7 @@ export function extractSchemaName(variableName: string): string {
 function createEmptyDocument(): CastrDocument {
   return {
     version: '1.0.0',
-    openApiVersion: '3.1.0',
+    openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: {
       title: 'Parsed from Zod',
       version: '1.0.0',

@@ -27,9 +27,9 @@ import { loadOpenApiDocument } from '../shared/load-openapi-document/index.js';
 /**
  * Minimal valid OpenAPI 3.0 spec for testing.
  */
-function createMinimalSpec(): OpenAPIObject {
+function createMinimalSpec(openapi = '3.0.0'): OpenAPIObject {
   return {
-    openapi: '3.0.0',
+    openapi,
     info: { title: 'Test API', version: '1.0.0' },
     paths: {
       '/test': {
@@ -71,6 +71,17 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
     expect(content).toContain('export');
   });
 
+  it('should accept native OpenAPI 3.2.0 via openApiDoc parameter', async () => {
+    const spec = createMinimalSpec('3.2.0');
+    const result = await generateZodClientFromOpenAPI({
+      openApiDoc: spec,
+      disableWriteToFile: true,
+    });
+
+    const content = assertAndExtractContent(result, 'native 3.2 in-memory object');
+    expect(content).toContain('export');
+  });
+
   it('should reject when both input and openApiDoc are provided', async () => {
     const spec = createMinimalSpec();
     await expect(
@@ -104,7 +115,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
     it('should validate and bundle file path input', async () => {
       const spec = await prepareOpenApiDocument('./examples/openapi/v3.0/petstore.yaml');
 
-      expect(spec.openapi).toMatch(/^3\.1\./);
+      expect(spec.openapi).toBe('3.2.0');
       expect(spec.info).toBeDefined();
       expect(spec.paths).toBeDefined();
       // Pipeline uses bundle mode to preserve internal $refs
@@ -126,21 +137,33 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const spec = await prepareOpenApiDocument(inputSpec);
 
       expect(spec).toBeDefined();
-      expect(spec.openapi).toMatch(/^3\.1\./);
+      expect(spec.openapi).toBe('3.2.0');
       // Pipeline uses bundle mode to preserve internal $refs
     });
 
-    it('should accept OpenAPI 3.1.0 in helper', async () => {
+    it('should canonicalise OpenAPI 3.1.0 bridge input to 3.2.0 in helper', async () => {
       const spec31: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
       };
 
-      // OpenAPI 3.1.x is now supported
+      // OpenAPI 3.1.x remains accepted as a bridge input
       const result = await prepareOpenApiDocument(spec31);
       expect(result).toBeDefined();
-      expect(result.openapi).toMatch(/^3\.1\./);
+      expect(result.openapi).toBe('3.2.0');
+    });
+
+    it('should accept native OpenAPI 3.2.0 in helper', async () => {
+      const spec32: OpenAPIObject = {
+        openapi: '3.2.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+      };
+
+      const result = await prepareOpenApiDocument(spec32);
+      expect(result).toBeDefined();
+      expect(result.openapi).toBe('3.2.0');
     });
 
     it('should reject malformed spec in helper', async () => {
@@ -160,7 +183,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const spec = await prepareOpenApiDocument('./examples/openapi/v3.0/petstore.yaml');
       // TypeScript should infer this as OpenAPIObject
       const typed: OpenAPIObject = spec;
-      expect(typed.openapi).toMatch(/^3\.1\./);
+      expect(typed.openapi).toBe('3.2.0');
     });
 
     it('should return OpenAPIObject from URL', async () => {
@@ -177,7 +200,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const inputSpec = createMinimalSpec();
       const spec = await prepareOpenApiDocument(inputSpec);
       const typed: OpenAPIObject = spec;
-      expect(typed.openapi).toMatch(/^3\.1\./);
+      expect(typed.openapi).toBe('3.2.0');
     });
   });
 });

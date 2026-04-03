@@ -2,8 +2,8 @@
 
 **Status:** PLANNED — Medium-term implementation arc
 **Created:** 2026-03-31
-**Predecessor:** OAS 3.2 Version Plumbing (must be completed first)
-**Dependency:** Version plumbing must be done before any feature work
+**Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)
+**Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice
 
 ---
 

@@ -10,6 +10,7 @@
 
 import type { CastrSchema } from '../../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../../../shared/openapi/version.js';
 import type { JsonSchemaObject } from '../../shared/json-schema-fields.js';
 import { writeAllJsonSchemaFields } from '../../shared/json-schema-fields.js';
 import { writeOasOnlyExtensions } from './openapi-writer.schema.extensions.js';
@@ -34,7 +35,7 @@ function writeSchemaFields(schema: CastrSchema, result: JsonSchemaObject): void 
  * to OAS 3.1 type arrays (e.g., `['string', 'null']`).
  *
  * @param schema - The IR schema to convert
- * @returns A valid OpenAPI 3.1 SchemaObject
+ * @returns A valid canonical OpenAPI 3.2 SchemaObject
  *
  * @example
  * ```typescript
@@ -54,12 +55,12 @@ export function writeOpenApiSchema(schema: CastrSchema): JsonSchemaObject {
   if (schema.booleanSchema !== undefined) {
     throw new Error(
       `Genuinely impossible: boolean schema \`${String(schema.booleanSchema)}\` cannot be ` +
-        'represented in OpenAPI 3.1 output. Boolean schemas are a pure JSON Schema 2020-12 ' +
+        'represented in OpenAPI 3.2 output. Boolean schemas are a pure JSON Schema 2020-12 ' +
         'concept with no OpenAPI equivalent. Use an explicit type instead.',
     );
   }
 
-  assertSchemaSupportsIntegerTargetCapabilities(schema, 'OpenAPI 3.1');
+  assertSchemaSupportsIntegerTargetCapabilities(schema, CANONICAL_OPENAPI_TARGET_LABEL);
 
   const result: JsonSchemaObject = {};
 

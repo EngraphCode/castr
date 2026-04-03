@@ -15,6 +15,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
+import { CANONICAL_OPENAPI_VERSION } from '../../src/shared/openapi/version.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
@@ -27,7 +28,7 @@ describe('OpenAPI Version Validation', () => {
     it('accepts minimal valid 3.0.x spec', async () => {
       const result = await loadOpenApiDocument(`${FIXTURES_DIR}/valid/3.0.x/minimal-valid.yaml`);
       expect(result.document).toBeDefined();
-      expect(result.document.openapi).toMatch(/^3\.1\./); // Upgraded to 3.1.x
+      expect(result.document.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('accepts complete 3.0.x spec with all fields', async () => {
@@ -49,7 +50,7 @@ describe('OpenAPI Version Validation', () => {
     it('accepts minimal valid 3.1.x spec', async () => {
       const result = await loadOpenApiDocument(`${FIXTURES_DIR}/valid/3.1.x/minimal-valid.yaml`);
       expect(result.document).toBeDefined();
-      expect(result.document.openapi).toMatch(/^3\.1\./);
+      expect(result.document.openapi).toBe(CANONICAL_OPENAPI_VERSION);
     });
 
     it('accepts complete 3.1.x spec with all fields including new additions', async () => {

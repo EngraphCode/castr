@@ -37,7 +37,7 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last recorded full repo-root sweep (including `test:e2e`): green on Sunday, 30 March 2026
+  - Last recorded full repo-root sweep (including `test:e2e`): green on Thursday, 2 April 2026
   - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
@@ -58,8 +58,9 @@ Then use:
   - Phase 1.5: all four TypeScript ❓ markers resolved
   - Phase 2: `$anchor`, `$dynamicRef`, and `$dynamicAnchor` added to the IR with parser/writer coverage and fail-fast handling where genuinely impossible
   - Input-Output Pair Compatibility Model established as governing doctrine
-- **Current OpenAPI truth:** live code still targets OpenAPI 3.1.x today; OAS 3.2 support is the next planned slice, not landed product truth
-- **Next critical-path work:** primary active plan [`.agent/plans/active/oas-3.2-version-plumbing.md`](plans/active/oas-3.2-version-plumbing.md), followed by planned successor [`.agent/plans/future/oas-3.2-full-feature-support.md`](plans/future/oas-3.2-full-feature-support.md)
+- **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
+- **Plan-state truth:** no primary active atomic plan is currently promoted; the most recent staged completion record is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
+- **Next critical-path work:** planned successor [`.agent/plans/future/oas-3.2-full-feature-support.md`](plans/future/oas-3.2-full-feature-support.md) for 3.2-only feature expansion beyond the landed version plumbing
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

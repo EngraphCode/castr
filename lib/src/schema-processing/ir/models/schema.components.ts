@@ -115,7 +115,7 @@ export interface IRCallbackComponent {
 }
 
 /**
- * PathItem component definition from OpenAPI components/pathItems section (3.1.x).
+ * PathItem component definition from OpenAPI components/pathItems section (3.1+).
  * Reusable path items that can be referenced.
  */
 export interface IRPathItemComponent {

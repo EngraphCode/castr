@@ -9,6 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../src/shared/openapi/version.js';
 import {
   ZOD_FIXTURES,
   ZOD_GENERATION_FAILURE_FIXTURES,
@@ -107,7 +108,9 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
       expectNoParseErrors('inline bigint test', 'Scenario 4 arbitrary-input parse', result);
 
       expect(() => writeOpenApi(result.ir)).toThrow(
-        /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+        new RegExp(
+          `${CANONICAL_OPENAPI_TARGET_LABEL} cannot represent arbitrary-precision bigint natively`,
+        ),
       );
     });
 

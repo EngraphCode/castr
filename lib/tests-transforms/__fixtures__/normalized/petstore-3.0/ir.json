@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "openApiVersion": "3.1.1",
+  "openApiVersion": "3.2.0",
   "info": {
     "version": "1.0.0",
     "title": "Swagger Petstore",
@@ -54,7 +54,8 @@
                 "circularReferences": []
               },
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "integerSemantics": "int64"
             },
             "name": {
               "metadata": {
@@ -94,7 +95,8 @@
             }
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,
@@ -230,7 +232,8 @@
             }
           }
         },
-        "required": ["code", "message"]
+        "required": ["code", "message"],
+        "additionalProperties": false
       },
       "metadata": {
         "required": true,

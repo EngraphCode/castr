@@ -42,6 +42,14 @@ describe('formatValidationPath', () => {
 });
 
 describe('getValidationHint', () => {
+  it('targets OpenAPI 3.2.0 in nullable upgrade guidance', () => {
+    const hint = getValidationHint(
+      "must have required property '$ref'",
+      '/components/schemas/Test/oneOf/0',
+    );
+    expect(hint).toContain("openapi: '3.2.0'");
+  });
+
   it('provides hint for missing response description', () => {
     const hint = getValidationHint(
       'must have required property',

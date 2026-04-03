@@ -2,7 +2,7 @@
  * Preflight OpenAPI validator with `allErrors: true`.
  *
  * This module provides a repo-local AJV validator that uses the same OpenAPI 3.1.x
- * JSON Schema that `@scalar/openapi-parser` uses internally, but configured with
+ * and 3.2.x JSON Schemas that `@scalar/openapi-parser` uses internally, but configured with
  * `allErrors: true` to harvest ALL validation errors in a single pass.
  *
  * This avoids the one-error-per-pass bottleneck of Scalar's validator (which uses
@@ -18,6 +18,10 @@ import { createRequire } from 'node:module';
 import Ajv2020Factory from 'ajv/dist/2020.js';
 import addFormatsFactory from 'ajv-formats/dist/index.js';
 import type { AnySchemaObject, ValidateFunction } from 'ajv';
+import {
+  detectOpenApiPreflightSchemaVersion,
+  type OpenApiPreflightSchemaVersion,
+} from '../openapi/version.js';
 
 type Ajv2020Constructor = typeof Ajv2020Factory.default;
 type AjvInstance = InstanceType<Ajv2020Constructor>;
@@ -55,17 +59,17 @@ function hasDefaultExport(value: unknown): value is { readonly default: unknown 
 }
 
 /**
- * Lazily compiled AJV validator with `allErrors: true`.
+ * Lazily compiled AJV validators with `allErrors: true`.
  */
-let cachedValidator: ValidateFunction | undefined;
+const cachedValidators: Partial<Record<OpenApiPreflightSchemaVersion, ValidateFunction>> = {};
 
-async function getOpenApi31Schema(): Promise<AnySchemaObject> {
+async function getOpenApiSchema(version: OpenApiPreflightSchemaVersion): Promise<AnySchemaObject> {
   // Resolve the @scalar/openapi-parser package root via its public entrypoint,
-  // then navigate to the bundled OpenAPI 3.1 schema on disk.
+  // then navigate to the bundled OpenAPI schema on disk.
   const require = createRequire(import.meta.url);
   const scalarEntrypoint = require.resolve('@scalar/openapi-parser');
   const scalarDist = dirname(scalarEntrypoint);
-  const schemaPath = resolve(scalarDist, 'schemas', 'v3.1', 'schema.js');
+  const schemaPath = resolve(scalarDist, 'schemas', `v${version}`, 'schema.js');
 
   // Use dynamic import with file:// URL to load the ESM schema module,
   // bypassing the package exports map.
@@ -73,17 +77,18 @@ async function getOpenApi31Schema(): Promise<AnySchemaObject> {
   const moduleObj: unknown = hasDefaultExport(schemaModule) ? schemaModule.default : schemaModule;
 
   if (!isAnySchemaObject(moduleObj)) {
-    throw new Error('Failed to load OpenAPI 3.1 schema from @scalar/openapi-parser');
+    throw new Error(`Failed to load OpenAPI ${version} schema from @scalar/openapi-parser`);
   }
   return moduleObj;
 }
 
-async function compileValidator(): Promise<ValidateFunction> {
-  if (cachedValidator) {
+async function compileValidator(version: OpenApiPreflightSchemaVersion): Promise<ValidateFunction> {
+  const cachedValidator = cachedValidators[version];
+  if (cachedValidator !== undefined) {
     return cachedValidator;
   }
 
-  const schema = await getOpenApi31Schema();
+  const schema = await getOpenApiSchema(version);
 
   const ajv: AjvInstance = new Ajv2020Factory.default({
     strict: false,
@@ -92,11 +97,11 @@ async function compileValidator(): Promise<ValidateFunction> {
 
   addFormatsFactory.default(ajv);
 
-  // OpenAPI 3.1 uses media-range format
+  // OpenAPI 3.1 and 3.2 use media-range format
   ajv.addFormat('media-range', true);
 
   const validator = ajv.compile(schema);
-  cachedValidator = validator;
+  cachedValidators[version] = validator;
   return validator;
 }
 
@@ -115,13 +120,20 @@ function buildPreflightError(e: {
 }
 
 /**
- * Validate a document against the OpenAPI 3.1 schema with `allErrors: true`.
+ * Validate a document against the matching OpenAPI 3.1 or 3.2 schema with `allErrors: true`.
  *
  * Returns ALL validation errors in a single pass, enabling batch rescue
- * of non-standard properties without repeated revalidation.
+ * of non-standard properties without repeated revalidation. Older 2.0/3.0
+ * documents intentionally skip this preflight and fall back to Scalar's
+ * version-specific validator loop.
  */
 export async function preflightValidate(document: unknown): Promise<PreflightValidationResult> {
-  const validator = await compileValidator();
+  const schemaVersion = detectOpenApiPreflightSchemaVersion(document);
+  if (schemaVersion === undefined) {
+    return { valid: true, errors: [] };
+  }
+
+  const validator = await compileValidator(schemaVersion);
   const valid = validator(document);
 
   if (valid || !validator.errors || validator.errors.length === 0) {

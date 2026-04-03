@@ -18579,7 +18579,7 @@ Some useful links:
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
         },
-        "openApiVersion": "3.1.1",
+        "openApiVersion": "3.2.0",
         "operations": [
             {
                 "description": "Add a new pet to the store",
@@ -28072,7 +28072,7 @@ Some useful links:
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
         },
-        "openApiVersion": "3.1.1",
+        "openApiVersion": "3.2.0",
         "operations": [
             {
                 "description": "Add a new pet to the store",
@@ -36645,7 +36645,7 @@ exports[`with optional, partial, all required objects 1`] = `
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
         },
-        "openApiVersion": "3.0.3",
+        "openApiVersion": "3.2.0",
         "operations": [
             {
                 "method": "get",

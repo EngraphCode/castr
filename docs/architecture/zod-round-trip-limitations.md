@@ -234,10 +234,10 @@ This is now one instance of the broader native-capability seam doctrine in ADR-0
 
 ### Current Accepted Behavior
 
-- OpenAPI 3.1 `type: integer, format: int64` parses to first-class IR `integerSemantics: 'int64'`.
+- Canonical OpenAPI 3.2 `type: integer, format: int64` parses to first-class IR `integerSemantics: 'int64'`.
 - direct `z.int64()` parses to the same IR semantics and emits canonical `z.int64()`.
 - direct `z.bigint()` parses to first-class IR `integerSemantics: 'bigint'` and emits canonical `z.bigint()`.
-- OpenAPI 3.1 output rejects arbitrary-precision `bigint`.
+- OpenAPI 3.2 output rejects arbitrary-precision `bigint`.
 - JSON Schema 2020-12 output rejects both `int64` and `bigint`.
 - TypeScript output emits `bigint` for both `int64` and `bigint` semantics.
 
@@ -252,7 +252,7 @@ This is now one instance of the broader native-capability seam doctrine in ADR-0
 
 - Zod 4 intentionally maps `z.int64()` to `bigint` to preserve the full signed 64-bit domain safely.
 - JavaScript `number` cannot safely represent the full int64 range.
-- OpenAPI 3.1 has native `int64` support, but not native arbitrary-precision `bigint`.
+- OpenAPI 3.2 has native `int64` support, but not native arbitrary-precision `bigint`.
 - JSON Schema 2020-12 has neither native `int64` nor native `bigint`.
 
 ### Example

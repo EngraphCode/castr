@@ -2,7 +2,7 @@
  * OpenAPI operations writer — converts CastrOperation[] to OpenAPI PathsObject.
  *
  * This module handles the conversion of IR operation definitions to valid
- * OpenAPI 3.1 PathsObject. Operations are grouped by path, then by HTTP method.
+ * canonical OpenAPI 3.2 PathsObject. Operations are grouped by path, then by HTTP method.
  *
  * @module
  */
@@ -260,7 +260,7 @@ function applyPathItemFields(operation: CastrOperation, pathItem: PathItemObject
  * Groups operations by path, then adds each operation under its HTTP method.
  *
  * @param operations - The IR operations to convert
- * @returns A valid OpenAPI 3.1 PathsObject
+ * @returns A valid canonical OpenAPI 3.2 PathsObject
  *
  * @example
  * ```typescript
