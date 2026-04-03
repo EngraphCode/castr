@@ -36,7 +36,7 @@ Notes:
 
 ---
 
-## Current State: OAS 3.2 Version Plumbing Complete; OAS 3.2 Feature Expansion Next
+## Current State: OAS 3.2 Full Feature Support Active
 
 ### Completed Predecessor Plans
 
@@ -99,18 +99,25 @@ Notes:
   - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
   - Format tensions table: **zero 🐛 markers remaining** in the Zod column
 
-### Current Successor Workstream
+### Current Active Workstream
 
 - **Schema Completeness Arc**: ✅ COMPLETE — Phase 1, Phase 1.5, and Phase 2 are all closed. See [anchor-and-dynamic-references.md](../plans/current/complete/anchor-and-dynamic-references.md) for the final phase.
-- **Primary active atomic plan**: none currently promoted.
-- **Most recent staged completion record**: [oas-3.2-version-plumbing.md](../plans/current/complete/oas-3.2-version-plumbing.md) — canonical OpenAPI target version is now 3.2.0 and the shared boundary, writer, generated-suite, and doctor seams are verified.
-- **Next planned successor plan**: [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) — follow-on arc for 3.2-only feature expansion.
+- **Primary active atomic plan**: [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across IR, parsers, and writers.
+- **Landed version baseline**: [oas-3.2-version-plumbing.md](../plans/current/complete/oas-3.2-version-plumbing.md) — canonical OpenAPI target version is 3.2.0.
+- **Phase A₂ (type migration)** is the next execution step: drop `openapi3-ts` and adopt `@scalar/openapi-types` with a strict re-export module (ADR-044/045). This must complete before any feature phase (B–E).
 - **Paused workstreams**: none currently.
+
+### Key Architectural Decisions (OAS 3.2 Arc)
+
+- **ADR-044**: Drop `openapi3-ts`, adopt `@scalar/openapi-types` as canonical OpenAPI type source. Scalar types provide native OAS 3.2 coverage; `openapi3-ts` contributes only one runtime value (`isReferenceObject`) and has no 3.2 roadmap.
+- **ADR-045**: Strict re-export module (`shared/openapi-types.ts`) narrows ~8 spec-required fields via intersection typing. Preserves compile-time strictness that Scalar intentionally relaxes for user-input tolerance.
+- **ADR-046**: Separate storage for `additionalOperations` on `CastrDocument`. Preserves `IRHttpMethod` closed union, validation discipline, and lossless round-trip fidelity.
 
 ### Deferred Future Threads
 
 - Reference resolution enhancements: external `$ref` resolution, `$anchor`-based reference resolution (`$ref: "#myAnchor"`), `$dynamicRef`/`$dynamicAnchor` runtime scope resolution
 - Parked research note: [multiformat-target-support.md](../research/multiformat-target-support.md)
+- ~~`openapi3-ts` dependency exit~~ — **superseded by ADR-044** (active migration in Phase A₂)
 
 ### Planned Companion Use-Case Tracks
 
@@ -158,9 +165,9 @@ Legend: ✅ supported | ❌ genuinely impossible | 🔲 not yet in IR
 
 - [oas-3.2-version-plumbing.md](../plans/current/complete/oas-3.2-version-plumbing.md)
 
-### Planned Successor Plan
+### Primary Active Plan
 
-- [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md)
+- [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md)
 
 ### Parked Research Note
 
@@ -247,30 +254,30 @@ User-reported issue rule:
 
 ## Immediate Priority
 
-The schema-completeness work is no longer the critical path. That arc is complete. The OpenAPI version-plumbing slice has landed; the next planned expansion arc is OAS 3.2 full feature support.
-
-No primary active atomic plan is currently promoted. Treat the staged completion record for version plumbing as the baseline until the next slice is explicitly activated.
+The primary active plan is [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md). The version plumbing baseline is landed; this arc adds the 3.2-only features (QUERY method, additionalOperations, hierarchical tags, example semantics, itemSchema streaming, OAuth2 Device flow, XML nodeType, path templating).
 
 **Critical path, in order:**
 
-1. **Treat canonical OpenAPI output as 3.2.0 everywhere** — 3.1.x is a bridge input, not a peer target.
-2. **Use [oas-3.2-full-feature-support.md](../plans/future/oas-3.2-full-feature-support.md) for the next OpenAPI expansion arc** — keep 3.2-only feature work separate from the now-landed version plumbing.
-3. **Keep docs honest whenever truth changes** — roadmap, session-entry, plan-state markers, and napkin must stay aligned.
+1. **Phase A₂: Type migration** — drop `openapi3-ts`, create strict re-export module from `@scalar/openapi-types`, migrate ~50 import sites. This unblocks all feature phases.
+2. **Phases B–E: Feature implementation** — work through the plan's recommended implementation order.
+3. **Treat canonical OpenAPI output as 3.2.0 everywhere** — 3.1.x is a bridge input, not a peer target.
+4. **Keep docs honest whenever truth changes** — roadmap, session-entry, plan-state markers, and napkin must stay aligned.
 
 **Rules:**
 
 1. **If the user reports a fresh gate or runtime issue, reproduce it first.**
-2. **Do not start implementation until a decision-complete plan exists.** For new OpenAPI feature work, the next one is `oas-3.2-full-feature-support.md`.
+2. **Follow the active plan's phase ordering** — each phase must pass `pnpm check` before the next begins.
 3. **Update handoff docs when truth changes** — roadmap, session-entry, plan-state markers, and napkin must stay honest.
 
 ## What This Session Should Do
 
-Honor the landed OpenAPI 3.2.0 canonical target.
+Execute the OAS 3.2 Full Feature Support arc.
 
-1. **Read the most relevant completion or successor plan first** — `oas-3.2-version-plumbing.md` for version-baseline context, `oas-3.2-full-feature-support.md` for new 3.2 feature work.
-2. **If implementation is requested, do not regress the 3.2.0 boundary, writer, doctor, or generated-suite acceptance proofs.**
-3. **Leave 3.2-only feature expansion to the dedicated successor plan unless the user explicitly requests that slice.**
-4. **For doc-only or review-only work, keep the current 3.2.0 product truth explicit and describe 3.1.x only as bridge input compatibility.**
+1. **Read the active plan first** — [oas-3.2-full-feature-support.md](../plans/active/oas-3.2-full-feature-support.md) is the primary plan; `oas-3.2-version-plumbing.md` is the landed predecessor for baseline context.
+2. **Phase A₂ (type migration) is the immediate next step** — create `shared/openapi-types.ts`, migrate imports, delete `openapi-schema-extensions.d.ts`, remove `openapi3-ts` from `package.json`. See ADR-044 and ADR-045 for the design rationale.
+3. **Do not regress the 3.2.0 boundary, writer, doctor, or generated-suite acceptance proofs.**
+4. **Work through the plan's phases in order** — each feature follows the Input-Output Pair Compatibility Model and must pass quality gates.
+5. **For doc-only or review-only work, keep the current 3.2.0 product truth explicit and describe 3.1.x only as bridge input compatibility.**
 
 ## Quality Gates
 

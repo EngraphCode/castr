@@ -59,8 +59,7 @@ Then use:
   - Phase 2: `$anchor`, `$dynamicRef`, and `$dynamicAnchor` added to the IR with parser/writer coverage and fail-fast handling where genuinely impossible
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
-- **Plan-state truth:** no primary active atomic plan is currently promoted; the most recent staged completion record is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
-- **Next critical-path work:** planned successor [`.agent/plans/future/oas-3.2-full-feature-support.md`](plans/future/oas-3.2-full-feature-support.md) for 3.2-only feature expansion beyond the landed version plumbing
+- **Plan-state truth:** the primary active plan is [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers; landed version baseline is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

@@ -35,7 +35,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-There is currently no promoted primary active atomic plan. Until the next slice is activated, use the most recent staged completion record plus its planned successor as the OpenAPI handoff chain.
+The primary active atomic plan is [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers.
 
 Current product truth:
 
@@ -47,10 +47,6 @@ Current product truth:
 - the full repo-root gate sweep was last recorded green on Thursday, 2 April 2026 via `pnpm check:ci`
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
-
-Next planned successor plan:
-
-- [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md) — next arc for 3.2-only feature fields beyond the landed version plumbing
 
 Recent staged completion records:
 
@@ -144,9 +140,9 @@ Current sweep record:
 - **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
 - **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
-**Planned Successor Plan: OAS 3.2 Full Feature Support**
+**Primary Active Plan: OAS 3.2 Full Feature Support**
 
-Tracked in [oas-3.2-full-feature-support.md](./future/oas-3.2-full-feature-support.md):
+Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md):
 
 - `QUERY` HTTP method (trivial enum addition)
 - `additionalOperations` for custom HTTP methods
