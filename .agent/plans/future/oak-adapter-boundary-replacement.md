@@ -84,7 +84,7 @@ This is the first external proving ladder for Castr, but it must still remain a 
 
 - roadmap / Phase 5 references when this plan is promoted or completed
 - Oak-facing migration contract note or durable research update
-- session-entry and napkin updates when execution status changes
+- session-continuation prompt and napkin updates when execution status changes
 
 ---
 

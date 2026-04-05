@@ -53,7 +53,7 @@ If a paused workstream contains durable conclusions, promote them before or whil
 When an unfinished workstream needs to stop being primary:
 
 - move its plan set out of `active/` into a named subdirectory here
-- update `session-entry.prompt.md`
+- update `session-continuation.prompt.md`
 - update `roadmap.md`
 - update any links that still imply the workstream is active
 
@@ -72,7 +72,7 @@ When the workstream becomes the next atomic slice again:
 - move the relevant plan back into `active/`
 - promote only one plan to primary status
 - create companion active plans only if the `active/README.md` contract still justifies them
-- update `session-entry.prompt.md` and `roadmap.md`
+- update `session-continuation.prompt.md` and `roadmap.md`
 
 ### 4. Complete Or Re-scope
 

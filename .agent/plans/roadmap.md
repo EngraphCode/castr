@@ -478,11 +478,11 @@ pnpm check
 
 ## Key Documents
 
-| Category    | Document                                                      | Purpose           |
-| ----------- | ------------------------------------------------------------- | ----------------- |
-| **Entry**   | [session-entry.prompt.md](../prompts/session-entry.prompt.md) | Session start     |
-| **Plan**    | [roadmap.md](./roadmap.md)                                    | Single plan truth |
-| **Archive** | [archive/](./archive/)                                        | Completed plans   |
+| Category    | Document                                                                    | Purpose           |
+| ----------- | --------------------------------------------------------------------------- | ----------------- |
+| **Entry**   | [session-continuation.prompt.md](../prompts/session-continuation.prompt.md) | Session start     |
+| **Plan**    | [roadmap.md](./roadmap.md)                                                  | Single plan truth |
+| **Archive** | [archive/](./archive/)                                                      | Completed plans   |
 
 ---
 

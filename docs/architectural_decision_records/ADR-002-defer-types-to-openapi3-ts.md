@@ -2,7 +2,11 @@
 
 ## Status
 
-**Accepted** - October 23, 2025
+**Accepted** - October 23, 2025  
+**Superseded by** [ADR-044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md) - April 2026
+
+> [!IMPORTANT]
+> This ADR's core principles (defer to source libraries, avoid custom type gymnastics, use type guards) remain valid. However, the specific library choice (`openapi3-ts`) has been replaced by `@scalar/openapi-types` via a strict re-export module. See ADR-044 and ADR-045 for the current type system architecture.
 
 ## Context
 

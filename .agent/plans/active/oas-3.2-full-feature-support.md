@@ -165,7 +165,7 @@ Phase A is complete. **Phase A₂ (type migration) must be completed before all 
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**ADRs:** [ADR-044](../../directives/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../directives/ADR-045-strict-reexport-module-openapi-types.md)
+**ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)
 
 ### Rationale
 

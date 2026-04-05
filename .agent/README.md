@@ -13,7 +13,7 @@
 
 Then use:
 
-→ **[prompts/session-entry.prompt.md](prompts/session-entry.prompt.md)** — Current session entrypoint and active workstream
+→ **[prompts/session-continuation.prompt.md](prompts/session-continuation.prompt.md)** — Context bridge between sessions
 
 ---
 
@@ -83,10 +83,7 @@ Then use:
 │   └── zod-parser-acceptance-criteria.md
 │
 ├── prompts/
-│   ├── architecture-review-packs.prompt.md ← Historical review-sweep prompt
-│   ├── pack-7-proof-system-and-durable-doctrine.prompt.md ← Historical final-pack prompt
-│   ├── session-entry.prompt.md  ← Current session entrypoint
-│   └── start-right.prompt.md    ← Re-anchor on doctrine and architecture
+│   └── session-continuation.prompt.md ← Context bridge between sessions
 │
 ├── commands/               ← Canonical command workflows
 ├── skills/                 ← Canonical skills

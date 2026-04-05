@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** 2026-04-02  
+**Last Updated:** 2026-04-05  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 
@@ -50,12 +50,12 @@ This library implements an **Intermediate Representation (IR) architecture** for
 
 ### Foundation (Complete)
 
-| ADR                                                      | Title                                  | Status      |
-| -------------------------------------------------------- | -------------------------------------- | ----------- |
-| [001](./ADR-001-fail-fast-spec-violations.md)            | Fail Fast on Spec Violations           | ✅ Accepted |
-| [002](./ADR-002-defer-types-to-openapi3-ts.md)           | Defer Types to openapi3-ts             | ✅ Accepted |
-| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters   | ✅ Accepted |
-| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | ✅ Accepted |
+| ADR                                                      | Title                                  | Status                                                                       |
+| -------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| [001](./ADR-001-fail-fast-spec-violations.md)            | Fail Fast on Spec Violations           | ✅ Accepted                                                                  |
+| [002](./ADR-002-defer-types-to-openapi3-ts.md)           | Defer Types to openapi3-ts             | ⛔ Superseded by [ADR-044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md) |
+| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters   | ✅ Accepted                                                                  |
+| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | ✅ Accepted                                                                  |
 
 ### Quality & Standards (Complete)
 
@@ -112,6 +112,13 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Doctrine         | ✅ Accepted    |
 | [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams        | ✅ Accepted    |
 | [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form | ✅ Accepted    |
+
+### Type System Migration (Current)
+
+| ADR                                                      | Title                                         | Status      |
+| -------------------------------------------------------- | --------------------------------------------- | ----------- |
+| [044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md)  | Drop openapi3-ts, Adopt @scalar/openapi-types | ✅ Accepted |
+| [045](./ADR-045-strict-reexport-module-openapi-types.md) | Strict Re-export Module for OpenAPI Types     | ✅ Accepted |
 
 ### Additional Architecture Records
 

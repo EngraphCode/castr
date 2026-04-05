@@ -41,7 +41,7 @@ Companion plans are allowed only when they help the next session investigate a c
 
 If more than one plan is active, one of them must be explicitly identified as the **primary** plan in:
 
-- `session-entry.prompt.md`
+- `session-continuation.prompt.md`
 - `roadmap.md`
 
 ---
@@ -68,7 +68,7 @@ When beginning a new workstream:
 - create the new plan in `active/`
 - make sure it is the smallest useful atomic slice
 - link it from `roadmap.md`
-- if relevant, point `session-entry.prompt.md` at it
+- if relevant, point `session-continuation.prompt.md` at it
 - ensure any predecessor context already lives in permanent docs if it is still important
 
 ### 2. Execute
@@ -89,7 +89,7 @@ When the atomic slice is complete:
 - move the completed plan out of `active/`
 - place it in `.agent/plans/current/complete/`
 - update `roadmap.md`
-- update `session-entry.prompt.md` if the next session should start somewhere else
+- update `session-continuation.prompt.md` if the next session should start somewhere else
 - check whether any durable insight still trapped in the plan must be promoted first
 
 If an active planning stub or diagnostic scaffold is rewritten in place into the chosen implementation plan, do not let the bridge decision vanish.
@@ -128,7 +128,7 @@ If both a primary and companion plan are active:
 - the primary plan owns the main user-facing objective
 - the companion plan owns a tightly related supporting investigation
 - both plans must cross-link each other explicitly
-- the session-entry prompt must tell the next session when to switch between them
+- the session-continuation prompt must tell the next session when to switch between them
 
 If the companion concern becomes the main workstream, promote it to primary status and update the prompt and roadmap accordingly.
 
@@ -166,7 +166,7 @@ If a user explicitly instructs that a non-primary unfinished workstream remain p
 
 Instead:
 
-- still name exactly one **primary** active plan in `session-entry.prompt.md` and `roadmap.md`
+- still name exactly one **primary** active plan in `session-continuation.prompt.md` and `roadmap.md`
 - explicitly label the other plans as **parked-in-place non-primary context**
 - do not describe parked plans as tightly coupled companions if they are not
 - return to the normal lifecycle model once the exception is no longer needed
@@ -190,7 +190,7 @@ See [`.agent/plans/current/paused/README.md`](../current/paused/README.md) for t
 
 A cold-start session should be able to use:
 
-- `session-entry.prompt.md`
+- `session-continuation.prompt.md`
 - the primary active plan
 - any explicitly linked companion active plan
 

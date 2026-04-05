@@ -2,6 +2,34 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-04-05
+
+- **Prompt consolidation completed:**
+  - archived 5 historical prompts to `.agent/archive/prompts/` (architecture-review-packs, pack-3, pack-4, pack-7, start-right, session-entry)
+  - replaced `session-entry.prompt.md` (356 lines) with lean `session-continuation.prompt.md` (~68 lines) — context bridge only, all doctrine removed
+  - `castr-start-right` skill now self-contained (absorbed workflow content from the archived start-right prompt)
+  - key design decision: session prompts must act only as context bridges; all durable doctrine resides in `directives/` or `docs/`
+- **ADR-044 and ADR-045 created:**
+  - ADR-044 records the `openapi3-ts` → `@scalar/openapi-types` migration decision, superseding ADR-002
+  - ADR-045 records the strict re-export module pattern with intersection narrowing for spec-required fields
+  - ADR-002 now carries a supersession notice while preserving its core principles (defer to source libraries, avoid type gymnastics)
+  - ADR SUMMARY and practice-index updated with both new ADRs
+- **Consolidation sweep (`jc-consolidate-docs`) found and fixed stale references:**
+  - `active/README.md` had one remaining `session-entry` prose reference
+  - `workflows/start-right.md` and `commands/jc-start-right.md` both pointed at the archived `start-right.prompt.md` — redirected to the skill
+  - `plans/future/oak-adapter-boundary-replacement.md` had a `session-entry` documentation-outputs reference
+  - `practice-index.md` prompts-directory description updated from "Reusable playbooks" to "Session continuation context bridge"
+  - remaining `session-entry` references in napkin, completed plans, and `practice-core/practice-bootstrap.md` are historical entries — left as-is
+- **Phase A₂ plan readiness fixes:**
+  - `isReferenceObject` changed from `any` to `unknown` (doctrine compliance)
+  - ADR path links fixed (were pointing at `../../directives/`, corrected to `../../docs/architectural_decision_records/`)
+  - added Step 4: `principles.md` doctrine update (6 `openapi3-ts` references flagged, requires explicit user approval)
+- Practice box check:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- **Structural learning:** the shift from prompt-heavy session management to skill-owned workflows with a lean context bridge is a useful local pattern, but it is product-specific lifecycle hygiene rather than a portable Practice pattern — no Practice Core evolution clears the bar
+
 ## 2026-04-02
 
 - OAS 3.2 version-plumbing close-out consolidation completed:

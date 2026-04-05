@@ -34,6 +34,8 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [ADR-041](../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-capability seam doctrine      |
 | [ADR-042](../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema egress normal form       |
 | [ADR-043](../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)                                  | Core-vs-companion workspace boundary |
+| [ADR-044](../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md)                           | Drop openapi3-ts, adopt Scalar types |
+| [ADR-045](../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)                          | Strict re-export module pattern      |
 
 ## Tools and Workflows
 
@@ -58,7 +60,7 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | Location                                        | What lives there                                                       |
 | ----------------------------------------------- | ---------------------------------------------------------------------- |
 | [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                                   |
-| [`.agent/prompts/`](prompts/)                   | Reusable playbooks                                                     |
+| [`.agent/prompts/`](prompts/)                   | Session continuation context bridge                                    |
 | [`.agent/commands/`](commands/)                 | Canonical command workflows                                            |
 | [`.agent/skills/`](skills/)                     | Canonical skills                                                       |
 | [`.agent/rules/`](rules/)                       | Operationalized doctrine                                               |
