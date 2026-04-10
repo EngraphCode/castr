@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SchemaObject } from '../../../../shared/openapi-types.js';
 import { buildInputSchemaObject, buildOutputSchemaObject } from './template-context.mcp.schemas.js';
 import { getTemplateContext as getTemplateContextBase } from '../../template-context.js';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../template-context.mcp.parameters.js';
 
 const getTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getTemplateContextBase>[1],
 ) => getTemplateContextBase(doc, options);
 
@@ -89,7 +89,7 @@ describe('template-context MCP schema helpers', () => {
 
 describe('buildMcpToolsFromIR (via getTemplateContext)', () => {
   test('retains templated and original paths while resolving dotted parameters', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Profiles', version: '1.0.0' },
       paths: {

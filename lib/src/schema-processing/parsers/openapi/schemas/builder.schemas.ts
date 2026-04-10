@@ -10,10 +10,10 @@
 
 import type {
   ComponentsObject,
-  OpenAPIObject,
+  OpenAPIDocument,
   ReferenceObject,
   SchemaObject,
-} from 'openapi3-ts/oas31';
+} from '../../../../shared/openapi-types.js';
 import type { IRBuildContext } from '../builder.types.js';
 import type { IRComponentSchemaContext, IRComponent } from '../../../ir/index.js';
 import { buildCastrSchema } from '../builder.core.js';
@@ -93,7 +93,7 @@ import { toIdentifier } from '../../../../shared/utils/identifier-utils.js';
 export function buildComponentSchema(
   name: string,
   schema: SchemaObject | ReferenceObject,
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): IRComponentSchemaContext {
   const context: IRBuildContext = {
     doc,
@@ -120,7 +120,7 @@ function buildSchemaComponents(
   // For now, we'll use the dummy doc as before, but ideally we should update the signature.
   // Wait, the original code used a dummy doc:
   // doc: { openapi: '3.2.0', info: { title: '', version: '' }, paths: {} },
-  const dummyDoc: OpenAPIObject = {
+  const dummyDoc: OpenAPIDocument = {
     openapi: CANONICAL_OPENAPI_VERSION,
     info: { title: '', version: '' },
     paths: {},

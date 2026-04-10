@@ -10,6 +10,12 @@ import { describe, test, expect } from 'vitest';
 import type { CastrSchemaContext } from './context.js';
 import { createMockCastrSchema, createMockCastrSchemaNode } from './test-helpers.js';
 
+function assertOptionalKeyAbsent<T>(
+  value: T & ('optional' extends keyof T ? never : unknown),
+): void {
+  expect(value).toBeDefined();
+}
+
 describe('CastrSchemaContext type guards', () => {
   test('isComponentContext narrows to component', () => {
     const context: CastrSchemaContext = {
@@ -22,9 +28,7 @@ describe('CastrSchemaContext type guards', () => {
     if (context.contextType === 'component') {
       // TypeScript should know: context.name exists
       expect(context.name).toBe('User');
-      // TypeScript should know: context.optional does NOT exist
-      // @ts-expect-error - optional doesn't exist on component context
-      expect(context.optional).toBeUndefined();
+      assertOptionalKeyAbsent(context);
     }
   });
 
@@ -51,8 +55,7 @@ describe('CastrSchemaContext type guards', () => {
 
     if (context.contextType === 'compositionMember') {
       expect(context.compositionType).toBe('oneOf');
-      // @ts-expect-error - optional doesn't exist on composition member context
-      expect(context.optional).toBeUndefined();
+      assertOptionalKeyAbsent(context);
     }
   });
 
@@ -63,8 +66,7 @@ describe('CastrSchemaContext type guards', () => {
     };
 
     if (context.contextType === 'arrayItems') {
-      // @ts-expect-error - optional doesn't exist on array items context
-      expect(context.optional).toBeUndefined();
+      assertOptionalKeyAbsent(context);
     }
   });
 

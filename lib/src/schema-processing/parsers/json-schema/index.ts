@@ -30,7 +30,7 @@ export { normalizeDraft07 } from './normalization/index.js';
 export type { Draft07Input } from './normalization/index.js';
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from '../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { normalizeDraft07 } from './normalization/index.js';

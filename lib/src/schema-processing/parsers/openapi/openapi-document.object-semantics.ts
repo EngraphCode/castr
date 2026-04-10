@@ -1,16 +1,16 @@
-import type {
-  CallbackObject,
-  HeaderObject,
-  MediaTypeObject,
-  OpenAPIObject,
-  OperationObject,
-  ParameterObject,
-  PathItemObject,
-  ReferenceObject,
-  RequestBodyObject,
-  ResponseObject,
-} from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type CallbackObject,
+  type HeaderObject,
+  type MediaTypeObject,
+  type OpenAPIDocument,
+  type OperationObject,
+  type ParameterObject,
+  type PathItemObject,
+  type ReferenceObject,
+  type RequestBodyObject,
+  type ResponseObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 
 import { visitSchemaNode } from './openapi-document.object-semantics.schemas.js';
 
@@ -24,6 +24,21 @@ const HTTP_METHODS = [
   'patch',
   'trace',
 ] as const satisfies readonly (keyof PathItemObject)[];
+
+const PATH_ITEM_MEMBER_KEYS = [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+  'query',
+  'additionalOperations',
+  'parameters',
+  'servers',
+] as const;
 
 function markSeen(value: object, seen: WeakSet<object>): boolean {
   if (seen.has(value)) {
@@ -48,10 +63,24 @@ function visitMapValues<T>(
 }
 
 function visitContent(
-  content: Record<string, MediaTypeObject> | undefined,
+  content: Record<string, MediaTypeObject | ReferenceObject> | undefined,
   seen: WeakSet<object>,
 ): void {
-  visitMapValues(content, (mediaType) => visitSchemaNode(mediaType.schema, seen));
+  visitMapValues(content, (mediaType) => {
+    if (!isReferenceObject(mediaType) && mediaType.schema) {
+      visitSchemaNode(mediaType.schema, seen);
+    }
+  });
+}
+
+function hasPathItemMembers(pathItem: PathItemObject | ReferenceObject): boolean {
+  return PATH_ITEM_MEMBER_KEYS.some((key) => key in pathItem);
+}
+
+function isStandalonePathItemReference(
+  pathItem: PathItemObject | ReferenceObject,
+): pathItem is ReferenceObject {
+  return isReferenceObject(pathItem) && !hasPathItemMembers(pathItem);
 }
 
 function visitHeaderNode(
@@ -146,7 +175,7 @@ function visitPathItemNode(
   pathItem: PathItemObject | ReferenceObject | undefined,
   seen: WeakSet<object>,
 ): void {
-  if (!pathItem || isReferenceObject(pathItem) || !markSeen(pathItem, seen)) {
+  if (!pathItem || isStandalonePathItemReference(pathItem) || !markSeen(pathItem, seen)) {
     return;
   }
 
@@ -156,13 +185,20 @@ function visitPathItemNode(
   }
 }
 
-export function cloneAndValidateOpenApiDocumentObjectSemantics(doc: OpenAPIObject): OpenAPIObject {
+export function cloneAndValidateOpenApiDocumentObjectSemantics(
+  doc: OpenAPIDocument,
+): OpenAPIDocument {
   const clonedDoc = structuredClone(doc);
   const seen = new WeakSet<object>();
 
   visitMapValues(clonedDoc.components?.headers, (header) => visitHeaderNode(header, seen));
   visitMapValues(clonedDoc.components?.callbacks, (callback) => visitCallbackNode(callback, seen));
   visitMapValues(clonedDoc.components?.pathItems, (pathItem) => visitPathItemNode(pathItem, seen));
+  visitMapValues(clonedDoc.components?.mediaTypes, (mediaType) => {
+    if (!isReferenceObject(mediaType) && mediaType.schema) {
+      visitSchemaNode(mediaType.schema, seen);
+    }
+  });
   visitMapValues(clonedDoc.webhooks, (pathItem) => visitPathItemNode(pathItem, seen));
 
   return clonedDoc;

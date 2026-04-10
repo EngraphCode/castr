@@ -11,13 +11,13 @@
  */
 
 import { expect, test, describe } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 describe('spec-compliance', () => {
   describe('MediaType schema property', () => {
     test('$ref at wrong level (mediaTypeObject instead of schema property) should throw', async () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc = {
         openapi: '3.0.3',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
@@ -31,7 +31,6 @@ describe('spec-compliance', () => {
                   content: {
                     // Per OAS 3.0 spec: MediaType.schema must be Schema | Reference
                     // This is a $ref at the MediaType level, not inside schema
-                    // @ts-expect-error TS2322 - Testing invalid spec ($ref at MediaType level) to verify error handling
                     '*/*': { $ref: '#/components/schemas/Pet' },
                   },
                 },

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../openapi-types.js';
 import { normalizeInput, isRemoteUrl } from './normalize-input.js';
 
 describe('normalize-input', () => {
@@ -92,9 +92,9 @@ describe('normalize-input', () => {
       });
     });
 
-    describe('OpenAPIObject input', () => {
+    describe('OpenAPIDocument input', () => {
       it('should normalize in-memory object to object entrypoint', () => {
-        const input: OpenAPIObject = {
+        const input: OpenAPIDocument = {
           openapi: '3.0.0',
           info: { title: 'Test API', version: '1.0.0' },
           paths: {},

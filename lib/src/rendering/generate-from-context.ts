@@ -19,7 +19,7 @@
  * - .agent/architecture/OPENAPI-3.1-MIGRATION.md (type system)
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIInputDocument } from '../shared/openapi-types.js';
 import type { Options } from 'prettier';
 import type {
   TemplateContext,
@@ -83,7 +83,7 @@ export type GenerateZodClientFromOpenApiArgs<
     }
   | {
       /** In-memory OpenAPI document. Mutually exclusive with input. */
-      openApiDoc: OpenAPIObject;
+      openApiDoc: OpenAPIInputDocument | object;
       input?: never;
       distPath?: never;
       /** when true, will only return the result rather than writing it to a file, mostly used for easier testing purpose */
@@ -91,7 +91,7 @@ export type GenerateZodClientFromOpenApiArgs<
     }
   | {
       /** In-memory OpenAPI document. Mutually exclusive with input. */
-      openApiDoc: OpenAPIObject;
+      openApiDoc: OpenAPIInputDocument | object;
       input?: never;
       distPath: string;
       disableWriteToFile?: false;
@@ -208,7 +208,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
 };
 
 async function buildContext(
-  docToPrepare: OpenAPIObject | string | URL,
+  docToPrepare: OpenAPIInputDocument | object | string | URL,
   noClient: boolean | undefined,
   template: TemplateName | undefined,
   options: TemplateContextOptions | undefined,
@@ -227,7 +227,7 @@ async function buildContext(
 
 function validateInputs(
   input: string | URL | undefined,
-  openApiDoc: OpenAPIObject | undefined,
+  openApiDoc: OpenAPIInputDocument | object | undefined,
 ): void {
   if (input !== undefined && openApiDoc !== undefined) {
     throw new Error(

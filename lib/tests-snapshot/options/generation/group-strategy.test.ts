@@ -1,4 +1,4 @@
-import { type OpenAPIObject } from 'openapi3-ts/oas31';
+import { type OpenAPIObject } from '../../../src/shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-document.js';
 import { expect, test } from 'vitest';
 

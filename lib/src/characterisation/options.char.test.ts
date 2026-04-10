@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { extractContent, generateZodClientFromOpenAPI } from './test-utils.js';
 
 /**
@@ -20,7 +20,7 @@ import { extractContent, generateZodClientFromOpenAPI } from './test-utils.js';
 /**
  * Helper: Create a basic test spec
  */
-function createBasicSpec(): OpenAPIObject {
+function createBasicSpec(): OpenAPIDocument {
   return {
     openapi: '3.0.0',
     info: { title: 'Test API', version: '1.0.0' },

@@ -4,7 +4,7 @@ import type {
   TagObject,
   ExternalDocumentationObject,
   PathItemObject,
-} from 'openapi3-ts/oas31';
+} from '../../../shared/openapi-types.js';
 import type { CastrSchema, IRDependencyGraph } from './schema.js';
 import type { IRComponent } from './schema.components.js';
 import type { CastrOperation, IRSecurityRequirement } from './schema.operations.js';

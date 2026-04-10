@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import type { ComponentsObject, OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import {
+  type ComponentsObject,
+  type OpenAPIDocument,
+  type SchemaObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 
 import { buildCastrSchemas, buildIR } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
@@ -87,7 +92,7 @@ describe('buildCastrSchemas object keyword preservation', () => {
   });
 
   it('does not stamp additionalProperties onto primitive parameter schemas', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Parameters', version: '1.0.0' },
       paths: {
@@ -118,7 +123,7 @@ describe('buildCastrSchemas object keyword preservation', () => {
   });
 
   it('does not stamp additionalProperties onto array schemas or array items', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Arrays', version: '1.0.0' },
       paths: {
@@ -145,8 +150,10 @@ describe('buildCastrSchemas object keyword preservation', () => {
 
     const result = buildIR(doc);
     const operation = result.operations.find((candidate) => candidate.operationId === 'listUsers');
-    const responseSchema = operation?.responses.find((candidate) => candidate.statusCode === '200')
-      ?.content?.['application/json']?.schema;
+    const responseContent = operation?.responses.find((candidate) => candidate.statusCode === '200')
+      ?.content?.['application/json'];
+    const responseSchema =
+      responseContent && !isReferenceObject(responseContent) ? responseContent.schema : undefined;
 
     expect(responseSchema?.type).toBe('array');
     expect(responseSchema?.additionalProperties).toBeUndefined();
@@ -158,7 +165,7 @@ describe('buildCastrSchemas object keyword preservation', () => {
   });
 });
 
-function createLooseRawSurfaceDoc(): OpenAPIObject {
+function createLooseRawSurfaceDoc(): OpenAPIDocument {
   const looseObjectSchema = {
     type: 'object',
     additionalProperties: true,
@@ -231,12 +238,12 @@ function createLooseRawSurfaceDoc(): OpenAPIObject {
         },
       },
     },
-  } satisfies OpenAPIObject;
+  } satisfies OpenAPIDocument;
 
   return doc;
 }
 
-function createStrictRawSurfaceDocWithExamplePayload(): OpenAPIObject {
+function createStrictRawSurfaceDocWithExamplePayload(): OpenAPIDocument {
   const strictObjectSchema = {
     type: 'object',
     additionalProperties: false,
@@ -272,7 +279,7 @@ function createStrictRawSurfaceDocWithExamplePayload(): OpenAPIObject {
         },
       },
     },
-  } satisfies OpenAPIObject;
+  } satisfies OpenAPIDocument;
 }
 
 describe('buildIR raw OpenAPI non-strict object enforcement', () => {

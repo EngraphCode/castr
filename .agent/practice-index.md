@@ -22,20 +22,21 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 
 ## Architectural Decisions
 
-| ADR                                                                                                                        | Subject                              |
-| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| [ADR-026](../docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md)                            | No string manipulation for parsing   |
-| [ADR-031](../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)                                           | Zod 4 output strategy                |
-| [ADR-032](../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)                                            | Zod 4 input strategy                 |
-| [ADR-035](../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)                                   | Transform validation parity          |
-| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)                                  | Object unknown-key semantics         |
-| [ADR-039](../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID subtype semantics               |
-| [ADR-040](../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict object ingest/output doctrine |
-| [ADR-041](../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-capability seam doctrine      |
-| [ADR-042](../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema egress normal form       |
-| [ADR-043](../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)                                  | Core-vs-companion workspace boundary |
-| [ADR-044](../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md)                           | Drop openapi3-ts, adopt Scalar types |
-| [ADR-045](../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)                          | Strict re-export module pattern      |
+| ADR                                                                                                                        | Subject                                    |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [ADR-026](../docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md)                            | No string manipulation for parsing         |
+| [ADR-031](../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)                                           | Zod 4 output strategy                      |
+| [ADR-032](../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)                                            | Zod 4 input strategy                       |
+| [ADR-035](../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)                                   | Transform validation parity                |
+| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)                                  | Object unknown-key semantics               |
+| [ADR-039](../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID subtype semantics                     |
+| [ADR-040](../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict object ingest/output doctrine       |
+| [ADR-041](../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-capability seam doctrine            |
+| [ADR-042](../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema egress normal form             |
+| [ADR-043](../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)                                  | Core-vs-companion workspace boundary       |
+| [ADR-044](../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md)                           | Drop openapi3-ts, adopt Scalar types       |
+| [ADR-045](../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)                          | Strict re-export module pattern            |
+| [ADR-046](../docs/architectural_decision_records/ADR-046-separate-storage-additional-operations.md)                        | Separate `additionalOperations` IR storage |
 
 ## Tools and Workflows
 

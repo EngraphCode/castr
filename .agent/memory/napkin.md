@@ -2,6 +2,171 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-04-10
+
+- **Post-AP4 deep docs consolidation completed:**
+  - the completed Phase A₂ closure record was moved from `.agent/plans/active/phase-a2-type-migration.md` to `.agent/plans/current/complete/phase-a2-type-migration.md` so `active/` keeps one honest execution entrypoint
+  - the live handoff layer now agrees on the post-close-out sequence: parent OAS 3.2 plan first, read-only reviewer/domain-expert pass over recent work and plans next, then MCP no-params follow-up triage before phases B/C
+  - `.agent/README.md`, `.agent/practice-index.md`, `.agent/plans/roadmap.md`, `.agent/prompts/session-continuation.prompt.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` now all point at the same active/closure split and next-step truth
+  - ADR-044 and ADR-045 now speak in post-close-out truth rather than "remaining AP4 tail" language, ADR-046 has been promoted into `docs/architectural_decision_records/`, and the ADR index/summary now include the active OpenAPI seam decisions
+  - the historical concern note `.agent/plans/current/complete/openapi3-ts-dependency-exit.md` now reads as fully historical instead of pretending the cleanup tail is still open
+  - practice-box check stayed clean again: `.agent/practice-core/incoming/` contains only `.gitkeep`, and `.agent/practice-context/incoming/` contains only `README.md`
+  - promoted one repo-local durable learning into `distilled.md`: completed closure records belong in `current/complete`, linked from the active parent plan/prompt rather than left in `active/`
+  - no new portable Practice-Core evolution clears the bar from this pass; the value was local handoff/ADR cohesion and active-plan lifecycle discipline
+
+- **AP4 session-truth consolidation completed:**
+  - the live handoff stack now says plainly that AP4 is in progress rather than "next": `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/active/phase-a2-type-migration.md`, `.agent/plans/active/oas-3.2-full-feature-support.md`, `.agent/plans/roadmap.md`, and `.agent/README.md` now carry the same Friday, 10 April 2026 blocker truth
+  - verified state captured durably: targeted active-surface `openapi3-ts` cleanup is largely landed, `lib/package.json` no longer lists `openapi3-ts`, `pnpm-lock.yaml` was refreshed, and `pnpm --dir lib lint --quiet` is green
+  - current blocking gate truth captured durably: repo-root `pnpm qg` is red in `type-check` on four errors in `lib/tests-snapshot/spec-compliance/oas-3.0-vs-3.1-feature-parity.test.ts` (`exclusiveMinimum`, `exclusiveMaximum`, `nullable`) and `lib/tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts` (`nullable`)
+  - reviewer-raised blocker was reproduced instead of being left as a notification: `pnpm madge:circular` is also red on `lib/src/schema-processing/ir/index.ts` ↔ `lib/src/schema-processing/ir/media-types/index.ts`
+  - reviewer-raised strictness follow-ups were surfaced into the handoff docs as explicit open questions rather than hidden debt: `shared/openapi/component-access.ts` currently widens `SchemaObject | ReferenceObject` checks to `isRecord`, and `shared/openapi/structure-types.ts` currently uses `Record<PropertyKey, unknown>` for `LinkObject.parameters`
+  - reviewer-raised test debt was also surfaced explicitly: the extracted IR media-type resolver still needs direct proof for component-ref resolution/fail-fast branches, `layer-boundaries.arch.test.ts` should keep an explicit `openapi3-ts` reintroduction guard during AP4, and the 3.0-vs-3.1 parity test needs an honest compile-time distinction again
+  - OpenAPI-fidelity review surfaced two more hidden AP4 obligations and both are now in the handoff layer: ref-bearing `components.pathItems` are no longer modelled honestly across the input boundary/seam/IR, and schema-less reusable `components.mediaTypes` are currently lossy because the parser drops them even though the writer emits `components.mediaTypes` from IR
+  - gateway review closed the reviewer loop and surfaced two more AP4 truths: the likely seam fix is a genuinely tolerant nested input-schema layer for `OpenAPIInputDocument`, and `pnpm knip` is not merely pending but red on duplicate exports `isOpenAPIDocument|isOpenAPIObject`
+  - `pnpm knip` was reproduced immediately so the handoff docs now carry verified status instead of reviewer-only suspicion; the remaining live issue is the duplicate export in `src/validation/cli-type-guards.ts` plus the existing `@typescript-eslint/rule-tester` configuration hint
+  - leading fix direction is recorded as an explicit hypothesis, not a claim of fact: the failing fixtures likely need truthful raw-input modelling for OAS 3.0 bridge syntax rather than canonical `OpenAPIObject`
+  - next-session cold start is now explicit in the continuation prompt as a copy-paste start statement
+  - `jc-consolidate-docs` cohesion audit also fixed one stale bridge label in `.agent/directives/AGENT.md` (`.agent/prompts/` are context bridges, not reusable playbooks)
+  - practice-box check stayed clean: `.agent/practice-core/incoming/` remains empty and `.agent/practice-context/incoming/` still contains only `README.md`
+  - no new Practice evolution clears the bar here; the value was turning session-only gate/debug state into honest resumable handoff truth
+
+- **Phase A₂ doc consolidation completed:**
+  - the live handoff stack now matches the landed 2026-04-10 code truth: `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/active/phase-a2-type-migration.md`, `.agent/plans/active/oas-3.2-full-feature-support.md`, `.agent/plans/roadmap.md`, and `.agent/README.md` all say A1 plus A2-A6 are resolved, AP3 is complete, and AP4 is next
+  - both ADR-044 copies and both ADR-045 copies now record the landed explicit-interface seam, `OpenAPIInputDocument` vs `OpenAPIDocument`, distinct `querystring`, media-type reference preservation, deletion of `openapi-schema-extensions.d.ts`, and the honest "no broad assignability claim" stance
+  - the superseded historical plan `.agent/plans/current/complete/openapi3-ts-dependency-exit.md` was rewritten into an explicitly historical note so it no longer describes the old augmentation state in present tense
+- **`jc-consolidate-docs` cohesion audit:**
+  - `.agent/practice-index.md`, `.agent/practice-core/*`, directives, prompts, plans, commands, and skills remain cohesive after the Phase A₂ replacement pass
+  - practice-box check stayed clean: `.agent/practice-core/incoming/` contains only `.gitkeep`; `.agent/practice-context/incoming/` contains only `README.md`
+  - promoted a durable learning into `distilled.md`: when a vendor type family must serve both tolerant boundary input and strict downstream truth, split the roles explicitly instead of weakening the canonical model
+  - no new Practice evolution clears the bar; this was a repo-local handoff/ADR correction pass, not a portable Practice-Core change
+
+## 2026-04-09
+
+- **A1 resolved and persisted durably:**
+  - `SchemaObject.examples` stays `unknown[]` at the strict seam; Scalar's `ExampleObject[]` typing is treated as an upstream mismatch, not repo truth
+  - local runtime verification showed Scalar upgrades `parameter.example` into `parameter.examples.default.value`, but leaves schema-level `examples` as raw arrays
+  - this exposed one real production bug: `convert-schema.ts` currently treats any raw object example with a `value` key as if it were an OpenAPI Example Object, which is lossy for valid JSON example payloads
+  - long-term architectural decision locked: do not invent a first-example fallback; expose schema-level arrays explicitly via `schemaExamples` on the public parameter metadata surfaces
+  - persisted in the live handoff/docs layer: `phase-a2-type-migration.md`, `oas-3.2-full-feature-support.md`, `roadmap.md`, `session-continuation.prompt.md`, `.agent/README.md`, and both ADR-045 copies
+- **Consolidation pass after A1 resolution (`jc-consolidate-docs` posture):**
+  - re-checked the Practice Box: `.agent/practice-core/incoming/` still contains only `.gitkeep`; `.agent/practice-context/incoming/` still contains only `README.md`
+  - cohesion sweep found one additional live-doc drift in `.agent/README.md` (`AP3 next`) and corrected it
+  - added two distilled learnings because A1 surfaced a reusable seam rule rather than a one-off migration note
+  - no broader Practice evolution clears the bar in this pass; the durable changes are repo-local seam and handoff corrections
+
+- **Deep Consolidation Pass (jc-consolidate-docs):**
+  - Surfaced Assumption A7 (stale `openapi3-ts` references in `principles.md` and `requirements.md`) was explicitly resolved based on user authorization during deep pass.
+  - Replaced all `openapi3-ts` references in directives with the canonical `shared/openapi-types.js` explicit interface module.
+  - assumption count lowered from 7 down to 6 in `roadmap.md`, `oas-3.2-full-feature-support.md`, `phase-a2-type-migration.md`, and `session-continuation.prompt.md`.
+  - Re-checked `practice-core` and verified documentation is completely cohesive.
+  - Made the `session-continuation.prompt.md` and `phase-a2-type-migration.md` a perfect standalone entry point.
+- **MCP tool input JSON schema for tools with no parameters** must be `{ "type": "object", "additionalProperties": false }` — not just `{ "type": "object" }`. Current `createInputSchemaFromIR` emits `{ type: "object", properties: {} }` without `additionalProperties: false`. This needs a fix in `template-context.mcp.schemas.from-ir.ts` line ~259-263.
+- **Doc consolidation findings:**
+  - roadmap had stale assumption count (6 → 7) — fixed
+  - superseded `openapi3-ts-dependency-exit.md` was moved from `future/` to `current/complete/`
+  - phase-a2 plan had redundant "Proposed Changes" section restating completed work from "Current State" — collapsed to "Remaining Work"
+  - session prompt was 87 lines but said "keep under 80 lines" — rewritten leaner with assumptions as explicit numbered steps
+  - ADR-045 copies (docs/ and directives/) were already updated last pass — both now accurate
+- **Session close-out / handoff completed:**
+  - parent plan execution ordering now matches the real next step: remaining assumption review (A2-A6), then the locked A1 follow-up, then AP3
+  - next-session cold start is explicit in the live handoff stack: `AGENT.md` → `session-continuation.prompt.md` → `phase-a2-type-migration.md` → begin A2
+- **AP2 COMPLETE — zero production type errors:**
+  - `JsonSchemaObject` index signature removed, replaced with explicit named properties (`xml`, `externalDocs`, `discriminator`, `contains`, `$anchor`, `$dynamicRef`, `$dynamicAnchor`, `contentEncoding`, `contentMediaType`)
+  - content map functions widened: `visitContentSchemas`, `buildResponseContent`, `buildRequestBodyContent` now accept `ReferenceObject | MediaTypeObject` with `isReferenceObject` filtering
+  - `buildIR` now guards `document.info` with runtime error for missing required field
+  - `toParameterType` and `parametersByLocation` initialiser both handle `querystring`
+  - fixture response objects given required `description` field
+- **`SchemaObject.examples` typed as `unknown[]` (not Scalar's `ExampleObject[]`):**
+  - Scalar V3.2 types `BaseSchemaObject.examples` as `ExampleObject[]`
+  - OAS spec and JSON Schema 2020-12 define `examples` as raw value array
+  - we chose `unknown[]` based on spec search — this was the pre-resolution stance and was later confirmed as A1 above
+- **7 assumptions surfaced and documented in plan:**
+  - A1: `examples` type, A2: `querystring` source, A3: content map union correctness, A4: `info` optionality, A5: `JsonSchemaObject` completeness, A6: explicit interface completeness, A7: stale doctrine refs
+  - all flagged for next-session examination in plan and prompt
+- **Consolidation pass completed:**
+  - plan, prompt, parent plan, roadmap, README, napkin all updated
+  - practice boxes checked (both empty)
+  - ADR-045 (canonical `docs/` copy AND directives copy) both revised to document explicit interfaces approach — old intersection-narrowing description was stale
+  - **A7 discovered during cohesion audit:** `principles.md` lines 33, 710, 718, 760, 1272, 1807 reference `openapi3-ts/oas31` — this is active doctrine directing agents to use the wrong import path. `requirements.md` line 244 also stale. Update requires explicit user approval.
+  - no structural learning clearing Practice evolution bar at this time
+
+## 2026-04-08
+
+- **D1 REVISED: `RemoveIndexSignature<T>` abandoned — explicit interfaces are the fix:**
+  - `RemoveIndexSignature<T>` produces an empty type when applied to Scalar's `Modify<Omit<...>>` composed types — TypeScript cannot enumerate named properties from intermediate mapped types created by `Omit`
+  - the proven fix: define all re-exported OpenAPI types as explicit interfaces listing only named properties, without any index signatures
+  - tested in isolation: `isReferenceObject()` type guard correctly narrows `ReferenceObject | ResponseObject` to `ResponseObject` (not `never`) when both types are explicit interfaces
+  - `noPropertyAccessFromIndexSignature: true` re-enabled in tsconfig — no TS4111 errors with explicit interfaces
+- **`SchemaObject` made fully explicit (~50 properties):**
+  - previously used `BaseSchemaObject & { ... }` intersection, which carried `[key: string]: any` from V3 chain
+  - now lists all properties from V3/V3.1/V3.2 `BaseSchemaObject` chain plus JSON Schema 2020-12 additions
+  - includes `$anchor`, `dependentRequired`, `if/then/else`, `contains`, `minContains/maxContains`, `propertyNames` — these were previously provided either by `BaseSchemaObject` or by module augmentation
+  - `if/then/else` accept `boolean` (matching `JsonSchema2020 extends SchemaObject`)
+- **Template literal pattern index signature for vendor extensions:**
+  - `OpenAPIDocument` uses `[ext: \`x-${string}\`]: unknown`instead of`[key: string]: any`
+  - scoped to `x-*` keys only — does NOT create structural overlap with `ReferenceObject`
+  - allows `doc['x-ext']` bracket access while keeping typed named properties
+- **Error reduction: 249 → 102:**
+  - TS4111 (index signature): 169 → 0 ✅
+  - TS2339 (never narrowing): 15 → 5 (remaining are non-guard sites)
+  - remaining 102 fall into 5 categorised families (F1–F5) — see plan
+- **Content map widening discovered:**
+  - V3.2 widens content maps from `Record<string, MediaTypeObject>` to `Record<string, ReferenceObject | MediaTypeObject>`
+  - functions that iterate content maps need to handle `ReferenceObject` entries
+  - this is a genuine typing improvement — previous code assumed refs were resolved, but our interfaces now reflect the pre-resolution type
+- **`JsonSchemaObject` → `SchemaObject` compatibility gap:**
+  - the OpenAPI writer produces `JsonSchemaObject` values and assigns them to `SchemaObject` positions
+  - `exactOptionalPropertyTypes` causes mismatch because `JsonSchemaObject` uses different base composition
+  - fix: update `JsonSchemaObject` to extend or alias our clean `SchemaObject`
+- **Session continuation prompt and plan deeply updated** to reflect D1 revision, current AP2 state, and categorised error families
+
+## 2026-04-07
+
+- **Phase A₂ exploratory migration completed and reverted:**
+  - bulk-migrated 128 files from `openapi3-ts/oas31` to `@scalar/openapi-types` V3_2
+  - catalogued 697 type errors across 6 families, then fully reverted to clean baseline
+  - the exploration was not a failed implementation; it was a discovery pass that produced a complete structural analysis
+- **Key structural finding: boolean schemas are spec-correct:**
+  - JSON Schema 2020-12 §4.3.2 defines boolean schemas (`true` = accept all, `false` = reject all)
+  - Scalar's `SchemaObject = (...ObjectTypes | boolean) & AnyOtherAttribute` is **more spec-accurate** than `openapi3-ts`, which excluded boolean entirely
+  - our codebase already handles boolean schemas at boundaries: `parseJsonSchemaObject(input: JsonSchema2020 | boolean)` with `typeof` guards, producing `{ booleanSchema: input }` IR nodes
+  - the previous session incorrectly treated boolean as a "problem to fix" — this was a flawed assumption that cascaded through error analysis and planning
+  - **root cause of the flawed assumption:** I saw `TS2312: interface extends union` errors during the exploration, and projected backwards to say the union was wrong, instead of assessing whether the `interface extends` pattern was the thing that needed to change
+- **Key structural finding: `AnyOtherAttribute` is the real problem:**
+  - `openapi3-ts` uses `ISpecificationExtension = { [extensionName: \`x-${string}\`]: any }` — template literal index doesn't trigger TS4111
+  - Scalar uses `AnyOtherAttribute = { [key: string]: any }` — general index signature triggers TS4111 on **every named property** under `noPropertyAccessFromIndexSignature: true`
+  - this produced 141 of the 697 errors and is the dominant structural issue
+- **Iterative exploration with assessment points:**
+  - user directed: set assessment points, accept winding back to a previously good state, refine understanding as you go
+  - the plan now has 4 assessment points instead of big-bang execution
+  - this is a generally applicable principle (not specific to type migrations)
+- **D1 resolved: `RemoveIndexSignature<T>` utility type:**
+  - strips `[key: string]: any` index signatures via mapped type that filters conditional string/number/symbol index keys
+  - preserves all named properties — new Scalar properties are automatically inherited
+  - all `x-*` extension access in the codebase already uses bracket notation (`doc['x-ext']`) — no breakage
+  - Scalar API boundary passes `unknown`/`UnknownRecord` (not our typed objects) — no assignability concern
+  - codebase never passes our re-exported types back to Scalar's `validate()` or `upgrade()`
+- **D2 resolved: `SchemaObject` excludes `boolean`:**
+  - `Exclude<OpenAPIV3_2.SchemaObject, boolean>` — object-form only in re-export module
+  - exactly one `interface JsonSchema2020 extends SchemaObject` in the codebase — this pattern requires an object type base
+  - boolean schemas handled at the parsing boundary (`parseJsonSchemaObject(input: JsonSchema2020 | boolean)`) with explicit `typeof` guard
+  - the re-export module exists to narrow Scalar's types stricter (ADR-045) — excluding boolean is the same category of narrowing as making `name: string` required on `ParameterObject`
+  - user correctly challenged unnecessary library comparison research: "aren't we moving ALL types to Scalar? Why care what other libraries do?" — yes, the only question is what our re-export module should look like given Scalar's source types
+- **D3 remains: test fixture versions — per-fixture assessment during AP3/AP4**
+- **Consolidation sweep (`jc-consolidate-docs`):**
+  - roadmap `OpenAPI` row still said `3.1 output` even though version plumbing completed — fixed to `3.2.0 output`
+  - roadmap gate date updated from 2 April to 5 April 2026
+  - roadmap current product truth updated with resolved D1/D2 decisions and execution-ready status
+  - session-continuation prompt deep-updated with resolved decisions and assessment-point execution approach
+  - parent plan (oas-3.2-full-feature-support.md) Phase A₂ section rewritten: design decisions, detailed steps replaced with link to standalone plan
+  - standalone plan (phase-a2-type-migration.md) deep-updated: all decisions resolved, execution approach with 4 assessment points
+  - practice boxes: `.agent/practice-core/incoming/` and `.agent/practice-context/incoming/` are empty (only scaffolds)
+- **Practice evolution assessment:**
+  - the "iterative exploration with assessment points" principle is generally useful but is already well-established in engineering practice (timeboxed spikes, proof-of-concept iterations)
+  - the "boolean schema flawed assumption" is a useful metacognitive lesson (questioning assumptions, tracing error attribution correctly) but is a session-specific correction rather than a portable Practice rule
+  - the "unnecessary library comparison research" lesson is worth noting: when migrating to a specific dependency, the only relevant question is how to consume that dependency's types, not what alternatives do
+  - no structural learning clears the bar for Practice evolution in this pass
+
 ## 2026-04-05
 
 - **Prompt consolidation completed:**
@@ -11,7 +176,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - key design decision: session prompts must act only as context bridges; all durable doctrine resides in `directives/` or `docs/`
 - **ADR-044 and ADR-045 created:**
   - ADR-044 records the `openapi3-ts` → `@scalar/openapi-types` migration decision, superseding ADR-002
-  - ADR-045 records the strict re-export module pattern with intersection narrowing for spec-required fields
+  - ADR-045 records the strict re-export module pattern; this was later revised from an "intersection narrowing" description to the explicit-interface seam and then to the boundary/canonical split now in force
   - ADR-002 now carries a supersession notice while preserving its core principles (defer to source libraries, avoid type gymnastics)
   - ADR SUMMARY and practice-index updated with both new ADRs
 - **Consolidation sweep (`jc-consolidate-docs`) found and fixed stale references:**

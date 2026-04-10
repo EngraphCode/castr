@@ -1,5 +1,5 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
-import type { SchemaObjectType } from 'openapi3-ts/oas31';
+import type { SchemaObjectType } from '../../../shared/openapi-types.js';
 import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
 import type { TemplateContextOptions } from '../../context/index.js';
 

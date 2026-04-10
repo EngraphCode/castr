@@ -13,7 +13,7 @@ import type {
   RequestBodyObject,
   ResponseObject,
   SecuritySchemeObject,
-} from 'openapi3-ts/oas31';
+} from '../../../../shared/openapi-types.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { buildSingleParameter } from '../operations/builder.parameters.js';
 import { buildSingleResponse } from '../operations/builder.responses.js';

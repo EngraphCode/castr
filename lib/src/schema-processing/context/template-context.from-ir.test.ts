@@ -2,7 +2,7 @@
  * IR-Based Context Helpers Tests
  *
  * Tests for context functions that operate ONLY on CastrDocument (IR),
- * without any OpenAPIObject access. These tests verify the architectural
+ * without any OpenAPIDocument access. These tests verify the architectural
  * separation where post-IR code never accesses raw OpenAPI data.
  */
 import { describe, it, expect } from 'vitest';

@@ -3,7 +3,7 @@
  * Extracted to reduce cognitive complexity in getOpenApiDependencyGraph.ts
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject, SchemaObject } from '../openapi-types.js';
 
 type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void;
 

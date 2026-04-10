@@ -1,4 +1,4 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 
 import {
   getOpenApiDependencyGraph,
@@ -15,7 +15,7 @@ import { sortSchemasByDependencyOrder } from '../../../shared/utils/schema/index
  *
  * @internal
  */
-export const extractSchemaNamesFromDoc = (doc: OpenAPIObject): string[] => {
+export const extractSchemaNamesFromDoc = (doc: OpenAPIDocument): string[] => {
   const schemaNames: string[] = [];
 
   // Extract from standard components location
@@ -33,7 +33,7 @@ export const extractSchemaNamesFromDoc = (doc: OpenAPIObject): string[] => {
  * Extract schema names from x-ext vendor extension locations.
  * @internal
  */
-function extractXExtSchemaNames(doc: OpenAPIObject): string[] {
+function extractXExtSchemaNames(doc: OpenAPIDocument): string[] {
   const names: string[] = [];
   const xExt: unknown = doc['x-ext'];
 
@@ -79,7 +79,7 @@ function getSchemaKeysFromExtContent(extContent: unknown): string[] {
  */
 export const buildDependencyGraphForSchemas = (
   schemaNames: string[],
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): {
   refsDependencyGraph: Record<string, Set<string>>;
   deepDependencyGraph: Record<string, Set<string>>;

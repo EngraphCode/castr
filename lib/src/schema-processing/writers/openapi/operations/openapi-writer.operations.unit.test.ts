@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { isReferenceObject } from '../../../../shared/openapi-types.js';
 
 import type { CastrSchemaNode, CastrOperation } from '../../../ir/index.js';
 
@@ -374,7 +375,8 @@ describe('writeOpenApiPaths', () => {
         typeof reqBody === 'object' &&
         'content' in reqBody &&
         reqBody.content !== undefined &&
-        'multipart/form-data' in reqBody.content
+        'multipart/form-data' in reqBody.content &&
+        !isReferenceObject(reqBody.content['multipart/form-data'])
           ? reqBody.content['multipart/form-data'].encoding
           : undefined;
       expect(encodingValue).toEqual({
@@ -455,9 +457,11 @@ describe('writeOpenApiPaths', () => {
 
       const result = writeOpenApiPaths(operations);
       const response200 = result['/users']?.get?.responses?.['200'];
+      const responseObject =
+        response200 && !isReferenceObject(response200) ? response200 : undefined;
 
-      expect(response200?.content).toBeDefined();
-      expect(response200?.content?.['application/json']).toBeDefined();
+      expect(responseObject?.content).toBeDefined();
+      expect(responseObject?.content?.['application/json']).toBeDefined();
     });
   });
 

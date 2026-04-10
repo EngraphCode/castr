@@ -4,14 +4,18 @@
  * Pure functions used by the core parser. Split to comply with ADR-036.
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends SchemaObject from openapi3-ts/oas31).
+ * Uses JsonSchema2020 (extends the shared OpenAPI seam).
  *
  * @module parsers/json-schema/json-schema-parser.helpers
  * @internal
  */
 
-import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type SchemaObject,
+  type ReferenceObject,
+  type SchemaObjectType,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';

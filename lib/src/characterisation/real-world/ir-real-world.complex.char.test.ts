@@ -6,7 +6,7 @@
  * @module ir-real-world.complex.char.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import {
   assertAndGetSingleFileContent,
@@ -21,7 +21,7 @@ import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../te
 describe('IR Characterization - Real-World Specs', () => {
   describe('Complex Schema Patterns', () => {
     test('handles deeply nested schemas with circular references', async () => {
-      const complexDoc: OpenAPIObject = {
+      const complexDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Complex Circular Test' },
         paths: {},
@@ -95,7 +95,7 @@ describe('IR Characterization - Real-World Specs', () => {
     });
 
     test('handles allOf with multiple refs and inline schemas', async () => {
-      const allOfDoc: OpenAPIObject = {
+      const allOfDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'AllOf Complex Test' },
         paths: {},
@@ -155,7 +155,7 @@ describe('IR Characterization - Real-World Specs', () => {
     });
 
     test('handles oneOf with discriminator', async () => {
-      const oneOfDoc: OpenAPIObject = {
+      const oneOfDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'OneOf Discriminator Test' },
         paths: {},
@@ -208,7 +208,7 @@ describe('IR Characterization - Real-World Specs', () => {
     });
 
     test('handles deeply nested object properties', async () => {
-      const nestedDoc: OpenAPIObject = {
+      const nestedDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Deep Nesting Test' },
         paths: {},
@@ -264,7 +264,7 @@ describe('IR Characterization - Real-World Specs', () => {
     });
 
     test('handles arrays of refs with complex items', async () => {
-      const arrayDoc: OpenAPIObject = {
+      const arrayDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Array Complex Test' },
         paths: {},

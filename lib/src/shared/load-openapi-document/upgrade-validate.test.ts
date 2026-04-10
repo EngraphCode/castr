@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../openapi-types.js';
 import { isBundledOpenApiDocument, upgradeAndValidate } from './upgrade-validate.js';
 
 describe('upgrade-validate', () => {
   describe('isBundledOpenApiDocument', () => {
     it('should return true for valid OpenAPI 3.1 document bridge input', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -15,7 +15,7 @@ describe('upgrade-validate', () => {
     });
 
     it('should return true for OpenAPI 3.1.x versions', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.1',
         info: { title: 'Test', version: '1.0' },
         paths: {},
@@ -25,7 +25,7 @@ describe('upgrade-validate', () => {
     });
 
     it('should return true for OpenAPI 3.2.x versions', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.2.0',
         info: { title: 'Test', version: '1.0' },
         paths: {},
@@ -93,7 +93,7 @@ describe('upgrade-validate', () => {
     });
 
     it('canonicalises OpenAPI 3.1 bridge documents to OpenAPI 3.2.0', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -106,7 +106,7 @@ describe('upgrade-validate', () => {
     });
 
     it('accepts native OpenAPI 3.2 documents and keeps the canonical 3.2.0 version', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.2.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},

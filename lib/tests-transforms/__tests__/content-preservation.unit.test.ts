@@ -16,7 +16,7 @@ import { resolve } from 'node:path';
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.js';
-import { assertNotReference } from '../../src/shared/component-access.js';
+import { assertNotReference } from '../../src/shared/openapi/component-access.js';
 
 // ============================================================================
 // Bug #1: Header Description Loss

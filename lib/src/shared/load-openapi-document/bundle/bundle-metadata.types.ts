@@ -1,16 +1,16 @@
 import type { OpenAPIV3_1 } from '@scalar/openapi-types';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../openapi-types.js';
 
 type BundledOpenApiVersion = `3.1.${number}` | `3.2.${number}`;
 
 /**
- * A bundled and canonicalised OpenAPI 3.2 document combining Scalar and openapi3-ts types.
+ * A bundled and canonicalised OpenAPI 3.2 document combining Scalar and the local seam.
  *
  * **NOT prefixed with OTT** - This is a pure intersection of library types.
  *
  * This intersection type provides:
  * - Scalar's extension-friendly structure (x-ext, x-ext-urls, etc.)
- * - openapi3-ts strict typing for the current OpenAPI 3.1-compatible field surface
+ * - strict local typing for the current OpenAPI field surface
  *
  * All documents are returned as canonical OpenAPI 3.2.0 after the shared load boundary,
  * even though older inputs may bridge through Scalar's OpenAPI 3.1 upgrade semantics.
@@ -22,7 +22,7 @@ type BundledOpenApiVersion = `3.1.${number}` | `3.2.${number}`;
  * - No casting required - validated at runtime boundary via type guards
  */
 export type BundledOpenApiDocument = Omit<OpenAPIV3_1.Document, 'openapi'> &
-  Omit<OpenAPIObject, 'openapi'> & {
+  Omit<OpenAPIDocument, 'openapi'> & {
     openapi: BundledOpenApiVersion;
   };
 
@@ -148,7 +148,7 @@ export interface OTTBundleMetadata {
  * 2. Validates against the declared OpenAPI version via @scalar/openapi-parser
  * 3. Bridges older specs through OpenAPI 3.1 semantics where needed
  * 4. Canonicalises the final document to OpenAPI 3.2.0
- * 5. Validates and types as intersection of Scalar + openapi3-ts
+ * 5. Validates and types as an intersection of Scalar + the strict local seam
  *
  * Input specs can be OpenAPI 3.0.x, 3.1.x, or native 3.2.x. The shared boundary
  * returns all accepted documents as canonical 3.2.0.
@@ -156,7 +156,7 @@ export interface OTTBundleMetadata {
 export interface OTTLoadedOpenApiDocument {
   /**
    * Bundled and canonical OpenAPI 3.2.0 document.
-   * Strictly typed for the current openapi3-ts/oas31 field surface, with preserved Scalar extensions.
+   * Strictly typed for the current shared OpenAPI seam, with preserved Scalar extensions.
    */
   readonly document: BundledOpenApiDocument;
   /** Metadata detailing how the bundle was assembled. */

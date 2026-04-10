@@ -1,5 +1,5 @@
 import { CodeBlockWriter } from 'ts-morph';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject, SchemaObject } from '../src/shared/openapi-types.js';
 import {
   generateZodClientFromOpenAPI as generateZodClientFromOpenAPIBase,
   getOpenApiDependencyGraph,

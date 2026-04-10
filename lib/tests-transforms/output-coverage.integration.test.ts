@@ -19,8 +19,7 @@ import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../src/shared/openapi/version.js';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject, type OpenAPIObject } from '../src/shared/openapi-types.js';
 import { assertOpenApiObject, assertSchemaObject } from '../tests-helpers/openapi-assertions.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -72,6 +71,201 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       const parsed = JSON.parse(jsonString);
       assertOpenApiObject(parsed, 'serialized OpenAPI output');
       expect(parsed.openapi).toBe(CANONICAL_OPENAPI_VERSION);
+    });
+  });
+
+  describe('OpenAPI 3.2 mediaTypes references', () => {
+    it('round-trips media type component refs across parameters, request bodies, responses, and headers', async () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.2.0',
+        info: { title: 'Media Type Ref API', version: '1.0.0' },
+        paths: {
+          '/users': {
+            post: {
+              operationId: 'createUser',
+              parameters: [
+                {
+                  name: 'payload',
+                  in: 'query',
+                  required: false,
+                  content: {
+                    'application/json': {
+                      $ref: '#/components/mediaTypes/JsonEnvelope',
+                    },
+                  },
+                },
+              ],
+              requestBody: {
+                required: true,
+                content: {
+                  'application/json': {
+                    $ref: '#/components/mediaTypes/JsonEnvelope',
+                  },
+                },
+              },
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      $ref: '#/components/mediaTypes/JsonEnvelope',
+                    },
+                  },
+                  headers: {
+                    'X-Envelope': {
+                      content: {
+                        'application/json': {
+                          $ref: '#/components/mediaTypes/JsonEnvelope',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          mediaTypes: {
+            JsonEnvelope: {
+              schema: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                },
+                additionalProperties: false,
+              },
+            },
+          },
+        },
+      };
+
+      const ir = buildIR(doc);
+      const output = writeOpenApi(ir);
+
+      expect(output.components?.mediaTypes?.['JsonEnvelope']).toBeDefined();
+
+      const operation = output.paths?.['/users']?.post;
+      const parameter = operation?.parameters?.[0];
+      const requestBody = operation?.requestBody;
+      const response = operation?.responses?.['200'];
+
+      if (!parameter || isReferenceObject(parameter)) {
+        throw new Error('Expected inline parameter object');
+      }
+      if (!requestBody || isReferenceObject(requestBody)) {
+        throw new Error('Expected inline request body object');
+      }
+      if (!response || isReferenceObject(response)) {
+        throw new Error('Expected inline response object');
+      }
+
+      expect(parameter.content?.['application/json']).toEqual({
+        $ref: '#/components/mediaTypes/JsonEnvelope',
+      });
+      expect(requestBody.content?.['application/json']).toEqual({
+        $ref: '#/components/mediaTypes/JsonEnvelope',
+      });
+      expect(response.content?.['application/json']).toEqual({
+        $ref: '#/components/mediaTypes/JsonEnvelope',
+      });
+
+      const responseHeader = response.headers?.['X-Envelope'];
+      if (!responseHeader || isReferenceObject(responseHeader)) {
+        throw new Error('Expected inline response header object');
+      }
+      expect(responseHeader.content?.['application/json']).toEqual({
+        $ref: '#/components/mediaTypes/JsonEnvelope',
+      });
+    });
+
+    it('preserves schema-less reusable media types and their refs', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.2.0',
+        info: { title: 'Schema-less Media Type API', version: '1.0.0' },
+        paths: {
+          '/plain-text': {
+            get: {
+              operationId: 'getPlainText',
+              responses: {
+                '200': {
+                  content: {
+                    'text/plain': {
+                      $ref: '#/components/mediaTypes/PlainText',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          mediaTypes: {
+            PlainText: {
+              example: 'hello world',
+            },
+          },
+        },
+      };
+
+      const output = writeOpenApi(buildIR(doc));
+
+      expect(output.components?.mediaTypes?.['PlainText']).toEqual({
+        example: 'hello world',
+      });
+
+      const response = output.paths?.['/plain-text']?.get?.responses?.['200'];
+      if (!response || isReferenceObject(response)) {
+        throw new Error('Expected inline response object');
+      }
+
+      expect(response.content?.['text/plain']).toEqual({
+        $ref: '#/components/mediaTypes/PlainText',
+      });
+    });
+  });
+
+  describe('OpenAPI reusable pathItems', () => {
+    it('preserves referenced pathItems in components.pathItems', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Path Item Ref API', version: '1.0.0' },
+        paths: {},
+        components: {
+          pathItems: {
+            SharedPath: {
+              get: {
+                operationId: 'sharedGet',
+                responses: {
+                  '200': {
+                    description: 'OK',
+                  },
+                },
+              },
+            },
+            SharedPathAlias: {
+              $ref: '#/components/pathItems/SharedPath',
+            },
+          },
+        },
+      };
+
+      const ir = buildIR(doc);
+      const aliasedPathItem = ir.components.find(
+        (component) => component.type === 'pathItem' && component.name === 'SharedPathAlias',
+      );
+
+      if (!aliasedPathItem || aliasedPathItem.type !== 'pathItem') {
+        throw new Error('Expected pathItem component for SharedPathAlias');
+      }
+
+      expect(aliasedPathItem.pathItem).toEqual({
+        $ref: '#/components/pathItems/SharedPath',
+      });
+
+      const output = writeOpenApi(ir);
+      expect(output.components?.pathItems?.['SharedPathAlias']).toEqual({
+        $ref: '#/components/pathItems/SharedPath',
+      });
     });
   });
 

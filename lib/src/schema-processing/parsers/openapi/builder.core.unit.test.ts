@@ -1,12 +1,12 @@
 import { describe, test, expect } from 'vitest';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SchemaObject } from '../../../shared/openapi-types.js';
 import { buildPropertySchema, buildCompositionMember, buildCastrSchema } from './builder.core.js';
 import type { IRBuildContext } from './builder.types.js';
 import { UUID_V4_PATTERN } from '../../ir/index.js';
 
 /**
  * Extended SchemaObject for test fixtures.
- * Includes JSON Schema 2020-12 keywords not yet in openapi3-ts types.
+ * Includes JSON Schema 2020-12 keywords used by these fixtures.
  * This is a TEST-ONLY type extension for constructing test fixtures.
  */
 type TestSchemaObject = SchemaObject & {
@@ -24,7 +24,7 @@ describe('buildPropertySchema', () => {
   test('buildPropertySchema creates property context with correct optionality', () => {
     const schema: SchemaObject = { type: 'string' };
     const parentRequired = ['id', 'name']; // 'email' is NOT in this list
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -45,7 +45,7 @@ describe('buildPropertySchema', () => {
   test('buildPropertySchema creates required property context', () => {
     const schema: SchemaObject = { type: 'string' };
     const parentRequired = ['id', 'email']; // 'email' IS in this list
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -67,7 +67,7 @@ describe('buildPropertySchema', () => {
 describe('buildCompositionMember', () => {
   test('buildCompositionMember creates context without .optional()', () => {
     const memberSchema: SchemaObject = { type: 'string' };
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},

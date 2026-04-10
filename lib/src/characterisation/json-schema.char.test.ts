@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from '../shared/openapi-types.js';
 
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import {

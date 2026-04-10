@@ -92,7 +92,7 @@ Installed roster:
 - `lib/` — product code and tests
 - `docs/` — durable architecture docs and ADRs
 - `.agent/directives/` — authoritative doctrine and operational entrypoints
-- `.agent/prompts/` — reusable playbooks
+- `.agent/prompts/` — session continuation context bridge
 - `.agent/commands/` — canonical command workflows
 - `.agent/skills/` — canonical skills
 - `.agent/rules/` — operationalized doctrine

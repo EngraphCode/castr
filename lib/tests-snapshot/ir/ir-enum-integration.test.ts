@@ -12,7 +12,7 @@
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 
 describe('IR Integration - Enum Schemas', () => {

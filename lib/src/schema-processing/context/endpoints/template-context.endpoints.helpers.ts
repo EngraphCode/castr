@@ -1,5 +1,4 @@
-import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, OperationObject } from '../../../shared/openapi-types.js';
 
 import { logger } from '../../../shared/utils/logger.js';
 
@@ -23,8 +22,12 @@ const GROUP_STRATEGY_TAG_FILE = 'tag-file';
 const GROUP_STRATEGY_METHOD = 'method';
 const GROUP_STRATEGY_METHOD_FILE = 'method-file';
 
-import type { MinimalTemplateContext } from './template-context.endpoints.types.js';
-import { makeEndpointTemplateContext } from './template-context.endpoints.types.js';
+import {
+  collectEndpointDependencies,
+  makeEndpointTemplateContext,
+  processTransitiveDependenciesForGroup,
+  type MinimalTemplateContext,
+} from './grouping/index.js';
 import type { EndpointDefinition } from '../../../endpoints/definition.types.js';
 
 /**
@@ -123,8 +126,6 @@ export const determineGroupName = (
   return snakeCase(DEFAULT_GROUP_NAME);
 };
 
-export { collectEndpointDependencies } from './template-context.endpoints.dependencies.js';
-
 /**
  * Get operation object from OpenAPI document for an endpoint.
  * Data gathering function that extracts operation from paths.
@@ -136,13 +137,13 @@ export { collectEndpointDependencies } from './template-context.endpoints.depend
  * @internal
  */
 export const getOperationForEndpoint = (
-  openApiDoc: OpenAPIObject,
+  openApiDoc: OpenAPIDocument,
   endpoint: EndpointDefinition,
 ): OperationObject | null => {
   const operationPath = getOriginalPathWithBrackets(endpoint.path);
   const pathItem = openApiDoc.paths?.[endpoint.path] ?? openApiDoc.paths?.[operationPath];
 
-  if (!pathItem || isReferenceObject(pathItem)) {
+  if (!pathItem) {
     logger.warn('Missing path', endpoint.path);
     return null;
   }
@@ -227,4 +228,4 @@ export const addDependenciesToGroup = (
   });
 };
 
-export { processTransitiveDependenciesForGroup } from './template-context.endpoints.dependencies.js';
+export { collectEndpointDependencies, processTransitiveDependenciesForGroup };

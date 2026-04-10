@@ -7,8 +7,7 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type { OperationObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { type OperationObject, isReferenceObject } from '../shared/openapi-types.js';
 
 // Re-export isReferenceObject for convenience
 export { isReferenceObject };

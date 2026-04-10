@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { isSingleFileResult, type GenerationResult } from '../rendering/generation-result.js';
 import { generateZodClientFromOpenAPI } from './test-utils.js';
 
@@ -31,7 +31,7 @@ describe('Characterisation: Schema Validation Regressions', () => {
    */
   describe('Regex Pattern Generation', () => {
     it('should generate valid regex literals without new RegExp wrapper', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -74,7 +74,7 @@ describe('Characterisation: Schema Validation Regressions', () => {
     });
 
     it('should handle patterns with slashes correctly', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -129,7 +129,7 @@ describe('Characterisation: Schema Validation Regressions', () => {
    */
   describe('Property Optionality', () => {
     it('should NOT mark required properties as optional', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -179,7 +179,7 @@ describe('Characterisation: Schema Validation Regressions', () => {
     });
 
     it('should not make all properties optional when all are required', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {

@@ -1,4 +1,4 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject, SchemaObject } from '../../../../shared/openapi-types.js';
 import type { Schema as JsonSchema } from 'ajv';
 import { SCHEMA_TYPE_INTEGER, SCHEMA_TYPE_NUMBER } from '../json-schema-constants.js';
 

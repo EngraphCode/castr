@@ -1,4 +1,4 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import {
   extractContent,
   assertSingleFileResult,
@@ -63,10 +63,20 @@ export function generateZodClientFromOpenAPI(
 }
 
 /**
+ * Characterisation helper: invoke the public generator with unknown-boundary
+ * inputs that intentionally step outside the typed public contract.
+ */
+export function generateZodClientFromOpenAPIFromUnknownBoundary(
+  args: object,
+): Promise<GenerationResult> {
+  return Reflect.apply(generateZodClientFromOpenAPIBase, undefined, [args]);
+}
+
+/**
  * Characterisation helper: invoke template-context generation directly.
  */
 export function getZodClientTemplateContext(
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument | object,
   options?: TemplateContextOptions,
 ): TemplateContext {
   return getZodClientTemplateContextBase(doc, options);

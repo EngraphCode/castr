@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { isReferenceObject } from '../../../../shared/openapi-types.js';
 import type { CastrSchemaNode, CastrOperation } from '../../../ir/index.js';
 import { writeOpenApiPaths } from './openapi-writer.operations.js';
 
@@ -144,9 +145,10 @@ describe('writeOpenApiPaths determinism', () => {
 
     const result = writeOpenApiPaths(operations);
     const response = result['/users']?.get?.responses?.['200'];
+    const responseObject = response && !isReferenceObject(response) ? response : undefined;
 
-    expect(Object.keys(response?.content ?? {})).toEqual(['application/json', 'text/plain']);
-    expect(Object.keys(response?.headers ?? {})).toEqual(['x-alpha', 'x-zeta']);
+    expect(Object.keys(responseObject?.content ?? {})).toEqual(['application/json', 'text/plain']);
+    expect(Object.keys(responseObject?.headers ?? {})).toEqual(['x-alpha', 'x-zeta']);
   });
 
   it('sorts operation security requirements by scheme name', () => {

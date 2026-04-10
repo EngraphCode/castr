@@ -1,10 +1,14 @@
 import { describe, expect, test } from 'vitest';
-import type { OpenAPIObject, ReferenceObject, ResponseObject } from 'openapi3-ts/oas31';
+import type {
+  OpenAPIDocument,
+  ReferenceObject,
+  ResponseObject,
+} from '../../../../shared/openapi-types.js';
 
 import { buildSingleResponse } from './builder.responses.js';
 import type { IRBuildContext } from '../builder.types.js';
 
-function createContext(doc: OpenAPIObject): IRBuildContext {
+function createContext(doc: OpenAPIDocument): IRBuildContext {
   return {
     doc,
     path: ['/users/{id}', 'get'],
@@ -14,7 +18,7 @@ function createContext(doc: OpenAPIObject): IRBuildContext {
 
 describe('buildSingleResponse strict ref resolution', () => {
   test('resolves valid response component refs', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -37,7 +41,7 @@ describe('buildSingleResponse strict ref resolution', () => {
   });
 
   test('throws on malformed response refs with actionable context', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -52,7 +56,7 @@ describe('buildSingleResponse strict ref resolution', () => {
   });
 
   test('throws on non-response component refs with actionable context', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},

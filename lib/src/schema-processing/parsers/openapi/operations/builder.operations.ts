@@ -8,19 +8,21 @@
  * @internal
  */
 
-import type {
-  OpenAPIObject,
-  PathItemObject,
-  OperationObject,
-  SecurityRequirementObject,
-} from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type OpenAPIDocument,
+  type PathItemObject,
+  type OperationObject,
+  type SecurityRequirementObject,
+  isReferenceObject,
+} from '../../../../shared/openapi-types.js';
 import type { HttpMethod } from '../../../../endpoints/definition.types.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { buildCastrParameters } from './builder.parameters.js';
 import { buildIRRequestBody } from './builder.request-body.js';
 import { buildCastrResponses } from './builder.responses.js';
 import type { CastrOperation, IRSecurityRequirement } from '../../../ir/index.js';
+
+const PARAMETER_LOCATION_QUERY_STRING = 'querystring';
 
 /**
  * Build IR operations from OpenAPI paths object.
@@ -46,7 +48,7 @@ import type { CastrOperation, IRSecurityRequirement } from '../../../ir/index.js
  *
  * @internal
  */
-export function buildCastrOperations(doc: OpenAPIObject): CastrOperation[] {
+export function buildCastrOperations(doc: OpenAPIDocument): CastrOperation[] {
   if (!doc.paths) {
     return [];
   }
@@ -70,7 +72,7 @@ export function buildCastrOperations(doc: OpenAPIObject): CastrOperation[] {
 function extractPathOperations(
   path: string,
   pathItem: PathItemObject,
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): CastrOperation[] {
   const operations: CastrOperation[] = [];
   const httpMethods: HttpMethod[] = [
@@ -134,7 +136,7 @@ function buildCastrOperation(
   path: string,
   operation: OperationObject,
   pathItem: PathItemObject,
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): CastrOperation {
   // Build minimal context for schema resolution
   const context: IRBuildContext = {
@@ -154,13 +156,17 @@ function buildCastrOperation(
       path: [],
       header: [],
       cookie: [],
+      querystring: [],
     },
     responses: buildCastrResponses(operation.responses, context),
   };
 
   // Populate parametersByLocation
   for (const param of irOperation.parameters) {
-    if (param.in in irOperation.parametersByLocation) {
+    if (param.in === PARAMETER_LOCATION_QUERY_STRING) {
+      irOperation.parametersByLocation.querystring ??= [];
+      irOperation.parametersByLocation.querystring.push(param);
+    } else if (param.in in irOperation.parametersByLocation) {
       irOperation.parametersByLocation[param.in].push(param);
     }
   }

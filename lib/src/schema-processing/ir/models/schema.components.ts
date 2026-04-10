@@ -15,9 +15,14 @@ import type {
   PathItemObject,
   ReferenceObject,
   SecuritySchemeObject,
-} from 'openapi3-ts/oas31';
+} from '../../../shared/openapi-types.js';
 import type { CastrSchema, CastrSchemaNode } from './schema.js';
-import type { CastrParameter, CastrResponse, IRRequestBody } from './schema.operations.js';
+import type {
+  CastrParameter,
+  CastrResponse,
+  IRMediaTypeEntry,
+  IRRequestBody,
+} from './schema.operations.js';
 
 /**
  * Reusable component definition from OpenAPI components section.
@@ -32,6 +37,7 @@ export type IRComponent =
   | IRLinkComponent
   | IRCallbackComponent
   | IRPathItemComponent
+  | IRMediaTypeComponent
   | IRExampleComponent;
 
 export interface CastrSchemaComponent {
@@ -121,7 +127,17 @@ export interface IRCallbackComponent {
 export interface IRPathItemComponent {
   type: 'pathItem';
   name: string;
-  pathItem: PathItemObject | ReferenceObject;
+  pathItem: ReferenceObject | PathItemObject;
+}
+
+/**
+ * Media type component definition from OpenAPI components/mediaTypes section (3.2+).
+ * Reusable media types can be referenced from content maps.
+ */
+export interface IRMediaTypeComponent {
+  type: 'mediaType';
+  name: string;
+  mediaType: IRMediaTypeEntry;
 }
 
 /**

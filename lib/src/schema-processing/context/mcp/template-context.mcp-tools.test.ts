@@ -1,14 +1,14 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { beforeAll, describe, expect, test } from 'vitest';
 
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../template-context.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
-const mcpToolsDoc: OpenAPIObject = {
+const mcpToolsDoc: OpenAPIDocument = {
   openapi: '3.1.0',
   info: { version: '1.0.0', title: 'Test API' },
   components: {

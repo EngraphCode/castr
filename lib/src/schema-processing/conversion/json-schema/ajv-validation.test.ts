@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../../shared/openapi-types.js';
 
 import { convertOpenApiSchemaToJsonSchema } from './convert-schema.js';
 import { createDraft07Validator } from './test-utils.js';

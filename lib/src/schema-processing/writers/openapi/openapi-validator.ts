@@ -5,7 +5,7 @@
  */
 
 import { validate } from '@scalar/openapi-parser';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 
 /**
  * Validates an OpenAPI document using external parser.
@@ -15,7 +15,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
  *
  * @internal
  */
-export async function validateOpenAPI(doc: OpenAPIObject): Promise<void> {
+export async function validateOpenAPI(doc: OpenAPIDocument): Promise<void> {
   const result = await validate(doc);
   if (!result.valid) {
     throw new Error(`Invalid OpenAPI document: ${JSON.stringify(result.errors)}`);

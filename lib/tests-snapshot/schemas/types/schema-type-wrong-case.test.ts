@@ -1,4 +1,4 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../../src/shared/openapi-types.js';
 import { expect, test, describe } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
@@ -13,7 +13,7 @@ import { generateZodClientFromOpenAPI } from '../../../src/index.js';
  */
 describe('schema-type-wrong-case', () => {
   test('invalid type case is rejected by strict validation', async () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc = {
       openapi: '3.0.3',
       info: { title: 'Swagger Petstore - OpenAPI 3.0', version: '1.0.11' },
       paths: {
@@ -34,7 +34,6 @@ describe('schema-type-wrong-case', () => {
           test1: {
             type: 'object',
             properties: {
-              // @ts-expect-error TS2322 - Invalid schema type ('Integer' instead of 'integer')
               text1: { type: 'Integer' },
             },
           },

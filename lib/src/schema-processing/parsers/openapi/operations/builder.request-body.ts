@@ -6,15 +6,15 @@
  * @module
  */
 
-import type { RequestBodyObject, ReferenceObject, MediaTypeObject } from 'openapi3-ts/oas31';
+import type { RequestBodyObject, ReferenceObject } from '../../../../shared/openapi-types.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { isReferenceObject } from '../../../../validation/type-guards.js';
-import { buildCastrSchema } from '../builder.core.js';
 import {
   assertNoCircularComponentRef,
   parseComponentNameForType,
 } from '../components/builder.component-ref-resolution.js';
-import type { IRRequestBody, IRMediaType } from '../../../ir/index.js';
+import type { IRMediaTypeEntry, IRRequestBody } from '../../../ir/index.js';
+import { buildIRMediaTypeEntries } from './builder.media-types.js';
 
 const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies';
 
@@ -157,63 +157,6 @@ function buildConcreteRequestBody(
 function buildRequestBodyContent(
   requestBody: RequestBodyObject,
   context: IRBuildContext,
-): Record<string, IRMediaType> {
-  const content: Record<string, IRMediaType> = {};
-
-  if (!requestBody.content) {
-    return content;
-  }
-
-  for (const [mediaType, mediaTypeObj] of Object.entries(requestBody.content)) {
-    const mediaContent = buildMediaTypeContent(mediaType, mediaTypeObj, context);
-    if (mediaContent) {
-      content[mediaType] = mediaContent;
-    }
-  }
-
-  return content;
-}
-
-/**
- * Build IR media type object from OpenAPI media type definition.
- *
- * @param mediaType - Media type string (e.g., 'application/json')
- * @param mediaTypeObj - OpenAPI media type object
- * @param context - Build context for schema resolution
- * @returns IR media type object or undefined if no schema present
- *
- * @internal
- */
-function buildMediaTypeContent(
-  mediaType: string,
-  mediaTypeObj: MediaTypeObject,
-  context: IRBuildContext,
-): IRMediaType | undefined {
-  if (!mediaTypeObj.schema) {
-    return undefined;
-  }
-
-  const mediaContext: IRBuildContext = {
-    ...context,
-    path: [...context.path, 'requestBody', mediaType],
-  };
-
-  const irMediaType: IRMediaType = {
-    schema: buildCastrSchema(mediaTypeObj.schema, mediaContext),
-  };
-
-  if (mediaTypeObj.example !== undefined) {
-    irMediaType.example = mediaTypeObj.example;
-  }
-
-  if (mediaTypeObj.examples) {
-    irMediaType.examples = mediaTypeObj.examples;
-  }
-
-  // Extract encoding for multipart/form-data requests
-  if (mediaTypeObj.encoding) {
-    irMediaType.encoding = mediaTypeObj.encoding;
-  }
-
-  return irMediaType;
+): Record<string, IRMediaTypeEntry> {
+  return buildIRMediaTypeEntries(requestBody.content, context, [...context.path, 'requestBody']);
 }

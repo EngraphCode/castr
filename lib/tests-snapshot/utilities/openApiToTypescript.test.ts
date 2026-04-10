@@ -1,6 +1,6 @@
 import { getTypescriptFromOpenApi } from '../../src/schema-processing/conversion/typescript/index.js';
 
-import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas31';
+import type { SchemaObject, SchemasObject } from '../../src/shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 
 const makeSchema = (schema: SchemaObject) => schema;

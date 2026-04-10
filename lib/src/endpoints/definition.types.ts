@@ -1,4 +1,4 @@
-import type { ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { ParameterObject, SchemaObject } from '../shared/openapi-types.js';
 import type { CastrSchema } from '../schema-processing/ir/index.js';
 
 /**
@@ -19,7 +19,7 @@ export type RequestFormat = 'json' | 'form-data' | 'form-url' | 'binary' | 'text
 /**
  * Parameter location types
  */
-export type ParameterType = 'Path' | 'Query' | 'Header' | 'Body';
+export type ParameterType = 'Path' | 'Query' | 'QueryString' | 'Header' | 'Body';
 
 /**
  * Schema constraints subset from OpenAPI SchemaObject.
@@ -64,6 +64,8 @@ export interface EndpointParameter {
   example?: ParameterObject['example'];
   /** Named examples (from ParameterObject.examples, resolved only) */
   examples?: ParameterObject['examples'];
+  /** Raw schema examples from SchemaObject.examples */
+  schemaExamples?: SchemaObject['examples'];
   /** Default value from schema (from SchemaObject) */
   default?: SchemaObject['default'];
   /** Schema validation constraints (from SchemaObject) */

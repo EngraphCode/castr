@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
 
 import {
   ZOD_FIXTURES,

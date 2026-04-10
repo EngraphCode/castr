@@ -1,5 +1,5 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
-import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject, SchemasObject } from '../../src/shared/openapi-types.js';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { isGroupedFileResult } from '../../src/rendering/generation-result.js';

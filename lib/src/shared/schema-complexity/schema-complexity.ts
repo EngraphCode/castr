@@ -1,5 +1,4 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { type ReferenceObject, type SchemaObject, isReferenceObject } from '../openapi-types.js';
 
 import { calculateTypeArrayComplexity } from './schema-complexity.helpers.js';
 import {

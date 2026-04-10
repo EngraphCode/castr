@@ -1,11 +1,11 @@
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../../shared/openapi-types.js';
 import { buildCastrSchema, type IRBuildContext } from '../../parsers/openapi/index.js';
 import { generateZodSchema } from '../../../test-helpers/generate-zod-schema.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 
-export function getZodSchema({ schema }: { schema: SchemaObject }): {
+export function getZodSchema({ schema }: { schema: SchemaObject | object }): {
   code: string;
-  schema: SchemaObject;
+  schema: SchemaObject | object;
 } {
   const context: IRBuildContext = {
     doc: { openapi: CANONICAL_OPENAPI_VERSION, info: { title: '', version: '' }, paths: {} },

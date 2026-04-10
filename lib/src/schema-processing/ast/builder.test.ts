@@ -38,10 +38,10 @@ describe('AstBuilder', () => {
 
     it('should add single named import', () => {
       const builder = new AstBuilder();
-      builder.addImport('openapi3-ts/oas31', ['OpenAPIObject']);
+      builder.addImport('../shared/openapi-types.js', ['OpenAPIDocument']);
 
       const output = builder.toString();
-      expect(output).toContain('import { OpenAPIObject } from "openapi3-ts/oas31"');
+      expect(output).toContain('import { OpenAPIDocument } from "../shared/openapi-types.js"');
     });
 
     it('should support method chaining', () => {

@@ -8,7 +8,7 @@ import type {
 } from './definition.types.js';
 import type { CastrSchema } from '../schema-processing/ir/index.js';
 
-import type { SchemaObjectType } from 'openapi3-ts/oas31';
+import type { SchemaObjectType } from '../shared/openapi-types.js';
 
 // Helper to create valid mock CastrSchema
 function mockSchema(type: SchemaObjectType, optional = false): CastrSchema {

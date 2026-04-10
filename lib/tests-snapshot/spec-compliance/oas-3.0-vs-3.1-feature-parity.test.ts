@@ -2,8 +2,10 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, test, describe } from 'vitest';
-import type { OpenAPIObject as OpenAPI30Object } from 'openapi3-ts/oas30';
-import type { OpenAPIObject as OpenAPI31Object } from 'openapi3-ts/oas31';
+import type {
+  OpenAPI30InputDocument,
+  OpenAPI31InputDocument,
+} from '../../src/shared/openapi-types.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
@@ -42,7 +44,7 @@ async function generateFromFixture(openApiDoc: object) {
 
 describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   test('OAS 3.0: exclusiveMinimum as boolean + minimum', async () => {
-    const openApiDoc: OpenAPI30Object = {
+    const openApiDoc: OpenAPI30InputDocument = {
       openapi: '3.0.3',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -92,7 +94,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: exclusiveMinimum as number (standalone)', async () => {
-    const openApiDoc: OpenAPI31Object = {
+    const openApiDoc: OpenAPI31InputDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -141,7 +143,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.0: nullable property', async () => {
-    const openApiDoc: OpenAPI30Object = {
+    const openApiDoc: OpenAPI30InputDocument = {
       openapi: '3.0.3',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -184,7 +186,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: type array with null', async () => {
-    const openApiDoc: OpenAPI31Object = {
+    const openApiDoc: OpenAPI31InputDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -228,7 +230,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: standalone type null', async () => {
-    const openApiDoc: OpenAPI31Object = {
+    const openApiDoc: OpenAPI31InputDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -266,7 +268,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: multiple types in array', async () => {
-    const openApiDoc: OpenAPI31Object = {
+    const openApiDoc: OpenAPI31InputDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {

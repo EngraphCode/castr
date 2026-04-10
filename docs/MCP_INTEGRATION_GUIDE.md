@@ -37,9 +37,8 @@ The manifest file is a JSON array. Each element contains:
 
 ```typescript
 import { getZodClientTemplateContext } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},
@@ -60,9 +59,8 @@ const manifest = context.mcpTools.map(({ tool, httpOperation, security }) => ({
 
 ```typescript
 import { buildIR, buildMcpToolsFromIR } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},

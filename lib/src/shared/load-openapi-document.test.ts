@@ -11,7 +11,7 @@ import { CANONICAL_OPENAPI_VERSION } from './openapi/version.js';
 // validate and narrow to BundledOpenApiDocument using a type guard (see ADR-020).
 // This follows our "validate at boundaries" principle.
 // BundleResult models Scalar's actual loose return type - we validate it properly
-// when converting to OpenAPIObject.
+// when converting to OpenAPIDocument.
 type BundleResult = UnknownRecord;
 
 let currentReadFilesPlugin: LoaderPlugin;

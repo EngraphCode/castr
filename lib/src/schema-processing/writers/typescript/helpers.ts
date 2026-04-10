@@ -3,6 +3,7 @@ import type { SourceFile } from 'ts-morph';
 const REQUEST_INPUT_TYPE = `{
     pathParams?: unknown;
     queryParams?: unknown;
+    queryString?: unknown;
     headers?: unknown;
     body?: unknown;
   }`;
@@ -10,6 +11,7 @@ const REQUEST_INPUT_TYPE = `{
 const REQUEST_RETURN_TYPE = `{
   pathParams?: unknown;
   queryParams?: unknown;
+  queryString?: unknown;
   headers?: unknown;
   body?: unknown;
 }`;
@@ -38,6 +40,9 @@ function addValidateRequestHelper(sourceFile: SourceFile): void {
   if (endpoint.request.queryParams && input.queryParams !== undefined) {
     result.queryParams = endpoint.request.queryParams.parse(input.queryParams);
   }
+  if (endpoint.request.queryString && input.queryString !== undefined) {
+    result.queryString = endpoint.request.queryString.parse(input.queryString);
+  }
   if (endpoint.request.headers && input.headers !== undefined) {
     result.headers = endpoint.request.headers.parse(input.headers);
   }
@@ -51,7 +56,7 @@ function addValidateRequestHelper(sourceFile: SourceFile): void {
         description: `Validates request parameters against endpoint schema.
  * 
  * Uses \`.parse()\` for fail-fast validation (throws on error). Each parameter type
- * (path, query, headers, body) is validated individually against the endpoint's schema.
+ * (path, query, queryString, headers, body) is validated individually against the endpoint's schema.
  * 
  * @throws {z.ZodError} When validation fails`,
       },

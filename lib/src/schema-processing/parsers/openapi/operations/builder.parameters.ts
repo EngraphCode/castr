@@ -6,7 +6,7 @@
  * @module
  */
 
-import type { ParameterObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { ParameterObject, ReferenceObject } from '../../../../shared/openapi-types.js';
 import type { CastrSchema, CastrParameter } from '../../../ir/index.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { isReferenceObject } from '../../../../validation/type-guards.js';
@@ -15,6 +15,10 @@ import {
   assertNoCircularComponentRef,
   parseComponentNameForType,
 } from '../components/builder.component-ref-resolution.js';
+import {
+  buildIRMediaTypeEntries,
+  deriveSchemaFromMediaTypeEntries,
+} from './builder.media-types.js';
 
 const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters';
 const PARAMETER_LOCATION_PATH = 'path';
@@ -187,7 +191,7 @@ function buildConcreteParameter(param: ParameterObject, context: IRBuildContext)
   const schema = buildParameterSchema(param, parameterContext);
   const irParameter = buildBaseParameter(param, schema);
 
-  return addOptionalParameterFields(irParameter, param);
+  return addOptionalParameterFields(irParameter, param, parameterContext);
 }
 
 /**
@@ -207,10 +211,12 @@ function buildParameterSchema(param: ParameterObject, context: IRBuildContext): 
 
   // OpenAPI spec requires either 'schema' or 'content' - validate this invariant
   if (param.content) {
-    // Content-based parameter - extract schema from first media type
-    const mediaTypes = Object.values(param.content);
-    if (mediaTypes.length > 0 && mediaTypes[0]?.schema) {
-      return buildCastrSchema(mediaTypes[0].schema, context);
+    const schema = deriveSchemaFromMediaTypeEntries(param.content, context, [
+      ...context.path,
+      'content',
+    ]);
+    if (schema) {
+      return schema;
     }
   }
 
@@ -254,6 +260,7 @@ function buildBaseParameter(param: ParameterObject, schema: CastrSchema): CastrP
 function addOptionalParameterFields(
   irParameter: CastrParameter,
   param: ParameterObject,
+  context: IRBuildContext,
 ): CastrParameter {
   const result = { ...irParameter };
 
@@ -275,6 +282,24 @@ function addOptionalParameterFields(
     result.examples = param.examples;
   }
 
+  addOptionalParameterContent(result, param, context);
+  addOptionalSerializationFields(result, param);
+
+  return result;
+}
+
+function addOptionalParameterContent(
+  result: CastrParameter,
+  param: ParameterObject,
+  context: IRBuildContext,
+): void {
+  const content = buildIRMediaTypeEntries(param.content, context, [...context.path, 'content']);
+  if (Object.keys(content).length > 0) {
+    result.content = content;
+  }
+}
+
+function addOptionalSerializationFields(result: CastrParameter, param: ParameterObject): void {
   if (param.style) {
     result.style = param.style;
   }
@@ -286,6 +311,4 @@ function addOptionalParameterFields(
   if (param.allowReserved !== undefined) {
     result.allowReserved = param.allowReserved;
   }
-
-  return result;
 }

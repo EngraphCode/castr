@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { getZodSchema } from '../../../src/schema-processing/conversion/zod/index.js';
-import { type OpenAPIObject } from 'openapi3-ts/oas31';
+import { type OpenAPIObject } from '../../../src/shared/openapi-types.js';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 // the schemas and fixtures used in these tests are modified from examples here: https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#anyof

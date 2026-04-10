@@ -43,14 +43,24 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /**
- * Pattern that detects OpenAPIObject imports from openapi3-ts.
+ * Pattern that detects document-shape imports from the shared re-export module.
  * Matches variations like:
- * - import { OpenAPIObject } from 'openapi3-ts/oas31'
- * - import type { OpenAPIObject } from 'openapi3-ts/oas31'
- * - import { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31'
+ * - import { OpenAPIDocument } from '../shared/openapi-types.js'
+ * - import { OpenAPIObject } from '../shared/openapi-types.js'
+ * - import type { OpenAPIDocument } from '../../shared/openapi-types.js'
+ * - import { OpenAPIObject, SchemaObject } from '../shared/openapi-types.js'
+ *
+ * Also catches direct vendor type imports and any legacy OpenAPI package
+ * reintroduction in protected layers as safety nets.
  */
-const OPENAPI_OBJECT_IMPORT_PATTERN =
-  /import\s+(?:type\s+)?{[^}]*\bOpenAPIObject\b[^}]*}\s+from\s+['"]openapi3-ts/;
+const SHARED_OPENAPI_DOCUMENT_IMPORT_PATTERN =
+  /import\s+(?:type\s+)?{[^}]*\b(?:OpenAPIDocument|OpenAPIObject)\b[^}]*}\s+from\s+['"][^'"]*openapi-types(?:\.js)?['"]/;
+const DIRECT_VENDOR_OPENAPI_IMPORT_PATTERN =
+  /import[\s\S]*?from\s+['"]@scalar\/openapi-types(?:\/[^'"]*)?['"]/;
+const LEGACY_OPENAPI_PACKAGE_NAME = `openapi3${'-'}ts`;
+const LEGACY_OPENAPI_IMPORT_PATTERN = new RegExp(
+  String.raw`import[\s\S]*?from\s+['"]${LEGACY_OPENAPI_PACKAGE_NAME}(?:\/[^'"]*)?['"]`,
+);
 
 /**
  * Get all TypeScript files in a directory recursively.
@@ -112,7 +122,11 @@ function getMcpLayerFiles(contextDir: string): string[] {
  */
 function checkFileForViolations(filePath: string): string | null {
   const content = fs.readFileSync(filePath, 'utf-8');
-  if (OPENAPI_OBJECT_IMPORT_PATTERN.test(content)) {
+  if (
+    SHARED_OPENAPI_DOCUMENT_IMPORT_PATTERN.test(content) ||
+    DIRECT_VENDOR_OPENAPI_IMPORT_PATTERN.test(content) ||
+    LEGACY_OPENAPI_IMPORT_PATTERN.test(content)
+  ) {
     return filePath;
   }
   return null;
@@ -122,7 +136,7 @@ describe('Layer Boundary Enforcement', () => {
   const libSrcPath = path.resolve(__dirname, '..');
 
   describe('Writers Layer', () => {
-    it('should not import OpenAPIObject in writer files', () => {
+    it('should not import OpenAPI document aliases or vendor types in writer files', () => {
       const writersDir = path.join(libSrcPath, 'schema-processing', 'writers');
       // Exception: writers/openapi is allowed to import OpenAPI types
       // because it's for OUTPUT generation (IR → OpenAPI), not input consumption.
@@ -146,7 +160,7 @@ describe('Layer Boundary Enforcement', () => {
   });
 
   describe('MCP Layer', () => {
-    it('should not import OpenAPIObject in MCP files', () => {
+    it('should not import OpenAPI document aliases or vendor types in MCP files', () => {
       const contextDir = path.join(libSrcPath, 'schema-processing', 'context');
       const mcpFiles = getMcpLayerFiles(contextDir);
 
@@ -167,7 +181,7 @@ describe('Layer Boundary Enforcement', () => {
   });
 
   describe('IR Layer (ADR-029)', () => {
-    it('should not import OpenAPIObject in IR files', () => {
+    it('should not import OpenAPI document aliases or vendor types in IR files', () => {
       const irDir = path.join(libSrcPath, 'schema-processing', 'ir');
       const irFiles = getTypeScriptFiles(irDir, true);
 

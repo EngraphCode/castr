@@ -2,67 +2,78 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-03  
+**Revised:** 2026-04-10 — Updated to reflect the landed boundary/canonical split, `components.pathItems`/`components.mediaTypes` fidelity, and dependency-exit guards  
 **Context:** OAS 3.2 Full Feature Support arc — companion to ADR-044
 
 ---
 
 ## Decision
 
-All OpenAPI type imports throughout the codebase MUST use a single local re-export module (`lib/src/shared/openapi-types.ts`), never importing from `@scalar/openapi-types` or `openapi3-ts/oas31` directly. This module re-exports Scalar's `OpenAPIV3_2` types with strictness narrowings on spec-required fields.
+All OpenAPI type imports throughout the codebase MUST use a single local re-export module (`lib/src/shared/openapi-types.ts`). Product code MUST NOT import OpenAPI types directly from `@scalar/openapi-types` or `openapi3-ts/oas31`.
+
+This module owns the strict seam between vendor types and repo truth. It defines explicit interfaces with named properties only, strips Scalar's general `[key: string]: any` index signature, and applies the spec/runtime corrections we rely on downstream.
+
+The seam is intentionally split into two roles:
+
+- `OpenAPIInputDocument` is the tolerant boundary type used when accepting parser/upgrader output or other partially validated input.
+- `OpenAPIDocument` is the canonical post-validation document type used downstream after load-time checks.
+
+At this seam we also preserve the OAS 3.2 surfaces that must remain lossless in IR and public APIs:
+
+- `SchemaObject.examples` stays `unknown[]`
+- `querystring` remains distinct instead of being coerced to `query`
+- content maps may contain `ReferenceObject | MediaTypeObject`
+- reusable `components.pathItems` remain ref-capable
+- reusable `components.mediaTypes` are modelled explicitly and may be schema-less
 
 ## Context
 
-`@scalar/openapi-types` is designed for tolerant user-input handling: all fields are optional because Scalar's parser and UI must gracefully handle malformed documents. This is the correct design for a parser/UI library.
+`@scalar/openapi-types` is the right upstream family for OAS 3.2 coverage, but its raw shapes do not line up with our strict downstream needs on their own:
 
-Castr's doctrine requires the opposite: strict type enforcement for spec-mandated fields. The OpenAPI 3.1/3.2 specification (using RFC 2119 language) explicitly REQUIRES the following fields:
-
-| Type                          | Field          | OAS Spec Requirement                       |
-| ----------------------------- | -------------- | ------------------------------------------ |
-| `ParameterObject`             | `name`         | **REQUIRED** — identifies the parameter    |
-| `ParameterObject`             | `in`           | **REQUIRED** — locates the parameter       |
-| `RequestBodyObject`           | `content`      | **REQUIRED** — defines media type mappings |
-| `ResponseObject`              | `description`  | **REQUIRED** — describes the response      |
-| `ExternalDocumentationObject` | `url`          | **REQUIRED** — target documentation URL    |
-| `TagObject`                   | `name`         | **REQUIRED** — unique tag identifier       |
-| `DiscriminatorObject`         | `propertyName` | **REQUIRED** — discriminating property     |
-| `SecuritySchemeObject`        | `type`         | **REQUIRED** — scheme category             |
-
-These fields being required is not `openapi3-ts` inventing strictness — it is faithful representation of the OpenAPI specification. A document missing any of these fields is invalid per the spec, and our library must not silently tolerate that.
+1. **`AnyOtherAttribute` index signature** — Scalar's general `[key: string]: any` signature breaks `isReferenceObject()` narrowing and collides with `noPropertyAccessFromIndexSignature: true`.
+2. **Tolerant raw-input bias** — Scalar intentionally types documents for partially constructed input, which blurs the boundary between unvalidated parser output and canonical documents that our pipeline has already checked.
+3. **Seam mismatches and corrected assumptions** — a few high-value surfaces required explicit correction at the seam: `SchemaObject.examples` is raw data, `ResponseObject.description` is optional in the 3.2 surface we now model, `PathItemObject.$ref` exists, and content/media-type maps can carry references.
 
 ## Implementation
 
-The re-export module uses TypeScript intersection narrowing (`& { field: Type }`) to restore required-ness on the ~8 fields where it matters. For all other types, it directly re-exports the Scalar types without modification.
+The re-export module uses hand-written explicit interfaces rather than mapped-type surgery. That choice was forced by Scalar's `Modify<Omit<...>>` composition chains: `RemoveIndexSignature<T>` could not reliably preserve named properties there.
+
+Implementation highlights:
+
+- explicit interfaces remove the general index signature while preserving named properties
+- `OpenAPIInputDocument` and `OpenAPIDocument` separate tolerant boundary input from validated canonical truth
+- canonical requiredness is restored where we depend on it (`openapi`, `info`, `info.title`, `info.version`, `server.url`)
+- seam corrections stay local to the module instead of leaking into IR or public APIs
+- a narrow drift harness checks the upstream signals we depend on (`querystring`, ref-capable `content`, `components.mediaTypes`, `PathItemObject.$ref`)
+- dependency-exit guard tests keep protected layers off direct vendor imports, the backwards-compatible `OpenAPIObject` alias, and any future `openapi3-ts` reintroduction
+
+### Vendor extensions
+
+`OpenAPIDocument` keeps a template-literal vendor-extension index signature:
 
 ```typescript
-// Example: ParameterObject with strict required fields
-export type ParameterObject = OpenAPIV3_2.ParameterObject & {
-  name: string;
-  in: ParameterLocation;
-};
+[ext: `x-${string}`]: unknown
 ```
 
-The intersection approach is strictly safe:
-
-- Our strict type is a **subtype** of Scalar's permissive type — any value of our type is assignable to Scalar's type
-- Existing code that accesses `.name` without undefined checks continues to compile
-- Code that passes a Scalar `ParameterObject` (optional `name`) to our strict `ParameterObject` gets a type error — which is the safety we want
+That allows `x-*` access without reintroducing the structural overlap problems caused by a general `[key: string]: any` index signature.
 
 ## Consequences
 
 ### Positive
 
-- **Preserves compile-time strictness** — spec-required fields cannot be accessed without existence guarantee
-- **Single import source** — all codebase files import from one central module; import path changes are one-time and mechanical
-- **Minimal maintenance** — only ~8 narrowings, not a full type redefinition; all other types pass through unchanged
-- **Spec-correct** — narrowings match exactly what the OAS specification mandates
+- correct type-guard narrowing for `isReferenceObject()`
+- strict canonical downstream types without weakening the raw input boundary
+- lossless handling of `querystring`, schema examples, and media-type references through IR and public surfaces
+- single import source for OpenAPI types
+- targeted drift protection against upstream `@scalar/openapi-types` changes
 
 ### Negative
 
-- **Not protocol-level enforcement** — this is compile-time only; runtime validation of incoming documents is a separate concern (handled by Scalar's parser and our IR validators)
-- **Coupling to Scalar's structure** — if Scalar significantly restructures their type namespaces, we'd need to update the re-export module
+- explicit interfaces require manual maintenance
+- boundary and canonical document roles must be understood separately
+- the seam intentionally differs from raw vendor types in a few places, so assignability is no longer the goal everywhere
 
-## Alternatives Considered
+### Risks
 
-1. **Use Scalar types directly everywhere** — loses all compile-time strictness for spec-required fields
-2. **Build complete strict type definitions from scratch** — enormous maintenance burden; redefining ~40+ interfaces for no gain over intersection narrowing
-3. **Use TypeScript `Required<Pick<>>` utility types** — more verbose, less readable, same effect as intersection narrowing
+- **Property drift** — upstream additions still require deliberate review and local updates; the drift harness reduces but does not eliminate this risk.
+- **Future vendor mismatches** — additional spec/runtime disagreements may still surface and will need explicit seam decisions.

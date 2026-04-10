@@ -17,11 +17,16 @@
  * See: .agent/architecture/SCALAR-PIPELINE.md (Bundling vs Dereferencing)
  */
 
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import {
+  type OpenAPIDocument,
+  type ReferenceObject,
+  type SchemaObject,
+  isReferenceObject,
+} from '../openapi-types.js';
+import { isOpenAPIDocument } from '../../validation/cli-type-guards.js';
 
-import { isReferenceObject } from 'openapi3-ts/oas31';
 import { visitComposition, visitObjectProperties } from './dependency-graph.helpers.js';
-import { getSchemaFromComponents } from '../component-access.js';
+import { getSchemaFromComponents } from '../openapi/component-access.js';
 import { parseComponentRef } from '../ref-resolution.js';
 
 type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void;
@@ -39,7 +44,7 @@ const handleReferenceInGraph = (
   fromRef: string,
   refsDependencyGraph: Record<string, Set<string>>,
   visitedsRefs: Record<string, boolean>,
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   visit: VisitFn,
 ): void => {
   if (!refsDependencyGraph[fromRef]) {
@@ -113,7 +118,7 @@ const handleSchemaType = (schema: SchemaObject, fromRef: string, visit: VisitFn)
  */
 const buildDirectDependencyGraph = (
   schemaRefs: string[],
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): Record<string, Set<string>> => {
   const visitedsRefs: Record<string, boolean> = {};
   const refsDependencyGraph: Record<string, Set<string>> = {};
@@ -231,11 +236,18 @@ const buildDeepDependencyGraph = (
  */
 export const getOpenApiDependencyGraph = (
   schemaRef: string[],
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument | object,
 ): {
   refsDependencyGraph: Record<string, Set<string>>;
   deepDependencyGraph: Record<string, Set<string>>;
 } => {
+  if (!isOpenAPIDocument(doc)) {
+    throw new Error(
+      'Expected an OpenAPI document with canonical required fields ' +
+        '(openapi, info.title, info.version, and at least one content section).',
+    );
+  }
+
   const refsDependencyGraph = buildDirectDependencyGraph(schemaRef, doc);
   const deepDependencyGraph = buildDeepDependencyGraph(schemaRef, refsDependencyGraph);
 

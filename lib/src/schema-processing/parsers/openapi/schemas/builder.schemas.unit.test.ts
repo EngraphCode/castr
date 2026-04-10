@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SchemaObject } from '../../../../shared/openapi-types.js';
 import { buildComponentSchema } from './builder.schemas.js';
 
 describe('buildComponentSchema', () => {
@@ -8,7 +8,7 @@ describe('buildComponentSchema', () => {
       type: 'object',
       properties: { id: { type: 'string' } },
     };
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},

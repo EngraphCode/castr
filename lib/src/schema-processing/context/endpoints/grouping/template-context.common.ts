@@ -1,12 +1,13 @@
-import { topologicalSort } from '../../shared/dependency-graph/index.js';
+import { topologicalSort } from '../../../../shared/dependency-graph/index.js';
 import {
   sortSchemaNamesByDependencyOrder,
   sortSchemasByDependencyOrder,
-} from '../../shared/utils/schema/index.js';
+} from '../../../../shared/utils/schema/index.js';
 import { split } from 'lodash-es';
+import type { MinimalTemplateContext } from './template-context.endpoints.types.js';
 
 // Re-export from centralized ref-resolution module
-export { getSchemaNameFromRef } from '../../shared/ref-resolution.js';
+export { getSchemaNameFromRef } from '../../../../shared/ref-resolution.js';
 
 /**
  * Calculate dependency counts across all groups.
@@ -110,14 +111,6 @@ export const processCommonSchemasForGroups = (
     ),
   );
 };
-
-// Local helpers/types to avoid circular imports
-export interface MinimalTemplateContext {
-  schemas: Record<string, string>;
-  endpoints: unknown[];
-  types: Record<string, string>;
-  imports?: Record<string, string>;
-}
 
 export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
   return fullSchemaNames.map((name) => {

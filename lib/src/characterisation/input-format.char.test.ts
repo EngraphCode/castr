@@ -22,7 +22,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { CANONICAL_OPENAPI_VERSION } from '../shared/openapi/version.js';
 import {
@@ -35,7 +35,7 @@ import {
  * Helper to parse and validate OpenAPI spec regardless of format.
  * The Scalar pipeline handles the format detection automatically.
  */
-async function parseSpec(path: string): Promise<OpenAPIObject> {
+async function parseSpec(path: string): Promise<OpenAPIDocument> {
   return prepareOpenApiDocument(path);
 }
 

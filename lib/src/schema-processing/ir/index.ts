@@ -24,10 +24,12 @@ export type {
   IRLinkComponent,
   IRCallbackComponent,
   IRPathItemComponent,
+  IRMediaTypeComponent,
   IRExampleComponent,
   CastrOperation,
   CastrParameter,
   IRRequestBody,
+  IRMediaTypeEntry,
   IRMediaType,
   CastrResponse,
   IRResponseHeader,
@@ -63,6 +65,7 @@ export {
   applyExplicitIntegerSemantics,
   schemaTypeIncludesInteger,
 } from './integer-semantics/index.js';
+export { getSchemaFromIRMediaTypeEntry, resolveIRMediaTypeEntry } from './media-types/index.js';
 
 // Serialization utilities
 // Validators and type guards

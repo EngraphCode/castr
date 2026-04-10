@@ -3,8 +3,11 @@
  * Extracted to reduce complexity and enable reuse across test cases
  */
 
-import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type OpenAPIDocument,
+  type OperationObject,
+  isReferenceObject,
+} from '../../shared/openapi-types.js';
 
 /**
  * Type guard to check if a path item value is an operation object
@@ -17,7 +20,7 @@ export function isOperationObject(value: unknown): value is OperationObject {
  * Extract all operation objects from an OpenAPI spec
  * Flattens the nested structure while respecting nesting depth limits
  */
-export function extractAllOperations(spec: OpenAPIObject): OperationObject[] {
+export function extractAllOperations(spec: OpenAPIDocument): OperationObject[] {
   const operations: OperationObject[] = [];
 
   const paths = spec.paths;
@@ -98,7 +101,7 @@ export function assertResponseNotRef(
  * Get operation from spec path, asserting it exists
  */
 export function getOperation(
-  spec: OpenAPIObject,
+  spec: OpenAPIDocument,
   path: string,
   method: 'get' | 'post' | 'put' | 'patch' | 'delete',
 ): OperationObject {
@@ -125,7 +128,7 @@ interface OperationPath {
 }
 
 export function verifyOperationsRefsResolved(
-  spec: OpenAPIObject,
+  spec: OpenAPIDocument,
   operations: OperationPath[],
 ): void {
   for (const { path, method } of operations) {

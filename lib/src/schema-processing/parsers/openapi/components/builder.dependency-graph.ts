@@ -7,7 +7,7 @@
  * @internal
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../../shared/openapi-types.js';
 import type { IRDependencyGraph, IRDependencyNode } from '../../../ir/index.js';
 import {
   getOpenApiDependencyGraph,
@@ -27,7 +27,7 @@ import { isRecord } from '../../../../shared/type-utils/types.js';
  *
  * @internal
  */
-export function extractOriginalSchemaKeys(doc: OpenAPIObject): string[] {
+export function extractOriginalSchemaKeys(doc: OpenAPIDocument): string[] {
   const schemaKeys: string[] = [];
 
   // Extract from standard location
@@ -44,7 +44,7 @@ export function extractOriginalSchemaKeys(doc: OpenAPIObject): string[] {
 /**
  * Extract schema keys from x-ext vendor extension locations.
  */
-function extractXExtSchemaKeys(doc: OpenAPIObject): string[] {
+function extractXExtSchemaKeys(doc: OpenAPIDocument): string[] {
   const keys: string[] = [];
   const xExt: unknown = doc['x-ext'];
   if (!isRecord(xExt)) {
@@ -80,7 +80,10 @@ function extractXExtSchemaKeys(doc: OpenAPIObject): string[] {
  *
  * @internal
  */
-export function buildDependencyGraph(schemaNames: string[], doc: OpenAPIObject): IRDependencyGraph {
+export function buildDependencyGraph(
+  schemaNames: string[],
+  doc: OpenAPIDocument,
+): IRDependencyGraph {
   if (schemaNames.length === 0) {
     return {
       nodes: new Map(),

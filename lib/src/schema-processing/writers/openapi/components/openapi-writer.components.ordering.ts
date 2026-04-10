@@ -9,8 +9,9 @@ const COMPONENT_TYPE_ORDER_INDEX: Record<IRComponent['type'], number> = {
   link: 5,
   callback: 6,
   pathItem: 7,
-  example: 8,
-  requestBody: 9,
+  mediaType: 8,
+  example: 9,
+  requestBody: 10,
 };
 
 export function compareComponentsForDeterminism(left: IRComponent, right: IRComponent): number {

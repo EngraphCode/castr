@@ -10,10 +10,7 @@ import {
   addDependenciesToGroup,
   processTransitiveDependenciesForGroup,
 } from './template-context.endpoints.helpers.js';
-import type { MinimalTemplateContext } from './template-context.endpoints.types.js';
-
-// Import the correct processCommonSchemasForGroups with topological sorting
-import { processCommonSchemasForGroups } from '../template-context.common.js';
+import { processCommonSchemasForGroups, type MinimalTemplateContext } from './grouping/index.js';
 
 // Re-export types and functions for external use
 export type { TemplateContextGroupStrategy, MinimalTemplateContext };

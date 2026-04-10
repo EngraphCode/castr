@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** 2026-04-05  
+**Last Updated:** 2026-04-10  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 
@@ -21,7 +21,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 │                           INPUT LAYER                                │
 │  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐              │
 │  │ OpenAPI Parser│ │  Zod Parser   │ │ JSON Schema   │              │
-│  │  (3.0, 3.1)   │ │    (v4)       │ │   Parser      │              │
+│  │(3.0,3.1,3.2)  │ │    (v4)       │ │   Parser      │              │
 │  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘              │
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
@@ -115,10 +115,11 @@ This library implements an **Intermediate Representation (IR) architecture** for
 
 ### Type System Migration (Current)
 
-| ADR                                                      | Title                                         | Status      |
-| -------------------------------------------------------- | --------------------------------------------- | ----------- |
-| [044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md)  | Drop openapi3-ts, Adopt @scalar/openapi-types | ✅ Accepted |
-| [045](./ADR-045-strict-reexport-module-openapi-types.md) | Strict Re-export Module for OpenAPI Types     | ✅ Accepted |
+| ADR                                                        | Title                                                          | Status      |
+| ---------------------------------------------------------- | -------------------------------------------------------------- | ----------- |
+| [044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md)    | Drop openapi3-ts, Adopt @scalar/openapi-types                  | ✅ Accepted |
+| [045](./ADR-045-strict-reexport-module-openapi-types.md)   | Strict Re-export Module for OpenAPI Types                      | ✅ Accepted |
+| [046](./ADR-046-separate-storage-additional-operations.md) | Separate Storage for `additionalOperations` on `CastrDocument` | ✅ Accepted |
 
 ### Additional Architecture Records
 
@@ -132,11 +133,12 @@ This library implements an **Intermediate Representation (IR) architecture** for
 ## Key Principles
 
 1. **IR is Truth** - The internal IR is authoritative
-2. **Fail Fast** - Invalid input rejected immediately
-3. **Type Safety** - No `any`, no unchecked assertions
-4. **O(N) Complexity** - One parser + one transformer per format
-5. **Building Blocks** - Schemas and metadata, not complete SDKs
-6. **Core vs Companion Separation** - Transport, runtime, framework, and code-first integrations live outside core `@engraph/castr`
+2. **Boundary and Canonical Roles Stay Separate** - tolerant OpenAPI input types and validated canonical documents are modelled explicitly at the seam
+3. **Fail Fast** - Invalid input rejected immediately
+4. **Type Safety** - No `any`, no unchecked assertions
+5. **O(N) Complexity** - One parser + one transformer per format
+6. **Building Blocks** - Schemas and metadata, not complete SDKs
+7. **Core vs Companion Separation** - Transport, runtime, framework, and code-first integrations live outside core `@engraph/castr`
 
 ---
 

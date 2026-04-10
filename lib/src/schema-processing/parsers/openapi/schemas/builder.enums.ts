@@ -15,12 +15,15 @@ import type {
   CastrOperation,
   IRRequestBody,
   CastrResponse,
+  IRMediaTypeEntry,
 } from '../../../ir/index.js';
+import { isReferenceObject } from '../../../../shared/openapi-types.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema';
 const COMPONENT_TYPE_PARAMETER = 'parameter';
 const COMPONENT_TYPE_RESPONSE = 'response';
 const COMPONENT_TYPE_REQUEST_BODY = 'requestBody';
+const COMPONENT_TYPE_MEDIA_TYPE = 'mediaType';
 
 /**
  * Extract all enums from components and operations.
@@ -58,6 +61,8 @@ class EnumExtractor {
       this.visitResponseComponent(component);
     } else if (component.type === COMPONENT_TYPE_REQUEST_BODY) {
       this.visitRequestBody(component.requestBody);
+    } else if (component.type === COMPONENT_TYPE_MEDIA_TYPE) {
+      this.visitMediaTypeEntry(component.mediaType, component.name);
     }
   }
 
@@ -89,7 +94,7 @@ class EnumExtractor {
   private visitRequestBody(requestBody: IRRequestBody): void {
     for (const key of Object.keys(requestBody.content)) {
       const media = requestBody.content[key];
-      if (media) {
+      if (media && !isReferenceObject(media) && media.schema) {
         this.visitSchema(media.schema);
       }
     }
@@ -107,10 +112,16 @@ class EnumExtractor {
     if (response.content) {
       for (const key of Object.keys(response.content)) {
         const media = response.content[key];
-        if (media) {
+        if (media && !isReferenceObject(media) && media.schema) {
           this.visitSchema(media.schema);
         }
       }
+    }
+  }
+
+  private visitMediaTypeEntry(mediaType: IRMediaTypeEntry, nameHint?: string): void {
+    if (!isReferenceObject(mediaType) && mediaType.schema) {
+      this.visitSchema(mediaType.schema, nameHint);
     }
   }
 

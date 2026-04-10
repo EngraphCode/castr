@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 import type { resolveConfig } from 'prettier';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 
 import type { GenerateZodClientFromOpenApiArgs } from '../rendering/index.js';
 import {
@@ -91,7 +91,7 @@ export function isTemplateName(
  * @internal
  */
 export function buildGenerationArgs(
-  openApiDoc: OpenAPIObject,
+  openApiDoc: OpenAPIDocument,
   distPath: string,
   prettierConfig: Awaited<ReturnType<typeof resolveConfig>> | null,
   options: CliOptions,

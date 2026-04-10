@@ -1,17 +1,14 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import {
   getZodClientTemplateContext as getZodClientTemplateContextBase,
   extractSchemaNamesFromDoc,
 } from './template-context.js';
-import {
-  createMinimalDoc,
-  createDocWithSchemaRef,
-  createDocWithTags,
-} from './template-context-fixtures.js';
+import { prepareOpenApiDocument } from '../../shared/prepare-openapi-document.js';
+import { createMinimalDoc, createDocWithSchemaRef, createDocWithTags } from './fixtures/index.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
@@ -21,7 +18,7 @@ const getZodClientTemplateContext = (
 describe('template-context helpers', () => {
   describe('extractSchemaNamesFromDoc', () => {
     test('should extract schema names from components.schemas', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.0.3',
         info: { version: '1', title: 'Test' },
         paths: {},
@@ -39,7 +36,7 @@ describe('template-context helpers', () => {
     });
 
     test('should return empty array when no schemas exist', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.0.3',
         info: { version: '1', title: 'Test' },
         paths: {},
@@ -52,7 +49,7 @@ describe('template-context helpers', () => {
     });
 
     test('should handle undefined components', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.0.3',
         info: { version: '1', title: 'Test' },
         paths: {},
@@ -180,7 +177,7 @@ describe('getZodClientTemplateContext - group strategy options', () => {
   });
 
   test('should group endpoints by method when strategy is method', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -227,7 +224,7 @@ describe('getZodClientTemplateContext - group strategy options', () => {
   });
 
   test('should use Default tag when no tags provided', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -260,12 +257,105 @@ describe('getZodClientTemplateContext - group strategy options', () => {
   });
 });
 
+describe('getZodClientTemplateContext - querystring semantics', () => {
+  test('preserves querystring as QueryString and exposes queryString in MCP input schemas', async () => {
+    const rawSchemaExamples = [{ value: 'keep-me-raw' }];
+    const prepared = await prepareOpenApiDocument({
+      openapi: '3.2.0',
+      info: { version: '1', title: 'QueryString API' },
+      paths: {
+        '/search': {
+          get: {
+            operationId: 'searchUsers',
+            parameters: [
+              {
+                name: 'filter',
+                in: 'querystring',
+                required: false,
+                content: {
+                  'application/x-www-form-urlencoded': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        tag: { type: 'string' },
+                      },
+                      examples: rawSchemaExamples,
+                    },
+                  },
+                },
+              },
+            ],
+            responses: {
+              '200': {
+                content: {
+                  'application/json': {
+                    schema: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const result = getZodClientTemplateContext(prepared);
+    const endpoint = result.endpoints[0];
+    const parameter = endpoint?.parameters[0];
+    const inputSchema = result.mcpTools[0]?.tool.inputSchema;
+
+    expect(parameter?.type).toBe('QueryString');
+    expect(parameter?.schemaExamples).toEqual(rawSchemaExamples);
+    expect(inputSchema).toHaveProperty('properties.queryString');
+    expect(inputSchema).not.toHaveProperty('properties.queryParams');
+  });
+
+  test('rejects operations that mix query and querystring parameter models', () => {
+    const mixedQueryModels: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { version: '1', title: 'Mixed Query Models' },
+      paths: {
+        '/search': {
+          get: {
+            operationId: 'searchUsers',
+            parameters: [
+              {
+                name: 'page',
+                in: 'query',
+                schema: { type: 'integer' },
+              },
+              {
+                name: 'filter',
+                in: 'querystring',
+                content: {
+                  'application/x-www-form-urlencoded': {
+                    schema: { type: 'string' },
+                  },
+                },
+              },
+            ],
+            responses: {
+              '200': {
+                description: 'OK',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    expect(() => getZodClientTemplateContext(mixedQueryModels)).toThrow(
+      /mixes `query` and `querystring` parameters/i,
+    );
+  });
+});
+
 /**
  * Test schema dependency sorting
  */
 describe('schema dependency sorting', () => {
   test('should sort schemas by dependency order', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -320,7 +410,7 @@ describe('schema dependency sorting', () => {
  */
 describe('common schema detection', () => {
   test('should detect common schemas when using file grouping', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -385,7 +475,7 @@ describe('common schema detection', () => {
  */
 describe('endpoint sorting', () => {
   test('should sort endpoints by path', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -440,7 +530,7 @@ describe('endpoint sorting', () => {
  */
 describe('schema ordering in grouped outputs', () => {
   test('should process tag-file grouping without errors', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -544,7 +634,7 @@ describe('schema ordering in grouped outputs', () => {
   });
 
   test('should process method-file grouping without errors', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {
@@ -648,7 +738,7 @@ describe('schema ordering in grouped outputs', () => {
  */
 describe('getZodClientTemplateContext - complex nested dependencies', () => {
   test('should handle complex nested dependencies correctly', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',
       info: { version: '1', title: 'Test API' },
       paths: {

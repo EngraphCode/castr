@@ -44,10 +44,9 @@ if (isSingleFileResult(result)) {
 ## 5. Generate From An In-Memory OpenAPI Object
 
 ```typescript
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '@engraph/castr';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {
@@ -74,9 +73,8 @@ await generateZodClientFromOpenAPI({
 
 ```typescript
 import { getZodClientTemplateContext } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},
@@ -99,9 +97,8 @@ This is the current programmatic path for MCP manifest data. `generateZodClientF
 
 ```typescript
 import { buildIR, writeOpenApi } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},

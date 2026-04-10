@@ -2,6 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-03  
+**Revised:** 2026-04-10 — Promoted into the durable ADR docs set during the post-Phase A₂ consolidation pass  
 **Context:** OAS 3.2 Full Feature Support arc — IR model decision for custom HTTP methods
 
 ---

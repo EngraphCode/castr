@@ -7,7 +7,7 @@
  * @module template-context.mcp.security.from-ir
  */
 
-import type { SecuritySchemeObject } from 'openapi3-ts/oas31';
+import type { SecuritySchemeObject } from '../../../shared/openapi-types.js';
 import type {
   OperationSecurityMetadata,
   SecuritySchemeRequirement,

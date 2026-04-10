@@ -4,9 +4,10 @@ import type {
   CastrOperation,
   CastrResponse,
   CastrSchema,
-  IRMediaType,
+  IRMediaTypeEntry,
   IRRequestBody,
 } from '../ir/index.js';
+import { isReferenceObject } from '../../shared/openapi-types.js';
 
 export type SchemaVisitor = (schema: CastrSchema, seen: Set<CastrSchema>) => void;
 
@@ -73,7 +74,7 @@ export function visitSchemaChildren(
 }
 
 function visitContentSchemas(
-  content: Record<string, IRMediaType> | undefined,
+  content: Record<string, IRMediaTypeEntry> | undefined,
   seen: Set<CastrSchema>,
   visitSchema: SchemaVisitor,
 ): void {
@@ -82,7 +83,9 @@ function visitContentSchemas(
   }
 
   for (const mediaType of Object.values(content)) {
-    visitSchema(mediaType.schema, seen);
+    if (!isReferenceObject(mediaType) && mediaType.schema) {
+      visitSchema(mediaType.schema, seen);
+    }
   }
 }
 
@@ -155,6 +158,11 @@ export function visitComponentSchemas(
       return;
     case 'requestBody':
       visitRequestBody(component.requestBody, seen, visitSchema);
+      return;
+    case 'mediaType':
+      if (!isReferenceObject(component.mediaType) && component.mediaType.schema) {
+        visitSchema(component.mediaType.schema, seen);
+      }
       return;
     default:
       return;

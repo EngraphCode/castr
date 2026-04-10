@@ -7,9 +7,11 @@ import type { CastrSchemaContext, IRPropertySchemaContext } from '../../ir/index
 const PARAM_TYPE_BODY = 'Body';
 const PARAM_TYPE_PATH = 'Path';
 const PARAM_TYPE_QUERY = 'Query';
+const PARAM_TYPE_QUERY_STRING = 'QueryString';
 const PARAM_TYPE_HEADER = 'Header';
 const PARAM_LOCATION_PATH = 'path';
 const PARAM_LOCATION_QUERY = 'query';
+const PARAM_LOCATION_QUERY_STRING = 'querystring';
 const PARAM_LOCATION_HEADER = 'header';
 
 export function createEndpointWriter(
@@ -164,6 +166,7 @@ function createRequestObjectWriter(
 ): WriterFunction {
   const pathParams = parameters.filter((p) => p.type === PARAM_TYPE_PATH);
   const queryParams = parameters.filter((p) => p.type === PARAM_TYPE_QUERY);
+  const queryString = parameters.filter((p) => p.type === PARAM_TYPE_QUERY_STRING);
   const headers = parameters.filter((p) => p.type === PARAM_TYPE_HEADER);
   const body = parameters.find((p) => p.type === PARAM_TYPE_BODY);
 
@@ -174,6 +177,9 @@ function createRequestObjectWriter(
   }
   if (queryParams.length > 0) {
     requestProps['queryParams'] = createZodObjectWriter(queryParams, options);
+  }
+  if (queryString.length > 0) {
+    requestProps['queryString'] = createZodObjectWriter(queryString, options);
   }
   if (headers.length > 0) {
     requestProps['headers'] = createZodObjectWriter(headers, options);
@@ -217,10 +223,11 @@ function createZodObjectWriter(
   };
 }
 
-function getParamLocation(type: string): 'path' | 'query' | 'header' {
-  const locationsByType: Record<string, 'path' | 'query' | 'header'> = {
+function getParamLocation(type: string): 'path' | 'query' | 'querystring' | 'header' {
+  const locationsByType: Record<string, 'path' | 'query' | 'querystring' | 'header'> = {
     [PARAM_TYPE_PATH]: PARAM_LOCATION_PATH,
     [PARAM_TYPE_QUERY]: PARAM_LOCATION_QUERY,
+    [PARAM_TYPE_QUERY_STRING]: PARAM_LOCATION_QUERY_STRING,
     [PARAM_TYPE_HEADER]: PARAM_LOCATION_HEADER,
   };
   const location = locationsByType[type];

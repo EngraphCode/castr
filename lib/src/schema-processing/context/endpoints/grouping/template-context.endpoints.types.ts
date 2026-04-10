@@ -1,4 +1,4 @@
-import type { EndpointDefinition } from '../../../endpoints/definition.types.js';
+import type { EndpointDefinition } from '../../../../endpoints/definition.types.js';
 
 export interface MinimalTemplateContext {
   schemas: Record<string, string>;

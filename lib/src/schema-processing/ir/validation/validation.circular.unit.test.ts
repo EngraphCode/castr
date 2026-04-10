@@ -6,19 +6,19 @@
  * @module ir-validation.circular.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 import { assertSchemaComponent } from '../test-helpers.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Circular Reference Detection', () => {
   test('detects self-referencing schemas', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {},
@@ -46,7 +46,7 @@ describe('IR Validation - Circular Reference Detection', () => {
   });
 
   test('detects mutual circular references', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {},

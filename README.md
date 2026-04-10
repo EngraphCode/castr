@@ -82,10 +82,9 @@ if (isSingleFileResult(result)) {
 In-memory input works too:
 
 ```typescript
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '@engraph/castr';
 
-const openApiDoc: OpenAPIObject = {
+const openApiDoc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},
@@ -109,9 +108,8 @@ If you want the structured metadata rather than rendered TypeScript, use the tem
 
 ```typescript
 import { getZodClientTemplateContext, buildIR, writeOpenApi } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},

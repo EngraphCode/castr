@@ -1,10 +1,10 @@
 import {
-  type OpenAPIObject,
+  type OpenAPIDocument,
   type SchemaObject,
   type ReferenceObject,
   isReferenceObject,
-} from 'openapi3-ts/oas31';
-import { getSchemaFromComponents } from '../component-access.js';
+} from '../openapi-types.js';
+import { getSchemaFromComponents } from '../openapi/component-access.js';
 import { parseComponentRef } from '../ref-resolution.js';
 
 /**
@@ -68,7 +68,7 @@ const createComposedRequiredSchema = (
 const patchPropertiesFromRef = (
   composedRequiredSchema: ReturnType<typeof createComposedRequiredSchema>,
   prop: SchemaObject | ReferenceObject,
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
 ): void => {
   if (isReferenceObject(prop)) {
     const parsedRef = parseComponentRef(prop.$ref);
@@ -95,7 +95,7 @@ export function inferRequiredSchema(schema: SchemaObject): {
     type: 'object';
     required: string[];
   };
-  patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIObject) => void;
+  patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIDocument) => void;
 } {
   if (!schema.allOf) {
     throw new Error(
@@ -109,7 +109,7 @@ export function inferRequiredSchema(schema: SchemaObject): {
   return {
     noRequiredOnlyAllof,
     composedRequiredSchema,
-    patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIObject) => {
+    patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIDocument) => {
       patchPropertiesFromRef(composedRequiredSchema, prop, doc);
     },
   };

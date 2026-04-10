@@ -1,4 +1,4 @@
-import { type SchemasObject } from 'openapi3-ts/oas31';
+import { type SchemasObject } from '../../src/shared/openapi-types.js';
 import { expect, it } from 'vitest';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';

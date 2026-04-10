@@ -9,7 +9,7 @@
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/schema-processing/context/template-context.js';
 import { assertSchemaComponent } from '../../src/schema-processing/ir/test-helpers.js';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 
 describe('IR Integration - Complex Circular References', () => {

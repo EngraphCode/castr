@@ -7,12 +7,12 @@
  * @module template-context-ir.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from './template-context.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
@@ -21,7 +21,7 @@ const getZodClientTemplateContext = (
  */
 describe('getZodClientTemplateContext - IR integration', () => {
   test('should populate _ir field with CastrDocument', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {
@@ -66,7 +66,7 @@ describe('getZodClientTemplateContext - IR integration', () => {
   });
 
   test('should populate IR with schemas from components', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {},
@@ -107,7 +107,7 @@ describe('getZodClientTemplateContext - IR integration', () => {
   });
 
   test('should populate IR with operations from paths', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {

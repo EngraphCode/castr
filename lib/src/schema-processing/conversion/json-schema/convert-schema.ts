@@ -1,4 +1,8 @@
-import { isReferenceObject, type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
+import {
+  isReferenceObject,
+  type ReferenceObject,
+  type SchemaObject,
+} from '../../../shared/openapi-types.js';
 
 import {
   applyArrayKeywords,
@@ -108,24 +112,11 @@ function extractSharedKeywords(schema: SchemaObject): MutableJsonSchema {
     setKeyword(shared, 'writeOnly', value);
   });
 
-  const examples = normaliseExamples(schema.examples);
-  if (examples !== undefined) {
-    setKeyword(shared, 'examples', examples);
+  if (Array.isArray(schema.examples)) {
+    setKeyword(shared, 'examples', schema.examples);
   }
 
   return shared;
-}
-
-function normaliseExamples(examples: SchemaObject['examples']): unknown[] | undefined {
-  if (!Array.isArray(examples)) {
-    return undefined;
-  }
-
-  const values: unknown[] = [];
-  for (const example of examples) {
-    values.push(isExampleObject(example) ? example.value : example);
-  }
-  return values;
 }
 
 function cloneWithoutSharedKeywords(schema: SchemaObject): SchemaObject {
@@ -144,10 +135,6 @@ function cloneWithoutSharedKeywords(schema: SchemaObject): SchemaObject {
   delete clone.unevaluatedProperties;
   delete clone.dependentSchemas;
   return clone;
-}
-
-function isExampleObject(candidate: unknown): candidate is { value: unknown } {
-  return typeof candidate === 'object' && candidate !== null && 'value' in candidate;
 }
 
 function rewriteComponentRef(ref: string, refField: '$ref' | '$dynamicRef'): string {

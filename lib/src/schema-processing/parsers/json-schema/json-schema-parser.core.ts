@@ -5,7 +5,7 @@
  * normalizer) and produces CastrSchema IR nodes.
  *
  * **Library Types:**
- * Extends SchemaObject from openapi3-ts/oas31 (JSON Schema 2020-12).
+ * Works from JsonSchema2020, which extends the shared OpenAPI seam for JSON Schema 2020-12.
  *
  * @module parsers/json-schema/json-schema-parser.core
  */

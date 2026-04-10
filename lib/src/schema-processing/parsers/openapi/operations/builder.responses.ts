@@ -10,17 +10,17 @@ import type {
   ResponsesObject,
   ResponseObject,
   ReferenceObject,
-  HeaderObject,
   MediaTypeObject,
-} from 'openapi3-ts/oas31';
+} from '../../../../shared/openapi-types.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { isReferenceObject } from '../../../../validation/type-guards.js';
-import { buildCastrSchema } from '../builder.core.js';
 import {
   assertNoCircularComponentRef,
   parseComponentNameForType,
 } from '../components/builder.component-ref-resolution.js';
-import type { CastrResponse, IRMediaType, IRResponseHeader } from '../../../ir/index.js';
+import type { CastrResponse, IRMediaTypeEntry } from '../../../ir/index.js';
+import { buildIRMediaTypeEntries } from './builder.media-types.js';
+import { buildResponseHeaders } from './responses/index.js';
 
 const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses';
 
@@ -203,118 +203,8 @@ function buildConcreteResponse(
  */
 function buildResponseContent(
   statusCode: string,
-  content: Record<string, MediaTypeObject>,
+  content: Record<string, ReferenceObject | MediaTypeObject>,
   context: IRBuildContext,
-): Record<string, IRMediaType> {
-  const result: Record<string, IRMediaType> = {};
-
-  for (const [mediaType, mediaTypeObj] of Object.entries(content)) {
-    const mediaContent = buildResponseMediaType(statusCode, mediaType, mediaTypeObj, context);
-    if (mediaContent) {
-      result[mediaType] = mediaContent;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Build IR media type object for response content.
- * @internal
- */
-function buildResponseMediaType(
-  statusCode: string,
-  mediaType: string,
-  mediaTypeObj: MediaTypeObject,
-  context: IRBuildContext,
-): IRMediaType | undefined {
-  if (!mediaTypeObj.schema) {
-    return undefined;
-  }
-
-  const responseContext: IRBuildContext = {
-    ...context,
-    path: [...context.path, 'responses', statusCode, mediaType],
-  };
-
-  const irMediaType: IRMediaType = {
-    schema: buildCastrSchema(mediaTypeObj.schema, responseContext),
-  };
-
-  if (mediaTypeObj.example !== undefined) {
-    irMediaType.example = mediaTypeObj.example;
-  }
-
-  if (mediaTypeObj.examples) {
-    irMediaType.examples = mediaTypeObj.examples;
-  }
-
-  return irMediaType;
-}
-
-/**
- * Build response headers mapping.
- * @internal
- */
-function buildResponseHeaders(
-  headers: Record<string, HeaderObject | ReferenceObject>,
-  context: IRBuildContext,
-): Record<string, IRResponseHeader> {
-  const result: Record<string, IRResponseHeader> = {};
-
-  for (const [headerName, headerObj] of Object.entries(headers)) {
-    const irHeader = buildResponseHeader(headerName, headerObj, context);
-    if (irHeader) {
-      result[headerName] = irHeader;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Build IRResponseHeader for a single response header.
- * Extracts all HeaderObject fields including description, required, deprecated.
- * @internal
- */
-function buildResponseHeader(
-  headerName: string,
-  headerObj: HeaderObject | ReferenceObject,
-  context: IRBuildContext,
-): IRResponseHeader | undefined {
-  if (isReferenceObject(headerObj)) {
-    return undefined;
-  }
-
-  if (!headerObj.schema) {
-    return undefined;
-  }
-
-  const headerContext: IRBuildContext = {
-    ...context,
-    path: [...context.path, 'headers', headerName],
-  };
-
-  const irHeader: IRResponseHeader = {
-    schema: buildCastrSchema(headerObj.schema, headerContext),
-  };
-
-  // Preserve all HeaderObject fields that were previously lost
-  if (headerObj.description !== undefined) {
-    irHeader.description = headerObj.description;
-  }
-  if (headerObj.required !== undefined) {
-    irHeader.required = headerObj.required;
-  }
-  if (headerObj.deprecated !== undefined) {
-    irHeader.deprecated = headerObj.deprecated;
-  }
-  if (headerObj.example !== undefined) {
-    irHeader.example = headerObj.example;
-  }
-  if (headerObj.examples !== undefined) {
-    irHeader.examples = headerObj.examples;
-  }
-
-  return irHeader;
+): Record<string, IRMediaTypeEntry> {
+  return buildIRMediaTypeEntries(content, context, [...context.path, 'responses', statusCode]);
 }

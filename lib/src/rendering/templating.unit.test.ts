@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import type { TemplateContext } from '../schema-processing/context/index.js';
 import { CastrSchemaProperties } from '../schema-processing/ir/index.js';
 import { generateZodClientFromOpenAPI } from './generate-from-context.js';
@@ -11,7 +11,7 @@ function sortPaths(paths: string[]): string[] {
   return [...paths].sort((left, right) => left.localeCompare(right));
 }
 
-function createGroupedSpec(pathOrder: 'alpha-first' | 'zeta-first'): OpenAPIObject {
+function createGroupedSpec(pathOrder: 'alpha-first' | 'zeta-first'): OpenAPIDocument {
   const alphaPathItem = {
     get: {
       operationId: 'listAlphaUsers',

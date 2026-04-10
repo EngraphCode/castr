@@ -8,7 +8,7 @@
  * 1. Use official OpenAPI JSON schemas from .agent/reference/openapi_schema/
  * 2. Validate test documents against official schemas using AJV
  * 3. Verify our code handles compliant documents correctly
- * 4. Use openapi3-ts types exclusively (no duplication)
+ * 4. Use the shared OpenAPI seam types exclusively (no duplication)
  *
  * References:
  * - OAS 3.0.3: https://spec.openapis.org/oas/v3.0.3
@@ -21,7 +21,7 @@ import Ajv04Factory from 'ajv-draft-04/dist/index.js';
 import addFormats from 'ajv-formats/dist/index.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPI30InputDocument } from '../../src/shared/openapi-types.js';
 import type { ValidateFunction } from 'ajv';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
@@ -58,7 +58,7 @@ describe('openapi-spec-compliance', () => {
 
   describe('OAS 3.0.x compliance', () => {
     test('minimal valid document', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: {
           title: 'Minimal API',
@@ -81,7 +81,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('parameter with schema (not content)', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -115,7 +115,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('parameter with content (not schema)', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -157,7 +157,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('MediaType.schema with $ref', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -202,7 +202,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('Schema composition (allOf, oneOf, anyOf)', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -238,7 +238,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('nullable property (OAS 3.0 style)', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -278,7 +278,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('enum values', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -314,7 +314,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('response with multiple status codes', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -364,7 +364,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('array schema with items', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {
@@ -405,7 +405,7 @@ describe('openapi-spec-compliance', () => {
     });
 
     test('schema with additionalProperties is rejected as non-strict', async () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
         paths: {

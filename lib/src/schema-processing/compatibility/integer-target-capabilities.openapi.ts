@@ -1,15 +1,15 @@
-import type {
-  CallbackObject,
-  HeaderObject,
-  MediaTypeObject,
-  OperationObject,
-  ParameterObject,
-  PathItemObject,
-  ReferenceObject,
-  RequestBodyObject,
-  ResponseObject,
-} from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type CallbackObject,
+  type HeaderObject,
+  type MediaTypeObject,
+  type OperationObject,
+  type ParameterObject,
+  type PathItemObject,
+  type ReferenceObject,
+  type RequestBodyObject,
+  type ResponseObject,
+  isReferenceObject,
+} from '../../shared/openapi-types.js';
 import type { CastrDocument } from '../ir/index.js';
 import {
   markOpenApiNodeSeen,
@@ -27,6 +27,21 @@ const OPENAPI_HTTP_METHODS = [
   'patch',
   'trace',
 ] as const satisfies readonly (keyof PathItemObject)[];
+
+const PATH_ITEM_MEMBER_KEYS = [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+  'query',
+  'additionalOperations',
+  'parameters',
+  'servers',
+] as const;
 
 function visitRecordValues<T>(
   values: Record<string, T> | undefined,
@@ -52,13 +67,25 @@ function visitMapValues<T>(values: Map<string, T> | undefined, visitor: (value: 
 }
 
 function visitContentSchemas(
-  content: Record<string, MediaTypeObject> | undefined,
+  content: Record<string, ReferenceObject | MediaTypeObject> | undefined,
   seen: WeakSet<object>,
   visitSchema: OpenApiSchemaVisitor,
 ): void {
-  visitRecordValues(content, (mediaType) =>
-    visitOpenApiSchemaNode(mediaType.schema, seen, visitSchema),
-  );
+  visitRecordValues(content, (mediaType) => {
+    if (!isReferenceObject(mediaType) && mediaType.schema) {
+      visitOpenApiSchemaNode(mediaType.schema, seen, visitSchema);
+    }
+  });
+}
+
+function hasPathItemMembers(pathItem: PathItemObject | ReferenceObject): boolean {
+  return PATH_ITEM_MEMBER_KEYS.some((key) => key in pathItem);
+}
+
+function isStandalonePathItemReference(
+  pathItem: PathItemObject | ReferenceObject,
+): pathItem is ReferenceObject {
+  return isReferenceObject(pathItem) && !hasPathItemMembers(pathItem);
 }
 
 function visitHeaderNode(
@@ -171,7 +198,7 @@ function visitPathItemNode(
 ): void {
   if (
     pathItem === undefined ||
-    isReferenceObject(pathItem) ||
+    isStandalonePathItemReference(pathItem) ||
     !markOpenApiNodeSeen(pathItem, seen)
   ) {
     return;
@@ -201,6 +228,11 @@ export function visitDocumentOpenApiSchemas(
         break;
       case 'pathItem':
         visitPathItemNode(component.pathItem, seen, visitSchema);
+        break;
+      case 'mediaType':
+        if (!isReferenceObject(component.mediaType) && component.mediaType.schema) {
+          visitOpenApiSchemaNode(component.mediaType.schema, seen, visitSchema);
+        }
         break;
       default:
         break;

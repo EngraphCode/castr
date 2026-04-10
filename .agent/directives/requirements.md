@@ -241,7 +241,7 @@ The IR MUST be capable of representing EVERY field listed in sections 2 and 3 wh
 
 **Verified Complete:**
 
-- ✅ `info.summary`, `license.identifier` — uses raw InfoObject from openapi3-ts
+- ✅ `info.summary`, `license.identifier` — uses explicit interfaces from our canonical shared module
 - ✅ `webhooks`, `jsonSchemaDialect`, `pathItems` — present in IR
 - ✅ `mutualTLS` — uses raw SecuritySchemeObject
 - ✅ `externalDocs` — at document/operation level

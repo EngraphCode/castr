@@ -3,7 +3,7 @@
  *
  * These tests verify that `inlineJsonSchemaRefsFromIR` produces the same
  * output as `inlineJsonSchemaRefs`, but uses `CastrDocument.components`
- * instead of `OpenAPIObject.components.schemas`.
+ * instead of `OpenAPIDocument.components.schemas`.
  *
  * @module template-context.mcp.inline-json-schema.from-ir.test
  */

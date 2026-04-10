@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated April 2, 2026)  
+**Date:** January 24, 2026 (Updated April 10, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -35,7 +35,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The primary active atomic plan is [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers.
+The primary active plan is [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers. The Phase A₂ closure record now lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md).
 
 Current product truth:
 
@@ -44,7 +44,9 @@ Current product truth:
 - OpenAPI 3.1.x remains a documented Scalar bridge input, not a peer output target
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
-- the full repo-root gate sweep was last recorded green on Thursday, 2 April 2026 via `pnpm check:ci`
+- Phase A₂ (type migration from `openapi3-ts` to `@scalar/openapi-types`) completed on Friday, 10 April 2026. The close-out resolved A1 and A2-A6, introduced a genuinely nested raw OpenAPI input seam, restored lossless `components.mediaTypes` and ref-bearing `components.pathItems` handling through IR, removed the verified IR media-type barrel cycle, cleared the duplicate CLI guard export plus stale `knip` ignore, strengthened dependency-exit guards, and closed the reviewer loop with no open findings.
+- `pnpm qg`, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green on Friday, 10 April 2026. Before feature phases B/C resume, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up.
+- the immediate next slice is a read-only reviewer/domain-expert pass over the recent Phase A₂ close-out plus docs-consolidation state, then MCP no-params follow-up triage, then feature phases B/C
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -445,7 +447,7 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 | Format          | Input | Output | Status / Notes                                                                                                                     |
 | --------------- | :---: | :----: | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output; `components.requestBodies` egress implemented in RC-4.1                                    |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.2.0 output; `components.requestBodies` egress implemented in RC-4.1                                  |
 | **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4                                                                                       |
 | **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                                                                                                 |
 | **JSON Schema** |  ✅   |   ✅   | Full Draft 07 / 2020-12 document parser, writer, and standalone round-trip proofs; `$dynamicRef`/`$dynamicAnchor` Zod/TS fail-fast |

@@ -5,7 +5,11 @@
  */
 
 import { describe, test, expect } from 'vitest';
-import type { RequestBodyObject, ReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type RequestBodyObject,
+  type ReferenceObject,
+  isReferenceObject,
+} from '../../../../shared/openapi-types.js';
 import { buildIRRequestBody } from './builder.request-body.js';
 import type { IRBuildContext } from '../builder.types.js';
 
@@ -48,13 +52,20 @@ describe('buildIRRequestBody - encoding extraction', () => {
     };
 
     const result = buildIRRequestBody(requestBody, createContext());
+    const mediaType = result.content['multipart/form-data'];
 
-    expect(result.content['multipart/form-data']).toBeDefined();
-    expect(result.content['multipart/form-data']?.encoding).toBeDefined();
-    expect(result.content['multipart/form-data']?.encoding?.['profileImage']).toBeDefined();
-    expect(result.content['multipart/form-data']?.encoding?.['profileImage']?.['contentType']).toBe(
-      'image/png, image/jpeg',
-    );
+    expect(mediaType).toBeDefined();
+    expect(
+      mediaType && !isReferenceObject(mediaType) ? mediaType.encoding : undefined,
+    ).toBeDefined();
+    expect(
+      mediaType && !isReferenceObject(mediaType) ? mediaType.encoding?.['profileImage'] : undefined,
+    ).toBeDefined();
+    expect(
+      mediaType && !isReferenceObject(mediaType)
+        ? mediaType.encoding?.['profileImage']?.['contentType']
+        : undefined,
+    ).toBe('image/png, image/jpeg');
   });
 
   test('handles request body without encoding', () => {
@@ -73,9 +84,12 @@ describe('buildIRRequestBody - encoding extraction', () => {
     };
 
     const result = buildIRRequestBody(requestBody, createContext());
+    const mediaType = result.content['application/json'];
 
-    expect(result.content['application/json']).toBeDefined();
-    expect(result.content['application/json']?.encoding).toBeUndefined();
+    expect(mediaType).toBeDefined();
+    expect(
+      mediaType && !isReferenceObject(mediaType) ? mediaType.encoding : undefined,
+    ).toBeUndefined();
   });
 
   test('throws on malformed requestBody component refs with actionable context', () => {

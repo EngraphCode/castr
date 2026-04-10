@@ -16,7 +16,7 @@ import type {
   ParameterObject,
   ReferenceObject,
   ServerObject,
-} from 'openapi3-ts/oas31';
+} from '../../../shared/openapi-types.js';
 import type { CastrSchema, CastrSchemaNode, IRHttpMethod } from './schema.js';
 
 /**
@@ -108,11 +108,14 @@ export interface CastrOperation {
    *   query: [pageParam, limitParam],
    *   path: [idParam],
    *   header: [authParam],
-   *   cookie: []
+   *   cookie: [],
+   *   querystring: []
    * }
    * ```
    */
-  parametersByLocation: Record<'query' | 'path' | 'header' | 'cookie', CastrParameter[]>;
+  parametersByLocation: Record<'query' | 'path' | 'header' | 'cookie', CastrParameter[]> & {
+    querystring?: CastrParameter[];
+  };
 
   /**
    * Optional request body definition.
@@ -211,7 +214,7 @@ export interface CastrParameter {
   /**
    * Parameter location discriminator.
    */
-  in: 'path' | 'query' | 'header' | 'cookie';
+  in: 'path' | 'query' | 'header' | 'cookie' | 'querystring';
 
   /**
    * Whether the parameter is required.
@@ -221,9 +224,15 @@ export interface CastrParameter {
 
   /**
    * Parameter schema definition.
-   * Can be a primitive, object, array, or reference.
+   * Derived effective schema for existing consumers. When `content` is present,
+   * that content map is the lossless source of truth.
    */
   schema: CastrSchema;
+
+  /**
+   * Lossless parameter content map for content-based parameters.
+   */
+  content?: Record<string, IRMediaTypeEntry>;
 
   /**
    * Rich metadata for code generation.
@@ -296,11 +305,19 @@ export interface IRRequestBody {
    * Content type to schema mapping.
    * Key is media type (e.g., 'application/json').
    */
-  content: Record<string, IRMediaType>;
+  content: Record<string, IRMediaTypeEntry>;
 }
 
 /**
- * Media type definition with schema.
+ * Lossless content entry for request/response/header/parameter content maps.
+ *
+ * Inline media types are converted to IR structures; reusable media-type refs
+ * are preserved as `ReferenceObject`.
+ */
+export type IRMediaTypeEntry = IRMediaType | ReferenceObject;
+
+/**
+ * Media type definition with optional schema.
  *
  * Represents a content type and its associated schema for request/response bodies.
  *
@@ -308,9 +325,9 @@ export interface IRRequestBody {
  */
 export interface IRMediaType {
   /**
-   * Schema for this media type.
+   * Schema for this media type, when one is present.
    */
-  schema: CastrSchema;
+  schema?: CastrSchema;
 
   /**
    * Example value for this media type.
@@ -371,7 +388,7 @@ export interface CastrResponse {
   /**
    * Content type to schema mapping (if multiple content types).
    */
-  content?: Record<string, IRMediaType>;
+  content?: Record<string, IRMediaTypeEntry>;
 
   /**
    * Response headers.
@@ -399,8 +416,15 @@ export interface CastrResponse {
 export interface IRResponseHeader {
   /**
    * Header schema definition.
+   * Derived effective schema for existing consumers. When `content` is present,
+   * that content map is the lossless source of truth.
    */
   schema: CastrSchema;
+
+  /**
+   * Lossless header content map for content-based headers.
+   */
+  content?: Record<string, IRMediaTypeEntry>;
 
   /**
    * Header description for documentation.

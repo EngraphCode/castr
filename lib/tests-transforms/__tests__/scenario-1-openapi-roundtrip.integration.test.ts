@@ -171,6 +171,9 @@ describe('OpenAPI Document: Information Preservation', () => {
         const httpMethods = ['get', 'post', 'put', 'delete', 'patch', 'head', 'options', 'trace'];
 
         for (const [pathKey, pathItem] of Object.entries(paths)) {
+          if (!pathItem) {
+            continue;
+          }
           for (const method of httpMethods) {
             if (method in pathItem) {
               operations.push(`${method.toUpperCase()} ${pathKey}`);

@@ -1,4 +1,4 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject, SchemaObject } from '../openapi-types.js';
 
 import type { PrimitiveSchemaType } from '../utils/schema/index.js';
 import { isPrimitiveSchemaType } from '../utils/schema/index.js';

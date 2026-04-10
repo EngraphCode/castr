@@ -7,10 +7,13 @@
  * @module
  */
 
-import type { ComponentsObject, ParameterObject, ResponseObject } from 'openapi3-ts/oas31';
+import type { ComponentsObject } from '../../../../shared/openapi-types.js';
 import { compareComponentsForDeterminism } from './openapi-writer.components.ordering.js';
 import { writeOpenApiSchema } from '../schema/openapi-writer.schema.js';
 import { writeRequestBodyComponent } from './openapi-writer.request-body.js';
+import { writeResponseObject } from '../operations/openapi-writer.bodies.js';
+import { writeParameterObject } from '../openapi-writer.parameters.js';
+import { writeMediaTypeEntry } from '../openapi-writer.media-types.js';
 import type {
   IRComponent,
   CastrSchemaComponent,
@@ -28,6 +31,7 @@ const COMPONENT_TYPE_HEADER = 'header';
 const COMPONENT_TYPE_LINK = 'link';
 const COMPONENT_TYPE_CALLBACK = 'callback';
 const COMPONENT_TYPE_PATH_ITEM = 'pathItem';
+const COMPONENT_TYPE_MEDIA_TYPE = 'mediaType';
 const COMPONENT_TYPE_EXAMPLE = 'example';
 
 /**
@@ -54,47 +58,10 @@ function isParameterComponent(component: IRComponent): component is CastrParamet
   return component.type === COMPONENT_TYPE_PARAMETER;
 }
 
-/**
- * Type guard for response components.
- * @internal
- */
-function isResponseComponent(component: IRComponent): component is CastrResponseComponent {
-  return component.type === COMPONENT_TYPE_RESPONSE;
-}
-
-/**
- * Converts a parameter component to OpenAPI ParameterObject.
- * @internal
- */
-function writeParameterComponent(component: CastrParameterComponent): ParameterObject {
-  const param: ParameterObject = {
-    name: component.parameter.name,
-    in: component.parameter.in,
-    required: component.parameter.required,
-    schema: writeOpenApiSchema(component.parameter.schema),
-  };
-  if (component.parameter.description !== undefined) {
-    param.description = component.parameter.description;
-  }
-  return param;
-}
-
-/**
- * Converts a response component to OpenAPI ResponseObject.
- * @internal
- */
-function writeResponseComponent(component: CastrResponseComponent): ResponseObject {
-  const response: ResponseObject = {
-    description: component.response.description ?? '',
-  };
-  if (component.response.schema !== undefined) {
-    response.content = {
-      'application/json': {
-        schema: writeOpenApiSchema(component.response.schema),
-      },
-    };
-  }
-  return response;
+function writeParameterComponent(
+  component: CastrParameterComponent,
+): ReturnType<typeof writeParameterObject> {
+  return writeParameterObject(component.parameter);
 }
 
 /**
@@ -141,7 +108,7 @@ function addResponseComponent(result: ComponentsObject, component: CastrResponse
   if (result.responses === undefined) {
     result.responses = {};
   }
-  result.responses[component.name] = writeResponseComponent(component);
+  result.responses[component.name] = writeResponseObject(component.response);
 }
 
 /**
@@ -215,6 +182,20 @@ function addExampleComponent(
 }
 
 /**
+ * Adds a media type component to the result.
+ * @internal
+ */
+function addMediaTypeComponent(
+  result: ComponentsObject,
+  component: IRComponent & { type: 'mediaType' },
+): void {
+  if (result.mediaTypes === undefined) {
+    result.mediaTypes = {};
+  }
+  result.mediaTypes[component.name] = writeMediaTypeEntry(component.mediaType);
+}
+
+/**
  * Type guard for header components.
  * @internal
  */
@@ -248,6 +229,16 @@ function isPathItemComponent(
   component: IRComponent,
 ): component is IRComponent & { type: 'pathItem' } {
   return component.type === COMPONENT_TYPE_PATH_ITEM;
+}
+
+/**
+ * Type guard for media type components.
+ * @internal
+ */
+function isMediaTypeComponent(
+  component: IRComponent,
+): component is IRComponent & { type: 'mediaType' } {
+  return component.type === COMPONENT_TYPE_MEDIA_TYPE;
 }
 
 /**
@@ -285,7 +276,7 @@ const COMPONENT_TYPE_HANDLERS: Record<
     }
   },
   response: (result, component) => {
-    if (isResponseComponent(component)) {
+    if (component.type === COMPONENT_TYPE_RESPONSE) {
       addResponseComponent(result, component);
     }
   },
@@ -307,6 +298,11 @@ const COMPONENT_TYPE_HANDLERS: Record<
   pathItem: (result, component) => {
     if (isPathItemComponent(component)) {
       addPathItemComponent(result, component);
+    }
+  },
+  mediaType: (result, component) => {
+    if (isMediaTypeComponent(component)) {
+      addMediaTypeComponent(result, component);
     }
   },
   example: (result, component) => {

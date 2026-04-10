@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import {
   assertAndExtractContent,
   extractContent,
@@ -27,7 +27,7 @@ import {
 describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () => {
   it('should order schemas by dependencies (Address before User)', async () => {
     // Arrange: User depends on Address
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -85,7 +85,7 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
 
   it('should handle multi-level dependencies (A → B → C)', async () => {
     // Arrange: Company depends on User, User depends on Address
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -150,7 +150,7 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
 
   it('should handle schemas with multiple dependencies', async () => {
     // Arrange: Person depends on both Address and Contact
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -216,7 +216,7 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
 
   it('should handle array dependencies', async () => {
     // Arrange: Group depends on User (via array)
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -277,7 +277,7 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
 describe('Characterisation: Schema Dependency Resolution - Circular Dependencies', () => {
   it('should handle circular references (Node → Node)', async () => {
     // Arrange: TreeNode references itself
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -328,7 +328,7 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 
   it('should handle mutual circular references (A → B → A)', async () => {
     // Arrange: Author references Book, Book references Author
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -390,7 +390,7 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 
   it('should handle circular references in allOf', async () => {
     // Arrange: Node with allOf that includes circular reference
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -450,7 +450,7 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 describe('Characterisation: Schema Dependency Resolution - Additional Dependency Scenarios', () => {
   it('should reject schema dependencies through schema-valued additionalProperties', async () => {
     // Arrange: schema-valued additionalProperties encodes a non-strict catchall object.
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -496,7 +496,7 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {
     // Arrange: Union schema with multiple referenced schemas
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -559,7 +559,7 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
 
   it('should handle complex dependency diamond (A→B, A→C, B→D, C→D)', async () => {
     // Arrange: Diamond dependency pattern
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {

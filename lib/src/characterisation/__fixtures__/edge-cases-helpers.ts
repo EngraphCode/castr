@@ -1,13 +1,13 @@
-import type { OpenAPIObject, ResponsesObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, ResponsesObject, SchemaObject } from '../../shared/openapi-types.js';
 
 /**
  * Creates a minimal OpenAPI spec for testing edge cases.
  *
  * @param overrides - Partial spec to merge with defaults
- * @returns Complete OpenAPIObject ready for testing
+ * @returns Complete OpenAPIDocument ready for testing
  */
-export function createMinimalSpec(overrides?: Partial<OpenAPIObject>): OpenAPIObject {
-  const defaultSpec: OpenAPIObject = {
+export function createMinimalSpec(overrides?: Partial<OpenAPIDocument>): OpenAPIDocument {
+  const defaultSpec: OpenAPIDocument = {
     openapi: '3.0.0',
     info: { title: 'Test API', version: '1.0.0' },
     paths: {},
@@ -21,13 +21,13 @@ export function createMinimalSpec(overrides?: Partial<OpenAPIObject>): OpenAPIOb
  * @param schemaName - Name of the schema
  * @param schema - Schema definition
  * @param paths - Optional paths to include
- * @returns Complete OpenAPIObject
+ * @returns Complete OpenAPIDocument
  */
 export function createSpecWithSchema(
   schemaName: string,
   schema: SchemaObject,
-  paths?: OpenAPIObject['paths'],
-): OpenAPIObject {
+  paths?: OpenAPIDocument['paths'],
+): OpenAPIDocument {
   return createMinimalSpec({
     components: {
       schemas: {
@@ -43,12 +43,12 @@ export function createSpecWithSchema(
  *
  * @param schemaDefinitions - Object mapping schema names to schema definitions
  * @param paths - Optional paths to include
- * @returns Complete OpenAPIObject
+ * @returns Complete OpenAPIDocument
  */
 export function createSpecWithSchemas(
   schemaDefinitions: Record<string, SchemaObject>,
-  paths?: OpenAPIObject['paths'],
-): OpenAPIObject {
+  paths?: OpenAPIDocument['paths'],
+): OpenAPIDocument {
   return createMinimalSpec({
     components: {
       schemas: schemaDefinitions,

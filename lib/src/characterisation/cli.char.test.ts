@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, rmSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { fileURLToPath } from 'node:url';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { assertOpenApiObject } from '../../tests-helpers/openapi-assertions.js';
@@ -25,8 +25,8 @@ const TEST_OUTPUT_DIR = join(thisDir, 'test-output-cli');
 /**
  * Helper: Create a test OpenAPI spec file
  */
-function createTestSpec(filename: string, spec?: Partial<OpenAPIObject>): string {
-  const defaultSpec: OpenAPIObject = {
+function createTestSpec(filename: string, spec?: Partial<OpenAPIDocument>): string {
+  const defaultSpec: OpenAPIDocument = {
     openapi: '3.0.0',
     info: { title: 'Test API', version: '1.0.0' },
     components: {
@@ -219,7 +219,7 @@ describe('Characterisation: CLI Behavior', () => {
     });
 
     it('should emit MCP manifest with --emit-mcp-manifest option', async () => {
-      const manifestSpec: Partial<OpenAPIObject> = {
+      const manifestSpec: Partial<OpenAPIDocument> = {
         openapi: '3.1.0',
         info: { title: 'Profiles', version: '1.0.0' },
         components: {
@@ -399,7 +399,7 @@ describe('Characterisation: CLI Behavior', () => {
             },
           },
         },
-      } satisfies Partial<OpenAPIObject>;
+      } satisfies Partial<OpenAPIDocument>;
 
       const inputPath = createTestSpec('complex-test.json', complexSpec);
       const outputPath = join(TEST_OUTPUT_DIR, 'complex-output.ts');

@@ -12,24 +12,25 @@
  * @module template-context.mcp.parameters
  */
 
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../../shared/openapi-types.js';
 import { pathParamToVariableName } from '../../../shared/utils/index.js';
 import type { CastrSchema, CastrOperation, CastrParameter } from '../../ir/index.js';
 import type { MutableJsonSchema } from '../../conversion/json-schema/index.js';
 import type { CastrSchemaPropertiesLike } from '../../../shared/type-utils/castr-schema-properties.js';
 import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.js';
 
-export type SupportedParameterLocation = 'path' | 'query' | 'header';
+export type SupportedParameterLocation = 'path' | 'query' | 'queryString' | 'header';
 
 const PARAM_LOCATION_PATH = 'path';
 const PARAM_LOCATION_QUERY = 'query';
+const PARAM_LOCATION_QUERY_STRING = 'queryString';
 const PARAM_LOCATION_HEADER = 'header';
 const SCHEMA_TYPE_OBJECT = 'object';
 const SCHEMA_KEY_METADATA = 'metadata';
 
 /**
  * Accumulator for OpenAPI-based parameter extraction.
- * Uses SchemaObject from openapi3-ts.
+ * Uses SchemaObject from the shared OpenAPI seam.
  *
  * Note: Prefer IRParameterAccumulator for IR-based extraction in new code.
  */
@@ -76,7 +77,7 @@ export const createParameterSectionSchema = (group: ParameterAccumulator): Schem
  * by the IR builder, eliminating the need to access raw OpenAPI.
  *
  * @param operation - The CastrOperation (or partial with parametersByLocation)
- * @returns Parameter groups by location (path, query, header)
+ * @returns Parameter groups by location (path, query, queryString, header)
  *
  * @example
  * ```typescript
@@ -121,10 +122,14 @@ export const collectParameterGroupsFromIR = (
     groups[location] = accumulator;
   };
 
-  // Process only supported locations (path, query, header)
+  // Process only supported locations (path, query, queryString, header)
   // Cookie is intentionally excluded as MCP doesn't support it
   processLocationGroup(PARAM_LOCATION_PATH, operation.parametersByLocation.path);
   processLocationGroup(PARAM_LOCATION_QUERY, operation.parametersByLocation.query);
+  processLocationGroup(
+    PARAM_LOCATION_QUERY_STRING,
+    operation.parametersByLocation.querystring ?? [],
+  );
   processLocationGroup(PARAM_LOCATION_HEADER, operation.parametersByLocation.header);
 
   return groups;

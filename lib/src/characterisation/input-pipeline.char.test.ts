@@ -19,15 +19,19 @@
 import path from 'node:path';
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { assertAndExtractContent, generateZodClientFromOpenAPI } from './test-utils.js';
+import {
+  assertAndExtractContent,
+  generateZodClientFromOpenAPI,
+  generateZodClientFromOpenAPIFromUnknownBoundary,
+} from './test-utils.js';
 import { loadOpenApiDocument } from '../shared/load-openapi-document/index.js';
 
 /**
  * Minimal valid OpenAPI 3.0 spec for testing.
  */
-function createMinimalSpec(openapi = '3.0.0'): OpenAPIObject {
+function createMinimalSpec(openapi = '3.0.0'): OpenAPIDocument {
   return {
     openapi,
     info: { title: 'Test API', version: '1.0.0' },
@@ -60,7 +64,7 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
     expect(content).toContain('export');
   });
 
-  it('should accept in-memory OpenAPIObject via openApiDoc parameter', async () => {
+  it('should accept in-memory OpenAPIDocument via openApiDoc parameter', async () => {
     const spec = createMinimalSpec();
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
@@ -85,8 +89,7 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
   it('should reject when both input and openApiDoc are provided', async () => {
     const spec = createMinimalSpec();
     await expect(
-      // @ts-expect-error TS2345 - Testing runtime validation when both mutually exclusive inputs are provided
-      generateZodClientFromOpenAPI({
+      generateZodClientFromOpenAPIFromUnknownBoundary({
         input: './examples/openapi/v3.0/petstore.yaml',
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -142,7 +145,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
     });
 
     it('should canonicalise OpenAPI 3.1.0 bridge input to 3.2.0 in helper', async () => {
-      const spec31: OpenAPIObject = {
+      const spec31: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
@@ -155,7 +158,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
     });
 
     it('should accept native OpenAPI 3.2.0 in helper', async () => {
-      const spec32: OpenAPIObject = {
+      const spec32: OpenAPIDocument = {
         openapi: '3.2.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
@@ -173,20 +176,19 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       };
 
       // Test behavior (rejection), not implementation (specific error message)
-      // @ts-expect-error TS2345 - Testing invalid spec boundary validation in prepareOpenApiDocument
       await expect(prepareOpenApiDocument(malformed)).rejects.toThrow();
     });
   });
 
   describe('Type Boundary Handling', () => {
-    it('should return OpenAPIObject from file path', async () => {
+    it('should return OpenAPIDocument from file path', async () => {
       const spec = await prepareOpenApiDocument('./examples/openapi/v3.0/petstore.yaml');
-      // TypeScript should infer this as OpenAPIObject
-      const typed: OpenAPIObject = spec;
+      // TypeScript should infer this as OpenAPIDocument
+      const typed: OpenAPIDocument = spec;
       expect(typed.openapi).toBe('3.2.0');
     });
 
-    it('should return OpenAPIObject from URL', async () => {
+    it('should return OpenAPIDocument from URL', async () => {
       // Note: This test documents URL object support, but actual URL fetching
       // requires a real server. SwaggerParser handles URLs internally.
       // This test documents that URL objects are converted to strings correctly.
@@ -196,10 +198,10 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       await expect(prepareOpenApiDocument(testUrl)).rejects.toThrow();
     });
 
-    it('should return OpenAPIObject from in-memory object', async () => {
+    it('should return OpenAPIDocument from in-memory object', async () => {
       const inputSpec = createMinimalSpec();
       const spec = await prepareOpenApiDocument(inputSpec);
-      const typed: OpenAPIObject = spec;
+      const typed: OpenAPIDocument = spec;
       expect(typed.openapi).toBe('3.2.0');
     });
   });

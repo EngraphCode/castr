@@ -119,6 +119,7 @@ function buildAllParameters(
   const parametersByLocation: CastrOperation['parametersByLocation'] = {
     path: [],
     query: [],
+    querystring: [],
     header: [],
     cookie: [],
   };

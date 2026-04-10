@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { EndpointDefinition } from '../../../endpoints/definition.types.js';
-import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
+import type { EndpointDefinition } from '../../../../endpoints/definition.types.js';
+import type { CastrSchema, CastrSchemaNode } from '../../../ir/index.js';
 import {
   normalizeSchemaNameForDependency,
   collectEndpointDependencies,
   processTransitiveDependenciesForGroup,
   type MinimalTemplateContext,
-} from './template-context.endpoints.dependencies.js';
+} from './index.js';
 
 function createSchemaNode(references: string[] = []): CastrSchemaNode {
   return {

@@ -1,10 +1,10 @@
-import { isReferenceObject } from 'openapi3-ts/oas31';
-import type {
-  ComponentsObject,
-  OpenAPIObject,
-  SecurityRequirementObject,
-  SecuritySchemeObject,
-} from 'openapi3-ts/oas31';
+import {
+  isReferenceObject,
+  type ComponentsObject,
+  type OpenAPIDocument,
+  type SecurityRequirementObject,
+  type SecuritySchemeObject,
+} from '../../../../shared/openapi-types.js';
 import {
   SECURITY_SELECTION_KIND_PUBLIC,
   SECURITY_SELECTION_KIND_REQUIREMENTS,
@@ -41,7 +41,7 @@ export function resolveOperationSecurity({
   document,
   operationSecurity,
 }: {
-  document: OpenAPIObject;
+  document: OpenAPIDocument;
   operationSecurity: SecurityRequirementObject[] | undefined;
 }): OperationSecurityMetadata {
   const securitySchemes = document.components?.securitySchemes ?? {};

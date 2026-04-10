@@ -5,7 +5,9 @@
  * without using type assertions.
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
+
+type UnknownObject = Record<PropertyKey, unknown>;
 
 /**
  * Valid group strategy values per CLI documentation
@@ -65,16 +67,37 @@ export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
   return typeof obj === 'object' && obj !== null;
 }
 
+function isObjectLike(value: unknown): value is UnknownObject {
+  return typeof value === 'object' && value !== null;
+}
+
+function hasStringProperty(obj: object, key: string): boolean {
+  return typeof Reflect.get(obj, key) === 'string';
+}
+
+function hasValidInfoObject(value: unknown): boolean {
+  return (
+    isObjectLike(value) && hasStringProperty(value, 'title') && hasStringProperty(value, 'version')
+  );
+}
+
+function hasValidServer(value: unknown): boolean {
+  return isObjectLike(value) && hasStringProperty(value, 'url');
+}
+
+function hasValidServers(value: unknown): boolean {
+  return value === undefined || (Array.isArray(value) && value.every(hasValidServer));
+}
+
 /**
  * Checks for required structural fields (openapi version string + info object).
  * @internal
  */
 function hasRequiredOpenApiFields(obj: object): boolean {
   return (
-    'openapi' in obj &&
-    typeof obj.openapi === 'string' &&
-    'info' in obj &&
-    typeof obj.info === 'object'
+    hasStringProperty(obj, 'openapi') &&
+    hasValidInfoObject(Reflect.get(obj, 'info')) &&
+    hasValidServers(Reflect.get(obj, 'servers'))
   );
 }
 
@@ -91,10 +114,10 @@ function hasDocumentContent(obj: object): boolean {
 }
 
 /**
- * Type guard to check if an object is a valid OpenAPIObject
+ * Type guard to check if an object is a valid OpenAPIDocument
  *
- * Performs minimal structural validation to distinguish SwaggerParser's OpenAPI type
- * from openapi3-ts's OpenAPIObject. Both are structurally compatible.
+ * Performs minimal structural validation to distinguish raw loader output from
+ * the canonical downstream OpenAPI document shape.
  *
  * Note: In OpenAPI 3.1+, `paths` is optional if `webhooks` is present. A valid
  * document can have just `webhooks` (e.g., webhook-example.yaml).
@@ -102,10 +125,14 @@ function hasDocumentContent(obj: object): boolean {
  * @param obj - Object to check (typically from SwaggerParser.bundle())
  * @returns True if the object has required OpenAPI properties
  */
-export function isOpenAPIObject(obj: unknown): obj is OpenAPIObject {
+export function isOpenAPIDocument(obj: unknown): obj is OpenAPIDocument {
   if (typeof obj !== 'object' || obj === null) {
     return false;
   }
 
   return hasRequiredOpenApiFields(obj) && hasDocumentContent(obj);
 }
+
+/**
+ * This module intentionally exports a single canonical document guard.
+ */

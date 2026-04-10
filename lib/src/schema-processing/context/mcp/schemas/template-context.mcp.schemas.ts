@@ -11,7 +11,7 @@
  */
 
 import type { Schema as JsonSchema } from 'ajv';
-import type { SchemaObject as OpenApiSchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject as OpenApiSchemaObject } from '../../../../shared/openapi-types.js';
 import type { OperationSecurityMetadata } from '../../../conversion/json-schema/index.js';
 
 const SCHEMA_TYPE_OBJECT = 'object';

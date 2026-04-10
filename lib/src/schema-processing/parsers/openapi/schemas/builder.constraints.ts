@@ -7,7 +7,7 @@
  * @internal
  */
 
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../../ir/index.js';
 

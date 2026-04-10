@@ -1,7 +1,7 @@
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { assertNotReference } from '../src/shared/component-access.js';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from '../src/shared/openapi-types.js';
+import { assertNotReference } from '../src/shared/openapi/component-access.js';
 import { isRecord } from '../src/shared/type-utils/types.js';
-import { isOpenAPIObject } from '../src/validation/cli-type-guards.js';
+import { isOpenAPIDocument } from '../src/validation/cli-type-guards.js';
 
 function describeValue(value: unknown): string {
   if (value === null) {
@@ -21,7 +21,7 @@ export function assertOpenApiObject(
   value: unknown,
   context: string,
 ): asserts value is OpenAPIObject {
-  if (!isOpenAPIObject(value)) {
+  if (!isOpenAPIDocument(value)) {
     throw new Error(`Expected OpenAPIObject in ${context}, received ${describeValue(value)}`);
   }
 }

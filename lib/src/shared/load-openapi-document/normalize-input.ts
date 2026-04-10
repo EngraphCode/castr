@@ -6,7 +6,7 @@
  */
 
 import path from 'node:path';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIInputDocument } from '../openapi-types.js';
 import type { OTTBundleMetadata } from './bundle/bundle-metadata.types.js';
 
 /**
@@ -16,7 +16,7 @@ import type { OTTBundleMetadata } from './bundle/bundle-metadata.types.js';
  */
 export interface OTTNormalizedInput {
   readonly entrypoint: OTTBundleMetadata['entrypoint'];
-  readonly bundleInput: string | OpenAPIObject;
+  readonly bundleInput: string | object;
   readonly origin?: string;
   readonly originalDescriptor: string;
 }
@@ -46,7 +46,9 @@ export function isRemoteUrl(value: string): boolean {
  * @returns Normalized input with entrypoint metadata
  * @public
  */
-export function normalizeInput(input: string | URL | OpenAPIObject): OTTNormalizedInput {
+export function normalizeInput(
+  input: string | URL | OpenAPIInputDocument | object,
+): OTTNormalizedInput {
   if (input instanceof URL) {
     const href = input.toString();
     return {

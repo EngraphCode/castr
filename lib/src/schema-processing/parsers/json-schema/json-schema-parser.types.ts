@@ -1,7 +1,7 @@
 /**
  * JSON Schema 2020-12 type definition.
  *
- * Extends SchemaObject from openapi3-ts/oas31 with 2020-12 applicator and
+ * Extends the shared OpenAPI seam with 2020-12 applicator and
  * validation keywords that OAS 3.1 does not explicitly surface.
  *
  * Extracted to its own module to avoid circular dependencies: core.ts imports
@@ -11,13 +11,13 @@
  * @module parsers/json-schema/json-schema-parser.types
  */
 
-import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { SchemaObject, ReferenceObject } from '../../../shared/openapi-types.js';
 
 /** Schema or `$ref`, optionally a boolean (for unevaluated / conditional forms). */
 type JsonSchemaOrBool = JsonSchema2020 | ReferenceObject | boolean;
 
 /**
- * JSON Schema 2020-12 with keywords not modelled by openapi3-ts.
+ * JSON Schema 2020-12 with keywords not modelled directly by the shared seam.
  *
  * Extends the domain expert library type with 2020-12 applicator and
  * validation keywords that OAS 3.1 does not explicitly surface.

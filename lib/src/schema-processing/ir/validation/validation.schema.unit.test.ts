@@ -6,7 +6,7 @@
  * @module ir-validation.schema.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 import { isCastrDocument, isCastrSchemaNode } from './validators.js';
@@ -19,14 +19,14 @@ import {
 } from '../test-helpers.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Schema Representation', () => {
   describe('Basic Schema Representation', () => {
     test('captures complete metadata for simple object schema', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -81,7 +81,7 @@ describe('IR Validation - Schema Representation', () => {
     });
 
     test('correctly computes nullable from OAS 3.1 type arrays', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -113,7 +113,7 @@ describe('IR Validation - Schema Representation', () => {
 
   describe('Complex Schema Patterns', () => {
     test('correctly handles allOf composition', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -162,7 +162,7 @@ describe('IR Validation - Schema Representation', () => {
     });
 
     test('correctly handles oneOf composition', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -191,7 +191,7 @@ describe('IR Validation - Schema Representation', () => {
     });
 
     test('handles deeply nested references', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -234,7 +234,7 @@ describe('IR Validation - Schema Representation', () => {
 
   describe('Array and Primitive Types', () => {
     test('correctly represents array schemas with item metadata', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},
@@ -274,7 +274,7 @@ describe('IR Validation - Schema Representation', () => {
     });
 
     test('correctly represents enum schemas with values', () => {
-      const openApiDoc: OpenAPIObject = {
+      const openApiDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Test API' },
         paths: {},

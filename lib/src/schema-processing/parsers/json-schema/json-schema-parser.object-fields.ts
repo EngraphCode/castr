@@ -9,8 +9,11 @@
  * @internal
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type ReferenceObject,
+  type SchemaObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 import {
   CastrSchemaProperties,
   ensureObjectTypeForObjectKeywords,

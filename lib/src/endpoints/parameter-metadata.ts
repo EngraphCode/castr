@@ -1,5 +1,9 @@
-import type { SchemaObject, ParameterObject, ExampleObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type SchemaObject,
+  type ParameterObject,
+  type ExampleObject,
+  isReferenceObject,
+} from '../shared/openapi-types.js';
 import { trim } from 'lodash-es';
 import type { SchemaConstraints } from './definition.types.js';
 
@@ -17,6 +21,8 @@ export type ParameterMetadata = Pick<
   'description' | 'deprecated' | 'example' | 'examples'
 > &
   Pick<SchemaObject, 'default'> & {
+    /** Raw schema examples from SchemaObject.examples */
+    schemaExamples?: SchemaObject['examples'];
     /** Schema validation constraints (subset of SchemaObject) */
     constraints?: SchemaConstraints;
   };
@@ -59,16 +65,14 @@ function hasExampleValue(value: unknown): value is { value: unknown } {
 }
 
 /**
- * Extract example value from an examples object's 'default' entry.
+ * Extract example value from a parameter examples object's 'default' entry.
  * Handles the case where Scalar upgrades examples to object format with named keys.
  *
  * @param examplesObj - Examples object from ParameterObject or SchemaObject
  * @returns Example value from 'default' entry, or undefined
  * @internal
  */
-function extractDefaultExample(
-  examplesObj: ParameterObject['examples'] | SchemaObject['examples'],
-): unknown | undefined {
+function extractDefaultExample(examplesObj: ParameterObject['examples']): unknown | undefined {
   if (!examplesObj) {
     return undefined;
   }
@@ -77,11 +81,7 @@ function extractDefaultExample(
   // Access the 'default' property if it exists
   if (typeof examplesObj === 'object' && 'default' in examplesObj) {
     const defaultEntry = examplesObj['default'];
-    if (!defaultEntry || isReferenceObject(defaultEntry)) {
-      return undefined;
-    }
-
-    if (hasExampleValue(defaultEntry)) {
+    if (defaultEntry && hasExampleValue(defaultEntry)) {
       return defaultEntry.value;
     }
   }
@@ -99,7 +99,7 @@ function extractDefaultExample(
  * 1. parameter.example (inline single example)
  * 2. parameter.examples['default'].value (Scalar sets this during upgrade)
  * 3. schema.example (inline single example)
- * 4. schema.examples['default'].value (Scalar sets this during upgrade)
+ * 4. schema.examples are exposed separately as raw `schemaExamples`
  *
  * @param param - Parameter object with optional example/examples
  * @param schema - Schema object with optional example/examples
@@ -118,13 +118,7 @@ export function extractExample(param: ParameterObject, schema: SchemaObject): un
     return paramExample;
   }
 
-  // Check schema.example (inline single example)
-  if (schema.example !== undefined) {
-    return schema.example;
-  }
-
-  // Check schema.examples['default'].value (Scalar upgrade format)
-  return extractDefaultExample(schema.examples);
+  return schema.example;
 }
 
 /**
@@ -329,6 +323,16 @@ export function extractExamples(param: ParameterObject): Record<string, ExampleO
   return Object.fromEntries(entries);
 }
 
+function assignMetadataIfDefined<Key extends keyof ParameterMetadata>(
+  metadata: ParameterMetadata,
+  key: Key,
+  value: ParameterMetadata[Key] | undefined,
+): void {
+  if (value !== undefined) {
+    metadata[key] = value;
+  }
+}
+
 /**
  * Extract parameter metadata from OpenAPI parameter and schema objects.
  *
@@ -352,36 +356,13 @@ export function extractParameterMetadata(
   schema: SchemaObject,
 ): ParameterMetadata {
   const metadata: ParameterMetadata = {};
-
-  const description = extractDescription(param);
-  if (description !== undefined) {
-    metadata.description = description;
-  }
-
-  const deprecated = extractDeprecated(param);
-  if (deprecated !== undefined) {
-    metadata.deprecated = deprecated;
-  }
-
-  const example = extractExample(param, schema);
-  if (example !== undefined) {
-    metadata.example = example;
-  }
-
-  const examples = extractExamples(param);
-  if (examples !== undefined) {
-    metadata.examples = examples;
-  }
-
-  const defaultValue = extractDefault(schema);
-  if (defaultValue !== undefined) {
-    metadata.default = defaultValue;
-  }
-
-  const constraints = extractSchemaConstraints(schema);
-  if (constraints !== undefined) {
-    metadata.constraints = constraints;
-  }
+  assignMetadataIfDefined(metadata, 'description', extractDescription(param));
+  assignMetadataIfDefined(metadata, 'deprecated', extractDeprecated(param));
+  assignMetadataIfDefined(metadata, 'example', extractExample(param, schema));
+  assignMetadataIfDefined(metadata, 'examples', extractExamples(param));
+  assignMetadataIfDefined(metadata, 'default', extractDefault(schema));
+  assignMetadataIfDefined(metadata, 'schemaExamples', schema.examples);
+  assignMetadataIfDefined(metadata, 'constraints', extractSchemaConstraints(schema));
 
   return metadata;
 }

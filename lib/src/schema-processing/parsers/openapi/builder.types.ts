@@ -6,7 +6,7 @@
  * @module
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 
 /**
  * Context passed through IR building process for schema resolution and metadata.
@@ -20,7 +20,7 @@ export interface IRBuildContext {
   /**
    * The full OpenAPI document (for reference resolution).
    */
-  doc: OpenAPIObject;
+  doc: OpenAPIDocument;
 
   /**
    * Current path in the schema tree (for debugging and metadata).

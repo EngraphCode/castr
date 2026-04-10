@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from './test-utils.js';
@@ -22,7 +22,7 @@ import { generateZodClientFromOpenAPI } from './test-utils.js';
 describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs', () => {
   it('should generate valid TypeScript from minimal spec', async () => {
     // Arrange: Minimal valid OpenAPI 3.0 spec
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -72,7 +72,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
 
   it('should handle schemas with $ref after bundling', async () => {
     // Arrange: Spec with component schema reference
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -124,7 +124,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
 
   it('should handle requestBody with $ref', async () => {
     // Arrange: Spec with requestBody component reference
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -185,7 +185,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
 
   it('should handle responses with $ref', async () => {
     // Arrange: Spec with response component reference
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -243,7 +243,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
 
   it('should handle parameters with $ref', async () => {
     // Arrange: Spec with parameter component reference
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -306,7 +306,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
 describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features', () => {
   it('should handle allOf composition', async () => {
     // Arrange: Spec with allOf schema composition
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -371,7 +371,7 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
 
   it('should handle oneOf unions', async () => {
     // Arrange: Spec with oneOf union type
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -435,7 +435,7 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
 
   it('should handle circular references', async () => {
     // Arrange: Spec with circular schema references
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -488,7 +488,7 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
 
   it('should handle deeply nested schemas', async () => {
     // Arrange: Spec with deeply nested object structures
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -556,7 +556,7 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
 describe('Characterisation: Full Generation Pipeline - Template Options', () => {
   it('should generate schemas-with-metadata as default template', async () => {
     // Arrange
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -593,7 +593,7 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
 
   it('should generate schemas-only template', async () => {
     // Arrange: Must have at least one path that references the schema
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -643,7 +643,7 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
 
   it('should generate schemas-with-metadata template', async () => {
     // Arrange
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -695,7 +695,7 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
 describe('Characterisation: Full Generation Pipeline - Additional Core Features', () => {
   it('should handle PUT, PATCH, DELETE HTTP methods', async () => {
     // Arrange: Spec with multiple HTTP methods
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -800,7 +800,7 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
 
   it('should handle anyOf composition', async () => {
     // Arrange: Spec with anyOf schema
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -850,7 +850,7 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
 
   it('should handle multiple content types in responses', async () => {
     // Arrange: Spec with multiple response content types
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {

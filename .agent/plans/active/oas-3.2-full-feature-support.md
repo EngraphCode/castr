@@ -4,7 +4,8 @@
 **Created:** 2026-03-31  
 **Promoted:** 2026-04-03  
 **Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
-**Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice
+**Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice  
+**Updated:** 2026-04-10 — Phase A₂ is closed and its completion record has been moved to `current/complete`; the immediate next slice is the MCP no-params follow-up before feature phases B/C
 
 ---
 
@@ -159,63 +160,36 @@ Ordered by dependency and increasing complexity:
 | D     | #4 Example semantics                                  | Medium | Phase A₂     |
 | E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     |
 
-Phase A is complete. **Phase A₂ (type migration) must be completed before all feature phases**, because every subsequent feature relies on the Scalar types. Phases B and C can run in parallel after A₂. Phases D and E are independent.
+Phase A and Phase A₂ are complete. Before feature phases B/C begin, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up. After that, phases B and C can run in parallel. Phases D and E are independent.
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, direct media-type resolver proof, strengthened dependency-exit guards, green `pnpm qg` / `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. Before feature phases B/C resume, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up.  
+**ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
+**Detailed completion record:** [phase-a2-type-migration.md](../current/complete/phase-a2-type-migration.md)
 
-### Rationale
+### Resolved Decisions
 
-`openapi3-ts` does not support OAS 3.2 types. `@scalar/openapi-types` (already a direct dependency) provides a complete `OpenAPIV3_2` namespace including all 3.2 features. This migration eliminates the need for module augmentation and aligns our type system with the Scalar parser boundary.
+- **D1 (REVISED):** Explicit interfaces strip Scalar's `[key: string]: any` pollution. `RemoveIndexSignature<T>` was abandoned — it fails on `Modify<Omit<...>>` composition chains.
+- **D2:** `SchemaObject` is a fully explicit ~50-property interface — object-form only, boolean handled at boundaries
+- **D3:** Test fixture versions assessed per-fixture during AP3/AP4
+- **A1:** `SchemaObject.examples` stays raw `unknown[]`; public metadata surfaces expose `schemaExamples` instead of inventing a fallback example
+- **A2-A4:** `querystring` stays distinct, content/media-type refs plus `components.mediaTypes` are preserved losslessly, and the tolerant input boundary is split from the canonical validated document type
+- **A5-A6:** writer assignability is closed, and a narrow drift harness guards the critical upstream `@scalar/openapi-types` shape signals
 
-### Strictness Strategy
+### Execution (Iterative Assessment Points)
 
-Scalar makes all fields optional for user-input tolerance. The OAS spec explicitly REQUIRES 8 fields across 6 types. We restore these via TypeScript intersection narrowing in a single re-export module:
+1. **AP1 ✅ COMPLETE:** Re-export module with explicit interfaces compiles
+2. **AP2 ✅ COMPLETE:** Production code — 0 errors (5 families resolved)
+3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
+4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
+5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
+6. Re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up, then resume feature phases B/C
 
-| Type                          | Required Fields Narrowed                   | OAS Spec Reference   |
-| ----------------------------- | ------------------------------------------ | -------------------- |
-| `ParameterObject`             | `name: string`, `in: ParameterLocation`    | §4.8.12 Fixed Fields |
-| `RequestBodyObject`           | `content: Record<string, MediaTypeObject>` | §4.8.13 Fixed Fields |
-| `ResponseObject`              | `description: string`                      | §4.8.17 Fixed Fields |
-| `ExternalDocumentationObject` | `url: string`                              | §4.8.11 Fixed Fields |
-| `TagObject`                   | `name: string`                             | §4.8.22 Fixed Fields |
-| `DiscriminatorObject`         | `propertyName: string`                     | §4.8.25 Fixed Fields |
-
-### Steps
-
-1. **Create `lib/src/shared/openapi-types.ts`**
-   - Import from `@scalar/openapi-types` `OpenAPIV3_2` namespace
-   - Re-export all types used in the codebase (~20 type aliases)
-   - Apply intersection narrowing on the 6 types with spec-required fields
-   - Provide local `isReferenceObject` runtime guard (replaces the only runtime import from `openapi3-ts`)
-
-2. **Migrate all imports** (~50 files)
-   - Replace `from 'openapi3-ts/oas31'` with `from '../shared/openapi-types.js'` (relative paths)
-   - Includes both `import type` and `import { isReferenceObject }` sites
-   - Map `OpenAPIObject` → `OpenAPIDocument` (Scalar uses `Document`)
-   - Map `SchemaObjectType` → union of `NonArraySchemaObjectType | ArraySchemaObjectType`
-   - Map `XmlObject` → `XMLObject` (Scalar uses uppercase XML)
-
-3. **Delete `openapi-schema-extensions.d.ts`**
-   - Module augmentations for `$dynamicRef`, `$dynamicAnchor`, `unevaluatedItems`, `unevaluatedProperties`, `dependentSchemas`, `$vocabulary` are no longer needed — Scalar's `OpenAPIV3_2.SchemaObject` includes all of these natively via its 3.1 base (`BaseSchemaObject`)
-
-4. **Remove `openapi3-ts` from `package.json`**
-
-5. **Update `BundledOpenApiDocument`**
-   - Replace `OpenAPIObject` (openapi3-ts) with types from the strict re-export module
-   - Simplify the junction type since both sides are now Scalar-typed
-
-6. **Run full quality gate chain** (`pnpm qg`)
-
-### Verification
-
-- All existing tests must pass with zero changes to test logic (only import paths change)
-- `pnpm type-check` confirms strictness narrowings are compatible
-- `pnpm knip` confirms `openapi3-ts` is fully removed
-- Round-trip proofs continue to pass unchanged
+> [!NOTE]
+> Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.
 
 ---
 

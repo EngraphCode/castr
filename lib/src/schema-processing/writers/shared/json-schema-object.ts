@@ -2,9 +2,9 @@
  * Shared JSON Schema output type.
  *
  * Defines the canonical mutable output container for JSON Schema field
- * writers.  This type is structurally assignable to OAS `SchemaObject`
- * (which has `[key: string]: any` via `ISpecificationExtension`) so
- * OpenAPI writer consumers can use it directly.
+ * writers.  This type is structurally assignable to the project's `SchemaObject`
+ * interface (defined in `shared/openapi-types.ts`) because both use
+ * explicit named properties without index signatures.
  *
  * > **Egress normal form:** The JSON Schema writer normalises `example`
  * > to `examples` (ADR-042). Nullability is represented via `type: [T,
@@ -15,7 +15,12 @@
  * @internal
  */
 
-import type { SchemaObjectType } from 'openapi3-ts/oas31';
+import type {
+  DiscriminatorObject,
+  ExternalDocumentationObject,
+  SchemaObjectType,
+  XMLObject,
+} from '../../../shared/openapi-types.js';
 
 import type { CastrSchema } from '../../ir/index.js';
 
@@ -29,18 +34,18 @@ export type WriteSchemaFn = (schema: CastrSchema) => JsonSchemaObject;
  * Mutable JSON Schema output object.
  *
  * A minimal, self-contained interface covering every field the shared
- * writers may set.  Structurally compatible with OAS `SchemaObject`
- * (via its index signature), so no type assertions are required when
- * passing it to OAS-typed consumers.
+ * writers may set.  Structurally assignable to the project's `SchemaObject`
+ * interface (defined in `shared/openapi-types.ts`) because both use
+ * explicit named properties without index signatures.
  *
- * The index-signature fallback lets callers set format-specific extras
- * (e.g. `xml`, `externalDocs`, `discriminator`) without extending.
+ * Format-specific extras (e.g. `xml`, `externalDocs`, `discriminator`)
+ * are listed as explicit named properties rather than relying on an
+ * index signature, so that the type remains assignable to `SchemaObject`
+ * which has no index signature.
  *
  * @internal
  */
 export interface JsonSchemaObject {
-  [key: string]: unknown;
-
   // Core type
   type?: SchemaObjectType | SchemaObjectType[];
   format?: string;
@@ -99,8 +104,14 @@ export interface JsonSchemaObject {
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
   maxContains?: number;
+  contains?: JsonSchemaObject;
   patternProperties?: Record<string, JsonSchemaObject>;
   propertyNames?: JsonSchemaObject;
+  $anchor?: string;
+  $dynamicRef?: string;
+  $dynamicAnchor?: string;
+  contentEncoding?: string;
+  contentMediaType?: string;
 
   // Conditional applicators (JSON Schema 2020-12)
   if?: JsonSchemaObject;
@@ -110,6 +121,11 @@ export interface JsonSchemaObject {
   // JSON Schema document-level
   $defs?: Record<string, JsonSchemaObject>;
   $schema?: string;
+
+  // OAS-only extensions (set by OpenAPI writer via bracket notation)
+  xml?: XMLObject;
+  externalDocs?: ExternalDocumentationObject;
+  discriminator?: DiscriminatorObject;
 }
 
 /**

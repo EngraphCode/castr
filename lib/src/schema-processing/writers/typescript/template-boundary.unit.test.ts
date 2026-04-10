@@ -3,7 +3,7 @@ import { writeTypeScript } from './index.js';
 import type { TemplateContext } from '../../context/index.js';
 import type { CastrSchema, CastrDocument } from '../../ir/index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
-import type { InfoObject, SchemaObjectType, ServerObject } from 'openapi3-ts/oas31';
+import type { InfoObject, SchemaObjectType, ServerObject } from '../../../shared/openapi-types.js';
 
 /**
  * Template Boundary Tests

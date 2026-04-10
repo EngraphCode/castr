@@ -1,7 +1,7 @@
 import { getZodSchema } from '../../src/schema-processing/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject, SchemaObject } from '../../src/shared/openapi-types.js';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 test('handle-props-with-special-characters', async () => {

@@ -6,7 +6,7 @@
 
 import { upgrade } from '@scalar/openapi-parser';
 import type { AnyObject, Filesystem } from '@scalar/openapi-parser';
-import { isOpenAPIObject } from '../../validation/cli-type-guards.js';
+import { isOpenAPIDocument } from '../../validation/cli-type-guards.js';
 import { CANONICAL_OPENAPI_VERSION, isSupportedBundledOpenApiVersion } from '../openapi/version.js';
 import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
 
@@ -27,7 +27,7 @@ import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
  * @internal
  */
 export function isBundledOpenApiDocument(value: unknown): value is BundledOpenApiDocument {
-  if (!isOpenAPIObject(value)) {
+  if (!isOpenAPIDocument(value)) {
     return false;
   }
 

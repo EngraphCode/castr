@@ -187,7 +187,9 @@ type: [string, 'null']
 ### Handling in TypeScript
 
 ```typescript
-import type { SchemaObject } from 'openapi3-ts/oas31';
+type SchemaLike = {
+  type?: string | string[];
+};
 
 // Normalize to array
 const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];

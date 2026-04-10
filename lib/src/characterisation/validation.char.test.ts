@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
-import { generateZodClientFromOpenAPI } from './test-utils.js';
+import {
+  generateZodClientFromOpenAPI,
+  generateZodClientFromOpenAPIFromUnknownBoundary,
+} from './test-utils.js';
 
 /**
  * Characterization Tests: OpenAPI Spec Validation
@@ -23,7 +26,7 @@ import { generateZodClientFromOpenAPI } from './test-utils.js';
 describe('Characterisation: OpenAPI Spec Validation', () => {
   describe('Valid Specs Pass Through', () => {
     it('should accept minimal valid OpenAPI 3.0 spec', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -39,7 +42,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     });
 
     it('should accept spec with components and operations', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.3',
         info: { title: 'Pet Store API', version: '1.0.0' },
         paths: {
@@ -85,8 +88,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject null spec', async () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid input (null) to verify error handling
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: null,
           disableWriteToFile: true,
         }),
@@ -96,8 +98,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject undefined spec', async () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
-        // @ts-expect-error TS2322 - Testing invalid input (undefined) to verify error handling
-        generateZodClientFromOpenAPI({
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: undefined,
           disableWriteToFile: true,
         }),
@@ -113,7 +114,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
         generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -129,7 +129,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
         generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -179,7 +178,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       // Should succeed (auto-upgraded by Scalar)
       const result = await generateZodClientFromOpenAPI({
-        // @ts-expect-error TS2322 - Testing Swagger 2.0 auto-upgrade through the runtime pipeline
         openApiDoc: spec,
         disableWriteToFile: true,
       });
@@ -192,7 +190,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       const versions = ['3.0.0', '3.0.1', '3.0.2', '3.0.3', '3.1.0'];
 
       for (const version of versions) {
-        const spec: OpenAPIObject = {
+        const spec: OpenAPIDocument = {
           openapi: version,
           info: { title: 'Test API', version: '1.0.0' },
           paths: {},
@@ -219,7 +217,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
         generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (non-string openapi) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -232,7 +229,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
         generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (array instead of object) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -250,7 +246,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       // Verify the error message is user-friendly (contains location context)
       await expect(
         generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (paths as array) to verify strict validation rejection
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -271,7 +266,6 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       try {
         await generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required properties) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         });

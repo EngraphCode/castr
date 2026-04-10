@@ -1,4 +1,5 @@
 import { toIdentifier } from '../../../shared/utils/identifier-utils.js';
+import { isReferenceObject } from '../../../shared/openapi-types.js';
 import type { CastrDocument, IRComponent, CastrOperation } from '../../ir/index.js';
 
 /**
@@ -15,6 +16,9 @@ function extractRequestBodySchema(
 
   // Find first inline (non-$ref) schema in media types
   for (const media of Object.values(operation.requestBody.content)) {
+    if (isReferenceObject(media)) {
+      continue;
+    }
     if (media.schema && !media.schema.$ref) {
       // It's an inline schema - extract as named component
       // Note: When multiple media types exist (e.g., JSON + XML), we extract

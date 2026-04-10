@@ -8,7 +8,7 @@
  * @module
  */
 
-import type { OpenAPIObject, SecurityRequirementObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SecurityRequirementObject } from '../../../shared/openapi-types.js';
 import { writeOpenApiComponents } from './components/openapi-writer.components.js';
 import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
 import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
@@ -17,14 +17,6 @@ import {
   CANONICAL_OPENAPI_TARGET_LABEL,
   CANONICAL_OPENAPI_VERSION,
 } from '../../../shared/openapi/version.js';
-
-/**
- * Extended OpenAPI object type that includes fields missing from the library types.
- * `jsonSchemaDialect` remains valid in the canonical 3.2.0 target but is not included in openapi3-ts types.
- */
-type OpenAPIObjectExtended = OpenAPIObject & {
-  jsonSchemaDialect?: string;
-};
 
 function getSortedMapEntries<T>(map: Map<string, T>): [string, T][] {
   return [...map.entries()].sort(([leftName], [rightName]) => leftName.localeCompare(rightName));
@@ -80,10 +72,10 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  *
  * @public
  */
-export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
+export function writeOpenApi(ir: CastrDocument): OpenAPIDocument {
   assertDocumentSupportsIntegerTargetCapabilities(ir, CANONICAL_OPENAPI_TARGET_LABEL);
 
-  const result: OpenAPIObjectExtended = {
+  const result: OpenAPIDocument = {
     openapi: CANONICAL_OPENAPI_VERSION,
     info: ir.info,
     paths: writeOpenApiPaths(ir.operations),
@@ -100,7 +92,7 @@ export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
  *
  * @internal
  */
-function addDocumentMetadata(result: OpenAPIObjectExtended, ir: CastrDocument): void {
+function addDocumentMetadata(result: OpenAPIDocument, ir: CastrDocument): void {
   if (ir.jsonSchemaDialect !== undefined) {
     result.jsonSchemaDialect = ir.jsonSchemaDialect;
   }
@@ -120,7 +112,7 @@ function addDocumentMetadata(result: OpenAPIObjectExtended, ir: CastrDocument): 
  *
  * @internal
  */
-function addDocumentContent(result: OpenAPIObjectExtended, ir: CastrDocument): void {
+function addDocumentContent(result: OpenAPIDocument, ir: CastrDocument): void {
   if (ir.webhooks !== undefined && ir.webhooks.size > 0) {
     result.webhooks = Object.fromEntries(getSortedMapEntries(ir.webhooks));
   }
@@ -137,7 +129,7 @@ function addDocumentContent(result: OpenAPIObjectExtended, ir: CastrDocument): v
  *
  * @internal
  */
-function addOptionalFields(result: OpenAPIObjectExtended, ir: CastrDocument): void {
+function addOptionalFields(result: OpenAPIDocument, ir: CastrDocument): void {
   addDocumentMetadata(result, ir);
   addDocumentContent(result, ir);
 }

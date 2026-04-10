@@ -10,10 +10,13 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
-import type { JsonSchema2020 } from '../../src/schema-processing/parsers/json-schema/index.js';
+import {
+  isReferenceObject,
+  type OpenAPIObject,
+  type SchemaObject,
+} from '../../src/shared/openapi-types.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/openapi-writer.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../src/shared/openapi/version.js';
@@ -23,7 +26,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
 
-function getSchema(context: OpenAPIObject, name: string): JsonSchema2020 {
+function getSchema(context: OpenAPIObject, name: string): SchemaObject {
   return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
 }
 
@@ -239,17 +242,29 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 
     it('writes response content', () => {
       const response = output.paths?.['/users']?.get?.responses?.['200'];
-      expect(response?.content?.['application/json']).toBeDefined();
+      expect(response).toBeDefined();
+      if (!response || isReferenceObject(response)) {
+        throw new Error('Expected /users GET 200 response to be an inline response object');
+      }
+      expect(response.content?.['application/json']).toBeDefined();
     });
 
     it('writes response headers', () => {
       const response = output.paths?.['/users']?.get?.responses?.['200'];
-      expect(response?.headers?.['X-Total-Count']).toBeDefined();
+      expect(response).toBeDefined();
+      if (!response || isReferenceObject(response)) {
+        throw new Error('Expected /users GET 200 response to be an inline response object');
+      }
+      expect(response.headers?.['X-Total-Count']).toBeDefined();
     });
 
     it('writes response links', () => {
       const response = output.paths?.['/users']?.get?.responses?.['200'];
-      expect(response?.links?.['GetUserById']).toBeDefined();
+      expect(response).toBeDefined();
+      if (!response || isReferenceObject(response)) {
+        throw new Error('Expected /users GET 200 response to be an inline response object');
+      }
+      expect(response.links?.['GetUserById']).toBeDefined();
     });
   });
 
@@ -320,8 +335,14 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
       expect(reqBody).toBeDefined();
       if (reqBody && 'content' in reqBody) {
         const multipartContent = reqBody.content?.['multipart/form-data'];
-        expect(multipartContent?.encoding).toBeDefined();
-        const avatarEncoding = multipartContent?.encoding?.['avatar'];
+        expect(multipartContent).toBeDefined();
+        if (!multipartContent || isReferenceObject(multipartContent)) {
+          throw new Error(
+            'Expected multipart/form-data request body content to be an inline media type object',
+          );
+        }
+        expect(multipartContent.encoding).toBeDefined();
+        const avatarEncoding = multipartContent.encoding?.['avatar'];
         expect(avatarEncoding).toBeDefined();
         expect(avatarEncoding?.contentType).toBe('image/png, image/jpeg');
       }

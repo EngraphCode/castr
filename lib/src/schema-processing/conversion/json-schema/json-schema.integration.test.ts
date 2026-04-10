@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   isReferenceObject,
-  type OpenAPIObject,
+  type OpenAPIDocument,
   type ReferenceObject,
   type SchemaObject,
-} from 'openapi3-ts/oas31';
+} from '../../../shared/openapi-types.js';
 
 import { prepareOpenApiDocument } from '../../../shared/prepare-openapi-document.js';
 import { convertOpenApiSchemaToJsonSchema } from './convert-schema.js';
@@ -201,6 +201,6 @@ interface CreateUserPayload {
   age?: number | null;
 }
 
-async function loadMultiAuthDocument(): Promise<OpenAPIObject> {
+async function loadMultiAuthDocument(): Promise<OpenAPIDocument> {
   return prepareOpenApiDocument('./examples/custom/openapi/v3.1/multi-auth.yaml');
 }

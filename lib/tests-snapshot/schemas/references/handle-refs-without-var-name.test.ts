@@ -102,6 +102,7 @@ test('handle-refs-without-var-name', () => {
                         "header": [],
                         "path": [],
                         "query": [],
+                        "querystring": [],
                     },
                     "path": "/something",
                     "responses": [

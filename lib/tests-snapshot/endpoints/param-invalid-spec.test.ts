@@ -6,7 +6,7 @@
  */
 
 import { expect, test, describe } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 describe('param-invalid-spec', () => {
@@ -24,7 +24,7 @@ describe('param-invalid-spec', () => {
                 description: 'This parameter is invalid per OpenAPI spec',
                 in: 'query',
                 // Missing both 'schema' and 'content' violates the OpenAPI spec,
-                // even though openapi3-ts does not encode that XOR at compile time.
+                // even though the shared type surface does not encode that XOR at compile time.
               },
             ],
             responses: {

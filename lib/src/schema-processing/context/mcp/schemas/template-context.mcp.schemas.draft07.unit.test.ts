@@ -7,7 +7,7 @@ import type {
   CastrSchemaNode,
 } from '../../../ir/index.js';
 import { CastrSchemaProperties } from '../../../ir/index.js';
-import type { InfoObject, ServerObject } from 'openapi3-ts/oas31';
+import type { InfoObject, ServerObject } from '../../../../shared/openapi-types.js';
 
 /**
  * Draft 07 Normalisation Tests

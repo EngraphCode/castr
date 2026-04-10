@@ -1,4 +1,4 @@
-import type { ReferenceObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject } from '../../../../shared/openapi-types.js';
 import { split, join } from 'lodash-es';
 import type { Draft07Input } from './json-schema-parser.normalization.types.js';
 

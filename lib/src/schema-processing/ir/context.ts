@@ -141,7 +141,7 @@ export interface IRArrayItemsContext {
 export interface CastrParameterSchemaContext {
   contextType: 'parameter';
   name: string;
-  location: 'path' | 'query' | 'header' | 'cookie';
+  location: 'path' | 'query' | 'querystring' | 'header' | 'cookie';
   schema: CastrSchema;
   required: boolean; // From ParameterObject.required
 }

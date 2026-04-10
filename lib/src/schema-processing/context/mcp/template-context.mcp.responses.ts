@@ -13,7 +13,13 @@
  */
 
 import { includes, split, toLower, trim } from 'lodash-es';
-import type { CastrSchema, CastrOperation, CastrResponse } from '../../ir/index.js';
+import {
+  getSchemaFromIRMediaTypeEntry,
+  type CastrDocument,
+  type CastrSchema,
+  type CastrOperation,
+  type CastrResponse,
+} from '../../ir/index.js';
 
 const MEDIA_TYPE_WILDCARD_TYPE = '*';
 const MEDIA_TYPE_WILDCARD_SUBTYPE = '*';
@@ -117,9 +123,14 @@ const isResponseContentTypeSupported = (mediaType: string): boolean => {
  * @param operation - The CastrOperation (or partial with requestBody)
  * @returns Schema and required flag, or undefined if no request body
  */
-export const resolveRequestBodySchemaFromIR = (
+export function resolveRequestBodySchemaFromIR(
   operation: Pick<CastrOperation, 'requestBody'>,
-): { schema: CastrSchema; required: boolean } | undefined => {
+  document?: Pick<CastrDocument, 'components'>,
+): { schema: CastrSchema; required: boolean } | undefined;
+export function resolveRequestBodySchemaFromIR(
+  operation: Pick<CastrOperation, 'requestBody'>,
+  document: Pick<CastrDocument, 'components'> = { components: [] },
+): { schema: CastrSchema; required: boolean } | undefined {
   const { requestBody } = operation;
   if (!requestBody) {
     return undefined;
@@ -133,20 +144,32 @@ export const resolveRequestBodySchemaFromIR = (
   }
 
   const mediaType = requestBody.content[matchingMediaType];
-  if (!mediaType?.schema) {
+  if (!mediaType) {
+    return undefined;
+  }
+
+  const schema = getSchemaFromIRMediaTypeEntry(
+    document,
+    mediaType,
+    `requestBody/${matchingMediaType}`,
+  );
+  if (!schema) {
     return undefined;
   }
 
   return {
-    schema: mediaType.schema,
+    schema,
     required: requestBody.required,
   };
-};
+}
 
 /**
  * Extracts the primary 2xx response schema from response content.
  */
-const extractResponseSchemaFromIR = (response: CastrResponse): CastrSchema | undefined => {
+const extractResponseSchemaFromIR = (
+  document: Pick<CastrDocument, 'components'>,
+  response: CastrResponse,
+): CastrSchema | undefined => {
   if (response.schema) {
     return response.schema;
   }
@@ -156,7 +179,15 @@ const extractResponseSchemaFromIR = (response: CastrResponse): CastrSchema | und
     const matchingMediaType = mediaTypes.find(isResponseContentTypeSupported);
 
     if (matchingMediaType) {
-      return response.content[matchingMediaType]?.schema;
+      const mediaType = response.content[matchingMediaType];
+      if (!mediaType) {
+        return undefined;
+      }
+      return getSchemaFromIRMediaTypeEntry(
+        document,
+        mediaType,
+        ['responses', response.statusCode, matchingMediaType].join('/'),
+      );
     }
   }
 
@@ -166,9 +197,14 @@ const extractResponseSchemaFromIR = (response: CastrResponse): CastrSchema | und
 /**
  * Extracts the primary success response schema from a CastrOperation using the IR.
  */
-export const resolvePrimarySuccessResponseSchemaFromIR = (
+export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
-): CastrSchema | undefined => {
+  document?: Pick<CastrDocument, 'components'>,
+): CastrSchema | undefined;
+export function resolvePrimarySuccessResponseSchemaFromIR(
+  operation: Pick<CastrOperation, 'responses'>,
+  document: Pick<CastrDocument, 'components'> = { components: [] },
+): CastrSchema | undefined {
   const { responses } = operation;
 
   const sortedResponses = [...responses].sort((a, b) => {
@@ -183,11 +219,11 @@ export const resolvePrimarySuccessResponseSchemaFromIR = (
       continue;
     }
 
-    const schema = extractResponseSchemaFromIR(response);
+    const schema = extractResponseSchemaFromIR(document, response);
     if (schema) {
       return schema;
     }
   }
 
   return undefined;
-};
+}

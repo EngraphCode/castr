@@ -5,11 +5,11 @@
  * @internal
  */
 
-import type { EndpointDefinition } from '../../../endpoints/definition.types.js';
-import type { CastrSchema } from '../../ir/index.js';
-import { getSchemaNameFromRef } from '../template-context.common.js';
-import { asComponentSchema } from '../../../shared/utils/index.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import type { EndpointDefinition } from '../../../../endpoints/definition.types.js';
+import type { CastrSchema } from '../../../ir/index.js';
+import { getSchemaNameFromRef } from './template-context.common.js';
+import { asComponentSchema } from '../../../../shared/utils/index.js';
+import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 
 import type { MinimalTemplateContext } from './template-context.endpoints.types.js';
 

@@ -11,7 +11,7 @@
  * 1. Bundle specs (resolves external $refs, adds x-ext metadata)
  * 2. Validate against the declared OpenAPI version before upgrade/canonicalisation
  * 3. Bridge older specs through Scalar's OpenAPI 3.1 upgrade path, then canonicalise to 3.2.0
- * 4. Type and return the canonical document as the current openapi3-ts/oas31-compatible surface
+ * 4. Type and return the canonical document through the current shared OpenAPI seam
  *
  * **Why Bundle Mode (Not Dereference)?**
  *
@@ -33,7 +33,7 @@
  * @module
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIInputDocument, OpenAPIDocument } from './openapi-types.js';
 import { loadOpenApiDocument } from './load-openapi-document/index.js';
 
 // eslint-disable-next-line sonarjs/redundant-type-aliases -- JC: it is semantically useful.
@@ -51,7 +51,7 @@ type FilePathInput = string;
  * 1. Bundling via @scalar/json-magic (validates structure, resolves external $refs, keeps internal ones)
  * 2. Strict declared-version validation via @scalar/openapi-parser
  * 3. Upgrade/canonicalisation to OpenAPI 3.2.0 via the shared preparation boundary
- * 4. Type boundary validation to ensure openapi3-ts/oas31 compatibility
+ * 4. Type boundary validation to ensure shared OpenAPI seam compatibility
  *
  * **Processing Strategy:**
  * The function uses Scalar's bundle() which resolves external $refs but preserves
@@ -63,8 +63,8 @@ type FilePathInput = string;
  * - Supports OpenAPI 3.0.x, 3.1.x, and native 3.2.x specifications
  * - Returns a canonical OpenAPI 3.2.0 document after the shared preparation boundary
  *
- * @param input - OpenAPI document source: file path string, URL object, or in-memory OpenAPIObject
- * @returns Validated, bundled, and canonicalised OpenAPIObject (3.2.0) with internal $refs preserved
+ * @param input - OpenAPI document source: file path string, URL object, or in-memory OpenAPIDocument
+ * @returns Validated, bundled, and canonicalised OpenAPIDocument (3.2.0) with internal $refs preserved
  *
  * @throws {Error} When input cannot be loaded (file not found, network error, etc.)
  * @throws {Error} When OpenAPI document fails validation (structural errors)
@@ -84,7 +84,7 @@ type FilePathInput = string;
  *
  * @example In-memory object
  * ```typescript
- * const mySpec: OpenAPIObject = {
+ * const mySpec: OpenAPIDocument = {
  *   openapi: '3.0.0',
  *   info: { title: 'My API', version: '1.0.0' },
  *   paths: {}
@@ -96,8 +96,8 @@ type FilePathInput = string;
  * @public
  */
 export async function prepareOpenApiDocument(
-  input: FilePathInput | URL | OpenAPIObject,
-): Promise<OpenAPIObject> {
+  input: FilePathInput | URL | OpenAPIInputDocument | object,
+): Promise<OpenAPIDocument> {
   const { document } = await loadOpenApiDocument(input);
   return document;
 }

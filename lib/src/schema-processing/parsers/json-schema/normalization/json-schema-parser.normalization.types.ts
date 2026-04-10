@@ -1,4 +1,4 @@
-import type { ReferenceObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 
 export type Draft07SchemaOrRef = Draft07Input | ReferenceObject;

@@ -6,7 +6,7 @@
  * @module parsers/json-schema/normalization/json-schema-parser.normalization.unit.test
  */
 
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from '../../../shared/openapi-types.js';
 import { describe, it, expect } from 'vitest';
 
 import { normalizeDraft07 } from './normalization/index.js';

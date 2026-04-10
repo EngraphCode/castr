@@ -7,19 +7,21 @@
  */
 
 import type {
-  RequestBodyObject,
-  ResponsesObject,
-  ResponseObject,
   HeaderObject,
   MediaTypeObject,
-} from 'openapi3-ts/oas31';
+  ReferenceObject,
+  RequestBodyObject,
+  ResponseObject,
+  ResponsesObject,
+} from '../../../../shared/openapi-types.js';
 import { writeOpenApiSchema } from '../schema/openapi-writer.schema.js';
 import type {
   IRRequestBody,
   CastrResponse,
-  IRMediaType,
+  IRMediaTypeEntry,
   IRResponseHeader,
 } from '../../../ir/index.js';
+import { writeMediaTypeEntries } from '../openapi-writer.media-types.js';
 
 const STATUS_DEFAULT = 'default';
 
@@ -80,24 +82,9 @@ function compareResponseStatusCodes(left: string, right: string): number {
  * @internal
  */
 function buildContentFromMediaTypes(
-  contentMap: Record<string, IRMediaType>,
-): Record<string, MediaTypeObject> {
-  const content: Record<string, MediaTypeObject> = {};
-  for (const [mediaType, mediaTypeObj] of getSortedRecordEntries(contentMap)) {
-    content[mediaType] = {
-      schema: writeOpenApiSchema(mediaTypeObj.schema),
-    };
-    if (mediaTypeObj.example !== undefined) {
-      content[mediaType].example = mediaTypeObj.example;
-    }
-    if (mediaTypeObj.examples !== undefined) {
-      content[mediaType].examples = mediaTypeObj.examples;
-    }
-    if (mediaTypeObj.encoding !== undefined) {
-      content[mediaType].encoding = mediaTypeObj.encoding;
-    }
-  }
-  return content;
+  contentMap: Record<string, IRMediaTypeEntry>,
+): Record<string, ReferenceObject | MediaTypeObject> {
+  return writeMediaTypeEntries(contentMap);
 }
 
 /**
@@ -105,26 +92,9 @@ function buildContentFromMediaTypes(
  * @internal
  */
 export function writeRequestBody(requestBody: IRRequestBody): RequestBodyObject {
-  const content: Record<string, MediaTypeObject> = {};
-
-  for (const [mediaType, mediaTypeObj] of getSortedRecordEntries(requestBody.content)) {
-    content[mediaType] = {
-      schema: writeOpenApiSchema(mediaTypeObj.schema),
-    };
-    if (mediaTypeObj.example !== undefined) {
-      content[mediaType].example = mediaTypeObj.example;
-    }
-    if (mediaTypeObj.examples !== undefined) {
-      content[mediaType].examples = mediaTypeObj.examples;
-    }
-    if (mediaTypeObj.encoding !== undefined) {
-      content[mediaType].encoding = mediaTypeObj.encoding;
-    }
-  }
-
   const result: RequestBodyObject = {
     required: requestBody.required,
-    content,
+    content: writeMediaTypeEntries(requestBody.content),
   };
 
   if (requestBody.description !== undefined) {
@@ -139,10 +109,14 @@ export function writeRequestBody(requestBody: IRRequestBody): RequestBodyObject 
  * Preserves all header fields including description, required, deprecated.
  * @internal
  */
-function writeResponseHeader(header: IRResponseHeader): HeaderObject {
-  const headerObj: HeaderObject = {
-    schema: writeOpenApiSchema(header.schema),
-  };
+export function writeResponseHeader(header: IRResponseHeader): HeaderObject {
+  const headerObj: HeaderObject = {};
+
+  if (header.content !== undefined) {
+    headerObj.content = writeMediaTypeEntries(header.content);
+  } else {
+    headerObj.schema = writeOpenApiSchema(header.schema);
+  }
 
   if (header.description !== undefined) {
     headerObj.description = header.description;
@@ -167,19 +141,21 @@ function writeResponseHeader(header: IRResponseHeader): HeaderObject {
  * Converts a single CastrResponse to OpenAPI ResponseObject.
  * @internal
  */
-function writeResponse(response: CastrResponse): ResponseObject {
-  const responseObj: ResponseObject = {
-    description: response.description ?? '',
-  };
+export function writeResponseObject(response: CastrResponse): ResponseObject {
+  const responseObj: ResponseObject = {};
 
-  if (response.schema !== undefined) {
+  if (response.description !== undefined) {
+    responseObj.description = response.description;
+  }
+
+  if (response.content !== undefined) {
+    responseObj.content = buildContentFromMediaTypes(response.content);
+  } else if (response.schema !== undefined) {
     responseObj.content = {
       'application/json': {
         schema: writeOpenApiSchema(response.schema),
       },
     };
-  } else if (response.content !== undefined) {
-    responseObj.content = buildContentFromMediaTypes(response.content);
   }
 
   if (response.headers !== undefined) {
@@ -206,7 +182,7 @@ export function writeResponses(responses: CastrResponse[]): ResponsesObject {
     compareResponseStatusCodes(left.statusCode, right.statusCode),
   );
   for (const response of sortedResponses) {
-    result[response.statusCode] = writeResponse(response);
+    result[response.statusCode] = writeResponseObject(response);
   }
   return result;
 }

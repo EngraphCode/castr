@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ComponentsObject } from 'openapi3-ts/oas31';
+import type { ComponentsObject } from '../../../shared/openapi-types.js';
 import { buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../../shared/openapi/version.js';

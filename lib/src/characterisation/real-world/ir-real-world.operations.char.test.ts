@@ -6,7 +6,7 @@
  * @module ir-real-world.operations.char.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { assertAndGetSingleFileContent } from '../ir-test-helpers.js';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../test-utils.js';
@@ -14,7 +14,7 @@ import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../te
 describe('IR Characterization - Real-World Specs', () => {
   describe('Operation Complexity', () => {
     test('handles operations with multiple content types', async () => {
-      const multiContentDoc: OpenAPIObject = {
+      const multiContentDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Multi Content Test' },
         paths: {
@@ -79,7 +79,7 @@ describe('IR Characterization - Real-World Specs', () => {
     });
 
     test('handles operations with many parameters', async () => {
-      const manyParamsDoc: OpenAPIObject = {
+      const manyParamsDoc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { version: '1.0.0', title: 'Many Parameters Test' },
         paths: {

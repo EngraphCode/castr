@@ -2,6 +2,7 @@
 
 **Date:** 2026-04-03  
 **Status:** Accepted  
+**Revised:** 2026-04-10 — Updated to reflect the completed dependency exit, green validation gates, and closed reviewer loop  
 **Supersedes:** [ADR-002](./ADR-002-defer-types-to-openapi3-ts.md) (Defer Types to openapi3-ts)  
 **Related:** [ADR-045](./ADR-045-strict-reexport-module-openapi-types.md) (Strict Re-export Module)
 
@@ -17,7 +18,7 @@ Maintaining both `openapi3-ts` and `@scalar/openapi-types` would create a split 
 
 ## Decision
 
-Drop `openapi3-ts` entirely. Adopt `@scalar/openapi-types` `OpenAPIV3_2` namespace as the sole source of OpenAPI type definitions.
+Drop `openapi3-ts` entirely. Adopt the `@scalar/openapi-types` family, centred on the `OpenAPIV3_2` namespace, as the sole upstream source of OpenAPI type definitions.
 
 All imports of OpenAPI types will be routed through a single internal re-export module (`lib/src/shared/openapi-types.ts`) rather than imported directly from `@scalar/openapi-types`. This provides a single seam for type narrowing and future migration (see ADR-045).
 
@@ -33,9 +34,20 @@ All imports of OpenAPI types will be routed through a single internal re-export 
 ### Negative
 
 - Breaking change for any consumer that relied on `openapi3-ts` type identity (currently internal-only)
-- Scalar makes all fields optional for user-input tolerance, requiring intersection narrowing to restore spec-required fields (addressed by ADR-045)
+- Scalar's tolerant raw-input shapes required a stricter local seam, explicit interfaces, and a boundary/canonical split rather than direct adoption (addressed by ADR-045)
 - Minor naming differences (`OpenAPIObject` → `Document`, `XmlObject` → `XMLObject`) require a one-time migration
+- The migration adds a durable seam and dependency-exit guard burden that must stay maintained as upstream vendor types evolve
 
 ### Risks
 
 - If Scalar's type definitions diverge from the OAS spec, we inherit that divergence. Mitigated by the re-export module seam, which can apply corrections.
+
+## Implementation Status
+
+As of 2026-04-10:
+
+1. the strict re-export module is live at `lib/src/shared/openapi-types.ts`
+2. the boundary/canonical split is live (`OpenAPIInputDocument` vs `OpenAPIDocument`)
+3. the stale `openapi-schema-extensions.d.ts` augmentation file is deleted
+4. the `openapi3-ts` dependency is removed from `lib/package.json`, and the targeted active-surface grep is clean
+5. protected layers now fail fast on direct `@scalar/openapi-types` imports, the backwards-compatible `OpenAPIObject` alias, and any future `openapi3-ts` reintroduction

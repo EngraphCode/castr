@@ -28,25 +28,25 @@ Each ADR follows this structure:
 
 ### Phase 1: Architecture Rewrite & Modernization
 
-| ADR                                                      | Title                                  | Status   | Date |
-| -------------------------------------------------------- | -------------------------------------- | -------- | ---- |
-| [001](./ADR-001-fail-fast-spec-violations.md)            | Fail Fast on Spec Violations           | Accepted | -    |
-| [002](./ADR-002-defer-types-to-openapi3-ts.md)           | Defer Types to openapi3-ts             | Accepted | -    |
-| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters   | Accepted | -    |
-| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | Accepted | -    |
-| [005](./ADR-005-enum-complexity-calculation.md)          | Enum Complexity Calculation            | Accepted | -    |
-| [006](./ADR-006-no-unused-variables-policy.md)           | No Unused Variables Policy             | Accepted | -    |
-| [007](./ADR-007-esm-with-nodenext-resolution.md)         | ESM with NodeNext Resolution           | Accepted | -    |
-| [008](./ADR-008-replace-cac-with-commander.md)           | Replace CAC with Commander             | Accepted | -    |
-| [009](./ADR-009-replace-preconstruct-with-tsup.md)       | Replace Preconstruct with tsup         | Accepted | -    |
-| [010](./ADR-010-use-turborepo.md)                        | Use Turborepo                          | Accepted | -    |
-| [011](./ADR-011-ajv-runtime-validation.md)               | AJV Runtime Validation                 | Accepted | -    |
-| [012](./ADR-012-remove-playground-examples.md)           | Remove Playground Examples             | Accepted | -    |
-| [013](./ADR-013-architecture-rewrite-decision.md)        | Architecture Rewrite Decision          | Accepted | -    |
-| [014](./ADR-014-migrate-tanu-to-ts-morph.md)             | Migrate Tanu to ts-morph               | Accepted | -    |
-| [015](./ADR-015-eliminate-make-schema-resolver.md)       | Eliminate makeSchemaResolver           | Accepted | -    |
-| [016](./ADR-016-remove-zodios-dependencies.md)           | Remove Zodios Dependencies             | Accepted | -    |
-| [017](./ADR-017-unified-bundle-only-pipeline.md)         | Unified Bundle-Only Pipeline           | Accepted | -    |
+| ADR                                                      | Title                                  | Status     | Date |
+| -------------------------------------------------------- | -------------------------------------- | ---------- | ---- |
+| [001](./ADR-001-fail-fast-spec-violations.md)            | Fail Fast on Spec Violations           | Accepted   | -    |
+| [002](./ADR-002-defer-types-to-openapi3-ts.md)           | Defer Types to openapi3-ts             | Superseded | -    |
+| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters   | Accepted   | -    |
+| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | Accepted   | -    |
+| [005](./ADR-005-enum-complexity-calculation.md)          | Enum Complexity Calculation            | Accepted   | -    |
+| [006](./ADR-006-no-unused-variables-policy.md)           | No Unused Variables Policy             | Accepted   | -    |
+| [007](./ADR-007-esm-with-nodenext-resolution.md)         | ESM with NodeNext Resolution           | Accepted   | -    |
+| [008](./ADR-008-replace-cac-with-commander.md)           | Replace CAC with Commander             | Accepted   | -    |
+| [009](./ADR-009-replace-preconstruct-with-tsup.md)       | Replace Preconstruct with tsup         | Accepted   | -    |
+| [010](./ADR-010-use-turborepo.md)                        | Use Turborepo                          | Accepted   | -    |
+| [011](./ADR-011-ajv-runtime-validation.md)               | AJV Runtime Validation                 | Accepted   | -    |
+| [012](./ADR-012-remove-playground-examples.md)           | Remove Playground Examples             | Accepted   | -    |
+| [013](./ADR-013-architecture-rewrite-decision.md)        | Architecture Rewrite Decision          | Accepted   | -    |
+| [014](./ADR-014-migrate-tanu-to-ts-morph.md)             | Migrate Tanu to ts-morph               | Accepted   | -    |
+| [015](./ADR-015-eliminate-make-schema-resolver.md)       | Eliminate makeSchemaResolver           | Accepted   | -    |
+| [016](./ADR-016-remove-zodios-dependencies.md)           | Remove Zodios Dependencies             | Accepted   | -    |
+| [017](./ADR-017-unified-bundle-only-pipeline.md)         | Unified Bundle-Only Pipeline           | Accepted   | -    |
 
 ### Phase 2 Part 1: Scalar Pipeline Re-architecture
 
@@ -87,6 +87,14 @@ Each ADR follows this structure:
 | [034](./ADR-034-writer-separation.md)           | Separation of Writer Concerns                 | Accepted | 2026-02-20 |
 | [035](./ADR-035-transform-validation-parity.md) | Transform Validation Parity & Scenario Matrix | Accepted | 2026-02-20 |
 
+### Phase 4: OpenAPI Type System & OAS 3.2 Migration
+
+| ADR                                                        | Title                                                          | Status   | Date       |
+| ---------------------------------------------------------- | -------------------------------------------------------------- | -------- | ---------- |
+| [044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md)    | Drop openapi3-ts, Adopt @scalar/openapi-types                  | Accepted | 2026-04-03 |
+| [045](./ADR-045-strict-reexport-module-openapi-types.md)   | Strict Re-export Module for OpenAPI Types                      | Accepted | 2026-04-03 |
+| [046](./ADR-046-separate-storage-additional-operations.md) | Separate Storage for `additionalOperations` on `CastrDocument` | Accepted | 2026-04-03 |
+
 ### Additional Architecture Records
 
 | ADR                                                                               | Title                                                           | Status   | Date       |
@@ -104,7 +112,9 @@ Each ADR follows this structure:
 
 ## Decision Dependencies
 
-### Phase 2 Part 1 Architecture
+### Phase 2 Part 1 Architecture (historical context)
+
+The dependency graph below captures the historical 3.1-first / `openapi3-ts` era. Current OpenAPI type-system truth for active work now lives in ADR-044, ADR-045, and ADR-046.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -142,8 +152,8 @@ Each ADR follows this structure:
 
 These ADRs establish the following principles:
 
-1. **Single Source of Truth:** All OpenAPI documents are 3.1 internally (ADR-018)
-2. **Type Safety First:** No casting, use type guards at boundaries (ADR-020)
+1. **Single Source of Truth:** Accepted OpenAPI inputs are canonicalised to 3.2.0 at the validated boundary, with a strict local seam for raw-input versus canonical documents (ADR-044/ADR-045)
+2. **Type Safety First:** No casting, use type guards and explicit seams at boundaries (ADR-020, ADR-045)
 3. **Rich Metadata:** Track all bundling operations for debugging (ADR-019)
 4. **Standards Alignment:** JSON Schema Draft 2020-12 compatibility (ADR-018)
 5. **Deterministic Behavior:** Pinned dependencies, controlled bundling (ADR-019)
@@ -157,11 +167,14 @@ These ADRs establish the following principles:
 2. Read [ADR-019](./ADR-019-scalar-pipeline-adoption.md) to see how documents are loaded
 3. Review [ADR-020](./ADR-020-intersection-type-strategy.md) to understand type boundaries
 4. Check [ADR-021](./ADR-021-legacy-dependency-removal.md) for migration context
+5. For the current OpenAPI seam and OAS 3.2 migration truth, read [ADR-044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](./ADR-045-strict-reexport-module-openapi-types.md), and [ADR-046](./ADR-046-separate-storage-additional-operations.md)
 
 **For understanding type system:**
 
-- [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) - Why 3.1 only
-- [ADR-020](./ADR-020-intersection-type-strategy.md) - How types work
+- [ADR-044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md) - Why the repo left `openapi3-ts`
+- [ADR-045](./ADR-045-strict-reexport-module-openapi-types.md) - How the current OpenAPI seam works
+- [ADR-046](./ADR-046-separate-storage-additional-operations.md) - How OAS 3.2 custom methods map into IR
+- Historical context: [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) and [ADR-020](./ADR-020-intersection-type-strategy.md)
 
 **For understanding bundling:**
 
@@ -192,7 +205,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 044)
+2. **Number sequentially** (next is 047)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -235,5 +248,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-03-28  
-**Next ADR:** 043
+**Last Updated:** 2026-04-10  
+**Next ADR:** 047

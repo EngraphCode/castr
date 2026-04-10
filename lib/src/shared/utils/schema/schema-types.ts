@@ -1,7 +1,7 @@
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../openapi-types.js';
 
 /**
- * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
+ * Primitive schema types (subset of SchemaObjectType from the shared OpenAPI seam)
  * Domain concept: types that map to simple primitives
  *
  * Pattern per principles.md §5: Literals tied to library types

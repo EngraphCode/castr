@@ -5701,7 +5701,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",

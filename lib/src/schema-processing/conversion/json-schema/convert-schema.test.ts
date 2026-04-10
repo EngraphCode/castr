@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Schema as JsonSchema } from 'ajv';
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../../../shared/openapi-types.js';
 
 import { convertOpenApiSchemaToJsonSchema } from './convert-schema.js';
 import * as keywordPrimitives from './keywords/keyword-primitives.js';
@@ -12,7 +12,7 @@ function expectSchemaObject(schema: JsonSchema): asserts schema is Extract<JsonS
 }
 
 describe('convertOpenApiSchemaToJsonSchema', () => {
-  it('converts a simple string schema with metadata', () => {
+  it('preserves raw schema examples without rewriting object-shaped values by shape', () => {
     const schema: SchemaObject = {
       type: 'string',
       minLength: 1,
@@ -36,7 +36,7 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
       description: 'Username',
       default: 'guest',
       format: 'email',
-      examples: ['alice', 'bob'],
+      examples: [{ value: 'alice' }, { value: 'bob' }],
       readOnly: true,
       writeOnly: false,
     });

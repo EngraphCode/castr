@@ -6,21 +6,11 @@
  * @module
  */
 
-import type { RequestBodyObject } from 'openapi3-ts/oas31';
-import { writeOpenApiSchema } from '../schema/openapi-writer.schema.js';
-import type { IRComponent, IRRequestBodyComponent, IRMediaType } from '../../../ir/index.js';
+import type { RequestBodyObject } from '../../../../shared/openapi-types.js';
+import type { IRComponent, IRRequestBodyComponent } from '../../../ir/index.js';
+import { writeMediaTypeEntries } from '../openapi-writer.media-types.js';
 
 const COMPONENT_TYPE_REQUEST_BODY = 'requestBody';
-
-/**
- * Converts a media type entry to an OpenAPI MediaTypeObject.
- * @internal
- */
-function writeMediaType(mediaType: IRMediaType): { schema: ReturnType<typeof writeOpenApiSchema> } {
-  return {
-    schema: writeOpenApiSchema(mediaType.schema),
-  };
-}
 
 /**
  * Narrows an IRComponent to an IRRequestBodyComponent.
@@ -43,12 +33,7 @@ export function writeRequestBodyComponent(component: IRComponent): RequestBodyOb
   const narrowed = narrowRequestBody(component);
   const requestBody: RequestBodyObject = {
     required: narrowed.requestBody.required,
-    content: Object.fromEntries(
-      Object.entries(narrowed.requestBody.content).map(([mediaTypeName, mediaType]) => [
-        mediaTypeName,
-        writeMediaType(mediaType),
-      ]),
-    ),
+    content: writeMediaTypeEntries(narrowed.requestBody.content),
   };
   if (narrowed.requestBody.description !== undefined) {
     requestBody.description = narrowed.requestBody.description;

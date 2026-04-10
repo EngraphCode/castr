@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type {
   ComponentsObject,
-  OpenAPIObject,
+  OpenAPIDocument,
   OperationObject,
   SecurityRequirementObject,
   SecuritySchemeObject,
-} from 'openapi3-ts/oas31';
+} from '../../../../shared/openapi-types.js';
 
 import { resolveOperationSecurity } from './extract-operation-security.js';
 
@@ -15,8 +15,8 @@ function buildDocument({
 }: {
   components?: ComponentsObject;
   security?: SecurityRequirementObject[];
-} = {}): OpenAPIObject {
-  const document: OpenAPIObject = {
+} = {}): OpenAPIDocument {
+  const document: OpenAPIDocument = {
     openapi: '3.1.0',
     info: {
       title: 'Test API',

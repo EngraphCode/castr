@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SchemaObject, ReferenceObject } from './openapi-types.js';
 import {
   getSchemaFromComponents,
   resolveSchemaRef,
   assertNotReference,
-} from './component-access.js';
+} from './openapi/component-access.js';
 
 /**
  * Test suite for component-access.ts
@@ -17,7 +17,7 @@ import {
  */
 describe('getSchemaFromComponents', () => {
   it('should return schema when it exists in components.schemas', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -41,7 +41,7 @@ describe('getSchemaFromComponents', () => {
   });
 
   it('should return ReferenceObject when schema contains a $ref', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -67,7 +67,7 @@ describe('getSchemaFromComponents', () => {
   });
 
   it('should throw error when schema does not exist', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -82,7 +82,7 @@ describe('getSchemaFromComponents', () => {
   });
 
   it('should throw error when components is undefined', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -94,7 +94,7 @@ describe('getSchemaFromComponents', () => {
   });
 
   it('should throw error when components.schemas is undefined', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -109,7 +109,7 @@ describe('getSchemaFromComponents', () => {
 
 describe('resolveSchemaRef', () => {
   it('should return schema unchanged when not a ReferenceObject', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -126,7 +126,7 @@ describe('resolveSchemaRef', () => {
   });
 
   it('should resolve valid schema $ref', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -154,7 +154,7 @@ describe('resolveSchemaRef', () => {
   });
 
   it('should throw error for invalid $ref format', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -168,7 +168,7 @@ describe('resolveSchemaRef', () => {
   });
 
   it('should throw error for $ref to non-schema component', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -184,7 +184,7 @@ describe('resolveSchemaRef', () => {
   });
 
   it('should throw error for nested $ref (not fully dereferenced)', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -216,7 +216,7 @@ describe('resolveSchemaRef', () => {
   });
 
   it('should handle allOf with $refs', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -315,7 +315,7 @@ describe('assertNotReference', () => {
 
 describe('x-ext support (multi-file specs)', () => {
   it('should return schema from x-ext location when xExtKey provided', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -344,7 +344,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should fallback to standard location when schema not in x-ext', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -382,7 +382,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should throw error when schema not found in x-ext or standard location', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -411,7 +411,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should handle x-ext location without schemas', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -438,7 +438,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should work without xExtKey (backward compatible)', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -462,7 +462,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should return ReferenceObject from x-ext when present', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -484,11 +484,34 @@ describe('x-ext support (multi-file specs)', () => {
     expect(result).toBeDefined();
     expect(result).toHaveProperty('$ref', '#/components/schemas/Pet');
   });
+
+  it('rejects arbitrary x-ext schema-map records that are neither schema objects nor refs', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+      'x-ext': {
+        abc123: {
+          components: {
+            schemas: {
+              Invalid: {
+                foo: 'bar',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    expect(() => getSchemaFromComponents(doc, 'Invalid', 'abc123')).toThrow(
+      "Schema 'Invalid' not found in x-ext.abc123.components.schemas or components.schemas",
+    );
+  });
 });
 
 describe('integration scenarios', () => {
   it('should handle real-world schema with nested properties', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -522,7 +545,7 @@ describe('integration scenarios', () => {
   });
 
   it('should handle schema with dependencies for topological sorting', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},

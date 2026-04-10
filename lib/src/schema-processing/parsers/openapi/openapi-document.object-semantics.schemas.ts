@@ -7,8 +7,7 @@
  * @internal
  */
 
-import type { SchemaObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import { type SchemaObject, isReferenceObject } from '../../../shared/openapi-types.js';
 
 import {
   buildNonStrictObjectRejectionMessage,

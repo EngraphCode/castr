@@ -5,22 +5,18 @@
  * This is the bottom layer of the IR builder architecture - it has no
  * dependencies on other IR builder modules.
  *
- * **Pure Functions:**
- * All functions are pure - deterministic output, no side effects.
- *
- * **Library Types:**
- * Uses SchemaObject, ReferenceObject from openapi3-ts/oas31 exclusively.
- *
  * @module ir-builder.core
  * @internal
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type ReferenceObject,
+  type SchemaObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 import {
   CastrSchemaProperties,
   ensureObjectTypeForObjectKeywords,
-  isObjectSchemaType,
   type CastrSchema,
   type CastrSchemaNode,
   type IRPropertySchemaContext,
@@ -32,10 +28,7 @@ import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
 import { updateZodChain } from './schemas/builder.zod-chain.js';
 import { addSchemaDocumentation } from './builder/builder.documentation.js';
 import { applySchemaFormat } from './builder/builder.integer-semantics.js';
-import {
-  buildNonStrictObjectRejectionMessage,
-  describePortableNonStrictObjectInput,
-} from '../../object-semantics.js';
+import { addAdditionalProperties } from './builder/builder.additional-properties.js';
 import {
   getNormalizedNullableTypeEntries,
   SCHEMA_TYPE_NULL,
@@ -75,7 +68,7 @@ export function buildCastrSchema(
 
   // Add complex schema properties
   addObjectProperties(schema, context, irSchema);
-  addAdditionalProperties(schema, context, irSchema);
+  addAdditionalProperties(schema, irSchema);
   addArrayItems(schema, context, irSchema);
   addCompositionSchemas(schema, context, irSchema);
 
@@ -263,39 +256,6 @@ function addObjectProperties(
  * Add additional properties to IR schema.
  * @internal
  */
-function addAdditionalProperties(
-  schema: SchemaObject,
-  _context: IRBuildContext,
-  irSchema: CastrSchema,
-): void {
-  if (!isObjectKeywordCandidate(schema, irSchema)) {
-    return;
-  }
-
-  if (schema.additionalProperties === false || schema.additionalProperties === undefined) {
-    irSchema.additionalProperties = false;
-    return;
-  }
-
-  const inputDescription = describePortableNonStrictObjectInput({
-    additionalProperties: schema.additionalProperties,
-  });
-  if (inputDescription === undefined) {
-    return;
-  }
-
-  throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));
-}
-
-function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): boolean {
-  return (
-    isObjectSchemaType(irSchema.type) ||
-    schema.properties !== undefined ||
-    (Array.isArray(schema.required) && schema.required.length > 0) ||
-    schema.additionalProperties !== undefined
-  );
-}
-
 /**
  * Add array items to IR schema (recursively builds items schema).
  * @internal

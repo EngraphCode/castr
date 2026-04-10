@@ -22,7 +22,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { isReferenceObject, type OpenAPIObject } from 'openapi3-ts/oas31';
+import { isReferenceObject, type OpenAPIDocument } from '../shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
 import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
@@ -35,9 +35,9 @@ import { generateZodClientFromOpenAPI } from './test-utils.js';
  * The Scalar pipeline automatically bundles and upgrades specs to OpenAPI 3.1,
  * providing consistent dereferencing behavior.
  *
- * @param pathOrSpec - Either a file path string or an OpenAPIObject to process
+ * @param pathOrSpec - Either a file path string or an OpenAPIDocument to process
  */
-async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<OpenAPIObject> {
+async function dereferenceSpec(pathOrSpec: string | OpenAPIDocument): Promise<OpenAPIDocument> {
   return prepareOpenApiDocument(pathOrSpec);
 }
 
@@ -46,7 +46,7 @@ async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<Open
  * Reduces nesting in test assertions.
  */
 function expectComponentExists(
-  bundled: OpenAPIObject,
+  bundled: OpenAPIDocument,
   type: 'parameters' | 'responses' | 'requestBodies',
   name: string,
 ): void {
@@ -58,7 +58,7 @@ function expectComponentExists(
  * Reduces test complexity by grouping related assertions.
  */
 function expectComponentsExist(
-  bundled: OpenAPIObject,
+  bundled: OpenAPIDocument,
   checks: { type: 'parameters' | 'responses' | 'requestBodies'; name: string }[],
 ): void {
   checks.forEach(({ type, name }) => expectComponentExists(bundled, type, name));
@@ -85,7 +85,7 @@ function expectComponentsExist(
 
 describe('Bundled Spec: Operation-Level $ref Preservation', () => {
   it('should preserve $ref in parameters (Scalar bundles but does not dereference)', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -131,7 +131,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
   });
 
   it('should preserve $ref in requestBody', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -171,7 +171,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
   });
 
   it('should preserve $ref in responses', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -212,7 +212,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
 
   it('should preserve multiple levels of operation $refs', async () => {
     // Test nested refs in parameters, requestBody, responses
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -298,7 +298,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
   });
 
   it('should preserve $refs across multiple operations', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -368,7 +368,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
 
 describe('Dereferenced Spec: Component Schema $ref Preservation', () => {
   it('should keep $refs in component schemas for dependency tracking', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -410,7 +410,7 @@ describe('Dereferenced Spec: Component Schema $ref Preservation', () => {
   });
 
   it('should handle allOf/oneOf/anyOf with $refs in schemas', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -491,7 +491,7 @@ describe('Bundled Spec: Code Generation Integration', () => {
   it('should prove resolver handles $refs in bundled specs', async () => {
     // Scalar pipeline preserves internal $refs - our makeSchemaResolver handles them
 
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -542,7 +542,7 @@ describe('Bundled Spec: Code Generation Integration', () => {
   });
 
   it('should handle complex spec with many $refs correctly', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Complex API', version: '1.0.0' },
       components: {

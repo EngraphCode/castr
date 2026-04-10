@@ -8,32 +8,66 @@
  * All functions in this module are pure - no side effects, deterministic output.
  *
  * **Library Types:**
- * Uses OpenAPIObject from openapi3-ts/oas31 exclusively.
+ * Uses the repo's strict OpenAPI seam types exclusively.
  *
  * @module ir-builder
  * @since 1.0.0
  * @public
  */
 
-import type { ComponentsObject, OpenAPIObject, PathItemObject } from 'openapi3-ts/oas31';
+import {
+  type ComponentsObject,
+  type OpenAPIDocument,
+  type PathItemObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 import { buildCastrSchemas, extractEnums } from './schemas/index.js';
-import { buildCastrOperations, buildIRSecurity } from './operations/index.js';
+import {
+  buildCastrOperations,
+  buildIRMediaTypeEntry,
+  buildIRSecurity,
+} from './operations/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
 import { cloneAndValidateOpenApiDocumentObjectSemantics } from './openapi-document.object-semantics.js';
+import type { IRBuildContext } from './builder.types.js';
+import { isOpenAPIDocument } from '../../../validation/cli-type-guards.js';
 
 // Re-export core functions for backwards compatibility
 export type { IRBuildContext } from './builder.types.js';
 export { buildCastrSchema, buildCastrSchemaNode } from './builder.core.js';
 export { buildCastrSchemas } from './schemas/index.js';
 
+const PATH_ITEM_MEMBER_KEYS = [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+  'query',
+  'additionalOperations',
+  'parameters',
+  'servers',
+] as const;
+
+function hasPathItemMembers(pathItem: PathItemObject): boolean {
+  return PATH_ITEM_MEMBER_KEYS.some((key) => key in pathItem);
+}
+
+function isStandalonePathItemReference(pathItem: PathItemObject | { $ref: string }): boolean {
+  return isReferenceObject(pathItem) && !hasPathItemMembers(pathItem);
+}
+
 /**
  * Build optional document-level fields for the IR.
  * @internal
  */
-function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument> {
+function buildOptionalDocumentFields(doc: OpenAPIDocument): Partial<CastrDocument> {
   const optionalFields: Partial<CastrDocument> = {};
 
   if (doc.security) {
@@ -69,7 +103,7 @@ function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument>
  *
  * @example
  * ```typescript
- * const openApiDoc: OpenAPIObject = loadOpenApiSpec('petstore.yaml');
+ * const openApiDoc: OpenAPIDocument = loadOpenApiSpec('petstore.yaml');
  * const ir = buildIR(openApiDoc);
  *
  * console.log(`Components: ${ir.components.length}`);
@@ -78,7 +112,14 @@ function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument>
  *
  * @public
  */
-export function buildIR(doc: OpenAPIObject): CastrDocument {
+export function buildIR(doc: OpenAPIDocument | object): CastrDocument {
+  if (!isOpenAPIDocument(doc)) {
+    throw new Error(
+      'Expected an OpenAPI document with canonical required fields ' +
+        '(openapi, info.title, info.version, and at least one content section).',
+    );
+  }
+
   const document = cloneAndValidateOpenApiDocumentObjectSemantics(doc);
   const components = buildCastrSchemas(document.components);
   components.push(...extractXExtSchemas(document));
@@ -115,7 +156,7 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
  *
  * @internal
  */
-function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
+function extractXExtSchemas(doc: OpenAPIDocument): IRComponent[] {
   const xExt: unknown = doc['x-ext'];
   if (!isRecord(xExt)) {
     return [];
@@ -156,7 +197,7 @@ function isComponentsObject(value: unknown): value is ComponentsObject {
  *
  * @internal
  */
-function extractAdditionalComponents(doc: OpenAPIObject): IRComponent[] {
+function extractAdditionalComponents(doc: OpenAPIDocument): IRComponent[] {
   const components = doc.components;
   if (!components) {
     return [];
@@ -169,6 +210,7 @@ function extractAdditionalComponents(doc: OpenAPIObject): IRComponent[] {
   extractLinks(components, result);
   extractCallbacks(components, result);
   extractPathItems(components, result);
+  extractMediaTypes(doc, result);
   extractExamples(components, result);
 
   return result;
@@ -210,6 +252,26 @@ function extractPathItems(components: ComponentsObject, result: IRComponent[]): 
   }
 }
 
+function extractMediaTypes(doc: OpenAPIDocument, result: IRComponent[]): void {
+  const mediaTypes = doc.components?.mediaTypes;
+  if (!mediaTypes) {
+    return;
+  }
+
+  for (const [name, mediaType] of Object.entries(mediaTypes)) {
+    const context: IRBuildContext = {
+      doc,
+      path: ['#', 'components', 'mediaTypes', name],
+      required: false,
+    };
+    result.push({
+      type: 'mediaType',
+      name,
+      mediaType: buildIRMediaTypeEntry(mediaType, context, context.path),
+    });
+  }
+}
+
 function extractExamples(components: ComponentsObject, result: IRComponent[]): void {
   if (!components.examples) {
     return;
@@ -229,7 +291,7 @@ function extractExamples(components: ComponentsObject, result: IRComponent[]): v
  *
  * @internal
  */
-function extractWebhooks(doc: OpenAPIObject): Map<string, PathItemObject> | undefined {
+function extractWebhooks(doc: OpenAPIDocument): Map<string, PathItemObject> | undefined {
   // Webhooks only exist in OpenAPI 3.1+
   if (!('webhooks' in doc) || !doc.webhooks) {
     return undefined;
@@ -238,8 +300,7 @@ function extractWebhooks(doc: OpenAPIObject): Map<string, PathItemObject> | unde
   const webhooks = new Map<string, PathItemObject>();
 
   for (const [name, pathItem] of Object.entries(doc.webhooks)) {
-    // Filter out references - we only want resolved PathItemObjects
-    if (pathItem && !('$ref' in pathItem)) {
+    if (pathItem && !isStandalonePathItemReference(pathItem)) {
       webhooks.set(name, pathItem);
     }
   }

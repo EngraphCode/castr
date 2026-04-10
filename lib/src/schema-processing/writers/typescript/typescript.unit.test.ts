@@ -3,7 +3,7 @@ import { writeTypeScript, writeIndexFile, writeCommonFile } from './index.js';
 import type { TemplateContext } from '../../context/index.js';
 import type { CastrSchema, CastrDocument } from '../../ir/index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
-import type { SchemaObjectType, InfoObject, ServerObject } from 'openapi3-ts/oas31';
+import type { SchemaObjectType, InfoObject, ServerObject } from '../../../shared/openapi-types.js';
 
 function createMockSchema(
   type: SchemaObjectType,
@@ -142,6 +142,50 @@ describe('writers/typescript', () => {
       expect(output).toContain('path: "/users"');
       // Note: Response will be z.unknown() since User schema is not in IR
       expect(output).toContain('response:');
+    });
+
+    it('uses queryString request sections for QueryString parameters', () => {
+      const context: TemplateContext = {
+        sortedSchemaNames: [],
+        endpoints: [
+          {
+            method: 'get',
+            path: '/search',
+            requestFormat: 'json',
+            parameters: [
+              {
+                name: 'filter',
+                type: 'QueryString',
+                schema: createMockSchema('string'),
+              },
+            ],
+            errors: [],
+            response: createMockSchema('string'),
+          },
+        ],
+        endpointsGroups: {},
+        mcpTools: [],
+        _ir: {
+          version: '1.0.0',
+          openApiVersion: '3.2.0',
+          info: mockInfo,
+          servers: mockServers,
+          enums: new Map(),
+          components: [],
+          operations: [],
+          dependencyGraph: {
+            nodes: new Map(),
+            topologicalOrder: [],
+            circularReferences: [],
+          },
+          schemaNames: [],
+        },
+      };
+
+      const output = writeTypeScript(context);
+
+      expect(output).toContain('queryString: z.object(');
+      expect(output).not.toContain('queryParams: z.object(');
     });
 
     it('should generate validation helpers when enabled', () => {

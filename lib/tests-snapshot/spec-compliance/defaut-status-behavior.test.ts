@@ -1,6 +1,6 @@
 import { getZodClientTemplateContext } from '../../src/index.js';
 import { expect, test } from 'vitest';
-import { type OpenAPIObject } from 'openapi3-ts/oas31';
+import { type OpenAPIObject } from '../../src/shared/openapi-types.js';
 
 test('defaut-status-behavior', () => {
   const doc: OpenAPIObject = {

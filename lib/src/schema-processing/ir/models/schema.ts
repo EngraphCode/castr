@@ -1,4 +1,8 @@
-import type { SchemaObject, XmlObject, ExternalDocumentationObject } from 'openapi3-ts/oas31';
+import type {
+  SchemaObject,
+  XMLObject,
+  ExternalDocumentationObject,
+} from '../../../shared/openapi-types.js';
 import type { IRIntegerSemantics } from '../integer-semantics/core.js';
 import {
   SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES,
@@ -321,7 +325,7 @@ export interface CastrSchema {
    *
    * @see {@link https://spec.openapis.org/oas/v3.1.0#xml-object OpenAPI XML Object}
    */
-  xml?: XmlObject;
+  xml?: XMLObject;
 
   /**
    * External documentation for this schema.

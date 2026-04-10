@@ -1,6 +1,6 @@
 import { getZodSchema } from '../../../src/index.js';
 import { expect, test } from 'vitest';
-import { type SchemaObject } from 'openapi3-ts/oas31';
+import { type SchemaObject } from '../../../src/shared/openapi-types.js';
 
 /**
  * Test: unicode-pattern-regex

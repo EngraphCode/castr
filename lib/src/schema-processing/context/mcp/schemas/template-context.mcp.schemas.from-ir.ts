@@ -29,6 +29,7 @@ const SCHEMA_TYPE_OBJECT = 'object';
 const SCHEMA_KEY_REF = '$ref';
 const INPUT_SECTION_PATH = 'path';
 const INPUT_SECTION_QUERY = 'query';
+const INPUT_SECTION_QUERY_STRING = 'queryString';
 const INPUT_SECTION_HEADERS = 'headers';
 const INPUT_SECTION_BODY = 'body';
 
@@ -238,13 +239,19 @@ const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema =
  */
 function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): MutableJsonSchema {
   const parameterGroups = collectParameterGroupsFromIR(operation);
-  const requestBody = resolveRequestBodySchemaFromIR(operation);
+  const requestBody = resolveRequestBodySchemaFromIR(operation, ir);
 
   const properties: Record<string, MutableJsonSchema> = {};
   const requiredSections = new Set<string>();
 
   assignSectionFromIR(properties, requiredSections, INPUT_SECTION_PATH, parameterGroups.path);
   assignSectionFromIR(properties, requiredSections, INPUT_SECTION_QUERY, parameterGroups.query);
+  assignSectionFromIR(
+    properties,
+    requiredSections,
+    INPUT_SECTION_QUERY_STRING,
+    parameterGroups.queryString,
+  );
   assignSectionFromIR(properties, requiredSections, INPUT_SECTION_HEADERS, parameterGroups.header);
 
   if (requestBody) {
@@ -286,7 +293,7 @@ function createOutputSchemaFromIR(
  * Builds MCP tool schemas from a CastrDocument and CastrOperation.
  *
  * This function reads from the IR instead of raw OpenAPI, eliminating
- * the need to access `OpenAPIObject` for schema resolution.
+ * the need to access `OpenAPIDocument` for schema resolution.
  *
  * @param ir - The CastrDocument containing component schemas
  * @param operation - The CastrOperation containing parameters, request body, and responses
@@ -303,7 +310,7 @@ export const buildMcpToolSchemasFromIR = (
   operation: CastrOperation,
 ): Omit<McpToolSchemaResult, 'security'> => {
   const inputSchema = createInputSchemaFromIR(ir, operation);
-  const successSchema = resolvePrimarySuccessResponseSchemaFromIR(operation);
+  const successSchema = resolvePrimarySuccessResponseSchemaFromIR(operation, ir);
   const outputSchema = successSchema ? createOutputSchemaFromIR(ir, successSchema) : undefined;
 
   return {

@@ -30,7 +30,7 @@ Types are our friend - they reveal architectural problems that need solving, not
 2. **Types Are Our Friend** - Type errors show us where we've made mistakes, lost type information, or have architectural problems
 3. **Clean Breaks Over Hacks** - No compatibility layers, no temporary solutions, no "TODO: fix later"
 4. **Fix Root Causes, Not Symptoms** - If types don't match, fix the architecture, don't add type assertions
-5. **Library Types First** - Defer to `openapi3-ts/oas31` and other domain expert libraries before creating custom types
+5. **Library Types First** - Defer to our canonical re-export module (`shared/openapi-types.js`) or other domain expert libraries before creating custom types
 6. **Test-Driven Development** - Write failing tests first, always, no exceptions
 7. **Comprehensive Documentation** - TSDoc for all public APIs enables professional self-service adoption
 8. **Quality Gates Are Absolute** - All gates defined in `.agent/directives/DEFINITION_OF_DONE.md` must pass GREEN, no exceptions, no workarounds
@@ -707,7 +707,7 @@ Use library types and type guards everywhere. Custom types are forbidden.
 
 **Core Principles:**
 
-1. **Use library types directly** - Import types from `openapi3-ts/oas31`, `zod`, ``, etc.
+1. **Use library types directly** - Import types from our re-export module (`shared/openapi-types.js`), `zod`, etc.
 2. **Avoid complex type extractions** - No `Exclude<>`, `Extract<>`, `Pick<>` gymnastics on library types
 3. **Don't redefine library concepts** - If the library has it, use it
 4. **Accept union types** - If the spec allows `SchemaObject | ReferenceObject`, accept both
@@ -715,7 +715,11 @@ Use library types and type guards everywhere. Custom types are forbidden.
 **Good:**
 
 ```typescript
-import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts';
+import type {
+  SchemaObject,
+  ReferenceObject,
+  SchemaObjectType,
+} from '../../shared/openapi-types.js';
 
 // Use library's union types directly
 function processSchema(schema: SchemaObject | ReferenceObject): Result {
@@ -757,7 +761,7 @@ function handleItems(
 
 ```typescript
 // ✅ Proper type guard - tied to library type with Extract
-import type { SchemaObject } from 'openapi3-ts';
+import type { SchemaObject } from '../../shared/openapi-types.js';
 
 type PrimitiveSchemaType = Extract<
   NonNullable<SchemaObject['type']>,
@@ -1269,7 +1273,7 @@ NONE. NO EXCEPTIONS.
 
 ```typescript
 // 1. External dependencies
-import type { OpenAPIObject } from 'openapi3-ts';
+import type { OpenAPIObject } from '../../shared/openapi-types.js';
 import { match } from 'ts-pattern';
 
 // 2. Internal imports (with .js extensions for ESM)
@@ -1804,7 +1808,7 @@ console.log(`Took ${performance.now() - start}ms`);
 4. ✅ **NEVER widen types** - Preserve literal types, avoid `: string` or `: number` parameters
 5. ✅ **Single source of truth** - Define types once, import consistently
 6. ✅ **Validate external boundaries** - Parse/validate data from network, files, user input
-7. ✅ **Defer to library types** - ALWAYS use library types everywhere (`openapi3-ts/oas31`), custom types are forbidden
+7. ✅ **Defer to library types** - ALWAYS use canonical shared types everywhere (`shared/openapi-types.js`), custom types are forbidden
 8. ✅ **No filesystem/network I/O in tests** - Mock all I/O operations
 9. ✅ **Pure functions when possible** - Same input → same output, no side effects
 10. ✅ **Explicit over implicit** - No hidden dependencies, no global state

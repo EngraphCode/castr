@@ -17,8 +17,12 @@
  */
 
 import { expect, test, describe } from 'vitest';
-import type { SchemaObject } from 'openapi3-ts/oas31';
+import type { SchemaObject } from '../openapi-types.js';
 import { getSchemaComplexity } from './schema-complexity.js';
+
+function getComplexityFromUnknownBoundary(schema: unknown): number {
+  return Reflect.apply(getSchemaComplexity, undefined, [{ schema, current: 0 }]);
+}
 
 const getComplexity = (schema: SchemaObject) => getSchemaComplexity({ schema, current: 0 });
 
@@ -162,8 +166,7 @@ describe('schema-complexity: enum calculations', () => {
     test('enum with mixed types (string and number)', () => {
       // Note: This might not be valid OpenAPI, but we should handle it
       const invalidSchema: unknown = { enum: ['a', 1, 'b', 2] };
-      // @ts-expect-error TS2345 - Testing invalid enum input from an unknown boundary to verify error handling
-      expect(getComplexity(invalidSchema)).toBe(2);
+      expect(getComplexityFromUnknownBoundary(invalidSchema)).toBe(2);
     });
   });
 });

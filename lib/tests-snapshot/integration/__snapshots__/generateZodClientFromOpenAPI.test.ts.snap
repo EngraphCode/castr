@@ -439,7 +439,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -3020,7 +3020,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -5017,7 +5017,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -7516,7 +7516,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -10015,7 +10015,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -12514,7 +12514,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -15013,7 +15013,7 @@ export const endpoints = [
   {
     method: "post",
     path: "/pet/{petId}/uploadImage",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
       {
         name: "petId",
@@ -18591,6 +18591,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet",
                 "requestBody": {
@@ -18735,6 +18736,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet",
                 "requestBody": {
@@ -18985,6 +18987,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/findByStatus",
                 "responses": [
@@ -19217,6 +19220,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/findByTags",
                 "responses": [
@@ -19423,6 +19427,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -19757,6 +19762,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -19958,6 +19964,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -20160,10 +20167,13 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}/uploadImage",
                 "requestBody": {
-                    "content": {},
+                    "content": {
+                        "application/octet-stream": {},
+                    },
                     "required": false,
                 },
                 "responses": [
@@ -20218,6 +20228,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/inventory",
                 "responses": [
@@ -20270,6 +20281,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order",
                 "requestBody": {
@@ -20476,6 +20488,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order/{orderId}",
                 "responses": [
@@ -20641,6 +20654,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order/{orderId}",
                 "responses": [
@@ -20668,6 +20682,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user",
                 "requestBody": {
@@ -20799,6 +20814,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/createWithList",
                 "requestBody": {
@@ -21068,6 +21084,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/user/login",
                 "responses": [
@@ -21186,6 +21203,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/logout",
                 "responses": [
@@ -21288,6 +21306,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "responses": [
@@ -21441,6 +21460,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "requestBody": {
@@ -21610,6 +21630,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "responses": [
@@ -22519,7 +22540,7 @@ Some useful links:
                 },
             ],
             "path": "/pet/{petId}/uploadImage",
-            "requestFormat": "json",
+            "requestFormat": "binary",
             "response": {
                 "$ref": "#/components/schemas/ApiResponse",
                 "metadata": {
@@ -28084,6 +28105,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet",
                 "requestBody": {
@@ -28228,6 +28250,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet",
                 "requestBody": {
@@ -28478,6 +28501,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/findByStatus",
                 "responses": [
@@ -28710,6 +28734,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/findByTags",
                 "responses": [
@@ -28916,6 +28941,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -29250,6 +29276,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -29451,6 +29478,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}",
                 "responses": [
@@ -29653,10 +29681,13 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/pet/{petId}/uploadImage",
                 "requestBody": {
-                    "content": {},
+                    "content": {
+                        "application/octet-stream": {},
+                    },
                     "required": false,
                 },
                 "responses": [
@@ -29711,6 +29742,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/inventory",
                 "responses": [
@@ -29763,6 +29795,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order",
                 "requestBody": {
@@ -29969,6 +30002,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order/{orderId}",
                 "responses": [
@@ -30134,6 +30168,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/store/order/{orderId}",
                 "responses": [
@@ -30161,6 +30196,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user",
                 "requestBody": {
@@ -30292,6 +30328,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/createWithList",
                 "requestBody": {
@@ -30561,6 +30598,7 @@ Some useful links:
                             },
                         },
                     ],
+                    "querystring": [],
                 },
                 "path": "/user/login",
                 "responses": [
@@ -30679,6 +30717,7 @@ Some useful links:
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/logout",
                 "responses": [
@@ -30781,6 +30820,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "responses": [
@@ -30934,6 +30974,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "requestBody": {
@@ -31103,6 +31144,7 @@ Some useful links:
                         },
                     ],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/user/{username}",
                 "responses": [
@@ -32012,7 +32054,7 @@ Some useful links:
                 },
             ],
             "path": "/pet/{petId}/uploadImage",
-            "requestFormat": "json",
+            "requestFormat": "binary",
             "response": {
                 "$ref": "#/components/schemas/ApiResponse",
                 "metadata": {
@@ -36656,6 +36698,7 @@ exports[`with optional, partial, all required objects 1`] = `
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/root",
                 "responses": [
@@ -36797,6 +36840,7 @@ exports[`with optional, partial, all required objects 1`] = `
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/nested",
                 "responses": [
@@ -36918,6 +36962,7 @@ exports[`with optional, partial, all required objects 1`] = `
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/deeplyNested",
                 "responses": [
@@ -36976,6 +37021,7 @@ exports[`with optional, partial, all required objects 1`] = `
                     "header": [],
                     "path": [],
                     "query": [],
+                    "querystring": [],
                 },
                 "path": "/veryDeeplyNested",
                 "responses": [

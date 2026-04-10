@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
+import type { ComponentsObject, OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { buildIR, buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
@@ -381,7 +381,7 @@ describe('buildCastrSchemas', () => {
 
 describe('buildIR', () => {
   it('should build complete IR document from minimal OpenAPI spec', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: {
         title: 'Test API',
@@ -406,7 +406,7 @@ describe('buildIR', () => {
   });
 
   it('should include schemas in IR document', () => {
-    const doc: OpenAPIObject = {
+    const doc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: {
         title: 'Test API',
@@ -435,7 +435,7 @@ describe('buildIR', () => {
 describe('buildCastrOperations', () => {
   describe('simple GET endpoint', () => {
     it('should extract operationId, method, and path from simple GET operation', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -467,7 +467,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should handle GET endpoint with summary and description', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -502,7 +502,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should extract multiple operations from different paths', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -532,7 +532,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should handle multiple HTTP methods on same path', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -567,7 +567,7 @@ describe('buildCastrOperations', () => {
 
   describe('POST with requestBody, parameters, responses, and security', () => {
     it('should extract parameters from operation', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -618,7 +618,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should extract requestBody from POST operation', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -662,7 +662,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should extract responses from operation', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -706,7 +706,7 @@ describe('buildCastrOperations', () => {
     });
 
     it('should extract security requirements from operation', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: {
           title: 'Test API',
@@ -750,7 +750,7 @@ describe('buildCastrOperations', () => {
 describe('buildIR - IR-1 enhancements', () => {
   describe('schemaNames', () => {
     it('should populate schemaNames from components', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -770,7 +770,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('should return empty array when no schemas exist', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -782,7 +782,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('should include schemas from x-ext vendor extension', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -811,7 +811,7 @@ describe('buildIR - IR-1 enhancements', () => {
 
   describe('dependencyGraph', () => {
     it('should build dependency graph with nodes for each schema', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -837,7 +837,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('should compute topological order with leaves first', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -865,7 +865,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('should detect circular references', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -888,7 +888,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('rejects circular additionalProperties references under strict doctrine', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
@@ -940,7 +940,7 @@ describe('buildIR - IR-1 enhancements', () => {
     });
 
     it('should build dependents (reverse edges) for each node', () => {
-      const doc: OpenAPIObject = {
+      const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},

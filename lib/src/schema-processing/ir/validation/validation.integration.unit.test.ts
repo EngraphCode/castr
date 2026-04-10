@@ -6,20 +6,20 @@
  * @module ir-validation.integration.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 import { isCastrDocument } from './validators.js';
 import { assertSchemaComponent } from '../test-helpers.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Real-World Integration', () => {
   test('handles a realistic API specification', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'User Management API' },
       paths: {

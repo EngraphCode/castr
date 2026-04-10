@@ -1,9 +1,9 @@
 import type {
-  OpenAPIObject,
+  OpenAPIDocument,
   ReferenceObject,
   SchemaObject,
   OperationObject,
-} from 'openapi3-ts/oas31';
+} from '../../shared/openapi-types.js';
 
 // Import helpers from modules
 import {
@@ -11,13 +11,13 @@ import {
   getDeepDependencyGraphFromIR,
 } from './template-context.from-ir.js';
 import {
+  getEndpointDefinitionsFromIR,
   processEndpointGroupingAndCommonSchemas,
   type MinimalTemplateContext,
 } from './endpoints/index.js';
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
 import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './mcp/index.js';
 import { buildIR } from '../parsers/openapi/index.js';
-import { getEndpointDefinitionsFromIR } from './endpoints/template-context.endpoints.from-ir.js';
 import { extractInlineSchemas } from './schemas/inline-schemas.js';
 import type { CastrDocument } from '../ir/index.js';
 
@@ -112,6 +112,20 @@ export interface TemplateContextOptions {
   withSchemaRegistry?: boolean;
 }
 
+function assertNoMixedQueryParameterModels(ir: Pick<CastrDocument, 'operations'>): void {
+  for (const operation of ir.operations) {
+    const hasQueryParameters = operation.parametersByLocation.query.length > 0;
+    const hasQueryStringParameters = (operation.parametersByLocation.querystring ?? []).length > 0;
+
+    if (hasQueryParameters && hasQueryStringParameters) {
+      throw new Error(
+        `Operation ${operation.method} ${operation.path} mixes ` +
+          '`query` and `querystring` parameters. Use exactly one query parameter model per operation.',
+      );
+    }
+  }
+}
+
 /**
  * Main function to generate template context from OpenAPI document.
  * Orchestrates the entire process of building template context.
@@ -121,11 +135,12 @@ export interface TemplateContextOptions {
  * @returns Complete template context for code generation
  */
 export const getTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument | object,
   options?: TemplateContextOptions,
 ): TemplateContext => {
   // Build IR document - Source of Truth (Cardinal Rule: after this, only IR matters)
   const irDocument = buildIR(doc);
+  assertNoMixedQueryParameterModels(irDocument);
 
   // Use IR for schema names and dependency graph (no raw doc access)
   const deepDependencyGraph = getDeepDependencyGraphFromIR(irDocument);
@@ -246,7 +261,7 @@ export { extractSchemaNamesFromDoc } from './schemas/template-context.schemas.js
  * @public
  */
 export const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument | object,
   options?: TemplateContextOptions,
 ): TemplateContext => {
   return getTemplateContext(doc, options);

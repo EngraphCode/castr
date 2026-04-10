@@ -6,7 +6,7 @@
  */
 
 import { validate } from '@scalar/openapi-parser';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIInputDocument } from '../openapi-types.js';
 import type { OTTLoadedOpenApiDocument } from './bundle/bundle-metadata.types.js';
 import { normalizeInput } from './normalize-input.js';
 import { setupBundleInfrastructure, createBundleConfig, bundleDocument } from './bundle/index.js';
@@ -43,7 +43,7 @@ import { createValidationErrorMessage } from './validation-errors.js';
  * @public
  */
 export async function loadOpenApiDocument(
-  input: string | URL | OpenAPIObject,
+  input: string | URL | OpenAPIInputDocument | object,
 ): Promise<OTTLoadedOpenApiDocument> {
   const normalizedInput = normalizeInput(input);
   const { entrypoint, bundleInput, origin, originalDescriptor } = normalizedInput;

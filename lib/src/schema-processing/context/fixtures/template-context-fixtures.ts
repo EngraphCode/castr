@@ -1,13 +1,10 @@
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument, SchemaObject } from '../../../shared/openapi-types.js';
 
-/**
- * Creates a minimal OpenAPI document with a single endpoint
- */
 export function createMinimalDoc(
   path: string,
   operationId: string,
   responseSchema: SchemaObject | { $ref: string },
-): OpenAPIObject {
+): OpenAPIDocument {
   return {
     openapi: '3.0.3',
     info: { version: '1', title: 'Test API' },
@@ -17,6 +14,7 @@ export function createMinimalDoc(
           operationId,
           responses: {
             '200': {
+              description: 'Successful response',
               content: {
                 'application/json': {
                   schema: responseSchema,
@@ -33,10 +31,7 @@ export function createMinimalDoc(
   };
 }
 
-/**
- * Creates an OpenAPI document with specified schemas
- */
-export function createDocWithSchemas(schemas: Record<string, SchemaObject>): OpenAPIObject {
+export function createDocWithSchemas(schemas: Record<string, SchemaObject>): OpenAPIDocument {
   return {
     openapi: '3.0.3',
     info: { version: '1', title: 'Test API' },
@@ -47,15 +42,12 @@ export function createDocWithSchemas(schemas: Record<string, SchemaObject>): Ope
   };
 }
 
-/**
- * Creates an OpenAPI document with schemas and a path that references a schema
- */
 export function createDocWithSchemaRef(
   path: string,
   operationId: string,
   schemaRef: string,
   schemas: Record<string, SchemaObject>,
-): OpenAPIObject {
+): OpenAPIDocument {
   return {
     openapi: '3.0.3',
     info: { version: '1', title: 'Test API' },
@@ -65,6 +57,7 @@ export function createDocWithSchemaRef(
           operationId,
           responses: {
             '200': {
+              description: 'Successful response',
               content: {
                 'application/json': {
                   schema: { $ref: schemaRef },
@@ -81,9 +74,6 @@ export function createDocWithSchemaRef(
   };
 }
 
-/**
- * Creates an OpenAPI document with a path and tags
- */
 export function createDocWithTags(
   paths: Record<
     string,
@@ -94,8 +84,8 @@ export function createDocWithTags(
     }
   >,
   schemas: Record<string, SchemaObject> = {},
-): OpenAPIObject {
-  const pathItems: OpenAPIObject['paths'] = {};
+): OpenAPIDocument {
+  const pathItems: OpenAPIDocument['paths'] = {};
 
   for (const [path, config] of Object.entries(paths)) {
     pathItems[path] = {
@@ -104,6 +94,7 @@ export function createDocWithTags(
         tags: config.tags,
         responses: {
           '200': {
+            description: 'Successful response',
             content: {
               'application/json': {
                 schema: config.responseSchema ?? { type: 'string' },

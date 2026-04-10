@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SchemaObject, ParameterObject } from 'openapi3-ts/oas31';
+import type { SchemaObject, ParameterObject } from '../shared/openapi-types.js';
 import { extractSchemaConstraints, extractParameterMetadata } from './parameter-metadata.js';
 
 describe('extractSchemaConstraints', () => {
@@ -342,6 +342,24 @@ describe('extractParameterMetadata', () => {
           description: 'Legacy XML format for compatibility',
         },
       });
+    });
+
+    it('exposes raw schemaExamples separately without inventing a primary example from them', () => {
+      const rawSchemaExamples = [{ value: 'raw-object-example' }, { nested: { ok: true } }];
+      const param: ParameterObject = {
+        name: 'filter',
+        in: 'query',
+      };
+
+      const schema: SchemaObject = {
+        type: 'object',
+        examples: rawSchemaExamples,
+      };
+
+      const result = extractParameterMetadata(param, schema);
+
+      expect(result.example).toBeUndefined();
+      expect(result.schemaExamples).toEqual(rawSchemaExamples);
     });
   });
 

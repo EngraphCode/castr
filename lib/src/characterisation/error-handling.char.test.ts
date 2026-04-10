@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { extractContent, generateZodClientFromOpenAPI } from './test-utils.js';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
+import {
+  extractContent,
+  generateZodClientFromOpenAPI,
+  generateZodClientFromOpenAPIFromUnknownBoundary,
+} from './test-utils.js';
 
 /**
  * Characterisation Tests: Error Handling
@@ -21,15 +25,14 @@ import { extractContent, generateZodClientFromOpenAPI } from './test-utils.js';
 describe('Characterisation: Error Handling', () => {
   describe('Invalid OpenAPI Specs', () => {
     it('should handle spec without openapi version', async () => {
-      const invalidSpec: unknown = {
+      const invalidSpec = {
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
       };
 
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -37,7 +40,7 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle spec without info object', async () => {
-      const invalidSpec: unknown = {
+      const invalidSpec = {
         openapi: '3.0.0',
         paths: {},
       };
@@ -45,8 +48,7 @@ describe('Characterisation: Error Handling', () => {
       // Fail fast: reject invalid specs at the boundary
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -54,7 +56,7 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle spec without paths object', async () => {
-      const invalidSpec: unknown = {
+      const invalidSpec = {
         openapi: '3.0.0',
         info: { title: 'Test', version: '1.0.0' },
       };
@@ -62,8 +64,7 @@ describe('Characterisation: Error Handling', () => {
       // Fail fast: reject invalid specs at the boundary
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -73,7 +74,7 @@ describe('Characterisation: Error Handling', () => {
 
   describe('Malformed References', () => {
     it('should handle invalid $ref format', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
@@ -117,7 +118,7 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle missing referenced schema', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
@@ -152,7 +153,7 @@ describe('Characterisation: Error Handling', () => {
 
   describe('Unsupported Features', () => {
     it('should handle schemas without type property', async () => {
-      const spec: unknown = {
+      const spec = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         components: {
@@ -186,8 +187,7 @@ describe('Characterisation: Error Handling', () => {
       // Bundling not needed for in-memory specs with internal refs
 
       // Should not throw, infer type from properties
-      const result = await generateZodClientFromOpenAPI({
-        // @ts-expect-error TS2322 - Testing external schema input that omits type
+      const result = await generateZodClientFromOpenAPIFromUnknownBoundary({
         openApiDoc: spec,
         disableWriteToFile: true,
       });
@@ -199,7 +199,7 @@ describe('Characterisation: Error Handling', () => {
 
   describe('Response Handling Errors', () => {
     it('should handle operations with no success responses', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
@@ -231,7 +231,7 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle responses with no content', async () => {
-      const spec: OpenAPIObject = {
+      const spec: OpenAPIDocument = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {
@@ -269,7 +269,7 @@ describe('Characterisation: Error Handling', () => {
 
   describe('Schema Validation Errors', () => {
     it('should reject schemas with conflicting properties', async () => {
-      const spec: unknown = {
+      const spec = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         components: {
@@ -303,8 +303,7 @@ describe('Characterisation: Error Handling', () => {
       };
 
       await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing external schema input with conflicting object-only keywords
+        generateZodClientFromOpenAPIFromUnknownBoundary({
           openApiDoc: spec,
           disableWriteToFile: true,
         }),

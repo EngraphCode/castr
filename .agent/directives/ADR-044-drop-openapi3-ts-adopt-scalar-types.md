@@ -2,13 +2,16 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-03  
+**Revised:** 2026-04-10 — Updated to reflect the completed dependency exit, green validation gates, and closed reviewer loop  
 **Context:** OAS 3.2 Full Feature Support arc
 
 ---
 
 ## Decision
 
-Replace `openapi3-ts` (v4.5.0) with `@scalar/openapi-types` as the canonical source of OpenAPI type definitions throughout the codebase.
+Replace `openapi3-ts` (v4.5.0) with the `@scalar/openapi-types` family as the canonical upstream source of OpenAPI type definitions throughout the codebase.
+
+All repo imports of OpenAPI types must route through `lib/src/shared/openapi-types.ts`, not directly through `@scalar/openapi-types`. That local seam owns strictness restoration and seam corrections (see ADR-045).
 
 ## Context
 
@@ -31,7 +34,8 @@ The project originally adopted `openapi3-ts` for strict OpenAPI 3.1 type definit
 ### Negative
 
 - **Import path migration** — ~50 files change from `openapi3-ts/oas31` to the new local module
-- **Strictness gap** — Scalar types make ~8 spec-required fields optional (see ADR-045 for mitigation)
+- **Strictness gap** — Scalar's tolerant raw-input shapes required a stricter local seam, explicit interfaces, and a boundary/canonical split instead of direct adoption (see ADR-045)
+- **Guard burden** — the strict seam now depends on ongoing dependency-exit guards so protected layers do not drift back to direct vendor imports or the legacy alias paths
 
 ## Alternatives Considered
 
@@ -41,8 +45,11 @@ The project originally adopted `openapi3-ts` for strict OpenAPI 3.1 type definit
 
 ## Implementation
 
-1. Create `lib/src/shared/openapi-types.ts` — central strict re-export module (see ADR-045)
-2. Replace all `openapi3-ts/oas31` imports with the local module across ~50 files
-3. Provide a local `isReferenceObject` runtime guard
-4. Delete `openapi-schema-extensions.d.ts`
-5. Remove `openapi3-ts` from `package.json`
+Implementation status as of 2026-04-10:
+
+1. `lib/src/shared/openapi-types.ts` is live as the central strict re-export module (see ADR-045)
+2. the boundary/canonical split is live (`OpenAPIInputDocument` vs `OpenAPIDocument`)
+3. the local `isReferenceObject` runtime guard is in place
+4. `openapi-schema-extensions.d.ts` is deleted
+5. `openapi3-ts` is removed from `lib/package.json`, and the targeted active-surface grep is clean
+6. protected layers now fail fast on direct `@scalar/openapi-types` imports, the backwards-compatible `OpenAPIObject` alias, and any future `openapi3-ts` reintroduction

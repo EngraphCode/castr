@@ -11,11 +11,10 @@ import type {
   PathsObject,
   PathItemObject,
   OperationObject,
-  ParameterObject,
   SecurityRequirementObject,
-} from 'openapi3-ts/oas31';
-import { writeOpenApiSchema } from '../schema/openapi-writer.schema.js';
+} from '../../../../shared/openapi-types.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
+import { writeParameterObject } from '../openapi-writer.parameters.js';
 import type { CastrOperation, CastrParameter, IRSecurityRequirement } from '../../../ir/index.js';
 
 function compareSecurityRequirements(
@@ -29,34 +28,8 @@ function compareSecurityRequirements(
  * Converts a CastrParameter to OpenAPI ParameterObject.
  * @internal
  */
-function writeParameter(param: CastrParameter): ParameterObject {
-  const result: ParameterObject = {
-    name: param.name,
-    in: param.in,
-    required: param.required,
-    schema: writeOpenApiSchema(param.schema),
-  };
-
-  if (param.description !== undefined) {
-    result.description = param.description;
-  }
-  if (param.deprecated !== undefined) {
-    result.deprecated = param.deprecated;
-  }
-  if (param.example !== undefined) {
-    result.example = param.example;
-  }
-  if (param.style !== undefined) {
-    result.style = param.style;
-  }
-  if (param.explode !== undefined) {
-    result.explode = param.explode;
-  }
-  if (param.allowReserved !== undefined) {
-    result.allowReserved = param.allowReserved;
-  }
-
-  return result;
+function writeParameter(param: CastrParameter): ReturnType<typeof writeParameterObject> {
+  return writeParameterObject(param);
 }
 
 /**

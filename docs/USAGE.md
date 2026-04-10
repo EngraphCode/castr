@@ -57,10 +57,9 @@ if (isSingleFileResult(result)) {
 You can also pass an in-memory OpenAPI document:
 
 ```typescript
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '@engraph/castr';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},
@@ -141,9 +140,8 @@ If you want metadata rather than rendered TypeScript, use the template-context A
 
 ```typescript
 import { getZodClientTemplateContext } from '@engraph/castr';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc: OpenAPIObject = {
+const doc = {
   openapi: '3.1.0',
   info: { title: 'Pets', version: '1.0.0' },
   paths: {},

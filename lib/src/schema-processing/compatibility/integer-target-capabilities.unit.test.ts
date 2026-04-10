@@ -1,4 +1,4 @@
-import type { HeaderObject, PathItemObject } from 'openapi3-ts/oas31';
+import type { HeaderObject, PathItemObject } from '../../shared/openapi-types.js';
 import { describe, expect, it } from 'vitest';
 import { CANONICAL_OPENAPI_TARGET_LABEL } from '../../shared/openapi/version.js';
 import {

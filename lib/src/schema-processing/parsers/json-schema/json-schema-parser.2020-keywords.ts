@@ -7,14 +7,17 @@
  * dependentRequired, minContains, maxContains, if/then/else).
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends SchemaObject from openapi3-ts/oas31).
+ * Uses JsonSchema2020 (extends the shared OpenAPI seam).
  *
  * @module parsers/json-schema/json-schema-parser.2020-keywords
  * @internal
  */
 
-import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
+import {
+  type SchemaObject,
+  type ReferenceObject,
+  isReferenceObject,
+} from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 

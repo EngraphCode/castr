@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import {
   extractContent,
@@ -36,9 +36,9 @@ function assertAndExtractResult(result: GenerationResult, context: string): stri
  * The Scalar pipeline (via prepareOpenApiDocument) automatically bundles and
  * upgrades specs to OpenAPI 3.1, providing consistent dereferencing behavior.
  *
- * @param pathOrSpec - Either a file path string or an OpenAPIObject to process
+ * @param pathOrSpec - Either a file path string or an OpenAPIDocument to process
  */
-async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<OpenAPIObject> {
+async function dereferenceSpec(pathOrSpec: string | OpenAPIDocument): Promise<OpenAPIDocument> {
   return prepareOpenApiDocument(pathOrSpec);
 }
 
@@ -56,7 +56,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * - NO type assertions
    */
   it('should generate named schemas from components.schemas', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -106,7 +106,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * - Both schemas exported
    */
   it('should handle schema dependencies correctly', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -152,7 +152,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * Note: Circular references are handled by the Scalar pipeline's bundling process
    */
   it('should handle circular references with Zod 4 getter syntax', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -198,7 +198,7 @@ describe('E2E: Programmatic Usage - After prepareOpenApiDocument()', () => {
    * - Uses z.object
    */
   it('should still extract named schemas from components', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -304,7 +304,7 @@ describe('E2E: CLI Usage', () => {
    * - Named schemas exported from inline spec
    */
   it('should work with inline specs via CLI path', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -364,7 +364,7 @@ describe('E2E: Operation-Level Refs', () => {
    * - No type assertions
    */
   it('should handle $refs in operation.parameters', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -409,7 +409,7 @@ describe('E2E: Operation-Level Refs', () => {
    * - No type assertions
    */
   it('should handle $refs in operation.requestBody', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -458,7 +458,7 @@ describe('E2E: Operation-Level Refs', () => {
    * - No type assertions
    */
   it('should handle $refs in operation.responses', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -521,7 +521,7 @@ describe('E2E: Edge Cases', () => {
    * - Property names with special chars handled
    */
   it('should handle schema names with special characters', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {
@@ -579,7 +579,7 @@ describe('E2E: Templates', () => {
    * - No type assertions
    */
   it('should preserve schema names in schemas-with-metadata template', async () => {
-    const spec: OpenAPIObject = {
+    const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       components: {

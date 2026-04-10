@@ -1,6 +1,10 @@
 import { describe, test, expect } from 'vitest';
 import { maybePretty } from './maybe-pretty.js';
 
+function maybePrettyFromUnknownBoundary(input: string, options: unknown): Promise<string> {
+  return Reflect.apply(maybePretty, undefined, [input, options]);
+}
+
 describe('maybePretty', () => {
   test('formats valid TypeScript code', async () => {
     const input = `const x:string="hello";`;
@@ -53,8 +57,7 @@ describe('maybePretty', () => {
       plugins: undefined,
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
-    const result = await maybePretty(input, invalidOptions);
+    const result = await maybePrettyFromUnknownBoundary(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);
@@ -66,8 +69,7 @@ describe('maybePretty', () => {
       plugins: [],
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
-    const result = await maybePretty(input, invalidOptions);
+    const result = await maybePrettyFromUnknownBoundary(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);
@@ -79,8 +81,7 @@ describe('maybePretty', () => {
       plugins: [null, undefined],
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
-    const result = await maybePretty(input, invalidOptions);
+    const result = await maybePrettyFromUnknownBoundary(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);

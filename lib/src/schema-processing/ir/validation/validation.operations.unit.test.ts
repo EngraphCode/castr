@@ -6,18 +6,18 @@
  * @module ir-validation.operations.test
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { type OpenAPIDocument, isReferenceObject } from '../../../shared/openapi-types.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 
 const getZodClientTemplateContext = (
-  doc: OpenAPIObject,
+  doc: OpenAPIDocument,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
 ) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Operation Metadata', () => {
   test('captures complete operation with parameters', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {
@@ -85,7 +85,7 @@ describe('IR Validation - Operation Metadata', () => {
   });
 
   test('captures request body with correct metadata', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {
@@ -135,7 +135,8 @@ describe('IR Validation - Operation Metadata', () => {
     const bodyContent = operation?.requestBody?.content?.['application/json'];
     expect(bodyContent).toBeDefined();
 
-    const bodySchema = bodyContent?.schema;
+    const bodySchema =
+      bodyContent && !isReferenceObject(bodyContent) ? bodyContent.schema : undefined;
     expect(bodySchema).toBeDefined();
     expect(bodySchema?.metadata).toBeDefined();
 
@@ -147,7 +148,7 @@ describe('IR Validation - Operation Metadata', () => {
   });
 
   test('captures multiple response status codes', () => {
-    const openApiDoc: OpenAPIObject = {
+    const openApiDoc: OpenAPIDocument = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Test API' },
       paths: {

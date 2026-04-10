@@ -26,6 +26,7 @@ export type {
   IRLinkComponent,
   IRCallbackComponent,
   IRPathItemComponent,
+  IRMediaTypeComponent,
   IRExampleComponent,
 } from './schema.components.js';
 
@@ -33,6 +34,7 @@ export type {
   CastrOperation,
   CastrParameter,
   IRRequestBody,
+  IRMediaTypeEntry,
   IRMediaType,
   CastrResponse,
   IRResponseHeader,

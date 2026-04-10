@@ -1,4 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  expectTypeOf,
+  it,
+  vi,
+  type MockInstance,
+} from 'vitest';
 import { logger } from './logger.js';
 
 describe('Logger', () => {
@@ -64,9 +73,11 @@ describe('Logger', () => {
       expect(typeof logger.warn).toBe('function');
       expect(typeof logger.error).toBe('function');
 
-      // Compile-time check (this would fail type-check if logger wasn't readonly):
-      // @ts-expect-error - logger methods are readonly
-      logger.info = (): void => undefined;
+      expectTypeOf(logger).toEqualTypeOf<{
+        readonly info: (...args: unknown[]) => void;
+        readonly warn: (...args: unknown[]) => void;
+        readonly error: (...args: unknown[]) => void;
+      }>();
     });
   });
 });
