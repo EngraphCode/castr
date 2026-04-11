@@ -20,7 +20,28 @@ import { getZodClientTemplateContext } from './test-utils.js';
 
 const thisDir = dirname(fileURLToPath(import.meta.url));
 const CLI_PATH = join(thisDir, '../../dist/cli/index.js');
+const REQUIRED_CLI_RUNTIME_PATHS = [
+  CLI_PATH,
+  join(thisDir, '../../dist/rendering/generate-from-context.js'),
+  join(thisDir, '../../dist/rendering/templating.js'),
+];
 const TEST_OUTPUT_DIR = join(thisDir, 'test-output-cli');
+
+function assertBuiltCliRuntimeAvailable(): void {
+  const missingPaths = REQUIRED_CLI_RUNTIME_PATHS.filter((filePath) => !existsSync(filePath));
+  if (missingPaths.length === 0) {
+    return;
+  }
+
+  const message = [
+    'CLI characterisation tests require a built CLI runtime graph in `lib/dist`.',
+    'Missing artifacts:',
+    ...missingPaths.map((filePath) => `- ${filePath}`),
+    'Run `pnpm build` first or invoke the suite via the Turbo task graph.',
+  ].join('\n');
+
+  throw new Error(message);
+}
 
 /**
  * Helper: Create a test OpenAPI spec file
@@ -95,6 +116,8 @@ function runCli(args: string[]): { stdout: string; exitCode: number } {
 
 describe('Characterisation: CLI Behavior', () => {
   beforeAll(() => {
+    assertBuiltCliRuntimeAvailable();
+
     // Create test output directory
     if (existsSync(TEST_OUTPUT_DIR)) {
       rmSync(TEST_OUTPUT_DIR, { recursive: true });

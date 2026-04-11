@@ -168,7 +168,17 @@ describe('OpenAPI Document: Information Preservation', () => {
           return [];
         }
         const operations: string[] = [];
-        const httpMethods = ['get', 'post', 'put', 'delete', 'patch', 'head', 'options', 'trace'];
+        const httpMethods = [
+          'get',
+          'post',
+          'put',
+          'delete',
+          'patch',
+          'head',
+          'options',
+          'trace',
+          'query',
+        ];
 
         for (const [pathKey, pathItem] of Object.entries(paths)) {
           if (!pathItem) {

@@ -45,9 +45,9 @@ Current product truth:
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - Phase A₂ (type migration from `openapi3-ts` to `@scalar/openapi-types`) completed on Friday, 10 April 2026. The close-out resolved A1 and A2-A6, introduced a genuinely nested raw OpenAPI input seam, restored lossless `components.mediaTypes` and ref-bearing `components.pathItems` handling through IR, removed the verified IR media-type barrel cycle, cleared the duplicate CLI guard export plus stale `knip` ignore, strengthened dependency-exit guards, and closed the reviewer loop with no open findings.
-- the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green on Friday, 10 April 2026. The MCP no-params tool-input-schema follow-up then closed on Saturday, 11 April 2026 with targeted MCP/schema proofs, affected snapshot proofs, and repo-root `pnpm type-check` green. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` for non-mutating reruns; do not invoke `pnpm qg` directly.
-- metacognitive review of the remaining OAS 3.2 feature work changed the entrypoint framing: `QUERY` still has real IR/parser/writer method-plumbing gaps, while hierarchical tags and the current Phase C surfaces look closer to pass-through proof work than fresh infrastructure work
-- the immediate next slice is therefore Phase B on the parent OAS 3.2 plan (`QUERY` method + hierarchical-tag proof); Phase C is the immediate follow-on proof sweep unless a user reports a fresh gate or runtime issue first
+- the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps were green on Friday, 10 April 2026. The MCP no-params tool-input-schema follow-up then closed on Saturday, 11 April 2026 with targeted MCP/schema proofs, affected snapshot proofs, and repo-root `pnpm type-check` green. Phase B also closed on Saturday, 11 April 2026 with repo-root `pnpm check` green. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` for non-mutating reruns; do not invoke `pnpm qg` directly.
+- Phase B is now honestly closed: native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, duplicated raw PathItem visitors no longer skip it, MCP treats `query` as read-only/non-destructive, and hierarchical tags (`summary`, `parent`, `kind`) have explicit parser/writer proof
+- the immediate next slice is therefore Phase C on the parent OAS 3.2 plan (`deviceAuthorization`, XML `nodeType`, path templating proofs) unless a user reports a fresh gate or runtime issue first
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -147,13 +147,13 @@ Current sweep record:
 
 Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md):
 
-- `QUERY` HTTP method (trivial enum addition)
-- `additionalOperations` for custom HTTP methods
-- Hierarchical tags (`parent`, `kind`, `summary` on Tag)
-- `itemSchema` streaming support on Media Type
+- Phase B is complete: `QUERY` HTTP method is landed end to end and hierarchical tags (`parent`, `kind`, `summary`) now have explicit proof
 - OAuth 2.0 Device Authorization flow
 - XML `nodeType` field
+- Path templating proof / ABNF validation
 - Example Object `dataValue`/`serializedValue` semantics
+- `itemSchema` streaming support on Media Type
+- `additionalOperations` for custom HTTP methods (later slice per ADR-046)
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 

@@ -26,6 +26,7 @@ const OPENAPI_HTTP_METHODS = [
   'head',
   'patch',
   'trace',
+  'query',
 ] as const satisfies readonly (keyof PathItemObject)[];
 
 const PATH_ITEM_MEMBER_KEYS = [

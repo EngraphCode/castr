@@ -9,6 +9,17 @@ import {
   isReferenceObject,
 } from '../../shared/openapi-types.js';
 
+type StandardOperationMethod =
+  | 'get'
+  | 'post'
+  | 'put'
+  | 'patch'
+  | 'delete'
+  | 'head'
+  | 'options'
+  | 'trace'
+  | 'query';
+
 /**
  * Type guard to check if a path item value is an operation object
  */
@@ -42,6 +53,7 @@ export function extractAllOperations(spec: OpenAPIDocument): OperationObject[] {
       pathItem.options,
       pathItem.head,
       pathItem.trace,
+      pathItem.query,
     ];
 
     for (const operation of operationsInPath) {
@@ -103,7 +115,7 @@ export function assertResponseNotRef(
 export function getOperation(
   spec: OpenAPIDocument,
   path: string,
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+  method: StandardOperationMethod,
 ): OperationObject {
   const pathItem = spec.paths?.[path];
   if (!pathItem) {
@@ -124,7 +136,7 @@ export function getOperation(
  */
 interface OperationPath {
   path: string;
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete';
+  method: StandardOperationMethod;
 }
 
 export function verifyOperationsRefsResolved(

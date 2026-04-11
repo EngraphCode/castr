@@ -19,6 +19,7 @@ import type { CastrDocument } from '../../src/schema-processing/ir/models/schema
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
+const PHASE_B_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
 
 describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
   let ir: CastrDocument;
@@ -345,5 +346,35 @@ describe('Parser Field Coverage - OpenAPI 3.0.x', () => {
       expect(listUsersOp?.pathItemSummary).toBe('User collection operations');
       expect(listUsersOp?.pathItemDescription).toBe('Operations for managing users');
     });
+  });
+});
+
+describe('Parser Field Coverage - Phase B OpenAPI 3.2', () => {
+  let phaseBIr: CastrDocument;
+
+  beforeAll(async () => {
+    const result = await loadOpenApiDocument(PHASE_B_FIXTURE);
+    phaseBIr = buildIR(result.document);
+  });
+
+  it('extracts the native query operation', () => {
+    const queryOp = phaseBIr.operations.find((op) => op.method === 'query');
+    expect(queryOp).toBeDefined();
+    expect(queryOp?.operationId).toBe('phaseBQuery');
+    expect(queryOp?.path).toBe('/phase-b');
+  });
+
+  it('preserves hierarchical tag metadata', () => {
+    const hierarchicalTag = phaseBIr.tags?.find((tag) => tag.name === 'hierarchical');
+    const metaTag = phaseBIr.tags?.find((tag) => tag.name === 'meta');
+
+    expect(hierarchicalTag).toBeDefined();
+    expect(hierarchicalTag?.summary).toBe('Hierarchical tag with parent metadata');
+    expect(hierarchicalTag?.parent).toBe('meta');
+    expect(hierarchicalTag?.kind).toBe('feature');
+
+    expect(metaTag).toBeDefined();
+    expect(metaTag?.summary).toBe('Meta tag for Phase B groupings');
+    expect(metaTag?.kind).toBe('group');
   });
 });

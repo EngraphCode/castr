@@ -84,6 +84,7 @@ function extractPathOperations(
     'head',
     'options',
     'trace',
+    'query',
   ];
 
   for (const method of httpMethods) {

@@ -15,7 +15,12 @@ import type {
 } from '../../../../shared/openapi-types.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
 import { writeParameterObject } from '../openapi-writer.parameters.js';
-import type { CastrOperation, CastrParameter, IRSecurityRequirement } from '../../../ir/index.js';
+import type {
+  CastrOperation,
+  CastrParameter,
+  IRHttpMethod,
+  IRSecurityRequirement,
+} from '../../../ir/index.js';
 
 function compareSecurityRequirements(
   left: IRSecurityRequirement,
@@ -120,7 +125,7 @@ function writeOperation(operation: CastrOperation): OperationObject {
 type PathItemMethodSetter = (pathItem: PathItemObject, op: OperationObject) => void;
 
 /** Map of HTTP methods to path item setters. @internal */
-const PATH_ITEM_METHOD_SETTERS: Record<string, PathItemMethodSetter> = {
+const PATH_ITEM_METHOD_SETTERS: Record<IRHttpMethod, PathItemMethodSetter> = {
   get: (p, op) => {
     p.get = op;
   },
@@ -145,9 +150,12 @@ const PATH_ITEM_METHOD_SETTERS: Record<string, PathItemMethodSetter> = {
   trace: (p, op) => {
     p.trace = op;
   },
+  query: (p, op) => {
+    p.query = op;
+  },
 };
 
-const HTTP_METHOD_ORDER: string[] = [
+const HTTP_METHOD_ORDER: IRHttpMethod[] = [
   'get',
   'post',
   'put',
@@ -156,9 +164,10 @@ const HTTP_METHOD_ORDER: string[] = [
   'head',
   'options',
   'trace',
+  'query',
 ];
 
-const HTTP_METHOD_ORDER_INDEX: Record<string, number> = Object.fromEntries(
+const HTTP_METHOD_ORDER_INDEX = new Map<IRHttpMethod, number>(
   HTTP_METHOD_ORDER.map((method, index) => [method, index]),
 );
 
@@ -168,8 +177,8 @@ function compareOperationsByPathThenMethod(left: CastrOperation, right: CastrOpe
     return pathComparison;
   }
 
-  const leftOrder = HTTP_METHOD_ORDER_INDEX[left.method] ?? Number.POSITIVE_INFINITY;
-  const rightOrder = HTTP_METHOD_ORDER_INDEX[right.method] ?? Number.POSITIVE_INFINITY;
+  const leftOrder = HTTP_METHOD_ORDER_INDEX.get(left.method) ?? Number.POSITIVE_INFINITY;
+  const rightOrder = HTTP_METHOD_ORDER_INDEX.get(right.method) ?? Number.POSITIVE_INFINITY;
   if (leftOrder !== rightOrder) {
     return leftOrder - rightOrder;
   }
@@ -184,12 +193,9 @@ function compareOperationsByPathThenMethod(left: CastrOperation, right: CastrOpe
 function assignOperationToPath(
   pathItem: PathItemObject,
   op: OperationObject,
-  method: string,
+  method: IRHttpMethod,
 ): void {
-  const setter = PATH_ITEM_METHOD_SETTERS[method];
-  if (setter) {
-    setter(pathItem, op);
-  }
+  PATH_ITEM_METHOD_SETTERS[method](pathItem, op);
 }
 
 /**

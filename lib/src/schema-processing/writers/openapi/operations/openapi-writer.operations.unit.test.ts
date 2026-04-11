@@ -77,6 +77,22 @@ describe('writeOpenApiPaths', () => {
       expect(pathItem?.post?.operationId).toBe('createUser');
     });
 
+    it('converts QUERY operation', () => {
+      const operations: CastrOperation[] = [
+        createOperation({
+          operationId: 'searchUsers',
+          method: 'query',
+          path: '/users/search',
+        }),
+      ];
+
+      const result = writeOpenApiPaths(operations);
+
+      const pathItem = result['/users/search'];
+      expect(pathItem?.query).toBeDefined();
+      expect(pathItem?.query?.operationId).toBe('searchUsers');
+    });
+
     it('groups multiple methods on same path', () => {
       const operations: CastrOperation[] = [
         createOperation({

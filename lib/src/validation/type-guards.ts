@@ -13,8 +13,7 @@ import { type OperationObject, isReferenceObject } from '../shared/openapi-types
 export { isReferenceObject };
 
 /**
- * Allowed HTTP methods per OpenAPI 3.0 spec
- * https://spec.openapis.org/oas/v3.0.3#path-item-object
+ * Allowed standard HTTP methods per OpenAPI 3.2 Path Item Object.
  */
 export const ALLOWED_METHODS = [
   'get',
@@ -24,6 +23,8 @@ export const ALLOWED_METHODS = [
   'put',
   'patch',
   'delete',
+  'trace',
+  'query',
 ] as const;
 
 /**

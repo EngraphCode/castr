@@ -82,7 +82,7 @@ Off-chain development aids (not in the canonical gate, green, documented honestl
 - **0 tolerance paths**: invalid/unsupported inputs fail fast with explicit errors
 - **Claimed-support completeness**: every claimed supported behaviour is parser/IR/writer/runtime-validator/test/doc consistent, or explicitly marked unsupported or paused
 - **Determinism**: repeated runs produce byte-for-byte identical output for all fixtures
-- **IR coverage**: all OpenAPI 3.0/3.1 fields from `.agent/directives/requirements.md` are representable at the IR boundary
+- **IR coverage**: all fields from the currently claimed OpenAPI 3.x surface in `.agent/directives/requirements.md` are representable at the IR boundary
 
 ---
 

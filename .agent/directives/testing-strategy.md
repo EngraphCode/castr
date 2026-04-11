@@ -367,20 +367,20 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### 1) Strict Spec Validation (Input Gate)
 
-- Reject invalid version syntax and wrong-version fields (3.0-only vs 3.1-only)
+- Reject invalid version syntax and wrong-version fields (3.0-only vs 3.1-only vs currently claimed native 3.2-only additions)
 - Reject unresolved `$ref`, invalid HTTP methods, missing required fields
 - Reject disallowed constructs per version (e.g., `nullable` in 3.1, `jsonSchemaDialect` in 3.0)
 
 ### 2) IR Completeness and Fidelity
 
-- Every required OpenAPI 3.0/3.1 field is represented in IR
+- Every required field from the currently claimed OpenAPI 3.x surface is represented in IR
 - Lossless transform execution for supported fields (no omissions or merges)
 - IR schema metadata supports strict Zod output (required, nullable, dependency graph)
 
 ### 3) OpenAPI Transform Validation (Sample Input)
 
-- OpenAPI input → IR → OpenAPI output matches normalized 3.1 expectations
-- Upgrades (3.0 → 3.1) are strictly standards-compliant
+- OpenAPI input → IR → OpenAPI output matches normalized 3.2 expectations for the claimed surface
+- Upgrades / canonicalisation (3.0 / 3.1 bridge → 3.2.0) are strictly standards-compliant
 - No weak/tolerance assertions in transform scenarios (`<=`, "at least", skip-on-error behavior)
 - Parse failures are assertions, not control flow: no early returns on parse errors; assert zero parse errors with fixture-scoped context before downstream structural checks
 
@@ -416,16 +416,16 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### Fixture Matrix (Strict-Only)
 
-| Category                                        | Source            | Primary Checks                                       |
-| ----------------------------------------------- | ----------------- | ---------------------------------------------------- |
-| Oak SDK-decorated core                          | Oak fixtures      | Full output equivalence, strictness, determinism     |
-| OpenAPI 3.0 → 3.1 upgrades                      | Synthetic         | Correct upgrades, strict rejection of invalid syntax |
-| Composition (allOf/oneOf/anyOf, discriminators) | Synthetic         | IR fidelity, Zod output shape                        |
-| Nullable and unions                             | Synthetic         | Type array handling, no `nullable` in 3.1            |
-| Callbacks and webhooks                          | Synthetic + Castr | IR coverage, OpenAPI writer                          |
-| Headers, links, examples, pathItems             | Synthetic         | IR completeness and writer preservation              |
-| Security schemes (oauth2, mutualTLS, etc.)      | Synthetic         | Strict validation + output mapping                   |
-| External refs and bundling                      | Synthetic         | Ref resolution and cycle handling                    |
+| Category                                                  | Source            | Primary Checks                                       |
+| --------------------------------------------------------- | ----------------- | ---------------------------------------------------- |
+| Oak SDK-decorated core                                    | Oak fixtures      | Full output equivalence, strictness, determinism     |
+| OpenAPI 3.0 / 3.1 → 3.2 canonicalisation                  | Synthetic         | Correct upgrades, strict rejection of invalid syntax |
+| Composition (allOf/oneOf/anyOf, discriminators)           | Synthetic         | IR fidelity, Zod output shape                        |
+| Nullable and unions                                       | Synthetic         | Type array handling, no `nullable` in 3.1            |
+| Callbacks and webhooks                                    | Synthetic + Castr | IR coverage, OpenAPI writer                          |
+| Headers, links, examples, pathItems, native 3.2 additions | Synthetic         | IR completeness and writer preservation              |
+| Security schemes (oauth2, mutualTLS, etc.)                | Synthetic         | Strict validation + output mapping                   |
+| External refs and bundling                                | Synthetic         | Ref resolution and cycle handling                    |
 
 ### Licensing and Provenance
 
@@ -437,11 +437,11 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ## Authoritative References
 
-| Document                                                            | Purpose                                     |
-| ------------------------------------------------------------------- | ------------------------------------------- |
-| `.agent/directives/requirements.md`                                 | Strict validation and OpenAPI 3.0/3.1 rules |
-| `.agent/directives/principles.md`                                   | Strictness, fail-fast, TDD discipline       |
-| `research/oak-open-curriculum-sdk/castr-requests/README.md`         | Oak contract shape                          |
-| `research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` | Type discipline                             |
-| `research/feature-parity/*`                                         | Parity gaps and integration targets         |
-| `research/openapi-ts/openapi-ts-comparison.md`                      | Fixture categories and edge cases           |
+| Document                                                            | Purpose                                           |
+| ------------------------------------------------------------------- | ------------------------------------------------- |
+| `.agent/directives/requirements.md`                                 | Strict validation and claimed OpenAPI 3.x surface |
+| `.agent/directives/principles.md`                                   | Strictness, fail-fast, TDD discipline             |
+| `research/oak-open-curriculum-sdk/castr-requests/README.md`         | Oak contract shape                                |
+| `research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` | Type discipline                                   |
+| `research/feature-parity/*`                                         | Parity gaps and integration targets               |
+| `research/openapi-ts/openapi-ts-comparison.md`                      | Fixture categories and edge cases                 |

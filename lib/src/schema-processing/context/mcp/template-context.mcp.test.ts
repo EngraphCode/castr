@@ -31,6 +31,14 @@ describe('template-context MCP helpers', () => {
       });
     });
 
+    test('marks readOnly for QUERY requests', () => {
+      expect(getMcpToolHints('query')).toEqual({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      });
+    });
+
     test('marks destructive for DELETE requests', () => {
       expect(getMcpToolHints('delete')).toEqual({
         readOnlyHint: false,

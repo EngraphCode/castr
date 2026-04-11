@@ -37,10 +37,11 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last recorded full repo-root sweep (including `test:e2e`): green on Friday, 10 April 2026
+  - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the Phase B `QUERY` + hierarchical-tag close-out
   - Use `pnpm check` for local aggregate verification or `pnpm check:ci` for non-mutating aggregate verification; do not invoke `pnpm qg` directly
   - `test:e2e` is now part of the canonical gate chain; `test:scalar-guard` remains off-chain and green
   - Phase A₂ is closed on Friday, 10 April 2026: AP4 landed honestly, the full repo-root gate chain is green, the targeted active-surface `openapi3-ts` grep is clean, and the reviewer loop closed with no open findings
+  - Phase B is closed on Saturday, 11 April 2026: native OpenAPI 3.2 `query` now survives parser -> IR -> writer and downstream endpoint/MCP consumers, duplicated raw PathItem visitors no longer skip it, MCP treats `query` as read-only/non-destructive, hierarchical tags (`summary`, `parent`, `kind`) have explicit parser/writer proof, and repo-root `pnpm check` is green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
 - **Workspace boundary:** `lib` / `@engraph/castr` is the core compiler surface (parsers, IR, writers, validation, metadata). Any future typed fetch, runtime handler, framework, or code-first integrations belong in companion workspaces, not core exports.
@@ -62,8 +63,8 @@ Then use:
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
 - **Plan-state truth:** the primary active plan is [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers; the Phase A₂ closure record is [`.agent/plans/current/complete/phase-a2-type-migration.md`](plans/current/complete/phase-a2-type-migration.md); landed version baseline is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
-- **Next-step truth:** metacognitive review changed the framing from vague "resume phases B/C" language to a concrete entrypoint: `QUERY` still has real method-plumbing gaps across the IR/parser/writer seam, while hierarchical tags and the current Phase C surfaces look like proof-oriented pass-through verification work
-- **Immediate next slice:** Phase B first on the parent plan (`QUERY` method + hierarchical-tag proof), then the Phase C proof sweep; if a user reports a fresh gate or runtime issue, reproduce it first
+- **Next-step truth:** Phase B is now honestly closed, and the metacognitive recommendation is Phase C next: `deviceAuthorization`, XML `nodeType`, and path-templating proofs remain the smallest honest follow-on slice unless a fresh gate or runtime regression is reported first
+- **Immediate next slice:** Phase C next on the parent plan; extend the native 3.2 proof base at `lib/tests-transforms/__fixtures__/phase-b-native-3.2.yaml` unless a user reports a fresh gate or runtime issue that must be reproduced first
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

@@ -43,6 +43,7 @@
     },
     "character": {
       "cache": false,
+      "dependsOn": ["build"],
       "outputs": []
     },
     "test:transforms": {

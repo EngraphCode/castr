@@ -13,6 +13,7 @@ const VALID_HTTP_METHODS = new Set<string>([
   'head',
   'options',
   'trace',
+  'query',
 ]);
 const VALID_PARAMETER_LOCATIONS = new Set<string>(['path', 'query', 'header', 'cookie']);
 

@@ -281,4 +281,19 @@ describe('template-context.endpoints.from-ir', () => {
     expect(endpoint?.parameters).toHaveLength(1);
     expect(endpoint?.parameters[0]?.type).toBe('Header');
   });
+
+  it('preserves query operations when mapping IR operations to endpoint definitions', () => {
+    const doc = createDocument([
+      createOperation({
+        method: 'query',
+        path: '/search',
+        responses: [createResponse('200', createSchema('object'))],
+      }),
+    ]);
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+
+    expect(endpoint?.method).toBe('query');
+    expect(endpoint?.path).toBe('/search');
+  });
 });

@@ -1,0 +1,26 @@
+openapi: '3.2.0'
+info:
+  title: Phase B Native 3.2 Proof Kit
+  description: Proof fixture for native OpenAPI 3.2 query operations and hierarchical tags.
+  version: '0.1.0'
+tags:
+  - name: meta
+    summary: Meta tag for Phase B groupings
+    kind: group
+  - name: hierarchical
+    summary: Hierarchical tag with parent metadata
+    parent: meta
+    kind: feature
+paths:
+  /phase-b:
+    servers:
+      - url: 'https://phaseb.example.com'
+        description: Phase B endpoint host
+    query:
+      summary: Perform the Phase B query operation
+      operationId: phaseBQuery
+      tags:
+        - hierarchical
+      responses:
+        '200':
+          description: Phase B query succeeded

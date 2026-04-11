@@ -25,6 +25,7 @@ import { assertSchemaObject } from '../../tests-helpers/openapi-assertions.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
+const PHASE_B_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
 
 function getSchema(context: OpenAPIObject, name: string): SchemaObject {
   return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
@@ -347,6 +348,37 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
         expect(avatarEncoding?.contentType).toBe('image/png, image/jpeg');
       }
     });
+  });
+});
+
+describe('Writer Field Coverage - Phase B OpenAPI 3.2', () => {
+  let output: OpenAPIObject;
+
+  beforeAll(async () => {
+    const result = await loadOpenApiDocument(PHASE_B_FIXTURE);
+    const ir = buildIR(result.document);
+    output = writeOpenApi(ir);
+  });
+
+  it('writes the native query operation', () => {
+    const phaseBPath = output.paths?.['/phase-b'];
+    expect(phaseBPath).toBeDefined();
+    expect(phaseBPath?.query).toBeDefined();
+    expect(phaseBPath?.query?.operationId).toBe('phaseBQuery');
+  });
+
+  it('emits hierarchical tags with summary/parent/kind metadata', () => {
+    const hierarchicalTag = output.tags?.find((tag) => tag.name === 'hierarchical');
+    const metaTag = output.tags?.find((tag) => tag.name === 'meta');
+
+    expect(hierarchicalTag).toBeDefined();
+    expect(hierarchicalTag?.summary).toBe('Hierarchical tag with parent metadata');
+    expect(hierarchicalTag?.parent).toBe('meta');
+    expect(hierarchicalTag?.kind).toBe('feature');
+
+    expect(metaTag).toBeDefined();
+    expect(metaTag?.summary).toBe('Meta tag for Phase B groupings');
+    expect(metaTag?.kind).toBe('group');
   });
 });
 

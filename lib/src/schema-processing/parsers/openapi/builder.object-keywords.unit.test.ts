@@ -282,9 +282,65 @@ function createStrictRawSurfaceDocWithExamplePayload(): OpenAPIDocument {
   } satisfies OpenAPIDocument;
 }
 
+function createLooseRawQuerySurfaceDoc(): OpenAPIDocument {
+  const looseObjectSchema = {
+    type: 'object',
+    additionalProperties: true,
+    properties: {
+      name: { type: 'string' },
+    },
+  } satisfies SchemaObject;
+
+  return {
+    openapi: '3.2.0',
+    info: { title: 'Raw query surfaces', version: '1.0.0' },
+    paths: {},
+    components: {
+      pathItems: {
+        LooseQueryPath: {
+          query: {
+            responses: {
+              '200': {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: structuredClone(looseObjectSchema),
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    webhooks: {
+      notify: {
+        query: {
+          responses: {
+            '200': {
+              description: 'ok',
+              content: {
+                'application/json': {
+                  schema: structuredClone(looseObjectSchema),
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  } satisfies OpenAPIDocument;
+}
+
 describe('buildIR raw OpenAPI non-strict object enforcement', () => {
   it('rejects non-strict object schemas on raw OpenAPI surfaces', () => {
     expect(() => buildIR(createLooseRawSurfaceDoc())).toThrow(
+      /additionalProperties: true.*rejected/,
+    );
+  });
+
+  it('rejects non-strict object schemas on raw query path-item and webhook surfaces', () => {
+    expect(() => buildIR(createLooseRawQuerySurfaceDoc())).toThrow(
       /additionalProperties: true.*rejected/,
     );
   });

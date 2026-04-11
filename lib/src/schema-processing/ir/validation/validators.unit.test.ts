@@ -496,9 +496,36 @@ describe('isCastrOperation', () => {
     expect(isCastrOperation(traceOperation)).toBe(true);
   });
 
-  it('should return true for all HTTP methods including trace', () => {
-    const methods: ('get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'trace')[] =
-      ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace'];
+  it('should return true for query HTTP method', () => {
+    const queryOperation: CastrOperation = {
+      operationId: 'querySearch',
+      method: 'query',
+      path: '/search',
+      parameters: [],
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
+      },
+      responses: [],
+    };
+
+    expect(isCastrOperation(queryOperation)).toBe(true);
+  });
+
+  it('should return true for all standard HTTP methods including trace and query', () => {
+    const methods: (
+      | 'get'
+      | 'post'
+      | 'put'
+      | 'patch'
+      | 'delete'
+      | 'head'
+      | 'options'
+      | 'trace'
+      | 'query'
+    )[] = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'query'];
 
     methods.forEach((method) => {
       const operation: CastrOperation = {

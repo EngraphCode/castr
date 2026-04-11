@@ -4,6 +4,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-11
 
+- **Phase B deep consolidation completed after implementation close-out:**
+  - `.agent/README.md` now matches the live handoff stack again: repo-root `pnpm check` is recorded green on Saturday, 11 April 2026, Phase B is described as closed, and Phase C is the next slice instead of the old Phase-B-first language
+  - `.agent/plans/active/oas-3.2-full-feature-support.md` now carries a real Phase B close-out section plus a phase-status table, instead of relying only on scattered paragraph updates
+  - `.agent/prompts/session-continuation.prompt.md` now points the next session at the concrete proof base `lib/tests-transforms/__fixtures__/phase-b-native-3.2.yaml` so Phase C extends the existing native 3.2 fixture rather than spawning unrelated one-off proofs
+  - `.agent/directives/requirements.md`, `.agent/acceptance-criteria/openapi-acceptance-criteria.md`, `.agent/directives/testing-strategy.md`, `.agent/directives/DEFINITION_OF_DONE.md`, and `.agent/directives/AGENT.md` now speak in terms of the currently claimed OpenAPI 3.x surface instead of freezing the contract at 3.0/3.1-era language
+  - the practice-box check stayed clean again: `.agent/practice-core/incoming/` remains empty and `.agent/practice-context/incoming/` still contains only `README.md`
+  - promoted one durable learning into `distilled.md`: when a slice closes, update every live handoff surface in the same pass and tie the next slice to a concrete proof base when possible
+  - no new Practice-Core evolution clears the bar from this pass; the value is repo-local handoff cohesion and proof-base discipline rather than a portable Core rule
+
 - **Planning/prompt consolidation and next-slice reflection completed:**
   - the live handoff layer now says Phase B comes first on the OAS 3.2 parent plan, with Phase C as the immediate follow-on proof sweep, instead of leaving the next step at the vaguer "resume phases B/C" level
   - the metacognitive shift came from a code audit, not preference: `QUERY` is already typed at the shared OpenAPI seam but still missing real IR/parser/writer method-plumbing support, while hierarchical tags and the current Phase C surfaces look much closer to parser -> IR -> writer proof work than fresh infrastructure work

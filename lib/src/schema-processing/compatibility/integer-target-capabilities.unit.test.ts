@@ -103,6 +103,29 @@ function createRefSiblingBigIntWebhookPathItem(
   };
 }
 
+function createBigIntQueryWebhookPathItem(): PathItemObject {
+  return {
+    query: {
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'integer',
+              format: 'bigint',
+            },
+          },
+        },
+      },
+      responses: {
+        '204': {
+          description: 'Accepted',
+        },
+      },
+    },
+  };
+}
+
 const nestedSchemaCases = [
   {
     label: 'properties',
@@ -376,6 +399,16 @@ describe('component and document traversal', () => {
     expect(() =>
       assertDocumentSupportsIntegerTargetCapabilities(document, 'TypeScript'),
     ).not.toThrow();
+  });
+
+  it('rejects unsupported bigint semantics in raw query webhook path items before OpenAPI emission', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([['queryCount', createBigIntQueryWebhookPathItem()]]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
   });
 });
 

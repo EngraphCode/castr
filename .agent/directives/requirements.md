@@ -45,7 +45,7 @@ The system is NOT ready for production until these criteria are met.
 
 - **Version**: OpenAPI 3.2.0 (canonical target version)
 - **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation, with OpenAPI 3.1.x accepted only as a Scalar bridge input and `3.2.0` retained as the canonical IR/output target.
-- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; 3.2-only feature expansion remains a separately tracked slice.
+- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with Phase B (`pathItem.query`, hierarchical tags) already landed and Phase C next.
 
 ### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
 
@@ -173,6 +173,18 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 
 - **NEW:** `pathItems` (Map<string, PathItem>)
 
+### 3A. Input Support: Currently Claimed OpenAPI 3.2.x Additions
+
+In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept and preserve the currently claimed native OpenAPI 3.2-only additions below when the input document is truly 3.2.x:
+
+**Path Item (3.2)**
+
+- `query`
+
+**Tag (3.2)**
+
+- `summary`, `parent`, `kind`
+
 ### 4.Strict Validation & Rejection
 
 **REJECT 3.0 specs with 3.1-only syntax:**
@@ -182,6 +194,11 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 - `exclusiveMinimum`/`exclusiveMaximum` as numbers
 - `mutualTLS` security scheme
 - `pathItems` in components
+
+**REJECT 3.0/3.1 specs with 3.2-only syntax:**
+
+- `pathItem.query`
+- `tag.summary`, `tag.parent`, `tag.kind`
 
 **REJECT 3.1/3.2 specs with 3.0-only syntax:**
 
@@ -217,9 +234,9 @@ ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as c
 - Preserve both `example` and `examples` in IR
 - Write to canonical 3.2 output using preferred `examples` format
 
-### 6. IR Completeness: Support ALL currently claimed OpenAPI 3.1-era concepts under a 3.2.0 target
+### 6. IR Completeness: Support ALL currently claimed OpenAPI 3.x concepts under a 3.2.0 target
 
-The IR MUST be capable of representing EVERY field listed in sections 2 and 3 while carrying `openApiVersion: '3.2.0'` as the canonical target marker.
+The IR MUST be capable of representing EVERY field listed in sections 2, 3, and 3A while carrying `openApiVersion: '3.2.0'` as the canonical target marker.
 
 **Regression-critical fields (implemented):** these fields exist in IR and MUST remain supported end-to-end (parse → IR → write) with tests proving preservation.
 
@@ -244,6 +261,8 @@ The IR MUST be capable of representing EVERY field listed in sections 2 and 3 wh
 - ✅ `info.summary`, `license.identifier` — uses explicit interfaces from our canonical shared module
 - ✅ `webhooks`, `jsonSchemaDialect`, `pathItems` — present in IR
 - ✅ `mutualTLS` — uses raw SecuritySchemeObject
+- ✅ `pathItem.query` — survives parser -> IR -> writer and downstream method consumers
+- ✅ `tag.summary`, `tag.parent`, `tag.kind` — explicitly proved through parser/writer round-trip coverage
 - ✅ `externalDocs` — at document/operation level
 - ✅ All basic JSON Schema keywords — type, format, validation, composition
 
@@ -254,6 +273,7 @@ The writer MUST produce valid canonical 3.2.0 output containing ALL fields from 
 - All document, component, operation, parameter, response, schema fields
 - All OAS extensions: `discriminator`, `xml`, `externalDocs`, `example`
 - All 3.1 additions: `webhooks`, `jsonSchemaDialect`, `mutualTLS`, etc.
+- All currently claimed 3.2 additions: `pathItem.query`, `tag.summary`, `tag.parent`, `tag.kind`
 - **NO content loss** during 3.0/3.1 bridge normalization or final 3.2 canonicalisation
 
 ---

@@ -20,7 +20,8 @@ export type IRHttpMethod =
   | 'delete'
   | 'head'
   | 'options'
-  | 'trace';
+  | 'trace'
+  | 'query';
 
 /**
  * Type-safe wrapper for CastrSchema properties.

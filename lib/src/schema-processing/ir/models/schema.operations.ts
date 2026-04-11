@@ -70,7 +70,7 @@ export interface CastrOperation {
 
   /**
    * HTTP method for this operation.
-   * One of: get, post, put, patch, delete, head, options.
+   * One of: get, post, put, patch, delete, head, options, trace, query.
    */
   method: IRHttpMethod;
 

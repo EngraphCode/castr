@@ -4,7 +4,7 @@ import type { HttpMethod } from '../../../endpoints/definition.types.js';
 
 type McpToolHints = Pick<ToolAnnotations, 'readOnlyHint' | 'destructiveHint' | 'idempotentHint'>;
 
-const READ_ONLY_METHODS = new Set<HttpMethod>(['get', 'head', 'options']);
+const READ_ONLY_METHODS = new Set<HttpMethod>(['get', 'head', 'options', 'query']);
 const UNDERSCORE_TOKEN = '_';
 const PATH_SEPARATOR = '/';
 const ROOT_SEGMENT = 'root';

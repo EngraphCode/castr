@@ -14,11 +14,11 @@
 
 ## Scope
 
-- Input: OpenAPI 3.0.x and 3.1.x (all valid fields), plus native OpenAPI 3.2.x for the currently supported 3.1-equivalent field surface
+- Input: OpenAPI 3.0.x and 3.1.x (all valid fields), plus native OpenAPI 3.2.x for the 3.1-equivalent field surface and the currently claimed 3.2 additions
 - Output: OpenAPI 3.2.x only
 - Internal: IR is normalized to `3.2.0`
 - OpenAPI 3.1.x remains accepted as a documented Scalar bridge input
-- OpenAPI 3.2-only feature expansion remains separately tracked work
+- Remaining OpenAPI 3.2-only feature expansion remains separately tracked work after the landed Phase B surface (`pathItem.query`, `Tag.summary`, `Tag.parent`, `Tag.kind`)
 
 ---
 
@@ -223,6 +223,22 @@ These are added on top of 3.0.x input.
 
 ---
 
+## Part 2B: Input Coverage (Currently Claimed Native OpenAPI 3.2.x Additions)
+
+The parser MUST accept and preserve the currently claimed native OpenAPI 3.2-only additions below.
+
+### Path Item Object (3.2)
+
+- `query`
+
+### Tag Object (3.2)
+
+- `summary`
+- `parent`
+- `kind`
+
+---
+
 ## Part 3: Strict Validation and Rejection
 
 Derived from requirements section 4.
@@ -234,6 +250,11 @@ Derived from requirements section 4.
 - `exclusiveMinimum`/`exclusiveMaximum` as numbers
 - `mutualTLS` security scheme
 - `pathItems` in components
+
+### Reject 3.0/3.1 specs that include 3.2-only syntax
+
+- `pathItem.query`
+- `tag.summary`, `tag.parent`, `tag.kind`
 
 ### Reject 3.1/3.2 specs that include 3.0-only syntax
 
@@ -280,7 +301,7 @@ All output documents MUST:
 
 ### Object-Level Output
 
-Every object type listed in Parts 1 and 2 MUST have ALL of its IR properties
+Every object type listed in Parts 1, 2, and 2B MUST have ALL of its IR properties
 written to output when present.
 
 ---
@@ -289,7 +310,7 @@ written to output when present.
 
 Allowed methods for input and output:
 
-- `get`, `put`, `post`, `delete`, `options`, `head`, `patch`, `trace`
+- `get`, `put`, `post`, `delete`, `options`, `head`, `patch`, `trace`, `query`
 
 ---
 
@@ -297,16 +318,17 @@ Allowed methods for input and output:
 
 ### Input Coverage Tests
 
-- For EACH field in Parts 1 and 2, a fixture MUST exist
+- For EACH field in Parts 1, 2, and 2B, a fixture MUST exist
 - Tests MUST assert the IR contains that field after parsing
 
 ### Output Coverage Tests
 
-- For EACH field in Parts 1 and 2, a test MUST assert the writer emits it from IR
+- For EACH field in Parts 1, 2, and 2B, a test MUST assert the writer emits it from IR
 
 ### Version Rejection Tests
 
 - 3.0 input with 3.1-only syntax MUST throw
+- 3.0/3.1 input with 3.2-only syntax MUST throw
 - 3.1/3.2 input with 3.0-only syntax MUST throw
 
 ### Upgrade Tests

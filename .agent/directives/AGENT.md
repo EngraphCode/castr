@@ -63,7 +63,7 @@ Installed roster:
 - `code-reviewer` — gateway reviewer for non-trivial changes
 - `test-reviewer` — TDD and test-quality specialist
 - `type-reviewer` — type-flow and strictness specialist
-- `openapi-expert` — OpenAPI 3.0/3.1 semantics and IR fidelity specialist
+- `openapi-expert` — OpenAPI 3.x (3.0-3.2) semantics and IR fidelity specialist
 - `zod-expert` — Zod parser/writer lockstep and ts-morph specialist
 - `json-schema-expert` — Draft 07 / 2020-12 fidelity and IR mapping specialist
 

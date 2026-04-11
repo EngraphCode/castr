@@ -45,7 +45,7 @@ describe('writeOpenApiPaths determinism', () => {
     expect(Object.keys(result)).toEqual(['/a-users', '/z-users']);
   });
 
-  it('sorts methods within a path by canonical HTTP method order', () => {
+  it('sorts methods within a path by canonical HTTP method order including query', () => {
     const operations: CastrOperation[] = [
       createOperation({
         method: 'post',
@@ -62,11 +62,21 @@ describe('writeOpenApiPaths determinism', () => {
         path: '/users',
         responses: [{ statusCode: '200', description: 'ok' }],
       }),
+      createOperation({
+        method: 'query',
+        path: '/users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+      createOperation({
+        method: 'trace',
+        path: '/users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
     ];
 
     const result = writeOpenApiPaths(operations);
 
-    expect(Object.keys(result['/users'] ?? {})).toEqual(['get', 'post', 'patch']);
+    expect(Object.keys(result['/users'] ?? {})).toEqual(['get', 'post', 'patch', 'trace', 'query']);
   });
 
   it('sorts request body media types for deterministic output', () => {

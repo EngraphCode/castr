@@ -193,7 +193,7 @@ describe('EndpointDefinition Types', () => {
       expect(endpoint.response).toEqual(mockSchema('object'));
     });
 
-    it('should support all HTTP methods', () => {
+    it('should support all standard HTTP methods', () => {
       const methods: EndpointDefinition['method'][] = [
         'get',
         'post',
@@ -202,6 +202,8 @@ describe('EndpointDefinition Types', () => {
         'delete',
         'head',
         'options',
+        'trace',
+        'query',
       ];
 
       methods.forEach((method) => {
