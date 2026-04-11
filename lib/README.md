@@ -37,7 +37,11 @@ All input formats (OpenAPI, JSON Schema) are parsed into the Caster Model, and a
 ## Development
 
 ```bash
-# From lib/ directory
+# From repo root: canonical aggregate verification
+pnpm check:ci
+pnpm check
+
+# From lib/ directory: targeted iteration
 pnpm build         # Build the library
 pnpm type-check    # Check TypeScript types
 pnpm lint          # Run ESLint
@@ -45,18 +49,20 @@ pnpm test          # Run unit tests
 pnpm test:snapshot # Run snapshot tests
 ```
 
+## Local Git Hooks
+
+- Husky `pre-commit` formats staged files with Prettier.
+- Husky `pre-push` runs `pnpm check:ci`.
+- Explicit repo-root aggregate reruns remain the close-out source of truth.
+
 ## Quality Gates
 
-All changes must pass these gates:
+Canonical aggregate verification lives at the repo root:
 
-1. `pnpm build` — Compiles without errors
-2. `pnpm type-check` — No TypeScript errors
-3. `pnpm lint` — No lint warnings
-4. `pnpm format:check` — Code is formatted
-5. `pnpm test` — All unit tests pass
-6. `pnpm test:snapshot` — Snapshot tests match
-7. `pnpm test:gen` — Generated tests pass
-8. `pnpm character` — Characterisation tests pass
+1. `pnpm check:ci` — full non-mutating aggregate verification
+2. `pnpm check` — full local aggregate verification, allowed to fix formatting and safe lint issues
+
+When you need to isolate failures manually, follow the expanded chain in [.agent/directives/DEFINITION_OF_DONE.md](../.agent/directives/DEFINITION_OF_DONE.md).
 
 ## Key Exports
 

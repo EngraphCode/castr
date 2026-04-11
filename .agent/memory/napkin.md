@@ -4,6 +4,24 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-11
 
+- **Generated-suite temp-directory race fixed and consolidated:**
+  - a fresh gate failure was reproduced honestly before reprioritising work: `test:gen` was red because multiple generated validation suites shared and deleted the same repo-scoped `lib/tests-generated/.tmp` directory under concurrent Vitest execution
+  - the harness fix stayed local to the real seam: `createTempDir()` now returns an isolated per-suite subdirectory under `.tmp`, `cleanupTempDir()` removes only the owned suite directory and opportunistically removes the parent root when empty, and a new regression proof covers directory isolation plus cleanup behavior
+  - repo-root `pnpm check` is green again on Saturday, 11 April 2026 after the fix, and the saved aggregate log is `.agent/analysis-and-reports/pnpm-check-2026-04-11-after-generated-temp-fix.log`
+  - `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` now all record the same truth: the gate issue is resolved, Phase C remains next, and the generated-suite race does not reopen Phase B
+  - practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
+  - promoted one durable repo learning into `distilled.md`: if parallel suites need a repo-scoped temp root, allocate per-suite subdirectories and clean only owned paths; shared temp-dir cleanup creates false regression signals
+  - no new portable Practice-Core evolution clears the bar from this pass; the value is repo-local proof-harness robustness and handoff accuracy
+
+- **Husky installation + docs consolidation completed:**
+  - Husky is now active locally via `package.json` `prepare` and Git `core.hooksPath`
+  - the live hook contract is explicit and repo-specific: `pre-commit` formats staged files with Prettier, while `pre-push` runs repo-root `pnpm check:ci`
+  - the first post-install full non-mutating aggregate sweep was captured green on Saturday, 11 April 2026 in `.agent/analysis-and-reports/pnpm-check-ci-2026-04-11-after-husky-setup.log`
+  - `.agent/directives/AGENT.md`, `.agent/directives/DEFINITION_OF_DONE.md`, `.agent/commands/jc-gates.md`, `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, `.agent/plans/active/oas-3.2-full-feature-support.md`, `.agent/practice-index.md`, and `lib/README.md` now describe the same local hook and aggregate-gate contract instead of leaving hooks as implicit local state
+  - practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
+  - promoted one durable repo learning into `distilled.md`: when local execution enforcement changes, update the live doctrine, handoff, plan, and package-doc surfaces in the same pass so future sessions inherit the real workflow instead of stale assumptions
+  - no new portable Practice-Core evolution clears the bar from this pass; the value is repo-local operational cohesion, not a travelling core rule
+
 - **Phase B deep consolidation completed after implementation close-out:**
   - `.agent/README.md` now matches the live handoff stack again: repo-root `pnpm check` is recorded green on Saturday, 11 April 2026, Phase B is described as closed, and Phase C is the next slice instead of the old Phase-B-first language
   - `.agent/plans/active/oas-3.2-full-feature-support.md` now carries a real Phase B close-out section plus a phase-status table, instead of relying only on scattered paragraph updates

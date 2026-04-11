@@ -36,7 +36,8 @@
     "qg": "pnpm build && pnpm format:check && pnpm type-check && pnpm lint && pnpm madge:circular && pnpm madge:orphans && pnpm depcruise && pnpm knip && pnpm portability:check && pnpm test:all",
     "check": "pnpm clean && pnpm install && pnpm fix && pnpm qg",
     "check:ci": "pnpm clean && pnpm install --frozen-lockfile && pnpm qg",
-    "fetch:examples": "turbo fetch:examples"
+    "fetch:examples": "turbo fetch:examples",
+    "prepare": "husky"
   },
   "license": "MIT",
   "pnpm": {
@@ -61,6 +62,7 @@
     "eslint-plugin-import-x": "^4.16.2",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-sonarjs": "^4.0.2",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "madge": "^8.0.0",
     "pnpm": "^10.33.0",

@@ -37,8 +37,10 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the Phase B `QUERY` + hierarchical-tag close-out
+  - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the generated-code validation temp-directory race fix
   - Use `pnpm check` for local aggregate verification or `pnpm check:ci` for non-mutating aggregate verification; do not invoke `pnpm qg` directly
+  - Husky is now active locally: `pre-commit` formats staged files with Prettier, `pre-push` runs `pnpm check:ci`, and the first post-install repo-root `pnpm check:ci` sweep was green on Saturday, 11 April 2026
+  - A fresh gate issue was reproduced and closed on Saturday, 11 April 2026: generated-code validation now uses isolated per-suite temp directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and the fix does not change the active Phase C priority
   - `test:e2e` is now part of the canonical gate chain; `test:scalar-guard` remains off-chain and green
   - Phase A₂ is closed on Friday, 10 April 2026: AP4 landed honestly, the full repo-root gate chain is green, the targeted active-surface `openapi3-ts` grep is clean, and the reviewer loop closed with no open findings
   - Phase B is closed on Saturday, 11 April 2026: native OpenAPI 3.2 `query` now survives parser -> IR -> writer and downstream endpoint/MCP consumers, duplicated raw PathItem visitors no longer skip it, MCP treats `query` as read-only/non-destructive, hierarchical tags (`summary`, `parent`, `kind`) have explicit parser/writer proof, and repo-root `pnpm check` is green
@@ -138,6 +140,8 @@ pnpm check
 # Structural Practice and adapter validation
 pnpm portability:check
 ```
+
+Local Git hooks are active via Husky: `pre-commit` formats staged files with Prettier and `pre-push` runs `pnpm check:ci`.
 
 ---
 

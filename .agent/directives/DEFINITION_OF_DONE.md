@@ -18,6 +18,14 @@ Done means strict and complete everywhere, all the time: claimed supported behav
 If you need a non-mutating verification run, use `pnpm check:ci`.
 Do not invoke `pnpm qg` directly. It may remain as a script implementation detail, but the canonical aggregate entrypoints are `pnpm check` and `pnpm check:ci`.
 
+## Local Git Hook Contract
+
+- Husky is active as the repo-local Git hook runner.
+- `pnpm install` activates Husky locally via the repo `prepare` script.
+- `pre-commit` formats staged files with Prettier and refreshes the index.
+- `pre-push` runs `pnpm check:ci`.
+- Hook passes are supportive local enforcement, not close-out proof. A slice still closes only after an intentional repo-root aggregate verification run whose result you have inspected directly.
+
 ---
 
 ## Quality Gates (Expanded, Run From Repo Root)

@@ -58,20 +58,21 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 
 ## Artefact Directories
 
-| Location                                        | What lives there                                                       |
-| ----------------------------------------------- | ---------------------------------------------------------------------- |
-| [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                                   |
-| [`.agent/prompts/`](prompts/)                   | Session continuation context bridge                                    |
-| [`.agent/commands/`](commands/)                 | Canonical command workflows                                            |
-| [`.agent/skills/`](skills/)                     | Canonical skills                                                       |
-| [`.agent/rules/`](rules/)                       | Operationalized doctrine                                               |
-| [`.agent/sub-agents/`](sub-agents/)             | Canonical reviewer and domain-expert prompt architecture               |
-| [`.agent/plans/`](plans/)                       | Active, paused, completed, archived, and future plans                  |
-| [`.agent/memory/`](memory/)                     | Napkin, distilled learnings, and code-pattern scaffolding              |
-| [`.agent/experience/`](experience/)             | Experience records                                                     |
-| [`.agent/practice-core/`](practice-core/)       | Portable Practice Core package                                         |
-| [`.agent/practice-context/`](practice-context/) | Optional exchange support context                                      |
-| [`.agents/skills/`](../.agents/skills/)         | Codex skill wrappers for skills and `jc-*` workflows                   |
-| [`.cursor/`](../.cursor/)                       | Cursor-specific wrappers and settings                                  |
-| [`.codex/`](../.codex/)                         | Codex project-agent registration and thin reviewer/expert adapters     |
-| [`.codex/agents/`](../.codex/agents/)           | Thin Codex project-agent adapters pointing back to canonical templates |
+| Location                                        | What lives there                                                                         |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                                                     |
+| [`.agent/prompts/`](prompts/)                   | Session continuation context bridge                                                      |
+| [`.agent/commands/`](commands/)                 | Canonical command workflows                                                              |
+| [`.agent/skills/`](skills/)                     | Canonical skills                                                                         |
+| [`.agent/rules/`](rules/)                       | Operationalized doctrine                                                                 |
+| [`.agent/sub-agents/`](sub-agents/)             | Canonical reviewer and domain-expert prompt architecture                                 |
+| [`.agent/plans/`](plans/)                       | Active, paused, completed, archived, and future plans                                    |
+| [`.agent/memory/`](memory/)                     | Napkin, distilled learnings, and code-pattern scaffolding                                |
+| [`.agent/experience/`](experience/)             | Experience records                                                                       |
+| [`.agent/practice-core/`](practice-core/)       | Portable Practice Core package                                                           |
+| [`.agent/practice-context/`](practice-context/) | Optional exchange support context                                                        |
+| [`.husky/`](../.husky/)                         | Repo-local Git hooks; `pre-commit` formats staged files, `pre-push` runs `pnpm check:ci` |
+| [`.agents/skills/`](../.agents/skills/)         | Codex skill wrappers for skills and `jc-*` workflows                                     |
+| [`.cursor/`](../.cursor/)                       | Cursor-specific wrappers and settings                                                    |
+| [`.codex/`](../.codex/)                         | Codex project-agent registration and thin reviewer/expert adapters                       |
+| [`.codex/agents/`](../.codex/agents/)           | Thin Codex project-agent adapters pointing back to canonical templates                   |

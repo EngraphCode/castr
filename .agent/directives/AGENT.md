@@ -87,6 +87,15 @@ Installed roster:
 - `pnpm test:snapshot`
 - `pnpm test:gen`
 - `pnpm test:transforms`
+- `pnpm test:e2e`
+
+## Local Git Hooks
+
+- Husky is the live repo-local hook runner.
+- `pnpm install` triggers the repo `prepare` step, which activates Husky locally.
+- `pre-commit` formats staged files with Prettier and refreshes the Git index.
+- `pre-push` runs `pnpm check:ci`.
+- Hooks reinforce the local workflow, but they do not replace an explicit repo-root aggregate rerun when closing a slice.
 
 ## Structure
 

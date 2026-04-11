@@ -9,6 +9,12 @@ Run the canonical quality gates from the repo root.
 
 Do not invoke `pnpm qg` directly. It may remain as a script implementation detail, but the canonical aggregate entrypoints are `pnpm check` and `pnpm check:ci`.
 
+## Local Hook Contract
+
+- Husky `pre-commit` formats staged files with Prettier and refreshes the index.
+- Husky `pre-push` runs `pnpm check:ci`.
+- Treat hook runs as local enforcement, not as implicit close-out proof. If you are finishing work, still run the canonical aggregate command intentionally and reason from that explicit result.
+
 ## Expanded Chain
 
 Use the expanded order below when you need to isolate a failing gate or walk the full chain manually.

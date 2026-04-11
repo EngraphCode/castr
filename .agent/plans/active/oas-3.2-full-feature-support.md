@@ -160,7 +160,7 @@ Ordered by dependency and increasing complexity:
 | D     | #4 Example semantics                                  | Medium | Phase A₂     | queued after Phase C           |
 | E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | queued after Phase D / Phase C |
 
-Phases A, A₂, and B are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. Phase C is now the primary next atomic slice, and it should remain the immediate follow-on proof sweep unless a fresh regression redirects the session. Phases D and E remain independent afterwards.
+Phases A, A₂, and B are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C is still the primary next atomic slice, and it should remain the immediate follow-on proof sweep unless a fresh regression redirects the session. Phases D and E remain independent afterwards.
 
 ### Metacognitive Refinement: Why Phase C Comes Next
 
@@ -261,3 +261,4 @@ An `allOperations(doc)` helper will be provided for consumers that need to itera
 ## Quality Gates
 
 Each phase must pass `pnpm check` before the next begins.
+Husky is now active locally: `pre-commit` formats staged files with Prettier and `pre-push` runs `pnpm check:ci`, but hook runs do not replace an explicit slice-close aggregate rerun.

@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { join, dirname } from 'path';
+import { join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 /**
@@ -16,11 +16,12 @@ const __dirname = dirname(__filename);
 /**
  * Create a temporary directory for test files.
  *
- * The directory is created in a repo-scoped location (lib/tests-generated/.tmp)
- * to avoid system-wide temp directories and ensure proper cleanup. If the
- * directory already exists, this function succeeds silently.
+ * The directory is created under a repo-scoped temp root
+ * (`lib/tests-generated/.tmp`) to avoid system-wide temp directories and
+ * ensure proper cleanup. Each call returns a unique per-suite subdirectory so
+ * parallel generated-suite files do not race on the same path.
  *
- * @param baseDir - Base directory where .tmp folder will be created (defaults to tests-generated directory)
+ * @param baseDir - Base directory under which a unique temp directory will be created
  * @returns Promise resolving to the absolute path of the created temp directory
  *
  * @example
@@ -30,24 +31,18 @@ const __dirname = dirname(__filename);
  * ```
  */
 export async function createTempDir(baseDir?: string): Promise<string> {
-  // Default to tests-generated/.tmp directory
-  const tempDir = baseDir || join(__dirname, '.tmp');
+  const tempRoot = baseDir || join(__dirname, '.tmp');
+  await fs.mkdir(tempRoot, { recursive: true });
 
-  try {
-    await fs.mkdir(tempDir, { recursive: true });
-  } catch {
-    // Directory may already exist, ignore error
-  }
-
-  return tempDir;
+  return fs.mkdtemp(join(tempRoot, 'generated-suite-'));
 }
 
 /**
  * Clean up a temporary directory and all files within it.
  *
- * This function removes all files in the specified directory and then removes
- * the directory itself. If the directory doesn't exist or is already empty,
- * the function succeeds silently.
+ * This function removes the specified per-suite directory recursively. If the
+ * shared `.tmp` parent becomes empty afterwards, it is removed as well. If the
+ * directory doesn't exist, the function succeeds silently.
  *
  * @param dir - Absolute path to the temporary directory to clean up
  * @returns Promise that resolves when cleanup is complete
@@ -60,12 +55,22 @@ export async function createTempDir(baseDir?: string): Promise<string> {
  * ```
  */
 export async function cleanupTempDir(dir: string): Promise<void> {
+  const parentDir = dirname(dir);
+
   try {
-    const files = await fs.readdir(dir);
-    await Promise.all(files.map((file) => fs.unlink(join(dir, file))));
-    await fs.rmdir(dir);
+    await fs.rm(dir, { recursive: true, force: true });
   } catch {
-    // Ignore cleanup errors - directory may not exist or may be empty
+    // Ignore cleanup errors - directory may not exist
+  }
+
+  if (basename(parentDir) !== '.tmp') {
+    return;
+  }
+
+  try {
+    await fs.rmdir(parentDir);
+  } catch {
+    // Ignore cleanup errors - parent may still contain sibling suite directories
   }
 }
 
