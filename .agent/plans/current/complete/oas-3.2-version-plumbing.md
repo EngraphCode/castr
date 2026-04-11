@@ -22,7 +22,7 @@ OAS 3.2 is **fully backwards-compatible** with 3.1 — every valid 3.1 document 
 - **Output:** all writers emit `"openapi": "3.2.0"`
 - **Input validation:** `isBundledOpenApiDocument()` accepts `3.1.x` AND `3.2.x` (because Scalar's `upgrade()` converts 2.0/3.0 → 3.1, and we cannot control that)
 - **Error messages:** all rejection and validation messages reference `3.2`, not `3.1`
-- **Documentation:** all references to the OAS version in session-entry, roadmap, TSDoc, README, and test fixtures say `3.2.0`
+- **Documentation:** all references to the OAS version in the session handoff prompt, roadmap, TSDoc, README, and test fixtures say `3.2.0`
 - **Test fixtures:** all hardcoded `'3.1.0'` become `'3.2.0'`
 
   3.1.x input acceptance is a **compatibility bridge**, not a peer target. Once Scalar's `upgrade()` can target 3.2 directly, the 3.1 bridge can be removed.
@@ -64,11 +64,11 @@ OAS 3.2 is **fully backwards-compatible** with 3.1 — every valid 3.1 document 
 5. **Type dependency** — verify `openapi3-ts` types are compatible; if not, add thin type extensions
 6. **Scalar upgrade** — verify `@scalar/openapi-parser` `upgrade()` handles 3.2 input (research: it does)
 7. **Tests** — update hardcoded `'3.1.0'` version strings where 3.2 is now canonical, and add explicit native 3.2 acceptance proofs at the shared prep boundary and generation seam
-8. **Documentation** — update roadmap, session-entry, supported formats table, and all TSDoc
+8. **Documentation** — update roadmap, the session handoff prompt, supported formats table, and all TSDoc
 
 ### Out of Scope
 
-All new OAS 3.2 features — see companion plan `oas-3.2-full-feature-support.md`.
+All new OAS 3.2 features were intentionally deferred from this plumbing slice; the completed companion closure record now lives at [oas-3.2-full-feature-support.md](./oas-3.2-full-feature-support.md).
 
 ---
 
@@ -106,7 +106,7 @@ Files:
 
 - OAS 3.2 is backwards-compatible with 3.1
 - The `openapi3-ts/oas31` types are a superset of what we use
-- New 3.2 fields (`itemSchema`, `additionalOperations`, tag `parent`/`kind`) are not handled yet and will be passed through as unknown extensions
+- At the time of this plumbing slice, new 3.2 fields (`itemSchema`, `additionalOperations`, tag `parent`/`kind`) were intentionally deferred to the companion feature-support workstream. That follow-on work is now complete in [oas-3.2-full-feature-support.md](./oas-3.2-full-feature-support.md).
 - **No type changes needed for this slice** — existing `oas31` types work
 
 ### 4. Test And Proof Expansion
@@ -131,7 +131,7 @@ Use `grep -r "openApiVersion: '3.1.0'" --include='*.ts'` to find all.
 
 ### 5. Documentation
 
-- `session-entry.prompt.md`: update supported formats, current state
+- `session-continuation.prompt.md`: update supported formats and current state
 - `roadmap.md`: update supported formats table, mark version plumbing as complete
 - `schema-document.ts`: update TSDoc example from `'3.1.0'` to `'3.2.0'`
 - `tests-generated/FIXTURES.md`: update fixture-scope documentation if native 3.2 proof coverage is added there
@@ -164,10 +164,12 @@ Use `grep -r "openApiVersion: '3.1.0'" --include='*.ts'` to find all.
 
 ## Documentation Outputs
 
-- revise this active plan with the native-3.2 proof obligations and completion criteria
-- update `session-entry.prompt.md` and `roadmap.md` when the verified repo truth changes
-- update TSDoc and durable comments that still present 3.1 as the canonical target
-- update generated-suite proof-scope docs if the fixture roster or guarantees change
+Historical outputs completed by this slice:
+
+- this completion record was revised with the native-3.2 proof obligations and completion criteria
+- `session-continuation.prompt.md` and `roadmap.md` were updated when the verified repo truth changed
+- TSDoc and durable comments that still presented 3.1 as the canonical target were updated
+- generated-suite proof-scope docs were updated where the fixture roster or guarantees changed
 
 ---
 

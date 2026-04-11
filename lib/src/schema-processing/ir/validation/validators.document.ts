@@ -1,29 +1,26 @@
 import type { CastrDocument } from '../models/schema-document.js';
 import type { IRComponent } from '../models/schema.components.js';
-import type { CastrOperation } from '../models/schema.operations.js';
+import type { CastrAdditionalOperation, CastrOperation } from '../models/schema.operations.js';
 import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
+import {
+  getAdditionalOperationMethodValidationError,
+  isStandardHttpMethod,
+} from '../../../shared/openapi/http-methods.js';
+import {
+  isValidContentMap,
+  isValidMediaTypeEntry,
+  isValidResponseHeaders,
+} from './content/validators.content.js';
 import { isCastrSchema, isCastrSchemaNode } from './validators.schema.js';
 
-const VALID_HTTP_METHODS = new Set<string>([
-  'get',
-  'post',
-  'put',
-  'patch',
-  'delete',
-  'head',
-  'options',
-  'trace',
+const VALID_PARAMETER_LOCATIONS = new Set<string>([
+  'path',
   'query',
+  'header',
+  'cookie',
+  'querystring',
 ]);
-const VALID_PARAMETER_LOCATIONS = new Set<string>(['path', 'query', 'header', 'cookie']);
 
-/**
- * Cross-realm-safe Map detection.
- *
- * `instanceof Map` fails in vitest ESM module isolation where Map instances
- * may originate from a different realm boundary. This uses `Symbol.toStringTag`
- * which is reliable across realms.
- */
 const MAP_TO_STRING_TAG = '[object Map]';
 
 function isMapLike(value: unknown): boolean {
@@ -36,7 +33,13 @@ function isMapLike(value: unknown): boolean {
 }
 
 function isSupportedHttpMethod(method: unknown): boolean {
-  return typeof method === 'string' && VALID_HTTP_METHODS.has(method);
+  return typeof method === 'string' && isStandardHttpMethod(method);
+}
+
+function isSupportedAdditionalOperationMethod(method: unknown): boolean {
+  return (
+    typeof method === 'string' && getAdditionalOperationMethodValidationError(method) === undefined
+  );
 }
 
 function hasValidDocumentComponents(value: UnknownRecord): boolean {
@@ -49,7 +52,9 @@ function hasValidDocumentComponents(value: UnknownRecord): boolean {
 function hasValidDocumentOperations(value: UnknownRecord): boolean {
   return (
     Array.isArray(value['operations']) &&
-    value['operations'].every((operation) => isCastrOperation(operation))
+    value['operations'].every((operation) => isCastrOperation(operation)) &&
+    Array.isArray(value['additionalOperations']) &&
+    value['additionalOperations'].every((operation) => isCastrAdditionalOperation(operation))
   );
 }
 
@@ -109,6 +114,9 @@ const STRUCTURED_COMPONENT_VALIDATORS = {
   response: (component: UnknownRecord) => isValidResponse(component['response']),
   requestBody: (component: UnknownRecord) => isValidRequestBody(component['requestBody']),
   securityScheme: (component: UnknownRecord) => isRecord(component['scheme']),
+  mediaType: (component: UnknownRecord) =>
+    (component['xExtKey'] === undefined || typeof component['xExtKey'] === 'string') &&
+    isValidMediaTypeEntry(component['mediaType']),
 } as const;
 
 type StructuredComponentType = keyof typeof STRUCTURED_COMPONENT_VALIDATORS;
@@ -133,24 +141,32 @@ export function isIRComponent(value: unknown): value is IRComponent {
   return false;
 }
 
-function isValidParameter(value: unknown): boolean {
-  if (!isRecord(value)) {
-    return false;
-  }
-
+function hasValidParameterCoreFields(value: UnknownRecord): boolean {
   return (
     typeof value['name'] === 'string' &&
     typeof value['in'] === 'string' &&
     VALID_PARAMETER_LOCATIONS.has(value['in']) &&
     typeof value['required'] === 'boolean' &&
-    isCastrSchema(value['schema']) &&
+    isCastrSchema(value['schema'])
+  );
+}
+
+function hasValidParameterOptionalFields(value: UnknownRecord): boolean {
+  return (
+    (value['content'] === undefined || isValidContentMap(value['content'])) &&
     (value['metadata'] === undefined || isCastrSchemaNode(value['metadata']))
+  );
+}
+
+function isValidParameter(value: unknown): boolean {
+  return (
+    isRecord(value) && hasValidParameterCoreFields(value) && hasValidParameterOptionalFields(value)
   );
 }
 
 function hasParameterGroup(
   value: UnknownRecord,
-  key: 'query' | 'path' | 'header' | 'cookie',
+  key: 'query' | 'path' | 'header' | 'cookie' | 'querystring',
 ): boolean {
   return Array.isArray(value[key]) && value[key].every((parameter) => isValidParameter(parameter));
 }
@@ -164,17 +180,8 @@ function isValidParametersByLocation(value: unknown): boolean {
     hasParameterGroup(value, 'query') &&
     hasParameterGroup(value, 'path') &&
     hasParameterGroup(value, 'header') &&
-    hasParameterGroup(value, 'cookie')
-  );
-}
-
-function isValidSchemaContainer(value: unknown): boolean {
-  return isRecord(value) && isCastrSchema(value['schema']);
-}
-
-function isValidContentMap(value: unknown): boolean {
-  return (
-    isRecord(value) && Object.values(value).every((mediaType) => isValidSchemaContainer(mediaType))
+    hasParameterGroup(value, 'cookie') &&
+    (value['querystring'] === undefined || hasParameterGroup(value, 'querystring'))
   );
 }
 
@@ -184,10 +191,6 @@ function isValidRequestBody(value: unknown): boolean {
   }
 
   return typeof value['required'] === 'boolean' && isValidContentMap(value['content']);
-}
-
-function isValidResponseHeaders(value: unknown): boolean {
-  return isRecord(value) && Object.values(value).every((header) => isValidSchemaContainer(header));
 }
 
 function hasValidOperationShape(value: UnknownRecord): boolean {
@@ -204,6 +207,17 @@ function hasValidOperationShape(value: UnknownRecord): boolean {
 
 export function isCastrOperation(value: unknown): value is CastrOperation {
   if (!isRecord(value) || !isSupportedHttpMethod(value['method'])) {
+    return false;
+  }
+
+  return (
+    (value['operationId'] === undefined || typeof value['operationId'] === 'string') &&
+    hasValidOperationShape(value)
+  );
+}
+
+export function isCastrAdditionalOperation(value: unknown): value is CastrAdditionalOperation {
+  if (!isRecord(value) || !isSupportedAdditionalOperationMethod(value['method'])) {
     return false;
   }
 

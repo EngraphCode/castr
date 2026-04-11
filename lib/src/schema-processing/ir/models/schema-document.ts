@@ -7,7 +7,11 @@ import type {
 } from '../../../shared/openapi-types.js';
 import type { CastrSchema, IRDependencyGraph } from './schema.js';
 import type { IRComponent } from './schema.components.js';
-import type { CastrOperation, IRSecurityRequirement } from './schema.operations.js';
+import type {
+  CastrAdditionalOperation,
+  CastrOperation,
+  IRSecurityRequirement,
+} from './schema.operations.js';
 
 /**
  * Enum definition for centralized catalog.
@@ -86,6 +90,11 @@ export interface CastrDocument {
   operations: CastrOperation[];
 
   /**
+   * All OAS 3.2 `additionalOperations` using verbatim custom method tokens.
+   */
+  additionalOperations: CastrAdditionalOperation[];
+
+  /**
    * Dependency graph for all schemas in the document.
    */
   dependencyGraph: IRDependencyGraph;
@@ -150,29 +159,13 @@ export interface CastrDocument {
 }
 
 /**
- * Type guard for CastrDocument.
+ * Deterministic combined operation view for downstream consumers that need both
+ * fixed-method operations and OAS 3.2 `additionalOperations`.
  *
- * @param value - The value to check
- * @returns True if the value is an CastrDocument
+ * Preserves the original relative order of each source array.
  */
-function isObject(value: unknown): value is object {
-  return typeof value === 'object' && value !== null;
-}
-
-const CASTR_DOCUMENT_REQUIRED_KEYS = [
-  'version',
-  'info',
-  'servers',
-  'components',
-  'operations',
-  'dependencyGraph',
-  'schemaNames',
-  'enums',
-] as const;
-
-export function isCastrDocument(value: unknown): value is CastrDocument {
-  if (!isObject(value)) {
-    return false;
-  }
-  return CASTR_DOCUMENT_REQUIRED_KEYS.every((key) => key in value);
+export function allOperations(
+  document: Pick<CastrDocument, 'operations' | 'additionalOperations'>,
+): (CastrOperation | CastrAdditionalOperation)[] {
+  return [...document.operations, ...document.additionalOperations];
 }

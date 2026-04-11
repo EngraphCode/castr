@@ -123,6 +123,7 @@ describe('rendering/templating grouped determinism', () => {
         },
       ],
       operations: [],
+      additionalOperations: [],
       dependencyGraph: {
         nodes: new Map(),
         topologicalOrder: [],

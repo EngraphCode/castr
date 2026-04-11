@@ -13,6 +13,24 @@ describe('template-context MCP helpers', () => {
       );
     });
 
+    test('preserves custom HTTP methods in fallback names', () => {
+      expect(getMcpToolName(undefined, 'PURGE', '/users/{user-id}/sessions')).toBe(
+        'method_purge_5055524745_users_user_id_sessions',
+      );
+    });
+
+    test('normalizes reserved standard spellings in fallback names', () => {
+      expect(getMcpToolName(undefined, 'GET', '/users/{user-id}/sessions')).toBe(
+        'get_users_user_id_sessions',
+      );
+    });
+
+    test('disambiguates case-distinct custom methods in fallback names', () => {
+      expect(getMcpToolName(undefined, 'PURGE', '/users')).not.toBe(
+        getMcpToolName(undefined, 'PuRgE', '/users'),
+      );
+    });
+
     test('produces root suffix when path has no segments', () => {
       expect(getMcpToolName(undefined, 'get', '/')).toBe('get_root');
     });
@@ -25,6 +43,14 @@ describe('template-context MCP helpers', () => {
   describe('getMcpToolHints', () => {
     test('marks readOnly for GET requests', () => {
       expect(getMcpToolHints('get')).toEqual({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      });
+    });
+
+    test('marks readOnly for reserved standard spellings case-insensitively', () => {
+      expect(getMcpToolHints('GET')).toEqual({
         readOnlyHint: true,
         destructiveHint: false,
         idempotentHint: false,
@@ -57,6 +83,14 @@ describe('template-context MCP helpers', () => {
 
     test('keeps all hints false for methods without a mapping', () => {
       expect(getMcpToolHints('post')).toEqual({
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      });
+    });
+
+    test('keeps all hints false for custom methods', () => {
+      expect(getMcpToolHints('PURGE')).toEqual({
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,

@@ -150,7 +150,7 @@ function buildHeaderSchema(
 
   const location = context.path.join('/');
   throw new Error(
-    `Header "${headerName}" at ${location} has neither 'schema' nor schema-bearing 'content'. ` +
+    `Header "${headerName}" at ${location} has neither 'schema' nor content-derived schema. ` +
       'OpenAPI headers must define a schema directly or via content.',
   );
 }

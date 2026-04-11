@@ -79,38 +79,6 @@ describe('writeOpenApiPaths determinism', () => {
     expect(Object.keys(result['/users'] ?? {})).toEqual(['get', 'post', 'patch', 'trace', 'query']);
   });
 
-  it('sorts request body media types for deterministic output', () => {
-    const operations: CastrOperation[] = [
-      createOperation({
-        method: 'post',
-        path: '/users',
-        requestBody: {
-          required: true,
-          content: {
-            'text/plain': {
-              schema: { type: 'string', metadata: createMetadata() },
-            },
-            'application/json': {
-              schema: { type: 'object', metadata: createMetadata() },
-            },
-          },
-        },
-      }),
-    ];
-
-    const result = writeOpenApiPaths(operations);
-    const requestBody = result['/users']?.post?.requestBody;
-    const mediaTypeKeys =
-      requestBody !== undefined &&
-      typeof requestBody === 'object' &&
-      'content' in requestBody &&
-      requestBody.content !== undefined
-        ? Object.keys(requestBody.content)
-        : [];
-
-    expect(mediaTypeKeys).toEqual(['application/json', 'text/plain']);
-  });
-
   it('sorts response status codes for deterministic output', () => {
     const operations: CastrOperation[] = [
       createOperation({

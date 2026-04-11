@@ -1,17 +1,21 @@
 # OAS 3.2 Full Feature Support
 
-**Status:** ACTIVE — Primary active plan  
+**Status:** COMPLETE — staged closure record  
 **Created:** 2026-03-31  
 **Promoted:** 2026-04-03  
-**Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
+**Predecessor:** [oas-3.2-version-plumbing.md](./oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
 **Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice  
-**Updated:** 2026-04-11 — Phase D is closed: Example Object `dataValue` / `serializedValue` semantics now have honest IR typing, helper semantics, and proof coverage, repo-root `pnpm check` is green, and Phase E is the immediate next slice
+**Lifecycle:** Moved from `.agent/plans/active/` to `.agent/plans/current/complete/` on Saturday, 11 April 2026 after Phase E closed so `active/` no longer implies resumable work that is already complete  
+**Updated:** 2026-04-11 — Phase E is closed: native `itemSchema` streaming plus `additionalOperations` now survive the OpenAPI parser/IR/writer path, downstream custom verbs are exposed end to end, non-OpenAPI downstreams fail fast on reachable `itemSchema`, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green
 
 ---
 
 ## Goal
 
 Implement full support for all OAS 3.2.0 features across the IR, parsers, and writers. Each feature follows the Input-Output Pair Compatibility Model: the IR must carry the feature, and each output format either emits it semantically or fails fast with an actionable error.
+
+> [!NOTE]
+> This file is now a staged completion record, not the active execution plan. Do not reopen it unless a fresh regression is actually reproduced on a landed OAS 3.2 surface.
 
 ---
 
@@ -158,20 +162,54 @@ Ordered by dependency and increasing complexity:
 | B     | #1 QUERY method, #3 Hierarchical tags                 | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 | C     | #6 OAuth2 Device, #7 XML nodeType, #8 Path templating | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 | D     | #4 Example semantics                                  | Medium | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
-| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | ▶ next                         |
+| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 
-Phases A, A₂, B, C, and D are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C then closed on Saturday, 11 April 2026: `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the final close-out sweep. Phase D then closed on Saturday, 11 April 2026: Example Object `dataValue` / `serializedValue` now have explicit parser/writer/round-trip proof across component, parameter, response-header, and media-type carriers, `CastrParameter.examples` now preserves full Example Object/ref shapes honestly, singular parameter example derivation now falls back to `examples.default.dataValue` but never `serializedValue` alone, the repaired parameter writer now prefers canonical `examples` output and revalidates cleanly at the shared load boundary, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the close-out sweep. Phase E is now the immediate next atomic slice.
+Phases A, A₂, B, C, D, and E are complete. The MCP no-params tool-input-schema follow-up, Husky local-workflow alignment, and the generated-suite temp-directory stability fix also closed on Saturday, 11 April 2026. Repo-root `pnpm check` is green on the final Phase E close-out rerun, repo-root `pnpm check:ci` remains green from Saturday, 11 April 2026, and no successor primary active plan has been promoted yet.
 
-### Metacognitive Refinement: Why Phase E Comes Next
+### Metacognitive Record: Why Phase E Was Next
 
-A deeper code audit already established why the earlier slices had to land first. With Phase D now closed, the next-step recommendation sharpens again:
+A deeper code audit already established why the earlier slices had to land first. Phase E was the right next slice because:
 
 - Feature #1 `QUERY` is now wired honestly across the core operation pipeline: the IR/public method unions include `'query'`, parser extraction and duplicated raw PathItem visitors no longer skip it, writer ordering emits `pathItem.query` explicitly, and downstream MCP hints treat it as read-only/non-destructive without broadening idempotent semantics.
 - Feature #3 hierarchical tags now have explicit proof that `parent`, `kind`, and `summary` survive parser -> IR -> writer round-trips through a native OpenAPI 3.2 fixture.
 - Phase C is now landed honestly: `deviceAuthorization` and XML `nodeType` are proved end to end at the parser/writer seams, the strict top-level `paths` grammar check now rejects malformed templates before upgrade, and valid templated paths are explicitly proved through downstream endpoint/MCP consumers.
 - Phase D is now landed honestly: Example Object `dataValue` / `serializedValue` survive the shared load boundary -> IR -> writer across all currently claimed carriers, the public parameter examples contract is honest, and the singular parameter helper only backfills from `default.dataValue` rather than from `serializedValue`.
-- Phase E is now the next smallest honest slice. `itemSchema` streaming is still bounded to media-type seams, while `additionalOperations` remains queued behind the ADR-046 separate-storage design and should be tackled alongside that slice rather than smuggled into any closed phase.
-- Repo-root `pnpm check` remains the required aggregate gate before any later phase closes. Use `pnpm check:ci` only when a non-mutating rerun is needed, and do not invoke `pnpm qg` directly.
+- Phase E was the next smallest honest slice. `itemSchema` streaming stayed bounded to media-type seams, while `additionalOperations` followed the ADR-046 separate-storage design instead of being smuggled into any earlier closed phase.
+- Repo-root `pnpm check` remained the required aggregate gate before the workstream could close. Use `pnpm check:ci` only when a non-mutating rerun is needed, and do not invoke `pnpm qg` directly.
+
+---
+
+## Phase E: `itemSchema` Streaming + `additionalOperations`
+
+**Status:** COMPLETE on Saturday, 11 April 2026.
+
+**What landed:**
+
+- `IRMediaType.itemSchema` is now part of the IR/public contract, distinct from full-payload `schema`, and it is parsed across the current media-type seams: request bodies, responses, headers, parameter `content`, and `components.mediaTypes`
+- `CastrDocument.additionalOperations` is now a required field, `CastrAdditionalOperation` is exported as the custom-method companion to `CastrOperation`, and `allOperations(document)` is available as the deterministic combined iterator
+- OpenAPI parsing now extracts `PathItem.additionalOperations`, preserves custom method tokens verbatim, applies the same path-level merge rules used for fixed methods, and rejects fixed-field methods inside `additionalOperations`
+- OpenAPI writing now round-trips both `itemSchema` and `additionalOperations`, keeps custom-method ordering deterministic, preserves x-ext media-type component identity through writer emission, and rejects invalid programmatic `additionalOperations` entries before they can overwrite fixed Path Item fields
+- Endpoint, MCP, and TypeScript downstreams now iterate via `allOperations(document)` and expose custom verbs end to end without widening the closed standard-method union
+- Endpoint, MCP, and TypeScript generation now fail fast with actionable unsupported-streaming errors when a reachable `itemSchema` would require semantics those downstreams do not yet implement
+- Late reviewer follow-up fixes also closed the parameter `content` traversal blind spot, tightened the public IR media-type ref contract, and made inline request-body fallback naming custom-method-safe so distinct verbs cannot collapse into duplicate generated schema declarations
+
+**Proof base:**
+
+- Native fixture: `lib/tests-transforms/__fixtures__/phase-e-native-3.2.yaml`
+- Targeted unit proof: parser, writer, IR model, validation, endpoint, MCP, and TypeScript suites covering `itemSchema`, `additionalOperations`, widened downstream method carriers, invalid-method rejection, and fail-fast item-schema boundaries
+- Native transform proof: parser-field, writer-field, round-trip/reparse, version-validation, downstream-context, and additional-operations-validation suites
+- Aggregate verification: repo-root `pnpm check` green on Saturday, 11 April 2026 after the final close-out rerun; repo-root `pnpm check:ci` remains green from Saturday, 11 April 2026
+
+**Reviewer loop:**
+
+- `code-reviewer` — **NO FINDINGS** after the late follow-up fix for custom-method inline request-body naming collisions and lowercase reserved-method validation during OpenAPI writing
+- `test-reviewer` — **NO FINDINGS** on the landed Phase E proof surface
+- `openapi-expert` — **NO FINDINGS** on the landed native 3.2 semantics and close-out claims
+- `type-reviewer` — **NO FINDINGS** after the public IR media-type helper narrowing follow-up
+
+**Next entrypoint:**
+
+- No successor primary active plan has been promoted yet. Reproduce any fresh regression first; otherwise promote the next honest active atomic plan before implementation begins.
 
 ---
 
@@ -201,9 +239,9 @@ A deeper code audit already established why the earlier slices had to land first
 - `openapi-expert` — **APPROVED** after the explicit 3.0/3.1 rejection coverage and final close-out doc-state alignment
 - `type-reviewer` — **APPROVED** after the `ParameterMetadata.examples` contract and precedence docs were brought back into line with the helper output
 
-**Next entrypoint:**
+**Historical next entrypoint at Phase D close-out:**
 
-- Resume Phase E next for `itemSchema` streaming and `additionalOperations` unless a fresh gate or runtime regression is reproduced first.
+- At Phase D close-out on Saturday, 11 April 2026, the then-next slice was Phase E for `itemSchema` streaming and `additionalOperations`. With Phase E now also closed, no successor primary active plan has been promoted yet.
 
 ---
 
@@ -234,7 +272,7 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase C close-out:**
 
-- At Phase C close-out on Saturday, 11 April 2026, the then-next slice was Phase D for Example Object semantics (`dataValue`, `serializedValue`). With Phase D now also closed, the active next entrypoint is Phase E.
+- At Phase C close-out on Saturday, 11 April 2026, the then-next slice was Phase D for Example Object semantics (`dataValue`, `serializedValue`). With Phases D and E now also closed, no successor primary active plan has been promoted yet.
 
 ---
 
@@ -257,15 +295,15 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase B close-out:**
 
-- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phases C and D now also closed, the active next entrypoint is Phase E.
+- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phases C, D, and E now also closed, no successor primary active plan has been promoted yet.
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B, C, and D now closed, the active next entrypoint is Phase E.
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B, C, D, and E now closed, no successor primary active plan has been promoted yet.
 **ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
-**Detailed completion record:** [phase-a2-type-migration.md](../current/complete/phase-a2-type-migration.md)
+**Detailed completion record:** [phase-a2-type-migration.md](./phase-a2-type-migration.md)
 
 ### Resolved Decisions
 
@@ -283,7 +321,7 @@ A deeper code audit already established why the earlier slices had to land first
 3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
 4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
 5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
-6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B, C, and D now closed, Phase E is the immediate follow-on proof sweep.
+6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B, C, D, and E now closed, no successor primary active plan has been promoted yet.
 
 > [!NOTE]
 > Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.
@@ -294,7 +332,7 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Decision: Separate storage on `CastrDocument`.**
 
-Custom-method operations from OAS 3.2 `additionalOperations` will be stored in a dedicated `additionalOperations` field on `CastrDocument`, not folded into the existing `operations` array. Rationale:
+Custom-method operations from OAS 3.2 `additionalOperations` are stored in a dedicated `additionalOperations` field on `CastrDocument`, not folded into the existing `operations` array. Rationale:
 
 1. **Type safety** — `IRHttpMethod` stays a closed union; exhaustiveness checks, `VALID_HTTP_METHODS`, `PATH_ITEM_METHOD_SETTERS`, and sorting logic are preserved
 2. **Lossless round-trip** — the writer knows exactly which operations go into `pathItem.additionalOperations` vs `pathItem[method]`

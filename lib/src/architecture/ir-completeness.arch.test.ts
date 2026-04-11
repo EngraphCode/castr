@@ -39,6 +39,7 @@ describe('IR Completeness', () => {
         servers: [],
         components: [],
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],
@@ -63,6 +64,7 @@ describe('IR Completeness', () => {
         servers: [],
         components: [],
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],

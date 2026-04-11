@@ -1,4 +1,5 @@
 import type { ParameterObject, SchemaObject } from '../shared/openapi-types.js';
+import type { StandardHttpMethod } from '../shared/openapi/http-methods.js';
 import type { CastrSchema } from '../schema-processing/ir/index.js';
 
 /**
@@ -9,16 +10,15 @@ import type { CastrSchema } from '../schema-processing/ir/index.js';
 /**
  * Standard HTTP methods supported by OpenAPI 3.2 path items.
  */
-export type HttpMethod =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'patch'
-  | 'delete'
-  | 'head'
-  | 'options'
-  | 'trace'
-  | 'query';
+export type HttpMethod = StandardHttpMethod;
+
+/**
+ * Endpoint-facing method carrier.
+ *
+ * Standard methods stay closed via {@link HttpMethod}, while custom methods
+ * from OAS 3.2 `additionalOperations` flow through as verbatim strings.
+ */
+export type EndpointHttpMethod = HttpMethod | (string & {});
 
 /**
  * Request format types
@@ -112,7 +112,7 @@ export interface EndpointResponse {
  */
 export interface EndpointDefinition {
   /** HTTP method */
-  method: HttpMethod;
+  method: EndpointHttpMethod;
   /** API path with parameter placeholders (e.g., '/users/:id') */
   path: string;
   /** Optional alias (typically the operationId) */

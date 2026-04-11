@@ -475,4 +475,17 @@ describe('EndpointDefinition Types', () => {
       }
     });
   });
+
+  it('allows custom HTTP method tokens on endpoint definitions', () => {
+    const endpoint: EndpointDefinition = {
+      method: 'PURGE',
+      path: '/users',
+      requestFormat: 'json',
+      parameters: [],
+      errors: [],
+      response: mockSchema('object'),
+    };
+
+    expect(endpoint.method).toBe('PURGE');
+  });
 });

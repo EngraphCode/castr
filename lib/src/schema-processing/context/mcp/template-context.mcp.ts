@@ -13,7 +13,8 @@ import {
 // IR-based imports
 import { buildMcpToolSchemasFromIR } from './schemas/template-context.mcp.schemas.from-ir.js';
 import { resolveOperationSecurityFromIR } from './template-context.mcp.security.from-ir.js';
-import type { CastrDocument, CastrOperation } from '../../ir/index.js';
+import type { CastrAdditionalOperation, CastrDocument, CastrOperation } from '../../ir/index.js';
+import { allOperations } from '../../ir/index.js';
 
 /**
  * Metadata for an MCP tool generated from an OpenAPI operation.
@@ -46,7 +47,7 @@ export interface TemplateContextMcpTool {
  * @internal
  */
 const normalizeDescriptionFromIR = (
-  operation: CastrOperation,
+  operation: CastrOperation | CastrAdditionalOperation,
 ): {
   title?: string;
   description: string;
@@ -101,7 +102,7 @@ const normalizeDescriptionFromIR = (
  * @public
  */
 export const buildMcpToolsFromIR = (ir: CastrDocument): TemplateContextMcpTool[] => {
-  return ir.operations.map((operation) => {
+  return allOperations(ir).map((operation) => {
     // Build schemas from IR
     const { inputSchema, outputSchema } = buildMcpToolSchemasFromIR(ir, operation);
 

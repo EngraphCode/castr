@@ -20,6 +20,7 @@ import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './mcp/index.js
 import { buildIR } from '../parsers/openapi/index.js';
 import { extractInlineSchemas } from './schemas/inline-schemas.js';
 import type { CastrDocument } from '../ir/index.js';
+import { allOperations } from '../ir/index.js';
 
 const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
 
@@ -112,8 +113,10 @@ export interface TemplateContextOptions {
   withSchemaRegistry?: boolean;
 }
 
-function assertNoMixedQueryParameterModels(ir: Pick<CastrDocument, 'operations'>): void {
-  for (const operation of ir.operations) {
+function assertNoMixedQueryParameterModels(
+  ir: Pick<CastrDocument, 'operations' | 'additionalOperations'>,
+): void {
+  for (const operation of allOperations(ir)) {
     const hasQueryParameters = operation.parametersByLocation.query.length > 0;
     const hasQueryStringParameters = (operation.parametersByLocation.querystring ?? []).length > 0;
 

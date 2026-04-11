@@ -1,10 +1,14 @@
 import type { ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
 import { endsWith, join, snakeCase, split, startsWith, trim, trimStart } from 'lodash-es';
-import type { HttpMethod } from '../../../endpoints/definition.types.js';
+import type { EndpointHttpMethod } from '../../../endpoints/definition.types.js';
+import {
+  getCanonicalStandardHttpMethod,
+  getHttpMethodIdentifier,
+} from '../../../shared/openapi/http-methods.js';
 
 type McpToolHints = Pick<ToolAnnotations, 'readOnlyHint' | 'destructiveHint' | 'idempotentHint'>;
 
-const READ_ONLY_METHODS = new Set<HttpMethod>(['get', 'head', 'options', 'query']);
+const READ_ONLY_METHODS = new Set<string>(['get', 'head', 'options', 'query']);
 const UNDERSCORE_TOKEN = '_';
 const PATH_SEPARATOR = '/';
 const ROOT_SEGMENT = 'root';
@@ -44,11 +48,11 @@ const sanitizePathSegment = (segment: string): string => {
 
 /**
  * Derive the canonical MCP tool name for an operation.
- * Prefers snake_case operationId with a method/path fallback.
+ * Prefers snake_case operationId with a deterministic method/path fallback.
  */
 export const getMcpToolName = (
   operationId: string | undefined,
-  method: HttpMethod,
+  method: EndpointHttpMethod,
   path: string,
 ): string => {
   const trimmedOperationId = operationId === undefined ? undefined : trim(operationId);
@@ -59,7 +63,7 @@ export const getMcpToolName = (
     }
   }
 
-  const methodPart = toSnakeCase(method);
+  const methodPart = getHttpMethodIdentifier(method);
   const pathParts = split(path, PATH_SEPARATOR)
     .map((segment) => sanitizePathSegment(segment))
     .filter((segment): segment is string => segment.length > 0);
@@ -73,8 +77,11 @@ export const getMcpToolName = (
  * Map HTTP method to MCP behavioral hints.
  * Defaults to all hints false.
  */
-export const getMcpToolHints = (method: HttpMethod): McpToolHints => {
-  if (READ_ONLY_METHODS.has(method)) {
+export const getMcpToolHints = (method: EndpointHttpMethod): McpToolHints => {
+  const canonicalMethod =
+    typeof method === 'string' ? (getCanonicalStandardHttpMethod(method) ?? method) : method;
+
+  if (READ_ONLY_METHODS.has(canonicalMethod)) {
     return {
       readOnlyHint: true,
       destructiveHint: false,
@@ -82,7 +89,7 @@ export const getMcpToolHints = (method: HttpMethod): McpToolHints => {
     };
   }
 
-  if (method === METHOD_DELETE) {
+  if (canonicalMethod === METHOD_DELETE) {
     return {
       readOnlyHint: false,
       destructiveHint: true,
@@ -90,7 +97,7 @@ export const getMcpToolHints = (method: HttpMethod): McpToolHints => {
     };
   }
 
-  if (method === METHOD_PUT) {
+  if (canonicalMethod === METHOD_PUT) {
     return {
       readOnlyHint: false,
       destructiveHint: false,

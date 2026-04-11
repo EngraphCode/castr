@@ -26,9 +26,11 @@ export type {
   IRPathItemComponent,
   IRMediaTypeComponent,
   IRExampleComponent,
+  CastrAdditionalOperation,
   CastrOperation,
   CastrParameter,
   IRRequestBody,
+  IRMediaTypeReference,
   IRMediaTypeEntry,
   IRMediaType,
   CastrResponse,
@@ -45,6 +47,7 @@ export type {
   IRDependencyGraph,
   IRDependencyNode,
 } from './models/index.js';
+export { allOperations } from './models/index.js';
 export { ensureObjectTypeForObjectKeywords, isObjectSchemaType } from './unknown-key-behavior.js';
 export {
   UUID_SCHEMA_TYPE,
@@ -65,7 +68,11 @@ export {
   applyExplicitIntegerSemantics,
   schemaTypeIncludesInteger,
 } from './integer-semantics/index.js';
-export { getSchemaFromIRMediaTypeEntry, resolveIRMediaTypeEntry } from './media-types/index.js';
+export {
+  getSchemaFromIRMediaTypeEntry,
+  getItemSchemaFromIRMediaTypeEntry,
+  resolveIRMediaTypeEntry,
+} from './media-types/index.js';
 
 // Serialization utilities
 // Validators and type guards
@@ -73,6 +80,7 @@ export { getSchemaFromIRMediaTypeEntry, resolveIRMediaTypeEntry } from './media-
 export { serializeIR, deserializeIR } from './serialization.js';
 export {
   isCastrDocument,
+  isCastrAdditionalOperation,
   isIRComponent,
   isCastrOperation,
   isCastrSchema,

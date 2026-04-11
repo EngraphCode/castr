@@ -1,18 +1,11 @@
-/**
- * IR-based MCP tool schema builder functions.
- *
- * These functions read from `CastrDocument` and `CastrOperation` instead of
- * raw OpenAPI objects, following the "IR is single source of truth" principle.
- *
- * @module template-context.mcp.schemas.from-ir
- */
-
-import type { Schema as JsonSchema } from 'ajv';
-import type { CastrSchema, CastrDocument, CastrOperation } from '../../../ir/index.js';
+import type {
+  CastrAdditionalOperation,
+  CastrDocument,
+  CastrOperation,
+  CastrSchema,
+} from '../../../ir/index.js';
 import type { MutableJsonSchema } from '../../../conversion/json-schema/index.js';
-import type { CastrSchemaPropertiesLike } from '../../../../shared/type-utils/castr-schema-properties.js';
-import { isRecord } from '../../../../shared/type-utils/types.js';
-import { isCastrSchemaProperties } from '../../../../shared/type-utils/type-guards.js';
+import { assertOperationSupportsItemSchemaTargetCapabilities } from '../../../compatibility/item-schema-target-capabilities.js';
 import {
   collectParameterGroupsFromIR,
   createParameterSectionSchemaFromIR,
@@ -23,85 +16,19 @@ import {
   resolvePrimarySuccessResponseSchemaFromIR,
 } from '../template-context.mcp.responses.js';
 import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-schema.js';
+import {
+  castrSchemaToJsonSchemaForMcp,
+  wrapJsonSchemaFromIR,
+  wrapSchemaFromIR,
+} from './template-context.mcp.schemas.json-schema.js';
 import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 
 const SCHEMA_TYPE_OBJECT = 'object';
-const SCHEMA_KEY_REF = '$ref';
 const INPUT_SECTION_PATH = 'path';
 const INPUT_SECTION_QUERY = 'query';
 const INPUT_SECTION_QUERY_STRING = 'queryString';
 const INPUT_SECTION_HEADERS = 'headers';
 const INPUT_SECTION_BODY = 'body';
-
-/**
- * Check if a schema is or could be an object type.
- * Handles explicit type, array types, and composition schemas.
- */
-const isLikelyObjectSchema = (schema: MutableJsonSchema): boolean => {
-  // Explicit object type
-  const schemaType: unknown = schema['type'];
-  if (schemaType === SCHEMA_TYPE_OBJECT) {
-    return true;
-  }
-  if (Array.isArray(schemaType)) {
-    const schemaTypes = new Set(schemaType);
-    if (schemaTypes.has(SCHEMA_TYPE_OBJECT)) {
-      return true;
-    }
-  }
-
-  if ('allOf' in schema || 'oneOf' in schema || 'anyOf' in schema) {
-    return false;
-  }
-
-  return false;
-};
-
-/**
- * Wrap a JSON schema to ensure it's always an object type.
- * Required for MCP ToolSchema which mandates outputSchema.type === 'object'.
- */
-const wrapSchemaFromIR = (schema: MutableJsonSchema | undefined): MutableJsonSchema => {
-  if (schema === undefined) {
-    return { type: SCHEMA_TYPE_OBJECT };
-  }
-
-  // Pass through $ref schemas - they should have been inlined before this point
-  // If we still have refs, pass through (caller should inline first)
-  if (SCHEMA_KEY_REF in schema) {
-    return schema;
-  }
-
-  // If already an object type, return as-is
-  if (isLikelyObjectSchema(schema)) {
-    return schema;
-  }
-
-  // Wrap non-object schemas (primitives, arrays, compositions without type)
-  return {
-    type: SCHEMA_TYPE_OBJECT,
-    properties: { value: schema },
-  };
-};
-
-/**
- * Wrap a JSON schema to ensure it's always an object type.
- * Accepts Ajv JsonSchema values (object or boolean) and normalizes to object.
- */
-const wrapJsonSchemaFromIR = (schema: JsonSchema | undefined): MutableJsonSchema => {
-  if (schema === undefined) {
-    return { type: SCHEMA_TYPE_OBJECT };
-  }
-
-  if (typeof schema === 'boolean') {
-    return {
-      type: SCHEMA_TYPE_OBJECT,
-      properties: { value: schema },
-    };
-  }
-
-  return wrapSchemaFromIR(schema);
-};
 
 /**
  * Assign an IR parameter section to the input schema properties.
@@ -125,113 +52,12 @@ const assignSectionFromIR = (
 };
 
 /**
- * Type guard for CastrSchema values.
- */
-const isCastrSchemaForMcp = (value: unknown): value is CastrSchema =>
-  typeof value === 'object' && value !== null && 'metadata' in value;
-
-/**
- * Convert CastrSchemaProperties (Map) to plain object for JSON Schema.
- */
-const convertPropertiesToJsonSchema = (
-  properties: CastrSchemaPropertiesLike,
-): Record<string, MutableJsonSchema> => {
-  const result: Record<string, MutableJsonSchema> = {};
-  for (const [propName, propSchema] of properties.entries()) {
-    if (!isCastrSchemaForMcp(propSchema)) {
-      throw new Error('[mcp-schemas-from-ir] Expected CastrSchema property value.');
-    }
-    result[propName] = castrSchemaToJsonSchemaForMcp(propSchema);
-  }
-  return result;
-};
-
-function convertArrayToJsonSchema(values: readonly unknown[]): unknown[] {
-  return values.map((value) =>
-    isCastrSchemaForMcp(value) ? castrSchemaToJsonSchemaForMcp(value) : value,
-  );
-}
-
-function convertSchemaFieldValue(value: unknown): unknown {
-  if (isCastrSchemaProperties(value)) {
-    return convertPropertiesToJsonSchema(value);
-  }
-  if (isCastrSchemaForMcp(value)) {
-    return castrSchemaToJsonSchemaForMcp(value);
-  }
-  if (Array.isArray(value)) {
-    return convertArrayToJsonSchema(value);
-  }
-  return value;
-}
-
-function getRecordEntries(value: unknown): [string, unknown][] {
-  return isRecord(value) ? Object.entries(value) : [];
-}
-
-/**
- * Draft 07 compatible keys that are safe to emit in MCP tool schemas.
- * Keys not in this set are IR-only and must be stripped.
- */
-const DRAFT_07_ALLOWLIST = new Set([
-  'type',
-  'format',
-  'description',
-  'title',
-  'default',
-  'example',
-  'examples',
-  'enum',
-  'const',
-  'properties',
-  'required',
-  'additionalProperties',
-  'items',
-  'minItems',
-  'maxItems',
-  'uniqueItems',
-  'minLength',
-  'maxLength',
-  'pattern',
-  'minimum',
-  'maximum',
-  'exclusiveMinimum',
-  'exclusiveMaximum',
-  'multipleOf',
-  'allOf',
-  'oneOf',
-  'anyOf',
-  'not',
-  'discriminator',
-  '$ref',
-  'readOnly',
-  'writeOnly',
-  'deprecated',
-]);
-
-/**
- * Convert CastrSchema to MutableJsonSchema for MCP output.
- * Uses an explicit Draft 07 allowlist to strip IR-only fields
- * (integerSemantics, uuidVersion, contentEncoding, unevaluatedProperties, etc.)
- * while preserving schema structure.
- * Handles CastrSchemaProperties (Map) for properties field.
- */
-const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema => {
-  const result: MutableJsonSchema = {};
-
-  for (const [key, value] of getRecordEntries(schema)) {
-    if (DRAFT_07_ALLOWLIST.has(key) && value !== undefined) {
-      result[key] = convertSchemaFieldValue(value);
-    }
-  }
-
-  return result;
-};
-
-/**
  * Create input schema from IR operation.
  */
-function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): MutableJsonSchema {
+function createInputSchemaFromIR(
+  ir: CastrDocument,
+  operation: CastrOperation | CastrAdditionalOperation,
+): MutableJsonSchema {
   const parameterGroups = collectParameterGroupsFromIR(operation);
   const requestBody = resolveRequestBodySchemaFromIR(operation, ir);
 
@@ -275,41 +101,21 @@ function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): 
   return wrapJsonSchemaFromIR(inlined);
 }
 
-/**
- * Create output schema from IR operation.
- * Inlines refs first, then wraps to ensure object type.
- */
 function createOutputSchemaFromIR(
   ir: CastrDocument,
   successSchema: CastrSchema,
 ): MutableJsonSchema {
   const asJsonSchema = castrSchemaToJsonSchemaForMcp(successSchema);
-  // Inline refs first to resolve $ref schemas
   const inlined = inlineJsonSchemaRefsFromIR(asJsonSchema, ir);
-  // Then wrap to ensure it's an object type (required by MCP ToolSchema)
   return wrapJsonSchemaFromIR(inlined);
 }
 
-/**
- * Builds MCP tool schemas from a CastrDocument and CastrOperation.
- *
- * This function reads from the IR instead of raw OpenAPI, eliminating
- * the need to access `OpenAPIDocument` for schema resolution.
- *
- * @param ir - The CastrDocument containing component schemas
- * @param operation - The CastrOperation containing parameters, request body, and responses
- * @returns MCP tool schema result with input/output schemas
- *
- * @example
- * ```typescript
- * const result = buildMcpToolSchemasFromIR(irDocument, operation);
- * // { inputSchema: {...}, outputSchema: {...} }
- * ```
- */
 export const buildMcpToolSchemasFromIR = (
   ir: CastrDocument,
-  operation: CastrOperation,
+  operation: CastrOperation | CastrAdditionalOperation,
 ): Omit<McpToolSchemaResult, 'security'> => {
+  assertOperationSupportsItemSchemaTargetCapabilities(ir, operation, 'MCP');
+
   const inputSchema = createInputSchemaFromIR(ir, operation);
   const successSchema = resolvePrimarySuccessResponseSchemaFromIR(operation, ir);
   const outputSchema = successSchema ? createOutputSchemaFromIR(ir, successSchema) : undefined;

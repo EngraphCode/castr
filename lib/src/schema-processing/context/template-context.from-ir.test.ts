@@ -30,6 +30,7 @@ function createMinimalIR(overrides: Partial<CastrDocument> = {}): CastrDocument 
     servers: [],
     components: [],
     operations: [],
+    additionalOperations: [],
     dependencyGraph: defaultDependencyGraph,
     schemaNames: [],
     enums: new Map(),

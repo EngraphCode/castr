@@ -1,4 +1,10 @@
-import type { CastrSchema, CastrDocument, CastrOperation } from '../../ir/index.js';
+import {
+  allOperations,
+  type CastrAdditionalOperation,
+  type CastrDocument,
+  type CastrOperation,
+  type CastrSchema,
+} from '../../ir/index.js';
 import { toUpper } from 'lodash-es';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
@@ -38,7 +44,7 @@ function writeOperations(ir: CastrDocument, lines: string[]): void {
   lines.push('## Operations');
   lines.push('');
 
-  for (const op of ir.operations) {
+  for (const op of allOperations(ir)) {
     lines.push(`### ${op.summary || op.operationId}`);
     lines.push('');
     lines.push(`\`${toUpper(op.method)} ${op.path}\``);
@@ -53,7 +59,7 @@ function writeOperations(ir: CastrDocument, lines: string[]): void {
   }
 }
 
-function writeParameters(op: CastrOperation, lines: string[]): void {
+function writeParameters(op: CastrOperation | CastrAdditionalOperation, lines: string[]): void {
   if (op.parameters.length === 0) {
     return;
   }
@@ -71,7 +77,7 @@ function writeParameters(op: CastrOperation, lines: string[]): void {
   lines.push('');
 }
 
-function writeResponses(op: CastrOperation, lines: string[]): void {
+function writeResponses(op: CastrOperation | CastrAdditionalOperation, lines: string[]): void {
   if (op.responses.length === 0) {
     return;
   }

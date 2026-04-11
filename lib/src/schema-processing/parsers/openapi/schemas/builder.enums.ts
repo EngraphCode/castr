@@ -8,6 +8,8 @@
  */
 
 import type {
+  CastrAdditionalOperation,
+  CastrParameter,
   CastrSchema,
   IREnum,
   IRComponent,
@@ -31,7 +33,7 @@ const COMPONENT_TYPE_MEDIA_TYPE = 'mediaType';
  */
 export function extractEnums(
   components: IRComponent[],
-  operations: CastrOperation[],
+  operations: (CastrOperation | CastrAdditionalOperation)[],
 ): Map<string, IREnum> {
   return new EnumExtractor().extract(components, operations);
 }
@@ -40,7 +42,10 @@ class EnumExtractor {
   private enums = new Map<string, IREnum>();
   private visited = new Set<CastrSchema>();
 
-  extract(components: IRComponent[], operations: CastrOperation[]): Map<string, IREnum> {
+  extract(
+    components: IRComponent[],
+    operations: (CastrOperation | CastrAdditionalOperation)[],
+  ): Map<string, IREnum> {
     this.traverseComponents(components);
     this.traverseOperations(operations);
     return this.enums;
@@ -56,7 +61,7 @@ class EnumExtractor {
     if (component.type === COMPONENT_TYPE_SCHEMA) {
       this.visitSchema(component.schema, component.name);
     } else if (component.type === COMPONENT_TYPE_PARAMETER) {
-      this.visitSchema(component.parameter.schema, component.parameter.name);
+      this.visitParameter(component.parameter);
     } else if (component.type === COMPONENT_TYPE_RESPONSE) {
       this.visitResponseComponent(component);
     } else if (component.type === COMPONENT_TYPE_REQUEST_BODY) {
@@ -67,21 +72,19 @@ class EnumExtractor {
   }
 
   private visitResponseComponent(component: CastrResponseComponent): void {
-    if (component.response.schema) {
-      this.visitSchema(component.response.schema, component.name);
-    }
+    this.visitOptionalSchema(component.response.schema, component.name);
     this.visitResponse(component.response);
   }
 
-  private traverseOperations(operations: CastrOperation[]): void {
+  private traverseOperations(operations: (CastrOperation | CastrAdditionalOperation)[]): void {
     for (const operation of operations) {
       this.visitOperation(operation);
     }
   }
 
-  private visitOperation(operation: CastrOperation): void {
+  private visitOperation(operation: CastrOperation | CastrAdditionalOperation): void {
     for (const param of operation.parameters) {
-      this.visitSchema(param.schema, param.name);
+      this.visitParameter(param);
     }
     if (operation.requestBody) {
       this.visitRequestBody(operation.requestBody);
@@ -92,46 +95,55 @@ class EnumExtractor {
   }
 
   private visitRequestBody(requestBody: IRRequestBody): void {
-    for (const key of Object.keys(requestBody.content)) {
-      const media = requestBody.content[key];
-      if (media && !isReferenceObject(media) && media.schema) {
-        this.visitSchema(media.schema);
-      }
-    }
+    this.visitMediaTypeEntries(requestBody.content);
+  }
+
+  private visitParameter(parameter: CastrParameter): void {
+    this.visitSchema(parameter.schema, parameter.name);
+    this.visitMediaTypeEntries(parameter.content, parameter.name);
   }
 
   private visitResponse(response: CastrResponse): void {
-    if (response.schema) {
-      this.visitSchema(response.schema);
-    }
-    this.visitResponseContent(response);
+    this.visitOptionalSchema(response.schema);
+    this.visitMediaTypeEntries(response.content);
     this.visitResponseHeaders(response);
   }
 
-  private visitResponseContent(response: CastrResponse): void {
-    if (response.content) {
-      for (const key of Object.keys(response.content)) {
-        const media = response.content[key];
-        if (media && !isReferenceObject(media) && media.schema) {
-          this.visitSchema(media.schema);
-        }
-      }
+  private visitOptionalSchema(schema: CastrSchema | undefined, nameHint?: string): void {
+    if (schema === undefined) {
+      return;
+    }
+
+    this.visitSchema(schema, nameHint);
+  }
+
+  private visitMediaTypeEntries(
+    content: Record<string, IRMediaTypeEntry> | undefined,
+    nameHint?: string,
+  ): void {
+    if (content === undefined) {
+      return;
+    }
+
+    for (const mediaType of Object.values(content)) {
+      this.visitMediaTypeEntry(mediaType, nameHint);
     }
   }
 
-  private visitMediaTypeEntry(mediaType: IRMediaTypeEntry, nameHint?: string): void {
-    if (!isReferenceObject(mediaType) && mediaType.schema) {
-      this.visitSchema(mediaType.schema, nameHint);
+  private visitMediaTypeEntry(mediaType: IRMediaTypeEntry | undefined, nameHint?: string): void {
+    if (mediaType === undefined || isReferenceObject(mediaType)) {
+      return;
     }
+
+    this.visitOptionalSchema(mediaType.schema, nameHint);
+    this.visitOptionalSchema(mediaType.itemSchema, nameHint);
   }
 
   private visitResponseHeaders(response: CastrResponse): void {
     if (response.headers) {
-      for (const key of Object.keys(response.headers)) {
-        const header = response.headers[key];
-        if (header) {
-          this.visitSchema(header.schema);
-        }
+      for (const header of Object.values(response.headers)) {
+        this.visitSchema(header.schema);
+        this.visitMediaTypeEntries(header.content);
       }
     }
   }

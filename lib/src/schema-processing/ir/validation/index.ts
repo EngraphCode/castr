@@ -1,5 +1,6 @@
 export {
   isCastrDocument,
+  isCastrAdditionalOperation,
   isIRComponent,
   isCastrOperation,
   isCastrSchema,

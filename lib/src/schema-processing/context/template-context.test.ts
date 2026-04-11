@@ -223,6 +223,53 @@ describe('getZodClientTemplateContext - group strategy options', () => {
     expect(result.endpointsGroups['post']?.endpoints.length).toBeGreaterThan(0);
   });
 
+  test('should keep case-distinct custom methods in separate method groups', () => {
+    const openApiDoc: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { version: '1', title: 'Test API' },
+      paths: {
+        '/pet': {
+          additionalOperations: {
+            PURGE: {
+              responses: {
+                '202': {
+                  content: {
+                    'application/json': {
+                      schema: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+            PuRgE: {
+              responses: {
+                '202': {
+                  content: {
+                    'application/json': {
+                      schema: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      components: {
+        schemas: {},
+      },
+    };
+
+    const result = getZodClientTemplateContext(openApiDoc, {
+      groupStrategy: 'method',
+    });
+
+    expect(result.endpointsGroups).toHaveProperty('method_purge__5055524745');
+    expect(result.endpointsGroups).toHaveProperty('method_purge__5075526745');
+    expect(result.endpointsGroups['method_purge__5055524745']?.endpoints).toHaveLength(1);
+    expect(result.endpointsGroups['method_purge__5075526745']?.endpoints).toHaveLength(1);
+  });
+
   test('should use Default tag when no tags provided', () => {
     const openApiDoc: OpenAPIDocument = {
       openapi: '3.0.3',

@@ -40,6 +40,7 @@ function createIR(components: CastrDocument['components'] = []): CastrDocument {
     enums: new Map(),
     components,
     operations: [],
+    additionalOperations: [],
     dependencyGraph: {
       nodes: new Map(),
       topologicalOrder: [],

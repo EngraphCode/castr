@@ -5,10 +5,11 @@ import { createMcpToolWriter } from './mcp.js';
 import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
 import { writeZodSchema } from '../zod/index.js';
 import { writeTypeDefinition } from './type-writer/index.js';
-import type { CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
+import type { CastrDocument, CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
+import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 
 export { writeTypeDefinition } from './type-writer/index.js';
 
@@ -29,6 +30,16 @@ function isSchemasOnly(context: TemplateContext): boolean {
   return context.options?.template === TEMPLATE_SCHEMAS_ONLY;
 }
 
+function requireIr(context: TemplateContext, consumer: string): CastrDocument {
+  if (!context._ir) {
+    throw new Error(
+      `${consumer} requires TemplateContext._ir so compatibility guards and schema emission stay honest.`,
+    );
+  }
+
+  return context._ir;
+}
+
 /**
  * Generate TypeScript code from TemplateContext using ts-morph.
  * Replaces the legacy Handlebars templates.
@@ -37,21 +48,15 @@ function isSchemasOnly(context: TemplateContext): boolean {
  * declarations are emitted — endpoints, MCP tools, and helpers are suppressed.
  */
 export function writeTypeScript(context: TemplateContext): string {
-  if (context._ir) {
-    assertDocumentSupportsIntegerTargetCapabilities(context._ir, 'TypeScript');
-  }
+  const ir = requireIr(context, 'TypeScript writer');
+  assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
+  assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
 
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('generated.ts', '', { overwrite: true });
 
   addImports(sourceFile);
-
-  if (context._ir) {
-    addSchemasAndTypes(sourceFile, context);
-  } else {
-    // Fallback or error if IR is missing (should not happen in this phase)
-    sourceFile.addStatements('// Error: CastrDocument missing from context');
-  }
+  addSchemasAndTypes(sourceFile, context, ir);
 
   // Schemas-only template: suppress all non-schema output
   if (!isSchemasOnly(context)) {
@@ -70,24 +75,26 @@ function addImports(sourceFile: SourceFile): void {
   });
 }
 
-function addSchemasAndTypes(sourceFile: SourceFile, context: TemplateContext): void {
-  if (!context._ir || context.sortedSchemaNames.length === 0) {
+function addSchemasAndTypes(
+  sourceFile: SourceFile,
+  context: TemplateContext,
+  ir: CastrDocument,
+): void {
+  if (context.sortedSchemaNames.length === 0) {
     return;
   }
-  addComponentsToSourceFile(sourceFile, context, context.sortedSchemaNames);
+
+  addComponentsToSourceFile(sourceFile, context, ir, context.sortedSchemaNames);
 }
 
 function addComponentsToSourceFile(
   sourceFile: SourceFile,
   context: TemplateContext,
+  ir: CastrDocument,
   schemaNames: string[],
 ): void {
-  if (!context._ir) {
-    return;
-  }
-
   const componentsMap = new Map<string, CastrSchemaComponent>();
-  context._ir.components.forEach((c) => {
+  ir.components.forEach((c) => {
     if (c.type === COMPONENT_TYPE_SCHEMA) {
       componentsMap.set(c.name, c);
     }
@@ -245,16 +252,20 @@ export function writeIndexFile(groupNames: Record<string, string>): string {
  * Generate common file for grouped output.
  */
 export function writeCommonFile(context: TemplateContext, schemaNames: string[]): string {
+  const ir = requireIr(context, 'TypeScript common writer');
+  assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
+  assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
+
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('common.ts', '', { overwrite: true });
 
   addImports(sourceFile);
 
-  if (!context._ir || schemaNames.length === 0) {
+  if (schemaNames.length === 0) {
     return sourceFile.getFullText();
   }
 
-  addComponentsToSourceFile(sourceFile, context, schemaNames);
+  addComponentsToSourceFile(sourceFile, context, ir, schemaNames);
 
   return sourceFile.getFullText();
 }

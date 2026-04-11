@@ -34,6 +34,7 @@ export function createMockCastrDocument(overrides: Partial<CastrDocument> = {}):
     servers: [],
     components: [],
     operations: [],
+    additionalOperations: [],
     schemaNames: [],
     dependencyGraph: {
       nodes: new Map(),

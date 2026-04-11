@@ -31,6 +31,7 @@ describe('Public API Preservation', () => {
       'getZodClientTemplateContext',
       'extractSchemaNamesFromDoc',
       'buildIR',
+      'allOperations',
 
       // OpenAPI writer
       'writeOpenApi',
@@ -59,6 +60,7 @@ describe('Public API Preservation', () => {
       'serializeIR',
       'deserializeIR',
       'isCastrDocument',
+      'isCastrAdditionalOperation',
       'isIRComponent',
       'isCastrOperation',
       'isCastrSchema',

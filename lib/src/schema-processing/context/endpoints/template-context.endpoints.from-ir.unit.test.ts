@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type {
+  CastrAdditionalOperation,
   CastrSchema,
   CastrSchemaNode,
   CastrDocument,
@@ -60,6 +61,7 @@ function createDocument(operations: CastrOperation[]): CastrDocument {
     servers: [],
     components: [],
     operations,
+    additionalOperations: [],
     schemaNames: [],
     dependencyGraph: {
       nodes: new Map(),
@@ -67,6 +69,24 @@ function createDocument(operations: CastrOperation[]): CastrDocument {
       circularReferences: [],
     },
     enums: new Map(),
+  };
+}
+
+function createAdditionalOperation(
+  overrides: Partial<CastrAdditionalOperation> = {},
+): CastrAdditionalOperation {
+  return {
+    method: 'PURGE',
+    path: '/users',
+    parameters: [],
+    parametersByLocation: {
+      path: [],
+      query: [],
+      header: [],
+      cookie: [],
+    },
+    responses: [],
+    ...overrides,
   };
 }
 
@@ -217,6 +237,108 @@ describe('template-context.endpoints.from-ir', () => {
     expect(bodyParameter?.name).toBe('body');
     expect(bodyParameter?.schema).toEqual(bodySchema);
     expect(bodyParameter?.description).toBe('Upload body');
+  });
+
+  it('maps additionalOperations into endpoint definitions', () => {
+    const doc = {
+      ...createDocument([]),
+      additionalOperations: [
+        createAdditionalOperation({
+          operationId: 'purgeUsers',
+          method: 'PuRgE',
+          path: '/users',
+          responses: [createResponse('202', createSchema('object'))],
+        }),
+      ],
+    };
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+
+    expect(endpoint?.method).toBe('PuRgE');
+    expect(endpoint?.path).toBe('/users');
+    expect(endpoint?.alias).toBe('purgeUsers');
+  });
+
+  it('fails fast when endpoint generation encounters itemSchema', () => {
+    const doc = createDocument([
+      createOperation({
+        requestBody: {
+          required: true,
+          content: {
+            'application/x-ndjson': {
+              schema: createSchema('object'),
+              itemSchema: createSchema('string'),
+            },
+          },
+        },
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
+  });
+
+  it('fails fast when endpoint generation encounters itemSchema in parameter content', () => {
+    const doc = createDocument([
+      createOperation({
+        parameters: [
+          {
+            name: 'stream-filter',
+            in: 'query',
+            required: false,
+            schema: createSchema('object'),
+            content: {
+              'application/x-ndjson': {
+                itemSchema: createSchema('string'),
+              },
+            },
+          },
+        ],
+        parametersByLocation: {
+          path: [],
+          query: [
+            {
+              name: 'stream-filter',
+              in: 'query',
+              required: false,
+              schema: createSchema('object'),
+              content: {
+                'application/x-ndjson': {
+                  itemSchema: createSchema('string'),
+                },
+              },
+            },
+          ],
+          header: [],
+          cookie: [],
+        },
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
+  });
+
+  it('fails fast when endpoint generation encounters itemSchema in response headers', () => {
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          {
+            statusCode: '200',
+            headers: {
+              'X-Stream-Acks': {
+                schema: createSchema('object'),
+                content: {
+                  'application/x-ndjson': {
+                    itemSchema: createSchema('string'),
+                  },
+                },
+              },
+            },
+          },
+        ],
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
   });
 
   it('uses lexicographically first media type for body parameter schema fallback', () => {

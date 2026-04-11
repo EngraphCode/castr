@@ -15,6 +15,8 @@ import type {
   CastrDocument,
   CastrSchemaComponent,
 } from '../../ir/index.js';
+import { getSchemaFromIRMediaTypeEntry } from '../../ir/index.js';
+import { buildIR } from '../../parsers/openapi/index.js';
 
 import { writeOpenApi } from './openapi-writer.js';
 
@@ -57,6 +59,7 @@ function createDocument(overrides: Partial<CastrDocument> = {}): CastrDocument {
     servers: [],
     components: [],
     operations: [],
+    additionalOperations: [],
     dependencyGraph: createDependencyGraph(),
     schemaNames: [],
     enums: new Map(),
@@ -131,6 +134,92 @@ describe('writeOpenApi', () => {
 
       expect(result.components?.schemas?.['User']).toBeDefined();
     });
+
+    it('writes x-ext mediaType components separately so x-ext refs remain reloadable', () => {
+      const ir = createDocument({
+        components: [
+          {
+            type: 'mediaType',
+            name: 'EventStream',
+            mediaType: {
+              schema: { type: 'object', metadata: createMetadata() },
+            },
+          },
+          {
+            type: 'mediaType',
+            name: 'EventStream',
+            xExtKey: 'abc123',
+            mediaType: {
+              schema: { type: 'string', metadata: createMetadata() },
+            },
+          },
+        ],
+        operations: [
+          {
+            method: 'get',
+            path: '/events',
+            parameters: [],
+            parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+            responses: [
+              {
+                statusCode: '200',
+                description: 'OK',
+                content: {
+                  'application/json': {
+                    $ref: '#/components/mediaTypes/EventStream',
+                  },
+                  'application/x-ndjson': {
+                    $ref: '#/x-ext/abc123/components/mediaTypes/EventStream',
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      const result = writeOpenApi(ir);
+      const rebuilt = buildIR(result);
+      const responseContent = rebuilt.operations[0]?.responses[0]?.content;
+
+      expect(result.components?.mediaTypes?.['EventStream']).toBeDefined();
+      expect(result['x-ext']).toEqual({
+        abc123: {
+          components: {
+            mediaTypes: {
+              EventStream: {
+                schema: { type: 'string' },
+              },
+            },
+          },
+        },
+      });
+
+      if (!responseContent) {
+        throw new Error('Expected response content after round-trip');
+      }
+      const jsonMediaType = responseContent['application/json'];
+      const streamingMediaType = responseContent['application/x-ndjson'];
+
+      if (!jsonMediaType || !streamingMediaType) {
+        throw new Error('Expected both round-tripped media type entries');
+      }
+
+      expect(
+        getSchemaFromIRMediaTypeEntry(
+          rebuilt,
+          jsonMediaType,
+          '#/paths/~1events/get/responses/200/content/application~1json',
+        )?.type,
+      ).toBe('object');
+      expect(
+        getSchemaFromIRMediaTypeEntry(
+          rebuilt,
+          streamingMediaType,
+          '#/paths/~1events/get/responses/200/content/application~1x-ndjson',
+        )?.type,
+      ).toBe('string');
+    });
   });
 
   describe('paths integration', () => {
@@ -157,6 +246,28 @@ describe('writeOpenApi', () => {
 
       expect(result.paths?.['/users']?.get).toBeDefined();
       expect(result.paths?.['/users']?.get?.operationId).toBe('getUsers');
+    });
+
+    it('includes additionalOperations as custom path item methods', () => {
+      const ir = createDocument({
+        additionalOperations: [
+          {
+            operationId: 'purgeUsers',
+            method: 'PURGE',
+            path: '/users',
+            parameters: [],
+            parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+            responses: [{ statusCode: '202', description: 'Accepted' }],
+          },
+        ],
+      });
+
+      const result = writeOpenApi(ir);
+
+      expect(result.paths?.['/users']?.additionalOperations?.['PURGE']).toBeDefined();
+      expect(result.paths?.['/users']?.additionalOperations?.['PURGE']?.operationId).toBe(
+        'purgeUsers',
+      );
     });
   });
 

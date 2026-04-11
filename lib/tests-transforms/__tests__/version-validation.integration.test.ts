@@ -20,6 +20,7 @@ import { CANONICAL_OPENAPI_VERSION } from '../../src/shared/openapi/version.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
+const NATIVE_OPENAPI_32_PHASE_E_FIXTURE = resolve(FIXTURES_DIR, 'phase-e-native-3.2.yaml');
 
 describe('OpenAPI Version Validation', () => {
   // =========================================================================
@@ -193,6 +194,19 @@ describe('OpenAPI Version Validation', () => {
     });
   });
 
+  describe('Valid native 3.2 Phase E shapes MUST be accepted', () => {
+    it('accepts native 3.2 itemSchema and additionalOperations from the shared fixture', async () => {
+      const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_PHASE_E_FIXTURE);
+      expect(result.document.openapi).toBe(CANONICAL_OPENAPI_VERSION);
+      expect(result.document.paths?.['/phase-e']?.additionalOperations?.['PuRgE']).toBeDefined();
+      const mediaType = result.document.components?.mediaTypes?.['PhaseEEventStream'];
+      if (!mediaType || '$ref' in mediaType) {
+        throw new Error('Expected the Phase E media type to be inline');
+      }
+      expect(mediaType.itemSchema).toEqual({ $ref: '#/components/schemas/PhaseEEvent' });
+    });
+  });
+
   describe('3.0.x/3.1.x with 3.2-only example object fields MUST be rejected', () => {
     it('REJECTS 3.0.x with parameter example dataValue (3.2 only)', async () => {
       await expect(
@@ -310,6 +324,74 @@ describe('OpenAPI Version Validation', () => {
       await expect(
         loadOpenApiDocument(`${FIXTURES_DIR}/invalid/3.0.x-with-3.1.x-fields/missing-paths.yaml`),
       ).rejects.toThrow(/paths|required/i);
+    });
+  });
+
+  describe('3.1.x with 3.2.x-only Phase E fields MUST be rejected', () => {
+    it('REJECTS 3.1.x with itemSchema (3.2 only)', async () => {
+      await expect(
+        loadOpenApiDocument({
+          openapi: '3.1.0',
+          info: { title: 'Invalid 3.1 itemSchema', version: '1.0.0' },
+          paths: {
+            '/phase-e': {
+              get: {
+                responses: {
+                  '200': {
+                    description: 'OK',
+                    content: {
+                      'application/x-ndjson': {
+                        schema: { type: 'array', items: { type: 'string' } },
+                        itemSchema: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ).rejects.toThrow(/itemSchema|not expected|not allowed|additional properties/i);
+    });
+
+    it('REJECTS 3.1.x with additionalOperations (3.2 only)', async () => {
+      await expect(
+        loadOpenApiDocument({
+          openapi: '3.1.0',
+          info: { title: 'Invalid 3.1 additionalOperations', version: '1.0.0' },
+          paths: {
+            '/phase-e': {
+              additionalOperations: {
+                PURGE: {
+                  responses: {
+                    '202': { description: 'Accepted' },
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ).rejects.toThrow(/additionalOperations|not expected|not allowed|additional properties/i);
+    });
+
+    it('REJECTS additionalOperations entries that use fixed-field HTTP methods', async () => {
+      await expect(
+        loadOpenApiDocument({
+          openapi: '3.2.0',
+          info: { title: 'Invalid 3.2 additionalOperations method', version: '1.0.0' },
+          paths: {
+            '/phase-e': {
+              additionalOperations: {
+                POST: {
+                  responses: {
+                    '202': { description: 'Accepted' },
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ).rejects.toThrow(/must not appear in additionalOperations/i);
     });
   });
 

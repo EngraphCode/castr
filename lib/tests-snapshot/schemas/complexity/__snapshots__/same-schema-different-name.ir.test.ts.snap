@@ -3,6 +3,7 @@
 exports[`same-schema-different-name - IR Snapshot 1`] = `
 {
     "_ir": {
+        "additionalOperations": [],
         "components": [],
         "dependencyGraph": {
             "circularReferences": [],

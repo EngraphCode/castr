@@ -125,4 +125,40 @@ describe('loadOpenApiDocument error formatting (integration)', () => {
     await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(/Malformed path template/);
     await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(/balanced template expressions/);
   });
+
+  it('formats nested callback additionalOperations errors with readable location', async () => {
+    const invalidSpec = {
+      openapi: '3.2.0',
+      info: { title: 'Invalid callback additionalOperations', version: '1.0.0' },
+      paths: {
+        '/phase-e': {
+          get: {
+            callbacks: {
+              phaseECallback: {
+                '{$request.body#/callbackUrl}': {
+                  additionalOperations: {
+                    POST: {
+                      responses: {
+                        '202': { description: 'Accepted' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: {
+              '200': { description: 'OK' },
+            },
+          },
+        },
+      },
+    };
+
+    await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(
+      /paths → \/phase-e → get → callbacks → phaseECallback → \{\$request.body#\/callbackUrl\} → additionalOperations → POST/,
+    );
+    await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(
+      /must not appear in additionalOperations/i,
+    );
+  });
 });

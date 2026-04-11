@@ -329,6 +329,38 @@ describe('component and document traversal', () => {
     ).toThrow(BIGINT_ERROR);
   });
 
+  it('rejects unsupported bigint semantics in response header content itemSchema', () => {
+    const document = createMockCastrDocument({
+      operations: [
+        {
+          method: 'get',
+          path: '/counts',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [
+            {
+              statusCode: '200',
+              headers: {
+                'X-Count-Stream': {
+                  schema: createMockCastrSchema({ type: 'string' }),
+                  content: {
+                    'application/x-ndjson': {
+                      itemSchema: createBigIntSchema(),
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
   it('rejects unsupported bigint semantics in raw header components before OpenAPI emission', () => {
     const document = createMockCastrDocument({
       components: [
@@ -404,6 +436,68 @@ describe('component and document traversal', () => {
   it('rejects unsupported bigint semantics in raw query webhook path items before OpenAPI emission', () => {
     const document = createMockCastrDocument({
       webhooks: new Map([['queryCount', createBigIntQueryWebhookPathItem()]]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
+  it('rejects unsupported bigint semantics hidden in operation parameter content entries', () => {
+    const document = createMockCastrDocument({
+      operations: [
+        {
+          method: 'get',
+          path: '/reports',
+          parameters: [
+            {
+              name: 'mode',
+              in: 'query',
+              required: false,
+              schema: createMockCastrSchema({ type: 'string' }),
+              content: {
+                'application/json': {
+                  schema: createMockCastrSchema({ type: 'string' }),
+                },
+                'text/plain': {
+                  schema: createBigIntSchema(),
+                },
+              },
+            },
+          ],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [{ statusCode: '200', description: 'OK' }],
+        },
+      ],
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
+  it('rejects unsupported bigint semantics hidden in parameter component content entries', () => {
+    const document = createMockCastrDocument({
+      components: [
+        {
+          type: 'parameter',
+          name: 'Mode',
+          parameter: {
+            name: 'mode',
+            in: 'query',
+            required: false,
+            schema: createMockCastrSchema({ type: 'string' }),
+            content: {
+              'application/json': {
+                schema: createMockCastrSchema({ type: 'string' }),
+              },
+              'text/plain': {
+                schema: createBigIntSchema(),
+              },
+            },
+          },
+        },
+      ],
     });
 
     expect(() =>

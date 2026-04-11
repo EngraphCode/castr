@@ -23,8 +23,8 @@ import {
 } from '../../../shared/openapi-types.js';
 import { buildCastrSchemas, extractEnums } from './schemas/index.js';
 import {
+  buildCastrAdditionalOperations,
   buildCastrOperations,
-  buildIRMediaTypeEntry,
   buildIRSecurity,
 } from './operations/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
@@ -32,8 +32,8 @@ import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/in
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
 import { cloneAndValidateOpenApiDocumentObjectSemantics } from './openapi-document.object-semantics.js';
-import type { IRBuildContext } from './builder.types.js';
 import { isOpenAPIDocument } from '../../../validation/cli-type-guards.js';
+import { extractMediaTypeComponents } from './components/builder.media-type-components.js';
 
 // Re-export core functions for backwards compatibility
 export type { IRBuildContext } from './builder.types.js';
@@ -124,12 +124,14 @@ export function buildIR(doc: OpenAPIDocument | object): CastrDocument {
   const components = buildCastrSchemas(document.components);
   components.push(...extractXExtSchemas(document));
   components.push(...extractAdditionalComponents(document));
+  components.push(...extractMediaTypeComponents(document));
 
   const schemaNames = buildSchemaNames(components);
   const originalSchemaKeys = extractOriginalSchemaKeys(document);
   const operations = buildCastrOperations(document);
+  const additionalOperations = buildCastrAdditionalOperations(document);
   const dependencyGraph = buildDependencyGraph(originalSchemaKeys, document);
-  const enums = extractEnums(components, operations);
+  const enums = extractEnums(components, [...operations, ...additionalOperations]);
 
   return {
     version: '1.0.0',
@@ -138,6 +140,7 @@ export function buildIR(doc: OpenAPIDocument | object): CastrDocument {
     servers: document.servers ?? [],
     components,
     operations,
+    additionalOperations,
     dependencyGraph,
     schemaNames,
     enums,
@@ -210,7 +213,6 @@ function extractAdditionalComponents(doc: OpenAPIDocument): IRComponent[] {
   extractLinks(components, result);
   extractCallbacks(components, result);
   extractPathItems(components, result);
-  extractMediaTypes(doc, result);
   extractExamples(components, result);
 
   return result;
@@ -249,26 +251,6 @@ function extractPathItems(components: ComponentsObject, result: IRComponent[]): 
   }
   for (const [name, pathItem] of Object.entries(components.pathItems)) {
     result.push({ type: 'pathItem', name, pathItem });
-  }
-}
-
-function extractMediaTypes(doc: OpenAPIDocument, result: IRComponent[]): void {
-  const mediaTypes = doc.components?.mediaTypes;
-  if (!mediaTypes) {
-    return;
-  }
-
-  for (const [name, mediaType] of Object.entries(mediaTypes)) {
-    const context: IRBuildContext = {
-      doc,
-      path: ['#', 'components', 'mediaTypes', name],
-      required: false,
-    };
-    result.push({
-      type: 'mediaType',
-      name,
-      mediaType: buildIRMediaTypeEntry(mediaType, context, context.path),
-    });
   }
 }
 

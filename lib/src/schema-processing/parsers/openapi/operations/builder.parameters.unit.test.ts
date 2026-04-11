@@ -162,4 +162,37 @@ describe('buildSingleParameter strict ref resolution', () => {
     expect(result.example).toBe('schema fallback');
     expect(result.examples).toEqual(parameter.examples);
   });
+
+  test('derives a compatibility schema from itemSchema-only parameter content', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    const parameter: ParameterObject = {
+      name: 'phase-e-filter',
+      in: 'query',
+      content: {
+        'application/x-ndjson': {
+          itemSchema: {
+            type: 'string',
+            minLength: 1,
+          },
+        },
+      },
+    };
+
+    const result = buildSingleParameter(parameter, createContext(doc));
+    const mediaType = result.content?.['application/x-ndjson'];
+
+    expect(result.schema.type).toBe('string');
+    expect(mediaType).toBeDefined();
+    if (!mediaType || '$ref' in mediaType) {
+      throw new Error('Expected inline media type entry');
+    }
+
+    expect(mediaType.itemSchema?.type).toBe('string');
+    expect(mediaType.itemSchema?.minLength).toBe(1);
+  });
 });

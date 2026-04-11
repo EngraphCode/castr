@@ -31,6 +31,7 @@ test('handle-refs-without-var-name', () => {
   ).toMatchInlineSnapshot(`
     {
         "_ir": {
+            "additionalOperations": [],
             "components": [
                 {
                     "metadata": {

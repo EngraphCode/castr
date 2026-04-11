@@ -11,7 +11,8 @@ export {
 } from './schema.js';
 export type { IRIntegerSemantics } from '../integer-semantics/core.js';
 
-export { isCastrDocument, type IREnum, type CastrDocument } from './schema-document.js';
+export { type IREnum, type CastrDocument, allOperations } from './schema-document.js';
+export { isCastrDocument } from '../validation/index.js';
 
 export { CastrSchemaProperties } from './schema.js';
 
@@ -31,9 +32,11 @@ export type {
 } from './schema.components.js';
 
 export type {
+  CastrAdditionalOperation,
   CastrOperation,
   CastrParameter,
   IRRequestBody,
+  IRMediaTypeReference,
   IRMediaTypeEntry,
   IRMediaType,
   CastrResponse,

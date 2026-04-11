@@ -16,7 +16,12 @@ import type {
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 import { isRecord } from '../../../../shared/type-utils/types.js';
 import { isReferenceObject } from '../../../../validation/type-guards.js';
-import type { CastrSchema, IRMediaType, IRMediaTypeEntry } from '../../../ir/index.js';
+import type {
+  CastrSchema,
+  IRMediaType,
+  IRMediaTypeEntry,
+  IRMediaTypeReference,
+} from '../../../ir/index.js';
 import { buildCastrSchema } from '../builder.core.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { assertNoCircularComponentRef } from '../components/builder.component-ref-resolution.js';
@@ -72,6 +77,28 @@ function getMediaTypesForRef(
   }
 
   return doc.components?.mediaTypes;
+}
+
+function assertValidIRMediaTypeRefPath(
+  refPath: string,
+  location: string,
+): asserts refPath is IRMediaTypeReference['$ref'] {
+  let parsedRef;
+  try {
+    parsedRef = parseComponentRef(refPath);
+  } catch (error) {
+    throw new Error(
+      `Invalid media type reference "${refPath}" at ${location}. ${describeUnknownError(error)}`,
+      { cause: error },
+    );
+  }
+
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_MEDIA_TYPES) {
+    throw new Error(
+      `Unsupported media type reference "${refPath}" at ${location}. ` +
+        'Expected #/components/mediaTypes/{name}.',
+    );
+  }
 }
 
 /**
@@ -139,7 +166,17 @@ export function buildIRMediaType(mediaType: MediaTypeObject, context: IRBuildCon
   const result: IRMediaType = {};
 
   if (mediaType.schema) {
-    result.schema = buildCastrSchema(mediaType.schema, context);
+    result.schema = buildCastrSchema(
+      mediaType.schema,
+      createMediaTypeContext(context, [...context.path, 'schema']),
+    );
+  }
+
+  if (mediaType.itemSchema) {
+    result.itemSchema = buildCastrSchema(
+      mediaType.itemSchema,
+      createMediaTypeContext(context, [...context.path, 'itemSchema']),
+    );
   }
 
   if (mediaType.example !== undefined) {
@@ -167,7 +204,8 @@ export function buildIRMediaTypeEntry(
 
   if (isReferenceObject(mediaType)) {
     resolveMediaTypeComponentRef(mediaType, mediaContext);
-    return mediaType;
+    assertValidIRMediaTypeRefPath(mediaType.$ref, mediaContext.path.join('/'));
+    return { $ref: mediaType.$ref };
   }
 
   return buildIRMediaType(mediaType, mediaContext);
@@ -205,12 +243,17 @@ function getSchemaFromMediaTypeEntry(
     ? resolveMediaTypeComponentRef(mediaType, context)
     : mediaType;
 
-  return buildIRMediaType(resolvedMediaType, context).schema;
+  const builtMediaType = buildIRMediaType(resolvedMediaType, context);
+  return builtMediaType.schema ?? builtMediaType.itemSchema;
 }
 
 /**
  * Derive an effective schema from a content map for compatibility surfaces that
  * still expect a single schema.
+ *
+ * When a media type only declares OpenAPI 3.2 `itemSchema`, the per-item schema
+ * becomes the effective compatibility fallback. The original content map remains
+ * the lossless source of truth for parser -> IR -> OpenAPI writer round-trips.
  */
 export function deriveSchemaFromMediaTypeEntries(
   content: Record<string, ReferenceObject | MediaTypeObject> | undefined,

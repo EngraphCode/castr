@@ -195,6 +195,24 @@ export interface CastrOperation {
 }
 
 /**
+ * Additional OAS 3.2 Path Item operation keyed by a custom HTTP method token.
+ *
+ * Mirrors {@link CastrOperation} while preserving the verbatim `additionalOperations`
+ * key exactly as it must be sent on the wire.
+ *
+ * @public
+ */
+export interface CastrAdditionalOperation extends Omit<CastrOperation, 'method'> {
+  /**
+   * Custom HTTP method token carried verbatim from OAS 3.2 `additionalOperations`.
+   *
+   * This intentionally stays open-ended so custom methods survive parser -> IR -> writer
+   * round-trips without widening the closed standard-method union used elsewhere.
+   */
+  method: string;
+}
+
+/**
  * Parameter definition for operations.
  *
  * Represents path, query, header, or cookie parameters with their schema
@@ -310,12 +328,23 @@ export interface IRRequestBody {
 }
 
 /**
+ * Reusable media-type component reference allowed in IR content maps.
+ *
+ * IR media-type refs are intentionally narrower than generic `ReferenceObject`
+ * values: only `components.mediaTypes` refs can survive validation and
+ * resolution on the IR side.
+ */
+export interface IRMediaTypeReference extends ReferenceObject {
+  $ref: `#/components/mediaTypes/${string}` | `#/x-ext/${string}/components/mediaTypes/${string}`;
+}
+
+/**
  * Lossless content entry for request/response/header/parameter content maps.
  *
  * Inline media types are converted to IR structures; reusable media-type refs
- * are preserved as `ReferenceObject`.
+ * are preserved as `IRMediaTypeReference`.
  */
-export type IRMediaTypeEntry = IRMediaType | ReferenceObject;
+export type IRMediaTypeEntry = IRMediaType | IRMediaTypeReference;
 
 /**
  * Media type definition with optional schema.
@@ -329,6 +358,13 @@ export interface IRMediaType {
    * Schema for this media type, when one is present.
    */
   schema?: CastrSchema;
+
+  /**
+   * Per-item schema for sequential media types (OpenAPI 3.2 `itemSchema`).
+   *
+   * Distinct from `schema`, which describes the complete content stream.
+   */
+  itemSchema?: CastrSchema;
 
   /**
    * Example value for this media type.

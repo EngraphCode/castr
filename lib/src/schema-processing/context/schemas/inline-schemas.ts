@@ -1,13 +1,21 @@
+import { trim, trimStart } from 'lodash-es';
 import { toIdentifier } from '../../../shared/utils/identifier-utils.js';
+import { getHttpMethodIdentifier } from '../../../shared/openapi/http-methods.js';
 import { isReferenceObject } from '../../../shared/openapi-types.js';
-import type { CastrDocument, IRComponent, CastrOperation } from '../../ir/index.js';
+import {
+  allOperations,
+  type CastrAdditionalOperation,
+  type CastrDocument,
+  type IRComponent,
+  type CastrOperation,
+} from '../../ir/index.js';
 
 /**
  * Extract inline request body schema from an operation.
  * Returns the schema component if an inline schema is found, null otherwise.
  */
 function extractRequestBodySchema(
-  operation: CastrOperation,
+  operation: CastrOperation | CastrAdditionalOperation,
   sanitizedOpId: string,
 ): IRComponent | null {
   if (!operation.requestBody) {
@@ -37,6 +45,19 @@ function extractRequestBodySchema(
   return null;
 }
 
+function getInlineSchemaOperationIdentifier(
+  operation: CastrOperation | CastrAdditionalOperation,
+): string {
+  const operationId = operation.operationId === undefined ? '' : trim(operation.operationId);
+  if (operationId && operationId.length > 0) {
+    return toIdentifier(operationId);
+  }
+
+  const pathIdentifier = trimStart(toIdentifier(operation.path), '_');
+  const normalizedPathIdentifier = pathIdentifier.length > 0 ? pathIdentifier : 'root';
+  return `${getHttpMethodIdentifier(operation.method)}_${normalizedPathIdentifier}`;
+}
+
 /**
  * Extract inline schemas from IR operations and promote them to named components.
  * This allows generating named exports for request bodies, parameters, etc.
@@ -54,9 +75,8 @@ function extractRequestBodySchema(
 export function extractInlineSchemas(ir: CastrDocument): IRComponent[] {
   const components: IRComponent[] = [];
 
-  for (const op of ir.operations) {
-    const operationId = op.operationId || `${op.method}${op.path}`;
-    const sanitizedOpId = toIdentifier(operationId);
+  for (const op of allOperations(ir)) {
+    const sanitizedOpId = getInlineSchemaOperationIdentifier(op);
 
     const bodyComponent = extractRequestBodySchema(op, sanitizedOpId);
     if (bodyComponent) {

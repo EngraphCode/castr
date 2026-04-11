@@ -20,6 +20,7 @@ import type {
   IRSecuritySchemeComponent,
   CastrParameterComponent,
   CastrResponseComponent,
+  IRMediaTypeComponent,
 } from '../../../ir/index.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema';
@@ -185,10 +186,7 @@ function addExampleComponent(
  * Adds a media type component to the result.
  * @internal
  */
-function addMediaTypeComponent(
-  result: ComponentsObject,
-  component: IRComponent & { type: 'mediaType' },
-): void {
+function addMediaTypeComponent(result: ComponentsObject, component: IRMediaTypeComponent): void {
   if (result.mediaTypes === undefined) {
     result.mediaTypes = {};
   }
@@ -235,9 +233,7 @@ function isPathItemComponent(
  * Type guard for media type components.
  * @internal
  */
-function isMediaTypeComponent(
-  component: IRComponent,
-): component is IRComponent & { type: 'mediaType' } {
+function isMediaTypeComponent(component: IRComponent): component is IRMediaTypeComponent {
   return component.type === COMPONENT_TYPE_MEDIA_TYPE;
 }
 
@@ -301,7 +297,7 @@ const COMPONENT_TYPE_HANDLERS: Record<
     }
   },
   mediaType: (result, component) => {
-    if (isMediaTypeComponent(component)) {
+    if (isMediaTypeComponent(component) && component.xExtKey === undefined) {
       addMediaTypeComponent(result, component);
     }
   },

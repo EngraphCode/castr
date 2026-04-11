@@ -31,11 +31,11 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ---
 
-## Current Active Workstream
+## Current Workstream Status
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The primary active plan is [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers. The Phase A₂ closure record now lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md).
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). No successor primary active plan has been promoted yet.
 
 Current product truth:
 
@@ -45,13 +45,14 @@ Current product truth:
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - Phase A₂ (type migration from `openapi3-ts` to `@scalar/openapi-types`) completed on Friday, 10 April 2026. The close-out resolved A1 and A2-A6, introduced a genuinely nested raw OpenAPI input seam, restored lossless `components.mediaTypes` and ref-bearing `components.pathItems` handling through IR, removed the verified IR media-type barrel cycle, cleared the duplicate CLI guard export plus stale `knip` ignore, strengthened dependency-exit guards, and closed the reviewer loop with no open findings.
-- the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps were green on Friday, 10 April 2026. The MCP no-params tool-input-schema follow-up then closed on Saturday, 11 April 2026 with targeted MCP/schema proofs, affected snapshot proofs, and repo-root `pnpm type-check` green. Phases B, C, and D also closed on Saturday, 11 April 2026 with repo-root `pnpm check` green on the final Phase D close-out sweep. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` for non-mutating reruns; do not invoke `pnpm qg` directly.
+- the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps were green on Friday, 10 April 2026. The MCP no-params tool-input-schema follow-up then closed on Saturday, 11 April 2026 with targeted MCP/schema proofs and repo-root `pnpm type-check` green. Phases B, C, D, and E also closed on Saturday, 11 April 2026, and repo-root `pnpm check` is green on the final Phase E close-out rerun. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` for non-mutating reruns; do not invoke `pnpm qg` directly.
 - Husky is now the live repo-local hook runner: `pre-commit` formats staged files with Prettier, `pre-push` runs `pnpm check:ci`, and the first post-install full non-mutating repo-root sweep completed green on Saturday, 11 April 2026
 - A fresh generated-code validation gate issue was reproduced and fixed on Saturday, 11 April 2026: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again at `5` files / `26` tests, and repo-root `pnpm check` is green again
 - Phase B is now honestly closed: native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, duplicated raw PathItem visitors no longer skip it, MCP treats `query` as read-only/non-destructive, and hierarchical tags (`summary`, `parent`, `kind`) have explicit parser/writer proof
 - Phase C is now honestly closed: `oauth2.flows.deviceAuthorization` and XML `nodeType` have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, and the `code-reviewer` / `test-reviewer` / `openapi-expert` loop is closed with no open findings
 - Phase D is now honestly closed: Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across component, parameter, response-header, and media-type carriers; `CastrParameter.examples` now preserves full Example Object/ref shapes honestly; singular parameter example derivation now falls back to `examples.default.dataValue` but never `serializedValue` alone; the repaired parameter writer now prefers canonical `examples` output and revalidates cleanly at the shared load boundary; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the close-out sweep
-- the immediate next slice is therefore Phase E on the parent OAS 3.2 plan (`itemSchema` streaming and `additionalOperations`) unless a user reports a fresh gate or runtime issue first
+- Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
+- no successor primary active plan has been promoted yet; if a user reports a fresh gate or runtime issue, reproduce it first, otherwise promote the next honest active atomic plan before implementation begins
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -147,15 +148,15 @@ Current sweep record:
 - **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
 - **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
-**Primary Active Plan: OAS 3.2 Full Feature Support**
+**Completed Workstream: OAS 3.2 Full Feature Support**
 
-Tracked in [oas-3.2-full-feature-support.md](./active/oas-3.2-full-feature-support.md):
+Closure record: [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md)
 
 - Phase B is complete: `QUERY` HTTP method is landed end to end and hierarchical tags (`parent`, `kind`, `summary`) now have explicit proof
 - Phase C is complete: OAuth 2.0 Device Authorization flow, XML `nodeType`, and strict top-level path-templating validation/proof are landed honestly
 - Phase D is complete: Example Object `dataValue` / `serializedValue` semantics are landed honestly across the native 3.2 seam
-- `itemSchema` streaming support on Media Type
-- `additionalOperations` for custom HTTP methods (later slice per ADR-046)
+- Phase E is complete: `itemSchema` streaming is preserved through the OpenAPI parser/IR/writer path, `additionalOperations` is stored separately per ADR-046 and exposed end to end downstream, and non-OpenAPI downstreams fail fast on reachable `itemSchema`
+- No successor primary active plan has been promoted yet
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 
@@ -207,7 +208,7 @@ This completed slice installed the canonical reviewer/domain-expert layer under 
 
 The completion sections below record what closed at the time.
 
-Packs 4-7 later found that the repo's current support and proof posture is narrower than some of the historical "complete" language below implies, especially for JSON Schema, Zod parity, generated output, and transform proof breadth. Use **Current Active Workstream** above plus the pack notes for current truth.
+Packs 4-7 later found that the repo's current support and proof posture is narrower than some of the historical "complete" language below implies, especially for JSON Schema, Zod parity, generated output, and transform proof breadth. Use **Current Workstream Status** above plus the pack notes for current truth.
 
 ## Priority: Production-Ready Core Path
 
@@ -303,7 +304,7 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) is complete and moved to `./current/complete/`.
 - [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md) is complete and moved to `./current/complete/`.
 - [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md) is complete and moved to `./current/complete/`.
-- Subsequent active work moved on from the historical 3.3b sequence; see **Current Active Workstream** above for the live active plan and follow-up handoff.
+- Subsequent work moved on from the historical 3.3b sequence; see **Current Workstream Status** above for the live closure state and follow-up handoff.
 
 ---
 

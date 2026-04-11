@@ -4,7 +4,7 @@
 **Created:** 2026-04-03  
 **Superseded:** 2026-04-03  
 **Revised:** 2026-04-10  
-**Context:** Historical concern note from the pre-decision stage. The strict seam is now live, `openapi-schema-extensions.d.ts` is deleted, the `openapi3-ts` dependency is removed, the targeted active-surface greps are clean, and the completed closure record now lives in [phase-a2-type-migration.md](./phase-a2-type-migration.md) under the parent [oas-3.2-full-feature-support.md](../../active/oas-3.2-full-feature-support.md).
+**Context:** Historical concern note from the pre-decision stage. The strict seam is now live, `openapi-schema-extensions.d.ts` is deleted, the `openapi3-ts` dependency is removed, the targeted active-surface greps are clean, and the completed closure record now lives in [phase-a2-type-migration.md](./phase-a2-type-migration.md) under the completed parent [oas-3.2-full-feature-support.md](./oas-3.2-full-feature-support.md).
 
 ---
 

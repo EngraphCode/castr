@@ -1,10 +1,12 @@
 import type {
+  CastrAdditionalOperation,
   CastrSchema,
   CastrDocument,
   CastrOperation,
   CastrParameter,
   CastrResponse,
 } from '../../ir/index.js';
+import { allOperations } from '../../ir/index.js';
 import type {
   EndpointDefinition,
   EndpointParameter,
@@ -12,6 +14,7 @@ import type {
   EndpointResponse,
   ParameterType,
 } from '../../../endpoints/definition.types.js';
+import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 import { extractConstraintsFromIR } from '../constraints/index.js';
 import { isSuccessStatusCode, STATUS_DEFAULT } from './template-context.status-codes.js';
 import {
@@ -22,12 +25,13 @@ import {
 } from './content/index.js';
 
 export function getEndpointDefinitionsFromIR(ir: CastrDocument): EndpointDefinition[] {
-  return ir.operations.map((operation) => mapOperationToEndpointDefinition(ir, operation));
+  assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'Endpoints');
+  return allOperations(ir).map((operation) => mapOperationToEndpointDefinition(ir, operation));
 }
 
 function mapOperationToEndpointDefinition(
   ir: Pick<CastrDocument, 'components'>,
-  operation: CastrOperation,
+  operation: CastrOperation | CastrAdditionalOperation,
 ): EndpointDefinition {
   const parameters = mapParameters(operation.parameters);
   const errors = mapErrors(ir, operation.responses);

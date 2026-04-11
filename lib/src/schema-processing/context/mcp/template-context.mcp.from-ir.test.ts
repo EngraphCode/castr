@@ -10,6 +10,7 @@
 
 import { describe, expect, test } from 'vitest';
 import type {
+  CastrAdditionalOperation,
   CastrSchema,
   CastrDocument,
   IRSecuritySchemeComponent,
@@ -35,6 +36,25 @@ function createMockOperation(overrides: Partial<CastrOperation> = {}): CastrOper
   return {
     operationId: 'testOperation',
     method: 'get',
+    path: '/test',
+    parameters: [],
+    parametersByLocation: {
+      path: [],
+      query: [],
+      header: [],
+      cookie: [],
+    },
+    responses: [],
+    ...overrides,
+  };
+}
+
+function createMockAdditionalOperation(
+  overrides: Partial<CastrAdditionalOperation> = {},
+): CastrAdditionalOperation {
+  return {
+    operationId: 'purgeOperation',
+    method: 'PURGE',
     path: '/test',
     parameters: [],
     parametersByLocation: {
@@ -87,6 +107,55 @@ describe('buildMcpToolsFromIR', () => {
       expect(result[0]?.tool.description).toBe('Get all users');
       expect(result[0]?.method).toBe('get');
       expect(result[0]?.path).toBe('/users');
+    });
+
+    test('creates MCP tools for additionalOperations custom verbs', () => {
+      const operation = createMockAdditionalOperation({
+        operationId: 'purgeUsers',
+        method: 'PuRgE',
+        path: '/users',
+        responses: [{ statusCode: '202', schema: createMockSchema('object') }],
+      });
+      const ir = createMockCastrDocument({ additionalOperations: [operation] });
+
+      const result = buildMcpToolsFromIR(ir);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.tool.name).toBe('purge_users');
+      expect(result[0]?.method).toBe('PuRgE');
+      expect(result[0]?.httpOperation.method).toBe('PuRgE');
+      expect(result[0]?.tool.annotations).toEqual({
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      });
+    });
+
+    test('keeps fallback MCP tool names distinct for case-distinct custom methods', () => {
+      const uppercaseOperation = createMockAdditionalOperation({
+        method: 'PURGE',
+        path: '/users',
+        responses: [{ statusCode: '202', schema: createMockSchema('object') }],
+      });
+      delete uppercaseOperation.operationId;
+
+      const mixedCaseOperation = createMockAdditionalOperation({
+        method: 'PuRgE',
+        path: '/users',
+        responses: [{ statusCode: '202', schema: createMockSchema('object') }],
+      });
+      delete mixedCaseOperation.operationId;
+
+      const ir = createMockCastrDocument({
+        additionalOperations: [uppercaseOperation, mixedCaseOperation],
+      });
+
+      const result = buildMcpToolsFromIR(ir);
+
+      expect(result.map((entry) => entry.tool.name)).toEqual([
+        'method_purge_5055524745_users',
+        'method_purge_5075526745_users',
+      ]);
     });
   });
 

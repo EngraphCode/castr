@@ -75,6 +75,7 @@ function createFullContext(template?: string): TemplateContext {
       },
     ],
     operations: [],
+    additionalOperations: [],
     dependencyGraph: {
       nodes: new Map(),
       topologicalOrder: [],
@@ -127,6 +128,19 @@ function createFullContext(template?: string): TemplateContext {
 }
 
 describe('writers/typescript template boundary', () => {
+  describe('IR requirement', () => {
+    it('fails fast when TemplateContext._ir is missing for writeTypeScript', () => {
+      const context: TemplateContext = {
+        sortedSchemaNames: [],
+        endpoints: [],
+        endpointsGroups: {},
+        mcpTools: [],
+      };
+
+      expect(() => writeTypeScript(context)).toThrow(/TemplateContext\._ir/i);
+    });
+  });
+
   describe('schemas-only template', () => {
     it('suppresses endpoint exports', () => {
       const context = createFullContext('schemas-only');
@@ -165,6 +179,35 @@ describe('writers/typescript template boundary', () => {
       const output = writeTypeScript(context);
       expect(output).not.toContain('schemaRegistry');
     });
+
+    it('fails fast when schemas-only TypeScript generation encounters itemSchema', () => {
+      const context = createFullContext('schemas-only');
+      if (!context._ir) {
+        throw new Error('Expected IR context');
+      }
+
+      context._ir.operations = [
+        {
+          operationId: 'streamUsers',
+          method: 'post',
+          path: '/users/stream',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          requestBody: {
+            required: true,
+            content: {
+              'application/x-ndjson': {
+                schema: createMockSchema('array'),
+                itemSchema: createMockSchema('string'),
+              },
+            },
+          },
+          responses: [],
+        },
+      ];
+
+      expect(() => writeTypeScript(context)).toThrow(/itemSchema/i);
+    });
   });
 
   describe('schemas-with-metadata template', () => {
@@ -198,6 +241,118 @@ describe('writers/typescript template boundary', () => {
       const context = createFullContext(undefined);
       const output = writeTypeScript(context);
       expect(output).toContain('export const mcpTools');
+    });
+
+    it('fails fast when TypeScript generation encounters itemSchema', () => {
+      const context = createFullContext(undefined);
+      if (!context._ir) {
+        throw new Error('Expected IR context');
+      }
+
+      context._ir.operations = [
+        {
+          operationId: 'streamUsers',
+          method: 'post',
+          path: '/users/stream',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          requestBody: {
+            required: true,
+            content: {
+              'application/x-ndjson': {
+                schema: createMockSchema('array'),
+                itemSchema: createMockSchema('string'),
+              },
+            },
+          },
+          responses: [],
+        },
+      ];
+
+      expect(() => writeTypeScript(context)).toThrow(/itemSchema/i);
+    });
+
+    it('fails fast when TypeScript generation encounters itemSchema in response headers', () => {
+      const context = createFullContext(undefined);
+      if (!context._ir) {
+        throw new Error('Expected IR context');
+      }
+
+      context._ir.operations = [
+        {
+          operationId: 'streamUsers',
+          method: 'get',
+          path: '/users/stream',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [
+            {
+              statusCode: '200',
+              headers: {
+                'X-Stream-Acks': {
+                  schema: createMockSchema('object'),
+                  content: {
+                    'application/x-ndjson': {
+                      itemSchema: createMockSchema('string'),
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ];
+
+      expect(() => writeTypeScript(context)).toThrow(/itemSchema/i);
+    });
+
+    it('fails fast when TypeScript generation encounters itemSchema in parameter content', () => {
+      const context = createFullContext(undefined);
+      if (!context._ir) {
+        throw new Error('Expected IR context');
+      }
+
+      context._ir.operations = [
+        {
+          operationId: 'streamUsers',
+          method: 'get',
+          path: '/users/stream',
+          parameters: [
+            {
+              name: 'stream-filter',
+              in: 'query',
+              required: false,
+              schema: createMockSchema('object'),
+              content: {
+                'application/x-ndjson': {
+                  itemSchema: createMockSchema('string'),
+                },
+              },
+            },
+          ],
+          parametersByLocation: {
+            query: [
+              {
+                name: 'stream-filter',
+                in: 'query',
+                required: false,
+                schema: createMockSchema('object'),
+                content: {
+                  'application/x-ndjson': {
+                    itemSchema: createMockSchema('string'),
+                  },
+                },
+              },
+            ],
+            path: [],
+            header: [],
+            cookie: [],
+          },
+          responses: [],
+        },
+      ];
+
+      expect(() => writeTypeScript(context)).toThrow(/itemSchema/i);
     });
   });
 });

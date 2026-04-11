@@ -8,6 +8,9 @@ function writeInlineMediaType(mediaType: IRMediaType): MediaTypeObject {
   if (mediaType.schema !== undefined) {
     result.schema = writeOpenApiSchema(mediaType.schema);
   }
+  if (mediaType.itemSchema !== undefined) {
+    result.itemSchema = writeOpenApiSchema(mediaType.itemSchema);
+  }
 
   if (mediaType.example !== undefined) {
     result.example = mediaType.example;

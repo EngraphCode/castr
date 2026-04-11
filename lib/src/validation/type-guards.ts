@@ -8,6 +8,11 @@
  */
 
 import { type OperationObject, isReferenceObject } from '../shared/openapi-types.js';
+import {
+  STANDARD_HTTP_METHODS,
+  type StandardHttpMethod,
+  isStandardHttpMethod,
+} from '../shared/openapi/http-methods.js';
 
 // Re-export isReferenceObject for convenience
 export { isReferenceObject };
@@ -15,22 +20,12 @@ export { isReferenceObject };
 /**
  * Allowed standard HTTP methods per OpenAPI 3.2 Path Item Object.
  */
-export const ALLOWED_METHODS = [
-  'get',
-  'head',
-  'options',
-  'post',
-  'put',
-  'patch',
-  'delete',
-  'trace',
-  'query',
-] as const;
+export const ALLOWED_METHODS = STANDARD_HTTP_METHODS;
 
 /**
  * Type representing allowed HTTP methods
  */
-export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
+export type AllowedMethod = StandardHttpMethod;
 
 /**
  * Type guard to check if a string is an allowed HTTP method
@@ -46,15 +41,7 @@ export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
  * ```
  */
 export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMethod {
-  if (!maybeMethod || typeof maybeMethod !== 'string') {
-    return false;
-  }
-  for (const allowedMethod of ALLOWED_METHODS) {
-    if (maybeMethod === allowedMethod) {
-      return true;
-    }
-  }
-  return false;
+  return isStandardHttpMethod(maybeMethod);
 }
 
 /**

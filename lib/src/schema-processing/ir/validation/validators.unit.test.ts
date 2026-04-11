@@ -6,14 +6,20 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { CastrSchema } from '../models/schema.js';
-import { createMockRawOpenApiComponents } from '../test-helpers.js';
-import { isIRComponent, isCastrDocument, isCastrOperation } from './validators.js';
+import { createMockCastrSchema, createMockRawOpenApiComponents } from '../test-helpers.js';
+import {
+  isIRComponent,
+  isCastrAdditionalOperation,
+  isCastrDocument,
+  isCastrOperation,
+} from './validators.js';
 import type { CastrDocument } from '../models/schema-document.js';
 import type { IRComponent } from '../models/schema.components.js';
-import type { CastrOperation } from '../models/schema.operations.js';
+import type { CastrAdditionalOperation, CastrOperation } from '../models/schema.operations.js';
 
 describe('isCastrDocument', () => {
+  const mockSchema = createMockCastrSchema({ type: 'string' });
+
   it('should return true for valid CastrDocument', () => {
     const validDoc: CastrDocument = {
       version: '1.0.0',
@@ -25,6 +31,7 @@ describe('isCastrDocument', () => {
       servers: [],
       components: [],
       operations: [],
+      additionalOperations: [],
       dependencyGraph: {
         nodes: new Map(),
         topologicalOrder: [],
@@ -70,6 +77,7 @@ describe('isCastrDocument', () => {
       info: { title: 'Test', version: '1.0.0' },
       components: [],
       operations: [],
+      additionalOperations: [],
       dependencyGraph: {},
     };
 
@@ -108,6 +116,7 @@ describe('isCastrDocument', () => {
         },
       ],
       operations: [],
+      additionalOperations: [],
       dependencyGraph: {
         nodes: new Map(),
         topologicalOrder: [],
@@ -131,6 +140,7 @@ describe('isCastrDocument', () => {
       servers: [],
       components: createMockRawOpenApiComponents(),
       operations: [],
+      additionalOperations: [],
       dependencyGraph: {
         nodes: new Map(),
         topologicalOrder: [],
@@ -142,9 +152,135 @@ describe('isCastrDocument', () => {
 
     expect(isCastrDocument(validDoc)).toBe(true);
   });
+
+  it('should return true for valid documents containing additionalOperations', () => {
+    const validDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      servers: [],
+      components: [],
+      operations: [],
+      additionalOperations: [
+        {
+          operationId: 'purgeUsers',
+          method: 'PURGE',
+          path: '/users',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [],
+        },
+      ],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(validDoc)).toBe(true);
+  });
+
+  it('should return true for valid documents containing mediaType components', () => {
+    const validDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      servers: [],
+      components: [
+        {
+          type: 'mediaType',
+          name: 'NdjsonStream',
+          mediaType: {
+            schema: mockSchema,
+            itemSchema: mockSchema,
+            examples: {
+              sample: { value: 'ok' },
+            },
+            encoding: {
+              payload: { contentType: 'application/json' },
+            },
+          },
+        },
+      ],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(validDoc)).toBe(true);
+  });
+
+  it('should return true for valid documents containing x-ext mediaType refs', () => {
+    const validDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      servers: [],
+      components: [
+        {
+          type: 'mediaType',
+          name: 'ExternalStream',
+          mediaType: {
+            $ref: '#/x-ext/abc123/components/mediaTypes/ExternalStream',
+          },
+        },
+      ],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(validDoc)).toBe(true);
+  });
+
+  it('should return false for documents containing non-media-type refs inside mediaType entries', () => {
+    const invalidDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      servers: [],
+      components: [
+        {
+          type: 'mediaType',
+          name: 'BrokenStream',
+          mediaType: {
+            $ref: '#/components/schemas/User',
+          },
+        },
+      ],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(invalidDoc)).toBe(false);
+  });
 });
 
 describe('isIRComponent', () => {
+  const mockSchema = createMockCastrSchema({ type: 'string' });
+
   it('should return true for valid schema component', () => {
     const validComponent: IRComponent = {
       type: 'schema',
@@ -172,17 +308,6 @@ describe('isIRComponent', () => {
   });
 
   it('should return true for all component types', () => {
-    const mockSchema: CastrSchema = {
-      type: 'string',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
     const schemaComponent: IRComponent = {
       type: 'schema',
       name: 'TestSchema',
@@ -226,6 +351,67 @@ describe('isIRComponent', () => {
       },
     };
     expect(isIRComponent(requestBodyComponent)).toBe(true);
+
+    const parameterWithContentComponent: IRComponent = {
+      type: 'parameter',
+      name: 'StreamFilter',
+      parameter: {
+        name: 'stream-filter',
+        in: 'query',
+        required: false,
+        schema: mockSchema,
+        content: {
+          'application/x-ndjson': {
+            itemSchema: mockSchema,
+          },
+        },
+      },
+    };
+    expect(isIRComponent(parameterWithContentComponent)).toBe(true);
+
+    const mediaTypeComponent: IRComponent = {
+      type: 'mediaType',
+      name: 'StreamJson',
+      mediaType: {
+        schema: mockSchema,
+        itemSchema: mockSchema,
+        examples: {
+          sample: { value: 'ok' },
+        },
+        encoding: {
+          payload: { contentType: 'application/json' },
+        },
+      },
+    };
+    expect(isIRComponent(mediaTypeComponent)).toBe(true);
+
+    const responseWithRichHeadersComponent: IRComponent = {
+      type: 'response',
+      name: 'StreamingResponse',
+      response: {
+        statusCode: '200',
+        headers: {
+          'X-Stream': {
+            schema: mockSchema,
+            content: {
+              'application/x-ndjson': {
+                itemSchema: mockSchema,
+                examples: {
+                  sample: { value: 'ok' },
+                },
+              },
+            },
+            description: 'Streaming header',
+            required: true,
+            deprecated: false,
+            examples: {
+              sample: { value: 'ok' },
+            },
+          },
+        },
+      },
+    };
+    expect(isIRComponent(responseWithRichHeadersComponent)).toBe(true);
   });
 
   it.each(createMockRawOpenApiComponents())(
@@ -318,6 +504,37 @@ describe('isIRComponent', () => {
             zodChain: { presence: '', validations: [], defaults: [] },
             dependencyGraph: { references: [], referencedBy: [], depth: 0 },
             circularReferences: [],
+          },
+        },
+      },
+    };
+
+    expect(isIRComponent(invalidComponent)).toBe(false);
+  });
+
+  it('should return false for mediaType components with invalid rich fields', () => {
+    const invalidComponent = {
+      type: 'mediaType',
+      name: 'BrokenMediaType',
+      mediaType: {
+        schema: mockSchema,
+        examples: 'invalid',
+      },
+    };
+
+    expect(isIRComponent(invalidComponent)).toBe(false);
+  });
+
+  it('should return false for response components with invalid header examples', () => {
+    const invalidComponent = {
+      type: 'response',
+      name: 'BrokenResponse',
+      response: {
+        statusCode: '200',
+        headers: {
+          'X-Stream': {
+            schema: mockSchema,
+            examples: 'invalid',
           },
         },
       },
@@ -544,5 +761,61 @@ describe('isCastrOperation', () => {
 
       expect(isCastrOperation(operation)).toBe(true);
     });
+  });
+});
+
+describe('isCastrAdditionalOperation', () => {
+  it('should return true for valid additional operations with custom methods', () => {
+    const operation: CastrAdditionalOperation = {
+      operationId: 'purgeUsers',
+      method: 'PURGE',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
+      },
+      responses: [],
+    };
+
+    expect(isCastrAdditionalOperation(operation)).toBe(true);
+  });
+
+  it('should return false for fixed-field HTTP methods inside additional operations', () => {
+    expect(
+      isCastrAdditionalOperation({
+        operationId: 'invalidPost',
+        method: 'post',
+        path: '/users',
+        parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
+        },
+        responses: [],
+      }),
+    ).toBe(false);
+  });
+
+  it('should return false for invalid custom method tokens', () => {
+    expect(
+      isCastrAdditionalOperation({
+        operationId: 'invalidWhitespaceMethod',
+        method: 'PUR GE',
+        path: '/users',
+        parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
+        },
+        responses: [],
+      }),
+    ).toBe(false);
   });
 });

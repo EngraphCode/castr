@@ -137,6 +137,11 @@ export interface IRPathItemComponent {
 export interface IRMediaTypeComponent {
   type: 'mediaType';
   name: string;
+  /**
+   * Scalar x-ext bucket key when this reusable media type originated from
+   * `#/x-ext/{hash}/components/mediaTypes/{name}`.
+   */
+  xExtKey?: string;
   mediaType: IRMediaTypeEntry;
 }
 

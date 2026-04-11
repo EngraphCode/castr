@@ -1,4 +1,12 @@
-import type { OpenAPIDocument, OperationObject } from '../../../shared/openapi-types.js';
+import type {
+  OpenAPIDocument,
+  OperationObject,
+  PathItemObject,
+} from '../../../shared/openapi-types.js';
+import {
+  getCanonicalStandardHttpMethod,
+  getHttpMethodIdentifier,
+} from '../../../shared/openapi/http-methods.js';
 
 import { logger } from '../../../shared/utils/logger.js';
 
@@ -121,10 +129,22 @@ export const determineGroupName = (
     return snakeCase(endpoint.tags?.[0] ?? DEFAULT_GROUP_NAME);
   }
   if (groupStrategy === GROUP_STRATEGY_METHOD || groupStrategy === GROUP_STRATEGY_METHOD_FILE) {
-    return snakeCase(endpoint.method);
+    return getHttpMethodIdentifier(endpoint.method);
   }
   return snakeCase(DEFAULT_GROUP_NAME);
 };
+
+function getPathItemOperation(
+  pathItem: PathItemObject,
+  method: EndpointDefinition['method'],
+): OperationObject | undefined {
+  const canonicalStandardMethod =
+    typeof method === 'string' ? getCanonicalStandardHttpMethod(method) : undefined;
+
+  return canonicalStandardMethod !== undefined
+    ? pathItem[canonicalStandardMethod]
+    : pathItem.additionalOperations?.[method];
+}
 
 /**
  * Get operation object from OpenAPI document for an endpoint.
@@ -148,7 +168,7 @@ export const getOperationForEndpoint = (
     return null;
   }
 
-  const operation = pathItem[endpoint.method];
+  const operation = getPathItemOperation(pathItem, endpoint.method);
   if (!operation) {
     logger.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
     return null;

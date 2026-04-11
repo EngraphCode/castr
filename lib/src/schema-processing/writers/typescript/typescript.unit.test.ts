@@ -76,6 +76,7 @@ describe('writers/typescript', () => {
           },
         ],
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],
@@ -127,6 +128,7 @@ describe('writers/typescript', () => {
           enums: new Map(),
           components: [],
           operations: [],
+          additionalOperations: [],
           dependencyGraph: {
             nodes: new Map(),
             topologicalOrder: [],
@@ -142,6 +144,63 @@ describe('writers/typescript', () => {
       expect(output).toContain('path: "/users"');
       // Note: Response will be z.unknown() since User schema is not in IR
       expect(output).toContain('response:');
+    });
+
+    it('preserves custom HTTP method casing in generated endpoints and MCP tools', () => {
+      const context: TemplateContext = {
+        sortedSchemaNames: [],
+        endpoints: [
+          {
+            method: 'PuRgE',
+            path: '/users',
+            requestFormat: 'json',
+            parameters: [],
+            errors: [],
+            response: createMockSchema('string'),
+          },
+        ],
+        endpointsGroups: {},
+        mcpTools: [
+          {
+            tool: {
+              name: 'purgeUsers',
+              description: 'Purge users',
+              inputSchema: { type: 'object' },
+            },
+            method: 'PuRgE',
+            path: '/users',
+            originalPath: '/users',
+            operationId: 'purgeUsers',
+            httpOperation: {
+              method: 'PuRgE',
+              path: '/users',
+              originalPath: '/users',
+              operationId: 'purgeUsers',
+            },
+            security: { isPublic: true, usesGlobalSecurity: false, requirementSets: [] },
+          },
+        ],
+        _ir: {
+          version: '1.0.0',
+          openApiVersion: '3.2.0',
+          info: mockInfo,
+          servers: mockServers,
+          enums: new Map(),
+          components: [],
+          operations: [],
+          additionalOperations: [],
+          dependencyGraph: {
+            nodes: new Map(),
+            topologicalOrder: [],
+            circularReferences: [],
+          },
+          schemaNames: [],
+        },
+      };
+
+      const output = writeTypeScript(context);
+
+      expect(output.match(/method: "PuRgE"/g)).toHaveLength(2);
     });
 
     it('uses queryString request sections for QueryString parameters', () => {
@@ -173,6 +232,7 @@ describe('writers/typescript', () => {
           enums: new Map(),
           components: [],
           operations: [],
+          additionalOperations: [],
           dependencyGraph: {
             nodes: new Map(),
             topologicalOrder: [],
@@ -202,6 +262,7 @@ describe('writers/typescript', () => {
           enums: new Map(),
           components: [],
           operations: [],
+          additionalOperations: [],
           dependencyGraph: {
             nodes: new Map(),
             topologicalOrder: [],
@@ -236,6 +297,7 @@ describe('writers/typescript', () => {
         servers: mockServers,
         enums: new Map(),
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],
@@ -328,6 +390,7 @@ describe('writers/typescript', () => {
         servers: mockServers,
         enums: new Map(),
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],
@@ -455,6 +518,7 @@ describe('writers/typescript', () => {
           },
         ],
         operations: [],
+        additionalOperations: [],
         dependencyGraph: {
           nodes: new Map(),
           topologicalOrder: [],

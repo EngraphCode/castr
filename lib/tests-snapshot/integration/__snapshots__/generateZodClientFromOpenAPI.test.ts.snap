@@ -17076,6 +17076,7 @@ export const mcpTools = [
 exports[`getZodClientTemplateContext 1`] = `
 {
     "_ir": {
+        "additionalOperations": [],
         "components": [
             {
                 "metadata": {
@@ -26590,6 +26591,7 @@ Some useful links:
 exports[`getZodClientTemplateContext with allReadonly 1`] = `
 {
     "_ir": {
+        "additionalOperations": [],
         "components": [
             {
                 "metadata": {
@@ -36105,6 +36107,7 @@ Some useful links:
 exports[`with optional, partial, all required objects 1`] = `
 {
     "_ir": {
+        "additionalOperations": [],
         "components": [
             {
                 "metadata": {

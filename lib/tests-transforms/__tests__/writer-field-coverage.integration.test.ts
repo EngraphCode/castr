@@ -26,6 +26,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
 const NATIVE_OPENAPI_32_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
+const NATIVE_OPENAPI_32_PHASE_E_FIXTURE = resolve(FIXTURES_DIR, 'phase-e-native-3.2.yaml');
 const NATIVE_OPENAPI_32_PHASE_D_FIXTURE = resolve(FIXTURES_DIR, 'phase-d-native-3.2-examples.yaml');
 
 function getSchema(context: OpenAPIObject, name: string): SchemaObject {
@@ -432,6 +433,167 @@ describe('Writer Field Coverage - Native OpenAPI 3.2', () => {
         '$ref' in parameter ? parameter.$ref : parameter.name,
       ),
     ).toEqual(['device-id', 'token.id']);
+  });
+});
+
+describe('Writer Field Coverage - Native OpenAPI 3.2 Phase E', () => {
+  let output: OpenAPIObject;
+
+  beforeAll(async () => {
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_PHASE_E_FIXTURE);
+    const ir = buildIR(result.document);
+    output = writeOpenApi(ir);
+  });
+
+  it('writes additionalOperations as a custom method map on the path item', () => {
+    const pathItem = output.paths?.['/phase-e'];
+
+    expect(pathItem?.additionalOperations?.['PuRgE']).toBeDefined();
+    expect(pathItem?.additionalOperations?.['PuRgE']?.operationId).toBe('phaseEPurge');
+    expect(pathItem?.query?.operationId).toBe('phaseEQuery');
+  });
+
+  it('writes itemSchema for reusable, request, and response media types', () => {
+    const mediaTypeComponent = output.components?.mediaTypes?.['PhaseEEventStream'];
+    expect(mediaTypeComponent).toBeDefined();
+    if (!mediaTypeComponent || isReferenceObject(mediaTypeComponent)) {
+      throw new Error('Expected PhaseEEventStream to be an inline media type object');
+    }
+
+    expect(mediaTypeComponent.itemSchema).toMatchObject({
+      $ref: '#/components/schemas/PhaseEEvent',
+    });
+
+    const purgeRequestMediaType =
+      output.paths?.['/phase-e']?.additionalOperations?.['PuRgE']?.requestBody &&
+      'content' in output.paths['/phase-e'].additionalOperations['PuRgE'].requestBody
+        ? output.paths['/phase-e'].additionalOperations['PuRgE'].requestBody.content?.[
+            'application/x-ndjson'
+          ]
+        : undefined;
+
+    expect(purgeRequestMediaType).toBeDefined();
+    if (!purgeRequestMediaType || isReferenceObject(purgeRequestMediaType)) {
+      throw new Error('Expected Phase E PuRgE request media type to be inline');
+    }
+
+    expect(purgeRequestMediaType.itemSchema).toMatchObject({
+      $ref: '#/components/schemas/PhaseEEvent',
+    });
+
+    const purgeResponseMediaType =
+      output.paths?.['/phase-e']?.additionalOperations?.['PuRgE']?.responses?.['202'];
+    if (!purgeResponseMediaType || isReferenceObject(purgeResponseMediaType)) {
+      throw new Error('Expected the Phase E PuRgE response to be inline');
+    }
+
+    const responseMediaType = purgeResponseMediaType.content?.['application/x-ndjson'];
+    expect(responseMediaType).toBeDefined();
+    if (!responseMediaType || isReferenceObject(responseMediaType)) {
+      throw new Error('Expected Phase E PuRgE response media type to be inline');
+    }
+
+    expect(responseMediaType.itemSchema).toMatchObject({
+      $ref: '#/components/schemas/PhaseEAck',
+    });
+  });
+
+  it('writes itemSchema-only parameter and response-header content without inventing schema fields', () => {
+    const queryOperation = output.paths?.['/phase-e']?.query;
+    const filterParameter = queryOperation?.parameters?.find(
+      (parameter) => !('$ref' in parameter) && parameter.name === 'phase-e-filter',
+    );
+
+    expect(filterParameter).toBeDefined();
+    if (!filterParameter || '$ref' in filterParameter) {
+      throw new Error('Expected the Phase E query parameter to be inline');
+    }
+
+    expect(filterParameter.schema).toBeUndefined();
+    const parameterMediaType = filterParameter.content?.['application/x-ndjson'];
+    expect(parameterMediaType).toBeDefined();
+    if (!parameterMediaType || isReferenceObject(parameterMediaType)) {
+      throw new Error('Expected the Phase E query parameter media type to be inline');
+    }
+
+    expect(parameterMediaType.itemSchema).toMatchObject({
+      $ref: '#/components/schemas/PhaseEFilter',
+    });
+
+    const purgeResponse =
+      output.paths?.['/phase-e']?.additionalOperations?.['PuRgE']?.responses?.['202'];
+    if (!purgeResponse || isReferenceObject(purgeResponse)) {
+      throw new Error('Expected the Phase E PuRgE response to be inline');
+    }
+
+    const ackHeader = purgeResponse.headers?.['X-Phase-E-Acks'];
+    expect(ackHeader).toBeDefined();
+    if (!ackHeader || isReferenceObject(ackHeader)) {
+      throw new Error('Expected the Phase E ack header to be inline');
+    }
+
+    expect(ackHeader.schema).toBeUndefined();
+    const headerMediaType = ackHeader.content?.['application/x-ndjson'];
+    expect(headerMediaType).toBeDefined();
+    if (!headerMediaType || isReferenceObject(headerMediaType)) {
+      throw new Error('Expected the Phase E ack header media type to be inline');
+    }
+
+    expect(headerMediaType.itemSchema).toMatchObject({
+      $ref: '#/components/schemas/PhaseEAck',
+    });
+  });
+
+  it('revalidates emitted Phase E output at the shared load boundary', async () => {
+    const reparsed = await loadOpenApiDocument(output);
+    const pathItem = reparsed.document.paths?.['/phase-e'];
+
+    expect(pathItem?.additionalOperations?.['PuRgE']).toBeDefined();
+    expect(pathItem?.additionalOperations?.['PuRgE']?.operationId).toBe('phaseEPurge');
+    const mediaType = reparsed.document.components?.mediaTypes?.['PhaseEEventStream'];
+    if (!mediaType || '$ref' in mediaType) {
+      throw new Error('Expected reparsed PhaseEEventStream to be inline');
+    }
+
+    expect(mediaType.itemSchema).toEqual({ $ref: '#/components/schemas/PhaseEEvent' });
+
+    const purgeResponse = pathItem?.additionalOperations?.['PuRgE']?.responses?.['202'];
+    if (!purgeResponse || '$ref' in purgeResponse) {
+      throw new Error('Expected the reparsed Phase E PuRgE response to be inline');
+    }
+
+    const responseMediaType = purgeResponse.content?.['application/x-ndjson'];
+    if (!responseMediaType || '$ref' in responseMediaType) {
+      throw new Error('Expected the reparsed Phase E PuRgE response media type to be inline');
+    }
+
+    expect(responseMediaType.itemSchema).toEqual({ $ref: '#/components/schemas/PhaseEAck' });
+
+    const filterParameter = pathItem?.query?.parameters?.find(
+      (parameter) => !('$ref' in parameter) && parameter.name === 'phase-e-filter',
+    );
+    if (!filterParameter || '$ref' in filterParameter) {
+      throw new Error('Expected the reparsed Phase E query parameter to be inline');
+    }
+
+    const parameterMediaType = filterParameter.content?.['application/x-ndjson'];
+    if (!parameterMediaType || '$ref' in parameterMediaType) {
+      throw new Error('Expected the reparsed Phase E query parameter media type to be inline');
+    }
+
+    expect(parameterMediaType.itemSchema).toEqual({ $ref: '#/components/schemas/PhaseEFilter' });
+
+    const ackHeader = purgeResponse.headers?.['X-Phase-E-Acks'];
+    if (!ackHeader || '$ref' in ackHeader) {
+      throw new Error('Expected the reparsed Phase E ack header to be inline');
+    }
+
+    const headerMediaType = ackHeader.content?.['application/x-ndjson'];
+    if (!headerMediaType || '$ref' in headerMediaType) {
+      throw new Error('Expected the reparsed Phase E ack header media type to be inline');
+    }
+
+    expect(headerMediaType.itemSchema).toEqual({ $ref: '#/components/schemas/PhaseEAck' });
   });
 });
 

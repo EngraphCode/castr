@@ -8,6 +8,7 @@ import { getZodClientTemplateContext } from '../../src/schema-processing/context
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
 const NATIVE_OPENAPI_32_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
+const NATIVE_OPENAPI_32_PHASE_E_FIXTURE = resolve(FIXTURES_DIR, 'phase-e-native-3.2.yaml');
 
 describe('Native OpenAPI 3.2 downstream context proof', () => {
   let context: ReturnType<typeof getZodClientTemplateContext>;
@@ -62,5 +63,11 @@ describe('Native OpenAPI 3.2 downstream context proof', () => {
     }
 
     expect(Object.keys(pathSchema.properties ?? {}).sort()).toEqual(['deviceId', 'tokenId']);
+  });
+
+  it('fails fast when downstream context generation encounters itemSchema', async () => {
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_PHASE_E_FIXTURE);
+
+    expect(() => getZodClientTemplateContext(result.document)).toThrow(/itemSchema/i);
   });
 });

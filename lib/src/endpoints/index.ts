@@ -7,6 +7,7 @@ export {
   type EndpointParameter,
   type EndpointError,
   type EndpointResponse,
+  type EndpointHttpMethod,
   type HttpMethod,
   type RequestFormat,
   type ParameterType,

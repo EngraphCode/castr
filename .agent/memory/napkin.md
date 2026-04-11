@@ -4,6 +4,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-11
 
+- **Phase E close-out + long-session docs consolidation completed:**
+  - the live handoff layer now matches the final Saturday, 11 April 2026 truth: `.agent/prompts/session-continuation.prompt.md`, `.agent/README.md`, `.agent/plans/roadmap.md`, and `.agent/plans/current/complete/oas-3.2-full-feature-support.md` all say the OAS 3.2 parent arc is complete, Phase E is closed, repo-root `pnpm check` is green, and no successor primary active plan has been promoted yet
+  - moved `.agent/plans/active/oas-3.2-full-feature-support.md` to `.agent/plans/current/complete/oas-3.2-full-feature-support.md` so `active/` no longer points at already-closed work, then repaired the stale parent/companion links in the adjacent completion records
+  - the reviewer follow-up fixes that landed during final Phase E close-out included x-ext media-type component identity/writer emission, parameter `content` traversal, IR media-type ref-contract tightening, custom-method inline request-body naming collisions, and lowercase reserved-method validation for programmatic `additionalOperations`
+  - direct reviewer re-checks finished clean in this pass: `code-reviewer`, `type-reviewer`, `test-reviewer`, and `openapi-expert` all returned no remaining findings on the landed close-out state
+  - the `jc-consolidate-docs` practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
+  - no new portable Practice-core or local-practice evolution clears the bar from this pass; the value was closing the long-running session honestly and leaving the next session a clean starting statement instead of stale "Phase E next" guidance
+
 - **Phase D close-out docs consolidation completed:**
   - the live handoff and navigation layer is aligned again after the final consolidation pass: `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` now all point at the same truth that Phase D is closed and Phase E is next
   - the session-continuation prompt now carries an explicit next-session starting statement for the Phase E entrypoint instead of leaving that truth implied across multiple files

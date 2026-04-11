@@ -1,7 +1,7 @@
 # OAS 3.2 Type Migration (Phase A₂)
 
 **Status:** Complete — staged closure record; AP1/AP2/AP3/AP4 closed, repo-root validation green, and reviewer loop closed on Friday, 10 April 2026.  
-**Parent:** [OAS 3.2 Full Feature Support](../../active/oas-3.2-full-feature-support.md)  
+**Parent:** [OAS 3.2 Full Feature Support](./oas-3.2-full-feature-support.md)  
 **ADRs:** [ADR-044](../../../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
 **Lifecycle:** Moved from `.agent/plans/active/` to `.agent/plans/current/complete/` during the Friday, 10 April 2026 docs-consolidation pass so `active/` retains one honest execution entrypoint.  
 **Updated:** 2026-04-10 — AP4 close-out recorded, reviewer loop closed, and this file promoted into staged-complete as the durable closure record.
@@ -90,7 +90,7 @@ Session-verified AP4 close-out on Friday, 10 April 2026:
 - removed the verified `schema-processing/ir` barrel cycle, removed the duplicate CLI guard export, and cleared the stale `knip` ignore hint
 - strengthened the dependency-exit safety net so protected layers fail on `OpenAPIObject` alias imports, direct `@scalar/openapi-types` imports, and any future `openapi3-ts` reintroduction
 - updated the affected transform, architecture, component-access, and snapshot proofs to match the truthful seam and IR behaviour
-- `pnpm format:check`, `pnpm type-check`, the targeted Vitest suites, `pnpm madge:circular`, `pnpm knip`, the targeted active-surface `openapi3-ts` grep, and repo-root `pnpm qg` are all green
+- `pnpm format:check`, `pnpm type-check`, the targeted Vitest suites, `pnpm madge:circular`, `pnpm knip`, the targeted active-surface `openapi3-ts` grep, and repo-root `pnpm check` are all green
 
 ---
 
@@ -212,8 +212,9 @@ Direct project-agent fan-out was not available in this Codex surface, so the rev
 - `pnpm madge:circular` - green on Friday, 10 April 2026
 - `pnpm knip` - green on Friday, 10 April 2026
 - targeted active-surface `openapi3-ts` grep across `README.md`, `docs/USAGE.md`, `docs/EXAMPLES.md`, `docs/MCP_INTEGRATION_GUIDE.md`, `docs/guides/openapi-3.1-migration.md`, `lib/src`, `lib/tests-snapshot`, `scripts`, and `lib/package.json` - clean on Friday, 10 April 2026
-- repo-root `pnpm qg` - green on Friday, 10 April 2026
+- repo-root `pnpm check` - green on Friday, 10 April 2026
 
-## Explicit Deferred Follow-Up
+## Historical Deferred Follow-Up (Now Closed)
 
-- The pending MCP no-params input-schema bug (`{ type: "object", "additionalProperties": false }`) was not re-verified during AP4 close-out. Keep it as the next follow-up before feature phases B/C resume, or explicitly defer it in the parent plan if current session truth proves it unrelated.
+- At AP4 close-out on Friday, 10 April 2026, the MCP no-params input-schema bug (`{ type: "object", "additionalProperties": false }`) remained as the next follow-up.
+- That follow-up later closed on Saturday, 11 April 2026: parameterless tools now emit a closed empty-object schema, unexpected top-level arguments are rejected by `isMcpToolInput()`, and the affected snapshot proofs are green.

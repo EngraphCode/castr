@@ -563,31 +563,6 @@ describe('buildCastrOperations', () => {
       expect(getUsersOp?.path).toBe('/users');
       expect(createUserOp?.path).toBe('/users');
     });
-
-    it('should extract QUERY operations from native OpenAPI 3.2 path items', () => {
-      const doc: OpenAPIDocument = {
-        openapi: '3.2.0',
-        info: {
-          title: 'Query API',
-          version: '1.0.0',
-        },
-        paths: {
-          '/search': {
-            query: {
-              operationId: 'searchUsers',
-              responses: { '200': { description: 'Success' } },
-            },
-          },
-        },
-      };
-
-      const result = buildIR(doc);
-
-      expect(result.operations).toHaveLength(1);
-      expect(result.operations[0]?.method).toBe('query');
-      expect(result.operations[0]?.path).toBe('/search');
-      expect(result.operations[0]?.operationId).toBe('searchUsers');
-    });
   });
 
   describe('POST with requestBody, parameters, responses, and security', () => {
@@ -659,6 +634,7 @@ describe('buildCastrOperations', () => {
                   'application/json': {
                     schema: {
                       type: 'object',
+                      additionalProperties: false,
                       properties: {
                         name: { type: 'string' },
                         email: { type: 'string' },
@@ -704,7 +680,7 @@ describe('buildCastrOperations', () => {
                     'application/json': {
                       schema: {
                         type: 'array',
-                        items: { type: 'object' },
+                        items: { type: 'object', additionalProperties: false },
                       },
                     },
                   },

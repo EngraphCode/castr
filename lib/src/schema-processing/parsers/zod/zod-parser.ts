@@ -91,6 +91,7 @@ function createEmptyDocument(): CastrDocument {
     servers: [],
     components: [],
     operations: [],
+    additionalOperations: [],
     schemaNames: [],
     dependencyGraph: {
       nodes: new Map(),

@@ -68,8 +68,13 @@ function visitContent(
   seen: WeakSet<object>,
 ): void {
   visitMapValues(content, (mediaType) => {
-    if (!isReferenceObject(mediaType) && mediaType.schema) {
-      visitSchemaNode(mediaType.schema, seen);
+    if (!isReferenceObject(mediaType)) {
+      if (mediaType.schema) {
+        visitSchemaNode(mediaType.schema, seen);
+      }
+      if (mediaType.itemSchema) {
+        visitSchemaNode(mediaType.itemSchema, seen);
+      }
     }
   });
 }
@@ -172,6 +177,13 @@ function visitOperationNode(operation: OperationObject | undefined, seen: WeakSe
   );
 }
 
+function visitAdditionalOperations(
+  additionalOperations: Record<string, OperationObject> | undefined,
+  seen: WeakSet<object>,
+): void {
+  visitMapValues(additionalOperations, (operation) => visitOperationNode(operation, seen));
+}
+
 function visitPathItemNode(
   pathItem: PathItemObject | ReferenceObject | undefined,
   seen: WeakSet<object>,
@@ -184,6 +196,7 @@ function visitPathItemNode(
   for (const method of HTTP_METHODS) {
     visitOperationNode(pathItem[method], seen);
   }
+  visitAdditionalOperations(pathItem.additionalOperations, seen);
 }
 
 export function cloneAndValidateOpenApiDocumentObjectSemantics(
@@ -196,8 +209,13 @@ export function cloneAndValidateOpenApiDocumentObjectSemantics(
   visitMapValues(clonedDoc.components?.callbacks, (callback) => visitCallbackNode(callback, seen));
   visitMapValues(clonedDoc.components?.pathItems, (pathItem) => visitPathItemNode(pathItem, seen));
   visitMapValues(clonedDoc.components?.mediaTypes, (mediaType) => {
-    if (!isReferenceObject(mediaType) && mediaType.schema) {
-      visitSchemaNode(mediaType.schema, seen);
+    if (!isReferenceObject(mediaType)) {
+      if (mediaType.schema) {
+        visitSchemaNode(mediaType.schema, seen);
+      }
+      if (mediaType.itemSchema) {
+        visitSchemaNode(mediaType.itemSchema, seen);
+      }
     }
   });
   visitMapValues(clonedDoc.webhooks, (pathItem) => visitPathItemNode(pathItem, seen));

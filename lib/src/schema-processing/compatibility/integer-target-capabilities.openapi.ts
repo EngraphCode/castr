@@ -27,18 +27,10 @@ const OPENAPI_HTTP_METHODS = [
   'patch',
   'trace',
   'query',
-] as const satisfies readonly (keyof PathItemObject)[];
+] as const;
 
 const PATH_ITEM_MEMBER_KEYS = [
-  'get',
-  'put',
-  'post',
-  'delete',
-  'options',
-  'head',
-  'patch',
-  'trace',
-  'query',
+  ...OPENAPI_HTTP_METHODS,
   'additionalOperations',
   'parameters',
   'servers',
@@ -67,16 +59,25 @@ function visitMapValues<T>(values: Map<string, T> | undefined, visitor: (value: 
   }
 }
 
+function visitMediaTypeNode(
+  mediaType: MediaTypeObject | ReferenceObject | undefined,
+  seen: WeakSet<object>,
+  visitSchema: OpenApiSchemaVisitor,
+): void {
+  if (mediaType === undefined || isReferenceObject(mediaType)) {
+    return;
+  }
+
+  visitOpenApiSchemaNode(mediaType.schema, seen, visitSchema);
+  visitOpenApiSchemaNode(mediaType.itemSchema, seen, visitSchema);
+}
+
 function visitContentSchemas(
   content: Record<string, ReferenceObject | MediaTypeObject> | undefined,
   seen: WeakSet<object>,
   visitSchema: OpenApiSchemaVisitor,
 ): void {
-  visitRecordValues(content, (mediaType) => {
-    if (!isReferenceObject(mediaType) && mediaType.schema) {
-      visitOpenApiSchemaNode(mediaType.schema, seen, visitSchema);
-    }
-  });
+  visitRecordValues(content, (mediaType) => visitMediaTypeNode(mediaType, seen, visitSchema));
 }
 
 function hasPathItemMembers(pathItem: PathItemObject | ReferenceObject): boolean {
@@ -212,6 +213,10 @@ function visitPathItemNode(
   for (const method of OPENAPI_HTTP_METHODS) {
     visitOperationNode(pathItem[method], seen, visitSchema);
   }
+
+  visitRecordValues(pathItem.additionalOperations, (operation) =>
+    visitOperationNode(operation, seen, visitSchema),
+  );
 }
 
 export function visitDocumentOpenApiSchemas(
@@ -229,11 +234,6 @@ export function visitDocumentOpenApiSchemas(
         break;
       case 'pathItem':
         visitPathItemNode(component.pathItem, seen, visitSchema);
-        break;
-      case 'mediaType':
-        if (!isReferenceObject(component.mediaType) && component.mediaType.schema) {
-          visitOpenApiSchemaNode(component.mediaType.schema, seen, visitSchema);
-        }
         break;
       default:
         break;

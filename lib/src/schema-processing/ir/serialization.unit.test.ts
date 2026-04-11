@@ -65,6 +65,7 @@ describe('IR Serialization', () => {
         tags: ['test'],
       },
     ],
+    additionalOperations: [],
     dependencyGraph: {
       nodes: new Map(),
       topologicalOrder: [],
@@ -146,6 +147,40 @@ describe('IR Serialization', () => {
     const deserialized = deserializeIR(serializeIR(rawComponentIR));
 
     expect(deserialized).toEqual(rawComponentIR);
+  });
+
+  it('should deserialize valid documents containing mediaType components', () => {
+    const metadata = assertSchemaComponent(mockIR.components[0]).metadata;
+    const mediaTypeComponentIR: CastrDocument = {
+      ...mockIR,
+      components: [
+        ...mockIR.components,
+        {
+          type: 'mediaType',
+          name: 'NdjsonStream',
+          mediaType: {
+            schema: {
+              type: 'string',
+              metadata,
+            },
+            itemSchema: {
+              type: 'string',
+              metadata,
+            },
+            examples: {
+              sample: { value: 'ok' },
+            },
+            encoding: {
+              payload: { contentType: 'application/json' },
+            },
+          },
+        },
+      ],
+    };
+
+    const deserialized = deserializeIR(serializeIR(mediaTypeComponentIR));
+
+    expect(deserialized).toEqual(mediaTypeComponentIR);
   });
 
   it('should reject contradictory integer semantics during deserialization', () => {

@@ -171,6 +171,105 @@ describe('buildMcpToolSchemasFromIR', () => {
     expect(inputSchema['required']).toContain('body');
   });
 
+  test('fails fast when MCP schema generation encounters itemSchema', () => {
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation({
+      method: 'post',
+      requestBody: {
+        required: true,
+        content: {
+          'application/x-ndjson': {
+            schema: createMockSchema('array'),
+            itemSchema: createMockSchema('string'),
+          },
+        },
+      },
+    });
+
+    expect(() => buildMcpToolSchemasFromIR(ir, operation)).toThrow(/itemSchema/i);
+  });
+
+  test('fails fast when MCP schema generation encounters itemSchema in responses', () => {
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation({
+      responses: [
+        {
+          statusCode: '200',
+          content: {
+            'application/x-ndjson': {
+              schema: createMockSchema('array'),
+              itemSchema: createMockSchema('string'),
+            },
+          },
+        },
+      ],
+    });
+
+    expect(() => buildMcpToolSchemasFromIR(ir, operation)).toThrow(/itemSchema/i);
+  });
+
+  test('fails fast when MCP schema generation encounters itemSchema in parameter content', () => {
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation({
+      parameters: [
+        {
+          name: 'stream-filter',
+          in: 'query',
+          required: false,
+          schema: createMockSchema('object'),
+          content: {
+            'application/x-ndjson': {
+              itemSchema: createMockSchema('string'),
+            },
+          },
+        },
+      ],
+      parametersByLocation: {
+        path: [],
+        query: [
+          {
+            name: 'stream-filter',
+            in: 'query',
+            required: false,
+            schema: createMockSchema('object'),
+            content: {
+              'application/x-ndjson': {
+                itemSchema: createMockSchema('string'),
+              },
+            },
+          },
+        ],
+        header: [],
+        cookie: [],
+      },
+    });
+
+    expect(() => buildMcpToolSchemasFromIR(ir, operation)).toThrow(/itemSchema/i);
+  });
+
+  test('fails fast when MCP schema generation encounters itemSchema in response headers', () => {
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation({
+      responses: [
+        {
+          statusCode: '200',
+          headers: {
+            'X-Stream-Acks': {
+              schema: createMockSchema('object'),
+              content: {
+                'application/x-ndjson': {
+                  itemSchema: createMockSchema('string'),
+                },
+              },
+            },
+          },
+        },
+      ],
+    });
+
+    expect(() => buildMcpToolSchemasFromIR(ir, operation)).toThrow(/itemSchema/i);
+  });
+
   test('builds output schema from success response', () => {
     const ir = createMockCastrDocument();
     const responseSchema = createMockSchema('object');

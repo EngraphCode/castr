@@ -1,0 +1,91 @@
+openapi: '3.2.0'
+info:
+  title: Native OpenAPI 3.2 Phase E Proof Kit
+  description: Proof fixture for native OpenAPI 3.2 itemSchema and additionalOperations.
+  version: '0.1.0'
+paths:
+  /phase-e:
+    summary: Phase E streaming operations
+    description: Exercises itemSchema and custom additionalOperations handling.
+    query:
+      operationId: phaseEQuery
+      summary: Query the Phase E event stream
+      parameters:
+        - name: phase-e-filter
+          in: query
+          content:
+            application/x-ndjson:
+              itemSchema:
+                $ref: '#/components/schemas/PhaseEFilter'
+      responses:
+        '200':
+          description: Stream of Phase E events
+          content:
+            application/x-ndjson:
+              $ref: '#/components/mediaTypes/PhaseEEventStream'
+    additionalOperations:
+      PuRgE:
+        operationId: phaseEPurge
+        summary: Purge Phase E events
+        requestBody:
+          required: true
+          content:
+            application/x-ndjson:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PhaseEEvent'
+              itemSchema:
+                $ref: '#/components/schemas/PhaseEEvent'
+        responses:
+          '202':
+            description: Purge accepted
+            headers:
+              X-Phase-E-Acks:
+                description: Ack summary stream
+                content:
+                  application/x-ndjson:
+                    itemSchema:
+                      $ref: '#/components/schemas/PhaseEAck'
+            content:
+              application/x-ndjson:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PhaseEAck'
+                itemSchema:
+                  $ref: '#/components/schemas/PhaseEAck'
+components:
+  mediaTypes:
+    PhaseEEventStream:
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/PhaseEEvent'
+      itemSchema:
+        $ref: '#/components/schemas/PhaseEEvent'
+  schemas:
+    PhaseEEvent:
+      type: object
+      required:
+        - kind
+        - sequence
+      properties:
+        kind:
+          type: string
+        sequence:
+          type: integer
+    PhaseEAck:
+      type: object
+      required:
+        - accepted
+      properties:
+        accepted:
+          type: boolean
+    PhaseEFilter:
+      type: object
+      required:
+        - field
+      properties:
+        field:
+          type: string

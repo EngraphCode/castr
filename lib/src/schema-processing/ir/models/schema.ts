@@ -3,6 +3,7 @@ import type {
   XMLObject,
   ExternalDocumentationObject,
 } from '../../../shared/openapi-types.js';
+import type { StandardHttpMethod } from '../../../shared/openapi/http-methods.js';
 import type { IRIntegerSemantics } from '../integer-semantics/core.js';
 import {
   SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES,
@@ -12,16 +13,7 @@ import {
 
 // ... existing imports ...
 
-export type IRHttpMethod =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'patch'
-  | 'delete'
-  | 'head'
-  | 'options'
-  | 'trace'
-  | 'query';
+export type IRHttpMethod = StandardHttpMethod;
 
 /**
  * Type-safe wrapper for CastrSchema properties.

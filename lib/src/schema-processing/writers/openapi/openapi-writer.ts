@@ -10,6 +10,7 @@
 
 import type { OpenAPIDocument, SecurityRequirementObject } from '../../../shared/openapi-types.js';
 import { writeOpenApiComponents } from './components/openapi-writer.components.js';
+import { writeOpenApiXExtMediaTypeComponents } from './components/openapi-writer.components.x-ext.js';
 import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
 import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
@@ -78,7 +79,7 @@ export function writeOpenApi(ir: CastrDocument): OpenAPIDocument {
   const result: OpenAPIDocument = {
     openapi: CANONICAL_OPENAPI_VERSION,
     info: ir.info,
-    paths: writeOpenApiPaths(ir.operations),
+    paths: writeOpenApiPaths(ir.operations, ir.additionalOperations),
   };
 
   // Add optional document-level fields
@@ -118,6 +119,10 @@ function addDocumentContent(result: OpenAPIDocument, ir: CastrDocument): void {
   }
   if (ir.components.length > 0) {
     result.components = writeOpenApiComponents(ir.components);
+    const xExtMediaTypes = writeOpenApiXExtMediaTypeComponents(ir.components);
+    if (xExtMediaTypes !== undefined) {
+      result['x-ext'] = xExtMediaTypes;
+    }
   }
   if (ir.security !== undefined && ir.security.length > 0) {
     result.security = writeDocumentSecurity(ir.security);

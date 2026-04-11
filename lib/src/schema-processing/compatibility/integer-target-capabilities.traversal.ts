@@ -1,4 +1,5 @@
 import type {
+  CastrAdditionalOperation,
   CastrDocument,
   IRComponent,
   CastrOperation,
@@ -8,6 +9,7 @@ import type {
   IRRequestBody,
 } from '../ir/index.js';
 import { isReferenceObject } from '../../shared/openapi-types.js';
+import { allOperations } from '../ir/index.js';
 
 export type SchemaVisitor = (schema: CastrSchema, seen: Set<CastrSchema>) => void;
 
@@ -49,6 +51,19 @@ function visitSchemaVariant(
   visitSchema(schema, seen);
 }
 
+function visitMediaTypeSchemas(
+  mediaType: IRMediaTypeEntry | undefined,
+  seen: Set<CastrSchema>,
+  visitSchema: SchemaVisitor,
+): void {
+  if (mediaType === undefined || isReferenceObject(mediaType)) {
+    return;
+  }
+
+  visitSchemaValue(mediaType.schema, seen, visitSchema);
+  visitSchemaValue(mediaType.itemSchema, seen, visitSchema);
+}
+
 export function visitSchemaChildren(
   schema: CastrSchema,
   seen: Set<CastrSchema>,
@@ -83,9 +98,7 @@ function visitContentSchemas(
   }
 
   for (const mediaType of Object.values(content)) {
-    if (!isReferenceObject(mediaType) && mediaType.schema) {
-      visitSchema(mediaType.schema, seen);
-    }
+    visitMediaTypeSchemas(mediaType, seen, visitSchema);
   }
 }
 
@@ -100,6 +113,7 @@ function visitResponseHeaders(
 
   for (const header of Object.values(headers)) {
     visitSchema(header.schema, seen);
+    visitContentSchemas(header.content, seen, visitSchema);
   }
 }
 
@@ -126,12 +140,13 @@ function visitResponse(
 }
 
 function visitOperation(
-  operation: CastrOperation,
+  operation: CastrOperation | CastrAdditionalOperation,
   seen: Set<CastrSchema>,
   visitSchema: SchemaVisitor,
 ): void {
   for (const parameter of operation.parameters) {
     visitSchema(parameter.schema, seen);
+    visitContentSchemas(parameter.content, seen, visitSchema);
   }
 
   visitRequestBody(operation.requestBody, seen, visitSchema);
@@ -152,6 +167,7 @@ export function visitComponentSchemas(
       return;
     case 'parameter':
       visitSchema(component.parameter.schema, seen);
+      visitContentSchemas(component.parameter.content, seen, visitSchema);
       return;
     case 'response':
       visitResponse(component.response, seen, visitSchema);
@@ -160,9 +176,7 @@ export function visitComponentSchemas(
       visitRequestBody(component.requestBody, seen, visitSchema);
       return;
     case 'mediaType':
-      if (!isReferenceObject(component.mediaType) && component.mediaType.schema) {
-        visitSchema(component.mediaType.schema, seen);
-      }
+      visitMediaTypeSchemas(component.mediaType, seen, visitSchema);
       return;
     default:
       return;
@@ -178,7 +192,7 @@ export function visitDocumentSchemas(
     visitComponentSchemas(component, seen, visitSchema);
   }
 
-  for (const operation of document.operations) {
+  for (const operation of allOperations(document)) {
     visitOperation(operation, seen, visitSchema);
   }
 }

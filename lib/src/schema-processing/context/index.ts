@@ -20,6 +20,7 @@ export {
 // NOTE: These re-exports are deprecated. Import directly from '../parsers/openapi/index.js' instead.
 export { buildIR } from '../parsers/openapi/index.js';
 export {
+  allOperations,
   CastrSchemaProperties,
   type IRHttpMethod,
   type IRComponent,
@@ -29,9 +30,11 @@ export {
   type CastrResponseComponent,
   type IRRequestBodyComponent,
   type IRMediaTypeComponent,
+  type CastrAdditionalOperation,
   type CastrOperation,
   type CastrParameter,
   type IRRequestBody,
+  type IRMediaTypeReference,
   type IRMediaTypeEntry,
   type IRMediaType,
   type CastrResponse,
@@ -47,6 +50,7 @@ export {
   serializeIR,
   deserializeIR,
   isCastrDocument,
+  isCastrAdditionalOperation,
   isIRComponent,
   isCastrOperation,
   isCastrSchema,

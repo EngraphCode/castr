@@ -19,10 +19,13 @@ function isMediaTypeComponent(component: IRComponent): component is IRMediaTypeC
 function findMediaTypeComponent(
   document: Pick<CastrDocument, 'components'>,
   componentName: string,
+  xExtKey?: string,
 ): IRMediaTypeComponent | undefined {
   return document.components.find(
     (component): component is IRMediaTypeComponent =>
-      isMediaTypeComponent(component) && component.name === componentName,
+      isMediaTypeComponent(component) &&
+      component.name === componentName &&
+      component.xExtKey === xExtKey,
   );
 }
 
@@ -53,11 +56,11 @@ function resolveIRMediaTypeReference(
   if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_MEDIA_TYPES) {
     throw new Error(
       `Unsupported IR media type reference "${ref.$ref}" at ${location}. ` +
-        'Expected #/components/mediaTypes/{name}.',
+        'Expected #/components/mediaTypes/{name} or #/x-ext/{hash}/components/mediaTypes/{name}.',
     );
   }
 
-  const component = findMediaTypeComponent(document, parsedRef.componentName);
+  const component = findMediaTypeComponent(document, parsedRef.componentName, parsedRef.xExtKey);
   if (!component) {
     throw new Error(
       `Unresolvable IR media type reference "${ref.$ref}" at ${location}. ` +
@@ -70,7 +73,7 @@ function resolveIRMediaTypeReference(
 
 export function resolveIRMediaTypeEntry(
   document: Pick<CastrDocument, 'components'>,
-  mediaType: IRMediaTypeEntry,
+  mediaType: IRMediaTypeEntry | ReferenceObject,
   location: string,
   seenRefs?: Set<string>,
 ): IRMediaType {
@@ -87,4 +90,12 @@ export function getSchemaFromIRMediaTypeEntry(
   location: string,
 ): CastrSchema | undefined {
   return resolveIRMediaTypeEntry(document, mediaType, location).schema;
+}
+
+export function getItemSchemaFromIRMediaTypeEntry(
+  document: Pick<CastrDocument, 'components'>,
+  mediaType: IRMediaTypeEntry,
+  location: string,
+): CastrSchema | undefined {
+  return resolveIRMediaTypeEntry(document, mediaType, location).itemSchema;
 }
