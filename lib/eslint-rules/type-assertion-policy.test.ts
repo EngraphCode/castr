@@ -46,7 +46,7 @@ describe('type assertion policy', () => {
     );
 
     expect(messages).toEqual([]);
-  });
+  }, 15000); // Cold ESLint startup under clean hook runs can exceed Vitest's 5s default.
 
   it('allows as const in snapshot tests', async () => {
     const messages = await lintAssertionMessages(
