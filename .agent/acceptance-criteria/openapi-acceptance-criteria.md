@@ -18,7 +18,7 @@
 - Output: OpenAPI 3.2.x only
 - Internal: IR is normalized to `3.2.0`
 - OpenAPI 3.1.x remains accepted as a documented Scalar bridge input
-- Remaining OpenAPI 3.2-only feature expansion remains separately tracked work after the landed Phase B surface (`pathItem.query`, `Tag.summary`, `Tag.parent`, `Tag.kind`)
+- Remaining OpenAPI 3.2-only feature expansion remains separately tracked work after the landed Phase C surface (`pathItem.query`, `Tag.summary`, `Tag.parent`, `Tag.kind`, `oauth2.flows.deviceAuthorization`, `XML.nodeType`, strict top-level path templating)
 
 ---
 
@@ -237,6 +237,18 @@ The parser MUST accept and preserve the currently claimed native OpenAPI 3.2-onl
 - `parent`
 - `kind`
 
+### OAuth Flows Object (3.2)
+
+- `deviceAuthorization`
+
+### XML Object (3.2)
+
+- `nodeType`
+
+### Top-Level Path Templating
+
+- valid balanced template expressions in `paths` keys (for example `/devices/{device-id}/tokens/{token.id}`)
+
 ---
 
 ## Part 3: Strict Validation and Rejection
@@ -267,6 +279,7 @@ Derived from requirements section 4.
 - Invalid `openapi` semver
 - Unresolvable `$ref` pointers
 - Invalid HTTP methods
+- Malformed top-level `paths` templates (unbalanced braces, stray `}`, empty `{}`)
 - Missing required fields
 
 ---
@@ -294,6 +307,7 @@ All output documents MUST:
 2. Emit `openapi` as canonical `3.2.0`
 3. Preserve ALL information from the IR (no content loss)
 4. Avoid 3.0-only constructs (`nullable`, boolean exclusive bounds, tuple `items` arrays)
+5. Preserve currently claimed 3.2 additions, including `pathItem.query`, hierarchical tags, `oauth2.flows.deviceAuthorization`, and `xml.nodeType`
 
 ### Root Object Output (when present in IR)
 
@@ -320,6 +334,7 @@ Allowed methods for input and output:
 
 - For EACH field in Parts 1, 2, and 2B, a fixture MUST exist
 - Tests MUST assert the IR contains that field after parsing
+- Valid top-level 3.2 path templates MUST be proved explicitly from fixture input through downstream consumers
 
 ### Output Coverage Tests
 
@@ -330,6 +345,7 @@ Allowed methods for input and output:
 - 3.0 input with 3.1-only syntax MUST throw
 - 3.0/3.1 input with 3.2-only syntax MUST throw
 - 3.1/3.2 input with 3.0-only syntax MUST throw
+- malformed top-level 3.2 path templates MUST throw before upgrade/canonicalisation completes
 
 ### Upgrade Tests
 

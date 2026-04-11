@@ -4,11 +4,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-11
 
+- **Phase C close-out docs consolidation completed:**
+  - the live handoff and planning stack remains aligned after the final consolidation sweep: `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` all now point at the same truth that Phase C is closed and Phase D is next
+  - the active parent plan now labels the old Phase B "next entrypoint" note explicitly as historical so it no longer reads like current execution guidance after the Phase C close-out
+  - `jc-consolidate-docs` practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
+  - no new portable Practice-Core evolution clears the bar from this pass; the value is keeping the live handoff layer chronologically honest after multiple same-day close-outs
+
 - **Generated-suite temp-directory race fixed and consolidated:**
   - a fresh gate failure was reproduced honestly before reprioritising work: `test:gen` was red because multiple generated validation suites shared and deleted the same repo-scoped `lib/tests-generated/.tmp` directory under concurrent Vitest execution
   - the harness fix stayed local to the real seam: `createTempDir()` now returns an isolated per-suite subdirectory under `.tmp`, `cleanupTempDir()` removes only the owned suite directory and opportunistically removes the parent root when empty, and a new regression proof covers directory isolation plus cleanup behavior
   - repo-root `pnpm check` is green again on Saturday, 11 April 2026 after the fix, and the saved aggregate log is `.agent/analysis-and-reports/pnpm-check-2026-04-11-after-generated-temp-fix.log`
-  - `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` now all record the same truth: the gate issue is resolved, Phase C remains next, and the generated-suite race does not reopen Phase B
+  - at that point in the day, `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` all recorded the same truth: the gate issue was resolved, Phase C remained next, and the generated-suite race did not reopen Phase B
   - practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
   - promoted one durable repo learning into `distilled.md`: if parallel suites need a repo-scoped temp root, allocate per-suite subdirectories and clean only owned paths; shared temp-dir cleanup creates false regression signals
   - no new portable Practice-Core evolution clears the bar from this pass; the value is repo-local proof-harness robustness and handoff accuracy

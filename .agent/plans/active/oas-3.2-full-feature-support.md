@@ -5,7 +5,7 @@
 **Promoted:** 2026-04-03  
 **Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
 **Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice  
-**Updated:** 2026-04-11 — Phase B is closed: `QUERY` now lands end to end, hierarchical-tag proof is green, repo-root `pnpm check` is green, and Phase C is the immediate next proof sweep
+**Updated:** 2026-04-11 — Phase C is closed: `deviceAuthorization`, XML `nodeType`, and strict top-level path templating now have honest proof and validation, repo-root `pnpm check` is green, and Phase D is the immediate next proof sweep
 
 ---
 
@@ -134,16 +134,16 @@ Each feature must be classified per output format using the compatibility model.
 
 ### Feature 8: Path Templating (ABNF)
 
-| Surface      | Support      | Rationale                                     |
-| ------------ | ------------ | --------------------------------------------- |
-| IR           | ✅ No change | Paths stored as strings                       |
-| OAS Parser   | ✅           | Path parsing already handles templates        |
-| OAS Writer   | ✅           | Paths emitted as-is                           |
-| IR Validator | ⚠️ Optional  | Could add ABNF-based path template validation |
-| All Writers  | ✅           | Path strings pass through unchanged           |
+| Surface      | Support      | Rationale                                                     |
+| ------------ | ------------ | ------------------------------------------------------------- |
+| IR           | ✅ No change | Paths stored as strings                                       |
+| OAS Parser   | ✅           | Path parsing already handles templates                        |
+| OAS Writer   | ✅           | Paths emitted as-is                                           |
+| IR Validator | ✅           | Strict top-level `paths` template grammar now fails fast      |
+| All Writers  | ✅           | Valid path strings pass through unchanged to downstream users |
 
 **IR changes:** None
-**Effort:** Low — verify existing behavior, optional validator enhancement
+**Effort:** Low — strict load-boundary validator + proof
 
 ---
 
@@ -156,22 +156,53 @@ Ordered by dependency and increasing complexity:
 | A     | Version plumbing (separate plan)                      | Small  | None         | ✅ complete                    |
 | A₂    | **Type migration: drop `openapi3-ts`, adopt Scalar**  | Medium | Phase A      | ✅ complete                    |
 | B     | #1 QUERY method, #3 Hierarchical tags                 | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
-| C     | #6 OAuth2 Device, #7 XML nodeType, #8 Path templating | Small  | Phase A₂     | ▶ next                         |
-| D     | #4 Example semantics                                  | Medium | Phase A₂     | queued after Phase C           |
-| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | queued after Phase D / Phase C |
+| C     | #6 OAuth2 Device, #7 XML nodeType, #8 Path templating | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
+| D     | #4 Example semantics                                  | Medium | Phase A₂     | ▶ next                         |
+| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | queued after Phase D           |
 
-Phases A, A₂, and B are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C is still the primary next atomic slice, and it should remain the immediate follow-on proof sweep unless a fresh regression redirects the session. Phases D and E remain independent afterwards.
+Phases A, A₂, B, and C are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C then closed on Saturday, 11 April 2026: `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the final close-out sweep. Phase D is now the immediate next atomic slice; Phase E remains queued afterwards.
 
-### Metacognitive Refinement: Why Phase C Comes Next
+### Metacognitive Refinement: Why Phase D Comes Next
 
-A deeper code audit already established why Phase B had to come first. That work is now landed, which sharpens the next-step recommendation again:
+A deeper code audit already established why the earlier slices had to land first. With Phase C now closed, the next-step recommendation sharpens again:
 
 - Feature #1 `QUERY` is now wired honestly across the core operation pipeline: the IR/public method unions include `'query'`, parser extraction and duplicated raw PathItem visitors no longer skip it, writer ordering emits `pathItem.query` explicitly, and downstream MCP hints treat it as read-only/non-destructive without broadening idempotent semantics.
 - Feature #3 hierarchical tags now have explicit proof that `parent`, `kind`, and `summary` survive parser -> IR -> writer round-trips through a native OpenAPI 3.2 fixture.
-- Phase C (`deviceAuthorization`, XML `nodeType`, path templating) remains the next smallest honest slice because the current evidence still points to proof-oriented pass-through work rather than fresh infrastructure: security schemes are stored raw, XML metadata already round-trips as metadata, and paths already flow through as strings.
-- The existing native proof base is now `lib/tests-transforms/__fixtures__/phase-b-native-3.2.yaml`; extend that fixture first for Phase C instead of creating scattered one-off proof fixtures unless a reproduced regression forces a different path.
+- Phase C is now landed honestly: `deviceAuthorization` and XML `nodeType` are proved end to end at the parser/writer seams, the strict top-level `paths` grammar check now rejects malformed templates before upgrade, and valid templated paths are explicitly proved through downstream endpoint/MCP consumers.
+- Phase D (`dataValue`, `serializedValue`) is now the next smallest honest slice because Example Object semantics touch multiple OpenAPI carriers but still remain narrower than `itemSchema` and `additionalOperations`.
 - Feature #2 `additionalOperations` still belongs later. It touches the same path-item operation area as `QUERY`, but it also carries the ADR-046 separate-storage design, so it should not be bundled into the smallest next slice.
 - Repo-root `pnpm check` remains the required aggregate gate before any later phase closes. Use `pnpm check:ci` only when a non-mutating rerun is needed, and do not invoke `pnpm qg` directly.
+
+---
+
+## Phase C: Native Pass-Through + Strict Path Templating
+
+**Status:** COMPLETE on Saturday, 11 April 2026.
+
+**What landed:**
+
+- `oauth2.flows.deviceAuthorization` now has explicit parser and writer proof, including `deviceAuthorizationUrl`, `tokenUrl`, `refreshUrl`, and `scopes`.
+- XML `nodeType` now has explicit parser and writer proof on both schema-level and property-level XML metadata.
+- Valid templated paths such as `/devices/{device-id}/tokens/{token.id}` now survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, while MCP path input keys still normalise from declared parameter names to camelCase.
+- Malformed top-level `paths` templates now fail fast before upgrade/canonicalisation completes. The grammar check rejects unmatched braces, stray `}`, empty `{}`, and equivalent malformed brace structures while ignoring `paths` specification extensions.
+- The shared validator now lives in a dedicated `path-template-validation/` bounded context under the OpenAPI load boundary rather than being bolted onto an already-full directory seam.
+
+**Proof base:**
+
+- Positive proof fixture: `lib/tests-transforms/__fixtures__/phase-b-native-3.2.yaml`
+- Negative rejection fixtures: `lib/tests-transforms/__fixtures__/invalid/3.2.x-malformed-path-templates/`
+- Targeted transform proof: parser, writer, version-validation, and downstream endpoint/MCP suites
+- Aggregate verification: repo-root `pnpm check` green on Saturday, 11 April 2026
+
+**Reviewer loop (installed in-session fallback):**
+
+- `code-reviewer` — **APPROVED** after the pre-close-out fixes for over-broad `paths` validation scope and partial `deviceAuthorization` nested-field proof
+- `test-reviewer` — **COMPLIANT**; the added proofs stay behaviour-focused and the rejection coverage remains seam-owned
+- `openapi-expert` — **APPROVED**; the touched native OpenAPI 3.2 surfaces are now claimed honestly and validated at the correct boundary
+
+**Next entrypoint:**
+
+- Resume Phase D next for Example Object semantics (`dataValue`, `serializedValue`) unless a fresh gate or runtime regression is reproduced first.
 
 ---
 
@@ -192,15 +223,15 @@ A deeper code audit already established why Phase B had to come first. That work
 - Targeted parser/writer proof suites now cover both `query` and hierarchical tags.
 - Repo-root `pnpm check` is green after the slice.
 
-**Next entrypoint:**
+**Historical next entrypoint at Phase B close-out:**
 
-- Extend `phase-b-native-3.2.yaml` for Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`) unless a fresh gate or runtime regression is reproduced first.
+- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phase C now also closed, the active next entrypoint is Phase D.
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phase B now closed, the active next entrypoint is Phase C.  
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B and C now closed, the active next entrypoint is Phase D.  
 **ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
 **Detailed completion record:** [phase-a2-type-migration.md](../current/complete/phase-a2-type-migration.md)
 
@@ -220,7 +251,7 @@ A deeper code audit already established why Phase B had to come first. That work
 3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
 4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
 5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
-6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phase B now closed, Phase C is the immediate follow-on proof sweep.
+6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B and C now closed, Phase D is the immediate follow-on proof sweep.
 
 > [!NOTE]
 > Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.

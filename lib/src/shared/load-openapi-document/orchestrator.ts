@@ -10,6 +10,7 @@ import type { OpenAPIInputDocument } from '../openapi-types.js';
 import type { OTTLoadedOpenApiDocument } from './bundle/bundle-metadata.types.js';
 import { normalizeInput } from './normalize-input.js';
 import { setupBundleInfrastructure, createBundleConfig, bundleDocument } from './bundle/index.js';
+import { validateTopLevelPathTemplates } from './path-template-validation/index.js';
 import { upgradeAndValidate } from './upgrade-validate.js';
 import { createMetadata, formatDescriptor } from './metadata.js';
 import { createValidationErrorMessage } from './validation-errors.js';
@@ -21,8 +22,9 @@ import { createValidationErrorMessage } from './validation-errors.js';
  * 1. Normalize Input: Accept string/URL/object, determine entry point
  * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
  * 3. **Validate**: Strict validation against declared version schema (FAIL FAST)
- * 4. Upgrade/Canonicalise: Bridge older specs through 3.1 semantics, then stamp 3.2.0
- * 5. Type Guard: Ensure BundledOpenApiDocument (intersection type)
+ * 4. **Validate Path Templates**: Reject malformed top-level `paths` keys before upgrade
+ * 5. Upgrade/Canonicalise: Bridge older specs through 3.1 semantics, then stamp 3.2.0
+ * 6. Type Guard: Ensure BundledOpenApiDocument (intersection type)
  *
  * **Architecture Notes:**
  * - Replaces legacy SwaggerParser approach (ADR-019)
@@ -65,6 +67,12 @@ export async function loadOpenApiDocument(
 
     if (!validationResult.valid) {
       const errorMessage = createValidationErrorMessage(validationResult.errors, bundledDocument);
+      throw new Error(errorMessage);
+    }
+
+    const pathTemplateErrors = validateTopLevelPathTemplates(bundledDocument);
+    if (pathTemplateErrors.length > 0) {
+      const errorMessage = createValidationErrorMessage(pathTemplateErrors, bundledDocument);
       throw new Error(errorMessage);
     }
 

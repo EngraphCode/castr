@@ -3,7 +3,7 @@
 ## Overview
 
 > [!IMPORTANT]
-> Current implementation note (2026-04-02): the `makeSchemaResolver()` function described below was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model rather than a resolver function wrapping the raw OpenAPI document. The shared OpenAPI load boundary now validates against the declared version first, bridges older input through Scalar's 3.1 upgrade semantics where needed, and returns canonical `openapi: 3.2.0` documents. This document remains valuable as architectural history for the bundling/validation pipeline and `$ref` preservation rationale.
+> Current implementation note (2026-04-11): the `makeSchemaResolver()` function described below was eliminated per [ADR-015](../architectural_decision_records/ADR-015-eliminate-make-schema-resolver.md). The current codebase resolves `$ref` values through the IR's own reference model rather than a resolver function wrapping the raw OpenAPI document. The shared OpenAPI load boundary now validates against the declared version first, applies an additional strict top-level path-template grammar pass, bridges older input through Scalar's 3.1 upgrade semantics where needed, and returns canonical `openapi: 3.2.0` documents. This document remains valuable as architectural history for the bundling/validation pipeline and `$ref` preservation rationale.
 
 The `@engraph/castr` library migrated from `@apidevtools/swagger-parser` to `@scalar/*` packages for OpenAPI document processing. This architectural shift brings significant improvements in type safety, validation, and reference handling while maintaining backward compatibility.
 
@@ -114,11 +114,12 @@ The Scalar pipeline consists of three distinct stages:
 
 **Output:** Raw OpenAPI document (JSON or YAML parsed)
 
-### 2. Validate Stage (`@scalar/json-magic`)
+### 2. Validate Stage (`@scalar/openapi-parser` + load-boundary checks)
 
 **Responsibilities:**
 
 - Validate OpenAPI structure against specification
+- Reject malformed top-level `paths` template syntax before upgrade/canonicalisation
 - Auto-upgrade OpenAPI versions
 - Ensure type safety
 
@@ -135,7 +136,7 @@ The Scalar pipeline consists of three distinct stages:
 - Simplifies internal code (single type system to handle)
 - Preserves semantic meaning during upgrade
 
-**Output:** Declared-version-valid OpenAPI document ready for canonical 3.2.0 boundary normalisation
+**Output:** Declared-version-valid OpenAPI document with strict top-level path-template grammar, ready for canonical 3.2.0 boundary normalisation
 
 ### 3. Bundle Stage (`@scalar/openapi-parser`)
 

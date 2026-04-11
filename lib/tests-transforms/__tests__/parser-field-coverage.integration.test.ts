@@ -19,7 +19,7 @@ import type { CastrDocument } from '../../src/schema-processing/ir/models/schema
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
-const PHASE_B_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
+const NATIVE_OPENAPI_32_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
 
 describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
   let ir: CastrDocument;
@@ -349,24 +349,24 @@ describe('Parser Field Coverage - OpenAPI 3.0.x', () => {
   });
 });
 
-describe('Parser Field Coverage - Phase B OpenAPI 3.2', () => {
-  let phaseBIr: CastrDocument;
+describe('Parser Field Coverage - Native OpenAPI 3.2', () => {
+  let native32Ir: CastrDocument;
 
   beforeAll(async () => {
-    const result = await loadOpenApiDocument(PHASE_B_FIXTURE);
-    phaseBIr = buildIR(result.document);
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_FIXTURE);
+    native32Ir = buildIR(result.document);
   });
 
   it('extracts the native query operation', () => {
-    const queryOp = phaseBIr.operations.find((op) => op.method === 'query');
+    const queryOp = native32Ir.operations.find((op) => op.method === 'query');
     expect(queryOp).toBeDefined();
     expect(queryOp?.operationId).toBe('phaseBQuery');
     expect(queryOp?.path).toBe('/phase-b');
   });
 
   it('preserves hierarchical tag metadata', () => {
-    const hierarchicalTag = phaseBIr.tags?.find((tag) => tag.name === 'hierarchical');
-    const metaTag = phaseBIr.tags?.find((tag) => tag.name === 'meta');
+    const hierarchicalTag = native32Ir.tags?.find((tag) => tag.name === 'hierarchical');
+    const metaTag = native32Ir.tags?.find((tag) => tag.name === 'meta');
 
     expect(hierarchicalTag).toBeDefined();
     expect(hierarchicalTag?.summary).toBe('Hierarchical tag with parent metadata');
@@ -376,5 +376,64 @@ describe('Parser Field Coverage - Phase B OpenAPI 3.2', () => {
     expect(metaTag).toBeDefined();
     expect(metaTag?.summary).toBe('Meta tag for Phase B groupings');
     expect(metaTag?.kind).toBe('group');
+  });
+
+  it('preserves oauth2 device authorization flow metadata', () => {
+    const securityScheme = native32Ir.components.find(
+      (component) => component.type === 'securityScheme' && component.name === 'deviceFlow',
+    );
+
+    expect(securityScheme).toBeDefined();
+    if (
+      !securityScheme ||
+      securityScheme.type !== 'securityScheme' ||
+      '$ref' in securityScheme.scheme ||
+      securityScheme.scheme.type !== 'oauth2'
+    ) {
+      throw new Error('Expected deviceFlow to be an inline oauth2 security scheme');
+    }
+
+    expect(native32Ir.security).toEqual([{ schemeName: 'deviceFlow', scopes: ['read:devices'] }]);
+    expect(securityScheme.scheme.flows?.deviceAuthorization?.deviceAuthorizationUrl).toBe(
+      'https://auth.example.com/device',
+    );
+    expect(securityScheme.scheme.flows?.deviceAuthorization?.tokenUrl).toBe(
+      'https://auth.example.com/token',
+    );
+    expect(securityScheme.scheme.flows?.deviceAuthorization?.refreshUrl).toBe(
+      'https://auth.example.com/refresh',
+    );
+    expect(securityScheme.scheme.flows?.deviceAuthorization?.scopes).toEqual({
+      'read:devices': 'Read device tokens',
+    });
+  });
+
+  it('preserves xml nodeType metadata on schemas and properties', () => {
+    const schemaComponent = native32Ir.components.find(
+      (component) => component.type === 'schema' && component.name === 'DeviceToken',
+    );
+
+    expect(schemaComponent).toBeDefined();
+    if (!schemaComponent || schemaComponent.type !== 'schema') {
+      throw new Error('Expected DeviceToken to be a schema component');
+    }
+
+    expect(schemaComponent.schema.xml?.name).toBe('deviceToken');
+    expect(schemaComponent.schema.xml?.nodeType).toBe('element');
+    expect(schemaComponent.schema.properties?.get('id')?.xml?.nodeType).toBe('attribute');
+    expect(schemaComponent.schema.properties?.get('payload')?.xml?.nodeType).toBe('text');
+  });
+
+  it('preserves valid templated paths and parameter names', () => {
+    const deviceTokenOp = native32Ir.operations.find(
+      (op) => op.operationId === 'phaseCGetDeviceToken',
+    );
+
+    expect(deviceTokenOp).toBeDefined();
+    expect(deviceTokenOp?.path).toBe('/devices/{device-id}/tokens/{token.id}');
+    expect(deviceTokenOp?.parametersByLocation.path.map((parameter) => parameter.name)).toEqual([
+      'device-id',
+      'token.id',
+    ]);
   });
 });

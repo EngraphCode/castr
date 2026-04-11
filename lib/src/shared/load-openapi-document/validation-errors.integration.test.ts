@@ -105,4 +105,24 @@ describe('loadOpenApiDocument error formatting (integration)', () => {
       expect(message).toContain('Hint:');
     }
   });
+
+  it('formats malformed path template errors with readable location and hint', async () => {
+    const invalidSpec = {
+      openapi: '3.2.0',
+      info: { title: 'Invalid path template', version: '1.0.0' },
+      paths: {
+        '/devices/{}/tokens': {
+          get: {
+            responses: {
+              '200': { description: 'OK' },
+            },
+          },
+        },
+      },
+    };
+
+    await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(/paths → \/devices\/{}\/tokens/);
+    await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(/Malformed path template/);
+    await expect(loadOpenApiDocument(invalidSpec)).rejects.toThrow(/balanced template expressions/);
+  });
 });

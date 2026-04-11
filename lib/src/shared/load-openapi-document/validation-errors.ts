@@ -10,8 +10,8 @@
 
 import { drop, endsWith, includes, join, split, startsWith, toLower } from 'lodash-es';
 
-const ROOT_EMPTY_PATH = '';
-const ROOT_SLASH_PATH = '/';
+const ROOT_EMPTY_PATH = '',
+  ROOT_SLASH_PATH = '/';
 const READABLE_ROOT = '(root)';
 const PATH_SEPARATOR = '/';
 const PATH_DISPLAY_SEPARATOR = ' → ';
@@ -19,14 +19,15 @@ const RESPONSES_SEGMENT = 'responses';
 const INFO_SUFFIX = '/info';
 const PATHS_PATH = '/paths';
 const TYPE_SUFFIX = '/type';
-const JSON_SCHEMA_DIALECT_TOKEN = 'jsonschemadialect';
-const WEBHOOKS_TOKEN = 'webhooks';
+const JSON_SCHEMA_DIALECT_TOKEN = 'jsonschemadialect',
+  WEBHOOKS_TOKEN = 'webhooks',
+  MALFORMED_PATH_TEMPLATE_TOKEN = 'malformed path template';
 const REQUIRED_PROPERTY_TOKEN = 'required property';
 const TYPE_ALLOWED_VALUES_TOKEN = 'equal to one of the allowed values';
-const NOT_EXPECTED_TOKEN = 'not expected';
-const NOT_ALLOWED_TOKEN = 'not allowed';
-const REF_REQUIRED_SINGLE_QUOTE = "required property '$ref'";
-const REF_REQUIRED_DOUBLE_QUOTE = 'required property "$ref"';
+const NOT_EXPECTED_TOKEN = 'not expected',
+  NOT_ALLOWED_TOKEN = 'not allowed';
+const REF_REQUIRED_SINGLE_QUOTE = "required property '$ref'",
+  REF_REQUIRED_DOUBLE_QUOTE = 'required property "$ref"';
 const JSON_POINTER_ESCAPED_SLASH = '~1';
 const JSON_POINTER_ESCAPED_TILDE = '~0';
 const TILDE_TOKEN = '~';
@@ -51,12 +52,8 @@ function parsePointerSegments(path: string): string[] {
   return split(path, PATH_SEPARATOR);
 }
 
-function normalizeMessage(message: string): string {
-  return toLower(message);
-}
-
 function containsNormalizedToken(message: string, token: string): boolean {
-  return includes(normalizeMessage(message), token);
+  return includes(toLower(message), token);
 }
 
 function isNumericText(value: string): boolean {
@@ -82,8 +79,10 @@ function isResponsePath(path: string): boolean {
  * (Missing description in responses triggers a oneOf error in OpenAPI 3.0 schemas)
  */
 function isRequiredPropertyOrOneOfError(message: string): boolean {
-  const norm = normalizeMessage(message);
-  return includes(norm, REQUIRED_PROPERTY_TOKEN) || includes(norm, 'oneof');
+  const normalizedMessage = toLower(message);
+  return (
+    includes(normalizedMessage, REQUIRED_PROPERTY_TOKEN) || includes(normalizedMessage, 'oneof')
+  );
 }
 
 /**
@@ -114,15 +113,11 @@ function isSchemaPath(path: string): boolean {
  * Check if message is about missing $ref (AJV validation quirk)
  */
 function isMissingRefError(message: string): boolean {
-  const normalized = normalizeMessage(message);
+  const normalized = toLower(message);
   return (
     includes(normalized, REF_REQUIRED_SINGLE_QUOTE) ||
     includes(normalized, REF_REQUIRED_DOUBLE_QUOTE)
   );
-}
-
-function pathContainsTokenCaseInsensitive(path: string, token: string): boolean {
-  return includes(toLower(path), token);
 }
 
 /**
@@ -161,14 +156,21 @@ const VALIDATION_HINTS: readonly {
     hint: "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string. 'null' is only valid in OpenAPI 3.1.x and 3.2.x",
   },
   {
-    pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, JSON_SCHEMA_DIALECT_TOKEN),
+    pathMatcher: (path) => containsNormalizedToken(path, JSON_SCHEMA_DIALECT_TOKEN),
     messageMatcher: isNotAllowedError,
     hint: "'jsonSchemaDialect' is only valid in OpenAPI 3.1.x and 3.2.x",
   },
   {
-    pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, WEBHOOKS_TOKEN),
+    pathMatcher: (path) => containsNormalizedToken(path, WEBHOOKS_TOKEN),
     messageMatcher: isNotAllowedError,
     hint: "'webhooks' is only valid in OpenAPI 3.1.x and 3.2.x",
+  },
+  {
+    pathMatcher: (path) => startsWith(path, `${PATHS_PATH}/`),
+    messageMatcher: (message) => containsNormalizedToken(message, MALFORMED_PATH_TEMPLATE_TOKEN),
+    hint:
+      'Path keys must use balanced template expressions such as `/users/{userId}`. ' +
+      'Malformed braces, stray `}`, and empty `{}` expressions are rejected.',
   },
 ];
 

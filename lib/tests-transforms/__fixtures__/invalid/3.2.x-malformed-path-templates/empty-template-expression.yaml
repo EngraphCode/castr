@@ -1,0 +1,10 @@
+openapi: '3.2.0'
+info:
+  title: Empty Template Expression
+  version: '1.0.0'
+paths:
+  /devices/{}/tokens:
+    get:
+      responses:
+        '200':
+          description: OK

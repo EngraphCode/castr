@@ -45,7 +45,7 @@ The system is NOT ready for production until these criteria are met.
 
 - **Version**: OpenAPI 3.2.0 (canonical target version)
 - **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation, with OpenAPI 3.1.x accepted only as a Scalar bridge input and `3.2.0` retained as the canonical IR/output target.
-- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with Phase B (`pathItem.query`, hierarchical tags) already landed and Phase C next.
+- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with the landed native 3.2 surface now including `pathItem.query`, hierarchical tags, `oauth2.flows.deviceAuthorization`, `xml.nodeType`, and strict top-level path-templating validation.
 
 ### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
 
@@ -185,6 +185,18 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 
 - `summary`, `parent`, `kind`
 
+**OAuth Flows (3.2)**
+
+- `deviceAuthorization`
+
+**XML Object (3.2)**
+
+- `nodeType`
+
+**Path Templating (3.2 grammar surface)**
+
+- valid top-level `paths` keys using balanced template expressions such as `/users/{userId}`
+
 ### 4.Strict Validation & Rejection
 
 **REJECT 3.0 specs with 3.1-only syntax:**
@@ -211,6 +223,7 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 - Invalid semver in `openapi` field
 - Unresolvable `$ref` pointers
 - Invalid HTTP methods
+- Malformed top-level path template syntax in `paths` keys (unbalanced braces, stray `}`, empty `{}`)
 - Missing REQUIRED fields
 
 ### 5. Automatic Upgrade / Canonicalisation (3.0 → 3.2 target)
@@ -263,6 +276,9 @@ The IR MUST be capable of representing EVERY field listed in sections 2, 3, and 
 - ✅ `mutualTLS` — uses raw SecuritySchemeObject
 - ✅ `pathItem.query` — survives parser -> IR -> writer and downstream method consumers
 - ✅ `tag.summary`, `tag.parent`, `tag.kind` — explicitly proved through parser/writer round-trip coverage
+- ✅ `oauth2.flows.deviceAuthorization` — survives shared load boundary -> IR -> writer and MCP security consumers
+- ✅ `xml.nodeType` — survives shared load boundary -> IR -> writer on schema and property metadata
+- ✅ valid top-level path templating — survives shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, while malformed templates fail fast before upgrade
 - ✅ `externalDocs` — at document/operation level
 - ✅ All basic JSON Schema keywords — type, format, validation, composition
 
@@ -273,7 +289,7 @@ The writer MUST produce valid canonical 3.2.0 output containing ALL fields from 
 - All document, component, operation, parameter, response, schema fields
 - All OAS extensions: `discriminator`, `xml`, `externalDocs`, `example`
 - All 3.1 additions: `webhooks`, `jsonSchemaDialect`, `mutualTLS`, etc.
-- All currently claimed 3.2 additions: `pathItem.query`, `tag.summary`, `tag.parent`, `tag.kind`
+- All currently claimed 3.2 additions: `pathItem.query`, `tag.summary`, `tag.parent`, `tag.kind`, `oauth2.flows.deviceAuthorization`, `xml.nodeType`
 - **NO content loss** during 3.0/3.1 bridge normalization or final 3.2 canonicalisation
 
 ---

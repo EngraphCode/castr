@@ -1,8 +1,8 @@
 openapi: '3.2.0'
 info:
-  title: Phase B Native 3.2 Proof Kit
-  description: Proof fixture for native OpenAPI 3.2 query operations and hierarchical tags.
-  version: '0.1.0'
+  title: Native OpenAPI 3.2 Proof Kit
+  description: Proof fixture for native OpenAPI 3.2 query operations, hierarchical tags, device authorization, XML nodeType, and templated paths.
+  version: '0.2.0'
 tags:
   - name: meta
     summary: Meta tag for Phase B groupings
@@ -11,6 +11,9 @@ tags:
     summary: Hierarchical tag with parent metadata
     parent: meta
     kind: feature
+security:
+  - deviceFlow:
+      - 'read:devices'
 paths:
   /phase-b:
     servers:
@@ -24,3 +27,56 @@ paths:
       responses:
         '200':
           description: Phase B query succeeded
+  /devices/{device-id}/tokens/{token.id}:
+    get:
+      summary: Retrieve a device token
+      operationId: phaseCGetDeviceToken
+      tags:
+        - hierarchical
+      parameters:
+        - name: device-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: token.id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Device token retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceToken'
+components:
+  securitySchemes:
+    deviceFlow:
+      type: oauth2
+      flows:
+        deviceAuthorization:
+          deviceAuthorizationUrl: 'https://auth.example.com/device'
+          tokenUrl: 'https://auth.example.com/token'
+          refreshUrl: 'https://auth.example.com/refresh'
+          scopes:
+            'read:devices': Read device tokens
+  schemas:
+    DeviceToken:
+      type: object
+      required:
+        - id
+        - payload
+      xml:
+        name: deviceToken
+        nodeType: element
+      properties:
+        id:
+          type: string
+          xml:
+            nodeType: attribute
+        payload:
+          type: string
+          xml:
+            nodeType: text

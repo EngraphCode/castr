@@ -7,28 +7,30 @@ This module provides the `loadOpenApiDocument()` function — the entry point fo
 ## Pipeline
 
 ```
-Input → bundle() → validate() → upgrade() → Output
+Input → bundle() → validate() → validatePathTemplates() → upgrade() → Output
 ```
 
 1. **Bundle** — Resolves `$ref` references, flattens external files
 2. **Validate** — Enforces OpenAPI schema compliance (version-specific)
-3. **Upgrade + Canonicalise** — Older inputs bridge through 3.1 semantics, then return as canonical `openapi: 3.2.0`
+3. **Validate Path Templates** — Rejects malformed top-level `paths` keys before upgrade
+4. **Upgrade + Canonicalise** — Older inputs bridge through 3.1 semantics, then return as canonical `openapi: 3.2.0`
 
 ---
 
 ## Files
 
-| File                       | Purpose                                     |
-| -------------------------- | ------------------------------------------- |
-| `index.ts`                 | Public API exports                          |
-| `orchestrator.ts`          | Main pipeline orchestration                 |
-| `bundle-config.ts`         | Scalar bundler configuration                |
-| `bundle-document.ts`       | Bundle wrapper with metadata                |
-| `bundle-infrastructure.ts` | Plugin infrastructure                       |
-| `normalize-input.ts`       | Input normalization (string/URL/object)     |
-| `metadata.ts`              | Metadata extraction (files, URLs, warnings) |
-| `upgrade-validate.ts`      | Upgrade and validation logic                |
-| `validation-errors.ts`     | User-friendly error formatting              |
+| File                                | Purpose                                      |
+| ----------------------------------- | -------------------------------------------- |
+| `index.ts`                          | Public API exports                           |
+| `orchestrator.ts`                   | Main pipeline orchestration                  |
+| `bundle-config.ts`                  | Scalar bundler configuration                 |
+| `bundle-document.ts`                | Bundle wrapper with metadata                 |
+| `bundle-infrastructure.ts`          | Plugin infrastructure                        |
+| `normalize-input.ts`                | Input normalization (string/URL/object)      |
+| `metadata.ts`                       | Metadata extraction (files, URLs, warnings)  |
+| `upgrade-validate.ts`               | Upgrade and validation logic                 |
+| `path-template-validation/index.ts` | Strict top-level `paths` template validation |
+| `validation-errors.ts`              | User-friendly error formatting               |
 
 ---
 
@@ -66,6 +68,7 @@ The module provides hints for common errors:
 | Missing info fields             | "The 'info' object requires 'title' and 'version'"                             |
 | Invalid type value              | "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string" |
 | 3.1+/3.2-only fields in 3.0.x   | Specific hint about version compatibility                                      |
+| Malformed path template         | "Path keys must use balanced template expressions such as `/users/{userId}`"   |
 
 ---
 

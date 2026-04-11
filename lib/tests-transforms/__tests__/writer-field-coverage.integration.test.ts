@@ -25,7 +25,7 @@ import { assertSchemaObject } from '../../tests-helpers/openapi-assertions.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
-const PHASE_B_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
+const NATIVE_OPENAPI_32_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
 
 function getSchema(context: OpenAPIObject, name: string): SchemaObject {
   return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
@@ -351,11 +351,11 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
   });
 });
 
-describe('Writer Field Coverage - Phase B OpenAPI 3.2', () => {
+describe('Writer Field Coverage - Native OpenAPI 3.2', () => {
   let output: OpenAPIObject;
 
   beforeAll(async () => {
-    const result = await loadOpenApiDocument(PHASE_B_FIXTURE);
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_FIXTURE);
     const ir = buildIR(result.document);
     output = writeOpenApi(ir);
   });
@@ -379,6 +379,58 @@ describe('Writer Field Coverage - Phase B OpenAPI 3.2', () => {
     expect(metaTag).toBeDefined();
     expect(metaTag?.summary).toBe('Meta tag for Phase B groupings');
     expect(metaTag?.kind).toBe('group');
+  });
+
+  it('writes oauth2 device authorization flow metadata', () => {
+    expect(output.security).toEqual([{ deviceFlow: ['read:devices'] }]);
+    const deviceFlow = output.components?.securitySchemes?.['deviceFlow'];
+
+    expect(deviceFlow).toBeDefined();
+    if (!deviceFlow || '$ref' in deviceFlow || deviceFlow.type !== 'oauth2') {
+      throw new Error('Expected deviceFlow to be an inline oauth2 security scheme');
+    }
+
+    expect(deviceFlow.flows?.deviceAuthorization?.deviceAuthorizationUrl).toBe(
+      'https://auth.example.com/device',
+    );
+    expect(deviceFlow.flows?.deviceAuthorization?.tokenUrl).toBe('https://auth.example.com/token');
+    expect(deviceFlow.flows?.deviceAuthorization?.refreshUrl).toBe(
+      'https://auth.example.com/refresh',
+    );
+    expect(deviceFlow.flows?.deviceAuthorization?.scopes).toEqual({
+      'read:devices': 'Read device tokens',
+    });
+  });
+
+  it('writes xml nodeType metadata on schemas and properties', () => {
+    const deviceToken = getSchema(output, 'DeviceToken');
+
+    expect(deviceToken.xml?.name).toBe('deviceToken');
+    expect(deviceToken.xml?.nodeType).toBe('element');
+    expect(
+      assertSchemaObject(
+        deviceToken.properties?.['id'],
+        'components.schemas.DeviceToken.properties.id',
+      ).xml?.nodeType,
+    ).toBe('attribute');
+    expect(
+      assertSchemaObject(
+        deviceToken.properties?.['payload'],
+        'components.schemas.DeviceToken.properties.payload',
+      ).xml?.nodeType,
+    ).toBe('text');
+  });
+
+  it('writes valid templated path keys and parameter names unchanged', () => {
+    const templatedPath = output.paths?.['/devices/{device-id}/tokens/{token.id}'];
+
+    expect(templatedPath).toBeDefined();
+    expect(templatedPath?.get?.operationId).toBe('phaseCGetDeviceToken');
+    expect(
+      templatedPath?.get?.parameters?.map((parameter) =>
+        '$ref' in parameter ? parameter.$ref : parameter.name,
+      ),
+    ).toEqual(['device-id', 'token.id']);
   });
 });
 

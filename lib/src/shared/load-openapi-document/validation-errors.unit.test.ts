@@ -80,6 +80,14 @@ describe('getValidationHint', () => {
     const hint = getValidationHint('some unknown error', '/unknown/path');
     expect(hint).toBeUndefined();
   });
+
+  it('provides hint for malformed path templates', () => {
+    const hint = getValidationHint(
+      'Malformed path template: empty template expressions like "{}" are not allowed',
+      '/paths/~1devices~1{}~1tokens',
+    );
+    expect(hint).toContain('balanced template expressions');
+  });
 });
 
 describe('formatValidationError', () => {

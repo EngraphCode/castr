@@ -141,6 +141,25 @@ describe('OpenAPI Version Validation', () => {
     });
   });
 
+  describe('Malformed 3.2 path templates MUST be rejected', () => {
+    it.each([
+      [
+        'missing closing brace',
+        `${FIXTURES_DIR}/invalid/3.2.x-malformed-path-templates/missing-closing-brace.yaml`,
+      ],
+      [
+        'stray closing brace',
+        `${FIXTURES_DIR}/invalid/3.2.x-malformed-path-templates/stray-closing-brace.yaml`,
+      ],
+      [
+        'empty template expression',
+        `${FIXTURES_DIR}/invalid/3.2.x-malformed-path-templates/empty-template-expression.yaml`,
+      ],
+    ])('REJECTS %s', async (_name, fixturePath) => {
+      await expect(loadOpenApiDocument(fixturePath)).rejects.toThrow(/Malformed path template/);
+    });
+  });
+
   // =========================================================================
   // NOTE: 3.1.x with 3.0.x-only fields (nullable: true, boolean exclusiveMinimum)
   // are NOT tested here. Scalar validator does not reject these constructs.
