@@ -4,6 +4,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-04-11
 
+- **Phase D close-out docs consolidation completed:**
+  - the live handoff and navigation layer is aligned again after the final consolidation pass: `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` now all point at the same truth that Phase D is closed and Phase E is next
+  - the session-continuation prompt now carries an explicit next-session starting statement for the Phase E entrypoint instead of leaving that truth implied across multiple files
+  - the `jc-consolidate-docs` audit stayed clean across the practice box and practice-cohesion surfaces: `.agent/practice-core/incoming/` still contains only `.gitkeep`, `.agent/practice-context/incoming/` still contains only `README.md`, and no additional Practice-core or local-practice evolution cleared the bar from this pass
+  - spawned reviewer coverage was mixed on this Codex surface during commit close-out: `code-reviewer`, `type-reviewer`, and `openapi-expert` returned substantive approvals, but `test-reviewer` only emitted a status-style placeholder, so the installed in-session fallback review was used for the final test-quality sign-off after the full green gate rerun
+  - no ADR or architecture-doc update was needed for this pass because the durable technical truth was already captured in the active plan, requirements, and acceptance criteria; the value here was finishing the live handoff layer and repo navigation honestly before commit
+
 - **Phase C close-out docs consolidation completed:**
   - the live handoff and planning stack remains aligned after the final consolidation sweep: `.agent/README.md`, `.agent/prompts/session-continuation.prompt.md`, `.agent/plans/roadmap.md`, and `.agent/plans/active/oas-3.2-full-feature-support.md` all now point at the same truth that Phase C is closed and Phase D is next
   - the active parent plan now labels the old Phase B "next entrypoint" note explicitly as historical so it no longer reads like current execution guidance after the Phase C close-out

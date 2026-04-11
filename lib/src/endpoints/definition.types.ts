@@ -71,7 +71,7 @@ export interface EndpointParameter {
   deprecated?: ParameterObject['deprecated'];
   /** Example value for the parameter (from ParameterObject or SchemaObject) */
   example?: ParameterObject['example'];
-  /** Named examples (from ParameterObject.examples, resolved only) */
+  /** Named examples from ParameterObject.examples, preserved losslessly */
   examples?: ParameterObject['examples'];
   /** Raw schema examples from SchemaObject.examples */
   schemaExamples?: SchemaObject['examples'];

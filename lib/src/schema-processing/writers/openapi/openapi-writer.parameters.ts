@@ -13,11 +13,12 @@ function assignOptionalParameterFields(
   if (parameter.deprecated !== undefined) {
     result.deprecated = parameter.deprecated;
   }
-  if (parameter.example !== undefined) {
-    result.example = parameter.example;
-  }
   if (parameter.examples !== undefined) {
+    // Canonical OpenAPI output must not emit both `example` and `examples`.
+    // When named examples are present, prefer them and omit the singular field.
     result.examples = parameter.examples;
+  } else if (parameter.example !== undefined) {
+    result.example = parameter.example;
   }
   if (parameter.style !== undefined) {
     result.style = parameter.style;

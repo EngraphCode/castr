@@ -77,4 +77,89 @@ describe('buildSingleParameter strict ref resolution', () => {
       /Unsupported parameter reference.*Expected #\/components\/parameters\/\{name\}/,
     );
   });
+
+  test('falls back to examples.default.dataValue for the singular example', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    const parameter: ParameterObject = {
+      name: 'filter',
+      in: 'query',
+      schema: {
+        type: 'string',
+        example: 'schema fallback should not be used',
+      },
+      examples: {
+        default: {
+          summary: 'Filter with spaces',
+          dataValue: 'active devices',
+          serializedValue: 'active%20devices',
+        },
+      },
+    };
+
+    const result = buildSingleParameter(parameter, createContext(doc));
+
+    expect(result.example).toBe('active devices');
+    expect(result.examples).toEqual(parameter.examples);
+  });
+
+  test('prefers examples.default.value over dataValue for the singular example', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    const parameter: ParameterObject = {
+      name: 'filter',
+      in: 'query',
+      schema: {
+        type: 'string',
+        example: 'schema fallback should not be used',
+      },
+      examples: {
+        default: {
+          value: 'value wins',
+          dataValue: 'dataValue loses',
+          serializedValue: 'value%20wins',
+        },
+      },
+    };
+
+    const result = buildSingleParameter(parameter, createContext(doc));
+
+    expect(result.example).toBe('value wins');
+    expect(result.examples).toEqual(parameter.examples);
+  });
+
+  test('does not derive the singular example from serializedValue alone', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.2.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    const parameter: ParameterObject = {
+      name: 'filter',
+      in: 'query',
+      schema: {
+        type: 'string',
+        example: 'schema fallback',
+      },
+      examples: {
+        default: {
+          serializedValue: 'active%20devices',
+        },
+      },
+    };
+
+    const result = buildSingleParameter(parameter, createContext(doc));
+
+    expect(result.example).toBe('schema fallback');
+    expect(result.examples).toEqual(parameter.examples);
+  });
 });

@@ -33,25 +33,41 @@ function toUnknownExample(value: unknown): unknown {
 }
 
 /**
- * Extract example value from parameter, handling Scalar's normalization.
+ * Extract example value from parameter, handling Scalar's normalization and
+ * native OpenAPI 3.2 Example Object semantics.
  *
- * Scalar normalizes `example` to `examples.default.value` during OpenAPI 3.0→3.1 upgrade.
- * This helper extracts from either location.
+ * Scalar normalizes `example` to `examples.default.value` during OpenAPI 3.0→3.1
+ * upgrade. Native 3.2 Example Objects may instead carry `dataValue`, which is
+ * the raw schema-valid example to use when `value` is absent. `serializedValue`
+ * is wire-format only and must not become the singular raw example.
  *
  * @param param - OpenAPI parameter object
+ * @param schemaExample - Schema-level example fallback
  * @returns Example value or undefined if not present
  * @internal
  */
-function extractExampleValue(param: ParameterObject): unknown | undefined {
+function extractExampleValue(
+  param: ParameterObject,
+  schemaExample: unknown | undefined,
+): unknown | undefined {
   // Direct example field takes precedence
   if (param.example !== undefined) {
     return toUnknownExample(param.example);
   }
 
-  // Check Scalar-normalized format: examples.default.value
+  // Check Scalar-normalized format first: examples.default.value
   const defaultExample = param.examples?.['default'];
-  if (defaultExample && !isReferenceObject(defaultExample) && defaultExample.value !== undefined) {
-    return toUnknownExample(defaultExample.value);
+  if (defaultExample && !isReferenceObject(defaultExample)) {
+    if (defaultExample.value !== undefined) {
+      return toUnknownExample(defaultExample.value);
+    }
+    if (defaultExample.dataValue !== undefined) {
+      return toUnknownExample(defaultExample.dataValue);
+    }
+  }
+
+  if (schemaExample !== undefined) {
+    return toUnknownExample(schemaExample);
   }
 
   return undefined;
@@ -272,8 +288,9 @@ function addOptionalParameterFields(
     result.deprecated = param.deprecated;
   }
 
-  // Extract example, handling both direct and Scalar-normalized formats
-  const example = extractExampleValue(param);
+  // Extract example, preserving native 3.2 dataValue fallback but never
+  // deriving a raw example from serializedValue alone.
+  const example = extractExampleValue(param, result.schema.example);
   if (example !== undefined) {
     result.example = example;
   }

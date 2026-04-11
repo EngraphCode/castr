@@ -444,11 +444,13 @@ describe('EndpointDefinition Types', () => {
         schema: mockSchema('string'),
         examples: {
           json: {
-            value: 'json',
+            dataValue: 'json',
+            serializedValue: 'json',
             summary: 'JSON format',
           },
           xml: {
-            value: 'xml',
+            dataValue: 'xml',
+            serializedValue: '<format>xml</format>',
             summary: 'XML format',
             description: 'Legacy XML format',
           },
@@ -462,10 +464,13 @@ describe('EndpointDefinition Types', () => {
       expect(jsonExample).toBeDefined();
       expect(xmlExample).toBeDefined();
       if (jsonExample && !('$ref' in jsonExample)) {
-        expect(jsonExample.value).toBe('json');
+        expect(jsonExample.dataValue).toBe('json');
+        expect(jsonExample.serializedValue).toBe('json');
         expect(jsonExample.summary).toBe('JSON format');
       }
       if (xmlExample && !('$ref' in xmlExample)) {
+        expect(xmlExample.dataValue).toBe('xml');
+        expect(xmlExample.serializedValue).toBe('<format>xml</format>');
         expect(xmlExample.description).toBe('Legacy XML format');
       }
     });

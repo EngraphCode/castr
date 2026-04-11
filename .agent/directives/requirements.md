@@ -45,7 +45,7 @@ The system is NOT ready for production until these criteria are met.
 
 - **Version**: OpenAPI 3.2.0 (canonical target version)
 - **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation, with OpenAPI 3.1.x accepted only as a Scalar bridge input and `3.2.0` retained as the canonical IR/output target.
-- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with the landed native 3.2 surface now including `pathItem.query`, hierarchical tags, `oauth2.flows.deviceAuthorization`, `xml.nodeType`, and strict top-level path-templating validation.
+- **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with the landed native 3.2 surface now including `pathItem.query`, hierarchical tags, Example Object `dataValue` / `serializedValue`, `oauth2.flows.deviceAuthorization`, `xml.nodeType`, and strict top-level path-templating validation.
 
 ### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
 
@@ -189,6 +189,11 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 
 - `deviceAuthorization`
 
+**Example Object (3.2)**
+
+- `dataValue`
+- `serializedValue`
+
 **XML Object (3.2)**
 
 - `nodeType`
@@ -211,6 +216,7 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 
 - `pathItem.query`
 - `tag.summary`, `tag.parent`, `tag.kind`
+- `example.dataValue`, `example.serializedValue`
 
 **REJECT 3.1/3.2 specs with 3.0-only syntax:**
 
@@ -245,6 +251,8 @@ ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as c
 **Example/Examples Normalization**
 
 - Preserve both `example` and `examples` in IR
+- Preserve Example Object `value`, `dataValue`, `serializedValue`, and `externalValue` losslessly when present
+- For singular parameter raw-example derivation, prefer `parameter.example` -> `parameter.examples.default.value` -> `parameter.examples.default.dataValue` -> `schema.example`; do not derive from `serializedValue` or `externalValue` alone
 - Write to canonical 3.2 output using preferred `examples` format
 
 ### 6. IR Completeness: Support ALL currently claimed OpenAPI 3.x concepts under a 3.2.0 target
@@ -276,6 +284,7 @@ The IR MUST be capable of representing EVERY field listed in sections 2, 3, and 
 - ✅ `mutualTLS` — uses raw SecuritySchemeObject
 - ✅ `pathItem.query` — survives parser -> IR -> writer and downstream method consumers
 - ✅ `tag.summary`, `tag.parent`, `tag.kind` — explicitly proved through parser/writer round-trip coverage
+- ✅ Example Object `dataValue` / `serializedValue` — survive shared load boundary -> IR -> writer across component, parameter, response-header, and media-type carriers; singular parameter example derivation now falls back to `default.dataValue` but never `serializedValue` alone
 - ✅ `oauth2.flows.deviceAuthorization` — survives shared load boundary -> IR -> writer and MCP security consumers
 - ✅ `xml.nodeType` — survives shared load boundary -> IR -> writer on schema and property metadata
 - ✅ valid top-level path templating — survives shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, while malformed templates fail fast before upgrade
@@ -289,7 +298,7 @@ The writer MUST produce valid canonical 3.2.0 output containing ALL fields from 
 - All document, component, operation, parameter, response, schema fields
 - All OAS extensions: `discriminator`, `xml`, `externalDocs`, `example`
 - All 3.1 additions: `webhooks`, `jsonSchemaDialect`, `mutualTLS`, etc.
-- All currently claimed 3.2 additions: `pathItem.query`, `tag.summary`, `tag.parent`, `tag.kind`, `oauth2.flows.deviceAuthorization`, `xml.nodeType`
+- All currently claimed 3.2 additions: `pathItem.query`, `tag.summary`, `tag.parent`, `tag.kind`, Example Object `dataValue` / `serializedValue`, `oauth2.flows.deviceAuthorization`, `xml.nodeType`
 - **NO content loss** during 3.0/3.1 bridge normalization or final 3.2 canonicalisation
 
 ---

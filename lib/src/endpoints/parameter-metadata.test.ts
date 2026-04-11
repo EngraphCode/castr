@@ -344,6 +344,76 @@ describe('extractParameterMetadata', () => {
       });
     });
 
+    it('prefers examples.default.value over dataValue for the singular example', () => {
+      const param: ParameterObject = {
+        name: 'format',
+        in: 'query',
+        examples: {
+          default: {
+            value: 'json',
+            dataValue: 'decoded-json',
+            serializedValue: 'json',
+          },
+        },
+      };
+
+      const schema: SchemaObject = {
+        type: 'string',
+        example: 'schema-value',
+      };
+
+      const result = extractParameterMetadata(param, schema);
+
+      expect(result.example).toBe('json');
+      expect(result.examples).toEqual(param.examples);
+    });
+
+    it('backs the singular example from examples.default.dataValue when value is absent', () => {
+      const param: ParameterObject = {
+        name: 'filter',
+        in: 'query',
+        examples: {
+          default: {
+            summary: 'Filter with spaces',
+            dataValue: 'active devices',
+            serializedValue: 'active%20devices',
+          },
+        },
+      };
+
+      const schema: SchemaObject = {
+        type: 'string',
+        example: 'schema fallback should not be used',
+      };
+
+      const result = extractParameterMetadata(param, schema);
+
+      expect(result.example).toBe('active devices');
+      expect(result.examples).toEqual(param.examples);
+    });
+
+    it('does not derive the singular example from serializedValue alone', () => {
+      const param: ParameterObject = {
+        name: 'filter',
+        in: 'query',
+        examples: {
+          default: {
+            serializedValue: 'active%20devices',
+          },
+        },
+      };
+
+      const schema: SchemaObject = {
+        type: 'string',
+        example: 'schema fallback',
+      };
+
+      const result = extractParameterMetadata(param, schema);
+
+      expect(result.example).toBe('schema fallback');
+      expect(result.examples).toEqual(param.examples);
+    });
+
     it('exposes raw schemaExamples separately without inventing a primary example from them', () => {
       const rawSchemaExamples = [{ value: 'raw-object-example' }, { nested: { ok: true } }];
       const param: ParameterObject = {

@@ -18,7 +18,7 @@
 - Output: OpenAPI 3.2.x only
 - Internal: IR is normalized to `3.2.0`
 - OpenAPI 3.1.x remains accepted as a documented Scalar bridge input
-- Remaining OpenAPI 3.2-only feature expansion remains separately tracked work after the landed Phase C surface (`pathItem.query`, `Tag.summary`, `Tag.parent`, `Tag.kind`, `oauth2.flows.deviceAuthorization`, `XML.nodeType`, strict top-level path templating)
+- Remaining OpenAPI 3.2-only feature expansion remains separately tracked work after the landed Phase D surface (`pathItem.query`, `Tag.summary`, `Tag.parent`, `Tag.kind`, Example Object `dataValue` / `serializedValue`, `oauth2.flows.deviceAuthorization`, `XML.nodeType`, strict top-level path templating)
 
 ---
 
@@ -241,6 +241,11 @@ The parser MUST accept and preserve the currently claimed native OpenAPI 3.2-onl
 
 - `deviceAuthorization`
 
+### Example Object (3.2)
+
+- `dataValue`
+- `serializedValue`
+
 ### XML Object (3.2)
 
 - `nodeType`
@@ -267,6 +272,7 @@ Derived from requirements section 4.
 
 - `pathItem.query`
 - `tag.summary`, `tag.parent`, `tag.kind`
+- `example.dataValue`, `example.serializedValue`
 
 ### Reject 3.1/3.2 specs that include 3.0-only syntax
 
@@ -296,6 +302,8 @@ Derived from requirements section 5.
 - `exclusiveMaximum: true` + `maximum: 100` -> `exclusiveMaximum: 100`
 - `items: [SchemaA, SchemaB]` -> `prefixItems: [SchemaA, SchemaB]`
 - Preserve both `example` and `examples` in IR; prefer `examples` in canonical 3.2 output
+- Preserve Example Object `dataValue` and `serializedValue` losslessly on native 3.2 input and output
+- When deriving a singular parameter raw example, use `parameter.example` -> `parameter.examples.default.value` -> `parameter.examples.default.dataValue` -> `schema.example`; never derive from `serializedValue` or `externalValue` alone
 
 ---
 
@@ -307,7 +315,7 @@ All output documents MUST:
 2. Emit `openapi` as canonical `3.2.0`
 3. Preserve ALL information from the IR (no content loss)
 4. Avoid 3.0-only constructs (`nullable`, boolean exclusive bounds, tuple `items` arrays)
-5. Preserve currently claimed 3.2 additions, including `pathItem.query`, hierarchical tags, `oauth2.flows.deviceAuthorization`, and `xml.nodeType`
+5. Preserve currently claimed 3.2 additions, including `pathItem.query`, hierarchical tags, Example Object `dataValue` / `serializedValue`, `oauth2.flows.deviceAuthorization`, and `xml.nodeType`
 
 ### Root Object Output (when present in IR)
 
@@ -335,10 +343,12 @@ Allowed methods for input and output:
 - For EACH field in Parts 1, 2, and 2B, a fixture MUST exist
 - Tests MUST assert the IR contains that field after parsing
 - Valid top-level 3.2 path templates MUST be proved explicitly from fixture input through downstream consumers
+- Native 3.2 Example Object proof MUST cover `components.examples`, parameter `examples`, response-header `examples`, and media-type `examples`
 
 ### Output Coverage Tests
 
 - For EACH field in Parts 1, 2, and 2B, a test MUST assert the writer emits it from IR
+- Example Object `dataValue` / `serializedValue` carriers MUST be asserted explicitly for the native 3.2 fixture
 
 ### Version Rejection Tests
 
@@ -355,6 +365,7 @@ Allowed methods for input and output:
 
 - Input -> IR -> Output preserves semantics
 - Normalized specs are idempotent byte-for-byte on re-processing
+- Parameter singular example derivation MUST prove `value` precedence, `dataValue` fallback, and non-fallback from `serializedValue` alone
 
 ---
 

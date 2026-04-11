@@ -1,7 +1,7 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Documentation and planning for @engraph/castr  
-**Last Updated:** April 2026
+**Last Updated:** 11 April 2026
 
 ---
 
@@ -37,14 +37,15 @@ Then use:
 - **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the Phase C close-out sweep
+  - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the Phase D close-out sweep
   - Use `pnpm check` for local aggregate verification or `pnpm check:ci` for non-mutating aggregate verification; do not invoke `pnpm qg` directly
   - Husky is now active locally: `pre-commit` formats staged files with Prettier, `pre-push` runs `pnpm check:ci`, and the first post-install repo-root `pnpm check:ci` sweep was green on Saturday, 11 April 2026
-  - A fresh gate issue was reproduced and closed on Saturday, 11 April 2026: generated-code validation now uses isolated per-suite temp directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and that fix remains part of the now-green Phase C close-out baseline
+  - A fresh gate issue was reproduced and closed on Saturday, 11 April 2026: generated-code validation now uses isolated per-suite temp directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and that fix remains part of the now-green Phase D close-out baseline
   - `test:e2e` is now part of the canonical gate chain; `test:scalar-guard` remains off-chain and green
   - Phase A₂ is closed on Friday, 10 April 2026: AP4 landed honestly, the full repo-root gate chain is green, the targeted active-surface `openapi3-ts` grep is clean, and the reviewer loop closed with no open findings
   - Phase B is closed on Saturday, 11 April 2026: native OpenAPI 3.2 `query` now survives parser -> IR -> writer and downstream endpoint/MCP consumers, duplicated raw PathItem visitors no longer skip it, MCP treats `query` as read-only/non-destructive, hierarchical tags (`summary`, `parent`, `kind`) have explicit parser/writer proof, and repo-root `pnpm check` is green
   - Phase C is closed on Saturday, 11 April 2026: `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, malformed top-level `paths` templates are rejected before upgrade/canonicalisation, valid templated paths survive parser -> IR -> writer -> endpoint/MCP consumers unchanged, and the reviewer loop closed with no open findings
+  - Phase D is closed on Saturday, 11 April 2026: Example Object `dataValue` / `serializedValue` now have explicit parser/writer/round-trip proof across component, parameter, response-header, and media-type carriers, singular parameter example derivation now falls back to `examples.default.dataValue` but never `serializedValue` alone, the repaired parameter writer now prefers canonical `examples` output and revalidates cleanly at the shared load boundary, and repo-root `pnpm check` is green
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
 - **Workspace boundary:** `lib` / `@engraph/castr` is the core compiler surface (parsers, IR, writers, validation, metadata). Any future typed fetch, runtime handler, framework, or code-first integrations belong in companion workspaces, not core exports.
@@ -66,8 +67,8 @@ Then use:
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
 - **Plan-state truth:** the primary active plan is [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers; the Phase A₂ closure record is [`.agent/plans/current/complete/phase-a2-type-migration.md`](plans/current/complete/phase-a2-type-migration.md); landed version baseline is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
-- **Next-step truth:** Phase C is now honestly closed, and the metacognitive recommendation is Phase D next: Example Object `dataValue` / `serializedValue` semantics remain the smallest honest follow-on slice unless a fresh gate or runtime regression is reported first
-- **Immediate next slice:** Phase D next on the parent plan unless a user reports a fresh gate or runtime issue that must be reproduced first
+- **Next-step truth:** Phase D is now honestly closed, and the metacognitive recommendation is Phase E next: `itemSchema` streaming and `additionalOperations` remain the next honest OAS 3.2-only slice unless a fresh gate or runtime regression is reported first
+- **Immediate next slice:** Phase E next on the parent plan unless a user reports a fresh gate or runtime issue that must be reproduced first
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

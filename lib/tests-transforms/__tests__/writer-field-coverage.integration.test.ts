@@ -26,6 +26,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
 const NATIVE_OPENAPI_32_FIXTURE = resolve(FIXTURES_DIR, 'phase-b-native-3.2.yaml');
+const NATIVE_OPENAPI_32_PHASE_D_FIXTURE = resolve(FIXTURES_DIR, 'phase-d-native-3.2-examples.yaml');
 
 function getSchema(context: OpenAPIObject, name: string): SchemaObject {
   return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
@@ -431,6 +432,124 @@ describe('Writer Field Coverage - Native OpenAPI 3.2', () => {
         '$ref' in parameter ? parameter.$ref : parameter.name,
       ),
     ).toEqual(['device-id', 'token.id']);
+  });
+});
+
+describe('Writer Field Coverage - Native OpenAPI 3.2 Example Objects', () => {
+  let output: OpenAPIObject;
+
+  beforeAll(async () => {
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_PHASE_D_FIXTURE);
+    const ir = buildIR(result.document);
+    output = writeOpenApi(ir);
+  });
+
+  it('writes component example dataValue and serializedValue fields', () => {
+    const component = output.components?.examples?.['PhaseDDeviceTokenExample'];
+
+    expect(component).toBeDefined();
+    if (!component || isReferenceObject(component)) {
+      throw new Error('Expected PhaseDDeviceTokenExample to be an inline example component');
+    }
+
+    expect(component.dataValue).toEqual({
+      id: 'device-token-123',
+      payload: 'opaque',
+    });
+    expect(component.serializedValue).toBe('{"id":"device-token-123","payload":"opaque"}');
+  });
+
+  it('writes parameter examples without inventing an invalid singular example field', () => {
+    const operation = output.paths?.['/phase-d']?.query;
+    const filterParameter = operation?.parameters?.find(
+      (parameter) => !('$ref' in parameter) && parameter.name === 'filter',
+    );
+
+    expect(filterParameter).toBeDefined();
+    if (!filterParameter || '$ref' in filterParameter) {
+      throw new Error('Expected the Phase D filter parameter to be inline');
+    }
+
+    const defaultExample = filterParameter.examples?.['default'];
+
+    expect(filterParameter.example).toBeUndefined();
+    expect(defaultExample).toBeDefined();
+    if (!defaultExample || isReferenceObject(defaultExample)) {
+      throw new Error('Expected the Phase D parameter example to be inline');
+    }
+
+    expect(defaultExample.dataValue).toBe('active devices');
+    expect(defaultExample.serializedValue).toBe('active%20devices');
+  });
+
+  it('revalidates emitted Phase D output at the shared load boundary', async () => {
+    const reparsed = await loadOpenApiDocument(output);
+    const operation = reparsed.document.paths?.['/phase-d']?.query;
+    const filterParameter = operation?.parameters?.find(
+      (parameter) => !('$ref' in parameter) && parameter.name === 'filter',
+    );
+
+    expect(filterParameter).toBeDefined();
+    if (!filterParameter || '$ref' in filterParameter) {
+      throw new Error('Expected the reparsed Phase D filter parameter to be inline');
+    }
+
+    expect(filterParameter.example).toBeUndefined();
+    const defaultExample = filterParameter.examples?.['default'];
+    expect(defaultExample).toBeDefined();
+    if (!defaultExample || isReferenceObject(defaultExample)) {
+      throw new Error('Expected the reparsed Phase D parameter example to be inline');
+    }
+
+    expect(defaultExample.dataValue).toBe('active devices');
+    expect(defaultExample.serializedValue).toBe('active%20devices');
+  });
+
+  it('writes response header example objects', () => {
+    const response = output.paths?.['/phase-d']?.query?.responses?.['200'];
+    if (!response || isReferenceObject(response)) {
+      throw new Error('Expected /phase-d QUERY 200 response to be an inline response object');
+    }
+
+    const header = response.headers?.['X-Phase-D-Filter'];
+    expect(header).toBeDefined();
+    if (!header || isReferenceObject(header)) {
+      throw new Error('Expected X-Phase-D-Filter to be an inline header object');
+    }
+
+    const example = header.examples?.['default'];
+    expect(example).toBeDefined();
+    if (!example || isReferenceObject(example)) {
+      throw new Error('Expected the Phase D response header example to be inline');
+    }
+
+    expect(example.dataValue).toBe('active devices');
+    expect(example.serializedValue).toBe('active%20devices');
+  });
+
+  it('writes media type example objects', () => {
+    const response = output.paths?.['/phase-d']?.query?.responses?.['200'];
+    if (!response || isReferenceObject(response)) {
+      throw new Error('Expected /phase-d QUERY 200 response to be an inline response object');
+    }
+
+    const mediaType = response.content?.['application/json'];
+    expect(mediaType).toBeDefined();
+    if (!mediaType || isReferenceObject(mediaType)) {
+      throw new Error('Expected application/json to be an inline media type object');
+    }
+
+    const example = mediaType.examples?.['default'];
+    expect(example).toBeDefined();
+    if (!example || isReferenceObject(example)) {
+      throw new Error('Expected the Phase D media type example to be inline');
+    }
+
+    expect(example.dataValue).toEqual({
+      id: 'device-token-123',
+      payload: 'opaque',
+    });
+    expect(example.serializedValue).toBe('{"id":"device-token-123","payload":"opaque"}');
   });
 });
 

@@ -249,6 +249,40 @@ describe('IR Completeness', () => {
       expect(operation.security).toBeDefined();
       expect(operation.tags).toBeDefined();
     });
+
+    it('allows full OpenAPI example objects on parameters', () => {
+      const parameter: CastrParameter = {
+        name: 'filter',
+        in: 'query',
+        required: false,
+        schema: {
+          type: 'string',
+          metadata: {
+            required: false,
+            nullable: false,
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            zodChain: { presence: '.optional()', validations: [], defaults: [] },
+            circularReferences: [],
+          },
+        },
+        examples: {
+          default: {
+            dataValue: 'active devices',
+            serializedValue: 'active%20devices',
+          },
+        },
+      };
+
+      const defaultExample = parameter.examples?.['default'];
+
+      expect(defaultExample).toBeDefined();
+      if (!defaultExample || '$ref' in defaultExample) {
+        throw new Error('Expected the parameter example to be inline');
+      }
+
+      expect(defaultExample.dataValue).toBe('active devices');
+      expect(defaultExample.serializedValue).toBe('active%20devices');
+    });
   });
 
   describe('IRDependencyGraph', () => {

@@ -5,7 +5,7 @@
 **Promoted:** 2026-04-03  
 **Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
 **Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice  
-**Updated:** 2026-04-11 — Phase C is closed: `deviceAuthorization`, XML `nodeType`, and strict top-level path templating now have honest proof and validation, repo-root `pnpm check` is green, and Phase D is the immediate next proof sweep
+**Updated:** 2026-04-11 — Phase D is closed: Example Object `dataValue` / `serializedValue` semantics now have honest IR typing, helper semantics, and proof coverage, repo-root `pnpm check` is green, and Phase E is the immediate next slice
 
 ---
 
@@ -78,17 +78,17 @@ Each feature must be classified per output format using the compatibility model.
 
 ### Feature 4: Example Semantics (`dataValue` / `serializedValue`)
 
-| Surface     | Support                                                      | Rationale                                                              |
-| ----------- | ------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| IR          | ✅ Fields come from `@scalar/openapi-types` `ExampleObject`  | `dataValue`, `serializedValue` already typed                           |
-| OAS Parser  | ✅ Parse `dataValue`, `serializedValue` from Example Objects | New field extraction                                                   |
-| OAS Writer  | ✅ Emit both fields                                          | New emission fields                                                    |
-| JSON Schema | ✅ (partial)                                                 | Schema-level `examples` unchanged; component examples carry new fields |
-| Zod         | N/A                                                          | Examples are documentation-only                                        |
-| TypeScript  | N/A                                                          | Examples are documentation-only                                        |
+| Surface     | Support                                                     | Rationale                                                                    |
+| ----------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| IR          | ✅ Native Scalar types + honest parameter examples contract | `ExampleObject` fields are native; `CastrParameter.examples` now matches OAS |
+| OAS Parser  | ✅ Pass-through preserves both fields                       | Shared load/parser path already keeps full Example Objects intact            |
+| OAS Writer  | ✅ Emit both fields                                         | Existing writer pass-through already preserves Example Objects               |
+| JSON Schema | ✅ (partial)                                                | Schema-level `examples` unchanged; component examples carry new fields       |
+| Zod         | N/A                                                         | Examples are documentation-only                                              |
+| TypeScript  | N/A                                                         | Examples are documentation-only                                              |
 
-**IR changes:** Scalar's `OpenAPIV3_2.ExampleObject` includes both fields natively. Affects `IRExampleComponent`, `IRMediaType.examples`, `CastrParameter.examples`, `IRResponseHeader.examples`.
-**Effort:** Medium — multiple touch points in IR model + round-trip, ~60-80 lines
+**IR changes:** Scalar's `OpenAPIV3_2.ExampleObject` includes both fields natively. Phase D closes the remaining seam by making `CastrParameter.examples` honest, preserving full Example Object/ref shapes publicly, and aligning singular parameter example derivation with the locked precedence rule.
+**Effort:** Closed on Saturday, 11 April 2026 — core seam + helper alignment plus proof coverage
 
 ### Feature 5: `itemSchema` Streaming
 
@@ -157,21 +157,53 @@ Ordered by dependency and increasing complexity:
 | A₂    | **Type migration: drop `openapi3-ts`, adopt Scalar**  | Medium | Phase A      | ✅ complete                    |
 | B     | #1 QUERY method, #3 Hierarchical tags                 | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 | C     | #6 OAuth2 Device, #7 XML nodeType, #8 Path templating | Small  | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
-| D     | #4 Example semantics                                  | Medium | Phase A₂     | ▶ next                         |
-| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | queued after Phase D           |
+| D     | #4 Example semantics                                  | Medium | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
+| E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | ▶ next                         |
 
-Phases A, A₂, B, and C are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C then closed on Saturday, 11 April 2026: `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the final close-out sweep. Phase D is now the immediate next atomic slice; Phase E remains queued afterwards.
+Phases A, A₂, B, C, and D are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phase B also closed on Saturday, 11 April 2026: native `3.2.0` `query` operations now survive parser -> IR -> writer and downstream endpoint/MCP consumers, hierarchical tags have explicit parser/writer proof, and repo-root `pnpm check` is green. A fresh generated-code validation gate issue was then reproduced and closed on Saturday, 11 April 2026 as well: the generated-suite temp harness now allocates isolated per-suite directories under `lib/tests-generated/.tmp`, `test:gen` is green again, and repo-root `pnpm check` is green again. Phase C then closed on Saturday, 11 April 2026: `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the final close-out sweep. Phase D then closed on Saturday, 11 April 2026: Example Object `dataValue` / `serializedValue` now have explicit parser/writer/round-trip proof across component, parameter, response-header, and media-type carriers, `CastrParameter.examples` now preserves full Example Object/ref shapes honestly, singular parameter example derivation now falls back to `examples.default.dataValue` but never `serializedValue` alone, the repaired parameter writer now prefers canonical `examples` output and revalidates cleanly at the shared load boundary, the reviewer loop is closed with no open findings, and repo-root `pnpm check` is green on the close-out sweep. Phase E is now the immediate next atomic slice.
 
-### Metacognitive Refinement: Why Phase D Comes Next
+### Metacognitive Refinement: Why Phase E Comes Next
 
-A deeper code audit already established why the earlier slices had to land first. With Phase C now closed, the next-step recommendation sharpens again:
+A deeper code audit already established why the earlier slices had to land first. With Phase D now closed, the next-step recommendation sharpens again:
 
 - Feature #1 `QUERY` is now wired honestly across the core operation pipeline: the IR/public method unions include `'query'`, parser extraction and duplicated raw PathItem visitors no longer skip it, writer ordering emits `pathItem.query` explicitly, and downstream MCP hints treat it as read-only/non-destructive without broadening idempotent semantics.
 - Feature #3 hierarchical tags now have explicit proof that `parent`, `kind`, and `summary` survive parser -> IR -> writer round-trips through a native OpenAPI 3.2 fixture.
 - Phase C is now landed honestly: `deviceAuthorization` and XML `nodeType` are proved end to end at the parser/writer seams, the strict top-level `paths` grammar check now rejects malformed templates before upgrade, and valid templated paths are explicitly proved through downstream endpoint/MCP consumers.
-- Phase D (`dataValue`, `serializedValue`) is now the next smallest honest slice because Example Object semantics touch multiple OpenAPI carriers but still remain narrower than `itemSchema` and `additionalOperations`.
-- Feature #2 `additionalOperations` still belongs later. It touches the same path-item operation area as `QUERY`, but it also carries the ADR-046 separate-storage design, so it should not be bundled into the smallest next slice.
+- Phase D is now landed honestly: Example Object `dataValue` / `serializedValue` survive the shared load boundary -> IR -> writer across all currently claimed carriers, the public parameter examples contract is honest, and the singular parameter helper only backfills from `default.dataValue` rather than from `serializedValue`.
+- Phase E is now the next smallest honest slice. `itemSchema` streaming is still bounded to media-type seams, while `additionalOperations` remains queued behind the ADR-046 separate-storage design and should be tackled alongside that slice rather than smuggled into any closed phase.
 - Repo-root `pnpm check` remains the required aggregate gate before any later phase closes. Use `pnpm check:ci` only when a non-mutating rerun is needed, and do not invoke `pnpm qg` directly.
+
+---
+
+## Phase D: Example Object Semantics
+
+**Status:** COMPLETE on Saturday, 11 April 2026.
+
+**What landed:**
+
+- `CastrParameter.examples` now uses `ParameterObject['examples']`, so the public IR contract preserves full Example Object/ref shapes rather than a narrowed pseudo-shape.
+- Singular parameter example derivation now follows the locked precedence rule: `parameter.example` -> `parameter.examples.default.value` -> `parameter.examples.default.dataValue` -> `schema.example`. It does not derive from `serializedValue` or `externalValue` alone.
+- A dedicated native OpenAPI 3.2 fixture now proves Example Object fidelity across the four currently claimed carriers: `components.examples`, parameter `examples`, response-header `examples`, and media-type `examples`.
+- Native version-validation coverage now accepts both `dataValue`-only and `serializedValue`-only Example Objects at the 3.2 boundary without inventing a singular parameter example from `serializedValue` alone.
+
+**Proof base:**
+
+- Native fixture: `lib/tests-transforms/__fixtures__/phase-d-native-3.2-examples.yaml`
+- Targeted unit proof: builder-parameter, parameter-metadata, definition-types, and IR-completeness suites
+- Targeted transform proof: parser, writer, round-trip/idempotence, and version-validation suites
+- Broader transform sweep: `pnpm --dir lib test:transforms` green on Saturday, 11 April 2026
+- Aggregate verification: repo-root `pnpm check` green on Saturday, 11 April 2026
+
+**Reviewer loop:**
+
+- `code-reviewer` — **APPROVED** after the follow-up fix for invalid parameter `example` + `examples` emission and the added emitted-document revalidation proof
+- `test-reviewer` — **COMPLIANT** after the added parser `value` precedence proof, parameter-carrier `serializedValue` boundary coverage, and stricter writer-field selection
+- `openapi-expert` — **APPROVED** after the explicit 3.0/3.1 rejection coverage and final close-out doc-state alignment
+- `type-reviewer` — **APPROVED** after the `ParameterMetadata.examples` contract and precedence docs were brought back into line with the helper output
+
+**Next entrypoint:**
+
+- Resume Phase E next for `itemSchema` streaming and `additionalOperations` unless a fresh gate or runtime regression is reproduced first.
 
 ---
 
@@ -200,9 +232,9 @@ A deeper code audit already established why the earlier slices had to land first
 - `test-reviewer` — **COMPLIANT**; the added proofs stay behaviour-focused and the rejection coverage remains seam-owned
 - `openapi-expert` — **APPROVED**; the touched native OpenAPI 3.2 surfaces are now claimed honestly and validated at the correct boundary
 
-**Next entrypoint:**
+**Historical next entrypoint at Phase C close-out:**
 
-- Resume Phase D next for Example Object semantics (`dataValue`, `serializedValue`) unless a fresh gate or runtime regression is reproduced first.
+- At Phase C close-out on Saturday, 11 April 2026, the then-next slice was Phase D for Example Object semantics (`dataValue`, `serializedValue`). With Phase D now also closed, the active next entrypoint is Phase E.
 
 ---
 
@@ -225,13 +257,13 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase B close-out:**
 
-- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phase C now also closed, the active next entrypoint is Phase D.
+- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phases C and D now also closed, the active next entrypoint is Phase E.
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B and C now closed, the active next entrypoint is Phase D.  
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B, C, and D now closed, the active next entrypoint is Phase E.
 **ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
 **Detailed completion record:** [phase-a2-type-migration.md](../current/complete/phase-a2-type-migration.md)
 
@@ -251,7 +283,7 @@ A deeper code audit already established why the earlier slices had to land first
 3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
 4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
 5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
-6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B and C now closed, Phase D is the immediate follow-on proof sweep.
+6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B, C, and D now closed, Phase E is the immediate follow-on proof sweep.
 
 > [!NOTE]
 > Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.

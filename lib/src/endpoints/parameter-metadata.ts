@@ -16,11 +16,13 @@ import type { SchemaConstraints } from './definition.types.js';
  * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
  * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object OpenAPI Schema Object}
  */
-export type ParameterMetadata = Pick<
-  ParameterObject,
-  'description' | 'deprecated' | 'example' | 'examples'
-> &
+export type ParameterMetadata = Pick<ParameterObject, 'description' | 'deprecated' | 'example'> &
   Pick<SchemaObject, 'default'> & {
+    /**
+     * Resolved inline named examples from ParameterObject.examples.
+     * ReferenceObject entries are filtered out defensively.
+     */
+    examples?: Record<string, ExampleObject>;
     /** Raw schema examples from SchemaObject.examples */
     schemaExamples?: SchemaObject['examples'];
     /** Schema validation constraints (subset of SchemaObject) */
@@ -53,20 +55,29 @@ export function extractDeprecated(param: ParameterObject): boolean | undefined {
 }
 
 /**
- * Type guard: checks if value is an object with a 'value' property.
- * Used to narrow ExampleObject after filtering out ReferenceObjects.
+ * Extract the singular raw example from an inline Example Object.
  *
- * @param value - Unknown value to check
- * @returns True if value has a value property
+ * OpenAPI 3.2 adds `dataValue`, which carries the schema-valid raw example
+ * when `value` is absent. `serializedValue` remains a wire-format-only field
+ * and must not be used as the raw singular example by itself.
+ *
+ * @param example - Inline example object
+ * @returns Raw example value or undefined
  * @internal
  */
-function hasExampleValue(value: unknown): value is { value: unknown } {
-  return typeof value === 'object' && value !== null && 'value' in value;
+function extractInlineExampleValue(example: ExampleObject): unknown | undefined {
+  if (example.value !== undefined) {
+    return example.value;
+  }
+  if (example.dataValue !== undefined) {
+    return example.dataValue;
+  }
+  return undefined;
 }
 
 /**
- * Extract example value from a parameter examples object's 'default' entry.
- * Handles the case where Scalar upgrades examples to object format with named keys.
+ * Extract example value from a parameter examples object's `default` entry.
+ * Handles Scalar's `default.value` normalization and native 3.2 `default.dataValue`.
  *
  * @param examplesObj - Examples object from ParameterObject or SchemaObject
  * @returns Example value from 'default' entry, or undefined
@@ -81,8 +92,8 @@ function extractDefaultExample(examplesObj: ParameterObject['examples']): unknow
   // Access the 'default' property if it exists
   if (typeof examplesObj === 'object' && 'default' in examplesObj) {
     const defaultEntry = examplesObj['default'];
-    if (defaultEntry && hasExampleValue(defaultEntry)) {
-      return defaultEntry.value;
+    if (defaultEntry && !isReferenceObject(defaultEntry)) {
+      return extractInlineExampleValue(defaultEntry);
     }
   }
 
@@ -98,8 +109,9 @@ function extractDefaultExample(examplesObj: ParameterObject['examples']): unknow
  * Priority order:
  * 1. parameter.example (inline single example)
  * 2. parameter.examples['default'].value (Scalar sets this during upgrade)
- * 3. schema.example (inline single example)
- * 4. schema.examples are exposed separately as raw `schemaExamples`
+ * 3. parameter.examples['default'].dataValue (OpenAPI 3.2 Example Object)
+ * 4. schema.example (inline single example)
+ * 5. schema.examples are exposed separately as raw `schemaExamples`
  *
  * @param param - Parameter object with optional example/examples
  * @param schema - Schema object with optional example/examples
@@ -249,10 +261,12 @@ export function extractSchemaConstraints(schema: SchemaObject): SchemaConstraint
  * Follows OpenAPI specification for parameter and schema objects.
  *
  * **Priority order for fields:**
- * - Example: parameter.example > schema.example
- * - Description: Always from parameter
- * - Default: Always from schema
- * - Constraints: Always from schema
+ * - Example: `parameter.example` -> `parameter.examples.default.value` ->
+ *   `parameter.examples.default.dataValue` -> `schema.example`
+ * - Named examples: resolved inline `parameter.examples` entries only
+ * - Description: always from parameter
+ * - Default: always from schema
+ * - Constraints: always from schema
  *
  * @param param - Parameter object from OpenAPI spec
  * @param schema - Resolved schema object for constraint extraction

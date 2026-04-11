@@ -259,9 +259,10 @@ export interface CastrParameter {
 
   /**
    * Multiple named examples.
-   * OpenAPI spec allows any structure for examples.
+   * Preserves full OpenAPI Example Objects, including refs and 3.2
+   * `dataValue` / `serializedValue` semantics.
    */
-  examples?: Record<string, { value?: unknown; summary?: string; description?: string }>;
+  examples?: ParameterObject['examples'];
 
   /**
    * Style of parameter serialization.

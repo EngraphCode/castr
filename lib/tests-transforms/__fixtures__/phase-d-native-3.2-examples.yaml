@@ -1,0 +1,61 @@
+openapi: '3.2.0'
+info:
+  title: Native OpenAPI 3.2 Example Object Proof Kit
+  description: Proof fixture for native OpenAPI 3.2 Example Object dataValue and serializedValue semantics.
+  version: '0.1.0'
+paths:
+  /phase-d:
+    query:
+      summary: Perform the Phase D query operation
+      operationId: phaseDQuery
+      parameters:
+        - name: filter
+          in: query
+          schema:
+            type: string
+            example: schema fallback should not be used
+          examples:
+            default:
+              summary: Filter with spaces
+              dataValue: active devices
+              serializedValue: active%20devices
+      responses:
+        '200':
+          description: Phase D query succeeded
+          headers:
+            X-Phase-D-Filter:
+              schema:
+                type: string
+              examples:
+                default:
+                  dataValue: active devices
+                  serializedValue: active%20devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTokenPayload'
+              examples:
+                default:
+                  dataValue:
+                    id: device-token-123
+                    payload: opaque
+                  serializedValue: '{"id":"device-token-123","payload":"opaque"}'
+components:
+  schemas:
+    DeviceTokenPayload:
+      type: object
+      required:
+        - id
+        - payload
+      properties:
+        id:
+          type: string
+        payload:
+          type: string
+  examples:
+    PhaseDDeviceTokenExample:
+      summary: Device token payload example
+      dataValue:
+        id: device-token-123
+        payload: opaque
+      serializedValue: '{"id":"device-token-123","payload":"opaque"}'

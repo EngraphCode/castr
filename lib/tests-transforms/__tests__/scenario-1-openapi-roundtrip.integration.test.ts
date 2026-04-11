@@ -10,6 +10,8 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   ARBITRARY_FIXTURES,
@@ -18,6 +20,10 @@ import {
   loadOpenApiDocument,
   writeOpenApi,
 } from '../utils/transform-helpers.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
+const NATIVE_OPENAPI_32_PHASE_D_FIXTURE = resolve(FIXTURES_DIR, 'phase-d-native-3.2-examples.yaml');
 
 type LoadedOpenApiPaths = Awaited<ReturnType<typeof loadOpenApiDocument>>['document']['paths'];
 type WrittenOpenApiPaths = ReturnType<typeof writeOpenApi>['paths'];
@@ -97,6 +103,29 @@ describe('Transform Samples: Losslessness (Round-Trip Proof)', () => {
       expect(transformedSchemas).toEqual(originalSchemas);
     });
   });
+
+  it('preserves Phase D example object semantics through round-trip IR', async () => {
+    const { originalIR, transformedIR } = await runTransformPass(NATIVE_OPENAPI_32_PHASE_D_FIXTURE);
+
+    const originalComponent = originalIR.components.find(
+      (entry) => entry.type === 'example' && entry.name === 'PhaseDDeviceTokenExample',
+    );
+    const transformedComponent = transformedIR.components.find(
+      (entry) => entry.type === 'example' && entry.name === 'PhaseDDeviceTokenExample',
+    );
+    const originalOperation = originalIR.operations.find(
+      (entry) => entry.operationId === 'phaseDQuery',
+    );
+    const transformedOperation = transformedIR.operations.find(
+      (entry) => entry.operationId === 'phaseDQuery',
+    );
+
+    expect(transformedComponent).toEqual(originalComponent);
+    expect(
+      transformedOperation?.parameters.find((parameter) => parameter.name === 'filter'),
+    ).toEqual(originalOperation?.parameters.find((parameter) => parameter.name === 'filter'));
+    expect(transformedOperation?.responses).toEqual(originalOperation?.responses);
+  });
 });
 
 // ============================================================================
@@ -119,6 +148,17 @@ describe('Transform Samples: Idempotency (Round-Trip Proof)', () => {
       // The outputs should be identical (idempotency)
       expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
     });
+  });
+
+  it('keeps Phase D example object output stable across repeated passes', async () => {
+    const result = await loadOpenApiDocument(NATIVE_OPENAPI_32_PHASE_D_FIXTURE);
+    const ir1 = buildIR(result.document);
+    const output1 = writeOpenApi(ir1);
+    const reparsed = await loadOpenApiDocument(output1);
+    const ir2 = buildIR(reparsed.document);
+    const output2 = writeOpenApi(ir2);
+
+    expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
   });
 });
 
