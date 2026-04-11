@@ -69,6 +69,7 @@ Installed roster:
 
 ## Development Commands
 
+- `pnpm check` — canonical local aggregate verification; use this instead of invoking `pnpm qg` directly
 - `pnpm check:ci` — aggregate non-mutating verification
 - `pnpm clean`
 - `pnpm install --frozen-lockfile`

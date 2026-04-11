@@ -96,6 +96,20 @@ function assertSchemaObject(schema: JsonSchema | undefined): asserts schema is M
 }
 
 describe('buildMcpToolSchemasFromIR', () => {
+  test('emits a strict empty object input schema for parameterless operations', () => {
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation();
+
+    const result = buildMcpToolSchemasFromIR(ir, operation);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
+
+    expect(inputSchema).toEqual({
+      type: 'object',
+      additionalProperties: false,
+    });
+  });
+
   test('builds input schema with path parameters', () => {
     const ir = createMockCastrDocument();
     const operation = createMockOperation({

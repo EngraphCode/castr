@@ -1909,7 +1909,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -2322,7 +2322,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3988,7 +3988,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -4401,7 +4401,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -6487,7 +6487,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -6900,7 +6900,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -8986,7 +8986,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -9399,7 +9399,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -11485,7 +11485,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -11898,7 +11898,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -13984,7 +13984,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -14397,7 +14397,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -16483,7 +16483,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -16896,7 +16896,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -25671,7 +25671,7 @@ Some useful links:
                 },
                 "description": "Returns a map of status codes to quantities",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_inventory",
@@ -26299,7 +26299,7 @@ Some useful links:
                 },
                 "description": "Logs out current logged in user session",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "logout_user",
@@ -35185,7 +35185,7 @@ Some useful links:
                 },
                 "description": "Returns a map of status codes to quantities",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_inventory",
@@ -35813,7 +35813,7 @@ Some useful links:
                 },
                 "description": "Logs out current logged in user session",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "logout_user",
@@ -37707,7 +37707,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "description": "GET /root",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_root",
@@ -37832,7 +37832,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "description": "GET /nested",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_nested",
@@ -37950,7 +37950,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "description": "GET /deeplyNested",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_deeply_nested",
@@ -37996,7 +37996,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "description": "GET /veryDeeplyNested",
                 "inputSchema": {
-                    "properties": {},
+                    "additionalProperties": false,
                     "type": "object",
                 },
                 "name": "get_very_deeply_nested",
@@ -38175,7 +38175,7 @@ export const mcpTools = [
     tool: {
       name: "get_root",
       description: "GET /root",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -38250,7 +38250,7 @@ export const mcpTools = [
     tool: {
       name: "get_nested",
       description: "GET /nested",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -38319,7 +38319,7 @@ export const mcpTools = [
     tool: {
       name: "get_deeply_nested",
       description: "GET /deeplyNested",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -38351,7 +38351,7 @@ export const mcpTools = [
     tool: {
       name: "get_very_deeply_nested",
       description: "GET /veryDeeplyNested",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string", enum: ["aaa", "bbb", "ccc"] } },

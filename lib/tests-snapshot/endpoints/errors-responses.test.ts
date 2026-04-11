@@ -138,7 +138,7 @@ it('includes errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
@@ -370,7 +370,7 @@ it('determines which status are considered errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
@@ -524,7 +524,7 @@ it('determines which status are considered errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },

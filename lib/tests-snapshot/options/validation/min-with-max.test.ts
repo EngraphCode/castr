@@ -66,7 +66,7 @@ test('allOf-missing-and', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { text2: { type: "string", minLength: 5, maxLength: 10 } },

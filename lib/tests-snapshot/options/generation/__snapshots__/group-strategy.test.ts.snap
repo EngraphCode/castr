@@ -864,7 +864,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -891,7 +891,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -918,7 +918,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -945,7 +945,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_put",
       description: "PUT /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -972,7 +972,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -999,7 +999,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1026,7 +1026,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1053,7 +1053,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1080,7 +1080,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user/pets",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1107,7 +1107,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user/pets",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1134,7 +1134,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /no-tags",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -1161,7 +1161,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_put",
       description: "PUT /no-tags",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2040,7 +2040,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2067,7 +2067,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2094,7 +2094,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2121,7 +2121,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_put",
       description: "PUT /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2148,7 +2148,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2175,7 +2175,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2202,7 +2202,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2229,7 +2229,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2256,7 +2256,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user/pets",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2283,7 +2283,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user/pets",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2310,7 +2310,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /no-tags",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -2337,7 +2337,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_put",
       description: "PUT /no-tags",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: { value: { type: "string" } },
@@ -3002,7 +3002,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3049,7 +3049,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3096,7 +3096,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3151,7 +3151,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_post",
       description: "POST /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3198,7 +3198,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3236,7 +3236,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3274,7 +3274,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3336,7 +3336,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3398,7 +3398,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /countries",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3594,7 +3594,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3641,7 +3641,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3688,7 +3688,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3743,7 +3743,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_post",
       description: "POST /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3790,7 +3790,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3828,7 +3828,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3866,7 +3866,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3928,7 +3928,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -3990,7 +3990,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /countries",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4154,7 +4154,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4201,7 +4201,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4248,7 +4248,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4303,7 +4303,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_post",
       description: "POST /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4350,7 +4350,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4388,7 +4388,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4426,7 +4426,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4488,7 +4488,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4550,7 +4550,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /countries",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4714,7 +4714,7 @@ export const mcpTools = [
     tool: {
       name: "pet_get",
       description: "GET /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4761,7 +4761,7 @@ export const mcpTools = [
     tool: {
       name: "pet_put",
       description: "PUT /pet",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4808,7 +4808,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_get",
       description: "GET /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4863,7 +4863,7 @@ export const mcpTools = [
     tool: {
       name: "pet_all_post",
       description: "POST /pet/all",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4910,7 +4910,7 @@ export const mcpTools = [
     tool: {
       name: "user_get",
       description: "GET /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4948,7 +4948,7 @@ export const mcpTools = [
     tool: {
       name: "user_put",
       description: "PUT /user",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -4986,7 +4986,7 @@ export const mcpTools = [
     tool: {
       name: "store_get",
       description: "GET /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -5048,7 +5048,7 @@ export const mcpTools = [
     tool: {
       name: "store_put",
       description: "PUT /store",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -5110,7 +5110,7 @@ export const mcpTools = [
     tool: {
       name: "no_tags_get",
       description: "GET /countries",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -6669,7 +6669,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -7256,7 +7256,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -8709,7 +8709,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -9296,7 +9296,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -10873,7 +10873,7 @@ export const mcpTools = [
       name: "get_inventory",
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
@@ -11460,7 +11460,7 @@ export const mcpTools = [
       name: "logout_user",
       title: "Logs out current logged in user session",
       description: "Logs out current logged in user session",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

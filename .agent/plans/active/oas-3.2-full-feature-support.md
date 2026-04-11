@@ -5,7 +5,7 @@
 **Promoted:** 2026-04-03  
 **Predecessor:** [oas-3.2-version-plumbing.md](../current/complete/oas-3.2-version-plumbing.md) (✅ complete, Thursday 2 April 2026)  
 **Dependency:** Version plumbing is complete; keep feature work separate from the canonical-version baseline slice  
-**Updated:** 2026-04-10 — Phase A₂ is closed and its completion record has been moved to `current/complete`; the immediate next slice is the MCP no-params follow-up before feature phases B/C
+**Updated:** 2026-04-11 — Phase A₂ is closed, the MCP no-params follow-up is resolved, and Phase B is the primary next slice with Phase C as the immediate follow-on proof sweep
 
 ---
 
@@ -160,13 +160,22 @@ Ordered by dependency and increasing complexity:
 | D     | #4 Example semantics                                  | Medium | Phase A₂     |
 | E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     |
 
-Phase A and Phase A₂ are complete. Before feature phases B/C begin, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up. After that, phases B and C can run in parallel. Phases D and E are independent.
+Phase A and Phase A₂ are complete. The MCP no-params tool-input-schema follow-up closed on Saturday, 11 April 2026: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, unexpected top-level arguments are rejected, and the affected snapshot proofs are green. Phases B and C remain independent on paper, but the primary next atomic slice should be Phase B first. Phase C should follow immediately after Phase B unless a fresh regression redirects the session. Phases D and E remain independent afterwards.
+
+### Metacognitive Refinement: Why Phase B Comes First
+
+A deeper code audit changed the framing from vague "resume phases B/C" language to a sharper next-step recommendation:
+
+- Feature #1 `QUERY` has real implementation gaps across the core operation pipeline: the shared type seam already knows about `query`, but the IR method union, parser operation extraction, writer method setters, and method-ordering logic still behave like the pre-3.2 method set.
+- Feature #3 hierarchical tags already ride the document-tag pass-through seam and mainly need explicit proof that `parent`, `kind`, and `summary` survive parser -> IR -> writer round-trips.
+- Phase C (`deviceAuthorization`, XML `nodeType`, path templating) currently looks like proof-oriented pass-through work rather than new infrastructure: security schemes are stored raw, XML metadata already round-trips as metadata, and paths already flow through as strings.
+- Feature #2 `additionalOperations` still belongs later. It touches the same path-item operation area as `QUERY`, but it also carries the ADR-046 separate-storage design, so it should not be bundled into the smallest next slice.
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, direct media-type resolver proof, strengthened dependency-exit guards, green `pnpm qg` / `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. Before feature phases B/C resume, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up.  
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. The next execution entrypoint is Phase B first, then the Phase C proof sweep.  
 **ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
 **Detailed completion record:** [phase-a2-type-migration.md](../current/complete/phase-a2-type-migration.md)
 
@@ -186,7 +195,7 @@ Phase A and Phase A₂ are complete. Before feature phases B/C begin, re-check o
 3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
 4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
 5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
-6. Re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up, then resume feature phases B/C
+6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema, Phase B is the next atomic slice, and Phase C is the immediate follow-on proof sweep
 
 > [!NOTE]
 > Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.

@@ -147,11 +147,9 @@ const convertPropertiesToJsonSchema = (
 };
 
 function convertArrayToJsonSchema(values: readonly unknown[]): unknown[] {
-  const converted: unknown[] = [];
-  for (const value of values) {
-    converted.push(isCastrSchemaForMcp(value) ? castrSchemaToJsonSchemaForMcp(value) : value);
-  }
-  return converted;
+  return values.map((value) =>
+    isCastrSchemaForMcp(value) ? castrSchemaToJsonSchemaForMcp(value) : value,
+  );
 }
 
 function convertSchemaFieldValue(value: unknown): unknown {
@@ -168,11 +166,7 @@ function convertSchemaFieldValue(value: unknown): unknown {
 }
 
 function getRecordEntries(value: unknown): [string, unknown][] {
-  if (!isRecord(value)) {
-    return [];
-  }
-
-  return Object.entries(value);
+  return isRecord(value) ? Object.entries(value) : [];
 }
 
 /**
@@ -260,6 +254,13 @@ function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): 
     if (requestBody.required) {
       requiredSections.add(INPUT_SECTION_BODY);
     }
+  }
+
+  if (Object.keys(properties).length === 0) {
+    return {
+      type: SCHEMA_TYPE_OBJECT,
+      additionalProperties: false,
+    };
   }
 
   const required = requiredSections.size > 0 ? [...requiredSections] : undefined;

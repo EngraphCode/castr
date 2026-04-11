@@ -93,7 +93,7 @@ test('handle-props-with-special-characters', async () => {
         tool: {
           name: "get_something",
           description: "GET /something",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { "@id": { type: "string" }, id: { type: "number" } },

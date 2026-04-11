@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-03-23  
+**Last Updated:** 2026-04-11  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -13,10 +13,10 @@ Done means strict and complete everywhere, all the time: claimed supported behav
 
 - **CI (non-mutating):** `pnpm check:ci`
 - **Local (may mutate to fix):** `pnpm check`
-- **Fast gates (assumes deps installed, non-mutating):** `pnpm qg`
 
 `pnpm check` is intentionally allowed to modify files (formatting, safe lint autofixes).  
 If you need a non-mutating verification run, use `pnpm check:ci`.
+Do not invoke `pnpm qg` directly. It may remain as a script implementation detail, but the canonical aggregate entrypoints are `pnpm check` and `pnpm check:ci`.
 
 ---
 

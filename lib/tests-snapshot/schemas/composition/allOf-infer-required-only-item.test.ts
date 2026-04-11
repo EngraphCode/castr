@@ -113,7 +113,7 @@ test('allOf-infer-required-only-item', async () => {
         tool: {
           name: "get_user",
           description: "GET /user",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: {

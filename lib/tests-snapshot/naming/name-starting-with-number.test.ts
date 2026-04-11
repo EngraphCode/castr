@@ -119,7 +119,7 @@ test('operationId-starting-with-number', async () => {
         tool: {
           name: "123_example",
           description: "GET /operationId-starting-with-number",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string" } },

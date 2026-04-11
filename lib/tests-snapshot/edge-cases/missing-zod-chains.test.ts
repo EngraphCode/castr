@@ -157,7 +157,7 @@ test('missing-zod-chains', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string", minLength: 5 } },

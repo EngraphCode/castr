@@ -315,8 +315,8 @@ Create `.agent/directives/architectural-file-system-structure.md`:
 
 The single most important agent mechanism is the synchronous Quality Gate.
 
-- Mandate in a `DEFINITION_OF_DONE.md` file that the agent _must_ run `pnpm qg` and verify it exits with `0` before completing a task.
-- Because the quality gate contains the ESLint file limit and the dependency-cruiser boundary checks, **the agent cannot cheat**. If it writes an 11th file into a directory, `pnpm qg` fails, and the agent must autonomously refactor its own work.
+- Mandate in a `DEFINITION_OF_DONE.md` file that the agent _must_ run `pnpm check` before completing a task, or `pnpm check:ci` when a non-mutating verification is required.
+- Because the aggregate quality gate contains the ESLint file limit and the dependency-cruiser boundary checks, **the agent cannot cheat**. If it writes an 11th file into a directory, the aggregate gate fails, and the agent must autonomously refactor its own work.
 
 ---
 

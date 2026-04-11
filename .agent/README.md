@@ -38,8 +38,9 @@ Then use:
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
   - Last recorded full repo-root sweep (including `test:e2e`): green on Friday, 10 April 2026
-  - `test:e2e` is now part of the canonical gate chain (`pnpm qg`); `test:scalar-guard` remains off-chain and green
-  - Phase A₂ is closed on Friday, 10 April 2026: AP4 landed honestly, `pnpm qg` / `pnpm madge:circular` / `pnpm knip` are green, the targeted active-surface `openapi3-ts` grep is clean, and the reviewer loop closed with no open findings
+  - Use `pnpm check` for local aggregate verification or `pnpm check:ci` for non-mutating aggregate verification; do not invoke `pnpm qg` directly
+  - `test:e2e` is now part of the canonical gate chain; `test:scalar-guard` remains off-chain and green
+  - Phase A₂ is closed on Friday, 10 April 2026: AP4 landed honestly, the full repo-root gate chain is green, the targeted active-surface `openapi3-ts` grep is clean, and the reviewer loop closed with no open findings
   - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
 - **Workspace boundary:** `lib` / `@engraph/castr` is the core compiler surface (parsers, IR, writers, validation, metadata). Any future typed fetch, runtime handler, framework, or code-first integrations belong in companion workspaces, not core exports.
@@ -61,7 +62,8 @@ Then use:
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
 - **Plan-state truth:** the primary active plan is [`.agent/plans/active/oas-3.2-full-feature-support.md`](plans/active/oas-3.2-full-feature-support.md) — OAS 3.2-only feature expansion across the IR, parsers, and writers; the Phase A₂ closure record is [`.agent/plans/current/complete/phase-a2-type-migration.md`](plans/current/complete/phase-a2-type-migration.md); landed version baseline is [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md)
-- **Immediate next slice:** run a read-only reviewer/domain-expert pass over the recent Phase A₂ close-out and docs-consolidation changes, then re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up before opening OAS 3.2 feature phases B/C
+- **Next-step truth:** metacognitive review changed the framing from vague "resume phases B/C" language to a concrete entrypoint: `QUERY` still has real method-plumbing gaps across the IR/parser/writer seam, while hierarchical tags and the current Phase C surfaces look like proof-oriented pass-through verification work
+- **Immediate next slice:** Phase B first on the parent plan (`QUERY` method + hierarchical-tag proof), then the Phase C proof sweep; if a user reports a fresh gate or runtime issue, reproduce it first
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

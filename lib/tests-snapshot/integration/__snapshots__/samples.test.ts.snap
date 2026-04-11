@@ -75,7 +75,7 @@ export const mcpTools = [
     tool: {
       name: "list_users",
       description: "GET /users",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -304,7 +304,7 @@ export const mcpTools = [
       name: "list_versionsv_2",
       title: "List API versions",
       description: "List API versions",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -328,7 +328,7 @@ export const mcpTools = [
       name: "get_version_detailsv_2",
       title: "Show API version details",
       description: "Show API version details",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2014,7 +2014,7 @@ export const mcpTools = [
       name: "list_data_sets",
       title: "List available data sets",
       description: "List available data sets",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -2204,7 +2204,7 @@ export const mcpTools = [
     tool: {
       name: "get_users",
       description: "GET /users",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2368,7 +2368,7 @@ export const mcpTools = [
       name: "get_board",
       title: "Get the whole board",
       description: "Retrieves the current state of the board and the winner.",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -2454,7 +2454,7 @@ export const mcpTools = [
       name: "get_square",
       title: "Get a single board square",
       description: "Retrieves the requested square.",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -2756,7 +2756,7 @@ export const mcpTools = [
       name: "get_board",
       title: "Get the whole board",
       description: "Retrieves the current state of the board and the winner.",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {
@@ -2842,7 +2842,7 @@ export const mcpTools = [
       name: "get_square",
       title: "Get a single board square",
       description: "Retrieves the requested square.",
-      inputSchema: { type: "object", properties: {} },
+      inputSchema: { type: "object", additionalProperties: false },
       outputSchema: {
         type: "object",
         properties: {

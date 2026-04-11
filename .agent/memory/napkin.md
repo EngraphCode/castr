@@ -2,6 +2,25 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-04-11
+
+- **Planning/prompt consolidation and next-slice reflection completed:**
+  - the live handoff layer now says Phase B comes first on the OAS 3.2 parent plan, with Phase C as the immediate follow-on proof sweep, instead of leaving the next step at the vaguer "resume phases B/C" level
+  - the metacognitive shift came from a code audit, not preference: `QUERY` is already typed at the shared OpenAPI seam but still missing real IR/parser/writer method-plumbing support, while hierarchical tags and the current Phase C surfaces look much closer to parser -> IR -> writer proof work than fresh infrastructure work
+  - `.agent/README.md`, `.agent/plans/roadmap.md`, `.agent/plans/active/oas-3.2-full-feature-support.md`, and `.agent/prompts/session-continuation.prompt.md` now all point at the same sharper Phase B-first entrypoint
+  - `jc-gates.md` now matches the live Definition of Done again: the canonical aggregate entrypoints are `pnpm check` and `pnpm check:ci`, and the expanded manual chain once again includes `pnpm portability:check` plus `pnpm test:e2e`
+  - `.agent/analysis-and-reports/architectural-enforcement-playbook.md` and the remaining historical roadmap note no longer reintroduce `pnpm qg` as if it were current operational guidance
+  - practice-box check stayed clean again: `.agent/practice-core/incoming/` contains only `.gitkeep`, and `.agent/practice-context/incoming/` contains only `README.md`
+  - no new portable Practice-Core evolution clears the bar from this pass; the useful learning is repo-local handoff tightening and command-surface hygiene rather than a travelling core rule
+
+- **MCP no-params follow-up closed on Saturday, 11 April 2026:**
+  - true zero-input MCP tools now emit the strict empty-object schema `{ type: "object", "additionalProperties": false }` instead of `{ type: "object", properties: {} }`
+  - `isMcpToolInput()` now has direct proof that `{}` is accepted and unexpected top-level arguments are rejected for parameterless tools
+  - the builder-level no-params proof landed in `template-context.mcp.schemas.from-ir.test.ts`
+  - the affected snapshot surface was updated cleanly; the snapshot-config suite went green after the one-line no-params expectation shift
+  - repo-root `pnpm type-check` is green on Saturday, 11 April 2026
+  - the live handoff layer now points directly at OAS 3.2 feature phases B/C instead of leaving the resolved follow-up as the next session entrypoint
+
 ## 2026-04-10
 
 - **Post-AP4 deep docs consolidation completed:**

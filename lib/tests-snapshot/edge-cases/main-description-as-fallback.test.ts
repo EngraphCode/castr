@@ -85,7 +85,7 @@ it('use main-description-as-fallback', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },

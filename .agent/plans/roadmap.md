@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated April 10, 2026)  
+**Date:** January 24, 2026 (Updated April 11, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -45,8 +45,9 @@ Current product truth:
 - `schemas-only` now genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
 - MCP tool schemas are normalised to a governed Draft 07 allowlist before AJV validation
 - Phase A₂ (type migration from `openapi3-ts` to `@scalar/openapi-types`) completed on Friday, 10 April 2026. The close-out resolved A1 and A2-A6, introduced a genuinely nested raw OpenAPI input seam, restored lossless `components.mediaTypes` and ref-bearing `components.pathItems` handling through IR, removed the verified IR media-type barrel cycle, cleared the duplicate CLI guard export plus stale `knip` ignore, strengthened dependency-exit guards, and closed the reviewer loop with no open findings.
-- `pnpm qg`, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green on Friday, 10 April 2026. Before feature phases B/C resume, re-check or explicitly defer the pending MCP no-params tool-input-schema follow-up.
-- the immediate next slice is a read-only reviewer/domain-expert pass over the recent Phase A₂ close-out plus docs-consolidation state, then MCP no-params follow-up triage, then feature phases B/C
+- the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green on Friday, 10 April 2026. The MCP no-params tool-input-schema follow-up then closed on Saturday, 11 April 2026 with targeted MCP/schema proofs, affected snapshot proofs, and repo-root `pnpm type-check` green. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` for non-mutating reruns; do not invoke `pnpm qg` directly.
+- metacognitive review of the remaining OAS 3.2 feature work changed the entrypoint framing: `QUERY` still has real IR/parser/writer method-plumbing gaps, while hierarchical tags and the current Phase C surfaces look closer to pass-through proof work than fresh infrastructure work
+- the immediate next slice is therefore Phase B on the parent OAS 3.2 plan (`QUERY` method + hierarchical-tag proof); Phase C is the immediate follow-on proof sweep unless a user reports a fresh gate or runtime issue first
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -124,7 +125,7 @@ Current sweep record:
 - Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already canonical
 - `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples`
 - ADR-042 documents the canonical normal form
-- All quality gates green (`pnpm qg` exit 0)
+- All quality gates green (historical aggregate gate chain exit 0)
 
 **Input-Output Pair Compatibility Model** established Friday, 28 March 2026:
 

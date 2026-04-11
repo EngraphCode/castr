@@ -193,7 +193,7 @@ test('jsdoc', async () => {
         tool: {
           name: "123_example",
           description: "GET /test",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: {

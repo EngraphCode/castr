@@ -45,6 +45,17 @@ const createSampleTool = () =>
     },
   });
 
+const createNoParamsTool = () =>
+  ToolSchema.parse({
+    name: 'ping',
+    description: 'Ping without arguments',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+    },
+    annotations: {},
+  });
+
 describe('mcp type guards', () => {
   describe('isMcpTool', () => {
     it('accepts a valid MCP tool object', () => {
@@ -79,6 +90,18 @@ describe('mcp type guards', () => {
         },
       };
       expect(isMcpToolInput(payload, tool)).toBe(false);
+    });
+
+    it('accepts an empty payload for parameterless tools', () => {
+      const tool = createNoParamsTool();
+
+      expect(isMcpToolInput({}, tool)).toBe(true);
+    });
+
+    it('rejects unexpected top-level arguments for parameterless tools', () => {
+      const tool = createNoParamsTool();
+
+      expect(isMcpToolInput({ foo: 'bar' }, tool)).toBe(false);
     });
   });
 

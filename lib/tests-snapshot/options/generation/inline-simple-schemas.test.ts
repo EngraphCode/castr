@@ -274,7 +274,7 @@ test('inline-simple-schemas', async () => {
         tool: {
           name: "123_example",
           description: "GET /inline-simple-schemas",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string" } },

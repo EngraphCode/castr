@@ -190,7 +190,7 @@ test('enum-null', async () => {
         tool: {
           name: "get_sample",
           description: "GET /sample",
-          inputSchema: { type: "object", properties: {} },
+          inputSchema: { type: "object", additionalProperties: false },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string", enum: [null] } },
