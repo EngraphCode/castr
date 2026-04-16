@@ -68,7 +68,7 @@ export function buildCastrSchema(
 
   // Add complex schema properties
   addObjectProperties(schema, context, irSchema);
-  addAdditionalProperties(schema, irSchema);
+  addAdditionalProperties(schema, context, irSchema, buildCastrSchema);
   addArrayItems(schema, context, irSchema);
   addCompositionSchemas(schema, context, irSchema);
 

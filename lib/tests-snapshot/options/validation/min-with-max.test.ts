@@ -71,7 +71,6 @@ test('allOf-missing-and', async () => {
             type: "object",
             properties: { text2: { type: "string", minLength: 5, maxLength: 10 } },
             required: [],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: false,

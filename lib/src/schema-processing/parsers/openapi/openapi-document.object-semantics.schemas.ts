@@ -1,19 +1,14 @@
 /**
- * OpenAPI document-level schema visitor for strict object semantics.
+ * OpenAPI document-level schema visitor for portable object semantics.
  *
- * Under IDENTITY doctrine, this visitor traverses schema nodes to detect
- * and reject non-strict object input (additionalProperties not false).
+ * Traverses schema nodes so nested schema carriers such as
+ * `additionalProperties` are still visited before IR build.
  *
  * @internal
  */
 
 import { type SchemaObject, isReferenceObject } from '../../../shared/openapi-types.js';
 
-import {
-  buildNonStrictObjectRejectionMessage,
-  describePortableNonStrictObjectInput,
-} from '../../object-semantics.js';
-import { isObjectSchemaType } from '../../ir/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
 
 const SINGLE_SCHEMA_KEYWORDS = [
@@ -30,42 +25,6 @@ const SINGLE_SCHEMA_KEYWORDS = [
 
 const ARRAY_SCHEMA_KEYWORDS = ['prefixItems', 'allOf', 'anyOf', 'oneOf'] as const;
 const MAP_SCHEMA_KEYWORDS = ['patternProperties', 'dependentSchemas'] as const;
-
-function hasObjectType(type: SchemaObject['type']): boolean {
-  return isObjectSchemaType(type);
-}
-
-function isObjectKeywordCandidate(schema: SchemaObject): boolean {
-  if (hasObjectType(schema.type)) {
-    return true;
-  }
-  if (schema.properties !== undefined) {
-    return true;
-  }
-  if (schema.additionalProperties !== undefined) {
-    return true;
-  }
-  if (Array.isArray(schema.required) && schema.required.length > 0) {
-    return true;
-  }
-
-  return false;
-}
-
-function applySchemaObjectPolicy(schema: SchemaObject): void {
-  if (!isObjectKeywordCandidate(schema)) {
-    return;
-  }
-
-  const inputDescription = describePortableNonStrictObjectInput({
-    additionalProperties: schema.additionalProperties,
-  });
-  if (inputDescription === undefined) {
-    return;
-  }
-
-  throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));
-}
 
 function getUnknownField(source: object, key: string): unknown {
   return Reflect.get(source, key);
@@ -97,7 +56,6 @@ function visitSchemaObject(schema: SchemaObject, seen: WeakSet<object>): void {
   }
 
   seen.add(schema);
-  applySchemaObjectPolicy(schema);
   visitSchemaMap(schema.properties, seen);
   visitSchemaNode(schema.additionalProperties, seen);
 

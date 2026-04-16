@@ -77,8 +77,9 @@ const result = parseZodSource(source);
 
 - `z.strictObject({...})` is the canonical accepted object form.
 - Statically analyzable `z.object({...}).strict()` is accepted and normalised to strict closed-world IR.
-- Bare `z.object({...})`, `.strip()`, `.passthrough()`, `.catchall(...)`, and `z.looseObject(...)` are rejected at ingest.
-- Portable IR object strictness is represented with `additionalProperties: false` only on object-capable schemas.
+- Statically analyzable `.catchall(...)` is accepted only for explicit catchall semantics and maps to IR `additionalProperties: true | CastrSchema`.
+- Bare `z.object({...})`, `.strip()`, `.passthrough()`, and `z.looseObject(...)` are still rejected at ingest.
+- Portable IR object strictness is represented with `additionalProperties: false` on strict object-capable schemas; explicit catchall source truth is carried via `additionalProperties: true | CastrSchema`.
 
 ## See Also
 

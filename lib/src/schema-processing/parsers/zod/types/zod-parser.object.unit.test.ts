@@ -70,14 +70,79 @@ describe('Zod Object Parsing', () => {
     ).toThrow(/closed-world object semantics/);
   });
 
-  it('rejects a catchall object', () => {
+  it('parses a catchall object with schema-valued additionalProperties', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).catchall(z.string())
+    `);
+
+    expect(result?.type).toBe('object');
+    expect(typeof result?.additionalProperties).toBe('object');
+    if (
+      typeof result?.additionalProperties === 'boolean' ||
+      result?.additionalProperties === undefined
+    ) {
+      throw new Error('Expected schema-valued additionalProperties.');
+    }
+    expect(result.additionalProperties.type).toBe('string');
+  });
+
+  it('rejects z.looseObject().catchall() as non-strict input', () => {
     expect(() =>
       parseObjectZod(`
-        z.object({
+        z.looseObject({
           id: z.string()
         }).catchall(z.string())
       `),
     ).toThrow(/closed-world object semantics/);
+  });
+
+  it('rejects z.object().passthrough().catchall() as non-strict input', () => {
+    expect(() =>
+      parseObjectZod(`
+        z.object({
+          id: z.string()
+        }).passthrough().catchall(z.string())
+      `),
+    ).toThrow(/closed-world object semantics/);
+  });
+
+  it('parses decorated z.unknown() catchalls as schema-valued additionalProperties', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).catchall(z.unknown().describe('extra values').meta({ deprecated: true }))
+    `);
+
+    if (
+      result === undefined ||
+      typeof result.additionalProperties === 'boolean' ||
+      result.additionalProperties === undefined
+    ) {
+      throw new Error('Expected schema-valued additionalProperties from decorated z.unknown().');
+    }
+
+    expect(result.additionalProperties.description).toBe('extra values');
+    expect(result.additionalProperties.deprecated).toBe(true);
+  });
+
+  it('parses decorated z.any() catchalls as schema-valued additionalProperties', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).catchall(z.any().default('fallback'))
+    `);
+
+    if (
+      result === undefined ||
+      typeof result.additionalProperties === 'boolean' ||
+      result.additionalProperties === undefined
+    ) {
+      throw new Error('Expected schema-valued additionalProperties from decorated z.any().');
+    }
+
+    expect(result.additionalProperties.default).toBe('fallback');
   });
 
   it('accepts z.object().strict() as equivalent to z.strictObject()', () => {

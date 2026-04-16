@@ -45,11 +45,35 @@ Out of scope:
 The ePerusteet real-world fixture proved a policy mismatch:
 
 - the shared load boundary accepts and canonicalises the document
-- the IR build seam currently rejects schema-valued `additionalProperties`
 - the IR type already allows `additionalProperties?: boolean | CastrSchema`
-- writer and validator assumptions still reflect the stronger closed-world-only doctrine
+- parser, validator, and portable writer alignment for explicit `additionalProperties` is now landed
+- non-recursive Zod catchall output is now landed for explicit source truth
+- remaining honest boundaries are explicit-open TypeScript fail-fast and recursive catchall-preserving Zod fail-fast
 
 This plan is the direct successor to that reproduction.
+
+## Current Open Findings
+
+The reviewer loop was re-run on Thursday, 16 April 2026 and surfaced open findings that must close before this slice can be considered honest:
+
+- Zod ingest still wrongly admits `z.looseObject(...).catchall(...)`; loose-object, strip, and passthrough modes must remain rejected even when `.catchall(...)` is present.
+- Zod ingest currently collapses decorated `z.any()` / `z.unknown()` catchalls to bare `additionalProperties: true`, which loses explicit source metadata such as `default`, `description`, or `deprecated`.
+- Raw-surface OpenAPI coverage currently proves acceptance with `not.toThrow()` but does not yet prove that explicit `additionalProperties` survives into IR on those raw path-item / webhook carriers.
+- The ePerusteet fixture still lacks a committed first-pass OpenAPI round-trip proof; repeated passes stabilise, but the first pass must be proven semantically honest.
+- Direct reproduction shows the first OpenAPI -> IR -> OpenAPI trip currently drops schema-level `deprecated: true` on `TutkinnonOsaKaikkiDto.properties.tavoitteet` and `.ammattitaitovaatimukset`, including their schema-valued `additionalProperties`.
+- `deprecated` must be treated as a legitimate OpenAPI Schema Object field and must survive parser -> IR -> writer honestly wherever supported.
+- The real-world Oak Open Curriculum fixture in `tests-transforms/__fixtures__/arbitrary/oak-api.json` must be refreshed from the current upstream `swagger.json` and kept in the active real-world fixture set.
+- Decorated permissive Zod catchalls must not lose first-pass `.default(...)` or metadata when written back through the Zod writer.
+- Recursive explicit-`additionalProperties` Zod output must fail fast not only for top-level component catchalls but also for nested property, array-item, and composition-member contexts.
+- Raw-surface OpenAPI proofs must cover schema-valued `additionalProperties`, not just boolean `true`, on header, callback, path-item, query, and webhook carriers.
+- The generated ePerusteet rejection proof must assert the narrowed explicit-`additionalProperties` capability boundary, not a broad alternation of unrelated failure families.
+- Duplicate low-signal proofs should be removed once a stronger transform or load-boundary proof exists elsewhere.
+- The recursive catchall guard needs explicit unit proof for `prefixItems`-driven recursion under schema-valued `additionalProperties`; otherwise the newly tightened Zod fail-fast boundary is only inferred from helper logic.
+- Property helper tests need a `prefixItems`-only recursive reference proof so getter-syntax recursion detection cannot silently regress on tuple-based cycles.
+- The refreshed real-world Oak fixture needs transform-round-trip proof, not just load-boundary coverage, and that proof must show explicit `additionalProperties` survives the pipeline.
+- The refreshed Oak real-world fixture must ship as a committed repo fixture, not remain local-only, or the new coverage becomes non-reproducible on a clean checkout.
+- The recursive Zod catchall fail-fast guard still needs to reject direct `$ref` catchalls and catchall objects whose recursion is reachable only through ordinary properties; traversing only tuple/items/composition subpaths is not sufficient.
+- OpenAPI component circular-reference detection must include `prefixItems`, or tuple-only self-recursive schemas will miss `metadata.circularReferences` and leave downstream fail-fast/getter logic blind.
 
 ## Success Criteria
 
@@ -58,6 +82,7 @@ This plan is the direct successor to that reproduction.
 - OpenAPI / JSON Schema output preserves declared `additionalProperties` honestly
 - downstream targets either emit equivalent semantics or fail fast with actionable errors where genuinely impossible
 - the ePerusteet fixture moves from fail-fast proof to honest supported-surface proof if and only if the landed slice truly covers it end to end
+- the reviewer-loop findings above are all closed, not merely documented
 
 ## Stage Map
 
@@ -83,7 +108,8 @@ Chosen. This matches the clarified product intent and the existing IR shape more
 1. write failing tests that capture the clarified product rule at the smallest seam
 2. land the minimal IR / validator / parser change needed to admit explicit `additionalProperties`
 3. wire writers and downstream fail-fast behavior honestly
-4. update durable docs and broader real-world proofs only after the core seam is correct
+4. close reviewer-raised regressions and real-world first-pass round-trip proofs
+5. update durable docs and broader real-world proofs only after the core seam is correct
 
 ## Documentation Outputs
 

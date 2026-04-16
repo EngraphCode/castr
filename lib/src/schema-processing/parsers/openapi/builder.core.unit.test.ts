@@ -157,6 +157,23 @@ describe('buildCastrSchema - OpenAPI extension fields', () => {
     });
   });
 
+  describe('schema metadata extraction', () => {
+    test('extracts deprecated, readOnly, and writeOnly from schema', () => {
+      const schema: SchemaObject = {
+        type: 'string',
+        deprecated: true,
+        readOnly: true,
+        writeOnly: false,
+      };
+
+      const result = buildCastrSchema(schema, createContext());
+
+      expect(result.deprecated).toBe(true);
+      expect(result.readOnly).toBe(true);
+      expect(result.writeOnly).toBe(false);
+    });
+  });
+
   describe('prefixItems extraction', () => {
     test('extracts prefixItems tuple from schema', () => {
       const schema: SchemaObject = {

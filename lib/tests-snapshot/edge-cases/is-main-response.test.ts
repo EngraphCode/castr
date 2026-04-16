@@ -101,7 +101,6 @@ it('determines which one is-main-response', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

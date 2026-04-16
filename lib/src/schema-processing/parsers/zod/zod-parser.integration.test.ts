@@ -105,15 +105,63 @@ describe('Zod Parser Integration', () => {
       expect(result.errors[0]?.message).toContain('looseObject()');
     });
 
-    it('rejects catchall objects always', () => {
+    it('parses catchall objects as explicit additionalProperties', () => {
       const source = `
         const UserSchema = z.object({ name: z.string() }).catchall(z.string());
       `;
 
       const result = parseZodSource(source);
+      expect(result.errors).toHaveLength(0);
+      expect(result.ir.components).toHaveLength(1);
+      const user = result.ir.components[0];
+      if (!user || user.type !== 'schema') {
+        throw new Error('Expected schema component.');
+      }
+      if (
+        typeof user.schema.additionalProperties === 'boolean' ||
+        user.schema.additionalProperties === undefined
+      ) {
+        throw new Error('Expected schema-valued additionalProperties.');
+      }
+      expect(user.schema.additionalProperties.type).toBe('string');
+    });
+
+    it('rejects z.looseObject().catchall() with a closed-world error', () => {
+      const source = `
+        const UserSchema = z.looseObject({ name: z.string() }).catchall(z.string());
+      `;
+
+      const result = parseZodSource(source);
+
       expect(result.ir.components).toHaveLength(0);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0]?.message).toContain('closed-world object semantics');
+      expect(result.errors[0]?.message).toContain('looseObject()');
+    });
+
+    it('preserves decorated permissive catchalls as schema-valued additionalProperties', () => {
+      const source = `
+        const UserSchema = z.object({ name: z.string() })
+          .catchall(z.unknown().describe('extra values').meta({ deprecated: true }));
+      `;
+
+      const result = parseZodSource(source);
+
+      expect(result.errors).toHaveLength(0);
+      const component = result.ir.components[0];
+      expect(component?.type).toBe('schema');
+      if (!component || component.type !== 'schema') {
+        throw new Error('Expected schema component.');
+      }
+      if (
+        typeof component.schema.additionalProperties === 'boolean' ||
+        component.schema.additionalProperties === undefined
+      ) {
+        throw new Error('Expected schema-valued additionalProperties.');
+      }
+
+      expect(component.schema.additionalProperties.description).toBe('extra values');
+      expect(component.schema.additionalProperties.deprecated).toBe(true);
     });
 
     it('should parse source with multiple schemas', () => {
@@ -203,8 +251,7 @@ describe('Zod Parser Integration', () => {
       const parseError = result.errors.find((e: { code: string }) => e.code === 'PARSE_ERROR');
       expect(parseError).toBeDefined();
       expect(parseError?.message).toContain('BrokenCatchallSchema');
-      expect(parseError?.message).toContain('Non-strict object input');
-      expect(parseError?.message).toContain('closed-world object semantics');
+      expect(parseError?.message).toContain('z.catchall() schema argument');
       expect(parseError?.location).toBeDefined();
     });
 

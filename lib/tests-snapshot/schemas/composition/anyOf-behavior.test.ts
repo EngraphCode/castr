@@ -408,7 +408,6 @@ describe('anyOf behavior', () => {
                             nickname: { type: "string" },
                           },
                           required: ["age"],
-                          additionalProperties: false,
                         },
                         {
                           type: "object",
@@ -417,7 +416,6 @@ describe('anyOf behavior', () => {
                             pet_type: { type: "string", enum: ["Cat", "Dog"] },
                           },
                           required: ["pet_type"],
-                          additionalProperties: false,
                         },
                       ],
                     },

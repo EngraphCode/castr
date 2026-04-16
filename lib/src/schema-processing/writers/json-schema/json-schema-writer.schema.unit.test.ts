@@ -260,6 +260,41 @@ describe('writeJsonSchema', () => {
 
       expect(result.additionalProperties).toBe(false);
     });
+
+    it('writes explicit additionalProperties: true', () => {
+      const schema = createSchema({
+        type: 'object',
+        additionalProperties: true,
+      });
+
+      const result = writeJsonSchemaAsObject(schema);
+
+      expect(result.additionalProperties).toBe(true);
+    });
+
+    it('writes schema-valued additionalProperties', () => {
+      const schema = createSchema({
+        type: 'object',
+        additionalProperties: createSchema({ type: 'string' }),
+      });
+
+      const result = writeJsonSchemaAsObject(schema);
+
+      expect(result.additionalProperties).toEqual({ type: 'string' });
+    });
+
+    it('does not invent additionalProperties when omitted', () => {
+      const schema = createSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          id: createSchema({ type: 'string' }),
+        }),
+      });
+
+      const result = writeJsonSchemaAsObject(schema);
+
+      expect('additionalProperties' in result).toBe(false);
+    });
   });
 
   describe('array fields', () => {
@@ -311,7 +346,7 @@ describe('writeJsonSchema', () => {
       const result = writeJsonSchemaAsObject(schema);
 
       expect(result.allOf).toHaveLength(2);
-      expect(result.allOf?.[0]).toEqual({ type: 'object', additionalProperties: false });
+      expect(result.allOf?.[0]).toEqual({ type: 'object' });
     });
 
     it('writes oneOf', () => {
@@ -469,7 +504,6 @@ describe('writeJsonSchema', () => {
 
       expect(result.dependentSchemas?.['creditCard']).toEqual({
         type: 'object',
-        additionalProperties: false,
       });
     });
 

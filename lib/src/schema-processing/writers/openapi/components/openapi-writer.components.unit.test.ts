@@ -50,7 +50,7 @@ describe('writeOpenApiComponents', () => {
       const result = writeOpenApiComponents(components);
 
       expect(result.schemas).toBeDefined();
-      expect(result.schemas?.['User']).toEqual({ type: 'object', additionalProperties: false });
+      expect(result.schemas?.['User']).toEqual({ type: 'object' });
     });
 
     it('converts multiple schema components', () => {
@@ -245,7 +245,7 @@ describe('writeOpenApiComponents', () => {
         required: true,
         content: {
           'application/json': {
-            schema: { type: 'object', additionalProperties: false },
+            schema: { type: 'object' },
           },
         },
       });
@@ -303,7 +303,7 @@ describe('writeOpenApiComponents', () => {
       expect(body).toBeDefined();
       expect(body).toMatchObject({
         content: {
-          'application/json': { schema: { type: 'object', additionalProperties: false } },
+          'application/json': { schema: { type: 'object' } },
           'application/xml': { schema: { type: 'string' } },
         },
       });

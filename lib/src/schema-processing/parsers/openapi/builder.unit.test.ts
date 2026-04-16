@@ -888,7 +888,7 @@ describe('buildIR - IR-1 enhancements', () => {
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
-    it('rejects circular additionalProperties references under strict doctrine', () => {
+    it('preserves circular additionalProperties references in IR', () => {
       const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -903,7 +903,40 @@ describe('buildIR - IR-1 enhancements', () => {
         },
       };
 
-      expect(() => buildIR(doc)).toThrow(/schema-valued additionalProperties.*rejected/);
+      const result = buildIR(doc);
+      const node = result.components.find(
+        (component) => component.type === 'schema' && component.name === 'Node',
+      );
+      if (!node || node.type !== 'schema') {
+        throw new Error('Expected Node schema component.');
+      }
+      expect(typeof node.schema.additionalProperties).toBe('object');
+    });
+
+    it('detects circular references that are reachable only through prefixItems', () => {
+      const doc: OpenAPIDocument = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            Node: {
+              type: 'array',
+              prefixItems: [{ $ref: '#/components/schemas/Node' }],
+            },
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+      const node = result.components.find(
+        (component) => component.type === 'schema' && component.name === 'Node',
+      );
+      if (!node || node.type !== 'schema') {
+        throw new Error('Expected Node schema component.');
+      }
+
+      expect(node.schema.metadata?.circularReferences).toContain('#/components/schemas/Node');
     });
 
     it('should throw on malformed schema refs during circular reference extraction', () => {

@@ -98,7 +98,6 @@ test('handle-props-with-special-characters', async () => {
             type: "object",
             properties: { "@id": { type: "string" }, id: { type: "number" } },
             required: [],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

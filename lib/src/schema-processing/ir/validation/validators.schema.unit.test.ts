@@ -55,7 +55,7 @@ describe('isCastrSchema', () => {
     expect(isCastrSchema(schema)).toBe(true);
   });
 
-  it('should return false for object schema with schema-valued additionalProperties (catchall)', () => {
+  it('should return true for object schema with schema-valued additionalProperties (catchall)', () => {
     const schema = {
       type: 'object',
       properties: new CastrSchemaProperties({
@@ -90,7 +90,7 @@ describe('isCastrSchema', () => {
       },
     };
 
-    expect(isCastrSchema(schema)).toBe(false);
+    expect(isCastrSchema(schema)).toBe(true);
   });
 
   it('should return true for array schema', () => {

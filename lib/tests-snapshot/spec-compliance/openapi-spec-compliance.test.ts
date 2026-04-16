@@ -404,7 +404,7 @@ describe('openapi-spec-compliance', () => {
       ).resolves.not.toThrow();
     });
 
-    test('schema with additionalProperties is rejected as non-strict', async () => {
+    test('schema with additionalProperties is accepted as explicit source truth', async () => {
       const doc: OpenAPI30InputDocument = {
         openapi: '3.0.3',
         info: { title: 'Test', version: '1.0.0' },
@@ -435,13 +435,13 @@ describe('openapi-spec-compliance', () => {
         },
       };
 
-      // Document is valid OAS 3.0, but Castr rejects non-strict objects
+      // Document is valid OAS 3.0 and explicit additionalProperties is preserved.
       const valid = validateOAS30(doc);
       expect(valid).toBe(true);
 
       await expect(
         generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: doc }),
-      ).rejects.toThrow(/non-strict object input/i);
+      ).resolves.not.toThrow();
     });
   });
 

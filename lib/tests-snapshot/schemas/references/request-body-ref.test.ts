@@ -103,7 +103,6 @@ test('request-body-ref', async () => {
                 type: "object",
                 properties: { id: { type: "string" } },
                 required: [],
-                additionalProperties: false,
               },
             },
           },

@@ -271,6 +271,52 @@ describe('enum values', () => {
   });
 });
 
+describe('additionalProperties', () => {
+  it('preserves explicit additionalProperties: true', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      additionalProperties: true,
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.additionalProperties).toBe(true);
+  });
+
+  it('preserves schema-valued additionalProperties', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      additionalProperties: {
+        type: 'string',
+        metadata: createMetadata(),
+      },
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.additionalProperties).toEqual({ type: 'string' });
+  });
+
+  it('does not invent additionalProperties when omitted', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        name: {
+          type: 'string',
+          metadata: createMetadata(),
+        },
+      }),
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect('additionalProperties' in result).toBe(false);
+  });
+});
+
 describe('nullable handling', () => {
   it('converts nullable string to OAS 3.1 type array', () => {
     const schema: CastrSchema = {
@@ -448,7 +494,7 @@ describe('composition schemas', () => {
     const result = writeOpenApiSchema(schema);
 
     expect(result.allOf).toHaveLength(2);
-    expect(result.allOf?.[0]).toEqual({ type: 'object', additionalProperties: false });
+    expect(result.allOf?.[0]).toEqual({ type: 'object' });
     expect(result.allOf?.[1]).toEqual({ $ref: '#/components/schemas/Base' });
   });
 
@@ -726,7 +772,6 @@ describe('JSON Schema 2020-12 keywords', () => {
     expect(result.dependentSchemas).toEqual({
       creditCard: {
         type: 'object',
-        additionalProperties: false,
         properties: { billingAddress: { type: 'string' } },
       },
     });

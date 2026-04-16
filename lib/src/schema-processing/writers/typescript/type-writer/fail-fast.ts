@@ -26,6 +26,7 @@ import { parseComponentRef } from '../../../../shared/ref-resolution.js';
  */
 export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
   rejectConditionalApplicators(schema);
+  rejectAdditionalProperties(schema);
   if (schema.patternProperties !== undefined) {
     throw new Error(
       'Genuinely impossible: patternProperties cannot be represented in TypeScript. ' +
@@ -50,6 +51,18 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
         'composition keywords and validating the remainder against a schema.',
     );
   }
+}
+
+function rejectAdditionalProperties(schema: CastrSchema): void {
+  if (schema.additionalProperties === undefined || schema.additionalProperties === false) {
+    return;
+  }
+
+  throw new Error(
+    'Genuinely impossible: explicit additionalProperties cannot be represented in TypeScript. ' +
+      'TypeScript object types cannot model arbitrary extra keys with source-truth JSON Schema/OpenAPI ' +
+      'acceptance semantics without either widening the type unsafely or silently changing meaning.',
+  );
 }
 
 function rejectConditionalApplicators(schema: CastrSchema): void {

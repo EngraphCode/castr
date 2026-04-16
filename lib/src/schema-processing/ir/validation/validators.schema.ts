@@ -97,7 +97,7 @@ function isSchemaTypeValue(value: unknown): value is CastrSchema['type'] {
   return isSchemaTypeEntry(value) || isSchemaTypeArray(value);
 }
 
-// ── additionalProperties (boolean-only per IDENTITY closed-world doctrine) ──
+// ── additionalProperties (boolean or valid CastrSchema on object-capable schemas) ──
 
 function hasValidSchemaAdditionalProperties(value: UnknownRecord): boolean {
   if (!('additionalProperties' in value) || value['additionalProperties'] === undefined) {
@@ -106,7 +106,10 @@ function hasValidSchemaAdditionalProperties(value: UnknownRecord): boolean {
   if (!isObjectSchemaRecord(value)) {
     return false;
   }
-  return typeof value['additionalProperties'] === 'boolean';
+  return (
+    typeof value['additionalProperties'] === 'boolean' ||
+    isCastrSchema(value['additionalProperties'])
+  );
 }
 
 // ── unevaluatedProperties (boolean or valid CastrSchema) ──

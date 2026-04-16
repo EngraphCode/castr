@@ -145,7 +145,7 @@ test('getSchemaAsTsString', () => {
       },
       { name: 'ObjectWithAdditionalPropsNb' },
     ),
-  ).toThrow(/non-strict object input/i);
+  ).toThrow(/explicit additionalProperties cannot be represented in TypeScript/i);
 
   expect(() =>
     getSchemaAsTsString(
@@ -156,7 +156,7 @@ test('getSchemaAsTsString', () => {
       },
       { name: 'ObjectWithNestedRecordBoolean' },
     ),
-  ).toThrow(/non-strict object input/i);
+  ).toThrow(/explicit additionalProperties cannot be represented in TypeScript/i);
 
   expect(
     getSchemaAsTsString({
