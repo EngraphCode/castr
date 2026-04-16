@@ -7,15 +7,14 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { CastrSchemaProperties, createMockCastrSchema } from '../../ir/index.js';
+import { CastrSchemaProperties, createMockCastrSchema } from '../../../ir/index.js';
+import { buildPropertyContext, formatPropertyKey } from '../properties.js';
 import {
-  buildPropertyContext,
   detectCircularReference,
-  shouldUseGetterSyntax,
-  isRecursiveObjectSchema,
-  formatPropertyKey,
   getNullableReferenceCompositionBaseSchema,
-} from './properties.js';
+  isRecursiveObjectSchema,
+  shouldUseGetterSyntax,
+} from '../../support/zod/properties.recursion.js';
 
 describe('Property Writing Helpers', () => {
   describe('formatPropertyKey', () => {
@@ -137,6 +136,25 @@ describe('Property Writing Helpers', () => {
       expect(detectCircularReference(propSchema, parentSchema)).toBe(true);
     });
 
+    it('returns true when prefixItems carry the only recursive reference', () => {
+      const propSchema = createMockCastrSchema({
+        type: 'array',
+        prefixItems: [createMockCastrSchema({ $ref: '#/components/schemas/Child' })],
+      });
+      const parentSchema = createMockCastrSchema({
+        type: 'object',
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['#/components/schemas/Child'],
+        },
+      });
+
+      expect(detectCircularReference(propSchema, parentSchema)).toBe(true);
+    });
+
     it('returns true when nullable reference compositions appear on a circular property', () => {
       const propSchema = createMockCastrSchema({
         anyOf: [
@@ -202,6 +220,25 @@ describe('Property Writing Helpers', () => {
         },
       });
       const parentSchema = createMockCastrSchema({ type: 'object' });
+
+      expect(shouldUseGetterSyntax(propSchema, parentSchema)).toBe(true);
+    });
+
+    it('returns true when tuple items are the only recursive path', () => {
+      const propSchema = createMockCastrSchema({
+        type: 'array',
+        prefixItems: [createMockCastrSchema({ $ref: '#/components/schemas/Node' })],
+      });
+      const parentSchema = createMockCastrSchema({
+        type: 'object',
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['#/components/schemas/Node'],
+        },
+      });
 
       expect(shouldUseGetterSyntax(propSchema, parentSchema)).toBe(true);
     });

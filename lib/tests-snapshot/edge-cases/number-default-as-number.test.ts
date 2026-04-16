@@ -82,7 +82,6 @@ test('number-default-cast', async () => {
               text1: { type: "string", default: "aaa" },
             },
             required: [],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: false,

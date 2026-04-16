@@ -100,10 +100,10 @@ Before ADR-040, the durable direction was defined by [ADR-038](../architectural_
 [IDENTITY.md](../../.agent/IDENTITY.md) established the final direction:
 
 1. Castr has **one object model**: closed-world with explicit properties
-2. strip, passthrough, and catchall are **rejected ontologies**, not deferred features
+2. strip and passthrough are **rejected ontologies**; explicit source-truth catchall semantics are admitted without reintroducing multi-mode runtime behaviour
 3. the IR has **no dual semantics** — `unknownKeyBehavior` has been removed entirely
 4. strip normalization belongs in the **doctor only**, not in the core pipeline
-5. non-strict object input is rejected unconditionally — there is no opt-in compatibility mode
+5. non-strict strip / passthrough input is rejected unconditionally — there is no opt-in compatibility mode
 
 This document therefore explains why the earlier preservation architecture existed, why the compatibility mode was tried and then removed, and why rejection is the correct behavior.
 

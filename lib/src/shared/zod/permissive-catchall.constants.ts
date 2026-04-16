@@ -1,0 +1,2 @@
+export const ZOD_INTERNAL_PERMISSIVE_CATCHALL_ANY = '__castr_permissive_catchall_any__';
+export const ZOD_INTERNAL_PERMISSIVE_CATCHALL_UNKNOWN = '__castr_permissive_catchall_unknown__';

@@ -2,6 +2,11 @@ import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { SchemaObjectType } from '../../../shared/openapi-types.js';
 import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
 import type { TemplateContextOptions } from '../../context/index.js';
+import {
+  getPermissiveCatchallBase,
+  stripInternalPermissiveCatchallValidations,
+} from '../support/zod/permissive-catchall.js';
+import { rejectDynamicReferenceKeywords } from '../support/zod/dynamic-reference-fail-fast.js';
 
 import {
   writeCompositionSchema,
@@ -16,7 +21,7 @@ import { writeMetadata } from './metadata.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { isOptionalSchemaContext } from './context-utils.js';
-import { getNullableReferenceCompositionBaseSchema } from './properties.js';
+import { getNullableReferenceCompositionBaseSchema } from '../support/zod/properties.recursion.js';
 
 const SCHEMA_TYPE_NULL = 'null';
 
@@ -133,6 +138,12 @@ function writeSchemaType(
   // Handle const values with z.literal() - BEFORE type switch
   if (schema.const !== undefined) {
     writeConstSchema(schema.const, writer);
+    return;
+  }
+
+  const permissiveCatchallBase = getPermissiveCatchallBase(schema);
+  if (permissiveCatchallBase !== undefined) {
+    writer.write(permissiveCatchallBase);
     return;
   }
 
@@ -270,7 +281,10 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   const { validations, defaults } = schema.metadata.zodChain;
 
   // Filter out validations that are redundant for Zod 4 format functions
-  const filteredValidations = filterRedundantValidations(validations, schema);
+  const filteredValidations = filterRedundantValidations(
+    stripInternalPermissiveCatchallValidations(validations),
+    schema,
+  );
   filteredValidations.forEach((v) => writer.write(v));
   defaults.forEach((d) => writer.write(d));
 
@@ -284,36 +298,5 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   // Skip if type is 'null' - we never want z.null().nullable()
   if (schema.metadata.nullable && !Array.isArray(schema.type) && schema.type !== SCHEMA_TYPE_NULL) {
     writer.write('.nullable()');
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Dynamic reference fail-fast
-// ---------------------------------------------------------------------------
-
-/**
- * Reject schemas with dynamic reference keywords that cannot be expressed
- * in static Zod code generation.
- *
- * `$anchor` is NOT rejected — it's a reference marker consumed at parse time.
- * `$dynamicRef` and `$dynamicAnchor` require runtime scope resolution that
- * has no static code-gen equivalent.
- *
- * @internal
- */
-function rejectDynamicReferenceKeywords(schema: CastrSchema): void {
-  if (schema.$dynamicRef !== undefined) {
-    throw new Error(
-      'Genuinely impossible: $dynamicRef cannot be represented in Zod. ' +
-        '$dynamicRef requires runtime resolution against a dynamic scope chain — ' +
-        'there is no static code-gen equivalent.',
-    );
-  }
-  if (schema.$dynamicAnchor !== undefined) {
-    throw new Error(
-      'Genuinely impossible: $dynamicAnchor cannot be represented in Zod. ' +
-        '$dynamicAnchor declares an override point for runtime schema extension — ' +
-        'there is no static code-gen equivalent.',
-    );
   }
 }

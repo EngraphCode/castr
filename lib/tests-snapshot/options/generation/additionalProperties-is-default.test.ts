@@ -21,27 +21,44 @@ describe('additional-properties', () => {
     `);
   });
 
-  test('additionalProperties is true — rejected as non-strict', () => {
-    expect(() =>
+  test('additionalProperties is true emits explicit catchall semantics', () => {
+    expect(
       getZodSchema({
         schema: {
           type: 'object',
           additionalProperties: true,
         },
       }),
-    ).toThrow(/non-strict object input/i);
+    ).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({
+      }).catchall(z.unknown())",
+          "schema": {
+              "additionalProperties": true,
+              "type": "object",
+          },
+      }
+    `);
   });
 
-  test('additionalProperties is empty object — rejected as non-strict', () => {
-    expect(() =>
+  test('additionalProperties is empty object emits schema-valued catchall semantics', () => {
+    expect(
       getZodSchema({
         schema: {
           type: 'object',
-          // empty object is equivalent to true according to swagger docs above
           additionalProperties: {},
         },
       }),
-    ).toThrow(/non-strict object input/i);
+    ).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({
+      }).catchall(z.unknown())",
+          "schema": {
+              "additionalProperties": {},
+              "type": "object",
+          },
+      }
+    `);
   });
 
   test('additional properties opt-out', () => {

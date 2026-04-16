@@ -122,13 +122,11 @@ test('array-oneOf-discriminated-union', async () => {
                       type: "object",
                       properties: { type: { type: "string", enum: ["a"] } },
                       required: ["type", "a"],
-                      additionalProperties: false,
                     },
                     {
                       type: "object",
                       properties: { type: { type: "string", enum: ["b"] } },
                       required: ["type", "b"],
-                      additionalProperties: false,
                     },
                   ],
                 },

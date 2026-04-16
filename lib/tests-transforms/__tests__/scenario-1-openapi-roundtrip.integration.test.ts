@@ -12,6 +12,11 @@
 import { describe, expect, it } from 'vitest';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  type ReferenceObject,
+  type SchemaObject,
+  isReferenceObject,
+} from '../../src/shared/openapi-types.js';
 
 import {
   ARBITRARY_FIXTURES,
@@ -24,10 +29,63 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
 const NATIVE_OPENAPI_32_PHASE_D_FIXTURE = resolve(FIXTURES_DIR, 'phase-d-native-3.2-examples.yaml');
+const EPERUSTEET_EXT_FIXTURE = resolve(
+  __dirname,
+  '../../tests-fixtures/openapi-samples/real-world/eperusteet-ext.json',
+);
+const OAK_FIXTURE = resolve(
+  __dirname,
+  '../../tests-fixtures/openapi-samples/real-world/oak-api.json',
+);
 
 type LoadedOpenApiPaths = Awaited<ReturnType<typeof loadOpenApiDocument>>['document']['paths'];
 type WrittenOpenApiPaths = ReturnType<typeof writeOpenApi>['paths'];
 type OpenApiPaths = LoadedOpenApiPaths | WrittenOpenApiPaths;
+
+function assertConcreteSchema(
+  schema: SchemaObject | ReferenceObject | undefined,
+  label: string,
+): SchemaObject {
+  if (schema === undefined || isReferenceObject(schema)) {
+    throw new Error(`Expected concrete schema object for ${label}.`);
+  }
+  return schema;
+}
+
+function getSchemaProperty(
+  output: ReturnType<typeof writeOpenApi>,
+  componentName: string,
+  propertyName: string,
+): SchemaObject {
+  const componentSchema = output.components?.schemas?.[componentName];
+  const concreteComponent = assertConcreteSchema(componentSchema, `component ${componentName}`);
+  const propertySchema = concreteComponent.properties?.[propertyName];
+  return assertConcreteSchema(propertySchema, `${componentName}.${propertyName}`);
+}
+
+function getAdditionalPropertiesSchema(schema: SchemaObject, label: string): SchemaObject {
+  const additionalProperties = schema.additionalProperties;
+  if (typeof additionalProperties === 'boolean') {
+    throw new Error(`Expected schema-valued additionalProperties for ${label}.`);
+  }
+  return assertConcreteSchema(additionalProperties, `${label}.additionalProperties`);
+}
+
+function countExplicitAdditionalProperties(value: unknown): number {
+  if (Array.isArray(value)) {
+    return value.reduce((count, entry) => count + countExplicitAdditionalProperties(entry), 0);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return 0;
+  }
+
+  return Object.entries(value).reduce(
+    (count, [key, entry]) =>
+      count + (key === 'additionalProperties' ? 1 : 0) + countExplicitAdditionalProperties(entry),
+    0,
+  );
+}
 
 // ============================================================================
 // Tests: Losslessness (IR Comparison)
@@ -158,6 +216,45 @@ describe('Transform Samples: Idempotency (Round-Trip Proof)', () => {
     const ir2 = buildIR(reparsed.document);
     const output2 = writeOpenApi(ir2);
 
+    expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
+  });
+
+  it('keeps the ePerusteet explicit additionalProperties seam stable and preserves deprecated metadata', async () => {
+    const loaded1 = await loadOpenApiDocument(EPERUSTEET_EXT_FIXTURE);
+    const output1 = writeOpenApi(buildIR(loaded1.document));
+    const loaded2 = await loadOpenApiDocument(output1);
+    const output2 = writeOpenApi(buildIR(loaded2.document));
+    const tavoitteet = getSchemaProperty(output1, 'TutkinnonOsaKaikkiDto', 'tavoitteet');
+    const tavoitteetAdditional = getAdditionalPropertiesSchema(
+      tavoitteet,
+      'TutkinnonOsaKaikkiDto.tavoitteet',
+    );
+    const ammattitaitovaatimukset = getSchemaProperty(
+      output1,
+      'TutkinnonOsaKaikkiDto',
+      'ammattitaitovaatimukset',
+    );
+    const ammattitaitovaatimuksetAdditional = getAdditionalPropertiesSchema(
+      ammattitaitovaatimukset,
+      'TutkinnonOsaKaikkiDto.ammattitaitovaatimukset',
+    );
+
+    expect(tavoitteet.deprecated).toBe(true);
+    expect(tavoitteetAdditional.deprecated).toBe(true);
+    expect(ammattitaitovaatimukset.deprecated).toBe(true);
+    expect(ammattitaitovaatimuksetAdditional.deprecated).toBe(true);
+    expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
+  });
+
+  it('keeps the Oak real-world fixture stable and preserves explicit additionalProperties counts', async () => {
+    const loaded1 = await loadOpenApiDocument(OAK_FIXTURE);
+    const output1 = writeOpenApi(buildIR(loaded1.document));
+    const loaded2 = await loadOpenApiDocument(output1);
+    const output2 = writeOpenApi(buildIR(loaded2.document));
+    const inputAdditionalPropertiesCount = countExplicitAdditionalProperties(loaded1.document);
+
+    expect(inputAdditionalPropertiesCount).toBeGreaterThan(0);
+    expect(countExplicitAdditionalProperties(output1)).toBe(inputAdditionalPropertiesCount);
     expect(JSON.stringify(output2)).toBe(JSON.stringify(output1));
   });
 });

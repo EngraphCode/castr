@@ -491,7 +491,7 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
         openApiDoc: spec,
         disableWriteToFile: true,
       }),
-    ).rejects.toThrow(/schema-valued additionalProperties/);
+    ).rejects.toThrow(/explicit additionalProperties cannot be represented in TypeScript/);
   });
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {

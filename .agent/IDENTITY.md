@@ -263,13 +263,19 @@ Backend-specific constructs must not:
 
 ### 8.1 Canonical Mapping
 
-Castr emits only closed-object semantics in Zod:
+Castr emits canonical strict-object semantics in Zod when the IR object is closed-world:
 
 ```ts
 z.strictObject({...})
 ```
 
-or equivalent canonical encoding.
+When the IR carries explicit source-truth `additionalProperties`, non-recursive Zod output may emit:
+
+```ts
+z.object({...}).catchall(...)
+```
+
+Recursive catchall-preserving Zod output still fails fast.
 
 ---
 
@@ -277,32 +283,31 @@ or equivalent canonical encoding.
 
 The following Zod constructs are **not part of the canonical supported path**:
 
-| Construct            | Current status                                                                  |
-| -------------------- | ------------------------------------------------------------------------------- |
-| `.passthrough()`     | Rejected; non-canonical runtime behaviour                                       |
-| `z.looseObject()`    | Rejected; equivalent to passthrough                                             |
-| `.strip()` semantics | Rejected; implicit data loss                                                    |
-| `.catchall()`        | Currently rejected at ingest; active plan is aligning explicit catchall support |
+| Construct            | Current status                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------- |
+| `.passthrough()`     | Rejected; non-canonical runtime behaviour                                                          |
+| `z.looseObject()`    | Rejected; equivalent to passthrough                                                                |
+| `.strip()` semantics | Rejected; implicit data loss                                                                       |
+| `.catchall()`        | Accepted only for explicit source catchall semantics; recursive preserving output still fails fast |
 
 ---
 
 ### 8.3 Recursive Objects
 
-Recursive schemas are supported **only in canonical closed form**.
+Recursive schemas are supported in canonical closed form.
 
 Any recursive schema relying on:
 
 - passthrough
-- catchall
 - loose object semantics
 
 is:
 
 > **currently rejected during ingestion**
 
-For passthrough / loose-object semantics, that is intentional doctrine. For
-explicit catchall semantics, the current rejection is the implementation state
-being aligned by the active explicit-`additionalProperties` slice.
+Recursive schemas relying on explicit catchall semantics are admitted into IR,
+but current Zod output still fails fast because recursive `.catchall(...)`
+remains runtime-unsafe in Zod 4.
 
 ---
 

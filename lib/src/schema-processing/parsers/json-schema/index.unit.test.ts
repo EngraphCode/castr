@@ -67,19 +67,19 @@ describe('parseJsonSchema', () => {
     expect(result.format).toBe('email');
   });
 
-  it('rejects non-strict object schemas with additionalProperties: true', () => {
-    expect(() =>
-      parseJsonSchema({
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-        },
-        additionalProperties: true,
-      }),
-    ).toThrow(/additionalProperties: true.*rejected/);
+  it('preserves explicit additionalProperties: true', () => {
+    const result = parseJsonSchema({
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      additionalProperties: true,
+    });
+
+    expect(result.additionalProperties).toBe(true);
   });
 
-  it('sets additionalProperties: false when omitted on object schemas', () => {
+  it('keeps additionalProperties undefined when omitted on object schemas', () => {
     const result = parseJsonSchema({
       type: 'object',
       properties: {
@@ -87,7 +87,7 @@ describe('parseJsonSchema', () => {
       },
     });
 
-    expect(result.additionalProperties).toBe(false);
+    expect(result.additionalProperties).toBeUndefined();
   });
 });
 
@@ -215,20 +215,21 @@ describe('parseJsonSchemaDocument', () => {
     expect(components[0]?.description).toBe('A described schema');
   });
 
-  it('rejects non-strict $defs object schemas', () => {
-    expect(() =>
-      parseJsonSchemaDocument({
-        $defs: {
-          LooseObject: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-            },
-            additionalProperties: true,
+  it('preserves explicit additionalProperties in $defs object schemas', () => {
+    const components = parseJsonSchemaDocument({
+      $defs: {
+        LooseObject: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
           },
+          additionalProperties: true,
         },
-      }),
-    ).toThrow(/additionalProperties: true.*rejected/);
+      },
+    });
+
+    expect(components).toHaveLength(1);
+    expect(components[0]?.schema.additionalProperties).toBe(true);
   });
 
   // ── Phase 1: Standalone document parsing ──────────────────────────

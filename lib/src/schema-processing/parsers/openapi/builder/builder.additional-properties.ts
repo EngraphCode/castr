@@ -1,9 +1,6 @@
-import type { SchemaObject } from '../../../../shared/openapi-types.js';
+import type { ReferenceObject, SchemaObject } from '../../../../shared/openapi-types.js';
 import { type CastrSchema, isObjectSchemaType } from '../../../ir/index.js';
-import {
-  buildNonStrictObjectRejectionMessage,
-  describePortableNonStrictObjectInput,
-} from '../../../object-semantics.js';
+import type { IRBuildContext } from '../builder.types.js';
 
 function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): boolean {
   return (
@@ -14,22 +11,28 @@ function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): 
   );
 }
 
-export function addAdditionalProperties(schema: SchemaObject, irSchema: CastrSchema): void {
+export function addAdditionalProperties(
+  schema: SchemaObject,
+  context: IRBuildContext,
+  irSchema: CastrSchema,
+  buildSchema: (schema: SchemaObject | ReferenceObject, context: IRBuildContext) => CastrSchema,
+): void {
   if (!isObjectKeywordCandidate(schema, irSchema)) {
     return;
   }
 
-  if (schema.additionalProperties === false || schema.additionalProperties === undefined) {
-    irSchema.additionalProperties = false;
+  if (schema.additionalProperties === undefined) {
     return;
   }
 
-  const inputDescription = describePortableNonStrictObjectInput({
-    additionalProperties: schema.additionalProperties,
+  if (typeof schema.additionalProperties === 'boolean') {
+    irSchema.additionalProperties = schema.additionalProperties;
+    return;
+  }
+
+  irSchema.additionalProperties = buildSchema(schema.additionalProperties, {
+    ...context,
+    path: [...context.path, 'additionalProperties'],
+    required: true,
   });
-  if (inputDescription === undefined) {
-    return;
-  }
-
-  throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));
 }

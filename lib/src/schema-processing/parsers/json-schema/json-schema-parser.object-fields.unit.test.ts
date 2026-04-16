@@ -12,7 +12,7 @@ describe('parseJsonSchemaObject object keyword preservation', () => {
     expect(result.additionalProperties).toBe(false);
   });
 
-  it('sets additionalProperties: false when omitted on object schemas', () => {
+  it('keeps additionalProperties undefined when omitted on object schemas', () => {
     const result = parseJsonSchemaObject({
       type: 'object',
       properties: {
@@ -20,7 +20,7 @@ describe('parseJsonSchemaObject object keyword preservation', () => {
       },
     });
 
-    expect(result.additionalProperties).toBe(false);
+    expect(result.additionalProperties).toBeUndefined();
   });
 
   it('infers object type from additionalProperties without explicit type', () => {
@@ -58,22 +58,29 @@ describe('parseJsonSchemaObject object keyword preservation', () => {
     expect(result.items?.additionalProperties).toBeUndefined();
   });
 
-  it('rejects additionalProperties: true', () => {
-    expect(() =>
-      parseJsonSchemaObject({
-        type: 'object',
-        additionalProperties: true,
-      }),
-    ).toThrow(/additionalProperties: true.*rejected/);
+  it('parses additionalProperties: true', () => {
+    const result = parseJsonSchemaObject({
+      type: 'object',
+      additionalProperties: true,
+    });
+
+    expect(result.additionalProperties).toBe(true);
   });
 
-  it('rejects schema-valued additionalProperties', () => {
-    expect(() =>
-      parseJsonSchemaObject({
-        type: 'object',
-        additionalProperties: { type: 'string' },
-      }),
-    ).toThrow(/schema-valued additionalProperties.*rejected/);
+  it('parses schema-valued additionalProperties', () => {
+    const result = parseJsonSchemaObject({
+      type: 'object',
+      additionalProperties: { type: 'string' },
+    });
+
+    if (
+      typeof result.additionalProperties === 'boolean' ||
+      result.additionalProperties === undefined
+    ) {
+      throw new Error('Expected schema-valued additionalProperties.');
+    }
+
+    expect(result.additionalProperties.type).toBe('string');
   });
 
   it('rejects object-only keywords on non-object schemas', () => {

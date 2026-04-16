@@ -131,7 +131,8 @@ Recursive object schemas still cannot safely emit unknown-key-preserving output 
 
 Current forward behavior under ADR-040 is:
 
-- default ingest rejects non-strict object input unconditionally
+- default ingest rejects strip / passthrough / loose-object input
+- explicit catchall input now survives parser -> IR -> writer non-recursively
 - default strict Zod output uses `z.strictObject({...})`
 - recursive unknown-key-preserving output is intentionally unsupported in canonical generation
 
@@ -192,9 +193,9 @@ Historical architectural direction:
 
 Current forward doctrine under ADR-040 is different:
 
-- default ingest rejects non-strict object behavior
-- one explicit compatibility mode may normalize non-strict object inputs to strip semantics
-- preserving-mode remediation is no longer the primary product target
+- default ingest still rejects strip / passthrough runtime behavior
+- explicit source-truth catchall semantics are now supported where the target can express them honestly
+- preserving-mode remediation beyond explicit catchall is no longer the primary product target
 
 See:
 
