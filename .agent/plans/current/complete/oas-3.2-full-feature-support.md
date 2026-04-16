@@ -164,7 +164,7 @@ Ordered by dependency and increasing complexity:
 | D     | #4 Example semantics                                  | Medium | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 | E     | #5 itemSchema streaming, #2 additionalOperations      | Medium | Phase A₂     | ✅ complete (Saturday, 11 Apr) |
 
-Phases A, A₂, B, C, D, and E are complete. The MCP no-params tool-input-schema follow-up, Husky local-workflow alignment, and the generated-suite temp-directory stability fix also closed on Saturday, 11 April 2026. Repo-root `pnpm check` is green on the final Phase E close-out rerun, repo-root `pnpm check:ci` remains green from Saturday, 11 April 2026, and no successor primary active plan has been promoted yet.
+Phases A, A₂, B, C, D, and E are complete. The MCP no-params tool-input-schema follow-up, Husky local-workflow alignment, and the generated-suite temp-directory stability fix also closed on Saturday, 11 April 2026. Repo-root `pnpm check` is green on the final Phase E close-out rerun, repo-root `pnpm check:ci` remains green from Saturday, 11 April 2026, and the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 
 ### Metacognitive Record: Why Phase E Was Next
 
@@ -209,7 +209,7 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Next entrypoint:**
 
-- No successor primary active plan has been promoted yet. Reproduce any fresh regression first; otherwise promote the next honest active atomic plan before implementation begins.
+- The direct successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md). Reproduce any fresh regression first; otherwise execute that slice honestly.
 
 ---
 
@@ -241,7 +241,7 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase D close-out:**
 
-- At Phase D close-out on Saturday, 11 April 2026, the then-next slice was Phase E for `itemSchema` streaming and `additionalOperations`. With Phase E now also closed, no successor primary active plan has been promoted yet.
+- At Phase D close-out on Saturday, 11 April 2026, the then-next slice was Phase E for `itemSchema` streaming and `additionalOperations`. With Phase E now also closed, the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 
 ---
 
@@ -272,7 +272,7 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase C close-out:**
 
-- At Phase C close-out on Saturday, 11 April 2026, the then-next slice was Phase D for Example Object semantics (`dataValue`, `serializedValue`). With Phases D and E now also closed, no successor primary active plan has been promoted yet.
+- At Phase C close-out on Saturday, 11 April 2026, the then-next slice was Phase D for Example Object semantics (`dataValue`, `serializedValue`). With Phases D and E now also closed, the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 
 ---
 
@@ -295,13 +295,13 @@ A deeper code audit already established why the earlier slices had to land first
 
 **Historical next entrypoint at Phase B close-out:**
 
-- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phases C, D, and E now also closed, no successor primary active plan has been promoted yet.
+- At Phase B close-out on Saturday, 11 April 2026, the then-next slice was Phase C proof work (`deviceAuthorization`, XML `nodeType`, path templating`). With Phases C, D, and E now also closed, the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 
 ---
 
 ## Phase A₂: Type Migration — Drop `openapi3-ts`, Adopt `@scalar/openapi-types`
 
-**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B, C, D, and E now closed, no successor primary active plan has been promoted yet.
+**Status:** COMPLETE on Friday, 10 April 2026. AP4 closed with a nested raw OpenAPI input seam, restored `components.pathItems` and schema-less `components.mediaTypes` fidelity through IR, a green full repo-root gate chain plus `pnpm madge:circular` / `pnpm knip` / targeted `openapi3-ts` greps, and a closed reviewer loop with no open findings. The parent workstream's MCP no-params tool-input-schema strictness follow-up also closed on Saturday, 11 April 2026. For aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating rerun is required; do not invoke `pnpm qg` directly. At the time of this close-out, the next execution entrypoint was the then-pending Phase B slice; with Phases B, C, D, and E now closed, the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 **ADRs:** [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md), [ADR-045](../../docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md)  
 **Detailed completion record:** [phase-a2-type-migration.md](./phase-a2-type-migration.md)
 
@@ -321,7 +321,7 @@ A deeper code audit already established why the earlier slices had to land first
 3. **Assumption-driven replacement pass ✅ COMPLETE:** distinct `querystring`, ref-capable content/mediaTypes, canonical/boundary split, and lossless schema examples are all landed in production/public surfaces
 4. **AP3 ✅ COMPLETE:** test/support code migrated, checked `@ts-expect-error` directives removed, targeted regressions added, and `openapi-schema-extensions.d.ts` deleted
 5. **AP4 ✅ COMPLETE:** the boundary-accurate fixture typing, IR/media-type fidelity fixes, dependency-exit cleanup, gate reruns, and reviewer loop are all closed on Friday, 10 April 2026
-6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B, C, D, and E now closed, no successor primary active plan has been promoted yet.
+6. **Post-close-out follow-up ✅ COMPLETE:** MCP no-params tool-input-schema strictness closed on Saturday, 11 April 2026; parameterless tools now emit a closed empty-object schema and, at that point, Phase B became the next atomic slice. With Phases B, C, D, and E now closed, the current successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md).
 
 > [!NOTE]
 > Phase A₂ is closed. Its detailed completion record now lives in `current/complete` so `active/` keeps one honest execution entrypoint. Reopen this slice only if a fresh regression is reproduced.

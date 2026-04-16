@@ -185,7 +185,8 @@ console.log(openApiDoc.paths);
 
 Castr is strict by design:
 
-- object schemas are treated as closed-world
+- object schemas stay strict by default
+- Castr never invents object openness that the input did not declare
 - unsupported or ambiguous behaviour fails fast
 - there is no public strictness toggle for object openness
 

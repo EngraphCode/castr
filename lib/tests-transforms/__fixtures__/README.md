@@ -13,7 +13,7 @@ This directory contains fixtures for transform testing with sample input (Sessio
 ## Usage
 
 Normalized fixtures are created by processing arbitrary specs through Castr once.
-Arbitrary fixtures link to `lib/examples/openapi/` specs.
+Arbitrary fixtures are a mix of symlinks to `lib/examples/openapi/` specs and committed real-world JSON fixtures stored directly in `arbitrary/`.
 Edge-case fixtures are minimal, focused tests for specific scenarios.
 
 ## See Also

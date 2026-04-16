@@ -9,7 +9,11 @@
 > [!IMPORTANT]
 > On 2026-03-21, [IDENTITY.md](../../.agent/IDENTITY.md) established that Castr has one object model: closed-world with explicit properties. `unknownKeyBehavior` has been removed from the IR entirely. Non-strict object behavior is a rejected ontology, not a compatibility mode.
 >
-> This document is now fully historical diagnosis and evidence for why preserving-mode remediation was investigated and ultimately rejected.
+> On 2026-04-16, product direction was clarified again: explicit source
+> `additionalProperties` is in scope, but strip / passthrough runtime modes are
+> still rejected. Read this document as historical diagnosis for Zod runtime
+> mode preservation, not as a blanket ban on explicit external
+> `additionalProperties`.
 
 ## Purpose
 

@@ -1,5 +1,16 @@
 # Castr: Identity, Semantics, and Policy
 
+> [!IMPORTANT]
+> On 2026-04-16, product direction was clarified: Castr must accept and emit
+> explicit source `additionalProperties`, but must never invent
+> `additionalProperties` from input that did not declare them. Current
+> implementation is still stricter than that doctrine at some seams; the active
+> alignment slice is
+> [explicit-additional-properties-support.md](./plans/active/explicit-additional-properties-support.md).
+>
+> This document records the canonical policy target. Temporary implementation
+> drift must be treated as work to close, not as the doctrine.
+
 ## 1. Identity
 
 Castr is a **schema compiler**.
@@ -53,7 +64,7 @@ Castr's strictness is inseparable from completeness.
 
 Castr defines **one and only one object semantics model**:
 
-> **Closed-world objects with explicit properties**
+> **Explicit, deterministic object semantics with no invented openness**
 
 This means:
 
@@ -61,8 +72,10 @@ This means:
 - Unknown keys are **never implicitly accepted**
 - Unknown keys are **never implicitly preserved**
 - Unknown keys are **never implicitly typed**
+- If source input explicitly declares `additionalProperties`, that openness is
+  preserved as explicit source truth rather than invented by Castr
 
-There are no alternate object modes in Castr.
+There are no alternate **implicit** object modes in Castr.
 
 ---
 
@@ -70,13 +83,15 @@ There are no alternate object modes in Castr.
 
 The following are **not part of Castr semantics**:
 
-| Feature                                      | Status   | Reason                                                                |
-| -------------------------------------------- | -------- | --------------------------------------------------------------------- |
-| Strip (accept + drop unknown keys)           | Rejected | Implicit data loss violates determinism                               |
-| Passthrough (accept + preserve unknown keys) | Rejected | Violates closed-world assumption                                      |
-| Catchall / additionalProperties              | Rejected | Introduces open structural typing incompatible with canonical closure |
+| Feature                                      | Status   | Reason                                                               |
+| -------------------------------------------- | -------- | -------------------------------------------------------------------- |
+| Strip (accept + drop unknown keys)           | Rejected | Implicit data loss violates determinism                              |
+| Passthrough (accept + preserve unknown keys) | Rejected | Backend/runtime-specific acceptance mode, not canonical object truth |
+| Invented catchall / `additionalProperties`   | Rejected | Semantic broadening from absent input is not allowed                 |
 
-These are **source-language features only**, not Castr features.
+Explicit source `additionalProperties` is different: it is admissible object
+truth when the source declared it and the relevant target can represent it
+honestly.
 
 ---
 
@@ -93,22 +108,26 @@ The IR contains only constructs that are:
 For objects:
 
 - Only explicitly declared properties exist
-- No unknown-key behaviour exists
+- No runtime unknown-key behaviour flags exist
 - No implicit acceptance rules exist
+- Explicit source `additionalProperties` may exist as carried schema truth; it
+  is never invented by Castr
 
 ### 4.2 No Dual Semantics
 
 The IR does **not**:
 
 - encode multiple object modes
-- preserve source-language openness semantics
 - carry behavioural flags for unknown keys
+
+The IR **does** carry explicit source-truth `additionalProperties` when present.
 
 There is no “strict vs passthrough vs strip” in IR.
 
 There is only:
 
-> **object with explicit properties**
+> **object with explicit properties, optionally plus explicit declared
+> `additionalProperties`**
 
 ---
 
@@ -131,26 +150,21 @@ Source constructs that allow unknown keys are handled as follows:
 #### Strip semantics
 
 - Definition: accepts unknown keys and removes them
-- Status: **rejected by default**
+- Status: **rejected**
 - Reason: changes observable behaviour (acceptance set differs from strict)
-
-Optional (explicit future extension only, not default):
-
-- May be allowed under **explicit compatibility mode**
-- Must produce a diagnostic explaining semantic change
-- Must not be silent
 
 #### Passthrough semantics
 
 - Definition: accepts and preserves unknown keys
 - Status: **rejected**
-- Reason: incompatible with closed-world semantics
+- Reason: introduces non-canonical runtime behaviour not carried by the IR
 
 #### Catchall semantics
 
 - Definition: unknown keys are typed via a rule
-- Status: **rejected**
-- Reason: represents open structural typing, not compatible with canonical object model
+- Status: **admitted only when explicit in source input**
+- Reason: explicit source-truth `additionalProperties` can be carried honestly,
+  but Castr must never invent catchall openness from absent input
 
 ---
 
@@ -261,14 +275,14 @@ or equivalent canonical encoding.
 
 ### 8.2 Explicit Non-Support
 
-The following Zod constructs are **not supported** for ingestion or emission:
+The following Zod constructs are **not part of the canonical supported path**:
 
-| Construct            | Reason                            |
-| -------------------- | --------------------------------- |
-| `.passthrough()`     | Violates closed-world semantics   |
-| `.catchall()`        | Represents open structural typing |
-| `z.looseObject()`    | Equivalent to passthrough         |
-| `.strip()` semantics | Implicit data loss                |
+| Construct            | Current status                                                                  |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `.passthrough()`     | Rejected; non-canonical runtime behaviour                                       |
+| `z.looseObject()`    | Rejected; equivalent to passthrough                                             |
+| `.strip()` semantics | Rejected; implicit data loss                                                    |
+| `.catchall()`        | Currently rejected at ingest; active plan is aligning explicit catchall support |
 
 ---
 
@@ -284,9 +298,11 @@ Any recursive schema relying on:
 
 is:
 
-> **rejected during ingestion**
+> **currently rejected during ingestion**
 
-This is **intentional**, not a limitation.
+For passthrough / loose-object semantics, that is intentional doctrine. For
+explicit catchall semantics, the current rejection is the implementation state
+being aligned by the active explicit-`additionalProperties` slice.
 
 ---
 

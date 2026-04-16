@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated April 11, 2026)  
+**Date:** January 24, 2026 (Updated April 16, 2026)
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -35,7 +35,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). No successor primary active plan has been promoted yet.
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor is now the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md).
 
 Current product truth:
 
@@ -52,7 +52,9 @@ Current product truth:
 - Phase C is now honestly closed: `oauth2.flows.deviceAuthorization` and XML `nodeType` have explicit parser/writer proof, valid templated paths survive the shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, malformed top-level `paths` templates fail fast before upgrade/canonicalisation, and the `code-reviewer` / `test-reviewer` / `openapi-expert` loop is closed with no open findings
 - Phase D is now honestly closed: Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across component, parameter, response-header, and media-type carriers; `CastrParameter.examples` now preserves full Example Object/ref shapes honestly; singular parameter example derivation now falls back to `examples.default.dataValue` but never `serializedValue` alone; the repaired parameter writer now prefers canonical `examples` output and revalidates cleanly at the shared load boundary; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the close-out sweep
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
-- no successor primary active plan has been promoted yet; if a user reports a fresh gate or runtime issue, reproduce it first, otherwise promote the next honest active atomic plan before implementation begins
+- the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
+- user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
+- the current primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md); if a user reports a fresh gate or runtime issue, reproduce it first, otherwise execute that slice honestly
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -156,7 +158,7 @@ Closure record: [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-ful
 - Phase C is complete: OAuth 2.0 Device Authorization flow, XML `nodeType`, and strict top-level path-templating validation/proof are landed honestly
 - Phase D is complete: Example Object `dataValue` / `serializedValue` semantics are landed honestly across the native 3.2 seam
 - Phase E is complete: `itemSchema` streaming is preserved through the OpenAPI parser/IR/writer path, `additionalOperations` is stored separately per ADR-046 and exposed end to end downstream, and non-OpenAPI downstreams fail fast on reachable `itemSchema`
-- No successor primary active plan has been promoted yet
+- The direct successor primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md)
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 

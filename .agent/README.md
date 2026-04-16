@@ -1,7 +1,7 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Documentation and planning for @engraph/castr  
-**Last Updated:** 11 April 2026
+**Last Updated:** 16 April 2026
 
 ---
 
@@ -34,7 +34,7 @@ Then use:
 
 ## 🎯 Current State (April 2026)
 
-- **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
+- **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with strict-by-default object semantics and no invented openness
 - **Operating Philosophy:** strict and complete everywhere, all the time — code, proofs, docs, plans, and prompts must agree before a support claim is honest
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
   - Last recorded full repo-root sweep (including `test:e2e`): green on Saturday, 11 April 2026 after the final Phase E close-out rerun
@@ -67,9 +67,9 @@ Then use:
   - Phase 2: `$anchor`, `$dynamicRef`, and `$dynamicAnchor` added to the IR with parser/writer coverage and fail-fast handling where genuinely impossible
   - Input-Output Pair Compatibility Model established as governing doctrine
 - **Current OpenAPI truth:** the shared preparation boundary now canonicalises accepted OpenAPI documents to `3.2.0`; native OAS 3.2 input is accepted, and OpenAPI 3.1.x remains a documented Scalar bridge input
-- **Plan-state truth:** the completed OAS 3.2 parent workstream now lives at [`.agent/plans/current/complete/oas-3.2-full-feature-support.md`](plans/current/complete/oas-3.2-full-feature-support.md); the Phase A₂ closure record remains [`.agent/plans/current/complete/phase-a2-type-migration.md`](plans/current/complete/phase-a2-type-migration.md); landed version baseline remains [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md); and no successor primary active plan has been promoted yet
+- **Plan-state truth:** the completed OAS 3.2 parent workstream now lives at [`.agent/plans/current/complete/oas-3.2-full-feature-support.md`](plans/current/complete/oas-3.2-full-feature-support.md); the Phase A₂ closure record remains [`.agent/plans/current/complete/phase-a2-type-migration.md`](plans/current/complete/phase-a2-type-migration.md); landed version baseline remains [`.agent/plans/current/complete/oas-3.2-version-plumbing.md`](plans/current/complete/oas-3.2-version-plumbing.md); the ePerusteet predecessor record lives at [`.agent/plans/current/complete/eperusteet-real-spec-validation.md`](plans/current/complete/eperusteet-real-spec-validation.md); and the current successor primary active plan is [`.agent/plans/active/explicit-additional-properties-support.md`](plans/active/explicit-additional-properties-support.md)
 - **Next-step truth:** do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is reproduced
-- **Immediate next slice:** if a user reports a fresh gate or runtime issue, reproduce it first; otherwise promote the next honest active atomic plan before implementation begins
+- **Immediate next slice:** if a user reports a fresh gate or runtime issue, reproduce it first; otherwise execute [`.agent/plans/active/explicit-additional-properties-support.md`](plans/active/explicit-additional-properties-support.md) honestly
 - **Plan of record:** [`.agent/plans/roadmap.md`](plans/roadmap.md)
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 

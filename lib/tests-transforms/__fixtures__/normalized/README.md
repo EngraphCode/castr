@@ -13,7 +13,7 @@ Each fixture directory contains:
 
 | File               | Description                                                      |
 | ------------------ | ---------------------------------------------------------------- |
-| `input.yaml`       | Symlink to original arbitrary fixture                            |
+| `input.<ext>`      | Symlink to the original arbitrary fixture (`yaml` or `json`)     |
 | `normalized.json`  | First pass: input → IR → OpenAPI                                 |
 | `reprocessed.json` | Second pass: normalized → IR → OpenAPI (should match normalized) |
 | `ir.json`          | IR from first pass (for debugging)                               |

@@ -1,6 +1,6 @@
 # Session Continuation: @engraph/castr
 
-**Last updated:** 2026-04-11
+**Last updated:** 2026-04-16
 
 Context bridge between sessions. Start here after reading [AGENT.md](../directives/AGENT.md).
 
@@ -10,13 +10,13 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 **Library:** Schema compiler. `Any Input -> Parser -> IR -> Writers -> Any Output`. Supported: OpenAPI 3.0/3.1/3.2, Zod 4, JSON Schema 2020-12, TypeScript, MCP Tools.
 
-**Active workstream:** No successor primary active plan has been promoted yet.
+**Active workstream:** [Explicit Additional Properties Support](../plans/active/explicit-additional-properties-support.md)
 
-**Current closure record:** [OAS 3.2 Full Feature Support](../plans/current/complete/oas-3.2-full-feature-support.md) <- **read this next**
+**Current closure record:** [ePerusteet Real-Spec Validation](../plans/current/complete/eperusteet-real-spec-validation.md)
 
-**Companion closure record:** [Phase A2 - Type Migration](../plans/current/complete/phase-a2-type-migration.md) (completed Friday, 10 April 2026)
+**Companion closure record:** [OAS 3.2 Full Feature Support](../plans/current/complete/oas-3.2-full-feature-support.md) (completed Saturday, 11 April 2026)
 
-The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026. The MCP no-params follow-up, Phases B, C, D, and E, Husky local-workflow alignment, and generated-suite stability all closed on Saturday, 11 April 2026. Repo-root `pnpm check` is green, `pnpm check:ci` remains green from Saturday, 11 April 2026, and no successor primary active plan has been promoted yet.
+The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026. The MCP no-params follow-up, Phases B, C, D, and E, Husky local-workflow alignment, and generated-suite stability all closed on Saturday, 11 April 2026. Repo-root `pnpm check` is green, `pnpm check:ci` remains green from Saturday, 11 April 2026, and the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the direct predecessor to the newly promoted explicit-additional-properties support plan.
 
 ### Verified Session Truth
 
@@ -32,16 +32,19 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 - repo-root `pnpm check` is green on Saturday, 11 April 2026 after the final Phase E close-out rerun, and `pnpm check:ci` remains green from Saturday, 11 April 2026
 - for aggregate verification, use `pnpm check` locally or `pnpm check:ci` when a non-mutating run is required; do not invoke `pnpm qg` directly
 - the reviewer loop is closed with no open findings across `code-reviewer`, `test-reviewer`, `openapi-expert`, and `type-reviewer`
+- the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduction exposed that current strict-object policy rejects explicit schema-valued `additionalProperties` at IR-build / generated seams
+- on Thursday, 16 April 2026, user clarification established the intended product boundary: Castr must accept and emit explicit `additionalProperties`, but must never invent them from input that did not declare them
+- the current primary active plan is [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md)
 
 ---
 
 ## What Next
 
-1. Re-read [metacognition.md](../directives/metacognition.md), then [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md).
+1. Re-read [metacognition.md](../directives/metacognition.md), then [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md).
 2. If a user reports a fresh gate or runtime regression, reproduce it immediately and treat that report as active session truth.
 3. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is actually reproduced.
-4. Otherwise, promote the next honest active atomic plan before implementation begins. Phase E is closed and is no longer resumable work.
-5. Use [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only if you need the exact seam, migration, or dependency-exit close-out detail.
+4. Execute the explicit-additional-properties support slice: admit explicit source `additionalProperties` honestly into IR and outputs, while preserving the invariant that Castr never invents them from absent input.
+5. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
 
 ---
 
@@ -53,4 +56,4 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 ## Next Session Start Statement
 
-Read `.agent/directives/AGENT.md`, then `.agent/directives/metacognition.md`, then this prompt, then `.agent/plans/current/complete/oas-3.2-full-feature-support.md`. Treat Friday, 10 April 2026 as the Phase A2 close-out date: the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green, and the AP4 reviewer loop is closed with no open findings. Treat Saturday, 11 April 2026 as the MCP no-params follow-up close-out date, the Phase B close-out date, the Phase C close-out date, the Phase D close-out date, the Husky-install local-workflow alignment date, the generated-suite gate-stability close-out date, and the Phase E close-out date: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across the currently claimed carriers, `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, malformed top-level `paths` templates are rejected before upgrade/canonicalisation, native OpenAPI 3.2 `itemSchema` and `additionalOperations` now survive parser -> IR -> OpenAPI writer -> shared load boundary reparse, custom verbs from `additionalOperations` flow through downstream endpoint/MCP/TypeScript surfaces, endpoint/MCP/TypeScript fail fast on reachable `itemSchema`, and repo-root `pnpm check` is green on the final close-out rerun while `pnpm check:ci` remains green from Saturday, 11 April 2026. The reviewer loop is closed with no open findings. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is reproduced. No successor primary active plan has been promoted yet, so if a user reports a fresh issue reproduce it first; otherwise promote the next honest active atomic plan before implementation begins.
+Read `.agent/directives/AGENT.md`, then `.agent/directives/metacognition.md`, then this prompt, then `.agent/plans/active/explicit-additional-properties-support.md`. Treat Friday, 10 April 2026 as the Phase A2 close-out date: the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green, and the AP4 reviewer loop is closed with no open findings. Treat Saturday, 11 April 2026 as the MCP no-params follow-up close-out date, the Phase B close-out date, the Phase C close-out date, the Phase D close-out date, the Husky-install local-workflow alignment date, the generated-suite gate-stability close-out date, and the Phase E close-out date: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across the currently claimed carriers, `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, malformed top-level `paths` templates are rejected before upgrade/canonicalisation, native OpenAPI 3.2 `itemSchema` and `additionalOperations` now survive parser -> IR -> OpenAPI writer -> shared load boundary reparse, custom verbs from `additionalOperations` flow through downstream endpoint/MCP/TypeScript surfaces, endpoint/MCP/TypeScript fail fast on reachable `itemSchema`, and repo-root `pnpm check` is green while `pnpm check:ci` remains green from Saturday, 11 April 2026. Treat Thursday, 16 April 2026 as the ePerusteet reproduction and clarification date: the shared load boundary accepts `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json`, the reproduced rejection at IR-build / generated seams exposed a policy mismatch, and user clarification established that Castr must accept and emit explicit `additionalProperties` while never inventing them from absent input. The current primary active plan is the explicit-additional-properties support slice. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is reproduced. If a user reports a fresh issue reproduce it first; otherwise execute that slice honestly.

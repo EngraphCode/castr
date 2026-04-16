@@ -7,7 +7,7 @@ This guide covers the main public-surface shifts in current Castr.
 Current Castr is centred on:
 
 - canonical IR as the source of truth
-- strict, closed-world object semantics
+- strict-by-default object semantics with no invented openness
 - generated schemas and metadata rather than a built-in HTTP client
 - a narrow core package, with any future transport/runtime/framework helpers living in separate companion workspaces
 
@@ -84,6 +84,10 @@ See [OPENAPI-FETCH-INTEGRATION.md](./OPENAPI-FETCH-INTEGRATION.md) for a current
 ## Strictness Changes
 
 There is no current public toggle for non-strict object behaviour.
+
+Castr also never invents `additionalProperties` from absent input. Explicit
+source `additionalProperties` is a distinct semantics question and is being
+aligned across the pipeline under the active implementation slice.
 
 Older knobs such as:
 

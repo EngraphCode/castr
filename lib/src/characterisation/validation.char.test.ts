@@ -1,3 +1,7 @@
+import { existsSync, rmSync } from 'node:fs';
+import { mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIDocument } from '../shared/openapi-types.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
@@ -256,29 +260,25 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
   describe('Validation Consistency', () => {
     it('should validate before any domain logic runs', async () => {
       // This test verifies that validation happens at the entry point
-      // by ensuring an invalid spec fails before any processing
+      // by ensuring an invalid spec fails before any generation side effects
       const invalidSpec = {
         openapi: '3.0.0',
         // Missing info and paths
       };
-
-      const startTime = Date.now();
+      const tempDir = await mkdtemp(path.join(tmpdir(), 'castr-validation-char-'));
+      const outputPath = path.join(tempDir, 'generated.ts');
 
       try {
-        await generateZodClientFromOpenAPI({
-          openApiDoc: invalidSpec,
-          disableWriteToFile: true,
-        });
-        expect.fail('Should have thrown error');
-      } catch (error) {
-        const endTime = Date.now();
-        const duration = endTime - startTime;
+        await expect(
+          generateZodClientFromOpenAPI({
+            openApiDoc: invalidSpec,
+            distPath: outputPath,
+          }),
+        ).rejects.toBeInstanceOf(Error);
 
-        // Validation should be fast (< 500ms) because it happens before domain logic
-        // Note: We use 500ms to account for JIT warmup and slower CI environments.
-        // The point is validation fails early (not after heavy processing), not sub-100ms.
-        expect(duration).toBeLessThan(500);
-        expect(error).toBeInstanceOf(Error);
+        expect(existsSync(outputPath)).toBe(false);
+      } finally {
+        rmSync(tempDir, { force: true, recursive: true });
       }
     });
   });

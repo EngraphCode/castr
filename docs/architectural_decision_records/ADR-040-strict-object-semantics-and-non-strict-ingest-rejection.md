@@ -10,6 +10,12 @@
 > The core pipeline no longer offers any non-strict ingest option. `nonStrictObjectPolicy` has been removed from the public/core surface entirely.
 > `unknownKeyBehavior` has been entirely removed from the IR.
 > Strip normalization belongs in the doctor (`repairOpenApiDocument`) only, not in the core parser/writer pipeline.
+>
+> On 2026-04-16, product direction was clarified again: explicit source
+> `additionalProperties` is in scope and must be accepted/emitted honestly once
+> the active implementation-alignment slice lands. The blanket rejection of all
+> catchall / `additionalProperties` input in this ADR should therefore be read
+> as historical overreach, not current doctrine.
 
 On 2026-03-11, product direction changed:
 
@@ -55,10 +61,12 @@ During ingest, non-strict object features must fail fast with helpful error mess
 Examples include:
 
 - Zod object forms that are not strict
-- OpenAPI / JSON Schema object schemas that permit extra keys
+- OpenAPI / JSON Schema object schemas that imply extra-key behaviour without
+  explicit supported source truth
 - preservation-oriented Castr extensions related to non-strict object behaviour
 
-The repo must not silently parse non-strict object behaviour into IR and hope later stages constrain it.
+The repo must not silently invent or broaden object openness in IR and hope
+later stages constrain it.
 
 ### 4. ~~Strip-normalization compatibility mode~~ — Removed
 

@@ -2,6 +2,16 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-04-16
+
+- **Explicit `additionalProperties` doctrine and docs consolidation completed:**
+  - the ePerusteet reproduction proved a cross-layer policy mismatch rather than a fresh OAS 3.2 regression: the shared load boundary accepts `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json`, but IR-build and generated seams still reject explicit schema-valued `additionalProperties`
+  - user clarification established the real product boundary: Castr must accept and emit explicit source `additionalProperties`, but must never invent them from input that did not declare them
+  - promoted the direct successor active plan at `.agent/plans/active/explicit-additional-properties-support.md` and aligned the live handoff stack in `.agent/prompts/session-continuation.prompt.md` and `.agent/plans/roadmap.md`
+  - `jc-consolidate-docs` then removed doctrine overclaim drift across `.agent/IDENTITY.md`, `.agent/README.md`, `README.md`, `docs/MIGRATION.md`, `docs/USAGE.md`, `docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md`, `docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md`, `docs/architecture/zod-round-trip-limitations.md`, and `docs/architecture/recursive-unknown-key-semantics.md`: strip / passthrough remain rejected, `unknownKeyBehavior` remains out of the IR, but blanket rejection wording for explicit external `additionalProperties` is no longer treated as durable doctrine
+  - practice-box check stayed clean again: `.agent/practice-core/incoming/` still contains only `.gitkeep`, and `.agent/practice-context/incoming/` still contains only `README.md`
+  - no new portable Practice evolution clears the bar from this pass; the durable learning is repo-local architectural hygiene: cross-cutting policy belongs in one canonical doctrine, with seam-specific enforcement derived from it rather than re-decided locally
+
 ## 2026-04-11
 
 - **Phase E close-out + long-session docs consolidation completed:**

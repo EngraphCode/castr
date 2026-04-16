@@ -15,7 +15,11 @@
 > - why recursive preserving-mode Zod reconstruction was difficult
 > - why parsed-output parity mattered
 >
-> It is no longer the active product direction. The active direction is strict-only object semantics with no `unknownKeyBehavior` in the IR. Strip normalization belongs in the doctor only, not in the core pipeline.
+> It is no longer the active product direction. The current doctrine still
+> rejects strip / passthrough runtime modes and keeps no `unknownKeyBehavior` in
+> the IR, but on 2026-04-16 product direction was clarified to admit explicit
+> source `additionalProperties` honestly. Read this ADR as diagnosis for the old
+> multi-mode direction, not as a blanket ban on explicit catchall semantics.
 
 ## Context
 

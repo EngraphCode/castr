@@ -9,7 +9,12 @@
 > [!IMPORTANT]
 > On 2026-03-21, [IDENTITY.md](../../.agent/IDENTITY.md) established that Castr has one object model: closed-world with explicit properties. The strip-normalization compatibility mode from [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) has been removed. `unknownKeyBehavior` has been removed from the IR entirely.
 >
-> This document keeps only the remaining durable limitations plus the historical context needed to explain why non-strict object semantics were investigated and ultimately rejected.
+> On 2026-04-16, product direction was clarified again: explicit source
+> `additionalProperties` is in scope and must survive parser -> IR -> writer
+> honestly once the active implementation-alignment slice lands. This document
+> therefore keeps the durable rejection of strip / passthrough runtime modes,
+> while treating blanket catchall-rejection wording as historical rather than
+> permanent doctrine.
 
 ## Purpose
 
@@ -27,14 +32,16 @@ Each unresolved limitation below is documented with:
 
 ---
 
-## Resolved: Strict-Only Object Enforcement
+## Current Doctrine: No Invented Object Openness
 
-Current object doctrine is now implemented per [IDENTITY.md](../../.agent/IDENTITY.md):
+Current object doctrine per [IDENTITY.md](../../.agent/IDENTITY.md) is:
 
-- non-strict object inputs are rejected unconditionally across Zod, OpenAPI, and JSON Schema ingest
+- strip / passthrough runtime object modes are rejected
 - `unknownKeyBehavior` has been removed from the IR entirely
 - default generated strict objects emit `z.strictObject({...})`
-- strip normalization belongs in the doctor (`repairOpenApiDocument`) only, not in the core pipeline
+- Castr never invents `additionalProperties` from absent input
+- explicit source `additionalProperties` is intended to be preserved honestly;
+  current implementation is still being aligned with that rule
 
 The remaining object-related material below is historical context explaining why non-strict object semantics were investigated and why preserving recursive passthrough / catchall was rejected as a product direction.
 

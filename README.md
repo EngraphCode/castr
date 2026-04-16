@@ -1,6 +1,6 @@
 # Castr
 
-> Transform schemas through a canonical IR with strict, closed-world semantics.
+> Transform schemas through a canonical IR with strict-by-default semantics.
 
 Castr is a schema compiler. Its public surface today focuses on:
 
@@ -151,9 +151,11 @@ console.log(openApiDoc.openapi);
 
 ## Strictness
 
-Castr is strict and closed-world by design:
+Castr is strict by design:
 
-- object schemas are emitted as strict / closed-world
+- object schemas are emitted as strict when the source does not explicitly
+  declare otherwise
+- Castr never invents object openness that the input did not declare
 - unsupported behaviour fails fast
 - support claims are only honest when code, proofs, and docs agree
 
