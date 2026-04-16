@@ -1,7 +1,7 @@
 # Recursive Unknown-Key Semantics
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-21  
+**Last Updated:** 2026-04-16  
 **Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 
 ---
@@ -11,9 +11,11 @@
 >
 > On 2026-04-16, product direction was clarified again: explicit source
 > `additionalProperties` is in scope, but strip / passthrough runtime modes are
-> still rejected. Read this document as historical diagnosis for Zod runtime
+> still rejected. The explicit-source support slice is now landed in product
+> code and proof. Read this document as historical diagnosis for Zod runtime
 > mode preservation, not as a blanket ban on explicit external
-> `additionalProperties`.
+> `additionalProperties` or as a statement that the active implementation is
+> still missing.
 
 ## Purpose
 

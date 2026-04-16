@@ -4,12 +4,12 @@
 > On 2026-04-16, product direction was clarified: Castr must accept and emit
 > explicit source `additionalProperties`, but must never invent
 > `additionalProperties` from input that did not declare them. Current
-> implementation is still stricter than that doctrine at some seams; the active
-> alignment slice is
+> implementation of that slice is now landed in product code and proof; the
+> remaining active work is durable-doc and close-out consolidation in
 > [explicit-additional-properties-support.md](./plans/active/explicit-additional-properties-support.md).
 >
-> This document records the canonical policy target. Temporary implementation
-> drift must be treated as work to close, not as the doctrine.
+> This document records the canonical policy target. Any future implementation
+> drift must be treated as a fresh regression to close, not as doctrine.
 
 ## 1. Identity
 
