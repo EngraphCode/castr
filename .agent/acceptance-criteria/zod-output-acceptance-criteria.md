@@ -4,7 +4,11 @@
 > and ADR-031. If any conflict exists, requirements win.
 
 > [!IMPORTANT]
-> [IDENTITY.md](../../.agent/IDENTITY.md) establishes strict-only object output. The strip-normalization compatibility mode from ADR-040 has been removed. Object output is always `z.strictObject({...})`.
+> [IDENTITY.md](../../.agent/IDENTITY.md) establishes strict-by-default object
+> output with no invented openness. The strip-normalization compatibility mode
+> from ADR-040 has been removed. Default-path closed objects emit
+> `z.strictObject({...})`, while non-recursive objects with explicit
+> source-truth `additionalProperties` may emit `z.object({...}).catchall(...)`.
 
 > [!IMPORTANT]
 > Current implementation note (2026-03-22): Pack 5 and Pack 7 both closed `red`.
@@ -38,21 +42,21 @@
 
 Every IR schema type must map to a valid Zod 4 construct:
 
-| IR Type             | Zod Output                       | Notes                       |
-| ------------------- | -------------------------------- | --------------------------- |
-| `string`            | `z.string()`                     | Default when no format      |
-| `number`            | `z.number()`                     |                             |
-| `integer`           | `z.int()`                        | Default integer             |
-| `integer+format`    | `z.int32()` / `z.int64()`        | `int32` / `int64`           |
-| `integer+semantic`  | `z.bigint()`                     | `bigint`                    |
-| `boolean`           | `z.boolean()`                    |                             |
-| `null`              | `z.null()`                       |                             |
-| `array`             | `z.array(...)`                   |                             |
-| `object`            | `z.strictObject({...})`          | Explicit strict object form |
-| `enum` (single)     | `z.literal(value)`               | Any type                    |
-| `enum` (all string) | `z.enum([...])`                  | String enums                |
-| `enum` (mixed)      | `z.union([z.literal(...), ...])` | Mixed literals              |
-| `const`             | `z.literal(value)`               |                             |
+| IR Type             | Zod Output                                                | Notes                                                         |
+| ------------------- | --------------------------------------------------------- | ------------------------------------------------------------- |
+| `string`            | `z.string()`                                              | Default when no format                                        |
+| `number`            | `z.number()`                                              |                                                               |
+| `integer`           | `z.int()`                                                 | Default integer                                               |
+| `integer+format`    | `z.int32()` / `z.int64()`                                 | `int32` / `int64`                                             |
+| `integer+semantic`  | `z.bigint()`                                              | `bigint`                                                      |
+| `boolean`           | `z.boolean()`                                             |                                                               |
+| `null`              | `z.null()`                                                |                                                               |
+| `array`             | `z.array(...)`                                            |                                                               |
+| `object`            | `z.strictObject({...})` / `z.object({...}).catchall(...)` | Default closed-world form plus explicit catchall preservation |
+| `enum` (single)     | `z.literal(value)`                                        | Any type                                                      |
+| `enum` (all string) | `z.enum([...])`                                           | String enums                                                  |
+| `enum` (mixed)      | `z.union([z.literal(...), ...])`                          | Mixed literals                                                |
+| `const`             | `z.literal(value)`                                        |                                                               |
 
 ---
 
@@ -151,10 +155,12 @@ If no metadata is present, no `.meta()` call should be emitted.
 
 ## 7. Strictness Rules
 
-- Objects are always emitted as explicit strict objects: `z.strictObject({...})`
+- Closed-world objects are emitted as explicit strict objects: `z.strictObject({...})`
+- Objects with explicit source-truth `additionalProperties` may emit `z.object({...}).catchall(...)`
 - Bare `z.object({...})` is not an acceptable stand-in for strict object semantics
-- `.strip()`, `.passthrough()`, and `.catchall(schema)` are not generated-object targets
+- `.strip()` and `.passthrough()` are not generated-object targets
 - Recursive strict output must use `z.strictObject({...})`, the runtime-safe canonical strict form accepted by parser/writer lockstep
+- Recursive catchall-preserving output must fail fast rather than emit unsafe Zod
 - No implicit coercion unless explicitly requested
 
 ---

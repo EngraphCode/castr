@@ -1108,3 +1108,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - Practice evolution: handling of dependency crashes should be codified as a wrapper pattern in repo knowledge rather than general practice.
+- A `jc-consolidate-docs` audit on Friday, 17 April 2026 re-checked the post-close-out state for explicit `additionalProperties` and the active-plan handoff:
+  - live doctrine, ADRs, acceptance criteria, roadmap, and session prompt were already aligned on the landed 2026-04-16 implementation plus 2026-04-17 consolidation boundary
+  - `.agent/README.md` still had one over-strong "execute the active plan honestly" line; corrected to say the active plan is now only the regression-first / successor-selection entrypoint until a real successor slice is promoted
+  - `.agent/prompts/session-continuation.prompt.md` header was tightened from "Active workstream" to "Active operational entrypoint" so the prompt no longer implies open semantic implementation work
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`, `.agent/practice-context/incoming/` still contains only the scaffold `README.md`, and `.agent/plans/current/paused/` still contains only its lifecycle `README.md`
+  - no new Practice evolution cleared the bar in this pass; the work was cohesion/handoff tightening rather than a change to portable Practice
+- Outstanding-work conclusion from that audit:
+  - no semantic or documentation implementation work remains inside the explicit-`additionalProperties` slice unless a fresh regression is reproduced
+  - no paused workstreams are waiting in `.agent/plans/current/paused/`
+  - the immediate operational outstanding item is successor selection and then promotion of the active explicit-`additionalProperties` plan into `.agent/plans/current/complete/`
+  - the broader repo-level outstanding work already named durably lives in roadmap/future surfaces: reference-resolution enhancements (`external $ref`, `$anchor` resolution, `$dynamicRef` / `$dynamicAnchor` runtime resolution), the residual Zod/transform research thread, and the planned companion-workspace / Oak / agent-platform future arcs

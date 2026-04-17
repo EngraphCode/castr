@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated April 16, 2026)
+**Date:** January 24, 2026 (Updated April 17, 2026)
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -35,7 +35,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor is now the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md).
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor remains the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md). That slice's semantic implementation closed on Thursday, 16 April 2026 and its broad durable-doc / staged-history consolidation closed on Friday, 17 April 2026, but no successor atomic slice has been promoted yet, so the plan remains active only as the honest regression-first / successor-selection entrypoint.
 
 Current product truth:
 
@@ -54,7 +54,8 @@ Current product truth:
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
-- the current primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md); if a user reports a fresh gate or runtime issue, reproduce it first, otherwise execute that slice honestly
+- the explicit-`additionalProperties` implementation slice landed on Thursday, 16 April 2026, and the broad durable-doc / staged-history consolidation closed on Friday, 17 April 2026: live doctrine, acceptance criteria, ADRs, staged completion records, and session-entry surfaces now align on the explicit-source-truth `additionalProperties` boundary, and repo-root `pnpm check:ci` is green on that consolidated tree
+- the current primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md); if a user reports a fresh gate or runtime issue, reproduce it first, otherwise use that plan only as the honest regression-first / successor-selection anchor until a real successor slice is promoted
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 

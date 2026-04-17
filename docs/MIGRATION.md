@@ -85,10 +85,11 @@ See [OPENAPI-FETCH-INTEGRATION.md](./OPENAPI-FETCH-INTEGRATION.md) for a current
 
 There is no current public toggle for non-strict object behaviour.
 
-Castr also never invents `additionalProperties` from absent input. Explicit
-source `additionalProperties` is now preserved across portable inputs/outputs
-and semantically safe generated Zod output. Recursive catchall-preserving Zod
-output and TypeScript open-object output still fail fast.
+Castr is strict by default, but it also never invents `additionalProperties`
+from absent input. Explicit source `additionalProperties` is now preserved
+across portable inputs/outputs and semantically safe generated Zod output.
+Recursive catchall-preserving Zod output and TypeScript open-object output
+still fail fast.
 
 Older knobs such as:
 

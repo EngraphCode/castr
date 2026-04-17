@@ -10,6 +10,15 @@
 
 ---
 
+> [!IMPORTANT]
+> Historical record, superseded in part by the 2026-04-16 explicit
+> `additionalProperties` clarification and the 2026-04-17 consolidation sweep.
+> This record remains correct about removing `unknownKeyBehavior` and
+> `nonStrictObjectPolicy`, but its blanket rejection of schema-valued
+> `additionalProperties` is no longer current doctrine. Current truth is:
+> strict by default, no invented openness, explicit source-truth
+> `additionalProperties` preserved where honest.
+
 This plan enforces IDENTITY.md's canonical doctrine: Castr has **one object model** — closed-world with explicit properties. The IR carries no dual semantics. Non-strict input is rejected at the core pipeline boundary. Strip normalization is a doctor concern only.
 
 ## Completion Record
@@ -34,16 +43,16 @@ This plan enforces IDENTITY.md's canonical doctrine: Castr has **one object mode
 5. `non-strict-object-policy.ts` module
 6. All strip/passthrough/catchall code paths in parsers and writers
 
-**Simplify parsers (reject non-strict input):**
+**Historical 2026-03-21 parser simplification target (superseded in part on 2026-04-16):**
 
-- **Zod parser:** `z.strictObject()` and `z.object()` both map to strict closed-world. `.strip()`, `.passthrough()`, `.catchall()`, `z.looseObject()` → reject with helpful error
-- **OpenAPI parser:** `additionalProperties: false` (or absent) = strict. `additionalProperties: true` or schema-valued → reject with helpful error
+- **Zod parser:** `z.strictObject()` and `z.object()` both map to strict closed-world. At the 2026-03-21 close-out point, `.strip()`, `.passthrough()`, `.catchall()`, and `z.looseObject()` were all rejected with helpful error; current doctrine keeps the rejection for non-canonical widening but admits explicit source-truth `.catchall(schema)` semantics.
+- **OpenAPI parser:** `additionalProperties: false` (or absent) = strict. At the 2026-03-21 close-out point, `additionalProperties: true` or schema-valued forms rejected with helpful error; current doctrine still rejects invented openness while admitting explicit schema-valued `additionalProperties` as source truth.
 - **JSON Schema parser:** same as OpenAPI
 
-**Simplify writers (emit strict-only):**
+**Historical 2026-03-21 writer simplification target (superseded in part on 2026-04-16):**
 
-- **Zod writer:** always emit `z.strictObject({...})` for objects. Remove passthrough/catchall/strip emission
-- **OpenAPI/JSON Schema writer:** always emit `additionalProperties: false`. Remove `x-castr-unknownKeyBehavior` extension
+- **Zod writer:** At the 2026-03-21 close-out point, object output always emitted `z.strictObject({...})`; current doctrine remains strict by default but permits honest non-recursive `.catchall(...)` emission for explicit source-truth openness.
+- **OpenAPI/JSON Schema writer:** At the 2026-03-21 close-out point, object output always emitted `additionalProperties: false`; current doctrine remains closed by default while preserving explicit source-truth openness where the target can represent it honestly.
 
 **Keep untouched:**
 
@@ -120,10 +129,10 @@ This plan enforces IDENTITY.md's canonical doctrine: Castr has **one object mode
 
 1. `unknownKeyBehavior` does not appear anywhere in the IR, parsers, or writers.
 2. `nonStrictObjectPolicy` does not appear anywhere in the current product surface; remaining mentions are historical context only.
-3. Non-strict Zod input (`.strip()`, `.passthrough()`, `.catchall()`, `z.looseObject()`) is rejected with helpful error.
-4. Non-strict OpenAPI/JSON Schema input (`additionalProperties: true` or schema-valued) is rejected with helpful error.
-5. All generated Zod output uses `z.strictObject({...})`.
-6. All generated OpenAPI/JSON Schema output uses `additionalProperties: false`.
+3. At the 2026-03-21 close-out point, non-strict Zod input (`.strip()`, `.passthrough()`, `.catchall()`, `z.looseObject()`) was rejected with helpful error.
+4. At the 2026-03-21 close-out point, non-strict OpenAPI/JSON Schema input (`additionalProperties: true` or schema-valued) was rejected with helpful error.
+5. At the 2026-03-21 close-out point, all generated Zod output used `z.strictObject({...})`.
+6. At the 2026-03-21 close-out point, all generated OpenAPI/JSON Schema output used `additionalProperties: false`.
 7. Doctor continues to function (no changes to doctor).
 8. All quality gates pass.
 

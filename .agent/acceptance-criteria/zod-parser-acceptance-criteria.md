@@ -20,10 +20,13 @@ reconstruct IR for lossless transform validation with sample input.
 > [!IMPORTANT]
 > [IDENTITY.md](../../.agent/IDENTITY.md) supersedes the earlier multi-mode object direction:
 >
-> - strict object forms are the only accepted path
+> - strict object forms remain the default accepted path
 > - non-strict object forms are rejected unconditionally
 > - there is no strip-normalization compatibility mode in the core pipeline
 > - `unknownKeyBehavior` has been removed from the IR entirely
+> - explicit source-truth catchall semantics are accepted only through plain
+>   `z.object({...}).catchall(schema)` when that source truth can be carried
+>   honestly into IR
 
 > [!IMPORTANT]
 > Current implementation note (2026-03-22): Pack 5 and Pack 7 both closed `red`.
@@ -97,20 +100,27 @@ reconstruct IR for lossless transform validation with sample input.
 
 Default accepted object-input direction:
 
-| Zod 4 Expression                          | Target IR                                                                         |
-| ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `z.strictObject({ prop: z.string() })`    | `type: 'object', properties: {...}, additionalProperties: false`                  |
-| `z.object({ prop: z.string() }).strict()` | same target IR when statically analyzable; recursive output must not rely on this |
+| Zod 4 Expression                                      | Target IR                                                                         |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `z.strictObject({ prop: z.string() })`                | `type: 'object', properties: {...}, additionalProperties: false`                  |
+| `z.object({ prop: z.string() }).strict()`             | same target IR when statically analyzable; recursive output must not rely on this |
+| `z.object({ prop: z.string() }).catchall(z.string())` | `type: 'object', properties: {...}, additionalProperties: { type: 'string' }`     |
 
 Rejected object-input direction (unconditional, no opt-out):
 
 - bare `z.object({ ... })`
 - `.strip()`
 - `.passthrough()`
-- `.catchall(schema)`
 - `z.looseObject({...})`
+- contradictory widening chains such as `z.strictObject({...}).catchall(...)`,
+  `z.looseObject({...}).catchall(...)`, or `.passthrough().catchall(...)`
 
-Non-strict object input must fail fast with actionable diagnostics. Callers who need to normalize non-strict input should use the doctor (`repairOpenApiDocument`) before feeding schemas into the core pipeline.
+Non-strict object input must fail fast with actionable diagnostics. Explicit
+catchall source truth is different: it is admitted only when the source uses a
+plain analyzable `z.object({...}).catchall(schema)` form and the schema
+argument can be preserved honestly. Callers who need to normalize non-strict
+input should use the doctor (`repairOpenApiDocument`) before feeding schemas
+into the core pipeline.
 
 ### 1.7 Array and Tuple Types
 

@@ -9,6 +9,15 @@
 
 ---
 
+> [!IMPORTANT]
+> Historical record, superseded in part by the 2026-04-16 explicit
+> `additionalProperties` clarification and the 2026-04-17 consolidation sweep.
+> Read all `nonStrictObjectPolicy` and blanket catchall-rejection material below
+> as period-specific implementation history, not current doctrine. Current truth
+> is: strict by default, explicit source-truth `additionalProperties` /
+> `.catchall(...)` is preserved where the target can represent it honestly, and
+> invented openness remains rejected.
+
 This slice is complete and no longer belongs in `active/`.
 
 Implemented on 2026-03-12:

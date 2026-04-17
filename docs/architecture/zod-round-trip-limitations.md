@@ -1,7 +1,7 @@
 # Zod Round-Trip Limitations
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-04-16  
+**Last Updated:** 2026-04-17  
 **Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md), [ADR-041](../architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [native-capability-matrix.md](./native-capability-matrix.md)
 
 ---
@@ -39,6 +39,7 @@ Current object doctrine per [IDENTITY.md](../../.agent/IDENTITY.md) is:
 - strip / passthrough runtime object modes are rejected
 - `unknownKeyBehavior` has been removed from the IR entirely
 - default generated strict objects emit `z.strictObject({...})`
+- non-recursive explicit catchall output emits `z.object({...}).catchall(...)`
 - Castr never invents `additionalProperties` from absent input
 - explicit source `additionalProperties` is now preserved honestly across the
   supported parser -> IR -> writer seams
@@ -111,11 +112,12 @@ Recursive object schemas still cannot safely emit unknown-key-preserving output 
 
 ### Current Accepted Behavior
 
-Current forward behavior under ADR-040 is:
+Current forward behavior under ADR-040 plus the 2026-04-16 clarification is:
 
 - default ingest rejects strip / passthrough / loose-object input
 - explicit catchall input now survives parser -> IR -> writer non-recursively
 - default strict Zod output uses `z.strictObject({...})`
+- non-recursive explicit catchall output uses `z.object({...}).catchall(...)`
 - recursive unknown-key-preserving output is intentionally unsupported in canonical generation
 
 Architecture status:

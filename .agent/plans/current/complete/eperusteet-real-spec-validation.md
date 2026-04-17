@@ -8,17 +8,29 @@
 
 ---
 
+> [!IMPORTANT]
+> Historical predecessor record, superseded in part by the 2026-04-16 explicit
+> `additionalProperties` implementation slice and the 2026-04-17 consolidation
+> sweep. The rejection described below was the reproduced truth at the time and
+> is preserved here as the trigger for the clarification. Current truth is:
+> ePerusteet now round-trips, repeated-pass idempotence is proven, preserved
+> `deprecated` metadata is proven, and the slice is no longer a rejection-only
+> fixture.
+
 ## Goal
 
 Add the upstream `eperusteet-ext.spec.json` document as a committed real-world OpenAPI fixture and wire it into the repo's validation surfaces honestly.
 
 ## Outcome
 
-This slice closed on Thursday, 16 April 2026.
+This slice closed on Thursday, 16 April 2026 as the predecessor reproduction
+record.
 
 The upstream ePerusteet document is now committed at `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json`, but it was **not** added to the green transform or generated-code fixture matrices. A fresh reproduction showed that the shared load boundary accepts and canonicalises the document, while the OpenAPI -> IR build seam rejects it because the spec uses schema-valued `additionalProperties`. That rejection was the then-current implementation state under ADR-040 / IDENTITY wording and became the reproduction that directly triggered the later doctrine clarification and successor plan.
 
-The landed change therefore wires the fixture into explicit fail-fast validation rather than pretending it is a supported semantic-equivalence fixture:
+The landed change in this predecessor slice therefore wired the fixture into
+explicit fail-fast validation rather than pretending it was already a supported
+semantic-equivalence fixture:
 
 - transform proof: `tests-transforms/__tests__/real-world-rejection.integration.test.ts` proves `buildIR()` rejects the fixture with the strict-object error
 - generated proof: `tests-generated/rejection-validation.gen.test.ts` proves `generateZodClientFromOpenAPI()` rejects the same fixture with the same doctrine-aligned error

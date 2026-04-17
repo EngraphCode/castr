@@ -3,10 +3,11 @@
 > [!IMPORTANT]
 > On 2026-04-16, product direction was clarified: Castr must accept and emit
 > explicit source `additionalProperties`, but must never invent
-> `additionalProperties` from input that did not declare them. Current
-> implementation of that slice is now landed in product code and proof; the
-> remaining active work is durable-doc and close-out consolidation in
-> [explicit-additional-properties-support.md](./plans/active/explicit-additional-properties-support.md).
+> `additionalProperties` from input that did not declare them. The product-code
+> and proof slice landed on 2026-04-16, and the broad durable-doc /
+> staged-history consolidation closed on 2026-04-17. The active plan remains
+> the session entrypoint only until a real successor slice is promoted or a
+> fresh regression is reproduced.
 >
 > This document records the canonical policy target. Any future implementation
 > drift must be treated as a fresh regression to close, not as doctrine.

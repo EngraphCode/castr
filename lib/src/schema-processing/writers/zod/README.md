@@ -41,8 +41,11 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 
 ## Object Strictness
 
-- Object output is strict-only.
-- Canonical object emission uses `z.strictObject({...})`.
+- Object output is strict by default, with no invented openness.
+- Canonical closed-world object emission uses `z.strictObject({...})`.
+- Objects that carry explicit source-truth `additionalProperties` emit
+  `z.object({...}).catchall(...)` when the slice is non-recursive and Zod can
+  represent it honestly.
 - Inline endpoint objects (queryParams, pathParams, headers) are also emitted as `z.strictObject({...})`.
 - Non-strict object modes are rejected during ingest rather than preserved for output.
 
@@ -55,7 +58,8 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
   - nullable recursion → `.nullable()`
   - optional nullable recursion → `.nullish()`
 - Recursive strict objects emit `z.strictObject({...})`.
-- Unknown-key-preserving recursive modes are intentionally unsupported and rejected upstream.
+- Unknown-key-preserving recursive modes are intentionally unsupported and fail
+  fast upstream.
 
 ## Important Semantics
 
