@@ -14,6 +14,12 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio
 
 > [!IMPORTANT]
 > [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object direction in this ADR. Default-path object output is strict-only. The strip-normalization compatibility mode from ADR-040 has been removed per IDENTITY.md; strip normalization belongs in the doctor only.
+>
+> On 2026-04-16, product direction was clarified again: explicit source-truth
+> `additionalProperties` is admissible object truth. Read the object-output
+> sections below as "strict by default, with explicit catchall preservation
+> where the IR and target can represent it honestly", not as a blanket ban on
+> all generated `.catchall(...)`.
 
 ## Decisions
 
@@ -76,7 +82,7 @@ z.xor(schemaA, schemaB);
 
 **Rationale:** `z.xor()` enforces exactly-one semantics that matches `oneOf`.
 
-### 5. Object Output Is Strict-Only
+### 5. Object Output Is Strict-By-Default With Explicit Catchall Preservation
 
 Object output must be explicitly strict where Zod can represent that honestly and safely:
 
@@ -86,9 +92,18 @@ z.strictObject({ ... });
 
 Bare `z.object({ ... })` is not an acceptable generated stand-in for strict object semantics because bare `z.object()` is strip-mode at runtime.
 
-`.strip()`, `.passthrough()`, and `.catchall(...)` are no longer generated-object targets.
+When the IR carries explicit source-truth `additionalProperties`, non-recursive
+Zod output may emit:
 
-**Rationale:** Generated object definitions are strict-only product scope, so output should state strictness directly instead of preserving non-strict runtime modes.
+```typescript
+z.object({ ... }).catchall(...);
+```
+
+`.strip()` and `.passthrough()` are not generated-object targets, and recursive
+catchall-preserving output must still fail fast.
+
+**Rationale:** Generated object definitions are strict by default, but explicit
+source-truth openness must survive honestly where Zod can represent it safely.
 
 ### 6. Redundant Validation Filtering
 

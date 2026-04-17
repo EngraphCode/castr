@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated April 16, 2026)
+**Date:** January 24, 2026 (Updated April 17, 2026)
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -101,7 +101,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md) holds position 3 in the plan-of-record sequence.
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md) holds position 3 in the plan-of-record sequence. An implementation of that slice landed on this branch on Thursday, 16 April 2026 (rebased onto the current main on Friday, 17 July 2026) and awaits re-validation against the post-transplant tree.
 
 Current product truth:
 
@@ -121,6 +121,7 @@ Current product truth:
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
 - **the plan-of-record sequence was RE-ORDERED by the owner (2026-06-19):** finish the FULL Practice transplant first, then remediation. New sequence: (1) [Oak → castr Practice transplant](./active/oak-practice-transplant.md) Phases 7–9 + arc D2/D4 (parity = part of "the full Practice"; Phase 7 in progress); (2) [remediation backlog](./remediation/) 02–07 (a **named position after the transplant**, not parked — `no-manufactured-permission` holds; 01 done); (3) [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md). "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) is deprioritised. _Supersedes the 2026-06-09 "(1) remediation; (2) transplant" order._ If a user reports a fresh product gate/runtime issue, reproduce it first (it pre-empts the sequence)
+- an implementation of the explicit-`additionalProperties` slice exists on this branch: the semantic implementation landed on Thursday, 16 April 2026 and its durable-doc consolidation closed on Friday, 17 April 2026 against the pre-transplant tree; the branch was rebased onto the post-transplant main on Friday, 17 July 2026 and has NOT yet been re-validated (gates, doctrine, reviewer loop) against that tree — the sequenced position 3 above still governs when that re-validation happens
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 

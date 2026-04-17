@@ -67,7 +67,10 @@ The Thursday, 16 April 2026 ePerusteet reproduction exposed a real policy mismat
 - the latest Oak upstream spec is now committed in the real-world fixture set and has both load-boundary and transform-round-trip proof
 - the duplicate low-signal rejection proof has been removed because stronger transform and generated-suite proofs now exist elsewhere
 
-This plan remains active only because the durable-doc and practice-consolidation pass is still being completed.
+This plan remains active only because no real successor atomic slice has been
+promoted yet. Semantic implementation closed on Thursday, 16 April 2026, and
+the broad durable-doc / staged-history consolidation pass closed on Friday, 17
+April 2026.
 
 ## Resolved Findings
 
@@ -84,11 +87,16 @@ The Thursday, 16 April 2026 reviewer findings that originally opened this slice 
 
 ## Remaining Work
 
-No fresh product regression is currently reproduced. The remaining work for this active plan is documentary rather than semantic:
+No fresh product regression is currently reproduced. No semantic or
+documentation work remains inside this slice.
 
-- consolidate durable docs so architecture and migration guidance reflect the landed truth without overstating the old blanket ban
-- audit prompt, command, rule, and practice cohesion after this slice
-- decide whether the plan can move from `ACTIVE` to a completion record once the consolidation pass is finished
+The remaining work is operational only:
+
+- keep this plan as the honest regression-first / successor-selection entrypoint
+  until a real successor atomic slice is identified
+- move this plan to a completion record only when that successor exists, or
+  reopen it only if a fresh explicit-`additionalProperties` regression is
+  reproduced
 
 ## Success Criteria
 
@@ -99,7 +107,8 @@ No fresh product regression is currently reproduced. The remaining work for this
 - the ePerusteet fixture has first-pass proof, repeated-pass idempotence proof, and preserved `deprecated` semantics at the reproduced seam
 - the latest committed Oak fixture survives the real-world transform proof set
 - repo-root `pnpm check` is green on the landed tree
-- durable docs and session surfaces reflect the landed boundary without reopening settled earlier phases
+- durable docs, staged completion notes, and session surfaces reflect the
+  landed boundary without reopening settled earlier phases
 
 ## Stage Map
 
@@ -143,4 +152,6 @@ Execute immediately. The issue has already been reproduced and the user has clar
 - targeted red/green at the affected seams first
 - targeted transform/generated reruns as the surface expands
 - full repo-root aggregate rerun before honest close-out
-- after code/proof landing, run document/practice consolidation before promoting to a completion record
+- the document/practice consolidation pass closed on Friday, 17 April 2026; the
+  remaining promotion trigger is successor selection or a freshly reproduced
+  regression

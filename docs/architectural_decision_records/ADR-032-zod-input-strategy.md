@@ -18,6 +18,12 @@ This decision must align with:
 
 > [!IMPORTANT]
 > [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object-ingest direction in this ADR. Non-strict object inputs are rejected unconditionally, and `unknownKeyBehavior` has been removed from the IR entirely.
+>
+> On 2026-04-16, product direction was clarified again: explicit source-truth
+> catchall / `additionalProperties` semantics are admissible when they are
+> declared explicitly and can be preserved honestly. Read the object-input
+> section below as "reject implicit non-strictness, admit explicit catchall
+> truth", not as a blanket rejection of every `.catchall(...)` form.
 
 ---
 
@@ -53,7 +59,7 @@ This decision must align with:
 - Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
 - `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Object Parsing Is Reject-Only
+### 5. Object Parsing Rejects Implicit Non-Strictness But Admits Explicit Catchall Truth
 
 > [!IMPORTANT]
 > Per [IDENTITY.md](../../.agent/IDENTITY.md), the strip-normalization compatibility mode described in the original version of this section has been removed. The core pipeline now exposes no compatibility knob for non-strict objects.
@@ -62,7 +68,11 @@ Default supported direction:
 
 - `z.strictObject({...})`
 - `z.object({...}).strict()` when statically analyzable
+- `z.object({...}).catchall(schema)` when statically analyzable and the
+  catchall schema can be preserved honestly
 - OpenAPI / JSON Schema object schemas that explicitly reject unknown keys
+- OpenAPI / JSON Schema object schemas that explicitly declare
+  `additionalProperties`
 
 Rejected direction (no opt-out available):
 
@@ -70,8 +80,9 @@ Rejected direction (no opt-out available):
 - `z.looseObject({...})`
 - `.strip()`
 - `.passthrough()`
-- `.catchall(...)`
+- contradictory widening chains such as `z.strictObject({...}).catchall(...)`
 - OpenAPI / JSON Schema object schemas that permit unknown keys
+- only through implicit default openness rather than explicit source truth
 - non-strict preservation extensions
 
 Invalid or non-strict object combinations must fail fast with actionable diagnostics.

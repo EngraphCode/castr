@@ -15,7 +15,9 @@
 > `additionalProperties` is in scope and must be accepted/emitted honestly once
 > the active implementation-alignment slice lands. The blanket rejection of all
 > catchall / `additionalProperties` input in this ADR should therefore be read
-> as historical overreach, not current doctrine.
+> as historical overreach, not current doctrine. On 2026-04-17, the durable-doc
+> and staged-history consolidation closed; current doctrine is "strict by
+> default, explicit source truth preserved, no invented openness".
 
 On 2026-03-11, product direction changed:
 
@@ -43,6 +45,11 @@ Rejected object behaviour includes:
 - accepting and preserving unknown keys
 - accepting and validating unknown keys via a catchall schema
 
+The third bullet is historical to the 2026-03-11 decision only. Current
+doctrine after the 2026-04-16 clarification admits explicit source-truth
+catchall / `additionalProperties` semantics while still rejecting strip,
+passthrough, and invented openness.
+
 ### 2. Generated outputs must state strictness explicitly where the target can do so honestly
 
 When an output format can represent strict object semantics natively and safely, writers must emit that explicit representation.
@@ -51,6 +58,10 @@ Examples:
 
 - OpenAPI / JSON Schema: `additionalProperties: false`
 - Zod: an explicit strict object form rather than an implicit strip-mode form
+
+Those examples describe the default closed-world path. They are not a claim
+that explicit source-truth `additionalProperties` must now be stripped from the
+system.
 
 If a target cannot express strictness natively, that limitation must remain explicit; the system must not silently imply support it does not have.
 
@@ -107,7 +118,9 @@ Implementation note:
 
 - `z.strictObject({...})` parser/writer lockstep is now implemented
 
-That implementation gap is tracked as follow-on active work, not as a reason to keep non-strict object semantics in scope.
+That implementation gap was later closed. Keep this section as historical
+evidence for why the strict-only doctrine required `z.strictObject({...})`
+rather than chained `.strict()` for recursive getter-based output.
 
 ## Consequences
 
@@ -145,6 +158,10 @@ Rejected.
 
 Some callers do want to put non-strict schemas through the system deliberately. An explicit, lossy, opt-in strip normalization mode is acceptable as long as the default remains reject and the feature is documented honestly.
 
+This "Rejected" rationale is itself historical. The compatibility path was later
+removed on 2026-03-21, and explicit source-truth `additionalProperties` was
+later admitted on 2026-04-16 without reviving `nonStrictObjectPolicy`.
+
 ### 4. Accept non-strict input only in portable formats
 
 Rejected.
@@ -158,7 +175,8 @@ This ADR supersedes the forward-looking product direction of the unknown-key pre
 In particular:
 
 - ADR-031 object-output sections must now be read through the strict-by-default doctrine
-- ADR-032 object-input sections must now be read through the reject-by-default plus optional strip-normalization doctrine
+- ADR-032 object-input sections must now be read through the reject-implicit /
+  admit-explicit-source-truth doctrine
 - ADR-038 remains valuable as historical diagnosis, but its preservation-oriented remediation direction is superseded
 
 ## References
