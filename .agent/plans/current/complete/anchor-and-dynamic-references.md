@@ -1,5 +1,10 @@
 # Phase 2: $anchor, $dynamicRef, $dynamicAnchor — IR Expansion
 
+> ⚠️ **Header overstates completion (2026-06-04):** despite the COMPLETE status, this plan retains a populated
+> "Remaining Work" section and a "NOT YET WIRED" TypeScript-writer fail-fast (review finding H1). Runtime
+> `$anchor`/`$dynamicRef`/`$dynamicAnchor` _resolution_ is genuinely deferred → future scope; the unwired TS fail-fast
+> is tracked in `.agent/report/initial-review/`. Retained as history.
+
 **Status:** ✅ COMPLETE — Sunday 30 March 2026
 **Created:** 2026-03-29
 **Predecessor:** Schema Completeness Arc Phase 1.5 (✅ complete, 2026-03-29)

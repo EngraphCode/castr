@@ -1,5 +1,10 @@
 # Plan: `if`/`then`/`else` Conditional Applicator Support
 
+> ⚠️ **Stale (2026-06-04, see ADR-047):** the Zod-writer **fail-fast** decision recorded here was later reversed to a
+> default `.refine()` approach ("Schema Completeness Arc Phase 1") that this plan never recorded. The shipped `.refine()`
+> for `if/then/else` is a no-op (review finding C6). See `docs/architectural_decision_records/ADR-047-…` and
+> `.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md`. Retained as history only.
+
 **Status:** Complete
 **Created:** 2026-03-27
 **Predecessor:** Boolean schema support (completed 2026-03-27)

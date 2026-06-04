@@ -1,5 +1,9 @@
 # Metaplan: Discovery and Prioritisation Session
 
+> ⚠️ **Historical session framing (2026-06-04):** the "zero outstanding debt" claim in this metaplan was not accurate
+> even when written (the concurrent architecture-review-packs arc recorded red packs) and is contradicted by the
+> findings report `.agent/report/initial-review/`. Retained as history.
+
 **Status:** ✅ Executed — first slice (`patternProperties`/`propertyNames`) selected, planned, implemented, and verified (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** JSON Schema parser expansion (completed 2026-03-25)

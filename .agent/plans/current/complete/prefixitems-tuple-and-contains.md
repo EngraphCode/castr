@@ -1,5 +1,10 @@
 # Plan: `prefixItems` Tuple Writer Fix + `contains` Keyword Support
 
+> ⚠️ **Stale for `contains` (2026-06-04, see ADR-047):** this plan's "Zod `contains` = fail-fast; `.refine()` =
+> future opt-in" stance was later reversed — `contains` now emits a default `.refine()` with an incorrect
+> `typeof x === 'integer'` check that rejects all valid integer arrays (review finding C6). The `prefixItems` tuple
+> writer fix is unaffected. See ADR-047 and `.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md`.
+
 **Status:** ✅ Complete — implemented and verified, all quality gates green (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** [pattern-properties-and-property-names.md](./pattern-properties-and-property-names.md), [discovery-and-prioritisation.md](./discovery-and-prioritisation.md)

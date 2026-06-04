@@ -1,5 +1,10 @@
 # Plan (Complete): Architecture Review Packs — Post-IDENTITY Audit
 
+> ⚠️ **Closure overstated (2026-06-04):** this record declares the arc "fully closed / repo cleared for new features"
+> while itself recording Packs 2-7 as **red** with partial remediations. Several pack findings remain live (review
+> findings C4/C5/C6/H4/H7); Pack 7's "the canonical gate chain can stay green while a dedicated IR fidelity suite is
+> required" **is** review finding H7. Current truth: `.agent/report/initial-review/`. Retained as history.
+
 **Status:** Complete — seven-pack review matrix closed; all remediation slices (RC-1 through RC-7) completed Tuesday, 25 March 2026; architecture review arc fully closed
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](./identity-doctrine-alignment.md)

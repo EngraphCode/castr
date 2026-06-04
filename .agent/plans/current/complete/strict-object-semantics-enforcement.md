@@ -1,5 +1,9 @@
 # Plan (Complete): Strict Object Semantics Enforcement
 
+> ⚠️ **Superseded (2026-06-04):** the `nonStrictObjectPolicy: 'reject' | 'strip'` strip-compatibility mode recorded
+> here was **removed** by ADR-040 / IDENTITY.md ("strip normalization belongs in the doctor only"). This plan describes
+> a mode that no longer exists in the default pipeline. Retained as history.
+
 **Status:** Complete  
 **Created:** 2026-03-11  
 **Last Updated:** 2026-03-12  

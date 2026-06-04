@@ -47,6 +47,26 @@ The remaining object-related material below is historical context explaining why
 
 ---
 
+## Known Defects (Under Remediation — added 2026-06-04)
+
+> These are **defects**, not accepted trade-offs. A 2026-06-04 review verified them by executing the built `dist`.
+> Governed by [ADR-047](../architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md) and
+> `.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md`.
+
+The Zod writer's `.refine()` closures for several JSON Schema 2020-12 applicator keywords do **not** preserve semantics
+(contrary to the roadmap's "Schema Completeness Arc Phase 1 — semantic `.refine()` runtime validation closures" claim):
+
+- `dependentSchemas` and `if`/`then`/`else` emit `.refine(… return true)` — **no-ops that validate nothing**.
+- `contains`, `patternProperties`, `unevaluatedProperties`, `unevaluatedItems` emit `typeof x === '<jsonSchemaType>'`
+  checks; `integer`/`array`/`null` and the `'unknown'` default are never `typeof` results, so the generated validators
+  **reject conforming data** (or drop all nested sub-schema constraints).
+- `dependentRequired` is the **one** correct closure.
+
+Required resolution (ADR-047): **semantic-or-fail-fast per keyword, proven by executing the generated validator** — no
+`return true`, no `typeof` against JSON-Schema type names. Until fixed, generated Zod for these keywords is unsafe.
+
+---
+
 ## Resolved: Optional Recursive Properties
 
 Optional recursive getter properties were previously dropped during the **first Zod parse**.
