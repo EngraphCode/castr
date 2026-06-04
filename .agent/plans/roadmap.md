@@ -33,6 +33,14 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **Deep Review (2026-06-04, branch `docs/initial-deep-review`):** a first-hand-verified review found **46 issues
+> (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
+> [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
+> backlog: [`.agent/plans/remediation/`](./remediation/) (promote one into `active/` at a time; `01-packaging` fixes the
+> shipped C1 types/`./parsers/zod` break). Nine completed plans + this roadmap carry dated ⚠️ correction banners (P1-P9).
+> A link-aware bulk-archive of settled completions is **deferred** (disposition in report §11). "Complete" labels below
+> predate the review — treat the review report as current truth where they disagree.
+
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
 The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor is now the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md).

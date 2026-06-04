@@ -2,6 +2,17 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-04
+
+- **Initial deep review completed (branch `docs/initial-deep-review`, not merged to `main`):** a first-hand-verified review (executing the built `dist`, running all 14 gates, reading source) found **46 distinct issues, 6 Critical**, that the green gates do not catch. Report: `.agent/report/initial-review/` (14 docs).
+  - Criticals reproduced against `dist`: C1 build emits zero `.d.ts` (root `tsconfig` `noEmit:true` inherited) + `./parsers/zod` export target missing → published types + the README Zod import are broken; C2 operation security `A AND B` round-trips as `A OR B`; C3 component-name `toIdentifier` mangling breaks `$ref` round-trips (dangling); C4 `buildIR({type:object,properties:{}})→serializeIR→deserializeIR` throws (root cause: `isRecord({})===false`; four divergent `isRecord`); C5 Zod parser silently drops union/tuple/nativeEnum/`.refine` content with `errors:[]`; C6 Zod 2020-12 keyword refinements (`if/then/else`, `dependentSchemas`) emit `return true` no-ops and `contains`/`patternProperties` use `typeof x==='integer'/'unknown'` (reject valid data).
+  - Root-cause pattern: shallow boundary-only proofs (substring `.toContain('.refine(')`, vacuous `.not.toContain` on the result object, happy-path-only round-trips) let real losslessness/fail-fast bugs pass behind green gates. The team's own architecture-review Pack 7 already flagged this ("the canonical gate chain can stay green while a dedicated IR fidelity suite is required") = finding H7.
+  - C6 is a recorded-but-mislabelled reversal: `roadmap.md` "Schema Completeness Arc Phase 1" upgraded the Zod fail-fast guards to "semantic `.refine()` closures", but they don't validate; this contradicted three completed sub-plans (which still said fail-fast) and was never ADR'd. Drafted **ADR-047** (semantic-or-fail-fast) to govern it; indexed in the ADR README.
+  - Actions: authored 7 atomic remediation plans under `.agent/plans/remediation/` (promote one to `active/` at a time); corrected 9 stale/contradictory completed plans + `roadmap.md` with dated ⚠️ banners (P1-P9); disclosed the C6 defects in `docs/architecture/zod-round-trip-limitations.md`; deleted 11 redundant session-3.3 queue-mirror stubs.
+  - Deferred by choice (link integrity): the bulk link-aware archive of settled `current/complete/` plans — disposition table in report §11.
+  - User directives this session: critically assess ALL agent/tool output and validate primary sources first-hand (second-hand reports never acceptable); and where code/proofs/docs disagree, normalise to the strictest of the three.
+  - Aligned the handoff stack: this napkin entry, `.agent/prompts/session-continuation.prompt.md`, and `roadmap.md` Current Workstream Status.
+
 ## 2026-04-16
 
 - **Explicit `additionalProperties` doctrine and docs consolidation completed:**
