@@ -30,6 +30,14 @@ intact, gates stay green, and provenance stays honest.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
 5. Tightenings: drop the **ground-truth search-eval triplet** + Oak **SonarQube/secrets infra** + ~2 UI-only patterns;
    **AMEND pattern `proven_in:` provenance + regenerate derived indexes**; `practice-fitness` **informational-first**.
+6. **Continuity is substrate, not ceremony (owner, 2026-06-05):** as the transplant lands Oak's **memory substrate +
+   knowledge-flow** (Phase 6), **hooks** (Phase 2: agent-tools `SessionStart`/PreToolUse + `repo-check`), and
+   **collaboration/handoff processes** (Phase 8: `session-handoff`, `start-right-team`, plus `jc-consolidate-docs`), wire
+   the **session-close continuity discipline into those mechanisms** so it becomes structural, not manual — per the
+   Practice's own learned principle _"if a behaviour must be automatic, it needs a rule, not just a skill"_. The
+   discipline: exhaustive durable state-recording (load-bearing decisions in the in-repo contract, **never** memory-only) +
+   an adversarial _"what would be lost if context vanished?"_ review at close + preservation/graduation of reflection
+   insights into the knowledge flow. (Owner will keep requesting it until it is structural.)
 
 ## Scope: BRING / PRESERVE / DON'T-BRING
 
