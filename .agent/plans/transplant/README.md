@@ -34,8 +34,19 @@ only.
   pointer + multi-dim fitness frontmatter. Bring `provenance.yml` (already holds castr history to 2026-03-09); **preserve
   castr's 2026-03-22 entry** and **append a 2026-06-05 transplant entry**. No history loss.
 - **Retire `.agent/practice-context/`**: entangled — referenced by 10 files incl. the PRESERVE'd `AGENT.md`, `README.md`,
-  `practice-index.md`, and `practice-lineage.md`. Archive castr's authored `outgoing/` notes; update the references.
+  `practice-index.md`, and `practice-lineage.md` (full list: `grep -rl practice-context .agent`). Archive castr's authored
+  `outgoing/` notes; update the references.
 - Then tag `transplant/phase-1`.
+
+> **Sequencing note (don't conflate phases):** Phase 1b closes green on the **standard gates** (`format:check`,
+> `type-check`, `lint`, `madge`, `depcruise`, `knip`, tests) **without** `agent-tools`. The plan's "build agent-tools
+> first so docs are checkable" means the `practice:substrate` / `vocabulary` / `fitness` validation of the Core runs
+> **retroactively at Phase 2** once `@engraph/agent-tools` is built — it is not a Phase-1b blocker.
+>
+> **Provenance precision:** Oak's `provenance.yml` contains castr's chain only **through 2026-03-09** (id `58b36dbe…`);
+> castr's current inline `practice.md` frontmatter additionally carries an **index-8 entry dated 2026-03-22** that Oak's
+> file lacks. When migrating, **port that 2026-03-22 entry into `provenance.yml`** and append the 2026-06-05 transplant
+> entry, or it is silently lost.
 
 ## Artefacts produced here
 

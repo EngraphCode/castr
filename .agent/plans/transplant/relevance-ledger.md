@@ -7,10 +7,9 @@ firsthand verification that corrected several agent claims** (see "Firsthand cor
 browser UI, React, auth, search index, design system, Sentry, or curriculum domain.
 
 Owner-locked posture (2026-06-05): **fully populate** scale surfaces; **collaboration ACTIVE** (about agents, not
-humans) seeded empty; transplant = primary active plan; **all generic experts**; tightenings = drop ground-truth triplet
-
-- Oak SonarQube/secrets + ~2 UI patterns, AMEND pattern provenance + regenerate indexes, `practice-fitness`
-  informational-first.
+humans) seeded empty; transplant = primary active plan; **all generic experts**. Tightenings: drop the ground-truth
+triplet, Oak SonarQube/secrets infra, and ~2 UI patterns; AMEND pattern provenance + regenerate derived indexes;
+`practice-fitness` informational-first.
 
 ---
 
