@@ -55,6 +55,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     standing rule); don't rush breadth — the deep-review lesson is that green gates mask gaps; PDRs are immutable portable
     governance (don't edit on receipt); collaboration runtime = bring **machinery** (schemas + empty dirs), never Oak's
     **2,936** comms events / claims history / logs.
+  - **Phase 1b LANDED (2026-06-05) — Practice Core generation merged, tagged `transplant/phase-1`.** Firsthand: (1) **no
+    `pned` tool exists** anywhere (castr / PATH / `scripts/` / Oak) — the "merge-history" is a manual YAML/Markdown
+    three-way merge (`uuidgen` for ids); (2) provenance is **per-file** (bootstrap never had the 2026-03-22 entry); (3)
+    the portable trinity carried **zero** generic content Oak lacks ("Paused is not future" already in Oak; learned
+    principles an Oak superset) → converged to Oak's current generation; castr identity preserved via `provenance.yml` +
+    the untouched PRESERVE set; (4) **Oak's Core is NOT stale on practice-context** — it documents the PDR-007 retirement
+    correctly (my earlier grep-count "stale" read was wrong — verify firsthand!); (5) Oak's `CHANGELOG.md` already carries
+    `[castr] 2026-03-09`, so a blind append would have duplicated it. `provenance.yml` = union (no loss, no dup,
+    identity-deduped); practice-context retired (dir gone, 4 authored notes archived, 3 live nav refs repointed, immutable
+    PDRs left intact). Oak's 2026-06-05 pull changed **agent-tools** (tsx `postinstall` not turbo; new validators;
+    hook-policy fail-closed) → `02-agent-tools-build-design.md` partly stale for Phase 2; re-read Oak fresh then.
 
 ## 2026-06-04
 

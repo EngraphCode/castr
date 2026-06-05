@@ -10,23 +10,35 @@ only.
 
 ## Status
 
-| Phase | Surface                                                                              | Status       | Tag                           |
-| ----- | ------------------------------------------------------------------------------------ | ------------ | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                          | ✅ done      | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness (+ build agent-tools) | 🔄 1a landed | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy                                                 | ⬜           | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                             | ⬜           | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                           | ⬜           | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive)                                                     | ⬜           | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                          | ⬜           | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                          | ⬜           | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                       | ⬜           | `transplant/phase-8`          |
-| 9     | practice-verification + relevance ledger + feedback + handoff                        | ⬜           | `transplant/phase-9`          |
+| Phase | Surface                                                                                  | Status  | Tag                           |
+| ----- | ---------------------------------------------------------------------------------------- | ------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy                                                     | ⬜      | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                 | ⬜      | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ⬜      | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive)                                                         | ⬜      | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                              | ⬜      | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                              | ⬜      | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                           | ⬜      | `transplant/phase-8`          |
+| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜      | `transplant/phase-9`          |
 
 ## Resume point (next session)
 
-**Phase 1 is partially landed.** Done (committed, green): **1a** — 92 PDRs + `practice-verification.md` +
-`reference-closure.md` ledger (additive; zero `@oaknational`/`oak-` naming). **Remaining (1b):**
+**Phase 1 is complete** — tagged `transplant/phase-1`. **1a** delivered the 92-PDR estate, `practice-verification.md`,
+and the `reference-closure.md` ledger (additive; zero `@oaknational`/`oak-` naming). **1b** (2026-06-05) converged the
+Core generation to Oak's current portable trinity + entry points, created `provenance.yml` as the branch-history union
+(castr's 2026-03-22 entry + a 2026-06-05 merge node preserved — no loss, no duplication, identity-deduped), merged
+`CHANGELOG.md`, and retired `.agent/practice-context/` (archived castr's authored notes; repointed the live navigational
+refs; immutable PDRs left intact).
+
+**Resume at Phase 2** — `@engraph/agent-tools` + hook policy; design in
+[`02-agent-tools-build-design.md`](./02-agent-tools-build-design.md). ⚠️ **Oak moved (pull 2026-06-05):** Oak's
+agent-tools was refactored (e.g. `postinstall` now bootstraps `dist` via **tsx, not turbo**; new validators registered
+in knip; hook-policy fails closed). Re-read Oak's `agent-tools/` fresh at Phase-2 execution — parts of
+`02-agent-tools-build-design.md` (the turbo `postinstall`) are now stale.
+
+The 1b method below is kept as the execution record:
 
 > **Frame Phase 1b as a HISTORY MERGE, not a replace.** Practice histories are **branchy — a DAG, like git** — not
 > linear. castr's Practice is a **branch** that diverged from the shared network ≈2026-03-09 (provenance index 7) and

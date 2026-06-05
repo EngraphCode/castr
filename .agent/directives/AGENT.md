@@ -108,7 +108,6 @@ Installed roster:
 - `.agent/rules/` — operationalized doctrine
 - `.agent/sub-agents/` — canonical reviewer and domain-expert templates
 - `.agent/practice-core/` — portable Core package
-- `.agent/practice-context/` — optional exchange support context
 - `.agent/plans/active/` — primary active plan plus any explicit parked-in-place exception
 - `.agent/plans/current/paused/` — incomplete but non-primary resumable workstreams
 - `.agent/plans/current/complete/` — completed atomic plans staged before archive

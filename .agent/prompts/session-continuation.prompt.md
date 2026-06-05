@@ -23,12 +23,14 @@ product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-p
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin `2026-06-05` entry (session insights + firsthand corrections + build gotchas).
 
-- **Status:** Phase 0 ✅; Phase 1 🔄 **1a landed** (92 PDRs + `practice-verification.md`, green). Commits:
+- **Status:** Phase 0 ✅; **Phase 1 ✅** — 1a (92 PDRs + `practice-verification.md`) and 1b (2026-06-05: Core generation
+  merged to Oak's current trinity + entry points, `provenance.yml` history union, `CHANGELOG.md` merge,
+  `.agent/practice-context/` retired) both green; tag `transplant/phase-1`. Commits:
   `git log --oneline transplant/phase-0-baseline..HEAD`.
-- **Next = Phase 1b:** bring Oak's current Core generation (portable, 0 oak-naming) replacing castr's March snapshot;
-  migrate provenance (castr inline `provenance:`+`fitness_ceiling` → Oak `provenance: provenance.yml` pointer + multi-dim
-  fitness; **preserve castr's 2026-03-22 entry, append a 2026-06-05 transplant entry** — no history loss); retire the
-  entangled `.agent/practice-context/` (10 refs incl. the PRESERVE'd `AGENT.md`). Then tag `transplant/phase-1`.
+- **Next = Phase 2:** `@engraph/agent-tools` + hook policy — design in
+  [`../plans/transplant/02-agent-tools-build-design.md`](../plans/transplant/02-agent-tools-build-design.md). ⚠️ Oak's
+  2026-06-05 pull refactored agent-tools (tsx `postinstall`, **not** turbo; new validators registered in knip;
+  hook-policy fails closed) → re-read Oak's `agent-tools/` fresh; that design doc is partially stale on `postinstall`.
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
   `practice-fitness` informational-first never red-gates the SACRED `principles.md`; Phase 2 commit must include the

@@ -1,85 +1,160 @@
 ---
-provenance:
-  - index: 0
-    repo: cloudinary-icon-ingest-poc
-    date: 2026-02-26
-    purpose: 'Short-lived POC: build-time SVG icon ingestion from Cloudinary, 3 reviewers, simplified gates'
-  - index: 1
-    repo: oak-open-curriculum-ecosystem
-    date: 2026-02-27
-    purpose: 'Production SDK ecosystem: curriculum SDK, MCP servers, semantic search, 13 specialist reviewers, full learning loop'
-  - index: 2
-    repo: oak-open-curriculum-ecosystem
-    date: 2026-02-28
-    purpose: 'Ecosystem-agnostic hydration: added ecosystem survey preamble for agents hydrating into non-TypeScript repos'
-  - index: 3
-    repo: new-cv
-    date: 2026-03-06
-    purpose: 'Personal website and CV: editorial voice, accessibility, single-developer workflow with learning loop'
-  - index: 4
-    repo: new-cv
-    date: 2026-03-08
-    purpose: 'Personal website and CV: Codex reviewer-sub-agent alignment and Practice Core consolidation'
-  - index: 5
-    repo: new-cv
-    date: 2026-03-09
-    purpose: 'Personal website and CV: value-traceability planning and Practice Core structural tightening'
-  - index: 6
-    repo: oak-open-curriculum-ecosystem
-    date: 2026-03-09
-    purpose: 'Production SDK ecosystem: integrated new-cv round-trip — Codex model, value traceability, six-file package, practice-context adjunct, napkin threshold 800→500, 16 specialist reviewers'
-  - index: 7
-    repo: castr
-    date: 2026-03-09
-    purpose: 'IR-based schema transformation library: integrated portable Practice Core into a mature local doctrine via clean-break principles naming, canonical-first restructuring, knowledge-flow installation, and paused-workstream lifecycle'
-fitness_ceiling: 400
-attribution: 'created by [Jim Cresswell](https://www.jimcresswell.net/), evolved by many people and agents in many repos'
+provenance: provenance.yml
+fitness_line_target: 680
+fitness_line_limit: 830
+fitness_char_limit: 40500
+fitness_line_length: 100
 ---
 
 # Practice Bootstrap
 
-This file completes the plasmid trinity. `practice.md` describes the system (the **what**), `practice-lineage.md` encodes the principles and evolution rules (the **why**), and this file provides annotated templates for every artefact type (the **how**). Three companion files travel with the trinity: `README.md` (for humans), `index.md` (for agents), and `CHANGELOG.md` (what changed). An agent reading all six Practice Core files has enough information to build a working Practice system from scratch. Templates use `{placeholders}` for project-specific content. The Practice uses a **canonical-first artefact model**: all substantive content lives in `.agent/` (platform-agnostic), and thin platform adapters in `.cursor/`, `.claude/`, `.gemini/`, `.agents/`, and `.codex/` reference canonical content without duplicating it. Sections below use Cursor as the concrete platform example -- adapt adapter formats to local platforms. Ecosystem conventions use TypeScript/Node.js as examples -- substitute your ecosystem's equivalents.
+This file completes the plasmid trinity. `practice.md` is the **what**,
+`practice-lineage.md` the **why**, and this file the **how**: annotated
+templates for every artefact type. Four companion files travel with the
+trinity: `README.md`, `index.md`, `CHANGELOG.md`, and `provenance.yml`.
+Templates use `{placeholders}` for project-specific content. The Practice uses
+a **canonical-first artefact model**: substantive content lives in `.agent/`,
+and thin platform adapters point back to it. Examples below are scaffolding —
+adapt paths, tools, and platform syntax to the receiving repo.
 
 ## Before You Begin: Ecosystem Survey
 
-The templates below use TypeScript/Node.js/Cursor conventions as concrete examples. Before creating any artefacts, the hydrating agent MUST:
+**The templates and checklists below all serve a single goal: passing the
+Fresh-Checkout Acceptance Criteria in
+[practice-verification.md](practice-verification.md).**
 
-1. **Survey the existing repo**: language(s), test framework(s), linter(s), formatter(s), package manager, build system, and existing quality standards. Also survey existing Practice infrastructure: commands, skills, rules, sub-agents, memory pipeline, prompts. Determine the hydration path: cold start (no existing Practice), augmentation (partial Practice), or restructuring (mature but platform-locked Practice).
-2. **Assess alignment**: identify what the repo already has that meets or exceeds Practice principles. Existing standards that are at least as rigorous as the Practice MUST be preserved.
-3. **Adapt templates**: substitute local tooling in every template. File extensions (`*.unit.test.ts` becomes `*_test.go`, `test_*.py`, etc.), tool names (`Vitest` becomes `pytest`, `go test`, etc.), configuration formats, and platform conventions all change.
-4. **Never overwrite**: the Practice enables excellence; it does not replace what has already been achieved. This extends beyond tooling to Practice mechanisms: specialised reviewers, additional knowledge flow feeds, editorial systems, domain-specific sub-agents. The local Practice may exceed the blueprint in areas the blueprint does not model. These are adaptations, not deviations — preserve and integrate them.
+The templates below include concrete ecosystem examples. Before creating any
+artefacts, the hydrating agent MUST:
+
+1. **Survey the existing repo**: language(s), test/lint/build stack,
+   package manager, quality standards, and existing Practice
+   infrastructure. Determine whether this is a cold start,
+   augmentation, or restructuring.
+2. **Assess alignment**: identify what the repo already has that meets or
+   exceeds Practice principles.
+3. **Adapt templates**: substitute local tooling in every template. File
+   extensions (`*.unit.test.ts` becomes `*_test.go`, `test_*.py`, etc.),
+   tool names (`Vitest` becomes `pytest`, `go test`, etc.), configuration
+   formats, and platform conventions all change.
+4. **Never overwrite**: preserve anything that already meets or exceeds
+   the blueprint. These are adaptations, not deviations.
+5. **Record deliberate omissions**: when a concept is intentionally not
+   installed, record the absence in live operational surfaces
+   (`practice-index.md`, `AGENT.md`) with rationale and conditions for
+   future adoption. A broken reference is not proof of required
+   restoration — check the changelog and execution surfaces first.
+   Hydration is incomplete until adaptation decisions are written down.
 
 ## The Artefact Model
 
-Four artefact types follow the canonical-first model. Canonical content in `.agent/` is the single source of truth; thin platform adapters contain only activation metadata and a pointer to the canonical source.
+Four artefact types follow the canonical-first model. Canonical content in
+`.agent/` is the single source of truth; thin platform adapters contain only
+activation metadata and a pointer to the canonical source.
 
-| Type                         | Canonical                          | Platform adapters                                                                                                    |
-| ---------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Skills**                   | `.agent/skills/*/SKILL.md`         | `.cursor/skills/*/SKILL.md`, `.agents/skills/*/SKILL.md`                                                             |
-| **Rules**                    | `.agent/rules/*.md`                | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (activation triggers only)                                               |
-| **Commands** (`jc-*` prefix) | `.agent/commands/*.md`             | `.cursor/commands/jc-*.md`, `.claude/commands/jc-*.md`, `.gemini/commands/jc-*.toml`, `.agents/skills/jc-*/SKILL.md` |
-| **Sub-agent templates**      | `.agent/sub-agents/templates/*.md` | `.cursor/agents/`, `.claude/agents/`, `.gemini/commands/review-*.toml`, Codex project-agent config in `.codex/`      |
+| Type                    | Canonical                          | Adapter contract                                                                                                                            |
+| ----------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Skills**              | `.agent/skills/*/SKILL.md`         | Generated thin adapters for supported platforms. The host bridge or surface matrix records emitted names, prefixes, and unsupported states. |
+| **Rules**               | `.agent/rules/*.md`                | Thin activation wrappers or an entry-point chain. Each wrapper identifies one canonical source and carries no substantive policy.           |
+| **Sub-agent templates** | `.agent/sub-agents/templates/*.md` | Thin platform adapters that point to canonical templates. Unsupported platforms stay explicit in the local matrix.                          |
+| **Hooks**               | `.agent/hooks/` (policy + README)  | Tracked platform config activates hooks; local overrides stay machine-specific. Runtime lives in the host's documented tool/script surface. |
 
-Canonical rules are short operational reinforcements of policy. Each platform trigger wrapper points at either `.agent/rules/*.md` or `.agent/skills/*/SKILL.md` — never both, and never at a directive directly.
+Canonical rules are short operational reinforcements of policy. Each
+activation wrapper identifies exactly one canonical source and stays thin.
 
 Two types need no adapters — consumed directly by all platforms:
 
-- **Directives** (`.agent/directives/`) — policy documents (AGENT.md, principles.md, testing-strategy.md, metacognition.md). Platform-agnostic by nature. Canonical rules operationalise aspects of these policies; the directives are the authoritative source.
-- **Plans** (`.agent/plans/`) — all platforms read plans from the same canonical location.
+- **Directives** (`.agent/directives/`) — policy documents (AGENT.md,
+  principles.md, testing-strategy.md, metacognition.md). Platform-agnostic
+  by nature. Canonical rules operationalise aspects of these policies; the
+  directives are the authoritative source.
+- **Plans** (`.agent/plans/`) — all platforms read plans from the same
+  canonical location. A `current/` plan must be both **decision-complete**
+  (direction settled, scope fixed, acceptance criteria defined) and
+  **session-entry-ready** (entry checklist, closure criteria, cold-start
+  context present). Plans can be decision-ready without being
+  session-entry-ready; the gap matters because a session starting from a
+  plan that lacks entry scaffolding will waste time re-deriving context.
+- **Reference** (`.agent/reference/`) — curated library tier:
+  owner-vetted, evergreen, deliberately-promoted read-to-learn
+  material. Promotion-gated per
+  [PDR-032](decision-records/PDR-032-reference-tier-as-curated-library.md)
+  (substantiate / justify / owner-vet). The default disposition for
+  fresh material is NOT `reference/` — material is promoted INTO
+  the tier from `research/`, `analysis/`, `reports/`, or active
+  memory. Content here should not age quickly; an aging gate
+  reviews retained material at each holistic-fitness pass.
+- **Research** (`.agent/research/`) — synthesis-heavy notes, surveys,
+  rationale trails, and disposition ledgers. The default landing
+  tier for fresh exploratory material. May contain a transient
+  `notes/` holding bay for material in transit between tiers (the
+  bay's README is bridged from the host repo's practice-index when
+  the bay exists). The split criterion vs `reference/` is curation:
+  research is exploratory synthesis; reference is owner-vetted
+  evergreen library.
 
-A thin wrapper MUST NOT contain substantive instructions or logic not in the canonical source. Add a portability validation script to the quality gates to enforce this.
+A thin wrapper MUST NOT contain substantive instructions or logic not in
+the canonical source. Add a portability validation script to the quality
+gates to enforce this.
+
+Where a repo supports multiple agent platforms, the practice-index should
+point to the local surface matrix that records supported and unsupported
+mappings explicitly.
+
+**Cross-platform integration order** — never reverse this sequence:
+
+1. Decide which platforms are first-class in the receiving repo.
+2. Install canonical surfaces: local bridge, memory, continuity host,
+   planning scaffold, hook policy (if supported).
+3. Write the local surface matrix with explicit states.
+4. Add thin adapters and tracked platform config.
+5. Add parity checks and health checks.
+
+Activation before canonical source is a structural bug. The four-layer
+authority hierarchy: canonical policy → native activation → repo-local
+runtime → explanatory mirrors. Lower layers activate or describe; they
+do not redefine higher-authority intent.
 
 ## Metacognition
 
 Before planning work, pause.
 
-Reflect on what you are about to do -- those are your thoughts. Think about those reflections -- those are your insights. Consider what those insights teach you about the original problem and your assumptions. How does that change the framing? Why?
+Reflect on what you are about to do — those are your thoughts. Think about
+those reflections — those are your insights. Consider what those insights
+teach you about the original problem and your assumptions. How does that
+change the framing? Why?
 
-This process costs nothing and prevents shallow execution. Apply it before every plan, every architectural decision, and every non-trivial implementation choice. Create this as `.agent/directives/metacognition.md` (it is universal -- no project-specific content).
+This costs nothing and prevents shallow execution. Apply before every
+plan, architectural decision, and non-trivial implementation. Create as
+`.agent/directives/metacognition.md` (universal — no project-specific
+content).
+
+**Critical**: Metacognition is a **technology**, not a checklist. The
+directive must create recursive self-reflection through explicitly named
+layers (thoughts → reflections → insights), with each layer's output
+becoming the next layer's input. Common failure modes:
+
+- **The "not even wrong" failure**: replacing the recursive prompt with
+  a planning template. The result is not weakened metacognition — it is
+  a different thing that prevents the depth it was meant to create.
+  Planning templates produce plans; the metacognitive prompt produces
+  insights about the nature of the work itself.
+- **The recursive failure**: when the metacognition directive is broken,
+  you cannot use metacognition to discover that it is broken. Detection
+  requires external comparison — reading the evolved version from another
+  repo and applying it to itself to feel the difference between
+  understanding a tool and using a tool.
+- **The affective break is load-bearing**: "How do you feel about thinking
+  about your thoughts?" creates a mode shift from analytical to reflective
+  processing. Removing it flattens the recursion.
+- **The grounding anchor is load-bearing**: "What is the bridge from
+  action to impact?" reconnects insights to the concrete work. Removing
+  it lets reflection float free of purpose.
 
 ## The Practice Index (.agent/practice-index.md)
 
-The Practice Index is the bridge between the portable Practice Core and the local repo. It is **not** part of the travelling package — it is created during hydration and stays in the repo. Practice Core files link to it via `../practice-index.md`; it carries the navigable links to the repo's actual artefacts.
+The Practice Index bridges the portable Practice Core and the local repo.
+It is **not** part of the travelling package — created during hydration
+and stays in the repo. Core files link to it via `../practice-index.md`.
 
 ### Required sections
 
@@ -95,44 +170,20 @@ The Practice Index is the bridge between the portable Practice Core and the loca
 ```markdown
 # Practice Index
 
-This file bridges the portable Practice Core files and this repo's local
-artefacts. It is **not** part of the travelling Practice Core package — it is
-created during hydration and stays in the repo. The format is specified by
-`practice-core/practice-bootstrap.md`.
+Bridge between the portable Practice Core and the host repo's local artefacts.
+Not part of the travelling package. Format specified by practice-bootstrap.md.
 
-For the Practice Core files and their roles, see
-[practice-core/index.md](practice-core/index.md).
+## Directives — table: [Directive](path) | Purpose
 
-## Directives
+## Architectural Decisions — table: [ADR](path) | Subject
 
-| Directive                                        | Purpose                            |
-| ------------------------------------------------ | ---------------------------------- |
-| [AGENT.md](directives/AGENT.md)                  | Operational entry point for agents |
-| [principles.md](directives/principles.md)        | Authoritative rules                |
-| [{additional directives}](directives/{filename}) | {purpose}                          |
+## Tools and Workflows — table: [Command/Skill](path) | Purpose
 
-## Architectural Decisions
-
-| ADR                                                          | Subject   |
-| ------------------------------------------------------------ | --------- |
-| [ADR-{nnn}](../docs/architecture/{adr-directory}/{filename}) | {subject} |
-
-## Tools and Workflows
-
-| Tool                                                 | Purpose   |
-| ---------------------------------------------------- | --------- |
-| [{command name}](../.cursor/commands/{filename})     | {purpose} |
-| [{skill name}](../.cursor/skills/{dirname}/SKILL.md) | {purpose} |
-
-## Artefact Directories
-
-| Location                            | What lives there                                                 |
-| ----------------------------------- | ---------------------------------------------------------------- |
-| [`.agent/directives/`](directives/) | Principles, rules, and operational directives                    |
-| [`.agent/plans/`](plans/)           | Work planning — active, paused, archived, and optional templates |
-| [`.agent/memory/`](memory/)         | Institutional memory — napkin, distilled, code patterns          |
-| {additional directories as needed}  |
+## Artefact Directories — table: [Location](path) | What lives there
 ```
+
+Each section uses a two-column markdown table with navigable links to the
+host repo's actual files. Populate every section during hydration.
 
 ## Entry Points
 
@@ -150,7 +201,13 @@ Read [AGENT.md](.agent/directives/AGENT.md)
 
 ### AGENT.md (.agent/directives/)
 
-The operational entry point. Sections (in order): **Grounding** (spelling, date format, link to metacognition), **The Practice** (link to `.agent/practice-core/index.md` and start-right), **First Question**, **Project Context** (what, package manager, framework, scope, key artefacts), **Principles** (link to principles.md), **Sub-agents** (installed roster, or an explicit not-yet-installed status), **Development Commands** (project-specific), **Structure** (directory tree).
+The operational entry point. Sections (in order): **Grounding** (spelling,
+date format, link to metacognition), **The Practice** (link to
+`.agent/practice-core/index.md` and start-right), **First Question**,
+**Project Context** (what, package manager, framework, scope, key
+artefacts), **Principles** (link to principles.md), **Sub-agents**
+(installed roster, or an explicit not-yet-installed status), **Development
+Commands** (project-specific), **Structure** (directory tree).
 
 Keep it stable -- no mutable session state. Mutable state belongs in plans.
 
@@ -158,21 +215,98 @@ Keep it stable -- no mutable session state. Mutable state belongs in plans.
 
 ### principles.md (.agent/directives/)
 
-Encode the Principles from `practice-lineage.md` as imperative rules. Sections: **First Question**, **Core Rules** (code design, domain-specific, refactoring, tooling, code quality, types, testing summary, developer experience). Each rule is stated as a command, not a suggestion. Link to `testing-strategy.md` from the testing section.
+Encode the Principles from `practice-lineage.md` as imperative rules. Sections:
+**First Question**, **Strict and Complete**, **Core Rules** (code design,
+domain-specific, refactoring, tooling, code quality, types, testing summary,
+developer experience). Each rule is stated as a command, not a suggestion.
+Make the strict-and-complete tenet explicit rather than leaving it implied by
+tone. Link to `testing-strategy.md` from the testing section.
 
 ### testing-strategy.md (.agent/directives/)
 
-Encode the Testing Philosophy from `practice-lineage.md` with local tooling. Sections: **Tooling** (test runner), **Philosophy** (imperative rules), **Test Types** (unit: pure function, no mocks; integration: units as code, simple injected mocks -- naming convention adapted to local ecosystem), **What to Test** (project-specific surfaces), **Workflow** (TDD always, tests next to code).
+Encode the Testing Philosophy from `practice-lineage.md` with local tooling.
+Sections: **Tooling** (test runner), **Philosophy** (imperative rules), **Test
+Types** (unit: pure function, no mocks; integration: units as code, simple
+injected mocks -- naming convention adapted to local ecosystem), **What to
+Test** (project-specific surfaces), **Workflow** (TDD always, tests next to
+code). Make explicit that strictness means complete proof in the correct layer
+rather than forcing type, lint, import-boundary, or repo-state checks into
+tests. Classification rule: behaviour shape, not filename suffix. Filename
+is signal, not exemption (testing-strategy amendment 2026-04-29).
+
+## Architectural Decision Records (ADRs)
+
+ADRs are the **graduation target** of the learning loop. When captured
+experience (napkin → distilled) settles into a permanent architectural
+decision, it becomes an ADR. ADRs are the architectural source of truth:
+they record _why_ the system is shaped as it is, not just what it does.
+Rules and directives operationalise ADRs; code implements them; quality
+gates enforce them. Without ADR infrastructure, the learning loop has no
+permanent destination for architectural knowledge.
+
+### Location and Index
+
+ADRs conventionally live in a dedicated directory under the host repo
+(the path is host-specific; the host's practice-index records the
+local choice). Each is a numbered markdown file. The directory
+contains a `README.md` index — the entry point for architectural
+orientation, with a **Start Here** section listing foundational ADRs.
+
+### ADR Template
+
+```markdown
+# ADR-{NNN}: {Title}
+
+**Status**: Proposed | Accepted | Superseded by ADR-{NNN} | Deprecated
+**Date**: {YYYY-MM-DD}
+**Related**: [ADR-{NNN}]({filename}) — {relationship}
+
+## Context
+
+{What situation or problem prompted this decision? What constraints
+apply? What prior decisions does this build on?}
+
+## Decision
+
+{What was decided and why. Be specific enough that an agent or
+engineer can determine whether code complies.}
+
+## Consequences
+
+{What follows from this decision — positive, negative, and neutral.
+Include migration impact if replacing a prior approach.}
+```
+
+### Lifecycle
+
+- **Proposed**: under discussion, not yet binding.
+- **Accepted**: binding. Code, rules, and quality gates must comply.
+- **Superseded**: replaced by a newer ADR. Keep the file; update status
+  and link to the successor.
+- **Deprecated**: no longer applicable (e.g. workspace removed).
+
+### Connection to the Learning Loop
+
+ADRs are created when a decision is significant enough to shape future
+work. The consolidation workflow checks whether completed work produced
+decisions that should be recorded. Custom lint rules can encode
+ADR constraints as automated enforcement — graduating knowledge into
+quality gates.
 
 ## Rules: Canonical Rules and Platform Triggers
 
 The rules system has three layers:
 
-1. **Policy** — `.agent/directives/` (principles.md, testing-strategy.md, etc.). Authoritative, comprehensive.
-2. **Canonical rules** — `.agent/rules/*.md`. Short operational reinforcements of policy. Each stands alone — enough to act on without reading the full directive.
-3. **Platform triggers** — `.cursor/rules/*.mdc`, `.claude/rules/*.md`, etc. Thin wrappers that point at a canonical rule or skill.
+1. **Policy** — `.agent/directives/` (principles.md, testing-strategy.md,
+   etc.). Authoritative, comprehensive.
+2. **Canonical rules** — `.agent/rules/*.md`. Short operational
+   reinforcements of policy. Each stands alone — enough to act on without
+   reading the full directive.
+3. **Platform triggers** — thin activation wrappers or entry-point chains
+   that identify one canonical source.
 
-A trigger MUST point at either `.agent/rules/*.md` or `.agent/skills/*/SKILL.md` — never at a directive directly, and never both. No double indirection.
+A trigger MUST identify exactly one canonical source and MUST NOT carry
+substantive policy. No double indirection.
 
 ### Canonical Rule Format
 
@@ -184,183 +318,190 @@ A trigger MUST point at either `.agent/rules/*.md` or `.agent/skills/*/SKILL.md`
 See `{directive-or-ADR-path}` for the full policy.
 ```
 
-### Trigger Wrapper Formats
+### Trigger Wrapper Format
 
-**Cursor** (`.cursor/rules/*.mdc`):
+Use the receiving platform's native wrapper metadata:
 
 ```text
 ---
 description: {one-line}
-alwaysApply: true  # or globs: '**/*.test.ts'
+{platform activation fields}
 ---
 
-Read and follow `.agent/rules/{name}.md`.
+Read and follow `{canonical-source}`.
 ```
 
-**Claude Code** (`.claude/rules/*.md`) — path-scoped only; `alwaysApply` rules are enforced via the entry-point chain. Same body (`Read and follow ...`) with `paths` YAML instead of `alwaysApply`.
+Platform-specific notes may appear in the trigger only as activation
+metadata, not policy.
 
-Platform-specific notes (e.g. "In Cursor, use `ReadLints`") may appear in the trigger — they are activation metadata, not policy.
-
-Codex note: this repo does not use a parallel `.agents/rules/` layer. Codex picks up always-on behaviour through the entry-point chain (`AGENTS.md` → `.agent/directives/AGENT.md` → canonical rules). When a rule activates a command or skill, add the corresponding `.agents/skills/` wrapper. Reviewer roles should be configured through Codex project-agent support in `.codex/`, not modelled as skills.
+Adapter locations and generated names are host-defined. Record them in the
+practice-index and local surface matrix; Core only requires thin activation
+and a single canonical source.
 
 ## Sub-agents: Templates and Platform Adapters
 
-When a repo has installed reviewer or domain-expert agents, canonical sub-agent prompts live in `.agent/sub-agents/templates/*.md` (platform-agnostic). For a production app, use the three-layer composition system: shared components → canonical templates → thin platform adapters. If the agent layer is not yet installed, make that status explicit in `AGENT.md` and the local Practice bridge rather than implying a roster exists.
+Canonical sub-agent prompts live in `.agent/sub-agents/templates/*.md`
+(platform-agnostic). Production apps use three-layer composition: shared
+components → canonical templates → thin platform adapters. If the agent
+layer is not yet installed, make that status explicit in `AGENT.md` and
+the Practice bridge.
 
-Platform adapters contain only activation metadata and a pointer to the canonical template: Cursor `.cursor/agents/*.md`, Claude Code `.claude/agents/*.md`, Gemini CLI `review-*.toml` commands, and Codex project-agent config under `.codex/`.
+Platform adapters contain only activation metadata and a pointer to the
+canonical template (see Artefact Model table for paths). Unsupported
+platforms stay explicit in the local matrix.
 
-Cursor adapter format (`readonly: true` enforces read-only review at the platform level):
+### Template Structure
 
-### Template
+A sub-agent template requires these sections (in order):
 
-```text
----
-name: {agent-name}
-description: {One-line description for Cursor's agent picker}
-model: auto
-tools: Read, Glob, Grep, LS, Shell, ReadLints
-readonly: true
----
-
-# {Agent Title}: {Role Description}
-
-{2-3 sentence role statement. Include "Mode: Observe, analyse and report. Do not modify code."}
-
-## Identity
-
-State your identity at the start of your first response:
-
-    Name: {agent-name}
-    Purpose: {purpose}
-    Summary: {one-line summary}
-
-## Reading Requirements (MANDATORY)
-
-Before reviewing, read and internalise:
-
-| Document | Purpose |
-|----------|---------|
-| `.agent/directives/AGENT.md` | Practice directives |
-| `.agent/directives/principles.md` | Authoritative rules |
-| `.agent/directives/testing-strategy.md` | TDD expectations |
-
-## Core Philosophy
-
-{The agent's guiding principle in one sentence}
-
-## When Invoked
-
-### Step 1: Gather Context
-{How to identify what to review}
-
-### Step 2: Analyse
-{What to assess -- specific to the agent's specialisation}
-
-### Step 3: Prioritise
-Categorise by severity: Critical (must fix), Important (should fix), Suggestions (could improve).
-
-### Step 4: Report
-{Actionable feedback with location, problem, impact, fix}
-
-## Output Format
-
-    ## {Report Title}
-    **Scope**: [what was reviewed]
-    **Verdict**: [APPROVED / APPROVED WITH SUGGESTIONS / CHANGES REQUESTED]
-    ### Critical Issues
-    ### Important Improvements
-    ### Suggestions
-    ### Positive Observations
-```
+1. **YAML frontmatter**: `name`, `description`, `model: auto`, `tools`, `readonly: true`
+2. **Role statement**: 2-3 sentences including "Mode: Observe, analyse
+   and report. Do not modify code."
+3. **Identity block**: Name, Purpose, Summary — stated at response start
+4. **Reading Requirements**: mandatory table of directive paths
+   (AGENT.md, principles.md, testing-strategy.md)
+5. **Core Philosophy**: one-sentence guiding principle
+6. **When Invoked**: Step 1 (Gather Context), Step 2 (Analyse), Step 3
+   (Prioritise by severity: Critical/Important/Suggestions), Step 4
+   (Report with location/problem/impact/fix)
+7. **Output Format**: Scope, Verdict (APPROVED / APPROVED WITH
+   SUGGESTIONS / CHANGES REQUESTED), Critical Issues, Important
+   Improvements, Suggestions, Positive Observations
 
 ### Core Review Agents
 
-Default portable roster. Local practices may add specialist reviewers such as editorial or domain-specific agents.
+Default portable roster. Local practices may add editorial, domain-specific,
+or browser-facing specialists.
 
-| Agent           | Specialisation                   | Key assessment areas                                                                                                                                                  |
-| --------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `code-reviewer` | Gateway reviewer, always invoked | Correctness, edge cases, security, performance, readability, maintainability, test coverage. Triages to specialists.                                                  |
-| `test-reviewer` | Test quality and TDD compliance  | Test classification (unit/integration), naming conventions, mock simplicity, test value, TDD evidence. Recommends deletion for tests that test mocks or types.        |
-| `type-reviewer` | TypeScript type safety           | Type flow tracing, type widening detection, assertion usage, external boundary validation. Core principle: "why solve at runtime what you can embed at compile time?" |
+| Agent         | Specialisation                   | Key assessment areas                                                                                                                                                  |
+| ------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `code-expert` | Gateway reviewer, always invoked | Correctness, edge cases, security, performance, readability, maintainability, test coverage. Triages to specialists.                                                  |
+| `test-expert` | Test quality and TDD compliance  | Test classification (unit/integration), naming conventions, mock simplicity, test value, TDD evidence. Recommends deletion for tests that test mocks or types.        |
+| `type-expert` | TypeScript type safety           | Type flow tracing, type widening detection, assertion usage, external boundary validation. Core principle: "why solve at runtime what you can embed at compile time?" |
 
-## Commands: Canonical and Platform Adapters
+When dispatching a reviewer to gate merge or completion, brief with the
+full merge-gate scope, not the arc scope — reviewer verdicts are
+scope-bounded artefacts (PDR-015 amendment 2026-04-29).
 
-Canonical commands in `.agent/commands/*.md` contain the substantive workflow instructions. Platform adapters use the `jc-*` prefix consistently across all platforms and contain only a pointer to the canonical command.
+## Skills: Canonical and Platform Adapters
 
-### Canonical Format (.agent/commands/)
+Canonical skill bodies live in `.agent/skills/<name>/SKILL-CANONICAL.md`
+and carry the substantive workflow. Platform adapters are generated thin
+wrappers using the receiving repo's configured owned-skill prefix and
+locations. The host bridge or surface matrix records emitted invocation
+names. Manual adapter edits are forbidden. Skills are the sole
+user-and-model-invokable workflow surface; custom command surfaces are
+retired. Unsupported states belong in the local surface matrix.
 
-```markdown
-# {Command Name}
+### Required Skills
 
-{Workflow instructions — the substantive content.}
+Each receiving repo MUST provide canonical bodies for these named
+workflows under `.agent/skills/<name>/SKILL-CANONICAL.md`. Generated
+adapters land at host-configured surfaces using the host's owned-skill
+prefix.
 
-## Steps
-
-1. {Step 1}
-2. {Step 2}
-```
-
-### Platform Adapter Formats
-
-Cursor (`.cursor/commands/jc-*.md`) — uses `@` file injection:
-
-```markdown
-# {Command Name}
-
-Read and follow @.agent/commands/{command-name}.md
-```
-
-Claude Code (`.claude/commands/jc-*.md`) — YAML frontmatter with `description`, `allowed-tools`, `argument-hint`; body references canonical path with `$ARGUMENTS`. Gemini (`.gemini/commands/jc-*.toml`) — TOML with `description` and `prompt` fields; uses `{{args}}` for argument injection. Codex (`.agents/skills/jc-*/SKILL.md`) — YAML frontmatter with `name`, `description`; body reads canonical path.
-
-### Required Commands
-
-| Command          | File                     | Core logic                                                                                                                                                                                                                             |
-| ---------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| start-right      | `jc-start-right.md`      | Read and follow the start-right prompt.                                                                                                                                                                                                |
-| gates            | `jc-gates.md`            | Run `type-check -> lint -> build -> test` sequentially. All blocking. Restart from beginning after any fix.                                                                                                                            |
-| commit           | `jc-commit.md`           | Check status, review diff, verify gates, stage selectively, conventional commit format. Safety: never force push, never amend pushed commits, never `--no-verify`.                                                                     |
-| consolidate-docs | `jc-consolidate-docs.md` | Verify documentation is current. Extract any remaining plan content to permanent locations. Update plan/prompt statuses. Write to napkin. Check the Practice Box. Audit cohesion. Check Practice fitness. Consider Practice evolution. |
-| plan             | `jc-plan.md`             | Read directives. Create plan with explicit outcome, impact, value mechanism, acceptance criteria, risk assessment, and non-goals.                                                                                                      |
-
-## Prompts (.agent/prompts/)
-
-All prompts carry YAML frontmatter: `prompt_id`, `title`, `type` (workflow | handover), `status` (active | completed), `last_updated`, and `parent_plan` (handover only). Completed prompts move to `archive/`. **Workflow prompts** (e.g. `start-right`) are evergreen processes with no `parent_plan`. **Handover prompts** describe specific implementation sessions; archived on completion.
-
-### start-right.prompt.md
-
-The session entry point. Sections: **Foundation Documents** (AGENT.md, principles.md, testing-strategy.md), **Guiding Questions** (right problem? right layer? simpler? assumptions?), **Practice Box** (check `.agent/practice-core/incoming/`; note `.agent/practice-context/incoming/` if present), **Process** (discuss first step with user), **Quality Gates**.
+| Skill            | Canonical body                                       | Core logic                                                                                                                                                                                |
+| ---------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| start-right      | `.agent/skills/start-right-quick/SKILL-CANONICAL.md` | Read and follow the start-right-quick skill at session open.                                                                                                                              |
+| session-handoff  | `.agent/skills/session-handoff/SKILL-CANONICAL.md`   | Refresh the continuity contract, close own collaboration claims, update decision threads, capture surprises, and escalate into the consolidate-docs skill only when due.                  |
+| gates            | `.agent/skills/gates/SKILL-CANONICAL.md`             | Run `type-check -> lint -> build -> test`. All blocking; restart after any fix.                                                                                                           |
+| commit           | `.agent/skills/commit/SKILL-CANONICAL.md`            | Check status, review diff, verify gates, stage selectively, and use a conventional commit. Never force push, amend pushed commits, or use `--no-verify`.                                  |
+| consolidate-docs | `.agent/skills/consolidate-docs/SKILL-CANONICAL.md`  | Verify docs current. Graduate settled content. Extract patterns. Rotate napkin. Manage fitness. Integrate incoming Practice Box. Broadcast outgoing context. See §Consolidation Workflow. |
+| plan             | `.agent/skills/plan/SKILL-CANONICAL.md`              | Read directives. Create plan with outcome, impact, value mechanism, acceptance criteria, risks, and non-goals.                                                                            |
 
 ## Skills (.agent/skills/)
 
-### SKILL.md Format
+### SKILL-CANONICAL.md Format
 
-Canonical skills use YAML frontmatter. Platform adapters in `.cursor/skills/` and `.agents/skills/` are thin wrappers.
+Canonical skill bodies use a non-discoverable filename
+(`SKILL-CANONICAL.md`) so only the host repo's tooling reads them
+directly; agents see the generated adapter copies. Frontmatter:
 
 ```yaml
 ---
-name: {skill-name}
+name: { skill-name }
 classification: active | passive
-description: {When to invoke this skill — one sentence trigger condition}
+description: { When to invoke this skill — one sentence trigger condition }
 ---
-
 # {Skill Title}
 
-## Goal
-{What the skill achieves}
-
-## Workflow
-1. {Step 1}
+{ Body — fully inlined; not a thin pointer. }
 ```
 
-Cursor adapter (`.cursor/skills/{name}/SKILL.md`): `name`/`description` frontmatter + `Read and follow @.agent/skills/{name}/SKILL.md`. Codex adapter (`.agents/skills/{name}/SKILL.md`): `name`/`description` frontmatter + reads canonical path without `@`.
+Adapters are emitted by the host's skill-adapter generator and **must not be
+edited manually**. Each adapter carries thin frontmatter (`name`,
+`description`) and generated body content derived from the canonical skill.
+The practice-index or surface matrix records which native surfaces are active,
+which are generated aliases, and which are unsupported.
+
+### Session-Entry Skills
+
+Session workflows live as canonical skills. Commands and platform adapters
+are thin wrappers.
+
+- **start-right-quick** — the default session entry point. Read directives,
+  memory, collaboration state, guiding questions, practice box, then apply session priority:
+  (1) bugs first, (2) unfinished planned work second, (3) new work last.
+- **start-right-thorough** — extends quick with domain context reading,
+  metacognition, testing-strategy review, practice orientation,
+  collaboration-overlap checks, and an execution outline.
+- **go** — mid-session re-grounding. Read directives, identify intent,
+  structure the todo list with ACTION/REVIEW/GROUNDING cadence.
+
+### Continuity Contract
+
+Session-entry skills depend on a live continuity surface. The following
+contract defines what that surface must provide.
+
+One explicit canonical host surface must carry the live continuity
+contract. Typical hosts include a dedicated state file (e.g.
+`.agent/memory/operational/repo-continuity.md`) or a section of a continuation prompt
+— the choice is host-local. Whatever the host is, `go`, `session-handoff`,
+and start-right must all point to it. The key rule: **if any workflow
+references a continuity surface, that surface must exist on a fresh
+checkout.** Hydration is incomplete until the host surface exists and
+the workflows that reference it resolve.
+
+Hosts that split the contract across multiple surfaces — canonical
+contract, per-thread next-session record, tactical track cards — remain compliant
+provided the authority order between them is explicit, each surface has a
+single documented writer, and the contract fields are covered in aggregate.
+
+The contract stays operational-only. The minimum field set is: active
+threads, branch-primary thread next-session record, repo-wide invariants /
+non-goals, next safe step, and deep-consolidation status. Hosts may add
+epistemic-continuity fields (recent surprises, open questions) either
+on the canonical contract or on a per-thread next-session record.
+
+Keep ordinary continuity and deep convergence separate:
+
+- `session-handoff` refreshes the continuity contract, syncs next-action
+  surfaces, and captures surprises. It is cheap and runs every session.
+- `consolidate-docs` owns graduation, pattern extraction, fitness management,
+  and practice exchange. It runs only when its trigger checklist fires.
+
+Surprise follows an explicit pipeline: capture → distil → graduate → enforce.
+Surprise becomes durable only when it changes future behaviour and clears the
+usual graduation bar.
 
 ### Napkin (.agent/skills/napkin/SKILL.md)
 
 The napkin is the capture stage of the learning loop. It is always active.
 
-**Session start**: Read `.agent/memory/distilled.md` (if exists), then `.agent/memory/napkin.md` (if exists; create if not).
+**Session start**: Read `.agent/memory/active/distilled.md` (if exists), then
+`.agent/memory/active/napkin.md` (if exists; create if not).
 
-**Continuous updates**: Write whenever you learn something worth recording -- errors you figure out, user corrections, your own mistakes, tool surprises, approaches that work or fail. Be specific: "Assumed API returns list but it returns paginated object with `.items`" not "Made an error."
+**Continuous updates**: Write whenever you learn something worth
+recording -- errors you figure out, user corrections, your own mistakes,
+tool surprises, Practice/tooling friction, insights, ideas, wishlist
+items, general impressions, or approaches that work or fail. Practice-tool
+feedback includes host-local tools that implement Practice capabilities:
+the host repo names its canonical implementation surface (a TypeScript
+agent-tools binary, a shell wrapper, a Python toolkit, an editor command,
+a CI workflow, etc.) in its bridge index. Capture the behaviour-level
+signal so consolidation can separate portable Practice substance from
+local implementation detail. Be specific: "Assumed API returns list but it
+returns a paginated object with `.items`" not "Made an error."
 
 **Structure**:
 
@@ -378,31 +519,286 @@ The napkin is the capture stage of the learning loop. It is always active.
 
 Add `### Mistakes Made` or `### Corrections` subsections as needed.
 
-**Rotation**: When the napkin exceeds ~500 lines, follow the distillation skill.
+**Rotation**: When the napkin exceeds ~500 lines, follow the distillation
+step in the consolidation workflow (`consolidate-docs`).
 
-### Distillation (.agent/skills/distillation/SKILL.md)
+### Distillation (consolidation step)
 
-Extracts high-signal patterns from the napkin into `distilled.md` (target: <200 lines). **Trigger**: napkin exceeds ~500 lines, or user requests.
+Extracts high-signal patterns from the napkin into `distilled.md` (target:
+<200 lines). Protocol: extract actionable entries, merge against existing
+content (add, skip duplicates, update refinements, investigate
+contradictions), prune graduated entries, archive, start fresh. See
+§Consolidation Workflow step 4.
 
-**Protocol**: (1) extract patterns, mistakes, and lessons from the outgoing napkin, (2) merge against existing `distilled.md` — add new, skip duplicates, update refinements, investigate contradictions, (3) prune entries that have graduated to permanent docs, (4) archive the old napkin, (5) start fresh. Entries must be specific, actionable, non-obvious, and terse.
+### Reusable Patterns — Two Homes
+
+Patterns live in one of two homes depending on their level of
+abstraction:
+
+**`.agent/memory/active/patterns/`** — **Specific instances** (host-side,
+not portable). Concrete, ecosystem-grounded patterns proven in this
+repo (TypeScript, Zod, Vitest, MCP, or whichever ecosystem applies
+locally). Instance files may carry a `related_pdr: PDR-NNN` or
+`related_pattern: <name>` frontmatter pointer linking them to their
+general form (if one has been authored).
+
+**`.agent/practice-core/decision-records/` with `pdr_kind: pattern`** —
+**Universal patterns recorded as PDRs** (portable; travels with Core).
+Ecosystem-agnostic abstractions synthesised from multiple specific
+instances. Authored fresh as a PDR when instance accumulation makes
+the general form legible across multiple contexts. Specific instances
+remain in `memory/active/patterns/`; they are not moved or copied.
+
+The previous `.agent/practice-core/patterns/` Core directory was
+retired 2026-04-29 by
+[PDR-007](decision-records/PDR-007-promoting-pdrs-and-patterns-to-first-class-core.md)
+amendment. Universal patterns now take PDR shape (the
+`pdr_kind: pattern` frontmatter distinguishes them from governance
+PDRs); the old `outgoing/patterns/` transport route is retired with
+the `practice-context/` peer companion.
+
+**Barrier to entry for either home**: a pattern belongs as a
+persisted entry only when it is (a) broadly applicable or clearly
+reusable, (b) proven by implementation, (c) protective against a
+recurring mistake, and (d) stable enough to teach without immediate
+churn.
+
+**Additional criteria for promotion to a `pdr_kind: pattern` PDR**:
+(e) ecosystem-agnostic — stated without dependence on any specific
+language, framework, or toolchain; (f) engineering-substance, not
+Practice-governance (Practice-governance patterns take ordinary
+governance PDR shape); (g) synthesised from ≥2 specific instances.
+
+**Instance file format**: one `.md` per pattern in
+`.agent/memory/active/patterns/` with YAML frontmatter:
+
+```yaml
+---
+name: { Pattern Name }
+use_this_when: { one sentence: when this pattern applies }
+category: { code | architecture | process | testing | agent }
+proven_in: { file path where pattern was first proven }
+proven_date: { YYYY-MM-DD }
+barrier:
+  broadly_applicable: true
+  proven_by_implementation: true
+  prevents_recurring_mistake: { failure mode prevented }
+  stable: true
+---
+```
+
+Body sections: **Principle** (one-paragraph statement), **Pattern**
+(steps), **Anti-pattern** (what not to do), **When to Apply**
+(trigger).
+
+**Index**: maintain a `README.md` in `.agent/memory/active/patterns/` with a
+short description for each pattern.
+
+**Cross-repo exchange**: portable universal patterns travel as Core
+content in PDR form. Specific instances remain in
+`.agent/memory/active/patterns/` as proof; they do not travel.
+
+### Design-Space Explorations
+
+Explorations are durable option-weighing documents that sit between
+session observations (napkin) and committed decisions (ADRs). They are
+not refinement of napkin entries; they are research-shaped design-space
+analyses that inform which ADR to write or which plan to promote. An
+exploration may remain `active` indefinitely if the question is not yet
+ripe — that is acceptable. An exploration that has reached a
+conclusion but has not graduated to ADR or plan is not.
+
+**Home**: the host exploration tier, conventionally a documentation
+explorations directory with a README defining the shape. The practice-index
+records the exact path; alternative locations are valid only when named there.
+
+**Filename convention**: `YYYY-MM-DD-<kebab-slug>.md`. The date prefix
+preserves chronological order without requiring metadata reads.
+
+**Required frontmatter**:
+
+```yaml
+---
+title: { Title }
+date: YYYY-MM-DD
+status:
+  active # or informed-adr-<N> / informed-plan-<name> /
+  # superseded-by-<ref> / undecided-pending-<trigger>
+---
+```
+
+**Document shape**:
+
+1. **Frontmatter** as above.
+2. **Problem statement** — what's under exploration and why now.
+3. **Options considered** — each with pros, cons, evidence, failure modes.
+4. **Research questions still open** — what we don't yet know.
+5. **Informs** — the ADR / plan / decision this feeds into if known.
+6. **References** — external sources cited.
+
+**Relationship to other tiers**: napkin captures observations;
+explorations weigh options; ADRs commit decisions; plans execute. The
+exploration survives as the evidence trail the ADR or plan cites; it
+does not substitute for either. A single session may produce multiple
+explorations as different research questions surface; each gets its
+own timestamped file.
+
+**When to create one**: whenever design-space work requires more
+durability than a napkin entry but is not yet ready to commit to a
+decision. Trigger examples: "should we dual-export to a second
+telemetry backend?"; "what's the event schema shape data scientists
+actually need?"; "how far does vendor X take us across these axes
+before we hit a gap?"
+
+**When NOT to create one**: routine implementation decisions with
+obvious right answers; session-internal observations (use the napkin);
+committed decisions (use an ADR); execution instructions (use a plan).
+
+**Cross-repo exchange**: explorations are typically too host-specific
+to travel verbatim, but the _shape_ of explorations is portable — an
+outgoing broadcast describing the explorations tier (problem, home,
+frontmatter, document shape, relationship to other tiers) is a
+legitimate Practice Context contribution.
+
+### Transplant Manifest (exploration variant)
+
+Wholesale Practice transplantation (PDR-005) uses a specialised
+exploration: the **transplant manifest**. It is authored in the destination
+repo's exploration home before any file is copied from the source repo.
+
+Filename: `YYYY-MM-DD-transplant-from-<source-repo>.md`.
+
+Additional frontmatter field:
+
+```yaml
+status:
+  transplant-in-progress
+  # or transplant-completed / transplant-aborted
+```
+
+Body sections:
+
+1. **Problem statement** — which source repo; why transplant rather
+   than cold-start; what the destination expects to inherit.
+2. **Gradient classification** — a table with one row per source
+   file or file-group:
+
+   | Source path                         | Gradient                 | Destination path    | Adaptation note                                                  |
+   | ----------------------------------- | ------------------------ | ------------------- | ---------------------------------------------------------------- |
+   | `.agent/directives/principles.md`   | portable-with-adaptation | same                | rewrite test-framework references; keep universal rules verbatim |
+   | `.agent/practice-index.md`          | local                    | create-from-scratch | bridge file is host-specific by design                           |
+   | `.agent/memory/active/distilled.md` | hybrid                   | same                | preserve universal entries; drop source-repo-domain entries      |
+   | `<host ADR directory>/<NNN>-*.md`   | hybrid                   | rewrite             | decision shape portable; decision substance host-specific        |
+   | ...                                 | ...                      | ...                 | ...                                                              |
+
+   Gradient values: **fully-portable** / **portable-with-adaptation**
+   / **hybrid** / **local** / **rejected** (with rationale).
+
+3. **Research questions** — ambiguous rows where classification
+   requires owner input.
+4. **Execution plan** — the order in which rows are processed;
+   typically fully-portable first, then portable-with-adaptation,
+   then hybrid, then local.
+5. **Four-audit close** — a checklist recording that each audit has
+   been performed and passed:
+   - Foreign-antigen audit (grep for source-repo names, paths, and
+     opaque identifiers such as ADR numbers; all hits resolved or
+     documented).
+   - Completeness audit (every source concept has a destination
+     representative or is recorded as intentionally omitted).
+   - Cohesion audit (no self-contradictions in the destination
+     Practice).
+   - Manifest-closure audit (every row reached a completed or
+     explicitly-rejected state).
+6. **Informs** — the destination's practice-index, the destination's
+   `CHANGELOG.md` entry, any new PDRs the transplantation surfaced.
+
+The manifest is retained permanently in the destination's exploration home —
+it is the reasoning trail for the destination's initial Practice shape and the
+record future agents use to understand why certain adaptations were made.
+
+### Consolidation Workflow
+
+The consolidation workflow drives the Knowledge Flow's graduation cycle —
+converting captured experience into settled Practice. Every repo should
+implement an invokable consolidation skill or workflow with this abstract shape:
+
+1. **Verify documentation is current.** Architectural decisions, system
+   behaviour, and technical reference should already be in permanent
+   locations. Scan active and completed plans for residual content that
+   describes how things work and move it to the appropriate permanent doc.
+2. **Update plan statuses.** Ensure all plans and prompts reflect current
+   state. Fix stale cross-references, especially after archive moves.
+3. **Extract reusable patterns.** Review completed work for patterns that
+   meet the barrier (see §Reusable Patterns). Covers all learning types.
+4. **Rotate the napkin (distillation).** When the napkin exceeds ~500
+   lines: extract high-signal entries, merge against `distilled.md`, prune
+   graduated entries, archive the old napkin, start fresh. See
+   §Distillation.
+5. **Graduate settled content.** For each entry in `distilled.md`, apply
+   two criteria: (a) **stable** — not contradicted by recent work,
+   (b) **natural home** — an existing permanent doc where it belongs.
+   Three outcomes: both met — graduate; stable but no natural home —
+   raise with the user (the gap in documentation structure is the
+   signal); not yet stable — leave for further validation. Fitness
+   limits are a signal to action (step 6), never a reason to defer.
+6. **Manage fitness thresholds** (three-zone fitness model — host repos
+   record the host-side adoption in their practice-index Concept ↔ ADR
+   map). Fitness is a post-writing health signal, never a learning
+   constraint. Write, capture, distil, and graduate at the weight the
+   signal deserves, then deal with zones here. Each metric lands in
+   `healthy` → `soft` → `hard` → `critical`, where critical is
+   `hard limit × 1.5`.
+   - `soft`: refine, split, or extend target (modestly, with rationale).
+     Never blocks.
+   - `hard`: refine, split, graduate, or raise with owner approval.
+     Treat the validator failure as a signal to route structural work;
+     do not roll back or suppress preserved learning.
+   - `critical`: loop failure. Preserve the learning, open a remediation
+     lane, and run the three-question post-mortem from the host's
+     concrete fitness-model record (the §Loop Health section in the
+     host's three-zone-fitness-model ADR).
+7. **Manage the practice exchange.** Two directions:
+   - _Incoming_: integrate files from
+     `.agent/practice-core/decision-records/incoming/` following the
+     provenance chain and three-part bar. Practice evolution is not
+     linear — incoming can be behind in some areas and ahead in others.
+     Compare bidirectionally. Clear the box only after user-approved
+     integration, never unilaterally.
+   - _Outgoing_: domain-specific observations and structural notes
+     route by shape per
+     [PDR-024](decision-records/PDR-024-vital-integration-surfaces.md)
+     amendment 2026-04-29. Content appropriate for Practice Core itself
+     (Learned Principles, structural proposals, bootstrap improvements)
+     goes as Core proposals with user approval; portable governance and
+     universal patterns become PDRs in `practice-core/decision-records/`;
+     host-specific worked instances stay in the host's pattern memory
+     and bridge index. The previous `practice-context/outgoing/`
+     ephemeral exchange surface was retired 2026-04-29 (PDR-007
+     amendment). All outgoing content must carry the **concept itself**
+     — not a pointer to where the source host repo documents it. No
+     ADR numbers, no local paths. The substance must be understandable
+     without the source repo.
 
 ## Platform Configuration
 
-Each platform requires configuration files (e.g. Cursor's `.cursor/environment.json` with `agentCanUpdateSnapshot: true`, and `.cursor/settings.json` for plugins). These are platform-specific -- consult each platform's documentation and the Practice Core files for adapter patterns.
+Treat platform config like source code: tracked project settings define the
+shared agentic contract, gitignored local settings carry user-specific
+overrides. Each supported platform should document its tracked/local pair
+(for example `{platform}/settings` plus `{platform}/settings.local`).
 
-## Bootstrap Checklist
+Tracked settings carry required permissions, hook activation, plugin state,
+and fresh-checkout affordances. Local settings carry paths, one-off
+permissions, and machine-specific wiring. The most dangerous failure mode is
+silent: wrappers exist but the platform refuses to run them because
+permissions were never granted in tracked config. Portability checks must
+verify authorisation parity, not just wrapper presence. Normal operation
+must not depend on gitignored local settings.
 
-After creating all files, validate:
+## Verification
 
-1. `.agent/practice-core/` contains all six Practice Core files (`practice.md`, `practice-lineage.md`, `practice-bootstrap.md`, `README.md`, `index.md`, `CHANGELOG.md`) and `incoming/.gitkeep`. Optional `.agent/practice-context/` is not required; `incoming/` there is transient.
-2. `.agent/practice-index.md` exists, all its links resolve, and its sections match the format specified above.
-3. `AGENT.md` links to `.agent/practice-core/index.md`.
-4. Every file path referenced in AGENT.md, rules, commands, and agents resolves.
-5. Every agent's reading requirements point to files that exist.
-6. `AGENTS.md` links to `AGENT.md`, which links to `principles.md` and `testing-strategy.md`.
-7. The `start-right` prompt references all foundation documents.
-8. The napkin rule points to a napkin skill that exists.
-9. Quality gates (`type-check`, `lint`, `build`, `test`) are wired in `package.json`.
-10. The project builds.
-11. **Artefact portability**: canonical skills and commands in `.agent/` contain no platform-specific syntax. All platform adapters are thin wrappers. Validate adapter-to-canonical consistency (portability check script or manual review).
-12. **Cohesion audit**: all Practice Core files are internally consistent, practice-index.md links resolve, and all broader Practice files (directives, rules, commands, prompts, skills) are aligned with the Core. No stale descriptions, no contradictions, no outdated wording.
+After building, verify. See
+[practice-verification.md](practice-verification.md) for the full
+verification sequence: structural checklist, intent-level health check,
+minimum operational estate, claimed/installed/activated audit, and
+fresh-checkout acceptance criteria.
