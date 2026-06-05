@@ -23,7 +23,7 @@ product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-p
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin `2026-06-05` entry (session insights + firsthand corrections + build gotchas).
 
-- **Status:** Phase 0 ✅; **Phase 1 ✅** — 1a (92 PDRs + `practice-verification.md`) and 1b (2026-06-05: Core generation
+- **Status:** Phase 0 ✅; **Phase 1 ✅** — 1a (91 PDRs + `practice-verification.md`) and 1b (2026-06-05: Core generation
   merged to Oak's current trinity + entry points, `provenance.yml` history union, `CHANGELOG.md` merge,
   `.agent/practice-context/` retired) both green; tag `transplant/phase-1`. Commits:
   `git log --oneline transplant/phase-0-baseline..HEAD`.
@@ -116,7 +116,7 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **@engraph/castr — next session start.** The **primary active workstream** is the Oak → castr Practice transplant, on branch `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set — NOT `main`; baseline `transplant/phase-0-baseline`). The product slice `explicit-additional-properties-support.md` and the `remediation/` backlog stay **parked-in-place** — resume only after the transplant closes or on a fresh reproduced regression.
 
-**Phase 1 is COMPLETE and green**, tagged `transplant/phase-1`: 1a (92 PDRs + `practice-verification.md`) and 1b (Core generation converged to Oak's current trinity + entry points, `provenance.yml` branch-history union, `CHANGELOG.md` merge, `.agent/practice-context/` retired). Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
+**Phase 1 is COMPLETE and green**, tagged `transplant/phase-1`: 1a (91 PDRs + `practice-verification.md`) and 1b (Core generation converged to Oak's current trinity + entry points, `provenance.yml` branch-history union, `CHANGELOG.md` merge, `.agent/practice-context/` retired). Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` `2026-06-05` entry. Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 

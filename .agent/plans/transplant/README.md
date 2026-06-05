@@ -25,7 +25,7 @@ only.
 
 ## Resume point (next session)
 
-**Phase 1 is complete** — tagged `transplant/phase-1`. **1a** delivered the 92-PDR estate, `practice-verification.md`,
+**Phase 1 is complete** — tagged `transplant/phase-1`. **1a** delivered the 91-PDR estate (89 numbered slots; PDR-086 vacant — inherited from Oak, lossless; PDR-076 split 076/076a/076b), `practice-verification.md`,
 and the `reference-closure.md` ledger (additive; zero `@oaknational`/`oak-` naming). **1b** (2026-06-05) converged the
 Core generation to Oak's current portable trinity + entry points, created `provenance.yml` as the branch-history union
 (castr's 2026-03-22 entry + a 2026-06-05 merge node preserved — no loss, no duplication, identity-deduped), merged

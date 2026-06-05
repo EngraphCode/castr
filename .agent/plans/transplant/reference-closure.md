@@ -43,7 +43,7 @@ which case the link _targets_ (not the references) get neutralised to plain text
 
 ### PDR → PDR citations — disposition: **resolve**
 
-90 distinct intra-PDR cites; all 92 PDRs transplanted together, so every intra-PDR reference resolves. ✓
+90 distinct intra-PDR cites; all 91 PDR files (89 numbered slots — PDR-086 vacant, inherited from Oak; PDR-076 split into 076/076a/076b) transplanted together, so every intra-PDR reference resolves. ✓
 
 ### PDR / practice-verification → no `@oaknational`/`oak-` naming
 

@@ -39,7 +39,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - **Reference-closure:** Oak rules carry **36 distinct Oak-ADR cites** vs castr ADR≤047; low-number overlaps are
     _semantic_ mismatches (Oak ADR-038 ≠ castr ADR-038) → re-point to PDRs, never assume resolved (Phase 4). PDR→Oak-ADR
     cites (8, in 10 PDRs) = **retained-cross-host** (immutable governance honestly naming Oak's phenotype).
-  - **Status:** Phase 0 ✅ (branch/baseline/plan-promotion/park). Phase 1 🔄: **1a landed** — 92 PDRs (zero oak-naming,
+  - **Status:** Phase 0 ✅ (branch/baseline/plan-promotion/park). Phase 1 🔄: **1a landed** — 91 PDRs (zero oak-naming,
     fully portable) + `practice-verification.md` committed green. **Phase 1b remaining:** Core-generation reconciliation +
     provenance migration (castr inline `provenance:`+`fitness_ceiling` → Oak `provenance: provenance.yml` pointer +
     multi-dim fitness; **history MERGE** — union both branches' provenance + a 2026-06-05 merge node, preserving castr's
@@ -97,6 +97,19 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
        run it to find contradictions (it caught a stale PR-ordering note here), not to confirm completeness.
     8. **`format:check`/linters validate style, not content** — verify the _rendered_ structure after editing padded
        markdown tables / list-continuations; prefer prose anchors over padded-cell matches (tooling-friction; cf. PDR-060).
+  - **Reflection/grounding pass (2026-06-05, session 2) — Phase-2 entry re-verification.** Firsthand, treating the pasted
+    Start Statement as a candidate lead: (1) **PDR estate is lossless vs Oak** — castr **91 files / 89 numbered slots ==
+    Oak 91/89 exactly**; **PDR-086 is vacant in BOTH** (not a transplant drop) and **PDR-076 is split 076/076a/076b in
+    both**. The "**92**" in this napkin (the 1a-landed bullet above), `README`, `reference-closure`, and the continuation
+    prompt was a **propagated miscount** (`90 range + 076a/b`, forgetting 086 is absent) — corrected to **91**; the true
+    count was already firsthand-recorded above ("PDRs 91"). (2) **Oak unmoved** — still HEAD `06018bc3`; **seven validator
+    families + `tsx` postinstall re-confirmed** against Oak's working tree (breaks the design-doc↔statement circularity —
+    the claim holds against source, not just against castr's own docs). (3) **Paste-artifact caution:** the pasted Start
+    Statement carried a `.ive/oak-practice-transplant.md` phantom path and a decapitated bullet that **do not exist in the
+    committed prompt** (correct path + intact bullet on disk) — verify the committed surface before "fixing" from a mangled
+    copy. (4) **§6 candidate (propose to owner before implementing):** a drift-validator — every PDR-count claim == file
+    count; every contract/handoff path resolves on disk — is the structural form of this manual catch ("if a behaviour
+    must be automatic, it needs a rule, not just a skill").
 
 ## 2026-06-04
 
