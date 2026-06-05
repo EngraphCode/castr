@@ -83,6 +83,24 @@ collaboration=active). AMEND: `ci` test fixtures (`@oak/*`), the path-encoding v
 `SessionStart`. **DON'T-BRING** sonar-secrets hooks / `secrets:scan` (castr has only `eslint-plugin-sonarjs`, no Sonar
 server). **Phase 2.**
 
+**Activation DONE (owner, 2026-06-05 Phase-2 execution — revised after the Oak re-sync).** Phase 2 brought the policy
+**data** (`.agent/hooks/policy.json`, localised) + the guard code (`agent-tools/src/hook-policy/*`, tested green) **and
+wired live Claude `PreToolUse` activation** (`.claude/settings.json` Bash/Edit/Write matchers + `run-pretooluse-guard.mjs`
+shim). Initially deferred for the fail-closed brick-risk; the owner's own Oak fix `89ec8dcf` (synced to baseline
+`2c85bc01`) reversed that — **unbuilt `dist` fails OPEN** (exit 0 + warning), only built-but-broken fails closed — so the
+deferral basis was obsolete and the owner authorised activation. Verified: routing validator OK, `git reset --hard`
+denied, safe commands allowed. The sonar-secrets `Read` matcher stays **DON'T-BRING**.
+
+### Agent-tools submodules (Phase 2) — KEEP Practice machinery / DON'T-BRING product-coupled
+
+The wholesale `copy src/**` pulls 20 modules; the ledger seeded surface-granularity only, so module dispositions are
+recorded here (owner 2026-06-05, firsthand during Phase-2 execution). **DON'T-BRING** `src/ci/ci-schema-drift-check.ts` —
+Oak-product, not Practice (calls Oak's curriculum API `open-api.thenational.academy`, reads
+`packages/sdks/oak-sdk-codegen/…`, requires `OAK_API_KEY`; nothing imports it — dropped, script removed). **KEEP**
+everything else, incl. `ci/ci-turbo-report*` (generic turbo-output parsing; the `@oak/pkg-a` in its JSDoc is a doc
+example) and `repo-check` (its `'sdk-codegen'` is a known-task-name literal). `OAK_API_KEY` existed only in the dropped
+file. **Phase 2.**
+
 ### Skills (20) — KEEP 18 / DON'T-BRING 2
 
 DON'T-BRING `ground-truth-design`, `ground-truth-evaluation` (search-eval). Migrate castr `jc-*` (jc-plan, jc-gates,

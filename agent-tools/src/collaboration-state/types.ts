@@ -1,0 +1,249 @@
+import { z } from 'zod';
+
+export interface CollaborationStateEnvironment {
+  readonly PRACTICE_AGENT_SESSION_ID_CLAUDE?: string;
+  readonly PRACTICE_AGENT_SESSION_ID_CURSOR?: string;
+  readonly PRACTICE_AGENT_SESSION_ID_GEMINI?: string;
+  readonly PRACTICE_AGENT_SESSION_ID_CODEX?: string;
+  readonly CODEX_THREAD_ID?: string;
+  readonly conversationId?: string;
+  readonly ANTIGRAVITY_SOURCE_METADATA?: string;
+  readonly ENGRAPH_AGENT_IDENTITY_OVERRIDE?: string;
+}
+
+/**
+ * Branded UUID v5 schema for the agent identity `id` field (PDR-076a §Cascade
+ * item 3). The schema validates standard UUID format and refines on the
+ * version nibble at position 14 = `5`, which v5 sets per RFC 4122. The brand
+ * marker `'UuidV5'` carries the derivation intent at the type level so a
+ * routing comparator receiving `agent_id.id` cannot accidentally accept a
+ * plain string at compile time.
+ *
+ * The derivation function (`deriveCollaborationIdentity`) produces values
+ * that satisfy this schema; the schema is the boundary check at every
+ * untrusted-input parse site.
+ */
+export const uuidV5Schema = z
+  .uuid()
+  .refine((value) => value.charAt(14) === '5', {
+    message: 'expected UUID v5 (version nibble at position 14 must be 5)',
+  })
+  .brand<'UuidV5'>();
+
+export type UuidV5 = z.infer<typeof uuidV5Schema>;
+
+/**
+ * Canonical read-side Zod schema for an agent identity tuple
+ * (PDR-027 as amended 2026-05-26). The type `CollaborationAgentId` is
+ * `z.infer<typeof collaborationAgentIdSchema>` per schema-first
+ * Commandment 12 — the schema IS the type, statically embedded.
+ *
+ * All four identity string fields (`agent_name`, `platform`, `model`,
+ * `session_id_prefix`) are non-empty (`.min(1)`), matching the canonical JSON
+ * schema (`comms-event.schema.json` `minLength: 1`). An empty component is a
+ * meaningless identity and is rejected at the parse boundary — do not relax
+ * these to bare `z.string()`.
+ *
+ * `id` is OPTIONAL on the read side to accept legacy rows written before the
+ * PDR-076a contract landed. The write-side schema
+ * `collaborationAgentIdWriteSchema` requires `id` so write factories cannot
+ * accidentally emit legacy shape; consumers narrow at the routing boundary
+ * (see `routingKeyFor` in `active-agent-routing.ts`).
+ *
+ * Any caller that needs to parse an identity from untrusted input (JSON, env,
+ * external source) MUST use this schema rather than hand-crafting a
+ * structural-typing equivalent.
+ */
+export const collaborationAgentIdSchema = z
+  .object({
+    agent_name: z.string().min(1),
+    platform: z.string().min(1),
+    model: z.string().min(1),
+    session_id_prefix: z.string().min(1),
+    id: uuidV5Schema.optional(),
+  })
+  .strict();
+
+export type CollaborationAgentId = Readonly<z.infer<typeof collaborationAgentIdSchema>>;
+
+/**
+ * Write-side Zod schema for an agent identity tuple (PDR-076a §Decision).
+ * Every write factory (`deriveCollaborationIdentity`, comms event authoring,
+ * claim opening, escalation, conversation appends) MUST emit identities that
+ * satisfy this schema. `id` is required here so missing-id is caught at
+ * compile time at the write site, not only as a runtime parse failure.
+ */
+export const collaborationAgentIdWriteSchema = collaborationAgentIdSchema.extend({
+  id: uuidV5Schema,
+});
+
+export type CollaborationAgentIdWrite = Readonly<z.infer<typeof collaborationAgentIdWriteSchema>>;
+
+export interface DerivedCollaborationIdentity {
+  readonly agentId: CollaborationAgentIdWrite;
+  readonly seed_source: string;
+}
+
+export interface CollaborationArea {
+  readonly kind: 'files' | 'workspace' | 'plan' | 'adr' | 'git';
+  readonly patterns: readonly string[];
+}
+
+interface CollaborationEvidence {
+  readonly kind:
+    | 'log_entry'
+    | 'decision_thread'
+    | 'claim'
+    | 'plan'
+    | 'adr'
+    | 'napkin'
+    | 'thread_record'
+    | 'commit'
+    | 'command_output'
+    | 'rule'
+    | 'pdr'
+    | 'pattern'
+    | 'memory_archive'
+    | 'workspace'
+    | 'gate'
+    | 'smoke'
+    | 'reflog'
+    | 'json_parse'
+    | 'git_status'
+    | 'git_index'
+    | 'script'
+    | 'external_api'
+    | 'continuity'
+    | 'comms_event'
+    | 'commit_queue';
+  readonly ref: string;
+  readonly summary: string;
+}
+
+interface CollaborationClosure {
+  readonly kind: 'explicit' | 'stale' | 'owner_forced';
+  readonly closed_at: string;
+  readonly closed_by: CollaborationAgentId;
+  readonly summary: string;
+  readonly evidence: readonly CollaborationEvidence[];
+}
+
+export interface CollaborationClaim {
+  readonly claim_id: string;
+  readonly agent_id: CollaborationAgentId;
+  readonly thread: string;
+  readonly areas: readonly CollaborationArea[];
+  readonly claimed_at: string;
+  readonly freshness_seconds?: number;
+  readonly heartbeat_at?: string;
+  readonly sidebar_open?: boolean;
+  readonly intent: string;
+  readonly notes?: string;
+  readonly intent_to_commit?: string;
+  readonly archived_at?: string;
+  readonly closure?: CollaborationClosure;
+}
+
+export interface CollaborationCommitQueueEntry {
+  readonly intent_id: string;
+  readonly claim_id: string;
+  readonly agent_id: CollaborationAgentId;
+  readonly files: readonly string[];
+  readonly commit_subject: string;
+  readonly queued_at: string;
+  readonly updated_at: string;
+  readonly expires_at: string;
+  readonly phase: 'queued' | 'staging' | 'pre_commit' | 'abandoned';
+  readonly staged_bundle_fingerprint?: string;
+  readonly staged_name_status?: string;
+  readonly notes?: string;
+}
+
+export interface CollaborationRegistry {
+  readonly schema_version: '1.3.0';
+  readonly commit_queue: readonly CollaborationCommitQueueEntry[];
+  readonly claims: readonly CollaborationClaim[];
+}
+
+export interface ClosedClaimsArchive {
+  readonly schema_version: '1.3.0';
+  readonly claims: readonly CollaborationClaim[];
+}
+
+interface BaseCommsEvent {
+  readonly schema_version: '2.0.0';
+  readonly event_id: string;
+  readonly created_at: string;
+}
+
+/**
+ * Narrative communication event — an authored, titled, bodied communication
+ * addressed to the team or a narrower audience. Lives in the canonical
+ * `.agent/state/collaboration/comms/` directory.
+ */
+export interface NarrativeCommsEvent extends BaseCommsEvent {
+  readonly kind: 'narrative';
+  readonly author: CollaborationAgentId;
+  readonly title: string;
+  readonly body: string;
+  readonly audience?: readonly CollaborationAgentId[];
+  readonly addressed_to?: CollaborationAgentId;
+  readonly in_response_to?: string;
+  readonly in_reply_to?: string;
+  readonly tags?: readonly string[];
+}
+
+/**
+ * Lifecycle communication event — a structured record of a session, claim, or
+ * consolidation lifecycle moment. `claim_id` may be empty when the event is
+ * not claim-scoped.
+ */
+export interface LifecycleCommsEvent extends BaseCommsEvent {
+  readonly kind: 'lifecycle';
+  readonly event_type: string;
+  readonly occurred_at: string;
+  readonly author: CollaborationAgentId;
+  readonly agent_id: CollaborationAgentId;
+  readonly thread: string;
+  readonly claim_id: string;
+  readonly title: string;
+  readonly subject: string;
+  readonly body: string;
+  readonly tags?: readonly string[];
+}
+
+/**
+ * Directed communication message — a point-to-point message from one agent to
+ * another. `kind` is the top-level comms discriminator; `message_kind` carries
+ * the directed-message sub-kind.
+ */
+export interface DirectedCommsMessage extends BaseCommsEvent {
+  readonly kind: 'directed';
+  readonly message_kind: string;
+  readonly from: CollaborationAgentId;
+  readonly to: CollaborationAgentId;
+  readonly subject: string;
+  readonly body: string;
+  readonly tags?: readonly string[];
+}
+
+export type CommsEvent = NarrativeCommsEvent | LifecycleCommsEvent | DirectedCommsMessage;
+
+/**
+ * Result of draining the canonical comms stream for an agent. `output` is
+ * the formatted text the caller emits to its destination (stdout, file,
+ * log); `eventCount` is the number of events drained (zero means nothing
+ * new was emitted); `eventIds` is the IDs of those drained events for the
+ * caller to mark seen AFTER successful emit.
+ *
+ * The drain function does NOT mark events seen — the caller is responsible
+ * for marking AFTER the emit step succeeds, so that a crash between drain
+ * and emit produces a duplicate notification (safe) rather than a missed
+ * notification (unsafe). See FM-2 cure (2026-05-23): Monitor-harness
+ * liveness investigation.
+ */
+export interface DrainResult {
+  readonly output: string;
+  readonly eventCount: number;
+  readonly eventIds: readonly string[];
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "comment": "Inlined from Oak's ../tsconfig.base.json (no root base in castr). Values verified firsthand vs Oak 06018bc3 — corrects the design doc's stale NodeNext/ES2022 note.",
+  "compilerOptions": {
+    "erasableSyntaxOnly": true,
+    "target": "ES2023",
+    "module": "ESNext",
+    "lib": ["ES2023"],
+    "moduleResolution": "bundler",
+    "customConditions": ["development"],
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "types": ["node", "vitest/globals"],
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "e2e-tests/**/*.ts",
+    "smoke-tests/**/*.ts",
+    "vitest.config.ts",
+    "vitest.e2e.config.ts"
+  ]
+}

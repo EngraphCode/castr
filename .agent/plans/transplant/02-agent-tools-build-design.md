@@ -7,13 +7,16 @@ execution per the firsthand rule. Items marked **✅verified** I checked against
 > Why this file exists: this is the hardest, least-recoverable phase. The parent plan carries only a summary; the full
 > actionable design lived only in session context. Persisted here so Phase 2 is resumable without it.
 
-> **⚠️ Reconciled to Oak's 2026-06-05 post-pull state (HEAD `06018bc3`).** The owner pulled Oak after the original
-> capture and the agent-tools surface moved; the corrections are folded in below. Headline changes: **(1)** `postinstall`
+> **⚠️ Reconciled to Oak's 2026-06-05 state. Baseline advanced `06018bc3` → `2c85bc01`** (re-synced mid-Phase-2
+> execution, owner-flagged; the agent-tools delta was 5 hook-policy/guard files, now folded in). The corrections are
+> below. Headline changes: **(1)** `postinstall`
 > is now a **`tsx` bootstrap script** (`agent-tools/src/bootstrap/bootstrap.ts`) that runs `tsc` directly — **not**
 > `turbo run build` — with turbo and pnpm deliberately kept out of the install lifecycle (enforced by the new
 > `validate-lifecycle-scripts` validator); **(2)** PreToolUse guards run from prebuilt **`dist`** via
-> `.claude/hooks/run-pretooluse-guard.mjs` and now **fail closed** when the guard artefact is missing/broken (so the
-> bootstrap exists to guarantee `dist` after install); **(3)** the validator set grew to **seven** (added
+> `.claude/hooks/run-pretooluse-guard.mjs`; as of `2c85bc01` (`89ec8dcf`) an **unbuilt `dist` fails OPEN** (exit 0 + loud
+> warning — so a fresh/branch-switched worktree is not bricked and can still run the install/build that creates the
+> guard), while a **built-but-broken guard still fails CLOSED** (exit 2); the postinstall bootstrap guarantees `dist`
+> after install; **(3)** the validator set grew to **seven** (added
 > `lifecycle-scripts`, `pretooluse-guard-routing`, `fitness-vocabulary`); **(4)** `tsx` is now a required devDep and
 > runtime deps moved to majors (`typescript ^6`, `eslint ^10`, `uuid ^14`, `ink ^7`, `zod ^4.4`). Oak is a moving target
 > — **re-read `agent-tools/` fresh at Phase-2 execution** before relying on any specific below.

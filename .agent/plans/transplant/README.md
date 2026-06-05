@@ -34,7 +34,7 @@ refs; immutable PDRs left intact).
 
 **Resume at Phase 2** — `@engraph/agent-tools` + hook policy; design in
 [`02-agent-tools-build-design.md`](./02-agent-tools-build-design.md), **reconciled to Oak's 2026-06-05 post-pull state in
-`8abdbb7`** (tsx `postinstall` bootstrap not turbo; dist-based fail-closed PreToolUse guards; seven validators incl.
+`8abdbb7`, baseline since advanced to `2c85bc01`)** (tsx `postinstall` bootstrap not turbo; dist-based PreToolUse guards — fail-OPEN if `dist` unbuilt, fail-closed if broken; eight validators incl.
 `lifecycle-scripts`/`pretooluse-guard-routing`/`fitness-vocabulary`; `tsx` devDep + dep majors). Standing discipline: Oak
 is a moving target — **re-read Oak's `agent-tools/` fresh at Phase-2 execution** even though the design is now current.
 

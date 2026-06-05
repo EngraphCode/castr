@@ -110,6 +110,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     copy. (4) **§6 candidate (propose to owner before implementing):** a drift-validator — every PDR-count claim == file
     count; every contract/handoff path resolves on disk — is the structural form of this manual catch ("if a behaviour
     must be automatic, it needs a rule, not just a skill").
+  - **Oak re-sync mid-Phase-2 (2026-06-05) — moving target moved, owner-flagged.** Oak advanced
+    `06018bc3` → `2c85bc01` (8 commits). Firsthand delta vs the transplant baseline: **agent-tools = 5 files, all
+    hook-policy/guard** (owner-authored `89ec8dcf fix(hook-policy): fail OPEN when the PreToolUse guard artefact is
+unbuilt`) — split the failure shapes: **unbuilt `dist` → fail OPEN (exit 0 + loud warning)**, built-but-broken → still
+    fail CLOSED (exit 2). `policy.json` **unchanged**. Synced the 5 files into castr Phase-2 (localised, green; suite
+    854→860/878 — the update added 6 passing fail-open tests). **Method insight:** a rescan isn't just "get latest code" —
+    it re-examines the _decisions_ that rested on the old state. Here the owner's own fix **removed the exact brick-risk
+    (fail-closed on unbuilt dist) I had cited to justify deferring guard activation** → the deferral's rationale is now
+    obsolete; re-surfaced the activation decision. **Out-of-Phase-2 deltas (note, don't conflate phases):** `PDR-089` grew
+    a Decision-7 clause (Phase-1 append — accretion, not mutation-violation); `documentation-hygiene.md` rule (Phase 4),
+    one `.cursor` adapter (Phase 7) — bring at those phases (re-read Oak fresh then anyway). Everything else = Oak product
+    (eef/school-data-search/graph-core) or memory — DON'T-BRING. New baseline for Phase 2: **`2c85bc01`**.
 
 ## 2026-06-04
 

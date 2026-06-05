@@ -30,7 +30,7 @@ inventory/dispositions) → the napkin `2026-06-05` entry (session insights + fi
 - **Next = Phase 2:** `@engraph/agent-tools` + hook policy — design in
   [`../plans/transplant/02-agent-tools-build-design.md`](../plans/transplant/02-agent-tools-build-design.md),
   **reconciled to Oak's 2026-06-05 post-pull state in `8abdbb7`** (tsx `postinstall` bootstrap not turbo; dist-based
-  fail-closed PreToolUse guards; seven validators; `tsx` devDep + dep majors). Standing: Oak moves — **re-read
+  PreToolUse guards (fail-OPEN if `dist` unbuilt, fail-closed if broken); eight validators; `tsx` devDep + dep majors). Standing: Oak moves — **re-read
   `agent-tools/` fresh at execution** even though the design is now current.
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
@@ -120,7 +120,7 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` `2026-06-05` entry. Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
-**Next executable step = Phase 2** (`@engraph/agent-tools` + hook policy). Design: `.agent/plans/transplant/02-agent-tools-build-design.md`, reconciled to Oak's 2026-06-05 state (commit `8abdbb7`). **Oak is a moving target — re-read Oak's `agent-tools/` fresh before relying on any specific** (postinstall is a `tsx` bootstrap not turbo; dist-based fail-closed PreToolUse guards; seven validators).
+**Next executable step = Phase 2** (`@engraph/agent-tools` + hook policy). Design: `.agent/plans/transplant/02-agent-tools-build-design.md`, reconciled to Oak's 2026-06-05 state (design commit `8abdbb7`; Oak baseline since advanced to `2c85bc01`). **Oak is a moving target — re-read Oak's `agent-tools/` fresh before relying on any specific** (postinstall is a `tsx` bootstrap not turbo; dist-based PreToolUse guards — fail-OPEN if `dist` unbuilt, fail-closed if broken; eight validators incl. the §6 drift validator).
 
 **Standing disciplines (active from message 1):**
 
