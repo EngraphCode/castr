@@ -70,8 +70,9 @@ tsconfig.build.json` directly (+ the chmod), deliberately keeping **turbo and pn
   `bootstrap-helpers.ts`) and localise the `tsx` postinstall.
 - **PreToolUse guards run from prebuilt `dist`, not source:** `.claude/settings.json` routes them through
   `.claude/hooks/run-pretooluse-guard.mjs agent-tools/dist/src/hook-policy/check-blocked-patterns.js` (and
-  `check-blocked-content.js`). The runner now **fails closed** when the guard artefact is missing/broken (Oak
-  2026-06-05) — which is _why_ the postinstall bootstrap must guarantee `dist`. The freshness mechanism is the
+  `check-blocked-content.js`). As of Oak `2c85bc01` the runner **fails OPEN** (warns) when the guard artefact is
+  **unbuilt** — so a fresh / branch-switched worktree is not bricked — and **fails closed** only when a _built_ artefact
+  is broken; the postinstall bootstrap still guarantees `dist`. The freshness mechanism is the
   **postinstall bootstrap**, not a pre-commit guard.
 - **`.husky/pre-commit`:** Oak's now routes formatting/markdownlint through `agent-tools:repo-check
 prettier-staged`/`markdownlint-staged` and runs `repo-validators:check`. castr keeps its simpler staged-prettier pass
