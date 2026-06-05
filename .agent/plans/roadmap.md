@@ -33,6 +33,14 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **PRIMARY ACTIVE (2026-06-05): Oak → castr Practice transplant.** The primary active plan is now the wholesale
+> Practice transplant — [`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md) (phase tracker
+> [`transplant/README.md`](./transplant/README.md)), on branch `feat/transplant-engraph-practice` (off
+> `docs/initial-deep-review`; baseline `transplant/phase-0-baseline`). Per the `active/README.md` parking exception,
+> [`active/explicit-additional-properties-support.md`](./active/explicit-additional-properties-support.md) is
+> **parked-in-place non-primary context** and resumes after the transplant closes. The `remediation/` backlog and the
+> `docs/initial-deep-review` branch are untouched.
+
 > **Deep Review (2026-06-04, branch `docs/initial-deep-review`):** a first-hand-verified review found **46 issues
 > (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
 > [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
@@ -62,7 +70,7 @@ Current product truth:
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
-- the current primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md); if a user reports a fresh gate or runtime issue, reproduce it first, otherwise execute that slice honestly
+- the current primary active plan is the [Oak → castr Practice transplant](./active/oak-practice-transplant.md); [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md) is parked-in-place and resumes after the transplant closes; if a user reports a fresh product gate/runtime issue, reproduce it first
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 

@@ -1,6 +1,12 @@
 # Explicit Additional Properties Support
 
-**Status:** ACTIVE  
+> **⏸️ PARKED-IN-PLACE (non-primary context) as of 2026-06-05.** Per the user-directed parking exception in
+> [`README.md`](./README.md), this product workstream remains physically in `active/` but is **not** the primary active
+> plan and is **not** a companion to it. The primary active plan is the Practice transplant
+> ([`oak-practice-transplant.md`](./oak-practice-transplant.md)). This plan's substance is unchanged and resumes as the
+> next product slice once the transplant completes. See `roadmap.md` / `session-continuation.prompt.md`.
+
+**Status:** PARKED-IN-PLACE (was ACTIVE; product primary deferred behind the Practice transplant)  
 **Created:** 2026-04-16  
 **Promoted:** 2026-04-16  
 **Predecessor:** [eperusteet-real-spec-validation.md](../current/complete/eperusteet-real-spec-validation.md)  

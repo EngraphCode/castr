@@ -8,6 +8,13 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Where We Are
 
+> 🔀 **PRIMARY ACTIVE PLAN (2026-06-05): Oak → castr Practice transplant.** The primary active workstream is now the
+> wholesale Practice transplant — [`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md) (phase
+> tracker: [`../plans/transplant/README.md`](../plans/transplant/README.md)), on branch
+> `feat/transplant-engraph-practice` (off `docs/initial-deep-review`). The product slice
+> `explicit-additional-properties-support.md` is **parked-in-place non-primary context** and resumes once the transplant
+> completes. The deep-review remediation backlog is untouched. Everything below remains true product context.
+
 > ⚠️ **Deep Review (2026-06-04) — green gates ≠ no bugs.** A first-hand-verified review (executing the built `dist`,
 > running all 14 gates, reading source) found **46 distinct issues, 6 Critical**, that the green gates do **not** catch.
 > The "reviewer loop closed with no open findings" / "all gates green" statements below are about the _gates_, not about
@@ -27,12 +34,14 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 >   `current/complete/` plans is **deferred** (disposition in report §11).
 > - **Governing rule (user, 2026-06-04):** where code, proofs, and docs disagree, normalise to the **strictest** of the three.
 >
-> The primary active plan is unchanged (explicit-additional-properties-support); you may instead promote
-> `remediation/01-packaging-and-types-integrity` to fix the shipped C1 break first.
+> The product primary (explicit-additional-properties-support) is now **parked-in-place** behind the Practice
+> transplant; when product work resumes you may instead promote `remediation/01-packaging-and-types-integrity` to fix
+> the shipped C1 break first.
 
 **Library:** Schema compiler. `Any Input -> Parser -> IR -> Writers -> Any Output`. Supported: OpenAPI 3.0/3.1/3.2, Zod 4, JSON Schema 2020-12, TypeScript, MCP Tools.
 
-**Active workstream:** [Explicit Additional Properties Support](../plans/active/explicit-additional-properties-support.md)
+**Active workstream (PRIMARY):** [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) — branch `feat/transplant-engraph-practice`.
+**Parked-in-place (non-primary):** [Explicit Additional Properties Support](../plans/active/explicit-additional-properties-support.md)
 
 **Current closure record:** [ePerusteet Real-Spec Validation](../plans/current/complete/eperusteet-real-spec-validation.md)
 
@@ -56,16 +65,16 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 - the reviewer loop is closed with no open findings across `code-reviewer`, `test-reviewer`, `openapi-expert`, and `type-reviewer`
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduction exposed that current strict-object policy rejects explicit schema-valued `additionalProperties` at IR-build / generated seams
 - on Thursday, 16 April 2026, user clarification established the intended product boundary: Castr must accept and emit explicit `additionalProperties`, but must never invent them from input that did not declare them
-- the current primary active plan is [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md)
+- the current primary active plan is the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md); [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md) is parked-in-place and resumes after the transplant closes
 
 ---
 
 ## What Next
 
-1. Re-read [metacognition.md](../directives/metacognition.md), then [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md).
-2. If a user reports a fresh gate or runtime regression, reproduce it immediately and treat that report as active session truth.
-3. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is actually reproduced.
-4. Execute the explicit-additional-properties support slice: admit explicit source `additionalProperties` honestly into IR and outputs, while preserving the invariant that Castr never invents them from absent input.
+1. Re-read [metacognition.md](../directives/metacognition.md), then the primary plan [oak-practice-transplant.md](../plans/active/oak-practice-transplant.md) and its phase tracker [transplant/README.md](../plans/transplant/README.md).
+2. Execute the transplant phase-by-phase on `feat/transplant-engraph-practice`; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
+3. If a user reports a fresh gate or runtime regression in product code, reproduce it immediately and treat that report as active session truth.
+4. The parked product slice (explicit-additional-properties-support): admit explicit source `additionalProperties` honestly into IR/outputs while never inventing them from absent input — resume only after the transplant closes.
 5. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
 
 ---
@@ -80,4 +89,4 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 ## Next Session Start Statement
 
-Read `.agent/directives/AGENT.md`, then `.agent/directives/metacognition.md`, then this prompt, then `.agent/plans/active/explicit-additional-properties-support.md`. Treat Friday, 10 April 2026 as the Phase A2 close-out date: the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green, and the AP4 reviewer loop is closed with no open findings. Treat Saturday, 11 April 2026 as the MCP no-params follow-up close-out date, the Phase B close-out date, the Phase C close-out date, the Phase D close-out date, the Husky-install local-workflow alignment date, the generated-suite gate-stability close-out date, and the Phase E close-out date: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across the currently claimed carriers, `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, malformed top-level `paths` templates are rejected before upgrade/canonicalisation, native OpenAPI 3.2 `itemSchema` and `additionalOperations` now survive parser -> IR -> OpenAPI writer -> shared load boundary reparse, custom verbs from `additionalOperations` flow through downstream endpoint/MCP/TypeScript surfaces, endpoint/MCP/TypeScript fail fast on reachable `itemSchema`, and repo-root `pnpm check` is green while `pnpm check:ci` remains green from Saturday, 11 April 2026. Treat Thursday, 16 April 2026 as the ePerusteet reproduction and clarification date: the shared load boundary accepts `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json`, the reproduced rejection at IR-build / generated seams exposed a policy mismatch, and user clarification established that Castr must accept and emit explicit `additionalProperties` while never inventing them from absent input. The current primary active plan is the explicit-additional-properties support slice. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is reproduced. If a user reports a fresh issue reproduce it first; otherwise execute that slice honestly.
+Read `.agent/directives/AGENT.md`, then `.agent/directives/metacognition.md`, then this prompt, then `.agent/plans/active/explicit-additional-properties-support.md`. Treat Friday, 10 April 2026 as the Phase A2 close-out date: the full repo-root gate chain, `pnpm madge:circular`, `pnpm knip`, and the targeted active-surface `openapi3-ts` greps are green, and the AP4 reviewer loop is closed with no open findings. Treat Saturday, 11 April 2026 as the MCP no-params follow-up close-out date, the Phase B close-out date, the Phase C close-out date, the Phase D close-out date, the Husky-install local-workflow alignment date, the generated-suite gate-stability close-out date, and the Phase E close-out date: true zero-input MCP tools now emit `{ type: 'object', additionalProperties: false }`, native OpenAPI 3.2 `query` survives parser -> IR -> writer and downstream endpoint/MCP consumers, Example Object `dataValue` / `serializedValue` survive parser -> IR -> writer across the currently claimed carriers, `oauth2.flows.deviceAuthorization` and XML `nodeType` now have explicit parser/writer proof, malformed top-level `paths` templates are rejected before upgrade/canonicalisation, native OpenAPI 3.2 `itemSchema` and `additionalOperations` now survive parser -> IR -> OpenAPI writer -> shared load boundary reparse, custom verbs from `additionalOperations` flow through downstream endpoint/MCP/TypeScript surfaces, endpoint/MCP/TypeScript fail fast on reachable `itemSchema`, and repo-root `pnpm check` is green while `pnpm check:ci` remains green from Saturday, 11 April 2026. Treat Thursday, 16 April 2026 as the ePerusteet reproduction and clarification date: the shared load boundary accepts `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json`, the reproduced rejection at IR-build / generated seams exposed a policy mismatch, and user clarification established that Castr must accept and emit explicit `additionalProperties` while never inventing them from absent input. The current primary active plan is the Oak → castr Practice transplant ([oak-practice-transplant.md](../plans/active/oak-practice-transplant.md), branch `feat/transplant-engraph-practice`); the explicit-additional-properties support slice is parked-in-place and resumes after the transplant closes. Do not reopen AP4, Phase B, Phase C, Phase D, or Phase E unless a fresh regression is reproduced. If a user reports a fresh issue reproduce it first; otherwise execute that slice honestly.

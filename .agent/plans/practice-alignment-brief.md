@@ -72,7 +72,7 @@ re-pointed to the relevant PDR, or marked placeholder (this is exactly PEEN's da
    evaluation (`ground-truth-design`/`-evaluation`), etc. **Migrate castr's `jc-*` commands → skills** (oak phased
    commands out). Lock with `skills-lock.json`.
 4. **All rules + `RULES_INDEX.md`** (oak's full set, three-form canonical + thin platform forwarders) — relevance pass
-   per below (KEEP / PARK / AMEND, not pre-filtered out).
+   per below (KEEP / AMEND / don't-bring / dormant — see Relevance determination; nothing pre-filtered out of scope).
 5. **Hooks:** `.agent/hooks/policy.json` (declarative guardrail — block `git push --force`/`reset --hard`/`--no-verify`/
    `git add -A`/`clean -fd`/`restore`/`stash drop`…), enforced by `agent-tools` hook-policy, wired per platform incl.
    **native `.cursor/hooks.json`** (PEEN finding) and Claude `PreToolUse`/`SessionStart`/`UserPromptSubmit`.
