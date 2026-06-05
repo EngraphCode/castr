@@ -51,6 +51,14 @@ format/build/type-check/lint/madge/depcruise/knip/portability/repo-validators + 
   `drift`, `fitness-vocabulary`). The other 4 are deferred informational: `stale-script`→P4, `collaboration-state`→P8,
   `subagents`→P6, `portability`(Oak's)→P7. Add each to the blocking chain when its content exists.
 
+**Next-session PRIORITY 1 (before Phase 3): reconcile `02-agent-tools-build-design.md` to as-built (owner-directed).**
+That forward-design doc accumulated drift during execution; residual stale claims: §1 tsconfig says `NodeNext`/`ES2022`
+(actual inlined config is `ESNext`/`bundler`/`ES2023`); the header says "seven validators" (castr now has eight, incl.
+`drift`); §2 says "do NOT wire guards as commit-blocking until Phase 6/8" (superseded — guards were activated in Phase 2
+per owner). Authoritative as-built record = the commits + napkin + this tracker; either reconcile the design doc to match
+or banner it "superseded by execution — see commits". (The §6 drift validator covers counts/anchors, not free prose, so
+this class needs a manual sweep.)
+
 **Resume at Phase 3** — Skills + commands→skills (18 skills incl. the continuity cluster; regenerate adapters
 `--prefix=engraph-`). **Re-read Oak's surfaces fresh first** — Oak is a moving target, proved twice today (it advanced to
 `2c85bc01` mid-Phase-2, an owner-authored hook fail-open fix).

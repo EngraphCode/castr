@@ -101,6 +101,16 @@ everything else, incl. `ci/ci-turbo-report*` (generic turbo-output parsing; the 
 example) and `repo-check` (its `'sdk-codegen'` is a known-task-name literal). `OAK_API_KEY` existed only in the dropped
 file. **Phase 2.**
 
+**Deferred-validator crash-on-absent-content (firsthand 2026-06-05).** `collaboration-state` (`state-integrity.ts`
+`directorySurfaces`) and `subagents` (`validate-subagents.ts` `listFiles`) throw unhandled `ENOENT` when their scan dirs
+are absent (`.agent/state/collaboration/comms`→P8; `.cursor/agents`→P6/7). **Verified NOT a localisation regression.**
+**Self-resolves:** both flip blocking at P6/P8, by which point the content exists — so they will not crash when they
+matter; the crash is cosmetic, in the informational pre-content window only. The robustness gap (a validator should
+tolerate a missing scan dir → empty, matching the stale-script `collectFiles` pattern + the design's "empty validates
+trivially") belongs **upstream in Oak** (general improvement; a castr-local patch is clobbered on the next re-sync).
+Disposition: do **not** castr-local-patch reflexively — upstream to Oak (then re-sync) or leave-and-document. **Owner
+decision pending.**
+
 ### Skills (20) — KEEP 18 / DON'T-BRING 2
 
 DON'T-BRING `ground-truth-design`, `ground-truth-evaluation` (search-eval). Migrate castr `jc-*` (jc-plan, jc-gates,
