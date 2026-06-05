@@ -78,6 +78,25 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - **PR-ordering resolved (owner, 2026-06-05):** the transplant PR to `main` **carries** its 2 deep-review commits;
     `docs/initial-deep-review` is **not** merged to `main` separately — now recorded in the parent plan. (Supersedes the
     "owner's merge-ordering call" open-question note in the planning bullet above.)
+  - **Transferable insights (reflection — generalised beyond the transplant; candidate structural learnings for the next
+    consolidation):**
+    1. **Verify a handoff's named tool/command exists before designing around it** (the `pned` phantom — a confidently
+       named command in a brief is a claim, not a fact).
+    2. **A term's frequency ≠ its meaning** — read context, don't conclude from grep _counts_ (the practice-context
+       "stale" misread: every ref was retirement-_documentation_).
+    3. **Merging histories/changelogs: the upstream often already carries your entries — dedup by identity, never
+       blind-append** (Oak's changelog already held `[castr] 2026-03-09`).
+    4. **Before assuming local divergence, verify it exists** — castr's portable trinity had _zero_ generic content Oak
+       lacked, so convergence beat a selective merge; identity lives in `provenance.yml` + the PRESERVE set, not in
+       divergent prose.
+    5. **Design docs bound to a moving external source are dated snapshots** — reconcile to a dated state _and_ keep a
+       standing "re-verify at execution"; never treat them as frozen-correct.
+    6. **Load-bearing decisions belong in the in-repo execution contract, not memory-only** — recalled memory is
+       non-authoritative; keep directed-read surfaces (this napkin) consistent with the contract.
+    7. **An adversarial "what would be lost if context vanished?" pass is the falsification test of state-recording** —
+       run it to find contradictions (it caught a stale PR-ordering note here), not to confirm completeness.
+    8. **`format:check`/linters validate style, not content** — verify the _rendered_ structure after editing padded
+       markdown tables / list-continuations; prefer prose anchors over padded-cell matches (tooling-friction; cf. PDR-060).
 
 ## 2026-06-04
 
