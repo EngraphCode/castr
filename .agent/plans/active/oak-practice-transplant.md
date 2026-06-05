@@ -32,7 +32,9 @@ intact, gates stay green, and provenance stays honest.
    **AMEND pattern `proven_in:` provenance + regenerate derived indexes**; `practice-fitness` **informational-first**.
 6. **Continuity is substrate, not ceremony (owner, 2026-06-05):** as the transplant lands Oak's **memory substrate +
    knowledge-flow** (Phase 6), **hooks** (Phase 2: agent-tools `SessionStart`/PreToolUse + `repo-check`), and
-   **collaboration/handoff processes** (Phase 8: `session-handoff`, `start-right-team`, plus `jc-consolidate-docs`), wire
+   **collaboration/consolidation processes** (`session-handoff` capture-edge, `consolidate-docs` [the canonical successor
+   that absorbs castr's `jc-consolidate-docs`], `consolidate-until-done` [strict loop-until-curated], `start-right-team`;
+   skills land Phase 3, collaboration activates Phase 8), wire
    the **session-close continuity discipline into those mechanisms** so it becomes structural, not manual — per the
    Practice's own learned principle _"if a behaviour must be automatic, it needs a rule, not just a skill"_. The
    discipline: exhaustive durable state-recording (load-bearing decisions in the in-repo contract, **never** memory-only) +

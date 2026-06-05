@@ -89,6 +89,15 @@ DON'T-BRING `ground-truth-design`, `ground-truth-evaluation` (search-eval). Migr
 jc-start-right, jc-consolidate-docs) → `SKILL-CANONICAL.md`. Regenerate adapters `--prefix=engraph-`; `skills-lock.json`.
 Collaboration skills (`start-right-team`, `session-handoff`) ACTIVE. **Phase 3.**
 
+**Continuity/consolidation cluster (owner-named — the §6 vehicles):** `session-handoff` (SESSION-scoped, every session —
+the **capture edge**, Conservation Invariant), `consolidate-docs` (THREAD-scoped, trigger-gated — the **distil/graduate
+edge**; the **canonical successor that absorbs castr's thinner `jc-consolidate-docs`** — merge castr's local steps into
+Oak's flow, don't keep both), and `consolidate-until-done` (the **strict persistent loop** wrapping `start-right-quick` +
+`consolidate-docs` — runs to a completion proof or reports the exact remaining owner-decisions; forbids
+archive/split/rename-only fitness cures). They implement `capture → distil → graduate → enforce` (PDR-011/014/046 — all
+present from 1a; the skills' host `ADR-150`/`ADR-131` cites reference-close to those PDRs or stay retained-cross-host at
+Phase 3/4). **This cluster is where the §6 session-close continuity discipline becomes structural.**
+
 ### Sub-agents (19 templates) — roster: castr's 3 schema experts + 12 generic / DON'T-BRING 7
 
 - **KEEP castr's 3:** `openapi-expert`, `zod-expert`, `json-schema-expert`.
