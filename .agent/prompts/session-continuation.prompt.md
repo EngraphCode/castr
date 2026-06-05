@@ -1,6 +1,6 @@
 # Session Continuation: @engraph/castr
 
-**Last updated:** 2026-06-04
+**Last updated:** 2026-06-05
 
 Context bridge between sessions. Start here after reading [AGENT.md](../directives/AGENT.md).
 
