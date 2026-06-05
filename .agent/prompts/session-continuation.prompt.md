@@ -15,6 +15,28 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > `explicit-additional-properties-support.md` is **parked-in-place non-primary context** and resumes once the transplant
 > completes. The deep-review remediation backlog is untouched. Everything below remains true product context.
 
+### Practice Transplant — resume here (primary)
+
+**Goal:** wholesale-transplant Oak's Practice estate into castr (localise `@oaknational`→`@engraph`), preserving castr's
+product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
+(baseline `transplant/phase-0-baseline`). **Read first:** `.agent/plans/active/oak-practice-transplant.md` (contract) →
+`.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
+inventory/dispositions) → the napkin `2026-06-05` entry (session insights + firsthand corrections + build gotchas).
+
+- **Status:** Phase 0 ✅; Phase 1 🔄 **1a landed** (92 PDRs + `practice-verification.md`, green). Commits:
+  `git log --oneline transplant/phase-0-baseline..HEAD`.
+- **Next = Phase 1b:** bring Oak's current Core generation (portable, 0 oak-naming) replacing castr's March snapshot;
+  migrate provenance (castr inline `provenance:`+`fitness_ceiling` → Oak `provenance: provenance.yml` pointer + multi-dim
+  fitness; **preserve castr's 2026-03-22 entry, append a 2026-06-05 transplant entry** — no history loss); retire the
+  entangled `.agent/practice-context/` (10 refs incl. the PRESERVE'd `AGENT.md`). Then tag `transplant/phase-1`.
+- **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
+  `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
+  `practice-fitness` informational-first never red-gates the SACRED `principles.md`; Phase 2 commit must include the
+  regenerated `pnpm-lock.yaml`; 36 Oak-ADR cites in Oak rules to reference-close at Phase 4 (re-point to PDRs).
+- **Posture (owner 2026-06-05):** fully populate; collaboration ACTIVE (about agents) seeded empty; all generic experts
+  incl. mcp-expert; drop ground-truth + Oak Sonar/secrets + ~2 UI patterns. Each phase = atomic commit + tag; roll back
+  forward only.
+
 > ⚠️ **Deep Review (2026-06-04) — green gates ≠ no bugs.** A first-hand-verified review (executing the built `dist`,
 > running all 14 gates, reading source) found **46 distinct issues, 6 Critical**, that the green gates do **not** catch.
 > The "reviewer loop closed with no open findings" / "all gates green" statements below are about the _gates_, not about

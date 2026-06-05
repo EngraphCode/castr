@@ -2,7 +2,7 @@
 
 **Status:** ACTIVE — primary plan
 **Created/Promoted:** 2026-06-05
-**Branch:** `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set; baseline tag `transplant/phase-0-baseline` = e0541f6)
+**Branch:** `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set; baseline tag `transplant/phase-0-baseline` = e0541f6). **Plan correction:** the approved plan said "off `main`", but `main` does **not** contain the PRESERVE set (initial-review report, remediation backlog, ADR-047, the brief) — branching off `main` would orphan them, so the base is `docs/initial-deep-review`. **PR implication:** a PR to `main` carries the 2 deep-review commits unless that branch merges to `main` first (owner's merge-ordering call).
 **Authoritative spec:** [`practice-alignment-brief.md`](../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `/Users/jim/code/project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 **Phase tracker:** [`../transplant/README.md`](../transplant/README.md)

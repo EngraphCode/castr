@@ -2,6 +2,53 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-05
+
+- **Oak → castr wholesale Practice transplant: planned (approved) and execution begun.** Spec:
+  `.agent/plans/practice-alignment-brief.md`; operating manual: PEEN field report at
+  `/Users/jim/code/project-explorer-especially-names/.agent/reports/practice-integration-feedback.md` (read in full).
+  Durable surfaces: primary plan `.agent/plans/active/oak-practice-transplant.md`; tracker
+  `.agent/plans/transplant/README.md`; ledgers `relevance-ledger.md` + `reference-closure.md`.
+  - **Branch:** `feat/transplant-engraph-practice` off **`docs/initial-deep-review`** (NOT `main`). Firsthand git check:
+    `main` (393e476) does **not** contain the PRESERVE set (initial-review report, remediation backlog, ADR-047, the
+    brief) — those live only on `docs/initial-deep-review`, 2 commits unmerged. Branching off `main` would have orphaned
+    the must-not-lose set. **PR implication:** a PR to `main` will carry the 2 deep-review commits unless that branch
+    merges to `main` first (owner's merge-ordering call). Baseline tag `transplant/phase-0-baseline` = e0541f6.
+  - **Owner-locked scope (2026-06-05):** fully populate scale surfaces (patterns/executive memory/.gemini/.windsurf);
+    **collaboration machinery ACTIVE** full + PEEN-hardened, seeded empty — _"the collaboration surface is about agents,
+    not humans; we WILL work with multiple agents"_; transplant = **primary active plan**, product slice
+    `explicit-additional-properties-support.md` **parked-in-place** (per `active/README.md` parking exception); **all ~13
+    generic experts** incl. `mcp-expert`. Tightenings: drop ground-truth search-eval triplet + Oak SonarQube/secrets infra
+    - ~2 UI patterns; AMEND pattern `proven_in:` provenance + regenerate derived indexes; `practice-fitness`
+      informational-first.
+  - **Firsthand corrections to the 3-agent fan-out (agents are candidate leads only):** (1) `mcp-expert` IS relevant —
+    castr emits MCP tools → KEEP (fan-out said drop); (2) the 121-file pattern estate is **mostly substrate** (frontmatter
+    categories: process/agent/code/testing/architecture, zero UI/search) → fully-populate holds; only ~2 patterns are UI
+    (fan-out overstated "Oak-specific"); my own grep "66 product-coupled" was substring noise (`aria`→v**aria**ble); (3)
+    `ground-truth` triplet IS product (Oak semantic-**search** quality, MRR) → drop; (4) skills-adapter `--prefix` is a CLI
+    flag, not hardcoded → `--prefix=engraph-`; (5) castr `scripts/validate-portability.mjs` is a **subagents/Codex-adapter
+    validator** (misnamed) with 5 Codex assertions Oak lacks — preserve before retiring; (6) discount "castr 49 ADRs / Oak
+    183" — castr ADRs are 001–047.
+  - **Build/gate gotchas (firsthand-verified — feed the per-phase verification):** agent-tools `src/` has **0**
+    `@oaknational` imports (tiny localisation surface: package.json name, new local eslint config, self-contained
+    tsconfig, one validator's path constants); **`.agent` is NOT prettier-ignored** so every phase must `pnpm format` new
+    docs (and `check:ci`/pre-push does **not** run `fix`); `practice-fitness` informational mode **always exits 0** → safe,
+    never red-gates sacred `principles.md`; `knip`/`depcruise`/`madge` are **lib-scoped** so agent-tools needs its own
+    minimal configs; **Phase 2 commit must include the regenerated `pnpm-lock.yaml`** (frozen-lockfile pre-push); add
+    `agent-tools` as a 2nd turbo workspace + `postinstall: turbo run build --filter=@engraph/agent-tools`.
+  - **Reference-closure:** Oak rules carry **36 distinct Oak-ADR cites** vs castr ADR≤047; low-number overlaps are
+    _semantic_ mismatches (Oak ADR-038 ≠ castr ADR-038) → re-point to PDRs, never assume resolved (Phase 4). PDR→Oak-ADR
+    cites (8, in 10 PDRs) = **retained-cross-host** (immutable governance honestly naming Oak's phenotype).
+  - **Status:** Phase 0 ✅ (branch/baseline/plan-promotion/park). Phase 1 🔄: **1a landed** — 92 PDRs (zero oak-naming,
+    fully portable) + `practice-verification.md` committed green. **Phase 1b remaining:** Core-generation reconciliation +
+    provenance migration (castr inline `provenance:`+`fitness_ceiling` → Oak `provenance: provenance.yml` pointer +
+    multi-dim fitness; preserve castr's 2026-03-22 entry, append 2026-06-05) + entangled `practice-context` retirement (10
+    refs incl. PRESERVE'd `AGENT.md`). Then Phases 2–9. Each phase = atomic commit + `transplant/phase-N` tag.
+  - **Method/value reminders:** treat ALL agent output as candidate leads, verify load-bearing claims firsthand (Jim's
+    standing rule); don't rush breadth — the deep-review lesson is that green gates mask gaps; PDRs are immutable portable
+    governance (don't edit on receipt); collaboration runtime = bring **machinery** (schemas + empty dirs), never Oak's
+    **2,936** comms events / claims history / logs.
+
 ## 2026-06-04
 
 - **Initial deep review completed (branch `docs/initial-deep-review`, not merged to `main`):** a first-hand-verified review (executing the built `dist`, running all 14 gates, reading source) found **46 distinct issues, 6 Critical**, that the green gates do not catch. Report: `.agent/report/initial-review/` (14 docs).

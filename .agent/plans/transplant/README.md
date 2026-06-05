@@ -40,5 +40,10 @@ only.
 ## Artefacts produced here
 
 - `NN-<surface>.md` — per-phase sub-plan (created when the phase begins).
-- `relevance-ledger.md` — per-item KEEP / AMEND / DON'T-BRING / DORMANT with rationale; not-brought + dormant sets.
-- `reference-closure.md` — running resolve / rewrite / placeholder classification of dangling cites.
+- `relevance-ledger.md` — ✅ **seeded 2026-06-05** (finalised Phase 9): full per-surface KEEP / AMEND / DON'T-BRING /
+  DORMANT dispositions, the firsthand corrections to the fan-out, and the explicit not-brought + dormant sets.
+- `reference-closure.md` — ✅ started: running resolve / rewrite / placeholder / retained-cross-host classification.
+
+> **Continuation surfaces (all updated 2026-06-05 — no session knowledge lost):** this tracker + `relevance-ledger.md` +
+> `reference-closure.md` + the parent plan + `.agent/prompts/session-continuation.prompt.md` (§Practice Transplant) +
+> `.agent/plans/roadmap.md` + the `.agent/memory/napkin.md` `2026-06-05` entry + the cross-session auto-memory.
