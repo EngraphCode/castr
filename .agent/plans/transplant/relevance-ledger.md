@@ -91,8 +91,8 @@ Collaboration skills (`start-right-team`, `session-handoff`) ACTIVE. **Phase 3.*
 
 **Continuity/consolidation cluster (owner-named — the §6 vehicles):** `session-handoff` (SESSION-scoped, every session —
 the **capture edge**, Conservation Invariant), `consolidate-docs` (THREAD-scoped, trigger-gated — the **distil/graduate
-edge**; the **canonical successor that absorbs castr's thinner `jc-consolidate-docs`** — merge castr's local steps into
-Oak's flow, don't keep both), and `consolidate-until-done` (the **strict persistent loop** wrapping `start-right-quick` +
+edge**; an **evolution of castr's thinner `jc-consolidate-docs` that replaces it** (owner: Oak's is an evolution of castr's and
+can replace it) — at Phase 3 confirm no unique castr-local step is lost, then retire `jc-consolidate-docs`), and `consolidate-until-done` (the **strict persistent loop** wrapping `start-right-quick` +
 `consolidate-docs` — runs to a completion proof or reports the exact remaining owner-decisions; forbids
 archive/split/rename-only fitness cures). They implement `capture → distil → graduate → enforce` (PDR-011/014/046 — all
 present from 1a; the skills' host `ADR-150`/`ADR-131` cites reference-close to those PDRs or stay retained-cross-host at

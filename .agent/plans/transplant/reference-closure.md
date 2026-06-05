@@ -7,6 +7,12 @@ castr does not and will not mirror — a _resolved_ disposition, not an open pla
 
 Phase-9 acceptance = **zero open `placeholder` entries**; `retained-cross-host` entries are accepted dispositions.
 
+**Governance — PDR vs ADR (owner, 2026-06-05; sharpens PDR-079):** PDRs are **portable governance and never
+repo-specific**; anything genuinely repo-specific **necessarily goes in a castr ADR**. When operationalising a
+transplanted PDR, author a **castr ADR only if the portable PDR is not sufficient** for a repo-specific need — do not mint
+an ADR by reflex. So Oak-ADR cites reference-close to the portable PDR wherever one suffices, and become a castr ADR only
+when castr has a genuinely local decision to record.
+
 ---
 
 ## Phase 1 — Practice Core / PDRs
