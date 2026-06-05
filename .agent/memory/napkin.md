@@ -42,8 +42,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - **Status:** Phase 0 ✅ (branch/baseline/plan-promotion/park). Phase 1 🔄: **1a landed** — 92 PDRs (zero oak-naming,
     fully portable) + `practice-verification.md` committed green. **Phase 1b remaining:** Core-generation reconciliation +
     provenance migration (castr inline `provenance:`+`fitness_ceiling` → Oak `provenance: provenance.yml` pointer +
-    multi-dim fitness; preserve castr's 2026-03-22 entry, append 2026-06-05) + entangled `practice-context` retirement (10
-    refs incl. PRESERVE'd `AGENT.md`). Then Phases 2–9. Each phase = atomic commit + `transplant/phase-N` tag.
+    multi-dim fitness; **history MERGE** — union both branches' provenance + a 2026-06-05 merge node, preserving castr's
+    2026-03-22 entry which Oak's file lacks) + entangled `practice-context` retirement (10 refs incl. PRESERVE'd
+    `AGENT.md`). Then Phases 2–9. Each phase = atomic commit + `transplant/phase-N` tag.
+  - **Conceptual correction (owner, 2026-06-05): Practice histories are branchy (a DAG, like git) — this transplant is a
+    MERGE, not a linear copy/append.** castr's Practice is a branch diverged from the shared network ≈2026-03-09 that
+    evolved locally; Oak's is a parallel branch. Where castr already has a surface (Core docs, provenance, directives),
+    reconcile as a **three-way merge** (ancestor = last shared sync; ours = castr; theirs = Oak current) — adopt Oak's
+    advances, preserve castr's divergence, never clobber. Re-frames Phase 1b (Phase 1a was additive → unaffected). See
+    `practice-lineage.md`'s integration protocol (~⅓ port clean, ⅓ selective-edit, ⅓ rewrite).
   - **Method/value reminders:** treat ALL agent output as candidate leads, verify load-bearing claims firsthand (Jim's
     standing rule); don't rush breadth — the deep-review lesson is that green gates mask gaps; PDRs are immutable portable
     governance (don't edit on receipt); collaboration runtime = bring **machinery** (schemas + empty dirs), never Oak's

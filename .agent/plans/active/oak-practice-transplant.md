@@ -53,6 +53,13 @@ data** (2,936 comms, claims history, 5.5 MB log, 317 KB archive); ~2 UI-only pat
 
 ## Method (PEEN four steps + hardening)
 
+**This is a Practice-history MERGE, not a one-way copy.** Practice histories are branchy (a DAG, like git): castr's
+Practice is a branch that diverged from the shared network ≈2026-03-09 and evolved locally; Oak's is a parallel branch.
+Where castr already has a surface (Core docs, provenance, directives), reconcile as a **three-way merge** (ancestor =
+the last shared sync; ours = castr's branch; theirs = Oak's current generation) — adopt Oak's advances, preserve castr's
+divergence, never clobber. `provenance.yml` is a flattened merge-history → union both branches + add a merge node. See
+`practice-lineage.md`'s integration protocol (~⅓ port clean, ⅓ selective-edit, ⅓ rewrite).
+
 reference-closure (resolve/rewrite/placeholder — 36 Oak-ADR cites dangle vs castr ADR≤047; low-number overlaps are
 _semantic_ mismatches → re-point to PDRs) → content-sync backfill → derived-index regeneration (RULES_INDEX, patterns
 README, executive catalogues, from frontmatter) → relevance ledger. Inherit PEEN-fixed forms (structured

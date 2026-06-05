@@ -28,11 +28,24 @@ only.
 **Phase 1 is partially landed.** Done (committed, green): **1a** — 92 PDRs + `practice-verification.md` +
 `reference-closure.md` ledger (additive; zero `@oaknational`/`oak-` naming). **Remaining (1b):**
 
-- Bring Oak's **current Core generation** (`practice.md`, `practice-lineage.md`, `practice-bootstrap.md`, `index.md`,
-  `README.md`, `CHANGELOG.md`) replacing castr's older March snapshot — these are portable (zero oak-naming).
-- **Migrate provenance**: castr's Core uses old inline `provenance:`+`fitness_ceiling`; adopt Oak's `provenance: provenance.yml`
-  pointer + multi-dim fitness frontmatter. Bring `provenance.yml` (already holds castr history to 2026-03-09); **preserve
-  castr's 2026-03-22 entry** and **append a 2026-06-05 transplant entry**. No history loss.
+> **Frame Phase 1b as a HISTORY MERGE, not a replace.** Practice histories are **branchy — a DAG, like git** — not
+> linear. castr's Practice is a **branch** that diverged from the shared network ≈2026-03-09 (provenance index 7) and
+> evolved locally since (index 8 / 2026-03-22 + clean-break principles naming, canonical-first restructuring,
+> paused-workstream lifecycle). Oak's Practice is another branch that advanced in parallel. This transplant **merges
+> Oak's current branch into castr's branch** — three-way: common ancestor ≈2026-03-09, _ours_ = castr's local Practice
+> (**preserve its divergence — do NOT clobber**), _theirs_ = Oak's current generation. Per `practice-lineage.md`'s
+> integration protocol, ~⅓ of files port clean, ⅓ need selective edit (universal core kept + castr-local sections kept),
+> ⅓ rewrite — three-way-merge each file.
+
+- **Merge Oak's current Core generation** (`practice.md`, `practice-lineage.md`, `practice-bootstrap.md`, `index.md`,
+  `README.md`, `CHANGELOG.md`) into castr's — adopt Oak's advances, **preserve castr's branch-local divergence** (not a
+  wholesale replace). All portable (zero oak-naming).
+- **Merge provenance (it is itself a flattened merge-history — entries from oak/cloudinary/new-cv/castr interleaved):**
+  castr's Core uses old inline `provenance:`+`fitness_ceiling`; adopt Oak's `provenance: provenance.yml` pointer +
+  multi-dim fitness frontmatter. **Union both branches' histories** (Oak's `provenance.yml` chains + castr's branch-only
+  entries) and add a **2026-06-05 merge node** — not a linear append. NB Oak's `provenance.yml` holds castr only **through
+  2026-03-09** (id `58b36dbe…`); castr's inline `practice.md` additionally carries an **index-8 entry dated 2026-03-22**
+  Oak's file lacks → port it in or it is silently lost.
 - **Retire `.agent/practice-context/`**: entangled — referenced by 10 files incl. the PRESERVE'd `AGENT.md`, `README.md`,
   `practice-index.md`, and `practice-lineage.md` (full list: `grep -rl practice-context .agent`). Archive castr's authored
   `outgoing/` notes; update the references.
@@ -42,11 +55,6 @@ only.
 > `type-check`, `lint`, `madge`, `depcruise`, `knip`, tests) **without** `agent-tools`. The plan's "build agent-tools
 > first so docs are checkable" means the `practice:substrate` / `vocabulary` / `fitness` validation of the Core runs
 > **retroactively at Phase 2** once `@engraph/agent-tools` is built — it is not a Phase-1b blocker.
->
-> **Provenance precision:** Oak's `provenance.yml` contains castr's chain only **through 2026-03-09** (id `58b36dbe…`);
-> castr's current inline `practice.md` frontmatter additionally carries an **index-8 entry dated 2026-03-22** that Oak's
-> file lacks. When migrating, **port that 2026-03-22 entry into `provenance.yml`** and append the 2026-06-05 transplant
-> entry, or it is silently lost.
 
 ## Artefacts produced here
 
