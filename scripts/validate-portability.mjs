@@ -30,26 +30,10 @@ const staleDocChecks = [
       'planned infrastructure until the canonical layer is installed',
     ],
   },
-  {
-    file: '.agent/practice-context/outgoing/platform-adapter-reference.md',
-    banned: [
-      '| OpenAI Codex          | (via skills)          | (via skills)          | `.agents/skills/*/SKILL.md` |',
-      'Codex does not currently have a subagent system equivalent',
-      'Reviewers can be invoked as commands that load',
-      '| Agent/Reviewer | `.claude/agents/{name}.md`      | `.cursor/agents/{name}.md`      | `.gemini/commands/review-{name}.toml` | (via skills)                        |',
-    ],
-  },
-  {
-    file: '.agent/practice-context/outgoing/reviewer-system-guide.md',
-    banned: [
-      '└─→ (future platforms)   └─→ .agents/skills/ (Codex)',
-      '**Codex** — Uses SKILL.md format or is invoked via the Agent tool',
-    ],
-  },
-  {
-    file: '.agent/practice-context/outgoing/castr-practice-integration-notes.md',
-    banned: ['- full reviewer/sub-agent roster installation'],
-  },
+  // The three `.agent/practice-context/outgoing/*.md` stale-doc checks were removed:
+  // `.agent/practice-context/` was retired in Phase 1b (docs archived). A check that
+  // requires retired content is itself stale — the correct fix is to remove the check,
+  // NOT to re-track archived files just to turn the gate green.
 ];
 
 const errors = [];
@@ -93,10 +77,16 @@ for (const agent of expectedAgents) {
     const template = read(templatePath);
 
     for (const snippet of requiredTemplateSnippets) {
-      ensure(template.includes(snippet), `Template missing required shared-component reference: ${templatePath} -> ${snippet}`);
+      ensure(
+        template.includes(snippet),
+        `Template missing required shared-component reference: ${templatePath} -> ${snippet}`,
+      );
     }
 
-    ensure(template.includes(`Name: ${agent}`), `Template identity block must declare the agent name: ${templatePath}`);
+    ensure(
+      template.includes(`Name: ${agent}`),
+      `Template identity block must declare the agent name: ${templatePath}`,
+    );
   }
 }
 
@@ -116,9 +106,9 @@ if (fileExists('.codex/config.toml')) {
     'Missing `[features]` with `multi_agent = true` in .codex/config.toml',
   );
 
-  const registeredAgents = [
-    ...config.matchAll(/\[agents\.(?:"([^"]+)"|([A-Za-z0-9_-]+))\]/g),
-  ].map((match) => match[1] ?? match[2]);
+  const registeredAgents = [...config.matchAll(/\[agents\.(?:"([^"]+)"|([A-Za-z0-9_-]+))\]/g)].map(
+    (match) => match[1] ?? match[2],
+  );
 
   for (const agent of expectedAgents) {
     ensure(
@@ -190,7 +180,10 @@ if (fileExists('.codex/agents')) {
   const entries = readdirSync(repoPath('.codex/agents')).filter((entry) => entry.endsWith('.toml'));
   for (const entry of entries) {
     const fullPath = repoPath(path.join('.codex/agents', entry));
-    ensure(statSync(fullPath).isFile(), `Codex agent adapter is not a file: .codex/agents/${entry}`);
+    ensure(
+      statSync(fullPath).isFile(),
+      `Codex agent adapter is not a file: .codex/agents/${entry}`,
+    );
   }
 }
 
