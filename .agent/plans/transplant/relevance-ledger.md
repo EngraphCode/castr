@@ -54,12 +54,15 @@ naming Oak's phenotype; see `reference-closure.md`). **Phase 1 (1a landed).**
 - **PRESERVE castr's, do not overwrite:** `principles.md` (**SACRED — no edit without owner approval**),
   `testing-strategy.md`, `requirements.md`, `AGENT.md`, `metacognition.md`. **Phase 5.**
 
-### agent-tools (~20 modules) — KEEP all (localise)
+### agent-tools (20 modules) — KEEP all (localise)
 
-`bin, branch-touched-files, ci, claude, codex, codex-exec, collaboration-state, commit-advisories, commit-queue,
-context-cost, core, cursor, hook-policy, practice-fitness, practice-substrate, repo-check, skills-adapter-generate,
-validators, version-guard`. Collaboration/health modules ACTIVE (per collaboration=active). AMEND: `ci` test fixtures
-(`@oak/*`), `validators/stale-script-invocations` (`SCANNED_ROOTS`/`ALLOWLISTED_PATHS`), eslint config. **Phase 2.**
+`bin, bootstrap, branch-touched-files, ci, claude, codex, codex-exec, collaboration-state, commit-advisories,
+commit-queue, context-cost, core, cursor, hook-policy, practice-fitness, practice-substrate, repo-check,
+skills-adapter-generate, validators, version-guard` (Oak 2026-06-05; `bootstrap/` is the new `tsx` postinstall builder).
+`validators/` now holds **seven**: collaboration-state, fitness-vocabulary, lifecycle-scripts, portability,
+pretooluse-guard-routing, stale-script-invocations, subagents. Collaboration/health modules ACTIVE (per
+collaboration=active). AMEND: `ci` test fixtures (`@oak/*`), the path-encoding validators
+(`SCANNED_ROOTS`/`ALLOWLISTED_PATHS`), eslint config; localise the `tsx` postinstall bootstrap. **Phase 2.**
 
 ### Rules (87) — KEEP ~78 / DON'T-BRING ~9 / AMEND (cites)
 
@@ -98,7 +101,7 @@ Collaboration skills (`start-right-team`, `session-handoff`) ACTIVE. **Phase 3.*
 
 ### Memory — fully populate (owner)
 
-`active/patterns/` (121; **AMEND `proven_in:` provenance**, regenerate index from frontmatter, **drop ~2 UI**:
+`active/patterns/` (122 as of Oak 2026-06-05; **AMEND `proven_in:` provenance**, regenerate index from frontmatter, **drop ~2 UI**:
 `accessibility-as-blocking-gate`, `ux-predates-visual-design`); `executive/` (regenerate derived catalogues —
 artefact-inventory, invoke-code-experts, cross-platform-surface-matrix — to castr's real estate, don't copy stale Oak
 indexes); `operational/`. Reconcile `napkin`/`distilled`. **Phase 6.**

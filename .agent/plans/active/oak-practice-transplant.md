@@ -73,10 +73,13 @@ coordinator-state, TTL presence registry, comms attention pass, plan-mode carveo
 > [`../transplant/02-agent-tools-build-design.md`](../transplant/02-agent-tools-build-design.md).
 
 `agent-tools/src` has **0** `@oaknational` imports — localise only `package.json` name, a new local `eslint.config.ts`,
-self-contained `tsconfig*.json`, and `validators/stale-script-invocations` paths. Add `agent-tools` to
-`pnpm-workspace.yaml`; `postinstall: turbo run build --filter=@engraph/agent-tools`; husky `test -f` build-guard; Phase
-2 commit includes regenerated `pnpm-lock.yaml`. Keep agent-tools out of `lib`'s depcruise/knip/madge (own minimal
-configs). **`.agent` is NOT prettier-ignored** → every phase `pnpm format`s its new docs and commits the result.
+self-contained `tsconfig*.json`, and the path-encoding validators' paths (stale-script-invocations, lifecycle-scripts,
+pretooluse-guard-routing, portability, subagents). Add `agent-tools` to `pnpm-workspace.yaml`; **`postinstall: tsx
+agent-tools/src/bootstrap/bootstrap.ts`** (Oak 2026-06-05 — a `tsx` bootstrap that runs `tsc` directly, keeping
+turbo/pnpm out of the install lifecycle per `validate-lifecycle-scripts`; bring the `bootstrap/` module + `tsx` devDep);
+dist-based fail-closed PreToolUse guards; Phase 2 commit includes regenerated `pnpm-lock.yaml`. Keep agent-tools out of
+`lib`'s depcruise/knip/madge (own minimal configs). **`.agent` is NOT prettier-ignored** → every phase `pnpm format`s its
+new docs and commits the result.
 `practice-fitness` informational-first (exits 0 — never red-gates sacred `principles.md`); strict fitness never enters
 blocking `qg`. Reconcile `validate-portability.mjs` (a subagents validator) → flip to Oak `validate-portability` only
 at Phase 7 after porting its 5 Codex assertions.
