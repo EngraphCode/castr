@@ -61,6 +61,10 @@ coordinator-state, TTL presence registry, comms attention pass, plan-mode carveo
 
 ## Build & gate integration (firsthand-verified)
 
+> Summary below; the **full Phase-2 design** (gate-adoption schedule, the 7 risk seams A–G incl. the agent-tools-tests-
+> assert-Oak-paths gotcha, workspace/tsconfig/eslint/knip/depcruise specifics, rollback) lives in
+> [`../transplant/02-agent-tools-build-design.md`](../transplant/02-agent-tools-build-design.md).
+
 `agent-tools/src` has **0** `@oaknational` imports — localise only `package.json` name, a new local `eslint.config.ts`,
 self-contained `tsconfig*.json`, and `validators/stale-script-invocations` paths. Add `agent-tools` to
 `pnpm-workspace.yaml`; `postinstall: turbo run build --filter=@engraph/agent-tools`; husky `test -f` build-guard; Phase

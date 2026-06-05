@@ -39,7 +39,8 @@ only.
 
 ## Artefacts produced here
 
-- `NN-<surface>.md` — per-phase sub-plan (created when the phase begins).
+- `NN-<surface>.md` — per-phase sub-plan. **`02-agent-tools-build-design.md` already written** (the hardest phase's full
+  build/gate design, captured early so it can't be lost).
 - `relevance-ledger.md` — ✅ **seeded 2026-06-05** (finalised Phase 9): full per-surface KEEP / AMEND / DON'T-BRING /
   DORMANT dispositions, the firsthand corrections to the fan-out, and the explicit not-brought + dormant sets.
 - `reference-closure.md` — ✅ started: running resolve / rewrite / placeholder / retained-cross-host classification.
