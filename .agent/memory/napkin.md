@@ -66,6 +66,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     identity-deduped); practice-context retired (dir gone, 4 authored notes archived, 3 live nav refs repointed, immutable
     PDRs left intact). Oak's 2026-06-05 pull changed **agent-tools** (tsx `postinstall` not turbo; new validators;
     hook-policy fail-closed) → `02-agent-tools-build-design.md` partly stale for Phase 2; re-read Oak fresh then.
+  - **Oak post-pull reconciliation done (2026-06-05, commit `8abdbb7`).** Reconciled the forward-looking transplant docs
+    to Oak's pulled state (HEAD `06018bc3`). Scouted first: the pull's transplant-relevant delta is concentrated in
+    **agent-tools/hook-policy** (Phase 2); the rest was Oak _product_ work (eef/oak-kg/graph/school-data-search) castr
+    doesn't bring. Updated `02-agent-tools-build-design.md` (postinstall = `tsx` bootstrap not turbo, enforced by
+    `validate-lifecycle-scripts`; dist fail-closed guards; 7 validators; `tsx` devDep + dep majors), the parent plan, and
+    the relevance-ledger (+`bootstrap` module; patterns 121→122). Other counts stable (rules 87, skills 20, sub-agent
+    templates 19, PDRs 91). **Method learning:** when a source repo you're transplanting from moves, treat the design
+    docs as **dated snapshots of a moving target** — reconcile to a dated state _and_ keep a standing "re-verify at
+    execution"; don't pretend frozen-correct. Phase 1 (Core) was unaffected — the merge already used Oak's current Core.
 
 ## 2026-06-04
 

@@ -28,9 +28,10 @@ inventory/dispositions) → the napkin `2026-06-05` entry (session insights + fi
   `.agent/practice-context/` retired) both green; tag `transplant/phase-1`. Commits:
   `git log --oneline transplant/phase-0-baseline..HEAD`.
 - **Next = Phase 2:** `@engraph/agent-tools` + hook policy — design in
-  [`../plans/transplant/02-agent-tools-build-design.md`](../plans/transplant/02-agent-tools-build-design.md). ⚠️ Oak's
-  2026-06-05 pull refactored agent-tools (tsx `postinstall`, **not** turbo; new validators registered in knip;
-  hook-policy fails closed) → re-read Oak's `agent-tools/` fresh; that design doc is partially stale on `postinstall`.
+  [`../plans/transplant/02-agent-tools-build-design.md`](../plans/transplant/02-agent-tools-build-design.md),
+  **reconciled to Oak's 2026-06-05 post-pull state in `8abdbb7`** (tsx `postinstall` bootstrap not turbo; dist-based
+  fail-closed PreToolUse guards; seven validators; `tsx` devDep + dep majors). Standing: Oak moves — **re-read
+  `agent-tools/` fresh at execution** even though the design is now current.
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
   `practice-fitness` informational-first never red-gates the SACRED `principles.md`; Phase 2 commit must include the
