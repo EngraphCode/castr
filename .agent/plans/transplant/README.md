@@ -14,7 +14,7 @@ only.
 | ----- | ---------------------------------------------------------------------------------------- | ------- | ----------------------------- |
 | 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done | `transplant/phase-0-baseline` |
 | 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy                                                     | ⬜      | `transplant/phase-2`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done | `transplant/phase-2`          |
 | 3     | Skills + commands→skills                                                                 | ⬜      | `transplant/phase-3`          |
 | 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ⬜      | `transplant/phase-4`          |
 | 5     | Directives (7 generic, additive)                                                         | ⬜      | `transplant/phase-5`          |
@@ -32,11 +32,34 @@ Core generation to Oak's current portable trinity + entry points, created `prove
 `CHANGELOG.md`, and retired `.agent/practice-context/` (archived castr's authored notes; repointed the live navigational
 refs; immutable PDRs left intact).
 
-**Resume at Phase 2** — `@engraph/agent-tools` + hook policy; design in
-[`02-agent-tools-build-design.md`](./02-agent-tools-build-design.md), **reconciled to Oak's 2026-06-05 post-pull state in
-`8abdbb7`, baseline since advanced to `2c85bc01`)** (tsx `postinstall` bootstrap not turbo; dist-based PreToolUse guards — fail-OPEN if `dist` unbuilt, fail-closed if broken; eight validators incl.
-`lifecycle-scripts`/`pretooluse-guard-routing`/`fitness-vocabulary`; `tsx` devDep + dep majors). Standing discipline: Oak
-is a moving target — **re-read Oak's `agent-tools/` fresh at Phase-2 execution** even though the design is now current.
+**Phase 2 is COMPLETE** — tagged `transplant/phase-2` (commit `55a6788`; Oak baseline advanced `06018bc3`→`2c85bc01`).
+Landed: the 340-file `@engraph/agent-tools` package (localised; product-coupled `ci-schema-drift-check` dropped per
+DON'T-BRING); self-contained tsconfig/eslint/knip/depcruise + inlined vitest bases; `pnpm-workspace` + `tsx` postinstall
+bootstrap; hook policy data + **LIVE Claude PreToolUse guards**; and the §6 **`validate-drift`** validator (8th). Green:
+format/build/type-check/lint/madge/depcruise/knip/portability/repo-validators + lib's 1669 tests.
+
+**CRITICAL operational state for the next session (non-obvious, easily lost):**
+
+- **PreToolUse guards are now LIVE** (`.claude/settings.json` Bash/Edit/Write → `.claude/hooks/run-pretooluse-guard.mjs`).
+  Your tool calls are guarded: dangerous-git patterns and content fingerprints (PDR-044 hedging/menu-framing) are denied;
+  an **unbuilt `dist` fails OPEN** (warns, never bricks), a built-but-broken guard fails closed. If a tool call is
+  blocked, that is the policy in `.agent/hooks/policy.json` — not a bug.
+- **agent-tools `test` is INFORMATIONAL**, excluded from the blocking gate via `turbo test --filter=!@engraph/agent-tools`
+  (+ runner `agent-tools:test:informational`). It is 867/885; the 18 failures are later-phase content (`RULES_INDEX`→P4,
+  collaboration schemas→P8, codex agents→P6/7). Remove the filter (flip blocking) as each phase lands its content.
+- **`repo-validators:check` chains only the 4 GREEN validators** (`lifecycle-scripts`, `pretooluse-guard-routing`,
+  `drift`, `fitness-vocabulary`). The other 4 are deferred informational: `stale-script`→P4, `collaboration-state`→P8,
+  `subagents`→P6, `portability`(Oak's)→P7. Add each to the blocking chain when its content exists.
+
+**Resume at Phase 3** — Skills + commands→skills (18 skills incl. the continuity cluster; regenerate adapters
+`--prefix=engraph-`). **Re-read Oak's surfaces fresh first** — Oak is a moving target, proved twice today (it advanced to
+`2c85bc01` mid-Phase-2, an owner-authored hook fail-open fix).
+
+**Phase-1 follow-up sync (don't conflate phases):** Oak's `2c85bc01` advance also grew `PDR-089` a Decision-7 clause
+(Phase-1 append), and touched `documentation-hygiene.md` (Phase 4) + a `.cursor` adapter (Phase 7) — fold in at those
+phases. **Latent-gap lesson (commit `11f7e48`):** Phase 1b retired `.agent/practice-context/` but did NOT update the
+bespoke `scripts/validate-portability.mjs` and did NOT run `portability:check` in its gate set — so the phase-1 tag was
+green while that gate was broken. **Every phase's gate run must include ALL of `qg`**, or "green" hides gaps.
 
 The 1b method below is kept as the execution record:
 

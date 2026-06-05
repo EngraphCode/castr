@@ -122,6 +122,26 @@ unbuilt`) — split the failure shapes: **unbuilt `dist` → fail OPEN (exit 0 +
     a Decision-7 clause (Phase-1 append — accretion, not mutation-violation); `documentation-hygiene.md` rule (Phase 4),
     one `.cursor` adapter (Phase 7) — bring at those phases (re-read Oak fresh then anyway). Everything else = Oak product
     (eef/school-data-search/graph-core) or memory — DON'T-BRING. New baseline for Phase 2: **`2c85bc01`**.
+  - **Phase 2 CLOSED + session-close insights (2026-06-05; candidate graduations).** Phase 2 landed green + tagged
+    `transplant/phase-2` (`55a6788`). The build's transferable lessons — most caught my OWN first instinct, i.e. the
+    verify-firsthand discipline cutting against the executor, not just the handoff:
+    1. **File-count ≠ effort.** "340 files = multi-session grind" was wrong — proven upstream code mostly just built and
+       passed; a workspace transplant is copy + wire-in + localise-the-small-coupled-surface, not 340 files of work.
+    2. **Probe before deferring on assumed difficulty.** Nearly deferred knip as "too noisy"; the firsthand probe found
+       zero real dead code (findings were my own incomplete entry config). The discipline cuts against pessimism too.
+    3. **A drift-validator must be MORE conservative than the drift it catches, or it becomes the drift** — a false
+       positive red-gates the build. `validate-drift` matches only definite estate phrasings; skips sub-counts/approximates.
+    4. **"Bring X" can hide the highest-blast-radius action.** "Bring the hook policy" split into safe data vs LIVE
+       PreToolUse activation (intercepts every tool call, fail-shape-dependent) — separate them; the environment-altering
+       half needs explicit owner sign-off, not autonomy.
+    5. **A rescan re-examines decisions, not just code.** The owner's own fail-open fix removed the exact risk basis for a
+       deferral we had just agreed → the right answer flipped. Re-scan the _decisions_ that rested on the old state.
+    6. **Every phase's gate run must include ALL of `qg`.** Phase 1b omitted `portability:check`, so the phase-1 tag was
+       green while that gate was latently broken (practice-context retired, bespoke validator unchanged). Fixed `11f7e48`;
+       removed the invalid check rather than re-tracking archived files to force it green (owner directive).
+    7. **Handoff: stale pointers are worse than missing context.** A tracker saying "Resume at Phase 2" after Phase 2
+       ships actively misleads the next session. The adversarial "what would be lost?" check prioritises pointer-currency +
+       non-obvious operational state (the guards are LIVE) over narrative richness.
 
 ## 2026-06-04
 

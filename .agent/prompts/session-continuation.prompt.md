@@ -23,15 +23,18 @@ product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-p
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin `2026-06-05` entry (session insights + firsthand corrections + build gotchas).
 
-- **Status:** Phase 0 ✅; **Phase 1 ✅** — 1a (91 PDRs + `practice-verification.md`) and 1b (2026-06-05: Core generation
-  merged to Oak's current trinity + entry points, `provenance.yml` history union, `CHANGELOG.md` merge,
-  `.agent/practice-context/` retired) both green; tag `transplant/phase-1`. Commits:
-  `git log --oneline transplant/phase-0-baseline..HEAD`.
-- **Next = Phase 2:** `@engraph/agent-tools` + hook policy — design in
-  [`../plans/transplant/02-agent-tools-build-design.md`](../plans/transplant/02-agent-tools-build-design.md),
-  **reconciled to Oak's 2026-06-05 post-pull state in `8abdbb7`** (tsx `postinstall` bootstrap not turbo; dist-based
-  PreToolUse guards (fail-OPEN if `dist` unbuilt, fail-closed if broken); eight validators; `tsx` devDep + dep majors). Standing: Oak moves — **re-read
-  `agent-tools/` fresh at execution** even though the design is now current.
+- **Status:** Phase 0 ✅; Phase 1 ✅; **Phase 2 ✅** — `@engraph/agent-tools` (340 files) + hook policy + LIVE PreToolUse
+  guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`); Oak baseline advanced `06018bc3`→`2c85bc01`.
+  Commits this session: `d08e497` (PDR miscount 92→91), `11f7e48` (Phase-1b portability fixup), `55a6788` (Phase 2).
+- **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
+  (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
+  INFORMATIONAL (`--filter=!@engraph/agent-tools`; 18/885 failures are later-phase content). `repo-validators:check` =
+  4 green validators only (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`); 4 deferred
+  (`stale-script`→P4, `collaboration-state`→P8, `subagents`→P6, Oak `portability`→P7).
+- **Next = Phase 3:** Skills + commands→skills (18 skills incl. continuity cluster; adapters `--prefix=engraph-`).
+  **Re-read Oak fresh first** — moving target, proved twice today. **Phase-1 follow-up:** Oak's advance grew `PDR-089` a
+  Decision-7 clause (Phase-1 append) + touched `documentation-hygiene.md` (P4) + a `.cursor` adapter (P7); fold in at
+  those phases.
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
   `practice-fitness` informational-first never red-gates the SACRED `principles.md`; Phase 2 commit must include the
@@ -116,11 +119,13 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **@engraph/castr — next session start.** The **primary active workstream** is the Oak → castr Practice transplant, on branch `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set — NOT `main`; baseline `transplant/phase-0-baseline`). The product slice `explicit-additional-properties-support.md` and the `remediation/` backlog stay **parked-in-place** — resume only after the transplant closes or on a fresh reproduced regression.
 
-**Phase 1 is COMPLETE and green**, tagged `transplant/phase-1`: 1a (91 PDRs + `practice-verification.md`) and 1b (Core generation converged to Oak's current trinity + entry points, `provenance.yml` branch-history union, `CHANGELOG.md` merge, `.agent/practice-context/` retired). Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
+**Phases 0–2 are COMPLETE and green.** Phase 2 (tag `transplant/phase-2`, commit `55a6788`; Oak baseline advanced `06018bc3`→`2c85bc01`): the 340-file `@engraph/agent-tools` package + hook policy + **LIVE Claude PreToolUse guards** + the §6 `validate-drift` validator. Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
+
+**⚠️ LIVE NOW — your tool calls are guarded.** `.claude/settings.json` routes Bash/Edit/Write through `run-pretooluse-guard.mjs`: dangerous-git patterns and PDR-044 content fingerprints are **denied**; an unbuilt `dist` fails **OPEN** (warns, never bricks). A blocked call is the policy in `.agent/hooks/policy.json`, not a bug. agent-tools `test` is **informational** (filtered out of the blocking gate via `--filter=!@engraph/agent-tools`); `repo-validators:check` carries only the 4 green validators (the other 4 deferred to P4/P6/P7/P8). **Gotcha (verified firsthand — it blocked my own command):** the Bash guard substring-matches the WHOLE command, so a blocked pattern anywhere in the command string — including an `echo`/test payload or a dangerous-command literal quoted inside a commit message — is denied. Keep such literals out of commands; when a commit message must discuss them, write it to a file and use `git commit -F <file>`, never `-m`. The guards also activate **mid-session** when `.claude/settings.json` changes, so your current session may already be guarded.
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` `2026-06-05` entry. Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
-**Next executable step = Phase 2** (`@engraph/agent-tools` + hook policy). Design: `.agent/plans/transplant/02-agent-tools-build-design.md`, reconciled to Oak's 2026-06-05 state (design commit `8abdbb7`; Oak baseline since advanced to `2c85bc01`). **Oak is a moving target — re-read Oak's `agent-tools/` fresh before relying on any specific** (postinstall is a `tsx` bootstrap not turbo; dist-based PreToolUse guards — fail-OPEN if `dist` unbuilt, fail-closed if broken; eight validators incl. the §6 drift validator).
+**Next executable step = Phase 3** (Skills + commands→skills: 18 skills incl. the continuity cluster `session-handoff`/`consolidate-docs`/`consolidate-until-done`; regenerate adapters `--prefix=engraph-`; migrate castr `jc-*` skills). **Oak is a moving target — re-read Oak's surfaces fresh before relying on any specific** (it advanced `06018bc3`→`2c85bc01` mid-Phase-2 today via an owner-authored hook fail-open fix). **Phase-1 follow-up sync (do not conflate phases):** Oak's advance grew `PDR-089` a Decision-7 clause + touched `documentation-hygiene.md` (P4) + a `.cursor` adapter (P7).
 
 **Standing disciplines (active from message 1):**
 
@@ -132,4 +137,4 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above, re-verify Oak's `agent-tools/` current state, then ground Phase 2 with the owner before executing.
+**First action:** read the surfaces above, re-verify Oak's current state fresh (it moves), then ground Phase 3 with the owner before executing.
