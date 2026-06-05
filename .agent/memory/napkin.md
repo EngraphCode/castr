@@ -75,6 +75,9 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     templates 19, PDRs 91). **Method learning:** when a source repo you're transplanting from moves, treat the design
     docs as **dated snapshots of a moving target** — reconcile to a dated state _and_ keep a standing "re-verify at
     execution"; don't pretend frozen-correct. Phase 1 (Core) was unaffected — the merge already used Oak's current Core.
+  - **PR-ordering resolved (owner, 2026-06-05):** the transplant PR to `main` **carries** its 2 deep-review commits;
+    `docs/initial-deep-review` is **not** merged to `main` separately — now recorded in the parent plan. (Supersedes the
+    "owner's merge-ordering call" open-question note in the planning bullet above.)
 
 ## 2026-06-04
 
