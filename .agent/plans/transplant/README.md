@@ -83,14 +83,14 @@ doctrinal shift**: two new generic rules (`collaboration-is-value-contingent`, `
   **Oak is held at `ad649710` as the working baseline (owner, 2026-06-07)** — transplant against it; no per-phase re-scan
   while it is held; re-scan only when the owner signals Oak has moved.
 
-**Step 1 — reconcile `02-agent-tools-build-design.md` to as-built.** Residual stale claims: §1 tsconfig `NodeNext`/`ES2022`
-→ actual `ESNext`/`bundler`/`ES2023`; header "seven validators" → eight (incl. `drift`); §2 "do NOT wire guards as
-commit-blocking until P6/8" → superseded (guards activated in P2). Authoritative as-built = commits + napkin + this
-tracker; reconcile or banner "superseded by execution".
+**Step 1 ✅ done** — `02-agent-tools-build-design.md` reconciled to as-built (as-built banner + tsconfig fix).
 
-**Step 2 — Phase 3: Skills + commands→skills.** 18 skills incl. the continuity cluster
-(`session-handoff`/`consolidate-docs`/`consolidate-until-done`); regenerate adapters `--prefix=engraph-`; migrate castr
-`jc-*` skills. (Step 0 re-grounds this against Oak's current skills.)
+**Step 2 ✅ done — Phase 3 (Skills) landed** (tag `transplant/phase-3`); see the Phase-3 resume block above.
+
+**NEXT: Phase 4 — Rules + `RULES_INDEX` + reference-closure.** Bring Oak's ~78 KEEP rules incl. the two new
+anti-ceremony rules (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`); reference-close
+the 36 Oak-ADR cites; the Phase-3 skills' forward-ref rule cites resolve here. **Carry the Phase-3 lesson:** Oak rules
+may embed product-specifics needing per-surface castr reconciliation, not naming-only.
 
 **Step 3 — fold Oak follow-ups in at their phases (not before):** `PDR-089` Decision-7 append → a Phase-1 touch;
 `documentation-hygiene.md` → Phase 4; the `.cursor` adapter → Phase 7.
