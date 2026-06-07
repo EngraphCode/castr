@@ -24,7 +24,9 @@ intact, gates stay green, and provenance stays honest.
 
 1. Scale surfaces (patterns, executive memory, `.gemini`/`.windsurf`, fitness gates): **fully populate**.
 2. Agent-collaboration machinery: **ACTIVE, full, PEEN-hardened**, seeded **empty** (no Oak event data). The
-   collaboration surface is about **agents**, not humans.
+   collaboration surface is about **agents**, not humans. **Transplant scope here is fixed (owner) — the collaboration
+   machinery is brought in full, never relevance-gated; the value-contingent rule (Phase 4) governs runtime
+   _invocation_, not whether to bring it.**
 3. This transplant is the **primary active plan**; `explicit-additional-properties-support.md` is **parked-in-place**;
    `remediation/` and the `docs/initial-deep-review` branch are untouched.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
@@ -39,7 +41,12 @@ intact, gates stay green, and provenance stays honest.
    Practice's own learned principle _"if a behaviour must be automatic, it needs a rule, not just a skill"_. The
    discipline: exhaustive durable state-recording (load-bearing decisions in the in-repo contract, **never** memory-only) +
    an adversarial _"what would be lost if context vanished?"_ review at close + preservation/graduation of reflection
-   insights into the knowledge flow. (Owner will keep requesting it until it is structural.)
+   insights into the knowledge flow. (Owner will keep requesting it until it is structural.) **Reconciliation (owner,
+   2026-06-07):** "exhaustive durable state-recording" means homing substance and load-bearing decisions in their
+   permanent docs — **the commit plus the permanent doc ARE the record.** It does **not** mean disposition ledgers,
+   before/after counts, closeout narratives, or provenance pointers (the transplanted
+   `permanent-doc-is-the-consolidation-record` rule, Phase 4, governs this). The _"what would be lost?"_ review is
+   retained: it surfaces un-homed substance, so it produces value, not accounting — the title's "not ceremony" made literal.
 
 ## Scope: BRING / PRESERVE / DON'T-BRING
 

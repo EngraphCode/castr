@@ -4,12 +4,17 @@
 rationale, plus the explicit not-brought + dormant sets. Sources: a 3-agent fan-out inventory of the Oak estate **plus
 firsthand verification that corrected several agent claims** (see "Firsthand corrections"). Relevance lens: castr is a
 **headless TypeScript schema-transform library** (OpenAPI/Zod/JSON-Schema via a canonical IR; emits MCP tools) — no
-browser UI, React, auth, search index, design system, Sentry, or curriculum domain.
+browser UI, React, auth, search index, design system, Sentry, or curriculum domain. **Relevance criterion (owner,
+2026-06-07):** judge each surface on **both** castr's need **and** the advantage Oak may bestow that we cannot foresee
+yet. The DON'T-BRING bar is therefore **high** — reserved for content genuinely tied to a domain castr lacks (UI / auth /
+search / curriculum / Sonar). When the call is unclear, **bring it (dormant) rather than drop it.** Assessing this per
+surface is the job, not overhead.
 
 Owner-locked posture (2026-06-05): **fully populate** scale surfaces; **collaboration ACTIVE** (about agents, not
 humans) seeded empty; transplant = primary active plan; **all generic experts**. Tightenings: drop the ground-truth
 triplet, Oak SonarQube/secrets infra, and ~2 UI patterns; AMEND pattern provenance + regenerate derived indexes;
-`practice-fitness` informational-first.
+`practice-fitness` informational-first. **Collaboration machinery is a fixed bring (owner) — never relevance-gated; the
+transplanted `collaboration-is-value-contingent` rule governs runtime _invocation_, not transplant scope.**
 
 ---
 
@@ -71,7 +76,9 @@ collaboration=active). AMEND: `ci` test fixtures (`@oak/*`), the path-encoding v
   (EEF corpus), `sonarqube-mcp-instructions` (no Sonar server), any ground-truth rule.
 - **KEEP:** `invoke-mcp-expert` (castr emits MCP); the collaboration rules ACTIVE (not dormant):
   `comms-all-channels-watcher`, `liveness-heartbeat-cron`, `respect-active-agent-claims`, `register-identity-on-thread-join`,
-  `use-agent-comms-log`, `follow-agent-collaboration-practice`, etc.
+  `use-agent-comms-log`, `follow-agent-collaboration-practice`, etc. **New since the Oak `ad649710` sync (Step 0,
+  2026-06-07) — KEEP:** `collaboration-is-value-contingent` + `permanent-doc-is-the-consolidation-record` (the
+  anti-ceremony pair; add them to the regenerated `RULES_INDEX`).
 - **AMEND:** rules with stale `oak`/ADR cites (`no-machine-local-paths`, `present-verdicts-not-menus`,
   `invoke-assumptions-expert`, `invoke-code-experts`, …). **36 distinct Oak-ADR cites** to reference-close (castr ADR≤047;
   low-number overlaps are _semantic_ mismatches → re-point to PDRs).
@@ -114,7 +121,7 @@ or config.** Correctly deferred from the blocking gate; resolves when P6 (sub-ag
 infrastructure. **Lesson:** silencing it would have masked the true "infrastructure absent" signal — the inverse of
 green-gates-mask-gaps. (Oak advanced `2c85bc01`→`ad649710` since the Phase-2 sync; agent-tools delta is docs-only — README
 
-- agent-identity.md — so castr's baseline stays `2c85bc01`; re-read Oak fresh at the next agent-tools touch.)
+- agent-identity.md — so the Phase-2 build stands. Step 0 (2026-06-07) reviewed Oak through `ad649710`; the agent-tools **code** is unchanged in `2c85bc01..ad649710`. Oak is held at `ad649710` as the working baseline.)
 
 ### Skills (20) — KEEP 18 / DON'T-BRING 2
 
@@ -129,7 +136,10 @@ can replace it) — at Phase 3 confirm no unique castr-local step is lost, then 
 `consolidate-docs` — runs to a completion proof or reports the exact remaining owner-decisions; forbids
 archive/split/rename-only fitness cures). They implement `capture → distil → graduate → enforce` (PDR-011/014/046 — all
 present from 1a; the skills' host `ADR-150`/`ADR-131` cites reference-close to those PDRs or stay retained-cross-host at
-Phase 3/4). **This cluster is where the §6 session-close continuity discipline becomes structural.**
+Phase 3/4). **This cluster is where the §6 session-close continuity discipline becomes structural.** **Bring Oak's current
+(`ad649710`) forms (Step 0, 2026-06-07):** these three skills were rewritten to drop disposition ledgers / closeout
+proof / provenance pointers and now defer to `permanent-doc-is-the-consolidation-record` — bring those forms, not the
+older heavier ones. `start-right-team` is confirmed present → KEEP (team-mode).
 
 ### Sub-agents (19 templates) — roster: castr's 3 schema experts + 12 generic / DON'T-BRING 7
 

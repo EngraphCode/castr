@@ -59,12 +59,19 @@ format/build/type-check/lint/madge/depcruise/knip/portability/repo-validators + 
 
 ## Next steps (in order)
 
-**Step 0 — review the updated Oak agentic engineering estate (owner-directed).** Oak advanced `2c85bc01`→`ad649710`
-since the Phase-2 sync; only the **agent-tools** delta was scanned (docs-only — README + `agent-identity.md`). Before
-resuming, re-scan Oak's **whole** agentic estate fresh: `git -C ../oak-open-curriculum-ecosystem log --oneline
-2c85bc01..HEAD`, then diff by surface (`git diff --stat 2c85bc01..HEAD -- .agent agent-tools`). Focus on the
-**Phase-3 skills** estate + rules / directives / sub-agents, to re-ground the remaining phases against current source.
-Oak is a proven moving target (it moved three times across this work).
+**Step 0 — review the updated Oak agentic estate (owner-directed). ✅ DONE 2026-06-07.** Scanned `2c85bc01..ad649710`
+whole-estate by surface. **Finding:** the delta is dominated by DON'T-BRING runtime event data (two ~2,900-line
+`comms-seen/*.json`, claims archives, the shared comms log, Oak `eef`/observability/mcp-harness sector plans). The
+**agent-tools _code_ is unchanged** in the range — only `README.md` + the new `docs/agent-identity.md` doc moved (Codex
+statusline identity, a Phase-7 `.codex` follow-up). The transplant-relevant signal is one coherent **anti-ceremony
+doctrinal shift**: two new generic rules (`collaboration-is-value-contingent`, `permanent-doc-is-the-consolidation-record`)
+
+- the **rewritten** continuity cluster (`consolidate-docs` / `consolidate-until-done` / `session-handoff`, now deferring
+  to those rules) + the new `start-right-team` skill + a reframe of subjective experience to **strictly voluntary** (the
+  corpus is not monitored for thinning). **Consequence:** Phase 3/4 bring Oak's _current_ (anti-ceremony) forms of these
+  surfaces, not the older heavier forms; the two new rules join the Rules KEEP set (relevance-ledger updated).
+  **Oak is held at `ad649710` as the working baseline (owner, 2026-06-07)** — transplant against it; no per-phase re-scan
+  while it is held; re-scan only when the owner signals Oak has moved.
 
 **Step 1 — reconcile `02-agent-tools-build-design.md` to as-built.** Residual stale claims: §1 tsconfig `NodeNext`/`ES2022`
 → actual `ESNext`/`bundler`/`ES2023`; header "seven validators" → eight (incl. `drift`); §2 "do NOT wire guards as

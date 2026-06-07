@@ -1,6 +1,6 @@
 # Session Continuation: @engraph/castr
 
-**Last updated:** 2026-06-05
+**Last updated:** 2026-06-07
 
 Context bridge between sessions. Start here after reading [AGENT.md](../directives/AGENT.md).
 
@@ -25,7 +25,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-07` + `2026-06
 
 - **Status:** Phase 0 ✅; Phase 1 ✅; **Phase 2 ✅** — `@engraph/agent-tools` (340 files) + hook policy + LIVE PreToolUse
   guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`); Oak baseline advanced `06018bc3`→`2c85bc01`.
-  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak has since advanced `2c85bc01`→`ad649710` (agent-tools delta docs-only; whole-estate delta unscanned = Step 0).
+  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak is held at `ad649710` as the working baseline.**
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
   INFORMATIONAL (`--filter=!@engraph/agent-tools`; 18/885 failures are later-phase content). `repo-validators:check` =
@@ -35,9 +35,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-07` + `2026-06
   infrastructure (Oak tests assert `rejects.toThrow` / `toThrow(/missing adapter/)`) — truthfully reporting castr's P6/P8
   infra isn't installed yet. A 2026-06-07 trial fix was reverted; **Oak clean at `ad649710`, nothing pushed**. They
   self-clear when P6/P8 land. See `relevance-ledger.md` §"Deferred-validator …".
-- **Next steps (in order) — full detail in the tracker's "Next steps":** **Step 0** review the updated Oak agentic
-  estate (advanced to `ad649710`; only agent-tools docs-delta scanned — re-scan the WHOLE estate fresh, esp. Phase-3
-  skills + rules/directives/sub-agents). **Step 1** reconcile `02-agent-tools-build-design.md` to as-built
+- **Next steps (in order) — full detail in the tracker's "Next steps":** **Step 0 ✅ done (2026-06-07)** — whole estate reviewed through `ad649710`; finding + working-baseline hold recorded in the tracker. **Step 1** reconcile `02-agent-tools-build-design.md` to as-built
   (NodeNext/ES2022→ESNext/bundler/ES2023; seven→eight validators; activation-deferral guidance superseded). **Step 2**
   Phase 3 (skills + commands→skills; adapters `--prefix=engraph-`; migrate `jc-*`). **Step 3** fold Oak follow-ups at
   their phases (`PDR-089` Decision-7→P1; `documentation-hygiene.md`→P4; `.cursor` adapter→P7).
@@ -131,16 +129,19 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` latest entries (`2026-06-07` + `2026-06-05`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
-**Next executable steps (in order, owner-directed):** **Step 0 — review the updated Oak agentic estate.** Oak advanced `2c85bc01`→`ad649710`; only the agent-tools docs-delta was scanned, so re-scan the WHOLE estate fresh (`git -C ../oak-open-curriculum-ecosystem log --oneline 2c85bc01..HEAD`, then diff by surface) — especially the Phase-3 skills estate + rules/directives/sub-agents — to re-ground the remaining phases against current source. **Step 1 — reconcile `02-agent-tools-build-design.md` to as-built** (tsconfig `NodeNext`/`ES2022`→`ESNext`/`bundler`/`ES2023`; "seven validators"→eight incl. `drift`; "do not activate guards until P6/8"→activated in P2; authoritative as-built = commits + napkin + tracker). **Step 2 — Phase 3** (Skills + commands→skills: 18 skills incl. the continuity cluster `session-handoff`/`consolidate-docs`/`consolidate-until-done`; adapters `--prefix=engraph-`; migrate castr `jc-*`). **Step 3 — fold Oak follow-ups at their phases** (`PDR-089` Decision-7→P1; `documentation-hygiene.md`→P4; `.cursor` adapter→P7). **Oak is a proven moving target — re-read fresh** (it moved three times across this work: `06018bc3`→`2c85bc01`→`ad649710`).
+**Next executable steps (in order, owner-directed):** **Step 0 ✅ done (2026-06-07).** Whole estate reviewed through `ad649710` (finding in the tracker): the delta is mostly DON'T-BRING runtime event data; the transplant-relevant signal is Oak's anti-ceremony shift — two new rules + the rewritten continuity cluster + `start-right-team` — so Phase 3/4 bring Oak's _current_ forms. **Step 1 — reconcile `02-agent-tools-build-design.md` to as-built** (tsconfig `NodeNext`/`ES2022`→`ESNext`/`bundler`/`ES2023`; "seven validators"→eight incl. `drift`; "do not activate guards until P6/8"→activated in P2; authoritative as-built = commits + napkin + tracker). **Step 2 — Phase 3** (Skills + commands→skills: 18 skills incl. the continuity cluster `session-handoff`/`consolidate-docs`/`consolidate-until-done`; adapters `--prefix=engraph-`; migrate castr `jc-*`). **Step 3 — fold Oak follow-ups at their phases** (`PDR-089` Decision-7→P1; `documentation-hygiene.md`→P4; `.cursor` adapter→P7). **Oak is held at `ad649710` as the working baseline (owner, 2026-06-07)** — no per-phase re-scan while held; re-scan only when the owner signals Oak has moved.
 
 **Standing disciplines (active from message 1):**
 
 - **Verify load-bearing claims firsthand** against source; all agent/tool output is a candidate lead, never relayed second-hand; a named tool/command is a claim until verified (the `pned` phantom).
 - **Record load-bearing decisions in the in-repo execution contract, never memory-only.**
-- **Session-close continuity discipline** (the owner will keep asking; §6 makes it structural in the transplanted vehicles `session-handoff` / `consolidate-docs` / `consolidate-until-done`): exhaustive durable state-recording + an adversarial _"what would be lost if context vanished?"_ review + preservation/graduation of reflection insights.
+- **Session-close continuity discipline** (the owner will keep asking; §6 makes it structural in the transplanted vehicles `session-handoff` / `consolidate-docs` / `consolidate-until-done`): exhaustive durable state-recording + an adversarial _"what would be lost if context vanished?"_ review + preservation/graduation of reflection insights. **The record is the commit + the permanent doc — not a ledger or closeout narrative** (reconciled with `permanent-doc-is-the-consolidation-record`; see plan §6).
 - **PDRs are portable and never repo-specific; anything repo-specific goes in a castr ADR** — author a castr ADR only if the portable PDR is insufficient (PDR-079).
 - **`principles.md` is SACRED** (no edit without explicit owner approval); never clobber the PRESERVE set; `.agent` is NOT prettier-ignored (`pnpm format` new docs each phase); **roll forward only** (revert; never `reset --hard`/force-push); each phase = one atomic commit + `transplant/phase-N` tag, green-gated + reference-closure-clean.
+- **No deadline pressure — excellence over expediency, always** (owner, emphatic 2026-06-07): speed is not a goal; architectural correctness is. The transplant is an accepted strategic investment to accelerate castr — **the premise is settled; do not re-litigate whether it is worth doing.**
+- **Less ceremony — the commit plus the permanent doc ARE the record.** No handoff-correction churn, disposition ledgers, before/after counts, or closeout narratives; home substance in its permanent doc and stop (`permanent-doc-is-the-consolidation-record`, Phase 4).
+- **Smoke-testing the transplanted substrate is a later phase** (owner, 2026-06-07) — for now bring surfaces over; prove in-use afterwards.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above, re-verify Oak's current state fresh (it moves), then ground Phase 3 with the owner before executing.
+**First action:** read the surfaces above. Step 0 is done and Oak is held at `ad649710`; ground Phase 3 with the owner, then execute Step 1 (reconcile `02-agent-tools-build-design.md`) → Phase 3.

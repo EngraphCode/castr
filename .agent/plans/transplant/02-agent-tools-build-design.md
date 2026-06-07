@@ -7,6 +7,15 @@ execution per the firsthand rule. Items marked **✅verified** I checked against
 > Why this file exists: this is the hardest, least-recoverable phase. The parent plan carries only a summary; the full
 > actionable design lived only in session context. Persisted here so Phase 2 is resumable without it.
 
+> **✅ AS-BUILT RECONCILIATION (2026-06-07, owner Step 1).** Phase 2 shipped green (commit `55a6788`; `pnpm check:ci`
+> verified green 2026-06-07) — authoritative as-built = the Phase-2 commit + tracker + napkin. Corrections to the design
+> below: **(1)** agent-tools `tsconfig` is **`ESNext` module + `bundler` resolution + `ES2023` target** (not the
+> `NodeNext`/`ES2022` drafted in §1); **(2)** the validator set is **eight** — the seven listed below **plus `drift`**
+> (the §6 validate-drift validator); **(3)** PreToolUse guards were **activated LIVE in Phase 2** (`.claude/settings.json`
+> → `run-pretooluse-guard.mjs`, dist fails OPEN), so any "defer guard activation" framing below is superseded for
+> PreToolUse (commit-blocking pre-commit hooks remain deferred per §2). The body below is kept as the execution-time
+> design record.
+
 > **⚠️ Reconciled to Oak's 2026-06-05 state. Baseline advanced `06018bc3` → `2c85bc01`** (re-synced mid-Phase-2
 > execution, owner-flagged; the agent-tools delta was 5 hook-policy/guard files, now folded in). The corrections are
 > below. Headline changes: **(1)** `postinstall`
@@ -40,7 +49,7 @@ uuid ^14, yaml ^2, zod ^4.4` — ✅verified `src/` has **0** `@oaknational` imp
 - **tsconfig:** do **NOT** add agent-tools as a project reference of root `tsconfig.json` (root has `exclude: [".agent"]`
   and is consumed by `lib`'s depcruise — referencing would pull agent-tools into lib's graph). Oak's
   `agent-tools/tsconfig.json` extends `../tsconfig.base.json` which won't exist in castr → **inline** the needed options
-  (NodeNext module/resolution, ES2022 target, strict, `jsx: react-jsx`, `types: ["node"]`, `noEmit:true`). Oak's current
+  (**as-built: `ESNext` module, `bundler` resolution, `ES2023` target**, strict, `jsx: react-jsx`, `types: ["node"]`, `noEmit:true`). Oak's current
   `tsconfig.build.json` **extends `./tsconfig.json`** with `rootDir: "."`, `outDir: "dist"`, `noEmit:false`,
   `declaration` + `declarationMap` + `sourceMap`, and `include: ["src/**/*.ts", "src/**/*.tsx"]` — mirror that shape.
   **⚠️verify** the exact compiler options against Oak's current tsconfig at execution.
