@@ -40,7 +40,7 @@ triplet, Oak SonarQube/secrets infra, and ~2 UI patterns; AMEND pattern provenan
 fitness model. Oak Core has **0 oak-naming** (portable). castr Core customisation = provenance entries (preserve). Retire
 `.agent/practice-context/` (entangled: 10 refs incl. PRESERVE'd `AGENT.md`). **Phase 1.**
 
-### PDRs (92) — KEEP (all)
+### PDRs (91) — KEEP (all)
 
 Zero `@oaknational`/`oak-` naming. 8 Oak-ADR cites (in 10 PDRs) = **retained-cross-host** (immutable governance honestly
 naming Oak's phenotype; see `reference-closure.md`). **Phase 1 (1a landed).**
