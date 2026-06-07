@@ -86,3 +86,62 @@ Retired per PDR-007 amendment (2026-04-29). Directory removed; castr's 4 authore
 - **Known cross-host prose inconsistency (retained-cross-host):** Oak's adopted Core prose names `decision-records/incoming/`
   as the inbound surface, but the actual Practice Box is `practice-core/incoming/` (present in both Oak and castr).
   Code-text only, non-breaking; mirrors Oak's own doc/disk state. Not corrected in 1b.
+
+---
+
+## Phase 3 — Skills
+
+18 Oak skills brought (current `ad649710` forms); `ground-truth-design`/`-evaluation` not brought.
+
+### Naming localisation — disposition: **rewrite (done)**
+
+The relevance-ledger's "zero `@oaknational`/`oak-` naming in skill bodies" was **overstated**: ~20 internal refs
+existed (`oak-consolidate-docs`, `oak-start-right-quick`, `oak-metacognition`, `oak-commit`, `oak-undo-change`,
+`@oaknational/agent-tools`, `oak-session-identity`). All localised `oak-`→`engraph-`, `@oaknational/`→`@engraph/`.
+Cross-skill refs now resolve to the `engraph-`-prefixed adapters generated this phase.
+
+### Oak-PRODUCT coupling reconciled to castr — disposition: **rewrite (done)**
+
+Correcting the ledger's "portable, localise-naming-only" assessment: several skills embedded Oak's **real, current**
+product specifics (correct for Oak, wrong for castr), reconciled to castr this phase:
+
+- `gates` + `start-right-quick/shared/start-right.md` + `start-right-thorough/shared/start-right-thorough.md` carried
+  Oak gate commands (`sdk-codegen`, `doc-gen`, `test:widget`/`:ui`/`:a11y`, `markdownlint:root`, `format:root`,
+  `secrets:scan`) → reconciled to castr's `qg` chain (`pnpm check`/`check:ci`).
+- SDK-specific "Schema-First Nuance" prose → castr **IR-honesty domain grounding** (the gap taxonomy, fail-fast,
+  schema-expert roster) — folding castr's retired `castr-start-right` into the shared core (owner directive).
+- Oak ADR-index navigational paths (`docs/architecture/architectural-decisions/`) → castr's
+  `docs/architectural_decision_records/`; `docs/engineering/*` doc pointers → generalised/castr equivalents.
+- `schema-first-execution.md` directive cites (DON'T-BRING) → re-pointed to `requirements.md` (castr's schema-first home).
+
+### Upstream Oak bug — disposition: **rewrite (done) + back-flow to Oak**
+
+`consolidate-docs` cited `.agent/practice-context/outgoing/`, but Oak **retired practice-context on 2026-04-29
+(`54f07f63`)** and did not update the skill — it is the only Oak skill still referencing it. Not a castr decision; a
+stale upstream ref. castr's copy repointed to the three durable homes (PDR / pattern-PDR / `.agent/reference/`). **Flag
+to Oak** as Practice-shaped feedback (the fix belongs upstream).
+
+### Forward-refs — disposition: **placeholder** (resolve at their phase)
+
+- Skill → **rule** cites (incl. `permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`,
+  `documentation-hygiene`, `pre-merge-divergence-analysis`, the collaboration cluster) → **P4**. `invoke-reviewers`
+  resolves now (castr rule present).
+- Skill → **memory** paths (`memory/active|operational|executive/…`) → **P6** (layout reconciled then; the live napkin
+  stays at `.agent/memory/napkin.md` until P6).
+- Skill → **state/collaboration** paths → **P8**.
+- `RULES_INDEX.md` → **P4**.
+- Skill → **directive** `orientation`/`tdd-as-design`/`continuity-practice` → **P5**.
+
+### Skill → Oak-ADR cites — disposition: **retained-cross-host**
+
+Doctrine cites to Oak ADRs > 047 (`ADR-117` in `plan`, `ADR-150` in `session-handoff`, `ADR-182` in `start-right-team`,
+plus ADR-121/125/131/144/172/176/183 across skills) — honest origin references to where the Practice pattern is
+operationalised in Oak, exactly as the Phase-1 PDR→Oak-ADR disposition. Not edited.
+
+### Resolved now
+
+Skill → PDR cites (PDR-007/011/014/018/026/027/029/…) ✓; skill → castr directives (AGENT/principles/testing-strategy/
+requirements/DEFINITION_OF_DONE/metacognition) ✓; skill → skill (within the 18) ✓.
+
+**Phase-3 result: 0 `rewrite`-class entries remain open in touched files; all dangles are `placeholder`(→P4/P5/P6/P8) or
+`retained-cross-host`.**

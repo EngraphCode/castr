@@ -15,7 +15,7 @@ only.
 | 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done | `transplant/phase-0-baseline` |
 | 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done | `transplant/phase-1`          |
 | 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                 | ⬜      | `transplant/phase-3`          |
+| 3     | Skills + commands→skills                                                                 | ✅ done | `transplant/phase-3`          |
 | 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ⬜      | `transplant/phase-4`          |
 | 5     | Directives (7 generic, additive)                                                         | ⬜      | `transplant/phase-5`          |
 | 6     | Sub-agents / memory / state                                                              | ⬜      | `transplant/phase-6`          |
@@ -37,6 +37,16 @@ Landed: the 340-file `@engraph/agent-tools` package (localised; product-coupled 
 DON'T-BRING); self-contained tsconfig/eslint/knip/depcruise + inlined vitest bases; `pnpm-workspace` + `tsx` postinstall
 bootstrap; hook policy data + **LIVE Claude PreToolUse guards**; and the §6 **`validate-drift`** validator (8th). Green:
 format/build/type-check/lint/madge/depcruise/knip/portability/repo-validators + lib's 1669 tests.
+
+**Phase 3 is COMPLETE** — tagged `transplant/phase-3`. Brought Oak's 18 skills (current `ad649710` forms; `ground-truth`
+×2 dropped), localised `oak-`→`engraph-`; folded castr's domain grounding (IR honesty, gap taxonomy, schema-expert
+roster, the castr gate chain) into the start-right shared core; retired castr's `distillation`/`napkin`/`castr-start-right`
+
+- all `jc-*`; regenerated 18×2 `engraph-` adapters (`.claude/skills` + `.agents/skills`); added empty `skills-lock.json`;
+  wired blocking `skills:check` into `qg`. **Discovery:** the skills were not naming-localise-only — several embedded Oak's
+  real product gate commands (`sdk-codegen`/`test:widget`/etc.) + repo-doc paths (reconciled to castr), and
+  `consolidate-docs` carried a stale upstream `practice-context` ref (Oak retired it 2026-04-29; flagged for back-flow). See
+  `reference-closure.md` §Phase 3.
 
 **CRITICAL operational state for the next session (non-obvious, easily lost):**
 

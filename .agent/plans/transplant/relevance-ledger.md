@@ -125,9 +125,14 @@ green-gates-mask-gaps. (Oak advanced `2c85bc01`→`ad649710` since the Phase-2 s
 
 ### Skills (20) — KEEP 18 / DON'T-BRING 2
 
-DON'T-BRING `ground-truth-design`, `ground-truth-evaluation` (search-eval). Migrate castr `jc-*` (jc-plan, jc-gates,
-jc-start-right, jc-consolidate-docs) → `SKILL-CANONICAL.md`. Regenerate adapters `--prefix=engraph-`; `skills-lock.json`.
-Collaboration skills (`start-right-team`, `session-handoff`) ACTIVE. **Phase 3.**
+DON'T-BRING `ground-truth-design`, `ground-truth-evaluation` (search-eval). **Executed (owner, 2026-06-07):** retired ALL
+castr `jc-*` (subsumed by Oak's `plan`/`gates`/`start-right`/`consolidate-docs`); adopted Oak's knowledge model (retired
+castr's `distillation` + `napkin`); folded castr's domain grounding into the start-right shared core (retired
+`castr-start-right`). Regenerated adapters `--prefix=engraph-` (18×2); empty `skills-lock.json`; blocking `skills:check`.
+**Correction to this ledger's earlier "portable / naming-only" read:** skills were NOT naming-localise-only — several
+embedded Oak's real product gate commands (`sdk-codegen`/`test:widget`/etc.) + repo-doc paths needing per-skill castr
+reconciliation, and `consolidate-docs` carried a stale upstream `practice-context` ref (Oak bug, flagged for back-flow;
+see `reference-closure.md` §Phase 3). Collaboration skills (`start-right-team`, `session-handoff`) ACTIVE. **Phase 3 ✅.**
 
 **Continuity/consolidation cluster (owner-named — the §6 vehicles):** `session-handoff` (SESSION-scoped, every session —
 the **capture edge**, Conservation Invariant), `consolidate-docs` (THREAD-scoped, trigger-gated — the **distil/graduate
