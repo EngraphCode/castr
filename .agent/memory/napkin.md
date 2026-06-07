@@ -32,6 +32,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     (less-ceremony applies to reasoning, not just artefacts). (3) Make ALL edits before gating — launched `qg` early and
     had to kill + restart.
 
+- **Adversarial context-loss review — PROVEN load-bearing (owner-affirmed 2026-06-07); caught real continuity drift
+  ≥3×:** `e790b0e` (stale PR-ordering note), `1710275` (stale napkin pointer), `1077476` (two stale Phase-2/Step-2 claims
+  this session). **Structural gap:** the transplanted `session-handoff` skill does NOT encode an explicit "falsify
+  stale/contradictory continuity claims at close" step — the review survives by manual habit, not the mechanism (§6's
+  "make it structural" unmet). **PDR + Oak back-flow candidate:** add an adversarial-falsification step to
+  `session-handoff` (portable; Oak's lacks it too).
+
 - **Session-close (Phase-2 follow-on): validator "crashes" diagnosed as a non-bug; Oak reverted clean; surfaces
   re-pointed.** Investigated the two "crashing" deferred validators (`collaboration-state`, `subagents`). **Reframe:** they
   are _designed_ to hard-fail on absent canonical infrastructure (Oak tests: `rejects.toThrow('…/conversations')`,
