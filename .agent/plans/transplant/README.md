@@ -50,24 +50,37 @@ format/build/type-check/lint/madge/depcruise/knip/portability/repo-validators + 
 - **`repo-validators:check` chains only the 4 GREEN validators** (`lifecycle-scripts`, `pretooluse-guard-routing`,
   `drift`, `fitness-vocabulary`). The other 4 are deferred informational: `stale-script`→P4, `collaboration-state`→P8,
   `subagents`→P6, `portability`(Oak's)→P7. Add each to the blocking chain when its content exists.
+- **⚠️ The deferred validators' "crashes" are NOT bugs — do NOT try to "fix" them.** `collaboration-state` and
+  `subagents` throw on absent scan dirs by **design** (Oak tests assert `rejects.toThrow('…/conversations')` /
+  `toThrow(/missing adapter/)`); they are truthfully reporting that castr's P6/P8 infrastructure is not installed yet. A
+  2026-06-07 trial fix (return `[]` on `ENOENT`) broke the hard-fail test and was reverted — **Oak is clean at
+  `ad649710`, nothing pushed**. They self-clear when P6/P8 land. Silencing them would mask the true "infrastructure
+  absent" signal. See `relevance-ledger.md` §"Deferred-validator …".
 
-**Next-session PRIORITY 1 (before Phase 3): reconcile `02-agent-tools-build-design.md` to as-built (owner-directed).**
-That forward-design doc accumulated drift during execution; residual stale claims: §1 tsconfig says `NodeNext`/`ES2022`
-(actual inlined config is `ESNext`/`bundler`/`ES2023`); the header says "seven validators" (castr now has eight, incl.
-`drift`); §2 says "do NOT wire guards as commit-blocking until Phase 6/8" (superseded — guards were activated in Phase 2
-per owner). Authoritative as-built record = the commits + napkin + this tracker; either reconcile the design doc to match
-or banner it "superseded by execution — see commits". (The §6 drift validator covers counts/anchors, not free prose, so
-this class needs a manual sweep.)
+## Next steps (in order)
 
-**Resume at Phase 3** — Skills + commands→skills (18 skills incl. the continuity cluster; regenerate adapters
-`--prefix=engraph-`). **Re-read Oak's surfaces fresh first** — Oak is a moving target, proved twice today (it advanced to
-`2c85bc01` mid-Phase-2, an owner-authored hook fail-open fix).
+**Step 0 — review the updated Oak agentic engineering estate (owner-directed).** Oak advanced `2c85bc01`→`ad649710`
+since the Phase-2 sync; only the **agent-tools** delta was scanned (docs-only — README + `agent-identity.md`). Before
+resuming, re-scan Oak's **whole** agentic estate fresh: `git -C ../oak-open-curriculum-ecosystem log --oneline
+2c85bc01..HEAD`, then diff by surface (`git diff --stat 2c85bc01..HEAD -- .agent agent-tools`). Focus on the
+**Phase-3 skills** estate + rules / directives / sub-agents, to re-ground the remaining phases against current source.
+Oak is a proven moving target (it moved three times across this work).
 
-**Phase-1 follow-up sync (don't conflate phases):** Oak's `2c85bc01` advance also grew `PDR-089` a Decision-7 clause
-(Phase-1 append), and touched `documentation-hygiene.md` (Phase 4) + a `.cursor` adapter (Phase 7) — fold in at those
-phases. **Latent-gap lesson (commit `11f7e48`):** Phase 1b retired `.agent/practice-context/` but did NOT update the
-bespoke `scripts/validate-portability.mjs` and did NOT run `portability:check` in its gate set — so the phase-1 tag was
-green while that gate was broken. **Every phase's gate run must include ALL of `qg`**, or "green" hides gaps.
+**Step 1 — reconcile `02-agent-tools-build-design.md` to as-built.** Residual stale claims: §1 tsconfig `NodeNext`/`ES2022`
+→ actual `ESNext`/`bundler`/`ES2023`; header "seven validators" → eight (incl. `drift`); §2 "do NOT wire guards as
+commit-blocking until P6/8" → superseded (guards activated in P2). Authoritative as-built = commits + napkin + this
+tracker; reconcile or banner "superseded by execution".
+
+**Step 2 — Phase 3: Skills + commands→skills.** 18 skills incl. the continuity cluster
+(`session-handoff`/`consolidate-docs`/`consolidate-until-done`); regenerate adapters `--prefix=engraph-`; migrate castr
+`jc-*` skills. (Step 0 re-grounds this against Oak's current skills.)
+
+**Step 3 — fold Oak follow-ups in at their phases (not before):** `PDR-089` Decision-7 append → a Phase-1 touch;
+`documentation-hygiene.md` → Phase 4; the `.cursor` adapter → Phase 7.
+
+**Standing gate-completeness rule (latent-gap lesson, commit `11f7e48`):** every phase's gate run must include ALL of
+`qg`. Phase 1b skipped `portability:check`, so the phase-1 tag was green while that gate was latently broken — "green"
+hides gaps when a gate is omitted.
 
 The 1b method below is kept as the execution record:
 

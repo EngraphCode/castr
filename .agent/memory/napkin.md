@@ -2,6 +2,24 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-07
+
+- **Session-close (Phase-2 follow-on): validator "crashes" diagnosed as a non-bug; Oak reverted clean; surfaces
+  re-pointed.** Investigated the two "crashing" deferred validators (`collaboration-state`, `subagents`). **Reframe:** they
+  are _designed_ to hard-fail on absent canonical infrastructure (Oak tests: `rejects.toThrow('…/conversations')`,
+  `toThrow(/missing adapter/)`) — truthfully reporting that castr's P6/P8 infra isn't installed yet. A trial
+  "tolerate-missing → `[]`" fix **broke the hard-fail test** and was **reverted byte-exact**; nothing committed/pushed to
+  Oak (**clean at `ad649710`**). castr's "problem" is **missing future-phase infrastructure, not a code/config bug**.
+  Corrected the wrong ledger record, graduated the lesson (2026-06-05 insight #8 — _a failing check may be a true signal;
+  don't silence it_), and swept + fixed two residual stale "92" PDR-estate claims (→91) the drift validator's
+  conservative patterns miss.
+- **Oak moved a THIRD time:** `06018bc3`→`2c85bc01`→`ad649710`. The `2c85bc01`→`ad649710` agent-tools delta is docs-only
+  (README + `agent-identity.md`); the WHOLE-estate delta is **unscanned** → next session's **Step 0** (owner-directed:
+  review the updated Oak agentic estate before resuming, esp. Phase-3 skills). castr's synced baseline stays `2c85bc01`.
+- **Next steps recorded in the tracker + start statement:** Step 0 (review Oak estate) → Step 1 (reconcile design doc to
+  as-built) → Step 2 (Phase 3 skills) → Step 3 (Oak follow-ups at their phases). **Anti-footgun preserved prominently:**
+  the validator "crashes" are intended hard-fails — do NOT re-attempt to "fix" them.
+
 ## 2026-06-05
 
 - **Oak → castr wholesale Practice transplant: planned (approved) and execution begun.** Spec:
