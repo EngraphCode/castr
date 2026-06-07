@@ -142,6 +142,14 @@ unbuilt`) — split the failure shapes: **unbuilt `dist` → fail OPEN (exit 0 +
     7. **Handoff: stale pointers are worse than missing context.** A tracker saying "Resume at Phase 2" after Phase 2
        ships actively misleads the next session. The adversarial "what would be lost?" check prioritises pointer-currency +
        non-obvious operational state (the guards are LIVE) over narrative richness.
+    8. **A failing check may be a TRUE signal, not a bug — don't silence it (2026-06-07).** The "crashing" deferred
+       validators are _designed_ to hard-fail on missing canonical infrastructure (Oak tests: `rejects.toThrow`,
+       `toThrow(/missing adapter/)`); they were correctly reporting that castr's P6/P8 infrastructure isn't installed yet.
+       I nearly "fixed" them to return empty — which broke the hard-fail test and would have **masked the true
+       infrastructure-absent signal** (inverse of green-gates-mask-gaps: making a red gate green by silencing it). When a
+       check fails, first ask "is the check wrong, or is it correctly telling me I haven't built that part yet?" Running
+       the test caught the misdiagnosis before it reached Oak's primary repo. Reverted; no upstream change. Diagnosis:
+       **missing (future-phase) infrastructure, not a code/config bug.**
 
 ## 2026-06-04
 

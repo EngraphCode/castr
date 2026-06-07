@@ -101,15 +101,20 @@ everything else, incl. `ci/ci-turbo-report*` (generic turbo-output parsing; the 
 example) and `repo-check` (its `'sdk-codegen'` is a known-task-name literal). `OAK_API_KEY` existed only in the dropped
 file. **Phase 2.**
 
-**Deferred-validator crash-on-absent-content (firsthand 2026-06-05).** `collaboration-state` (`state-integrity.ts`
-`directorySurfaces`) and `subagents` (`validate-subagents.ts` `listFiles`) throw unhandled `ENOENT` when their scan dirs
-are absent (`.agent/state/collaboration/comms`→P8; `.cursor/agents`→P6/7). **Verified NOT a localisation regression.**
-**Self-resolves:** both flip blocking at P6/P8, by which point the content exists — so they will not crash when they
-matter; the crash is cosmetic, in the informational pre-content window only. The robustness gap (a validator should
-tolerate a missing scan dir → empty, matching the stale-script `collectFiles` pattern + the design's "empty validates
-trivially") belongs **upstream in Oak** (general improvement; a castr-local patch is clobbered on the next re-sync).
-Disposition: do **not** castr-local-patch reflexively — upstream to Oak (then re-sync) or leave-and-document. **Owner
-decision pending.**
+**Deferred-validator "crash" on absent infrastructure — NOT a bug (corrected 2026-06-07).** `collaboration-state`
+(`state-integrity.ts`) and `subagents` (`validate-subagents.ts`) throw on absent scan dirs
+(`.agent/state/collaboration/*`→P8; `.cursor/agents` etc.→P6/7). **An earlier entry mis-called this a "robustness gap to
+upstream-fix" — that was wrong.** These validators are **designed to hard-fail (throw, with the path in the message) when
+canonical infrastructure is missing** — confirmed by Oak's own tests (`state-integrity.integration.test.ts`:
+`rejects.toThrow('…/conversations')`; `codex-project-agents`: `toThrow(/missing adapter/)`). A trial fix that made them
+return `[]` on `ENOENT` **broke that intended contract** (the hard-fail test went red) and was reverted; **no upstream
+change was committed or pushed — Oak is clean at `ad649710`.** So the "crash" is the validator **truthfully reporting
+that castr's P6/P8 infrastructure is not installed yet** — expected mid-transplant. Disposition: **nothing to fix in code
+or config.** Correctly deferred from the blocking gate; resolves when P6 (sub-agents) / P8 (collaboration) land their
+infrastructure. **Lesson:** silencing it would have masked the true "infrastructure absent" signal — the inverse of
+green-gates-mask-gaps. (Oak advanced `2c85bc01`→`ad649710` since the Phase-2 sync; agent-tools delta is docs-only — README
+
+- agent-identity.md — so castr's baseline stays `2c85bc01`; re-read Oak fresh at the next agent-tools touch.)
 
 ### Skills (20) — KEEP 18 / DON'T-BRING 2
 
