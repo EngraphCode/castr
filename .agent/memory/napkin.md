@@ -4,6 +4,34 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-07
 
+- **Phase 3 (skills transplant) LANDED — tag `transplant/phase-3`, full `qg` green.** Gotchas + method lessons worth
+  carrying into Phase 4+ (capture edge; some are PDR/back-flow candidates):
+  - **Oak surfaces embed host-PRODUCT specifics, not just naming.** The relevance-ledger's "skills are portable /
+    localise-naming-only" read was WRONG: `gates` + both start-right shared cores carried Oak's real gate commands
+    (`sdk-codegen`/`test:widget`/`test:a11y`/`markdownlint:root`), Oak ADR-index paths, and SDK schema-first prose — all
+    needing per-surface castr reconciliation. **Apply to P4–9: verify each transplanted surface against castr reality
+    before assuming portability; naming-localisation is necessary, not sufficient.** _(PDR candidate: "transplanted
+    Practice surfaces carry host-product phenotype; reconcile per-surface.")_
+  - **Upstream Oak bug — back-flow item (for the Phase-9 feedback report):** `consolidate-docs` cited retired
+    `.agent/practice-context/outgoing/` (Oak retired it 2026-04-29 `54f07f63`; the only Oak skill still citing it). Fixed
+    in castr's copy; the fix belongs upstream.
+  - **prettier is non-idempotent in ONE pass on some Oak markdown** (nested ordered lists + glued inline code like
+    `` `x`and ``): `--write` changes it, `--check` still flags; a SECOND `--write` converges. Oak formats `.agent` md with
+    markdownlint, castr prettier-checks it → expect this on more Oak md in P4–8. Run `pnpm format` (prettier `--write`)
+    twice on flagged Oak-sourced md.
+  - **`skills-adapter-generate`:** resolves `.agent/skills/<id>/SKILL-CANONICAL.md` ONLY (no `SKILL.md` fallback despite
+    the stale docstring); `repoRoot = process.cwd()` (run from repo root); `--clear` wipes `.claude/skills` +
+    `.agents/skills` then writes 2 stubs/skill; frontmatter edits require re-running it.
+  - **zsh does NOT word-split unquoted `$vars`** (unlike bash) → `perl -i … $files` took the whole list as one arg
+    ("File name too long"). Use `find … -exec perl -i -pe '…' {} +`.
+  - **Agent fan-out is a lead, never fact:** both Explore agents miscounted PDRs (claimed 92; actual 91), claimed "zero
+    oak-naming" (false; ~20 refs), one misread `skills-lock.json` as "3 external entries" (it is empty). Firsthand checks
+    caught each — reinforces [[verify-agent-claims-firsthand]].
+  - **Process lessons:** (1) verify the load-bearing PREMISE (here: skill portability) BEFORE planning, not mid-execution
+    — the approved plan was built on a false "naming-only" assessment. (2) Don't re-litigate settled owner direction
+    (less-ceremony applies to reasoning, not just artefacts). (3) Make ALL edits before gating — launched `qg` early and
+    had to kill + restart.
+
 - **Session-close (Phase-2 follow-on): validator "crashes" diagnosed as a non-bug; Oak reverted clean; surfaces
   re-pointed.** Investigated the two "crashing" deferred validators (`collaboration-state`, `subagents`). **Reframe:** they
   are _designed_ to hard-fail on absent canonical infrastructure (Oak tests: `rejects.toThrow('…/conversations')`,
