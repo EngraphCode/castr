@@ -8,14 +8,19 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Where We Are
 
-> 🔀 **PRIMARY ACTIVE PLAN (2026-06-05): Oak → castr Practice transplant.** The primary active workstream is now the
-> wholesale Practice transplant — [`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md) (phase
-> tracker: [`../plans/transplant/README.md`](../plans/transplant/README.md)), on branch
-> `feat/transplant-engraph-practice` (off `docs/initial-deep-review`). The product slice
-> `explicit-additional-properties-support.md` is **parked-in-place non-primary context** and resumes once the transplant
-> completes. The deep-review remediation backlog is untouched. Everything below remains true product context.
+> 🔀 **PLAN-OF-RECORD SEQUENCE (owner, 2026-06-09 — "all issues MUST be fixed, mostly now; sequencing in the
+> current plan is acceptable; an undefined 'later' is never"): (1) NOW — the deep-review remediation backlog**
+> ([`remediation/`](../plans/remediation/), plans 01→07 in order; 01 in flight on branch
+> `fix/remediation-01-packaging-and-types` off `docs/initial-deep-review`, PR'd to `main` independently — the 6
+> shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 5–9**
+> ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
+> [`transplant/README.md`](../plans/transplant/README.md), branch `feat/transplant-engraph-practice`, Phases 0–4
+> complete and tagged); **(3) THEN — the product feature slice**
+> [`explicit-additional-properties-support.md`](../plans/current/paused/explicit-additional-properties-support.md)
+> (sequenced, not parked). A 2026-06-05 record claimed the owner "parked" item 3 — **the owner never gave that
+> instruction and repudiated the parking framing outright (2026-06-09)**. Everything below remains true context.
 
-### Practice Transplant — resume here (primary)
+### Practice Transplant — resume from the tracker (sequence position 2)
 
 **Goal:** wholesale-transplant Oak's Practice estate into castr (localise `@oaknational`→`@engraph`), preserving castr's
 product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
@@ -74,17 +79,18 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06
 > - **Corrections:** 9 completed plans + `roadmap.md` carry dated ⚠️ banners (P1-P9); C6 disclosed in
 >   `docs/architecture/zod-round-trip-limitations.md`; 11 redundant session-3.3 stubs deleted.
 > - **Committed on branch `docs/initial-deep-review`** (not merged to `main`). A link-aware bulk-archive of settled
->   `current/complete/` plans is **deferred** (disposition in report §11).
+>   `current/complete/` plans is **sequenced into transplant Phase 9** (named slot, owner 2026-06-09).
 > - **Governing rule (user, 2026-06-04):** where code, proofs, and docs disagree, normalise to the **strictest** of the three.
 >
-> The product primary (explicit-additional-properties-support) is now **parked-in-place** behind the Practice
-> transplant; when product work resumes you may instead promote `remediation/01-packaging-and-types-integrity` to fix
-> the shipped C1 break first.
+> **The remediation backlog is the NOW work (owner, 2026-06-09)** — plans 01→07 in order, starting with
+> `01-packaging-and-types-integrity` (the shipped C1 break); the transplant and the product feature slice hold
+> sequence positions 2 and 3.
 
 **Library:** Schema compiler. `Any Input -> Parser -> IR -> Writers -> Any Output`. Supported: OpenAPI 3.0/3.1/3.2, Zod 4, JSON Schema 2020-12, TypeScript, MCP Tools.
 
-**Active workstream (PRIMARY):** [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) — branch `feat/transplant-engraph-practice`.
-**Parked-in-place (non-primary):** [Explicit Additional Properties Support](../plans/active/explicit-additional-properties-support.md)
+**Active workstream (PRIMARY, sequence position 1):** [remediation backlog](../plans/remediation/) plans 01→07 — branch `fix/remediation-01-packaging-and-types` off `docs/initial-deep-review`.
+**Sequence position 2:** [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 5–9 — branch `feat/transplant-engraph-practice`.
+**Sequence position 3:** [Explicit Additional Properties Support](../plans/current/paused/explicit-additional-properties-support.md)
 
 **Current closure record:** [ePerusteet Real-Spec Validation](../plans/current/complete/eperusteet-real-spec-validation.md)
 
@@ -108,17 +114,18 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 - the reviewer loop is closed with no open findings across `code-reviewer`, `test-reviewer`, `openapi-expert`, and `type-reviewer`
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduction exposed that current strict-object policy rejects explicit schema-valued `additionalProperties` at IR-build / generated seams
 - on Thursday, 16 April 2026, user clarification established the intended product boundary: Castr must accept and emit explicit `additionalProperties`, but must never invent them from input that did not declare them
-- the current primary active plan is the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md); [explicit-additional-properties-support.md](../plans/active/explicit-additional-properties-support.md) is parked-in-place and resumes after the transplant closes
+- the plan-of-record sequence (owner, 2026-06-09) is: (1) the remediation backlog 01→07 (NOW), (2) the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 5–9, (3) [explicit-additional-properties-support.md](../plans/current/paused/explicit-additional-properties-support.md) — sequenced, never parked
 
 ---
 
 ## What Next
 
-1. Re-read [metacognition.md](../directives/metacognition.md), then the primary plan [oak-practice-transplant.md](../plans/active/oak-practice-transplant.md) and its phase tracker [transplant/README.md](../plans/transplant/README.md).
-2. Execute the transplant phase-by-phase on `feat/transplant-engraph-practice`; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
-3. If a user reports a fresh gate or runtime regression in product code, reproduce it immediately and treat that report as active session truth.
-4. The parked product slice (explicit-additional-properties-support): admit explicit source `additionalProperties` honestly into IR/outputs while never inventing them from absent input — resume only after the transplant closes.
-5. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
+1. Re-read [metacognition.md](../directives/metacognition.md), then the plan-of-record sequence in [roadmap.md](../plans/roadmap.md).
+2. **Sequence position 1 (NOW):** execute the [remediation backlog](../plans/remediation/) plans 01→07 in order on `fix/remediation-*` branches off `docs/initial-deep-review`, PR'd to `main` independently; proof-first TDD; each plan atomic and gated.
+3. **Sequence position 2:** resume the transplant Phases 5–9 on `feat/transplant-engraph-practice` from the tracker; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
+4. If a user reports a fresh gate or runtime regression in product code, reproduce it immediately and treat that report as active session truth.
+5. **Sequence position 3:** the product feature slice (explicit-additional-properties-support): admit explicit source `additionalProperties` honestly into IR/outputs while never inventing them from absent input.
+6. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
 
 ---
 
@@ -132,15 +139,23 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 ## Next Session Start Statement
 
-**@engraph/castr — next session start.** The **primary active workstream** is the Oak → castr Practice transplant, on branch `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set — NOT `main`; baseline `transplant/phase-0-baseline`). The product slice `explicit-additional-properties-support.md` and the `remediation/` backlog stay **parked-in-place** — resume only after the transplant closes or on a fresh reproduced regression.
+**@engraph/castr — next session start.** The **plan-of-record sequence (owner, 2026-06-09)** is: **(1) NOW — the
+deep-review remediation backlog** (`.agent/plans/remediation/` plans 01→07 in order, on `fix/remediation-*` branches
+off `docs/initial-deep-review` — that branch holds the report/plans/ADR-047, NOT `main` — each PR'd to `main`
+independently; 01-packaging is in flight); **(2) the Practice transplant Phases 5–9** (branch
+`feat/transplant-engraph-practice`, resume from the tracker); **(3) the product feature slice**
+(`current/paused/explicit-additional-properties-support.md`). **Nothing is parked, ever** (owner: "all issues MUST
+be fixed, mostly now; sequencing in the current plan is acceptable; an undefined 'later' is never") — a 2026-06-05
+record claiming the owner parked the product slice was a fabricated attribution, repudiated and corrected
+2026-06-09. A fresh reproduced product regression pre-empts the sequence.
 
 **Phases 0–4 are COMPLETE and green.** Phase 4 (tag `transplant/phase-4`, 2026-06-09): **80 Oak rules** (held
 `ad649710` forms) + castr's 5 = **85 canonical rules** + root `RULES_INDEX.md` (85 rows, index↔disk verified); every
-body read firsthand and reconciled per-surface; `use-result-pattern` dropped (contradicts SACRED `principles.md`
+body read firsthand and reconciled per-surface; `use-result-pattern` dropped (contradicts `principles.md`
 fail-fast — the 9th DON'T-BRING); collision-range Oak-ADR cites disambiguated; `pnpm agent-tools:*` root aliases
 wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplant/phase-3`): Oak's 18 skills brought + localised, castr grounding folded into the start-right shared core, all `jc-*`/`distillation`/`napkin`/`castr-start-right` retired, blocking `skills:check`. Phase 2 (tag `transplant/phase-2`, commit `55a6788`): the 340-file `@engraph/agent-tools` package + hook policy + **LIVE Claude PreToolUse guards** + the §6 `validate-drift` validator. Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
 
-**⚠️ LIVE NOW — your tool calls are guarded.** `.claude/settings.json` routes Bash/Edit/Write through `run-pretooluse-guard.mjs`: dangerous-git patterns and PDR-044 content fingerprints are **denied**; an unbuilt `dist` fails **OPEN** (warns, never bricks). A blocked call is the policy in `.agent/hooks/policy.json`, not a bug. agent-tools `test` is **informational** (filtered out of the blocking gate via `--filter=!@engraph/agent-tools`); `repo-validators:check` carries only the 4 green validators (the other 4 deferred to P4/P6/P7/P8). **The deferred validators' "crashes" are NOT bugs — do NOT try to "fix"/silence them: they hard-fail by design on absent infrastructure (Oak tests assert it), truthfully reporting castr's P6/P8 infra isn't installed yet; a 2026-06-07 trial fix was reverted (Oak clean at `ad649710`).** **Gotcha (verified firsthand — it blocked my own command):** the Bash guard substring-matches the WHOLE command, so a blocked pattern anywhere in the command string — including an `echo`/test payload or a dangerous-command literal quoted inside a commit message — is denied. Keep such literals out of commands; when a commit message must discuss them, write it to a file and use `git commit -F <file>`, never `-m`. The guards also activate **mid-session** when `.claude/settings.json` changes, so your current session may already be guarded.
+**⚠️ LIVE NOW — your tool calls are guarded.** `.claude/settings.json` routes Bash/Edit/Write through `run-pretooluse-guard.mjs`: dangerous-git patterns and PDR-044 content fingerprints are **denied**; an unbuilt `dist` fails **OPEN** (warns, never bricks). A blocked call is the policy in `.agent/hooks/policy.json`, not a bug. agent-tools `test` is **informational** (filtered out of the blocking gate via `--filter=!@engraph/agent-tools`; 13/885 failures, all P6/P8 content); `repo-validators:check` carries **5 green BLOCKING validators** (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`/`stale-script`), 3 sequenced at their phases (`collaboration-state`→P8, `subagents`→P6, Oak `portability`→P7). **The sequenced validators' "crashes" are NOT bugs — do NOT try to "fix"/silence them: they hard-fail by design on absent infrastructure (Oak tests assert it), truthfully reporting castr's P6/P8 infra isn't installed yet; a 2026-06-07 trial fix was reverted (Oak clean at `ad649710`).** (Note: the guards live on the transplant branch; remediation branches off `docs/initial-deep-review` predate them.) **Gotcha (verified firsthand — it blocked my own command):** the Bash guard substring-matches the WHOLE command, so a blocked pattern anywhere in the command string — including an `echo`/test payload or a dangerous-command literal quoted inside a commit message — is denied. Keep such literals out of commands; when a commit message must discuss them, write it to a file and use `git commit -F <file>`, never `-m`. The guards also activate **mid-session** when `.claude/settings.json` changes, so your current session may already be guarded.
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` latest entries (`2026-06-07` + `2026-06-05`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
@@ -172,7 +187,8 @@ edit-with-rigour, never park-the-defect (owner, 2026-06-09: known issues are alw
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above. Phases 0–4 are done (plus the 2026-06-09 follow-on: stale-script green +
-blocking, policy citations completed in lockstep) and Oak is held at `ad649710` (drift noted; final delta-sync
-scheduled pre-Phase-9); ground **Phase 5** (Directives) with the owner, then execute. Carry the per-surface
-reconciliation lesson: Oak surfaces embed host-product specifics; bodies must be read, not classified.
+**First action:** read the surfaces above, then resume **sequence position 1 — the remediation backlog** at its
+current plan (01-packaging in flight; on completion promote the next plan in order). The transplant (Phases 5–9;
+ground Phase 5 — Directives — with the owner first) resumes at sequence position 2 from the tracker; Oak is held at
+`ad649710` (drift noted; final delta-sync scheduled pre-Phase-9). Carry the per-surface reconciliation lesson: Oak
+surfaces embed host-product specifics; bodies must be read, not classified.

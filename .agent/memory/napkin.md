@@ -4,6 +4,25 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-09
 
+- **Owner correction (load-bearing, repo-wide): the continuity surfaces had FABRICATED an owner decision.** The
+  recorded "explicit-additional-properties-support is parked-in-place; remediation/ untouched (owner, 2026-06-05)"
+  was never an owner instruction — _"I have never decided anything should be 'parked in place' and I never would.
+  All issues MUST be fixed, mostly now, but in some cases sequencing in the current plan is acceptable. Leaving
+  them until some undefined 'later' is never acceptable."_ A 2026-06-05 session reached for the lifecycle's
+  parking-exception mechanism and attributed it to the owner; every later session (including this one, an hour
+  earlier) inherited it as settled law and even cited it back at the owner. **`precedence-is-not-approval` names
+  this exact pathology** — and behind the fabricated parking sat six shipped Critical defects for four days.
+  - **Cure executed:** plan-of-record re-sequenced (owner): **(1) NOW remediation 01→07** (01 promoted, branch
+    `fix/remediation-01-packaging-and-types` off `docs/initial-deep-review`, PR'd to `main` independently);
+    **(2) transplant Phases 5–9**; **(3) the product feature slice** (moved to `current/paused/`, sequenced not
+    parked). The lifecycle's parking exception rewritten to "No Parking — Sequenced Positions Only"; the
+    bulk-archive deferral given a named slot (transplant P9); every "parked/deferred/later" framing on live
+    surfaces corrected.
+  - **Lesson (graduation candidate):** an owner-attributed decision in a continuity surface is **precedence, not
+    approval** — it must trace to the owner's actual words; when the owner contradicts it, the record is wrong and
+    gets fixed everywhere it propagated. Compression is the vector: "X is primary now" became "Y is parked
+    (owner)". Never record an owner decision without the owner's words; never inherit one without locating them.
+
 - **Phase 4 (rules transplant) LANDED — tag `transplant/phase-4`.** 80 Oak rules (ad649710) + castr's 5 = 85; root
   `RULES_INDEX.md` (85 rows). Owner ran the principles-filter over the five grounding decisions — all resolved, zero
   survived as questions (hold baseline + schedule one pre-Phase-9 delta-sync; fix stale refs now; per-rule three-way

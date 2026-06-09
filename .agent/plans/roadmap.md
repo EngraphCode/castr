@@ -25,7 +25,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 - **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer transform validation with sample input).
 - **Atomic plans**: Small, linear steps stored under `./current/` and linked below.
 - **Primary active atomic plan**: The primary next atomic plan lives under `./active/`.
-- **Parked-in-place exception**: A user may explicitly keep non-primary unfinished plans physically in `./active/`; if so, they must be labelled as parked-in-place context rather than companions.
+- **No parking (owner, 2026-06-09)**: nothing is ever "parked" to an undefined later — **all issues MUST be fixed, mostly now; sequencing with a named position in the current plan is acceptable**. Non-primary unfinished work moves to `./current/paused/` carrying its named sequence position. (A former "parked-in-place exception" entry here was applied on 2026-06-05 with a claimed user instruction the owner never gave; the owner repudiated the parking framing outright.)
 - **Paused workstreams**: Incomplete but non-primary workstreams live under `./current/paused/` until they become the next atomic slice again.
 - **Completed atomic plans (staged)**: Completed atomic plans are moved to `./current/complete/` and only archived in batches when a group of work is complete.
 
@@ -33,25 +33,34 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
-> **PRIMARY ACTIVE (2026-06-05): Oak → castr Practice transplant.** The primary active plan is now the wholesale
-> Practice transplant — [`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md) (phase tracker
-> [`transplant/README.md`](./transplant/README.md)), on branch `feat/transplant-engraph-practice` (off
-> `docs/initial-deep-review`; baseline `transplant/phase-0-baseline`). Per the `active/README.md` parking exception,
-> [`active/explicit-additional-properties-support.md`](./active/explicit-additional-properties-support.md) is
-> **parked-in-place non-primary context** and resumes after the transplant closes. The `remediation/` backlog and the
-> `docs/initial-deep-review` branch are untouched.
+> **PLAN-OF-RECORD SEQUENCE (owner, 2026-06-09 — "all issues MUST be fixed, mostly now; sequencing in the current
+> plan is acceptable; an undefined 'later' is never"):**
+>
+> 1. **NOW — deep-review remediation backlog** ([`remediation/`](./remediation/), plans **01→07** in their stated
+>    order; 01 promoted and in flight on branch `fix/remediation-01-packaging-and-types` off
+>    `docs/initial-deep-review`, PR'd to `main` independently). The 6 shipped Criticals outrank practice
+>    infrastructure.
+> 2. **NEXT — Oak → castr Practice transplant Phases 5–9** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md),
+>    tracker [`transplant/README.md`](./transplant/README.md), branch `feat/transplant-engraph-practice`; Phases 0–4
+>    complete and tagged; resumes exactly from the tracker).
+> 3. **THEN — [`current/paused/explicit-additional-properties-support.md`](./current/paused/explicit-additional-properties-support.md)**
+>    (feature slice; sequenced, not parked).
+>
+> A 2026-06-05 record framed item 3 as "parked-in-place per a user instruction" — **the owner never gave that
+> instruction and repudiated the framing on 2026-06-09**; this sequence is the correction.
 
 > **Deep Review (2026-06-04, branch `docs/initial-deep-review`):** a first-hand-verified review found **46 issues
 > (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
 > [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
 > backlog: [`.agent/plans/remediation/`](./remediation/) (promote one into `active/` at a time; `01-packaging` fixes the
 > shipped C1 types/`./parsers/zod` break). Nine completed plans + this roadmap carry dated ⚠️ correction banners (P1-P9).
-> A link-aware bulk-archive of settled completions is **deferred** (disposition in report §11). "Complete" labels below
-> predate the review — treat the review report as current truth where they disagree.
+> The link-aware bulk-archive of settled completions is **sequenced into transplant Phase 9** (named slot, owner
+> 2026-06-09; disposition history in report §11). "Complete" labels below predate the review — treat the review
+> report as current truth where they disagree.
 
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor is now the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md).
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md) holds position 3 in the plan-of-record sequence.
 
 Current product truth:
 
@@ -70,7 +79,7 @@ Current product truth:
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
-- the current primary active plan is the [Oak → castr Practice transplant](./active/oak-practice-transplant.md); [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md) is parked-in-place and resumes after the transplant closes; if a user reports a fresh product gate/runtime issue, reproduce it first
+- the plan-of-record sequence (owner, 2026-06-09) is: (1) the [remediation backlog](./remediation/) 01→07 — in flight now; (2) [Oak → castr Practice transplant](./active/oak-practice-transplant.md) Phases 5–9; (3) [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md); if a user reports a fresh product gate/runtime issue, reproduce it first
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 

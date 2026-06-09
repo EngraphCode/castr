@@ -27,8 +27,15 @@ intact, gates stay green, and provenance stays honest.
    collaboration surface is about **agents**, not humans. **Transplant scope here is fixed (owner) — the collaboration
    machinery is brought in full, never relevance-gated; the value-contingent rule (Phase 4) governs runtime
    _invocation_, not whether to bring it.**
-3. This transplant is the **primary active plan**; `explicit-additional-properties-support.md` is **parked-in-place**;
-   `remediation/` and the `docs/initial-deep-review` branch are untouched.
+3. ~~This transplant is the primary active plan; `explicit-additional-properties-support.md` is parked-in-place;
+   `remediation/` and the `docs/initial-deep-review` branch are untouched.~~ **Corrected (owner, 2026-06-09): the
+   owner never decided — and would never decide — that anything be "parked in place"; the 2026-06-05 record
+   manufactured that framing from a sequencing arrangement.** The standing doctrine: **all issues MUST be fixed,
+   mostly now; sequencing with a named position in the current plan is acceptable; an undefined "later" is never.**
+   Plan-of-record sequence (roadmap.md): **(1) deep-review remediation backlog 01→07 — the primary active work,
+   started 2026-06-09; (2) this transplant, Phases 5–9; (3) `explicit-additional-properties-support.md`** (now at
+   `current/paused/`, sequenced not parked). "Untouched" meant only never-clobbered-by-the-transplant; it never
+   meant defects wait.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
 5. Tightenings: drop the **ground-truth search-eval triplet** + Oak **SonarQube/secrets infra** + ~2 UI-only patterns;
    **AMEND pattern `proven_in:` provenance + regenerate derived indexes**; `practice-fitness` **informational-first**.
@@ -62,7 +69,7 @@ known issues in it are blocking and get fixed like any other defect),
 `IDENTITY.md`, `requirements.md`, `testing-strategy.md`, `AGENT.md` (layer Oak's generic directives additively); ADRs
 **001–047** + `docs/architecture/*`; schema reviewers `openapi`/`zod`/`json-schema-expert`; strict-object/
 `additionalProperties` doctrine; `input-output-pair-compatibility.md`; `.agent/report/initial-review/`;
-`.agent/plans/remediation/`; the parked `explicit-additional-properties-support.md`; the `docs/initial-deep-review`
+`.agent/plans/remediation/`; the sequenced `explicit-additional-properties-support.md`; the `docs/initial-deep-review`
 branch; the 5 Codex-adapter assertions in `scripts/validate-portability.mjs` (port before retiring).
 
 **DON'T-BRING (recorded in the relevance ledger):** 6 UI/product experts (accessibility, clerk, design-system,
@@ -118,7 +125,9 @@ at Phase 7 after porting its 5 Codex assertions.
 7. **Adapters** — regenerate `.claude`/`.codex`/`.cursor`/`.agents`; add `.gemini`/`.windsurf`; flip portability/subagents blocking (after porting 5 Codex assertions); retire bespoke script.
 8. **Collaboration ACTIVE** — directive + rules cluster + skills + structured coordinator-state + TTL presence + comms attention pass + plan-mode carveout; wire collaboration validator blocking.
 9. **`practice-verification` pass** — zero reference-closure placeholders; commit relevance ledger; write castr
-   `.agent/report/practice-integration-feedback.md`; update roadmap + session-continuation + napkin.
+   `.agent/report/practice-integration-feedback.md`; update roadmap + session-continuation + napkin; execute the
+   link-aware bulk-archive of settled `current/complete/` plans (deep-review report §11 — sequenced here, owner
+   2026-06-09, so it has a named slot rather than an undefined deferral).
 
 **Per-phase verification:** `pnpm clean && install` → `test -f/-x agent-tools/dist/src/bin/*.js` → `pnpm format` new +
 commit → `format:check` `type-check` `lint` `madge:circular/orphans` `depcruise` `knip` → phase practice/agent gates →

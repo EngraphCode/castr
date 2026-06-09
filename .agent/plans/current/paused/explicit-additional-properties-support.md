@@ -1,12 +1,13 @@
 # Explicit Additional Properties Support
 
-> **⏸️ PARKED-IN-PLACE (non-primary context) as of 2026-06-05.** Per the user-directed parking exception in
-> [`README.md`](./README.md), this product workstream remains physically in `active/` but is **not** the primary active
-> plan and is **not** a companion to it. The primary active plan is the Practice transplant
-> ([`oak-practice-transplant.md`](./oak-practice-transplant.md)). This plan's substance is unchanged and resumes as the
-> next product slice once the transplant completes. See `roadmap.md` / `session-continuation.prompt.md`.
+> **⏸️ SEQUENCED — position 3 in the plan-of-record (owner, 2026-06-09).** This feature slice runs after **(1) the
+> deep-review remediation backlog** (`.agent/plans/remediation/`, plans 01→07, in flight now) and **(2) the Practice
+> transplant Phases 5–9**. A 2026-06-05 record claimed this plan was "parked-in-place per the user-directed parking
+> exception" — **the owner never gave that instruction and repudiated the parking framing on 2026-06-09** ("all
+> issues MUST be fixed, mostly now; sequencing in the current plan is acceptable; an undefined 'later' is never").
+> This banner is the correction; the plan's substance is unchanged and it holds a named position, not a parking bay.
 
-**Status:** PARKED-IN-PLACE (was ACTIVE; product primary deferred behind the Practice transplant)  
+**Status:** SEQUENCED #3 (paused per the normal lifecycle; named position in `roadmap.md`)  
 **Created:** 2026-04-16  
 **Promoted:** 2026-04-16  
 **Predecessor:** [eperusteet-real-spec-validation.md](../current/complete/eperusteet-real-spec-validation.md)  
