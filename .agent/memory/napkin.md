@@ -2,7 +2,37 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-06-07
+## 2026-06-09
+
+- **Phase 4 (rules transplant) LANDED — tag `transplant/phase-4`.** 80 Oak rules (ad649710) + castr's 5 = 85; root
+  `RULES_INDEX.md` (85 rows). Owner ran the principles-filter over the five grounding decisions — all resolved, zero
+  survived as questions (hold baseline + schedule one pre-Phase-9 delta-sync; fix stale refs now; per-rule three-way
+  merge; collaboration rules land vanilla self-gated by `collaboration-is-value-contingent`; flip validators only when
+  truthfully green). Gotchas + lessons:
+  - **A KEEP-classed rule can contradict SACRED doctrine — only per-body reading catches it.** `use-result-pattern`
+    ("never throw") vs `principles.md` §Fail-Fast ("MUST throw immediately"); 1/340 agent-tools files used `Result<`.
+    Dropped (9th DON'T-BRING; KEEP 81→80). The relevance-ledger's surface-level KEEP read could not see this. _(Same
+    family as the Phase-3 portability lesson, one level deeper: classification reads lie; bodies do not.)_
+  - **castr's session-handoff step-11 insertion shifted Oak's step numbering** — Oak rules citing handoff steps ≥11
+    are off-by-one in castr (`check-singleton-per-window` §11→§12 fixed); cites ≤10 verified unshifted. Expect the
+    same on any future castr-local step insertion into a transplanted skill.
+  - **False principles-section cites are pervasive in Oak rules** (~12 rules cited sections castr's principles.md
+    does not have — "Owner Direction Beats Plan", "Misleading docs are blocking", "Document Everywhere", "No
+    machine-local paths"…). Every directive-section cite in a transplanted surface is a claim to verify against the
+    actual headings.
+  - **Five new upstream Oak bugs** flagged for Phase-9 back-flow (stale `SKILL.md`/`commands/` cites in 3 rules;
+    machine-local `~/.claude` links + wrong PDR-057 filename in `present-verdicts-not-menus`) — Oak's own
+    `no-machine-local-paths` founding violation class, alive in its rule estate.
+  - **`policy.json` deny citations point at `distilled.md` (absent until P6)** while the permanent home
+    (`stage-by-explicit-pathspec`) landed this phase. A citation re-point was attempted and REVERTED: the
+    hook-policy integration test pins the exact citation string — **policy data and its test are a lockstep pair;
+    change neither alone.** Truthful re-point deferred to an agent-tools-touching phase (P7/final sync). _(Cure
+    shape generalised: a transplanted enforcement layer's data is contract-tested; treat data edits as code edits.)_
+  - **`stale-script` validator enumerated ONE finding — inside SACRED `principles.md`** (line 1729 invokes
+    non-existent `scripts/validate-jsdoc-examples.ts`). Owner action-moment; validator stays deferred until the
+    owner-approved fix (natural slot: P5 directives). Suite informational count 18→13 (RULES_INDEX slice green).
+  - **PDR candidate (cause-preservation):** castr throws by doctrine; a castr-shaped rule mandating `{ cause }`
+    chains on re-thrown errors would keep the one good nugget of the dropped Result rule.
 
 - **Phase 3 (skills transplant) LANDED — tag `transplant/phase-3`, full `qg` green.** Gotchas + method lessons worth
   carrying into Phase 4+ (capture edge; some are PDR/back-flow candidates):

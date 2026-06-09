@@ -1,0 +1,164 @@
+# Knowledge Preservation Over Fitness Warnings
+
+Never decline to write a napkin entry, distilled graduation,
+correction capture, or pending-graduation candidate because the
+target surface is "already overflowing" against its
+fitness-line/character/word limit. **Knowledge preservation is
+strictly prior to file-size warnings.**
+
+## The Invariant
+
+When the impulse appears to defer or skip writing an entry because
+the destination surface is at or past a fitness limit, that
+impulse is the **diagnostic, not the cure**. Write the entry. If
+rotation is needed, surface that as a separate question after the
+entry lands.
+
+Archive is also downstream of curation. Never archive unprocessed
+content as a way to make the live surface smaller. First read the
+source, extract the behaviour-changing substance, route each item to
+its correct home or explicit unresolved queue, and only then archive
+the source as the preserved historical record. Archive-after-processing
+protects knowledge; archive-before-processing hides unfinished
+curation.
+
+Before any archive, park, supersede, or retirement move, run a
+live-unique substance screen. Ask what currently lives only in the
+candidate source, which current files still depend on it, and whether
+the proposed destination would keep that substance reachable for the
+next practical use. Archive/park framing is never the first lens; it
+is the lifecycle action that follows after the substance-loss question
+has been answered and recorded.
+
+Owner-stated 2026-05-11 as already-established repo doctrine:
+_"never, ever withhold knowledge preservation to keep a mechanical
+warning lower, that is already repo doctrine"_.
+
+## Scope
+
+The preservation-over-fitness invariant applies to **memory and state
+surfaces**:
+
+- `.agent/memory/active/napkin.md` (current session observations)
+- `.agent/memory/active/distilled.md` (cross-session hard-won
+  rules)
+- `.agent/memory/active/patterns/*.md` (reusable pattern entries)
+- `.agent/state/collaboration/shared-comms-log.md` (the event
+  stream's canonical render)
+- Thread continuity records under
+  `.agent/memory/operational/threads/`
+- Per-user platform-specific memory stores (own platform only)
+
+That preservation-over-fitness branch does **not** apply to **buffer
+surfaces** like
+`.agent/memory/operational/pending-graduations.md`. Buffers are
+flow-control surfaces; fitness pressure on a buffer is a producer-
+or-consumer rate diagnostic, not a preservation question. See
+[surface classification PDR](../practice-core/decision-records/PDR-067-surface-classification-for-fitness-response.md)
+for the four-surface taxonomy.
+
+The archive-after-processing invariant is broader: it applies to
+every curation archive move, including buffers. A buffer can be drained
+only by processing its entries first: verify the destination or
+remaining live route, record the disposition, and only then archive the
+source body. Buffer scope changes the fitness diagnosis; it does not
+permit archive-before-processing.
+
+## Retiring a lossy or unversioned mirror
+
+Retiring an unversioned or lossy knowledge mirror — `.remember`, a
+per-platform memory store, any unversioned sidecar that has accumulated
+substance over time — is a special case of the live-unique substance
+screen, and it carries its own discipline:
+
+- **Mine, then verify every candidate against canon before deletion.**
+  The mirror may hold the only copy of a behaviour-changing learning;
+  enumerate its substance and confirm each item is either already homed
+  in canon or routed to a home before the mirror is removed.
+- **A near-empty harvest is the SUCCESS case, not a failed search.**
+  When mining surfaces little, that is positive evidence the
+  capture→graduate pipeline already caught the substance — it is not a
+  signal to keep digging or to doubt the search. Finding little is the
+  outcome a healthy pipeline produces.
+- **An unversioned mirror is a liability precisely because it can
+  resurrect overturned decisions.** That risk is the reason to retire
+  it, and the reason the correct move is mine-then-verify — neither a
+  blind delete (which can drop a live-only learning) nor blind retention
+  (which lets the mirror re-introduce superseded shapes).
+
+Worked twice in 2026: the `.remember` retirement (~1,400 lines mined →
+zero orphans) and a cross-platform memory read (Codex / Cursor / Gemini
+→ substance already homed).
+
+## Why
+
+The fitness gate surfaces overflow as a rotation prompt — it is
+not a reason to drop the insight. Rotation is owner-cadenced and
+orthogonal to the act of capture. Treating the warning as a
+capture-suppression signal is the failure mode this rule blocks;
+the same shape recurs across surfaces (napkin → distilled → memory
+file → comms log) and across agents whenever the urge to "tidy"
+overrides the obligation to preserve.
+
+Related shape: the urge to skip the doctrine substrate (see
+[`no-speed-pressure`](no-speed-pressure.md)) is the same family —
+_the urge is the diagnostic, the doctrine substrate is the
+deliverable_. This rule names the equivalent at the
+knowledge-capture surface.
+
+## How to Apply
+
+When drafting a memory or state entry, the question is **does this
+substance change behaviour or carry durable understanding?**
+
+- **Yes** — write it. Fitness state of the destination is
+  irrelevant to the write decision.
+- **No** — the entry would be ephemeral; consider whether it
+  belongs in a shorter-lived surface (a comms event) rather than
+  the durable memory.
+
+If the destination surface is overflowing, raise the rotation
+question separately, **after the entry lands**. If archive or
+rotation is the right structural move, complete the curation pass
+first: every source item must have a disposition before the archive
+move. Never:
+
+- Truncate substance to stay under a line count.
+- Defer the entry "until the next rotation".
+- Move the entry to a less appropriate surface to spare the warning.
+- Drop the entry because "the substance is similar to existing
+  content" (similarity ≠ duplication; the new instance is its own
+  evidence).
+- Archive unprocessed source material and call the live-surface
+  shrink a completed curation pass.
+
+## Composition
+
+- [`no-speed-pressure`](no-speed-pressure.md) — the same diagnostic
+  shape at a different surface; the urge to skip is the signal,
+  the substrate is the deliverable.
+- [`capture-practice-tool-feedback`](capture-practice-tool-feedback.md) —
+  capture obligation; this rule reinforces capture under fitness
+  pressure.
+- [`per-user-memory-is-a-buffer`](per-user-memory-is-a-buffer.md) —
+  per-user memory is a buffer, so the preservation rule does NOT
+  apply to it; per-user entries graduate when substance matures.
+
+## Owner Sharpening History
+
+- 2026-05-11 — owner named the rule as already-existing doctrine.
+- 2026-05-17 (Swift Winging Gust) — recurrence on
+  pending-graduations.md; the substance-preservation rule was
+  reframed as scoped to memory/state, not buffers, producing the
+  four-surface classification.
+- 2026-05-22 — graduation from per-user memory to in-repo rule
+  surface so the doctrine is visible to all platforms.
+- 2026-05-24 — owner sharpened the archival boundary: knowledge
+  curation comes first, always; never archive unprocessed content.
+- 2026-06-02 — graph-estate consolidation supplied the second worked
+  instance for the live-unique substance screen before archive or
+  park moves; the doctrine now names the screen explicitly.
+- 2026-06-04 — owner-directed graduation of the lossy-mirror-retirement
+  clause (`.remember` retirement + cross-platform memory read as the two
+  worked instances): mine-then-verify-against-canon, near-empty-harvest-
+  is-success, unversioned-mirror-is-a-liability.

@@ -69,20 +69,22 @@ pretooluse-guard-routing, stale-script-invocations, subagents. Collaboration/hea
 collaboration=active). AMEND: `ci` test fixtures (`@oak/*`), the path-encoding validators
 (`SCANNED_ROOTS`/`ALLOWLISTED_PATHS`), eslint config; localise the `tsx` postinstall bootstrap. **Phase 2.**
 
-### Rules (87) — KEEP ~78 / DON'T-BRING ~9 / AMEND (cites)
+### Rules (89 at `ad649710`) — KEEP 80 / DON'T-BRING 9 — **Phase 4 ✅ (2026-06-09)**
 
-- **DON'T-BRING:** `invoke-accessibility-expert`, `invoke-react-component-expert`, `invoke-design-system-expert`,
+- **DON'T-BRING (9):** `invoke-accessibility-expert`, `invoke-react-component-expert`, `invoke-design-system-expert`,
   `invoke-clerk-expert`, `invoke-elasticsearch-expert`, `invoke-sentry-expert` (6 UI/product), `eef-corpus-grounding`
-  (EEF corpus), `sonarqube-mcp-instructions` (no Sonar server), any ground-truth rule.
-- **KEEP:** `invoke-mcp-expert` (castr emits MCP); the collaboration rules ACTIVE (not dormant):
-  `comms-all-channels-watcher`, `liveness-heartbeat-cron`, `respect-active-agent-claims`, `register-identity-on-thread-join`,
-  `use-agent-comms-log`, `follow-agent-collaboration-practice`, etc. **New since the Oak `ad649710` sync (Step 0,
-  2026-06-07) — KEEP:** `collaboration-is-value-contingent` + `permanent-doc-is-the-consolidation-record` (the
-  anti-ceremony pair; add them to the regenerated `RULES_INDEX`).
-- **AMEND:** rules with stale `oak`/ADR cites (`no-machine-local-paths`, `present-verdicts-not-menus`,
-  `invoke-assumptions-expert`, `invoke-code-experts`, …). **36 distinct Oak-ADR cites** to reference-close (castr ADR≤047;
-  low-number overlaps are _semantic_ mismatches → re-point to PDRs).
-- Merge castr's 5 existing rules into the always-on set. Build `RULES_INDEX.md`. **Phase 4.**
+  (EEF corpus), `sonarqube-mcp-instructions` (no Sonar server), and — **firsthand Phase-4 correction to this ledger's
+  KEEP read** — `use-result-pattern` ("never throw") which directly contradicts castr's SACRED `principles.md`
+  §Fail-Fast and has no true estate here. No ground-truth rule existed.
+- **KEPT (80) + castr's 5 merged in place = 85 canonical rules**; root `RULES_INDEX.md` hand-authored (85 rows,
+  index↔disk verified). The collaboration rules landed ACTIVE in their `ad649710` anti-ceremony forms
+  (`collaboration-is-value-contingent` self-gates invocation until P8 infra lands); the anti-ceremony pair is in.
+- **Executed reconciliation:** every body read firsthand; the Phase-3 lesson held at full strength — false
+  principles-section cites across ~12 rules, Oak gate/tooling estates, Oak ESLint thresholds (250/50 → castr's real
+  220/45), SDK-codegen coupling in `generator-first-mindset`, server-product triggers in `invoke-mcp-expert`, and
+  castr's testing-strategy upstream-quarantine shape folded into `no-skipped-tests`. The 7 collision-range Oak-ADR
+  cites were operative-authority traps, re-pointed with explicit cross-host disambiguation; >047 cites retained
+  cross-host. Five new upstream Oak bugs flagged for back-flow. Full dispositions: `reference-closure.md` §Phase 4.
 
 ### Hooks — KEEP policy.json + native Cursor + Claude / DON'T-BRING Sonar
 

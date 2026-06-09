@@ -16,7 +16,7 @@ only.
 | 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done | `transplant/phase-1`          |
 | 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done | `transplant/phase-2`          |
 | 3     | Skills + commands→skills                                                                 | ✅ done | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ⬜      | `transplant/phase-4`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done | `transplant/phase-4`          |
 | 5     | Directives (7 generic, additive)                                                         | ⬜      | `transplant/phase-5`          |
 | 6     | Sub-agents / memory / state                                                              | ⬜      | `transplant/phase-6`          |
 | 7     | Adapters + flip portability/subagents gates                                              | ⬜      | `transplant/phase-7`          |
@@ -87,16 +87,24 @@ doctrinal shift**: two new generic rules (`collaboration-is-value-contingent`, `
 
 **Step 2 ✅ done — Phase 3 (Skills) landed** (tag `transplant/phase-3`); see the Phase-3 resume block above.
 
-**NEXT: Phase 4 — Rules + `RULES_INDEX` + reference-closure.** Grounded 2026-06-09 (principles-filtered;
-owner-approved plan): bring Oak's **81** KEEP rules — 89 on disk at `ad649710` minus the 8 DON'T-BRING present (6
-`invoke-*` UI/product experts, `eef-corpus-grounding`, `sonarqube-mcp-instructions`; no ground-truth rule exists) —
-incl. the two anti-ceremony rules (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`);
-merge castr's 5 (ids stable); **hand-author** the root `RULES_INDEX.md` (86 rows; there is no generator — Oak's is
-hand-maintained, validator-checked); reference-close the 36 Oak-ADR cites (the 7 numeric collisions with castr ADR≤047
-— ADR-011/029/030/031/032/034/038 — are semantic traps, never auto-resolve); the Phase-3 skills' forward-ref rule cites
-resolve here; the `.claude`/`.cursor`/`.agents` rule-forwarder tiers are Phase-7 adapter work (rules do not auto-load
-until then). **Carry the Phase-3 lesson:** Oak rules may embed product-specifics needing per-surface castr
-reconciliation, not naming-only.
+**Phase 4 ✅ done (2026-06-09) — Rules + `RULES_INDEX` + reference-closure** (tag `transplant/phase-4`). Landed:
+**80** Oak KEEP rules (held `ad649710` forms; the grounded 81 minus `use-result-pattern`, dropped firsthand for
+direct contradiction with SACRED `principles.md` §Fail-Fast — the 9th DON'T-BRING) + castr's 5 merged in place =
+**85** canonical rules; root `RULES_INDEX.md` hand-authored (85 rows, index↔disk verified); every rule body read
+firsthand and reconciled per-surface (the Phase-3 lesson held: false principles-cites, Oak gate estates, wrong ESLint
+thresholds, SDK-codegen coupling, server-product MCP triggers, step-renumber drift); 7 collision-range Oak-ADR cites
+re-pointed with cross-host disambiguation, >047 cites retained-cross-host; Phase-3 skill→rule placeholders resolved;
+P5/P6/P7/P8 forward placeholders emitted; `pnpm agent-tools:*` root aliases wired; the `policy.json` citation
+re-point was attempted and reverted (the hook-policy test pins the string — data↔test lockstep; deferred to
+P7/final-sync); `stale-script` stays deferred on one SACRED-file finding (owner action-moment, P5); five new
+upstream Oak bugs flagged for back-flow. Full record: `reference-closure.md` §Phase 4 + `relevance-ledger.md`
+§Rules.
+
+**NEXT: Phase 5 — Directives (7 generic, additive).** Bring `agent-collaboration`, `continuity-practice`,
+`definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; do not
+touch sacred castr directives; `schema-first-execution.md` stays DON'T-BRING. The Phase-4 rules' directive
+placeholders (P5) resolve here. Carry the per-surface reconciliation lesson — expect host-product specifics; also
+reconcile castr's `tdd.md` rule against the arriving `tdd-as-design` directive.
 
 **Baseline drift (2026-06-09): the hold STANDS.** Oak HEAD advanced `ad649710`→`5779ed20` (17 commits, 16 of them on
 2026-06-08 — active flight); the `.agent/rules/` delta is additive-only: one new rule, `precedence-is-not-approval.md`,

@@ -169,3 +169,121 @@ verification.
   `CHANGELOG.md` history.
 - **Orphan noted:** `.agent/workflows/` (single file, zero inbound references) — repointed truthfully now; disposition
   folds into the directives/adapters phases (P5/P7).
+
+---
+
+## Phase 4 — Rules + RULES_INDEX
+
+**80** Oak rules brought (held baseline `ad649710` forms) + castr's 5 merged in place = **85** canonical rules;
+root `RULES_INDEX.md` hand-authored (85 rows, Oak grammar; index↔disk verified exact). Every rule body read
+firsthand; per-surface reconciliation throughout (the Phase-3 lesson held: naming-localisation was nowhere near
+sufficient).
+
+### Disposition change vs the grounded plan — `use-result-pattern` DON'T-BRING (9th drop)
+
+Firsthand reading found `use-result-pattern` ("never throw exceptions") in **direct contradiction with castr's
+SACRED `principles.md` §Fail-Fast** ("errors MUST be thrown IMMEDIATELY"), with no true estate here (1 of ~340
+agent-tools files uses `Result<`; its enforcement mechanics are Oak-workspace ESLint). The locked hierarchy (castr
+product doctrine always wins) forces the verdict — dropped, not escalated. KEEP count corrected 81→80. Its
+cause-preservation nugget (`{ cause }` chains — castr-compatible since castr throws) is a future castr-rule
+candidate, napkin-noted.
+
+### Naming localisation — disposition: **rewrite (done)**
+
+`oak-` skill/command names (`oak-consolidate-docs`, `oak-session-handoff`, `oak-plan`, `oak-start-right-team`),
+`OAK_AGENT_IDENTITY_OVERRIDE`→`ENGRAPH_AGENT_IDENTITY_OVERRIDE` (matches castr's transplanted code),
+`.cursor` hook/mirror names → `engraph-` forms (match `agent-tools/src/cursor/`), `@oaknational` references.
+
+### Oak-PRODUCT/host coupling reconciled to castr — disposition: **rewrite (done)**
+
+- **False principles-section cites** (castr's principles has no "Owner Direction Beats Plan", "Code Quality /
+  Misleading docs are blocking", "Document Everywhere", "No machine-local paths", "§Refactoring", or no-verify
+  language): generalised in-rule or repointed to castr's real anchors (`§Core Philosophy: Engineering Excellence
+Over Speed`, `§Strict And Complete Everywhere, All The Time`, `§Comprehensive TSDoc Standards`, `§Type System
+Discipline`, `§Strict-By-Default and Fail-Fast`) and to `DEFINITION_OF_DONE.md` + `quality-gate-failures.md`
+  (castr's blocking-gate doctrine) across ~12 rules.
+- **Oak gate/tooling estate** → castr's chain: markdownlint/secrets-scan/esbuild/Sentry enforcement sections
+  reconciled (prettier + `.prettierignore` as the format-gate record; castr test-suite names; ESLint thresholds
+  corrected 250/50 → castr's real **220/45**; `sha-prefix` and `markdown-code-blocks` enforcement honestly
+  attributed cross-host).
+- **`generator-first-mindset`** rebound from Oak's SDK-codegen phenotype (sdk-codegen command,
+  `schema-first-execution.md`) to castr's IR→writers/codegen phenotype + `requirements.md`, principle preserved.
+- **`invoke-mcp-expert`** trimmed from MCP-server-product triggers to castr's MCP-emission domain; DON'T-BRING
+  expert cross-refs (clerk, elasticsearch) removed; roster names reconciled (current castr gateway =
+  `code-reviewer`; P6-arriving specialists keep Oak names).
+- **`no-skipped-tests`** now carries castr's testing-strategy upstream-quarantine shape (`DEFECT_FIXTURES` +
+  `it.skip.each()`) — castr's authority wins over Oak's absolute form.
+- **`directive-file-context-budget`** Oak directive enumeration dropped (drift-prone; included DON'T-BRING
+  `schema-first-execution.md`).
+- **session-handoff step renumbering**: castr's step-11 adversarial insertion shifted Oak's ≥11 cites —
+  `check-singleton-per-window` §11→§12 fixed; step ≤10 cites verified unshifted.
+- `pnpm agent-tools:*` root aliases the rules canonically invoke added to `package.json` (mirror of Oak's form,
+  localised; CLIs exist and build — absent-infra invocations hard-fail truthfully per the deferred-validator
+  lesson).
+
+### Oak-ADR cites — dispositions
+
+- **7 numeric collisions with castr ADR≤047** (ADR-011/029/030/031/032/034/038, across the test/type/generator
+  rules): all were cited as operative "Operationalises" authority — actively misleading in castr. Re-pointed to
+  castr's real authorities (`testing-strategy.md`, `principles.md` sections) with explicit **"Origin: Oak ADR-NNN
+  (cross-host; castr's ADRs with those numbers are unrelated decisions)"** disambiguation.
+- **>047 cites** (ADR-114/117/119/121/123/124/125/127/129/131/141/146/150/153/161/163/167/182/183/186):
+  **retained-cross-host** — honest origin references, exactly the Phase-1 PDR and Phase-3 skill disposition. Link
+  forms left intact (non-load-bearing; castr has no link gate). Where a collision-range or operative-authority
+  rewrite touched the surrounding text, Oak-tree links were de-linked to plain cross-host attributions.
+- **Oak-local plan/doc cites** (gate-recovery-cadence plan, multi-agent-collaboration plan, docs/engineering
+  guides, docs/governance/typescript-practice, `.gitleaks.toml`): de-linked to plain-text cross-host origin notes;
+  castr equivalents named where they exist.
+
+### Phase-3 placeholders pointing here — disposition: **resolve** ✓
+
+Skill→rule cites (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`,
+`documentation-hygiene`, `pre-merge-divergence-analysis`, the collaboration cluster) and `RULES_INDEX.md` all
+resolve on this tree. `new-rule-vs-pdr-clause` → `RULES_INDEX.md` resolves same-phase.
+
+### Forward placeholders out of rules
+
+- Rule → **directive** cites (`agent-collaboration`, `user-collaboration`, `orientation`) → **P5**.
+- Rule → **memory** paths (`memory/active/patterns/*`, `memory/operational/*` incl. `pending-graduations`,
+  quarantine, threads, `distilled.md`) → **P6**; rule → P6-arriving sub-agent templates/experts (assumptions,
+  docs-adr, onboarding, security, config, release-readiness, architecture personas, subagent-architect) → **P6**.
+- Rule → `.claude/rules`/`.cursor/rules`/`.agents` forwarder tiers + `.cursor` hooks → **P7** (the index's
+  three-form authoring contract becomes fully realised then; rules do not auto-load on any platform until P7).
+- Rule → **state/collaboration** paths (schemas, claims, comms, conversations, escalations, handoffs,
+  `.agent/reference/comms-watch-mechanism.md`) → **P8**.
+
+### Upstream Oak bugs — **back-flow items** (for the Phase-9 feedback report)
+
+3. `capture-practice-tool-feedback` cites `skills/napkin/SKILL.md` — Oak's own napkin skill is
+   `SKILL-CANONICAL.md` (stale upstream; fixed here).
+4. `dont-break-build-without-fix-plan` cites `../commands/consolidate-docs.md` — Oak retired `commands/`
+   2026-05-10 (fixed here → skill path).
+5. `present-verdicts-not-menus` carries machine-local `~/.claude` reference links with Oak's flattened project
+   id — the founding violation class of Oak's own `no-machine-local-paths` (fixed here → templated prose).
+6. `present-verdicts-not-menus` cites PDR-057 by a wrong filename (`-pre-question-gate` suffix; actual file is
+   `PDR-057-empirical-answerability.md`) (fixed here).
+7. `register-identity-on-thread-join` cites `../commands/session-handoff.md` + `../commands/consolidate-docs.md`
+   — the retired Oak `commands/` paths again (fixed here → skill paths).
+
+### Hook-policy citation residue — disposition: **placeholder (→P6/P7, data↔test lockstep)**
+
+castr's live `policy.json` cites `distilled.md §Stage by explicit pathspec` — a doc castr lacks until P6 — while
+the permanent home (`stage-by-explicit-pathspec.md`) landed this phase. A re-point of the citation display text
+was attempted and **reverted firsthand**: the transplanted hook-policy integration test
+(`check-blocked-patterns.integration.test.ts`) pins the exact citation string — policy data and its test move in
+lockstep, and agent-tools is consumed read-only this phase. The truthful re-point lands with an
+agent-tools-touching phase (P7 adapters or the scheduled final delta-sync), updating data + test together. Same
+class: the content-block citation "principles.md §Architectural Excellence Over Expediency" is the portable name
+of castr's `§Engineering Excellence Over Speed` (noted in `no-hedging-vocabulary`; left as-is in policy data).
+
+### Two deferred-suite findings recorded (informational run, 18→13 failures)
+
+The RULES_INDEX slice went green (5 tests). Remaining 13 = collaboration-state (P8 infra absent — the designed
+hard-fails) + codex-project-agents (P6/7 roster; its `clerk-expert` parity expectation is a P7 reconciliation
+item — castr never hosts clerk-expert). The `stale-script` validator enumerated exactly **one** finding:
+`principles.md:1729` invokes `node scripts/validate-jsdoc-examples.ts`, which does not exist — a dangling
+invocation inside the SACRED file, so the fix is an **owner action-moment** (natural slot: Phase 5 directives).
+The validator stays deferred-informational until that lands; never force-green.
+
+**Phase-4 result: 0 `rewrite`-class entries remain open in touched files; all dangles are
+`placeholder`(→P5/P6/P7/P8) or `retained-cross-host`.**
