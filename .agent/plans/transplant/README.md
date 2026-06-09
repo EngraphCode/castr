@@ -87,10 +87,22 @@ doctrinal shift**: two new generic rules (`collaboration-is-value-contingent`, `
 
 **Step 2 ✅ done — Phase 3 (Skills) landed** (tag `transplant/phase-3`); see the Phase-3 resume block above.
 
-**NEXT: Phase 4 — Rules + `RULES_INDEX` + reference-closure.** Bring Oak's ~78 KEEP rules incl. the two new
-anti-ceremony rules (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`); reference-close
-the 36 Oak-ADR cites; the Phase-3 skills' forward-ref rule cites resolve here. **Carry the Phase-3 lesson:** Oak rules
-may embed product-specifics needing per-surface castr reconciliation, not naming-only.
+**NEXT: Phase 4 — Rules + `RULES_INDEX` + reference-closure.** Grounded 2026-06-09 (principles-filtered;
+owner-approved plan): bring Oak's **81** KEEP rules — 89 on disk at `ad649710` minus the 8 DON'T-BRING present (6
+`invoke-*` UI/product experts, `eef-corpus-grounding`, `sonarqube-mcp-instructions`; no ground-truth rule exists) —
+incl. the two anti-ceremony rules (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`);
+merge castr's 5 (ids stable); **hand-author** the root `RULES_INDEX.md` (86 rows; there is no generator — Oak's is
+hand-maintained, validator-checked); reference-close the 36 Oak-ADR cites (the 7 numeric collisions with castr ADR≤047
+— ADR-011/029/030/031/032/034/038 — are semantic traps, never auto-resolve); the Phase-3 skills' forward-ref rule cites
+resolve here; the `.claude`/`.cursor`/`.agents` rule-forwarder tiers are Phase-7 adapter work (rules do not auto-load
+until then). **Carry the Phase-3 lesson:** Oak rules may embed product-specifics needing per-surface castr
+reconciliation, not naming-only.
+
+**Baseline drift (2026-06-09): the hold STANDS.** Oak HEAD advanced `ad649710`→`5779ed20` (17 commits, 16 of them on
+2026-06-08 — active flight); the `.agent/rules/` delta is additive-only: one new rule, `precedence-is-not-approval.md`,
+citing post-baseline PDR-091. Recorded and lossless, not lost: a **single final delta-sync (Step-0-style whole-estate
+scan, hold → Oak HEAD) is scheduled immediately before Phase 9's verification pass** to bring the accumulated portable
+delta. No per-phase re-scan; earlier re-scan only on owner signal.
 
 **Step 3 — fold Oak follow-ups in at their phases (not before):** `PDR-089` Decision-7 append → a Phase-1 touch;
 `documentation-hygiene.md` → Phase 4; the `.cursor` adapter → Phase 7.

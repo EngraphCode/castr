@@ -121,6 +121,8 @@ at Phase 7 after porting its 5 Codex assertions.
 **Per-phase verification:** `pnpm clean && install` → `test -f/-x agent-tools/dist/src/bin/*.js` → `pnpm format` new +
 commit → `format:check` `type-check` `lint` `madge:circular/orphans` `depcruise` `knip` → phase practice/agent gates →
 `test:all` + `test:e2e` → reference-closure scan (0 `rewrite` in touched files; placeholders map to later phases) →
+**reverse-closure sweep** (grep the whole repo for every name retired/renamed this phase and fix live navigational
+refs — retirement dangles references in files the phase never touched) →
 `git diff --stat <prev-tag> HEAD` + clean `git status` → tag.
 
 ## TDD / proof-first order

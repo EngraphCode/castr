@@ -95,7 +95,6 @@ Then use:
 ├── prompts/
 │   └── session-continuation.prompt.md ← Context bridge between sessions
 │
-├── commands/               ← Canonical command workflows
 ├── skills/                 ← Canonical skills
 ├── sub-agents/             ← Canonical reviewer and domain-expert templates
 ├── practice-core/          ← Portable Practice Core package

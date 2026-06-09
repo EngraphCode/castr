@@ -145,3 +145,27 @@ requirements/DEFINITION_OF_DONE/metacognition) ✓; skill → skill (within the 
 
 **Phase-3 result: 0 `rewrite`-class entries remain open in touched files; all dangles are `placeholder`(→P4/P5/P6/P8) or
 `retained-cross-host`.**
+
+---
+
+## Pre-Phase-4 hygiene (2026-06-09) — reverse closure of the Phase-3 retirements
+
+The per-phase scan covers references _out of touched files_; retiring a surface dangles references _in untouched
+files_. This sweep closes that gap for Phase 3's retirements (`jc-*`, `castr-start-right`, `distillation`,
+`.agent/commands/`, `SKILL.md`→`SKILL-CANONICAL.md`); the sweep is now a standing step in the contract's per-phase
+verification.
+
+- **Live navigational refs repointed (rewrite, done):** `directives/AGENT.md` (start-right guidance, infrastructure
+  lists, adapter wording), `practice-index.md` (Tools table → canonical skills; artefact rows), `.agent/README.md`
+  (tree), `rules/napkin.md` and `workflows/start-right.md` (→ `SKILL-CANONICAL.md` targets; the latter repointed to
+  `start-right-quick`), `.codex/README.md` (adapter wording), `plans/remediation/README.md` (`jc-plan` → the `plan`
+  skill).
+- **Upstream Oak bug — rewrite (done) + back-flow:** `practice-core/practice-lineage.md` named `jc-consolidate-docs`
+  as the live consolidation vehicle in two present-tense protocol lines; Oak's `ad649710` copy carries the same lines.
+  castr's copy now names the canonical `consolidate-docs` skill. Second back-flow item (with Phase 3's
+  `consolidate-docs` practice-context ref) for the Phase-9 feedback report.
+- **Retained-historical (NOT edited):** napkin session history, archived practice-context notes, completed/historical
+  plans, the transplant ledgers' own retirement records, immutable PDR-026/PDR-029 `jc-*` mentions, practice-core
+  `CHANGELOG.md` history.
+- **Orphan noted:** `.agent/workflows/` (single file, zero inbound references) — repointed truthfully now; disposition
+  folds into the directives/adapters phases (P5/P7).

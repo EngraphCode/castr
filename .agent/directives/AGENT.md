@@ -12,7 +12,7 @@
 
 - Read [`practice-core/index.md`](../practice-core/index.md) for the portable Practice Core.
 - Read [`practice-index.md`](../practice-index.md) for the bridge into this repo's local Practice.
-- Use `castr-start-right` or `jc-start-right` at session start or after a context switch.
+- Use the `start-right-quick` skill at session start, or `start-right-thorough` after a context switch or long gap.
 
 ## First Question
 
@@ -39,7 +39,6 @@
 
 ## Practice Infrastructure
 
-- Commands: [`commands/`](../commands/)
 - Skills: [`skills/`](../skills/)
 - Rules: [`rules/`](../rules/)
 - Sub-agents: [`sub-agents/`](../sub-agents/)
@@ -56,7 +55,7 @@ Invocation contract:
 
 - read and apply `.agent/rules/invoke-reviewers.md`
 - use `.codex/config.toml` and `.codex/agents/*.toml` for Codex reviewer/domain-expert roles
-- keep `.agents/skills/` for skills and `jc-*` command workflows only
+- keep `.agents/skills/` for generated `engraph-` skill adapters only
 
 Installed roster:
 
@@ -103,7 +102,6 @@ Installed roster:
 - `docs/` — durable architecture docs and ADRs
 - `.agent/directives/` — authoritative doctrine and operational entrypoints
 - `.agent/prompts/` — session continuation context bridge
-- `.agent/commands/` — canonical command workflows
 - `.agent/skills/` — canonical skills
 - `.agent/rules/` — operationalized doctrine
 - `.agent/sub-agents/` — canonical reviewer and domain-expert templates

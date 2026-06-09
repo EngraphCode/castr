@@ -12,7 +12,7 @@ A **prioritised backlog** of atomic, finding-driven remediation plans derived fr
 parked here (not in `active/`) so the `active/README.md` contract — _one primary active plan_ — is preserved. Promote
 **one** of these into `active/` at a time, in the order below, following the normal activation lifecycle.
 
-Each plan is an execution contract per `.agent/commands/jc-plan.md`: it references permanent docs/ADRs first and states
+Each plan is an execution contract per the `plan` skill (`.agent/skills/plan/SKILL-CANONICAL.md`): it references permanent docs/ADRs first and states
 its own scope, success criteria, and TDD order. The _why_ lives in the report; these plans hold the _what_ and _how_.
 
 ## Governing rules

@@ -2,7 +2,7 @@
 
 This directory holds Codex-specific project configuration.
 
-- `.agents/skills/` holds thin Codex skill adapters for repo-local skills and `jc-*` workflows.
+- `.agents/skills/` holds thin Codex skill adapters (`engraph-` prefixed) for repo-local skills.
 - `.codex/config.toml` registers the repo's reviewer and domain-expert project agents.
 - `.codex/agents/*.toml` are thin per-agent Codex adapters.
 - Canonical reviewer and expert instructions live in `.agent/sub-agents/templates/`.
