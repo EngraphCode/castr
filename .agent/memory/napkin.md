@@ -34,10 +34,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 - **Adversarial context-loss review — PROVEN load-bearing (owner-affirmed 2026-06-07); caught real continuity drift
   ≥3×:** `e790b0e` (stale PR-ordering note), `1710275` (stale napkin pointer), `1077476` (two stale Phase-2/Step-2 claims
-  this session). **Structural gap:** the transplanted `session-handoff` skill does NOT encode an explicit "falsify
-  stale/contradictory continuity claims at close" step — the review survives by manual habit, not the mechanism (§6's
-  "make it structural" unmet). **PDR + Oak back-flow candidate:** add an adversarial-falsification step to
-  `session-handoff` (portable; Oak's lacks it too).
+  this session). **Structural gap CLOSED (2026-06-09, owner-directed):** added step 11 "Adversarially falsify the
+  continuity surfaces" to castr's `session-handoff` skill — the review now fires every close by the mechanism, not manual
+  habit (discharges part of §6's "make it structural"). **Still an Oak back-flow + PDR candidate** (the step is portable;
+  Oak's `session-handoff` lacks it).
 
 - **Session-close (Phase-2 follow-on): validator "crashes" diagnosed as a non-bug; Oak reverted clean; surfaces
   re-pointed.** Investigated the two "crashing" deferred validators (`collaboration-state`, `subagents`). **Reframe:** they

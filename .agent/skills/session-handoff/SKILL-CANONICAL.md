@@ -558,7 +558,22 @@ last_session` per identity, comma-separated when multiple
     - If `engraph-consolidate-docs` runs now, refresh `Deep consolidation status`
       to `completed this handoff — <reason>`.
 
-11. **Verify the `pnpm check` cleanliness gate.** A sole-contributor session
+11. **Adversarially falsify the continuity surfaces.** Before declaring
+    handoff complete, run a deliberate falsification pass over every
+    continuity surface this session touched (the continuity contract /
+    start statement, trackers, ledgers, the napkin, any active plan). Run
+    it as a falsification test, not a completeness victory-lap: actively
+    hunt for claims the session's landed reality has made **stale or
+    self-contradictory** — a status headline that lags the body, a "next
+    step" listing already-completed work as pending, a pointer to a renamed
+    or retired surface, a phase number or count the work has moved past.
+    Read each surface against the landed outcome (step 1) and against the
+    other surfaces, and fix every contradiction. A surface that disagrees
+    with the committed reality is worse than silence for the next session.
+    This step is **structural, not optional** — the review reliably catches
+    drift only when it fires at every close, not from memory.
+
+12. **Verify the `pnpm check` cleanliness gate.** A sole-contributor session
     or team handoff-owner closeout cannot be marked complete while
     `pnpm check` is red or carries warnings. Run `pnpm check` from the repo
     root before declaring handoff complete. The outcome routes one of three
@@ -617,7 +632,7 @@ than re-inheriting the dispatch obligation.
     list in the handoff narrative so the next implementer does not
     discover the dispatch obligation only at session-open.
 
-12. **Keep the boundary clean.** `session-handoff` includes the consolidation
+13. **Keep the boundary clean.** `session-handoff` includes the consolidation
     gate and can escalate into `engraph-consolidate-docs` when appropriate, but
     ordinary sessions remain lightweight. It does not smuggle in review or git
     actions.
