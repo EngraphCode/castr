@@ -43,7 +43,7 @@ const sharedExcludePaths = [
 ] as const;
 
 const sharedCitation =
-  're-apply-first-question-at-elaboration-boundaries.md; principles.md §Architectural Excellence Over Expediency';
+  're-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed';
 
 function buildMenuFrameBlock(phrase: string): ScopedContentBlock {
   return {

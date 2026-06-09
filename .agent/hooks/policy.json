@@ -21,18 +21,18 @@
         "git stash clear",
         {
           "pattern": "git add -A",
-          "citation": "distilled.md §Stage by explicit pathspec"
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
         },
         {
           "pattern": "git add --all",
-          "citation": "distilled.md §Stage by explicit pathspec"
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
         },
         {
           "pattern": "git add .",
-          "citation": "distilled.md §Stage by explicit pathspec"
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
         }
       ],
-      "description": "Block shell commands that bypass safety guardrails, destroy history, or overwrite live working-tree edits. Working-tree-overwrite commands (checkout/restore variants) are blocked because they silently throw away in-flight edits — including peer-agent edits in parallel sessions — and `git fsck --lost-found` cannot recover them. Wildcard staging commands (`git add -A` / `--all` / `.`) are blocked under the explicit-pathspec discipline (distilled.md §Stage by explicit pathspec) so a continuity-deferral commit cannot accidentally bundle parallel-thread plan work or unrelated plugin enables. We never use git to remove work; forward-going filesystem changes only. See `.agent/rules/never-use-git-to-remove-work.md`."
+      "description": "Block shell commands that bypass safety guardrails, destroy history, or overwrite live working-tree edits. Working-tree-overwrite commands (checkout/restore variants) are blocked because they silently throw away in-flight edits — including peer-agent edits in parallel sessions — and `git fsck --lost-found` cannot recover them. Wildcard staging commands (`git add -A` / `--all` / `.`) are blocked under the explicit-pathspec discipline (.agent/rules/stage-by-explicit-pathspec.md) so a continuity-deferral commit cannot accidentally bundle parallel-thread plan work or unrelated plugin enables. We never use git to remove work; forward-going filesystem changes only. See `.agent/rules/never-use-git-to-remove-work.md`."
     },
     "preToolUseContent": {
       "blocked_patterns": ["-- jc:", "-- JC:"],
@@ -58,7 +58,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "carve-out",
@@ -81,7 +81,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "carve around",
@@ -104,7 +104,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "an exception to",
@@ -127,7 +127,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "with the exception of",
@@ -150,7 +150,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "make an exception",
@@ -173,7 +173,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "for these arcs",
@@ -196,7 +196,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "honest framing for",
@@ -219,7 +219,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "permitted variant",
@@ -242,7 +242,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "land it then iterate",
@@ -265,7 +265,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "cheap cure",
@@ -288,7 +288,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "good enough",
@@ -311,7 +311,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "quick fix",
@@ -334,7 +334,7 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Architectural Excellence Over Expediency"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "\\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b",
@@ -373,7 +373,7 @@
             ".test.ts",
             "re-apply-first-question-at-elaboration-boundaries.md"
           ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Architectural Excellence Over Expediency"
+          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "for owner decision",
@@ -397,7 +397,7 @@
             ".test.ts",
             "re-apply-first-question-at-elaboration-boundaries.md"
           ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Architectural Excellence Over Expediency"
+          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         },
         {
           "pattern": "for owner ratification",
@@ -421,10 +421,10 @@
             ".test.ts",
             "re-apply-first-question-at-elaboration-boundaries.md"
           ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Architectural Excellence Over Expediency"
+          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
         }
       ],
-      "description": "Block agents from writing user-approved markers into file content (only the project owner can approve eslint-disable approvals with the JC: prefix). The path-scoped scoped_blocks are write-time fingerprints per PDR-044 §Innate immunity. Three kinds: (literal) the hedging-vocabulary trip-list — language that means 'I know the rule applies, but this situation is special' rejected on doctrine surfaces (PDRs, plans, ADRs, governance), with doctrine-defining surfaces excluded so principles.md, distilled.md, PDR-043 and PDR-044 may catalogue the words they forbid; (regex) the SHA-in-permanent-doc fingerprint — 7- to 40-character hex tokens with at least one a-f character on portable-permanent-doc paths (practice-core, rules, memory/active/patterns, principles.md, testing-strategy.md; ADRs are repo-bound and out of scope per PDR-079), with fenced code blocks, inline-code spans, and `(historical reference)` marker lines excluded so the discipline 'moving targets do not belong in permanent docs' (distilled.md) is enforced at write-time without tripping intentional code-block examples or explicit historical citations; (literal) the menu-framing trip-list — owner-decision phrasings ('for owner verdict' / 'for owner decision' / 'for owner ratification') rejected on architectural surfaces ('for owner approval' was considered and rejected at design time — too high false-positive rate in legitimate governance prose) (plans, PDRs, ADRs, governance) so menu-shaped option-sets do not slip past the re-apply-first-question-at-elaboration-boundaries discipline; the rule file itself is excluded so it may catalogue the phrases it forbids. PDR-044 names false positives as a design property of the innate layer."
+      "description": "Block agents from writing user-approved markers into file content (only the project owner can approve eslint-disable approvals with the JC: prefix). The path-scoped scoped_blocks are write-time fingerprints per PDR-044 §Innate immunity. Three kinds: (literal) the hedging-vocabulary trip-list — language that means 'I know the rule applies, but this situation is special' rejected on doctrine surfaces (PDRs, plans, ADRs, governance), with doctrine-defining surfaces excluded so principles.md, distilled.md, PDR-043 and PDR-044 may catalogue the words they forbid; (regex) the SHA-in-permanent-doc fingerprint — 7- to 40-character hex tokens with at least one a-f character on portable-permanent-doc paths (practice-core, rules, memory/active/patterns, principles.md, testing-strategy.md; ADRs are repo-bound and out of scope per PDR-079), with fenced code blocks, inline-code spans, and `(historical reference)` marker lines excluded so the discipline 'moving targets do not belong in permanent docs' (.agent/rules/no-moving-targets-in-permanent-docs.md) is enforced at write-time without tripping intentional code-block examples or explicit historical citations; (literal) the menu-framing trip-list — owner-decision phrasings ('for owner verdict' / 'for owner decision' / 'for owner ratification') rejected on architectural surfaces ('for owner approval' was considered and rejected at design time — too high false-positive rate in legitimate governance prose) (plans, PDRs, ADRs, governance) so menu-shaped option-sets do not slip past the re-apply-first-question-at-elaboration-boundaries discipline; the rule file itself is excluded so it may catalogue the phrases it forbids. PDR-044 names false positives as a design property of the innate layer."
     },
     "sessionStart": {
       "grounding_reminder": "Read .agent/directives/AGENT.md and .agent/memory/active/distilled.md before starting work.",

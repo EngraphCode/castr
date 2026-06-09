@@ -56,7 +56,8 @@ naming Oak's phenotype; see `reference-closure.md`). **Phase 1 (1a landed).**
   `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`.
 - **DON'T-BRING:** `schema-first-execution.md` (Oak SDK/MCP-**runtime** doctrine; castr's schema-first lives in
   IDENTITY/requirements).
-- **PRESERVE castr's, do not overwrite:** `principles.md` (**SACRED — no edit without owner approval**),
+- **PRESERVE castr's, do not overwrite:** `principles.md` (protected by engineering discipline, not dogma — known
+  issues in it are blocking and get fixed; never clobber with Oak content [owner, 2026-06-09]),
   `testing-strategy.md`, `requirements.md`, `AGENT.md`, `metacognition.md`. **Phase 5.**
 
 ### agent-tools (20 modules) — KEEP all (localise)
@@ -74,7 +75,7 @@ collaboration=active). AMEND: `ci` test fixtures (`@oak/*`), the path-encoding v
 - **DON'T-BRING (9):** `invoke-accessibility-expert`, `invoke-react-component-expert`, `invoke-design-system-expert`,
   `invoke-clerk-expert`, `invoke-elasticsearch-expert`, `invoke-sentry-expert` (6 UI/product), `eef-corpus-grounding`
   (EEF corpus), `sonarqube-mcp-instructions` (no Sonar server), and — **firsthand Phase-4 correction to this ledger's
-  KEEP read** — `use-result-pattern` ("never throw") which directly contradicts castr's SACRED `principles.md`
+  KEEP read** — `use-result-pattern` ("never throw") which directly contradicts castr's `principles.md`
   §Fail-Fast and has no true estate here. No ground-truth rule existed.
 - **KEPT (80) + castr's 5 merged in place = 85 canonical rules**; root `RULES_INDEX.md` hand-authored (85 rows,
   index↔disk verified). The collaboration rules landed ACTIVE in their `ad649710` anti-ceremony forms

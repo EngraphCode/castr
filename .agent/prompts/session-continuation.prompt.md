@@ -25,8 +25,8 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06
 
 - **Status:** Phases 0–4 ✅. **Phase 4 (2026-06-09, tag `transplant/phase-4`)** — 80 Oak rules (ad649710) + castr's 5
   = 85 canonical rules + root `RULES_INDEX.md` (85 rows, index↔disk verified); per-rule firsthand reconciliation;
-  `use-result-pattern` dropped (contradicts SACRED fail-fast — 9th DON'T-BRING); 7 collision-range Oak-ADR cites
-  disambiguated cross-host; `pnpm agent-tools:*` aliases wired. Phase 3 — skills (18 brought + localised; castr
+  `use-result-pattern` dropped (contradicts `principles.md` fail-fast — 9th DON'T-BRING); 7 collision-range Oak-ADR
+  cites disambiguated cross-host; `pnpm agent-tools:*` aliases wired. Phase 3 — skills (18 brought + localised; castr
   grounding folded into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking
   `skills:check`); tag `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE
   PreToolUse guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
@@ -34,11 +34,12 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
   INFORMATIONAL (`--filter=!@engraph/agent-tools`; **13**/885 failures are later-phase content — the RULES_INDEX slice
-  went green at P4). `repo-validators:check` = 4 green validators only
-  (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`); 4 deferred (`stale-script` blocked on
-  ONE finding inside SACRED `principles.md:1729` — owner action-moment at P5; `collaboration-state`→P8,
-  `subagents`→P6, Oak `portability`→P7). **policy.json is contract-tested** (hook-policy integration test pins its
-  citation strings — data↔test lockstep, change neither alone).
+  went green at P4). `repo-validators:check` = **5 green BLOCKING validators**
+  (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`/**`stale-script` — flipped 2026-06-09**
+  after its one finding, the `principles.md:1729` dangling invocation, was fixed); 3 deferred
+  (`collaboration-state`→P8, `subagents`→P6, Oak `portability`→P7). **policy.json is contract-tested** (hook-policy
+  tests pin its citation strings — data↔test lockstep, change BOTH together: done 2026-06-09 for the staging-deny →
+  rule-path and hedging/menu-deny → real-principles-heading citations; 114/114 green).
 - **⚠️ The deferred validators' "crashes" are NOT bugs — do NOT silence them.** They hard-fail by design on absent
   infrastructure (Oak tests assert `rejects.toThrow` / `toThrow(/missing adapter/)`) — truthfully reporting castr's P6/P8
   infra isn't installed yet. A 2026-06-07 trial fix was reverted; **Oak clean at `ad649710`, nothing pushed**. They
@@ -49,10 +50,10 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06
   post-hold drift (`precedence-is-not-approval` + PDR-091 + any later KEEPs).
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); some Oak markdown needs prettier `--write` TWICE to converge;
-  `practice-fitness` informational-first never red-gates the SACRED `principles.md`; transplanted surfaces'
+  `practice-fitness` informational-first never red-gates `principles.md`; transplanted surfaces'
   section-cites and classifications are claims — read bodies firsthand (the P3 skills lesson, re-proven at P4 where a
-  KEEP-classed rule contradicted SACRED doctrine); the 36 Oak-ADR cites are closed (P4) — the 7 collision-range ones
-  carry explicit cross-host disambiguation.
+  KEEP-classed rule contradicted principles doctrine); the 36 Oak-ADR cites are closed (P4) — the 7 collision-range
+  ones carry explicit cross-host disambiguation.
 - **Posture (owner 2026-06-05):** fully populate; collaboration ACTIVE (about agents) seeded empty; all generic experts
   incl. mcp-expert; drop ground-truth + Oak Sonar/secrets + ~2 UI patterns. Each phase = atomic commit + tag; roll back
   forward only.
@@ -147,12 +148,12 @@ wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplan
 blocks). **NEXT: Phase 5 — Directives (7 generic, additive):** `agent-collaboration`, `continuity-practice`,
 `definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; sacred
 castr directives untouched; `schema-first-execution.md` stays DON'T-BRING; the Phase-4 rules' P5 directive
-placeholders resolve here; reconcile castr's `tdd.md` rule against the arriving `tdd-as-design`; **owner
-action-moment carried into P5:** SACRED `principles.md:1729` invokes non-existent `scripts/validate-jsdoc-examples.ts`
-(the `stale-script` validator's only finding — it stays deferred until the owner-approved fix). **Carry the Phase-4
-lessons:** classification reads lie, bodies do not (a KEEP rule contradicted SACRED doctrine); transplanted
-enforcement data is contract-tested (policy.json ↔ its integration test move in lockstep — change neither alone);
-directive-section cites in Oak surfaces are claims to verify against castr's actual headings. \*\*Oak baseline: held at
+placeholders resolve here; reconcile castr's `tdd.md` rule against the arriving `tdd-as-design`. **Carry the Phase-4
+lessons:** classification reads lie, bodies do not (a KEEP rule contradicted principles doctrine); transplanted
+enforcement data is contract-tested (policy.json ↔ its tests move in lockstep — change both together);
+directive-section cites in Oak surfaces are claims to verify against castr's actual headings; protection labels mean
+edit-with-rigour, never park-the-defect (owner, 2026-06-09: known issues are always blocking — the
+`principles.md:1729` finding was fixed same-day and `stale-script` flipped blocking). \*\*Oak baseline: held at
 `ad649710`; drift noted 2026-06-09 (HEAD `5779ed20`, 17 commits, rules delta additive-only — `precedence-is-not-approval`
 
 - PDR-091); a single Step-0-style delta-sync is scheduled immediately before Phase 9\*\* — no per-phase re-scan; earlier
@@ -164,14 +165,14 @@ directive-section cites in Oak surfaces are claims to verify against castr's act
 - **Record load-bearing decisions in the in-repo execution contract, never memory-only.**
 - **Session-close continuity discipline** (the owner will keep asking; §6 makes it structural in the transplanted vehicles `session-handoff` / `consolidate-docs` / `consolidate-until-done`): exhaustive durable state-recording + an adversarial _"what would be lost if context vanished?"_ review + preservation/graduation of reflection insights. **The record is the commit + the permanent doc — not a ledger or closeout narrative** (reconciled with `permanent-doc-is-the-consolidation-record`; see plan §6).
 - **PDRs are portable and never repo-specific; anything repo-specific goes in a castr ADR** — author a castr ADR only if the portable PDR is insufficient (PDR-079).
-- **`principles.md` is SACRED** (no edit without explicit owner approval); never clobber the PRESERVE set; `.agent` is NOT prettier-ignored (`pnpm format` new docs each phase); **roll forward only** (revert; never `reset --hard`/force-push); each phase = one atomic commit + `transplant/phase-N` tag, green-gated + reference-closure-clean.
+- **Nothing is sacred — protection is engineering discipline, not dogma (owner, 2026-06-09):** `principles.md` and the PRESERVE set are edited with firsthand verification and owner-visible rationale, never clobbered with Oak content — and **known issues in them are blocking and get fixed like any other defect**; `.agent` is NOT prettier-ignored (`pnpm format` new docs each phase); **roll forward only** (revert; never `reset --hard`/force-push); each phase = one atomic commit + `transplant/phase-N` tag, green-gated + reference-closure-clean.
 - **No deadline pressure — excellence over expediency, always** (owner, emphatic 2026-06-07): speed is not a goal; architectural correctness is. The transplant is an accepted strategic investment to accelerate castr — **the premise is settled; do not re-litigate whether it is worth doing.**
 - **Less ceremony — the commit plus the permanent doc ARE the record.** No handoff-correction churn, disposition ledgers, before/after counts, or closeout narratives; home substance in its permanent doc and stop (`permanent-doc-is-the-consolidation-record`, Phase 4).
 - **Smoke-testing the transplanted substrate is a later phase** (owner, 2026-06-07) — for now bring surfaces over; prove in-use afterwards.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above. Phases 0–4 are done and Oak is held at `ad649710` (drift noted; final
-delta-sync scheduled pre-Phase-9); ground **Phase 5** (Directives) with the owner, then execute — it carries one
-named owner action-moment (the SACRED `principles.md:1729` stale invocation). Carry the per-surface reconciliation
-lesson: Oak surfaces embed host-product specifics; bodies must be read, not classified.
+**First action:** read the surfaces above. Phases 0–4 are done (plus the 2026-06-09 follow-on: stale-script green +
+blocking, policy citations completed in lockstep) and Oak is held at `ad649710` (drift noted; final delta-sync
+scheduled pre-Phase-9); ground **Phase 5** (Directives) with the owner, then execute. Carry the per-surface
+reconciliation lesson: Oak surfaces embed host-product specifics; bodies must be read, not classified.

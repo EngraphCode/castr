@@ -2,9 +2,6 @@
 
 Operationalises [PDR-044 §Carve-out vocabulary](../practice-core/decision-records/PDR-044-memetic-immune-system.md)
 and [`principles.md` §Core Philosophy: Engineering Excellence Over Speed](../directives/principles.md).
-(The live hook's deny payload cites the doctrine as _"principles.md
-§Architectural Excellence Over Expediency"_ — the portable name of the
-same principle.)
 
 Language that means _"I know the rule applies, but this situation is
 special"_ is rejected on doctrine surfaces. Every wording — _carve
@@ -21,9 +18,9 @@ When authoring on doctrine surfaces (PDRs, plans, ADRs, governance
 docs), do not introduce hedging vocabulary. The Edit/Write hook
 (`.agent/hooks/policy.json` `preToolUseContent.scoped_blocks`)
 catches the literal trip-list at write-time and surfaces a deny
-payload with the citation _"PDR-044; principles.md §Architectural
-Excellence Over Expediency"_ so the doctrinal anchor travels with
-the refusal.
+payload with the citation _"PDR-044; principles.md §Core Philosophy:
+Engineering Excellence Over Speed"_ so the doctrinal anchor travels
+with the refusal.
 
 ## Trip-List (literals)
 

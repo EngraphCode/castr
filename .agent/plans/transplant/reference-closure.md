@@ -182,7 +182,7 @@ sufficient).
 ### Disposition change vs the grounded plan — `use-result-pattern` DON'T-BRING (9th drop)
 
 Firsthand reading found `use-result-pattern` ("never throw exceptions") in **direct contradiction with castr's
-SACRED `principles.md` §Fail-Fast** ("errors MUST be thrown IMMEDIATELY"), with no true estate here (1 of ~340
+`principles.md` §Fail-Fast** ("errors MUST be thrown IMMEDIATELY"), with no true estate here (1 of ~340
 agent-tools files uses `Result<`; its enforcement mechanics are Oak-workspace ESLint). The locked hierarchy (castr
 product doctrine always wins) forces the verdict — dropped, not escalated. KEEP count corrected 81→80. Its
 cause-preservation nugget (`{ cause }` chains — castr-compatible since castr throws) is a future castr-rule
@@ -265,25 +265,25 @@ resolve on this tree. `new-rule-vs-pdr-clause` → `RULES_INDEX.md` resolves sam
 7. `register-identity-on-thread-join` cites `../commands/session-handoff.md` + `../commands/consolidate-docs.md`
    — the retired Oak `commands/` paths again (fixed here → skill paths).
 
-### Hook-policy citation residue — disposition: **placeholder (→P6/P7, data↔test lockstep)**
+### Hook-policy citations completed in data↔test lockstep — disposition: **resolve** ✓ (2026-06-09 follow-on)
 
-castr's live `policy.json` cites `distilled.md §Stage by explicit pathspec` — a doc castr lacks until P6 — while
-the permanent home (`stage-by-explicit-pathspec.md`) landed this phase. A re-point of the citation display text
-was attempted and **reverted firsthand**: the transplanted hook-policy integration test
-(`check-blocked-patterns.integration.test.ts`) pins the exact citation string — policy data and its test move in
-lockstep, and agent-tools is consumed read-only this phase. The truthful re-point lands with an
-agent-tools-touching phase (P7 adapters or the scheduled final delta-sync), updating data + test together. Same
-class: the content-block citation "principles.md §Architectural Excellence Over Expediency" is the portable name
-of castr's `§Engineering Excellence Over Speed` (noted in `no-hedging-vocabulary`; left as-is in policy data).
+castr's live `policy.json` cited `distilled.md §Stage by explicit pathspec` (a doc absent until P6) and
+`principles.md §Architectural Excellence Over Expediency` (a section name castr's principles does not have). Both
+resolved under the owner direction _"known issues are always blocking"_: staging-deny citations → the permanent
+home `.agent/rules/stage-by-explicit-pathspec.md`; hedging/menu-framing-deny citations → castr's real
+`principles.md §Core Philosophy: Engineering Excellence Over Speed`. Changed **together with their pinning
+tests** (`check-blocked-patterns.integration.test.ts` contract pin + the fixture mirrors) — hook-policy suites
+114/114 green. (A first attempt changed data alone and was caught by the contract test — the lockstep lesson.)
 
-### Two deferred-suite findings recorded (informational run, 18→13 failures)
+### `stale-script` validator — **GREEN and BLOCKING** ✓ (2026-06-09 follow-on)
 
-The RULES_INDEX slice went green (5 tests). Remaining 13 = collaboration-state (P8 infra absent — the designed
-hard-fails) + codex-project-agents (P6/7 roster; its `clerk-expert` parity expectation is a P7 reconciliation
-item — castr never hosts clerk-expert). The `stale-script` validator enumerated exactly **one** finding:
-`principles.md:1729` invokes `node scripts/validate-jsdoc-examples.ts`, which does not exist — a dangling
-invocation inside the SACRED file, so the fix is an **owner action-moment** (natural slot: Phase 5 directives).
-The validator stays deferred-informational until that lands; never force-green.
+Its single finding — `principles.md:1729` invoking non-existent `scripts/validate-jsdoc-examples.ts` — was fixed
+at source under the same owner direction (the whole aspirational §Tooling Integration block reconciled to castr's
+real review-time TSDoc enforcement; an impossible sweep item dropped). Validator now green and added to the
+blocking `repo-validators:check` chain (5 blocking; 3 deferred: `collaboration-state`→P8, `subagents`→P6, Oak
+`portability`→P7). Informational suite stands at 13/885 failures, all P6/P8 content (incl.
+codex-project-agents' `clerk-expert` parity expectation — a P7 reconciliation item; castr never hosts
+clerk-expert).
 
 **Phase-4 result: 0 `rewrite`-class entries remain open in touched files; all dangles are
 `placeholder`(→P5/P6/P7/P8) or `retained-cross-host`.**

@@ -183,14 +183,14 @@ describe('buildPreToolUseDenyResponse', () => {
     expect(
       buildPreToolUseDenyResponse(
         'carve out',
-        'PDR-044; principles.md §Architectural Excellence Over Expediency',
+        'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
       ),
     ).toStrictEqual({
       hookSpecificOutput: {
         hookEventName: 'PreToolUse',
         permissionDecision: 'deny',
         permissionDecisionReason:
-          'Blocked by repo hook policy: content contains forbidden pattern "carve out". Only the project owner can use this pattern. Citation: PDR-044; principles.md §Architectural Excellence Over Expediency.',
+          'Blocked by repo hook policy: content contains forbidden pattern "carve out". Only the project owner can use this pattern. Citation: PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed.',
       },
     });
   });
@@ -229,7 +229,7 @@ describe('findAddedScopedBlock', () => {
     pattern: 'carve out',
     include_paths: ['.agent/practice-core/', '**/*.plan.md'],
     exclude_paths: [],
-    citation: 'PDR-044; principles.md §Architectural Excellence Over Expediency',
+    citation: 'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
   };
 
   it('returns the block when the pattern is added on a path inside the include scope', () => {

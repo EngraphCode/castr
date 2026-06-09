@@ -1698,39 +1698,19 @@ Before any major release or phase completion, a **comprehensive documentation sw
 1. **TSDoc Audit** - Every exported symbol has complete TSDoc
 2. **Example Validation** - All @example code blocks are tested and working
 3. **Link Validation** - All @see links resolve correctly
-4. **TypeDoc Generation** - Generate docs with zero warnings
-5. **README Sync** - README examples match actual API
-6. **Migration Guides** - Breaking changes documented with upgrade paths
+4. **README Sync** - README examples match actual API
+5. **Migration Guides** - Breaking changes documented with upgrade paths
 
 ### **Tooling Integration**
 
-**TypeDoc Configuration:**
-
-```json
-{
-  "entryPoints": ["src/index.ts"],
-  "excludePrivate": true,
-  "excludeInternal": true,
-  "validation": {
-    "notExported": true,
-    "invalidLink": true,
-    "notDocumented": true
-  }
-}
-```
-
-**Quality Checks:**
-
-```bash
-# Generate documentation and fail on warnings
-pnpm typedoc --treatWarningsAsErrors
-
-# Validate examples in JSDoc
-pnpm ts-node scripts/validate-jsdoc-examples.ts
-
-# Check for missing documentation
-pnpm eslint --rule 'jsdoc/require-jsdoc: error'
-```
+TSDoc enforcement is currently **review-time discipline, not an automated
+gate**: the [`documentation-hygiene`](../rules/documentation-hygiene.md)
+rule (presence and quality checked at edit time), the `tsdoc` skill (the
+authoring workflow), and the `code-reviewer` gateway (TSDoc completeness on
+every non-trivial change). No documentation generator or TSDoc lint plugin
+is wired today; adopting one (TypeDoc with warnings-as-errors, or
+`eslint-plugin-tsdoc`) is a recognised structural-hardening candidate, and
+when it lands this section names the real commands.
 
 ---
 

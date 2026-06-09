@@ -157,7 +157,7 @@ describe('runPreToolUseContentGuard', () => {
         {
           pattern: 'carve out',
           include_paths: ['**/*.plan.md'],
-          citation: 'PDR-044; principles.md §Architectural Excellence Over Expediency',
+          citation: 'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
         },
       ],
     });
@@ -167,7 +167,7 @@ describe('runPreToolUseContentGuard', () => {
     expect(JSON.parse(stdoutChunks.join(''))).toStrictEqual(
       buildPreToolUseDenyResponse(
         'carve out',
-        'PDR-044; principles.md §Architectural Excellence Over Expediency',
+        'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
       ),
     );
   });
@@ -205,7 +205,8 @@ describe('runPreToolUseContentGuard', () => {
 });
 
 describe('canonical policy: hedging-vocabulary trip-list (WS3)', () => {
-  const expectedCitation = 'PDR-044; principles.md §Architectural Excellence Over Expediency';
+  const expectedCitation =
+    'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed';
 
   it('the canonical policy registers a hedging-vocabulary trip-list scoped to doctrine surfaces', async () => {
     const blocks = await loadScopedContentBlocks();

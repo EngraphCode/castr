@@ -89,16 +89,23 @@ doctrinal shift**: two new generic rules (`collaboration-is-value-contingent`, `
 
 **Phase 4 ✅ done (2026-06-09) — Rules + `RULES_INDEX` + reference-closure** (tag `transplant/phase-4`). Landed:
 **80** Oak KEEP rules (held `ad649710` forms; the grounded 81 minus `use-result-pattern`, dropped firsthand for
-direct contradiction with SACRED `principles.md` §Fail-Fast — the 9th DON'T-BRING) + castr's 5 merged in place =
+direct contradiction with `principles.md` §Fail-Fast — the 9th DON'T-BRING) + castr's 5 merged in place =
 **85** canonical rules; root `RULES_INDEX.md` hand-authored (85 rows, index↔disk verified); every rule body read
 firsthand and reconciled per-surface (the Phase-3 lesson held: false principles-cites, Oak gate estates, wrong ESLint
 thresholds, SDK-codegen coupling, server-product MCP triggers, step-renumber drift); 7 collision-range Oak-ADR cites
 re-pointed with cross-host disambiguation, >047 cites retained-cross-host; Phase-3 skill→rule placeholders resolved;
-P5/P6/P7/P8 forward placeholders emitted; `pnpm agent-tools:*` root aliases wired; the `policy.json` citation
-re-point was attempted and reverted (the hook-policy test pins the string — data↔test lockstep; deferred to
-P7/final-sync); `stale-script` stays deferred on one SACRED-file finding (owner action-moment, P5); five new
-upstream Oak bugs flagged for back-flow. Full record: `reference-closure.md` §Phase 4 + `relevance-ledger.md`
-§Rules.
+P5/P6/P7/P8 forward placeholders emitted; `pnpm agent-tools:*` root aliases wired; five new upstream Oak bugs
+flagged for back-flow. Full record: `reference-closure.md` §Phase 4 + `relevance-ledger.md` §Rules.
+
+**Phase-4 follow-on (2026-06-09, owner-directed: "nothing is sacred — engineering discipline, not dogma; known
+issues are always blocking"):** the `principles.md:1729` dangling invocation FIXED (the whole aspirational
+§Tooling Integration block reconciled to castr's real review-time TSDoc enforcement); **`stale-script` validator
+now GREEN and BLOCKING** in `repo-validators:check` (5 green validators; 3 deferred: `collaboration-state`→P8,
+`subagents`→P6, Oak `portability`→P7); the `policy.json` citations completed properly in data↔test lockstep
+(staging deny → the `stage-by-explicit-pathspec` rule path; hedging/menu-framing deny → castr's real
+`principles.md §Core Philosophy: Engineering Excellence Over Speed`; hook-policy suites 114/114 green). The
+"SACRED" edit-bar framing is retired across live surfaces: protection = rigour + owner-visible rationale + never
+clobbering, not an approval taboo that parks defects.
 
 **NEXT: Phase 5 — Directives (7 generic, additive).** Bring `agent-collaboration`, `continuity-practice`,
 `definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; do not

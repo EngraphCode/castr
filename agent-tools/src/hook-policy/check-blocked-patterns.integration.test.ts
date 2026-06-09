@@ -48,7 +48,7 @@ describe('runPreToolUseGuard', () => {
 });
 
 describe('canonical policy: explicit-pathspec staging discipline (WS6)', () => {
-  const expectedCitation = 'distilled.md §Stage by explicit pathspec';
+  const expectedCitation = '.agent/rules/stage-by-explicit-pathspec.md';
 
   it('blocks `git add -A`, `git add --all`, and `git add .` and surfaces the doctrinal citation', async () => {
     const patterns = await loadBlockedPatterns();

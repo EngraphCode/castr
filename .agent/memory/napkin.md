@@ -9,7 +9,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   survived as questions (hold baseline + schedule one pre-Phase-9 delta-sync; fix stale refs now; per-rule three-way
   merge; collaboration rules land vanilla self-gated by `collaboration-is-value-contingent`; flip validators only when
   truthfully green). Gotchas + lessons:
-  - **A KEEP-classed rule can contradict SACRED doctrine — only per-body reading catches it.** `use-result-pattern`
+  - **A KEEP-classed rule can contradict principles doctrine — only per-body reading catches it.** `use-result-pattern`
     ("never throw") vs `principles.md` §Fail-Fast ("MUST throw immediately"); 1/340 agent-tools files used `Result<`.
     Dropped (9th DON'T-BRING; KEEP 81→80). The relevance-ledger's surface-level KEEP read could not see this. _(Same
     family as the Phase-3 portability lesson, one level deeper: classification reads lie; bodies do not.)_
@@ -28,9 +28,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     hook-policy integration test pins the exact citation string — **policy data and its test are a lockstep pair;
     change neither alone.** Truthful re-point deferred to an agent-tools-touching phase (P7/final sync). _(Cure
     shape generalised: a transplanted enforcement layer's data is contract-tested; treat data edits as code edits.)_
-  - **`stale-script` validator enumerated ONE finding — inside SACRED `principles.md`** (line 1729 invokes
-    non-existent `scripts/validate-jsdoc-examples.ts`). Owner action-moment; validator stays deferred until the
-    owner-approved fix (natural slot: P5 directives). Suite informational count 18→13 (RULES_INDEX slice green).
+  - **`stale-script` validator enumerated ONE finding — inside `principles.md`** (line 1729 invoked non-existent
+    `scripts/validate-jsdoc-examples.ts`). Initially parked as an "owner action-moment behind the SACRED label" —
+    **owner corrected same-day: "Nothing is sacred, this is engineering discipline, not dogma. Known issues are
+    always blocking, resolve them."** Resolved: the whole aspirational §Tooling Integration block (typedoc/ts-node/
+    jsdoc commands that never existed) reconciled to castr's real review-time TSDoc enforcement; validator GREEN and
+    flipped BLOCKING into `repo-validators:check` (5 blocking / 3 deferred). Suite informational count 18→13
+    (RULES*INDEX slice green). *(Lesson graduated: protection labels mean edit-with-rigour, never park-the-defect —
+    my deferral violated the just-transplanted `no-warning-toleration`'s own text, "fix the root cause in the same
+    work-item that surfaced the warning". The transplanted rules apply to the transplanting agent.)\_
+  - **policy.json citations completed properly second try (data↔test lockstep):** staging-deny → the
+    `stage-by-explicit-pathspec` rule path; hedging/menu-deny → castr's real `§Core Philosophy: Engineering
+Excellence Over Speed`; contract pin + fixture mirrors updated in the same change; hook-policy 114/114.
   - **PDR candidate (cause-preservation):** castr throws by doctrine; a castr-shaped rule mandating `{ cause }`
     chains on re-thrown errors would keep the one good nugget of the dropped Result rule.
 

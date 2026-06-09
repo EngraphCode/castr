@@ -38,7 +38,7 @@
     "knip": "turbo knip",
     "portability:check": "node scripts/validate-portability.mjs",
     "skills:check": "pnpm --filter @engraph/agent-tools -s build && node agent-tools/dist/src/bin/skills-adapter-generate.js --check --prefix=engraph-",
-    "repo-validators:check": "pnpm --filter @engraph/agent-tools validate-lifecycle-scripts && pnpm --filter @engraph/agent-tools validate-pretooluse-guard-routing && pnpm --filter @engraph/agent-tools validate-drift && pnpm --filter @engraph/agent-tools validate-fitness-vocabulary",
+    "repo-validators:check": "pnpm --filter @engraph/agent-tools validate-lifecycle-scripts && pnpm --filter @engraph/agent-tools validate-pretooluse-guard-routing && pnpm --filter @engraph/agent-tools validate-drift && pnpm --filter @engraph/agent-tools validate-fitness-vocabulary && pnpm --filter @engraph/agent-tools validate-no-stale-script-invocations",
     "test:all": "pnpm test && pnpm character && pnpm test:snapshot && pnpm test:gen && pnpm test:transforms && pnpm test:e2e",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",

@@ -56,7 +56,9 @@ intact, gates stay green, and provenance stays honest.
 templates + `components/`; full `patterns`/`executive`/`operational` memory; collaboration schemas + empty dirs;
 regenerated adapters incl. `.gemini`/`.windsurf`; collaboration machinery ACTIVE.
 
-**PRESERVE — castr wins, never clobber:** `principles.md` (**SACRED — no edit without explicit user approval**),
+**PRESERVE — castr wins, never clobber:** `principles.md` (**protected by engineering discipline, not dogma**
+[owner, 2026-06-09]: edit with firsthand verification and owner-visible rationale, never clobber with Oak content;
+known issues in it are blocking and get fixed like any other defect),
 `IDENTITY.md`, `requirements.md`, `testing-strategy.md`, `AGENT.md` (layer Oak's generic directives additively); ADRs
 **001–047** + `docs/architecture/*`; schema reviewers `openapi`/`zod`/`json-schema-expert`; strict-object/
 `additionalProperties` doctrine; `input-output-pair-compatibility.md`; `.agent/report/initial-review/`;
