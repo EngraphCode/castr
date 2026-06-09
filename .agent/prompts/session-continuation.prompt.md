@@ -1,6 +1,6 @@
 # Session Continuation: @engraph/castr
 
-**Last updated:** 2026-06-07
+**Last updated:** 2026-06-09
 
 Context bridge between sessions. Start here after reading [AGENT.md](../directives/AGENT.md).
 
@@ -21,30 +21,38 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
 (baseline `transplant/phase-0-baseline`). **Read first:** `.agent/plans/active/oak-practice-transplant.md` (contract) →
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
-inventory/dispositions) → the napkin's latest entries (`2026-06-07` + `2026-06-05`: session insights, firsthand corrections, build gotchas, the validator non-bug reframe).
+inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06-07`: Phase-4 lessons, firsthand corrections, build gotchas, the validator non-bug reframe).
 
-- **Status:** Phase 0 ✅; Phase 1 ✅; Phase 2 ✅; **Phase 3 ✅** — skills (18 brought + localised; castr grounding folded
-  into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking `skills:check`); tag
-  `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE PreToolUse guards + §6
-  `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
+- **Status:** Phases 0–4 ✅. **Phase 4 (2026-06-09, tag `transplant/phase-4`)** — 80 Oak rules (ad649710) + castr's 5
+  = 85 canonical rules + root `RULES_INDEX.md` (85 rows, index↔disk verified); per-rule firsthand reconciliation;
+  `use-result-pattern` dropped (contradicts SACRED fail-fast — 9th DON'T-BRING); 7 collision-range Oak-ADR cites
+  disambiguated cross-host; `pnpm agent-tools:*` aliases wired. Phase 3 — skills (18 brought + localised; castr
+  grounding folded into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking
+  `skills:check`); tag `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE
+  PreToolUse guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
   Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak is held at `ad649710` as the working baseline.**
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
-  INFORMATIONAL (`--filter=!@engraph/agent-tools`; 18/885 failures are later-phase content). `repo-validators:check` =
-  4 green validators only (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`); 4 deferred
-  (`stale-script`→P4, `collaboration-state`→P8, `subagents`→P6, Oak `portability`→P7).
+  INFORMATIONAL (`--filter=!@engraph/agent-tools`; **13**/885 failures are later-phase content — the RULES_INDEX slice
+  went green at P4). `repo-validators:check` = 4 green validators only
+  (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`); 4 deferred (`stale-script` blocked on
+  ONE finding inside SACRED `principles.md:1729` — owner action-moment at P5; `collaboration-state`→P8,
+  `subagents`→P6, Oak `portability`→P7). **policy.json is contract-tested** (hook-policy integration test pins its
+  citation strings — data↔test lockstep, change neither alone).
 - **⚠️ The deferred validators' "crashes" are NOT bugs — do NOT silence them.** They hard-fail by design on absent
   infrastructure (Oak tests assert `rejects.toThrow` / `toThrow(/missing adapter/)`) — truthfully reporting castr's P6/P8
   infra isn't installed yet. A 2026-06-07 trial fix was reverted; **Oak clean at `ad649710`, nothing pushed**. They
   self-clear when P6/P8 land. See `relevance-ledger.md` §"Deferred-validator …".
-- **Next steps (in order) — full detail in the tracker's "Next steps":** **Step 0 ✅ done (2026-06-07)** — whole estate reviewed through `ad649710`; finding + working-baseline hold recorded in the tracker. **Step 1** reconcile `02-agent-tools-build-design.md` to as-built
-  (NodeNext/ES2022→ESNext/bundler/ES2023; seven→eight validators; activation-deferral guidance superseded). **Step 2**
-  Phase 3 (skills + commands→skills; adapters `--prefix=engraph-`; migrate `jc-*`). **Step 3** fold Oak follow-ups at
-  their phases (`PDR-089` Decision-7→P1; `documentation-hygiene.md`→P4; `.cursor` adapter→P7).
+- **Next steps — full detail in the tracker's "Next steps":** Steps 0–2 + Phase 4 ✅ done. **NEXT: Phase 5 —
+  Directives (7 generic, additive)**; then Step 3 residue folds at its phases (`PDR-089` Decision-7→P1; `.cursor`
+  adapter→P7; `documentation-hygiene.md` landed with P4). The scheduled **pre-Phase-9 Oak delta-sync** brings the
+  post-hold drift (`precedence-is-not-approval` + PDR-091 + any later KEEPs).
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
-  `check:ci`/pre-push does not run `fix`); agent-tools `src/` has 0 `@oaknational` imports (tiny localisation surface);
-  `practice-fitness` informational-first never red-gates the SACRED `principles.md`; Phase 2 commit must include the
-  regenerated `pnpm-lock.yaml`; 36 Oak-ADR cites in Oak rules to reference-close at Phase 4 (re-point to PDRs).
+  `check:ci`/pre-push does not run `fix`); some Oak markdown needs prettier `--write` TWICE to converge;
+  `practice-fitness` informational-first never red-gates the SACRED `principles.md`; transplanted surfaces'
+  section-cites and classifications are claims — read bodies firsthand (the P3 skills lesson, re-proven at P4 where a
+  KEEP-classed rule contradicted SACRED doctrine); the 36 Oak-ADR cites are closed (P4) — the 7 collision-range ones
+  carry explicit cross-host disambiguation.
 - **Posture (owner 2026-06-05):** fully populate; collaboration ACTIVE (about agents) seeded empty; all generic experts
   incl. mcp-expert; drop ground-truth + Oak Sonar/secrets + ~2 UI patterns. Each phase = atomic commit + tag; roll back
   forward only.
@@ -125,13 +133,30 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **@engraph/castr — next session start.** The **primary active workstream** is the Oak → castr Practice transplant, on branch `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set — NOT `main`; baseline `transplant/phase-0-baseline`). The product slice `explicit-additional-properties-support.md` and the `remediation/` backlog stay **parked-in-place** — resume only after the transplant closes or on a fresh reproduced regression.
 
-**Phases 0–3 are COMPLETE and green.** Phase 3 (tag `transplant/phase-3`): Oak's 18 skills brought + localised, castr grounding folded into the start-right shared core, all `jc-*`/`distillation`/`napkin`/`castr-start-right` retired, blocking `skills:check`. Phase 2 (tag `transplant/phase-2`, commit `55a6788`): the 340-file `@engraph/agent-tools` package + hook policy + **LIVE Claude PreToolUse guards** + the §6 `validate-drift` validator. Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
+**Phases 0–4 are COMPLETE and green.** Phase 4 (tag `transplant/phase-4`, 2026-06-09): **80 Oak rules** (held
+`ad649710` forms) + castr's 5 = **85 canonical rules** + root `RULES_INDEX.md` (85 rows, index↔disk verified); every
+body read firsthand and reconciled per-surface; `use-result-pattern` dropped (contradicts SACRED `principles.md`
+fail-fast — the 9th DON'T-BRING); collision-range Oak-ADR cites disambiguated; `pnpm agent-tools:*` root aliases
+wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplant/phase-3`): Oak's 18 skills brought + localised, castr grounding folded into the start-right shared core, all `jc-*`/`distillation`/`napkin`/`castr-start-right` retired, blocking `skills:check`. Phase 2 (tag `transplant/phase-2`, commit `55a6788`): the 340-file `@engraph/agent-tools` package + hook policy + **LIVE Claude PreToolUse guards** + the §6 `validate-drift` validator. Reconstruct with `git log --oneline transplant/phase-0-baseline..HEAD`.
 
 **⚠️ LIVE NOW — your tool calls are guarded.** `.claude/settings.json` routes Bash/Edit/Write through `run-pretooluse-guard.mjs`: dangerous-git patterns and PDR-044 content fingerprints are **denied**; an unbuilt `dist` fails **OPEN** (warns, never bricks). A blocked call is the policy in `.agent/hooks/policy.json`, not a bug. agent-tools `test` is **informational** (filtered out of the blocking gate via `--filter=!@engraph/agent-tools`); `repo-validators:check` carries only the 4 green validators (the other 4 deferred to P4/P6/P7/P8). **The deferred validators' "crashes" are NOT bugs — do NOT try to "fix"/silence them: they hard-fail by design on absent infrastructure (Oak tests assert it), truthfully reporting castr's P6/P8 infra isn't installed yet; a 2026-06-07 trial fix was reverted (Oak clean at `ad649710`).** **Gotcha (verified firsthand — it blocked my own command):** the Bash guard substring-matches the WHOLE command, so a blocked pattern anywhere in the command string — including an `echo`/test payload or a dangerous-command literal quoted inside a commit message — is denied. Keep such literals out of commands; when a commit message must discuss them, write it to a file and use `git commit -F <file>`, never `-m`. The guards also activate **mid-session** when `.claude/settings.json` changes, so your current session may already be guarded.
 
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` latest entries (`2026-06-07` + `2026-06-05`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
-**Next executable steps (in order, owner-directed):** **Step 0 ✅ done (2026-06-07).** Whole estate reviewed through `ad649710` (finding in the tracker): the delta is mostly DON'T-BRING runtime event data; the transplant-relevant signal is Oak's anti-ceremony shift — two new rules + the rewritten continuity cluster + `start-right-team` — so Phase 3/4 bring Oak's _current_ forms. **Step 1 ✅ done** — `02-agent-tools-build-design.md` reconciled to as-built (as-built banner + tsconfig fix). **Step 2 — Phase 3 ✅ done** — skills brought + localised; castr grounding folded into the start-right shared core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; 18×2 `engraph-` adapters; empty `skills-lock.json`; blocking `skills:check`. **NEXT: Phase 4 — Rules + `RULES_INDEX` + reference-closure.** Bring Oak's ~78 KEEP rules incl. the two new anti-ceremony rules (`permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`); reference-close the 36 Oak-ADR cites; the Phase-3 skills' forward-ref rule cites resolve here. Apply the same per-skill lesson: Oak rules may embed product-specifics needing castr reconciliation, not naming-only. **Step 3 — fold Oak follow-ups at their phases** (`PDR-089` Decision-7→P1; `documentation-hygiene.md`→P4; `.cursor` adapter→P7). **Oak is held at `ad649710` as the working baseline (owner, 2026-06-07)** — no per-phase re-scan while held; re-scan only when the owner signals Oak has moved.
+**Next executable steps (in order, owner-directed):** Steps 0–2 and **Phase 4 ✅ done** (see the tracker's per-phase
+blocks). **NEXT: Phase 5 — Directives (7 generic, additive):** `agent-collaboration`, `continuity-practice`,
+`definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; sacred
+castr directives untouched; `schema-first-execution.md` stays DON'T-BRING; the Phase-4 rules' P5 directive
+placeholders resolve here; reconcile castr's `tdd.md` rule against the arriving `tdd-as-design`; **owner
+action-moment carried into P5:** SACRED `principles.md:1729` invokes non-existent `scripts/validate-jsdoc-examples.ts`
+(the `stale-script` validator's only finding — it stays deferred until the owner-approved fix). **Carry the Phase-4
+lessons:** classification reads lie, bodies do not (a KEEP rule contradicted SACRED doctrine); transplanted
+enforcement data is contract-tested (policy.json ↔ its integration test move in lockstep — change neither alone);
+directive-section cites in Oak surfaces are claims to verify against castr's actual headings. \*\*Oak baseline: held at
+`ad649710`; drift noted 2026-06-09 (HEAD `5779ed20`, 17 commits, rules delta additive-only — `precedence-is-not-approval`
+
+- PDR-091); a single Step-0-style delta-sync is scheduled immediately before Phase 9\*\* — no per-phase re-scan; earlier
+  re-scan only on owner signal.
 
 **Standing disciplines (active from message 1):**
 
@@ -146,4 +171,7 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above. Phases 0–3 are done and Oak is held at `ad649710`; ground **Phase 4** (Rules + `RULES_INDEX` + reference-closure) with the owner, then execute. Carry the Phase-3 lesson: Oak surfaces may embed product-specifics needing per-item castr reconciliation, not naming-only.
+**First action:** read the surfaces above. Phases 0–4 are done and Oak is held at `ad649710` (drift noted; final
+delta-sync scheduled pre-Phase-9); ground **Phase 5** (Directives) with the owner, then execute — it carries one
+named owner action-moment (the SACRED `principles.md:1729` stale invocation). Carry the per-surface reconciliation
+lesson: Oak surfaces embed host-product specifics; bodies must be read, not classified.
