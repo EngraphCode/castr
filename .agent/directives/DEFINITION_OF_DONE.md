@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-04-11  
+**Last Updated:** 2026-06-09  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -46,6 +46,7 @@ pnpm madge:orphans
 pnpm depcruise
 pnpm knip
 pnpm portability:check
+pnpm packaging:check
 
 pnpm test
 pnpm character
@@ -54,6 +55,14 @@ pnpm test:gen
 pnpm test:transforms
 pnpm test:e2e
 ```
+
+`pnpm packaging:check` (2026-06-09, remediation plan 01 / finding C1) verifies the **published package shape**:
+`publint --strict` lints the packed tarball's manifest/field integrity, and `attw --pack . --profile esm-only`
+(`@arethetypeswrong/cli`) proves every `exports` target's types and runtime files resolve for ESM consumers and
+bundlers — the package is deliberately ESM-only (`"type": "module"`, Node ≥ 22), so the CJS/node10 resolution modes
+are declared out of the support matrix rather than shimmed. The companion e2e proof
+(`lib/tests-e2e/packaging-integrity.test.ts`) packs the real tarball and imports every entrypoint as a consumer
+would, including the README's `parseZodSource` example and the CLI bin.
 
 Off-chain development aids (not in the canonical gate, green, documented honestly):
 
