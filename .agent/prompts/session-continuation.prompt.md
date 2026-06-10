@@ -13,6 +13,17 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > - **Committed `31ba0f0`** (pnpm-fix only: `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`), made with **`--no-verify` under a one-time grant**. `pnpm check` was breaking with `turbo: command not found` / lockfile churn / `Worker pnpm#4 exited with code 1`. Three causes: (1) a stray `pnpm` devDependency (10.34.1) shadowing the `packageManager` pnpm 11.5.2 inside scripts — **removed**; (2) pnpm v11's default 24h `minimumReleaseAge` holding back same-day-published `turbo@2.9.17` — fixed with explicit `minimumReleaseAge: 1440` + `minimumReleaseAgeStrict: true` and durable name/glob `minimumReleaseAgeExclude` (`turbo`, `@turbo/*`); (3) `check` now uses `pnpm install --frozen-lockfile`.
 > - **⚠️ Lint is red on this branch** — 126 `sonarjs/function-return-type` errors (sonarjs recommended preset, after the 4.0.2→4.0.3 bump in the regenerated lockfile). **User confirmed this is a known new stricter rule, not a real failure, and is handling it separately** — do not fix it here, and the `--no-verify` grant was single-use.
 > - **Uncommitted remediation-01 work remains intact/unstaged** (plan-file moves, `lib/**` edits, 4 untracked test/build files). The pnpm commit deliberately touched none of it.
+> - **LATER THE SAME DAY (session close):** plan-01 work restored + completed and COMMITTED on the remediation branch
+>   (`a2c86ab` product + `e1eaffc` continuity; plan 01 → `current/complete/`, plan 02 promoted; Node 24/26 + CI
+>   matrix/pnpm-action fixes included). The remediation branch was then **merged into this transplant branch**
+>   (owner-sanctioned; merge `8ed2b0a` + napkin repair `62c529c`) so pnpm 11 governs here too — `skills:check` and
+>   all 5 blocking validators verified green under pnpm 11.5.2. **Lint stays red repo-wide (the sonarjs shift) —
+>   owner-sequenced for DISCUSSION, do not fix or disable** (analysis brief: napkin 2026-06-10, lint-inventory
+>   bullet). **Next acts:** push `fix/remediation-01-packaging-and-types` + open its PR to `main` (it carries the 2
+>   deep-review commits + the pnpm-11 migration — concern-mix owner-accepted, name it in the PR body); then
+>   remediation 02. **Branches/PRs per plan: [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md)** (the new
+>   single home; monitor PR comments/CI per its discipline). **Oak is PINNED on `practice/transplant-to-castr` @
+>   `4470266`** (owner; no more moving target; castr commits AND pushes back-flow/feedback directly in Oak).
 
 ---
 
@@ -178,11 +189,10 @@ lessons:** classification reads lie, bodies do not (a KEEP rule contradicted pri
 enforcement data is contract-tested (policy.json ↔ its tests move in lockstep — change both together);
 directive-section cites in Oak surfaces are claims to verify against castr's actual headings; protection labels mean
 edit-with-rigour, never park-the-defect (owner, 2026-06-09: known issues are always blocking — the
-`principles.md:1729` finding was fixed same-day and `stale-script` flipped blocking). \*\*Oak baseline: held at
-`ad649710`; drift noted 2026-06-09 (HEAD `5779ed20`, 17 commits, rules delta additive-only — `precedence-is-not-approval`
-
-- PDR-091); a single Step-0-style delta-sync is scheduled immediately before Phase 9\*\* — no per-phase re-scan; earlier
-  re-scan only on owner signal.
+`principles.md:1729` finding was fixed same-day and `stale-script` flipped blocking). **Oak baseline (2026-06-10):
+PINNED on the dedicated branch `practice/transplant-to-castr` @ `4470266`** — supersedes the `ad649710` hold and
+absorbs the previously scheduled pre-P9 delta-sync; Phase-5 grounding re-checks the `.agent/rules/` delta
+`ad649710`→pin (known: `precedence-is-not-approval` + PDR-091) and folds new KEEPs there.
 
 **Standing disciplines (active from message 1):**
 

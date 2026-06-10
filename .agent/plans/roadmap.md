@@ -48,6 +48,10 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 >
 > A 2026-06-05 record framed item 3 as "parked-in-place per a user instruction" — **the owner never gave that
 > instruction and repudiated the framing on 2026-06-09**; this sequence is the correction.
+>
+> **Branches/PRs per plan live in the [delivery ledger](./delivery-ledger.md)** (single DRY home; a plan's
+> _delivery_ = the branches, PRs, and release acts that carry its outcome to a beneficiary, per PDR-085). PR
+> comment/CI monitoring discipline is defined there.
 
 > **Deep Review (2026-06-04, branch `docs/initial-deep-review`):** a first-hand-verified review found **46 issues
 > (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and

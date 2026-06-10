@@ -106,8 +106,10 @@ turbo/pnpm out of the install lifecycle per `validate-lifecycle-scripts`; bring 
 dist-based fail-closed PreToolUse guards; Phase 2 commit includes regenerated `pnpm-lock.yaml`. Keep agent-tools out of
 `lib`'s depcruise/knip/madge (own minimal configs). **`.agent` is NOT prettier-ignored** → every phase `pnpm format`s its
 new docs and commits the result.
-`practice-fitness` informational-first (exits 0 — never red-gates sacred `principles.md`); strict fitness never enters
-blocking `qg`. Reconcile `validate-portability.mjs` (a subagents validator) → flip to Oak `validate-portability` only
+`practice-fitness` informational-first (exits 0 — never red-gates `principles.md`); strict fitness never enters
+blocking `qg`. **Owner requirement (2026-06-10): adopt Oak's SHA-pinned GitHub-Actions convention** — workflow
+actions pinned to commit SHAs with a tag comment (movable tags are a supply-chain risk); apply with the named
+CI-modernisation slice (workflows are stale beyond Node: path filters, release flow). Reconcile `validate-portability.mjs` (a subagents validator) → flip to Oak `validate-portability` only
 at Phase 7 after porting its 5 Codex assertions.
 
 ## Phases (each ends green + reference-closure-clean; atomic commit; tag `transplant/phase-N`)

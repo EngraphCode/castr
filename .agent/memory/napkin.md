@@ -32,6 +32,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   collides head-on with castr's deliberate discriminated-union returns (principles §Discriminated unions; the
   IR/writer architecture). Discussion question: rule-selection (does the rule belong in castr's gate?), NOT
   disable-to-dodge; the 5 `in-operator` hits look like genuine narrowing fixes either way.
+- **Session close (handoff):** remediation branch committed (`a2c86ab` + `e1eaffc`) and **merged into the transplant
+  branch** (owner-sanctioned concern-mix; `8ed2b0a` + napkin repair `62c529c`) — pnpm 11 now governs both branches;
+  skills:check + 5 validators green under 11. **Merge gotchas worth keeping:** (1) staging a conflicted file marks it
+  resolved — ALWAYS `grep '<<<<<<<'` before the merge commit (markers landed once; prettier then mangled `>>>>>>>`
+  into blockquotes — repair needed parent-tree reconstruction); (2) an earlier napkin insertion had silently eaten the
+  `## 2026-06-07` heading (date-attribution drift) — restored; heading-adjacent Edits must re-check section
+  boundaries. **Delivery concept landed (owner enhancement):** a plan's _delivery_ = branches+PRs+release acts
+  reaching the beneficiary (PDR-085); single DRY home `.agent/plans/delivery-ledger.md` incl. PR comment/CI
+  monitoring discipline. **Oak pinned** on `practice/transplant-to-castr` @ `4470266` (no moving target; back-flow
+  commits+pushes go directly to Oak — feedback file now lives THERE). **Owner feedback (standing): put visible
+  signposts of reasoning/decisions in chat output as work proceeds** — so misconceptions are spottable on scroll-back
+  (this session's fabricated-parking and SACRED misreads were caught exactly that way) → feedback memory written.
 
 ## 2026-06-09
 
@@ -92,6 +104,8 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 Excellence Over Speed`; contract pin + fixture mirrors updated in the same change; hook-policy 114/114.
   - **PDR candidate (cause-preservation):** castr throws by doctrine; a castr-shaped rule mandating `{ cause }`
     chains on re-thrown errors would keep the one good nugget of the dropped Result rule.
+
+## 2026-06-07
 
 - **Phase 3 (skills transplant) LANDED — tag `transplant/phase-3`, full `qg` green.** Gotchas + method lessons worth
   carrying into Phase 4+ (capture edge; some are PDR/back-flow candidates):

@@ -113,11 +113,12 @@ touch sacred castr directives; `schema-first-execution.md` stays DON'T-BRING. Th
 placeholders (P5) resolve here. Carry the per-surface reconciliation lesson — expect host-product specifics; also
 reconcile castr's `tdd.md` rule against the arriving `tdd-as-design` directive.
 
-**Baseline drift (2026-06-09): the hold STANDS.** Oak HEAD advanced `ad649710`→`5779ed20` (17 commits, 16 of them on
-2026-06-08 — active flight); the `.agent/rules/` delta is additive-only: one new rule, `precedence-is-not-approval.md`,
-citing post-baseline PDR-091. Recorded and lossless, not lost: a **single final delta-sync (Step-0-style whole-estate
-scan, hold → Oak HEAD) is scheduled immediately before Phase 9's verification pass** to bring the accumulated portable
-delta. No per-phase re-scan; earlier re-scan only on owner signal.
+**Baseline (2026-06-10, supersedes the `ad649710` hold): Oak is PINNED on a dedicated work branch** —
+`practice/transplant-to-castr` @ `4470266` (owner-created; no more moving target; castr may commit AND push there,
+so back-flow fixes/feedback live in Oak directly). Phases 5–9 read their estates from that pinned branch. The
+previously scheduled pre-P9 delta-sync is absorbed: the pin is current; **Phase-5 grounding re-checks the
+`.agent/rules/` delta `ad649710`→pin** (known: `precedence-is-not-approval` + PDR-091, possibly more) and folds any
+new KEEPs there. Delivery state (branches/PRs per plan) lives in [`../delivery-ledger.md`](../delivery-ledger.md).
 
 **Step 3 — fold Oak follow-ups in at their phases (not before):** `PDR-089` Decision-7 append → a Phase-1 touch;
 `documentation-hygiene.md` → Phase 4; the `.cursor` adapter → Phase 7.
