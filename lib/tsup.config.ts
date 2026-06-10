@@ -5,7 +5,7 @@ import { join } from 'node:path';
 export default defineConfig({
   // All code: ESM only (library + CLI)
   // Use glob pattern to preserve directory structure when bundle: false
-  entry: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/__tests__/**'],
+  entry: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/__tests__/**', '!src/characterisation/**'],
   format: ['esm'],
   platform: 'node',
   target: 'es2024',

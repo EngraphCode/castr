@@ -2,6 +2,8 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+<<<<<<< HEAD
+
 ## 2026-06-09
 
 - **Owner correction (load-bearing, repo-wide): the continuity surfaces had FABRICATED an owner decision.** The
@@ -235,32 +237,57 @@ unbuilt`) — split the failure shapes: **unbuilt `dist` → fail OPEN (exit 0 +
     (eef/school-data-search/graph-core) or memory — DON'T-BRING. New baseline for Phase 2: **`2c85bc01`**.
   - **Phase 2 CLOSED + session-close insights (2026-06-05; candidate graduations).** Phase 2 landed green + tagged
     `transplant/phase-2` (`55a6788`). The build's transferable lessons — most caught my OWN first instinct, i.e. the
-    verify-firsthand discipline cutting against the executor, not just the handoff:
-    1. **File-count ≠ effort.** "340 files = multi-session grind" was wrong — proven upstream code mostly just built and
-       passed; a workspace transplant is copy + wire-in + localise-the-small-coupled-surface, not 340 files of work.
-    2. **Probe before deferring on assumed difficulty.** Nearly deferred knip as "too noisy"; the firsthand probe found
-       zero real dead code (findings were my own incomplete entry config). The discipline cuts against pessimism too.
-    3. **A drift-validator must be MORE conservative than the drift it catches, or it becomes the drift** — a false
-       positive red-gates the build. `validate-drift` matches only definite estate phrasings; skips sub-counts/approximates.
-    4. **"Bring X" can hide the highest-blast-radius action.** "Bring the hook policy" split into safe data vs LIVE
-       PreToolUse activation (intercepts every tool call, fail-shape-dependent) — separate them; the environment-altering
-       half needs explicit owner sign-off, not autonomy.
-    5. **A rescan re-examines decisions, not just code.** The owner's own fail-open fix removed the exact risk basis for a
-       deferral we had just agreed → the right answer flipped. Re-scan the _decisions_ that rested on the old state.
-    6. **Every phase's gate run must include ALL of `qg`.** Phase 1b omitted `portability:check`, so the phase-1 tag was
-       green while that gate was latently broken (practice-context retired, bespoke validator unchanged). Fixed `11f7e48`;
-       removed the invalid check rather than re-tracking archived files to force it green (owner directive).
-    7. **Handoff: stale pointers are worse than missing context.** A tracker saying "Resume at Phase 2" after Phase 2
-       ships actively misleads the next session. The adversarial "what would be lost?" check prioritises pointer-currency +
-       non-obvious operational state (the guards are LIVE) over narrative richness.
-    8. **A failing check may be a TRUE signal, not a bug — don't silence it (2026-06-07).** The "crashing" deferred
-       validators are _designed_ to hard-fail on missing canonical infrastructure (Oak tests: `rejects.toThrow`,
-       `toThrow(/missing adapter/)`); they were correctly reporting that castr's P6/P8 infrastructure isn't installed yet.
-       I nearly "fixed" them to return empty — which broke the hard-fail test and would have **masked the true
-       infrastructure-absent signal** (inverse of green-gates-mask-gaps: making a red gate green by silencing it). When a
-       check fails, first ask "is the check wrong, or is it correctly telling me I haven't built that part yet?" Running
-       the test caught the misdiagnosis before it reached Oak's primary repo. Reverted; no upstream change. Diagnosis:
-       **missing (future-phase) infrastructure, not a code/config bug.**
+    verify-firsthand discipline cutting against the executor, not just the handoff: 1. **File-count ≠ effort.** "340 files = multi-session grind" was wrong — proven upstream code mostly just built and
+    passed; a workspace transplant is copy + wire-in + localise-the-small-coupled-surface, not 340 files of work. 2. **Probe before deferring on assumed difficulty.** Nearly deferred knip as "too noisy"; the firsthand probe found
+    zero real dead code (findings were my own incomplete entry config). The discipline cuts against pessimism too. 3. **A drift-validator must be MORE conservative than the drift it catches, or it becomes the drift** — a false
+    positive red-gates the build. `validate-drift` matches only definite estate phrasings; skips sub-counts/approximates. 4. **"Bring X" can hide the highest-blast-radius action.** "Bring the hook policy" split into safe data vs LIVE
+    PreToolUse activation (intercepts every tool call, fail-shape-dependent) — separate them; the environment-altering
+    half needs explicit owner sign-off, not autonomy. 5. **A rescan re-examines decisions, not just code.** The owner's own fail-open fix removed the exact risk basis for a
+    deferral we had just agreed → the right answer flipped. Re-scan the _decisions_ that rested on the old state. 6. **Every phase's gate run must include ALL of `qg`.** Phase 1b omitted `portability:check`, so the phase-1 tag was
+    green while that gate was latently broken (practice-context retired, bespoke validator unchanged). Fixed `11f7e48`;
+    removed the invalid check rather than re-tracking archived files to force it green (owner directive). 7. **Handoff: stale pointers are worse than missing context.** A tracker saying "Resume at Phase 2" after Phase 2
+    ships actively misleads the next session. The adversarial "what would be lost?" check prioritises pointer-currency +
+    non-obvious operational state (the guards are LIVE) over narrative richness. 8. **A failing check may be a TRUE signal, not a bug — don't silence it (2026-06-07).** The "crashing" deferred
+    validators are _designed_ to hard-fail on missing canonical infrastructure (Oak tests: `rejects.toThrow`,
+    `toThrow(/missing adapter/)`); they were correctly reporting that castr's P6/P8 infrastructure isn't installed yet.
+    I nearly "fixed" them to return empty — which broke the hard-fail test and would have **masked the true
+    infrastructure-absent signal** (inverse of green-gates-mask-gaps: making a red gate green by silencing it). When a
+    check fails, first ask "is the check wrong, or is it correctly telling me I haven't built that part yet?" Running
+    the test caught the misdiagnosis before it reached Oak's primary repo. Reverted; no upstream change. Diagnosis:
+    **missing (future-phase) infrastructure, not a code/config bug.**
+    =======
+
+## 2026-06-10
+
+- **pnpm toolchain integrity + release-age cooldown fixed on branch `fix/remediation-01-packaging-and-types` (commit `31ba0f0`, committed with `--no-verify` by one-time user grant).** Symptom reported: `pnpm check` triggered an install that "replaced the lockfile" and left `turbo: command not found`, with turbo flapping in/out of `node_modules/.bin` across identical runs. Three distinct root causes, all first-hand verified:
+  - **Dominant cause — `pnpm` was a devDependency (`^10.33.0` → installed `10.34.1`).** pnpm puts `node_modules/.bin` first on `PATH`, so every nested `pnpm` call inside the `check` script (`clean && install && fix && qg`) ran **10.34.1**, while the terminal ran the `packageManager`-pinned **11.5.2**. The two versions fought over `node_modules`/the lockfile each run (the "reinstall from scratch" prompt + `ERROR Worker pnpm#4 exited with code 1`, stack rooted in `node_modules/.pnpm/pnpm@10.34.1/.../pnpm.cjs`). This is the engine of the churn, flapping, and crash. Fix: removed the devDependency; `packageManager: pnpm@11.5.2` is the single source of truth. It was vestigial since the initial commit and referenced nowhere.
+  - **Secondary — pnpm v11 default `minimumReleaseAge: 1440` (24h supply-chain cooldown) held back `turbo@2.9.17`** (published 2026-06-09T16:10Z, ~6h before the session). pnpm fetched turbo to the store but refused to _link_ it until 24h old; since every script is `turbo …`, the whole toolchain broke. The pre-existing `minimumReleaseAgeExclude` was a brittle `name@version` list (`turbo@2.9.17` + 6 platform entries) — **and it was pnpm auto-generated**, not hand-written: under non-strict fallback pnpm appends the too-new `name@version` ids to the exclude list itself (proved in a temp probe: `Added 7 entries to minimumReleaseAgeExclude … (set minimumReleaseAgeStrict to true to gate these updates with a prompt)`). Fix: replaced with durable name/glob `- turbo` / `- '@turbo/*'` (matching is by package name, all versions; the correct documented form), and set `minimumReleaseAge: 1440` + `minimumReleaseAgeStrict: true` **explicitly** so the value is visible and resolution **fails fast** (`ERR_PNPM_NO_MATURE_MATCHING_VERSION`) instead of silently adopting a fresh release. Strict was confirmed empirically: explicit age → install fails on a too-new-only range; `minimumReleaseAgeStrict: false` → silent fallback + auto-exclude.
+  - **Tertiary — `check` ran a non-frozen `pnpm install`** (a quality gate mutating the lockfile). Changed to `pnpm install --frozen-lockfile` (matches `check:ci`), per user decision.
+- **Verified pnpm behaviour facts (temp-dir probes, pnpm 11.5.2):** `pnpm outdated` and `pnpm update`/`update --latest` already honour `minimumReleaseAge` — `outdated` reports only the newest age-eligible version as "Latest" (hides too-new), `update` adopts only age-eligible and annotates `(X is available)` for what it withholds. No per-command config needed. Settings keys: `minimumReleaseAge` (default 1440 since v11), `minimumReleaseAgeExclude` (by name/glob), `minimumReleaseAgeStrict` (derives true when age is set explicitly), `minimumReleaseAgeIgnoreMissingTime` (default true). The serialized `node_modules/.pnpm-workspace-state-v1.json` only refreshes on a non-no-op install, so its `settings` can lag the live config — force-refresh (rm the file + install) before trusting it.
+- **Caveat — open pnpm v11 bugs:** `minimumReleaseAge` is reportedly not respected in monorepos under v11 ([pnpm/pnpm#11433](https://github.com/pnpm/pnpm/issues/11433)); `pnpx`/`self-update` ignore it (#11183, #11655). castr is a workspace, so don't treat the cooldown as a hard guarantee.
+- **Metacognition correction worth keeping:** I burned the first pass deep inside the exotic `minimumReleaseAge` machinery and explicitly waved away the stray `pnpm` devDependency as "weird but mostly harmless" — that dismissal was the miss. When the symptom is _a tool behaving inconsistently across identical runs_, the first question is "which binary is actually running?", not the most novel policy explanation. Promote unexplained anomalies; don't park them. The crash stack trace naming the exact `pnpm@10.34.1` path is what forced the correction.
+- **⚠️ OPEN / NOT MINE — lint is red on this branch:** `pnpm lint` fails with 126 `sonarjs/function-return-type` errors across `lib/src/shared/**` (from the sonarjs _recommended_ preset, `lib/eslint.config.ts:8`). Commit `31ba0f0` bumped `eslint-plugin-sonarjs` 4.0.2→4.0.3 via the lockfile regen, but none of the flagged files are in the commit. **User states this is a known new stricter rule, not a real failure, and will handle it separately** — do not "fix" it as part of the pnpm work. This is why `--no-verify` was used (one-time grant; not to be repeated).
+- **Uncommitted branch work left intact (unstaged):** the plan-file moves (`remediation/01…` → `current/complete/`, `remediation/02…` → `active/`) now show as old-path deletions + new-path untracked (re-stage with `git add -A .agent/plans/` to re-detect as renames); plus `DEFINITION_OF_DONE.md`, `lib/src/**` edits, and 4 untracked files (`lib/tests-e2e/packaging-integrity.test.ts`, `lib/tests-helpers/generation-result-assertions.d.ts(+.map)`, `lib/tsconfig.build.json`). None of this was touched by the pnpm commit.
+
+- **Plan-01 work restored post-sweep + Node 24/26 (owner-directed), same branch:** the pnpm migration had reverted
+  `lib/package.json`'s four plan-01 pieces — restored under pnpm 11 (build → `tsc -p tsconfig.build.json`;
+  `packaging:check` = `publint --strict && attw --pack . --profile esm-only`; `./parsers/zod` export repointed to the
+  real `dist/schema-processing/...` path; publint/attw devDeps re-added). Build, packaging gate, and the 4 e2e tarball
+  proofs re-verified green. Stray `tests-helpers/*.d.ts(.map)` artefacts (from the earlier mis-rooted tsc run) deleted.
+  **Node 24/26 everywhere (owner):** root engines were already `>=24` (owner's fix — form mirrored); added engines to
+  the published `lib` package (it had NONE); CI matrix 16/18/20 → 24.x/26.x; publish 16.x → 24.x; pnpm action v8 → 11
+  (v8 cannot read an 11.x lockfile — CI was hard-broken).
+- **CI workflows are stale beyond Node (named follow-up, sequenced):** path filters reference `lib/pnpm-lock.yaml`
+  (lockfile lives at root), publish invokes a non-existent `pnpm release` via changesets the repo doesn't use, actions
+  pinned by movable tags. **Owner requirement (2026-06-10): adopt Oak's SHA-pinned actions convention** (pin to commit
+  SHAs with a tag comment) — recorded in the transplant contract; apply with the CI-modernisation slice.
+- **Lint inventory for the owner discussion (captured, untouched per owner directive):** 126 errors =
+  `sonarjs/function-return-type` ×121 + `sonarjs/in-operator-type-error` ×5. Cause: sonarjs 4.0.2→4.0.3 via lockfile
+  regen shifted the recommended set. Cause beneath: `function-return-type` is a single-return-type heuristic that
+  collides head-on with castr's deliberate discriminated-union returns (principles §Discriminated unions; the
+  IR/writer architecture). Discussion question: rule-selection (does the rule belong in castr's gate?), NOT
+  disable-to-dodge; the 5 `in-operator` hits look like genuine narrowing fixes either way.
+  > > > > > > > fix/remediation-01-packaging-and-types
 
 ## 2026-06-04
 

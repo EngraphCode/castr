@@ -94,21 +94,3 @@ export function assertContentContains(content: string, expectedStrings: string[]
     }
   }
 }
-
-/**
- * Assert that generated content contains expected strings (case insensitive).
- * Useful for checking schema names that might have different casing.
- *
- * @param content - Generated code content to check
- * @param expectedStrings - Array of strings that should be in content (case insensitive)
- */
-export function assertContentContainsInsensitive(content: string, expectedStrings: string[]): void {
-  const lowerContent = content.toLowerCase();
-  for (const expected of expectedStrings) {
-    if (!lowerContent.includes(expected.toLowerCase())) {
-      throw new Error(
-        `Expected content to contain "${expected}" (case insensitive) but it was not found`,
-      );
-    }
-  }
-}

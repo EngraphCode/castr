@@ -1,6 +1,17 @@
 # Plan: Packaging and Types Integrity
 
-**Status:** Backlog (remediation) · **Findings:** C1 · **Risk:** Low
+**Status:** ✅ COMPLETE (2026-06-09) · **Findings:** C1 (+2 same-class found in execution) · **Risk:** Low
+
+> **Executed 2026-06-09** on `fix/remediation-01-packaging-and-types`. Landed: `tsconfig.build.json` (src-only
+> declaration emit, `rootDir: src`, Node types) so `pnpm build` ships a `.d.ts` at every declared `types` target;
+> `./parsers/zod` export repointed to the real built path (`dist/schema-processing/parsers/zod/`); the packaging
+> gate `publint --strict && attw --pack . --profile esm-only` wired as `pnpm packaging:check` into `qg` and
+> `DEFINITION_OF_DONE.md`; the e2e proof `lib/tests-e2e/packaging-integrity.test.ts` packs the real tarball and
+> imports every entrypoint (incl. the README `parseZodSource` example and the CLI bin). **Two same-class defects
+> found and fixed during execution:** the CLI bin had no shebang, and `src/characterisation/**` (test scaffolding
+> importing un-packed `tests-helpers/`) was shipping dead-broken in `dist` — now excluded from both emit paths.
+> Next in sequence: plan 02 (promoted to `active/`).
+
 **References:** report `02-findings-critical.md` (C1); `lib/tsconfig.json`, root `tsconfig.json`, `lib/tsup.config.ts`, `lib/package.json`
 
 ---
