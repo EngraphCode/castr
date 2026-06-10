@@ -7,9 +7,9 @@
     "url": "https://github.com/jimcresswell/openapi-zod-validation.git"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24"
   },
-  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
+  "packageManager": "pnpm@11.5.2+sha512.71c631e382066efc25625d5cf029075de07b61b37f6e27350fbd84b1bda5864c8c1967adc280776b45c30a715c0359a3be08fef42d5bb09e2b99029979692916",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev --parallel",
@@ -28,23 +28,19 @@
     "depcruise": "turbo depcruise",
     "knip": "turbo knip",
     "portability:check": "node scripts/validate-portability.mjs",
+    "packaging:check": "pnpm --filter @engraph/castr packaging:check",
     "test:all": "pnpm test && pnpm character && pnpm test:snapshot && pnpm test:gen && pnpm test:transforms && pnpm test:e2e",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "clean": "turbo clean",
     "fix": "pnpm format && pnpm lint:fix",
-    "qg": "pnpm build && pnpm format:check && pnpm type-check && pnpm lint && pnpm madge:circular && pnpm madge:orphans && pnpm depcruise && pnpm knip && pnpm portability:check && pnpm test:all",
-    "check": "pnpm clean && pnpm install && pnpm fix && pnpm qg",
+    "qg": "pnpm build && pnpm format:check && pnpm type-check && pnpm lint && pnpm madge:circular && pnpm madge:orphans && pnpm depcruise && pnpm knip && pnpm portability:check && pnpm packaging:check && pnpm test:all",
+    "check": "pnpm clean && pnpm install --frozen-lockfile && pnpm fix && pnpm qg",
     "check:ci": "pnpm clean && pnpm install --frozen-lockfile && pnpm qg",
     "fetch:examples": "turbo fetch:examples",
     "prepare": "husky"
   },
   "license": "MIT",
-  "pnpm": {
-    "overrides": {
-      "esbuild": "0.25.11"
-    }
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.2",
@@ -65,11 +61,10 @@
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "madge": "^8.0.0",
-    "pnpm": "^10.33.0",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",
     "tsx": "^4.21.0",
-    "turbo": "^2.9.3",
+    "turbo": "^2.9.17",
     "typescript": "^5",
     "typescript-eslint": "^8.58.0"
   }
