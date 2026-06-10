@@ -1,8 +1,18 @@
 # Session Continuation: @engraph/castr
 
-**Last updated:** 2026-06-04
+**Last updated:** 2026-06-10
 
 Context bridge between sessions. Start here after reading [AGENT.md](../directives/AGENT.md).
+
+---
+
+## Latest session (2026-06-10) — pnpm toolchain fix on `fix/remediation-01-packaging-and-types`
+
+> A focused infra detour while remediation-01 is in flight. Full detail in [napkin 2026-06-10](../memory/napkin.md).
+>
+> - **Committed `31ba0f0`** (pnpm-fix only: `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`), made with **`--no-verify` under a one-time grant**. `pnpm check` was breaking with `turbo: command not found` / lockfile churn / `Worker pnpm#4 exited with code 1`. Three causes: (1) a stray `pnpm` devDependency (10.34.1) shadowing the `packageManager` pnpm 11.5.2 inside scripts — **removed**; (2) pnpm v11's default 24h `minimumReleaseAge` holding back same-day-published `turbo@2.9.17` — fixed with explicit `minimumReleaseAge: 1440` + `minimumReleaseAgeStrict: true` and durable name/glob `minimumReleaseAgeExclude` (`turbo`, `@turbo/*`); (3) `check` now uses `pnpm install --frozen-lockfile`.
+> - **⚠️ Lint is red on this branch** — 126 `sonarjs/function-return-type` errors (sonarjs recommended preset, after the 4.0.2→4.0.3 bump in the regenerated lockfile). **User confirmed this is a known new stricter rule, not a real failure, and is handling it separately** — do not fix it here, and the `--no-verify` grant was single-use.
+> - **Uncommitted remediation-01 work remains intact/unstaged** (plan-file moves, `lib/**` edits, 4 untracked test/build files). The pnpm commit deliberately touched none of it.
 
 ---
 
