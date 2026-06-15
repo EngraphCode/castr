@@ -37,9 +37,9 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > plan is acceptable; an undefined 'later' is never"):**
 >
 > 1. **NOW — deep-review remediation backlog** ([`remediation/`](./remediation/), plans **01→07** in their stated
->    order; 01 promoted and in flight on branch `fix/remediation-01-packaging-and-types` off
->    `docs/initial-deep-review`, PR'd to `main` independently). The 6 shipped Criticals outrank practice
->    infrastructure.
+>    order; **01 COMPLETE + merged in**, **02** next — all executed on the single branch
+>    `feat/transplant-engraph-practice` per the 2026-06-15 single-branch consolidation; see
+>    [delivery ledger](./delivery-ledger.md)). The 6 shipped Criticals outrank practice infrastructure.
 > 2. **NEXT — Oak → castr Practice transplant Phases 5–9** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md),
 >    tracker [`transplant/README.md`](./transplant/README.md), branch `feat/transplant-engraph-practice`; Phases 0–4
 >    complete and tagged; resumes exactly from the tracker).
@@ -53,7 +53,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > _delivery_ = the branches, PRs, and release acts that carry its outcome to a beneficiary, per PDR-085). PR
 > comment/CI monitoring discipline is defined there.
 
-> **Deep Review (2026-06-04, branch `docs/initial-deep-review`):** a first-hand-verified review found **46 issues
+> **Deep Review (2026-06-04; report + ADR-047 now on `feat/transplant-engraph-practice`):** a first-hand-verified review found **46 issues
 > (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
 > [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
 > backlog: [`.agent/plans/remediation/`](./remediation/) (promote one into `active/` at a time; `01-packaging` fixes the

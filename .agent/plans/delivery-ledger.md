@@ -1,33 +1,44 @@
 # Delivery Ledger
 
-**The concept (owner-requested, 2026-06-10):** plans are decoupled from branches — one plan's work may span several
-branches, PRs, and release acts. The unit binding them is the plan's **delivery**: everything that must land for the
+**The concept (owner-requested, 2026-06-10):** plans are decoupled from branches — a plan's work may span several
+commits, PRs, and release acts. The unit binding them is the plan's **delivery**: everything that must land for the
 plan's outcome to reach its beneficiary (per PDR-085, value that has not reached a beneficiary has not been
-delivered). This ledger is the **single home (DRY)** for delivery state: which branches and PRs carry which plan,
-their merge/CI/review state, and the next act. Other surfaces (roadmap, session-continuation, trackers) point here
-and never duplicate the table.
+delivered). This ledger is the **single home (DRY)** for delivery state. Other surfaces (roadmap,
+session-continuation, trackers) point here and never duplicate the table.
+
+**Single-branch consolidation (owner, 2026-06-15):** the earlier multi-branch model — remediation on `fix/*` branches
+off `docs/initial-deep-review`, each PR'd to `main` independently — was **retired**. The coordination overhead (branch
+confusion, cross-branch CI drift, multiple PRs to monitor) outweighed its "ship Criticals independently" benefit, and
+the transplant branch already contained every other branch's content. **All work now proceeds on the single branch
+`feat/transplant-engraph-practice`.** Done in the consolidation, all verified lossless first-hand:
+
+- PR #1 (DRAFT, remediation-01 → main) **closed** as superseded.
+- Branches `docs/initial-deep-review` (0 commits ahead — fully subsumed) and `fix/remediation-01-packaging-and-types`
+  (its one unique commit's change already present via `fa167b6`) **deleted, local + remote**.
+- The single eventual delivery act is **one PR `feat/transplant-engraph-practice` → `main`** carrying everything: the
+  deep-review report + ADR-047, all remediation work, the full transplant, and the deep-enhancement arc.
+
+`feat/rewrite` (remote-only, ~170 unique commits, a historical session-3.x line) is **not** part of current work and
+was left untouched.
 
 ## Monitoring discipline
 
-Open PRs are live surfaces: reviews and CI **will** demand fixes, and the multi-branch shape multiplies that load.
+Open PRs are live surfaces: reviews and CI **will** demand fixes.
 
-- **Session open** (with start-right): for every OPEN row below, run `gh pr status` and per PR
-  `gh pr checks <n>` + `gh pr view <n> --comments` — triage anything red or commented before new work.
+- **Session open** (with start-right): for each OPEN row below, run `gh pr status` and per PR `gh pr checks <n>` +
+  `gh pr view <n> --comments` before new work. _(No PR is open right now; the transplant PR opens at transplant close.)_
 - **Session close** (session-handoff): refresh this ledger; a handoff with a stale ledger is incomplete.
-- Structural option when PR count grows: a scheduled routine or `/loop` sweeping `gh pr checks` — adopt when manual
-  sweeps start missing things, not before.
 
 ## Deliveries
 
-| Plan (sequence position)                                  | Branches                                                                          | PRs                                                                                   | State / next act                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Remediation 01 — packaging & types (pos 1, plan COMPLETE) | `fix/remediation-01-packaging-and-types` (off `docs/initial-deep-review`, PUSHED) | **[#1 DRAFT](https://github.com/EngraphCode/castr/pull/1)** — monitor checks/comments | **CI GREEN** (verified 2026-06-10: Build 24.x, Build 26.x, Analyze, CodeQL all SUCCESS; no review comments). Mergeable. CI does not run lint, so the local lint-red is not a PR blocker. Carries deep-review commits + pnpm-11 (named in body). ⚠️ **Cross-branch CI drift:** this branch's `ci.yml` still has the `[24.x, 26.x]` matrix; the transplant branch now has the owner's single-Node-24 `ci.yml`. Reconcile when both reach `main` (D2/D3 settle it to single-24). |
-| Remediation 02 — IR fidelity harness (pos 1, ACTIVE next) | not yet created (`fix/remediation-02-…` off `docs/initial-deep-review`)           | —                                                                                     | Execute next session.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Practice transplant Phases 0–4 (+5–9) (pos 2)             | `feat/transplant-engraph-practice` (PUSHED, incl. `transplant/*` tags)            | none yet — single PR to `main` at transplant close                                    | Phases 0–4 tagged; Phase 5 next (ground with owner). **+ engineering-infrastructure arc D1–D4** (lint warn→error, Node single-source, CI→Oak standard, quality-gate/Practice parity) — see tracker §Deep-enhancement arc; "phases done" ≠ "deep enhancement complete". Oak pinned: `practice/transplant-to-castr` @ `4470266`.                                                                                                                                                |
-| Oak back-flow (feedback + upstream fixes)                 | Oak repo, branch `practice/transplant-to-castr` (PUSHED)                          | as raised in Oak                                                                      | Feedback file delivered to Oak's Practice Box and pushed (2026-06-10).                                                                                                                                                                                                                                                                                                                                                                                                        |
-| Explicit additional-properties (pos 3, paused)            | none yet                                                                          | —                                                                                     | Starts after positions 1–2.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Plan (sequence position)                                  | Branch                                                  | PR                                                       | State / next act                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Remediation 01 — packaging & types (pos 1, COMPLETE)      | `feat/transplant-engraph-practice`                      | PR #1 CLOSED (superseded by single-branch consolidation) | **Done, merged in.** C1 fixed: types ship, `./parsers/zod` resolves, `packaging:check` (publint + attw) green first-hand (2026-06-15). Reaches `main` via the single transplant PR.                                                                                              |
+| Remediation 02–07 (pos 1, 02 ACTIVE next)                 | `feat/transplant-engraph-practice`                      | —                                                        | Execute **on the transplant branch** (no separate `fix/*` branches). 02 = IR-fidelity proof harness (`.agent/plans/active/02-ir-fidelity-proof-harness.md`).                                                                                                                     |
+| Practice transplant Phases 0–4 (+5–9) + arc D1–D4 (pos 2) | `feat/transplant-engraph-practice`                      | one PR to `main` at transplant close                     | Phases 0–4 tagged; Phase 5 next (ground with owner). **D1 lint:** warn-downgrade DONE (2026-06-15, commit `3b3f0d9`); refactor `warn→error` pending (DoD completion gate). D2–D4 per tracker §Deep-enhancement arc. Branch is `check:ci`-green end-to-end (verified 2026-06-15). |
+| Oak back-flow (feedback + upstream fixes)                 | Oak `practice/transplant-to-castr` @ `4470266` (PUSHED) | as raised in Oak                                         | Feedback delivered to Oak's Practice Box (2026-06-10).                                                                                                                                                                                                                           |
+| Explicit additional-properties (pos 3, paused)            | `feat/transplant-engraph-practice` (when started)       | —                                                        | Starts after positions 1–2.                                                                                                                                                                                                                                                      |
 
 **Conventions:** one row per plan-delivery; a row closes only when its value is merged/released to its beneficiary,
-not when code exists. Remediation deliveries each take their own `fix/*` branch off `docs/initial-deep-review`; the
-first merged PR carries the two deep-review commits into `main`; later branches then rebase their PR target view
-naturally (no history rewriting — forward merges only).
+not when code exists. All work lands on `feat/transplant-engraph-practice`; the first PR to `main` (at transplant
+close) carries the full history forward — forward merges only, no history rewriting.

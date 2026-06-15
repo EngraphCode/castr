@@ -2,7 +2,7 @@
 
 **Status:** ACTIVE — primary plan
 **Created/Promoted:** 2026-06-05
-**Branch:** `feat/transplant-engraph-practice` (off `docs/initial-deep-review`, which holds the PRESERVE set; baseline tag `transplant/phase-0-baseline` = e0541f6). **Plan correction:** the approved plan said "off `main`", but `main` does **not** contain the PRESERVE set (initial-review report, remediation backlog, ADR-047, the brief) — branching off `main` would orphan them, so the base is `docs/initial-deep-review`. **PR implication (owner decided 2026-06-05):** the transplant PR to `main` **carries** its 2 deep-review commits — `docs/initial-deep-review` is **not** merged to `main` separately.
+**Branch:** `feat/transplant-engraph-practice` (baseline tag `transplant/phase-0-baseline` = e0541f6). **Single-branch (owner, 2026-06-15):** this branch now holds ALL work. Its former base `docs/initial-deep-review` (which held the PRESERVE set — initial-review report, remediation backlog, ADR-047, the brief) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and **deleted (local + remote, verified lossless)**; PR #1 was closed. Everything reaches `main` via one eventual PR `feat/transplant-engraph-practice → main` carrying the full history. See [`../delivery-ledger.md`](../delivery-ledger.md).
 **Authoritative spec:** [`practice-alignment-brief.md`](../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `/Users/jim/code/project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 **Phase tracker:** [`../transplant/README.md`](../transplant/README.md)

@@ -6,31 +6,41 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ---
 
-## Current state (2026-06-10 close) — read this first
+## Current state (2026-06-15 close) — read this first
 
-Detailed session history (pnpm toolchain root-causes, the merge, the fabricated-parking correction, the
-manufactured-permission rule candidate) is in [napkin 2026-06-10](../memory/napkin.md). This block is current truth only.
+This block is current truth only. Branch/delivery state lives in
+[`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home). **Sections below this block predate the
+2026-06-15 single-branch consolidation and are historical context** — where they describe `fix/*` branches off
+`docs/initial-deep-review` or PR #1, this block supersedes them.
 
-- **Branch:** `feat/transplant-engraph-practice` (this branch; pnpm 11.5.2 and Node 24 govern; the remediation-01
-  work is merged in). All branches and `transplant/*` tags are PUSHED to `EngraphCode/castr`.
-- **Plan-of-record sequence (owner):** (1) deep-review remediation backlog 01→07 — **01 COMPLETE**, draft PR #1 OPEN
-  and CI-GREEN (Build 24.x, Build 26.x, Analyze, CodeQL; mergeable; no comments), **02** promoted to `active/` and
-  next to execute; (2) Practice transplant Phases 5–9 plus the engineering-infrastructure arc D1–D4 (tracker
-  §Deep-enhancement arc); (3) `explicit-additional-properties-support` (paused, sequence pos 3). Branch/PR state:
-  [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home; monitor PR comments/CI per its discipline).
+- **Single branch (owner, 2026-06-15):** ALL work is on `feat/transplant-engraph-practice` (pnpm 11.5.2, Node 24
+  govern). The multi-branch model was retired — `docs/initial-deep-review` and `fix/remediation-01-packaging-and-types`
+  were fully subsumed and **deleted (local + remote, verified lossless via `git cherry`/diff/ancestry)**; **PR #1 was
+  closed** (superseded). Remediation 02–07 now execute **on this branch**, not separate `fix/*` branches. The single
+  delivery act is one eventual PR `feat/transplant-engraph-practice → main` carrying everything. `feat/rewrite`
+  (remote-only, historical session-3.x line) is untouched.
+- **The branch is `check:ci`-GREEN end-to-end** (verified first-hand via pre-push, 2026-06-15) — through `test:all`/
+  `test:e2e`. First time it has been provably green: lint-red had been **masking** two knip failures (`check:ci` stops
+  at the first failure), so "green except lint" was false. Both knip failures are now fixed (see below).
+- **D1 lint — step 1 DONE (commit `3b3f0d9`):** `sonarjs/function-return-type` (121) + `sonarjs/in-operator-type-error`
+  (5) transitioned `error → warn` in `lib/eslint.config.ts` (NOT off; lint runs no `--max-warnings 0`). Lint exits 0.
+  **Remaining: the refactor `warn → error`** (the DoD completion gate before the deep enhancement is complete).
+- **knip fixed (commits `c622998`, `1363181`):** the lint fix unmasked two pre-existing knip failures, both fixed —
+  6 dead char-test exports removed; `commitlint` installed + wired (`@commitlint/cli` + `config-conventional` +
+  root `commitlint.config.mjs`), which also made the agent-tools `check-commit-message` validator operational (it had
+  been a phantom — no `commitlint` was installed). No enforcing `commit-msg` hook (owner).
+- **Plan-of-record sequence (owner):** (1) deep-review remediation backlog 01→07 — **01 COMPLETE + merged in**, **02**
+  in `active/`, next to execute; (2) Practice transplant Phases 5–9 + the engineering-infrastructure arc D1–D4 (tracker
+  §Deep-enhancement arc); (3) `explicit-additional-properties-support` (paused, pos 3). All on the single branch.
 - **Owner decision 1 — Node:** 24 everywhere; stable-LTS always; advance to 26 only once GitHub _and_ Vercel support
-  it. Config already executed (`engines: 24.x`, single-Node-24 `ci.yml`); single-source and ADR-048 remain as D2.
+  it. Config executed (`engines: 24.x`, single-Node-24 `ci.yml`); single-source `.nvmrc` and ADR-048 remain as D2.
 - **Owner decision 2 — lint:** no rule ever off; in-flight rules MAY be `warn` transitionally; DoD requires all back
-  to `error` before the deep enhancement is complete (`DEFINITION_OF_DONE.md` §Transitional gate states; D1). The
-  doctrine-correct path for the 126-error lint red — this is NOT disabling.
+  to `error` before the deep enhancement is complete (`DEFINITION_OF_DONE.md` §Transitional gate states; D1). NOT disabling.
 - **Owner decision 3 — scope:** the deep enhancement is broader than Phases 0–9 (CI to the Oak SHA-pinned-actions
   standard, plus quality-gate and Practice parity; D1–D4). "Phases done" is not "deep enhancement complete".
-- **Turnkey next steps:** (a) **D1 lint** — set `sonarjs/function-return-type` and `sonarjs/in-operator-type-error`
-  to `warn` (NOT off) in `lib/eslint.config.ts`, confirm `lint` carries no `--max-warnings 0`, then refactor each to
-  `error`; (b) **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 5** (Directives —
-  ground with owner).
-- **Push note:** lint is red repo-wide until D1 starts, so pushing needs the D1 warn-fix first or a per-invocation
-  owner hook-skip grant. Committing does NOT hit lint (pre-commit is format-only); only pre-push runs `check:ci`.
+- **Turnkey next steps:** (a) **D1 refactor** — `warn → error` for the two sonarjs rules (121 `function-return-type`
+  collide with castr's deliberate discriminated-union returns; 5 `in-operator` are genuine narrowing fixes); (b)
+  **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 5** (Directives — ground with owner).
 - **Oak:** PINNED on `practice/transplant-to-castr` @ `4470266` (no moving target; castr commits AND pushes
   back-flow/feedback directly in Oak).
 

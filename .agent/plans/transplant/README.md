@@ -2,7 +2,9 @@
 
 **Primary plan:** [`../active/oak-practice-transplant.md`](../active/oak-practice-transplant.md)
 **Spec:** [`../practice-alignment-brief.md`](../practice-alignment-brief.md)
-**Branch:** `feat/transplant-engraph-practice` (off `docs/initial-deep-review`; baseline `transplant/phase-0-baseline`)
+**Branch:** `feat/transplant-engraph-practice` (baseline `transplant/phase-0-baseline`; the former base
+`docs/initial-deep-review` was subsumed + deleted in the 2026-06-15 single-branch consolidation — all work is on this
+one branch now, see [`../delivery-ledger.md`](../delivery-ledger.md))
 
 This directory holds per-phase sub-plans + the relevance ledger, mirroring `remediation/`. Each phase ends green
 (`pnpm check`) + reference-closure-clean, with an atomic commit and a `transplant/phase-N` tag. Roll back **forward**
