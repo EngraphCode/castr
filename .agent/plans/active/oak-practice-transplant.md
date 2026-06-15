@@ -124,6 +124,11 @@ at Phase 7 after porting its 5 Codex assertions.
 5. **Directives** — 7 generic additive; do not touch sacred docs; drop `schema-first-execution.md`.
 6. **Sub-agents / memory / state** — 13 generic templates + `components/`; full patterns (provenance-amended, index
    regenerated, drop ~2 UI); executive (regenerated catalogues); operational; collaboration schemas + empty dirs.
+   Reconcile castr's existing `memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout (the
+   transplanted napkin/consolidate rules already cite `memory/active/…`). **Opens with a consolidation pass**
+   (owner-confirmed 2026-06-10: memory stays at P6, not pulled forward): drain the napkin — currently ≈1459 lines,
+   ~3× a healthy threshold — and graduate this transplant's captured learnings (the manufactured-permission rule
+   candidate and the transplant-method lessons) into their enforcement homes (rules / patterns / distilled).
 7. **Adapters** — regenerate `.claude`/`.codex`/`.cursor`/`.agents`; add `.gemini`/`.windsurf`; flip portability/subagents blocking (after porting 5 Codex assertions); retire bespoke script.
 8. **Collaboration ACTIVE** — directive + rules cluster + skills + structured coordinator-state + TTL presence + comms attention pass + plan-mode carveout; wire collaboration validator blocking.
 9. **`practice-verification` pass** — zero reference-closure placeholders; commit relevance ledger; write castr

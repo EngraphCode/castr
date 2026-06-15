@@ -17,6 +17,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     `rules-have-no-exceptions`, `never-disable-checks`) rather than a wholly new rule — `new-rule-vs-pdr-clause`
     decides. Cross-refs [[nothing-is-sacred-engineering-discipline]], [[verify-agent-claims-firsthand]].
 
+- **Prioritisation decision (owner, 2026-06-10): keep the plan — do NOT pull the memory surfaces forward.** Asked
+  whether to prioritise P6 memory surfaces to "help the repo learn from the transplant." Verdict (owner-confirmed):
+  no — shipped Criticals outrank practice infrastructure, and the learnings are NOT at risk (castr already has both
+  `memory/napkin.md` and `memory/distilled.md`, committed; capture+distil pair is live). The real cost is hygiene,
+  not loss: the napkin is ≈1459 lines (~3× threshold), a per-session read tax. Resolution: memory stays at **P6**,
+  which **opens with a consolidation pass** (napkin-drain + graduate the manufactured-permission rule candidate and
+  transplant-method lessons) — recorded as a named position in the contract's Phase 6, so it is not an
+  undefined-later. Question closed; do not re-litigate.
+
 - **Three owner decisions captured (2026-06-10, all now homed in the plan):**
   1. **Node 24 everywhere; stable LTS is always the right choice; advance to 26 only once GitHub _and_ Vercel
      support it** (named tripwire). Owner executed the config (`engines: 24.x` root+lib; `ci.yml` single-Node-24,
