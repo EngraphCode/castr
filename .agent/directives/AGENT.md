@@ -33,9 +33,16 @@
 
 - Authoritative doctrine: [principles.md](./principles.md)
 - Test methodology: [testing-strategy.md](./testing-strategy.md)
+- TDD foundational definition: [tdd-as-design.md](./tdd-as-design.md)
 - Decision guidance: [requirements.md](./requirements.md)
 - Quality gate protocol: [DEFINITION_OF_DONE.md](./DEFINITION_OF_DONE.md)
 - Architectural file-system structure: [architectural-file-system-structure.md](./architectural-file-system-structure.md)
+- Layering contract and authority order: [orientation.md](./orientation.md)
+- Principle → operationalisation flow: [operationalisation-contract.md](./operationalisation-contract.md)
+- What counts as delivered: [definition-of-delivery.md](./definition-of-delivery.md)
+- Continuity practice: [continuity-practice.md](./continuity-practice.md)
+- Agent-to-agent collaboration: [agent-collaboration.md](./agent-collaboration.md)
+- Agent-to-owner collaboration: [user-collaboration.md](./user-collaboration.md)
 
 ## Practice Infrastructure
 

@@ -19,7 +19,7 @@ only.
 | 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done | `transplant/phase-2`          |
 | 3     | Skills + commands→skills                                                                 | ✅ done | `transplant/phase-3`          |
 | 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive)                                                         | ⬜      | `transplant/phase-5`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done | `transplant/phase-5`          |
 | 6     | Sub-agents / memory / state                                                              | ⬜      | `transplant/phase-6`          |
 | 7     | Adapters + flip portability/subagents gates                                              | ⬜      | `transplant/phase-7`          |
 | 8     | Collaboration machinery ACTIVE                                                           | ⬜      | `transplant/phase-8`          |
@@ -27,7 +27,7 @@ only.
 
 ## Resume point (next session)
 
-**Phase 1 is complete** — tagged `transplant/phase-1`. **1a** delivered the 91-PDR estate (89 numbered slots; PDR-086 vacant — inherited from Oak, lossless; PDR-076 split 076/076a/076b), `practice-verification.md`,
+**Phase 1 is complete** — tagged `transplant/phase-1`. **1a** delivered the PDR estate (91 files at 1a; now 92 files / 90 numbered slots after Phase 5 folded PDR-091 — PDR-086 vacant, inherited from Oak, lossless; PDR-076 split 076/076a/076b), `practice-verification.md`,
 and the `reference-closure.md` ledger (additive; zero `@oaknational`/`oak-` naming). **1b** (2026-06-05) converged the
 Core generation to Oak's current portable trinity + entry points, created `provenance.yml` as the branch-history union
 (castr's 2026-03-22 entry + a 2026-06-05 merge node preserved — no loss, no duplication, identity-deduped), merged
@@ -109,18 +109,34 @@ now GREEN and BLOCKING** in `repo-validators:check` (5 green validators; 3 defer
 "SACRED" edit-bar framing is retired across live surfaces: protection = rigour + owner-visible rationale + never
 clobbering, not an approval taboo that parks defects.
 
-**NEXT: Phase 5 — Directives (7 generic, additive).** Bring `agent-collaboration`, `continuity-practice`,
-`definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; do not
-touch sacred castr directives; `schema-first-execution.md` stays DON'T-BRING. The Phase-4 rules' directive
-placeholders (P5) resolve here. Carry the per-surface reconciliation lesson — expect host-product specifics; also
-reconcile castr's `tdd.md` rule against the arriving `tdd-as-design` directive.
+**Phase 5 ✅ done — Directives (7 generic, additive) + Oak rules-delta fold (tag `transplant/phase-5`).** Brought
+`agent-collaboration`, `continuity-practice`, `definition-of-delivery`, `operationalisation-contract`, `orientation`,
+`tdd-as-design`, `user-collaboration` from the pinned Oak branch (read at `4470266`), additive — sacred castr directives
+untouched, `AGENT.md` gained an additive index of the 7; `schema-first-execution.md` held DON'T-BRING (its dangling
+agent-tools-doc reference repointed to `requirements.md`). Per-surface reconciliation throughout (false `§Code Quality`
+cite → `§Testing Standards`; Oak-local plan cites de-linked per `no-moving-targets`; `oak-consolidate-docs` localised;
+mechanism-catalogue surfaces reconciled to castr; tdd-as-design scales grounded for castr's headless `lib`). All P5
+directive placeholders resolved; castr's `tdd.md` rule reconciled against `tdd-as-design`. **Oak rules-delta
+`ad649710`→pin folded:** new rule `precedence-is-not-approval` + `PDR-091` + `verify-dont-trust` +6 lines (PDR estate
+91→92 files / 90 numbered slots; `RULES_INDEX` 85→86 rows; drift count-claims updated). Full record:
+`reference-closure.md` §Phase 5.
+
+**NEXT: Phase 6 — Sub-agents / memory / state.** 13 generic sub-agent templates + `components/`; full patterns
+(provenance-amended, index regenerated, drop ~2 UI); executive (regenerated catalogues); operational; collaboration
+schemas + empty dirs. **Opens with a consolidation pass** (owner-confirmed 2026-06-10): reconcile castr's flat
+`memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout — the Phase-5 directives
+(`orientation`/`continuity-practice`/`agent-collaboration`) already cite `memory/active/…` + `memory/operational/…` +
+`memory/executive/…` as forward-placeholders that resolve here — then drain the napkin and graduate captured learnings
+into their enforcement homes.
 
 **Baseline (2026-06-10, supersedes the `ad649710` hold): Oak is PINNED on a dedicated work branch** —
 `practice/transplant-to-castr` @ `4470266` (owner-created; no more moving target; castr may commit AND push there,
 so back-flow fixes/feedback live in Oak directly). Phases 5–9 read their estates from that pinned branch. The
-previously scheduled pre-P9 delta-sync is absorbed: the pin is current; **Phase-5 grounding re-checks the
-`.agent/rules/` delta `ad649710`→pin** (known: `precedence-is-not-approval` + PDR-091, possibly more) and folds any
-new KEEPs there. Delivery state (branches/PRs per plan) lives in [`../delivery-ledger.md`](../delivery-ledger.md).
+previously scheduled pre-P9 delta-sync is absorbed: the pin is current; **Phase-5 grounding re-checked the
+`.agent/rules/` delta `ad649710`→pin and folded it ✅** — the delta was exactly `precedence-is-not-approval` (new rule)
+
+- `PDR-091` (its portable backing) + a 6-line append to `verify-dont-trust`; no other KEEPs. Also verified the pin
+  `4470266` vs branch tip `518b34af` differ only by castr's own back-flow feedback doc (directives byte-identical). Delivery state (branches/PRs per plan) lives in [`../delivery-ledger.md`](../delivery-ledger.md).
 
 **Step 3 — fold Oak follow-ups in at their phases (not before):** `PDR-089` Decision-7 append → a Phase-1 touch;
 `documentation-hygiene.md` → Phase 4; the `.cursor` adapter → Phase 7.

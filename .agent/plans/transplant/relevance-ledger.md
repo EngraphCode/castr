@@ -58,7 +58,10 @@ naming Oak's phenotype; see `reference-closure.md`). **Phase 1 (1a landed).**
   IDENTITY/requirements).
 - **PRESERVE castr's, do not overwrite:** `principles.md` (protected by engineering discipline, not dogma — known
   issues in it are blocking and get fixed; never clobber with Oak content [owner, 2026-06-09]),
-  `testing-strategy.md`, `requirements.md`, `AGENT.md`, `metacognition.md`. **Phase 5.**
+  `testing-strategy.md`, `requirements.md`, `AGENT.md`, `metacognition.md`. **Phase 5 ✅ (2026-06-15, tag
+  `transplant/phase-5`):** all 7 brought additive + per-surface reconciled; `AGENT.md` gained an additive index of the
+  7; `schema-first-execution.md` held DON'T-BRING. Oak rules-delta `ad649710`→pin folded here too
+  (`precedence-is-not-approval` + `PDR-091` + `verify-dont-trust` +6). Full record: `reference-closure.md` §Phase 5.
 
 ### agent-tools (20 modules) — KEEP all (localise)
 

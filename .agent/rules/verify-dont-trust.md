@@ -116,3 +116,9 @@ first, then compare the claim boundary to that discovered set.
 - 2026-06-02 EEF D4 sibling-frontmatter repair: a stale label was present in
   history and contaminated artefacts but not live truth; assertion-time checks
   needed to test whether the cited label was current and visible.
+- Status surfaces are pointers, not facts: thread records, frictions registers,
+  plan statuses, and register markers each describe state without being it. A
+  frictions register stamped "addressed-in-working-tree" with a never-completed
+  "replace with SHA" trigger reads "fixed" for work that may never have
+  committed. Before acting on any status, recompute against the current
+  code / data / state, not the marker.

@@ -44,7 +44,7 @@ This block is current truth only. Branch/delivery state lives in
 - **Turnkey next steps:** (a) **D1 `warn → error`** — UNCONFIRMED path; first **measure what the rules actually flag**
   (the earlier "collides with discriminated-union returns" claim was disproven) per
   [`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md) (suspect — re-derive); (b)
-  **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 5** (Directives — ground with owner).
+  **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 6** (Sub-agents / memory / state).
 - **Oak:** PINNED on `practice/transplant-to-castr` @ `4470266` (no moving target; castr commits AND pushes
   back-flow/feedback directly in Oak).
 
@@ -72,7 +72,13 @@ product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-p
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions + rule candidate, `2026-06-09` Phase-4 lessons, `2026-06-07` firsthand corrections).
 
-- **Status:** Phases 0–4 ✅. **Phase 4 (2026-06-09, tag `transplant/phase-4`)** — 80 Oak rules (ad649710) + castr's 5
+- **Status:** Phases 0–5 ✅. **Phase 5 (2026-06-15, tag `transplant/phase-5`)** — 7 generic directives brought
+  additive (`agent-collaboration`, `continuity-practice`, `definition-of-delivery`, `operationalisation-contract`,
+  `orientation`, `tdd-as-design`, `user-collaboration`), per-surface reconciled (false `§Code Quality` TDD cite →
+  `§Testing Standards`; Oak-local plan cites de-linked; `oak-consolidate-docs` localised; mechanism surfaces
+  reconciled; tdd-as-design scales grounded for castr's headless `lib`); `AGENT.md` gained an additive directive index;
+  `schema-first-execution.md` held DON'T-BRING. Oak rules-delta folded (`precedence-is-not-approval` + `PDR-091` +
+  `verify-dont-trust` +6) → **86 canonical rules / 92 PDR files**. **Phase 4 (2026-06-09, tag `transplant/phase-4`)** — 80 Oak rules (ad649710) + castr's 5
   = 85 canonical rules + root `RULES_INDEX.md` (85 rows, index↔disk verified); per-rule firsthand reconciliation;
   `use-result-pattern` dropped (contradicts `principles.md` fail-fast — 9th DON'T-BRING); 7 collision-range Oak-ADR
   cites disambiguated cross-host; `pnpm agent-tools:*` aliases wired. Phase 3 — skills (18 brought + localised; castr
@@ -93,10 +99,11 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
   infrastructure (Oak tests assert `rejects.toThrow` / `toThrow(/missing adapter/)`) — truthfully reporting castr's P6/P8
   infra isn't installed yet. A 2026-06-07 trial fix was reverted; **Oak clean at `ad649710`, nothing pushed**. They
   self-clear when P6/P8 land. See `relevance-ledger.md` §"Deferred-validator …".
-- **Next steps — full detail in the tracker's "Next steps":** Steps 0–2 + Phase 4 ✅ done. **NEXT: Phase 5 —
-  Directives (7 generic, additive)**; then Step 3 residue folds at its phases (`PDR-089` Decision-7→P1; `.cursor`
-  adapter→P7; `documentation-hygiene.md` landed with P4). The scheduled **pre-Phase-9 Oak delta-sync** brings the
-  post-hold drift (`precedence-is-not-approval` + PDR-091 + any later KEEPs).
+- **Next steps — full detail in the tracker's "Next steps":** Phases 0–5 ✅ done. **NEXT: Phase 6 —
+  Sub-agents / memory / state** (opens with the memory-layout consolidation pass); then Step 3 residue folds at its
+  phases (`PDR-089` Decision-7→P1; `.cursor` adapter→P7; `documentation-hygiene.md` landed with P4). The pre-Phase-9
+  Oak delta-sync is **done** — Phase 5 folded the `ad649710`→pin rules-delta (`precedence-is-not-approval` + PDR-091 +
+  `verify-dont-trust` +6; no other KEEPs).
 - **Standing gotchas (firsthand-verified):** `.agent` is NOT prettier-ignored → `pnpm format` new docs every phase (and
   `check:ci`/pre-push does not run `fix`); some Oak markdown needs prettier `--write` TWICE to converge;
   `practice-fitness` informational-first never red-gates `principles.md`; transplanted surfaces'
@@ -193,7 +200,9 @@ be fixed, mostly now; sequencing in the current plan is acceptable; an undefined
 record claiming the owner parked the product slice was a fabricated attribution, repudiated and corrected
 2026-06-09. A fresh reproduced product regression pre-empts the sequence.
 
-**Phases 0–4 are COMPLETE and green.** Phase 4 (tag `transplant/phase-4`, 2026-06-09): **80 Oak rules** (held
+**Phases 0–5 are COMPLETE and green.** Phase 5 (tag `transplant/phase-5`, 2026-06-15): 7 generic directives brought
+additive + per-surface reconciled; Oak rules-delta folded (`precedence-is-not-approval` + PDR-091 + `verify-dont-trust`
++6) → 86 canonical rules / 92 PDR files. Phase 4 (tag `transplant/phase-4`, 2026-06-09): **80 Oak rules** (held
 `ad649710` forms) + castr's 5 = **85 canonical rules** + root `RULES_INDEX.md` (85 rows, index↔disk verified); every
 body read firsthand and reconciled per-surface; `use-result-pattern` dropped (contradicts `principles.md`
 fail-fast — the 9th DON'T-BRING); collision-range Oak-ADR cites disambiguated; `pnpm agent-tools:*` root aliases
@@ -204,18 +213,18 @@ wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplan
 **Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/napkin.md` latest entries (`2026-06-07` + `2026-06-05`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
 **Next executable steps (in order, owner-directed):** Steps 0–2 and **Phase 4 ✅ done** (see the tracker's per-phase
-blocks). **NEXT: Phase 5 — Directives (7 generic, additive):** `agent-collaboration`, `continuity-practice`,
-`definition-of-delivery`, `operationalisation-contract`, `orientation`, `tdd-as-design`, `user-collaboration`; sacred
-castr directives untouched; `schema-first-execution.md` stays DON'T-BRING; the Phase-4 rules' P5 directive
-placeholders resolve here; reconcile castr's `tdd.md` rule against the arriving `tdd-as-design`. **Carry the Phase-4
-lessons:** classification reads lie, bodies do not (a KEEP rule contradicted principles doctrine); transplanted
-enforcement data is contract-tested (policy.json ↔ its tests move in lockstep — change both together);
-directive-section cites in Oak surfaces are claims to verify against castr's actual headings; protection labels mean
-edit-with-rigour, never park-the-defect (owner, 2026-06-09: known issues are always blocking — the
-`principles.md:1729` finding was fixed same-day and `stale-script` flipped blocking). **Oak baseline (2026-06-10):
-PINNED on the dedicated branch `practice/transplant-to-castr` @ `4470266`** — supersedes the `ad649710` hold and
-absorbs the previously scheduled pre-P9 delta-sync; Phase-5 grounding re-checks the `.agent/rules/` delta
-`ad649710`→pin (known: `precedence-is-not-approval` + PDR-091) and folds new KEEPs there.
+blocks). **NEXT: Phase 6 — Sub-agents / memory / state:** 13 generic sub-agent templates + `components/`; full
+patterns (provenance-amended, index regenerated, drop ~2 UI); executive (regenerated catalogues); operational;
+collaboration schemas + empty dirs. **Opens with a consolidation pass** — reconcile castr's flat `memory/napkin.md` +
+`memory/distilled.md` into the Oak `active/` layout (the Phase-5 directives already cite
+`memory/active|operational|executive/…` as forward-placeholders that resolve here), drain the napkin, graduate
+captured learnings. **Carry the Phase-3/4/5 lessons:** classification reads lie, bodies do not; transplanted
+enforcement data is contract-tested (change data ↔ its tests together); directive-section cites in Oak surfaces are
+claims to verify against castr's actual headings (Phase 5 caught a false `§Code Quality` TDD cite → `§Testing
+Standards`); Oak-local plan citations in permanent docs violate `no-moving-targets` — de-link them; protection labels
+mean edit-with-rigour, never park-the-defect. **Oak baseline: PINNED `practice/transplant-to-castr` @ `4470266`** (tip
+`518b34af` adds only castr's back-flow doc; directives byte-identical) — the `ad649710`→pin rules-delta was folded at
+Phase 5.
 
 **Standing disciplines (active from message 1):**
 

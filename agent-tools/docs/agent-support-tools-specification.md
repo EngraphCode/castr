@@ -577,5 +577,5 @@ All gates must pass.
 - [OpenAI Apps SDK Reference](../openai-apps/openai-apps-sdk-reference.md)
 - [OpenAI Apps Build MCP Server](../openai-apps/openai-apps-sdk-build-mcp-server.md)
 - [MCP TypeScript SDK](../mcp-typescript-sdk-readme.md)
-- [Testing Strategy](../../directives/testing-strategy.md)
-- [Schema-First Execution](../../directives/schema-first-execution.md)
+- [Testing Strategy](../../.agent/directives/testing-strategy.md)
+- [Schema-first execution doctrine (castr keeps it in requirements.md)](../../.agent/directives/requirements.md)

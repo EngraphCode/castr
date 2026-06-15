@@ -43,7 +43,7 @@ which case the link _targets_ (not the references) get neutralised to plain text
 
 ### PDR → PDR citations — disposition: **resolve**
 
-90 distinct intra-PDR cites; all 91 PDR files (89 numbered slots — PDR-086 vacant, inherited from Oak; PDR-076 split into 076/076a/076b) transplanted together, so every intra-PDR reference resolves. ✓
+90 distinct intra-PDR cites; every transplanted PDR file (now 92 files / 90 numbered slots — PDR-086 vacant, inherited from Oak; PDR-076 split into 076/076a/076b; PDR-091 folded at Phase 5) resolves, so every intra-PDR reference resolves. ✓
 
 ### PDR / practice-verification → no `@oaknational`/`oak-` naming
 
@@ -287,3 +287,80 @@ clerk-expert).
 
 **Phase-4 result: 0 `rewrite`-class entries remain open in touched files; all dangles are
 `placeholder`(→P5/P6/P7/P8) or `retained-cross-host`.**
+
+---
+
+## Phase 5 — Directives (7 generic, additive) + Oak rules-delta fold
+
+7 directives brought from the pinned Oak branch (`practice/transplant-to-castr`, read at pinned commit `4470266`;
+verified that the branch tip `518b34af` differs only by one file — castr's own back-flow feedback doc — so the 7
+directives, `AGENT.md`, and `principles.md` are byte-identical at pin and tip). Brought additively; the PRESERVE'd
+sacred directives (`principles`, `requirements`, `testing-strategy`, `AGENT`, `metacognition`) were not overwritten —
+`AGENT.md` gained an additive index of the 7. `schema-first-execution.md` stays DON'T-BRING.
+
+### Naming + host-product reconciliation — disposition: **rewrite (done)**
+
+- `continuity-practice.md` + `operationalisation-contract.md`: `oak-consolidate-docs` / `/oak-consolidate-docs` →
+  `consolidate-docs` (castr's canonical skill).
+- `definition-of-delivery.md`: `@oaknational/*` → `@engraph/*`; dropped the Oak-only "(per ADR-162)" telemetry cite and
+  the Oak EEF gate-1a "first application" cross-ref; `docs/engineering/` split-strategy → `docs/architecture/`.
+- `operationalisation-contract.md` mechanism catalogue reconciled to castr surfaces: `.claude/agents/`/`.cursor/`/`.agents/`
+  → `.agent/sub-agents/` (+ adapters); `packages/core/oak-eslint/` → `lib/eslint-rules/` (+ `lib/eslint.config.ts`);
+  `docs/architecture/architectural-decisions/` → `docs/architectural_decision_records/`; `docs/governance/*.md` →
+  `docs/architecture/*.md`.
+- `tdd-as-design.md`: false `principles.md §Code Quality` cite → castr's real `§Testing Standards` (the
+  **MANDATORY: TDD** block); Oak `validation-strategy.md` + `validation-and-tdd-doctrine-restructure` plan refs and the
+  `docs/engineering/testing-{tdd-recipes,patterns}.md` cross-refs → castr's `testing-strategy.md` (its real recipe home);
+  added a castr-headless grounding note to the scales table (UI/a11y/visual apply to companion UI workspaces, not `lib`);
+  rule-surface list now names castr's `tdd.md` + `tdd-for-refactoring.md` (bidirectional with the tdd.md-rule reconcile).
+- `agent-collaboration.md`: the two Oak-local **plan** citations (`multi-agent-collaboration-protocol.plan.md`,
+  `gate-recovery-cadence.plan.md`) de-linked to plain text — they were `permanent → ephemeral` + cross-host, forbidden
+  by `no-moving-targets-in-permanent-docs` (the rule `operationalisation-contract.md` itself cites); the build invariant
+  re-attributed to castr's `principles.md §Strict And Complete` + `dont-break-build-without-fix-plan` rule.
+- `orientation.md`: removed `schema-first-execution` from the Doctrine-layer row (DON'T-BRING); listed castr's real
+  doctrine set.
+- `user-collaboration.md`: port-clean (its only non-castr refs are bare Oak-ADR mentions = retained-cross-host).
+
+### Phase-3/4 placeholders pointing here — disposition: **resolve** ✓
+
+All `→P5` directive placeholders recorded in §Phase 3 and §Phase 4 now resolve on disk: skill→directive
+(`orientation`/`tdd-as-design`/`continuity-practice` from `start-right`/`session-handoff`/`napkin`) and rule→directive
+(`agent-collaboration`/`user-collaboration`/`orientation` from the collaboration + memory-drift rules). Reverse-closure
+audit confirmed every inbound reference lands on `.agent/directives/<name>.md`.
+
+### Forward placeholders out of the directives — disposition: **placeholder**
+
+The directives reference castr-future surfaces that land at later phases (left as forward-links to correct future castr
+paths, exactly as Phases 3–4): `.agent/memory/{active,operational,executive}/…` incl. `repo-continuity.md`,
+`threads/`, `collaboration-state-conventions.md`, `agent-collaboration-channels.md`, the patterns library, and
+`napkin.md`/`distilled.md` at their `active/` home → **P6**; `.agent/state/collaboration/…` (schemas, claims, comms,
+conversations, escalations) → **P8**; `.gemini`/`.windsurf` adapters → **P7**.
+
+### Retained-cross-host — disposition: **retained-cross-host**
+
+Bare Oak-ADR mentions (`ADR-150`, `ADR-125` in `agent-collaboration`; `ADR-166` in `user-collaboration`) — honest origin
+references > castr ADR-047, exactly the Phase-1/3/4 disposition. The `agent-collaboration` Founding Pattern (Frodo/Pippin/
+Jazzy 2026-04 incidents) is retained as honest origin history, not a castr claim.
+
+### Oak rules-delta fold (`ad649710` → pin) — disposition: **resolve**
+
+The pinned-branch rules delta since the held baseline was exactly: new rule `precedence-is-not-approval.md` (+ its
+portable backing `PDR-091-precedence-is-not-approval.md`) and a 6-line append to `verify-dont-trust.md`. All folded:
+the rule (canonical only — forwarder tiers remain P7 for all transplanted rules) + `RULES_INDEX.md` row (86 rows == 86
+files); PDR-091 + `decision-records/README.md` index row (PDR estate 91→**92 files / 90 numbered slots**; the drift
+validator's definite count-claims updated in this ledger + the tracker); the verify-dont-trust status-pointer append.
+Its 5 composition cross-refs (`verify-dont-trust`, `no-tombstones-for-removed-ideas`, `present-verdicts-not-menus`,
+`owner-attention-at-action-moments`, PDR-091) all resolve.
+
+### DON'T-BRING closure + discovered Phase-2-doc residue
+
+`schema-first-execution.md` DON'T-BRING closure: the dangling `agent-tools/docs/agent-support-tools-specification.md`
+reference (a Phase-2 localisation miss pointing at the never-brought directive on a wrong `../../directives/` path) →
+repointed to castr's schema-first home `requirements.md` with the correct `../../.agent/directives/` path; its sibling
+`testing-strategy` link on the same broken path fixed too. **Discovered (scoped to a later Phase-2-doc cleanup, not
+Phase 5):** that doc's References section also carries Oak-product links (`ADR-058`/`ADR-059` under Oak's
+`docs/architecture/architectural-decisions/`, OpenAI-apps / MCP-SDK refs) — recorded here so the residue is not lost.
+
+**Phase-5 result: 0 `rewrite`-class entries remain open in touched files; all dangles are `placeholder`(→P6/P7/P8) or
+`retained-cross-host`. The Oak rules-delta is folded; the PDR/rule counts and the drift-checked count-claims are
+consistent with disk.**
