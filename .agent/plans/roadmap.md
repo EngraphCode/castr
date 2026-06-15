@@ -188,7 +188,7 @@ Closure record: [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-ful
 - Phase C is complete: OAuth 2.0 Device Authorization flow, XML `nodeType`, and strict top-level path-templating validation/proof are landed honestly
 - Phase D is complete: Example Object `dataValue` / `serializedValue` semantics are landed honestly across the native 3.2 seam
 - Phase E is complete: `itemSchema` streaming is preserved through the OpenAPI parser/IR/writer path, `additionalOperations` is stored separately per ADR-046 and exposed end to end downstream, and non-OpenAPI downstreams fail fast on reachable `itemSchema`
-- The direct successor primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md)
+- The direct successor primary active plan is [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md)
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 
