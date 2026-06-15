@@ -136,15 +136,19 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   turned off.** To avoid forcing complex refactors ad-hoc, the in-flight rules (the sonarjs-4.0.3 recommended-set
   additions now erroring) **may be set to `warn` transitionally** — and the **DoD requirement** is that **every one
   is back to `error` before the deep enhancement is considered complete** (recorded in
-  [`DEFINITION_OF_DONE.md`](../../directives/DEFINITION_OF_DONE.md) §Transitional gate states). Current red (firsthand,
-  2026-06-10): **126 errors = 121 `sonarjs/function-return-type` + 5 `sonarjs/in-operator-type-error`**, all in
-  `lib/src/schema-processing/**`; `function-return-type` collides with castr's deliberate discriminated-union returns
-  (IR/writer architecture). sonarjs enters via `sonarjsConfigs.recommended` (`lib/eslint.config.ts:86`); the repo
-  already tunes individual sonarjs rules there (precedent of mechanism only — **never a warrant to disable**, per
-  `precedence-is-not-approval`). **Turnkey first action:** set the two rules to `warn` (NOT off) in
-  `lib/eslint.config.ts`, verify `lint` does not run `--max-warnings 0` (relax transitionally if it does — still not
-  disabling), then refactor to satisfy each rule and flip back to `error`. The 5 `in-operator` hits look like genuine
-  narrowing fixes and may resolve directly.
+  [`DEFINITION_OF_DONE.md`](../../directives/DEFINITION_OF_DONE.md) §Transitional gate states). **Status (2026-06-15):**
+  the warn-downgrade is DONE (commit `3b3f0d9`; **126 warnings** = 121 `sonarjs/function-return-type` + 5
+  `sonarjs/in-operator-type-error`, all under `lib/src/schema-processing/**`; both `warn`, never off, set in
+  `lib/eslint.config.ts` after `sonarjsConfigs.recommended`). **The `warn → error` resolution is NOT yet confirmed.**
+  A 2026-06-15 investigation ([`d1-sonarjs-findings.md`](./d1-sonarjs-findings.md)) found the earlier
+  _"function-return-type collides with discriminated-union returns"_ framing was **wrong** (the rule excludes
+  null-like and collapses all object types), and could **not** determine whether the violations are genuine
+  inconsistencies, undocumented-function debt, or something else — so it could not say whether the fix is code
+  changes or a justified rule-selection. **That report's conclusions are explicitly suspect** (its author was
+  repeatedly wrong); its value is the `[VERIFIED]` facts + the measurement steps it names. **Next: measure what the
+  rules actually see (report §8) before deciding.** Owner doctrine stands — no rule ever off; `warn` is transitional,
+  not a resting state — but whether the end-state is `error` or a ratified rule-selection is the open question the
+  measurement must settle.
 - **D2 — Node version policy + single source.** Owner decision (2026-06-10): **Node 24 everywhere; stable LTS is
   always the right choice; advance to 26 only once GitHub _and_ Vercel support it** (named tripwire, not a date).
   Owner already executed the config: `engines: "24.x"` (root + `lib`), CI collapsed to single Node 24 (matrix

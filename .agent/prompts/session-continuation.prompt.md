@@ -22,9 +22,12 @@ This block is current truth only. Branch/delivery state lives in
 - **The branch is `check:ci`-GREEN end-to-end** (verified first-hand via pre-push, 2026-06-15) — through `test:all`/
   `test:e2e`. First time it has been provably green: lint-red had been **masking** two knip failures (`check:ci` stops
   at the first failure), so "green except lint" was false. Both knip failures are now fixed (see below).
-- **D1 lint — step 1 DONE (commit `3b3f0d9`):** `sonarjs/function-return-type` (121) + `sonarjs/in-operator-type-error`
-  (5) transitioned `error → warn` in `lib/eslint.config.ts` (NOT off; lint runs no `--max-warnings 0`). Lint exits 0.
-  **Remaining: the refactor `warn → error`** (the DoD completion gate before the deep enhancement is complete).
+- **D1 lint — warn-downgrade DONE (commit `3b3f0d9`):** `sonarjs/function-return-type` (121) +
+  `sonarjs/in-operator-type-error` (5) transitioned `error → warn` in `lib/eslint.config.ts` (NOT off; lint runs no
+  `--max-warnings 0`). Lint exits 0. **The `warn → error` resolution is UNCONFIRMED** — a 2026-06-15 investigation
+  ([`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md)) corrected an earlier
+  wrong analysis and could not yet say whether the fix is code changes or a ratified rule-selection. **Treat that
+  report's conclusions as suspect; measure before deciding** (report §8).
 - **knip fixed (commits `c622998`, `1363181`):** the lint fix unmasked two pre-existing knip failures, both fixed —
   6 dead char-test exports removed; `commitlint` installed + wired (`@commitlint/cli` + `config-conventional` +
   root `commitlint.config.mjs`), which also made the agent-tools `check-commit-message` validator operational (it had
@@ -38,8 +41,9 @@ This block is current truth only. Branch/delivery state lives in
   to `error` before the deep enhancement is complete (`DEFINITION_OF_DONE.md` §Transitional gate states; D1). NOT disabling.
 - **Owner decision 3 — scope:** the deep enhancement is broader than Phases 0–9 (CI to the Oak SHA-pinned-actions
   standard, plus quality-gate and Practice parity; D1–D4). "Phases done" is not "deep enhancement complete".
-- **Turnkey next steps:** (a) **D1 refactor** — `warn → error` for the two sonarjs rules (121 `function-return-type`
-  collide with castr's deliberate discriminated-union returns; 5 `in-operator` are genuine narrowing fixes); (b)
+- **Turnkey next steps:** (a) **D1 `warn → error`** — UNCONFIRMED path; first **measure what the rules actually flag**
+  (the earlier "collides with discriminated-union returns" claim was disproven) per
+  [`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md) (suspect — re-derive); (b)
   **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 5** (Directives — ground with owner).
 - **Oak:** PINNED on `practice/transplant-to-castr` @ `4470266` (no moving target; castr commits AND pushes
   back-flow/feedback directly in Oak).
