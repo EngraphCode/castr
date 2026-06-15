@@ -33,7 +33,7 @@ This block is current truth only. Branch/delivery state lives in
   root `commitlint.config.mjs`), which also made the agent-tools `check-commit-message` validator operational (it had
   been a phantom — no `commitlint` was installed). No enforcing `commit-msg` hook (owner).
 - **Plan-of-record sequence (owner):** (1) deep-review remediation backlog 01→07 — **01 COMPLETE + merged in**, **02**
-  in `active/`, next to execute; (2) Practice transplant Phases 5–9 + the engineering-infrastructure arc D1–D4 (tracker
+  in `active/`, next to execute; (2) Practice transplant Phases 6–9 (0–5 done) + the engineering-infrastructure arc D1–D4 (tracker
   §Deep-enhancement arc); (3) `explicit-additional-properties-support` (paused, pos 3). All on the single branch.
 - **Owner decision 1 — Node:** 24 everywhere; stable-LTS always; advance to 26 only once GitHub _and_ Vercel support
   it. Config executed (`engines: 24.x`, single-Node-24 `ci.yml`); single-source `.nvmrc` and ADR-048 remain as D2.
@@ -56,9 +56,9 @@ This block is current truth only. Branch/delivery state lives in
 > current plan is acceptable; an undefined 'later' is never"): (1) NOW — the deep-review remediation backlog**
 > ([`remediation/`](../plans/remediation/), plans 01→07 in order; **01 COMPLETE — draft PR #1 open + CI-green**;
 > **02** promoted to `active/`, next to execute; branch `fix/remediation-01-packaging-and-types` off
-> `docs/initial-deep-review`, PR'd to `main` independently — the 6 shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 5–9**
+> `docs/initial-deep-review`, PR'd to `main` independently — the 6 shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 6–9**
 > ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
-> [`transplant/README.md`](../plans/transplant/README.md), branch `feat/transplant-engraph-practice`, Phases 0–4
+> [`transplant/README.md`](../plans/transplant/README.md), branch `feat/transplant-engraph-practice`, Phases 0–5
 > complete and tagged); **(3) THEN — the product feature slice**
 > [`explicit-additional-properties-support.md`](../plans/current/paused/explicit-additional-properties-support.md)
 > (sequenced, not parked). A 2026-06-05 record claimed the owner "parked" item 3 — **the owner never gave that
@@ -85,7 +85,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
   grounding folded into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking
   `skills:check`); tag `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE
   PreToolUse guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
-  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak is held at `ad649710` as the working baseline.**
+  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak was held at `ad649710` through Phase 4 and is now PINNED at `4470266` — the Phase-5+ baseline (the `ad649710`→pin rules-delta was folded at Phase 5).**
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
   INFORMATIONAL (`--filter=!@engraph/agent-tools`; **13**/885 failures are later-phase content — the RULES_INDEX slice
@@ -239,8 +239,12 @@ Phase 5.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action:** read the surfaces above, then resume **sequence position 1 — the remediation backlog** at its
-current plan (01-packaging in flight; on completion promote the next plan in order). The transplant (Phases 5–9;
-ground Phase 5 — Directives — with the owner first) resumes at sequence position 2 from the tracker; Oak is held at
-`ad649710` (drift noted; final delta-sync scheduled pre-Phase-9). Carry the per-surface reconciliation lesson: Oak
-surfaces embed host-product specifics; bodies must be read, not classified.
+**First action (owner-directed, 2026-06-15):** continue the **Practice transplant — Phase 6 (Sub-agents / memory /
+state)** in a fresh session, grounding with the owner first. Phase 6 opens with the memory-layout consolidation pass
+(reconcile castr's flat `memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout that the Phase-5
+directives already forward-reference, then drain the napkin and graduate captured learnings). The documented
+plan-of-record still lists the remediation backlog at sequence position 1 (02 IR-fidelity harness next) and the
+product slice at position 3 — the owner has directed the transplant forward for now. Oak is PINNED at `4470266`. **Once
+reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so far** (owner,
+2026-06-15). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics; bodies must be
+read, not classified.
