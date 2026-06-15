@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-15
+
+- **Transplant Phase 5 LANDED — tag `transplant/phase-5` (commit `6895b4b`).** 7 generic directives brought additive +
+  the Oak rules-delta folded (`precedence-is-not-approval` + `PDR-091` + `verify-dont-trust` +6). The durable record is
+  the commit + `reference-closure.md` §Phase 5 + the tracker (per `permanent-doc-is-the-consolidation-record`); only the
+  surprises live here:
+  - **commitlint is now LIVE and enforces `subject-case`** (lowercase-start subject). `feat(transplant): Phase 5 …` was
+    REJECTED; `… phase 5 …` passed. The older `Phase 4` tag commit predates commitlint. Draft subjects lowercase-first;
+    validate with `pnpm exec commitlint --edit <file>` before `git commit`.
+  - **"Oak moved" was benign — measured before trusting.** The pin had advanced `4470266`→`518b34af`, but the delta is a
+    single file (castr's own back-flow feedback doc); all 7 directives + AGENT/principles are byte-identical at pin and
+    tip. Read Phase-5 estates at the pin `4470266`.
+  - **A foundational directive carried a false cross-host cite:** `tdd-as-design` cited `principles.md §Code Quality`
+    for TDD-as-non-negotiable; castr names it in §Testing Standards. Same class as the Phase-4 false principles-cites —
+    every directive-section cite is a claim to verify against castr's real headings.
+  - **The edit-surface-bounding rule for a directive transplant:** reconcile Oak-LOCAL refs NOW (Oak plans,
+    `@oaknational`, `oak-eslint`, `docs/engineering`, EEF, `oak-consolidate-docs`, Oak ADR paths); leave castr-FUTURE
+    refs (P6 memory, P8 state — correct future castr paths) as forward-placeholders, exactly as Phases 3–4. Oak-local
+    PLAN citations in a permanent doc also violate `no-moving-targets` — de-link, don't just leave.
+  - **Adding PDR-091 tripped the drift validator's count check** (it counts PDR files vs definite count-claims): the
+    estate went 91→92 files / 90 numbered slots; two definite "91-PDR"/"all 91 PDR" claims in the scanned ledgers had to
+    be recomputed. The validator working as designed — recompute counts, don't just record.
+  - **zsh word-splitting bit again:** `grep … $FILES` (newline-joined var) was read as one filename → false "CLEAN".
+    Known lesson held: pass explicit file args / globs, never an unquoted multi-file `$var`.
+
 ## 2026-06-10
 
 - **⭐ RULE CANDIDATE (owner-flagged 2026-06-10) — No Manufactured Permission to Bypass an Absolute.**
