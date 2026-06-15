@@ -59,10 +59,27 @@ pnpm test:e2e
 `pnpm packaging:check` (2026-06-09, remediation plan 01 / finding C1) verifies the **published package shape**:
 `publint --strict` lints the packed tarball's manifest/field integrity, and `attw --pack . --profile esm-only`
 (`@arethetypeswrong/cli`) proves every `exports` target's types and runtime files resolve for ESM consumers and
-bundlers — the package is deliberately ESM-only (`"type": "module"`, Node ≥ 22), so the CJS/node10 resolution modes
+bundlers — the package is deliberately ESM-only (`"type": "module"`, Node 24 LTS), so the CJS/node10 resolution modes
 are declared out of the support matrix rather than shimmed. The companion e2e proof
 (`lib/tests-e2e/packaging-integrity.test.ts`) packs the real tarball and imports every entrypoint as a consumer
 would, including the README's `parseZodSource` example and the CLI bin.
+
+## Transitional gate states (owner, 2026-06-10)
+
+**No quality-gate rule is ever turned off** — that is absolute (see `principles.md` §Strict And Complete, and
+`.agent/rules/never-disable-checks.md`). The single sanctioned transitional state, owner-directed, is a **severity
+downgrade to `warn`** for rules whose findings require complex refactors that must not be handled ad-hoc:
+
+- A rule may be set to `warn` (never `off`) while its violations are being refactored away deliberately.
+- **DoD requirement:** every such in-flight rule MUST be back at `error` before the deep enhancement of castr (the
+  Oak-Practice transplant arc, including engineering-infrastructure parity) can be considered complete. This is a
+  hard completion gate, not an undefined-later; the migration is tracked as deliverable **D1** in
+  [`.agent/plans/transplant/README.md`](../plans/transplant/README.md) §Deep-enhancement arc.
+- `warn` is never a resting state: a rule left at `warn` with no active migration and no completion gate is the
+  forbidden `gate-off-fix-gate-on` anti-pattern in disguise.
+
+In flight as of 2026-06-10: the sonarjs-4.0.3 recommended-set additions (`sonarjs/function-return-type`,
+`sonarjs/in-operator-type-error`) — see D1.
 
 Off-chain development aids (not in the canonical gate, green, documented honestly):
 

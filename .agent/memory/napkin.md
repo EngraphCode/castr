@@ -4,6 +4,39 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-10
 
+- **⭐ RULE CANDIDATE (owner-flagged 2026-06-10) — No Manufactured Permission to Bypass an Absolute.**
+  - **Trigger:** an absolute rule (no-disabling-checks, strict-everywhere, sacred-file protection, no-parking) is in
+    the way, and the impulse is to soften it via a permission structure — a label, an inherited/fabricated decision,
+    an undefined-later, or a **precedent** ("we already disabled 4 sonarjs rules, so this is fine").
+  - **Action:** the reach for label / precedent / special-case / "note it for later" **is the tripwire** — stop and
+    obey the absolute (fix now, or sequence with a _named_ position; never an undefined later, never a softened gate).
+  - **Evidence:** caught 4× this session — SACRED-label parking → fabricated "parked-in-place" → undefined
+    "CI-modernisation slice" → "precedent matters for the lint decision." Owner: _"no disabling checks, strict
+    everywhere all the time… no circumstance, including prior work, bypasses that rule."_
+  - **Authoring note:** likely a clause uniting existing rules (`precedence-is-not-approval`,
+    `rules-have-no-exceptions`, `never-disable-checks`) rather than a wholly new rule — `new-rule-vs-pdr-clause`
+    decides. Cross-refs [[nothing-is-sacred-engineering-discipline]], [[verify-agent-claims-firsthand]].
+
+- **Three owner decisions captured (2026-06-10, all now homed in the plan):**
+  1. **Node 24 everywhere; stable LTS is always the right choice; advance to 26 only once GitHub _and_ Vercel
+     support it** (named tripwire). Owner executed the config (`engines: 24.x` root+lib; `ci.yml` single-Node-24,
+     matrix removed). Remaining = single-source (`.nvmrc`/`node-version-file`) + ADR-048. → tracker D2.
+  2. **No lint rule ever off; in-flight rules MAY be `warn` transitionally; DoD = all back to `error` before the
+     deep enhancement is complete.** This is the doctrine-correct resolution of the 126-error lint red (it is NOT
+     disabling — `warn` still runs+reports, with a hard completion gate). → `DEFINITION_OF_DONE.md` §Transitional
+     gate states + tracker D1.
+  3. **The deep enhancement is broader than Phases 0–9** — "plenty more Practice, rules, agent tool, agentic
+     engineering, CI, quality gates" to bring over; CI to the Oak SHA-pinned-actions standard. → tracker
+     §Deep-enhancement arc D1–D4. "Phases done" ≠ "deep enhancement complete."
+- **PR #1 verified GREEN firsthand** (Build 24.x + 26.x + Analyze + CodeQL all SUCCESS; mergeable; no review
+  comments). CI does not run lint, so the local lint-red is not a PR blocker. Cross-branch `ci.yml` drift noted in
+  the delivery ledger (remediation branch `[24.x,26.x]` vs transplant single-24).
+- **Adversarial sweep (session-handoff step 11) findings + fixes:** (a) `DEFINITION_OF_DONE.md` packaging paragraph
+  said "Node ≥ 22" — stale under the Node-24 decision → fixed to "Node 24 LTS". (b) delivery-ledger PR#1 row said
+  "CI (Node 24/26) should run build+test" (speculative/future-tense) → replaced with the verified-green result. (c)
+  Confirmed no other surface still says Node 22 / `>=24` / `[24.x,26.x]`-as-intended (grep below). The owner's own
+  config edits (engines 24.x, single-node ci.yml) are owner-authored, preserved verbatim, committed this close.
+
 - **pnpm toolchain integrity + release-age cooldown fixed on branch `fix/remediation-01-packaging-and-types` (commit `31ba0f0`, committed with `--no-verify` by one-time user grant).** Symptom reported: `pnpm check` triggered an install that "replaced the lockfile" and left `turbo: command not found`, with turbo flapping in/out of `node_modules/.bin` across identical runs. Three distinct root causes, all first-hand verified:
   - **Dominant cause — `pnpm` was a devDependency (`^10.33.0` → installed `10.34.1`).** pnpm puts `node_modules/.bin` first on `PATH`, so every nested `pnpm` call inside the `check` script (`clean && install && fix && qg`) ran **10.34.1**, while the terminal ran the `packageManager`-pinned **11.5.2**. The two versions fought over `node_modules`/the lockfile each run (the "reinstall from scratch" prompt + `ERROR Worker pnpm#4 exited with code 1`, stack rooted in `node_modules/.pnpm/pnpm@10.34.1/.../pnpm.cjs`). This is the engine of the churn, flapping, and crash. Fix: removed the devDependency; `packageManager: pnpm@11.5.2` is the single source of truth. It was vestigial since the initial commit and referenced nowhere.
   - **Secondary — pnpm v11 default `minimumReleaseAge: 1440` (24h supply-chain cooldown) held back `turbo@2.9.17`** (published 2026-06-09T16:10Z, ~6h before the session). pnpm fetched turbo to the store but refused to _link_ it until 24h old; since every script is `turbo …`, the whole toolchain broke. The pre-existing `minimumReleaseAgeExclude` was a brittle `name@version` list (`turbo@2.9.17` + 6 platform entries) — **and it was pnpm auto-generated**, not hand-written: under non-strict fallback pnpm appends the too-new `name@version` ids to the exclude list itself (proved in a temp probe: `Added 7 entries to minimumReleaseAgeExclude … (set minimumReleaseAgeStrict to true to gate these updates with a prompt)`). Fix: replaced with durable name/glob `- turbo` / `- '@turbo/*'` (matching is by package name, all versions; the correct documented form), and set `minimumReleaseAge: 1440` + `minimumReleaseAgeStrict: true` **explicitly** so the value is visible and resolution **fails fast** (`ERR_PNPM_NO_MATURE_MATCHING_VERSION`) instead of silently adopting a fresh release. Strict was confirmed empirically: explicit age → install fails on a too-new-only range; `minimumReleaseAgeStrict: false` → silent fallback + auto-exclude.

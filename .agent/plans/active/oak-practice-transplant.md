@@ -6,7 +6,7 @@
 **Authoritative spec:** [`practice-alignment-brief.md`](../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `/Users/jim/code/project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 **Phase tracker:** [`../transplant/README.md`](../transplant/README.md)
-**Parked-in-place (non-primary):** [`explicit-additional-properties-support.md`](./explicit-additional-properties-support.md)
+**Sequence position 3 (paused, never "parked"):** [`explicit-additional-properties-support.md`](../current/paused/explicit-additional-properties-support.md) — see [`../roadmap.md`](../roadmap.md) plan-of-record sequence.
 
 > Permanent architecture truth belongs in `docs/architecture/*`, ADRs, and the transplanted `.agent/practice-core/`
 > (PDRs). This plan is the execution contract; it does not duplicate doctrine.

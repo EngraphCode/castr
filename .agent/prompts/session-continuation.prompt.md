@@ -6,24 +6,33 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ---
 
-## Latest session (2026-06-10) — pnpm toolchain fix on `fix/remediation-01-packaging-and-types`
+## Current state (2026-06-10 close) — read this first
 
-> A focused infra detour while remediation-01 is in flight. Full detail in [napkin 2026-06-10](../memory/napkin.md).
->
-> - **Committed `31ba0f0`** (pnpm-fix only: `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`), made with **`--no-verify` under a one-time grant**. `pnpm check` was breaking with `turbo: command not found` / lockfile churn / `Worker pnpm#4 exited with code 1`. Three causes: (1) a stray `pnpm` devDependency (10.34.1) shadowing the `packageManager` pnpm 11.5.2 inside scripts — **removed**; (2) pnpm v11's default 24h `minimumReleaseAge` holding back same-day-published `turbo@2.9.17` — fixed with explicit `minimumReleaseAge: 1440` + `minimumReleaseAgeStrict: true` and durable name/glob `minimumReleaseAgeExclude` (`turbo`, `@turbo/*`); (3) `check` now uses `pnpm install --frozen-lockfile`.
-> - **⚠️ Lint is red on this branch** — 126 `sonarjs/function-return-type` errors (sonarjs recommended preset, after the 4.0.2→4.0.3 bump in the regenerated lockfile). **User confirmed this is a known new stricter rule, not a real failure, and is handling it separately** — do not fix it here, and the `--no-verify` grant was single-use.
-> - **Uncommitted remediation-01 work remains intact/unstaged** (plan-file moves, `lib/**` edits, 4 untracked test/build files). The pnpm commit deliberately touched none of it.
-> - **LATER THE SAME DAY (session close):** plan-01 work restored + completed and COMMITTED on the remediation branch
->   (`a2c86ab` product + `e1eaffc` continuity; plan 01 → `current/complete/`, plan 02 promoted; Node 24/26 + CI
->   matrix/pnpm-action fixes included). The remediation branch was then **merged into this transplant branch**
->   (owner-sanctioned; merge `8ed2b0a` + napkin repair `62c529c`) so pnpm 11 governs here too — `skills:check` and
->   all 5 blocking validators verified green under pnpm 11.5.2. **Lint stays red repo-wide (the sonarjs shift) —
->   owner-sequenced for DISCUSSION, do not fix or disable** (analysis brief: napkin 2026-06-10, lint-inventory
->   bullet). **Next acts:** push `fix/remediation-01-packaging-and-types` + open its PR to `main` (it carries the 2
->   deep-review commits + the pnpm-11 migration — concern-mix owner-accepted, name it in the PR body); then
->   remediation 02. **Branches/PRs per plan: [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md)** (the new
->   single home; monitor PR comments/CI per its discipline). **Oak is PINNED on `practice/transplant-to-castr` @
->   `4470266`** (owner; no more moving target; castr commits AND pushes back-flow/feedback directly in Oak).
+Detailed session history (pnpm toolchain root-causes, the merge, the fabricated-parking correction, the
+manufactured-permission rule candidate) is in [napkin 2026-06-10](../memory/napkin.md). This block is current truth only.
+
+- **Branch:** `feat/transplant-engraph-practice` (this branch; pnpm 11.5.2 and Node 24 govern; the remediation-01
+  work is merged in). All branches and `transplant/*` tags are PUSHED to `EngraphCode/castr`.
+- **Plan-of-record sequence (owner):** (1) deep-review remediation backlog 01→07 — **01 COMPLETE**, draft PR #1 OPEN
+  and CI-GREEN (Build 24.x, Build 26.x, Analyze, CodeQL; mergeable; no comments), **02** promoted to `active/` and
+  next to execute; (2) Practice transplant Phases 5–9 plus the engineering-infrastructure arc D1–D4 (tracker
+  §Deep-enhancement arc); (3) `explicit-additional-properties-support` (paused, sequence pos 3). Branch/PR state:
+  [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home; monitor PR comments/CI per its discipline).
+- **Owner decision 1 — Node:** 24 everywhere; stable-LTS always; advance to 26 only once GitHub _and_ Vercel support
+  it. Config already executed (`engines: 24.x`, single-Node-24 `ci.yml`); single-source and ADR-048 remain as D2.
+- **Owner decision 2 — lint:** no rule ever off; in-flight rules MAY be `warn` transitionally; DoD requires all back
+  to `error` before the deep enhancement is complete (`DEFINITION_OF_DONE.md` §Transitional gate states; D1). The
+  doctrine-correct path for the 126-error lint red — this is NOT disabling.
+- **Owner decision 3 — scope:** the deep enhancement is broader than Phases 0–9 (CI to the Oak SHA-pinned-actions
+  standard, plus quality-gate and Practice parity; D1–D4). "Phases done" is not "deep enhancement complete".
+- **Turnkey next steps:** (a) **D1 lint** — set `sonarjs/function-return-type` and `sonarjs/in-operator-type-error`
+  to `warn` (NOT off) in `lib/eslint.config.ts`, confirm `lint` carries no `--max-warnings 0`, then refactor each to
+  `error`; (b) **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 5** (Directives —
+  ground with owner).
+- **Push note:** lint is red repo-wide until D1 starts, so pushing needs the D1 warn-fix first or a per-invocation
+  owner hook-skip grant. Committing does NOT hit lint (pre-commit is format-only); only pre-push runs `check:ci`.
+- **Oak:** PINNED on `practice/transplant-to-castr` @ `4470266` (no moving target; castr commits AND pushes
+  back-flow/feedback directly in Oak).
 
 ---
 
@@ -31,9 +40,9 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 > 🔀 **PLAN-OF-RECORD SEQUENCE (owner, 2026-06-09 — "all issues MUST be fixed, mostly now; sequencing in the
 > current plan is acceptable; an undefined 'later' is never"): (1) NOW — the deep-review remediation backlog**
-> ([`remediation/`](../plans/remediation/), plans 01→07 in order; 01 in flight on branch
-> `fix/remediation-01-packaging-and-types` off `docs/initial-deep-review`, PR'd to `main` independently — the 6
-> shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 5–9**
+> ([`remediation/`](../plans/remediation/), plans 01→07 in order; **01 COMPLETE — draft PR #1 open + CI-green**;
+> **02** promoted to `active/`, next to execute; branch `fix/remediation-01-packaging-and-types` off
+> `docs/initial-deep-review`, PR'd to `main` independently — the 6 shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 5–9**
 > ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
 > [`transplant/README.md`](../plans/transplant/README.md), branch `feat/transplant-engraph-practice`, Phases 0–4
 > complete and tagged); **(3) THEN — the product feature slice**
@@ -47,7 +56,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
 (baseline `transplant/phase-0-baseline`). **Read first:** `.agent/plans/active/oak-practice-transplant.md` (contract) →
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
-inventory/dispositions) → the napkin's latest entries (`2026-06-09` + `2026-06-07`: Phase-4 lessons, firsthand corrections, build gotchas, the validator non-bug reframe).
+inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions + rule candidate, `2026-06-09` Phase-4 lessons, `2026-06-07` firsthand corrections).
 
 - **Status:** Phases 0–4 ✅. **Phase 4 (2026-06-09, tag `transplant/phase-4`)** — 80 Oak rules (ad649710) + castr's 5
   = 85 canonical rules + root `RULES_INDEX.md` (85 rows, index↔disk verified); per-rule firsthand reconciliation;
