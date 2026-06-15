@@ -507,4 +507,28 @@ export default defineConfig(
       'sonarjs/no-empty-test-file': 'off',
     },
   },
+
+  // ---------------------------------------------------------------------------
+  // D1 — Transitional severity (owner decision, 2026-06-10). NOT disabled.
+  // ---------------------------------------------------------------------------
+  // The sonarjs-4.0.3 recommended-set additions below are downgraded error ->
+  // warn while their violations are refactored away deliberately (warn still
+  // runs and reports — no rule is ever turned off; see
+  // .agent/rules/never-disable-checks.md and principles.md §Strict And Complete).
+  //
+  // HARD COMPLETION GATE: both MUST be restored to 'error' before the
+  // deep-enhancement arc is complete. Tracked as deliverable D1 in
+  // .agent/plans/transplant/README.md §Deep-enhancement arc and
+  // .agent/directives/DEFINITION_OF_DONE.md §Transitional gate states.
+  //   - sonarjs/function-return-type (121 hits): collides with castr's
+  //     deliberate discriminated-union returns (the IR/writer architecture) —
+  //     refactor deliberately, then re-error.
+  //   - sonarjs/in-operator-type-error (5 hits): genuine type-narrowing fixes —
+  //     resolve directly, then re-error.
+  {
+    rules: {
+      'sonarjs/function-return-type': 'warn',
+      'sonarjs/in-operator-type-error': 'warn',
+    },
+  },
 );
