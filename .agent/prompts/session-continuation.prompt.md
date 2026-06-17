@@ -49,8 +49,9 @@ This block is current truth only. Branch/delivery state lives in
   (the earlier "collides with discriminated-union returns" claim was disproven) per
   [`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md) (suspect — re-derive); (b)
   **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 6** (Sub-agents / memory / state).
-- **Oak:** PINNED on `practice/transplant-to-castr` @ `4470266` (no moving target; castr commits AND pushes
-  back-flow/feedback directly in Oak).
+- **Oak:** RE-PINNED to Oak `main` `ad359a4f` (owner, 2026-06-17) — a clean superset of the former pin `4470266`
+  (+429 commits, no merge cost); Phases 6–9 source from main. Back-flow target is now OPEN (deferred to Phase 9). The
+  pin→main bring-manifest with named positions is in `relevance-ledger.md` §Main re-pin delta.
 
 ---
 
@@ -97,7 +98,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
   grounding folded into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking
   `skills:check`); tag `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE
   PreToolUse guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
-  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak was held at `ad649710` through Phase 4 and is now PINNED at `4470266` — the Phase-5+ baseline (the `ad649710`→pin rules-delta was folded at Phase 5).**
+  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak was held at `ad649710` through Phase 4, pinned at `4470266` for Phase 5, and is now RE-PINNED to `main` `ad359a4f` (owner, 2026-06-17) for Phases 6–9 — a clean superset of the pin (the `ad649710`→pin rules-delta was folded at Phase 5; the pin→main delta is the bring-manifest in `relevance-ledger.md`).**
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
   INFORMATIONAL (`--filter=!@engraph/agent-tools`; **13**/885 failures are later-phase content — the RULES_INDEX slice
@@ -229,16 +230,17 @@ wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplan
 **Next executable steps (in order, owner-directed):** Steps 0–2 and **Phase 4 ✅ done** (see the tracker's per-phase
 blocks). **NEXT: Phase 6 — Sub-agents / memory / state:** 13 generic sub-agent templates + `components/`; full
 patterns (provenance-amended, index regenerated, drop ~2 UI); executive (regenerated catalogues); operational;
-collaboration schemas + empty dirs. **Opens with a consolidation pass** — reconcile castr's flat `memory/napkin.md` +
-`memory/distilled.md` into the Oak `active/` layout (the Phase-5 directives already cite
-`memory/active|operational|executive/…` as forward-placeholders that resolve here), drain the napkin, graduate
-captured learnings. **Carry the Phase-3/4/5 lessons:** classification reads lie, bodies do not; transplanted
+collaboration schemas + empty dirs. **Opening consolidation pass IN PROGRESS** (slice `5a264a7`): the flat memory was
+moved into the Oak `active/` layout (the Phase-5 directives' `memory/active|operational|executive/…` forward-placeholders
+now resolve on disk), `ephemeral-to-permanent-homing.md` is in place, and the generator-triage generic fold landed.
+**The napkin drain is the next step** — see the First action block below and sub-plan `06` §4 for the exact sequence. **Carry the Phase-3/4/5 lessons:** classification reads lie, bodies do not; transplanted
 enforcement data is contract-tested (change data ↔ its tests together); directive-section cites in Oak surfaces are
 claims to verify against castr's actual headings (Phase 5 caught a false `§Code Quality` TDD cite → `§Testing
 Standards`); Oak-local plan citations in permanent docs violate `no-moving-targets` — de-link them; protection labels
-mean edit-with-rigour, never park-the-defect. **Oak baseline: PINNED `practice/transplant-to-castr` @ `4470266`** (tip
-`518b34af` adds only castr's back-flow doc; directives byte-identical) — the `ad649710`→pin rules-delta was folded at
-Phase 5.
+mean edit-with-rigour, never park-the-defect. **Oak baseline: RE-PINNED to Oak `main` `ad359a4f` (owner, 2026-06-17)** —
+a clean superset of the former pin `4470266` (`4470266` is a direct ancestor of main, +429 commits, no merge cost);
+Phases 6–9 source from main. The `ad649710`→pin rules-delta was folded at Phase 5; the pin→main delta is enumerated with
+named positions in `relevance-ledger.md` §Main re-pin delta.
 
 **Standing disciplines (active from message 1):**
 
@@ -253,12 +255,16 @@ Phase 5.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action (owner-directed, 2026-06-17):** continue the **Practice transplant — Phase 6 (Sub-agents / memory /
-state)** in a fresh session, grounding with the owner first. Phase 6 opens with the memory-layout consolidation pass
-(reconcile castr's flat `memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout that the Phase-5
-directives already forward-reference, then drain the napkin and graduate captured learnings). This is **one deep
-enhancement** — Phase 6 is the slice the owner named next; the remediation backlog 02–07, the rest of the transplant +
-arc D1–D4, and the feature slice are all still required and unparked, not gated behind one another. Oak is PINNED at
-`4470266`. **Once reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so
-far** (owner, 2026-06-17). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
+**First action (next session, from 2026-06-17):** continue **Practice transplant — Phase 6 (memory)** on
+`feat/transplant-engraph-practice`, grounding with the owner first. **Phase 6 opening slice LANDED — commit `5a264a7`**
+(flat memory → Oak `active/` layout; `ephemeral-to-permanent-homing.md` brought, resolving 3 dangling Phase-3 refs;
+generator-triage generic fold; the main-delta bring-manifest). **Next: the napkin drain** — first seed the operational
+registers it writes into (`pending-graduations.md`, `open-questions.md`, `threads/README`, `tracks/README`, then
+`operational/README`), then drain the ~1509-line `active/napkin.md` through the now-current homing procedure, graduating
+the manufactured-permission rule candidate + transplant-method lessons. Full sequence + live status: sub-plan
+`06-memory-and-generator-consolidation.md` §4 (reorder a✅…g). This is **one deep enhancement** — Phase 6 is the slice the
+owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
+still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
+**Once reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so far** (owner,
+2026-06-17). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
 bodies must be read, not classified.
