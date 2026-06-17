@@ -33,21 +33,23 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
-> **PLAN-OF-RECORD SEQUENCE (owner, 2026-06-09 — "all issues MUST be fixed, mostly now; sequencing in the current
-> plan is acceptable; an undefined 'later' is never"):**
+> **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
+> skill+rule+subagent+hook definitions AND fix castr's known issues — the same goal, not competing priorities.** Owner
+> doctrine (2026-06-09): "all issues MUST be fixed, mostly now; sequencing with a named position is acceptable; an
+> undefined 'later' is never." All components live on the single branch `feat/transplant-engraph-practice` (2026-06-15
+> consolidation; see the [delivery ledger](./delivery-ledger.md)), none parked, and the owner names the next slice:
 >
-> 1. **NOW — deep-review remediation backlog** ([`remediation/`](./remediation/), plans **01→07** in their stated
->    order; **01 COMPLETE + merged in**, **02** next — all executed on the single branch
->    `feat/transplant-engraph-practice` per the 2026-06-15 single-branch consolidation; see
->    [delivery ledger](./delivery-ledger.md)). The 6 shipped Criticals outrank practice infrastructure.
-> 2. **NEXT — Oak → castr Practice transplant Phases 6–9** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md),
->    tracker [`transplant/README.md`](./transplant/README.md), branch `feat/transplant-engraph-practice`; Phases 0–5
->    complete and tagged; resumes exactly from the tracker).
-> 3. **THEN — [`current/paused/explicit-additional-properties-support.md`](./current/paused/explicit-additional-properties-support.md)**
->    (feature slice; sequenced, not parked).
+> - **Practice transplant** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md), tracker
+>   [`transplant/README.md`](./transplant/README.md)) — Phases 0–5 complete and tagged; **Phase 6 is the owner-directed
+>   next slice**.
+> - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
+> - **Deep-review remediation backlog** ([`remediation/`](./remediation/) 02–07; 01 complete + merged in) — the 6
+>   shipped Criticals must be fixed; a required component, not a gate that blocks the transplant.
+> - **Product feature slice** [`current/paused/explicit-additional-properties-support.md`](./current/paused/explicit-additional-properties-support.md).
 >
-> A 2026-06-05 record framed item 3 as "parked-in-place per a user instruction" — **the owner never gave that
-> instruction and repudiated the framing on 2026-06-09**; this sequence is the correction.
+> A 2026-06-05 record framed the feature slice as "parked-in-place per a user instruction" — **the owner never gave
+> that instruction and repudiated the framing on 2026-06-09**. The 2026-06-09 "sequence positions 1/2/3" were an
+> ordering guide, not a gate; advancing the transplant does not demote remediation.
 >
 > **Branches/PRs per plan live in the [delivery ledger](./delivery-ledger.md)** (single DRY home; a plan's
 > _delivery_ = the branches, PRs, and release acts that carry its outcome to a beneficiary, per PDR-085). PR

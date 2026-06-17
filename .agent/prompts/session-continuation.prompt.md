@@ -32,9 +32,13 @@ This block is current truth only. Branch/delivery state lives in
   6 dead char-test exports removed; `commitlint` installed + wired (`@commitlint/cli` + `config-conventional` +
   root `commitlint.config.mjs`), which also made the agent-tools `check-commit-message` validator operational (it had
   been a phantom — no `commitlint` was installed). No enforcing `commit-msg` hook (owner).
-- **Plan-of-record sequence (owner):** (1) deep-review remediation backlog 01→07 — **01 COMPLETE + merged in**, **02**
-  in `active/`, next to execute; (2) Practice transplant Phases 6–9 (0–5 done) + the engineering-infrastructure arc D1–D4 (tracker
-  §Deep-enhancement arc); (3) `explicit-additional-properties-support` (paused, pos 3). All on the single branch.
+- **One deep enhancement (owner):** bringing over the ENTIRE Practice / agentic-engineering framework / agent-tools /
+  skill+rule+subagent+hook definitions AND fixing castr's known issues are the **same** goal, not competing priorities
+  (owner, 2026-06-17). Components — all required, all on the single branch `feat/transplant-engraph-practice`, none
+  parked: (a) Practice transplant Phases 6–9 (0–5 done); (b) engineering-infrastructure arc D1–D4 (tracker
+  §Deep-enhancement arc); (c) deep-review remediation backlog 02–07 (01 complete + merged in — the 6 shipped Criticals
+  must be fixed); (d) `explicit-additional-properties-support`. The owner names the next slice — **currently Phase 6**.
+  The 2026-06-09 "sequence positions 1/2/3" were an ordering guide, never a gate blocking one component behind another.
 - **Owner decision 1 — Node:** 24 everywhere; stable-LTS always; advance to 26 only once GitHub _and_ Vercel support
   it. Config executed (`engines: 24.x`, single-Node-24 `ci.yml`); single-source `.nvmrc` and ADR-048 remain as D2.
 - **Owner decision 2 — lint:** no rule ever off; in-flight rules MAY be `warn` transitionally; DoD requires all back
@@ -52,17 +56,25 @@ This block is current truth only. Branch/delivery state lives in
 
 ## Where We Are
 
-> 🔀 **PLAN-OF-RECORD SEQUENCE (owner, 2026-06-09 — "all issues MUST be fixed, mostly now; sequencing in the
-> current plan is acceptable; an undefined 'later' is never"): (1) NOW — the deep-review remediation backlog**
-> ([`remediation/`](../plans/remediation/), plans 01→07 in order; **01 COMPLETE — draft PR #1 open + CI-green**;
-> **02** promoted to `active/`, next to execute; branch `fix/remediation-01-packaging-and-types` off
-> `docs/initial-deep-review`, PR'd to `main` independently — the 6 shipped Criticals outrank practice infrastructure); **(2) NEXT — the Practice transplant Phases 6–9**
-> ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
-> [`transplant/README.md`](../plans/transplant/README.md), branch `feat/transplant-engraph-practice`, Phases 0–5
-> complete and tagged); **(3) THEN — the product feature slice**
-> [`explicit-additional-properties-support.md`](../plans/current/paused/explicit-additional-properties-support.md)
-> (sequenced, not parked). A 2026-06-05 record claimed the owner "parked" item 3 — **the owner never gave that
-> instruction and repudiated the parking framing outright (2026-06-09)**. Everything below remains true context.
+> 🔀 **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
+> skill+rule+subagent+hook definitions AND fix castr's known issues — the same goal, not competing priorities.**
+> Owner doctrine (2026-06-09): "all issues MUST be fixed, mostly now; sequencing with a named position is acceptable;
+> an undefined 'later' is never." Components — all required, all on the single branch
+> `feat/transplant-engraph-practice`, none parked:
+>
+> - **Practice transplant** ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
+>   [`transplant/README.md`](../plans/transplant/README.md)) — Phases 0–5 complete and tagged; **Phase 6 is the
+>   owner-directed next slice**.
+> - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
+> - **Deep-review remediation backlog** ([`remediation/`](../plans/remediation/) 02–07; 01 complete + merged in) — the
+>   6 shipped Criticals must be fixed; a required component, not a gate that blocks the transplant.
+> - **Product feature slice** [`explicit-additional-properties-support.md`](../plans/current/paused/explicit-additional-properties-support.md).
+>
+> The owner names the next slice; the rest keep their place and still get done. A 2026-06-05 record claimed the owner
+> "parked" the feature slice — **the owner never gave that instruction and repudiated the parking framing (2026-06-09)**.
+> The 2026-06-09 "sequence positions 1/2/3" were an ordering guide, not a priority gate; advancing the transplant does
+> not demote remediation. Everything below remains true context (where it routes work to `fix/*` branches off
+> `docs/initial-deep-review`, the single-branch consolidation in §Current state supersedes it).
 
 ### Practice Transplant — resume from the tracker (sequence position 2)
 
@@ -72,7 +84,7 @@ product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-p
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions + rule candidate, `2026-06-09` Phase-4 lessons, `2026-06-07` firsthand corrections).
 
-- **Status:** Phases 0–5 ✅. **Phase 5 (2026-06-15, tag `transplant/phase-5`)** — 7 generic directives brought
+- **Status:** Phases 0–5 ✅. **Phase 5 (2026-06-17, tag `transplant/phase-5`)** — 7 generic directives brought
   additive (`agent-collaboration`, `continuity-practice`, `definition-of-delivery`, `operationalisation-contract`,
   `orientation`, `tdd-as-design`, `user-collaboration`), per-surface reconciled (false `§Code Quality` TDD cite →
   `§Testing Standards`; Oak-local plan cites de-linked; `oak-consolidate-docs` localised; mechanism surfaces
@@ -133,15 +145,17 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
 >   `current/complete/` plans is **sequenced into transplant Phase 9** (named slot, owner 2026-06-09).
 > - **Governing rule (user, 2026-06-04):** where code, proofs, and docs disagree, normalise to the **strictest** of the three.
 >
-> **The remediation backlog is the NOW work (owner, 2026-06-09)** — plans 01→07 in order, starting with
-> `01-packaging-and-types-integrity` (the shipped C1 break); the transplant and the product feature slice hold
-> sequence positions 2 and 3.
+> **The remediation backlog is a required component (owner, 2026-06-09: all issues MUST be fixed, nothing parked)** —
+> plans 02–07 remain (01 complete + merged in). It is one part of the single deep enhancement, not a gate that blocks
+> the transplant; the owner names the next slice (see §Current state).
 
 **Library:** Schema compiler. `Any Input -> Parser -> IR -> Writers -> Any Output`. Supported: OpenAPI 3.0/3.1/3.2, Zod 4, JSON Schema 2020-12, TypeScript, MCP Tools.
 
-**Active workstream (PRIMARY, sequence position 1):** [remediation backlog](../plans/remediation/) plans 01→07 — branch `fix/remediation-01-packaging-and-types` off `docs/initial-deep-review`.
-**Sequence position 2:** [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 5–9 — branch `feat/transplant-engraph-practice`.
-**Sequence position 3:** [Explicit Additional Properties Support](../plans/current/paused/explicit-additional-properties-support.md)
+**One deep enhancement, single branch `feat/transplant-engraph-practice`** — all components required, none parked, owner names the next slice (currently **Phase 6**):
+
+- [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 6–9 (0–5 done) + engineering-infrastructure arc D1–D4
+- [deep-review remediation backlog](../plans/remediation/) 02–07 (01 complete + merged in)
+- [Explicit Additional Properties Support](../plans/current/paused/explicit-additional-properties-support.md) (feature slice)
 
 **Current closure record:** [ePerusteet Real-Spec Validation](../plans/current/complete/eperusteet-real-spec-validation.md)
 
@@ -165,18 +179,17 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 - the reviewer loop is closed with no open findings across `code-reviewer`, `test-reviewer`, `openapi-expert`, and `type-reviewer`
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduction exposed that current strict-object policy rejects explicit schema-valued `additionalProperties` at IR-build / generated seams
 - on Thursday, 16 April 2026, user clarification established the intended product boundary: Castr must accept and emit explicit `additionalProperties`, but must never invent them from input that did not declare them
-- the plan-of-record sequence (owner, 2026-06-09) is: (1) the remediation backlog 01→07 (NOW), (2) the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 5–9, (3) [explicit-additional-properties-support.md](../plans/current/paused/explicit-additional-properties-support.md) — sequenced, never parked
+- the deep enhancement is one body of work (owner): the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 6–9 + arc D1–D4, the remediation backlog 02–07, and [explicit-additional-properties-support.md](../plans/current/paused/explicit-additional-properties-support.md) are all required components on the single branch — sequenced, never parked, owner names the next slice (currently Phase 6)
 
 ---
 
 ## What Next
 
-1. Re-read [metacognition.md](../directives/metacognition.md), then the plan-of-record sequence in [roadmap.md](../plans/roadmap.md).
-2. **Sequence position 1 (NOW):** execute the [remediation backlog](../plans/remediation/) plans 01→07 in order on `fix/remediation-*` branches off `docs/initial-deep-review`, PR'd to `main` independently; proof-first TDD; each plan atomic and gated.
-3. **Sequence position 2:** resume the transplant Phases 5–9 on `feat/transplant-engraph-practice` from the tracker; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
+1. Re-read [metacognition.md](../directives/metacognition.md), then the §Current state block above and the transplant tracker.
+2. **Next slice (owner-directed): transplant Phase 6 — Sub-agents / memory / state** on `feat/transplant-engraph-practice` from the tracker; it opens with the memory-layout consolidation pass; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
+3. **Also required — one deep enhancement, single branch, nothing parked, not gated behind one another:** the [remediation backlog](../plans/remediation/) 02–07 (proof-first TDD, atomic + gated), the rest of the transplant Phases 7–9 + arc D1–D4, and the [feature slice](../plans/current/paused/explicit-additional-properties-support.md). The owner names which is next.
 4. If a user reports a fresh gate or runtime regression in product code, reproduce it immediately and treat that report as active session truth.
-5. **Sequence position 3:** the product feature slice (explicit-additional-properties-support): admit explicit source `additionalProperties` honestly into IR/outputs while never inventing them from absent input.
-6. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
+5. Use [eperusteet-real-spec-validation.md](../plans/current/complete/eperusteet-real-spec-validation.md), [oas-3.2-full-feature-support.md](../plans/current/complete/oas-3.2-full-feature-support.md), and [phase-a2-type-migration.md](../plans/current/complete/phase-a2-type-migration.md) only for predecessor context.
 
 ---
 
@@ -190,17 +203,18 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 
 ## Next Session Start Statement
 
-**@engraph/castr — next session start.** The **plan-of-record sequence (owner, 2026-06-09)** is: **(1) NOW — the
-deep-review remediation backlog** (`.agent/plans/remediation/` plans 01→07 in order, on `fix/remediation-*` branches
-off `docs/initial-deep-review` — that branch holds the report/plans/ADR-047, NOT `main` — each PR'd to `main`
-independently; 01-packaging is in flight); **(2) the Practice transplant Phases 5–9** (branch
-`feat/transplant-engraph-practice`, resume from the tracker); **(3) the product feature slice**
-(`current/paused/explicit-additional-properties-support.md`). **Nothing is parked, ever** (owner: "all issues MUST
-be fixed, mostly now; sequencing in the current plan is acceptable; an undefined 'later' is never") — a 2026-06-05
-record claiming the owner parked the product slice was a fabricated attribution, repudiated and corrected
-2026-06-09. A fresh reproduced product regression pre-empts the sequence.
+**@engraph/castr — next session start.** This is **one deep enhancement** (owner): bring over the ENTIRE Practice /
+agentic-engineering framework / agent-tools / skill+rule+subagent+hook definitions **and** fix castr's known issues —
+the same goal, not competing priorities. All components live on the single branch `feat/transplant-engraph-practice`,
+none parked: the **Practice transplant** (Phases 0–5 done; **Phase 6 is the owner-directed next slice**), the
+**engineering-infrastructure arc D1–D4**, the **deep-review remediation backlog** (02–07; 01 complete + merged in — the
+6 shipped Criticals must be fixed), and the **product feature slice**
+(`current/paused/explicit-additional-properties-support.md`). **Nothing is parked, ever** (owner: "all issues MUST be
+fixed, mostly now; sequencing with a named position is acceptable; an undefined 'later' is never") — a 2026-06-05
+record claiming the owner parked the feature slice was a fabricated attribution, repudiated 2026-06-09. The owner names
+the next slice; a fresh reproduced product regression pre-empts it.
 
-**Phases 0–5 are COMPLETE and green.** Phase 5 (tag `transplant/phase-5`, 2026-06-15): 7 generic directives brought
+**Phases 0–5 are COMPLETE and green.** Phase 5 (tag `transplant/phase-5`, 2026-06-17): 7 generic directives brought
 additive + per-surface reconciled; Oak rules-delta folded (`precedence-is-not-approval` + PDR-091 + `verify-dont-trust`
 +6) → 86 canonical rules / 92 PDR files. Phase 4 (tag `transplant/phase-4`, 2026-06-09): **80 Oak rules** (held
 `ad649710` forms) + castr's 5 = **85 canonical rules** + root `RULES_INDEX.md` (85 rows, index↔disk verified); every
@@ -239,12 +253,12 @@ Phase 5.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action (owner-directed, 2026-06-15):** continue the **Practice transplant — Phase 6 (Sub-agents / memory /
+**First action (owner-directed, 2026-06-17):** continue the **Practice transplant — Phase 6 (Sub-agents / memory /
 state)** in a fresh session, grounding with the owner first. Phase 6 opens with the memory-layout consolidation pass
 (reconcile castr's flat `memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout that the Phase-5
-directives already forward-reference, then drain the napkin and graduate captured learnings). The documented
-plan-of-record still lists the remediation backlog at sequence position 1 (02 IR-fidelity harness next) and the
-product slice at position 3 — the owner has directed the transplant forward for now. Oak is PINNED at `4470266`. **Once
-reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so far** (owner,
-2026-06-15). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics; bodies must be
-read, not classified.
+directives already forward-reference, then drain the napkin and graduate captured learnings). This is **one deep
+enhancement** — Phase 6 is the slice the owner named next; the remediation backlog 02–07, the rest of the transplant +
+arc D1–D4, and the feature slice are all still required and unparked, not gated behind one another. Oak is PINNED at
+`4470266`. **Once reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so
+far** (owner, 2026-06-17). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
+bodies must be read, not classified.
