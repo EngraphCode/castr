@@ -210,3 +210,66 @@ Currently **none** structurally deferred — owner chose to fully populate scale
 fan-out's many "DORMANT until castr grows a team" calls were overruled: collaboration is about _agents_, and castr will
 run multiple agents.) `.gemini`/`.windsurf` adapters are populated only if the generator supports them; otherwise
 recorded here as deferred-pending-generator-support.
+
+---
+
+## Main re-pin delta (2026-06-17) — bring-manifest refresh against Oak `main` `ad359a4f`
+
+**Why this section exists.** The re-pin from `4470266` to Oak `main` (see tracker §Baseline RE-PINNED) means the dispositions
+above were measured against a stale baseline. This section enumerates **what main has that castr does not yet have**, so
+every outstanding item has a named position and nothing is an undefined-later. Built **firsthand** (slug set-difference +
+per-file `diff` castr-current↔main), not from aggregate `git diff` counts — which mis-stated the scope on first pass.
+
+**Confidence tiers** are explicit: NEW items (slug-diff) are exact; AMENDED items on **portable** surfaces (PDRs) are
+high-confidence (minimal localisation); AMENDED items on **localised** surfaces (rules, directives, skills) are
+**noise-confounded** — the castr↔main diff conflates castr's own localisations with upstream amendments, so a true count
+needs a three-way (`ad649710` base) per-file pass and is scoped as a sweep, not asserted as a number.
+
+### Tier 1 — NEW items (outstanding, to bring)
+
+| Item                                 | Count | Position | Notes                                                                                           |
+| ------------------------------------ | ----- | -------- | ----------------------------------------------------------------------------------------------- |
+| PDR-092 mechanical-firing-moments    | 1     | **D4**   | generic Practice doctrine                                                                       |
+| PDR-093 self-correcting-deliverables | 1     | **D4**   | generic Practice doctrine                                                                       |
+| PDR-094 coordination-event-rotation  | 1     | **P8**   | comms-rotation backing (the consolidate-docs/curator step-3a content defers to it)              |
+| PDR-095 collaboration-is-multi-dim   | 1     | **P8**   | collaboration doctrine                                                                          |
+| rule `no-unbounded-host-load`        | 1     | **D4**   | gates the start-right host-health section (also deferred) — bring the pair together             |
+| `active/patterns/*` import           | ~131  | **P6**   | castr currently has **0** real patterns; main has **133** (−~2 UI). The full populate never ran |
+
+### Tier 1 — NEW-by-slug but resolved-by-DON'T-BRING (not outstanding)
+
+The slug-diff also surfaces **9 rules** main has and castr lacks **by design** (already in the Not-brought set above):
+the 6 UI/product `invoke-*` experts, `eef-corpus-grounding`, `sonarqube-mcp-instructions`, `use-result-pattern`. These are
+**resolved**, not missing — recorded here so a future slug-diff does not re-flag them as a gap. Likewise the 2 new Oak
+skills (`onboard-me` Oak-teammate-forked, `working-with-graphs` Oak-product) are DON'T-BRING / D4-only.
+
+### Tier 2 — AMENDED items (the silent-loss vector — NEW workstream)
+
+- **PDR amendments — ≈30 PDRs have diverged from main** (the 20 largest range 4–124 changed lines; e.g. PDR-074 +124,
+  PDR-089 +117, PDR-091 +59, PDR-081 +50, PDR-085 +36). Sampled divergences are **real upstream content** — new dated
+  Decisions and amendment-log entries (PDR-089 gained Decision 8 + 2026-06-11/06-14 entries), not formatting. **The
+  transplant treated PDRs as bring-once at P1; it never tracked Oak amending them.** This is a newly-surfaced **PDR
+  amendment re-sync** workstream. → **RESOLVED (owner, 2026-06-17): adopt Oak's amendments at a periodic "PDR currency
+  sync."** castr hydrates portable governance from Oak as upstream; castr appends Oak's amendment-logs **verbatim** at the
+  sync. Immutability (PDR-001) means **append the upstream amendment-log, not freeze castr's stale copy**. Position: a
+  **D4/P9 named "PDR currency sync"** workstream (the ≈30-PDR fold; full per-PDR list generated at that pass). This also
+  defines the ongoing castr↔Oak Practice relationship: it is a **periodic upstream merge**, not a one-time copy.
+- **Rule / directive amendments — noise-confounded.** ~30 rule files and 3 directives differ from main, but the diff mixes
+  castr's deliberate localisations (gate commands, ESLint thresholds, false-cite fixes) with upstream amendments.
+  Separating them needs a three-way (`ad649710` base) per-file pass → scoped as the **D4 rule/directive currency sweep**;
+  file list generated at that pass, not asserted here.
+
+### agent-tools delta (NEW 41 / MODIFIED 47) — grouped by subsystem
+
+- **`collaboration-state` (20 new + 18 modified = 38) → P8.** The comms/collaboration machinery (comms-archive,
+  comms-provenance-check, role registry, schemas). Lands with Phase 8.
+- **`validators` (3 new + 10 modified), `hook-policy` (1 + 7), `core` (10 + 3), `claude` (4 + 2), `practice-fitness`,
+  `bin`, `ci`, `repo-check` → D4 parity.** Includes the validator amendments that flip the deferred validators green as
+  P6/P8 land. Per-file enumeration is a D4-execution detail; the named subsystem groups are the tracked positions.
+
+### Net outstanding (the honest scope of "bring it all")
+
+P6: ~131 patterns + (sub-agents/state, already scoped). P8: PDR-094/095 + ~38 collaboration-state files + the deferred
+comms skill prose. D4: PDR-092/093 + `no-unbounded-host-load` + the PDR-currency sync (~30) + the rule/directive
+three-way sweep + ~50 agent-tools parity files. **No item is undefined-later; each line above names its phase.** The one
+genuinely-open decision is the PDR-currency mechanism (owner, above).

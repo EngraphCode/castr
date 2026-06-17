@@ -126,8 +126,11 @@ to Oak** as Practice-shaped feedback (the fix belongs upstream).
 - Skill → **rule** cites (incl. `permanent-doc-is-the-consolidation-record`, `collaboration-is-value-contingent`,
   `documentation-hygiene`, `pre-merge-divergence-analysis`, the collaboration cluster) → **P4**. `invoke-reviewers`
   resolves now (castr rule present).
-- Skill → **memory** paths (`memory/active|operational|executive/…`) → **P6** (layout reconciled then; the live napkin
-  stays at `.agent/memory/napkin.md` until P6).
+- Skill → **memory** paths (`memory/active|operational|executive/…`) → **P6 ✅ (2026-06-17, opening pass)**: the flat
+  `.agent/memory/{napkin,distilled}.md` + `code-patterns/` were `git mv`'d into `.agent/memory/active/{napkin,distilled}.md`
+  - `active/patterns/` (renames, history preserved), so the skill/directive/start-right `memory/active/…` forward-refs now
+    resolve on disk. `operational/` + `executive/` contract docs land in the same Phase-6 surface (sub-plan
+    `06-memory-and-generator-consolidation.md`).
 - Skill → **state/collaboration** paths → **P8**.
 - `RULES_INDEX.md` → **P4**.
 - Skill → **directive** `orientation`/`tdd-as-design`/`continuity-practice` → **P5**.

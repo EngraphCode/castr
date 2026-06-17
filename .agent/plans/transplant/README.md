@@ -123,11 +123,28 @@ directive placeholders resolved; castr's `tdd.md` rule reconciled against `tdd-a
 
 **NEXT: Phase 6 — Sub-agents / memory / state.** 13 generic sub-agent templates + `components/`; full patterns
 (provenance-amended, index regenerated, drop ~2 UI); executive (regenerated catalogues); operational; collaboration
-schemas + empty dirs. **Opens with a consolidation pass** (owner-confirmed 2026-06-10): reconcile castr's flat
+schemas + empty dirs. **Opens with a consolidation pass** (owner-confirmed 2026-06-10) — full design in
+[`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md): reconcile castr's flat
 `memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout — the Phase-5 directives
 (`orientation`/`continuity-practice`/`agent-collaboration`) already cite `memory/active/…` + `memory/operational/…` +
 `memory/executive/…` as forward-placeholders that resolve here — then drain the napkin and graduate captured learnings
 into their enforcement homes.
+
+**Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
+consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).
+So the opening pass aligns the **generator** (re-sync the memory-populating skill cluster to main forms), not just the
+directory shape. Measured split: memory-governing **rules** unchanged `ad649710`→main; structural **contracts** (READMEs,
+substrate-contract, `orientation`) byte-identical pin→main; the **skills** moved (`consolidate-docs`/`session-handoff`/
+`curator-pass`/`start-right`). See the sub-plan §2.
+
+**Baseline RE-PINNED (2026-06-17, owner — supersedes the `4470266` pin below): Oak `main` `ad359a4f`** is the fixed
+baseline for Phases 6–9. Not a moving-target violation — it adopts a _newer fixed ref_. **✅measured: `main` is a clean
+superset of the old pin** — `4470266` is a direct ancestor of `origin/main`, +429 commits, no divergence / no merge cost.
+Rationale: deciding the Phase-6 memory _structure_ (and the skills that generate it) against a stale pin risks
+transplanting superseded forms; the structure itself is byte-identical pin→main, so the re-pin costs nothing structurally
+and buys the current generator skills + content. **Back-flow target is now OPEN** (the old pin's "push to
+`practice/transplant-to-castr`" no longer self-evident) — deferred to the Phase-9 feedback step. The historical pin note
+below is retained as the record of the 2026-06-10→2026-06-17 baseline.
 
 **Baseline (2026-06-10, supersedes the `ad649710` hold): Oak is PINNED on a dedicated work branch** —
 `practice/transplant-to-castr` @ `4470266` (owner-created; no more moving target; castr may commit AND push there,

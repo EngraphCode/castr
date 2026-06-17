@@ -19,6 +19,50 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   legitimately 2026-06-15; Phase 5 is today's. Corrected the live surfaces (commit timestamps are the authoritative
   record). The date is a claim to verify firsthand like any other.
 
+- **Phase 6 opened — baseline RE-PINNED `4470266` → Oak `main` `ad359a4f` (owner, load-bearing).** Owner steered:
+  for deciding the memory _structure_ we're better off from Oak's current main than the stale pin. Measured firsthand
+  before acting: `main` is a **clean superset** of the pin (pin is a direct ancestor, +429 commits, no divergence/merge
+  cost). Decision: re-pin all remaining phases (6–9) to `ad359a4f` — a _newer fixed ref_, not a moving target. **Key
+  measured nuance:** the memory _structure_ is **byte-identical** pin→main (READMEs, substrate-contract, `orientation`,
+  dir taxonomy all unchanged); only _content_ moved (patterns 122→133, generator skills). So "work from main" was right
+  for the reason of getting current _content/skills_, but it does **not** change the layout I build. Back-flow target is
+  now OPEN (old pin's "push to `practice/transplant-to-castr`" no longer self-evident) → deferred to Phase 9.
+- **Generator-first (owner): the memory dir is a _generated artefact_ — align the skills, not just the directory.**
+  Owner: _"it's not just the memory dir, it's the skills that cause it to be populated."_ `generator-first-mindset`
+  vindicated. Measured split `ad649710`→main: memory-governing **rules** = zero change; structural **contracts** =
+  byte-identical; the memory-**populating skills** (`consolidate-docs`/`session-handoff`/`curator-pass`/`start-right`)
+  **moved** → re-sync those to main forms in this phase. `napkin`/`consolidate-until-done`/`metacognition`/
+  `start-right-thorough` unchanged.
+- **Opening move LANDED — flat memory → `active/` (git mv, history preserved).** `.agent/memory/{napkin,distilled}.md`
+  - `code-patterns/` → `active/{napkin,distilled}.md` + `active/patterns/`. **The flat files were the only lagging
+    surface** — every skill (napkin/consolidate-docs/session-handoff/start-right) AND `policy.json` (grounding_reminder
+    line 430) already pointed at `active/`. **Lockstep landmine cleared firsthand** (the Phase-4 warning): `policy.json`'s
+    17 `"distilled.md"` entries + the hook-policy test citation are **bare basenames / labels — location-independent**, so
+    the move doesn't touch them; `practice-fitness`/`fitness-vocabulary` **discover by frontmatter, not hardcoded path**.
+    Verified: format clean, all 5 blocking validators green (drift `92 PDR files` consistent). Sub-plan
+    `06-memory-and-generator-consolidation.md` written; tracker re-pinned. **Next blocks:** operational/executive contract
+    docs (localised) → generator skill re-sync → napkin drain.
+
+- **Homing doc landed + generator-resync triaged (block c).** Brought `ephemeral-to-permanent-homing.md` (reconciled —
+  resolves 3 dangling Phase-3 refs from consolidate-docs/session-handoff). **`git merge-file` three-way DEGENERATED** for
+  the skill re-sync (castr localised 778/768 lines vs base → localisation noise swamps the real 111-line delta) → fell
+  back to manual per-hunk triage (Phase-5 method). **Finding:** the generator's `ad649710`→main evolution is ~95%
+  Phase-8 comms/collaboration + Oak-product; only 1 clean generic fold bringable now (consolidate-docs "trigger-firing
+  discipline"). The bulk is correctly a P8 activity. Lesson: **a "skill re-sync" is a per-hunk relevance triage, not a
+  wholesale bring** (Phase-3/4 lesson, deeper) — and **merge tools degenerate when ours-vs-base localisation is large;
+  measure the conflict surface before trusting the tool.**
+- **Main re-pin delta ledger built (owner asked "do you have a plan to bring ALL materials?").** Firsthand slug-diff +
+  per-file diff vs main — **corrected my own asserted numbers**: NEW rules = **1** (`no-unbounded-host-load`), not ~10
+  (9 are the DON'T-BRING set, resolved-by-design); patterns = **~131** (castr has 0; main 133), not 11; and surfaced
+  **≈30 PDRs amended on main** — real upstream content (new Decisions/amendment-logs), a workstream the transplant
+  **never tracked** (treated PDRs as bring-once at P1). Folded into `relevance-ledger.md` §Main re-pin delta (Tier-1 NEW
+  / Tier-2 AMENDED / agent-tools by subsystem; every item phase-positioned). **Lesson: aggregate `git diff` counts
+  mislead — a bring-manifest needs slug-diff cross-checked against existing DON'T-BRING dispositions, or it over-counts.**
+- **OWNER DECISION (2026-06-17): PDR currency = adopt Oak's amendments at a periodic "PDR currency sync" (D4/P9).** PDRs
+  are portable governance castr _hydrates_ from Oak upstream; castr appends Oak's amendment-logs **verbatim**; immutability
+  (PDR-001) means append-upstream, not freeze. **The castr↔Oak Practice relationship is a periodic upstream merge, not a
+  one-time copy** — reframes the transplant's tail (and ties to the Phase-9 back-flow target, still open).
+
 - **Transplant Phase 5 LANDED — tag `transplant/phase-5` (commit `6895b4b`).** 7 generic directives brought additive +
   the Oak rules-delta folded (`precedence-is-not-approval` + `PDR-091` + `verify-dont-trust` +6). The durable record is
   the commit + `reference-closure.md` §Phase 5 + the tracker (per `permanent-doc-is-the-consolidation-record`); only the
