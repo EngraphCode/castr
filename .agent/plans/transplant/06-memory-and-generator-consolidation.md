@@ -109,9 +109,12 @@ refs)** → **(b) leaf operational docs (`tracks/README`) ✅ (2026-06-18)** + d
 below — bringable-now layer done; remainder folds to P8)** → (c) generator skill re-sync to
 main **✅ (bringable-now layer)** → **(d) coupled docs (`threads/README`, `pending-graduations`, `open-questions`) +
 `operational/README` overview ✅ (2026-06-18 — all five registers seeded, host-phenotype reconciled per §5; dispositions
-in `reference-closure.md` §Phase 6)** → (e) **drain the napkin** through the now-current homing procedure **← NEXT** →
-(f) author `repo-continuity.md` (after the drain reveals what's live)
-→ (g) executive/ + root `memory/README.md` (with the catalogue unit).
+in `reference-closure.md` §Phase 6)** → **(e) drain the napkin ✅ (2026-06-18)** — graduated the two named targets
+(manufactured-permission → new rule `no-manufactured-permission.md` per owner's `new-rule-vs-pdr-clause` choice;
+transplant-method lessons → `distilled.md`), tombstoned the candidate, rotated the pre-transplant April/March block to
+`active/archive/napkin-2026-03-to-04.md`; active napkin back under the ~500-line threshold (480) → **(f) author
+`repo-continuity.md` (after the drain reveals what's live) ← NEXT** → (g) executive/ + root `memory/README.md` (with the
+catalogue unit).
 
 ### Generator re-sync — measured outcome (2026-06-17)
 
