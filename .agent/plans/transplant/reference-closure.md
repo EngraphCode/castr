@@ -404,7 +404,25 @@ structural **contracts**, not Oak runtime data — sub-plan `06` §5):
   2026-06-18):** castr's own continuity contract authored at `memory/operational/repo-continuity.md` (lean structural
   contract; single-stream scale; points to prompt/delivery-ledger/tracker for scope; all internal links resolve).
 - `../README.md` / `../../README.md` → root `.agent/memory/README.md` (cited by `operational/README.md`,
-  `tracks/README.md`, `repo-continuity.md`) — authored at block (g) with the executive unit.
+  `tracks/README.md`, `repo-continuity.md`) — **RESOLVED ✅ (block g structure tier, 2026-06-18):** root
+  `memory/README.md` (three-mode taxonomy, localised — castr directive set, `.agent/reference/` row, no `workstreams`
+  surface) + `executive/README.md` authored. **The full `.agent/memory` dangling-link sweep is now empty.**
 
-The remaining root-`memory/README.md` placeholder resolves before the `transplant/phase-6` tag (acceptance §6); it
-dangles only in the in-progress intermediate commits, exactly as the Phase-3/4/5 forward-placeholders did.
+### Block (g) structure tier — disposition: **rewrite (done)** (2026-06-18)
+
+- `memory/README.md` — Oak `schema-first-execution.md` dropped from the directives table (castr DON'T-BROUGHT); the
+  `workstreams/` retirement paragraph rewritten to castr's no-workstream end-state; per-file executive enumeration
+  deferred to `executive/README.md` (avoids dangling the not-yet-authored catalogues).
+- `executive/README.md` — surfaces table marks each surface's **bring-status** (catalogues → Phase-6 executive-catalogue
+  sub-block; `agent-collaboration-channels` → P8; substrate `.md/.manifest/.schema` → substrate sub-block); Oak host
+  **ADR-125/114/129 re-pointed to castr portable PDRs** (PDR-079 portability, PDR-003 sub-agent, **PDR-010
+  domain-specialist (exact)**, **PDR-050 substrate (exact)**); Oak `agent-capability-vocabulary.md` recorded
+  **DON'T-BRING** (Oak developer/curriculum capability axis; no castr analogue).
+
+### Block (g) remaining — disposition: **placeholder** (executive-catalogue + substrate sub-blocks)
+
+The executive **catalogues** (`artefact-inventory`, `invoke-code-experts`, `cross-platform-agent-surface-matrix`) are
+**regenerated from castr's real estate** — host-phenotype documents, not localisations — in the executive-catalogue
+sub-block. The **substrate** contract (`.md` + strict `.manifest.json`/`.schema.json`, consumer
+`agent-tools/src/practice-substrate/`) re-authors to castr roots in the substrate sub-block. `agent-collaboration-channels`
+lands at P8. All before the `transplant/phase-6` tag (acceptance §6).
