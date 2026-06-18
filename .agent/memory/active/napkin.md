@@ -88,18 +88,12 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-10
 
-- **⭐ RULE CANDIDATE (owner-flagged 2026-06-10) — No Manufactured Permission to Bypass an Absolute.**
-  - **Trigger:** an absolute rule (no-disabling-checks, strict-everywhere, sacred-file protection, no-parking) is in
-    the way, and the impulse is to soften it via a permission structure — a label, an inherited/fabricated decision,
-    an undefined-later, or a **precedent** ("we already disabled 4 sonarjs rules, so this is fine").
-  - **Action:** the reach for label / precedent / special-case / "note it for later" **is the tripwire** — stop and
-    obey the absolute (fix now, or sequence with a _named_ position; never an undefined later, never a softened gate).
-  - **Evidence:** caught 4× this session — SACRED-label parking → fabricated "parked-in-place" → undefined
-    "CI-modernisation slice" → "precedent matters for the lint decision." Owner: _"no disabling checks, strict
-    everywhere all the time… no circumstance, including prior work, bypasses that rule."_
-  - **Authoring note:** likely a clause uniting existing rules (`precedence-is-not-approval`,
-    `rules-have-no-exceptions`, `never-disable-checks`) rather than a wholly new rule — `new-rule-vs-pdr-clause`
-    decides. Cross-refs [[nothing-is-sacred-engineering-discipline]], [[verify-agent-claims-firsthand]].
+- **✅ GRADUATED (2026-06-18, Phase-6 napkin drain) — the manufactured-permission rule candidate is now a rule.**
+  Owner ran `new-rule-vs-pdr-clause` and chose **new rule** (over a clause / pattern / new PDR): a cross-cutting
+  tripwire spanning all four absolutes hides if buried in one rule's clause. Landed as
+  `.agent/rules/no-manufactured-permission.md` (always-on; composes `never-disable-checks` /
+  `rules-have-no-exceptions` / `precedence-is-not-approval` (PDR-091) / no-parking; the three worked instances carried
+  over) + a `RULES_INDEX.md` row (87 canonical rules; drift green). The candidate is graduated; the rule is the home.
 
 - **Prioritisation decision (owner, 2026-06-10): keep the plan — do NOT pull the memory surfaces forward.** Asked
   whether to prioritise P6 memory surfaces to "help the repo learn from the transplant." Verdict (owner-confirmed):

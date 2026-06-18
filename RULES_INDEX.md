@@ -102,6 +102,7 @@ without proportional value.
 | `.agent/rules/no-global-state-in-tests.md`                                 | always-on      | —                                                                                                |
 | `.agent/rules/no-hedging-vocabulary.md`                                    | always-on      | —                                                                                                |
 | `.agent/rules/no-machine-local-paths.md`                                   | always-on      | —                                                                                                |
+| `.agent/rules/no-manufactured-permission.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/no-moving-targets-in-permanent-docs.md`                      | always-on      | —                                                                                                |
 | `.agent/rules/no-skipped-tests.md`                                         | always-on      | —                                                                                                |
 | `.agent/rules/no-speed-pressure.md`                                        | always-on      | —                                                                                                |
