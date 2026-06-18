@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                            | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — block (g): substrate + OUT items next | claude-code / opus-4-8 / executor / `2026-06-18` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                   | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — substrate ✅; `active/patterns/` import next | claude-code / opus-4-8 / executor / `2026-06-18` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
