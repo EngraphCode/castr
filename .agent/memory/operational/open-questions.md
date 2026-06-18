@@ -26,3 +26,23 @@ owning artefact / discussion home (if any), and a status line.
 > drain and later consolidation passes — not copied from any other repo.
 
 <!-- Q-entries appended below by drains and consolidation passes. -->
+
+## Q-001 — Transplant PR delivery strategy + D3-before-merge timing
+
+- **Captured:** 2026-06-18 (strategic-assessment pass, Phase 6).
+- **Question:** At transplant close, does the single-branch work land as **one PR to
+  `main`** (currently ~74 commits / 743 files / +102k lines, per the delivery ledger),
+  or as a **staged / stacked merge** for reviewability — and should **D3** (CI brought
+  to the Oak standard, so CI actually runs `check:ci`) land **before** that merge?
+- **Why it shapes future work:** castr's CI today runs only `build` + `test`, not the
+  `check:ci` gate chain, so the per-phase `check:ci` discipline has been **local-only**;
+  the eventual merge to `main` would currently carry no CI gate enforcement, and a
+  100k-line PR is effectively un-reviewable. The answer sets the close sequence (D3
+  relative to the PR) and the PR shape.
+- **Why not cheaply answerable now:** it is a transplant-close / Phase-9 decision; the
+  diff size and arc-D3 scope are still growing, and sequencing within the arc is
+  owner-directed at execution.
+- **Owning artefact / home:** [`delivery-ledger.md`](../../plans/delivery-ledger.md) +
+  transplant tracker §Deep-enhancement arc **D3**.
+- **Status:** OPEN — surfaced for owner. Not a reopening of the single-branch decision
+  (owner, 2026-06-15); a close-time delivery-shape question layered on top of it.

@@ -265,15 +265,18 @@ pre-transplant entries rotated to `active/archive/` (napkin 480 lines); **`repo-
 contract); **root `memory/README.md` + `executive/README`** (three-mode taxonomy — **the full `.agent/memory`
 dangling-link sweep is now empty**); the **three executive catalogues** (`artefact-inventory`, `invoke-code-experts`,
 `cross-platform-agent-surface-matrix`) **regenerated firsthand from castr's real estate** (6-reviewer roster; real
-adapter parity with named P7/Codex-only/Claude-only gaps; honest forwarder note). **NEXT — remaining in (g):** the
-**substrate contract** `executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}` re-authored to castr
-roots — **strict, consumer-coupled data** (consumer `agent-tools/src/practice-substrate/live-report.ts` + `live-types.ts`;
-portable spec PDR-050); a focused data pass (read the consumer + schema → enumerate castr roots → author → validate
-against the consumer), **deliberately deferred from the 2026-06-18 session as too error-prone to rush** (`no-manufactured-permission`).
-Then the **OUT items** (full `active/patterns/` import ~131; the sub-agent roster expansion + `components/`;
-`.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels`) before the `transplant/phase-6` tag + full
-green `pnpm check`. Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4 (reorder
-a✅…g-structure✅, g-catalogues✅, substrate← NEXT). This is **one deep enhancement** — Phase 6 is the slice the
+adapter parity with named P7/Codex-only/Claude-only gaps; honest forwarder note). **Substrate contract ✅ LANDED
+2026-06-18 (commit `360923d`):** `executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}` re-authored
+to castr roots — 22 surfaces (the 11 Phase-8 surfaces carry `notes`), castr identity/PDR-049+050 cites/plan roots/reviewer
+routes; verified firsthand against the live `practice-substrate` consumer (manifest-validates-against-schema; only the
+absent Phase-8 collaboration plane reports the expected `live-reader-failure`). **Follow-on (`150e628`):** removed the
+consumer's two magic-number drift checks (`EXPECTED_MANIFEST_SURFACES = 22`, `expectedEntryCount: 114`) — stored-derived-value
+anti-patterns violating the contract's own `stored_derived_values_rule`; Oak carries identical code → Phase-9 back-flow item.
+**NEXT — remaining Phase 6 (the OUT items):** full `active/patterns/` import (~131); the sub-agent roster expansion +
+`components/`; `.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the
+`transplant/phase-6` tag + full green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-18 (exit 0; 126 sonarjs
+`warn` = D1 transitional, 0 errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
+(reorder a✅…g✅ incl. substrate✅). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
 **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). castr's 6 reviewers already

@@ -57,8 +57,9 @@ roster, the castr gate chain) into the start-right shared core; retired castr's 
   an **unbuilt `dist` fails OPEN** (warns, never bricks), a built-but-broken guard fails closed. If a tool call is
   blocked, that is the policy in `.agent/hooks/policy.json` — not a bug.
 - **agent-tools `test` is INFORMATIONAL**, excluded from the blocking gate via `turbo test --filter=!@engraph/agent-tools`
-  (+ runner `agent-tools:test:informational`). It is 867/885; the 18 failures are later-phase content (`RULES_INDEX`→P4,
-  collaboration schemas→P8, codex agents→P6/7). Remove the filter (flip blocking) as each phase lands its content.
+  (+ runner `agent-tools:test:informational`). It is **873/885 (12 failures, measured 2026-06-18)**; all 12 are later-phase
+  content — collaboration-state schemas→P8 + `codex-project-agents` roster parity→P6/7 (the earlier `RULES_INDEX`→P4 entry
+  cleared when Phase 4 landed). Remove the filter (flip blocking) as each phase lands its content.
 - **`repo-validators:check` chains only the 4 GREEN validators** (`lifecycle-scripts`, `pretooluse-guard-routing`,
   `drift`, `fitness-vocabulary`). The other 4 are deferred informational: `stale-script`→P4, `collaboration-state`→P8,
   `subagents`→P6, `portability`(Oak's)→P7. Add each to the blocking chain when its content exists.
@@ -126,11 +127,16 @@ directive placeholders resolved; castr's `tdd.md` rule reconciled against `tdd-a
 `active/` layout; operational registers materialised + reconciled; napkin drained (new rule `no-manufactured-permission`;
 lessons → `distilled.md`; rotated to 480 lines); `repo-continuity.md` authored; root `memory/README.md` +
 `executive/README.md` + the three executive catalogues regenerated from castr's real estate. **The full `.agent/memory`
-dangling-link sweep is empty.** Full per-block design + live status in
-[`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md) §4 (reorder a✅…g-catalogues✅).
-**NEXT (remaining Phase 6):** the **substrate contract** (`executive/memory-state-substrate-contracts.{md,manifest,schema}`
-— strict consumer-coupled data) → full `active/patterns/` import (~131; provenance-amended, index regenerated, drop ~2 UI)
-→ the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers already exist) →
+dangling-link sweep is empty.** **Substrate contract ✅ landed 2026-06-18** (commit `360923d`):
+`executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}` re-authored to castr roots (22 surfaces,
+castr identity/PDR cites/plan roots/reviewer routes; the 11 Phase-8 surfaces carry `notes`), verified firsthand against
+the live `practice-substrate` consumer. Follow-on (commit `150e628`): the consumer's two **magic-number drift checks
+removed** (`EXPECTED_MANIFEST_SURFACES = 22`, `expectedEntryCount: 114`) as stored-derived-value anti-patterns that
+violate the contract's own `stored_derived_values_rule` — Oak carries the identical code → recorded as a Phase-9 back-flow
+item. Full per-block design + live status in
+[`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md) §4 (reorder a✅…g✅).
+**NEXT (remaining Phase 6):** full `active/patterns/` import (~131; provenance-amended, index regenerated, drop ~2 UI) →
+the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers already exist) →
 `.agent/state/collaboration/` schemas + empty dirs (P8) before the `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
@@ -201,6 +207,10 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   `check:ci` gate chain — so castr's CI does not currently enforce its own gates), and `ci.yml` path filters
   reference `lib/pnpm-lock.yaml` though the lockfile is at the repo root. `publish.yml` invokes a non-existent
   `pnpm release` via changesets the repo does not use. Bring all of this to the Oak standard as one coherent slice.
+  **Merge-time implication (2026-06-18 assessment):** because castr's CI does not run `check:ci`, the eventual transplant
+  PR would merge to `main` with **no CI gate enforcement** — the per-phase `check:ci` discipline is local-only. Whether D3
+  should therefore land _before_ that merge (and whether the ~100k-line single PR is split for reviewability) is surfaced
+  as [`open-questions.md` Q-001](../../memory/operational/open-questions.md).
 - **D4 — Quality-gate + further Practice/agent-tools parity.** "Plenty more" still to import from the pinned Oak
   branch beyond Phases 5–9's named estates (additional rules, agent-tools capabilities, agentic-engineering and
   quality-gate machinery). Enumerate against the pinned Oak branch at the Phase-9 verification sweep; until then this

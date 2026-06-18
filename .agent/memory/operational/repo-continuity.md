@@ -64,22 +64,28 @@ transplant-method lessons → `distilled.md`; pre-transplant entries rotated to
 `memory/README.md` + `executive/README.md` + the three executive catalogues
 (`artefact-inventory`, `invoke-code-experts`, `cross-platform-agent-surface-matrix`)
 regenerated from castr's real estate. **The full `.agent/memory` dangling-link
-sweep is empty.** Remaining Phase-6: the **substrate contract**
-(`executive/memory-state-substrate-contracts.{md,manifest,schema}` — strict
-consumer-coupled data, deferred as too error-prone to rush) → the OUT items
-(full `active/patterns/` import ~131, sub-agent roster expansion,
-`.agent/state/collaboration/` schemas) before the `transplant/phase-6` tag +
-full green `pnpm check`.
+sweep is empty.** **Substrate contract ✅ landed (2026-06-18, commit `360923d`)** —
+`executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}`
+re-authored to castr roots (22 surfaces; the 11 Phase-8 surfaces carry `notes`),
+verified firsthand against the live `practice-substrate` consumer; follow-on
+`150e628` removed the consumer's two magic-number drift checks (stored-derived-value
+anti-patterns that violated the contract's own `stored_derived_values_rule`; Oak
+back-flow item recorded). Remaining Phase-6: the OUT items (full `active/patterns/`
+import ~131, sub-agent roster expansion, `.agent/state/collaboration/` schemas)
+before the `transplant/phase-6` tag + full green `pnpm check` (**branch
+`check:ci`-green, re-verified 2026-06-18, exit 0; 126 sonarjs `warn` = D1
+transitional, 0 errors**).
 
 ## Next Safe Steps
 
 Authoritative sequence: sub-plan
 [`06-memory-and-generator-consolidation.md` §4](../../plans/transplant/06-memory-and-generator-consolidation.md)
-(reorder a✅…g-structure✅, g-catalogues✅, **substrate ← NEXT**) and the
-[transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
-enhancement also keeps the remediation backlog 02–07, the rest of the transplant
-and arc D1–D4, and the feature slice required and unparked — the owner names
-which is next; a fresh reproduced product regression pre-empts it.
+(reorder a✅…g✅ incl. substrate✅; **`active/patterns/` import ← NEXT** in Phase 6)
+and the [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
+enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals
+still unfixed — 02 = the IR-fidelity proof harness, active, not started), the rest
+of the transplant and arc D1–D4, and the feature slice required and unparked — the
+owner names which is next; a fresh reproduced product regression pre-empts it.
 
 ## Open Owner-Decision Items
 
@@ -94,6 +100,13 @@ which is next; a fresh reproduced product regression pre-empts it.
   ratified rule-selection is not yet established — measure what the rules
   actually flag before deciding ([d1-sonarjs-findings.md](../../plans/transplant/d1-sonarjs-findings.md),
   treated as suspect; re-derive). Tracked as arc **D1**.
+- **Transplant PR delivery strategy + D3 timing — SURFACED (not blocking).** The
+  recorded plan is one ~100k-line PR to `main` at transplant close; castr's CI does
+  not run `check:ci`, so that merge would land with no CI gate enforcement. Whether
+  D3 (CI to the Oak standard) should land before the merge, and whether the single
+  PR is split for reviewability, is surfaced for owner at close as
+  [`open-questions.md` Q-001](open-questions.md). Not a reopening of the
+  single-branch decision (owner, 2026-06-15) — a close-time delivery question.
 
 (The PDR-currency mechanism is **resolved**, not open — adopt Oak amendments at a
 periodic D4/P9 "PDR currency sync"; owner, 2026-06-17.)
