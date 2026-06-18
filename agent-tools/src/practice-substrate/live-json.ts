@@ -169,7 +169,6 @@ async function evaluateMigrationLedger(
 
   return evaluateMigrationLedgerSnapshot({
     ledgerPath,
-    expectedEntryCount: 114,
     entries,
   });
 }

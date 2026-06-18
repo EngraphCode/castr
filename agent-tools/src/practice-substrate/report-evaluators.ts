@@ -17,7 +17,6 @@ export interface ManifestSurfaceSnapshot {
 
 export interface ManifestSnapshot {
   readonly manifestPath: string;
-  readonly expectedSurfaceCount: number;
   readonly requiredContractFields: readonly string[];
   readonly surfaces: readonly ManifestSurfaceSnapshot[];
 }
@@ -33,7 +32,6 @@ export interface MigrationLedgerEntrySnapshot {
 
 export interface MigrationLedgerSnapshot {
   readonly ledgerPath: string;
-  readonly expectedEntryCount: number;
   readonly entries: readonly MigrationLedgerEntrySnapshot[];
 }
 
@@ -44,7 +42,6 @@ const LEDGER_SURFACE = 'legacy-comms-events-migration-ledger';
  */
 export function evaluateManifestSnapshot(snapshot: ManifestSnapshot): readonly SubstrateFinding[] {
   return [
-    ...evaluateManifestSurfaceCount(snapshot),
     ...evaluateManifestDuplicateSurfaceIds(snapshot),
     ...evaluateManifestRequiredFields(snapshot),
     ...evaluateMergeClassDeclarations(
@@ -65,7 +62,6 @@ export function evaluateMigrationLedgerSnapshot(
   snapshot: MigrationLedgerSnapshot,
 ): readonly SubstrateFinding[] {
   return [
-    ...evaluateMigrationLedgerCount(snapshot),
     ...evaluateDuplicateLedgerPaths(
       snapshot.entries.map((entry) => entry.originalPath),
       'migration-ledger-duplicate-original-path',
@@ -78,25 +74,6 @@ export function evaluateMigrationLedgerSnapshot(
     ),
     ...evaluateLedgerTargetByteCounts(snapshot.entries),
     ...evaluateLedgerTargetHashes(snapshot.entries),
-  ];
-}
-
-function evaluateManifestSurfaceCount(snapshot: ManifestSnapshot): readonly SubstrateFinding[] {
-  if (snapshot.surfaces.length === snapshot.expectedSurfaceCount) {
-    return [];
-  }
-
-  return [
-    finding({
-      id: 'manifest-surface-count-drift',
-      surface: 'substrate-inventory',
-      severity: 'blocking',
-      repair: 'manual-with-provenance',
-      message:
-        `Manifest ${snapshot.manifestPath} declares ${snapshot.surfaces.length} surfaces; ` +
-        `expected ${snapshot.expectedSurfaceCount}.`,
-      evidence: [snapshot.manifestPath],
-    }),
   ];
 }
 
@@ -141,27 +118,6 @@ function evaluateManifestRequiredFields(snapshot: ManifestSnapshot): readonly Su
       ];
     }),
   );
-}
-
-function evaluateMigrationLedgerCount(
-  snapshot: MigrationLedgerSnapshot,
-): readonly SubstrateFinding[] {
-  if (snapshot.entries.length === snapshot.expectedEntryCount) {
-    return [];
-  }
-
-  return [
-    finding({
-      id: 'migration-ledger-count-drift',
-      surface: LEDGER_SURFACE,
-      severity: 'blocking',
-      repair: 'manual-with-provenance',
-      message:
-        `Migration ledger ${snapshot.ledgerPath} declares ${snapshot.entries.length} entries; ` +
-        `expected ${snapshot.expectedEntryCount}.`,
-      evidence: [snapshot.ledgerPath],
-    }),
-  ];
 }
 
 function evaluateDuplicateLedgerPaths(

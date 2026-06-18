@@ -109,10 +109,15 @@ above. `level: "error"` maps to `severity: "blocking"`.
 
 ## Current Materialisation
 
-The manifest enumerates the full 22-surface substrate castr is building toward;
-the consumer pins that count (`EXPECTED_MANIFEST_SURFACES = 22`). Not every
+The manifest enumerates the full substrate castr is building toward. Not every
 surface is materialised yet — the unbuilt ones are **named Phase-8 / future
-positions**, not drift, and carry a `notes` field in the manifest.
+positions**, not drift, and carry a `notes` field in the manifest. The consumer
+does **not** assert a fixed surface count: a hardcoded expected-count is a
+stored derived value that this contract's own `stored_derived_values_rule`
+forbids (it is never recomputed, so it only guarantees future staleness). The
+evaluator instead checks per-surface integrity — unique ids, required contract
+fields, valid PDR-049 merge classes — and validates the manifest against the
+schema.
 
 **Live today (11):** this contract; `.agent/memory/README.md`;
 `active/napkin.md`; `active/distilled.md`; `active/patterns/` (directory — the

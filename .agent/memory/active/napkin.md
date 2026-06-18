@@ -4,6 +4,23 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-18
 
+- **Removed two anti-pattern magic numbers from the substrate consumer (owner-directed) — `EXPECTED_MANIFEST_SURFACES = 22`
+  and `expectedEntryCount: 114`.** Owner: _"I don't want either of those magic numbers to exist in either repo… all they
+  achieve is guaranteeing they will be out of date."_ Sharper framing found in the metacognition pass: a hardcoded
+  expected-count is a **stored derived value** that the substrate manifest's own `surface_defaults.stored_derived_values_rule`
+  ("allowed only when the validator recomputes and compares them") **forbids** — so the consumer was violating the very
+  contract it enforces. And `22` never described reality (only 11 of 22 surfaces exist on disk) — it compared the manifest's
+  length against a copy of its own count: a tautology with a maintenance tax. Removed both count checks + their interface
+  fields (`ManifestSnapshot.expectedSurfaceCount`, `MigrationLedgerSnapshot.expectedEntryCount`) + the two now-dead functions
+  (`evaluateManifestSurfaceCount`, `evaluateMigrationLedgerCount`); kept the integrity checks that **do** recompute against
+  state (unique ids, required fields, valid merge classes, schema validation; ledger dup-paths + byte-count + SHA-256
+  recompute-vs-recorded). Tests updated in lockstep (the enforcement-data↔test pairing lesson). **Lesson: a "drift detector"
+  that is itself a hand-edited literal is not a drift detector — it is a second source of truth that drifts. The honest
+  anti-drift pattern is recompute-and-compare against the artefact, never a frozen count.** Castr done + verified; Oak
+  carries the identical code (pin + HEAD) → recorded as a precise Phase-9 back-flow item (destination is the open
+  owner-decision). **This supersedes the "keep all 22 / lockstep code change avoided" note below** — the better answer was
+  to delete the coupling, not work around it.
+
 - **Phase 6 block (g) substrate contract LANDED — `memory-state-substrate-contracts.{md,manifest.json,schema.json}` to
   castr roots, verified against the live consumer.** The durable record is the commit + `reference-closure.md` §Block (g)
   substrate + sub-plan §4 + the executive README row; only the surprises live here:

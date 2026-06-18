@@ -17,8 +17,6 @@ import { finding } from './finding.js';
 import { readOptionalString, readString, type ManifestDocument } from './live-types.js';
 import { type SubstrateFinding } from './types.js';
 
-const EXPECTED_MANIFEST_SURFACES = 22;
-
 /**
  * Build the read-only report from live repo state.
  */
@@ -125,7 +123,6 @@ async function evaluateTargetRefLiveFindings(
 function evaluateManifestFromLiveSnapshot(manifest: ManifestDocument): readonly SubstrateFinding[] {
   return evaluateManifestSnapshot({
     manifestPath: '.agent/memory/executive/memory-state-substrate-contracts.manifest.json',
-    expectedSurfaceCount: EXPECTED_MANIFEST_SURFACES,
     requiredContractFields: manifest.surface_defaults?.required_contract_fields ?? [],
     surfaces: (manifest.surfaces ?? []).map(toManifestSurfaceSnapshot),
   });

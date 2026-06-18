@@ -449,6 +449,24 @@ Oak's `docs-adr-expert`/`architecture-expert-fred`/`assumptions-expert` (castr l
 `/fixtures/` subdir); the Oak retired-YAML-seed evidence link dropped (Oak-local). `executive/README.md` substrate row
 flipped to ✅ Landed.
 
+### Substrate consumer magic numbers — disposition: **fixed in castr + Oak back-flow item** (2026-06-18)
+
+Owner-directed removal of two anti-pattern magic numbers in `agent-tools/src/practice-substrate/`:
+`EXPECTED_MANIFEST_SURFACES = 22` (`live-report.ts`) and `expectedEntryCount: 114` (`live-json.ts`). Both were **stored
+derived values that the substrate manifest's own `surface_defaults.stored_derived_values_rule` forbids** ("allowed only
+when the validator recomputes and compares them") — frozen literals hand-edited on every change, guaranteeing future
+staleness; `22` did not even describe disk reality (11 of 22 surfaces are forward-references). Removed both count checks
+(`evaluateManifestSurfaceCount`, `evaluateMigrationLedgerCount`) + their `ManifestSnapshot.expectedSurfaceCount` /
+`MigrationLedgerSnapshot.expectedEntryCount` fields; the recompute-against-state integrity checks remain (unique ids,
+required fields, valid PDR-049 merge classes, schema validation; ledger dup-paths + byte-count + SHA-256 recompute). Tests
+updated in lockstep; `practice-substrate` 41/41 green; type-check + lint + build green; the live consumer is behaviourally
+unchanged (only the 2 expected Phase-8 `live-reader-failure` signals).
+
+- **Oak back-flow item (Phase-9 feedback report):** Oak's `agent-tools/src/practice-substrate/` carries the **identical**
+  code at the pin `ad359a4f` _and_ at Oak `main` HEAD (same three files, same line numbers). The same removal should land
+  upstream. **Destination is the open Phase-9 back-flow decision** (`practice/transplant-to-castr` vs `main` vs a fresh
+  branch); not applied to the pinned Oak working tree to avoid dirtying the Phases 6–9 source.
+
 ### Block (g) remaining — disposition: **placeholder** (P8 channels)
 
 `agent-collaboration-channels.md` lands at P8 with the collaboration machinery, before the `transplant/phase-6` tag

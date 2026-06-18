@@ -276,7 +276,6 @@ describe('practice substrate manifest snapshot classification', () => {
     expect(
       evaluateManifestSnapshot({
         manifestPath: '.agent/memory/executive/memory-state-substrate-contracts.manifest.json',
-        expectedSurfaceCount: 1,
         requiredContractFields: ['purpose', 'merge_class', 'generated_outputs'],
         surfaces: [
           {
@@ -294,11 +293,10 @@ describe('practice substrate manifest snapshot classification', () => {
     ).toStrictEqual([]);
   });
 
-  it('detects surface count drift, duplicate surface IDs, missing fields, and invalid merge classes', () => {
+  it('detects duplicate surface IDs, missing fields, and invalid merge classes', () => {
     expect(
       evaluateManifestSnapshot({
         manifestPath: '.agent/memory/executive/memory-state-substrate-contracts.manifest.json',
-        expectedSurfaceCount: 22,
         requiredContractFields: ['purpose', 'merge_class', 'validator'],
         surfaces: [
           {
@@ -323,15 +321,6 @@ describe('practice substrate manifest snapshot classification', () => {
         ],
       }),
     ).toStrictEqual([
-      {
-        id: 'manifest-surface-count-drift',
-        surface: 'substrate-inventory',
-        severity: 'blocking',
-        repair: 'manual-with-provenance',
-        message:
-          'Manifest .agent/memory/executive/memory-state-substrate-contracts.manifest.json declares 2 surfaces; expected 22.',
-        evidence: ['.agent/memory/executive/memory-state-substrate-contracts.manifest.json'],
-      },
       {
         id: 'duplicate-stable-id',
         surface: 'substrate-inventory',
@@ -366,7 +355,6 @@ describe('practice substrate migration-ledger snapshot classification', () => {
       evaluateMigrationLedgerSnapshot({
         ledgerPath:
           '.agent/state/collaboration/comms/archive/legacy-comms-events-migration-ledger-2026-05-07.json',
-        expectedEntryCount: 1,
         entries: [
           {
             originalPath: '.agent/state/collaboration/comms/events/one.json',
@@ -381,12 +369,11 @@ describe('practice substrate migration-ledger snapshot classification', () => {
     ).toStrictEqual([]);
   });
 
-  it('detects migration-ledger count, identity, byte-count, and hash drift', () => {
+  it('detects migration-ledger identity, byte-count, and hash drift', () => {
     expect(
       evaluateMigrationLedgerSnapshot({
         ledgerPath:
           '.agent/state/collaboration/comms/archive/legacy-comms-events-migration-ledger-2026-05-07.json',
-        expectedEntryCount: 114,
         entries: [
           {
             originalPath: '.agent/state/collaboration/comms/events/one.json',
@@ -407,17 +394,6 @@ describe('practice substrate migration-ledger snapshot classification', () => {
         ],
       }),
     ).toStrictEqual([
-      {
-        id: 'migration-ledger-count-drift',
-        surface: 'legacy-comms-events-migration-ledger',
-        severity: 'blocking',
-        repair: 'manual-with-provenance',
-        message:
-          'Migration ledger .agent/state/collaboration/comms/archive/legacy-comms-events-migration-ledger-2026-05-07.json declares 2 entries; expected 114.',
-        evidence: [
-          '.agent/state/collaboration/comms/archive/legacy-comms-events-migration-ledger-2026-05-07.json',
-        ],
-      },
       {
         id: 'migration-ledger-duplicate-original-path',
         surface: 'legacy-comms-events-migration-ledger',
