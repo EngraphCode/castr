@@ -1,0 +1,109 @@
+# Phase 8 sub-plan — Collaboration ACTIVE (the activation phase)
+
+**Source:** owner correction (2026-06-18) — "single-branch is a _constraint_, not a fit; multi-agent concurrency is the
+goal" — plus a firsthand inventory of castr's current collaboration estate this session. **Status:** authored 2026-06-18;
+**NOT executing.** Sequencing is **unchanged** — Phase 8 remains after Phase 6 (memory/state) and Phase 7 (adapters), per
+the primary plan and the owner's standing "I name the next slice." This sub-plan only **sharpens scope** so the
+prioritisation decision rests on measured ground; it does not pull Phase 8 forward.
+
+> Why this file exists: the parent plan's Phase-8 line is a one-liner ("directive + rules cluster + skills + structured
+> coordinator-state + TTL presence + comms attention pass + plan-mode carveout; wire collaboration validator blocking").
+> Read literally it sounds like a large bring. The firsthand inventory below shows it is mostly **activation of
+> already-transplanted machinery** — a materially smaller lift. Persisted so the scope is resumable and the owner's
+> sequencing call is informed.
+
+---
+
+## 1. Key finding — Phase 8 is ACTIVATION, not a new bring (firsthand, 2026-06-18)
+
+The collaboration **machinery is already in the tree** from earlier phases. What is missing is the **runtime substrate**
+and the **wiring/flips** that turn it on. This is the inverse of how the one-liner reads.
+
+### Present (already transplanted — verified firsthand)
+
+| Surface                       | Where                                                                                                                                                                                                                                                                                                                                                                     | Landed  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Collaboration **engine**      | `agent-tools/src/collaboration-state/` (51 modules: claims, comms, identity, watchers, heartbeat, migration, TUI, CLI)                                                                                                                                                                                                                                                    | Phase 2 |
+| In-code **schemas** (Zod)     | `agent-tools/src/collaboration-state/state-schemas.ts` (`commsEventSchema` discriminated union; `schema_version 2.0.0`; PDR-027 `agentIdSchema`)                                                                                                                                                                                                                          | Phase 2 |
+| Collaboration **rules** (12+) | `register-active-areas-at-session-open`, `register-identity-on-thread-join`, `respect-active-agent-claims`, `check-singleton-per-window`, `use-agent-comms-log`, `comms-all-channels-watcher`, `ping-before-escalate`, `collaboration-is-value-contingent`, `follow-agent-collaboration-practice`, `sha-prefix-in-collaboration-content`, `present-verdicts-not-menus`, … | Phase 4 |
+| Collaboration **directives**  | `agent-collaboration.md`, `user-collaboration.md`                                                                                                                                                                                                                                                                                                                         | Phase 5 |
+| Team **skill**                | `start-right-team`                                                                                                                                                                                                                                                                                                                                                        | Phase 3 |
+| **Hooks**                     | Claude `SessionStart` (`practice-session-identity.mjs`) + live PreToolUse guards                                                                                                                                                                                                                                                                                          | Phase 2 |
+| Per-thread **convention**     | `.agent/memory/operational/threads/README.md` (identity schema, lanes, additive-identity)                                                                                                                                                                                                                                                                                 | Phase 6 |
+| Substrate **contract**        | `executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}` (the 6 collaboration surfaces enumerated, marked Phase-8 forward-refs)                                                                                                                                                                                                                        | Phase 6 |
+
+### Absent (what Phase 8 actually does)
+
+- `.agent/state/` **does not exist** — so neither does `.agent/state/collaboration/`. This is the binding gap.
+- The runtime substrate skeleton: per Oak's committed layout at the pin `ad359a4f`, the **committed** surfaces are the
+  directory skeleton + per-dir `README.md` + `.gitkeep` + a `.gitignore` (the **live** runtime files — `active-claims.json`,
+  comms event fragments, `shared-comms-log.md` — are git-ignored and created on first CLI use, never committed).
+- The `collaboration-state` validator is **deferred** (designed to hard-fail on the absent scan dirs — do NOT "fix" it;
+  it self-clears once the substrate exists).
+- The agent-tools test suite carries **12 informational failures** (measured 2026-06-18), the bulk being
+  `collaboration-state` IO/integrity tests that fail purely because `.agent/state/collaboration/` is absent.
+- SessionStart identity/claim **registration to live state** — the hook sets the identity env var, but with no state dir
+  there is nothing to write a claim into.
+- **Per-thread continuity records** — the convention is seeded; no records exist (correctly — they activate here).
+
+## 2. Scope — IN (the activation tasks)
+
+1. **Materialise the runtime substrate skeleton**, seeded **empty** (owner scope — no Oak event data ever):
+   `.agent/state/README.md` + `.agent/state/collaboration/` with the committed skeleton (`conversations/`, `escalations/`,
+   `sidebars/`, `handoffs/`, `comms-archive/` + per-dir `README.md`/`.gitkeep`) and the `.gitignore` that keeps live
+   runtime files (claims/comms/log) out of git. Reconcile dir names against the engine's expectations firsthand (Oak's
+   committed `comms-archive/` vs the substrate consumer's `CANONICAL_COMMS_ROOT = comms/` — the live `comms/` is the
+   git-ignored runtime dir; confirm at execution).
+2. **Resolve the schema-surface contract.** The `practice-substrate` consumer reads `.agent/state/collaboration/*.schema.json`
+   (5: active-claims, closed-claims, comms-event, conversation, escalation) via Ajv, while the engine validates with the
+   **in-code Zod** `state-schemas.ts`. Decide and execute: emit JSON-Schema artefacts from the Zod schemas to those paths,
+   **or** reconcile the consumer to the in-code schemas. (This is the one open design point — verify firsthand; it is why
+   the substrate-contract `.md` marks those schema paths a "Phase-8 item".)
+3. **Wire SessionStart registration** to write an identity row + open an active claim into the live substrate at session
+   open (the rules `register-identity-on-thread-join` / `register-active-areas-at-session-open` already mandate it; the
+   engine CLI already implements `claims open|heartbeat|close`).
+4. **Flip the deferred gates blocking** once their estate exists: add `collaboration-state` to `repo-validators:check`;
+   remove the `turbo test --filter=!@engraph/agent-tools` informational exclusion so agent-tools tests gate (target: the
+   12 substrate-absent failures → 0). (`subagents`→P6 roster, Oak `portability`→P7 are separate flips.)
+5. **Activate per-thread continuity records** as part of the capability: when a second stream becomes safe to run, each
+   stream gets a `threads/<slug>.next-session.md` record (identity table, lanes) per `threads/README.md`; the intermediate
+   step is a `## Lanes` block on the single thread. Records are the **leaf** of this phase, not its substance.
+6. Bring any genuinely-new Phase-8 generic surfaces from the pin that depend on live state (PEEN-hardened coordinator
+   state, TTL presence, comms attention pass, plan-mode carveout) — triage per-hunk against what the engine already
+   implements (most is present; this is a thin reconciliation, per the Phase-3/6 "re-sync is per-hunk triage" lesson).
+
+## 3. D3 dependency mapping (CI / branch coordination is coupled to safe concurrency)
+
+Safe **concurrent multi-agent / multi-branch** work — the goal Phase 8 unlocks — needs CI to enforce gates per branch and
+a safe merge path. castr's CI today (`/.github/workflows/ci.yml`) runs only `install + build + test` — **not** `check:ci`
+(the lint/type-check/madge/depcruise/knip/validators/test:all chain). Consequences:
+
+- Concurrent branches would merge to `main` **ungated** — the per-phase `check:ci` discipline is local-only.
+- This is the same gap as **Q-001** (the ~100k-line transplant PR merging without CI gate enforcement).
+
+**Therefore D3 is a prerequisite for _safe_ multi-stream**, not an independent nicety. D3 scope (per the arc): CI runs the
+full `check:ci` chain; SHA-pin every action with a `# vX.Y.Z` comment (supply-chain); fix the `lib/pnpm-lock.yaml` path
+filter (lockfile is at root); repair the `publish.yml` non-existent `pnpm release`. **Sequencing note:** this sub-plan does
+**not** re-order D3; it records that Phase 8's _value_ (safe concurrency) is not realised until D3 also lands, so the owner
+can weigh them together. See [`open-questions.md` Q-001](../../memory/operational/open-questions.md).
+
+## 4. Acceptance + validation
+
+- `.agent/state/collaboration/` skeleton exists, seeded empty; `.gitignore` keeps runtime files uncommitted; no Oak event
+  data present.
+- The schema-surface contract is resolved: the `practice-substrate` consumer runs with **no `live-reader-failure`** for the
+  collaboration plane (the 2 expected Phase-8 findings from the substrate sub-block clear).
+- `collaboration-state` validator flipped into `repo-validators:check` and green; the agent-tools test informational
+  exclusion removed and the suite green (12 → 0 substrate-absent failures).
+- SessionStart writes a live identity row + claim; a second concurrent session is demonstrably collision-safe (claims +
+  comms exercised end-to-end, empty-seeded).
+- Per-thread continuity records (or the `## Lanes` shape) carry a genuinely concurrent stream.
+- `pnpm check` green (ALL gates); tag `transplant/phase-8`; reference-closure-clean.
+
+## 5. Sequencing — UNCHANGED (owner, 2026-06-18)
+
+Phase 8 stays **after** Phase 6 (memory/state) and Phase 7 (adapters). It has real prerequisites: the substrate **contract**
+(Phase 6 ✅, this session) and the `.agent/state/` layout it describes; the regenerated adapters (Phase 7). This sub-plan
+sharpens _what_ Phase 8 is (activation + D3 coupling), not _when_ it runs. The owner names the next slice; the value of
+this sharpening is that lifting the single-branch constraint is now a **measured, mostly-activation** lift, not an
+open-ended bring — useful input to that prioritisation, nothing more.
