@@ -113,8 +113,10 @@ in `reference-closure.md` §Phase 6)** → **(e) drain the napkin ✅ (2026-06-1
 (manufactured-permission → new rule `no-manufactured-permission.md` per owner's `new-rule-vs-pdr-clause` choice;
 transplant-method lessons → `distilled.md`), tombstoned the candidate, rotated the pre-transplant April/March block to
 `active/archive/napkin-2026-03-to-04.md`; active napkin back under the ~500-line threshold (480) → **(f) author
-`repo-continuity.md` (after the drain reveals what's live) ← NEXT** → (g) executive/ + root `memory/README.md` (with the
-catalogue unit).
+`repo-continuity.md` ✅ (2026-06-18)** — castr's own continuity contract from castr's live state (NOT copied from Oak;
+lean structural contract that points to prompt/delivery-ledger/tracker for scope rather than restating; single-stream
+scale, per-thread records deferred until concurrent threads arise); closes the `repo-continuity.md` forward-refs from
+`operational/README` + `threads/README` → **(g) executive/ + root `memory/README.md` (with the catalogue unit) ← NEXT**.
 
 ### Generator re-sync — measured outcome (2026-06-17)
 

@@ -400,9 +400,11 @@ structural **contracts**, not Oak runtime data — sub-plan `06` §5):
 
 ### Forward placeholders out of the registers — disposition: **placeholder** (resolve later in Phase 6)
 
-- `repo-continuity.md` (cited by `operational/README.md`, `threads/README.md`) — authored at sub-plan `06` block (f).
+- `repo-continuity.md` (cited by `operational/README.md`, `threads/README.md`) — **RESOLVED ✅ (block f,
+  2026-06-18):** castr's own continuity contract authored at `memory/operational/repo-continuity.md` (lean structural
+  contract; single-stream scale; points to prompt/delivery-ledger/tracker for scope; all internal links resolve).
 - `../README.md` / `../../README.md` → root `.agent/memory/README.md` (cited by `operational/README.md`,
-  `tracks/README.md`) — authored at block (g) with the executive unit.
+  `tracks/README.md`, `repo-continuity.md`) — authored at block (g) with the executive unit.
 
-Both resolve before the `transplant/phase-6` tag (acceptance §6); they dangle only in the in-progress intermediate
-commits, exactly as the Phase-3/4/5 forward-placeholders did.
+The remaining root-`memory/README.md` placeholder resolves before the `transplant/phase-6` tag (acceptance §6); it
+dangles only in the in-progress intermediate commits, exactly as the Phase-3/4/5 forward-placeholders did.
