@@ -4,6 +4,33 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-18
 
+- **Phase 6 block (g) substrate contract LANDED — `memory-state-substrate-contracts.{md,manifest.json,schema.json}` to
+  castr roots, verified against the live consumer.** The durable record is the commit + `reference-closure.md` §Block (g)
+  substrate + sub-plan §4 + the executive README row; only the surprises live here:
+  - **The consumer pins the contract: `EXPECTED_MANIFEST_SURFACES = 22` is hardcoded in `live-report.ts`.** The manifest
+    is **consumed at runtime**, not just docs — `readManifest` Ajv-2020-compiles the sibling schema and validates the
+    manifest against it (`schema-incoherence`/`invalid-json` findings), checks count==22, unique ids, all 13
+    `required_contract_fields` present, valid PDR-049 `merge_class`. So "re-author to castr roots" = keep all 22 surfaces
+    (the layout is byte-identical Oak↔castr; the unbuilt collaboration/diagnostics surfaces are **named Phase-8
+    positions**, not drift) and reconcile only the host-local fields. Reducing the surface set would have forced a
+    lockstep `EXPECTED_MANIFEST_SURFACES` code change — avoided.
+  - **`practice-substrate` is NOT wired into `pnpm check`** (only a standalone `agent-tools` script). So I could run it as
+    a **firsthand verification harness** for the contract without gate-blast-radius. Result: all structural checks green;
+    the only 2 blocking findings are `live-reader-failure` reading `.agent/state/collaboration/{active-claims.schema.json,
+shared-comms-log.md}` — the **expected, honest Phase-8-absent signal** (`collaborationAjv` readFile's the schemas with
+    NO catch → throws → caught one level up as one finding per always-live evaluator). Documented in the `.md` as
+    must-not-silence (the napkin's own "a failing check may be a TRUE signal" lesson, 2026-06-07).
+  - **Oak phenotype in the contract, reconciled per-surface (the per-body lesson again):** Oak's reviewer routes name
+    sub-agents castr lacks (`docs-adr-expert`/`architecture-expert-fred`/`assumptions-expert`) → mapped to castr's real
+    `code-reviewer`/`type-reviewer` + workflow labels; `plan_roots` pointed at two Oak-local plans (incl. an `agent-tooling`
+    doctor plan castr has no analogue for) → re-pointed to the transplant sub-plan, Oak doctor plan **de-linked** per
+    `no-moving-targets`; `fixture_roots` named `agent-tools/tests/collaboration-state/fixtures/` (castr has the dir but no
+    `/fixtures/` subdir — schemas are in-code/TS fixtures) → corrected; the Oak retired-YAML-seed evidence link dropped.
+  - **The portable schema is genuinely portable — brought as-is.** It encodes the PDR-049 merge-class enum + PDR-050
+    required-field set, zero host phenotype; matches sub-plan §2's "structural contracts byte-identical, replicate as-is."
+    Confirmed castr's PDR-049 (5 merge tokens incl. `append-only-structured-by-<key>`) + PDR-050 (field set, tiers,
+    severity/repair split) define exactly what the manifest asserts — faithful to castr's own doctrine, not just Oak text.
+
 - **Phase 6 (memory) continued — operational registers seeded + napkin drained.** Materialised the five operational
   registers from Oak `main` `ad359a4f` (commit `d80e49f`): `operational/README`, `threads/README`, `tracks/README`
   (convention contracts, host-phenotype reconciled per sub-plan §5) + `pending-graduations`/`open-questions`

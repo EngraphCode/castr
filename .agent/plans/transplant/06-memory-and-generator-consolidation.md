@@ -121,10 +121,18 @@ taxonomy, localised) + `executive/README.md` (surfaces table with per-surface br
 castr PDR-079/003/010 + PDR-050; `agent-capability-vocabulary` DON'T-BRING); **the full `.agent/memory` dangling-link
 sweep is now empty.** Executive **catalogues ✅ (2026-06-18)** — `artefact-inventory` / `invoke-code-experts` /
 `cross-platform-agent-surface-matrix` regenerated firsthand from castr's real estate (6-reviewer roster, real adapter
-topology with named P7/Codex-only/Claude-only gaps, honest forwarder note). **Remaining in (g) ← NEXT:** the **substrate**
-contract (`.md`/`.manifest`/`.schema`) re-authored to castr roots (consumer `agent-tools/src/practice-substrate/`); then
-the OUT items (full `active/patterns/` import, sub-agent roster, `.agent/state/collaboration/` schemas + P8
-`agent-collaboration-channels`) before the `transplant/phase-6` tag + full green `pnpm check`.
+topology with named P7/Codex-only/Claude-only gaps, honest forwarder note). **Substrate contract ✅ (2026-06-18)** — the
+`memory-state-substrate-contracts.{md,manifest.json,schema.json}` trio re-authored to castr roots: 22 surfaces (the count
+the consumer pins), castr identity/`generated_at`/PDR-049+050 cites, `plan_roots` re-pointed to this sub-plan (Oak doctor
+plan de-linked per `no-moving-targets`), reviewer routes mapped to castr's 6-reviewer roster, and a `notes` field marking
+each of the 11 Phase-8/forward-reference surfaces. **Verified firsthand** by running the real consumer
+(`pnpm --filter @engraph/agent-tools practice-substrate -- check --mode report`): all structural manifest checks pass
+(count=22, unique ids, required fields, valid PDR-049 merge classes, manifest-validates-against-schema); the only findings
+are the **expected, documented** `blocking` `live-reader-failure` signals for the absent Phase-8 `.agent/state/collaboration/`
+plane (the consumer is **not** in `pnpm check`, so no gate is affected; the signal must not be silenced). Format + 5 repo
+validators green. **Remaining in (g) / Phase-6 ← NEXT:** the OUT items (full `active/patterns/` import, sub-agent roster,
+`.agent/state/collaboration/` schemas + P8 `agent-collaboration-channels`) before the `transplant/phase-6` tag + full green
+`pnpm check`.
 
 ### Generator re-sync — measured outcome (2026-06-17)
 

@@ -436,8 +436,20 @@ localisations):
 
 `executive/README.md` surfaces table flipped these three to ✅ Landed.
 
-### Block (g) remaining — disposition: **placeholder** (substrate + P8)
+### Block (g) substrate — disposition: **CLOSED (2026-06-18)**
 
-The **substrate** contract (`.md` + strict `.manifest.json`/`.schema.json`, consumer `agent-tools/src/practice-substrate/`)
-re-authors to castr roots in the substrate sub-block; `agent-collaboration-channels` lands at P8. Both before the
-`transplant/phase-6` tag (acceptance §6).
+The **substrate** contract (`memory-state-substrate-contracts.{md,manifest.json,schema.json}`, consumer
+`agent-tools/src/practice-substrate/`) was re-authored to castr roots and verified firsthand against the live consumer
+(22 surfaces; manifest-validates-against-schema; only the absent Phase-8 collaboration plane reports the expected
+`live-reader-failure`). Reconciliations from Oak: castr identity/`generated_at`; PDR-049+050 doctrine cites (castr has
+both); `plan_roots` re-pointed to `transplant/06-memory-and-generator-consolidation.md` (Oak `agent-tooling` doctor plan
+**de-linked** per `no-moving-targets` — back-flow not needed, the Oak plan path is host-local); reviewer routes mapped off
+Oak's `docs-adr-expert`/`architecture-expert-fred`/`assumptions-expert` (castr lacks them) to castr's real `code-reviewer`
+/`type-reviewer` + workflow labels; `fixture_roots` corrected to castr's `agent-tools/tests/collaboration-state/` (no
+`/fixtures/` subdir); the Oak retired-YAML-seed evidence link dropped (Oak-local). `executive/README.md` substrate row
+flipped to ✅ Landed.
+
+### Block (g) remaining — disposition: **placeholder** (P8 channels)
+
+`agent-collaboration-channels.md` lands at P8 with the collaboration machinery, before the `transplant/phase-6` tag
+(acceptance §6).
