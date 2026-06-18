@@ -119,10 +119,12 @@ scale, per-thread records deferred until concurrent threads arise); closes the `
 `operational/README` + `threads/README` → **(g) structure tier ✅ (2026-06-18)** — root `memory/README.md` (three-mode
 taxonomy, localised) + `executive/README.md` (surfaces table with per-surface bring-status; Oak ADR-125/114/129 →
 castr PDR-079/003/010 + PDR-050; `agent-capability-vocabulary` DON'T-BRING); **the full `.agent/memory` dangling-link
-sweep is now empty.** **Remaining in (g) ← NEXT:** the executive **catalogues** (`artefact-inventory`,
-`invoke-code-experts`, `cross-platform-agent-surface-matrix`) regenerated from castr's real estate, and the **substrate**
-contract (`.md`/`.manifest`/`.schema`) re-authored to castr roots; then the OUT items (patterns import, sub-agent roster,
-collaboration schemas) before the `transplant/phase-6` tag + full green `pnpm check`.
+sweep is now empty.** Executive **catalogues ✅ (2026-06-18)** — `artefact-inventory` / `invoke-code-experts` /
+`cross-platform-agent-surface-matrix` regenerated firsthand from castr's real estate (6-reviewer roster, real adapter
+topology with named P7/Codex-only/Claude-only gaps, honest forwarder note). **Remaining in (g) ← NEXT:** the **substrate**
+contract (`.md`/`.manifest`/`.schema`) re-authored to castr roots (consumer `agent-tools/src/practice-substrate/`); then
+the OUT items (full `active/patterns/` import, sub-agent roster, `.agent/state/collaboration/` schemas + P8
+`agent-collaboration-channels`) before the `transplant/phase-6` tag + full green `pnpm check`.
 
 ### Generator re-sync — measured outcome (2026-06-17)
 

@@ -419,10 +419,25 @@ structural **contracts**, not Oak runtime data — sub-plan `06` §5):
   domain-specialist (exact)**, **PDR-050 substrate (exact)**); Oak `agent-capability-vocabulary.md` recorded
   **DON'T-BRING** (Oak developer/curriculum capability axis; no castr analogue).
 
-### Block (g) remaining — disposition: **placeholder** (executive-catalogue + substrate sub-blocks)
+### Block (g) executive catalogues — disposition: **rewrite (done)** (2026-06-18)
 
-The executive **catalogues** (`artefact-inventory`, `invoke-code-experts`, `cross-platform-agent-surface-matrix`) are
-**regenerated from castr's real estate** — host-phenotype documents, not localisations — in the executive-catalogue
-sub-block. The **substrate** contract (`.md` + strict `.manifest.json`/`.schema.json`, consumer
-`agent-tools/src/practice-substrate/`) re-authors to castr roots in the substrate sub-block. `agent-collaboration-channels`
-lands at P8. All before the `transplant/phase-6` tag (acceptance §6).
+The three executive **catalogues** were **regenerated from castr's real estate** (firsthand-grounded against the
+sub-agents roster, the adapter topology, and the `invoke-reviewers` rule — host-phenotype documents, not Oak
+localisations):
+
+- `artefact-inventory.md` — castr's canonical-vs-adapter taxonomy + how-to (skills via `skills-adapter-generate`; rules
+  canonical + index, with an **honest forwarder note** that the "three on-disk forms" model is aspirational/P7;
+  sub-agents canonical template + Codex adapter).
+- `invoke-code-experts.md` — castr's **6-reviewer roster** (code/test/type-reviewer + openapi/zod/json-schema-expert),
+  triage ladder, Codex-adapter + in-session-template invocation, worked examples; points to the `invoke-reviewers` rule
+  as the firing doctrine.
+- `cross-platform-agent-surface-matrix.md` — castr's **real** adapter parity (skills broad; rules forwarder-less →
+  P7 ⚠️; sub-agents Codex-only ⚠️; hooks Claude-only ⚠️) with each gap named.
+
+`executive/README.md` surfaces table flipped these three to ✅ Landed.
+
+### Block (g) remaining — disposition: **placeholder** (substrate + P8)
+
+The **substrate** contract (`.md` + strict `.manifest.json`/`.schema.json`, consumer `agent-tools/src/practice-substrate/`)
+re-authors to castr roots in the substrate sub-block; `agent-collaboration-channels` lands at P8. Both before the
+`transplant/phase-6` tag (acceptance §6).
