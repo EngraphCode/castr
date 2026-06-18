@@ -367,3 +367,42 @@ Phase 5):** that doc's References section also carries Oak-product links (`ADR-0
 **Phase-5 result: 0 `rewrite`-class entries remain open in touched files; all dangles are `placeholder`(→P6/P7/P8) or
 `retained-cross-host`. The Oak rules-delta is folded; the PDR/rule counts and the drift-checked count-claims are
 consistent with disk.**
+
+---
+
+## Phase 6 — Memory layout (operational registers seeded)
+
+### Operational register seeding — disposition: **rewrite (done)** (2026-06-18)
+
+Five operational-memory surfaces materialised from Oak `main` `ad359a4f`, localised + host-phenotype reconciled (the
+structural **contracts**, not Oak runtime data — sub-plan `06` §5):
+
+- `operational/README.md` — Oak-local OAC plan-path cite (`operational-awareness-and-continuity-surface-separation.plan.md`)
+  **de-linked** per `no-moving-targets` → cite PDR-011 only; the two `collaboration-state-*.md` surface rows marked
+  **(Phase 8)** un-linked (machinery not installed); the Oak `workstreams/README.md` retirement-notice rewritten to
+  castr's end-state ("No workstream surface; lane state inline per PDR-027") — castr never had that surface.
+- `threads/README.md` — Oak "not yet ratified / jc-consolidate-docs candidate" header rewritten (PDR-027 **is** ratified
+  in castr); `jc-consolidate-docs`→`consolidate-docs`, `$jc-start-right-team`→`start-right-team`,
+  `/jc-metacognition`→`metacognition`; `schema-first-execution.md` **removed** from the foundation-directive list
+  (castr DON'T-BROUGHT it); the `session-discipline.md` plan-component conditional removed (castr has no such component);
+  `workstreams/README.md` cites dropped; `state/collaboration/` cite marked **(Phase 8)** un-linked.
+- `tracks/README.md` — OAC-phase / `runtime/tracks/` provenance rewritten to castr's Phase-6 origin; the Oak-local
+  `cross-vendor-session-sidecars.plan.md` cite **de-linked** to neutral prose.
+- `pending-graduations.md`, `open-questions.md` — **contract only** (frontmatter + preamble) brought; all Oak runtime
+  content (owner-walk, Q-items, dated captures) is **DON'T-BRING**; `fitness_rationale` reconciled to castr (Oak ADR-144
+  / dated-recalibration history dropped); castr authors entries via the napkin drain.
+
+### New upstream Oak bug — back-flow item (Phase-9 feedback report)
+
+8. `memory/operational/threads/README.md` cites `consolidate-docs` via `../../skills/...` (resolves to
+   `.agent/memory/skills/`, nonexistent) — wrong relative depth; its sibling PDR cites in the same file correctly use
+   `../../../`. Fixed here → `../../../skills/consolidate-docs/SKILL-CANONICAL.md`. (Continues the items-1–7 series above.)
+
+### Forward placeholders out of the registers — disposition: **placeholder** (resolve later in Phase 6)
+
+- `repo-continuity.md` (cited by `operational/README.md`, `threads/README.md`) — authored at sub-plan `06` block (f).
+- `../README.md` / `../../README.md` → root `.agent/memory/README.md` (cited by `operational/README.md`,
+  `tracks/README.md`) — authored at block (g) with the executive unit.
+
+Both resolve before the `transplant/phase-6` tag (acceptance §6); they dangle only in the in-progress intermediate
+commits, exactly as the Phase-3/4/5 forward-placeholders did.

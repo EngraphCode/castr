@@ -105,9 +105,12 @@ dependency measurement corrected the order:
   doc was absent) — so the homing doc is a genuine prerequisite that also resolves a standing dangling ref.
 
 Resulting order: **(a) `ephemeral-to-permanent-homing.md` ✅ (2026-06-17 — landed, reconciled, resolves the 3 dangling
-refs)** → (b) leaf operational docs (`tracks/README`) + decision on the skill re-sync → (c) generator skill re-sync to
-main → (d) coupled docs (`threads/README`, `pending-graduations`) + `operational/README` overview → (e) **drain the
-napkin** through the now-current homing procedure → (f) author `repo-continuity.md` (after the drain reveals what's live)
+refs)** → **(b) leaf operational docs (`tracks/README`) ✅ (2026-06-18)** + decision on the skill re-sync **✅ (block c
+below — bringable-now layer done; remainder folds to P8)** → (c) generator skill re-sync to
+main **✅ (bringable-now layer)** → **(d) coupled docs (`threads/README`, `pending-graduations`, `open-questions`) +
+`operational/README` overview ✅ (2026-06-18 — all five registers seeded, host-phenotype reconciled per §5; dispositions
+in `reference-closure.md` §Phase 6)** → (e) **drain the napkin** through the now-current homing procedure **← NEXT** →
+(f) author `repo-continuity.md` (after the drain reveals what's live)
 → (g) executive/ + root `memory/README.md` (with the catalogue unit).
 
 ### Generator re-sync — measured outcome (2026-06-17)
