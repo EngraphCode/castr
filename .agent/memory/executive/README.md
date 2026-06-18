@@ -47,15 +47,19 @@ doctrines behind these surfaces live in the Practice Core:
 
 - the canonical-vs-adapter / artefact-portability pattern →
   [PDR-079](../../practice-core/decision-records/PDR-079-pdr-vs-adr-portability-distinction.md);
-- the sub-agent / reviewer-roster doctrine →
-  [PDR-003](../../practice-core/decision-records/PDR-003-sub-agent-protection-of-foundational-practice-docs.md);
-- the domain-specialist capability pattern →
+- the domain-specialist capability pattern (the domain experts) →
   [PDR-010](../../practice-core/decision-records/PDR-010-domain-specialist-capability-pattern.md);
+- sub-agent protection of foundational docs →
+  [PDR-003](../../practice-core/decision-records/PDR-003-sub-agent-protection-of-foundational-practice-docs.md);
+- the layered component/template composition architecture →
+  [`sub-agents/README.md`](../../sub-agents/README.md) (host-local; castr has no
+  separate PDR for prompt composition);
 - the state/memory substrate contract →
   [PDR-050](../../practice-core/decision-records/PDR-050-state-memory-substrate-contracts.md).
 
 The executive-memory surfaces operationalise those doctrines with
 concrete castr catalogues and step-by-step creation procedures.
 (Oak's host ADR-125/114/129 cites are re-pointed to these portable
-PDRs per the transplant's per-surface reconciliation; castr authors a
-host ADR only where a portable PDR is insufficient — PDR-079.)
+homes — PDR-079, PDR-010, and the host-local `sub-agents/README.md` —
+per the transplant's per-surface reconciliation; castr authors a host
+ADR only where no portable PDR can own the contract.)
