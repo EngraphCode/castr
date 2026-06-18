@@ -121,14 +121,17 @@ directive placeholders resolved; castr's `tdd.md` rule reconciled against `tdd-a
 91→92 files / 90 numbered slots; `RULES_INDEX` 85→86 rows; drift count-claims updated). Full record:
 `reference-closure.md` §Phase 5.
 
-**NEXT: Phase 6 — Sub-agents / memory / state.** 13 generic sub-agent templates + `components/`; full patterns
-(provenance-amended, index regenerated, drop ~2 UI); executive (regenerated catalogues); operational; collaboration
-schemas + empty dirs. **Opens with a consolidation pass** (owner-confirmed 2026-06-10) — full design in
-[`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md): reconcile castr's flat
-`memory/napkin.md` + `memory/distilled.md` into the Oak `active/` layout — the Phase-5 directives
-(`orientation`/`continuity-practice`/`agent-collaboration`) already cite `memory/active/…` + `memory/operational/…` +
-`memory/executive/…` as forward-placeholders that resolve here — then drain the napkin and graduate captured learnings
-into their enforcement homes.
+**Phase 6 — Sub-agents / memory / state — IN PROGRESS (memory layout substantially landed 2026-06-18).** Blocks
+(a)–(f) + (g) structure & catalogues done (commits `5a264a7`, `c6b90eb`, then `d80e49f`→`b21ec54`): flat memory → Oak
+`active/` layout; operational registers materialised + reconciled; napkin drained (new rule `no-manufactured-permission`;
+lessons → `distilled.md`; rotated to 480 lines); `repo-continuity.md` authored; root `memory/README.md` +
+`executive/README.md` + the three executive catalogues regenerated from castr's real estate. **The full `.agent/memory`
+dangling-link sweep is empty.** Full per-block design + live status in
+[`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md) §4 (reorder a✅…g-catalogues✅).
+**NEXT (remaining Phase 6):** the **substrate contract** (`executive/memory-state-substrate-contracts.{md,manifest,schema}`
+— strict consumer-coupled data) → full `active/patterns/` import (~131; provenance-amended, index regenerated, drop ~2 UI)
+→ the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers already exist) →
+`.agent/state/collaboration/` schemas + empty dirs (P8) before the `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).

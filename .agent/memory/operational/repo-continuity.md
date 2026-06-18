@@ -34,10 +34,13 @@ mapping is 1:1 and a separate record would pay coordination cost without
 structural value. The convention is seeded and ready (`threads/README.md`); the
 prompt + tracker carry the single stream's continuation today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — block (f) | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                            | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — block (g): substrate + OUT items next | claude-code / opus-4-8 / executor / `2026-06-18` | See §Next Safe Steps |
 
+At single-stream scale the row above is the continuity record; the `Latest
+identity` column carries the PDR-027 attribution (platform / model / role /
+`last_session`) in lieu of a separate `threads/<slug>.next-session.md` file.
 When a second concurrent stream opens (e.g. a remediation-backlog lane run in
 parallel), give it a `threads/<slug>.next-session.md` record with its own
 identity table per `threads/README.md`.
@@ -52,25 +55,27 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**Phase-6 memory consolidation — in progress (2026-06-18).** The flat memory was
-moved into the Oak `active/` layout; the operational register layout is
-materialised (`README`, `threads/README`, `tracks/README`,
-`pending-graduations`, `open-questions` — contracts, host-phenotype reconciled).
-The napkin was drained (manufactured-permission candidate → new rule
-`no-manufactured-permission.md`; transplant-method lessons → `distilled.md`;
-pre-transplant entries rotated to `active/archive/`; napkin under its ~500-line
-threshold). [`pending-graduations.md`](pending-graduations.md) and
-[`open-questions.md`](open-questions.md) are seeded near-empty and populated by
-future drains. Remaining Phase-6 blocks: this contract (f, landing now) → the
-executive unit + root `memory/README.md` (g) → the OUT items (full
-`active/patterns/` import, the sub-agent roster, `.agent/state/collaboration/`
-schemas) before the `transplant/phase-6` tag.
+**Phase-6 memory consolidation — substantially landed (2026-06-18).** Blocks
+(a)–(f) + (g) structure & catalogues done: flat memory → Oak `active/` layout;
+operational registers materialised + reconciled; napkin drained
+(manufactured-permission candidate → new rule `no-manufactured-permission.md`;
+transplant-method lessons → `distilled.md`; pre-transplant entries rotated to
+`active/archive/`; napkin 480 lines); `repo-continuity.md` authored; root
+`memory/README.md` + `executive/README.md` + the three executive catalogues
+(`artefact-inventory`, `invoke-code-experts`, `cross-platform-agent-surface-matrix`)
+regenerated from castr's real estate. **The full `.agent/memory` dangling-link
+sweep is empty.** Remaining Phase-6: the **substrate contract**
+(`executive/memory-state-substrate-contracts.{md,manifest,schema}` — strict
+consumer-coupled data, deferred as too error-prone to rush) → the OUT items
+(full `active/patterns/` import ~131, sub-agent roster expansion,
+`.agent/state/collaboration/` schemas) before the `transplant/phase-6` tag +
+full green `pnpm check`.
 
 ## Next Safe Steps
 
 Authoritative sequence: sub-plan
 [`06-memory-and-generator-consolidation.md` §4](../../plans/transplant/06-memory-and-generator-consolidation.md)
-(reorder a✅…e✅, **f landing now**, g next) and the
+(reorder a✅…g-structure✅, g-catalogues✅, **substrate ← NEXT**) and the
 [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
 enhancement also keeps the remediation backlog 02–07, the rest of the transplant
 and arc D1–D4, and the feature slice required and unparked — the owner names

@@ -44,3 +44,27 @@ an item graduates, replace it with a one-line tombstone naming where it landed
 > consolidation passes from castr's own state — not copied from any other repo.
 
 <!-- Entries appended below by napkin drains and consolidation passes. -->
+
+## 2026-06-18 capture (Phase-6 session-completion consolidation)
+
+- **Single-stream continuity scale — the repo-continuity Active-Threads row IS
+  the record; per-thread `next-session.md` records deferred until concurrent
+  threads arise.** Candidate home: a **PDR-027 amendment** (or clause) extending
+  the 2026-04-21 workstream-retirement logic from the workstream layer to the
+  thread-record layer — at 1:1 thread↔stream scale a separate per-thread file
+  pays coordination cost without structural value, so the identity attribution
+  folds into the repo-continuity row. **Owner-gated:** PDR amendment is owner
+  governance; also part of the periodic PDR-currency sync (D4/P9), so route there
+  rather than authoring a one-off.
+  `[captured: 2026-06-18 | source: repo-continuity block-f + this consolidation]`
+- **Pattern: a transplanted surface carries the source repo's phenotype — read
+  the body, reconcile per-surface, and _regenerate_ host-estate catalogues
+  rather than localise them.** Multi-instance, proven every transplant phase
+  (P3 portability; P4 a KEEP-classed rule contradicting principles + false
+  §-cites; P5 a false TDD cite; P6 an Oak relative-path depth bug + the
+  three-forms-aspirational index + regenerate-not-localise catalogues). Candidate
+  home: a `.agent/memory/active/patterns/` instance, or a PDR with
+  `pdr_kind: pattern` if it generalises beyond the transplant. **Pending:** the
+  instances are conserved in `distilled.md` §Transplant method; this is the
+  graduation-upward step, owner-confirmable at a dedicated-curation pass.
+  `[captured: 2026-06-18 | source: distilled.md §Transplant method]`

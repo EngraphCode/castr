@@ -276,6 +276,9 @@ green `pnpm check`. Full sequence + live status: sub-plan `06-memory-and-generat
 a✅…g-structure✅, g-catalogues✅, substrate← NEXT). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
-**Once reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so far** (owner,
-2026-06-17). Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
+**Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). castr's 6 reviewers already
+exist (`code/test/type-reviewer` + `openapi/zod/json-schema-expert`, catalogued in
+`memory/executive/invoke-code-experts.md`); the Phase-6 sub-agent work is the roster _expansion_, not first install. The
+reviewers review code / types / schema fidelity — point them at transplanted **code** changes (e.g. agent-tools), not at
+governance-doc edits. Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
 bodies must be read, not classified.
