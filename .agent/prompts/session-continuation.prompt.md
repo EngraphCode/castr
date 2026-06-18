@@ -255,14 +255,20 @@ named positions in `relevance-ledger.md` §Main re-pin delta.
 
 **Resolved owner decisions:** the transplant PR to `main` carries its 2 deep-review commits (do not merge `docs/initial-deep-review` separately); Oak's `consolidate-docs` replaces castr's `jc-consolidate-docs`; pulling any one skill pulls its dependency closure.
 
-**First action (next session, from 2026-06-17):** continue **Practice transplant — Phase 6 (memory)** on
-`feat/transplant-engraph-practice`, grounding with the owner first. **Phase 6 opening slice LANDED — commit `5a264a7`**
-(flat memory → Oak `active/` layout; `ephemeral-to-permanent-homing.md` brought, resolving 3 dangling Phase-3 refs;
-generator-triage generic fold; the main-delta bring-manifest). **Next: the napkin drain** — first seed the operational
-registers it writes into (`pending-graduations.md`, `open-questions.md`, `threads/README`, `tracks/README`, then
-`operational/README`), then drain the ~1509-line `active/napkin.md` through the now-current homing procedure, graduating
-the manufactured-permission rule candidate + transplant-method lessons. Full sequence + live status: sub-plan
-`06-memory-and-generator-consolidation.md` §4 (reorder a✅…g). This is **one deep enhancement** — Phase 6 is the slice the
+**First action (next session, from 2026-06-18):** continue **Practice transplant — Phase 6 (memory)** on
+`feat/transplant-engraph-practice`, grounding with the owner first. **Blocks (a)–(e) LANDED.** Opening slice (`5a264a7`):
+flat memory → Oak `active/` layout + `ephemeral-to-permanent-homing.md` + generator-triage fold + main-delta manifest.
+**2026-06-18 (commits `d80e49f`, `ce57dd1`, `e2ce7de`):** five operational registers seeded + host-phenotype reconciled
+(`operational/README`, `threads/README`, `tracks/README`, `pending-graduations`/`open-questions` contracts);
+**napkin drained** — the manufactured-permission candidate graduated to a **new rule**
+`.agent/rules/no-manufactured-permission.md` (owner ran `new-rule-vs-pdr-clause`; **87 canonical rules**),
+transplant-method lessons → `distilled.md`, pre-transplant entries rotated to `active/archive/napkin-2026-03-to-04.md`
+(napkin 480 lines, under threshold). **NEXT: block (f)** — author castr's own `repo-continuity.md` from castr's real
+current state (NOT copied from Oak; closes the two forward-refs from `operational/README` + `threads/README`); **then (g)**
+executive/ + root `memory/README.md` (closes the `../README.md` forward-refs) with the catalogue unit; then the Phase-6
+OUT items (full `active/patterns/` import, the 13 sub-agent templates + `components/`, `.agent/state/collaboration/`
+schemas) before the `transplant/phase-6` tag + full green `pnpm check`. Full sequence + live status: sub-plan
+`06-memory-and-generator-consolidation.md` §4 (reorder a✅…e✅, f← NEXT). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
 **Once reviewers exist (Phase 6 installs the sub-agent roster), use them to assess the transplant work so far** (owner,
