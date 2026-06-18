@@ -4,6 +4,23 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-06-18
 
+- **Owner correction — single-branch operation is a CONSTRAINT, not a fit (inverted-causality).** I answered "are we
+  ready for per-thread continuity records?" with "no — wait until concurrent threads arise; no structural value yet."
+  Owner: _"that's backwards, I am operating in a single branch because that is all the agent support framework can
+  currently handle."_ Multi-agent concurrency is the explicit **goal** of this branch (primary plan user-impact line);
+  per-thread continuity + the collaboration substrate are **enabling infrastructure on the path to it**, not a downstream
+  consequence to wait for. My "wait for the trigger" deferral was **circular** — concurrency cannot arise until the
+  framework (which _includes_ per-thread continuity) is built. Root error: I inherited Oak's steady-state deferral
+  rationale (per-thread records "without structural value" at single-thread scale, PDR-027 §Amendment 2026-04-21) and
+  applied it to castr **without reconciling to castr's build-toward-concurrency context** — the per-surface transplant
+  lesson applied to a doctrine's _rationale_, and I missed it. **Meta-lesson (distill candidate): mistook a constraint
+  for a fit.** Same family as green-gates-mask-gaps and manufactured-parking — reading a current limitation/absence as
+  the intended steady state. **Cure:** when a surface asserts "X is fine / sufficient / 1:1 / deferred-no-value", ask
+  whether X is _chosen_ or merely _imposed by an unbuilt capability_; if imposed, the surface should name the constraint
+  and the enabling work, not present it as a fit. Reframed `repo-continuity.md` §Active Threads. The binding gap to lift
+  the constraint is the Phase-8 collaboration substrate (+ branch/CI coordination, D3); per-thread records are its
+  cheapest leaf.
+
 - **Removed two anti-pattern magic numbers from the substrate consumer (owner-directed) — `EXPECTED_MANIFEST_SURFACES = 22`
   and `expectedEntryCount: 114`.** Owner: _"I don't want either of those magic numbers to exist in either repo… all they
   achieve is guaranteeing they will be out of date."_ Sharper framing found in the metacognition pass: a hardcoded

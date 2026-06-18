@@ -26,13 +26,28 @@ This block is a pointer, not a second narrative. The authoritative homes:
 
 ## Active Threads
 
-castr runs at **single-stream scale**: one continuity stream, one branch. Per
-the workstream-retirement rationale ([PDR-027 §Amendment Log 2026-04-21 Session 5](../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md#amendment-log)),
-a separate per-thread `threads/<slug>.next-session.md` record is **deferred**
-until concurrent threads actually arise — at current scale the thread↔stream
-mapping is 1:1 and a separate record would pay coordination cost without
-structural value. The convention is seeded and ready (`threads/README.md`); the
-prompt + tracker carry the single stream's continuation today.
+castr runs **single-stream today as a _constraint_, not a fit** (owner, 2026-06-18):
+one continuity stream, one branch — **because the multi-agent collaboration
+framework that would make concurrent streams safe is not yet built**, not because
+the work is naturally single-stream. Multi-agent concurrency is the **goal** of
+this branch (see the primary plan's user-impact line: "active multi-agent
+collaboration so multiple agents can work on castr coherently"), so per-thread
+continuity records **and** the collaboration substrate are **enabling
+infrastructure on the path to it** — not a consequence to wait for. The binding
+gap is the unbuilt Phase-8 substrate (`.agent/state/collaboration/` absent; the
+`collaboration-state`/`subagents` validators deferred-by-design; comms/presence
+not active) plus branch/CI coordination (CI does not yet run `check:ci`, arc D3).
+Per-thread records are the cheapest **leaf** of that capability, not the thing
+that lifts the constraint.
+
+While single-stream, the operational simplification still holds (PDR-027
+§Amendment Log 2026-04-21 Session 5): the row below **is** the continuity record
+and no separate `threads/<slug>.next-session.md` file is needed _yet_. But the
+trigger to activate per-thread records is **building the Phase-8 framework that
+supports concurrency** — not concurrency "spontaneously arising", which is
+circular (concurrency cannot arise until the support, including per-thread
+continuity, exists). The convention is seeded and ready (`threads/README.md`);
+the prompt + tracker carry the single stream today.
 
 | Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                            | Latest identity                                  | Next safe step       |
 | ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------ | -------------------- |
@@ -41,9 +56,12 @@ prompt + tracker carry the single stream's continuation today.
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
 `last_session`) in lieu of a separate `threads/<slug>.next-session.md` file.
-When a second concurrent stream opens (e.g. a remediation-backlog lane run in
-parallel), give it a `threads/<slug>.next-session.md` record with its own
-identity table per `threads/README.md`.
+Per-thread records activate **as the Phase-8 collaboration framework lands** (the
+capability that makes a second stream safe to run) — at which point each stream
+gets a `threads/<slug>.next-session.md` record with its own identity table per
+`threads/README.md`. The intermediate step the convention already supports is a
+`## Lanes` block on this single thread (one thread, multiple lanes) the moment a
+second arc becomes safely takeable.
 
 ## Paused Threads
 
