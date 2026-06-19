@@ -496,3 +496,50 @@ unchanged (only the 2 expected Phase-8 `live-reader-failure` signals).
   (`resolveRepoRoot`, no repo names) → ports to Oak verbatim and **fixes Oak's stale hand-kept index (87 listed / 132 on
   disk)**. Destination is the open Phase-9 back-flow decision (`practice/transplant-to-castr` vs `main` vs fresh branch),
   same as the substrate-consumer item above.
+
+### Sub-agent roster — disposition: **complete the half-built expert system (done)** (2026-06-19)
+
+The opener's "bring Oak's 13 generic templates + components" was a hypothesis; firsthand grounding overturned it twice
+(napkin 2026-06-19 s2). The real driver was a **negative-space sweep of castr's own `invoke-*` rules**: three rules
+authored in Phases 4–5 — `invoke-assumptions-expert`, `invoke-mcp-expert`, and
+`invoke-doc-and-onboarding-experts-on-significant-changes` (the last is **owner standing doctrine 2026-05-02**) — each
+cited a `.agent/sub-agents/templates/<x>.md` that **did not exist**. So Phase 6's sub-agent step was **completing the
+missing half of an expert system castr already committed to**, not a free roster choice. Owner confirmed (2026-06-19):
+author the full rule-required set + `config`/`release-readiness`, keep the 4-persona architecture device, keep the
+DON'T-BRING-7.
+
+- **9 new lean castr-native templates** (`.agent/sub-agents/templates/`): `architecture-expert` (one template, four
+  persona lenses), `assumptions-expert`, `config-expert`, `docs-adr-expert`, `mcp-expert` (narrow: the IR→MCP-Tools
+  **writer** / emitted definitions, NOT servers/Apps/auth), `onboarding-expert` (narrow: castr's AI-agent + contributor
+  paths, NOT Oak's curriculum/VISION journey), `release-readiness-expert`, `security-expert` (re-scoped:
+  untrusted-input / ReDoS / billion-laughs / prototype-pollution / unsafe-deserialisation — castr has no auth/PII
+  surface), `subagent-architect`. **Authored native, not copied** — castr's existing 6 are lean (76-line) templates
+  referencing `principles/dry-yagni.md`, so Oak's ~300-line monorepo/product templates were reference-for-essence only;
+  zero Oak phenotype carried in. Roster **6 → 15** templates.
+- **Components** (`.agent/sub-agents/components/`): `architecture/reviewer-team.md` + `personas/{barney,betty,fred,wilma}.md`
+  brought + localised ("monorepo" → "repository"); `subagent-principles.md` **DON'T-BRING** (castr's existing templates
+  use the leaner `dry-yagni.md`). DON'T-BRING-7 unchanged (accessibility, clerk, design-system, elasticsearch,
+  react-component, sentry, ground-truth-designer — no castr surface).
+- **Codex adapters** (`.codex/agents/` + `config.toml`): 12 new adapters (4 architecture personas each loading the shared
+  template + persona component, Oak's mechanism; 8 singles) + 12 registrations; **existing 6 backfilled** with the
+  validator-required `name`+`description` (a latent gap — the deferred validator never caught it). **Pre-existing
+  `config.toml` bug fixed:** `config_file` resolves relative to `.codex/`, so `".codex/agents/X.toml"` wrongly resolved to
+  `.codex/.codex/agents/X.toml`; corrected all 18 to Oak's `"agents/X.toml"` form (surfaced by running the validator
+  firsthand against a temp empty `.cursor/agents`).
+- **Dangling-rule reconciliation:** the three rules above now point at real templates; their Oak naming reconciled —
+  `code-expert`→`code-reviewer`, `test-expert`→`test-reviewer`; Oak ADR-path cites re-pointed to castr homes (ADR-129 →
+  **PDR-010**, ADR-114 → **PDR-003**; the proportionality doctrine → `principles.md`); Oak MCP-server/Apps ADRs
+  (123/141) **de-linked** (castr emits, has no server). Roster-of-record surfaces updated in lockstep: `AGENT.md`,
+  `sub-agents/README.md`, `executive/invoke-code-experts.md`, `invoke-reviewers.md`, `start-right.md`.
+- **`subagents` validator stays deferred → Phase 7.** It hard-requires a `.cursor/agents` wrapper per template (line 198),
+  and `.cursor`/`.claude` platform adapters are the Phase-7 deliverable (tracker phase-table row 7: "Adapters + flip
+  portability/subagents gates"). Firsthand proof the Codex+template+component layer is otherwise fully compliant: with a
+  temp empty `.cursor/agents`, the validator reports **only** the 15 expected "no wrapper in .cursor/agents" issues and
+  zero adapter/registration/setting/component errors. `validate-subagents` is **not** in `repo-validators:check`, so
+  `pnpm check` is unaffected.
+- **Named boundary (not silent):** `code-expert`/`test-expert`/`type-expert` naming and Oak ADR-path cites remain
+  **pervasive** across the pre-existing transplanted estate (practice-core PDRs — which use Oak's portable generic names
+  by design — plus ~25 rules and several skills/patterns). That broad estate sweep is the existing reference-closure /
+  **D4** backlog, **not** this slice; only the three rules being resolved here were reconciled. The substrate manifest's
+  reviewer-route mapping (which earlier mapped off `docs-adr-expert`/`assumptions-expert` because castr lacked them) can
+  now be re-pointed to the real experts — a follow-on substrate touch, noted not done.

@@ -259,9 +259,14 @@ is the source of truth.
 ## Sub-agent Reviews
 
 Invoke the reviewer and domain-expert layer per
-[`invoke-reviewers.md`](../../../rules/invoke-reviewers.md) after non-trivial changes. castr's schema-domain experts —
-`openapi-expert`, `zod-expert`, `json-schema-expert` — review IR fidelity and parser/writer lockstep; the generic
-reviewers (`code-reviewer`, `test-reviewer`, `type-reviewer`) cover correctness, tests, and type-flow.
+[`invoke-reviewers.md`](../../../rules/invoke-reviewers.md) after non-trivial changes. The roster is 15 canonical
+templates — see [`invoke-code-experts.md`](../../../memory/executive/invoke-code-experts.md) for the authoritative
+catalogue and triage. castr's schema-domain experts — `openapi-expert`, `zod-expert`, `json-schema-expert`, and
+`mcp-expert` (the IR→MCP-Tools writer) — review IR fidelity and parser/writer lockstep; the generic reviewers
+(`code-reviewer`, `test-reviewer`, `type-reviewer`) cover correctness, tests, and type-flow; cross-cutting reviewers
+(`architecture-expert-{barney,betty,fred,wilma}`, `config-expert`, `security-expert`, `docs-adr-expert` +
+`onboarding-expert`, `release-readiness-expert`) and the plan-time `assumptions-expert` / `subagent-architect` complete
+the layer.
 
 ## Process
 

@@ -1,4 +1,6 @@
 # Inherit the session model so expert calls stay aligned with the parent run.
+name = "zod-expert"
+description = "Zod parser/writer lockstep and ts-morph expert."
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 approval_policy = "never"

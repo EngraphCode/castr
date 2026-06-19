@@ -1,6 +1,6 @@
 # Invoke MCP Expert
 
-Operationalises [ADR-129 (Domain Specialist Capability Pattern)](../../docs/architecture/architectural-decisions/129-domain-specialist-capability-pattern.md), [ADR-123 (MCP Server Primitives Strategy)](../../docs/architecture/architectural-decisions/123-mcp-server-primitives-strategy.md), and [ADR-141 (MCP Apps Standard as Only UI Surface)](../../docs/architecture/architectural-decisions/141-mcp-apps-standard-primary.md).
+Operationalises [PDR-010 (Domain Specialist Capability Pattern)](../practice-core/decision-records/PDR-010-domain-specialist-capability-pattern.md) for castr's MCP output surface. castr **emits** MCP tool definitions as an output format (`requirements.md`: IR → MCP Tools); it does **not** run an MCP server, so Oak's MCP-server-primitives and MCP-Apps-UI doctrine does not apply here — scope every engagement to the IR→MCP-Tools writer and the definitions it emits.
 
 When changes touch castr's MCP output surface — the MCP Tools writer, emitted
 tool definitions, or MCP protocol semantics — invoke the `mcp-expert`

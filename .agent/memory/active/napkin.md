@@ -2,6 +2,43 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-19 (session 2 — sub-agent roster)
+
+- **The opener's "13 generic templates, bring + components" was a hypothesis that firsthand grounding overturned twice.**
+  Oak at pin `ad359a4f` has **19** templates (not 13), heavily UI/product-phenotyped. The real driver of the slice was
+  invisible until the **negative-space sweep of castr's own `invoke-*` rules**: castr has THREE dangling expert-rules
+  authored in Phases 4–5 — `invoke-assumptions-expert`, `invoke-mcp-expert`, and
+  `invoke-doc-and-onboarding-experts-on-significant-changes` (the last is **owner standing doctrine 2026-05-02**) — each
+  citing a `.agent/sub-agents/templates/<x>.md` that does NOT exist. **Phase 6's sub-agent step is not a free roster
+  choice; it is completing the missing half of a half-built expert system castr already committed to.** I twice
+  recommended dropping mcp+onboarding ("no surface") and was twice wrong: castr's OWN rules require them (narrowly
+  scoped to castr's real surface — MCP-tools _emission_, Practice/AI-path onboarding). **Lesson: before classifying a
+  transplant surface DON'T-BRING for "no consuming surface", grep the host's own rules/cites for the surface — the
+  consumer may already be installed and dangling.** Same family as the 2026-06-19(s1) manufactured-completion (narrow
+  negative-space search).
+- **The dangling rules carry unreconciled Oak agent-naming phenotype:** they say `code-expert` where castr's template
+  is `code-reviewer`, and assume the 4-persona `architecture-expert-barney/-fred/-wilma` device. Reconciling that naming
+  is part of the slice (per-surface phenotype lesson, now on castr's own transplanted rules).
+- **castr authors LEAN NATIVE templates, not copy+AMEND of Oak's.** Existing `code-reviewer.md` is 76 lines, references
+  castr's `principles/dry-yagni.md` (Oak uses heavier `subagent-principles.md`), castr identity, castr specialists. Oak's
+  `code-expert` is ~300 lines of monorepo verbosity. So new templates are authored native (Oak templates = reference for
+  the role's essence, not the artefact). This de-risks the whole Oak-phenotype problem at the source.
+- **subagents validator gate-flip is PHASE 7, not 6** (tracker phase-table line 24: "Adapters + flip portability/subagents
+  gates"). The validator (`agent-tools/.../validate-subagents.ts`) hard-requires a `.cursor/agents` wrapper per template
+  (line 198) — and `.cursor/agents` is a P7 deliverable (ledger §Platform adapters→P7). `validate-subagents` is NOT in
+  `repo-validators:check`, so `pnpm check` stays green without it. **Phase 6 lands templates + Codex adapters; P7 adds
+  Cursor/Claude wrappers + flips the gate.** The "subagents→P6" note in the tracker operational block is superseded.
+- **Codex adapter contract (validate-subagents-codex-adapter-field-checks):** each adapter `.toml` REQUIRES top-level
+  `name` (== filename) + `description` (== config registration) + `model_reasoning_effort="high"` + `sandbox_mode="read-only"`
+  - `approval_policy="never"` + a `developer_instructions` triple-quote referencing the canonical template. **The existing 6
+    adapters LACK `name`+`description`** (latent gap; validator deferred so unnoticed). Authoring new ones compliant +
+    backfilling the 6 makes P7 a clean flip.
+- **State schemas (task #4) — the ledger §State location is STALE.** Oak main moved the JSON schemas FROM
+  `.agent/state/collaboration/` TO `agent-tools/src/collaboration-state/schemas/` (5: active-claims, closed-claims,
+  comms-event, conversation, escalation). castr's runtime validation is **in-code Zod** (`state-schemas.ts`), and its
+  consumer/substrate-manifest reference `.agent/state/collaboration/*.schema.json` (the live-reader-failure = expected
+  P8-absent signal). Needs its own scoping pass; under-specified by the stale ledger. Lower value than roster completion.
+
 ## 2026-06-19
 
 - **Phase 6 `active/patterns/` import LANDED — 130 patterns + a new generator/validator CLI `validate-patterns-index`.** Durable

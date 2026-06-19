@@ -145,8 +145,17 @@ sentinel-delimited index from frontmatter and **strictly gates conformance** (er
 non-canonical `category`/`polarity`). Repo-agnostic → Phase-9 Oak back-flow item (also fixes Oak's stale 87/132 index).
 Full record: sub-plan §4 + `reference-closure.md` §Phase 6.
 
-**NEXT (remaining Phase 6):** the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers
-already exist) → `.agent/state/collaboration/` schemas + empty dirs (P8) before the `transplant/phase-6` tag.
+**Sub-agent roster ✅ LANDED (2026-06-19).** Firsthand grounding overturned the "13 generic" opener: the driver was
+**completing the half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner
+standing doctrine). **9 new lean castr-native templates** → roster **6 → 15** (`architecture-expert` 4-persona +
+`assumptions`/`config`/`docs-adr`/`mcp`[emission]/`onboarding`/`release-readiness`/`security`[input-DoS]/`subagent-architect`);
+persona + reviewer-team components; 12 Codex adapters + registrations (existing 6 backfilled; pre-existing `config.toml`
+path-bug fixed); 3 dangling rules reconciled. Roster-of-record surfaces in lockstep. `subagents` gate flip + `.cursor`/`.claude`
+wrappers = **Phase 7** (row 7). Full record: `reference-closure.md` §Phase 6 + sub-plan §4 OUT + `relevance-ledger.md`.
+
+**NEXT (remaining Phase 6):** `.agent/state/collaboration/` schemas + empty dirs (P8 machinery, structure-only) — needs a
+firsthand scoping pass (the ledger §State location is stale: Oak `main` moved the schemas to `agent-tools/src/collaboration-state/schemas/`;
+castr's runtime validation is in-code Zod) → `agent-collaboration-channels.md` → full green `pnpm check` → `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).

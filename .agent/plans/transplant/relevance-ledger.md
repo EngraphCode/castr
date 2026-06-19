@@ -162,6 +162,22 @@ older heavier ones. `start-right-team` is confirmed present → KEEP (team-mode)
 - **Components:** `behaviours/` + `principles/` KEEP; `architecture/reviewer-team.md` + `personas/{barney,betty,fred,wilma}`
   come with `architecture-expert` (Oak's multi-lens device) — bring with it. **Phase 6.**
 
+**✅ LANDED (2026-06-19) — firsthand override of the disposition above.** Two corrections from reading every candidate
+body + a negative-space sweep of castr's own `invoke-*` rules:
+
+- The real driver is **completing a half-built expert system**: castr's rules `invoke-assumptions-expert`,
+  `invoke-mcp-expert`, and `invoke-doc-and-onboarding-experts-on-significant-changes` (owner standing doctrine) already
+  cited templates that did not exist. So `mcp-expert` and `onboarding-expert` are **BRING** (not droppable) — but **narrow
+  to castr's surface** (MCP-tools _emission_; the AI-agent + contributor onboarding paths), not Oak's server/Apps/curriculum
+  product. The "DON'T-BRING mcp" temptation was wrong for the third time.
+- Net **9 new templates** authored **lean+native** (Oak templates = reference for the role's essence, not artefacts to
+  copy): `architecture-expert` (4-persona device kept, owner-confirmed), `assumptions-expert`, `config-expert`,
+  `docs-adr-expert`, `mcp-expert`, `onboarding-expert`, `release-readiness-expert`, `security-expert` (re-scoped to
+  untrusted-input/DoS), `subagent-architect`. Roster **6 → 15**. The "12 generic / 13" counts in the disposition above
+  conflated already-installed `code/test/type` with net-new; the firsthand net-new is 9 (+ 4 persona adapters). DON'T-BRING-7
+  unchanged. Full record: `reference-closure.md` §Phase 6 "Sub-agent roster". `subagents` gate flip + `.cursor`/`.claude`
+  wrappers remain **Phase 7**.
+
 ### Memory — fully populate (owner)
 
 `active/patterns/` (122 as of Oak 2026-06-05; **AMEND `proven_in:` provenance**, regenerate index from frontmatter, **drop ~2 UI**:

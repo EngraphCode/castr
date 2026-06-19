@@ -4,9 +4,9 @@ Operationalises owner-stated standing doctrine: _"for all significant
 documentation or Practice changes — and this is always true — we need
 reviews from the documentation reviewer and the onboarding reviewer."_
 Layered onto
-[ADR-114 (Layered Sub-agent Prompt Composition)](../../docs/architecture/architectural-decisions/114-layered-sub-agent-prompt-composition-architecture.md)
+[PDR-003 (Sub-agent Protection of Foundational Practice Docs)](../practice-core/decision-records/PDR-003-sub-agent-protection-of-foundational-practice-docs.md)
 and
-[ADR-129 (Domain Specialist Capability Pattern)](../../docs/architecture/architectural-decisions/129-domain-specialist-capability-pattern.md)
+[PDR-010 (Domain Specialist Capability Pattern)](../practice-core/decision-records/PDR-010-domain-specialist-capability-pattern.md)
 that govern the broader expert dispatch matrix.
 
 ## The Rule
@@ -71,13 +71,13 @@ risk are routed to the prioritised remediation list.
 
 ## Composition with the Broader Reviewer Matrix
 
-This rule does not replace `code-expert` (the gateway reviewer per
+This rule does not replace `code-reviewer` (the gateway reviewer per
 [`invoke-code-experts`](invoke-code-experts.md)). Code-expert remains
 the gateway for source-code changes; this rule fires _additionally_
 for documentation and Practice changes.
 
 For change sets that mix code and significant documentation, the
-`code-expert` gateway dispatch and this rule's pair both fire.
+`code-reviewer` gateway dispatch and this rule's pair both fire.
 
 ## Doctrinal Anchors
 
@@ -90,5 +90,5 @@ For change sets that mix code and significant documentation, the
   specialists for documentation and onboarding lanes.
 - [`.agent/memory/executive/invoke-code-experts.md`](../memory/executive/invoke-code-experts.md)
   — the full reviewer catalogue.
-- ADR-114 (Layered Sub-agent Prompt Composition).
-- ADR-129 (Domain Specialist Capability Pattern).
+- PDR-003 (Sub-agent Protection of Foundational Practice Docs).
+- PDR-010 (Domain Specialist Capability Pattern).

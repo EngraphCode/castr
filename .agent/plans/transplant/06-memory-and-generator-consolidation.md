@@ -168,9 +168,21 @@ the reorder is therefore **DONE for the bringable-now layer**; its remainder fol
   frontmatter; `--check` (wired into `repo-validators:check`) / `--fix`; **strictly gates conformance** (errors, not warnings).
   Repo-agnostic (`resolveRepoRoot`) → Phase-9 Oak back-flow (also fixes Oak's stale 87/132 hand-kept index). This supersedes
   the original "regenerate index" framing — the index is now a generated artefact with a check gate (`generator-first`).
-- executive catalogue regeneration ✅ (prior pass); the 13 generic sub-agent templates + `components/`;
-  `.agent/state/collaboration/` schemas + empty dirs. These are tracked in the parent README Phase-6 row and land before the
-  phase tag.
+- executive catalogue regeneration ✅ (prior pass).
+- **Sub-agent roster ✅ LANDED (2026-06-19).** Firsthand grounding overturned the "13 generic" framing: the real driver
+  was **completing the half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one
+  owner standing doctrine). Owner-confirmed scope: **9 new lean castr-native templates** (`architecture-expert` 4-persona,
+  `assumptions-expert`, `config-expert`, `docs-adr-expert`, `mcp-expert` narrow-emission, `onboarding-expert` narrow-paths,
+  `release-readiness-expert`, `security-expert` re-scoped-to-input-DoS, `subagent-architect`) → roster **6 → 15**; persona +
+  `reviewer-team` components; 12 Codex adapters + registrations (existing 6 backfilled; pre-existing `config.toml`
+  path-bug fixed); 3 dangling rules reconciled (Oak naming + ADR cites → castr PDR-003/010 + `principles.md`); roster-of-record
+  surfaces updated in lockstep. `subagents` gate flip + `.cursor`/`.claude` wrappers = **Phase 7**. Full record:
+  `reference-closure.md` §Phase 6 "Sub-agent roster"; `relevance-ledger.md` §Sub-agents "LANDED".
+- **Remaining before the `transplant/phase-6` tag:** `.agent/state/collaboration/` schemas + empty dirs (P8 machinery
+  structure-only) — note the ledger §State location is stale (Oak `main` moved the JSON schemas to
+  `agent-tools/src/collaboration-state/schemas/`; castr's runtime validation is in-code Zod in `state-schemas.ts`; the
+  consumer/substrate-manifest reference `.agent/state/collaboration/*.schema.json`); this needs its own firsthand scoping
+  pass. Then `agent-collaboration-channels.md` (P8 catalogue) + full green `pnpm check` + the tag.
 
 ## 5. Contract-doc reconciliation map (KEEP-localise vs reconcile vs DON'T-BRING)
 

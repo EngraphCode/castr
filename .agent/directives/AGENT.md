@@ -64,14 +64,37 @@ Invocation contract:
 - use `.codex/config.toml` and `.codex/agents/*.toml` for Codex reviewer/domain-expert roles
 - keep `.agents/skills/` for generated `engraph-` skill adapters only
 
-Installed roster:
+Installed roster (15 templates; the architecture reviewer ships as four persona adapters):
+
+Generic reviewers:
 
 - `code-reviewer` — gateway reviewer for non-trivial changes
 - `test-reviewer` — TDD and test-quality specialist
 - `type-reviewer` — type-flow and strictness specialist
+- `config-expert` — tooling-configuration and quality-gate integrity reviewer
+- `docs-adr-expert` — documentation drift, TSDoc, and decision-record completeness reviewer
+- `onboarding-expert` — onboarding-path accuracy and first-success reviewer
+- `release-readiness-expert` — release-boundary go/no-go reviewer
+- `security-expert` — untrusted-input and denial-of-service reviewer
+
+Architecture reviewers (one template, four persona lenses):
+
+- `architecture-expert-barney` — simplification and dependency/boundary cartography
+- `architecture-expert-betty` — cohesion, coupling, and change-cost trade-offs
+- `architecture-expert-fred` — decision-record compliance and boundary discipline
+- `architecture-expert-wilma` — adversarial resilience and failure-mode pressure testing
+
+Meta and plan reviewers:
+
+- `assumptions-expert` — meta-level plan and proportionality reviewer
+- `subagent-architect` — meta-agent for sub-agent definition design and review
+
+Domain experts (castr schema surface):
+
 - `openapi-expert` — OpenAPI 3.x (3.0-3.2) semantics and IR fidelity specialist
 - `zod-expert` — Zod parser/writer lockstep and ts-morph specialist
 - `json-schema-expert` — Draft 07 / 2020-12 fidelity and IR mapping specialist
+- `mcp-expert` — castr MCP tool-emission fidelity specialist (the IR→MCP-Tools writer)
 
 ## Development Commands
 

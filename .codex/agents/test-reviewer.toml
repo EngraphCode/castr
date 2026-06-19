@@ -1,4 +1,6 @@
 # Inherit the session model so reviewer calls stay aligned with the parent run.
+name = "test-reviewer"
+description = "Test quality and TDD compliance reviewer."
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 approval_policy = "never"

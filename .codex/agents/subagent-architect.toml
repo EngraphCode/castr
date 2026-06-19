@@ -1,0 +1,15 @@
+name = "subagent-architect"
+description = "Meta-agent for sub-agent definition design and review."
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "never"
+
+developer_instructions = """
+Read and follow `.agent/sub-agents/templates/subagent-architect.md`.
+
+This file is a thin Codex adapter. The canonical instructions live in
+`.agent/sub-agents/templates/subagent-architect.md`.
+
+Mode: Review and recommend. Propose changes; the parent session applies any
+file modifications.
+"""

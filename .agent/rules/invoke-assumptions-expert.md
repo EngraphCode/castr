@@ -1,8 +1,8 @@
 # Invoke Assumptions Expert
 
-Operationalises [ADR-146 (Assumptions Reviewer — Meta-Level Plan Assessment)](../../docs/architecture/architectural-decisions/146-assumptions-expert-meta-level-plan-assessment.md) and [ADR-129 (Domain Specialist Capability Pattern)](../../docs/architecture/architectural-decisions/129-domain-specialist-capability-pattern.md).
+Operationalises [PDR-010 (Domain Specialist Capability Pattern)](../practice-core/decision-records/PDR-010-domain-specialist-capability-pattern.md); the proportionality doctrine this expert enforces is [`principles.md`](../directives/principles.md) (the first question and the simplicity imperative).
 
-When plans, designs, or architectural proposals are being finalised, invoke the `assumptions-expert` specialist in addition to the standard `code-expert` gateway.
+When plans, designs, or architectural proposals are being finalised, invoke the `assumptions-expert` specialist in addition to the standard `code-reviewer` gateway.
 
 ## Trigger Conditions
 
@@ -22,15 +22,15 @@ Invoke `assumptions-expert` when:
 
 Do not invoke `assumptions-expert` for:
 
-- Code quality, style, or implementation correctness (use `code-expert`)
+- Code quality, style, or implementation correctness (use `code-reviewer`)
 - Architectural boundary compliance in code (use the architecture reviewers)
 - Documentation completeness or ADR accuracy (use `docs-adr-expert`)
-- Test quality or TDD compliance (use `test-expert`)
+- Test quality or TDD compliance (use `test-reviewer`)
 - Domain-specific technology validation (use the relevant domain specialist)
 
 ## Overlap Boundaries
 
-- **`code-expert`**: Always invoke as the gateway for code changes. `assumptions-expert` operates at the plan level, not the code level — they do not overlap.
+- **`code-reviewer`**: Always invoke as the gateway for code changes. `assumptions-expert` operates at the plan level, not the code level — they do not overlap.
 - **`docs-adr-expert`**: Validates documentation accuracy. `assumptions-expert` questions whether the documented decisions are proportional — complementary, not overlapping.
 - **`architecture-expert-barney`**: Simplification focus. `assumptions-expert` questions proportionality at the plan level; Barney questions simplification at the architecture level. Invoke both when a plan proposes significant architectural changes.
 - **`subagent-architect`**: Reviews agent triplet quality. `assumptions-expert` questions whether the proposed agents are needed at all. Invoke `assumptions-expert` first when 3+ agents are proposed; `subagent-architect` reviews the triplets after the count is validated.
