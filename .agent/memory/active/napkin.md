@@ -31,6 +31,32 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     cleanly. Root meta-lesson: **never accept an absence from a probe that could fail silently — verify against the
     authoritative source (the Oak checkout, the body at the pin), and finish grounding before forming a verdict.**
 
+## 2026-06-19 (session 3c — D1 lint RESOLVED: a TypeScript-version skew, not code/rule)
+
+- **D1's 126 sonarjs warnings were a TypeScript-instance `TypeFlags` skew — root-fixed in one line.** lib resolves TS
+  6.0.3; `eslint-plugin-sonarjs@4.0.3` declares `typescript: ">=5"` and resolved its own bundled **5.9.3** in-subtree.
+  The `typescript-eslint` parser builds `Type` objects with 6.0.3, but each rule does `type.flags & ts.TypeFlags.X`
+  with `ts` = the plugin's 5.9.3 — and TS6 **renumbers** `TypeFlags` (Union 0x08000000 in TS6 lands inside TS5.9.3's
+  `StringLike` mask; `Undefined` is 4 vs 32768 so `isNullLike` missed it). Wrong-bit masks → false-fires on type-safe
+  object-union `in` guards (S3785) and `X | undefined` returns (S3800). **Fix:** `pnpm-workspace.yaml`
+  `overrides: typescript: 6.0.3` (single workspace TS) → both rules flag **0** → restored to `error`. The whole "warn→error
+  refactor pending" framing across DoD/tracker/ledger/prompt was a **false premise** (nothing to refactor; a toolchain to
+  align) — swept all surfaces.
+- **The verify-firsthand discipline WORKED (and mattered).** I delegated the measurement to a sub-agent; its finding
+  (TS-version skew) was extraordinary and sat near the prior session's "false-positive/deselect" trap. I did **not** relay
+  it — I reproduced every load-bearing fact firsthand (loaded both `typescript` instances and printed `TypeFlags`; computed
+  the bit collisions; watched the `+2 -8` install + lint `126→0`). It held. [[verify-agent-claims-firsthand]] is not
+  ceremony: an unverified "it's an environment bug" would have been the same shape of error as the prior agent's
+  "it's a false positive" — the difference is the measurement.
+- **Trust the aligned-TS MEASUREMENT over the sub-agent's SIMULATION.** The agent estimated "~8 genuine cross-kind returns"
+  would survive a correct rule; the actual aligned-TS run flags **0** (castr's mandated `@returns` exempts S3800; the 5
+  S3785 are type-safe object unions). The agent simulated a _partial_ correction; the real override is ground truth.
+- **pnpm 11 gotchas (both bit me, both the "deprecated mechanism prints to stdout" family):** (1) `pnpm.overrides` in
+  `package.json` is **no longer read** by pnpm 11 (moved to `pnpm-workspace.yaml`); it warned but my probe still flipped —
+  unreliable, don't use it. (2) `$typescript` override-reference syntax is **deprecated** and prints a `[WARN]` to
+  **stdout** that pollutes piped tool output (broke a JSON parse). Use an explicit pinned version (kept in lockstep with
+  the root TS devDep via a comment) — or a pnpm catalog, which is heavier than a single pin needs.
+
 ## 2026-06-19 (session 3b — reviewer-routes + channels card; "surface, don't pre-resolve")
 
 - **Owner correction of a behavioural pattern, not just a task error:** "present the two open issues to me as questions,

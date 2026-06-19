@@ -1,7 +1,41 @@
 # D1 lint findings — `function-return-type` (S3800) & `in-operator-type-error` (S3785)
 
 **Date:** 2026-06-15 · **Branch:** `feat/transplant-engraph-practice` · **Author:** an AI agent (Claude, Opus 4.8)
-**Status:** findings handoff — **conclusions unverified; treat the whole document critically.**
+**Status:** **RESOLVED 2026-06-19** — see §0. The §1–§9 handoff below is the (suspect) investigation history; read §0
+first. The original conclusions were unverified; the actual root cause was measured firsthand on 2026-06-19 and is **not**
+what §4/§9 guessed.
+
+---
+
+## 0. Resolution (2026-06-19) — VERIFIED root cause + fix
+
+The 126 violations were **not** code smells and **not** a discriminated-union/optionality property of castr's code.
+**Root cause (measured firsthand at the bit level): a TypeScript-version skew.** `lib` resolves TypeScript **6.0.3**;
+`eslint-plugin-sonarjs@4.0.3` declares `typescript: ">=5"` and resolved its **own bundled 5.9.3** in-subtree. The
+`typescript-eslint` parser builds the `Type` objects with **6.0.3**, but each sonarjs rule does
+`type.flags & ts.TypeFlags.X` where `ts` is the rule's **5.9.3** — and the two releases **renumber `TypeFlags`**:
+
+| flag           | TS 6.0.3  | TS 5.9.3  |
+| -------------- | --------- | --------- |
+| `Undefined`    | 4         | 32768     |
+| `Null`         | 8         | 65536     |
+| `Union`        | 134217728 | 1048576   |
+| `Intersection` | 268435456 | 2097152   |
+| `StringLike`   | 12583968  | 402653316 |
+
+So `Union(TS6)=0x08000000` falls **inside** `StringLike(TS5.9.3)=402653316` → S3785 (`isPrimitive`) false-fired on every
+type-safe **object-union** `in` guard; and `Undefined(TS6)=4 & Undefined(TS5.9.3)=32768 = 0` → `isNullLike` **missed**
+`undefined`, so S3800 counted `X | undefined` as a second return category. All five facts were reproduced firsthand
+(load both `typescript` instances, print `TypeFlags`; the arithmetic collisions; the `+2 -8` install when the override
+landed; lint count `121+5 → 0`).
+
+**Fix — single TypeScript across the workspace** (`pnpm-workspace.yaml` `overrides: { typescript: 6.0.3 }`). Under aligned
+TypeScript both rules compute correctly and report **ZERO** violations, so both were restored to **`error`** in
+`lib/eslint.config.ts`. Full `pnpm check` green. (Note: a sub-agent's _simulation_ estimated "~8 genuine cross-kind
+returns" would survive — the **actual aligned-TS run flags 0**; the measurement supersedes the simulation. castr's
+mandated `@returns` TSDoc independently exempts S3800 functions, verified.) §4's "central puzzle" is hereby answered: the
+checker's inferred types differed from neither the annotations nor the rule logic — the **flag constants** were from the
+wrong TypeScript instance. The lesson in §7 still stands and was vindicated: the rule was right; the environment was skewed.
 
 ---
 

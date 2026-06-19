@@ -22,12 +22,14 @@ This block is current truth only. Branch/delivery state lives in
 - **The branch is `check:ci`-GREEN end-to-end** (verified first-hand via pre-push, 2026-06-15) — through `test:all`/
   `test:e2e`. First time it has been provably green: lint-red had been **masking** two knip failures (`check:ci` stops
   at the first failure), so "green except lint" was false. Both knip failures are now fixed (see below).
-- **D1 lint — warn-downgrade DONE (commit `3b3f0d9`):** `sonarjs/function-return-type` (121) +
-  `sonarjs/in-operator-type-error` (5) transitioned `error → warn` in `lib/eslint.config.ts` (NOT off; lint runs no
-  `--max-warnings 0`). Lint exits 0. **The `warn → error` resolution is UNCONFIRMED** — a 2026-06-15 investigation
-  ([`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md)) corrected an earlier
-  wrong analysis and could not yet say whether the fix is code changes or a ratified rule-selection. **Treat that
-  report's conclusions as suspect; measure before deciding** (report §8).
+- **D1 lint — ✅ RESOLVED (2026-06-19), both rules back at `error`.** `sonarjs/function-return-type` (S3800) +
+  `sonarjs/in-operator-type-error` (S3785) were warn-downgraded 2026-06-15 (`3b3f0d9`; 126 violations). Root cause,
+  measured firsthand: a **TypeScript-version skew** — `eslint-plugin-sonarjs@4.0.3` resolved its bundled TS 5.9.3 while
+  the parser built Type objects with the workspace's 6.0.3, and the two releases renumber `ts.TypeFlags`, so the rules
+  masked the wrong bits and mis-fired on type-safe code (not a code smell, not a rule defect — an environment skew).
+  **Fixed at root** by pinning a single workspace TypeScript (`pnpm-workspace.yaml` `overrides: typescript: 6.0.3`);
+  under aligned TS both rules flag **0** and are restored to `error`. Full root-cause record:
+  [`../plans/transplant/d1-sonarjs-findings.md` §0](../plans/transplant/d1-sonarjs-findings.md).
 - **knip fixed (commits `c622998`, `1363181`):** the lint fix unmasked two pre-existing knip failures, both fixed —
   6 dead char-test exports removed; `commitlint` installed + wired (`@commitlint/cli` + `config-conventional` +
   root `commitlint.config.mjs`), which also made the agent-tools `check-commit-message` validator operational (it had
@@ -277,11 +279,13 @@ anti-patterns violating the contract's own `stored_derived_values_rule`; Oak car
 canonical 5 categories; the README index is now **generated + strictly gated** by the new agent-tools CLI
 `validate-patterns-index` (`--check` in `repo-validators:check`; repo-agnostic → Phase-9 Oak back-flow, also fixes Oak's
 stale index). **Sub-agent roster ✅ LANDED (2026-06-19, commit `d5cd4eb`):** roster 6→15 (9 new lean native templates
-incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` rules reconciled). **NEXT — remaining
-Phase 6 (the OUT items):** `.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the `transplant/phase-6` tag + full
-green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 126 sonarjs `warn` = D1 transitional, 0
-errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
-(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅; state schemas next). This is **one deep enhancement** — Phase 6 is the slice the
+incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` rules reconciled). **State schemas ✅
+(Oak WS7, `07f1f3c`); reviewer-routes + `agent-collaboration-channels.md` ✅ (`4567d06`); standing items ✅ — back-flow
+target, D1 lint (TS-skew root-fix, rules at `error`), Q-001 (`2431f97` + D1 fix).** **NEXT:** the `transplant/phase-6`
+tag (now unblocked) after full green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 0 errors,
+0 sonarjs warnings — D1 resolved).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
+(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
+channels✅). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
 **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —

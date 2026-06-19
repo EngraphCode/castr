@@ -509,28 +509,25 @@ export default defineConfig(
   },
 
   // ---------------------------------------------------------------------------
-  // D1 — Transitional severity (owner decision, 2026-06-10). NOT disabled.
+  // D1 — RESOLVED (2026-06-19): both rules restored to 'error'.
   // ---------------------------------------------------------------------------
-  // The sonarjs-4.0.3 recommended-set additions below are downgraded error ->
-  // warn while their violations are refactored away deliberately (warn still
-  // runs and reports — no rule is ever turned off; see
-  // .agent/rules/never-disable-checks.md and principles.md §Strict And Complete).
-  //
-  // HARD COMPLETION GATE: both MUST be restored to 'error' before the
-  // deep-enhancement arc is complete. Tracked as deliverable D1 in
-  // .agent/plans/transplant/README.md §Deep-enhancement arc and
-  // .agent/directives/DEFINITION_OF_DONE.md §Transitional gate states.
-  //   - sonarjs/function-return-type (121 hits) + sonarjs/in-operator-type-error
-  //     (5 hits): the end state is UNCONFIRMED — whether the fix is code changes
-  //     or a ratified rule-selection has not been determined. An earlier
-  //     "collides with discriminated-union returns" framing was DISPROVEN (the
-  //     rule excludes null/undefined and collapses all object types). Measure
-  //     what the rules actually flag before deciding; do not pre-commit to an
-  //     answer. See .agent/plans/transplant/d1-sonarjs-findings.md (§4, §8).
+  // The 126 violations (121 sonarjs/function-return-type S3800 + 5
+  // sonarjs/in-operator-type-error S3785) that prompted the 2026-06-10 error->warn
+  // downgrade were NOT code smells. Root cause, measured firsthand at the bit
+  // level: a TypeScript-version skew — eslint-plugin-sonarjs resolved its own
+  // bundled typescript 5.9.3 while the typescript-eslint parser built Type objects
+  // with the workspace's 6.0.3, and the two releases renumber `ts.TypeFlags`
+  // (Union 0x08000000 in TS6 falls inside TS5.9.3's StringLike mask; Undefined is
+  // 4 vs 32768 so `isNullLike` missed it). The rules therefore masked the wrong
+  // bits and mis-fired on type-safe object-union `in` guards and `X | undefined`
+  // returns. The fix is the single-TypeScript pnpm override in
+  // pnpm-workspace.yaml; under aligned TypeScript both rules compute correctly and
+  // report ZERO violations, so 'error' is green. Full root-cause analysis:
+  // .agent/plans/transplant/d1-sonarjs-findings.md §Resolution.
   {
     rules: {
-      'sonarjs/function-return-type': 'warn',
-      'sonarjs/in-operator-type-error': 'warn',
+      'sonarjs/function-return-type': 'error',
+      'sonarjs/in-operator-type-error': 'error',
     },
   },
 );

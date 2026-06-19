@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                       | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 — state schemas ✅ (Oak WS7) + reviewer-routes ✅ + channels card ✅; `transplant/phase-6` tag follows standing deferred-item resolution (back-flow target, D1 lint, Q-001) | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                    | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 — state schemas ✅ (Oak WS7) + reviewer-routes ✅ + channels card ✅; standing items ✅ resolved (back-flow target, D1 lint TS-skew root-fix, Q-001); `transplant/phase-6` tag unblocked | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -111,9 +111,10 @@ dangling rules reconciled; roster-of-record surfaces in lockstep. `subagents` ga
 check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item).
   **Two follow-on Phase-6 items ✅ DONE (owner-directed):** substrate reviewer-route re-point (22 surfaces
   mirror Oak reconciled to castr's roster) + `agent-collaboration-channels.md` authored (routing
-  index/contract; runtime surfaces = Phase-8 forward-refs). **`transplant/phase-6` tag** follows the
-  standing deferred-item resolution being driven this session (Oak back-flow target; D1 lint
-  measurement; Q-001 PR/D3 timing).
+  index/contract; runtime surfaces = Phase-8 forward-refs). **All three standing deferred items ✅ RESOLVED
+  this session (owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version
+  skew root-fixed — single-TS pnpm override; both rules back at `error`, 0 violations; the 126 transitional
+  warnings are GONE)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` tag is now unblocked.**
 
 ## Next Safe Steps
 
@@ -122,9 +123,9 @@ Authoritative sequence: sub-plan
 (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ +
 reviewer-routes✅ + channels-card✅; **collaboration state schemas LANDED via Oak WS7** — schemas relocated to
 committed source `agent-tools/src/collaboration-state/schemas/` + validator decoupled, no runtime `.agent/state/`
-plane created; the two follow-on items (reviewer-route re-point, `agent-collaboration-channels.md`) DONE; the
-**`transplant/phase-6` tag** follows the standing deferred-item resolution being driven this session — Oak back-flow
-target, D1 lint measurement, Q-001 PR/D3 timing)
+plane created; the two follow-on items (reviewer-route re-point, `agent-collaboration-channels.md`) DONE; **all three
+standing deferred items RESOLVED** (back-flow target → fresh branch off Oak main; D1 → TS-skew root-fixed, rules at
+`error`, 0 violations; Q-001 → D3-before-merge + split PRs); the **`transplant/phase-6` tag is now unblocked**)
 and the [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
 enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals
 still unfixed — 02 = the IR-fidelity proof harness, active, not started), the rest
@@ -140,13 +141,14 @@ owner names which is next; a fresh reproduced product regression pre-empts it.
   - the running item list in
     [`reference-closure.md` §back-flow items](../../plans/transplant/reference-closure.md));
     only the destination is now fixed.
-- **D1 lint `warn → error` — measurement IN PROGRESS (owner-directed, 2026-06-19
-  s3: "drive it now").** The decisive datum the prior suspect session never
-  captured — S3800's secondary "Returns X/Y" categories per site + the 5 S3785
-  operands' _inferred_ types — is being measured firsthand (background agent) to
-  make code-fix vs JSDoc-add vs rule-selection decidable. Source of record:
-  [d1-sonarjs-findings.md](../../plans/transplant/d1-sonarjs-findings.md) (suspect;
-  re-derive). Tracked as arc **D1**.
+- **D1 lint `warn → error` — RESOLVED (owner-directed root fix, 2026-06-19 s3).**
+  Measured firsthand: the 126 sonarjs violations were a **TypeScript-version skew**
+  (plugin's bundled TS 5.9.3 `TypeFlags` constants masked against TS-6.0.3 type
+  objects — wrong bits), **not** refactorable code. Fixed at root by pinning a single
+  workspace TypeScript (`pnpm-workspace.yaml` `overrides: typescript: 6.0.3`); under
+  aligned TS both rules flag **0** and were **restored to `error`** in
+  `lib/eslint.config.ts`. Full `pnpm check` green. Root-cause record:
+  [d1-sonarjs-findings.md §0](../../plans/transplant/d1-sonarjs-findings.md).
 - **Transplant PR delivery strategy + D3 timing — RESOLVED (owner, 2026-06-19 s3):
   D3 before the merge, split PRs.** Land D3 (CI runs the full `check:ci` chain,
   SHA-pinned actions) **before** the transplant merge, and split the ~100k-line

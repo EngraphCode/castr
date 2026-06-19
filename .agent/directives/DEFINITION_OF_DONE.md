@@ -78,8 +78,13 @@ downgrade to `warn`** for rules whose findings require complex refactors that mu
 - `warn` is never a resting state: a rule left at `warn` with no active migration and no completion gate is the
   forbidden `gate-off-fix-gate-on` anti-pattern in disguise.
 
-In flight as of 2026-06-10: the sonarjs-4.0.3 recommended-set additions (`sonarjs/function-return-type`,
-`sonarjs/in-operator-type-error`) — see D1.
+~~In flight as of 2026-06-10~~ **RESOLVED 2026-06-19:** the sonarjs-4.0.3 recommended-set additions
+(`sonarjs/function-return-type`, `sonarjs/in-operator-type-error`) are **back at `error`**. Their 126 "violations" were a
+TypeScript-version skew (the plugin's bundled TS 5.9.3 `TypeFlags` constants applied to TS-6.0.3 type objects — a wrong-bit
+mask), **not** refactorable code; fixed at root by pinning a single workspace TypeScript in `pnpm-workspace.yaml`, after
+which both rules compute correctly and flag zero. No rule was left at `warn` as a resting state. Full root cause: D1 in
+[`.agent/plans/transplant/README.md`](../plans/transplant/README.md) §Deep-enhancement arc +
+[`d1-sonarjs-findings.md` §0](../plans/transplant/d1-sonarjs-findings.md).
 
 Off-chain development aids (not in the canonical gate, green, documented honestly):
 

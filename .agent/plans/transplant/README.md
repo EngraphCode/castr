@@ -164,8 +164,10 @@ agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item). 
 **Two follow-on Phase-6 items ✅ DONE (2026-06-19 s3, owner-directed):** the substrate manifest **reviewer-route
 re-point** (all 22 surfaces mirror Oak reconciled to castr's roster; Oak's `agent-tooling`→`code-reviewer`; owner-gate
 clauses preserved) and **`agent-collaboration-channels.md`** authored as the routing index/contract (schema cross-refs →
-WS7 source; runtime surfaces = Phase-8 forward-refs). **NEXT:** the standing deferred items (Oak back-flow target; D1 lint
-measurement; Q-001 PR/D3 timing) being driven this session → then full green `pnpm check` → `transplant/phase-6` tag.
+WS7 source; runtime surfaces = Phase-8 forward-refs). **All three standing deferred items ✅ RESOLVED this session
+(owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version skew root-fixed via a single-TS
+pnpm override; both rules back at `error`, 0 violations)**; Q-001 (D3 before merge, split PRs). **NEXT:** full green
+`pnpm check` → `transplant/phase-6` tag (now unblocked).
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).
@@ -202,23 +204,18 @@ Practice, rules, agent tool, agentic engineering, CI, quality gates to bring ove
 Castr is complete"_). These engineering-infrastructure deliverables are named here so none is an undefined-later;
 each has a position, none blocks Phase 5 from proceeding. Sequence within the arc is owner-directed at execution.
 
-- **D1 — Lint-rule parity / in-flight warn→error migration.** Owner decision (2026-06-10): **no lint rule is ever
-  turned off.** To avoid forcing complex refactors ad-hoc, the in-flight rules (the sonarjs-4.0.3 recommended-set
-  additions now erroring) **may be set to `warn` transitionally** — and the **DoD requirement** is that **every one
-  is back to `error` before the deep enhancement is considered complete** (recorded in
-  [`DEFINITION_OF_DONE.md`](../../directives/DEFINITION_OF_DONE.md) §Transitional gate states). **Status (2026-06-15):**
-  the warn-downgrade is DONE (commit `3b3f0d9`; **126 warnings** = 121 `sonarjs/function-return-type` + 5
-  `sonarjs/in-operator-type-error`, all under `lib/src/schema-processing/**`; both `warn`, never off, set in
-  `lib/eslint.config.ts` after `sonarjsConfigs.recommended`). **The `warn → error` resolution is NOT yet confirmed.**
-  A 2026-06-15 investigation ([`d1-sonarjs-findings.md`](./d1-sonarjs-findings.md)) found the earlier
-  _"function-return-type collides with discriminated-union returns"_ framing was **wrong** (the rule excludes
-  null-like and collapses all object types), and could **not** determine whether the violations are genuine
-  inconsistencies, undocumented-function debt, or something else — so it could not say whether the fix is code
-  changes or a justified rule-selection. **That report's conclusions are explicitly suspect** (its author was
-  repeatedly wrong); its value is the `[VERIFIED]` facts + the measurement steps it names. **Next: measure what the
-  rules actually see (report §8) before deciding.** Owner doctrine stands — no rule ever off; `warn` is transitional,
-  not a resting state — but whether the end-state is `error` or a ratified rule-selection is the open question the
-  measurement must settle.
+- **D1 — Lint-rule parity / warn→error migration — ✅ RESOLVED (2026-06-19).** Owner decision (2026-06-10): **no lint
+  rule is ever turned off**; in-flight rules may sit at `warn` transitionally but must return to `error` before the deep
+  enhancement is complete (DoD §Transitional gate states). The two sonarjs-4.0.3 rules (`function-return-type` S3800,
+  `in-operator-type-error` S3785) were warn-downgraded 2026-06-15 (`3b3f0d9`; 126 = 121 + 5). **Root cause measured
+  firsthand 2026-06-19: a TypeScript-version skew** — `eslint-plugin-sonarjs@4.0.3` resolved its bundled TS **5.9.3**
+  while the `typescript-eslint` parser built Type objects with the workspace's **6.0.3**, and the two releases renumber
+  `ts.TypeFlags`, so the rules masked the wrong bits and mis-fired on type-safe code (the 2026-06-15 report's "suspect"
+  framing was right to distrust the earlier guesses; the real cause was neither the rule nor the code — it was the
+  environment). **Fixed at root** by pinning a single workspace TypeScript (`pnpm-workspace.yaml`
+  `overrides: typescript: 6.0.3`); under aligned TS both rules flag **0** and were **restored to `error`** in
+  `lib/eslint.config.ts`. Full `pnpm check` green; the 126 transitional warnings are gone, no rule left at `warn`. Full
+  root-cause record: [`d1-sonarjs-findings.md` §0](./d1-sonarjs-findings.md).
 - **D2 — Node version policy + single source.** Owner decision (2026-06-10): **Node 24 everywhere; stable LTS is
   always the right choice; advance to 26 only once GitHub _and_ Vercel support it** (named tripwire, not a date).
   Owner already executed the config: `engines: "24.x"` (root + `lib`), CI collapsed to single Node 24 (matrix
@@ -246,8 +243,9 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   quality-gate machinery). Enumerate against the pinned Oak branch at the Phase-9 verification sweep; until then this
   is the named placeholder so the arc's incompleteness is explicit, not forgotten.
 
-**Completion of the deep enhancement requires the arc AND Phases 0–9 — including every in-flight lint rule back at
-`error` (D1) and CI at the Oak standard (D3).** "Transplant phases done" ≠ "deep enhancement complete."
+**Completion of the deep enhancement requires the arc AND Phases 0–9 — D1 (every in-flight lint rule back at `error`)
+is ✅ done (2026-06-19); CI at the Oak standard (D3) is still pending.** "Transplant phases done" ≠ "deep enhancement
+complete."
 
 **Standing gate-completeness rule (latent-gap lesson, commit `11f7e48`):** every phase's gate run must include ALL of
 `qg`. Phase 1b skipped `portability:check`, so the phase-1 tag was green while that gate was latently broken — "green"
