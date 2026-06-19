@@ -178,11 +178,24 @@ the reorder is therefore **DONE for the bringable-now layer**; its remainder fol
   path-bug fixed); 3 dangling rules reconciled (Oak naming + ADR cites → castr PDR-003/010 + `principles.md`); roster-of-record
   surfaces updated in lockstep. `subagents` gate flip + `.cursor`/`.claude` wrappers = **Phase 7**. Full record:
   `reference-closure.md` §Phase 6 "Sub-agent roster"; `relevance-ledger.md` §Sub-agents "LANDED".
-- **Remaining before the `transplant/phase-6` tag:** `.agent/state/collaboration/` schemas + empty dirs (P8 machinery
-  structure-only) — note the ledger §State location is stale (Oak `main` moved the JSON schemas to
-  `agent-tools/src/collaboration-state/schemas/`; castr's runtime validation is in-code Zod in `state-schemas.ts`; the
-  consumer/substrate-manifest reference `.agent/state/collaboration/*.schema.json`); this needs its own firsthand scoping
-  pass. Then `agent-collaboration-channels.md` (P8 catalogue) + full green `pnpm check` + the tag.
+- **Collaboration state schemas ✅ LANDED (2026-06-19 s3) — bring Oak WS7.** Firsthand grounding against the Oak pin
+  overturned the "schemas + empty dirs (P8 structure-only)" framing: Oak commit `6d1e45f3` (**WS7**) had already
+  relocated the 5 `*.schema.json` out of `.agent/state/collaboration/` into committed source at
+  `agent-tools/src/collaboration-state/schemas/` and decoupled the validator's schema-root from the data path
+  (`package.json`-walk). castr was on the pre-WS7 design (schemas "missing" → agent-tools suites red at setup). Brought
+  WS7 as a **Phase-6 source/contract** change (owner-confirmed): 5 schemas verbatim (phenotype-clean) + the validator
+  decouple + repoint every reader (`live-types` constants, the 2 schema fixtures, `temp-collaboration-state` copy-source)
+  - substrate-contract (`.md`/manifest) reconciled to "schemas committed source; only runtime data is Phase-8." **No
+    `.agent/state/` runtime plane created** — that stays Phase-8. Full `pnpm check` green; agent-tools informational suite
+    13 → 1 (remaining = pre-existing `clerk-expert` P7 item). The WS7-bundled statusline rapid-comms repoint is **excluded**
+    (different workstream, no castr surface). This makes schemas-as-source (P6) cleanly separable from the runtime skeleton
+    (P8, `08-collaboration-active.md` §1–2); `08` §2's "emit-from-Zod vs reconcile-consumer" open design point is moot.
+    Full record: `reference-closure.md` §Phase 6 "Collaboration state schemas — WS7".
+- **Remaining before the `transplant/phase-6` tag — owner sequencing call (not silently resolved):** the substrate
+  manifest **reviewer-route re-point** to the now-real experts (noted-not-done in `reference-closure.md` §Sub-agent
+  roster) and `agent-collaboration-channels.md` — which `08-collaboration-active.md` treats as **P8**, though older
+  reference-closure prose said "before the phase-6 tag." Whether either blocks the tag, or rides to P7/P8, is surfaced for
+  the owner.
 
 ## 5. Contract-doc reconciliation map (KEEP-localise vs reconcile vs DON'T-BRING)
 

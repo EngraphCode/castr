@@ -2,6 +2,35 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-19 (session 3 — state-schemas scoping; FUNDAMENTAL ERROR + correction)
+
+- **FALSE ABSENCE FROM A BROKEN PROBE → wrong-design verdict (owner halted me).** I concluded "no Oak checkout
+  reachable locally" from `ls -d /Users/jim/code/oak* /Users/jim/code/*oak* /Users/jim/code/monorepo*`. In zsh a single
+  non-matching glob (`monorepo*`) **aborts the whole command** before `ls` runs → empty output, which I read as "Oak
+  absent." Oak was at `/Users/jim/code/oak-open-curriculum-ecosystem` the whole time (matches `oak*`). **This is the
+  zsh-glob lesson already in `distilled.md`, re-violated.** Then I hit the SAME family twice more: `git show $P:path` →
+  zsh ate `:a` as the absolute-path modifier (`ad359a4f`+`gent-tools`); fix = `"${P}:path"` braced/quoted.
+- **The deeper error the false-absence caused:** with Oak "unreachable" I reconciled against a HALF picture (castr's
+  bodies + a stale napkin summary "castr's validation is in-code Zod") and began forming a verdict — "Option A: author
+  the 5 schemas at `.agent/state/collaboration/`" — **before** reading `08-collaboration-active.md` (the most recent,
+  most specific surface) and before reading Oak's actual code. Option A was WRONG: it replicates castr's pre-WS7
+  coupling (schemas live with data), the exact thing Oak's **WS7** refactor removed. It also conflated "make the 5 red
+  state-integrity tests green" with "materialise the `.agent/state/collaboration/` data plane" — which would have
+  prematurely pulled Phase-8 substrate into Phase 6 and risked silencing the honest absent-DATA signal (risk #2 the
+  opener flagged; my own [[dont-dismiss-tools-as-false-positive]] / manufactured-completion family, inverted).
+- **Firsthand Oak-pin truth (ad359a4f), now grounded:** (1) 5 schemas live at `agent-tools/src/collaboration-state/schemas/`
+  (source tree), NOT `.agent/state/collaboration/`. (2) Resolver = package.json-walk from `import.meta.url`; schemas
+  ALWAYS exist regardless of runtime data → decoupled (WS7). (3) NO Zod→JSON-Schema generator exists — schemas are
+  hand-authored Ajv contracts, parallel to the in-code Zod (so `08`'s "emit from Zod OR reconcile consumer" open design
+  point is moot: Oak already chose committed-source-schemas). (4) Oak's committed `.agent/state/collaboration/` =
+  `.gitignore` + per-dir README/.gitkeep + Oak runtime data (DON'T-BRING); live claims/comms/log git-ignored.
+- **Corrected design (firsthand, pending owner confirm):** bring WS7 — schemas → castr `agent-tools/src/collaboration-state/schemas/`
+  - the resolver refactor (no-arg validator, package.json-walk) + test-helper source change. This greens the 5 (+ other
+    helper-dependent) agent-tools tests as a Phase-6 SOURCE/contract bring, **without** touching `.agent/state/` — the
+    Phase-8 runtime data plane stays correctly absent. Resolves the P6(schemas-as-source)/P8(runtime-skeleton) boundary
+    cleanly. Root meta-lesson: **never accept an absence from a probe that could fail silently — verify against the
+    authoritative source (the Oak checkout, the body at the pin), and finish grounding before forming a verdict.**
+
 ## 2026-06-19 (session 2 — sub-agent roster)
 
 - **The opener's "13 generic templates, bring + components" was a hypothesis that firsthand grounding overturned twice.**

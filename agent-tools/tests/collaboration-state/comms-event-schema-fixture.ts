@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { type AnySchemaObject } from 'ajv';
 
 const schemaUrl = new URL(
-  '../../../.agent/state/collaboration/comms-event.schema.json',
+  '../../src/collaboration-state/schemas/comms-event.schema.json',
   import.meta.url,
 );
 

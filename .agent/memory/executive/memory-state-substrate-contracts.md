@@ -133,11 +133,16 @@ active/closed claims, conversations, escalations); `.agent/memory/collaboration/
 `operational/collaboration-state-*.md`; `operational/diagnostics/`;
 `operational/quarantine/`.
 
-Because the `.agent/state/collaboration/` plane and its colocated schemas are
-not yet on disk, running the evaluator today surfaces **expected `blocking`
-`live-reader-failure` findings for that plane**. That is a true signal that
-Phase-8 infrastructure is not yet installed — **it must not be silenced**
-(inverse of green-gates-mask-gaps). The structural manifest checks
+Because the `.agent/state/collaboration/` **runtime data plane** is not yet on
+disk, running the evaluator today surfaces **expected `blocking`
+`live-reader-failure` findings for that plane** (the absent `active-claims.json`
+and `shared-comms-log.md`). That is a true signal that Phase-8 infrastructure is
+not yet installed — **it must not be silenced** (inverse of
+green-gates-mask-gaps). The five collaboration JSON schemas are **no longer**
+part of this gap: WS7 relocated them to committed source at
+`agent-tools/src/collaboration-state/schemas/` and decoupled the validator from
+the data path, so the schema reads now resolve; only the runtime data remains
+Phase-8. The structural manifest checks
 (count = 22, unique ids, required fields present, valid PDR-049 merge classes,
 manifest-validates-against-schema) pass independently of the absent plane.
 
@@ -163,14 +168,14 @@ standalone substrate audit.
 These are not permission to trim content. They are the substrate defect-ledger
 for castr.
 
-| Gap                                                                               | Current classification                            | Next owner                         |
-| --------------------------------------------------------------------------------- | ------------------------------------------------- | ---------------------------------- |
-| `.agent/state/collaboration/` plane unmaterialised                                | Phase-8 named position; evaluator reports absence | Phase-8 collaboration machinery    |
-| Collaboration JSON schemas live in-code/fixtures, not as colocated `.schema.json` | Contract gap; runtime schema files are Phase-8    | Phase-8 collaboration machinery    |
-| `shared-comms-log.md` renderer exists but has no live source set yet              | Deterministic checker is dormant until Phase-8    | Phase-8 collaboration machinery    |
-| Full `active/patterns/` ecosystem import outstanding                              | Phase-6 OUT item                                  | Remaining Phase-6 pass             |
-| Directory README contract coverage partial across memory roots                    | Structural metadata gap; preserve content         | Consolidation                      |
-| Memory/state merge claims lack live topology validation in castr                  | Multi-checkout merge-safety gap (evaluator-ready) | Phase-8 / first multi-agent stream |
+| Gap                                                                                               | Current classification                                        | Next owner                         |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------- |
+| `.agent/state/collaboration/` plane unmaterialised                                                | Phase-8 named position; evaluator reports absence             | Phase-8 collaboration machinery    |
+| Collaboration JSON schemas now committed source at `agent-tools/src/collaboration-state/schemas/` | RESOLVED (Phase 6) — WS7 relocation + validator-path decouple | Closed                             |
+| `shared-comms-log.md` renderer exists but has no live source set yet                              | Deterministic checker is dormant until Phase-8                | Phase-8 collaboration machinery    |
+| Full `active/patterns/` ecosystem import outstanding                                              | Phase-6 OUT item                                              | Remaining Phase-6 pass             |
+| Directory README contract coverage partial across memory roots                                    | Structural metadata gap; preserve content                     | Consolidation                      |
+| Memory/state merge claims lack live topology validation in castr                                  | Multi-checkout merge-safety gap (evaluator-ready)             | Phase-8 / first multi-agent stream |
 
 ## Canonical Communication-Event Root
 

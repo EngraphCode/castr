@@ -182,7 +182,7 @@
       "writer_or_write_api": "pnpm agent-tools:collaboration-state -- comms send",
       "entry_identity": "event JSON filename and event_id",
       "merge_class": "exclusive-create-fragments",
-      "schema_or_parser": "agent-tools collaboration-state comms parser and in-code JSON Schema; colocated runtime .schema.json is a Phase-8 item",
+      "schema_or_parser": "agent-tools collaboration-state comms parser plus JSON Schema at agent-tools/src/collaboration-state/schemas/comms-event.schema.json (committed source, WS7-decoupled from the data plane); the runtime .agent/state/collaboration/comms/ event data is a Phase-8 item",
       "generated_outputs": [".agent/state/collaboration/shared-comms-log.md"],
       "validator": "pnpm agent-tools:collaboration-state -- check --comms-dir .agent/state/collaboration/comms; practice-substrate drift comparison",
       "severity": [
@@ -278,7 +278,7 @@
       "writer_or_write_api": "pnpm agent-tools:collaboration-state -- claims open|heartbeat|close and commit skill queue helpers",
       "entry_identity": "claim_id for claims; intent_id for commit_queue",
       "merge_class": "index-narrative-tables",
-      "schema_or_parser": "agent-tools collaboration-state in-code JSON Schema validation; runtime .agent/state/collaboration/active-claims.schema.json is a Phase-8 item",
+      "schema_or_parser": "agent-tools collaboration-state JSON Schema at agent-tools/src/collaboration-state/schemas/active-claims.schema.json (committed source, WS7-decoupled from the data plane); the runtime .agent/state/collaboration/active-claims.json data file is a Phase-8 item",
       "generated_outputs": [],
       "validator": "pnpm agent-tools:collaboration-state -- check --active .agent/state/collaboration/active-claims.json",
       "severity": [
@@ -330,7 +330,7 @@
       "writer_or_write_api": "claim close/archive helper and commit skill closeout",
       "entry_identity": "claim_id",
       "merge_class": "append-only-structured-by-claim_id",
-      "schema_or_parser": "agent-tools collaboration-state in-code JSON Schema validation; runtime .agent/state/collaboration/closed-claims.schema.json is a Phase-8 item",
+      "schema_or_parser": "agent-tools collaboration-state JSON Schema at agent-tools/src/collaboration-state/schemas/closed-claims.schema.json (committed source, WS7-decoupled from the data plane); the runtime .agent/state/collaboration/closed-claims.archive.json data file is a Phase-8 item",
       "generated_outputs": [],
       "validator": "pnpm agent-tools:collaboration-state -- check --closed .agent/state/collaboration/closed-claims.archive.json",
       "severity": [
@@ -378,7 +378,7 @@
       "writer_or_write_api": "human or helper-authored JSON entries following conversation schema",
       "entry_identity": "entry_id inside each conversation record",
       "merge_class": "append-only-structured-by-entry_id",
-      "schema_or_parser": "agent-tools collaboration-state in-code conversation JSON Schema; runtime .agent/state/collaboration/conversation.schema.json is a Phase-8 item",
+      "schema_or_parser": "agent-tools collaboration-state conversation JSON Schema at agent-tools/src/collaboration-state/schemas/conversation.schema.json (committed source, WS7-decoupled from the data plane); the runtime .agent/state/collaboration/conversations/ data is a Phase-8 item",
       "generated_outputs": [],
       "validator": "practice-substrate JSON Schema validation excluding *.example.json",
       "severity": [
@@ -422,7 +422,7 @@
       "writer_or_write_api": "human or helper-authored JSON entries following escalation schema",
       "entry_identity": "escalation_id",
       "merge_class": "append-only-structured-by-escalation_id",
-      "schema_or_parser": "agent-tools collaboration-state in-code escalation JSON Schema plus README contract; runtime .agent/state/collaboration/escalation.schema.json is a Phase-8 item",
+      "schema_or_parser": "agent-tools collaboration-state escalation JSON Schema at agent-tools/src/collaboration-state/schemas/escalation.schema.json (committed source, WS7-decoupled from the data plane) plus README contract; the runtime .agent/state/collaboration/escalations/ data is a Phase-8 item",
       "generated_outputs": [],
       "validator": "practice-substrate JSON Schema validation",
       "severity": [

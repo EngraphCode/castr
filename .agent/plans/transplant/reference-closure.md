@@ -552,3 +552,47 @@ DON'T-BRING-7.
   **D4** backlog, **not** this slice; only the three rules being resolved here were reconciled. The substrate manifest's
   reviewer-route mapping (which earlier mapped off `docs-adr-expert`/`assumptions-expert` because castr lacked them) can
   now be re-pointed to the real experts — a follow-on substrate touch, noted not done.
+
+### Collaboration state schemas — disposition: **bring Oak WS7 (done)** (2026-06-19 s3)
+
+The opener framed the remaining Phase-6 item as "`.agent/state/collaboration/` schemas + empty dirs (P8 machinery
+structure-only)" and the ledger §State location as stale. Firsthand grounding against the **Oak pin** (`ad359a4f`)
+overturned that framing: Oak had already solved the location contention in commit `6d1e45f3` (**WS7**, 2026-06-13),
+which **relocated the 5 collaboration `*.schema.json` out of `.agent/state/collaboration/` into committed source at
+`agent-tools/src/collaboration-state/schemas/`** and **decoupled the validator's schema-root from the validated data
+file's path** (module-relative `package.json`-walk, so the schemas always exist independent of the runtime data plane).
+castr was on the **pre-WS7** design (validator looked for schemas beside the data → the 5 schema files were "missing"
+and the agent-tools `collaboration-state`/`practice-substrate` suites failed at setup). Owner decision (2026-06-19):
+**bring WS7 now as a Phase-6 source/contract bring.**
+
+- **Schemas relocated, not authored — disposition: replicate-as-is.** The 5 schemas (`active-claims`, `closed-claims`,
+  `comms-event`, `conversation`, `escalation`) brought verbatim from the Oak pin to
+  `agent-tools/src/collaboration-state/schemas/`; phenotype-clean (standard draft-2020-12, bare-filename `$id` matching
+  the Ajv lookup key; no Oak/product/ADR tokens) — the structural-contract "byte-identical, replicate as-is" case.
+- **Validator decouple — disposition: rewrite (done).** `collaboration-json-validation.ts` adopts the WS7
+  `resolveSchemasDir()` (`package.json`-walk → `src/collaboration-state/schemas/`) + no-arg
+  `createCollaborationJsonSchemaValidator()`; `state-integrity.ts` drops the data-dir schema-root argument;
+  `live-types.ts` repoints the 5 `*_SCHEMA_PATH` constants to source (the data-path constants stay
+  `.agent/state/collaboration/`). Readers repointed: the two compile-time schema fixtures (castr's `readFileSync` form
+  kept, path only changed) and the `temp-collaboration-state` copy-source. `practice-substrate.unit.test.ts` needed **no**
+  change (its schema paths are synthetic inputs, not constant-coupled — verified by running the suite).
+- **Excluded from the bring (named):** WS7 also bundled a separate statusline `listExperiments` ArcAngel rapid-comms
+  repoint (`.agent/collaboration/rapid-comms`, Bugbot ccc37502/de9f2522) — a different workstream; castr has no such code,
+  so it is **out of scope**. No `.agent/state/` runtime data was created — the runtime data plane stays Phase-8.
+- **Substrate-contract reconciled to truth — disposition: rewrite (done).** The manifest's 5 `schema_or_parser` fields
+  and the `.md` (findings framing + Known-Contract-Gaps row) flipped from "schemas are a Phase-8 item / colocated
+  `.schema.json` not yet on disk" to "schemas committed source at `agent-tools/src/collaboration-state/schemas/`
+  (WS7-decoupled); only the runtime data plane is Phase-8." Verified firsthand: the substrate consumer now reports the
+  schema reads as resolving — its remaining 2 `live-reader-failure` findings are both **runtime data** (`active-claims.json`,
+  `shared-comms-log.md`), the honest Phase-8-absent signal that **must not be silenced**. The agent-tools informational
+  suite went **13 → 1** failures; the lone remaining is the pre-existing `clerk-expert` parity expectation (P7 item).
+- **Effect on the Phase-6/8 boundary:** WS7 makes "schemas-as-committed-source" (Phase 6, this slice) cleanly separable
+  from the "`.agent/state/collaboration/` runtime skeleton + activation" (Phase 8, `08-collaboration-active.md` §1–2).
+  `08` §2's "open design point" (emit JSON-Schema from Zod **or** reconcile the consumer) is **moot** — Oak chose neither;
+  it committed hand-authored schemas in source, which this slice adopts.
+
+**Phase-6 result (state schemas): full `pnpm check` green; the bring is a `agent-tools` source/contract change touching
+no runtime `.agent/state/` plane.** Remaining before the `transplant/phase-6` tag — owner sequencing call: the
+reviewer-route re-point (above, noted-not-done) and `agent-collaboration-channels.md` (treated as **P8** by
+`08-collaboration-active.md`, though older reference-closure prose said "before the phase-6 tag" — the discrepancy is
+surfaced, not silently resolved).

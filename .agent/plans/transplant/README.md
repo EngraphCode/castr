@@ -153,9 +153,18 @@ persona + reviewer-team components; 12 Codex adapters + registrations (existing 
 path-bug fixed); 3 dangling rules reconciled. Roster-of-record surfaces in lockstep. `subagents` gate flip + `.cursor`/`.claude`
 wrappers = **Phase 7** (row 7). Full record: `reference-closure.md` §Phase 6 + sub-plan §4 OUT + `relevance-ledger.md`.
 
-**NEXT (remaining Phase 6):** `.agent/state/collaboration/` schemas + empty dirs (P8 machinery, structure-only) — needs a
-firsthand scoping pass (the ledger §State location is stale: Oak `main` moved the schemas to `agent-tools/src/collaboration-state/schemas/`;
-castr's runtime validation is in-code Zod) → `agent-collaboration-channels.md` → full green `pnpm check` → `transplant/phase-6` tag.
+**Collaboration state schemas ✅ LANDED (2026-06-19 s3) — Oak WS7 (`6d1e45f3`).** Firsthand grounding against the Oak pin
+overturned the "schemas + empty dirs (P8 structure-only)" framing: WS7 had already relocated the 5 `*.schema.json` to
+committed source `agent-tools/src/collaboration-state/schemas/` and decoupled the validator schema-root from the data
+path. Brought as a **Phase-6 source/contract** change (5 schemas verbatim + validator decouple + repoint every reader +
+substrate-contract reconciled); **no `.agent/state/` runtime plane created** (Phase-8). Full `pnpm check` green;
+agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item). Full record: `reference-closure.md` §Phase 6
+"Collaboration state schemas — WS7" + sub-plan §4.
+
+**NEXT — owner sequencing call for the `transplant/phase-6` tag (surfaced, not silently resolved):** the substrate
+manifest **reviewer-route re-point** to the now-real experts (noted-not-done) and `agent-collaboration-channels.md`
+(treated as **P8** by `08-collaboration-active.md`, vs older "before phase-6 tag" prose) — decide P6-tag-blocker vs
+P7/P8, then full green `pnpm check` → `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).

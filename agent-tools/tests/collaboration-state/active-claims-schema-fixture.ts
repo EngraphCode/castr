@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { type AnySchemaObject } from 'ajv';
 
 const schemaUrl = new URL(
-  '../../../.agent/state/collaboration/active-claims.schema.json',
+  '../../src/collaboration-state/schemas/active-claims.schema.json',
   import.meta.url,
 );
 

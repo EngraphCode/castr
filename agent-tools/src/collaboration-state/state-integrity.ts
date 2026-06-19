@@ -33,9 +33,7 @@ export async function validateCollaborationStateIntegrity(input: {
   readonly repoRoot: string;
 }): Promise<CollaborationStateIntegrityReport> {
   const surfaces = await jsonSurfaces(input.repoRoot);
-  const validator = await createCollaborationJsonSchemaValidator(
-    join(input.repoRoot, COLLABORATION_ROOT),
-  );
+  const validator = await createCollaborationJsonSchemaValidator();
   const findings = (
     await Promise.all(
       surfaces.map((surface) => validateJsonSurface(input.repoRoot, validator, surface)),
