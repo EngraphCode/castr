@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                    | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 — state schemas ✅ (Oak WS7) + reviewer-routes ✅ + channels card ✅; standing items ✅ resolved (back-flow target, D1 lint TS-skew root-fix, Q-001); `transplant/phase-6` tag unblocked | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                     | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ COMPLETE + tagged `transplant/phase-6` (`a63aee3`, pushed) — WS7 schemas, reviewer-routes, channels card, D1 TS-skew root-fix; next = Phase 7 (platform adapters) or owner-named slice | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -114,7 +114,7 @@ check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expe
   index/contract; runtime surfaces = Phase-8 forward-refs). **All three standing deferred items ✅ RESOLVED
   this session (owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version
   skew root-fixed — single-TS pnpm override; both rules back at `error`, 0 violations; the 126 transitional
-  warnings are GONE)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` tag is now unblocked.**
+  warnings are GONE)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` tag ✅ CUT (`a63aee3`) + pushed; Phase 6 COMPLETE.**
 
 ## Next Safe Steps
 
@@ -125,12 +125,24 @@ reviewer-routes✅ + channels-card✅; **collaboration state schemas LANDED via 
 committed source `agent-tools/src/collaboration-state/schemas/` + validator decoupled, no runtime `.agent/state/`
 plane created; the two follow-on items (reviewer-route re-point, `agent-collaboration-channels.md`) DONE; **all three
 standing deferred items RESOLVED** (back-flow target → fresh branch off Oak main; D1 → TS-skew root-fixed, rules at
-`error`, 0 violations; Q-001 → D3-before-merge + split PRs); the **`transplant/phase-6` tag is now unblocked**)
-and the [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
-enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals
-still unfixed — 02 = the IR-fidelity proof harness, active, not started), the rest
-of the transplant and arc D1–D4, and the feature slice required and unparked — the
-owner names which is next; a fresh reproduced product regression pre-empts it.
+`error`, 0 violations; Q-001 → D3-before-merge + split PRs); **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed —
+Phase 6 COMPLETE**) and the [transplant tracker §Next steps](../../plans/transplant/README.md). **Next transplant phase
+= Phase 7 (platform adapters: `.cursor`/`.claude` rule+sub-agent wrappers, then flip the `portability`/`subagents`
+gates).** The one deep enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals still unfixed —
+02 = the IR-fidelity proof harness, active, not started), the rest of the transplant and arc **D2–D4** (D1 ✅ done), and
+the feature slice required and unparked — the owner names which is next; a fresh reproduced product regression pre-empts
+it.
+
+**Incoming from `main` (low priority, owner 2026-06-19 — next-session-or-later):** `origin/main` commit `ccd9c7a` added
+`.agent/research/zod-compiler-comparison-and-surface-architecture.report-plan.md` (dated 2026-06-19, written on branch
+`claude/castr-zod-compiler-review-qpre7n` against castr `393e476`), which is **not on this branch**. Bring it onto
+`feat/transplant-engraph-practice` and **home + wire it per its own "Note to the consuming/homing agent"**: split the
+plan sections → `.agent/plans/` (a new Phase plan + a `castr check`/surface atomic plan); the atomisation decision → a
+new castr ADR (it **supersedes part of ADR-043's scope**, see the file's §7); the zod-compiler findings →
+`.agent/research/zod-compiler/`; the report's correction table → the architecture-review provenance; **PRESERVE the §4
+reasoning trail** (most expensive to re-derive). `.agent/research/` already exists on the branch. _Meta: this is a
+main→branch divergence — work landed on `main` outside the single-transplant-branch invariant; the model needs a periodic
+main→branch sync check (cf. the Oak PDR-currency sync) so main-side commits are not stranded._
 
 ## Open Owner-Decision Items
 

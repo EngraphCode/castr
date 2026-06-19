@@ -120,8 +120,8 @@ fields, valid PDR-049 merge classes — and validates the manifest against the
 schema.
 
 **Live today (11):** this contract; `.agent/memory/README.md`;
-`active/napkin.md`; `active/distilled.md`; `active/patterns/` (directory — the
-full pattern import is a remaining Phase-6 OUT item);
+`active/napkin.md`; `active/distilled.md`; `active/patterns/` (130 patterns
+imported 2026-06-19; index generated + gated by `validate-patterns-index`);
 `operational/repo-continuity.md`; `operational/threads/` (README convention
 seeded); `operational/tracks/` (README convention seeded);
 `operational/pending-graduations.md`; `operational/open-questions.md`;

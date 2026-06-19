@@ -73,3 +73,29 @@ an item graduates, replace it with a one-line tombstone naming where it landed
   system, not a free choice); (b) author reviewer templates NATIVE to the host, not
   copy-and-AMEND the source's, because a template instructs against a real estate.
   `[captured: 2026-06-18, extended 2026-06-19 | source: distilled.md §Transplant method]`
+
+## 2026-06-19 capture (session 3 — Phase-6 close)
+
+- **ADR candidate: pin a single workspace TypeScript via a `pnpm-workspace.yaml`
+  override.** castr-local toolchain decision (genuine local need → ADR, not a
+  portable PDR, per PDR-079): `eslint-plugin-sonarjs` bundles its own TypeScript
+  (`>=5` → 5.9.3) while the workspace runs 6.0.3, and the two releases renumber
+  `ts.TypeFlags`, so the plugin's type-aware rules masked the wrong bits and
+  mis-fired (the D1 126-violation arc). The fix pins `typescript` to one version
+  workspace-wide. **graduation-target:** a castr ADR recording the decision +
+  rationale + the revisit trigger (sonarjs ships a TS-6 peer, or root TS major
+  changes). **trigger-condition:** a second cross-tool version-skew incident, OR
+  a curation pass, OR owner direction. **status:** pending — the decision is
+  conserved in `pnpm-workspace.yaml` (comment) + `d1-sonarjs-findings.md` §0; the
+  ADR is the graduation-upward step, not yet authored.
+  `[captured: 2026-06-19 | source: d1-sonarjs-findings.md §0 + pnpm-workspace.yaml]`
+- **Doctrine candidate: a periodic `main`→branch sync check for the single-branch
+  model.** The single-transplant-branch invariant ("one branch carries
+  everything") leaked — `origin/main` `ccd9c7a` (a zod-compiler report-plan)
+  landed on `main` via a separate branch, outside the transplant branch. Mirror of
+  the Oak PDR-currency sync (upstream→castr); this is the castr-`main`→working-branch
+  direction. **graduation-target:** a clause in the continuity/delivery doctrine
+  (or the transplant tracker) naming the periodic main→branch reconciliation so
+  main-side commits are not stranded. **status:** pending — first instance
+  captured; surface a second before graduating.
+  `[captured: 2026-06-19 | source: repo-continuity.md §Next Safe Steps incoming-from-main]`

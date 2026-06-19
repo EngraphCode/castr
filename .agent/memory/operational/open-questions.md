@@ -50,3 +50,21 @@ owning artefact / discussion home (if any), and a status line.
   removes the ungated-big-merge risk and makes review tractable. Execution is the transplant-close
   / arc-D3 sequence; this entry records the decision and is drainable at the next `consolidate-docs`.
   Not a reopening of the single-branch decision (owner, 2026-06-15).
+
+## Q-002 — Retire the single-TypeScript pnpm override once sonarjs ships a TS-6 peer
+
+- **Captured:** 2026-06-19 (session 3, D1 resolution).
+- **Question:** The D1 fix pins `typescript` workspace-wide via a `pnpm-workspace.yaml`
+  override because `eslint-plugin-sonarjs@4.0.3` resolves its own bundled TS (5.9.3) and the
+  `TypeFlags` skew vs the workspace 6.0.3 made its type-aware rules mis-fire. When sonarjs ships
+  a release that declares a TypeScript-6 peer (or otherwise resolves the workspace TS), should the
+  override be **retired** so version resolution is driven by declared peers rather than a pinned
+  literal — and is a pnpm **catalog** the better single-source mechanism than the version pin?
+- **Why it shapes future work:** the override is a workaround for an upstream packaging gap; the
+  clean end-state is sonarjs resolving the workspace TS natively. Leaving the pin indefinitely is a
+  silent literal that must be bumped in lockstep with every TS major (a drift surface).
+- **Why not cheaply answerable now:** depends on an upstream sonarjs release that does not yet exist;
+  re-evaluate at a dependency-cooldown/`pnpm outdated` pass.
+- **Owning artefact / home:** `pnpm-workspace.yaml` (the override + its comment) + the D1 ADR
+  candidate in [`pending-graduations.md`](pending-graduations.md).
+- **Status:** OPEN — watch for a sonarjs TS-6-peer release; low priority.

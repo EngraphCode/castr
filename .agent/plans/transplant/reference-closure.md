@@ -609,5 +609,7 @@ and the agent-tools `collaboration-state`/`practice-substrate` suites failed at 
 **Phase-6 result (state schemas): full `pnpm check` green; the bring is a `agent-tools` source/contract change touching
 no runtime `.agent/state/` plane.** The two follow-on Phase-6 items the owner directed (2026-06-19 s3, "resolve all open
 questions and deferred items") are **both done**: the substrate reviewer-route re-point (above) and
-`agent-collaboration-channels.md` (Block (g) remaining, above). The `transplant/phase-6` tag now follows the standing
-deferred-item resolution (Oak back-flow target, D1 lint measurement, Q-001 PR/D3 timing — being driven this session).
+`agent-collaboration-channels.md` (Block (g) remaining, above). All three standing deferred items are also **resolved**
+(back-flow target → fresh branch off Oak main; D1 → TS-version-skew root-fixed via a single-TS pnpm override, rules at
+`error`, 0 violations; Q-001 → D3-before-merge + split PRs). **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed — Phase 6
+COMPLETE; reference-closure-clean (no open P6 placeholders).** Next = Phase 7.

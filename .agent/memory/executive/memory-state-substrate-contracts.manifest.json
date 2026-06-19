@@ -644,7 +644,7 @@
       ],
       "portability_tier": "repo-local-contract",
       "owner_reviewer_route": "AGENT pattern lookup guidance + docs-adr-expert",
-      "notes": "Partially materialised: the active/patterns/ directory exists in castr; the full ecosystem-pattern import is a remaining Phase-6 OUT item."
+      "notes": "Materialised (2026-06-19): 130 patterns imported (132 Oak − 2 UI-only DON'T-BROUGHT); the README ## Pattern Index is generated + gated by the agent-tools validate-patterns-index CLI (--check in repo-validators:check)."
     },
     {
       "id": "memory-collaboration-patterns",

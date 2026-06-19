@@ -281,9 +281,11 @@ canonical 5 categories; the README index is now **generated + strictly gated** b
 stale index). **Sub-agent roster ✅ LANDED (2026-06-19, commit `d5cd4eb`):** roster 6→15 (9 new lean native templates
 incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` rules reconciled). **State schemas ✅
 (Oak WS7, `07f1f3c`); reviewer-routes + `agent-collaboration-channels.md` ✅ (`4567d06`); standing items ✅ — back-flow
-target, D1 lint (TS-skew root-fix, rules at `error`), Q-001 (`2431f97` + D1 fix).** **NEXT:** the `transplant/phase-6`
-tag (now unblocked) after full green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 0 errors,
-0 sonarjs warnings — D1 resolved).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
+target, D1 lint (TS-skew root-fix, rules at `error`), Q-001 (`2431f97` + D1 fix).** **`transplant/phase-6` ✅ CUT
+(`a63aee3`) + pushed — Phase 6 COMPLETE. NEXT = Phase 7** (platform adapters → flip portability/subagents gates), or an
+owner-named slice. **Branch `check:ci`-green (2026-06-19; 0 errors, 0 sonarjs warnings — D1 resolved).** _Low-priority
+incoming: `origin/main` `ccd9c7a` zod-compiler report-plan to bring + home/wire (see `repo-continuity.md` §Next Safe
+Steps)._ Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
 (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
 channels✅). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all

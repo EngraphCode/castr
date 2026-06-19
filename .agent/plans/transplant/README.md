@@ -166,8 +166,11 @@ re-point** (all 22 surfaces mirror Oak reconciled to castr's roster; Oak's `agen
 clauses preserved) and **`agent-collaboration-channels.md`** authored as the routing index/contract (schema cross-refs →
 WS7 source; runtime surfaces = Phase-8 forward-refs). **All three standing deferred items ✅ RESOLVED this session
 (owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version skew root-fixed via a single-TS
-pnpm override; both rules back at `error`, 0 violations)**; Q-001 (D3 before merge, split PRs). **NEXT:** full green
-`pnpm check` → `transplant/phase-6` tag (now unblocked).
+pnpm override; both rules back at `error`, 0 violations)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed —
+Phase 6 COMPLETE. NEXT = Phase 7** (platform adapters: `.cursor`/`.claude` wrappers → flip `portability`/`subagents`
+gates), or an owner-named slice. _Low-priority incoming: bring `origin/main` `ccd9c7a`
+(`.agent/research/zod-compiler-comparison-and-surface-architecture.report-plan.md`) onto the branch + home/wire per its
+own split note — see `repo-continuity.md` §Next Safe Steps._
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).

@@ -197,8 +197,10 @@ the reorder is therefore **DONE for the bringable-now layer**; its remainder fol
   **`agent-collaboration-channels.md` authored** as the routing index/contract (schema cross-refs → WS7 source location;
   Oak-local write-safety plan de-linked; runtime surfaces framed as Phase-8 forward-refs). Full record:
   `reference-closure.md` §Phase 6 (Block (g) remaining + Sub-agent roster reviewer-route line).
-- **`transplant/phase-6` tag:** follows the standing deferred-item resolution (Oak back-flow target, D1 lint measurement,
-  Q-001 PR/D3 timing) the owner directed be driven this session.
+- **`transplant/phase-6` tag ✅ CUT (`a63aee3`) + pushed — Phase 6 COMPLETE (2026-06-19).** All three standing deferred
+  items resolved (back-flow target → fresh branch off Oak main; D1 → TS-version-skew root-fixed via a single-TS pnpm
+  override, both rules at `error`, 0 violations; Q-001 → D3-before-merge + split PRs). **Next = Phase 7** (platform
+  adapters → flip `portability`/`subagents` gates).
 
 ## 5. Contract-doc reconciliation map (KEEP-localise vs reconcile vs DON'T-BRING)
 
