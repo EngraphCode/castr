@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                     | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ COMPLETE + tagged `transplant/phase-6` (`a63aee3`, pushed) — WS7 schemas, reviewer-routes, channels card, D1 TS-skew root-fix; next = Phase 7 (platform adapters) or owner-named slice | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                              | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ COMPLETE + tagged `transplant/phase-6` (`a63aee3`, pushed); zod-compiler report-plan homed (`3db3461`). **Phase 7 IN PROGRESS** — sub-plan `transplant/07-adapters-and-gate-flips.md` authored; build a native adapter generator (Oak ships none). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -117,6 +117,16 @@ check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expe
   warnings are GONE)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` tag ✅ CUT (`a63aee3`) + pushed; Phase 6 COMPLETE.**
 
 ## Next Safe Steps
+
+**Owner steer (2026-06-19): finish the FULL Practice transplant first; not in a rush to merge.** _"Bring over the full
+Practice — the Practice, agent tools, agentic frameworks, processes and protocols. Leave the remediation and focus on
+finishing the transplant."_ → **Active slice = transplant Phase 7** (sub-plan
+[`07-adapters-and-gate-flips.md`](../../plans/transplant/07-adapters-and-gate-flips.md)), then Phase 8, Phase 9, plus arc
+**D2/D4** (parity work = part of "the full Practice"). The deep-review **remediation backlog 02–07 takes a named position
+AFTER the transplant** (not parked — `no-manufactured-permission` holds; an undefined "later" is never). Delivery
+(D3-as-merge-gate + the merge act) is **deprioritised** ("not in a rush to merge"). This **supersedes the roadmap's
+"(1) remediation; (2) transplant" plan-of-record order** for the current run; the roadmap + primary-plan sequence notes
+are to be reconciled to this within the Phase-7 commit.
 
 Authoritative sequence: sub-plan
 [`06-memory-and-generator-consolidation.md` §4](../../plans/transplant/06-memory-and-generator-consolidation.md)

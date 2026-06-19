@@ -8,6 +8,15 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **2026-06-19 close UPDATE (supersedes the stale bullets below where they conflict):** Phase 6 is ✅ COMPLETE +
+> tagged (`a63aee3`); the zod-compiler report-plan was homed (`3db3461`). **D1 lint is ✅ RESOLVED** (TS-version skew,
+> single-TS override; rules back at `error`) — ignore the "D1 UNCONFIRMED / warn→error pending" turnkey step below.
+> **Active slice = transplant Phase 7** (sub-plan `transplant/07-adapters-and-gate-flips.md`): **build** a native
+> adapter generator (Oak pin `ad359a4f` ships none + hand-maintains), then flip portability/subagents gates, retire
+> the bespoke script. **Owner re-order (2026-06-19): finish the FULL Practice transplant first; remediation 02–07 = a
+> named position AFTER (not parked); not in a rush to merge.** "currently Phase 6" / "Phase 6 is the owner-directed
+> next slice" below are stale → Phase 7.
+
 This block is current truth only. Branch/delivery state lives in
 [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home). **Sections below this block predate the
 2026-06-15 single-branch consolidation and are historical context** — where they describe `fix/*` branches off
@@ -282,17 +291,21 @@ stale index). **Sub-agent roster ✅ LANDED (2026-06-19, commit `d5cd4eb`):** ro
 incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` rules reconciled). **State schemas ✅
 (Oak WS7, `07f1f3c`); reviewer-routes + `agent-collaboration-channels.md` ✅ (`4567d06`); standing items ✅ — back-flow
 target, D1 lint (TS-skew root-fix, rules at `error`), Q-001 (`2431f97` + D1 fix).** **`transplant/phase-6` ✅ CUT
-(`a63aee3`) + pushed — Phase 6 COMPLETE. NEXT = Phase 7** (platform adapters → flip portability/subagents gates), or an
-owner-named slice. **Branch `check:ci`-green (2026-06-19; 0 errors, 0 sonarjs warnings — D1 resolved).** \_Incoming
+(`a63aee3`) + pushed — Phase 6 COMPLETE. **Phase 7 IN PROGRESS** — sub-plan
+[`transplant/07-adapters-and-gate-flips.md`](../plans/transplant/07-adapters-and-gate-flips.md) authored (verified scope:
+15 templates/18 persona adapters, 87 rules; **build** a native adapter generator — Oak pin `ad359a4f` ships none + hand-
+maintains → a Phase-9 back-flow improvement; then flip portability/subagents gates, retire bespoke script). **Branch
+`check:ci`-green (2026-06-19; 0 errors, 0 sonarjs warnings — D1 resolved).\*\* \_Incoming
 `origin/main` `ccd9c7a` zod-compiler report-plan ✅ HOMED (2026-06-19): cherry-picked then split to `.agent/research/zod-compiler/`
 (comparison + corrections + reasoning-trail §4 preserved), `.agent/plans/future/castr-surface-architecture-and-verb-model.md`
 
 - `castr-check-verb.md`, and ADR-048 (Proposed — compiler-internal-split scope/value-gate, clarifies ADR-043); monolith removed.\_
   Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
   (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
-  channels✅). This is **one deep enhancement** — Phase 6 is the slice the
-  owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
-  still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
+  channels✅). This is **one deep enhancement**. **Owner re-order (2026-06-19): finish the FULL Practice transplant
+  first** (Phases 7–9 + arc D2/D4 parity), **then** remediation backlog 02–07 (named position after, not parked —
+  `no-manufactured-permission` holds), then the feature slice; "not in a rush to merge" (delivery deprioritised). All
+  still required; a fresh reproduced product regression still pre-empts the sequence. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
   **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
   sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
   half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner standing

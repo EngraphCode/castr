@@ -40,8 +40,8 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > consolidation; see the [delivery ledger](./delivery-ledger.md)), none parked, and the owner names the next slice:
 >
 > - **Practice transplant** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md), tracker
->   [`transplant/README.md`](./transplant/README.md)) — Phases 0–5 complete and tagged; **Phase 6 is the owner-directed
->   next slice**.
+>   [`transplant/README.md`](./transplant/README.md)) — Phases 0–6 complete and tagged; **Phase 7 is in progress**
+>   (sub-plan [`transplant/07-adapters-and-gate-flips.md`](./transplant/07-adapters-and-gate-flips.md)).
 > - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
 > - **Deep-review remediation backlog** ([`remediation/`](./remediation/) 02–07; 01 complete + merged in) — the 6
 >   shipped Criticals must be fixed; a required component, not a gate that blocks the transplant.
@@ -85,7 +85,7 @@ Current product truth:
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
-- the plan-of-record sequence (owner, 2026-06-09) is: (1) the [remediation backlog](./remediation/) 01→07 — in flight now; (2) [Oak → castr Practice transplant](./active/oak-practice-transplant.md) Phases 6–9 (Phases 0–5 done); (3) [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md); if a user reports a fresh product gate/runtime issue, reproduce it first
+- **the plan-of-record sequence was RE-ORDERED by the owner (2026-06-19):** finish the FULL Practice transplant first, then remediation. New sequence: (1) [Oak → castr Practice transplant](./active/oak-practice-transplant.md) Phases 7–9 + arc D2/D4 (parity = part of "the full Practice"; Phase 7 in progress); (2) [remediation backlog](./remediation/) 02–07 (a **named position after the transplant**, not parked — `no-manufactured-permission` holds; 01 done); (3) [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md). "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) is deprioritised. _Supersedes the 2026-06-09 "(1) remediation; (2) transplant" order._ If a user reports a fresh product gate/runtime issue, reproduce it first (it pre-empts the sequence)
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 

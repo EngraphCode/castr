@@ -2,6 +2,26 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-19 (session 4 — zod-compiler homing + Phase-7 scoping)
+
+- **FALSE ABSENCE FROM ONE DIRECTORY → wrong claim to the owner.** I told the owner "remediation 02's plan is
+  unauthored" after checking only `.agent/plans/remediation/` (which holds 03–07). It was authored and **promoted to
+  `.agent/plans/active/02-ir-fidelity-proof-harness.md`** — the lifecycle MOVES a plan on promotion. Same false-absence
+  family as session 3's zsh-glob: verify the actual location (here, the lifecycle destination) before claiming absence.
+  The delivery-ledger even named the path; I relayed my own stale summary instead of reading it. [[verify-agent-claims-firsthand]]
+- **A sub-agent (Explore) over-counted a load-bearing number.** It reported "18 sub-agent templates / 18 wrappers
+  needed"; firsthand `ls .agent/sub-agents/templates/` = **15** templates (the 18 is the persona-EXPANDED adapter count:
+  `architecture-expert`→barney/betty/fred/wilma). Spot-check every scope-defining count from a sub-agent report against
+  source before planning on it. [[dont-dismiss-tools-as-false-positive]] inverted — don't over-trust either.
+- **Checking the pinned SOURCE firsthand converts "transplant-vs-build" AND reveals improve-on-Oak openings.** Phase 7's
+  framing implied "regenerate adapters" (run an existing generator). `git -C /Users/jim/code/oak-open-curriculum-ecosystem
+ls-tree -r ad359a4f` showed Oak HAS the adapter surfaces (`.cursor/agents`, 93 `.cursor/rules`) but ships **NO
+  generator** for them — Oak **hand-maintains** them. So it's BUILD, not transplant, and building a generator **improves
+  on Oak** (a Phase-9 back-flow item). For any transplant phase, inspect the pinned Oak tree before assuming a tool exists.
+- **Cherry-picked/copied content can carry trailing tool-call tags.** The homed zod-compiler report-plan (origin/main
+  `ccd9c7a`) ended with literal `</content>`/`</invoke>` lines (the original author leaked them). They propagated into
+  every file I split it into; caught by grep before commit. Grep homed/copied files for trailing `</…>` artefacts.
+
 ## 2026-06-19 (session 3 — state-schemas scoping; FUNDAMENTAL ERROR + correction)
 
 - **FALSE ABSENCE FROM A BROKEN PROBE → wrong-design verdict (owner halted me).** I concluded "no Oak checkout

@@ -12,18 +12,18 @@ only.
 
 ## Status
 
-| Phase | Surface                                                                                  | Status  | Tag                           |
-| ----- | ---------------------------------------------------------------------------------------- | ------- | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                 | ✅ done | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                              | ⬜      | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                              | ⬜      | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                           | ⬜      | `transplant/phase-8`          |
-| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜      | `transplant/phase-9`          |
+| Phase | Surface                                                                                  | Status                                        | Tag                           |
+| ----- | ---------------------------------------------------------------------------------------- | --------------------------------------------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done                                       | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done                                       | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done                                       | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                 | ✅ done                                       | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done                                       | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done                                       | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                              | ⬜                                            | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                              | 🔄 IN PROGRESS (sub-plan authored 2026-06-19) | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                           | ⬜                                            | `transplant/phase-8`          |
+| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                                            | `transplant/phase-9`          |
 
 ## Resume point (next session)
 
@@ -246,7 +246,11 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
 - **D4 — Quality-gate + further Practice/agent-tools parity.** "Plenty more" still to import from the pinned Oak
   branch beyond Phases 5–9's named estates (additional rules, agent-tools capabilities, agentic-engineering and
   quality-gate machinery). Enumerate against the pinned Oak branch at the Phase-9 verification sweep; until then this
-  is the named placeholder so the arc's incompleteness is explicit, not forgotten.
+  is the named placeholder so the arc's incompleteness is explicit, not forgotten. **Elevated by the owner's
+  2026-06-19 "bring over the FULL Practice" steer:** "transplant finished" is only honest after a **measured gap-scan
+  against Oak `ad359a4f`** (`git -C /Users/jim/code/oak-open-curriculum-ecosystem ls-tree -r ad359a4f` — the pin is
+  locally inspectable) — what surfaces/rules/agent-tools/protocols exist on the pin but not yet on the branch. Tagging
+  Phase 9 without that scan would be a green-but-incomplete claim (the Phase-1b skipped-gate failure mode).
 
 **Completion of the deep enhancement requires the arc AND Phases 0–9 — D1 (every in-flight lint rule back at `error`)
 is ✅ done (2026-06-19); CI at the Oak standard (D3) is still pending.** "Transplant phases done" ≠ "deep enhancement
@@ -290,7 +294,9 @@ The 1b method below is kept as the execution record:
 
 - `NN-<surface>.md` — per-phase sub-plan. Written so far: **`02-agent-tools-build-design.md`** (the hardest phase's full
   build/gate design, captured early so it can't be lost); **`06-memory-and-generator-consolidation.md`** (Phase 6 layout +
-  generator); **`08-collaboration-active.md`** (Phase 8 scope — the firsthand finding that collaboration is mostly
+  generator); **`07-adapters-and-gate-flips.md`** (Phase 7 — verified scope: 15 templates/18 persona adapters, 87 rules;
+  the transplant-vs-build fork SETTLED firsthand at Oak pin `ad359a4f` = **BUILD** a native adapter generator, since Oak
+  ships none and hand-maintains its adapters → a Phase-9 back-flow improvement); **`08-collaboration-active.md`** (Phase 8 scope — the firsthand finding that collaboration is mostly
   **activation of already-transplanted machinery**, not a new bring, with the D3 coupling mapped; sequencing unchanged).
 - `relevance-ledger.md` — ✅ **seeded 2026-06-05** (finalised Phase 9): full per-surface KEEP / AMEND / DON'T-BRING /
   DORMANT dispositions, the firsthand corrections to the fan-out, and the explicit not-brought + dormant sets.

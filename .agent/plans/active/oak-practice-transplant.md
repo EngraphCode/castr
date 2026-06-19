@@ -36,6 +36,11 @@ intact, gates stay green, and provenance stays honest.
    started 2026-06-09; (2) this transplant, Phases 5–9; (3) `explicit-additional-properties-support.md`** (now at
    `current/paused/`, sequenced not parked). "Untouched" meant only never-clobbered-by-the-transplant; it never
    meant defects wait.
+   **RE-ORDERED (owner, 2026-06-19): finish the FULL Practice transplant FIRST, then remediation.** New sequence:
+   (1) this transplant Phases 7–9 + arc D2/D4 (Phase 7 in progress); (2) remediation backlog 02–07 — a **named
+   position after the transplant** (still not parked; `no-manufactured-permission` holds); (3) the feature slice.
+   "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) deprioritised. A fresh reproduced product
+   regression still pre-empts the sequence.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
 5. Tightenings: drop the **ground-truth search-eval triplet** + Oak **SonarQube/secrets infra** + ~2 UI-only patterns;
    **AMEND pattern `proven_in:` provenance + regenerate derived indexes**; `practice-fitness` **informational-first**.
