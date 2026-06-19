@@ -133,24 +133,28 @@ owner names which is next; a fresh reproduced product regression pre-empts it.
 
 ## Open Owner-Decision Items
 
-- **Oak back-flow target — OPEN (Phase 9).** Re-pinning to Oak `main`
-  `ad359a4f` did not decide where castr's upstream feedback lands (the old
-  `practice/transplant-to-castr` branch vs main vs a fresh branch). Deferred to
-  the Phase-9 feedback step; the running back-flow item list is in
-  [`reference-closure.md` §back-flow items](../../plans/transplant/reference-closure.md).
-- **D1 lint `warn → error` — path UNCONFIRMED; measure first.** The
-  `sonarjs/function-return-type` (121) + `sonarjs/in-operator-type-error` (5)
-  warn-downgrade is done, but whether the resolution is code changes or a
-  ratified rule-selection is not yet established — measure what the rules
-  actually flag before deciding ([d1-sonarjs-findings.md](../../plans/transplant/d1-sonarjs-findings.md),
-  treated as suspect; re-derive). Tracked as arc **D1**.
-- **Transplant PR delivery strategy + D3 timing — SURFACED (not blocking).** The
-  recorded plan is one ~100k-line PR to `main` at transplant close; castr's CI does
-  not run `check:ci`, so that merge would land with no CI gate enforcement. Whether
-  D3 (CI to the Oak standard) should land before the merge, and whether the single
-  PR is split for reviewability, is surfaced for owner at close as
-  [`open-questions.md` Q-001](open-questions.md). Not a reopening of the
-  single-branch decision (owner, 2026-06-15) — a close-time delivery question.
+- **Oak back-flow target — RESOLVED (owner, 2026-06-19 s3): a fresh branch off
+  current Oak `main`** (e.g. `practice/castr-backflow`), PR'd to Oak `main`. Not
+  the stale `practice/transplant-to-castr` branch, not a direct-to-main PR with no
+  staging branch. Execution remains a **Phase-9** deliverable (the back-flow report
+  - the running item list in
+    [`reference-closure.md` §back-flow items](../../plans/transplant/reference-closure.md));
+    only the destination is now fixed.
+- **D1 lint `warn → error` — measurement IN PROGRESS (owner-directed, 2026-06-19
+  s3: "drive it now").** The decisive datum the prior suspect session never
+  captured — S3800's secondary "Returns X/Y" categories per site + the 5 S3785
+  operands' _inferred_ types — is being measured firsthand (background agent) to
+  make code-fix vs JSDoc-add vs rule-selection decidable. Source of record:
+  [d1-sonarjs-findings.md](../../plans/transplant/d1-sonarjs-findings.md) (suspect;
+  re-derive). Tracked as arc **D1**.
+- **Transplant PR delivery strategy + D3 timing — RESOLVED (owner, 2026-06-19 s3):
+  D3 before the merge, split PRs.** Land D3 (CI runs the full `check:ci` chain,
+  SHA-pinned actions) **before** the transplant merge, and split the ~100k-line
+  transplant into reviewable PRs — removing the Q-001 ungated-big-merge risk and
+  making review tractable. Recorded at [`open-questions.md` Q-001](open-questions.md)
+  - [`08-collaboration-active.md` §3](../../plans/transplant/08-collaboration-active.md).
+    Not a reopening of the single-branch decision (owner, 2026-06-15) — a close-time
+    delivery decision now made.
 
 (The PDR-currency mechanism is **resolved**, not open — adopt Oak amendments at a
 periodic D4/P9 "PDR currency sync"; owner, 2026-06-17.)

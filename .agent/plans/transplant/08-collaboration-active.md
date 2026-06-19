@@ -83,9 +83,11 @@ a safe merge path. castr's CI today (`/.github/workflows/ci.yml`) runs only `ins
 
 **Therefore D3 is a prerequisite for _safe_ multi-stream**, not an independent nicety. D3 scope (per the arc): CI runs the
 full `check:ci` chain; SHA-pin every action with a `# vX.Y.Z` comment (supply-chain); fix the `lib/pnpm-lock.yaml` path
-filter (lockfile is at root); repair the `publish.yml` non-existent `pnpm release`. **Sequencing note:** this sub-plan does
-**not** re-order D3; it records that Phase 8's _value_ (safe concurrency) is not realised until D3 also lands, so the owner
-can weigh them together. See [`open-questions.md` Q-001](../../memory/operational/open-questions.md).
+filter (lockfile is at root); repair the `publish.yml` non-existent `pnpm release`. **Sequencing — DECIDED (owner,
+2026-06-19 s3, resolving Q-001): D3 lands _before_ the transplant merge, and the transplant is delivered as split,
+reviewable PRs** (not one ~100k-line PR). So the transplant-close sequence is: complete the phases → land D3 → split the
+delivery into reviewable PRs against a D3-gated `main`. See [`open-questions.md` Q-001](../../memory/operational/open-questions.md)
+and [`delivery-ledger.md`](../../plans/delivery-ledger.md).
 
 ## 4. Acceptance + validation
 

@@ -257,6 +257,12 @@ resolve on this tree. `new-rule-vs-pdr-clause` → `RULES_INDEX.md` resolves sam
 
 ### Upstream Oak bugs — **back-flow items** (for the Phase-9 feedback report)
 
+**Back-flow target — DECIDED (owner, 2026-06-19 s3): a fresh branch off current Oak `main`** (e.g.
+`practice/castr-backflow`), PR'd to Oak `main` — **not** the stale `practice/transplant-to-castr` branch and not a
+direct-to-main PR with no staging branch. The items below (plus the substrate magic-number removal §"Substrate consumer
+magic numbers", the `validate-patterns-index` generator, and the WS7 schema-relocation if Oak ever regresses) land there
+as the **Phase-9** feedback deliverable; only the destination is now fixed.
+
 3. `capture-practice-tool-feedback` cites `skills/napkin/SKILL.md` — Oak's own napkin skill is
    `SKILL-CANONICAL.md` (stale upstream; fixed here).
 4. `dont-break-build-without-fix-plan` cites `../commands/consolidate-docs.md` — Oak retired `commands/`

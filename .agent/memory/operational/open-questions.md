@@ -44,5 +44,9 @@ owning artefact / discussion home (if any), and a status line.
   owner-directed at execution.
 - **Owning artefact / home:** [`delivery-ledger.md`](../../plans/delivery-ledger.md) +
   transplant tracker §Deep-enhancement arc **D3**.
-- **Status:** OPEN — surfaced for owner. Not a reopening of the single-branch decision
-  (owner, 2026-06-15); a close-time delivery-shape question layered on top of it.
+- **Status:** RESOLVED (owner, 2026-06-19 s3) — **D3 before the merge, split PRs.** Land D3
+  (CI runs the full `check:ci` chain, SHA-pinned actions) **before** the transplant merge, and
+  split the ~100k-line transplant into reviewable PRs rather than one un-reviewable PR. This
+  removes the ungated-big-merge risk and makes review tractable. Execution is the transplant-close
+  / arc-D3 sequence; this entry records the decision and is drainable at the next `consolidate-docs`.
+  Not a reopening of the single-branch decision (owner, 2026-06-15).
