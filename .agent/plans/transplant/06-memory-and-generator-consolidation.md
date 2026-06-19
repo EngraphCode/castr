@@ -155,11 +155,22 @@ forms remain valid generic procedure in the interim (memory-governing **rules** 
 doctrine is current; only the comms-specific prose is stale, and it is a P8 forward-placeholder either way). Block (c) of
 the reorder is therefore **DONE for the bringable-now layer**; its remainder folds into Phase 8.
 
-**OUT (rest of Phase 6, after this pass):** full `active/patterns/` import (133 on main − ~2 UI, AMEND `proven_in:`,
-regenerate index); executive catalogue regeneration to castr's estate (`artefact-inventory`, `invoke-code-experts`,
-`cross-platform-agent-surface-matrix`) + the substrate-contract manifest/schema re-authored to castr roots; the 13
-generic sub-agent templates + `components/`; `.agent/state/collaboration/` schemas + empty dirs. These are tracked in the
-parent README Phase-6 row and land before the phase tag.
+**OUT (rest of Phase 6, after this pass):**
+
+- **`active/patterns/` import ✅ LANDED (2026-06-19).** 130 patterns (132 on main − 2 UI-only: `accessibility-as-blocking-gate`,
+  `ux-predates-visual-design`). `proven_in: imported` on all (owner: keep `proven_date`; **no source-repo reference at all**).
+  **Broad source-repo neutralization** of pattern bodies (owner-directed): 16 Oak ADR refs + 11 dangling links +
+  product/path/package tokens all removed — justified by the patterns README's own "patterns are abstract" doctrine, so
+  stripping Oak concretions is faithful, not lossy. Frontmatter normalized to the **canonical 5 categories** (substance-mapped,
+  _not_ expanded — expanding would ratify accidental drift); polarity typos fixed; `use_this_when` backfilled (36 files);
+  `title:`→`name:` (3). **Index is GENERATED, not hand-maintained** — new agent-tools CLI
+  `validate-patterns-index` (`src/validators/patterns-index/`, TDD): recomputes the sentinel-delimited `## Pattern Index` from
+  frontmatter; `--check` (wired into `repo-validators:check`) / `--fix`; **strictly gates conformance** (errors, not warnings).
+  Repo-agnostic (`resolveRepoRoot`) → Phase-9 Oak back-flow (also fixes Oak's stale 87/132 hand-kept index). This supersedes
+  the original "regenerate index" framing — the index is now a generated artefact with a check gate (`generator-first`).
+- executive catalogue regeneration ✅ (prior pass); the 13 generic sub-agent templates + `components/`;
+  `.agent/state/collaboration/` schemas + empty dirs. These are tracked in the parent README Phase-6 row and land before the
+  phase tag.
 
 ## 5. Contract-doc reconciliation map (KEEP-localise vs reconcile vs DON'T-BRING)
 

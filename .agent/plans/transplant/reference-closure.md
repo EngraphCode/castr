@@ -471,3 +471,28 @@ unchanged (only the 2 expected Phase-8 `live-reader-failure` signals).
 
 `agent-collaboration-channels.md` lands at P8 with the collaboration machinery, before the `transplant/phase-6` tag
 (acceptance §6).
+
+### `active/patterns/` import — disposition: **rewrite (done) + new tooling + Oak back-flow** (2026-06-19)
+
+130 patterns imported from Oak `ad359a4f` (132 − 2 UI-only). Dispositions:
+
+- **`proven_in` — disposition: rewrite (done).** Owner-directed: set to the literal `imported` on all 130 (keep
+  `proven_date`); **no source-repo reference at all** — this **diverges from** the `retained-cross-host` convention used for
+  PDR/rule/skill Oak-ADR cites. The owner extended "do not reference the source repo" to **all** source-repo references in
+  pattern bodies (not just `proven_in`).
+- **Broad source-repo neutralization — disposition: rewrite (done).** Removed every Oak reference from pattern bodies: 16
+  distinct Oak ADR refs (`ADR-078`…`ADR-185`, genericized in prose/tables/de-linked), 11 dangling `.md` links to Oak-estate
+  ADRs/docs/plans/reports/experience (de-linked), and product/path/package tokens (oak-curriculum apps, `@oaknational/*`,
+  EEF/opal/KS5/sdk-codegen). Verified firsthand: **zero** Oak identifiers remain (agent codenames like Opalescent and generic
+  third-party vendors Sentry/Clerk/Elasticsearch retained — neither is source-repo identity). Justified by the patterns
+  README's own "patterns are abstract" doctrine.
+- **Frontmatter taxonomy — disposition: rewrite (done), NORMALIZE not expand.** Real estate had drifted to 10 categories;
+  normalized by substance to the canonical 5 (planning→process, test-architecture→testing, build-system→architecture,
+  coordination\*→agent as P8 collaboration-class candidates); polarity typos fixed; `use_this_when` backfilled (36 files);
+  `title:`→`name:` (3). Expanding the taxonomy was rejected as ratifying accidental drift.
+- **Index generator — disposition: NEW tooling + Oak back-flow item (Phase-9).** The README `## Pattern Index` is now a
+  **generated** sentinel-delimited region produced by `agent-tools/src/validators/patterns-index/validate-patterns-index.ts`
+  (`--check` wired into `repo-validators:check`; `--fix` regenerates; strict conformance gate). Repo-agnostic
+  (`resolveRepoRoot`, no repo names) → ports to Oak verbatim and **fixes Oak's stale hand-kept index (87 listed / 132 on
+  disk)**. Destination is the open Phase-9 back-flow decision (`practice/transplant-to-castr` vs `main` vs fresh branch),
+  same as the substrate-consumer item above.

@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                   | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — substrate ✅; `active/patterns/` import next | claude-code / opus-4-8 / executor / `2026-06-18` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 (memory) — `active/patterns/` (130) ✅ + generated index tool; sub-agent roster next | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -88,17 +88,21 @@ re-authored to castr roots (22 surfaces; the 11 Phase-8 surfaces carry `notes`),
 verified firsthand against the live `practice-substrate` consumer; follow-on
 `150e628` removed the consumer's two magic-number drift checks (stored-derived-value
 anti-patterns that violated the contract's own `stored_derived_values_rule`; Oak
-back-flow item recorded). Remaining Phase-6: the OUT items (full `active/patterns/`
-import ~131, sub-agent roster expansion, `.agent/state/collaboration/` schemas)
-before the `transplant/phase-6` tag + full green `pnpm check` (**branch
-`check:ci`-green, re-verified 2026-06-18, exit 0; 126 sonarjs `warn` = D1
-transitional, 0 errors**).
+back-flow item recorded). **`active/patterns/` import ✅ landed (2026-06-19):**
+130 patterns (132 − 2 UI); `proven_in: imported`; broad source-repo
+neutralization (zero Oak refs remain); frontmatter normalized to the canonical 5
+categories; the README index is now **generated + strictly gated** by a new
+agent-tools CLI `validate-patterns-index` (wired into `repo-validators:check`;
+repo-agnostic → Phase-9 Oak back-flow). Remaining Phase-6: sub-agent roster
+expansion + `.agent/state/collaboration/` schemas before the `transplant/phase-6`
+tag + full green `pnpm check` (**branch `check:ci`-green, re-verified 2026-06-19,
+exit 0; 126 sonarjs `warn` = D1 transitional, 0 errors**).
 
 ## Next Safe Steps
 
 Authoritative sequence: sub-plan
 [`06-memory-and-generator-consolidation.md` §4](../../plans/transplant/06-memory-and-generator-consolidation.md)
-(reorder a✅…g✅ incl. substrate✅; **`active/patterns/` import ← NEXT** in Phase 6)
+(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅; **sub-agent roster ← NEXT** in Phase 6)
 and the [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
 enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals
 still unfixed — 02 = the IR-fidelity proof harness, active, not started), the rest

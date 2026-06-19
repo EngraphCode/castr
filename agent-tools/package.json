@@ -44,6 +44,8 @@
     "validate-practice-fitness": "cd .. && pnpm exec tsx agent-tools/src/practice-fitness/validate-practice-fitness.ts",
     "validate-subagents": "cd .. && pnpm exec tsx agent-tools/src/validators/subagents/validate-subagents.ts",
     "validate-drift": "cd .. && pnpm exec tsx agent-tools/src/validators/drift/validate-drift.ts",
+    "validate-patterns-index": "cd .. && pnpm exec tsx agent-tools/src/validators/patterns-index/validate-patterns-index.ts",
+    "validate-patterns-index:fix": "cd .. && pnpm exec tsx agent-tools/src/validators/patterns-index/validate-patterns-index.ts --fix",
     "ci-turbo-report": "cd .. && pnpm exec tsx agent-tools/src/ci/ci-turbo-report.ts"
   },
   "devDependencies": {

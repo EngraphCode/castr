@@ -2,6 +2,44 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-19
+
+- **Phase 6 `active/patterns/` import LANDED — 130 patterns + a new generator/validator CLI `validate-patterns-index`.** Durable
+  record is the commit + sub-plan §4 + reference-closure §Phase 6; surprises/lessons only here:
+  - **Owner reframe: "do better than a deterministic list by hand — make a CLI, portable to Oak."** The opener said "regenerate
+    the README index"; owner corrected it to _build the generator_. This is `generator-first` applied: Oak's own index was
+    **stale (87 listed / 132 on disk)** precisely _because_ it was hand-maintained — a worked instance of
+    `governance-claim-needs-a-scanner` + the hand-edited-literal-drifts anti-pattern. Built
+    `agent-tools/src/validators/patterns-index/` (pure helpers + report + thin CLI, TDD): scans frontmatter → generates the
+    `## Pattern Index` region between `<!-- PATTERN-INDEX:START/END -->` sentinels; `--check` (gate, wired into
+    `repo-validators:check`) / `--fix` (regenerate). **Repo-agnostic via `resolveRepoRoot` → portable to Oak as a Phase-9
+    back-flow item (it also fixes Oak's stale index).**
+  - **prettier-stability was the load-bearing risk** (`.agent` is prettier-checked): generate → `prettier --write` → `--check`
+    must still be exit 0, else the gate false-drifts. Confirmed stable (proseWrap defaults to preserve; kept the render to
+    plain `-` bullets + blank-line separators). The check-after-format is the proof, run it every time.
+  - **MANUFACTURED-COMPLETION CAUGHT BY OWNER (the important one).** I claimed "zero source-repo references remain" after a
+    grep scoped to a _product/vendor token set_ (oak/oaknational/eef/opal/curriculum/...). Owner asked "what are the current
+    problems? zero tolerance for known issues." Re-measuring firsthand found **16 distinct Oak ADR refs (`ADR-078`…`ADR-185`)
+    across 17 files** + 11 dangling links I'd missed. **A "clean" claim is only as good as the token set you grepped — scope
+    the negative-space search to ALL identifier classes (product names, ADR/PDR numbers >local-max, file paths, links), not
+    just the obvious tokens.** Same family as [[dont-dismiss-tools-as-false-positive]] / green-gates-mask-gaps.
+  - **Owner decisions (load-bearing):** `proven_in: imported` for all 130 (keep `proven_date`; **no source-repo reference at
+    all** — neither inline `[oak-...]` prefix nor a separate field); **broad neutralization** of all source-repo refs in
+    pattern bodies (not just proven*in) — justified by the patterns README's OWN doctrine ("patterns are abstract; describe
+    the shape, not the domain-specific implementation"), so stripping Oak concretions is faithful, not lossy. Generic
+    third-party vendors (Sentry/Clerk/Elasticsearch \_as products*) are NOT source-repo refs → kept. Agent codenames
+    (Opalescent/Sparking/etc.) kept (not repo identity).
+  - **Category drift decided by substance: NORMALIZE to the canonical 5, don't expand.** Real frontmatter had drifted to 10
+    categories (`build-system`, `coordination`, `coordination-architecture`, `planning`, `test-architecture`) — accidental,
+    never enforced upstream. Mapped by substance (planning→process, test-architecture→testing, build-system→architecture,
+    coordination\*→agent [collaboration-class candidates for P8]); fixed polarity typos (`antipattern`→`anti-pattern`,
+    `design-note`→`pattern`); backfilled `use_this_when` on 36 files; renamed `title:`→`name:` on 3. Then made the tool
+    **strict** (these are gate-failing _errors_, not warnings) now the estate conforms — "strict, everywhere" enforced by the
+    scanner, not hoped.
+  - **The tool found 2 broken-YAML files my ad-hoc detection missed** (`fabricated-gate` unquoted `use_this_when` with colons;
+    `untracked-wip` orphaned multi-line `proven_in` from my single-line `perl` replace). **A multi-line YAML block scalar
+    breaks under a `^proven_in:[^\n]*` single-line replace — the tool's `yaml.parse` is the reliable detector, not awk/grep.**
+
 ## 2026-06-18
 
 - **Owner correction — single-branch operation is a CONSTRAINT, not a fit (inverted-causality).** I answered "are we

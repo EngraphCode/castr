@@ -135,9 +135,18 @@ removed** (`EXPECTED_MANIFEST_SURFACES = 22`, `expectedEntryCount: 114`) as stor
 violate the contract's own `stored_derived_values_rule` — Oak carries the identical code → recorded as a Phase-9 back-flow
 item. Full per-block design + live status in
 [`06-memory-and-generator-consolidation.md`](./06-memory-and-generator-consolidation.md) §4 (reorder a✅…g✅).
-**NEXT (remaining Phase 6):** full `active/patterns/` import (~131; provenance-amended, index regenerated, drop ~2 UI) →
-the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers already exist) →
-`.agent/state/collaboration/` schemas + empty dirs (P8) before the `transplant/phase-6` tag.
+**`active/patterns/` import ✅ LANDED (2026-06-19).** 130 patterns imported (132 on main − 2 UI-only); `proven_in: imported`
+on all (owner: keep `proven_date`, **no source-repo reference at all**); **broad neutralization** of every source-repo
+reference in pattern bodies (16 Oak ADR refs + 11 dangling links + product/path tokens — zero remain); frontmatter
+normalized to the canonical 5 categories (substance-mapped, not expanded) + polarity typos fixed + `use_this_when`
+backfilled on 36 files. **The README index is now GENERATED**, not hand-maintained: new agent-tools CLI
+`validate-patterns-index` (`--check` wired into `repo-validators:check`, `--fix` to regenerate) recomputes the
+sentinel-delimited index from frontmatter and **strictly gates conformance** (errors on missing `name`/`use_this_when`,
+non-canonical `category`/`polarity`). Repo-agnostic → Phase-9 Oak back-flow item (also fixes Oak's stale 87/132 index).
+Full record: sub-plan §4 + `reference-closure.md` §Phase 6.
+
+**NEXT (remaining Phase 6):** the sub-agent roster expansion (Oak's generic templates + `components/`; castr's 6 reviewers
+already exist) → `.agent/state/collaboration/` schemas + empty dirs (P8) before the `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).
