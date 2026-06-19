@@ -10,7 +10,7 @@ adapter** coverage. ⚠️ marks a known gap with a named position.
 | -------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
 | **Skills**     | ✅ `.claude/skills/engraph-<name>/SKILL.md` (generated, 18) | ✅ via `.agents/skills/` (cross-tool, generated)                                 | ✅ via `.agents/skills/`                          | ✅ via `.agents/skills/`                          |
 | **Rules**      | auto-loaded via `CLAUDE.md` → `AGENT.md` → `RULES_INDEX.md` | ⚠️ `.cursor/rules/` carries only 3 legacy `.mdc` forwarders, not the full roster | reads `RULES_INDEX.md` + canonical files directly | reads `RULES_INDEX.md` + canonical files directly |
-| **Sub-agents** | ⚠️ none — in-session template fallback                      | ⚠️ none — in-session template fallback                                           | ✅ `.codex/agents/<name>.toml` (6)                | ⚠️ none — in-session template fallback            |
+| **Sub-agents** | ⚠️ none — in-session template fallback                      | ⚠️ none — in-session template fallback                                           | ✅ `.codex/agents/<name>.toml` (18→15 tmpl)       | ⚠️ none — in-session template fallback            |
 | **Hooks**      | ✅ `.claude/hooks/run-pretooluse-guard.mjs` (PreToolUse)    | ⚠️ none                                                                          | ⚠️ none                                           | ⚠️ none                                           |
 
 ## Reading the matrix

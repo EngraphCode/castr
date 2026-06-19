@@ -522,10 +522,19 @@ DON'T-BRING-7.
   react-component, sentry, ground-truth-designer — no castr surface).
 - **Codex adapters** (`.codex/agents/` + `config.toml`): 12 new adapters (4 architecture personas each loading the shared
   template + persona component, Oak's mechanism; 8 singles) + 12 registrations; **existing 6 backfilled** with the
-  validator-required `name`+`description` (a latent gap — the deferred validator never caught it). **Pre-existing
-  `config.toml` bug fixed:** `config_file` resolves relative to `.codex/`, so `".codex/agents/X.toml"` wrongly resolved to
-  `.codex/.codex/agents/X.toml`; corrected all 18 to Oak's `"agents/X.toml"` form (surfaced by running the validator
-  firsthand against a temp empty `.cursor/agents`).
+  validator-required `name`+`description` (a latent gap — the deferred validator never caught it). **Two subagent
+  validators with CONTRADICTORY `config_file` path resolution (P7 reconciliation item):** castr's LIVE
+  `portability:check` (`scripts/validate-portability.mjs`, in `pnpm check`) resolves `config_file` **relative to repo
+  root** → requires `.codex/agents/X.toml`; the **deferred** Oak `validate-subagents.ts` resolves **relative to
+  `.codex/`** → requires `agents/X.toml`. No single string satisfies both. castr keeps the **live** form
+  (`.codex/agents/X.toml`, its historical gate-passing shape); the Oak validator's double-nesting is a **Phase-7**
+  reconciliation (row 7 = "flip portability/subagents gates"). **`validate-portability.mjs` refactored to recompute**
+  the roster from disk (template dir + adapter dir + config registrations, with a registration↔adapter bijection and a
+  persona-aware "adapter loads SOME canonical template" check) instead of a **hardcoded `expectedAgents` list of 6 + an
+  `=== 6` count assertion** — the same drift-detector-as-frozen-literal anti-pattern removed from the substrate consumer
+  (2026-06-18); adding a reviewer now never requires editing a frozen list. (Caught by the session-handoff full
+  `pnpm check`: the intra-phase commit `d5cd4eb` had been made after only a gate _subset_, so it carried a red
+  `portability:check`; rolled forward — never rewritten — to a green tip.)
 - **Dangling-rule reconciliation:** the three rules above now point at real templates; their Oak naming reconciled —
   `code-expert`→`code-reviewer`, `test-expert`→`test-reviewer`; Oak ADR-path cites re-pointed to castr homes (ADR-129 →
   **PDR-010**, ADR-114 → **PDR-003**; the proportionality doctrine → `principles.md`); Oak MCP-server/Apps ADRs

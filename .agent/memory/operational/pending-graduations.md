@@ -67,4 +67,9 @@ an item graduates, replace it with a one-line tombstone naming where it landed
   `pdr_kind: pattern` if it generalises beyond the transplant. **Pending:** the
   instances are conserved in `distilled.md` §Transplant method; this is the
   graduation-upward step, owner-confirmable at a dedicated-curation pass.
-  `[captured: 2026-06-18 | source: distilled.md §Transplant method]`
+  **New instances (2026-06-19 s2, sub-agent roster):** (a) the negative-space sweep
+  of the host's OWN rules before a DON'T-BRING verdict — castr's `invoke-*` rules
+  already required experts whose templates did not exist (completing a half-built
+  system, not a free choice); (b) author reviewer templates NATIVE to the host, not
+  copy-and-AMEND the source's, because a template instructs against a real estate.
+  `[captured: 2026-06-18, extended 2026-06-19 | source: distilled.md §Transplant method]`

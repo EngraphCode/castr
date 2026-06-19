@@ -38,6 +38,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   comms-event, conversation, escalation). castr's runtime validation is **in-code Zod** (`state-schemas.ts`), and its
   consumer/substrate-manifest reference `.agent/state/collaboration/*.schema.json` (the live-reader-failure = expected
   P8-absent signal). Needs its own scoping pass; under-specified by the stale ledger. Lower value than roster completion.
+- **RAN ONLY A GATE SUBSET BEFORE AN INTRA-PHASE COMMIT → put a RED gate on the branch (caught at session-handoff full
+  `pnpm check`).** I committed `d5cd4eb` after `format:check` + `repo-validators:check` + the deferred subagents
+  validator, reasoning "doc/config changes don't touch the heavy gates." But **`.codex/config.toml` is validated by the
+  LIVE `portability:check`** (`scripts/validate-portability.mjs`, in `pnpm check` but NOT in `repo-validators:check`),
+  which hardcoded `expectedAgents` (6) + asserted `registeredAgents.length === 6`. My 18 registrations + a `config_file`
+  path change broke it. **Lesson: run the FULL `pnpm check` before ANY commit that touches a gate-validated surface — the
+  cheap-subset shortcut for "just docs/config" is exactly where a live validator hides.** `repo-validators:check` ≠
+  `pnpm check`; `portability:check`, `packaging:check`, `skills:check`, `test:all` are separate links. Roll-forward fix
+  (never rewrite the red commit) → green tip before push.
+- **Two subagent validators disagree on `config_file` resolution (latent contradiction):** live `validate-portability.mjs`
+  resolves relative to **repo root** (wants `.codex/agents/X.toml`); deferred Oak `validate-subagents.ts` resolves
+  relative to **`.codex/`** (wants `agents/X.toml`). No single string satisfies both; keep the live form, reconcile at P7.
+  And the live validator's hardcoded `expectedAgents`+count was itself the **drift-detector-as-frozen-literal** anti-pattern
+  (the 2026-06-18 substrate magic-number lesson) — refactored it to recompute the roster from disk.
 
 ## 2026-06-19
 

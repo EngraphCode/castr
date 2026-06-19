@@ -264,8 +264,8 @@ chose new-rule via `new-rule-vs-pdr-clause`; **87 canonical rules**), transplant
 pre-transplant entries rotated to `active/archive/` (napkin 480 lines); **`repo-continuity.md`** authored (castr's lean
 contract); **root `memory/README.md` + `executive/README`** (three-mode taxonomy — **the full `.agent/memory`
 dangling-link sweep is now empty**); the **three executive catalogues** (`artefact-inventory`, `invoke-code-experts`,
-`cross-platform-agent-surface-matrix`) **regenerated firsthand from castr's real estate** (6-reviewer roster; real
-adapter parity with named P7/Codex-only/Claude-only gaps; honest forwarder note). **Substrate contract ✅ LANDED
+`cross-platform-agent-surface-matrix`) **regenerated firsthand from castr's real estate** (reviewer roster 6→15 after
+the 2026-06-19 sub-agent landing; real adapter parity with named P7/Codex-only/Claude-only gaps; honest forwarder note). **Substrate contract ✅ LANDED
 2026-06-18 (commit `360923d`):** `executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}` re-authored
 to castr roots — 22 surfaces (the 11 Phase-8 surfaces carry `notes`), castr identity/PDR-049+050 cites/plan roots/reviewer
 routes; verified firsthand against the live `practice-substrate` consumer (manifest-validates-against-schema; only the
@@ -276,8 +276,9 @@ anti-patterns violating the contract's own `stored_derived_values_rule`; Oak car
 (no source-repo reference at all); broad source-repo neutralization of pattern bodies; frontmatter normalized to the
 canonical 5 categories; the README index is now **generated + strictly gated** by the new agent-tools CLI
 `validate-patterns-index` (`--check` in `repo-validators:check`; repo-agnostic → Phase-9 Oak back-flow, also fixes Oak's
-stale index). **NEXT — remaining Phase 6 (the OUT items):** the sub-agent roster expansion + `components/`;
-`.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the `transplant/phase-6` tag + full
+stale index). **Sub-agent roster ✅ LANDED (2026-06-19, commit `d5cd4eb`):** roster 6→15 (9 new lean native templates
+incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` rules reconciled). **NEXT — remaining
+Phase 6 (the OUT items):** `.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the `transplant/phase-6` tag + full
 green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 126 sonarjs `warn` = D1 transitional, 0
 errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
 (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅; state schemas next). This is **one deep enhancement** — Phase 6 is the slice the

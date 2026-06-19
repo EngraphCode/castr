@@ -3,72 +3,72 @@ multi_agent = true
 
 [agents."code-reviewer"]
 description = "Gateway reviewer for non-trivial changes."
-config_file = "agents/code-reviewer.toml"
+config_file = ".codex/agents/code-reviewer.toml"
 
 [agents."test-reviewer"]
 description = "Test quality and TDD compliance reviewer."
-config_file = "agents/test-reviewer.toml"
+config_file = ".codex/agents/test-reviewer.toml"
 
 [agents."type-reviewer"]
 description = "Type flow and strictness reviewer."
-config_file = "agents/type-reviewer.toml"
+config_file = ".codex/agents/type-reviewer.toml"
 
 [agents."openapi-expert"]
 description = "OpenAPI 3.0/3.1 semantics and IR fidelity expert."
-config_file = "agents/openapi-expert.toml"
+config_file = ".codex/agents/openapi-expert.toml"
 
 [agents."zod-expert"]
 description = "Zod parser/writer lockstep and ts-morph expert."
-config_file = "agents/zod-expert.toml"
+config_file = ".codex/agents/zod-expert.toml"
 
 [agents."json-schema-expert"]
 description = "Draft 07 and 2020-12 JSON Schema fidelity expert."
-config_file = "agents/json-schema-expert.toml"
+config_file = ".codex/agents/json-schema-expert.toml"
 
 [agents."architecture-expert-barney"]
 description = "Simplification-first architecture reviewer — boundary and dependency mapping."
-config_file = "agents/architecture-expert-barney.toml"
+config_file = ".codex/agents/architecture-expert-barney.toml"
 
 [agents."architecture-expert-betty"]
 description = "Systems-thinking architecture reviewer — cohesion, coupling, and change-cost trade-offs."
-config_file = "agents/architecture-expert-betty.toml"
+config_file = ".codex/agents/architecture-expert-betty.toml"
 
 [agents."architecture-expert-fred"]
 description = "Principles-first architecture reviewer — decision-record compliance and boundary discipline."
-config_file = "agents/architecture-expert-fred.toml"
+config_file = ".codex/agents/architecture-expert-fred.toml"
 
 [agents."architecture-expert-wilma"]
 description = "Adversarial architecture reviewer — resilience, failure modes, and hidden coupling risks."
-config_file = "agents/architecture-expert-wilma.toml"
+config_file = ".codex/agents/architecture-expert-wilma.toml"
 
 [agents."assumptions-expert"]
 description = "Meta-level plan and proportionality reviewer."
-config_file = "agents/assumptions-expert.toml"
+config_file = ".codex/agents/assumptions-expert.toml"
 
 [agents."config-expert"]
 description = "Tooling-configuration and quality-gate integrity reviewer."
-config_file = "agents/config-expert.toml"
+config_file = ".codex/agents/config-expert.toml"
 
 [agents."docs-adr-expert"]
 description = "Documentation drift, TSDoc, and decision-record completeness reviewer."
-config_file = "agents/docs-adr-expert.toml"
+config_file = ".codex/agents/docs-adr-expert.toml"
 
 [agents."mcp-expert"]
 description = "castr MCP tool-emission fidelity specialist."
-config_file = "agents/mcp-expert.toml"
+config_file = ".codex/agents/mcp-expert.toml"
 
 [agents."onboarding-expert"]
 description = "Onboarding-path accuracy and first-success reviewer."
-config_file = "agents/onboarding-expert.toml"
+config_file = ".codex/agents/onboarding-expert.toml"
 
 [agents."release-readiness-expert"]
 description = "Release-boundary go/no-go reviewer."
-config_file = "agents/release-readiness-expert.toml"
+config_file = ".codex/agents/release-readiness-expert.toml"
 
 [agents."security-expert"]
 description = "Untrusted-input and denial-of-service reviewer."
-config_file = "agents/security-expert.toml"
+config_file = ".codex/agents/security-expert.toml"
 
 [agents."subagent-architect"]
 description = "Meta-agent for sub-agent definition design and review."
-config_file = "agents/subagent-architect.toml"
+config_file = ".codex/agents/subagent-architect.toml"
