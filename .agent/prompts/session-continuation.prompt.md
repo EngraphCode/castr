@@ -280,12 +280,17 @@ stale index). **NEXT — remaining Phase 6 (the OUT items):** the sub-agent rost
 `.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the `transplant/phase-6` tag + full
 green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 126 sonarjs `warn` = D1 transitional, 0
 errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
-(reorder a✅…g✅ incl. substrate✅). This is **one deep enhancement** — Phase 6 is the slice the
+(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅; state schemas next). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
-**Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). castr's 6 reviewers already
-exist (`code/test/type-reviewer` + `openapi/zod/json-schema-expert`, catalogued in
-`memory/executive/invoke-code-experts.md`); the Phase-6 sub-agent work is the roster _expansion_, not first install. The
+**Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
+sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
+half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner standing
+doctrine) — not the opener's "13 generic" framing. New: `architecture-expert` (4-persona), `assumptions`/`config`/
+`docs-adr`/`mcp`[emission]/`onboarding`/`release-readiness`/`security`[input-DoS]/`subagent-architect`, all lean
+castr-native (catalogue: `memory/executive/invoke-code-experts.md`). The `subagents` gate flip + `.cursor`/`.claude`
+wrappers are **Phase 7**. **Phase-6 remaining before the tag: `.agent/state/collaboration/` schemas** (under-specified —
+see `repo-continuity.md` §Next Safe Steps for the stale-location + deferred-validator-asserts-absence gotchas). The
 reviewers review code / types / schema fidelity — point them at transplanted **code** changes (e.g. agent-tools), not at
 governance-doc edits. Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
 bodies must be read, not classified.
