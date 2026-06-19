@@ -227,14 +227,14 @@ needs a three-way (`ad649710` base) per-file pass and is scoped as a sweep, not 
 
 ### Tier 1 — NEW items (outstanding, to bring)
 
-| Item                                 | Count | Position | Notes                                                                                           |
-| ------------------------------------ | ----- | -------- | ----------------------------------------------------------------------------------------------- |
-| PDR-092 mechanical-firing-moments    | 1     | **D4**   | generic Practice doctrine                                                                       |
-| PDR-093 self-correcting-deliverables | 1     | **D4**   | generic Practice doctrine                                                                       |
-| PDR-094 coordination-event-rotation  | 1     | **P8**   | comms-rotation backing (the consolidate-docs/curator step-3a content defers to it)              |
-| PDR-095 collaboration-is-multi-dim   | 1     | **P8**   | collaboration doctrine                                                                          |
-| rule `no-unbounded-host-load`        | 1     | **D4**   | gates the start-right host-health section (also deferred) — bring the pair together             |
-| `active/patterns/*` import           | ~131  | **P6**   | castr currently has **0** real patterns; main has **133** (−~2 UI). The full populate never ran |
+| Item                                 | Count | Position  | Notes                                                                                                                      |
+| ------------------------------------ | ----- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| PDR-092 mechanical-firing-moments    | 1     | **D4**    | generic Practice doctrine                                                                                                  |
+| PDR-093 self-correcting-deliverables | 1     | **D4**    | generic Practice doctrine                                                                                                  |
+| PDR-094 coordination-event-rotation  | 1     | **P8**    | comms-rotation backing (the consolidate-docs/curator step-3a content defers to it)                                         |
+| PDR-095 collaboration-is-multi-dim   | 1     | **P8**    | collaboration doctrine                                                                                                     |
+| rule `no-unbounded-host-load`        | 1     | **D4**    | gates the start-right host-health section (also deferred) — bring the pair together                                        |
+| `active/patterns/*` import           | 130   | **P6** ✅ | LANDED 2026-06-19 (132 main − 2 UI-only); `proven_in: imported`; broad source-repo neutralization; index generated + gated |
 
 ### Tier 1 — NEW-by-slug but resolved-by-DON'T-BRING (not outstanding)
 

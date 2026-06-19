@@ -272,10 +272,14 @@ routes; verified firsthand against the live `practice-substrate` consumer (manif
 absent Phase-8 collaboration plane reports the expected `live-reader-failure`). **Follow-on (`150e628`):** removed the
 consumer's two magic-number drift checks (`EXPECTED_MANIFEST_SURFACES = 22`, `expectedEntryCount: 114`) — stored-derived-value
 anti-patterns violating the contract's own `stored_derived_values_rule`; Oak carries identical code → Phase-9 back-flow item.
-**NEXT — remaining Phase 6 (the OUT items):** full `active/patterns/` import (~131); the sub-agent roster expansion +
-`components/`; `.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the
-`transplant/phase-6` tag + full green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-18 (exit 0; 126 sonarjs
-`warn` = D1 transitional, 0 errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
+**`active/patterns/` import ✅ LANDED (2026-06-19, commit `795d935`):** 130 patterns (132 − 2 UI-only); `proven_in: imported`
+(no source-repo reference at all); broad source-repo neutralization of pattern bodies; frontmatter normalized to the
+canonical 5 categories; the README index is now **generated + strictly gated** by the new agent-tools CLI
+`validate-patterns-index` (`--check` in `repo-validators:check`; repo-agnostic → Phase-9 Oak back-flow, also fixes Oak's
+stale index). **NEXT — remaining Phase 6 (the OUT items):** the sub-agent roster expansion + `components/`;
+`.agent/state/collaboration/` schemas + the P8 `agent-collaboration-channels` — before the `transplant/phase-6` tag + full
+green `pnpm check`. **Branch `check:ci`-green re-verified 2026-06-19 (exit 0; 126 sonarjs `warn` = D1 transitional, 0
+errors).** Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
 (reorder a✅…g✅ incl. substrate✅). This is **one deep enhancement** — Phase 6 is the slice the
 owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
 still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
