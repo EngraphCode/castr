@@ -2,7 +2,11 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Related:** [ADR-022](./ADR-022-building-blocks-no-http-client.md), [ADR-023](./ADR-023-ir-based-architecture.md), [ADR-025](./ADR-025-http-client-di-integration.md)
+**Related:** [ADR-022](./ADR-022-building-blocks-no-http-client.md), [ADR-023](./ADR-023-ir-based-architecture.md), [ADR-025](./ADR-025-http-client-di-integration.md), [ADR-048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)
+
+---
+
+> **Scope clarification (2026-06-19, see [ADR-048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)).** This ADR draws the boundary between the **compiler core** and **runtime / transport / framework companions**. It does **not** decide whether the _compiler itself_ splits into a lean `castr-core` plus format-adapter packages — that distinct question is taken up, and value-gated, in ADR-048 (Proposed). This ADR is otherwise unchanged.
 
 ---
 

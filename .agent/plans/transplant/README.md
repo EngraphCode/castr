@@ -168,9 +168,9 @@ WS7 source; runtime surfaces = Phase-8 forward-refs). **All three standing defer
 (owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version skew root-fixed via a single-TS
 pnpm override; both rules back at `error`, 0 violations)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed —
 Phase 6 COMPLETE. NEXT = Phase 7** (platform adapters: `.cursor`/`.claude` wrappers → flip `portability`/`subagents`
-gates), or an owner-named slice. _Low-priority incoming: bring `origin/main` `ccd9c7a`
-(`.agent/research/zod-compiler-comparison-and-surface-architecture.report-plan.md`) onto the branch + home/wire per its
-own split note — see `repo-continuity.md` §Next Safe Steps._
+gates), or an owner-named slice. _Incoming `origin/main` `ccd9c7a` (zod-compiler report-plan) ✅ HOMED 2026-06-19 —
+cherry-picked + split to `.agent/research/zod-compiler/` + `.agent/plans/future/castr-surface-architecture-and-verb-model.md`
+(+ `castr-check-verb.md`) + ADR-048 (Proposed); monolith removed. See `repo-continuity.md` §Next Safe Steps._
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).
@@ -224,8 +224,10 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   Owner already executed the config: `engines: "24.x"` (root + `lib`), CI collapsed to single Node 24 (matrix
   removed), publish on 24. **Remaining (DRY):** Node version is still hardcoded in ~4 places — introduce a single
   source (`.nvmrc` = 24 + `node-version-file:` in the workflows, the Oak standard) so the next LTS bump is one edit.
-  **ADR-048 candidate:** "Node version policy — stable-LTS, currently 24, advance only when CI+deploy platforms
-  support the next LTS" (repo-specific → ADR per PDR-079). _Consideration for the ADR (not a blocker):_ exact-major
+  **ADR-049 candidate:** "Node version policy — stable-LTS, currently 24, advance only when CI+deploy platforms
+  support the next LTS" (repo-specific → ADR per PDR-079). _(Was "ADR-048 candidate"; 048 was taken 2026-06-19 by the
+  compiler-internal-split scope ADR homed from the zod-compiler report-plan. Next free ADR number per the ADR index is
+  049.)_ _Consideration for the ADR (not a blocker):_ exact-major
   `engines: 24.x` is restrictive for downstream consumers of the published `@engraph/castr`; confirm intent vs a
   `>=24` floor.
 - **D3 — CI modernization to the Oak standard.** Oak's CI (observed on the pinned branch) **SHA-pins every action

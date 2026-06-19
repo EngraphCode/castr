@@ -133,16 +133,18 @@ gates).** The one deep enhancement also keeps the remediation backlog 02–07 (5
 the feature slice required and unparked — the owner names which is next; a fresh reproduced product regression pre-empts
 it.
 
-**Incoming from `main` (low priority, owner 2026-06-19 — next-session-or-later):** `origin/main` commit `ccd9c7a` added
-`.agent/research/zod-compiler-comparison-and-surface-architecture.report-plan.md` (dated 2026-06-19, written on branch
-`claude/castr-zod-compiler-review-qpre7n` against castr `393e476`), which is **not on this branch**. Bring it onto
-`feat/transplant-engraph-practice` and **home + wire it per its own "Note to the consuming/homing agent"**: split the
-plan sections → `.agent/plans/` (a new Phase plan + a `castr check`/surface atomic plan); the atomisation decision → a
-new castr ADR (it **supersedes part of ADR-043's scope**, see the file's §7); the zod-compiler findings →
-`.agent/research/zod-compiler/`; the report's correction table → the architecture-review provenance; **PRESERVE the §4
-reasoning trail** (most expensive to re-derive). `.agent/research/` already exists on the branch. _Meta: this is a
-main→branch divergence — work landed on `main` outside the single-transplant-branch invariant; the model needs a periodic
-main→branch sync check (cf. the Oak PDR-currency sync) so main-side commits are not stranded._
+**Incoming from `main` ✅ HOMED (2026-06-19):** `origin/main` commit `ccd9c7a` (the zod-compiler report-plan, written on
+branch `claude/castr-zod-compiler-review-qpre7n` against castr `393e476`) was cherry-picked onto
+`feat/transplant-engraph-practice` and **split to its proper homes per its own "Note to the consuming/homing agent"**:
+findings + §0/§1/§8/§9 → `.agent/research/zod-compiler/README.md`; §3 comparison + appendices A–D → `comparison.md`; §2
+corrections (the prior report is **not** in-repo, so homed as verified current-reality + a provenance pointer from
+`architecture-review-packs/README.md`) → `corrections.md`; **§4 reasoning trail PRESERVED** → `reasoning-trail.md`; the
+plan (§5 verb model + §6 Phases A–F) → `.agent/plans/future/castr-surface-architecture-and-verb-model.md` (+ `castr-check-verb.md`
+atomic Phase-D plan); the atomisation decision (§7) → **ADR-048** (Proposed; clarifies ADR-043's scope via a banner; the
+D2 "ADR-048 candidate" was re-pointed to 049). Monolith removed (content fully conserved; homing map in the research
+README). _Meta still live: this was a main→branch divergence — work landed on `main` outside the single-transplant-branch
+invariant; the periodic main→branch sync check (cf. the Oak PDR-currency sync) is still wanted so future main-side commits
+are not stranded._
 
 ## Open Owner-Decision Items
 

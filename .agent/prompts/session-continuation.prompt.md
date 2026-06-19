@@ -283,21 +283,24 @@ incl. `architecture-expert` 4-persona; 12 Codex adapters; 3 dangling `invoke-*` 
 (Oak WS7, `07f1f3c`); reviewer-routes + `agent-collaboration-channels.md` ✅ (`4567d06`); standing items ✅ — back-flow
 target, D1 lint (TS-skew root-fix, rules at `error`), Q-001 (`2431f97` + D1 fix).** **`transplant/phase-6` ✅ CUT
 (`a63aee3`) + pushed — Phase 6 COMPLETE. NEXT = Phase 7** (platform adapters → flip portability/subagents gates), or an
-owner-named slice. **Branch `check:ci`-green (2026-06-19; 0 errors, 0 sonarjs warnings — D1 resolved).** _Low-priority
-incoming: `origin/main` `ccd9c7a` zod-compiler report-plan to bring + home/wire (see `repo-continuity.md` §Next Safe
-Steps)._ Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
-(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
-channels✅). This is **one deep enhancement** — Phase 6 is the slice the
-owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
-still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
-**Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
-sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
-half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner standing
-doctrine) — not the opener's "13 generic" framing. New: `architecture-expert` (4-persona), `assumptions`/`config`/
-`docs-adr`/`mcp`[emission]/`onboarding`/`release-readiness`/`security`[input-DoS]/`subagent-architect`, all lean
-castr-native (catalogue: `memory/executive/invoke-code-experts.md`). The `subagents` gate flip + `.cursor`/`.claude`
-wrappers are **Phase 7**. **Phase-6 remaining before the tag: `.agent/state/collaboration/` schemas** (under-specified —
-see `repo-continuity.md` §Next Safe Steps for the stale-location + deferred-validator-asserts-absence gotchas). The
-reviewers review code / types / schema fidelity — point them at transplanted **code** changes (e.g. agent-tools), not at
-governance-doc edits. Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
-bodies must be read, not classified.
+owner-named slice. **Branch `check:ci`-green (2026-06-19; 0 errors, 0 sonarjs warnings — D1 resolved).** \_Incoming
+`origin/main` `ccd9c7a` zod-compiler report-plan ✅ HOMED (2026-06-19): cherry-picked then split to `.agent/research/zod-compiler/`
+(comparison + corrections + reasoning-trail §4 preserved), `.agent/plans/future/castr-surface-architecture-and-verb-model.md`
+
+- `castr-check-verb.md`, and ADR-048 (Proposed — compiler-internal-split scope/value-gate, clarifies ADR-043); monolith removed.\_
+  Full sequence + live status: sub-plan `06-memory-and-generator-consolidation.md` §4
+  (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
+  channels✅). This is **one deep enhancement** — Phase 6 is the slice the
+  owner named next; the remediation backlog 02–07, the rest of the transplant + arc D1–D4, and the feature slice are all
+  still required and unparked, not gated behind one another. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
+  **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
+  sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
+  half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner standing
+  doctrine) — not the opener's "13 generic" framing. New: `architecture-expert` (4-persona), `assumptions`/`config`/
+  `docs-adr`/`mcp`[emission]/`onboarding`/`release-readiness`/`security`[input-DoS]/`subagent-architect`, all lean
+  castr-native (catalogue: `memory/executive/invoke-code-experts.md`). The `subagents` gate flip + `.cursor`/`.claude`
+  wrappers are **Phase 7**. **Phase-6 remaining before the tag: `.agent/state/collaboration/` schemas** (under-specified —
+  see `repo-continuity.md` §Next Safe Steps for the stale-location + deferred-validator-asserts-absence gotchas). The
+  reviewers review code / types / schema fidelity — point them at transplanted **code** changes (e.g. agent-tools), not at
+  governance-doc edits. Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
+  bodies must be read, not classified.
