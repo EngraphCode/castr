@@ -15,7 +15,7 @@
     "merge_semantics": ".agent/practice-core/decision-records/PDR-049-memory-and-state-file-merge-semantics.md"
   },
   "strict_data_status": "strict-local-instance; the pure practice-substrate evaluator (agent-tools/src/practice-substrate) consumes this manifest and validates it against the adjacent schema. The live .agent/state/collaboration/ plane and several memory surfaces are Phase-8 / named-position forward-references not yet materialised in castr (see the human contract Current Materialisation section); their contract rows describe the intended shape.",
-  "doctor_start_gate": "castr has no separate substrate-doctor workstream; the consumer is the pure practice-substrate evaluator (pnpm --filter @engraph/agent-tools practice-substrate -- check --mode report). Live collaboration-plane checks only become meaningful once the Phase-8 .agent/state/collaboration/ surfaces and their colocated schemas are materialised; until then the evaluator truthfully reports the absent plane and that signal must not be silenced.",
+  "doctor_start_gate": "castr has no separate substrate-doctor workstream; the consumer is the pure practice-substrate evaluator (pnpm --filter @engraph/agent-tools practice-substrate -- check --mode report). Live collaboration-plane checks only become meaningful once the Phase-8 .agent/state/collaboration/ runtime data plane is materialised (the five collaboration JSON schemas already live in committed source at agent-tools/src/collaboration-state/schemas/ as of WS7, decoupled from the data path); until then the evaluator truthfully reports the absent data plane and that signal must not be silenced.",
   "portability_tiers": [
     "core-portable",
     "host-bridge",
@@ -119,7 +119,7 @@
         }
       ],
       "portability_tier": "host-bridge",
-      "owner_reviewer_route": "code-reviewer + type-reviewer; owner for contract-version changes"
+      "owner_reviewer_route": "docs-adr-expert + assumptions-expert + architecture-expert; owner for contract-version changes"
     },
     {
       "id": "state-entrypoint",
@@ -166,7 +166,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "code-reviewer; owner for state-topology changes",
+      "owner_reviewer_route": "architecture-expert + docs-adr-expert; owner for state-topology changes",
       "notes": "Phase-8 forward-reference: .agent/state/ is not yet materialised in castr; the contract describes the intended state-plane entrypoint."
     },
     {
@@ -218,7 +218,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + docs-adr-expert",
       "notes": "Phase-8 forward-reference: the live .agent/state/collaboration/ plane is not yet materialised in castr; the practice-substrate evaluator reports the absent plane until Phase-8 lands."
     },
     {
@@ -262,7 +262,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + docs-adr-expert",
       "notes": "Phase-8 forward-reference: the generated read model does not yet exist in castr; it is rendered from the Phase-8 comms-events root."
     },
     {
@@ -314,7 +314,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + architecture-expert",
       "notes": "Phase-8 forward-reference: the live claims registry is not yet materialised in castr."
     },
     {
@@ -362,7 +362,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + architecture-expert",
       "notes": "Phase-8 forward-reference: the closed-claims archive is not yet materialised in castr."
     },
     {
@@ -406,7 +406,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + docs-adr-expert",
       "notes": "Phase-8 forward-reference: the conversations root is not yet materialised in castr."
     },
     {
@@ -450,7 +450,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + docs-adr-expert",
       "notes": "Phase-8 forward-reference: the escalations root is not yet materialised in castr."
     },
     {
@@ -494,7 +494,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "code-reviewer; owner for taxonomy changes"
+      "owner_reviewer_route": "docs-adr-expert + architecture-expert; owner for taxonomy changes"
     },
     {
       "id": "memory-active-napkin",
@@ -545,7 +545,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation (consolidate-docs) + code-reviewer"
+      "owner_reviewer_route": "consolidation (consolidate-docs) + docs-adr-expert"
     },
     {
       "id": "memory-active-distilled",
@@ -596,7 +596,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation (consolidate-docs) + code-reviewer"
+      "owner_reviewer_route": "consolidation (consolidate-docs) + docs-adr-expert"
     },
     {
       "id": "memory-active-patterns",
@@ -643,7 +643,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "AGENT pattern lookup guidance + code-reviewer",
+      "owner_reviewer_route": "AGENT pattern lookup guidance + docs-adr-expert",
       "notes": "Partially materialised: the active/patterns/ directory exists in castr; the full ecosystem-pattern import is a remaining Phase-6 OUT item."
     },
     {
@@ -687,7 +687,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation + code-reviewer",
+      "owner_reviewer_route": "consolidation + architecture-expert",
       "notes": "Phase-8 forward-reference: the .agent/memory/collaboration/ placeholder is not yet materialised in castr."
     },
     {
@@ -739,7 +739,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "session-handoff + code-reviewer"
+      "owner_reviewer_route": "session-handoff + docs-adr-expert"
     },
     {
       "id": "memory-operational-threads",
@@ -786,7 +786,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "session-handoff + code-reviewer",
+      "owner_reviewer_route": "session-handoff + architecture-expert",
       "notes": "Convention-only in castr today: threads/README.md is seeded; per-thread next-session records are deferred until concurrent threads arise (single-stream scale, PDR-027 amendment)."
     },
     {
@@ -830,7 +830,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "session-handoff + code-reviewer",
+      "owner_reviewer_route": "session-handoff + architecture-expert",
       "notes": "Convention-only in castr today: tracks/README.md is seeded; track cards are authored when concurrent tactical work arises."
     },
     {
@@ -882,7 +882,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation + owner"
+      "owner_reviewer_route": "consolidation + assumptions-expert + owner"
     },
     {
       "id": "memory-operational-open-questions",
@@ -934,7 +934,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation + owner + code-reviewer"
+      "owner_reviewer_route": "consolidation + assumptions-expert + docs-adr-expert + owner"
     },
     {
       "id": "memory-operational-collaboration-contracts",
@@ -981,7 +981,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "agent-tools + code-reviewer",
+      "owner_reviewer_route": "code-reviewer + architecture-expert",
       "notes": "Phase-8 forward-reference: collaboration-state operational recipes land with the Phase-8 collaboration machinery."
     },
     {
@@ -1025,7 +1025,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation + owner",
+      "owner_reviewer_route": "consolidation + assumptions-expert + owner",
       "notes": "Not yet materialised in castr: the diagnostics directory is authored on first diagnostic-evidence need."
     },
     {
@@ -1069,7 +1069,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "consolidation + owner",
+      "owner_reviewer_route": "consolidation + assumptions-expert + owner",
       "notes": "Not yet materialised in castr: the quarantine directory is authored on first quarantine need."
     },
     {
@@ -1113,7 +1113,7 @@
         }
       ],
       "portability_tier": "repo-local-contract",
-      "owner_reviewer_route": "code-reviewer; owner for catalogue architecture"
+      "owner_reviewer_route": "docs-adr-expert + architecture-expert; owner for catalogue architecture"
     }
   ]
 }

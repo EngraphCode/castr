@@ -467,10 +467,16 @@ unchanged (only the 2 expected Phase-8 `live-reader-failure` signals).
   upstream. **Destination is the open Phase-9 back-flow decision** (`practice/transplant-to-castr` vs `main` vs a fresh
   branch); not applied to the pinned Oak working tree to avoid dirtying the Phases 6–9 source.
 
-### Block (g) remaining — disposition: **placeholder** (P8 channels)
+### Block (g) remaining — disposition: **rewrite (done)** (2026-06-19 s3, owner-directed P6)
 
-`agent-collaboration-channels.md` lands at P8 with the collaboration machinery, before the `transplant/phase-6` tag
-(acceptance §6).
+`agent-collaboration-channels.md` **authored in Phase 6** (owner direction 2026-06-19: "resolve all open questions and
+deferred items"; supersedes the earlier "lands at P8" placeholder). It is the routing **index/contract** for the channels
+in [`agent-collaboration.md`](../../directives/agent-collaboration.md), reconciled to castr: schema cross-refs re-pointed
+to the WS7 source location (`agent-tools/src/collaboration-state/schemas/`); the Oak-local
+`collaboration-state-write-safety.plan.md` cite **de-linked** per `no-moving-targets`; channel-5 reviewer experts
+(`docs-adr-expert`/`assumptions-expert`) now real. The `.agent/state/collaboration/` **runtime surfaces** it indexes
+remain **Phase-8** (the card carries an explicit materialisation-status note, so it is an honest forward-looking contract,
+not a claim the runtime plane exists). `executive/README.md` row flipped to ✅ Landed.
 
 ### `active/patterns/` import — disposition: **rewrite (done) + new tooling + Oak back-flow** (2026-06-19)
 
@@ -550,8 +556,11 @@ DON'T-BRING-7.
   **pervasive** across the pre-existing transplanted estate (practice-core PDRs — which use Oak's portable generic names
   by design — plus ~25 rules and several skills/patterns). That broad estate sweep is the existing reference-closure /
   **D4** backlog, **not** this slice; only the three rules being resolved here were reconciled. The substrate manifest's
-  reviewer-route mapping (which earlier mapped off `docs-adr-expert`/`assumptions-expert` because castr lacked them) can
-  now be re-pointed to the real experts — a follow-on substrate touch, noted not done.
+  reviewer-route mapping (which earlier mapped off `docs-adr-expert`/`assumptions-expert` because castr lacked them) was
+  **re-pointed to the real experts (done, 2026-06-19 s3)** — all 22 substrate surfaces mirror Oak's per-surface routing
+  reconciled to castr's roster (`docs-adr`→`docs-adr-expert`, `architecture`→`architecture-expert`,
+  `assumptions`→`assumptions-expert`; Oak's `agent-tooling`, which castr has no equivalent for, → `code-reviewer`;
+  `code-reviewer` retained as gateway and castr's owner-gate clauses preserved). Manifest re-validated against its schema.
 
 ### Collaboration state schemas — disposition: **bring Oak WS7 (done)** (2026-06-19 s3)
 
@@ -592,7 +601,7 @@ and the agent-tools `collaboration-state`/`practice-substrate` suites failed at 
   it committed hand-authored schemas in source, which this slice adopts.
 
 **Phase-6 result (state schemas): full `pnpm check` green; the bring is a `agent-tools` source/contract change touching
-no runtime `.agent/state/` plane.** Remaining before the `transplant/phase-6` tag — owner sequencing call: the
-reviewer-route re-point (above, noted-not-done) and `agent-collaboration-channels.md` (treated as **P8** by
-`08-collaboration-active.md`, though older reference-closure prose said "before the phase-6 tag" — the discrepancy is
-surfaced, not silently resolved).
+no runtime `.agent/state/` plane.** The two follow-on Phase-6 items the owner directed (2026-06-19 s3, "resolve all open
+questions and deferred items") are **both done**: the substrate reviewer-route re-point (above) and
+`agent-collaboration-channels.md` (Block (g) remaining, above). The `transplant/phase-6` tag now follows the standing
+deferred-item resolution (Oak back-flow target, D1 lint measurement, Q-001 PR/D3 timing — being driven this session).

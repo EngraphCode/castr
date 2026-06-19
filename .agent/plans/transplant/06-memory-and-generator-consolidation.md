@@ -191,11 +191,14 @@ the reorder is therefore **DONE for the bringable-now layer**; its remainder fol
     (different workstream, no castr surface). This makes schemas-as-source (P6) cleanly separable from the runtime skeleton
     (P8, `08-collaboration-active.md` §1–2); `08` §2's "emit-from-Zod vs reconcile-consumer" open design point is moot.
     Full record: `reference-closure.md` §Phase 6 "Collaboration state schemas — WS7".
-- **Remaining before the `transplant/phase-6` tag — owner sequencing call (not silently resolved):** the substrate
-  manifest **reviewer-route re-point** to the now-real experts (noted-not-done in `reference-closure.md` §Sub-agent
-  roster) and `agent-collaboration-channels.md` — which `08-collaboration-active.md` treats as **P8**, though older
-  reference-closure prose said "before the phase-6 tag." Whether either blocks the tag, or rides to P7/P8, is surfaced for
-  the owner.
+- **Two follow-on Phase-6 items ✅ DONE (2026-06-19 s3, owner-directed "resolve all open questions and deferred items"):**
+  (1) the substrate manifest **reviewer-route re-point** — all 22 surfaces now mirror Oak's per-surface routing reconciled
+  to castr's 15-expert roster (Oak's `agent-tooling` → `code-reviewer`; owner-gate clauses preserved); (2)
+  **`agent-collaboration-channels.md` authored** as the routing index/contract (schema cross-refs → WS7 source location;
+  Oak-local write-safety plan de-linked; runtime surfaces framed as Phase-8 forward-refs). Full record:
+  `reference-closure.md` §Phase 6 (Block (g) remaining + Sub-agent roster reviewer-route line).
+- **`transplant/phase-6` tag:** follows the standing deferred-item resolution (Oak back-flow target, D1 lint measurement,
+  Q-001 PR/D3 timing) the owner directed be driven this session.
 
 ## 5. Contract-doc reconciliation map (KEEP-localise vs reconcile vs DON'T-BRING)
 

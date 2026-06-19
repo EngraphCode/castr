@@ -31,6 +31,31 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     cleanly. Root meta-lesson: **never accept an absence from a probe that could fail silently — verify against the
     authoritative source (the Oak checkout, the body at the pin), and finish grounding before forming a verdict.**
 
+## 2026-06-19 (session 3b — reviewer-routes + channels card; "surface, don't pre-resolve")
+
+- **Owner correction of a behavioural pattern, not just a task error:** "present the two open issues to me as questions,
+  we must resolve all open questions and deferred items." I had defaulted to "I'll do the two follow-on items my way,
+  then tag" — quietly choosing the reviewer-route mapping and the channels-card scope, and labelling standing items
+  "named-position deferrals." **"Named position" had become my euphemism for "parked."** Same root as this session's
+  first halt (substituting my judgment/probes for ground truth + owner intent). **Cure: at any genuine fork with
+  owner-relevant stakes, surface it as a decision with a recommendation; resolve nothing load-bearing by silent
+  judgment.** Presented A/B + the standing C/D/E set as questions; owner chose mirror-Oak / full-catalogue / drive-all.
+- **A — substrate reviewer-routes ✅:** all 22 surfaces are 1:1 with Oak's manifest, so mirror was clean. Mapped Oak's
+  routing to castr's 15-expert roster (docs-adr→docs-adr-expert, architecture→architecture-expert,
+  assumptions→assumptions-expert); **Oak's `agent-tooling` reviewer has NO castr equivalent → `code-reviewer`**; kept
+  code-reviewer gateway + preserved castr's owner-gate clauses. Applied by id via a node script (not 22 fragile edits),
+  prettier, then re-validated the manifest against its schema via the substrate consumer.
+- **B — agent-collaboration-channels.md ✅:** authored as the routing index/contract (not runtime data). Schema
+  cross-refs re-pointed to the **WS7 source location** (`agent-tools/src/collaboration-state/schemas/`), NOT the old
+  `.agent/state/collaboration/` path; Oak-local `collaboration-state-write-safety.plan.md` **de-linked** per
+  `no-moving-targets`; explicit materialisation-status note marks the `.agent/state/collaboration/` runtime surfaces as
+  Phase-8 forward-refs (honest, not a claim they exist). `08-collaboration-active.md` never actually named the card —
+  the "P8" attribution was reference-closure "Block (g) remaining" prose, now corrected to "P6, owner-directed."
+- **D1 (lint) understood before measuring:** the prior `d1-sonarjs-findings.md` is a documented cautionary tale (agent
+  asserted "false positives" repeatedly, wrong). The ONE decisive unmeasured datum (§4/§8): surface S3800's **secondary
+  "Returns X/Y" locations** (what the rule actually sees per site) + the **inferred** types of the 5 S3785 operands —
+  "likely resolves §4 outright." Measure that, never theorize from the source-reading. [[dont-dismiss-tools-as-false-positive]].
+
 ## 2026-06-19 (session 2 — sub-agent roster)
 
 - **The opener's "13 generic templates, bring + components" was a hypothesis that firsthand grounding overturned twice.**

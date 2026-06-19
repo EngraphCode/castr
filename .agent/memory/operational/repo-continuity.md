@@ -49,9 +49,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                  | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 — state schemas ✅ (Oak WS7, schemas→committed source); `transplant/phase-6` tag = owner sequencing call (reviewer-route re-point + `agent-collaboration-channels.md`) | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                       | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 — state schemas ✅ (Oak WS7) + reviewer-routes ✅ + channels card ✅; `transplant/phase-6` tag follows standing deferred-item resolution (back-flow target, D1 lint, Q-001) | claude-code / opus-4-8 / executor / `2026-06-19` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -109,19 +109,22 @@ dangling rules reconciled; roster-of-record surfaces in lockstep. `subagents` ga
   source `agent-tools/src/collaboration-state/schemas/` + validator schema-root decoupled
   from the data path; no `.agent/state/` runtime plane created (stays Phase-8). Full `pnpm
 check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item).
-  Remaining before the `transplant/phase-6` tag is an **owner sequencing call** (surfaced,
-  not silently resolved): the substrate reviewer-route re-point + `agent-collaboration-channels.md`
-  (P8 per `08`, vs older "before phase-6 tag" prose).
+  **Two follow-on Phase-6 items ✅ DONE (owner-directed):** substrate reviewer-route re-point (22 surfaces
+  mirror Oak reconciled to castr's roster) + `agent-collaboration-channels.md` authored (routing
+  index/contract; runtime surfaces = Phase-8 forward-refs). **`transplant/phase-6` tag** follows the
+  standing deferred-item resolution being driven this session (Oak back-flow target; D1 lint
+  measurement; Q-001 PR/D3 timing).
 
 ## Next Safe Steps
 
 Authoritative sequence: sub-plan
 [`06-memory-and-generator-consolidation.md` §4](../../plans/transplant/06-memory-and-generator-consolidation.md)
-(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅;
-**collaboration state schemas LANDED via Oak WS7** — schemas relocated to committed source
-`agent-tools/src/collaboration-state/schemas/` + validator decoupled, no runtime `.agent/state/` plane created;
-the **`transplant/phase-6` tag is the owner's next sequencing call** once the reviewer-route re-point +
-`agent-collaboration-channels.md` placement (P6-tag-blocker vs P7/P8) are decided)
+(reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ +
+reviewer-routes✅ + channels-card✅; **collaboration state schemas LANDED via Oak WS7** — schemas relocated to
+committed source `agent-tools/src/collaboration-state/schemas/` + validator decoupled, no runtime `.agent/state/`
+plane created; the two follow-on items (reviewer-route re-point, `agent-collaboration-channels.md`) DONE; the
+**`transplant/phase-6` tag** follows the standing deferred-item resolution being driven this session — Oak back-flow
+target, D1 lint measurement, Q-001 PR/D3 timing)
 and the [transplant tracker §Next steps](../../plans/transplant/README.md). The one deep
 enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals
 still unfixed — 02 = the IR-fidelity proof harness, active, not started), the rest

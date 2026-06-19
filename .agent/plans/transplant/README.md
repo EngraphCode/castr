@@ -161,10 +161,11 @@ substrate-contract reconciled); **no `.agent/state/` runtime plane created** (Ph
 agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item). Full record: `reference-closure.md` §Phase 6
 "Collaboration state schemas — WS7" + sub-plan §4.
 
-**NEXT — owner sequencing call for the `transplant/phase-6` tag (surfaced, not silently resolved):** the substrate
-manifest **reviewer-route re-point** to the now-real experts (noted-not-done) and `agent-collaboration-channels.md`
-(treated as **P8** by `08-collaboration-active.md`, vs older "before phase-6 tag" prose) — decide P6-tag-blocker vs
-P7/P8, then full green `pnpm check` → `transplant/phase-6` tag.
+**Two follow-on Phase-6 items ✅ DONE (2026-06-19 s3, owner-directed):** the substrate manifest **reviewer-route
+re-point** (all 22 surfaces mirror Oak reconciled to castr's roster; Oak's `agent-tooling`→`code-reviewer`; owner-gate
+clauses preserved) and **`agent-collaboration-channels.md`** authored as the routing index/contract (schema cross-refs →
+WS7 source; runtime surfaces = Phase-8 forward-refs). **NEXT:** the standing deferred items (Oak back-flow target; D1 lint
+measurement; Q-001 PR/D3 timing) being driven this session → then full green `pnpm check` → `transplant/phase-6` tag.
 
 **Phase-6 scope sharpened (owner, 2026-06-17) — generator-first.** The memory dir is a _generated artefact_: the
 consolidate/curator/napkin/session-handoff/start-right skills are what populate and maintain it (`generator-first-mindset`).
