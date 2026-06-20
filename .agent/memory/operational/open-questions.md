@@ -86,7 +86,16 @@ owning artefact / discussion home (if any), and a status line.
 - **Owning artefact / home:** `.claude/settings.json` + a new `.claude/scripts/statusline-identity.mjs`; Oak pin
   `practice/castr-pin:.claude/scripts/statusline-identity.mjs` is the source. Recorded in
   [`repo-continuity.md §Open Owner-Decision Items`](repo-continuity.md).
-- **Status:** OPEN — owner decision (fix now vs defer); surfaced multiple times this session, unanswered at handoff.
+- **Status:** ✅ RESOLVED (owner, 2026-06-20 — "fix now", Lane 3). Both wiring pieces landed on
+  `feat/transplant-engraph-practice`: new `.claude/scripts/statusline-identity.mjs` (soft-fail shim, ported verbatim from
+  the Oak pin after confirming it is generic) + a top-level `statusLine` block in `.claude/settings.json`. Verified
+  firsthand end-to-end (8 adapter/shim invocations: full payload renders `Stormy Sailing Archipelago ➜ castr
+git:(branch) ✗ ctx:N% [model]`; empty stdin + missing adapter both soft-fail to silent exit 0; `CLAUDE_PROJECT_DIR`
+  override resolves). Gates green: format/lint/portability/skills/repo-validators/madge:orphans/knip. Reviewed
+  config-expert (PASS) + code-reviewer (PASS), both load-bearing claims re-verified firsthand. **Optional hardening
+  follow-up** (both reviewers, independently): a `validate-statusline-routing` validator asserting
+  `settings.json.statusLine.command` → an extant shim whose adapter target resolves — captured in `pending-graduations.md`
+  (out of scope for the wiring itself; routable to the friction-fix tranche).
 
 ## Q-004 — Release automation: semantic-release (Oak parity) vs changesets?
 

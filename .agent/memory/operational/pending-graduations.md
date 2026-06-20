@@ -157,3 +157,16 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
   lands all .agent writes", + a `claims/identity register` CLI doing an atomic additive upsert. **trigger-condition:**
   next team session OR curation pass. **status:** pending — conserved in napkin N1/N2.
   `[captured: 2026-06-20 | source: napkin N1/N2]`
+
+## 2026-06-20 capture (Lane 3 — statusline wiring; reviewer-surfaced hardening)
+
+- **Validator candidate: `validate-statusline-routing` — assert `settings.json.statusLine.command` points at an extant
+  shim whose adapter target resolves.** Surfaced independently by BOTH reviewers (config-expert + code-reviewer) during
+  the Q-003 statusline wiring. There are now THREE classes of `.claude/` → `agent-tools/dist` wiring (PreToolUse guards,
+  SessionStart hook, and now `statusLine`), but only the PreToolUse class has a routing validator
+  (`validate-pretooluse-guard-routing`, in `repo-validators:check`). A sibling `validate-statusline-routing` would harden
+  against silent drift if `agent-tools/` ever relocates — the shim's own `CLAUDE_PROJECT_DIR`-preference comment names
+  exactly this risk. **graduation-target:** a new validator under `agent-tools/src/validators/` wired into
+  `repo-validators:check`. **trigger-condition:** the friction-fix tranche (Lane 1), OR a third drift incident, OR owner
+  direction. **status:** pending — out of scope for the wiring itself (which is proven + green); not a blocker.
+  `[captured: 2026-06-20 | source: config-expert + code-reviewer PASS reviews of the Q-003 wiring]`

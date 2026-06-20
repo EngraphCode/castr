@@ -152,8 +152,9 @@ the records end-to-end (claims/heartbeats/comms/Director-serialised review with 
 
 **Active slice = transplant Phase 9** (Oak back-flow to a fresh branch off Oak `main` + PDR-currency sync; sub-plan
 [`reference-closure.md §back-flow items`](../../plans/transplant/reference-closure.md)). **Arc D3/D2/D4 ✅ landed on
-branches (2026-06-20, unpushed)** — D3 `c7f819e`, D2 `41b24f8`, D4 `0a75231`; the deferred **release-automation** lane
-(owner strategy: semantic-release vs changesets) and the **statusline wiring fix** (owner decision; pending) remain. The
+branches (2026-06-20, unpushed)** — D3 `c7f819e`, D2 `41b24f8`, D4 `0a75231`; the **statusline wiring fix ✅ LANDED**
+(2026-06-20, Lane 3, on the transplant branch — Q-003 resolved); the deferred **release-automation** lane
+(owner strategy: semantic-release vs changesets) remains. The
 deep-review **remediation backlog 02–07 takes a named position AFTER the transplant** (not parked —
 `no-manufactured-permission` holds; an undefined "later" is never). Delivery (the merge act + push of the lane branches)
 is **deprioritised** ("not in a rush to merge"). This **supersedes the roadmap's
@@ -224,13 +225,12 @@ deleted the now-merged `claude/castr-zod-compiler-review-qpre7n` source branch (
     Not a reopening of the single-branch decision (owner, 2026-06-15) — a close-time
     delivery decision now made.
 
-- **Statusline identity wiring — OPEN (surfaced 2026-06-20, first concurrent stream).** castr transplanted the
-  statusline renderer (`agent-tools/src/claude/statusline-*`, built) but NOT the `.claude/` wiring Oak has at the pin:
-  `.claude/scripts/statusline-identity.mjs` shim (castr has no `.claude/scripts/`) + the `statusLine` block in
-  `.claude/settings.json`. So PDR-027 identities resolve under the hood but are invisible in every session's status bar.
-  Director did NOT bring it unprompted (it modifies the owner's harness config). **Owner decision: fix now (route the
-  2-piece bring from the Oak pin to a seat) or defer to the friction tranche.** Recorded at
-  [`open-questions.md`](open-questions.md).
+- **Statusline identity wiring — ✅ RESOLVED (owner, 2026-06-20: "fix now", Lane 3).** Both `.claude/` wiring pieces
+  Oak has at the pin are now landed on `feat/transplant-engraph-practice`: `.claude/scripts/statusline-identity.mjs`
+  (soft-fail shim, ported verbatim) + the `statusLine` block in `.claude/settings.json`. PDR-027 identities now render
+  in the status bar (verified firsthand end-to-end; config-expert + code-reviewer PASS). Full record + the optional
+  `validate-statusline-routing` hardening follow-up at [`open-questions.md §Q-003`](open-questions.md) and
+  [`pending-graduations.md`](pending-graduations.md).
 - **Release automation strategy — OPEN (surfaced 2026-06-20, D3 stream).** castr has no release tooling; the dead
   `publish.yml` (non-existent `pnpm release`) was removed in D3. **Owner decision: adopt semantic-release (Oak parity)
   vs changesets** — cross-surface (package.json), a separate lane. Recorded at [`open-questions.md`](open-questions.md)

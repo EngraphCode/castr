@@ -66,5 +66,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/scripts/statusline-identity.mjs"
   }
 }
