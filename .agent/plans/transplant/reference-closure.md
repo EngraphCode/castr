@@ -651,9 +651,10 @@ code) → brought the hardened source (green). castr's `state-integrity.ts` is n
 
 `validate-collaboration-state` added to `repo-validators:check`; green against the empty skeleton
 (`collaboration-state validate: OK`). The deferred-validator note in the tracker is updated — `collaboration-state` is
-no longer in the deferred set; the only remaining informational exclusion is the `agent-tools` test suite
-(`turbo test --filter=!@engraph/agent-tools`), blocked on the **clerk-expert P7** parity item (unrelated to
-collaboration).
+no longer in the deferred set. **The `agent-tools` test exclusion is also resolved (Phase 8 task 4b, 2026-06-20):** the
+"clerk-expert P7" blocker was a **phantom** — an Oak-phenotype assertion (`codex-project-agents.integration.test.ts`
+demanded a `clerk-expert` castr never hosts, per §Phase-4 above), reconciled to castr's real `code-reviewer` roster;
+suite 943/0 and `turbo test --filter=!@engraph/agent-tools` removed, so agent-tools now gates in `pnpm check`.
 
 ### Cross-host + local cites introduced — disposition: **retained-cross-host / resolve**
 

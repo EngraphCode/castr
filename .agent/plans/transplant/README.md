@@ -56,11 +56,12 @@ roster, the castr gate chain) into the start-right shared core; retired castr's 
   Your tool calls are guarded: dangerous-git patterns and content fingerprints (PDR-044 hedging/menu-framing) are denied;
   an **unbuilt `dist` fails OPEN** (warns, never bricks), a built-but-broken guard fails closed. If a tool call is
   blocked, that is the policy in `.agent/hooks/policy.json` — not a bug.
-- **agent-tools `test` is INFORMATIONAL**, excluded from the blocking gate via `turbo test --filter=!@engraph/agent-tools`
-  (+ runner `agent-tools:test:informational`). It is **940/941 (1 failure, measured 2026-06-20)** — the lone failure is
-  the `codex-project-agents` **clerk-expert roster-parity (P7)** item; the earlier collaboration-state-schema failures
-  cleared when WS7 landed (Phase 6) and the substrate skeleton + ENOENT-tolerance landed (Phase 8 partial, 2026-06-20).
-  Remove the filter (flip blocking) once the clerk-expert P7 item is fixed.
+- **agent-tools `test` now GATES** (Phase 8 task 4b, 2026-06-20): the `turbo test --filter=!@engraph/agent-tools`
+  exclusion was removed, so the suite (**943/0**) blocks in `pnpm test` → `test:all` → `qg` → `pnpm check`; the runner
+  alias was renamed `agent-tools:test`. The "clerk-expert P7" blocker was a **phantom** — an Oak-phenotype assertion in
+  `codex-project-agents.integration.test.ts` demanding a `clerk-expert` (Clerk = Oak's auth SaaS) the headless castr
+  library never hosts (`reference-closure.md §Phase-4`). Reconciled the test to castr's real `code-reviewer` roster; no
+  agent was added.
 - **`repo-validators:check` chains 8 GREEN validators** (2026-06-20): `lifecycle-scripts`, `pretooluse-guard-routing`,
   `drift`, `fitness-vocabulary`, `no-stale-script-invocations` (P4), `patterns-index` (P6), `subagents` (P7), and
   `collaboration-state` (**P8 partial, flipped 2026-06-20**). Oak's `portability` runs as a separate `portability:check`

@@ -171,12 +171,16 @@ Read and follow \`.agent/sub-agents/templates/code-expert.md\`.
     );
   });
 
-  it('lists the live repo roster, including clerk-expert parity for Codex', () => {
+  it('lists the live repo roster, resolving the gateway reviewer for Codex', () => {
+    // castr's gateway reviewer is `code-reviewer` (Oak's was `code-expert`), and
+    // castr never hosts Oak's `clerk-expert` auth agent — this repo is a headless
+    // schema-conversion library with no auth surface. See reference-closure.md
+    // §Phase-4 (clerk-expert P7 reconciliation: "castr never hosts clerk-expert").
     const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 
-    expect(listCodexProjectAgentNames(repoRoot)).toContain('clerk-expert');
-    expect(resolveCodexProjectAgent(repoRoot, 'code-expert').referencedCanonicalFiles).toContain(
-      '.agent/sub-agents/templates/code-expert.md',
+    expect(listCodexProjectAgentNames(repoRoot)).toContain('code-reviewer');
+    expect(resolveCodexProjectAgent(repoRoot, 'code-reviewer').referencedCanonicalFiles).toContain(
+      '.agent/sub-agents/templates/code-reviewer.md',
     );
   });
 });

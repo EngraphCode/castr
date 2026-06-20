@@ -146,10 +146,11 @@ tracked/untracked via `.gitignore`); completed the WS7 bring of `state-integrity
 hardening — instance-tier absent = clean state); flipped `validate-collaboration-state` blocking into
 `repo-validators:check` (8 green validators); reconciled the stale 2026-06-18 sub-plan to as-built (its premises were
 superseded by WS7/P7 — task 2 already done, failures 1 not 12, subagents already wired). **Task 3a (SessionStart identity
-hook) ✅ + task 3b (claims lifecycle + concurrent-session collision-safety) ✅ done 2026-06-20.** **Phase 8 REMAINING (carry
-the `transplant/phase-8` tag):** task 4b (remove the agent-tools test exclusion — blocked on the **clerk-expert P7** parity
-item); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). Full
-as-built detail:
+hook) ✅ + task 3b (claims lifecycle + concurrent-session collision-safety) ✅ + task 4b (agent-tools suite now gates —
+the "clerk-expert P7" blocker was a phantom Oak-phenotype test assertion; reconciled to castr's real `code-reviewer`
+roster, suite 943/0, exclusion removed) ✅ done 2026-06-20.** **Phase 8 REMAINING (carry the `transplant/phase-8` tag):**
+task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). Full as-built
+detail:
 [`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md) §As-built banner.
 
 **Active slice = the rest of transplant Phase 8** (sub-plan

@@ -61,16 +61,28 @@ Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owne
 >    under real concurrent filesystem contention, and "a second concurrent session" means a separate OS process. The
 >    demonstration is encoded durably as
 >    [`agent-tools/tests/collaboration-state/claims-concurrency.integration.test.ts`](../../../agent-tools/tests/collaboration-state/claims-concurrency.integration.test.ts)
->    (concurrent real-filesystem opens + concurrent close-to-archive through the real CLI stack; `942 passed / 1 failed`
->    suite — the lone failure is the pre-existing clerk-expert P7 item below, not this work). The collision-safety
+>    (concurrent real-filesystem opens + concurrent close-to-archive through the real CLI stack). At this commit the
+>    suite stood at 942 passed, 1 failed — the one then-remaining failure was the pre-existing clerk-expert P7 item,
+>    resolved in task 4b below. The collision-safety
 >    mechanism, verified firsthand in the engine: atomic `mkdir`-based directory lock (100 attempts, 30 s stale-takeover)
 >    serialises writers; an optimistic read-reread-compare retry (5 attempts) guards lost updates even under the lock;
 >    temp-file + rename gives atomic publish so readers never see partial state.
+> 6. **Task 4b — agent-tools test suite now gates; the "clerk-expert P7" blocker was a phantom.** Metacognition +
+>    firsthand measurement overturned the inherited "4b is blocked on a hard clerk-expert fix" label. `clerk-expert` has
+>    **zero** references in product source — it appeared in exactly one test assertion
+>    (`codex-project-agents.integration.test.ts`: `…toContain('clerk-expert')`, plus an Oak-phenotype `code-expert`
+>    resolve), and `reference-closure.md §Phase-4` already records the intent: **"castr never hosts clerk-expert"** (Clerk
+>    is Oak's auth SaaS; castr is a headless schema-conversion library with no auth surface). The fix was to **reconcile
+>    the test to castr's real Codex roster** (gateway reviewer `code-reviewer` → `.agent/sub-agents/templates/code-reviewer.md`,
+>    verified against the live 18-agent `.codex/agents/` roster), not to author an agent castr has no use for — the
+>    per-surface phenotype-reconciliation lesson, applied. Suite then **943 passed / 0 failed**, so the
+>    `turbo test --filter=!@engraph/agent-tools` exclusion was removed (`package.json`): agent-tools tests now gate in
+>    `pnpm test` → `test:all` → `qg` → `pnpm check`. The now-misnamed `agent-tools:test:informational` alias was renamed
+>    `agent-tools:test`.
 >
-> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 4b (remove the
-> `turbo test --filter=!@engraph/agent-tools` exclusion — blocked on the **clerk-expert P7** fix); task 5 (per-thread
-> records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). These land as green-gated
-> intra-phase commits, not the phase tag.
+> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 5 (per-thread records / `## Lanes`);
+> task 6 (thin per-hunk reconciliation of new generic surfaces). These land as green-gated intra-phase commits, not the
+> phase tag.
 
 This sub-plan only **sharpened scope** so the prioritisation decision rests on measured ground; the partial execution
 above does not pull the remaining Phase 8 work forward.

@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Phase 8 cont. — task 4b: the "clerk-expert P7 blocker" was a PHANTOM)
+
+- **A "blocker" I relayed four times was never measured — and dissolved on first contact.** Across the sub-plan,
+  repo-continuity, delivery-ledger, and my own 3b closeout I wrote "4b is blocked on the clerk-expert P7 fix" without
+  ever opening the failing test. The metacognition pass forced the question I'd skipped: _is `clerk-expert` even a thing
+  castr should have?_ Firsthand: **zero** references in `agent-tools/src` (product source); it appeared in exactly ONE
+  test assertion (`codex-project-agents.integration.test.ts` `…toContain('clerk-expert')` + an Oak-phenotype `code-expert`
+  resolve); and `reference-closure.md §Phase-4` already recorded the intent — **"castr never hosts clerk-expert"** (Clerk
+  = Oak's auth SaaS; castr is a headless schema lib with no auth surface). So "fixing P7" was never "author a
+  clerk-expert agent" — it was **reconcile a bogus Oak-phenotype test assertion** to castr's real `code-reviewer` roster
+  (verified against the live 18-agent `.codex/agents/` set + the resolver output). One ~8-line test edit → suite 942/1 →
+  **943/0** → removed the `turbo test --filter=!@engraph/agent-tools` exclusion → agent-tools now gates in `pnpm check`.
+  The "hard blocker" framing had **inverted** the actual work (add an agent) from its truth (delete an assertion).
+- **The meta-lesson: a "blocked on X" label is a claim to verify against X firsthand, exactly like any other — and a
+  multi-surface-repeated blocker is MORE suspect, not less** (repetition launders an unmeasured assumption into apparent
+  fact). Same family as the transplant per-surface phenotype lesson ([[verify-agent-claims-firsthand]],
+  green-gates-mask-gaps) and the "brought ≠ current" find: the inherited classification (`blocked` / `parity item`) was a
+  claim; the body (the test + the source roster) was the verdict. Cure: before relaying "blocked on X" even once more,
+  open X and measure what X actually requires — the fix may be the inverse of the inherited framing.
+- **Faithful reconciliation ≠ deletion.** The risk in "the assertion is bogus, remove it" is manufactured-completion via
+  convenient deletion. Avoided by replacing the Oak-phenotype names with castr's REAL roster (`code-reviewer` +
+  `.agent/sub-agents/templates/code-reviewer.md`, measured live) so the test still meaningfully asserts the live Codex
+  roster — strengthened to castr's truth, not weakened.
+
 ## 2026-06-20 (Phase 8 cont. — task 3b: claims lifecycle + concurrent-session collision-safety)
 
 - **THE coverage insight: "concurrency is tested" was true at the wrong layer.** The engine's lock+retry was unit-tested
