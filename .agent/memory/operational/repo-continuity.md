@@ -37,12 +37,14 @@ infrastructure on the path to it** — not a consequence to wait for. The remain
 gap (after Phase-8-partial, 2026-06-20): the `.agent/state/collaboration/` substrate
 skeleton now exists, the `collaboration-state`/`subagents` validators are
 blocking-green, and the **SessionStart identity hook is now wired** (auto-derives
-the PDR-027 identity into `$CLAUDE_ENV_FILE`). Still open: **live claim registration
-is not yet exercised end-to-end** (it is the `register-active-areas-at-session-open`
-agent discipline — `openClaim` needs intent/areas, so it is _not_ a hook write — now
-enabled by the substrate) and comms/presence are not active — plus branch/CI
-coordination (CI does not yet run `check:ci`, arc D3). Per-thread records are the
-cheapest **leaf** of that capability, not the thing that lifts the constraint.
+the PDR-027 identity into `$CLAUDE_ENV_FILE`). **Live claim registration is now
+exercised end-to-end (task 3b, 2026-06-20):** the `claims open → heartbeat → close`
+lifecycle ran against the real substrate and **10 concurrent separate-process
+sessions were demonstrated collision-safe** (no lost write; encoded as
+`claims-concurrency.integration.test.ts`). Still open: comms/presence are not active
+as standing practice — plus branch/CI coordination (CI does not yet run `check:ci`,
+arc D3). Per-thread records are the cheapest **leaf** of that capability, not the
+thing that lifts the constraint.
 
 While single-stream, the operational simplification still holds (PDR-027
 §Amendment Log 2026-04-21 Session 5): the row below **is** the continuity record
@@ -143,11 +145,11 @@ phase incomplete):** materialised the `.agent/state/collaboration/` runtime subs
 tracked/untracked via `.gitignore`); completed the WS7 bring of `state-integrity.ts` (Oak-pin `optionalWhenAbsent`
 hardening — instance-tier absent = clean state); flipped `validate-collaboration-state` blocking into
 `repo-validators:check` (8 green validators); reconciled the stale 2026-06-18 sub-plan to as-built (its premises were
-superseded by WS7/P7 — task 2 already done, failures 1 not 12, subagents already wired). **Phase 8 REMAINING (carry the
-`transplant/phase-8` tag):** task 3 (wire SessionStart to write a live identity row + claim — the behaviourally
-significant, self-modifying piece, touches `.claude/settings.json`); task 4b (remove the agent-tools test exclusion —
-blocked on the **clerk-expert P7** parity item); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk
-reconciliation of new generic surfaces). Full as-built detail:
+superseded by WS7/P7 — task 2 already done, failures 1 not 12, subagents already wired). **Task 3a (SessionStart identity
+hook) ✅ + task 3b (claims lifecycle + concurrent-session collision-safety) ✅ done 2026-06-20.** **Phase 8 REMAINING (carry
+the `transplant/phase-8` tag):** task 4b (remove the agent-tools test exclusion — blocked on the **clerk-expert P7** parity
+item); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). Full
+as-built detail:
 [`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md) §As-built banner.
 
 **Active slice = the rest of transplant Phase 8** (sub-plan

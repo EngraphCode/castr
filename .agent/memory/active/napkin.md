@@ -2,6 +2,35 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Phase 8 cont. — task 3b: claims lifecycle + concurrent-session collision-safety)
+
+- **THE coverage insight: "concurrency is tested" was true at the wrong layer.** The engine's lock+retry was unit-tested
+  only on a **bare counter** (`transaction.integration.test` "serializes concurrent JSON file updates", in-process
+  `Promise.all`), and every `collaboration-state.integration` test runs against an **in-memory fake runtime** (virtual
+  paths, no real fs). So the full `claims open`/`close` stack (identity derivation → live-routing-collision assertion →
+  `mkdir` transaction lock → optimistic re-read retry → atomic temp-file publish) had **never** been exercised under real
+  multi-writer filesystem contention — and "a second concurrent session" means a **separate OS process**, which no test
+  touched. The 3b demonstration (10 separate `node` processes opening at one `active-claims.json`: 11/11 claims survived,
+  11 unique ids, no lost write) closed that, and I encoded it durably as `claims-concurrency.integration.test.ts` (real-fs
+  concurrent opens + close-to-archive through the real CLI). Lesson: before trusting "X is tested", check the test runs X's
+  _real_ path at the _real_ layer — a green concurrency test on a proxy (counter) or a fake (in-memory runtime) is not
+  proof the production stack is collision-safe. Same family as green-gates-mask-gaps.
+- **`claim_id` is schema-`format: "uuid"` — you cannot pass a human-readable `--claim-id`.** First demo seeded `--claim-id
+ews-session` → `schema validation failed at /claims/0/claim_id: must match format "uuid"`. The CLI generates a v4 when
+  `--claim-id` is omitted; capture it from the open command's JSON stdout (`{claim_id, claim}`) to drive heartbeat/close.
+- **zsh word-split re-bite (the recurring lesson, again): a multi-word `CLI="node …js collaboration-state"` var ran as ONE
+  command** ("no such file or directory: node …collaboration-state"). zsh does not split unquoted vars. Cure used: write the
+  harness as a `bash` script (`#!/usr/bin/env bash` + `bash script.sh`) and a `CLI=(...)` array, where word-splitting is
+  normal. The distilled "pass explicit args, never an unquoted multi-word $var" extends to "the command itself".
+- **`require(relPath)` resolves vs the MODULE dir, not cwd → `MODULE_NOT_FOUND` for `.agent/state/...`.** A reporter helper
+  `node -e 'require(process.argv[1])' .agent/state/.../active-claims.json` failed (Node treats a non-`./`/non-absolute
+  specifier as a package). It silently ate the close-archival verification (the substitution failed but `echo` still
+  exited 0 under `set -e`). Cure: `JSON.parse(fs.readFileSync(path,'utf8'))` (resolves vs cwd), or prefix `./`.
+- **`claims open` does NOT auto-create `active-claims.json`** — `updateActiveClaimsFile` `readFile`s the path with no
+  ENOENT tolerance, so the README's "created on first CLI use" needs a seed step: write `{schema_version:"1.3.0",
+commit_queue:[],claims:[]}` (+ closed `{schema_version:"1.3.0",claims:[]}`) before the first open. Instance-tier +
+  git-ignored, so seeding then cleaning leaves the working tree clean (verified `git status` empty after).
+
 ## 2026-06-20 (Phase 8 PARTIAL — substrate skeleton + collaboration-state gate flip + identity SessionStart hook + remote-sync check)
 
 - **A controlling sub-plan can go stale between authoring and execution — re-measure its load-bearing premises before

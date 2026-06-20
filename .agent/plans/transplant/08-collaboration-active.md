@@ -44,8 +44,30 @@ Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owne
 > `register-active-areas-at-session-open` agent discipline, now **enabled** by the substrate; the hook's job is identity
 > only (as the brought Oak adapter implements).
 >
-> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 3b (exercise claims open/heartbeat/close
-> end-to-end + demonstrate a second concurrent session is collision-safe — needs concurrency); task 4b (remove the
+> **Landed 2026-06-20 (session "Ethereal Weaving Star", intra-phase commit — _not_ the phase tag):**
+>
+> 5. **Task 3b — claims lifecycle exercised end-to-end + concurrent-session collision-safety demonstrated.** Ran the
+>    `claims open → heartbeat → close` lifecycle against the REAL materialised `.agent/state/collaboration/` substrate
+>    (instance-tier, git-ignored — seeded empty, exercised, cleaned back to the absent/clean state) under my live PDR-027
+>    identity (`Ethereal Weaving Star`, prefix `10bc66`). Then fired **10 concurrent _separate-OS-process_ sessions**
+>    (distinct env-seed identities) opening claims at the same `active-claims.json`: all 11 claims survived with 11 unique
+>    `claim_id`s and 11 unique agent identities — **no lost write under contention**; `claims active-agents` surfaced all
+>    11 distinct sessions; two sessions exchanged comms events; `validate-collaboration-state` reported OK against the
+>    populated substrate (4 JSON files); concurrent heartbeat held; concurrent close archived all 11 (active → 0,
+>    closed → 11). **Why this was the real gap:** the engine's lock+retry was only unit-tested on a bare counter
+>    (`transaction.integration.test`, in-process `Promise.all`) and the comms integration tests run against an
+>    **in-memory fake runtime** — neither exercised the full `claims open`/`close` stack (identity derivation →
+>    live-routing-collision assertion → `mkdir` transaction lock → optimistic re-read retry → atomic temp-file publish)
+>    under real concurrent filesystem contention, and "a second concurrent session" means a separate OS process. The
+>    demonstration is encoded durably as
+>    [`agent-tools/tests/collaboration-state/claims-concurrency.integration.test.ts`](../../../agent-tools/tests/collaboration-state/claims-concurrency.integration.test.ts)
+>    (concurrent real-filesystem opens + concurrent close-to-archive through the real CLI stack; `942 passed / 1 failed`
+>    suite — the lone failure is the pre-existing clerk-expert P7 item below, not this work). The collision-safety
+>    mechanism, verified firsthand in the engine: atomic `mkdir`-based directory lock (100 attempts, 30 s stale-takeover)
+>    serialises writers; an optimistic read-reread-compare retry (5 attempts) guards lost updates even under the lock;
+>    temp-file + rename gives atomic publish so readers never see partial state.
+>
+> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 4b (remove the
 > `turbo test --filter=!@engraph/agent-tools` exclusion — blocked on the **clerk-expert P7** fix); task 5 (per-thread
 > records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). These land as green-gated
 > intra-phase commits, not the phase tag.
