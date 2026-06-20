@@ -341,6 +341,24 @@ ews-session` → `schema validation failed at /claims/0/claim_id: must match for
 commit_queue:[],claims:[]}` (+ closed `{schema_version:"1.3.0",claims:[]}`) before the first open. Instance-tier +
   git-ignored, so seeding then cleaning leaves the working tree clean (verified `git status` empty after).
 
+## 2026-06-20 (Lane 3 — statusline wiring, solo session: Stormy Sailing Archipelago / cba47e)
+
+- **Q-003 landed (`ebf08b5`).** Brought the two missing `.claude/` wiring pieces (shim + `statusLine` settings block) so
+  PDR-027 identities render in the status bar. The renderer was already transplanted (Phase 7); only the harness wiring
+  was missing. Shim ported VERBATIM from the Oak pin after confirming generic (no `@oaknational`, correct path
+  arithmetic) — a clean instance of the transplant-method pattern (read the body, confirm portability, then port).
+- **Reviewer claim was OVERSTATED; firsthand check corrected it ([[verify-agent-claims-firsthand]]).** config-expert
+  asserted "both eslint configs target `**/*.{ts,tsx}` only" → grep showed `lib/eslint.config.ts` also lints
+  `lib/scripts/**/*.mjs` (line 231). The reviewer's CONCLUSION (the `.claude/` shim isn't lint-gated) held — `.claude/`
+  is outside both package lint roots, confirmed by a green `pnpm lint` — but a supporting claim was wrong. Lesson: a
+  PASS verdict's load-bearing facts still get re-derived firsthand, not synthesised as given. Also verified firsthand
+  the code-reviewer's grep claim (adapter has no `process.exit`/`throw`) AND empirically tested the inference (a shim
+  spawning an `exit(3)` adapter forwards 3 — so the shim is NOT unconditional-exit-0; soft-fail holds only because the
+  adapter can't deliberately fail + pre-spawn failures exit 0).
+- **Harness Edit-race observed (minor):** two `Edit` calls on `.claude/settings.json` returned "File has not been
+  read" / "content has changed since last read" yet the intended block landed exactly (clean 4-line git diff). One-off;
+  noted, not load-bearing.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_
