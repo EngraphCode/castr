@@ -258,8 +258,12 @@ resolve on this tree. `new-rule-vs-pdr-clause` → `RULES_INDEX.md` resolves sam
 ### Upstream Oak bugs — **back-flow items** (for the Phase-9 feedback report)
 
 **Back-flow target — DECIDED (owner, 2026-06-19 s3): a fresh branch off current Oak `main`** (e.g.
-`practice/castr-backflow`), PR'd to Oak `main` — **not** the stale `practice/transplant-to-castr` branch and not a
-direct-to-main PR with no staging branch. The items below (plus the substrate magic-number removal §"Substrate consumer
+`practice/castr-backflow`), PR'd to Oak `main`. **The canonical feedback report now lives in castr** (owner, 2026-06-20:
+"the feedback lives in castr, not Oak") at
+[`oak-backflow/castr-feedback-2026-06-10.md`](oak-backflow/castr-feedback-2026-06-10.md) — Phase 9 delivers it FROM castr
+to the fresh Oak branch. The stale Oak `practice/transplant-to-castr` branch (which held the only Oak-side copy, at
+`518b34af`) was **deleted local + remote on 2026-06-20** after its sole unique file was conserved into castr. The items
+below (plus the substrate magic-number removal §"Substrate consumer
 magic numbers", the `validate-patterns-index` generator, the WS7 schema-relocation if Oak ever regresses, and **the
 Phase-7 agent-adapter generator** — Oak `ad359a4f` hand-maintains its `.cursor/agents`/`.claude/agents` wrappers and
 `.cursor/rules/*.mdc` triggers with no generator; castr building one replaces that hand-maintenance, the exact fragility

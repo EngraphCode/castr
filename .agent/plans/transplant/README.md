@@ -184,14 +184,31 @@ directory shape. Measured split: memory-governing **rules** unchanged `ad649710`
 substrate-contract, `orientation`) byte-identical pin→main; the **skills** moved (`consolidate-docs`/`session-handoff`/
 `curator-pass`/`start-right`). See the sub-plan §2.
 
-**Baseline RE-PINNED (2026-06-17, owner — supersedes the `4470266` pin below): Oak `main` `ad359a4f`** is the fixed
-baseline for Phases 6–9. Not a moving-target violation — it adopts a _newer fixed ref_. **✅measured: `main` is a clean
-superset of the old pin** — `4470266` is a direct ancestor of `origin/main`, +429 commits, no divergence / no merge cost.
-Rationale: deciding the Phase-6 memory _structure_ (and the skills that generate it) against a stale pin risks
-transplanting superseded forms; the structure itself is byte-identical pin→main, so the re-pin costs nothing structurally
-and buys the current generator skills + content. **Back-flow target is now OPEN** (the old pin's "push to
-`practice/transplant-to-castr`" no longer self-evident) — deferred to the Phase-9 feedback step. The historical pin note
-below is retained as the record of the 2026-06-10→2026-06-17 baseline.
+**PIN MODEL CHANGED (2026-06-20, owner — supersedes the frozen-SHA model): the pin is a rebased BRANCH, not a frozen
+ref.** castr syncs from the local Oak checkout's `practice/castr-pin` branch (created off Oak `main`, currently at
+`ad359a4f` = Oak `main` HEAD). **The pin may go stale by design** — its only purpose is to control _when_ castr absorbs
+Oak's living Practice; a frozen SHA would eventually import a corpse (stale doctrine/processes), and "a moving target is
+a hell of a lot better than doing days of work to import stale doctrine." This supersedes the prior "fixed ref, not a
+moving target" framing — a living upstream source is correctly a controlled-moving target (distinct from
+`no-moving-targets-in-permanent-docs`, which governs castr's own docs citing moving Oak plans).
+
+### Pin rebase tripwire (run regularly — at minimum each session-open on this thread and at each phase boundary)
+
+```bash
+OAK=/Users/jim/code/oak-open-curriculum-ecosystem
+git -C "$OAK" fetch origin main
+behind=$(git -C "$OAK" rev-list --count practice/castr-pin..origin/main)
+echo "pin is $behind commits behind Oak main"
+# When behind > 0 and it is a controlled moment to absorb upstream:
+git -C "$OAK" branch -f practice/castr-pin origin/main   # rebase the pin to current main
+# then re-assess the estate against the new pin (what upstream changed since last sync) and record the new synced SHA + date here.
+```
+
+Record each rebase: `synced YYYY-MM-DD → <new-SHA> (was <old-SHA>, +N upstream commits absorbed)`. **Always read the pin
+via `git -C "$OAK" show practice/castr-pin:<path>`, never the Oak working tree** — on 2026-06-20 the working tree sat on
+an unrelated branch (`practice/transplant-to-castr`, since deleted) and a disk-based search produced a false-absence
+error. **Sync log:** `synced 2026-06-20 → ad359a4f (initial branch-pin off Oak main; supersedes the frozen ad359a4f).`
+The historical pin notes below are retained as the record of the 2026-06-10→2026-06-17 frozen baselines.
 
 **Baseline (2026-06-10, supersedes the `ad649710` hold): Oak is PINNED on a dedicated work branch** —
 `practice/transplant-to-castr` @ `4470266` (owner-created; no more moving target; castr may commit AND push there,

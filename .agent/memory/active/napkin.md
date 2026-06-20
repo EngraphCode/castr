@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (pin-model reframe — frozen SHA → rebased branch; the disk-vs-pin trap)
+
+- **THE trap (owner caught it): I read the Oak WORKING TREE during a search, not the pin — and the working tree was on a
+  diverged branch 429 commits behind main.** Searching for the Director/Implementer session-opener template, I ran
+  `grep`/`find`/`ls`/`cat` against `/Users/jim/code/oak-.../` on disk — checked out at `518b34af`
+  (`practice/transplant-to-castr`, the castr-feedback branch), NOT our pin `ad359a4f`. Result: a **false absence** ("no
+  canonical director template exists") + a misleading "start-right-team byte-identical" comparison (vs the wrong ref).
+  The template existed at the pin all along (`git cat-file -e ad359a4f:.../team-session-opener.prompt.md` → present).
+  **Cure (now doctrine in repo-continuity + tracker): always read the pin via `git -C <oak> show <pin-ref>:<path>`,
+  NEVER the working tree — it can sit on any branch.** Same family as the zsh-glob false-absence.
+- **Verify the OWNER'S premise firsthand too (respectfully).** Owner: "I didn't realise our pin was so old." Firsthand
+  `git ls-remote origin refs/heads/main` → `ad359a4f` = our exact pin. The pin was **current main HEAD, not stale** — the
+  "old" impression was entirely the disk-on-feedback-branch illusion. I surfaced the correction before executing on the
+  false premise; the reframe was still valid as future-proofing, so I proceeded on the corrected understanding. The
+  just-distilled "a classification/claim is a thing to MEASURE, repetition increases suspicion" applies to an owner's
+  premise as much as an inherited label.
+- **Pin-model reframe (owner doctrine, 2026-06-20): a frozen-SHA pin of a LIVING upstream Practice eventually imports a
+  corpse.** "A moving target is a hell of a lot better than doing days of work to import stale doctrine and processes —
+  the pin exists only so WE control when the change happens." Executed: converted the pin from frozen `ad359a4f` to a
+  rebased Oak branch `practice/castr-pin` (off `main`, rebased at controlled points, may-go-stale-by-design); added a
+  rebase tripwire to the tracker; homed castr's back-flow feedback into castr (`oak-backflow/castr-feedback-2026-06-10.md`)
+  and **deleted the stale `practice/transplant-to-castr` branch local + remote** (gh API; content conserved first). No
+  git tag ever existed for the pin. Distinct from `no-moving-targets-in-permanent-docs` (castr's own docs citing moving
+  Oak _plans_) — a living upstream _source_ is correctly a controlled-moving target.
+
 ## 2026-06-20 (Phase 8 cont. — tasks 6 + 5: triage-clean + Lanes activation)
 
 - **A controlling sub-plan's scope estimate is a claim to MEASURE, not inherit — and it can under- or over-state.** Task
