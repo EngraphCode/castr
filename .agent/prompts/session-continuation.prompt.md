@@ -14,10 +14,16 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > turnkey step below. **Phase 7 landed:** native adapter generator (`agent-tools/src/agent-adapter-generate/`, TDD) →
 > `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) + 174 `.claude`/`.agents` rule wrappers;
 > `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired; full
-> `pnpm check:ci` green. **Active slice = transplant Phase 8** (collaboration machinery ACTIVE, sub-plan
-> `transplant/08-collaboration-active.md`). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
-> remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6" / "Phase
-> 6/7 is the next slice" language below is stale → Phase 8.
+> `pnpm check:ci` green. **Phase 8 🔶 PARTIAL landed (2026-06-20, 3 commits `059dcf5`/`07257dd`/`ace99de`, untagged):**
+> the `.agent/state/collaboration/` substrate skeleton (seeded empty) + the `collaboration-state` validator flipped
+> blocking (8 green repo-validators; completed the WS7 `state-integrity.ts` ENOENT-tolerance bring) + the SessionStart
+> identity hook wired (`.claude/hooks/practice-session-identity.mjs` + `settings.json` `SessionStart`) + an
+> owner-directed main→branch sync check (nothing to integrate). **Phase 8 REMAINING → the `transplant/phase-8` tag:**
+> task 3b (exercise claims open/heartbeat/close end-to-end + a 2-stream collision-safety demo — needs concurrency), 4b
+> (clerk-expert P7 → remove the agent-tools test exclusion), 5 (per-thread records / `## Lanes`), 6 (generic-surface
+> reconciliation). Sub-plan `transplant/08-collaboration-active.md` §As-built. **Owner re-order (2026-06-19): finish the
+> FULL Practice transplant first; remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All
+> "currently Phase 6" / "Phase 6/7 is the next slice" language below is stale → Phase 8.
 
 This block is current truth only. Branch/delivery state lives in
 [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home). **Sections below this block predate the

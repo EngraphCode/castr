@@ -77,6 +77,18 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
+**completed this handoff — 2026-06-20 (session-completion mode).** Phase-8-partial
+session close: surprises captured (napkin); transplant-method lesson graduated
+napkin→`distilled.md` ("brought ≠ current — diff a brought file against the pin");
+main→branch sync doctrine candidate marked `due` (second instance observed,
+owner-directed) in `pending-graduations.md`; adversarial sweep fixed stale
+"Phase 7 IN PROGRESS" in `delivery-ledger.md` + `session-continuation.prompt.md`;
+no napkin rotation (455 lines, under threshold); no active claim to close
+(bootstrap fast-path — none opened this session). ADR/PDR scan: nothing new
+qualifies for immediate graduation (the brought collaboration doctrine is Oak
+ADR-199/PDR-094, retained cross-host; the main→branch-sync clause awaits owner
+sign-off). The historical Phase-6 record below is retained for continuity.
+
 **Phase-6 memory consolidation — substantially landed (2026-06-18).** Blocks
 (a)–(f) + (g) structure & catalogues done: flat memory → Oak `active/` layout;
 operational registers materialised + reconciled; napkin drained

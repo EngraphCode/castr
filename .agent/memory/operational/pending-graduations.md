@@ -96,6 +96,11 @@ an item graduates, replace it with a one-line tombstone naming where it landed
   the Oak PDR-currency sync (upstream→castr); this is the castr-`main`→working-branch
   direction. **graduation-target:** a clause in the continuity/delivery doctrine
   (or the transplant tracker) naming the periodic main→branch reconciliation so
-  main-side commits are not stranded. **status:** pending — first instance
-  captured; surface a second before graduating.
-  `[captured: 2026-06-19 | source: repo-continuity.md §Next Safe Steps incoming-from-main]`
+  main-side commits are not stranded. **status:** due — **second instance observed
+  2026-06-20**: the owner directed a main→branch sync check this session
+  ("if there are additional commits on the remote, fetch and integrate"),
+  confirming the need; the check ran (`git fetch --prune` + divergence analysis)
+  and found nothing to integrate (recorded in `repo-continuity.md §Next Safe Steps`).
+  The trigger has fired — recommend graduating the clause (owner sign-off) at the
+  next pass; conserved meanwhile in the continuity record.
+  `[captured: 2026-06-19 | second-instance: 2026-06-20 | source: repo-continuity.md §Next Safe Steps incoming-from-main]`
