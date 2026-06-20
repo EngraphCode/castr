@@ -60,6 +60,28 @@ Run the command via the platform's persistent background-task mechanism:
 Claude Code uses the `Monitor` tool with `persistent: true`; Cursor and
 Codex use their equivalent watch primitives.
 
+### Liveness self-check (cycle boundaries)
+
+Pass `--heartbeat-file <path>` to make the watcher write a substrate-typed
+liveness heartbeat (the FM-2 cure surface, default interval 30 s, tunable via
+`--heartbeat-interval-ms`). The heartbeat records the watcher's drain/emit
+state and pid. At cycle boundaries, classify the watcher's liveness from this
+surface rather than trusting the supervisor's "running" status: a hung process
+cannot self-report, so an external staleness check is the only detection path
+for a hang that sits where no signal is armed. Use the `collaboration-state`
+staleness classifier, or stat the heartbeat file and treat an mtime older than
+`3 ×` the interval as stale. The heartbeat is **opt-in** — a watcher started
+without `--heartbeat-file` has no liveness surface, so always pass it in a team
+window. (Per-step `drain`/`emit`/`markSeen` deadlines that fail the watcher
+loud on a hung step are a planned hardening, tracked as the Oak-parity C3 item;
+until they land, the external staleness check above is the sole hang detector.)
+
+**Mutual cover — the detector cannot detect itself.** In a team window,
+every agent's cycle-boundary sweep ALSO staleness-checks the DIRECTOR'S
+watcher heartbeat-file, because the highest-awareness seat is the one nobody
+else watches: a frozen watcher is caught only from outside (a peer's stall
+diagnostic; owner transport).
+
 ### Seen-file convention
 
 The `<agent-codename>.json` seen-file lives in
