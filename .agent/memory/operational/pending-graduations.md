@@ -118,3 +118,42 @@ item`, `not-needed-yet`) is a claim to measure against the artefact, and
   **trigger-condition:** second instance, OR curation pass, OR owner direction.
   **status:** pending — conserved in `distilled.md`.
   `[captured: 2026-06-20 | source: distilled.md + claims-concurrency.integration.test.ts]`
+
+## 2026-06-20 capture (first director-led concurrent stream — collaboration-setup first-run friction)
+
+The first genuinely-concurrent stream was also the first real exercise of the collaboration setup; the owner directed
+"record all frustrations and issues." Full friction set (F1–F7, N1–N11) is durable in
+[`napkin.md`](../active/napkin.md). The graduation-worthy candidates:
+
+- **Doctrine amendment: name the Monitor-idle-coalescing caveat + the catch-up-sweep cure (F6/N10 — the headline
+  finding).** An ARMED persistent comms watcher does NOT guarantee per-event wake: when many watcher stdout lines fire
+  while a session is idle, the harness coalesces them and only the latest surfaces — so a correctly-armed agent can go
+  silently dark (measured firsthand: Seat 2's seen-file consumed all 27 events; the gap was harness notification
+  delivery, not the CLI). **graduation-target:** amend `use-monitor-for-event-driven-wake.md` + `comms-all-channels-
+watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandate a full `comms list` catch-up sweep
+  on every wake + the ≤120s fallback sweep; consider a watcher "N unseen since last wake" summary line. Already
+  graduated to user-memory `monitor-watcher-coalesces-idle-notifications` + adopted as team doctrine this session.
+  **trigger-condition:** owner direction OR next curation pass (the doctrine is already live as team practice).
+  **status:** pending the rule-text amendment. `[captured: 2026-06-20 | source: napkin F6/N10 + comms c3b52249]`
+- **Rule/enforcement fix: the dangerous-pattern hook over-matches free substrings (N7 + N11).** The matcher blocked a
+  comms-body heredoc containing the word "checkout" AND blocks safe `git checkout -b` as if it were `git checkout --`
+  (discard). **graduation-target:** `hook-policy-substring-discipline.md` already names the hazard — this is the
+  strongest worked instance; graduate to an actual matcher fix (anchor on command-leading position / word boundary, not
+  free substring) in the hook-policy code, + a rule note. **trigger-condition:** a third instance OR owner direction
+  (two independent instances this session already). **status:** pending — conserved in napkin N7/N11.
+  `[captured: 2026-06-20 | source: napkin N7/N11 + comms 3bbcb36d]`
+- **agent-tools CLI hardening backlog (F1/F2/F4/F5/F7/N5/N6 + alias/flag friction).** Read-only claims actions ENOENT
+  on a fresh home instead of reporting empty (F2); `comms watch` does not auto-create the seen-file parent dir (F4);
+  HEARTBEAT MODE requires `--claim-id`/`--intent-id` before a claim exists (F5) + `--intent-id` has no canonical source
+  (N5); the commit skill documents a non-existent root alias `agent-tools:check-commit-message` (F7); `platform` field
+  renders inconsistently (`claude` vs `claude-code`) breaking directed-comms targeting (N6); `comms list` uses `--tail`
+  not `--limit`; the `pnpm … --` wrapper's `cd ..` forces absolute paths. **graduation-target:** an agent-tools
+  hardening slice (code) + small doc/reading-order fixes (`start-right.md` §4 "fresh-home files may be absent"). **trigger-
+  condition:** owner names a friction-fix tranche OR these recur. **status:** pending — all conserved in napkin.
+  `[captured: 2026-06-20 | source: napkin F1–F7/N1–N11]`
+- **Doctrine: identity-row registration is the one bootstrap continuity write a seat makes directly, distinct from
+  feature-branch pure-diff (N1); and the lock-free identity table has a live write-race (N2).** **graduation-target:**
+  a `start-right-team` / `threads/README.md` clause reconciling "seat registers its own identity row" with "Director
+  lands all .agent writes", + a `claims/identity register` CLI doing an atomic additive upsert. **trigger-condition:**
+  next team session OR curation pass. **status:** pending — conserved in napkin N1/N2.
+  `[captured: 2026-06-20 | source: napkin N1/N2]`

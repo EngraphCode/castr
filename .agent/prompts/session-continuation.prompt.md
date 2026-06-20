@@ -14,19 +14,27 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > turnkey step below. **Phase 7 landed:** native adapter generator (`agent-tools/src/agent-adapter-generate/`, TDD) →
 > `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) + 174 `.claude`/`.agents` rule wrappers;
 > `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired; full
-> `pnpm check:ci` green. **Phase 8 🔶 task-work COMPLETE (2026-06-20, untagged):** substrate skeleton +
-> `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + **task 3b** claims
-> lifecycle/10-session collision-safety (`0086090`, encoded as `claims-concurrency.integration.test.ts`) + **task 4b**
-> agent-tools suite now gates (`fd0ffec` — the "clerk-expert P7" blocker was a phantom Oak-phenotype test assertion,
-> reconciled to castr's `code-reviewer` roster, 943/0) + **task 6** generic-surface triage clean + **task 5** per-thread
-> records ACTIVE (`59ce12a` — first thread record `threads/practice-transplant.next-session.md` with a `## Lanes` block).
-> **Only the `transplant/phase-8` tag remains, and it awaits a genuinely concurrent second stream** exercising the
-> now-active records (its acceptance bar — "records carry a genuinely concurrent stream" — cannot be manufactured
-> single-stream). Sub-plan `transplant/08-collaboration-active.md` §As-built; lane state in the thread record. **Owner
-> re-order (2026-06-19): finish the FULL Practice transplant first; remediation 02–07 = a named position AFTER (not
-> parked); not in a rush to merge.** All "currently Phase 6" / "Phase 6/7 is the next slice" language below is stale →
-> Phase 8 task-work done; the live next slices are the **phase-8 tag (needs a 2nd stream)** and **arc D2/D3** (CI), per
-> the thread record's lanes.
+> `pnpm check:ci` green. **Phase 8 ✅ COMPLETE + TAGGED `transplant/phase-8` (`8d62197`, 2026-06-20).** The final
+> acceptance bar — "records carry a genuinely concurrent stream" — was satisfied by the **first director-led concurrent
+> stream** (2026-06-20): Director Briny Cresting Sextant (fdb75b) + 2 implementers Stratospheric Wheeling Horizon
+> (4aeee2, Lane A) and Secret Watching Candle (328f4f, Lane B) — each with a distinct PDR-027 identity, an armed comms
+> watcher, a live claim, a ≤4-min heartbeat, and comms; the stream exercised claims (open→heartbeat→close), directed +
+> broadcast comms, Director-serialised review with routed reviewer sub-agents adjudicated firsthand, a live
+> identity-table write-race, and a measured watcher-idle-coalescing failure (F6/N10, now team doctrine). `pnpm check`
+> green at the tag; reference-closure clean for scope. **The same stream landed the first split-PR-shaped delivery — arc
+> D3/D2/D4 on dedicated branches (pushed): `feat/d3-ci-oak-standard`@`c7f819e` (CI to Oak standard: check:ci gate + 6
+> SHA-pinned actions + dead publish.yml removed), `feat/d2-node-version-single-source`@`41b24f8` (.nvmrc single-source;
+> off D3 — coordinate-dependent on ci.yml), `feat/d4-archive-provenance-backbring`@`0a75231` (archive+provenance
+> subsystems, `@oaknational/result`→fail-fast).** Not merged (split-PR merge to main = owner's next move).
+> **First-run collaboration-setup friction harvest** (owner-directed "record all"): F1–F12 + N1–N12 in
+> `.agent/memory/active/napkin.md`; headline **F6/N10** (an armed Monitor watcher silently coalesces events during idle
+> windows → an agent goes dark despite a correct watcher; cure = catch-up-sweep on every wake, now team doctrine +
+> user-memory). **LIVE NEXT SLICES (per the thread record's lanes):** transplant **Phase 9** (Oak back-flow + PDR-currency
+> sync); the **first-run friction-fix tranche** (the agent-tools/doctrine fixes the friction harvest names — high-leverage
+> before the next team session); the split-PR **delivery** (D3-gated). **Open owner decisions:** statusline wiring (Q-003),
+> release-automation strategy (Q-004). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
+> remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6/7" language
+> below is stale → Phases 6/7/8 complete + tagged.
 
 This block is current truth only. Branch/delivery state lives in
 [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home). **Sections below this block predate the

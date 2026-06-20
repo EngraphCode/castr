@@ -626,7 +626,7 @@ questions and deferred items") are **both done**: the substrate reviewer-route r
 `error`, 0 violations; Q-001 → D3-before-merge + split PRs). **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed — Phase 6
 COMPLETE; reference-closure-clean (no open P6 placeholders).** Next = Phase 7.
 
-## Phase 8 (partial) — Collaboration substrate skeleton + `collaboration-state` gate flip (2026-06-20)
+## Phase 8 — Collaboration substrate + concurrent-stream activation + arc-D landings (2026-06-20, ✅ tagged)
 
 Owner-approved partial Phase-8 landing ("skeleton + replan reconcile"). Materialised the `.agent/state/collaboration/`
 runtime substrate (seeded empty) and flipped the last deferred validator blocking. The remaining Phase-8 tasks
@@ -681,11 +681,17 @@ other names — `agent-id.ts`→`types`/`identity`, `cli-claim-areas.ts`→`cli-
 `cli-comms-commands`, `comms-watch-errors.ts`→`comms-watch-loop` (each verified at the identifier level: `uuidV5Schema`,
 `areaFromOptions`, `sendComms`, `WatcherErrorKind`). **Verdict: nothing to bring in phase-8 scope.**
 
-- **D4 back-bring item (genuinely-new subsystems, out of phase-8 named scope):** the Oak pin carries two collaboration
-  subsystems castr lacks — `archive/` (comms-archive rotation: `archive-move`, `disposition-policy`,
-  `event-classification`, `event-projection`, `manifest`) and `provenance/` (`cited-event-provenance`,
-  `provenance-scan`). castr's `.agent/state/README.md` already classifies the archive-rotation harness as a forward
-  Phase-8/D4 capability; provenance joins it. Recorded as the **D4 generic-surface back-brings** lane in
+- **D4 back-bring item ✅ LANDED (2026-06-20, branch `feat/d4-archive-provenance-backbring`@`0a75231`, unpushed):** the
+  two genuinely-new Oak-pin collaboration subsystems castr lacked were brought by Seat 2 (Secret Watching Candle) in the
+  first concurrent stream — `archive/` (`archive-move`/`-execute`/`-node`, `disposition-policy`, `event-classification`,
+  `event-projection`, `manifest`) and `provenance/` (`cited-event-provenance`, `provenance-scan`/`-node`). **Error model
+  reconciled** Oak's `@oaknational/result` (castr-DON'T-BRING, contradicts `principles.md` §Fail-Fast) → typed
+  `ArchiveMoveError`/`ProvenanceScanError` (kind + `{cause}`) THROW; discriminated-union returns only for genuine domain
+  multi-outcomes. Wired via `index.ts` barrel + unified `cli.ts` topics (`provenance check`, `archive plan`, `archive
+move` — castr's unified-CLI form, not Oak's standalone bins; Oak's ADR doc-root reconciled to castr's
+  `docs/architectural_decision_records`, test-guarded). 94 unit tests; `pnpm check` green; Director-approved (code/type/
+  test/architecture-fred reviewers + firsthand, both refutations verified). **Optional follow-on (D4/Oak back-flow):**
+  `collectKnownEventIds` does not exclude `.tmp-` writes (byte-identical to the Oak pin; fail-closed-safe). Lane state:
   [`threads/practice-transplant.next-session.md`](../../memory/operational/threads/practice-transplant.next-session.md).
 
 ### Task 5 per-thread records — disposition: **activated (done, owner-directed)** (2026-06-20)
@@ -695,5 +701,8 @@ the first activated thread record `threads/practice-transplant.next-session.md` 
 `## Lanes` block over the real takeable arcs); `repo-continuity.md §Active Threads` re-pointed to it as the lane/identity
 source of truth, the table staying the index.
 
-**Phase-8 (partial) result: full `pnpm check` green; intra-phase commits (no `transplant/phase-8` tag — the tag act
-awaits a genuinely concurrent stream exercising the now-active records, which cannot be manufactured single-stream).**
+**Phase-8 result: ✅ COMPLETE + tagged `transplant/phase-8` (`8d62197`, 2026-06-20).** The tag act's acceptance bar —
+a genuinely concurrent stream exercising the now-active records — was satisfied by the first director-led concurrent
+stream (Director fdb75b + 2 implementers 4aeee2/328f4f); `pnpm check` green at the tag; reference-closure clean for
+phase-8 scope (the drift validator runs inside `repo-validators:check` → green). The **D4 back-bring item below LANDED**
+in the same stream (Seat 2, branch `feat/d4-archive-provenance-backbring`@`0a75231`, unpushed).

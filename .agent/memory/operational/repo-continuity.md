@@ -53,9 +53,9 @@ state + additive PDR-027 identity table live in the activated record (see the
 ACTIVE note under the table). A second session joining the thread takes a lane and
 adds its identity row there.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Latest identity                                  | Next safe step                                                   |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 🔶 nearly complete** (2026-06-20, untagged): substrate skeleton + `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + task 3b claims lifecycle/collision-safety (`0086090`) + task 4b agent-tools-suite-gates (`fd0ffec`) + task 6 generic-surface triage (clean) + task 5 per-thread records ACTIVE done; only the `transplant/phase-8` tag remains (awaits a genuinely concurrent stream exercising the now-active lane records). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-20` | See [thread record](threads/practice-transplant.next-session.md) |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Latest identity                                                                                                                                   | Next safe step                                                   |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 ✅ COMPLETE + TAGGED** (`transplant/phase-8` @ `8d62197`, 2026-06-20): substrate skeleton + `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + task 3b claims lifecycle/collision-safety (`0086090`) + task 4b agent-tools-suite-gates (`fd0ffec`) + task 6 generic-surface triage (clean) + task 5 per-thread records ACTIVE done. The tag was cut by the **first director-led concurrent stream** (Director fdb75b + 2 implementers 4aeee2/328f4f exercised the now-active records end-to-end — claims/heartbeats/comms/Director-serialised review), which ALSO landed arc **D3 (`c7f819e`) + D2 (`41b24f8`) + D4 archive/provenance (`0a75231`)** on unpushed branches. Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / Briny Cresting Sextant (director) + Stratospheric Wheeling Horizon (impl) + Secret Watching Candle (impl) / `2026-06-20` | See [thread record](threads/practice-transplant.next-session.md) |
 
 **Per-thread records are now ACTIVE (2026-06-20, Phase 8 task 5).** The enabling
 trigger fired: task 3b proved a second concurrent stream is collision-safe, lifting
@@ -78,17 +78,17 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**completed this handoff — 2026-06-20 (session-completion mode).** Phase-8-partial
-session close: surprises captured (napkin); transplant-method lesson graduated
-napkin→`distilled.md` ("brought ≠ current — diff a brought file against the pin");
-main→branch sync doctrine candidate marked `due` (second instance observed,
-owner-directed) in `pending-graduations.md`; adversarial sweep fixed stale
-"Phase 7 IN PROGRESS" in `delivery-ledger.md` + `session-continuation.prompt.md`;
-no napkin rotation (455 lines, under threshold); no active claim to close
-(bootstrap fast-path — none opened this session). ADR/PDR scan: nothing new
-qualifies for immediate graduation (the brought collaboration doctrine is Oak
-ADR-199/PDR-094, retained cross-host; the main→branch-sync clause awaits owner
-sign-off). The historical Phase-6 record below is retained for continuity.
+**completed this handoff — 2026-06-20 (Phase-8 tag + first concurrent-stream session).**
+The first director-led concurrent stream cut `transplant/phase-8` (@ `8d62197`) and landed arc
+D3/D2/D4 on branches. Closeout: the **first-run collaboration-setup friction harvest** (owner-directed
+"record all frustrations and issues") captured durably in the napkin — F1–F7 + N1–N11, headline
+**F6/N10** (armed Monitor watcher silently coalesces events during idle windows → an agent goes dark
+despite a correct watcher; team-doctrine cure = catch-up-sweep on every wake) graduated to
+user-memory `monitor-watcher-coalesces-idle-notifications`; the coordinate-dependent-lane-base lesson
+captured (Director mis-assigned D2's branch base as if surface-disjoint; D2/D3 share ci.yml). ADR/PDR
+candidates from the friction captured to `pending-graduations.md`; owner-decision items
+(statusline wiring, release-automation strategy) to `open-questions.md`. All three seat claims closed;
+Director claim closed at handoff end. The historical records below are retained for continuity.
 
 **Phase-6 memory consolidation — substantially landed (2026-06-18).** Blocks
 (a)–(f) + (g) structure & catalogues done: flat memory → Oak `active/` layout;
@@ -139,24 +139,24 @@ check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expe
 Practice — the Practice, agent tools, agentic frameworks, processes and protocols. Leave the remediation and focus on
 finishing the transplant."_ → **Phase 7 ✅ COMPLETE + tagged `transplant/phase-7` (2026-06-20).**
 
-**Phase 8 🔶 PARTIAL landed (2026-06-20, commit `059dcf5`, owner-approved "skeleton + replan reconcile"; NOT tagged —
-phase incomplete):** materialised the `.agent/state/collaboration/` runtime substrate (seeded empty, two-tier
-tracked/untracked via `.gitignore`); completed the WS7 bring of `state-integrity.ts` (Oak-pin `optionalWhenAbsent`
-hardening — instance-tier absent = clean state); flipped `validate-collaboration-state` blocking into
-`repo-validators:check` (8 green validators); reconciled the stale 2026-06-18 sub-plan to as-built (its premises were
-superseded by WS7/P7 — task 2 already done, failures 1 not 12, subagents already wired). **Task 3a (SessionStart identity
-hook) ✅ + task 3b (claims lifecycle + concurrent-session collision-safety) ✅ + task 4b (agent-tools suite now gates —
-the "clerk-expert P7" blocker was a phantom Oak-phenotype test assertion; reconciled to castr's real `code-reviewer`
-roster, suite 943/0, exclusion removed) ✅ done 2026-06-20.** **Phase 8 REMAINING (carry the `transplant/phase-8` tag):**
-task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). Full as-built
-detail:
+**Phase 8 ✅ COMPLETE + TAGGED (`transplant/phase-8` @ `8d62197`, 2026-06-20):** materialised the
+`.agent/state/collaboration/` runtime substrate (seeded empty, two-tier tracked/untracked via `.gitignore`); completed
+the WS7 bring of `state-integrity.ts` (Oak-pin `optionalWhenAbsent` hardening); flipped `validate-collaboration-state`
+blocking into `repo-validators:check`; tasks 3a/3b/4a/4b ✅ + task 6 generic-surface triage (clean) ✅ + task 5 per-thread
+records ACTIVE ✅. **The final acceptance bar — "records carry a genuinely concurrent stream" — was satisfied by the first
+director-led concurrent stream (2026-06-20):** Director fdb75b + 2 implementers (4aeee2 Lane A, 328f4f Lane B) exercised
+the records end-to-end (claims/heartbeats/comms/Director-serialised review with routed reviewers adjudicated firsthand),
+`pnpm check` green at the tag, reference-closure clean for scope. That stream ALSO landed arc **D3 (`c7f819e`), D2
+(`41b24f8`), D4 archive/provenance (`0a75231`)** on unpushed branches. Full as-built detail:
 [`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md) §As-built banner.
 
-**Active slice = the rest of transplant Phase 8** (sub-plan
-[`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md)), then Phase 9, plus arc
-**D2/D4** (parity work = part of "the full Practice"). The deep-review **remediation backlog 02–07 takes a named position
-AFTER the transplant** (not parked — `no-manufactured-permission` holds; an undefined "later" is never). Delivery
-(D3-as-merge-gate + the merge act) is **deprioritised** ("not in a rush to merge"). This **supersedes the roadmap's
+**Active slice = transplant Phase 9** (Oak back-flow to a fresh branch off Oak `main` + PDR-currency sync; sub-plan
+[`reference-closure.md §back-flow items`](../../plans/transplant/reference-closure.md)). **Arc D3/D2/D4 ✅ landed on
+branches (2026-06-20, unpushed)** — D3 `c7f819e`, D2 `41b24f8`, D4 `0a75231`; the deferred **release-automation** lane
+(owner strategy: semantic-release vs changesets) and the **statusline wiring fix** (owner decision; pending) remain. The
+deep-review **remediation backlog 02–07 takes a named position AFTER the transplant** (not parked —
+`no-manufactured-permission` holds; an undefined "later" is never). Delivery (the merge act + push of the lane branches)
+is **deprioritised** ("not in a rush to merge"). This **supersedes the roadmap's
 "(1) remediation; (2) transplant" plan-of-record order** for the current run; the roadmap + primary-plan sequence notes
 are to be reconciled to this within the Phase-7 commit.
 
@@ -168,9 +168,9 @@ committed source `agent-tools/src/collaboration-state/schemas/` + validator deco
 plane created; the two follow-on items (reviewer-route re-point, `agent-collaboration-channels.md`) DONE; **all three
 standing deferred items RESOLVED** (back-flow target → fresh branch off Oak main; D1 → TS-skew root-fixed, rules at
 `error`, 0 violations; Q-001 → D3-before-merge + split PRs); **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed —
-Phase 6 COMPLETE**) and the [transplant tracker §Next steps](../../plans/transplant/README.md). **Next transplant phase
-= Phase 7 (platform adapters: `.cursor`/`.claude` rule+sub-agent wrappers, then flip the `portability`/`subagents`
-gates).** The one deep enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals still unfixed —
+Phase 6 COMPLETE**) and the [transplant tracker §Next steps](../../plans/transplant/README.md). **Phases 7 + 8 ✅
+COMPLETE + tagged (`transplant/phase-7`, `transplant/phase-8`, 2026-06-20); next transplant phase = Phase 9 (Oak
+back-flow + PDR-currency sync).** The one deep enhancement also keeps the remediation backlog 02–07 (5 of 6 reproduced Criticals still unfixed —
 02 = the IR-fidelity proof harness, active, not started), the rest of the transplant and arc **D2–D4** (D1 ✅ done), and
 the feature slice required and unparked — the owner names which is next; a fresh reproduced product regression pre-empts
 it.
@@ -223,6 +223,18 @@ deleted the now-merged `claude/castr-zod-compiler-review-qpre7n` source branch (
   - [`08-collaboration-active.md` §3](../../plans/transplant/08-collaboration-active.md).
     Not a reopening of the single-branch decision (owner, 2026-06-15) — a close-time
     delivery decision now made.
+
+- **Statusline identity wiring — OPEN (surfaced 2026-06-20, first concurrent stream).** castr transplanted the
+  statusline renderer (`agent-tools/src/claude/statusline-*`, built) but NOT the `.claude/` wiring Oak has at the pin:
+  `.claude/scripts/statusline-identity.mjs` shim (castr has no `.claude/scripts/`) + the `statusLine` block in
+  `.claude/settings.json`. So PDR-027 identities resolve under the hood but are invisible in every session's status bar.
+  Director did NOT bring it unprompted (it modifies the owner's harness config). **Owner decision: fix now (route the
+  2-piece bring from the Oak pin to a seat) or defer to the friction tranche.** Recorded at
+  [`open-questions.md`](open-questions.md).
+- **Release automation strategy — OPEN (surfaced 2026-06-20, D3 stream).** castr has no release tooling; the dead
+  `publish.yml` (non-existent `pnpm release`) was removed in D3. **Owner decision: adopt semantic-release (Oak parity)
+  vs changesets** — cross-surface (package.json), a separate lane. Recorded at [`open-questions.md`](open-questions.md)
+  - the thread-record release-automation lane.
 
 (The PDR-currency mechanism is **resolved**, not open — adopt Oak amendments at a
 periodic D4/P9 "PDR currency sync"; owner, 2026-06-17.)

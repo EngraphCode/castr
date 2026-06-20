@@ -97,10 +97,16 @@ Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owne
 >    `repo-continuity.md §Active Threads` updated: the table is now the index, the thread record the lane/identity source
 >    of truth.
 >
-> **REMAINING for the `transplant/phase-8` tag:** only the tag act itself, which the acceptance bar gates on a
-> **genuinely concurrent stream** exercising the now-active records/lanes end-to-end (a second real session joining the
-> thread record + taking a lane) — that cannot be manufactured single-stream. All task-level work (1–6, 3a/3b, 4a/4b) is
-> done. Cut the tag when a second stream has carried a lane and `pnpm check` is green + reference-closure-clean.
+> **✅ TAG CUT — `transplant/phase-8` @ `8d62197` (2026-06-20).** The final acceptance bar — a **genuinely concurrent
+> stream** exercising the now-active records/lanes end-to-end — was satisfied by the **first director-led concurrent
+> stream**: Director Briny Cresting Sextant (fdb75b) + two implementers Stratospheric Wheeling Horizon (4aeee2, Lane A)
+> and Secret Watching Candle (328f4f, Lane B), each with a distinct PDR-027 identity, an armed comms watcher, a live
+> claim, a ≤4-min heartbeat, and comms. The stream exercised claims (open→heartbeat→close), directed + broadcast comms,
+> Director-serialised review with routed reviewer sub-agents adjudicated firsthand, a live identity-table write-race, and
+> a measured watcher-idle-coalescing failure (F6/N10, now team doctrine). `pnpm check` green at the tag (full gate
+> completeness, verified firsthand in an isolated detached worktree); reference-closure clean for phase-8 scope. The
+> stream ALSO landed arc D3/D2/D4 on branches (the first split-PR-shaped delivery). All task-level work (1–6, 3a/3b,
+> 4a/4b) done.
 
 This sub-plan only **sharpened scope** so the prioritisation decision rests on measured ground; the partial execution
 above does not pull the remaining Phase 8 work forward.

@@ -68,3 +68,38 @@ owning artefact / discussion home (if any), and a status line.
 - **Owning artefact / home:** `pnpm-workspace.yaml` (the override + its comment) + the D1 ADR
   candidate in [`pending-graduations.md`](pending-graduations.md).
 - **Status:** OPEN — watch for a sonarjs TS-6-peer release; low priority.
+
+## Q-003 — Wire the PDR-027 statusline now, or defer to the friction tranche?
+
+- **Captured:** 2026-06-20 (first director-led concurrent stream; owner Q2).
+- **Question:** castr transplanted the statusline renderer (`agent-tools/src/claude/statusline-*`, built + chmod +x) but
+  NOT the `.claude/` wiring Oak has at the pin: `.claude/scripts/statusline-identity.mjs` (a soft-fail shim spawning the
+  built adapter — castr has **no `.claude/scripts/` dir**) + the `statusLine` block in `.claude/settings.json`. Should
+  these two pieces be brought now (a ~2-file copy from the Oak pin, routable to a seat), or deferred?
+- **Why it shapes future work:** PDR-027 identities resolve under the hood (the SessionStart hook sets
+  `PRACTICE_AGENT_SESSION_ID_CLAUDE`) but are **invisible in every session's status bar** — so "no one has a visible
+  agent identity," which directly degrades multi-agent legibility (the owner's Q2). It is a clean transplant-completion
+  gap, in scope for "fix castr's known issues."
+- **Why not cheaply answerable now / why owner-owned:** it modifies the **owner's harness config**
+  (`.claude/settings.json` changes how the owner's own Claude Code sessions render); the Director declined to touch it
+  unprompted.
+- **Owning artefact / home:** `.claude/settings.json` + a new `.claude/scripts/statusline-identity.mjs`; Oak pin
+  `practice/castr-pin:.claude/scripts/statusline-identity.mjs` is the source. Recorded in
+  [`repo-continuity.md §Open Owner-Decision Items`](repo-continuity.md).
+- **Status:** OPEN — owner decision (fix now vs defer); surfaced multiple times this session, unanswered at handoff.
+
+## Q-004 — Release automation: semantic-release (Oak parity) vs changesets?
+
+- **Captured:** 2026-06-20 (arc-D3 stream; Director ruling comms `fa53d0af`).
+- **Question:** castr has **no release tooling** (no `.changeset`, no changesets/semantic-release in any package.json, no
+  `release` script); the inherited `publish.yml` invoked a non-existent `pnpm release` and was **removed** in the D3
+  slice (fail-fast; a disabled stub would be a tombstone). What release path should castr adopt — semantic-release (Oak
+  parity) or changesets — and when?
+- **Why it shapes future work:** without release automation there is no publish path; the choice is cross-surface
+  (package.json + config + a CI release job) and sets the delivery story.
+- **Why not cheaply answerable now / why owner-owned:** it is a release-strategy decision the owner owns, cross-surface
+  beyond any single lane, and delivery is currently deprioritised ("not in a rush to merge").
+- **Owning artefact / home:** the **release-automation deferred lane** in
+  [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md) +
+  [`delivery-ledger.md`](../../plans/delivery-ledger.md).
+- **Status:** OPEN — owner names the release strategy; non-blocking.

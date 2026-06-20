@@ -20,9 +20,12 @@ constraint is now lifted, so the thread is recorded as a multi-lane container.
 Additive per PDR-027 — joining adds an identity; a matching platform/model/agent_name
 updates `last_session` rather than adding a row.
 
-| platform    | model              | session_id_prefix | agent_name            | role     | first_session | last_session |
-| ----------- | ------------------ | ----------------- | --------------------- | -------- | ------------- | ------------ |
-| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star | executor | 2026-06-20    | 2026-06-20   |
+| platform    | model              | session_id_prefix | agent_name                     | role        | first_session | last_session |
+| ----------- | ------------------ | ----------------- | ------------------------------ | ----------- | ------------- | ------------ |
+| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor    | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director    | 2026-06-20    | 2026-06-20   |
 
 ## Lanes
 
@@ -31,15 +34,21 @@ trigger, active OR deferred. There is no single thread-level "next safe step";
 several lanes can be "next" at once. Branch is `feat/transplant-engraph-practice`
 for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
-### Lane: Phase 8 close — active (trigger: now)
+### Lane: Phase 8 close — ✅ COMPLETE + TAGGED (2026-06-20)
 
 - Controlling plan: [`../../../plans/transplant/08-collaboration-active.md`](../../../plans/transplant/08-collaboration-active.md) §As-built.
-- Next safe step: tasks 3a/3b/4a/4b ✅ + task 6 triaged clean ✅ + task 5 records
-  activated (this file). The `transplant/phase-8` tag is cuttable once a genuinely
-  concurrent stream has exercised these records/lanes end-to-end (the acceptance
-  bar names "records carry a genuinely concurrent stream") and `pnpm check` is
-  green + reference-closure-clean at the tag.
-- Acceptance bar: `pnpm check` green (all gates); reference-closure clean; tag cut.
+- **Outcome:** `transplant/phase-8` tag CUT on `8d62197` (lightweight, matching `phase-0..7`).
+  The last acceptance bar — "records carry a genuinely concurrent stream" — was satisfied by the
+  **first director-led concurrent stream** (this session, 2026-06-20): Director Briny Cresting Sextant
+  (fdb75b) + two implementers Stratospheric Wheeling Horizon (4aeee2, Lane A) and Secret Watching
+  Candle (328f4f, Lane B), each with a distinct PDR-027 identity, an armed comms watcher, a live claim,
+  a ≤4-min heartbeat, and comms. The stream exercised claims (open→heartbeat→close), directed +
+  broadcast comms, Director-serialised review with routed reviewer sub-agents adjudicated firsthand, a
+  live identity-table write-race, and a measured watcher-idle-coalescing failure (F6/N10, now team
+  doctrine: catch-up-sweep on every wake).
+- **Gate evidence:** `pnpm check` GREEN at `8d62197` (full gate completeness, verified firsthand in an
+  isolated detached worktree); reference-closure clean for phase-8 scope (drift validator green inside
+  `repo-validators:check`; D4 was a recorded deferred lane, out of phase-8 scope).
 
 ### Lane: transplant Phase 9 — deferred (trigger: transplant phases complete)
 
@@ -48,25 +57,39 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   owner-resolved 2026-06-19); PDR-currency sync (adopt Oak amendments).
 - Acceptance bar: back-flow PR raised to Oak; castr-side closure recorded.
 
-### Lane: D4 generic-surface back-brings — deferred (trigger: D4 / owner direction)
+### Lane: D4 generic-surface back-brings — ✅ LANDED (branch, 2026-06-20)
 
 - Controlling plan: [`reference-closure.md`](../../../plans/transplant/reference-closure.md) (recorded by Phase 8 task 6 triage).
-- Next safe step: bring the two genuinely-new Oak-pin collaboration subsystems
-  task 6 found out of phase-8 scope — `archive/` (comms-archive rotation:
-  `archive-move`, `disposition-policy`, `event-classification`, `event-projection`,
-  `manifest`) and `provenance/` (`cited-event-provenance`, `provenance-scan`).
-  castr's `.agent/state/README.md` already classifies archive-rotation as a
-  forward Phase-8/D4 capability.
-- Acceptance bar: each subsystem brought with TDD + wiring, or explicitly
-  owner-classified DON'T-BRING.
+- **Outcome:** both genuinely-new Oak-pin collaboration subsystems brought by Seat 2 (Secret Watching
+  Candle) on branch `feat/d4-archive-provenance-backbring` @ `0a75231` (off transplant tip `8d62197`;
+  **unpushed**): `archive/` (class-tiered comms-archive rotation: `archive-move`/`-execute`/`-node`,
+  `disposition-policy`, `event-classification`, `event-projection`, `manifest`) + `provenance/`
+  (`cited-event-provenance`, `provenance-scan`/`-node`). **Error model reconciled** Oak's
+  `@oaknational/result` (castr-DON'T-BRING) → fail-fast: typed `ArchiveMoveError`/`ProvenanceScanError`
+  (kind discriminator + `{cause}`) THROW; discriminated-union returns only for genuine domain
+  multi-outcomes. Wired via `index.ts` barrel + the unified `cli.ts` topics (`provenance check`,
+  `archive plan`, `archive move` — castr's unified-CLI form, not Oak's standalone bins). 94 unit tests;
+  `pnpm check` green; Director-approved (code/type/test/architecture-fred reviewers + firsthand). Three
+  commits: `4de8857` (core) → `b684a28` (review follow-up) → `0a75231` (CLI slice).
+- **Open follow-on (optional, D4/Oak back-flow):** `collectKnownEventIds` does not exclude `.tmp-`
+  writes (byte-identical to the Oak pin; fail-closed-safe — can only BLOCK a move, never wrongly permit).
 
-### Lane: arc D2 / D3 — deferred (trigger: before the transplant merge, per Q-001)
+### Lane: arc D2 / D3 — ✅ LANDED (branches, 2026-06-20)
 
 - Controlling plan: transplant tracker §Deep-enhancement arc + [`delivery-ledger.md`](../../../plans/delivery-ledger.md).
-- Next safe step: D2 (Node-version single-source); D3 (CI runs the full `check:ci`
-  chain, SHA-pinned actions) — **D3 lands before the transplant merge** (owner,
-  Q-001 resolved), enabling safe split-PR delivery.
-- Acceptance bar: CI enforces `check:ci` per branch; actions SHA-pinned.
+- **Outcome (Seat 1, Stratospheric Wheeling Horizon):**
+  - **D3** (CI to Oak standard) — `feat/d3-ci-oak-standard` @ `c7f819e` (off `8d62197`; **unpushed**):
+    ci.yml runs the full `check:ci` gate; 6 actions SHA-pinned (`# vX.Y.Z`); CodeQL kept+modernized
+    v2→v3+pinned; broken `lib/**` path filters removed; dead `publish.yml` removed. Reviewed
+    config-expert (PASS-with-nits) + security-expert (PASS), Director-approved firsthand.
+  - **D2** (node-version single-source) — `feat/d2-node-version-single-source` @ `41b24f8` (off D3's
+    `c7f819e` — D2/D3 are **coordinate-dependent on ci.yml**, so D2 builds on D3): `.nvmrc` "24" + ci.yml
+    `node-version-file: .nvmrc` (drops the hardcoded value). `engines.node` semantics left to owner/ADR-049.
+    Director-approved firsthand.
+- **Delivery framing (Q-001 split-PR plan):** off `c7f819e`, the D2 branch contains D3 (shared ci.yml
+  lineage) → they deliver coupled (D2 on top of D3) or D3-first-then-D2-rebase. Both unpushed (delivery
+  deprioritised; push = owner's call).
+- **Remaining in arc:** release automation (separate deferred lane below); D4 ✅ landed above.
 
 ### Lane: remediation 02–07 — deferred (trigger: owner names it after the transplant)
 
@@ -82,6 +105,19 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - Next safe step: sequenced product-feature slice (a required component of the one
   deep enhancement, named position — not a paused continuity thread).
 - Acceptance bar: feature lands with parser/writer lockstep + tests.
+
+### Lane: release automation — deferred (trigger: owner names release strategy)
+
+- Controlling plan: transplant tracker §Deep-enhancement arc (release surface) + [`delivery-ledger.md`](../../../plans/delivery-ledger.md).
+- Origin: surfaced 2026-06-20 by the D3 stream (Seat 1, Stratospheric Wheeling Horizon). castr has **no release tooling**
+  (no `.changeset`, no changesets/semantic-release in any package.json, no `release` script); the inherited `publish.yml`
+  called a non-existent `pnpm release` via `changesets/action@v1` and was REMOVED in the D3 slice (Director ruling, comms
+  `fa53d0af`). Removal is fail-fast (a disabled stub would be a tombstone).
+- Next safe step: **owner-owned decision** — adopt semantic-release (Oak parity) vs changesets. Cross-surface
+  (package.json + config), outside D3's `.github/workflows/` surface, so a separate lane. Non-blocking; delivery is
+  deprioritised.
+- Acceptance bar: a working release path lands with the chosen tooling + a CI release job, or owner classifies
+  release-out-of-scope.
 
 ## Standing decisions this thread carries
 
