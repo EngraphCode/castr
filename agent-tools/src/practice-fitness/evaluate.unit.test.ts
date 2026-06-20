@@ -127,6 +127,24 @@ describe('evaluateFitnessFile', () => {
     expect(result.overallZone).toBe('healthy');
   });
 
+  it('does not flag a prose line that is long only because of an unwrappable URL', () => {
+    // A line cannot be wrapped at a URL; its width must be measured on the
+    // wrappable prose only. Raw length here is ~92 (> the 40 limit) but the
+    // visible prose ('see the plan here') is 17 — well inside the limit, so the
+    // line must measure short and the prose dimension stays healthy.
+    const proseLine =
+      'see [the plan](https://example.com/a/very/long/unwrappable/path/to/the/plan/document.md) here';
+    const content = ['---', 'fitness_line_length: 40', '---', '', proseLine].join('\n');
+
+    const result = evaluateFitnessFile('test.md', content);
+
+    expect(result.maxProseLineWidth).toBe(40);
+    expect(result.maxProseLen).toBe('see the plan here'.length);
+    expect(result.proseViolationCount).toBe(0);
+    expect(result.proseZone).toBe('healthy');
+    expect(result.overallZone).toBe('healthy');
+  });
+
   it('reports above target but below hard limit as soft', () => {
     const content = [
       '---',
