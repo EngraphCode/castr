@@ -64,6 +64,12 @@ Invocation contract:
 - use `.codex/config.toml` and `.codex/agents/*.toml` for Codex reviewer/domain-expert roles
 - keep `.agents/skills/` for generated `engraph-` skill adapters only
 
+The cross-platform `.cursor/agents` + `.claude/agents` wrappers and the `.cursor/rules/*.mdc` triggers are **generated**
+(never hand-authored) from the Codex layer + `.agent/rules/` by `pnpm agents:adapter-generate`; the `.claude/rules` +
+`.agents/rules` rule wrappers come from `pnpm portability:check --fix`. After adding or renaming a template, persona,
+or rule, regenerate and verify with `pnpm portability:check` (the blocking `portability` + `subagents` gates enforce
+parity; `pnpm agents:check` fails on drift).
+
 Installed roster (15 templates; the architecture reviewer ships as four persona adapters):
 
 Generic reviewers:

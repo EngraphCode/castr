@@ -1,0 +1,6 @@
+---
+description: Verify, Do Not Trust
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/verify-dont-trust.md`.

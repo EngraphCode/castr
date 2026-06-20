@@ -2,7 +2,8 @@
 
 **Parent plan:** [`../active/oak-practice-transplant.md`](../active/oak-practice-transplant.md) (Phase 7 row)
 **Tracker:** [`./README.md`](./README.md) · **Tag on completion:** `transplant/phase-7`
-**Status:** ⬜ NOT STARTED — sub-plan authored 2026-06-19 from firsthand-verified scope
+**Status:** ✅ COMPLETE 2026-06-20 — native generator built (TDD), all adapters generated, `portability`+`subagents`
+gates flipped blocking-green, bespoke script retired, full `pnpm check:ci` green. Tag: `transplant/phase-7`.
 **Oak baseline:** pinned `main` `ad359a4f` (fixed ref for Phases 6–9)
 
 > **Owner steer (2026-06-19):** _"Not in a rush to merge; bring over the FULL Practice — the Practice, agent tools,

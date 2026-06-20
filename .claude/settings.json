@@ -1,4 +1,26 @@
 {
+  "permissions": {
+    "allow": [
+      "Skill(engraph-chatgpt-report-normalisation)",
+      "Skill(engraph-codex-helper)",
+      "Skill(engraph-commit)",
+      "Skill(engraph-complex-merge)",
+      "Skill(engraph-consolidate-docs)",
+      "Skill(engraph-consolidate-until-done)",
+      "Skill(engraph-curator-pass)",
+      "Skill(engraph-gates)",
+      "Skill(engraph-go)",
+      "Skill(engraph-metacognition)",
+      "Skill(engraph-napkin)",
+      "Skill(engraph-plan)",
+      "Skill(engraph-session-handoff)",
+      "Skill(engraph-start-right-quick)",
+      "Skill(engraph-start-right-team)",
+      "Skill(engraph-start-right-thorough)",
+      "Skill(engraph-tsdoc)",
+      "Skill(engraph-undo-change)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

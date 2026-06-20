@@ -1,0 +1,6 @@
+---
+description: Monitor Branch Touched Files
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/monitor-branch-touched-files.md`.

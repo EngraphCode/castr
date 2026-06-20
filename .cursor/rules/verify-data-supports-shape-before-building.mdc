@@ -1,0 +1,6 @@
+---
+description: Verify the Data Supports the Shape Before Building
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/verify-data-supports-shape-before-building.md`.

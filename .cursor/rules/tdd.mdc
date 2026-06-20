@@ -1,5 +1,5 @@
 ---
-description: TDD is mandatory
+description: Write failing tests first.
 alwaysApply: true
 ---
 

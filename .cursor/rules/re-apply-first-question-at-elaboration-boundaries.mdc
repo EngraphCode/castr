@@ -1,0 +1,6 @@
+---
+description: Re-Apply the First Question at Every Elaboration Boundary
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/re-apply-first-question-at-elaboration-boundaries.md`.

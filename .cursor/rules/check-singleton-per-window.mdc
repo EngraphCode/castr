@@ -1,0 +1,6 @@
+---
+description: Check-Runner Singleton Per Coordination Window
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/check-singleton-per-window.md`.

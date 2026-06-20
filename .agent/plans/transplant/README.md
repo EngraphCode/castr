@@ -12,18 +12,18 @@ only.
 
 ## Status
 
-| Phase | Surface                                                                                  | Status                                        | Tag                           |
-| ----- | ---------------------------------------------------------------------------------------- | --------------------------------------------- | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done                                       | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done                                       | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done                                       | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                 | ✅ done                                       | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done                                       | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done                                       | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                              | ⬜                                            | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                              | 🔄 IN PROGRESS (sub-plan authored 2026-06-19) | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                           | ⬜                                            | `transplant/phase-8`          |
-| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                                            | `transplant/phase-9`          |
+| Phase | Surface                                                                                  | Status               | Tag                           |
+| ----- | ---------------------------------------------------------------------------------------- | -------------------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done              | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done              | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done              | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                 | ✅ done              | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done              | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done              | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                              | ✅ done              | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                              | ✅ done (2026-06-20) | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                           | ⬜                   | `transplant/phase-8`          |
+| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                   | `transplant/phase-9`          |
 
 ## Resume point (next session)
 

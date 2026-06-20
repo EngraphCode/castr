@@ -55,12 +55,13 @@ The scanner is small, zero-dependency, and runs as a wired pnpm script:
 
 Materialised examples in this repo:
 
-| Scanner                                   | Governing ADR         | Universal claim enforced                                                            |
-| ----------------------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
-| `scripts/validate-portability.mjs`        | platform portability  | Every canonical artefact has a platform adapter on each supported platform          |
-| `scripts/validate-subagents.mjs`          | sub-agent conformance | Every sub-agent template has conformant wrappers and matching descriptions          |
-| `scripts/validate-practice-fitness.mjs`   | fitness metrics       | Every fitness-managed file declares the four required metrics and stays within zone |
-| `scripts/validate-fitness-vocabulary.mjs` | fitness vocabulary    | Every live surface uses the three-zone vocabulary verbatim; no retired phrases leak |
+| Scanner                                                                        | Governing ADR         | Universal claim enforced                                                                        |
+| ------------------------------------------------------------------------------ | --------------------- | ----------------------------------------------------------------------------------------------- |
+| `agent-tools/src/validators/portability/validate-portability.ts`               | platform portability  | Every canonical artefact has a platform adapter on each supported platform                      |
+| `agent-tools/src/validators/subagents/validate-subagents.ts`                   | sub-agent conformance | Every sub-agent template has conformant wrappers and matching descriptions                      |
+| `agent-tools/src/bin/agent-adapter-generate.ts --check`                        | adapter generation    | Every reviewer template and canonical rule has an up-to-date generated adapter on each platform |
+| `agent-tools/src/practice-fitness/validate-practice-fitness.ts`                | fitness metrics       | Every fitness-managed file declares the four required metrics and stays within zone             |
+| `agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts` | fitness vocabulary    | Every live surface uses the three-zone vocabulary verbatim; no retired phrases leak             |
 
 ## Why This Matters
 

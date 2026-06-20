@@ -8,14 +8,16 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
-> **2026-06-19 close UPDATE (supersedes the stale bullets below where they conflict):** Phase 6 is ✅ COMPLETE +
-> tagged (`a63aee3`); the zod-compiler report-plan was homed (`3db3461`). **D1 lint is ✅ RESOLVED** (TS-version skew,
-> single-TS override; rules back at `error`) — ignore the "D1 UNCONFIRMED / warn→error pending" turnkey step below.
-> **Active slice = transplant Phase 7** (sub-plan `transplant/07-adapters-and-gate-flips.md`): **build** a native
-> adapter generator (Oak pin `ad359a4f` ships none + hand-maintains), then flip portability/subagents gates, retire
-> the bespoke script. **Owner re-order (2026-06-19): finish the FULL Practice transplant first; remediation 02–07 = a
-> named position AFTER (not parked); not in a rush to merge.** "currently Phase 6" / "Phase 6 is the owner-directed
-> next slice" below are stale → Phase 7.
+> **2026-06-20 close UPDATE (supersedes the stale bullets below where they conflict):** Phases 6 **and 7** are ✅
+> COMPLETE + tagged (`transplant/phase-6` `a63aee3`; `transplant/phase-7` 2026-06-20). **D1 lint is ✅ RESOLVED**
+> (TS-version skew, single-TS override; rules back at `error`) — ignore the "D1 UNCONFIRMED / warn→error pending"
+> turnkey step below. **Phase 7 landed:** native adapter generator (`agent-tools/src/agent-adapter-generate/`, TDD) →
+> `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) + 174 `.claude`/`.agents` rule wrappers;
+> `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired; full
+> `pnpm check:ci` green. **Active slice = transplant Phase 8** (collaboration machinery ACTIVE, sub-plan
+> `transplant/08-collaboration-active.md`). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
+> remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6" / "Phase
+> 6/7 is the next slice" language below is stale → Phase 8.
 
 This block is current truth only. Branch/delivery state lives in
 [`../plans/delivery-ledger.md`](../plans/delivery-ledger.md) (single DRY home). **Sections below this block predate the

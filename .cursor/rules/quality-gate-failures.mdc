@@ -1,5 +1,5 @@
 ---
-description: Quality gate failures are always blocking
+description: Quality Gate Failures Are Blocking
 alwaysApply: true
 ---
 

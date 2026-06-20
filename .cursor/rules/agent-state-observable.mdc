@@ -1,0 +1,6 @@
+---
+description: Agent State That Affects Other Agents Must Be Observable
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/agent-state-observable.md`.

@@ -1,0 +1,6 @@
+---
+description: Use Only The Built Agent-Tools CLI
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/use-built-agent-tools-cli.md`.

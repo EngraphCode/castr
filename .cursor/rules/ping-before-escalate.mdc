@@ -1,0 +1,6 @@
+---
+description: Ping Before Escalate
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/ping-before-escalate.md`.

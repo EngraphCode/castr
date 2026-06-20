@@ -1,0 +1,6 @@
+---
+description: Handoff Messages Must Be Self-Contained
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/handoff-messages-self-contained.md`.
