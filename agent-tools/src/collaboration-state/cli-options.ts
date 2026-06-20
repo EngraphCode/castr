@@ -53,6 +53,7 @@ const KNOWN_OPTION_KEYS = new Set([
   'platform',
   'poll-ms',
   'repo-root',
+  'role',
   'shared-log',
   'seen-file',
   'subject',

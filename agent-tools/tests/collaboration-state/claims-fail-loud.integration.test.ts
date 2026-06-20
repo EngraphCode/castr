@@ -151,4 +151,101 @@ describe('claims fail-loud guard + role declaration', () => {
       await removeDirectory(root);
     }
   });
+
+  it('fails loudly when --role is passed with no value (no silent role="true")', async () => {
+    const root = await makeTempCollaborationRepo();
+    const activePath = activeClaimsPath(root);
+    try {
+      const result = await runCollaborationStateCli({
+        argv: [
+          '--',
+          'claims',
+          'open',
+          '--active',
+          activePath,
+          '--thread',
+          'parity',
+          '--area-kind',
+          'files',
+          '--area-pattern',
+          'agent-tools/**',
+          '--intent',
+          'role with no value',
+          '--now',
+          NOW,
+          '--platform',
+          'claude',
+          '--model',
+          'claude-opus-4-8',
+          '--role',
+        ],
+        env: sessionEnv('role-novalue'),
+      });
+
+      expect(result.exitCode).not.toBe(0);
+      expect(result.stderr).toMatch(/requires a value/i);
+
+      const registry = parseCollaborationRegistry(await readFile(activePath, 'utf8'));
+      expect(registry.claims).toHaveLength(0);
+    } finally {
+      await removeDirectory(root);
+    }
+  });
+
+  it('fails loud and leaves the registry unchanged when heartbeat misses on a non-empty registry', async () => {
+    const root = await makeTempCollaborationRepo();
+    const activePath = activeClaimsPath(root);
+    try {
+      const opened = await runCollaborationStateCli({
+        argv: [
+          '--',
+          'claims',
+          'open',
+          '--active',
+          activePath,
+          '--thread',
+          'parity',
+          '--area-kind',
+          'files',
+          '--area-pattern',
+          'agent-tools/**',
+          '--intent',
+          'prefix-miss baseline',
+          '--now',
+          NOW,
+          '--platform',
+          'claude',
+          '--model',
+          'claude-opus-4-8',
+        ],
+        env: sessionEnv('prefix-miss'),
+      });
+      expect(opened.exitCode, opened.stderr).toBe(0);
+      const claimId = claimIdFromOpenStdout(opened.stdout);
+      const afterOpen = await readFile(activePath, 'utf8');
+
+      // A truncated prefix of a real claim id matches nothing under exact ===.
+      const result = await runCollaborationStateCli({
+        argv: [
+          '--',
+          'claims',
+          'heartbeat',
+          '--active',
+          activePath,
+          '--claim-id',
+          claimId.slice(0, 8),
+          '--now',
+          '2026-06-20T10:05:00Z',
+        ],
+        env: sessionEnv('prefix-miss'),
+      });
+
+      expect(result.exitCode).not.toBe(0);
+      expect(result.stderr).toMatch(/no active claim matches/i);
+      // The guard runs inside the transactional transform: no write on a miss.
+      expect(await readFile(activePath, 'utf8')).toBe(afterOpen);
+    } finally {
+      await removeDirectory(root);
+    }
+  });
 });

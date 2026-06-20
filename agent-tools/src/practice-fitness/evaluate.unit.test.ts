@@ -145,6 +145,22 @@ describe('evaluateFitnessFile', () => {
     expect(result.overallZone).toBe('healthy');
   });
 
+  it('does not flag a prose line that is long only because of a bare URL', () => {
+    // The bare-URL branch (the most common false-flag trigger) measured
+    // end-to-end through evaluateFitnessFile, not only at the unit level.
+    // Discounting the unwrappable URL leaves 'see  here' (the two spaces that
+    // bracketed the URL collapse together), well under the 40 limit.
+    const proseLine =
+      'see https://example.com/a/very/long/unwrappable/path/to/the/document.md here';
+    const content = ['---', 'fitness_line_length: 40', '---', '', proseLine].join('\n');
+
+    const result = evaluateFitnessFile('test.md', content);
+
+    expect(result.maxProseLen).toBe('see  here'.length);
+    expect(result.proseViolationCount).toBe(0);
+    expect(result.proseZone).toBe('healthy');
+  });
+
   it('reports above target but below hard limit as soft', () => {
     const content = [
       '---',
