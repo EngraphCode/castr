@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Phase 8 cont. — tasks 6 + 5: triage-clean + Lanes activation)
+
+- **A controlling sub-plan's scope estimate is a claim to MEASURE, not inherit — and it can under- or over-state.** Task
+  6 was framed "thin per-hunk reconciliation (most is present)." Firsthand engine-vs-Oak-pin (`ad359a4f`) set-difference
+  of `collaboration-state/` (Oak 82 entries vs castr 52) found 6 by-name absences. Triaged each: the 4 `.ts` deltas are
+  Oak **refactor-splits** castr already covers under other module names (verified at the identifier level —
+  `areaFromOptions`/`sendComms`/`uuidV5Schema`/`WatcherErrorKind` all live in castr, differently filed), so a filename
+  set-difference **over-counts** exactly as the distilled lesson warns. But the 2 _directories_ (`archive/` rotation,
+  `provenance/`) are genuinely-new **subsystems** the "thin" framing under-stated — caught only because I dropped from
+  filename-compare to identifier-compare. Resolution: phase-8-named surfaces all present → nothing to bring in scope;
+  the 2 subsystems are castr-classified forward-D4 (`.agent/state/README.md`) → recorded as a D4 lane, not phase-8 work.
+  Method that worked: set-difference → per-candidate identifier grep (not filename) → classify bring/covered/forward.
+- **"Activate X now" from the owner resolves a premature-scaffolding judgment that I correctly would NOT have made
+  solo.** Task 5 (per-thread records / Lanes) sat in genuine tension: the repo's anti-pattern is speculative scaffolding
+  for concurrency that isn't happening, yet 3b had just proved a second stream is _safe_ (the enabling trigger). I
+  surfaced the fork rather than pre-resolving; owner chose activate-now. The activation is the inverse of the
+  "mistook a constraint for a fit" lesson realised: the single-stream constraint was imposed by the unbuilt framework,
+  the framework now exists (3b), so materialising the `## Lanes` shape **completes the activation** rather than scaffolds
+  speculation. Created the first `threads/<slug>.next-session.md` with the additive PDR-027 identity table + lanes over
+  the real takeable arcs. The `transplant/phase-8` tag now awaits only a genuinely concurrent _second stream_ exercising
+  the records — which by definition cannot be manufactured by one session.
+
 ## 2026-06-20 (Phase 8 cont. — task 4b: the "clerk-expert P7 blocker" was a PHANTOM)
 
 - **A "blocker" I relayed four times was never measured — and dissolved on first contact.** Across the sub-plan,

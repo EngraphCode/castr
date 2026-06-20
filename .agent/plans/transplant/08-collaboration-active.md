@@ -79,10 +79,28 @@ Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owne
 >    `turbo test --filter=!@engraph/agent-tools` exclusion was removed (`package.json`): agent-tools tests now gate in
 >    `pnpm test` → `test:all` → `qg` → `pnpm check`. The now-misnamed `agent-tools:test:informational` alias was renamed
 >    `agent-tools:test`.
+> 7. **Task 6 — generic-surface reconciliation triaged clean for phase-8 scope.** Firsthand engine-vs-Oak-pin
+>    (`ad359a4f`) set-difference + per-surface triage: all four _named_ task-6 surfaces are already present in castr (PEEN
+>    coordinator-state hardening — proven collision-safe in 3b, no PEEN source surface at the pin either; TTL presence —
+>    `watcher-heartbeat`/`watcher-staleness`; comms attention pass — `comms-watch-loop`/`comms-relevant-events`/
+>    `cli-comms-inbox`; plan-mode carveout — parity in `stage-by-explicit-pathspec.md`). The four `.ts` deltas at the pin
+>    (`agent-id`, `cli-claim-areas`, `cli-comms-send`, `comms-watch-errors`) are Oak refactor-splits castr already covers
+>    under other module names (`types`/`identity`, `cli-claim-commands`, `cli-comms-commands`, `comms-watch-loop`). The
+>    only genuinely-new subsystems — `archive/` (comms-archive rotation) and `provenance/` — are **outside** task-6's
+>    named scope and castr-classified forward-D4 (`.agent/state/README.md`); recorded as a D4 lane in the thread record.
+>    **Verdict: nothing to bring in phase-8 scope; reconciliation clean.**
+> 8. **Task 5 — per-thread continuity records ACTIVATED (owner-directed).** The enabling trigger fired: 3b proved a
+>    second stream is collision-safe, lifting the single-stream _constraint_. Created the first activated thread record
+>    [`threads/practice-transplant.next-session.md`](../../memory/operational/threads/practice-transplant.next-session.md)
+>    — additive PDR-027 identity table + a `## Lanes` block recording the thread's real takeable arcs (Phase-8 close
+>    active; Phase 9, D4 back-brings, D2/D3, remediation 02–07, additional-properties feature deferred-with-triggers).
+>    `repo-continuity.md §Active Threads` updated: the table is now the index, the thread record the lane/identity source
+>    of truth.
 >
-> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 5 (per-thread records / `## Lanes`);
-> task 6 (thin per-hunk reconciliation of new generic surfaces). These land as green-gated intra-phase commits, not the
-> phase tag.
+> **REMAINING for the `transplant/phase-8` tag:** only the tag act itself, which the acceptance bar gates on a
+> **genuinely concurrent stream** exercising the now-active records/lanes end-to-end (a second real session joining the
+> thread record + taking a lane) — that cannot be manufactured single-stream. All task-level work (1–6, 3a/3b, 4a/4b) is
+> done. Cut the tag when a second stream has carried a lane and `pnpm check` is green + reference-closure-clean.
 
 This sub-plan only **sharpened scope** so the prioritisation decision rests on measured ground; the partial execution
 above does not pull the remaining Phase 8 work forward.

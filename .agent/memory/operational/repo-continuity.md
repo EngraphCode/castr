@@ -43,31 +43,30 @@ lifecycle ran against the real substrate and **10 concurrent separate-process
 sessions were demonstrated collision-safe** (no lost write; encoded as
 `claims-concurrency.integration.test.ts`). Still open: comms/presence are not active
 as standing practice — plus branch/CI coordination (CI does not yet run `check:ci`,
-arc D3). Per-thread records are the cheapest **leaf** of that capability, not the
-thing that lifts the constraint.
+arc D3).
 
-While single-stream, the operational simplification still holds (PDR-027
-§Amendment Log 2026-04-21 Session 5): the row below **is** the continuity record
-and no separate `threads/<slug>.next-session.md` file is needed _yet_. But the
-trigger to activate per-thread records is **building the Phase-8 framework that
-supports concurrency** — not concurrency "spontaneously arising", which is
-circular (concurrency cannot arise until the support, including per-thread
-continuity, exists). The convention is seeded and ready (`threads/README.md`);
-the prompt + tracker carry the single stream today.
+**The single-stream simplification is now superseded (2026-06-20).** Its trigger —
+"building the Phase-8 framework that supports concurrency" (PDR-027 §Amendment Log
+2026-04-21 Session 5) — has fired: task 3b proved a second stream collision-safe, so
+per-thread records went live. The row below is the **index**; the thread's lane
+state + additive PDR-027 identity table live in the activated record (see the
+ACTIVE note under the table). A second session joining the thread takes a lane and
+adds its identity row there.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 🔶 partial** (2026-06-20, `059dcf5`, untagged): `.agent/state/collaboration/` substrate skeleton + `collaboration-state` gate flip landed; SessionStart wiring + per-thread records remain. Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-20` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Latest identity                                  | Next safe step                                                   |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 🔶 nearly complete** (2026-06-20, untagged): substrate skeleton + `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + task 3b claims lifecycle/collision-safety (`0086090`) + task 4b agent-tools-suite-gates (`fd0ffec`) + task 6 generic-surface triage (clean) + task 5 per-thread records ACTIVE done; only the `transplant/phase-8` tag remains (awaits a genuinely concurrent stream exercising the now-active lane records). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-20` | See [thread record](threads/practice-transplant.next-session.md) |
 
-At single-stream scale the row above is the continuity record; the `Latest
-identity` column carries the PDR-027 attribution (platform / model / role /
-`last_session`) in lieu of a separate `threads/<slug>.next-session.md` file.
-Per-thread records activate **as the Phase-8 collaboration framework lands** (the
-capability that makes a second stream safe to run) — at which point each stream
-gets a `threads/<slug>.next-session.md` record with its own identity table per
-`threads/README.md`. The intermediate step the convention already supports is a
-`## Lanes` block on this single thread (one thread, multiple lanes) the moment a
-second arc becomes safely takeable.
+**Per-thread records are now ACTIVE (2026-06-20, Phase 8 task 5).** The enabling
+trigger fired: task 3b proved a second concurrent stream is collision-safe, lifting
+the single-stream _constraint_ (it was never a fit). The thread's lane state +
+identity history now live in
+[`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md)
+with a `## Lanes` block (one thread, multiple independently-takeable arcs) per
+`threads/README.md`. The row above stays the **index** (status at a glance); the
+thread record is the source of truth for lanes and the additive PDR-027 identity
+table. A second session joining adds its identity row there (additive, never
+overwrite).
 
 ## Paused Threads
 

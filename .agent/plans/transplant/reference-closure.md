@@ -666,4 +666,30 @@ suite 943/0 and `turbo test --filter=!@engraph/agent-tools` removed, so agent-to
   `agent-tools/src/collaboration-state/schemas/escalation.schema.json`; Oak's `../fixtures/escalations/` (castr has no
   such dir) repointed to the `agent-tools/tests/collaboration-state/` suite.
 
-**Phase-8 (partial) result: full `pnpm check` green; intra-phase commit (no `transplant/phase-8` tag — phase incomplete).**
+### Task 6 generic-surface reconciliation — disposition: **triaged clean for phase-8 scope (done)** (2026-06-20)
+
+Firsthand engine-vs-Oak-pin (`ad359a4f`) set-difference of `agent-tools/src/collaboration-state/` (Oak 82 path entries
+vs castr 52). All four _named_ task-6 surfaces are already present in castr: PEEN coordinator-state hardening (proven
+collision-safe in task 3b; no PEEN source surface at the pin either), TTL presence (`watcher-heartbeat`/
+`watcher-staleness`), comms attention pass (`comms-watch-loop`/`comms-relevant-events`/`cli-comms-inbox`), plan-mode
+carveout (parity in `stage-by-explicit-pathspec.md`). The four `.ts` deltas are Oak refactor-splits castr covers under
+other names — `agent-id.ts`→`types`/`identity`, `cli-claim-areas.ts`→`cli-claim-commands`, `cli-comms-send.ts`→
+`cli-comms-commands`, `comms-watch-errors.ts`→`comms-watch-loop` (each verified at the identifier level: `uuidV5Schema`,
+`areaFromOptions`, `sendComms`, `WatcherErrorKind`). **Verdict: nothing to bring in phase-8 scope.**
+
+- **D4 back-bring item (genuinely-new subsystems, out of phase-8 named scope):** the Oak pin carries two collaboration
+  subsystems castr lacks — `archive/` (comms-archive rotation: `archive-move`, `disposition-policy`,
+  `event-classification`, `event-projection`, `manifest`) and `provenance/` (`cited-event-provenance`,
+  `provenance-scan`). castr's `.agent/state/README.md` already classifies the archive-rotation harness as a forward
+  Phase-8/D4 capability; provenance joins it. Recorded as the **D4 generic-surface back-brings** lane in
+  [`threads/practice-transplant.next-session.md`](../../memory/operational/threads/practice-transplant.next-session.md).
+
+### Task 5 per-thread records — disposition: **activated (done, owner-directed)** (2026-06-20)
+
+The enabling trigger fired (task 3b proved a second stream collision-safe, lifting the single-stream constraint). Created
+the first activated thread record `threads/practice-transplant.next-session.md` (additive PDR-027 identity table +
+`## Lanes` block over the real takeable arcs); `repo-continuity.md §Active Threads` re-pointed to it as the lane/identity
+source of truth, the table staying the index.
+
+**Phase-8 (partial) result: full `pnpm check` green; intra-phase commits (no `transplant/phase-8` tag — the tag act
+awaits a genuinely concurrent stream exercising the now-active records, which cannot be manufactured single-stream).**
