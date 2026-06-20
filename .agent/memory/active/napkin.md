@@ -2,7 +2,7 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-06-20 (Phase 8 PARTIAL — substrate skeleton + collaboration-state gate flip; owner-approved "skeleton + replan reconcile")
+## 2026-06-20 (Phase 8 PARTIAL — substrate skeleton + collaboration-state gate flip + identity SessionStart hook + remote-sync check)
 
 - **A controlling sub-plan can go stale between authoring and execution — re-measure its load-bearing premises before
   executing, don't inherit them.** `08-collaboration-active.md` was authored 2026-06-18, **before** WS7 (P6, 06-19) and
@@ -32,6 +32,27 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **The validator's `checkedCount` counts always-listed surfaces even when skipped:** `validate-collaboration-state` on
   the empty skeleton reports "OK (2 JSON file(s) checked)" — the 2 are `active-claims.json` + `closed-claims.archive.json`
   (always in `jsonSurfaces`, both optional-absent → skipped). Not "0"; the count is `surfaces.length`, not files-read.
+- **"Are there additional commits on the remote?" → an authoritative `git fetch` + divergence analysis answers it; "nothing
+  to integrate" is a valid evidence-backed verdict.** The opener's "5 commits unpushed" was **stale** — the remote-tracking
+  `origin/feat` ref had drifted (showed `ddbe217`) but `git reflog show origin/feat…` proved `9712113` was already pushed.
+  After `git fetch --prune`: origin/feat is a clean ancestor of HEAD (ahead 2 = my P8 commits); `origin/main` (PR #2 merged
+  the zod-compiler branch) has **no un-homed content** — `git log origin/main --not HEAD` surfaced only the zod-compiler
+  monolith, already cherry-picked-and-homed-in-split-form on the branch, so re-integrating would **regress** the homing;
+  `origin/feat/rewrite` is an unrelated 7-month orphan (`git merge-base … HEAD` is **empty** → no shared history, never
+  integrate). Tools: `rev-list --left-right --count A...B`, `merge-base --is-ancestor`, `log B --not A`, `merge-base A B`.
+- **A plan that says "the hook does X + Y" is a claim to verify against the hook CODE — Y may belong to a different actor.**
+  The sub-plan's task 3 said "wire SessionStart to write an identity row **+ open a claim**." Reading the Oak adapter
+  (`planClaudeSessionIdentityHook`): it does **identity only** (env vars + `additionalContext` banner), touches **no**
+  `.agent/state/`. And `openClaim` _requires_ `intent`/`thread`/`areas` — unknowable at session start. So claim-open is the
+  **`register-active-areas-at-session-open` agent discipline** (after intent clears), not a hook write. Wiring conflated
+  hook-time identity with agent-time claim. Same family as the per-surface "verify the claim against the artefact" lesson.
+- **A doc naming a hook file is a claim to verify on disk AND in the registration.** start-right named the Claude
+  SessionStart hook `.claude/hooks/practice-session-identity.mjs` as if live — but the file **did not exist** and
+  `.claude/settings.json` had **no `SessionStart` key** (only PreToolUse). Wiring it (Oak's soft-surface shim verbatim +
+  the `SessionStart` registration, castr-style `node "${CLAUDE_PROJECT_DIR}/…"`) made the doc accurate. The
+  `.claude/settings.json` self-mod needed explicit owner authorisation (surfaced as a decision; authorised; edit went
+  through — the napkin's prior self-mod-guard lesson, re-applied). No validator gates SessionStart, so verification is
+  behavioural: pipe `{"session_id":"…"}` through the shim → confirm `hookSpecificOutput` JSON + `$CLAUDE_ENV_FILE` append.
 
 ## 2026-06-20 (Phase 7 — adapter generator + gate flips LANDED, tag `transplant/phase-7` `b5a7538`)
 

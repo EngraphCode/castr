@@ -33,12 +33,22 @@ Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owne
 >    `escalations/` still required) + its test (TDD red→green). castr's source is now byte-identical to the Oak pin.
 > 3. **Task 4a — flipped `validate-collaboration-state` blocking** into `repo-validators:check`; green against the empty
 >    skeleton (`checkedCount 0` of real surfaces).
+> 4. **Task 3a — identity SessionStart hook wired** (owner-authorised): brought Oak's soft-surface shim
+>    `.claude/hooks/practice-session-identity.mjs` + registered it in `.claude/settings.json` `SessionStart`. Verified it
+>    fires (emits the PDR-027 identity context + writes `PRACTICE_AGENT_SESSION_ID_CLAUDE` /
+>    `ENGRAPH_AGENT_IDENTITY_OVERRIDE` to `$CLAUDE_ENV_FILE`; soft-fails `{}` on empty stdin). This also resolves the
+>    start-right doc's dangling reference to a hook file that did not previously exist on disk.
 >
-> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 3 (wire SessionStart to write a live
-> identity row + claim — the behaviourally significant, self-modifying piece); task 4b (remove the
-> `turbo test --filter=!@engraph/agent-tools` exclusion — blocked on the **clerk-expert P7** fix, unrelated to
-> collaboration); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces).
-> This session lands as a **green-gated intra-phase commit**, not the phase tag.
+> **Scope correction (firsthand):** the sub-plan's task-3 "open an active claim at SessionStart" is **not** a hook write —
+> `openClaim` requires `intent`/`thread`/`areas` (knowable only after intent clears). Claim registration is the
+> `register-active-areas-at-session-open` agent discipline, now **enabled** by the substrate; the hook's job is identity
+> only (as the brought Oak adapter implements).
+>
+> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 3b (exercise claims open/heartbeat/close
+> end-to-end + demonstrate a second concurrent session is collision-safe — needs concurrency); task 4b (remove the
+> `turbo test --filter=!@engraph/agent-tools` exclusion — blocked on the **clerk-expert P7** fix); task 5 (per-thread
+> records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces). These land as green-gated
+> intra-phase commits, not the phase tag.
 
 This sub-plan only **sharpened scope** so the prioritisation decision rests on measured ground; the partial execution
 above does not pull the remaining Phase 8 work forward.

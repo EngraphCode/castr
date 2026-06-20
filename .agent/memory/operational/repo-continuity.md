@@ -34,13 +34,15 @@ this branch (see the primary plan's user-impact line: "active multi-agent
 collaboration so multiple agents can work on castr coherently"), so per-thread
 continuity records **and** the collaboration substrate are **enabling
 infrastructure on the path to it** — not a consequence to wait for. The remaining
-gap (after Phase-8-partial, 2026-06-20): the `.agent/state/collaboration/`
-substrate skeleton now exists and the `collaboration-state`/`subagents` validators
-are blocking-green, but **SessionStart live-registration is not yet wired** (no
-identity row / claim is written at session open) and comms/presence are not active
-— plus branch/CI coordination (CI does not yet run `check:ci`, arc D3). Per-thread
-records are the cheapest **leaf** of that capability, not the thing that lifts the
-constraint.
+gap (after Phase-8-partial, 2026-06-20): the `.agent/state/collaboration/` substrate
+skeleton now exists, the `collaboration-state`/`subagents` validators are
+blocking-green, and the **SessionStart identity hook is now wired** (auto-derives
+the PDR-027 identity into `$CLAUDE_ENV_FILE`). Still open: **live claim registration
+is not yet exercised end-to-end** (it is the `register-active-areas-at-session-open`
+agent discipline — `openClaim` needs intent/areas, so it is _not_ a hook write — now
+enabled by the substrate) and comms/presence are not active — plus branch/CI
+coordination (CI does not yet run `check:ci`, arc D3). Per-thread records are the
+cheapest **leaf** of that capability, not the thing that lifts the constraint.
 
 While single-stream, the operational simplification still holds (PDR-027
 §Amendment Log 2026-04-21 Session 5): the row below **is** the continuity record
@@ -171,6 +173,16 @@ D2 "ADR-048 candidate" was re-pointed to 049). Monolith removed (content fully c
 README). _Meta still live: this was a main→branch divergence — work landed on `main` outside the single-transplant-branch
 invariant; the periodic main→branch sync check (cf. the Oak PDR-currency sync) is still wanted so future main-side commits
 are not stranded._
+
+**Main→branch sync check ✅ PERFORMED (2026-06-20, owner-directed):** authoritative `git fetch origin --prune --tags` +
+divergence analysis. Result — **nothing to integrate**: `origin/feat/transplant-engraph-practice` (`9712113`) is a clean
+ancestor of HEAD (local ahead by the 2 Phase-8 commits, behind 0; the opener's "5 unpushed" was a stale local
+remote-tracking ref — `reflog` confirms `9712113` was already pushed). `origin/main` advanced to `a71a09a` (PR #2 merged
+the zod-compiler branch), but `git log origin/main --not HEAD` surfaces only the zod-compiler monolith — **already
+cherry-picked and homed in split form** on the branch (re-integrating would regress the homing). `origin/feat/rewrite`
+(`d2c6fb1`, 2025-11-30) is an **unrelated orphan** (empty `merge-base` with HEAD — no shared history). The remote prune
+deleted the now-merged `claude/castr-zod-compiler-review-qpre7n` source branch (expected). The 2 Phase-8 commits remain
+**locally unpushed** (delivery deprioritised per the owner steer).
 
 ## Open Owner-Decision Items
 

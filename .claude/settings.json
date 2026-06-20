@@ -53,6 +53,18 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/practice-session-identity.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }
