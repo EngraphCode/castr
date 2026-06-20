@@ -2,6 +2,40 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Oak parity Tranche 1 — Clouded Floating Gust / 8de446)
+
+Executed parity Tranche 1 (C1/C2/C6/C4/C5/C7/C8) solo, RED-first TDD on the code gaps, each gap verified firsthand
+against the live pin before fixing. Landed: `9a37691` C1, `2b0fdc2` C2, C6 dirs, `35051f4` prettierignore, `96b9a3e`
+C4/C5, `707731d` C7/C8, `5b444b7` review-driven hardening. Full `pnpm check` green.
+
+- **A parity plan's per-item gap FRAMING is a claim to re-measure against the live pin — even when the audit that
+  produced it was firsthand.** Four of Tranche 1's framings narrowed on measurement (`plan-body-first-principles-check`
+  fired exactly as designed): `workstreams/` is a NON-gap (Oak's own README marks it RETIRED → folded into threads/;
+  materialising = tombstone); `agent-capability-vocabulary.md` is product-coupled (Oak's 3-audience domain model);
+  `skillOverrides`/`enabledPlugins` are 100% Oak-product-plugin-coupled (sentry/vercel/sonarqube); the watcher
+  "Hardened against silent hangs" section asserts an unbuilt `--step-timeout-ms` (C3) so bringing it would be a costume
+  (PDR-092 — deferred, not dropped). The audit found the dirs MISSING (true); the disposition (bring vs preserve) still
+  needed per-item firsthand judgement. Same family as [[verify-agent-claims-firsthand]] applied to a plan.
+- **The hook substring matcher (A2 gap) blocked a COMMIT, firsthand: the word "restore" in a `-m` message** matched the
+  `git restore` dangerous pattern (`git add … && check-commit-message -m "…reinstate --role…"` — original wording was
+  "restore --role"). The whole `&&` chain was denied. Strongest worked instance yet of N7/N11 over-match: it fires on
+  prose inside `-m`, not just git commands. Cure used: reword ("reinstate") + keep dangerous-pattern words out of
+  command strings. The A2 fix (positional/command-leading matching) is Tranche 2.
+- **`comms append --comms-dir` must point at the `comms/` SUBdir, but `--active` points at the collaboration ROOT** —
+  inconsistent path conventions on the same command. Passing the collaboration root for `--comms-dir` fails with a
+  confusing `unsupported collaboration JSON state path <uuid>.json` (it tried to write the event at the root). New
+  F-class friction for the first-run friction-fix lane; candidate cure: accept either and resolve `comms/` internally.
+- **N12-family confirmed + FIXED (`35051f4`):** instance-tier collaboration state (`active-claims.json` etc.) had no
+  `.prettierignore` entry, so `format:check` reds the moment a session opens a claim whose `patterns` array is long
+  enough that the CLI's `JSON.stringify(…,2)` expansion disagrees with prettier's packing. Mirrored the instance-tier
+  gitignore into `.prettierignore`. Every claim-opening session would have hit this; the first stream got lucky with
+  single-area claims.
+- **A reviewer caught a real defect I shipped, confirmed firsthand before fixing.** code-reviewer flagged that C2 added
+  `--role` to the per-command spec/help/type but NOT to `KNOWN_OPTION_KEYS`, so value-less `--role` silently persisted
+  `role="true"` instead of failing loud — the exact hole C2's `assertClaimMatches` was closing. Verified against the
+  live parser + the pin (which has it), fixed RED-first (`5b444b7`). The happy-path test + gate were green precisely
+  because the gap only bites the malformed-invocation path — green-gates-mask-gaps, in my own just-written code.
+
 ## 2026-06-20 (FIRST RUN of the collaboration setup — Director seat, owner-directed continuous friction log)
 
 > Owner: _"record all frustrations and issues, this is a first run of the collaboration setup in this repo."_

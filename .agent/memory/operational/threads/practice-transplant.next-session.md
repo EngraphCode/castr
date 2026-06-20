@@ -27,6 +27,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director    | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor    | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor    | 2026-06-20    | 2026-06-20   |
 
 ## Lanes
 
@@ -46,6 +47,14 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   - 6 Tier-B + 8 Tier-C verified gaps. Built by a 5-subagent firsthand audit; all load-bearing claims re-verified
     firsthand; 3 agent errors caught (D4 archive on a branch not missing; agent-identity wordlists already present;
     patterns-index exists — castr ahead).
+- **Tranche 1 ✅ COMPLETE (2026-06-20, Clouded Floating Gust / 8de446):** C1 (`9a37691` fitness URL-width false-flag
+  fix, RED-first) → C2 (`2b0fdc2` claim heartbeat/close fail-loud + `--role`) → C6 (collaboration/curator/quarantine/
+  archive machinery dirs; **workstreams + agent-capability-vocabulary recorded NON-gaps**) → `35051f4` prettierignore
+  fix (N12-family) → C4/C5 (`96b9a3e` watcher + heartbeat rule depth; "Hardened against silent hangs" deferred to C3)
+  → C7/C8 (`707731d` skillListingBudgetFraction + log-hook-errors wrapper wired to SessionStart; **skillOverrides +
+  enabledPlugins NON-gaps**) → `5b444b7` review-driven hardening (KNOWN_OPTION_KEYS `--role` defect caught by
+  code-reviewer, fixed RED-first; +bare-URL/prefix-miss coverage). Full `pnpm check` green; code/test/config reviewers
+  run, all load-bearing claims re-verified firsthand. **Next: Tranche 2 (A2+A3 hook-policy concept/reappraisal unit).**
 - **Progress:** B2 metacognition directive ✅ (`fcda10a`). The `no-unbounded-host-load.md` rule was reconciled this
   session but **NOT kept in-tree** (an untracked canonical rule breaks `portability:check` — missing wrappers +
   RULES_INDEX entry — and it can't be committed until A2 adds the policy.json busy-loop patterns its Enforcement claims,

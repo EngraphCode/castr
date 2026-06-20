@@ -21,25 +21,25 @@ todos:
     status: completed
   - id: C1
     content: practice-fitness URL-aware prose width (measurableProseWidth) + fix evaluate.ts:95 raw length bug
-    status: pending
+    status: completed
   - id: C2
-    content: assertClaimMatches fail-loud guard on claims heartbeat/close + restore --role field
-    status: pending
+    content: assertClaimMatches fail-loud guard on claims heartbeat/close + restore --role field (incl. KNOWN_OPTION_KEYS so value-less --role fails loud)
+    status: completed
   - id: C6
-    content: Materialise memory-machinery dirs (quarantine, curator-passes, workstreams, operational/archive, memory/collaboration, agent-capability-vocabulary)
-    status: pending
+    content: Materialise memory-machinery dirs — BROUGHT quarantine/curator-passes/operational-archive/collaboration (4); workstreams + agent-capability-vocabulary are recorded NON-gaps (Oak-retired / product-coupled)
+    status: completed
   - id: C4
-    content: Re-add watcher liveness self-check + mutual-cover sections to comms-all-channels-watcher rule
-    status: pending
+    content: Re-add watcher liveness self-check + mutual-cover (opt-in --heartbeat-file reality); "Hardened against silent hangs" deferred to C3 (asserts unbuilt --step-timeout-ms, would be a costume)
+    status: completed
   - id: C5
     content: Re-add liveness-heartbeat-cron loop-hygiene + remote cross-check sections
-    status: pending
+    status: completed
   - id: C7
-    content: Add skillListingBudgetFraction + skillOverrides to .claude/settings.json
-    status: pending
+    content: Add skillListingBudgetFraction to .claude/settings.json; skillOverrides + enabledPlugins are recorded NON-gaps (100% Oak-product-plugin-coupled)
+    status: completed
   - id: C8
-    content: Bring .claude/hooks/_lib/log-hook-errors.sh (+ assess secrets hooks for product-coupling)
-    status: pending
+    content: Bring .claude/hooks/_lib/log-hook-errors.sh + wire castr's SessionStart hook through it (secrets hooks NOT brought — product-coupled)
+    status: completed
   - id: A2
     content: Upgrade hook-policy to Oak concept/reappraisal model (content-deny-response, richer types/matchers, substring match) + host-load patterns + no-unbounded-host-load rule + start-right §7
     status: pending
@@ -154,10 +154,29 @@ fail-fast over `use-result-pattern`; zero-Oak-token PDR convention; dropped Oak-
 CI/repo-check at parity. Sub-agent roster at parity once Oak-product experts excluded + code/test/type-expert↔reviewer
 renames accounted.
 
+**Added by Tranche-1 firsthand verification (2026-06-20, Clouded Floating Gust) — gap-framings that narrowed on
+measurement against the live pin (per `plan-body-first-principles-check`):**
+
+- **`workstreams/` memory dir (was in C6)** — Oak's own `workstreams/README.md` marks the surface **RETIRED** (folded
+  into thread next-session records). castr's `operational/threads/` + the active `## Lanes` section IS the successor;
+  materialising it would be a tombstone (`no-tombstones-for-removed-ideas`). NON-gap.
+- **`executive/agent-capability-vocabulary.md` (was in C6)** — fully product-coupled: Oak's three-audience domain model
+  (repo / Oak-developer-platform / teacher-curriculum), citing ADR-189 + curriculum-tools docs castr lacks. castr is
+  single-domain (headless schema lib). Same family as the dropped Oak-product experts. NON-gap.
+- **`skillOverrides` + `enabledPlugins` in `.claude/settings.json` (was in C7)** — 100% Oak-product-plugin-coupled
+  (sentry/vercel/sonarqube SDK skills castr does not enable). Only `skillListingBudgetFraction` was a real gap. NON-gap.
+- **"Hardened against silent hangs" watcher rule section (adjacent to C4)** — asserts a per-step `--step-timeout-ms`
+  deadline castr does not yet implement; that is C3 (Tranche 4). Bringing the rule text now would be a costume
+  mechanism (PDR-092). Deferred to C3, not a non-gap.
+
 ## Sequencing (low-risk high-value first; couple dependent units)
 
-1. **Tranche 1 — doctrine + correctness quick wins (S):** B2 ✅ → C1 → C2 → C6 → C4 → C5 → C7 → C8. Independent,
-   mostly additive; can batch. C1/C2 are TDD (real defects in castr's own systems).
+1. **Tranche 1 — doctrine + correctness quick wins (S): ✅ COMPLETE (2026-06-20, Clouded Floating Gust).** B2 ✅ →
+   C1 ✅ → C2 ✅ → C6 ✅ → C4 ✅ → C5 ✅ → C7 ✅ → C8 ✅. C1/C2 were TDD against real defects in castr's own systems
+   (C1 false-flag fix; C2 silent-no-op + value-less `--role`). Four firsthand narrowings recorded as NON-gaps above
+   (workstreams, agent-capability-vocabulary, skillOverrides) + one deferral to C3 (watcher per-step deadline). Full
+   `pnpm check` green at the tranche; code/test/config reviewers run, all load-bearing claims re-verified firsthand
+   (the code-reviewer's `KNOWN_OPTION_KEYS` defect was confirmed + fixed RED-first).
 2. **Tranche 2 — hook-policy capability unit (L):** A2 + A3 together (shared types/data + the validator that guards
    them). TDD; RED-first against the founding busy-loop shape (PDR-092). The reconciled `no-unbounded-host-load.md`
    (untracked in-tree) + start-right §7 + host-load patterns land inside A2.
