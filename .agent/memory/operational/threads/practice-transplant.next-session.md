@@ -56,12 +56,14 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - **Measured scope (gap-scan firsthand 2026-06-20, the docs-mandated measurement).** The honest fold lens is **Oak's OWN
   churn between the former pin `4470266` and the current pin `ad359a4f`** (NOT castr-vs-pin, which conflates castr's
   deliberate localisation — a naive diff shows 71 PDRs "differ" but the real fold is 13). Per-surface:
-  - **PDR-currency = 13 PDRs + README** (NOT the "~30" estimate). **4 net-new** (092/093/094/095) + **9 amendments**
-    (011/051/058/064/078/081/085/089/091). Fold mechanism (owner-resolved 2026-06-17): append Oak's amendment-log/Decision
-    additions onto castr's localised copies per PDR-001 immutability — DON'T replace castr's copy with the pin.
-    Of the 9: PDR-051/058/089 are pure additions (+N/-0, clean appends); 011/064/078/081/085/091 have removals
-    (Oak modified lines — care-merge vs castr localisation). PDR-011's "already in castr" was a FALSE positive of a
-    Status-line signature — it still needs the fold.
+  - **PDR-currency = 13 PDRs + README — ✅ COMPLETE (slices 1+2, 2026-06-20).** **4 net-new** (092/093/094/095, `5c40adb`)
+    - **9 amendments** (011/051/058/064/078/081/085/089/091, `3787928`). **Method correction (firsthand, supersedes the
+      "append Oak's amendment-log" framing):** castr's PDR copies sat at INCONSISTENT older Oak bases (PDR-089 was missing
+      ~47 lines of pre-`4470266` content too), so "fold the latest delta" would have left content out; and castr's PDRs
+      carry ZERO localisation. The complete + lossless fold was therefore a VERBATIM replace with the current pin, then
+      re-neutralise the incoming Oak-product worked-instance tokens (`EEF D5/D6`, `@oaknational/oak-curriculum-sdk`) per
+      castr's zero-token PDR convention. Reverse-closure sweep caught an upstream Oak bug (Oak's own PDR-058 → stale
+      PDR-014 slug) — fixed in castr + recorded in the feedback report. Lesson: verify each PDR's actual base before folding.
   - **`no-unbounded-host-load` rule** (D4 pair): canonical `.agent/rules/` + regenerate wrappers; couples to start-right
     §7 host-health section (castr's start-right LACKS it — bring together) + verify `.agent/hooks/policy.json` carries the
     busy-loop/`stress-ng` patterns the rule's Enforcement claims + neutralize the Oak session-operations-report dangling ref.
@@ -69,12 +71,18 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
     `ad649710` localisation base to separate castr's deliberate localisations from Oak's upstream amendments. Heavy/fuzzy.
   - **agent-tools parity** (~50 files): validators/hook-policy/core/claude subsystems; much may already be on the
     D2/D3/D4 branches — reconcile against those before bringing.
-- **Progress (2026-06-20):** Slice 1 ✅ — PDR-092..095 brought verbatim (`5c40adb`); drift-green at 96 PDRs.
-- **Remaining slices:** 2 (9 PDR folds) → 3 (rule pair) → 4 (rule/directive three-way sweep) → 5 (agent-tools parity) →
-  6 (Oak back-flow PR — **owner-gated outward publish**) → 7 (practice-verification + relevance-ledger + handoff, then
-  cut `transplant/phase-9`). **Do NOT tag Phase 9 until the full gap-scan sweep is honestly complete** (the docs name
-  tagging-without-the-sweep as the Phase-1b green-but-incomplete failure mode).
-- Acceptance bar: all surfaces folded + back-flow PR raised to Oak + castr-side closure recorded + `transplant/phase-9` cut green.
+- **Progress (2026-06-20):** Slice 1 ✅ (`5c40adb`) + Slice 2 ✅ (`3787928`) → **PDR-currency sync COMPLETE** (estate
+  current with Oak `ad359a4f`; drift-green at 96 PDRs).
+- **Remaining slices:** 3 (rule pair `no-unbounded-host-load` + start-right §7 host-health) → 4 (rule/directive three-way
+  sweep) → 5 (agent-tools parity) → 6 (Oak back-flow, castr-only — see below) → 7 (practice-verification + relevance-ledger
+  - handoff, then cut `transplant/phase-9`). **Do NOT tag Phase 9 until the full gap-scan sweep is honestly complete**
+    (the docs name tagging-without-the-sweep as the Phase-1b green-but-incomplete failure mode).
+- **Oak back-flow (slice 6) — OWNER-DECIDED 2026-06-20: castr-only; the owner moves it to Oak manually.** No agent raises
+  a PR to Oak. The castr feedback report (`oak-backflow/castr-feedback-2026-06-10.md`) is kept COMPLETE + current
+  (Phase-9 findings already appended); the owner carries it across. **Supersedes** the earlier "fresh branch off Oak
+  `main`, PR'd to Oak `main`" plan in `reference-closure.md` / `open-questions.md` (reconcile those at closure).
+- Acceptance bar: all surfaces folded + castr feedback report current + castr-side closure recorded + `transplant/phase-9`
+  cut green. (Oak-side delivery is the owner's manual act, NOT a phase-9 acceptance gate.)
 
 ### Lane: D4 generic-surface back-brings — ✅ LANDED (branch, 2026-06-20)
 
