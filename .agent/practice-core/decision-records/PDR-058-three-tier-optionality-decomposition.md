@@ -7,7 +7,7 @@ pdr_kind: governance
 **Status**: Accepted
 **Date**: 2026-05-10
 **Related**:
-[PDR-014](PDR-014-pattern-routing-discipline.md) (consolidation
+[PDR-014](PDR-014-consolidation-and-knowledge-flow-discipline.md) (consolidation
 flow — this PDR routes optionality-shaped findings into three
 distinct surfaces rather than a single fence);
 [PDR-026](PDR-026-per-session-landing-commitment.md) (deferral
@@ -27,6 +27,28 @@ combined quarantine entry
 under the 2026-05-01 owner-named reformulation.
 
 ## Amendment Log
+
+- **2026-06-11** (Accepted; owner-approved at the dedicated consolidation
+  walk): **Gate-outcome vocabulary gains a third word — `reject-as-framed`.**
+  Surface 4's gate-walk application previously admitted two outcomes for a
+  fork presented at a decision gate: _decide_ (settle it at the gate) or
+  _park_ (defer with a named, falsifiable trigger). Two outcomes coerce a
+  third, distinct state: the gate itself is **mis-posed** — its framing, not
+  its answer, is what the decision-holder rejects. Without the third word,
+  owner hesitation at a mis-posed gate gets coerced into a decision that was
+  never made or into a costume-trigger park which merely dates the
+  mis-framing. `reject-as-framed` has a different recording shape from both:
+  the gate **routes back to synthesis and the gate row itself is edited** —
+  the question is re-posed, not answered or postponed. Evidence: first
+  instance 2026-06-04 (a gate-walk opener where owner hesitation had no
+  legitimate outlet); second instance 2026-06-11 (the owner reframed a
+  decision-walk's own question protocol — "assume the recommendation; show
+  me only genuine questions" — which neither _decide_ nor _park_ could
+  record).
+  - **Falsifiability**: this amendment would be shown wrong if gate walks
+    using the three-word vocabulary routinely misfiled genuine decisions or
+    parks under `reject-as-framed` (the word becoming an escape hatch from
+    deciding), or if no gate walk ever legitimately used it again.
 
 - **2026-05-29** (Accepted; owner-reviewed): **Surface 4 — Sequencing
   Optionality named, and Surface 3's rule sibling graduated as a merged
@@ -179,7 +201,7 @@ the verification layer where the discipline is most load-bearing.
 - Acceptance criteria of the form _"if X then Y else Z"_ where
   one of X, Y, Z is the determinate answer.
 - LLM-graded outcome conditions in plans where the LLM-graded
-  evaluation infrastructure has not been built (the EEF plan
+  evaluation infrastructure has not been built (the LLM-graded plan
   example, removed under owner direction).
 - Plans whose success condition is _"the team agrees"_ without
   naming what the team would observe.
@@ -262,6 +284,11 @@ observability_, not whether a condition is merely named: a named-but-
 unobservable condition (_"when the design is approved"_ with no approval
 artefact a future agent could check) is still bare-deferred optionality,
 because nothing a future agent can observe tells them it has fired.
+
+At a decision gate the cure's vocabulary has three words, not two:
+_decide_, _park_ (with a falsifiable trigger), or _reject-as-framed_ —
+the gate is mis-posed, routes back to synthesis, and the gate row itself
+is edited (2026-06-11 amendment; see the Amendment Log).
 
 **Enforcement (active layer for Surfaces 3 and 4).** Both the
 outcome-optionality and sequencing-optionality cures fire at the

@@ -60,3 +60,20 @@ have caught items 2–5 here at their retirement moments.
 fail-fast product doctrine and had essentially no consuming estate there (1 of ~340 agent-tools files). Rule-estate
 classification reads lie; bodies decide. Its cause-preservation clause was the salvageable nugget (castr will
 re-home it in a fail-fast-compatible rule).
+
+## Additional upstream defects found during the Phase-9 PDR-currency sync (2026-06-20)
+
+Found firsthand while folding Oak's PDR amendments (`4470266..ad359a4f`) into castr's copies — the reverse-closure
+sweep recommended above caught it:
+
+1. **`PDR-058` links to a stale `PDR-014` slug.** Oak's `PDR-058-three-tier-optionality-decomposition.md` §Related links
+   to `PDR-014-pattern-routing-discipline.md`, but Oak's own current PDR-014 file is
+   `PDR-014-consolidation-and-knowledge-flow-discipline.md` (renamed upstream; the link was never repointed). The link
+   dangles in Oak itself. castr repointed its copy to the correct slug; Oak should do the same.
+
+**Method note (corroborates the report above):** castr's PDRs sat at an _older_ Oak base than assumed, at inconsistent
+per-file bases — e.g. PDR-089 was missing ~47 lines of pre-`4470266` content as well as the post-`4470266` amendments.
+A simple "fold the latest delta" would have left content out. Because castr's PDR copies carry **zero** localisation
+(portability constraint holds), the correct, complete fold was a verbatim replace with the current pin + re-neutralising
+the incoming Oak-product worked-instance tokens (`EEF D5/D6`, `@oaknational/oak-curriculum-sdk`) that castr's convention
+excludes. Lesson for the ongoing castr↔Oak sync: verify each PDR's actual base before folding; don't assume a uniform one.

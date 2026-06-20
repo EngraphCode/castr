@@ -70,8 +70,8 @@ Two distinct failure modes shaped the contract:
 
 ## Decision
 
-The Liveness-Heartbeat Contract has six named clauses. Clauses 5
-and 6 were added by later amendments; see §Revision history.
+The Liveness-Heartbeat Contract has seven named clauses. Clauses 5,
+6, and 7 were added by later amendments; see §Revision history.
 
 ### 1. Emit-side: cadence
 
@@ -206,6 +206,29 @@ The observer move is:
 An owner-reroute broadcast or other narrative event resets this
 diagnostic because it proves main-loop attention and changes the
 peer's interpretation of silence.
+
+### 7. Emit-side: loop hygiene
+
+The scheduling loop that emits heartbeats follows four hygiene rules,
+each graduated from a worked failure:
+
+- **Posture derives from current state at emit time, never baked at
+  arm time.** A loop armed with a fixed lane/branch/intent label
+  misreports for as long as it runs after the underlying state moves;
+  re-derive every posture field per tick, and re-label explicitly at
+  every lane or role transition (worked twice: a lane renamed under a
+  running loop; a coordinator loop emitting a stale branch name for
+  hours after its holder had moved).
+- **One timestamp per tick.** Deriving "now" more than once in a tick
+  races clock boundaries — a substrate correctly rejected an event
+  whose created-at sat in the future of its sibling field. Derive the
+  timestamp once and pass it to every field that needs it.
+- **Stop the loop FIRST, then emit the end-of-heartbeat event.** The
+  reverse order lets a scheduled tick fire after the end event and
+  contradict it.
+- **Capture stderr on the loop's failure path.** A loop that swallows
+  stderr surfaces its own failures as an undiagnosable bare failure
+  line; the failure line must carry the underlying error text.
 
 ## Mechanism
 
@@ -408,6 +431,13 @@ rerouted.
 
 ## Revision history
 
+- 2026-06-12 — Added clause §7 ("Emit-side: loop hygiene"), the portable
+  facet of a host rule amendment that graduated 2026-06-11 (relabel at
+  lane transitions, stop-loop-then-emit-end ordering, one timestamp per
+  tick, stderr-captured failure lines), plus a fifth worked rule instance
+  from a coordinator loop emitting a stale branch name (2026-06-12).
+  Owner-approved at the 2026-06-11 register walk. Emit-side cadence (§1),
+  redundancy (§2), and the substrate-category invariant (§5) unchanged.
 - 2026-05-26 — Added clause §6 ("Observe-side:
   heartbeat-only stall diagnostic"), one corresponding entry
   under §Consequences §Forbids, a fifth falsifiability axis, and
