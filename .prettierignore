@@ -27,3 +27,14 @@ CHANGELOG.md
 # Cache
 .eslintcache
 
+# Instance-tier collaboration state — regenerated at runtime, gitignored.
+# Mirrors .agent/state/collaboration/.gitignore so the format gate does not
+# trip on runtime-written JSON/log files (e.g. a claim opened with a
+# multi-area patterns array). Tracked READMEs/.gitkeep stay checked.
+.agent/state/collaboration/active-claims.json
+.agent/state/collaboration/closed-claims.archive.json
+.agent/state/collaboration/shared-comms-log.md
+.agent/state/collaboration/comms/
+.agent/state/collaboration/comms-seen/
+.agent/state/collaboration/comms-draft/
+
