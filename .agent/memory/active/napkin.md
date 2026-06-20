@@ -2,6 +2,39 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Phase 7 — adapter generator + gate flips LANDED, tag `transplant/phase-7` `b5a7538`)
+
+- **Wiring a transplanted-but-deferred validator surfaces the gaps it was silently masking — budget for them as the
+  real content of the "flip" step, not scope creep.** Flipping `portability:check` to Oak's `validate-portability`
+  exposed **19 pre-existing issues** (18 missing `Skill(engraph-*)` entries in `.claude/settings.json` + 1 surface-matrix
+  hook-description gap); flipping `subagents` exposed **18** `config_file` resolution failures. NONE came from my
+  generator (it was portability-clean on first generation). The gate had been green only because it was deferred — exactly
+  the green-gates-mask-gaps family. The fixes ARE the flip.
+- **The `config_file` reconciliation was the napkin's own predicted P7 item (2026-06-19 s2, line ~150).** castr's
+  `.codex/config.toml` used repo-root-relative `config_file = ".codex/agents/X.toml"` (to satisfy the bespoke
+  `validate-portability.mjs`), but Oak's `validate-subagents` resolves `config_file` relative to `.codex/` →
+  `.codex/.codex/agents/X.toml` (doubled). Fix: switch to `agents/X.toml` (Oak's reference form, verified at pin
+  `ad359a4f`). This was only safe **because the bespoke script is retired in the same phase** — retiring it removed the
+  repo-root-form constraint. Lockstep: change config_file + retire script + wire Oak validator, verify green before commit.
+- **Prettier-stability of generated frontmatter = single-quoted/plain YAML, not JSON double quotes.** First generation
+  emitted `description: "..."` (JSON.stringify); prettier's YAML formatter rewrote all 36 agent `.md` wrappers to
+  `'...'`. The repo convention (skills generator via the `yaml` lib) is **plain scalars where possible, single-quote when
+  needed**. Cure: a `yamlScalar` that quotes only when a plain scalar would be ambiguous, using YAML single-quote
+  escaping (`'` → `''`). `.cursor/rules/*.mdc` are NOT in the prettier glob (only `.md` is) so they were never the
+  problem. The check-after-generate proof: `prettier --check` the generated surfaces every time (the patterns-index
+  lesson, re-applied). **Verify prettier config with a real in-repo file — a `/tmp` copy uses different config and gives
+  a false "stable".**
+- **`check:ci` runs `format:check` (non-mutating); `check` runs `fix` first.** My own two `.ts` source files were
+  unformatted — `check:ci` failed at format:check (early in qg, so the rest never ran). When iterating, run
+  `prettier --write` on new source before the aggregate, or the first full run wastes minutes failing fast on a triviality.
+- **The harness self-modification guard blocks editing `.claude/settings.json`** (startup config) unless the owner
+  explicitly authorises — correctly. Surfaced it as a decision; owner authorised; then the edit went through. Don't try to
+  work around a self-modification denial; surface it.
+- **Reverse-closure caught a fully-stale table:** `governance-claim-needs-a-scanner.md` listed four `scripts/*.mjs`
+  scanner paths — **all four already absent** (the real scanners are `agent-tools/src/validators/*`); my deletion of
+  `validate-portability.mjs` merely completed the drift. Repointed all four to real paths + added the new generator. A
+  "materialised examples" table is a claim set to verify against disk, like any other (the per-surface lesson).
+
 ## 2026-06-19 (session 4 — zod-compiler homing + Phase-7 scoping)
 
 - **FALSE ABSENCE FROM ONE DIRECTORY → wrong claim to the owner.** I told the owner "remediation 02's plan is

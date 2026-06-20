@@ -550,6 +550,11 @@ DON'T-BRING-7.
   (2026-06-18); adding a reviewer now never requires editing a frozen list. (Caught by the session-handoff full
   `pnpm check`: the intra-phase commit `d5cd4eb` had been made after only a gate _subset_, so it carried a red
   `portability:check`; rolled forward — never rewritten — to a green tip.)
+  **RESOLVED Phase 7 (2026-06-20, `transplant/phase-7` `b5a7538`):** the bespoke `scripts/validate-portability.mjs` was
+  **retired** (its checks subsumed by Oak's `validate-subagents` + `validate-portability`), removing the repo-root-form
+  constraint; `config_file` switched to the `.codex/`-relative `agents/X.toml` form Oak's resolver wants (matches Oak at
+  pin `ad359a4f`). `portability:check` now runs Oak `validate-portability`; `validate-subagents` joined
+  `repo-validators:check`; both blocking-green. No double-nesting, single source.
 - **Dangling-rule reconciliation:** the three rules above now point at real templates; their Oak naming reconciled —
   `code-expert`→`code-reviewer`, `test-expert`→`test-reviewer`; Oak ADR-path cites re-pointed to castr homes (ADR-129 →
   **PDR-010**, ADR-114 → **PDR-003**; the proportionality doctrine → `principles.md`); Oak MCP-server/Apps ADRs
