@@ -60,7 +60,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/practice-session-identity.mjs\"",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/_lib/log-hook-errors.sh node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/practice-session-identity.mjs\"",
             "timeout": 5
           }
         ]
@@ -70,5 +70,6 @@
   "statusLine": {
     "type": "command",
     "command": "node .claude/scripts/statusline-identity.mjs"
-  }
+  },
+  "skillListingBudgetFraction": 0.03
 }
