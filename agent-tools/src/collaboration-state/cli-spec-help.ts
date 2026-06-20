@@ -110,7 +110,8 @@ export const claimsOpenHelp =
   '--area-kind <files|workspace|plan|adr|git> ' +
   '--intent <text> --now <iso> --platform <platform> --model <model> ' +
   '[--file <path>...] [--area-pattern <pattern>...] [--claim-id <id>] ' +
-  '[--ttl-seconds <n>] (use either repeatable --file or repeatable --area-pattern, not both)';
+  '[--ttl-seconds <n>] [--role <role>] ' +
+  '(use either repeatable --file or repeatable --area-pattern, not both)';
 
 export const claimsHeartbeatHelp = 'claims heartbeat --active <path> --claim-id <id> --now <iso>';
 

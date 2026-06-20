@@ -104,6 +104,7 @@ export const claimsOpenOptions = [
   'claim-id',
   'ttl-seconds',
   'notes',
+  'role',
 ] as const;
 
 export const claimsCloseOptions = [

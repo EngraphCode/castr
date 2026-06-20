@@ -137,6 +137,7 @@ export interface CollaborationClaim {
   readonly freshness_seconds?: number;
   readonly heartbeat_at?: string;
   readonly sidebar_open?: boolean;
+  readonly role?: string;
   readonly intent: string;
   readonly notes?: string;
   readonly intent_to_commit?: string;
