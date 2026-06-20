@@ -11,6 +11,16 @@ for the portable doctrine.
 
 ## Current State
 
+> **🔭 SCOPE EXPANDED (owner, 2026-06-20) → the [Oak Parity-or-Better Program](../../plans/transplant/oak-parity-program.md).**
+> The deep enhancement now explicitly includes **upgrading every castr agentic system that is simpler than Oak's to
+> parity-or-better** ("castr is not meant to stay simple"; ArcAngel named + "not the only thing missing"). The transplant
+> manifest was proven incomplete; a firsthand 5-subagent gap audit (all claims re-verified firsthand) produced the
+> authoritative verified gap map (4 Tier-A + 6 Tier-B + 8 Tier-C) in `oak-parity-program.md` — now the active deep-enhancement
+> executable plan. **transplant Phase 9 is reframed as the closure gate that runs AFTER parity.** Standing directive:
+> user-memory `castr-parity-or-better-with-oak` (deliberate-localisation → preserve; unbuilt-gap → upgrade). The branch is
+> **pushed to origin** (owner, through `f8b4910`). Landed 2026-06-20: Q-003 statusline (`ebf08b5`), PDR-currency sync
+> complete (`5c40adb`/`3787928`), metacognition directive B2 (`fcda10a`).
+
 castr is executing **one deep enhancement** (owner): bring over the entire
 Practice / agentic-engineering framework / agent-tools / skill+rule+subagent+hook
 definitions **and** fix castr's known issues — the same goal, not competing

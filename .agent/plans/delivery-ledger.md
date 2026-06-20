@@ -24,6 +24,13 @@ the transplant branch already contained every other branch's content. **All work
 `feat/rewrite` (remote-only, ~170 unique commits, a historical session-3.x line) is **not** part of current work and
 was left untouched.
 
+**Branch push state (owner, 2026-06-20):** the owner pushed `feat/transplant-engraph-practice` to `origin` (through
+`f8b4910`); subsequent commits land locally until the owner pushes again. This does **not** change the delivery shape
+above (split, D3-gated PRs to `main`) — pushing the working branch to its own origin remote is continuity/backup, not
+the delivery merge act. The active deep-enhancement workstream is now the
+[Oak Parity-or-Better Program](./transplant/oak-parity-program.md) (estate-wide upgrade; transplant Phase 9 reframed as
+its closure gate).
+
 ## Main→branch sync discipline (owner sign-off 2026-06-20)
 
 The single-branch invariant ("`feat/transplant-engraph-practice` carries everything; one eventual PR to `main`") can

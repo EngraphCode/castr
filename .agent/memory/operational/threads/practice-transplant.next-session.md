@@ -34,6 +34,31 @@ trigger, active OR deferred. There is no single thread-level "next safe step";
 several lanes can be "next" at once. Branch is `feat/transplant-engraph-practice`
 for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
+### Lane: Oak Parity-or-Better Program — ACTIVE, DOMINANT (started 2026-06-20)
+
+- Controlling plan: [`../../../plans/transplant/oak-parity-program.md`](../../../plans/transplant/oak-parity-program.md)
+  (authoritative executable plan + verified gap map; supersedes the transplant manifest's inventory).
+- **Owner directive (2026-06-20):** upgrade every castr agentic system that is simpler than Oak's to parity-or-better;
+  "castr is not meant to stay simple." Standing directive in user-memory `castr-parity-or-better-with-oak`. Classify each
+  diff: deliberate-localisation (preserve) vs unbuilt-gap (upgrade).
+- **Scope:** 4 Tier-A (ArcAngel, hook-policy concept/reappraisal, policy-reappraisal validator, statusline session-shape)
+  - 6 Tier-B + 8 Tier-C verified gaps. Built by a 5-subagent firsthand audit; all load-bearing claims re-verified
+    firsthand; 3 agent errors caught (D4 archive on a branch not missing; agent-identity wordlists already present;
+    patterns-index exists — castr ahead).
+- **Progress:** B2 metacognition directive ✅ (`fcda10a`). The `no-unbounded-host-load.md` rule is reconciled +
+  untracked in-tree (lands inside the A2 hook-policy tranche, not alone — PDR-092 costume rule).
+- **Sequencing:** Tranche 1 (C1/C2 bug fixes → C6 dirs → C4/C5/C7/C8) → Tranche 2 (A2+A3 hook-policy unit, TDD) →
+  Tranche 3 (A4 statusline → A1 ArcAngel) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
+- **Acceptance:** every ledger row applied-or-decided; gap re-audit clean; then the P9 closure gate.
+
+### Lane: transplant Phase 9 — GATED by the parity program (was: deferred)
+
+- **Reframed 2026-06-20:** Phase 9 is now the **closure gate at the END of the parity program** (practice-verification +
+  relevance-ledger + handoff, then cut `transplant/phase-9`), not a standalone next step. The old Phase-9 PDR-currency
+  component is ✅ COMPLETE (4 new + 9 folded PDRs current with Oak `ad359a4f`; `5c40adb`, `3787928`). Oak back-flow is
+  **castr-only** (owner moves the feedback report manually — owner decision 2026-06-20). Do NOT tag Phase 9 until the
+  full parity sweep lands (the docs name tagging-without-the-sweep as the Phase-1b green-but-incomplete failure mode).
+
 ### Lane: Phase 8 close — ✅ COMPLETE + TAGGED (2026-06-20)
 
 - Controlling plan: [`../../../plans/transplant/08-collaboration-active.md`](../../../plans/transplant/08-collaboration-active.md) §As-built.
@@ -49,40 +74,6 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - **Gate evidence:** `pnpm check` GREEN at `8d62197` (full gate completeness, verified firsthand in an
   isolated detached worktree); reference-closure clean for phase-8 scope (drift validator green inside
   `repo-validators:check`; D4 was a recorded deferred lane, out of phase-8 scope).
-
-### Lane: transplant Phase 9 — ACTIVE / in progress (started 2026-06-20)
-
-- Controlling plan: [transplant tracker](../../../plans/transplant/README.md) + [`reference-closure.md §back-flow items`](../../../plans/transplant/reference-closure.md) + [`relevance-ledger.md §Main re-pin delta`](../../../plans/transplant/relevance-ledger.md).
-- **Measured scope (gap-scan firsthand 2026-06-20, the docs-mandated measurement).** The honest fold lens is **Oak's OWN
-  churn between the former pin `4470266` and the current pin `ad359a4f`** (NOT castr-vs-pin, which conflates castr's
-  deliberate localisation — a naive diff shows 71 PDRs "differ" but the real fold is 13). Per-surface:
-  - **PDR-currency = 13 PDRs + README — ✅ COMPLETE (slices 1+2, 2026-06-20).** **4 net-new** (092/093/094/095, `5c40adb`)
-    - **9 amendments** (011/051/058/064/078/081/085/089/091, `3787928`). **Method correction (firsthand, supersedes the
-      "append Oak's amendment-log" framing):** castr's PDR copies sat at INCONSISTENT older Oak bases (PDR-089 was missing
-      ~47 lines of pre-`4470266` content too), so "fold the latest delta" would have left content out; and castr's PDRs
-      carry ZERO localisation. The complete + lossless fold was therefore a VERBATIM replace with the current pin, then
-      re-neutralise the incoming Oak-product worked-instance tokens (`EEF D5/D6`, `@oaknational/oak-curriculum-sdk`) per
-      castr's zero-token PDR convention. Reverse-closure sweep caught an upstream Oak bug (Oak's own PDR-058 → stale
-      PDR-014 slug) — fixed in castr + recorded in the feedback report. Lesson: verify each PDR's actual base before folding.
-  - **`no-unbounded-host-load` rule** (D4 pair): canonical `.agent/rules/` + regenerate wrappers; couples to start-right
-    §7 host-health section (castr's start-right LACKS it — bring together) + verify `.agent/hooks/policy.json` carries the
-    busy-loop/`stress-ng` patterns the rule's Enforcement claims + neutralize the Oak session-operations-report dangling ref.
-  - **rule/directive currency sweep** (~30 rules + 3 directives): NOISE-CONFOUNDED — needs a three-way diff vs the
-    `ad649710` localisation base to separate castr's deliberate localisations from Oak's upstream amendments. Heavy/fuzzy.
-  - **agent-tools parity** (~50 files): validators/hook-policy/core/claude subsystems; much may already be on the
-    D2/D3/D4 branches — reconcile against those before bringing.
-- **Progress (2026-06-20):** Slice 1 ✅ (`5c40adb`) + Slice 2 ✅ (`3787928`) → **PDR-currency sync COMPLETE** (estate
-  current with Oak `ad359a4f`; drift-green at 96 PDRs).
-- **Remaining slices:** 3 (rule pair `no-unbounded-host-load` + start-right §7 host-health) → 4 (rule/directive three-way
-  sweep) → 5 (agent-tools parity) → 6 (Oak back-flow, castr-only — see below) → 7 (practice-verification + relevance-ledger
-  - handoff, then cut `transplant/phase-9`). **Do NOT tag Phase 9 until the full gap-scan sweep is honestly complete**
-    (the docs name tagging-without-the-sweep as the Phase-1b green-but-incomplete failure mode).
-- **Oak back-flow (slice 6) — OWNER-DECIDED 2026-06-20: castr-only; the owner moves it to Oak manually.** No agent raises
-  a PR to Oak. The castr feedback report (`oak-backflow/castr-feedback-2026-06-10.md`) is kept COMPLETE + current
-  (Phase-9 findings already appended); the owner carries it across. **Supersedes** the earlier "fresh branch off Oak
-  `main`, PR'd to Oak `main`" plan in `reference-closure.md` / `open-questions.md` (reconcile those at closure).
-- Acceptance bar: all surfaces folded + castr feedback report current + castr-side closure recorded + `transplant/phase-9`
-  cut green. (Oak-side delivery is the owner's manual act, NOT a phase-9 acceptance gate.)
 
 ### Lane: D4 generic-surface back-brings — ✅ LANDED (branch, 2026-06-20)
 

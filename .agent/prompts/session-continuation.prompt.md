@@ -8,6 +8,20 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **2026-06-20 SCOPE-EXPANSION UPDATE (supersedes everything below it on scope — read this first).** The owner expanded
+> the work from "finish the transplant (Phases 0–9)" to the **[Oak Parity-or-Better Program](../plans/transplant/oak-parity-program.md)**:
+> _"upgrade everything in castr that is less sophisticated or powerful than Oak; castr is not meant to stay simple"_
+> (ArcAngel named explicitly + "not the only thing missing"). The transplant manifest was proven **incomplete**, so a
+> firsthand 5-subagent Oak↔castr gap audit (all claims re-verified firsthand; 3 agent errors caught) produced the
+> authoritative gap map: **4 Tier-A + 6 Tier-B + 8 Tier-C verified gaps** in `oak-parity-program.md` (the active
+> executable plan). **Phase 9 is now the closure gate that runs AFTER parity lands**, not a standalone step. Landed this
+> session: **Q-003 statusline wiring** (`ebf08b5`); **PDR-currency sync COMPLETE** — 4 new + 9 folded PDRs current with
+> Oak `ad359a4f` (`5c40adb`, `3787928`); **B2 metacognition directive** upgraded 16→122 lines (`fcda10a`). Standing
+> directive saved to user-memory `castr-parity-or-better-with-oak` (distinguish deliberate-localisation → preserve, from
+> unbuilt-gap → upgrade). **The branch is PUSHED to origin (owner pushed, through `f8b4910`); last 2 commits unpushed.**
+> Next: parity Tranche 1 (C1/C2 bug fixes → C6 dirs → C4/C5/C7/C8) then the hook-policy unit (A2+A3). All "finish Phase 9"
+> framing below is superseded by the parity-program framing.
+
 > **2026-06-20 close UPDATE (supersedes the stale bullets below where they conflict):** Phases 6 **and 7** are ✅
 > COMPLETE + tagged (`transplant/phase-6` `a63aee3`; `transplant/phase-7` 2026-06-20). **D1 lint is ✅ RESOLVED**
 > (TS-version skew, single-TS override; rules back at `error`) — ignore the "D1 UNCONFIRMED / warn→error pending"

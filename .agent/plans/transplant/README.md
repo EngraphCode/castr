@@ -10,20 +10,27 @@ This directory holds per-phase sub-plans + the relevance ledger, mirroring `reme
 (`pnpm check`) + reference-closure-clean, with an atomic commit and a `transplant/phase-N` tag. Roll back **forward**
 only.
 
+> **🔭 SCOPE EXPANDED (owner, 2026-06-20) → the [Oak Parity-or-Better Program](./oak-parity-program.md).** The
+> transplant's named-phase manifest was proven **incomplete** (it never tracked ArcAngel, the hook-policy concept model,
+> the memory-machinery dirs, etc.). Owner directive: "upgrade everything less sophisticated than Oak; castr is not meant
+> to stay simple." The authoritative gap inventory + execution plan is now [`oak-parity-program.md`](./oak-parity-program.md)
+> (4 Tier-A + 6 Tier-B + 8 Tier-C verified gaps). **Phase 9 below is reframed as the closure gate that runs AFTER the
+> parity program lands.** The old Phase-9 PDR-currency component is ✅ COMPLETE (4 new + 9 folded PDRs; `5c40adb`, `3787928`).
+
 ## Status
 
-| Phase | Surface                                                                                  | Status                  | Tag                           |
-| ----- | ---------------------------------------------------------------------------------------- | ----------------------- | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done                 | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done                 | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done                 | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                 | ✅ done                 | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done                 | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done                 | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                              | ✅ done                 | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                              | ✅ done (2026-06-20)    | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                           | 🔶 partial (2026-06-20) | `transplant/phase-8`          |
-| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                      | `transplant/phase-9`          |
+| Phase | Surface                                                                                      | Status                  | Tag                           |
+| ----- | -------------------------------------------------------------------------------------------- | ----------------------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                                  | ✅ done                 | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context     | ✅ done                 | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                     | ✅ done                 | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                     | ✅ done                 | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                                   | ✅ done                 | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                      | ✅ done                 | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                                  | ✅ done                 | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                                  | ✅ done (2026-06-20)    | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                               | 🔶 partial (2026-06-20) | `transplant/phase-8`          |
+| 9     | closure gate (practice-verification + relevance ledger + handoff) — AFTER the parity program | ⬜ gated by parity      | `transplant/phase-9`          |
 
 ## Resume point (next session)
 
