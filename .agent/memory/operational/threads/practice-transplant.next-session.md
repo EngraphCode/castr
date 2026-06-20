@@ -50,12 +50,31 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   isolated detached worktree); reference-closure clean for phase-8 scope (drift validator green inside
   `repo-validators:check`; D4 was a recorded deferred lane, out of phase-8 scope).
 
-### Lane: transplant Phase 9 — deferred (trigger: transplant phases complete)
+### Lane: transplant Phase 9 — ACTIVE / in progress (started 2026-06-20)
 
-- Controlling plan: [transplant tracker](../../../plans/transplant/README.md) + [`reference-closure.md §back-flow items`](../../../plans/transplant/reference-closure.md).
-- Next safe step: Oak back-flow to a **fresh branch off Oak `main`** (destination
-  owner-resolved 2026-06-19); PDR-currency sync (adopt Oak amendments).
-- Acceptance bar: back-flow PR raised to Oak; castr-side closure recorded.
+- Controlling plan: [transplant tracker](../../../plans/transplant/README.md) + [`reference-closure.md §back-flow items`](../../../plans/transplant/reference-closure.md) + [`relevance-ledger.md §Main re-pin delta`](../../../plans/transplant/relevance-ledger.md).
+- **Measured scope (gap-scan firsthand 2026-06-20, the docs-mandated measurement).** The honest fold lens is **Oak's OWN
+  churn between the former pin `4470266` and the current pin `ad359a4f`** (NOT castr-vs-pin, which conflates castr's
+  deliberate localisation — a naive diff shows 71 PDRs "differ" but the real fold is 13). Per-surface:
+  - **PDR-currency = 13 PDRs + README** (NOT the "~30" estimate). **4 net-new** (092/093/094/095) + **9 amendments**
+    (011/051/058/064/078/081/085/089/091). Fold mechanism (owner-resolved 2026-06-17): append Oak's amendment-log/Decision
+    additions onto castr's localised copies per PDR-001 immutability — DON'T replace castr's copy with the pin.
+    Of the 9: PDR-051/058/089 are pure additions (+N/-0, clean appends); 011/064/078/081/085/091 have removals
+    (Oak modified lines — care-merge vs castr localisation). PDR-011's "already in castr" was a FALSE positive of a
+    Status-line signature — it still needs the fold.
+  - **`no-unbounded-host-load` rule** (D4 pair): canonical `.agent/rules/` + regenerate wrappers; couples to start-right
+    §7 host-health section (castr's start-right LACKS it — bring together) + verify `.agent/hooks/policy.json` carries the
+    busy-loop/`stress-ng` patterns the rule's Enforcement claims + neutralize the Oak session-operations-report dangling ref.
+  - **rule/directive currency sweep** (~30 rules + 3 directives): NOISE-CONFOUNDED — needs a three-way diff vs the
+    `ad649710` localisation base to separate castr's deliberate localisations from Oak's upstream amendments. Heavy/fuzzy.
+  - **agent-tools parity** (~50 files): validators/hook-policy/core/claude subsystems; much may already be on the
+    D2/D3/D4 branches — reconcile against those before bringing.
+- **Progress (2026-06-20):** Slice 1 ✅ — PDR-092..095 brought verbatim (`5c40adb`); drift-green at 96 PDRs.
+- **Remaining slices:** 2 (9 PDR folds) → 3 (rule pair) → 4 (rule/directive three-way sweep) → 5 (agent-tools parity) →
+  6 (Oak back-flow PR — **owner-gated outward publish**) → 7 (practice-verification + relevance-ledger + handoff, then
+  cut `transplant/phase-9`). **Do NOT tag Phase 9 until the full gap-scan sweep is honestly complete** (the docs name
+  tagging-without-the-sweep as the Phase-1b green-but-incomplete failure mode).
+- Acceptance bar: all surfaces folded + back-flow PR raised to Oak + castr-side closure recorded + `transplant/phase-9` cut green.
 
 ### Lane: D4 generic-surface back-brings — ✅ LANDED (branch, 2026-06-20)
 
