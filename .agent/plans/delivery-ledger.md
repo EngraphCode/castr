@@ -24,6 +24,28 @@ the transplant branch already contained every other branch's content. **All work
 `feat/rewrite` (remote-only, ~170 unique commits, a historical session-3.x line) is **not** part of current work and
 was left untouched.
 
+## Main→branch sync discipline (owner sign-off 2026-06-20)
+
+The single-branch invariant ("`feat/transplant-engraph-practice` carries everything; one eventual PR to `main`") can
+**leak**: work occasionally lands on `main` through a _separate_ branch — e.g. a Claude-web review branch
+(`claude/castr-zod-compiler-review-*`) merged via its own PR (`ccd9c7a`, PR #2) — outside the transplant branch. Left
+unchecked, such `main`-side commits are **stranded** and the eventual transplant merge would either lose them or
+regress whatever already homed them. This is the castr-local `main`→working-branch mirror of the upstream
+`Oak`→castr PDR-currency sync (a different _direction_, same shape).
+
+**The check — run it at session open, before any merge act, and whenever the owner directs:**
+
+1. `git fetch origin --prune --tags` (authoritative; never trust a possibly-stale local remote-tracking ref).
+2. `git log origin/main --not HEAD --oneline` — what is on `main` that the branch has not absorbed.
+3. For each surfaced commit, decide with evidence: **integrate** (cherry-pick / home its content), or record
+   **"already homed / nothing to integrate"** when the content is present in split or homed form (re-integrating would
+   regress the homing — verify firsthand with `git merge-base --is-ancestor` and content diffs, not commit identity).
+4. Record the verdict in `repo-continuity.md §Next Safe Steps` so the next session inherits a current sync state.
+
+"Nothing to integrate" is a valid, evidence-backed outcome — the goal is that no `main`-side commit is silently
+stranded, not that every `main` ref is merged. Unrelated orphan branches (empty `merge-base` with HEAD, e.g.
+`feat/rewrite`) are never integrated.
+
 ## Monitoring discipline
 
 Open PRs are live surfaces: reviews and CI **will** demand fixes.

@@ -234,6 +234,12 @@ Continuity invariants (the non-negotiables a resuming agent must hold):
 - **Single branch** `feat/transplant-engraph-practice`; one eventual PR → `main`
   carries everything. Branch/PR state is owned by
   [`delivery-ledger.md`](../../plans/delivery-ledger.md).
+- **Periodic main→branch sync** (owner sign-off 2026-06-20) — at session open,
+  before any merge act, and on owner direction, run the
+  [`delivery-ledger.md §Main→branch sync discipline`](../../plans/delivery-ledger.md)
+  check so no `main`-side commit (landed via a separate branch) is silently
+  stranded outside the transplant branch. "Nothing to integrate" is a valid,
+  evidence-backed verdict.
 - **Roll forward only** — revert; never `reset --hard` / force-push
   ([`never-use-git-to-remove-work`](../../rules/never-use-git-to-remove-work.md)).
 - **Each transplant phase = one atomic commit + `transplant/phase-N` tag**,

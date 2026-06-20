@@ -89,18 +89,7 @@ an item graduates, replace it with a one-line tombstone naming where it landed
   conserved in `pnpm-workspace.yaml` (comment) + `d1-sonarjs-findings.md` §0; the
   ADR is the graduation-upward step, not yet authored.
   `[captured: 2026-06-19 | source: d1-sonarjs-findings.md §0 + pnpm-workspace.yaml]`
-- **Doctrine candidate: a periodic `main`→branch sync check for the single-branch
-  model.** The single-transplant-branch invariant ("one branch carries
-  everything") leaked — `origin/main` `ccd9c7a` (a zod-compiler report-plan)
-  landed on `main` via a separate branch, outside the transplant branch. Mirror of
-  the Oak PDR-currency sync (upstream→castr); this is the castr-`main`→working-branch
-  direction. **graduation-target:** a clause in the continuity/delivery doctrine
-  (or the transplant tracker) naming the periodic main→branch reconciliation so
-  main-side commits are not stranded. **status:** due — **second instance observed
-  2026-06-20**: the owner directed a main→branch sync check this session
-  ("if there are additional commits on the remote, fetch and integrate"),
-  confirming the need; the check ran (`git fetch --prune` + divergence analysis)
-  and found nothing to integrate (recorded in `repo-continuity.md §Next Safe Steps`).
-  The trigger has fired — recommend graduating the clause (owner sign-off) at the
-  next pass; conserved meanwhile in the continuity record.
-  `[captured: 2026-06-19 | second-instance: 2026-06-20 | source: repo-continuity.md §Next Safe Steps incoming-from-main]`
+- **GRADUATED 2026-06-20** (owner sign-off): the periodic `main`→branch sync-check
+  doctrine landed as `delivery-ledger.md §Main→branch sync discipline` + the
+  `repo-continuity.md §Repo-Wide Invariants` periodic-sync line (commit graduating
+  phase-8 task-3b follow-on).
