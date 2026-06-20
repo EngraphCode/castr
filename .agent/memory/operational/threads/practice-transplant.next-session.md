@@ -26,6 +26,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director    | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor    | 2026-06-20    | 2026-06-20   |
 
 ## Lanes
 
@@ -45,8 +46,15 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   - 6 Tier-B + 8 Tier-C verified gaps. Built by a 5-subagent firsthand audit; all load-bearing claims re-verified
     firsthand; 3 agent errors caught (D4 archive on a branch not missing; agent-identity wordlists already present;
     patterns-index exists — castr ahead).
-- **Progress:** B2 metacognition directive ✅ (`fcda10a`). The `no-unbounded-host-load.md` rule is reconciled +
-  untracked in-tree (lands inside the A2 hook-policy tranche, not alone — PDR-092 costume rule).
+- **Progress:** B2 metacognition directive ✅ (`fcda10a`). The `no-unbounded-host-load.md` rule was reconciled this
+  session but **NOT kept in-tree** (an untracked canonical rule breaks `portability:check` — missing wrappers +
+  RULES_INDEX entry — and it can't be committed until A2 adds the policy.json busy-loop patterns its Enforcement claims,
+  per PDR-092 costume rule). It is fully reproducible: in A2, `git show practice/castr-pin:.agent/rules/no-unbounded-host-load.md`
+  then re-apply the two reconciliations — (1) drop the `never-ignore-signals` Related-Surfaces bullet (that rule does
+  NOT exist at the Oak pin either → an upstream Oak dangling ref, recorded in the feedback report); (2) neutralise the
+  Oak `graph-team-session-operations…` session-ops-report path. Then add the 3 host-load patterns (`for(;;)`,
+  `while(1)`, `stress-ng`) + a fork-bomb literal to `policy.json`, a RED-first test, start-right §7, and regenerate
+  wrappers.
 - **Sequencing:** Tranche 1 (C1/C2 bug fixes → C6 dirs → C4/C5/C7/C8) → Tranche 2 (A2+A3 hook-policy unit, TDD) →
   Tranche 3 (A4 statusline → A1 ArcAngel) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
 - **Acceptance:** every ledger row applied-or-decided; gap re-audit clean; then the P9 closure gate.
@@ -80,7 +88,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - Controlling plan: [`reference-closure.md`](../../../plans/transplant/reference-closure.md) (recorded by Phase 8 task 6 triage).
 - **Outcome:** both genuinely-new Oak-pin collaboration subsystems brought by Seat 2 (Secret Watching
   Candle) on branch `feat/d4-archive-provenance-backbring` @ `0a75231` (off transplant tip `8d62197`;
-  **unpushed**): `archive/` (class-tiered comms-archive rotation: `archive-move`/`-execute`/`-node`,
+  **pushed**): `archive/` (class-tiered comms-archive rotation: `archive-move`/`-execute`/`-node`,
   `disposition-policy`, `event-classification`, `event-projection`, `manifest`) + `provenance/`
   (`cited-event-provenance`, `provenance-scan`/`-node`). **Error model reconciled** Oak's
   `@oaknational/result` (castr-DON'T-BRING) → fail-fast: typed `ArchiveMoveError`/`ProvenanceScanError`
@@ -96,7 +104,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
 - Controlling plan: transplant tracker §Deep-enhancement arc + [`delivery-ledger.md`](../../../plans/delivery-ledger.md).
 - **Outcome (Seat 1, Stratospheric Wheeling Horizon):**
-  - **D3** (CI to Oak standard) — `feat/d3-ci-oak-standard` @ `c7f819e` (off `8d62197`; **unpushed**):
+  - **D3** (CI to Oak standard) — `feat/d3-ci-oak-standard` @ `c7f819e` (off `8d62197`; **pushed**):
     ci.yml runs the full `check:ci` gate; 6 actions SHA-pinned (`# vX.Y.Z`); CodeQL kept+modernized
     v2→v3+pinned; broken `lib/**` path filters removed; dead `publish.yml` removed. Reviewed
     config-expert (PASS-with-nits) + security-expert (PASS), Director-approved firsthand.
@@ -105,7 +113,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
     `node-version-file: .nvmrc` (drops the hardcoded value). `engines.node` semantics left to owner/ADR-049.
     Director-approved firsthand.
 - **Delivery framing (Q-001 split-PR plan):** off `c7f819e`, the D2 branch contains D3 (shared ci.yml
-  lineage) → they deliver coupled (D2 on top of D3) or D3-first-then-D2-rebase. Both unpushed (delivery
+  lineage) → they deliver coupled (D2 on top of D3) or D3-first-then-D2-rebase. Both pushed to origin (delivery
   deprioritised; push = owner's call).
 - **Remaining in arc:** release automation (separate deferred lane below); D4 ✅ landed above.
 

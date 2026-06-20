@@ -170,3 +170,16 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
   `repo-validators:check`. **trigger-condition:** the friction-fix tranche (Lane 1), OR a third drift incident, OR owner
   direction. **status:** pending — out of scope for the wiring itself (which is proven + green); not a blocker.
   `[captured: 2026-06-20 | source: config-expert + code-reviewer PASS reviews of the Q-003 wiring]`
+
+## 2026-06-20 capture (Oak parity-program planning — meta-gap)
+
+- **Meta-gap: `.agent/plans/templates/` is EMPTY in castr.** The `engraph-plan` skill and the
+  `lifecycle-triggers` plan component both reference plan templates (`.agent/plans/templates/README.md`
+  - a template inventory) that do not exist in castr — so plan authoring has no scaffold inventory to
+    copy from, and the lifecycle-triggers component reference is a dangling pointer. **graduation-target:**
+    a parity-program tranche item (materialise the plan-templates inventory from the Oak pin, or author
+    castr-native templates) + a `lifecycle-triggers.md` component. **trigger-condition:** the Oak
+    parity-program execution (it is itself a sophistication gap — castr is simpler than Oak here), OR
+    owner direction. **status:** pending — recorded in `oak-parity-program.md` §Learning loop as a noted
+    meta-gap; folds into the parity program.
+    `[captured: 2026-06-20 | source: engraph-plan skill run during parity-program planning]`

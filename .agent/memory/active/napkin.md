@@ -359,6 +359,25 @@ commit_queue:[],claims:[]}` (+ closed `{schema_version:"1.3.0",claims:[]}`) befo
   read" / "content has changed since last read" yet the intended block landed exactly (clean 4-line git diff). One-off;
   noted, not load-bearing.
 
+## 2026-06-20 (Oak parity-program planning + closeout — Stormy Sailing Archipelago / cba47e)
+
+- **The N7/N11 hook over-match bit ME, live, mid-session.** My own diagnostic Bash command
+  (`git config … 'push|hook'` + `stat -f`) was BLOCKED — the matcher matched `git`…`push`…`-f` as a
+  SUBSEQUENCE across the whole compound command. Strongest worked instance yet that castr's hook-policy
+  matcher needs the A2 upgrade (substring/positional matching). The gap I was planning literally
+  obstructed the planning.
+- **Push over-engineering → Occam.** Found origin ahead (commits pushed) and theorised an "environment
+  auto-push" mechanism, digging through reflogs/config. Owner: "Occam's Razor, I pushed." Lesson: when a
+  state I didn't cause appears, the SIMPLE explanation (the owner did it) outranks an elaborate mechanism
+  theory — consider the obvious actor first. (Surfacing the "nothing pushed" contradiction was right; the
+  auto-push _theory_ was the over-reach — frame as a question, not a mechanism.)
+- **A 5-subagent gap-audit caught 3 errors on firsthand re-verification** ([[verify-agent-claims-firsthand]]):
+  D4 archive/provenance "missing" was on a branch (agent read HEAD); agent-identity "flat wordlists"
+  wrong (themed wordlists present + used — my name "Stormy Sailing **Archipelago**" is maritime); "no
+  patterns-index generator" wrong (castr has it, ahead). Audit output is candidate leads, not findings.
+- **Meta-gap: `.agent/plans/templates/` is EMPTY** — the engraph-plan skill + lifecycle-triggers component
+  reference templates that don't exist in castr. Recorded in pending-graduations.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_

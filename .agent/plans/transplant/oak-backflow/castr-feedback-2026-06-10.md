@@ -70,6 +70,11 @@ sweep recommended above caught it:
    to `PDR-014-pattern-routing-discipline.md`, but Oak's own current PDR-014 file is
    `PDR-014-consolidation-and-knowledge-flow-discipline.md` (renamed upstream; the link was never repointed). The link
    dangles in Oak itself. castr repointed its copy to the correct slug; Oak should do the same.
+2. **`no-unbounded-host-load.md` references a non-existent `never-ignore-signals` rule.** Oak's rule lists
+   `[`never-ignore-signals`](never-ignore-signals.md)` under §Related Surfaces, but no `never-ignore-signals.md` exists
+   at the Oak pin (`git -C <oak> cat-file -e practice/castr-pin:.agent/rules/never-ignore-signals.md` → does not exist).
+   A dangling Related-Surfaces link in Oak — either author the rule or drop the reference. castr drops the reference when
+   it brings the rule.
 
 **Method note (corroborates the report above):** castr's PDRs sat at an _older_ Oak base than assumed, at inconsistent
 per-file bases — e.g. PDR-089 was missing ~47 lines of pre-`4470266` content as well as the post-`4470266` amendments.
