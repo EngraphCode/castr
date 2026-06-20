@@ -119,6 +119,37 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - Acceptance bar: a working release path lands with the chosen tooling + a CI release job, or owner classifies
   release-out-of-scope.
 
+### Lane: first-run friction-fix tranche — active-next (trigger: owner-recommended; before the next team session)
+
+- Controlling detail: [`../../active/napkin.md` §FIRST RUN of the collaboration setup](../../active/napkin.md) (F1–F12,
+  N1–N12, measured firsthand by the first concurrent stream) + graduation candidates/cures in
+  [`../pending-graduations.md`](../pending-graduations.md).
+- Why: highest-leverage hardening before the next team session — fixes the agent-tools/hook/doctrine walls the first
+  concurrent stream hit, so the collaboration framework (Phase 8's deliverable) is genuinely dogfoodable.
+- Concrete items (each pickup-able; durable detail in the two homes above):
+  - **Monitor idle-coalescing sweep doctrine (F6/N10, headline)** — amend `use-monitor-for-event-driven-wake.md` +
+    `comms-all-channels-watcher.md` to mandate a full `comms list` catch-up sweep on every wake (already live as team
+    doctrine + user-memory; the rule-text amendment is what's pending).
+  - **Dangerous-pattern hook over-match (N7/N11)** — anchor the matcher on command-leading position / word boundary,
+    not free substring (it blocks safe `git checkout -b` and innocent prose containing "checkout").
+  - **Seen-file naming (N4/N12)** — write seen-files as `<slug>.seen` (not `<Codename>.json`; the `.json`-on-non-JSON
+    broke `format:check`), or add `comms-seen/` to `.prettierignore`.
+  - **agent-tools CLI hardening (F2/F4/F5/F7/N5/N6)** — read-only claims ENOENT on a fresh home; `comms watch`
+    seen-dir auto-create; pre-claim heartbeat ordering; commit-skill phantom root alias; `--intent-id` canonical source;
+    `platform` field consistency.
+  - **`validate-statusline-routing` validator (NEW, 2026-06-20)** — assert `settings.json.statusLine.command` → an
+    extant shim whose adapter target resolves, sibling to the existing `validate-pretooluse-guard-routing`. Surfaced
+    independently by config-expert + code-reviewer during the Q-003 statusline landing (`ebf08b5`); there are now THREE
+    classes of `.claude/`→`agent-tools/dist` wiring but only one is validated. Detail in `pending-graduations.md`.
+- Acceptance bar: each item lands as code/rule-text with TDD where code is touched; solo or a small dogfooding team session.
+
+### Lane: statusline identity wiring (Q-003) — ✅ LANDED (2026-06-20, `ebf08b5`)
+
+- Outcome: the two missing `.claude/` wiring pieces brought (shim + `statusLine` settings block) so PDR-027 identities
+  render in the status bar (from the next session onward). Verified firsthand end-to-end; config-expert + code-reviewer
+  PASS. Full record: [`../open-questions.md §Q-003`](../open-questions.md). Optional follow-up folded into the
+  friction-fix tranche lane above.
+
 ## Standing decisions this thread carries
 
 - Single branch `feat/transplant-engraph-practice`; roll-forward only; each
