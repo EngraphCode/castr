@@ -93,3 +93,28 @@ an item graduates, replace it with a one-line tombstone naming where it landed
   doctrine landed as `delivery-ledger.md §Main→branch sync discipline` + the
   `repo-continuity.md §Repo-Wide Invariants` periodic-sync line (commit graduating
   phase-8 task-3b follow-on).
+
+## 2026-06-20 capture (Phase 8 close consolidation)
+
+- **PDR-pattern candidate: an inherited classification (`blocked`, `thin`, `parity
+item`, `not-needed-yet`) is a claim to measure against the artefact, and
+  multi-surface repetition increases suspicion rather than confidence.** Distilled
+  this session from three instances: the clerk-expert "phantom blocker", the task-6
+  "thin" mis-estimate, and the per-thread-records "not-needed-yet" framing.
+  **graduation-target:** a Practice Core PDR with `pdr_kind: pattern` (verification
+  discipline — sibling to [[verify-agent-claims-firsthand]] / `verify-dont-trust`),
+  OR fold as a sharpening of an existing verify-firsthand PDR. **trigger-condition:**
+  a third distinct instance, OR a curation pass, OR owner direction. **status:**
+  pending — conserved in `distilled.md` (two new bullets); the PDR is the
+  graduation-upward step, not yet authored.
+  `[captured: 2026-06-20 | source: distilled.md + napkin Phase-8 entries]`
+- **Pattern candidate: a green test proves only the layer it runs at — verify it
+  exercises the real production stack on its real substrate, not a proxy or a
+  fake.** Instance this session: collaboration-state concurrency was "tested" only
+  on a bare-counter `Promise.all` + an in-memory fake runtime; the real multi-process
+  filesystem path was unproven until the live demonstration + a real-fs test.
+  **graduation-target:** `.agent/memory/active/patterns/` (a testing-discipline
+  instance) or a `pdr_kind: pattern` PDR if a second cross-repo instance appears.
+  **trigger-condition:** second instance, OR curation pass, OR owner direction.
+  **status:** pending — conserved in `distilled.md`.
+  `[captured: 2026-06-20 | source: distilled.md + claims-concurrency.integration.test.ts]`
