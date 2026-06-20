@@ -2,9 +2,46 @@
 
 **Source:** owner correction (2026-06-18) — "single-branch is a _constraint_, not a fit; multi-agent concurrency is the
 goal" — plus a firsthand inventory of castr's current collaboration estate this session. **Status:** authored 2026-06-18;
-**NOT executing.** Sequencing is **unchanged** — Phase 8 remains after Phase 6 (memory/state) and Phase 7 (adapters), per
-the primary plan and the owner's standing "I name the next slice." This sub-plan only **sharpens scope** so the
-prioritisation decision rests on measured ground; it does not pull Phase 8 forward.
+**PARTIALLY EXECUTING (2026-06-20)** — see the as-built banner. Sequencing is **unchanged** — Phase 8 remains after
+Phase 6 (memory/state) and Phase 7 (adapters), per the primary plan and the owner's standing "I name the next slice."
+
+> ## As-built reconciliation (2026-06-20, firsthand)
+>
+> This sub-plan was authored 2026-06-18, **before** WS7 (Phase 6, 2026-06-19) and Phase 7 (2026-06-20) landed. Three of
+> its load-bearing premises were stale; corrected against measured reality:
+>
+> - **Task 2 (schema-surface contract) — ALREADY RESOLVED.** WS7 relocated the 5 `*.schema.json` to committed source
+>   `agent-tools/src/collaboration-state/schemas/` and repointed the `practice-substrate` consumer (`live-types.ts`) at
+>   them. There is no open design point; the "emit-from-Zod vs reconcile-consumer" fork was decided (committed-source
+>   schemas) and is in the tree.
+> - **Task 4 failure count — 1, not 12.** The agent-tools informational suite is `940 passed / 1 failed`; the lone failure
+>   is the pre-existing **clerk-expert P7 roster-parity** item, not a collaboration-state absence. WS7's decoupling means
+>   the collaboration-state tests pass without `.agent/state/` present. The "12 → 0 substrate-absent" target is moot.
+> - **`subagents` gate — already wired blocking** (Phase 7); only `collaboration-state` remained deferred.
+>
+> **Landed this session (owner-approved partial: "skeleton + replan reconcile"):**
+>
+> 1. **Task 1 — substrate skeleton materialised**, seeded empty (no upstream event data): `.agent/state/README.md` plus
+>    the `collaboration/` skeleton (`.gitignore`, `conversations/`, `escalations/`, `handoffs/`, `sidebars/`,
+>    `comms-archive/`, each anchored by a `README.md` or `.gitkeep`). Repo-tier (`conversations/`, `escalations/`,
+>    `sidebars/`) tracked; instance-tier (`comms/`, `active-claims.json`, `closed-claims.archive.json`, `comms-archive/*`,
+>    `handoffs/*`) untracked-by-design via `.gitignore`. READMEs reconciled per-surface (schema path → WS7 source;
+>    PDR-063 castr-local; ADR-199/182, PDR-094 retained cross-host).
+> 2. **Completed the WS7 bring of `state-integrity.ts`** — the earlier WS7 pass took an older version that threw
+>    unconditionally on absent surfaces. Brought Oak pin's `optionalWhenAbsent` hardening (instance-tier
+>    `active-claims.json` / `closed-claims.archive.json` / `comms/` optional-when-absent; `conversations/` /
+>    `escalations/` still required) + its test (TDD red→green). castr's source is now byte-identical to the Oak pin.
+> 3. **Task 4a — flipped `validate-collaboration-state` blocking** into `repo-validators:check`; green against the empty
+>    skeleton (`checkedCount 0` of real surfaces).
+>
+> **NOT yet done (carry the `transplant/phase-8` tag — phase incomplete):** task 3 (wire SessionStart to write a live
+> identity row + claim — the behaviourally significant, self-modifying piece); task 4b (remove the
+> `turbo test --filter=!@engraph/agent-tools` exclusion — blocked on the **clerk-expert P7** fix, unrelated to
+> collaboration); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk reconciliation of new generic surfaces).
+> This session lands as a **green-gated intra-phase commit**, not the phase tag.
+
+This sub-plan only **sharpened scope** so the prioritisation decision rests on measured ground; the partial execution
+above does not pull the remaining Phase 8 work forward.
 
 > Why this file exists: the parent plan's Phase-8 line is a one-liner ("directive + rules cluster + skills + structured
 > coordinator-state + TTL presence + comms attention pass + plan-mode carveout; wire collaboration validator blocking").

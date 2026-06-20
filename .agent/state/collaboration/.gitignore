@@ -1,0 +1,17 @@
+# Instance-tier coordination state — untracked-by-design.
+# Preserved on disk, not carried in git. The durable decision-provenance
+# surfaces (conversations/, escalations/, sidebars/) and the READMEs stay
+# tracked. See ../README.md for the tier boundary; the portable backing is
+# Oak PDR-094 / ADR-199 (cross-host — not yet hydrated into castr's estate).
+_tmp-*
+*.seen
+comms/*
+comms-seen/*
+comms-draft/*
+handoffs/*
+!handoffs/README.md
+active-claims.json
+closed-claims.archive.json
+shared-comms-log.md
+comms-archive/*
+!comms-archive/.gitkeep

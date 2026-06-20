@@ -621,3 +621,48 @@ questions and deferred items") are **both done**: the substrate reviewer-route r
 (back-flow target → fresh branch off Oak main; D1 → TS-version-skew root-fixed via a single-TS pnpm override, rules at
 `error`, 0 violations; Q-001 → D3-before-merge + split PRs). **`transplant/phase-6` ✅ CUT (`a63aee3`) + pushed — Phase 6
 COMPLETE; reference-closure-clean (no open P6 placeholders).** Next = Phase 7.
+
+## Phase 8 (partial) — Collaboration substrate skeleton + `collaboration-state` gate flip (2026-06-20)
+
+Owner-approved partial Phase-8 landing ("skeleton + replan reconcile"). Materialised the `.agent/state/collaboration/`
+runtime substrate (seeded empty) and flipped the last deferred validator blocking. The remaining Phase-8 tasks
+(SessionStart live-registration, test-exclusion removal, per-thread records, generic-surface reconciliation) carry the
+`transplant/phase-8` tag — this is a **green-gated intra-phase commit**, not the phase tag.
+
+### Substrate skeleton — disposition: **rewrite (done)**
+
+`.agent/state/README.md` + `collaboration/{.gitignore, conversations/.gitkeep, escalations/README.md,
+handoffs/README.md, sidebars/.gitkeep, comms-archive/.gitkeep}` authored castr-native, seeded **empty** (no upstream
+event data — Oak's committed `conversations/`/`sidebars/` carry real Oak decision data, DON'T-BRING). The two-tier
+tracked/untracked model (repo-tier `conversations/`/`escalations/`/`sidebars/` tracked; instance-tier
+`comms/`/`active-claims.json`/`closed-claims.archive.json`/`comms-archive/*`/`handoffs/*` untracked) is enforced by
+`collaboration/.gitignore`, brought near-verbatim (portable).
+
+### `state-integrity.ts` ENOENT-tolerance — disposition: **complete the WS7 bring (done)**
+
+The earlier WS7 pass (2026-06-19 s3) brought an **older** `state-integrity.ts` that threw unconditionally on absent
+surfaces — so the deferred validator could never be green on a fresh checkout (instance-tier files are git-ignored,
+absent in CI). Brought the Oak pin's `optionalWhenAbsent` hardening: `active-claims.json` / `closed-claims.archive.json`
+/ `comms/` are optional-when-absent (the clean state, not a fault); `conversations/` / `escalations/` stay required.
+TDD: brought the Oak pin's "treats absent untracked-by-design surfaces as clean" test (red against castr's throwing
+code) → brought the hardened source (green). castr's `state-integrity.ts` is now **byte-identical to the Oak pin**.
+
+### `collaboration-state` gate flip — disposition: **flipped blocking (done)**
+
+`validate-collaboration-state` added to `repo-validators:check`; green against the empty skeleton
+(`collaboration-state validate: OK`). The deferred-validator note in the tracker is updated — `collaboration-state` is
+no longer in the deferred set; the only remaining informational exclusion is the `agent-tools` test suite
+(`turbo test --filter=!@engraph/agent-tools`), blocked on the **clerk-expert P7** parity item (unrelated to
+collaboration).
+
+### Cross-host + local cites introduced — disposition: **retained-cross-host / resolve**
+
+- **Retained-cross-host** (Oak refs castr's estate lacks; the design genuinely originates in Oak, per the Phase-4 >047
+  precedent): `ADR-199` / `PDR-094` (untracked-instance-tier + class-tiered archive doctrine, in `.agent/state/README.md`
+  - `.gitignore`); `ADR-182` (mid-cycle-handoff-record substrate phenotype, in `handoffs/README.md`).
+- **Resolved castr-local**: `PDR-063-mid-cycle-retirement-protocol.md` (handoffs genotype — castr-resolvable link);
+  the escalation-schema cite repointed from Oak's old `../escalation.schema.json` to the WS7 committed source
+  `agent-tools/src/collaboration-state/schemas/escalation.schema.json`; Oak's `../fixtures/escalations/` (castr has no
+  such dir) repointed to the `agent-tools/tests/collaboration-state/` suite.
+
+**Phase-8 (partial) result: full `pnpm check` green; intra-phase commit (no `transplant/phase-8` tag — phase incomplete).**

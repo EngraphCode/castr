@@ -12,18 +12,18 @@ only.
 
 ## Status
 
-| Phase | Surface                                                                                  | Status               | Tag                           |
-| ----- | ---------------------------------------------------------------------------------------- | -------------------- | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done              | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done              | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done              | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                 | ✅ done              | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done              | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done              | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                              | ✅ done              | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                              | ✅ done (2026-06-20) | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                           | ⬜                   | `transplant/phase-8`          |
-| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                   | `transplant/phase-9`          |
+| Phase | Surface                                                                                  | Status                  | Tag                           |
+| ----- | ---------------------------------------------------------------------------------------- | ----------------------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                              | ✅ done                 | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context | ✅ done                 | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                 | ✅ done                 | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                 | ✅ done                 | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                               | ✅ done                 | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                  | ✅ done                 | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                              | ✅ done                 | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                              | ✅ done (2026-06-20)    | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                           | 🔶 partial (2026-06-20) | `transplant/phase-8`          |
+| 9     | practice-verification + relevance ledger + feedback + handoff                            | ⬜                      | `transplant/phase-9`          |
 
 ## Resume point (next session)
 
@@ -57,18 +57,22 @@ roster, the castr gate chain) into the start-right shared core; retired castr's 
   an **unbuilt `dist` fails OPEN** (warns, never bricks), a built-but-broken guard fails closed. If a tool call is
   blocked, that is the policy in `.agent/hooks/policy.json` — not a bug.
 - **agent-tools `test` is INFORMATIONAL**, excluded from the blocking gate via `turbo test --filter=!@engraph/agent-tools`
-  (+ runner `agent-tools:test:informational`). It is **873/885 (12 failures, measured 2026-06-18)**; all 12 are later-phase
-  content — collaboration-state schemas→P8 + `codex-project-agents` roster parity→P6/7 (the earlier `RULES_INDEX`→P4 entry
-  cleared when Phase 4 landed). Remove the filter (flip blocking) as each phase lands its content.
-- **`repo-validators:check` chains only the 4 GREEN validators** (`lifecycle-scripts`, `pretooluse-guard-routing`,
-  `drift`, `fitness-vocabulary`). The other 4 are deferred informational: `stale-script`→P4, `collaboration-state`→P8,
-  `subagents`→P6, `portability`(Oak's)→P7. Add each to the blocking chain when its content exists.
-- **⚠️ The deferred validators' "crashes" are NOT bugs — do NOT try to "fix" them.** `collaboration-state` and
-  `subagents` throw on absent scan dirs by **design** (Oak tests assert `rejects.toThrow('…/conversations')` /
-  `toThrow(/missing adapter/)`); they are truthfully reporting that castr's P6/P8 infrastructure is not installed yet. A
-  2026-06-07 trial fix (return `[]` on `ENOENT`) broke the hard-fail test and was reverted — **Oak is clean at
-  `ad649710`, nothing pushed**. They self-clear when P6/P8 land. Silencing them would mask the true "infrastructure
-  absent" signal. See `relevance-ledger.md` §"Deferred-validator …".
+  (+ runner `agent-tools:test:informational`). It is **940/941 (1 failure, measured 2026-06-20)** — the lone failure is
+  the `codex-project-agents` **clerk-expert roster-parity (P7)** item; the earlier collaboration-state-schema failures
+  cleared when WS7 landed (Phase 6) and the substrate skeleton + ENOENT-tolerance landed (Phase 8 partial, 2026-06-20).
+  Remove the filter (flip blocking) once the clerk-expert P7 item is fixed.
+- **`repo-validators:check` chains 8 GREEN validators** (2026-06-20): `lifecycle-scripts`, `pretooluse-guard-routing`,
+  `drift`, `fitness-vocabulary`, `no-stale-script-invocations` (P4), `patterns-index` (P6), `subagents` (P7), and
+  `collaboration-state` (**P8 partial, flipped 2026-06-20**). Oak's `portability` runs as a separate `portability:check`
+  gate in `qg` (flipped P7). No deferred-informational validators remain.
+- **⚠️ Historical note — the deferred validators self-cleared by landing their infrastructure, NOT by silencing.**
+  `subagents` cleared when Phase 7 generated the `.cursor`/`.claude` adapters. `collaboration-state` cleared in two
+  steps: WS7 (Phase 6) decoupled the schemas from the data plane, then the Phase-8-partial slice (2026-06-20)
+  materialised the `.agent/state/collaboration/` skeleton **and** completed the WS7 bring of `state-integrity.ts`
+  (Oak pin's `optionalWhenAbsent` hardening: instance-tier surfaces absent = the clean state). The 2026-06-07 "return
+  `[]` on ENOENT" trial that was reverted is now superseded by Oak's correct design (per-surface `optionalWhenAbsent`,
+  with `conversations/`/`escalations/` still required → the hard-fail test still holds). See
+  `relevance-ledger.md` §"Deferred-validator …".
 
 ## Next steps (in order)
 

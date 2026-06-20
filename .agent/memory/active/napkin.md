@@ -2,6 +2,37 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-20 (Phase 8 PARTIAL — substrate skeleton + collaboration-state gate flip; owner-approved "skeleton + replan reconcile")
+
+- **A controlling sub-plan can go stale between authoring and execution — re-measure its load-bearing premises before
+  executing, don't inherit them.** `08-collaboration-active.md` was authored 2026-06-18, **before** WS7 (P6, 06-19) and
+  P7 (06-20). Three premises were stale at execution time: task 2's "one open design point" (schema-surface contract) was
+  **already resolved** by WS7 (consumer `live-types.ts` points at committed-source schemas); the "**12** informational
+  failures, bulk = collaboration-state absence" was actually **1** (the clerk-expert P7 item — WS7's decoupling made the
+  collaboration-state tests pass without `.agent/state/`); and `subagents` was **already wired blocking** (P7). The
+  metacognition pass + firsthand measurement caught all three before I built on them. Surfaced to the owner as a scope
+  correction (smaller than the plan), got the landing decision, then executed. [[verify-agent-claims-firsthand]]
+- **THE load-bearing find: a transplant "bring" took the WRONG (older) version of a file — verify a brought file is
+  byte-identical to the PIN, not merely "present."** WS7 (06-19 s3) brought `state-integrity.ts`, but an **older** copy
+  that threw unconditionally on absent surfaces. The Oak pin's current version has `optionalWhenAbsent` hardening
+  (instance-tier `active-claims.json`/`closed-claims.archive.json`/`comms/` absent = the expected clean state, not a
+  fault; `conversations/`/`escalations/` still required). Without that, the deferred `collaboration-state` validator
+  could **never** flip green on a fresh checkout (the instance tier is git-ignored, absent in CI) — materialising the
+  skeleton alone was insufficient. The sub-plan's task 4 ("flip once the estate exists") under-specified this. Cure:
+  `diff <(cat castr/file) <(git -C oak show PIN:file)` for every transplanted file — "brought" ≠ "current." Completing
+  the bring (the hardening + its TDD test) was the actual enabler of the gate flip, and is squarely "bring Oak's design,"
+  not "silence the validator."
+- **prettier broke a blockquote: a long inline brace-list with `+` at a wrap point inside a `> 1.` list lost its `>` on
+  the wrapped continuation line.** `` `collaboration/{.gitignore, conversations/.gitkeep, …}` `` wrapped and line N+1
+  (`comms-archive/.gitkeep}…`) rendered OUTSIDE the quote. **prettier-stable** (format:check passes) but renders broken —
+  the gate does not catch it. Same family as the `(PDR-049 + PDR-050)` → `- PDR-050` list-injection (markdown special
+  char `+`/`-` landing at a wrapped line-start). Cure: after `prettier --write` on blockquoted/list markdown, verify
+  blockquote integrity firsthand (`grep -vnE '^>|^$'` over the banner range), and avoid long inline `{…}` lists / `+`
+  inside blockquotes. format:check green is necessary, not sufficient, for correct render.
+- **The validator's `checkedCount` counts always-listed surfaces even when skipped:** `validate-collaboration-state` on
+  the empty skeleton reports "OK (2 JSON file(s) checked)" — the 2 are `active-claims.json` + `closed-claims.archive.json`
+  (always in `jsonSurfaces`, both optional-absent → skipped). Not "0"; the count is `surfaces.length`, not files-read.
+
 ## 2026-06-20 (Phase 7 — adapter generator + gate flips LANDED, tag `transplant/phase-7` `b5a7538`)
 
 - **Wiring a transplanted-but-deferred validator surfaces the gaps it was silently masking — budget for them as the
