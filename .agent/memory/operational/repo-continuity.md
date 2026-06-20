@@ -33,12 +33,14 @@ the work is naturally single-stream. Multi-agent concurrency is the **goal** of
 this branch (see the primary plan's user-impact line: "active multi-agent
 collaboration so multiple agents can work on castr coherently"), so per-thread
 continuity records **and** the collaboration substrate are **enabling
-infrastructure on the path to it** — not a consequence to wait for. The binding
-gap is the unbuilt Phase-8 substrate (`.agent/state/collaboration/` absent; the
-`collaboration-state`/`subagents` validators deferred-by-design; comms/presence
-not active) plus branch/CI coordination (CI does not yet run `check:ci`, arc D3).
-Per-thread records are the cheapest **leaf** of that capability, not the thing
-that lifts the constraint.
+infrastructure on the path to it** — not a consequence to wait for. The remaining
+gap (after Phase-8-partial, 2026-06-20): the `.agent/state/collaboration/`
+substrate skeleton now exists and the `collaboration-state`/`subagents` validators
+are blocking-green, but **SessionStart live-registration is not yet wired** (no
+identity row / claim is written at session open) and comms/presence are not active
+— plus branch/CI coordination (CI does not yet run `check:ci`, arc D3). Per-thread
+records are the cheapest **leaf** of that capability, not the thing that lifts the
+constraint.
 
 While single-stream, the operational simplification still holds (PDR-027
 §Amendment Log 2026-04-21 Session 5): the row below **is** the continuity record
@@ -49,9 +51,9 @@ circular (concurrency cannot arise until the support, including per-thread
 continuity, exists). The convention is seeded and ready (`threads/README.md`);
 the prompt + tracker carry the single stream today.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Latest identity                                  | Next safe step       |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Next = Phase 8** (collaboration machinery ACTIVE). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-20` | See §Next Safe Steps |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Latest identity                                  | Next safe step       |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | -------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 🔶 partial** (2026-06-20, `059dcf5`, untagged): `.agent/state/collaboration/` substrate skeleton + `collaboration-state` gate flip landed; SessionStart wiring + per-thread records remain. Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps) | claude-code / opus-4-8 / executor / `2026-06-20` | See §Next Safe Steps |
 
 At single-stream scale the row above is the continuity record; the `Latest
 identity` column carries the PDR-027 attribution (platform / model / role /
@@ -120,8 +122,21 @@ check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expe
 
 **Owner steer (2026-06-19): finish the FULL Practice transplant first; not in a rush to merge.** _"Bring over the full
 Practice — the Practice, agent tools, agentic frameworks, processes and protocols. Leave the remediation and focus on
-finishing the transplant."_ → **Phase 7 ✅ COMPLETE + tagged `transplant/phase-7` (2026-06-20).** **Active slice =
-transplant Phase 8** (collaboration machinery ACTIVE; sub-plan
+finishing the transplant."_ → **Phase 7 ✅ COMPLETE + tagged `transplant/phase-7` (2026-06-20).**
+
+**Phase 8 🔶 PARTIAL landed (2026-06-20, commit `059dcf5`, owner-approved "skeleton + replan reconcile"; NOT tagged —
+phase incomplete):** materialised the `.agent/state/collaboration/` runtime substrate (seeded empty, two-tier
+tracked/untracked via `.gitignore`); completed the WS7 bring of `state-integrity.ts` (Oak-pin `optionalWhenAbsent`
+hardening — instance-tier absent = clean state); flipped `validate-collaboration-state` blocking into
+`repo-validators:check` (8 green validators); reconciled the stale 2026-06-18 sub-plan to as-built (its premises were
+superseded by WS7/P7 — task 2 already done, failures 1 not 12, subagents already wired). **Phase 8 REMAINING (carry the
+`transplant/phase-8` tag):** task 3 (wire SessionStart to write a live identity row + claim — the behaviourally
+significant, self-modifying piece, touches `.claude/settings.json`); task 4b (remove the agent-tools test exclusion —
+blocked on the **clerk-expert P7** parity item); task 5 (per-thread records / `## Lanes`); task 6 (thin per-hunk
+reconciliation of new generic surfaces). Full as-built detail:
+[`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md) §As-built banner.
+
+**Active slice = the rest of transplant Phase 8** (sub-plan
 [`08-collaboration-active.md`](../../plans/transplant/08-collaboration-active.md)), then Phase 9, plus arc
 **D2/D4** (parity work = part of "the full Practice"). The deep-review **remediation backlog 02–07 takes a named position
 AFTER the transplant** (not parked — `no-manufactured-permission` holds; an undefined "later" is never). Delivery
