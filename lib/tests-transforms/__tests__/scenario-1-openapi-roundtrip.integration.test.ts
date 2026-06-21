@@ -45,7 +45,7 @@ describe('Transform Samples: Losslessness (Round-Trip Proof)', () => {
         expect(transformedIR.servers).toEqual(originalIR.servers);
 
         // Operations count and core properties
-        expect(transformedIR.operations.length).toBe(originalIR.operations.length);
+        expect(transformedIR.operations).toHaveLength(originalIR.operations.length);
 
         // Components count by type
         const originalSchemaCount = originalIR.components.filter((c) => c.type === 'schema').length;

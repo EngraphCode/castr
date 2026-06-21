@@ -317,7 +317,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       expect(output.paths).toBeDefined();
-      expect(Object.keys(output.paths ?? {}).length).toBe(2); // /board, /board/{row}/{column}
+      expect(Object.keys(output.paths ?? {})).toHaveLength(2); // /board, /board/{row}/{column}
     });
 
     it('writes operation methods', async () => {
@@ -421,7 +421,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       expect(output.components?.securitySchemes).toBeDefined();
-      expect(Object.keys(output.components?.securitySchemes ?? {}).length).toBe(2);
+      expect(Object.keys(output.components?.securitySchemes ?? {})).toHaveLength(2);
     });
 
     // Tests for links and callbacks will be added after IR expansion (Phase 1.3)

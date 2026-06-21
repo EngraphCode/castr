@@ -104,7 +104,7 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
         const components2 = parseJsonSchemaDocument(output1);
 
         // IR deep-equals: same schemas, same structure
-        expect(components2.length).toBe(components1.length);
+        expect(components2).toHaveLength(components1.length);
 
         // Compare schema names
         const names1 = components1.map((c) => c.name).sort();
@@ -133,7 +133,7 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
         const output = writeJsonSchemaBundle(components);
         const roundTripped = parseJsonSchemaDocument(output);
 
-        expect(roundTripped.length).toBe(components.length);
+        expect(roundTripped).toHaveLength(components.length);
       },
     );
   });
@@ -199,7 +199,7 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
 
       // Re-parse the standalone output
       const roundTripped = parseJsonSchemaDocument(standaloneOutput);
-      expect(roundTripped.length).toBe(1);
+      expect(roundTripped).toHaveLength(1);
 
       // IR schemas must be equal
       const roundTrippedRoot = roundTripped[0];

@@ -35,7 +35,9 @@ const driftAssertions: [
 
 describe('openapi-types drift harness', () => {
   it('compiles the critical Scalar compatibility assertions', () => {
-    expect(driftAssertions).toBeDefined();
-    expect(true).toBe(true);
+    // The real assertions are the compile-time `Assert<...>` types above — this
+    // file fails to compile if Scalar's types drift. This runtime check confirms
+    // every harness entry resolved to `true`.
+    expect(driftAssertions.every((held) => held)).toBe(true);
   });
 });

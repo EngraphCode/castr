@@ -33,9 +33,14 @@ describe('schema-types', () => {
     });
 
     it('should narrow type correctly from unknown', () => {
-      const value: unknown = 'string';
+      // A runtime-opaque value (read from an `unknown[]`, so the analyzer cannot
+      // fold it to a literal) — exercises the guard with a genuinely unknown input.
+      const candidates: unknown[] = ['string'];
+      const value = candidates[0];
+      expect(isPrimitiveSchemaType(value)).toBe(true);
       if (isPrimitiveSchemaType(value)) {
-        // Type should be narrowed to PrimitiveSchemaType
+        // Compile-time proof: inside the guard `value` narrows to PrimitiveSchemaType
+        // (this assignment fails to compile if the guard regresses).
         const primitiveType: PrimitiveSchemaType = value;
         expect(primitiveType).toBe('string');
       }

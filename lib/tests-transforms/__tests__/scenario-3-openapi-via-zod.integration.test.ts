@@ -43,7 +43,7 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
         expectNoParseErrors(_name, 'Scenario 3 generated-output parse', zodParsed);
 
         // Schema count must be preserved exactly through the transform path.
-        expect(zodParsed.ir.components.length).toBe(originalSchemaCount);
+        expect(zodParsed.ir.components).toHaveLength(originalSchemaCount);
       },
     );
   });

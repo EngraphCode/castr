@@ -106,7 +106,7 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
         expectNoParseErrors(fixture.name, 'Scenario 6 round-tripped Zod parse', result3);
 
         // Schema count preserved through full cross-format trip
-        expect(result3.ir.components.length).toBe(originalCount);
+        expect(result3.ir.components).toHaveLength(originalCount);
       },
     );
   });

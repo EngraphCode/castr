@@ -24,6 +24,11 @@ const EQUALITY_OPERATORS = new Set(['===', '!==', '==', '!=']);
 /** Structural type for AST nodes received from BinaryExpression.left / .right */
 interface ExpressionNode {
   type: string;
+  // `| undefined` is NOT redundant under exactOptionalPropertyTypes: estree's
+  // Literal `value` includes `undefined`, so ExpressionNode must permit an
+  // explicit `undefined` to stay structurally compatible with the AST nodes
+  // passed in at the call sites (removing it fails type-check with TS2345).
+  // eslint-disable-next-line sonarjs/no-redundant-optional -- exactOptionalPropertyTypes makes `?` and `| undefined` distinct; both are required here
   value?: string | number | boolean | RegExp | bigint | null | undefined;
   operator?: string;
 }

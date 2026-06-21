@@ -175,7 +175,7 @@ describe('Input Coverage: OpenAPI → IR', () => {
       const ir = await loadAndBuildIR(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const paramComponents = ir.components.filter((c) => c.type === 'parameter');
-      expect(paramComponents.length).toBe(2); // rowParam, columnParam
+      expect(paramComponents).toHaveLength(2); // rowParam, columnParam
     });
 
     it('parses component responses', async () => {
@@ -198,7 +198,7 @@ describe('Input Coverage: OpenAPI → IR', () => {
       const ir = await loadAndBuildIR(`${SWAGGER_DIR}/petstore.yaml`);
 
       const securityComponents = ir.components.filter((c) => c.type === 'securityScheme');
-      expect(securityComponents.length).toBe(2); // petstore_auth, api_key
+      expect(securityComponents).toHaveLength(2); // petstore_auth, api_key
     });
 
     // Tests for links and callbacks will be added after IR expansion (Phase 1.3)
@@ -212,7 +212,7 @@ describe('Input Coverage: OpenAPI → IR', () => {
     it('parses all operations from paths', async () => {
       const ir = await loadAndBuildIR(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      expect(ir.operations.length).toBe(3); // get-board, get-square, put-square
+      expect(ir.operations).toHaveLength(3); // get-board, get-square, put-square
     });
 
     it('parses operation metadata', async () => {
@@ -297,8 +297,8 @@ describe('Input Coverage: OpenAPI → IR', () => {
 
       // Core structure should match
       expect(yamlIR.info.title).toBe(jsonIR.info.title);
-      expect(yamlIR.operations.length).toBe(jsonIR.operations.length);
-      expect(yamlIR.components.length).toBe(jsonIR.components.length);
+      expect(yamlIR.operations).toHaveLength(jsonIR.operations.length);
+      expect(yamlIR.components).toHaveLength(jsonIR.components.length);
     });
   });
 
