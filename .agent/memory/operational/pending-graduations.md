@@ -55,10 +55,15 @@ commit and the permanent doc are the record (no tombstone; see
   BEFORE install, diff AFTER** (a non-empty diff is STOP-and-understand); for tooling whose changelog is poorly
   version-mapped, the **empirical consumer-side test** is the decisive proof; **roll-forward-only** (revert a
   bad bump with a forward commit).
-- **Candidate home:** PDR in `.agent/practice-core/decision-records/` (governance, or `pdr_kind: pattern` —
-  portable: this is how any Practice-bearing repo should run dependency currency). Currently captured in
+- **Home (owner-decided 2026-06-21, four-lenses pass):** a **practice-core `pdr_kind: pattern` PDR** in
+  `.agent/practice-core/decision-records/` — portable (this is how any Practice-bearing repo should run
+  dependency currency) and **Oak-bound** (flows back via the bidirectional-node policy). Currently captured in
   [`../../plans/current/dependency-currency.md`](../../plans/current/dependency-currency.md) (controlling) +
-  four `distilled.md` entries.
-- **Trigger:** graduate when a SECOND dependency-currency execution confirms the method (e.g. the DC1–DC5
-  emission tier of the current plan, or a currency pass in another Practice repo). Instance 1 only so far.
-- `[captured: 2026-06-21 | source: dependency-currency lane (Woodland Bending Glade / dc3825)]`
+  five `distilled.md` entries.
+- **Trigger (sharpened, owner-decided 2026-06-21):** graduate at **dependency-currency lane close — after the
+  full DC2–DC5 emission tier completes** (not now). Rationale: DC1 (crown jewel, 2026-06-21) is the confirming
+  second execution, but DC2 (IR-input vendor reconciliation) and DC3 (emission-formatter diff) still exercise
+  parts of the method DC1 did not, and lane-close is the natural conservation moment (the plan moves to
+  `complete/`, which would otherwise orphan the method). Instances so far: the low-risk tier
+  (DC0/DC0b/DC6/DC7/DC8) and the DC1 emission crown jewel.
+- `[captured: 2026-06-21 | source: dependency-currency lane (Woodland Bending Glade / dc3825); home+trigger sharpened 2026-06-21 (Soaring Lifting Current / f7e30d, owner four-lenses pass)]`

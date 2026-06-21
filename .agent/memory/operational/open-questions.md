@@ -39,7 +39,12 @@ owning artefact / discussion home (if any), and a status line.
   not a defect — needs an owner call. Low-stakes: `@types/node` is dev-only (cannot make castr ship or run a
   Node-26 API) and the Node-24 test suite already guards real runtime usage.
 - **Home:** [`../../plans/current/dependency-currency.md`](../../plans/current/dependency-currency.md) §Progress (DC6 finding).
-- **Status:** open — surfaced to owner at the 2026-06-21 dependency-currency handoff.
+- **Status:** RESOLVED 2026-06-21 (owner, four-lenses decision-pass, Soaring Lifting Current / f7e30d) — **Node 24
+  only; pin `@types/node` to `^24`** (the type surface must describe the shipped runtime). Ratified by
+  [ADR-049](../../../docs/architectural_decision_records/ADR-049-single-node-runtime-and-version-single-source.md);
+  implemented (manifests at `^24.0.0`, installed 24.13.2, type-check + check:ci green). The question dissolved
+  under the strict/everywhere/all-the-time/long-term lenses — it was a type-fidelity determination, not a
+  posture trade-off. Drain at next consolidate-docs.
 
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling, hook-matcher
 precision) are carried by

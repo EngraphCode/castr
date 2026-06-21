@@ -97,18 +97,19 @@ Each ADR follows this structure:
 
 ### Additional Architecture Records
 
-| ADR                                                                               | Title                                                                | Status   | Date       |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------- | -------- | ---------- |
-| [036](./ADR-036-limit-directory-complexity.md)                                    | Limit Directory Complexity                                           | Accepted | 2026-02-21 |
-| [037](./ADR-037-strict-architectural-domain-boundaries.md)                        | Strict Architectural Domain Boundaries                               | Accepted | 2026-02-21 |
-| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics                                         | Accepted | 2026-03-09 |
-| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics and Native-Only Emission                      | Accepted | 2026-03-10 |
-| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Semantics and Non-Strict Ingest Rejection              | Accepted | 2026-03-11 |
-| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams, Governed Widening, and Early Rejection      | Accepted | 2026-03-12 |
-| [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form                                       | Accepted | 2026-03-28 |
-| [047](./ADR-047-zod-2020-12-keyword-emission-strategy.md)                         | Zod Emission Strategy for JSON Schema 2020-12 Applicator Keywords    | Proposed | 2026-06-04 |
-| [048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)                  | Compiler-Internal Split — ADR-043 Scope Clarification and Value-Gate | Proposed | 2026-06-19 |
-| [050](./ADR-050-single-workspace-typescript-override.md)                          | Pin a Single Workspace TypeScript via a pnpm-workspace.yaml Override | Accepted | 2026-06-21 |
+| ADR                                                                               | Title                                                                 | Status   | Date       |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------- | -------- | ---------- |
+| [036](./ADR-036-limit-directory-complexity.md)                                    | Limit Directory Complexity                                            | Accepted | 2026-02-21 |
+| [037](./ADR-037-strict-architectural-domain-boundaries.md)                        | Strict Architectural Domain Boundaries                                | Accepted | 2026-02-21 |
+| [038](./ADR-038-object-unknown-key-semantics.md)                                  | Object Unknown-Key Semantics                                          | Accepted | 2026-03-09 |
+| [039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID Subtype Semantics and Native-Only Emission                       | Accepted | 2026-03-10 |
+| [040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict Object Semantics and Non-Strict Ingest Rejection               | Accepted | 2026-03-11 |
+| [041](./ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-Capability Seams, Governed Widening, and Early Rejection       | Accepted | 2026-03-12 |
+| [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form                                        | Accepted | 2026-03-28 |
+| [047](./ADR-047-zod-2020-12-keyword-emission-strategy.md)                         | Zod Emission Strategy for JSON Schema 2020-12 Applicator Keywords     | Proposed | 2026-06-04 |
+| [048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)                  | Compiler-Internal Split — ADR-043 Scope Clarification and Value-Gate  | Proposed | 2026-06-19 |
+| [049](./ADR-049-single-node-runtime-and-version-single-source.md)                 | Support a Single Node Runtime (Node 24) and Single-Source the Version | Accepted | 2026-06-21 |
+| [050](./ADR-050-single-workspace-typescript-override.md)                          | Pin a Single Workspace TypeScript via a pnpm-workspace.yaml Override  | Accepted | 2026-06-21 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
