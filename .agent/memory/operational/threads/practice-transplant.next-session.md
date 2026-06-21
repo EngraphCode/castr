@@ -203,8 +203,17 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   castr is a two-way Practice node (user-memory `castr-parity-or-better-with-oak`, bidirectional sharpening).
 - Scope: word-boundary matching for binary-name patterns (`stress-ng`); command-leading-position anchoring for the git
   family (so `git checkout -b` / prose mentioning "checkout" do not trip while `git checkout --` still does). Keep
-  substring for shapes that genuinely hide inside one quoted token (`for(;;)`/`while(1)`/fork bomb). This SUPERSEDES the
-  friction-fix N7/N11 bullet and the Q-005 "accept" framing.
+  substring for shapes that genuinely hide inside one quoted token (the no-space infinite-loop / fork-bomb tokens). This
+  SUPERSEDES the friction-fix N7/N11 bullet and the Q-005 "accept" framing.
+- **NEW SPECIMEN (2026-06-21, Soaring Lifting Current / f7e30d) — the keep-substring-for-loop-tokens decision ALSO has a
+  false-positive surface: PROSE/DOCUMENTATION that names the pattern.** A `git commit` whose message documented the
+  no-unbounded-host-load guard was BLOCKED because the printf command string contained the verbatim no-space loop token —
+  the matcher cannot tell "execute a busy-loop" from "write a commit message about the busy-loop guard." So the
+  "keep substring as-is for the loop tokens" plan is not cost-free: command-string substring over-matches benign prose
+  mentions of the loop tokens, exactly as it does for the git family. Implication for the precision work: the loop-token
+  case likely needs command-CONTEXT awareness too (literal in an executable position vs inside a string/printf/heredoc
+  being written to a doc), not just word-boundary/position anchoring — a harder matching problem. Best false-positive
+  specimen yet (the guard blocked the documentation of its own guard). Detail: napkin §guard-firing-is-diagnosis entry.
 - Next safe step: RED-first against the founding false positives (`libstress-ng`, `git checkout -b`, the N7/N11 prose
   cases) in `agent-tools/src/hook-policy/`; then write the Oak back-flow note (home: the `oak-backflow/` feedback
   surface) describing the precision improvement for upstream adoption.
