@@ -59,9 +59,9 @@ state + additive PDR-027 identity table live in the activated record (see the
 ACTIVE note under the table). A second session joining the thread takes a lane and
 adds its identity row there.
 
-| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Latest identity                                                                                                                                                                                                                                                     | Next safe step                                                   |
-| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 ✅ COMPLETE + TAGGED** (`transplant/phase-8` @ `8d62197`, 2026-06-20): substrate skeleton + `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + task 3b claims lifecycle/collision-safety (`0086090`) + task 4b agent-tools-suite-gates (`fd0ffec`) + task 6 generic-surface triage (clean) + task 5 per-thread records ACTIVE done. The tag was cut by the **first director-led concurrent stream** (Director fdb75b + 2 implementers 4aeee2/328f4f exercised the now-active records end-to-end — claims/heartbeats/comms/Director-serialised review), which ALSO landed arc **D3 (`c7f819e`) + D2 (`41b24f8`) + D4 archive/provenance (`0a75231`)** on pushed branches (all on origin). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps). **Oak Parity-or-Better Program: Tranche 1 ✅ (C1/C2/C6/C4/C5/C7/C8) + Tranche 2 ✅ (A2+A3 hook-policy concept/reappraisal unit — `511326f`/`abe580f`/`31caf78`, `check:ci` green); next = Tranche 3 (A4 statusline → A1 ArcAngel).** | claude-code / opus-4-8 / Igneous Flaring Hearth (executor — parity Tranche 2) `2026-06-21`; Stormy Sailing Archipelago (parity planning) + Briny Cresting Sextant (director) + Stratospheric Wheeling Horizon (impl) + Secret Watching Candle (impl) / `2026-06-20` | See [thread record](threads/practice-transplant.next-session.md) |
+| Thread                                     | Branch                             | Controlling plan                                                                                                                     | Current slice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Latest identity                                                                                                                                                                                                                                                                                                                                     | Next safe step                                                   |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **Practice transplant + deep enhancement** | `feat/transplant-engraph-practice` | [oak-practice-transplant.md](../../plans/active/oak-practice-transplant.md) + [transplant tracker](../../plans/transplant/README.md) | Phase 6 ✅ + Phase 7 ✅ COMPLETE + tagged. **Phase 7 (`transplant/phase-7`, 2026-06-20):** native adapter generator built (`agent-tools/src/agent-adapter-generate/`, TDD); `.cursor/agents`+`.claude/agents` (18 each) + `.cursor/rules/*.mdc` (87) generated; 174 `.claude`/`.agents` rule wrappers via `validate-portability --fix`; `portability`+`subagents` gates flipped blocking-green; bespoke `scripts/validate-portability.mjs` retired. **Phase 8 ✅ COMPLETE + TAGGED** (`transplant/phase-8` @ `8d62197`, 2026-06-20): substrate skeleton + `collaboration-state` gate flip (`059dcf5`) + SessionStart identity hook (`ace99de`) + task 3b claims lifecycle/collision-safety (`0086090`) + task 4b agent-tools-suite-gates (`fd0ffec`) + task 6 generic-surface triage (clean) + task 5 per-thread records ACTIVE done. The tag was cut by the **first director-led concurrent stream** (Director fdb75b + 2 implementers 4aeee2/328f4f exercised the now-active records end-to-end — claims/heartbeats/comms/Director-serialised review), which ALSO landed arc **D3 (`c7f819e`) + D2 (`41b24f8`) + D4 archive/provenance (`0a75231`)** on pushed branches (all on origin). Owner steer 2026-06-19: full Practice transplant first, remediation after (§Next Safe Steps). **Oak Parity-or-Better Program: Tranche 1 ✅ (C1/C2/C6/C4/C5/C7/C8) + Tranche 2 ✅ (A2+A3 hook-policy concept/reappraisal unit — `511326f`/`abe580f`/`31caf78`, `check:ci` green); next = Tranche 3 (A4 statusline → A1 ArcAngel).** | claude-code / opus-4-8 / Volcanic Charring Hearth (consolidator — dedicated consolidation) `2026-06-21`; Igneous Flaring Hearth (executor — parity Tranche 2) `2026-06-21`; Stormy Sailing Archipelago (parity planning) + Briny Cresting Sextant (director) + Stratospheric Wheeling Horizon (impl) + Secret Watching Candle (impl) / `2026-06-20` | See [thread record](threads/practice-transplant.next-session.md) |
 
 **Per-thread records are now ACTIVE (2026-06-20, Phase 8 task 5).** The enabling
 trigger fired: task 3b proved a second concurrent stream is collision-safe, lifting
@@ -84,60 +84,15 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**completed this handoff — 2026-06-20 (Phase-8 tag + first concurrent-stream session).**
-The first director-led concurrent stream cut `transplant/phase-8` (@ `8d62197`) and landed arc
-D3/D2/D4 on branches. Closeout: the **first-run collaboration-setup friction harvest** (owner-directed
-"record all frustrations and issues") captured durably in the napkin — F1–F7 + N1–N11, headline
-**F6/N10** (armed Monitor watcher silently coalesces events during idle windows → an agent goes dark
-despite a correct watcher; team-doctrine cure = catch-up-sweep on every wake) graduated to
-user-memory `monitor-watcher-coalesces-idle-notifications`; the coordinate-dependent-lane-base lesson
-captured (Director mis-assigned D2's branch base as if surface-disjoint; D2/D3 share ci.yml). ADR/PDR
-candidates from the friction captured to `pending-graduations.md`; owner-decision items
-(statusline wiring, release-automation strategy) to `open-questions.md`. All three seat claims closed;
-Director claim closed at handoff end. The historical records below are retained for continuity.
+**completed this handoff — 2026-06-21** (first dedicated knowledge-curation pass; commit `235c2e0`).
+Drainable buffers (`open-questions.md`, `pending-graduations.md`) are empty; the substrate reads
+healthy-to-soft (0 hard / 0 critical). Per-closeout detail lives in git history and the artefacts each
+pass homed — not accumulated here, per
+[`permanent-doc-is-the-consolidation-record`](../../rules/permanent-doc-is-the-consolidation-record.md)
+(this section is a single current-state pointer, not a running closeout log).
 
-**Phase-6 memory consolidation — substantially landed (2026-06-18).** Blocks
-(a)–(f) + (g) structure & catalogues done: flat memory → Oak `active/` layout;
-operational registers materialised + reconciled; napkin drained
-(manufactured-permission candidate → new rule `no-manufactured-permission.md`;
-transplant-method lessons → `distilled.md`; pre-transplant entries rotated to
-`active/archive/`; napkin 480 lines); `repo-continuity.md` authored; root
-`memory/README.md` + `executive/README.md` + the three executive catalogues
-(`artefact-inventory`, `invoke-code-experts`, `cross-platform-agent-surface-matrix`)
-regenerated from castr's real estate. **The full `.agent/memory` dangling-link
-sweep is empty.** **Substrate contract ✅ landed (2026-06-18, commit `360923d`)** —
-`executive/memory-state-substrate-contracts.{md,manifest.json,schema.json}`
-re-authored to castr roots (22 surfaces; the 11 Phase-8 surfaces carry `notes`),
-verified firsthand against the live `practice-substrate` consumer; follow-on
-`150e628` removed the consumer's two magic-number drift checks (stored-derived-value
-anti-patterns that violated the contract's own `stored_derived_values_rule`; Oak
-back-flow item recorded). **`active/patterns/` import ✅ landed (2026-06-19):**
-130 patterns (132 − 2 UI); `proven_in: imported`; broad source-repo
-neutralization (zero Oak refs remain); frontmatter normalized to the canonical 5
-categories; the README index is now **generated + strictly gated** by a new
-agent-tools CLI `validate-patterns-index` (wired into `repo-validators:check`;
-repo-agnostic → Phase-9 Oak back-flow). **Sub-agent roster ✅ landed (2026-06-19,
-commit `d5cd4eb`):** firsthand grounding showed the real driver was completing the
-**half-built expert system** castr's own `invoke-*` rules already required (3 dangling
-rules, one owner standing doctrine) — not the opener's "13 generic" framing. 9 new
-lean castr-native templates → roster **6→15** (`architecture-expert` 4-persona +
-`assumptions`/`config`/`docs-adr`/`mcp`[emission]/`onboarding`/`release-readiness`/
-`security`[input-DoS]/`subagent-architect`); persona + reviewer-team components; 12
-Codex adapters (existing 6 backfilled; pre-existing `config.toml` path-bug fixed); 3
-dangling rules reconciled; roster-of-record surfaces in lockstep. `subagents` gate flip
-
-- `.cursor`/`.claude` wrappers = **Phase 7** (validator needs `.cursor/agents`; Codex
-  layer firsthand-verified compliant). **Collaboration state schemas ✅ LANDED (2026-06-19
-  s3) — brought Oak WS7** (commit `6d1e45f3`): the 5 `*.schema.json` relocated to committed
-  source `agent-tools/src/collaboration-state/schemas/` + validator schema-root decoupled
-  from the data path; no `.agent/state/` runtime plane created (stays Phase-8). Full `pnpm
-check` green; agent-tools informational suite 13 → 1 (pre-existing `clerk-expert` P7 item).
-  **Two follow-on Phase-6 items ✅ DONE (owner-directed):** substrate reviewer-route re-point (22 surfaces
-  mirror Oak reconciled to castr's roster) + `agent-collaboration-channels.md` authored (routing
-  index/contract; runtime surfaces = Phase-8 forward-refs). **All three standing deferred items ✅ RESOLVED
-  this session (owner-directed):** Oak back-flow target (fresh branch off Oak main); **D1 lint (TS-version
-  skew root-fixed — single-TS pnpm override; both rules back at `error`, 0 violations; the 126 transitional
-  warnings are GONE)**; Q-001 (D3 before merge, split PRs). **`transplant/phase-6` tag ✅ CUT (`a63aee3`) + pushed; Phase 6 COMPLETE.**
+<!-- Historical Phase-6/7/8 closeout detail collapsed 2026-06-21; it lives in git history and in the
+artefacts it homed (memory layout, substrate contract, patterns import, sub-agent roster, the phase tags). -->
 
 ## Next Safe Steps
 
@@ -210,43 +165,11 @@ origin through `f8b4910` (2026-06-20)**; only commits after `f8b4910` are now lo
 
 ## Open Owner-Decision Items
 
-- **Oak back-flow target — RESOLVED (owner, 2026-06-19 s3): a fresh branch off
-  current Oak `main`** (e.g. `practice/castr-backflow`), PR'd to Oak `main`. Not
-  the stale `practice/transplant-to-castr` branch, not a direct-to-main PR with no
-  staging branch. Execution remains a **Phase-9** deliverable (the back-flow report
-  - the running item list in
-    [`reference-closure.md` §back-flow items](../../plans/transplant/reference-closure.md));
-    only the destination is now fixed.
-- **D1 lint `warn → error` — RESOLVED (owner-directed root fix, 2026-06-19 s3).**
-  Measured firsthand: the 126 sonarjs violations were a **TypeScript-version skew**
-  (plugin's bundled TS 5.9.3 `TypeFlags` constants masked against TS-6.0.3 type
-  objects — wrong bits), **not** refactorable code. Fixed at root by pinning a single
-  workspace TypeScript (`pnpm-workspace.yaml` `overrides: typescript: 6.0.3`); under
-  aligned TS both rules flag **0** and were **restored to `error`** in
-  `lib/eslint.config.ts`. Full `pnpm check` green. Root-cause record:
-  [d1-sonarjs-findings.md §0](../../plans/transplant/d1-sonarjs-findings.md).
-- **Transplant PR delivery strategy + D3 timing — RESOLVED (owner, 2026-06-19 s3):
-  D3 before the merge, split PRs.** Land D3 (CI runs the full `check:ci` chain,
-  SHA-pinned actions) **before** the transplant merge, and split the ~100k-line
-  transplant into reviewable PRs — removing the Q-001 ungated-big-merge risk and
-  making review tractable. Recorded at [`open-questions.md` Q-001](open-questions.md)
-  - [`08-collaboration-active.md` §3](../../plans/transplant/08-collaboration-active.md).
-    Not a reopening of the single-branch decision (owner, 2026-06-15) — a close-time
-    delivery decision now made.
-
-- **Statusline identity wiring — ✅ RESOLVED (owner, 2026-06-20: "fix now", Lane 3).** Both `.claude/` wiring pieces
-  Oak has at the pin are now landed on `feat/transplant-engraph-practice`: `.claude/scripts/statusline-identity.mjs`
-  (soft-fail shim, ported verbatim) + the `statusLine` block in `.claude/settings.json`. PDR-027 identities now render
-  in the status bar (verified firsthand end-to-end; config-expert + code-reviewer PASS). Full record + the optional
-  `validate-statusline-routing` hardening follow-up at [`open-questions.md §Q-003`](open-questions.md) and
-  [`pending-graduations.md`](pending-graduations.md).
-- **Release automation strategy — OPEN (surfaced 2026-06-20, D3 stream).** castr has no release tooling; the dead
-  `publish.yml` (non-existent `pnpm release`) was removed in D3. **Owner decision: adopt semantic-release (Oak parity)
-  vs changesets** — cross-surface (package.json), a separate lane. Recorded at [`open-questions.md`](open-questions.md)
-  - the thread-record release-automation lane.
-
-(The PDR-currency mechanism is **resolved**, not open — adopt Oak amendments at a
-periodic D4/P9 "PDR currency sync"; owner, 2026-06-17.)
+None — the transplant decision ledger is clean (Q-001…Q-005 all resolved). The
+standing decisions and their rationale live in the thread record's
+[§ Standing decisions + Lanes](threads/practice-transplant.next-session.md); the
+D1/single-TS-override decision is now
+[ADR-050](../../docs/architectural_decision_records/ADR-050-single-workspace-typescript-override.md).
 
 ## Repo-Wide Invariants / Non-Goals
 

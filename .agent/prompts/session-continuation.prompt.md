@@ -49,8 +49,8 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > windows → an agent goes dark despite a correct watcher; cure = catch-up-sweep on every wake, now team doctrine +
 > user-memory). **LIVE NEXT SLICES (per the thread record's lanes):** transplant **Phase 9** (Oak back-flow + PDR-currency
 > sync); the **first-run friction-fix tranche** (the agent-tools/doctrine fixes the friction harvest names — high-leverage
-> before the next team session); the split-PR **delivery** (D3-gated). **Open owner decisions:** statusline wiring (Q-003),
-> release-automation strategy (Q-004). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
+> before the next team session); the split-PR **delivery** (D3-gated). **No open owner decisions** — the ledger is clean
+> (Q-001…Q-005 resolved; see line above). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
 > remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6/7" language
 > below is stale → Phases 6/7/8 complete + tagged.
 

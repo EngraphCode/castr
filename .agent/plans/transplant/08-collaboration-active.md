@@ -191,8 +191,7 @@ full `check:ci` chain; SHA-pin every action with a `# vX.Y.Z` comment (supply-ch
 filter (lockfile is at root); repair the `publish.yml` non-existent `pnpm release`. **Sequencing — DECIDED (owner,
 2026-06-19 s3, resolving Q-001): D3 lands _before_ the transplant merge, and the transplant is delivered as split,
 reviewable PRs** (not one ~100k-line PR). So the transplant-close sequence is: complete the phases → land D3 → split the
-delivery into reviewable PRs against a D3-gated `main`. See [`open-questions.md` Q-001](../../memory/operational/open-questions.md)
-and [`delivery-ledger.md`](../../plans/delivery-ledger.md).
+delivery into reviewable PRs against a D3-gated `main`. See [`delivery-ledger.md`](../../plans/delivery-ledger.md).
 
 ## 4. Acceptance + validation
 

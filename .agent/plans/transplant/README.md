@@ -268,8 +268,8 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   `pnpm release` via changesets the repo does not use. Bring all of this to the Oak standard as one coherent slice.
   **Merge-time implication (2026-06-18 assessment):** because castr's CI does not run `check:ci`, the eventual transplant
   PR would merge to `main` with **no CI gate enforcement** — the per-phase `check:ci` discipline is local-only. Whether D3
-  should therefore land _before_ that merge (and whether the ~100k-line single PR is split for reviewability) is surfaced
-  as [`open-questions.md` Q-001](../../memory/operational/open-questions.md). **D3 is also a prerequisite for _safe_
+  should therefore land _before_ that merge (and whether the ~100k-line single PR is split for reviewability) was
+  resolved (Q-001: yes — D3 before the merge, split PRs); see [`delivery-ledger.md`](../../plans/delivery-ledger.md). **D3 is also a prerequisite for _safe_
   Phase-8 concurrency** (concurrent branches must be gate-enforced per branch) — the coupling is mapped in
   [`08-collaboration-active.md` §3](./08-collaboration-active.md).
 - **D4 — Quality-gate + further Practice/agent-tools parity.** "Plenty more" still to import from the pinned Oak

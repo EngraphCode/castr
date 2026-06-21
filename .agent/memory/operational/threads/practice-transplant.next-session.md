@@ -20,15 +20,16 @@ constraint is now lifted, so the thread is recorded as a multi-lane container.
 Additive per PDR-027 — joining adds an identity; a matching platform/model/agent_name
 updates `last_session` rather than adding a row.
 
-| platform    | model              | session_id_prefix | agent_name                     | role        | first_session | last_session |
-| ----------- | ------------------ | ----------------- | ------------------------------ | ----------- | ------------- | ------------ |
-| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor    | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director    | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor    | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor    | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor    | 2026-06-21    | 2026-06-21   |
+| platform    | model              | session_id_prefix | agent_name                     | role         | first_session | last_session |
+| ----------- | ------------------ | ----------------- | ------------------------------ | ------------ | ------------- | ------------ |
+| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor     | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer  | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer  | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director     | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor     | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor     | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor     | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator | 2026-06-21    | 2026-06-21   |
 
 ## Lanes
 
@@ -166,8 +167,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 ### Lane: first-run friction-fix tranche — active-next (trigger: owner-recommended; before the next team session)
 
 - Controlling detail: [`../../active/napkin.md` §FIRST RUN of the collaboration setup](../../active/napkin.md) (F1–F12,
-  N1–N12, measured firsthand by the first concurrent stream) + graduation candidates/cures in
-  [`../pending-graduations.md`](../pending-graduations.md).
+  N1–N12, measured firsthand by the first concurrent stream). The concrete cures are the lane bullets below.
 - Why: highest-leverage hardening before the next team session — fixes the agent-tools/hook/doctrine walls the first
   concurrent stream hit, so the collaboration framework (Phase 8's deliverable) is genuinely dogfoodable.
 - Concrete items (each pickup-able; durable detail in the two homes above):
@@ -234,8 +234,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
 - Outcome: the two missing `.claude/` wiring pieces brought (shim + `statusLine` settings block) so PDR-027 identities
   render in the status bar (from the next session onward). Verified firsthand end-to-end; config-expert + code-reviewer
-  PASS. Full record: [`../open-questions.md §Q-003`](../open-questions.md). Optional follow-up folded into the
-  friction-fix tranche lane above.
+  PASS (landed `ebf08b5`). Optional `validate-statusline-routing` follow-up folded into the friction-fix tranche lane above.
 
 ## Standing decisions this thread carries
 
