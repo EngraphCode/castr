@@ -62,9 +62,9 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@scalar/json-magic": "0.12.4",
-    "@scalar/openapi-parser": "0.25.7",
-    "@scalar/openapi-types": "0.6.1",
+    "@scalar/json-magic": "0.12.16",
+    "@scalar/openapi-parser": "0.28.7",
+    "@scalar/openapi-types": "0.9.1",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "commander": "^14.0.3",
