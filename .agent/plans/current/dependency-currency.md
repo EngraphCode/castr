@@ -46,16 +46,16 @@ todos:
     status: pending
     depends_on: [DC0]
   - id: DC6
-    content: '@types/node 25->26 (types-only, no emission — confirmed no Node type names in any emitted snapshot). type-check green across the two type-check workspaces (lib + agent-tools); check engines/Node-24 compat.'
-    status: pending
+    content: '@types/node 25->26 (types-only, no emission — confirmed firsthand 0/8 emitted .snap files reference any Node type name). type-check green across lib + agent-tools. Note: dev-only dep now 2 majors ahead of engines.node 24.x (pre-existing posture; cannot make castr USE a Node-26 API).'
+    status: done # a731765 (2026-06-21). type-check 4/4 + check:ci green; undici-types 8.3.0 transitive; TS6-compatible.
     depends_on: [DC0]
   - id: DC7
     content: '@commitlint/cli + config-conventional 19->21 (two majors, dev-only, advisory). TWO manifests (root: cli+config-conventional; agent-tools: cli). check-commit-message rejects a known-bad + passes a known-good message under the castr type-enum.'
-    status: pending
+    status: done # 0fd4a4c (2026-06-21). v20 URL-line relaxation + v21 min-Node-22/display-only — no rule change castr relies on. Proof: validator accepts good, rejects bad type/case/no-type; check:ci green.
     depends_on: [DC0]
   - id: DC8
-    content: degit 2->3 (dev). Knip-config-only reference (lib/knip.ts) — FIRST confirm what degit actually feeds; if nothing, bump is install+gates+knip green (or consider removal); if it has a runtime path, test it.
-    status: pending
+    content: 'degit 2->3 (dev). Consumer = lib/scripts/examples-fetcher.mts (manual fixture-refresh, NOT knip-config-only — the .mts hid it from the first sweep). degit 3 ships own types -> @types/degit removed + dropped from knip ignore. FINDING: the script tsconfig include is stale (examples-fetcher.mts vs scripts/examples-fetcher.mts) so type-check does NOT cover it — separate follow-up slice.'
+    status: done # bb653c9 (2026-06-21). API verified vs degit-3 d.ts + real-clone smoke test (exact fetcher source) passed; check:ci + knip green.
     depends_on: [DC0]
 ---
 
@@ -83,8 +83,19 @@ by a firsthand diff of the emitted output against a baseline captured before the
     `no-redundant-optional` BROKE type-check (TS2345 under exactOptionalPropertyTypes) — a D1-family worked
     instance (the type-checker is the authority over a type-aware lint rule's heuristic); reverted to a
     type-checker-justified per-line disable. test-reviewer COMPLIANT; claims re-verified firsthand.
-- **Remaining:** the emission/IR/runtime tier — DC1 (ts-morph, own session), DC2 (@scalar trio), DC3
-  (prettier), DC4 (ink), DC5 (commander), DC6 (@types/node), DC7 (commitlint), DC8 (degit). None started.
+  - **DC6/DC7/DC8 done (low-risk non-emission batch, owner-directed continue) — `a731765`, `0fd4a4c`,
+    `bb653c9`.** @types/node 25→26 (0/8 emitted .snap reference Node types — verified firsthand; types now
+    2 majors ahead of the Node-24 runtime, a pre-existing dev-only posture). commitlint 19→21 (no rule castr
+    relies on changed; validator accept-good/reject-bad proof). degit 2→3 (consumer is the manual
+    examples-fetcher.mts, NOT knip-only — `.mts` hid it; degit-3 ships own types so @types/degit dropped;
+    API + real-clone smoke test both pass). Each its own commit; check:ci green per cycle.
+- **Remaining:** the emission/IR/type-machinery tier — **DC1 (ts-morph, its own session)**, DC2 (@scalar
+  trio), DC3 (prettier), DC4 (ink), DC5 (commander). None started. These need baseline-capture + emitted/CLI
+  diff + the relevant reviewers per the plan.
+- **Findings routed (not in scope to fix here):** (1) `lib/tsconfig.json` include lists `examples-fetcher.mts`
+  but the file is at `scripts/examples-fetcher.mts` → the degit-using script is NOT type-checked (stale
+  include; its own follow-up slice). (2) @types/node dev-only posture sits 2 majors ahead of `engines.node`
+  — note, not a defect.
 
 ## End goal / mechanism / means / non-goals
 

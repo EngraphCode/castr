@@ -42,6 +42,31 @@ true` (tsconfig.json:8) `?` and `| undefined` are DISTINCT, and estree nodes car
   dropped non-prefer-specific lines. Re-ran unfiltered, corrected the characterisation in-chat before fixing.
   Lesson: a filtered tool view is a claim; get the complete artefact before acting (read-diagnostic-artefacts).
 
+Then owner-directed "continue with the low-risk batch" → DC6/DC7/DC8 (`a731765` @types/node 25→26, `0fd4a4c`
+commitlint 19→21, `bb653c9` degit 2→3). All green. New lessons:
+
+- **A "no usage / no runtime path" claim is only as good as the FILE EXTENSIONS in your search scope — a
+  `--include` set that omits `.mts` produced a false "degit is knip-config-only".** The plan + a prior napkin
+  said degit had "no runtime path found"; the real consumer was `lib/scripts/examples-fetcher.mts` (a manual
+  fixture-fetch script), invisible because my first sweep's `--include=*.ts,*.mjs,...` didn't list `.mts`.
+  Same family as the distilled negative-space-search lesson, sharpened to: enumerate file EXTENSIONS
+  (`.mts`/`.cts`/`.mjs`/`.cjs`/shell) as an identifier class, not just token classes. The `@types/degit` devDep
+  was the tell I should have weighted (you don't add types for a package you never import).
+- **Bumping a package can make a sibling `@types/*` dead — degit 3 ships its own `dist/index.d.ts`, so
+  `@types/degit` became redundant.** Removed it from the manifest AND from knip's `ignoreDependencies` (it was
+  ignored as an unused type pkg). For a lint-plugin/types bump, check whether the new major bundles types and
+  retire the now-redundant `@types/*` in the same cycle — that's currency, not scope creep.
+- **A dep-bump verification can surface a latent gap in a NEIGHBOURING config — `lib/tsconfig.json` `include`
+  lists `examples-fetcher.mts` but the file is at `scripts/examples-fetcher.mts`, so the degit-using script is
+  NOT type-checked.** I could not lean on the type-check gate as degit-3 proof; used the shipped d.ts +a
+  real-clone smoke test (the exact fetcher source → throwaway temp; cloned + info-event fired) instead. Routed
+  the stale-include as its own follow-up slice (NOT fixed in a dep bump — fixing it could surface unrelated
+  pre-existing script type errors, unbounded scope). Right-sizing, not reflexive-defer.
+- **Read the bump's breaking changes, but for tooling whose changelog is poorly version-mapped, the EMPIRICAL
+  proof is decisive (recurred 3×: sonarjs, commitlint, degit).** commitlint: accept-good/reject-bad-type/
+  reject-bad-case/reject-no-type. degit: d.ts API match + real clone. sonarjs: the lint diff. Don't over-invest
+  chasing a vendor changelog when the consumer-side empirical test answers the real question firsthand.
+
 First `/engraph-consolidate-until-done` pass in this repo. Drained both HARD drainable buffers to healthy
 (open-questions: all 5 Q's resolved → skeleton; pending-graduations: 10 items → 0, four graduated, rest
 routed/stale/tombstone), graduated the F6/N10 monitor-coalescing doctrine into the two watcher rules, fixed

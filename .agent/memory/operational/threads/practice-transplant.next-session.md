@@ -217,10 +217,14 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   eslint-plugin-sonarjs 4.0.3->4.1.0, SURFACED from `outdated` (not in the original plan), owner-directed
   ADOPT-NOW: its `recommended` preset newly enables 5 rules (25 sites), all fixed firsthand (incl. a
   D1-family catch where `no-redundant-optional`'s advice BROKE type-check under exactOptionalPropertyTypes ->
-  type-checker-justified per-line disable). test-reviewer COMPLIANT; firsthand-verified. **Remaining = the
-  emission/IR/runtime tier: DC1 ts-morph (its own session), DC2 @scalar trio, DC3 prettier, DC4 ink, DC5
-  commander, DC6 @types/node, DC7 commitlint, DC8 degit — none started.** Next safe step: DC6/DC7/DC8 (low-risk
-  non-emission) can batch in a follow session; DC1 (crown jewel) needs its own dedicated session per the plan.
+  type-checker-justified per-line disable). test-reviewer COMPLIANT; firsthand-verified. Then, owner-directed
+  "continue with the low-risk batch," the **non-emission low-risk cycles DC6/DC7/DC8 also landed** — `a731765`
+  @types/node 25->26, `0fd4a4c` commitlint 19->21, `bb653c9` degit 2->3 (+ dropped redundant @types/degit;
+  degit's real consumer is the manual examples-fetcher.mts, proven by a real-clone smoke test). Each its own
+  commit; check:ci green per cycle. **Remaining = the emission/IR/type-machinery tier ONLY: DC1 ts-morph (its
+  OWN session, crown jewel), DC2 @scalar trio, DC3 prettier, DC4 ink, DC5 commander — none started; each needs
+  baseline-capture + emitted/CLI diff + reviewers.** Two findings routed in the plan: stale tsconfig include
+  (examples-fetcher.mts untype-checked) + @types/node dev-only 2-majors-ahead posture.
 - **Controlling plan: [`../../../plans/current/dependency-currency.md`](../../../plans/current/dependency-currency.md)** (§Progress (live) carries the cycle-by-cycle record)
   — executable, 9 cycles (DC0 dev-tooling sweep → DC1 ts-morph → DC2 @scalar IR trio → DC3 prettier → DC4 ink →
   DC5 commander → DC6 @types/node → DC7 commitlint → DC8 degit). Authored + reviewed (type-reviewer + assumptions-expert,
