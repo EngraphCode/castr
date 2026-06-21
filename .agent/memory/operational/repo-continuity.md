@@ -36,24 +36,20 @@ This block is a pointer, not a second narrative. The authoritative homes:
 
 ## Active Threads
 
-castr runs **single-stream today as a _constraint_, not a fit** (owner, 2026-06-18):
-one continuity stream, one branch — **because the multi-agent collaboration
-framework that would make concurrent streams safe is not yet built**, not because
-the work is naturally single-stream. Multi-agent concurrency is the **goal** of
-this branch (see the primary plan's user-impact line: "active multi-agent
-collaboration so multiple agents can work on castr coherently"), so per-thread
-continuity records **and** the collaboration substrate are **enabling
-infrastructure on the path to it** — not a consequence to wait for. The remaining
-gap (after Phase-8-partial, 2026-06-20): the `.agent/state/collaboration/` substrate
-skeleton now exists, the `collaboration-state`/`subagents` validators are
-blocking-green, and the **SessionStart identity hook is now wired** (auto-derives
-the PDR-027 identity into `$CLAUDE_ENV_FILE`). **Live claim registration is now
-exercised end-to-end (task 3b, 2026-06-20):** the `claims open → heartbeat → close`
-lifecycle ran against the real substrate and **10 concurrent separate-process
-sessions were demonstrated collision-safe** (no lost write; encoded as
-`claims-concurrency.integration.test.ts`). Still open: comms/presence are not active
-as standing practice — plus branch/CI coordination (CI does not yet run `check:ci`,
-arc D3).
+castr's multi-agent collaboration framework is **built and live** as of Phase 8
+(2026-06-20) — see the supersession note below. The earlier single-stream operation
+was a **constraint of the then-unbuilt framework, not a fit** (owner, 2026-06-18):
+multi-agent concurrency is the **goal** of this branch (primary plan's user-impact
+line: "active multi-agent collaboration so multiple agents can work on castr
+coherently"), so the `.agent/state/collaboration/` substrate, the blocking-green
+`collaboration-state`/`subagents` validators, the SessionStart identity hook
+(auto-derives the PDR-027 identity into `$CLAUDE_ENV_FILE`), and the
+`claims open → heartbeat → close` lifecycle (task 3b: **10 concurrent
+separate-process sessions demonstrated collision-safe**, no lost write, encoded as
+`claims-concurrency.integration.test.ts`) were enabling infrastructure on the path
+to it — now delivered and exercised end-to-end by the first director-led concurrent
+stream (2026-06-20). Remaining coordination gap: comms/presence are not yet standing
+practice across every session (CI now runs `check:ci` — arc D3 landed).
 
 **The single-stream simplification is now superseded (2026-06-20).** Its trigger —
 "building the Phase-8 framework that supports concurrency" (PDR-027 §Amendment Log

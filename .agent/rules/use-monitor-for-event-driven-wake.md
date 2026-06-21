@@ -32,6 +32,29 @@ notifications, this distinction becomes moot. Until then, choosing
 Bash background for event-driven wake is a named failure mode —
 surface it as soon as polling shows up in the design.
 
+## Idle-Window Coalescing — Monitor Does Not Guarantee Per-Event Wake
+
+Monitor streams each line as a `<task-notification>`, but the harness
+does **not** guarantee one actionable wake per line across an idle gap.
+Measured firsthand (first director-led concurrent stream, 2026-06-20):
+when many watcher stdout lines fire while a session is **idle** (no turn
+in flight), the harness **coalesces** the notifications and only the
+latest surfaces as an actionable wake — so a correctly-armed agent can go
+silently dark across a long idle window. The watcher CLI was correct (the
+idle seat's seen-file had consumed all 27 events); the gap was harness
+notification _delivery_. Continuously-active agents caught every event;
+only the idle one missed several.
+
+The cure is doctrine, not vigilance: **treat a watcher wake as "something
+changed, go look at the whole stream", not "here is every event."** On any
+wake, run a full catch-up sweep of the watched surface and reconcile
+against the seen-file. Keep the periodic fallback sweep (≤120s for comms)
+**mandatory**, not optional — an unverified Monitor that has silently
+stopped delivering looks identical to "nothing is happening." See
+[`comms-all-channels-watcher`](comms-all-channels-watcher.md) § Idle-window
+coalescing for the comms-stream instance, and user-memory
+`monitor-watcher-coalesces-idle-notifications`.
+
 ## When the Rule Fires
 
 - All-channels comms watchers (`pnpm agent-tools:collaboration-state

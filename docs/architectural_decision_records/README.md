@@ -108,6 +108,7 @@ Each ADR follows this structure:
 | [042](./ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema Egress Normal Form                                       | Accepted | 2026-03-28 |
 | [047](./ADR-047-zod-2020-12-keyword-emission-strategy.md)                         | Zod Emission Strategy for JSON Schema 2020-12 Applicator Keywords    | Proposed | 2026-06-04 |
 | [048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)                  | Compiler-Internal Split — ADR-043 Scope Clarification and Value-Gate | Proposed | 2026-06-19 |
+| [050](./ADR-050-single-workspace-typescript-override.md)                          | Pin a Single Workspace TypeScript via a pnpm-workspace.yaml Override | Accepted | 2026-06-21 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -207,7 +208,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 049)
+2. **Number sequentially** (next is 049 — reserved for the Node-version-policy candidate; 050 is taken, so the next free number after 049 is 051)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -250,5 +251,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-06-19  
-**Next ADR:** 049
+**Last Updated:** 2026-06-21  
+**Next ADR:** 049 (reserved: Node-version policy) · 050 taken · next free after 049 is 051

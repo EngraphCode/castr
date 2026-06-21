@@ -178,15 +178,17 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
     2026-06-21, chose to INVEST + Oak back-flow; it is now a parity-or-better enhancement, not just a friction fix).
   - **Seen-file naming (N4/N12)** — write seen-files as `<slug>.seen` (not `<Codename>.json`; the `.json`-on-non-JSON
     broke `format:check`), or add `comms-seen/` to `.prettierignore`.
-  - **agent-tools CLI hardening (F2/F4/F5/F7/N5/N6)** — read-only claims ENOENT on a fresh home; `comms watch`
+  - **agent-tools CLI hardening (F2/F4/F5/F7/N1/N2/N5/N6)** — read-only claims ENOENT on a fresh home; `comms watch`
     seen-dir auto-create; pre-claim heartbeat ordering; commit-skill phantom root alias; `--intent-id` canonical source;
-    `platform` field consistency.
+    `platform` field consistency; identity-row registration as the one bootstrap continuity write each seat makes
+    directly — reconciled against Director-lands-all-`.agent`-writes (N1); the lock-free identity-table write-race →
+    a `claims/identity register` CLI doing an atomic additive upsert (N2).
   - **Two structural-cure validators (owner, 2026-06-21 — folded into this tranche):** (1) `validate-statusline-routing`
     — assert `settings.json.statusLine.command` → an extant shim whose adapter target resolves, sibling to
     `validate-pretooluse-guard-routing` (surfaced by config-expert + code-reviewer at the Q-003 landing `ebf08b5`; THREE
     classes of `.claude/`→`agent-tools/dist` wiring exist, only one validated). (2) `validate-principles-section-cites`
     — assert every `principles.md §<heading>` citation across `.agent/`+`docs/` resolves to a real heading (the recurring
-    false-§-cite class: Tranche-2 found one in an already-landed sibling rule). Both in `pending-graduations.md`; build as
+    false-§-cite class: Tranche-2 found one in an already-landed sibling rule). Build as
     one "validator hardening" slice, TDD, wired into `repo-validators:check`.
 - Acceptance bar: each item lands as code/rule-text with TDD where code is touched; solo or a small dogfooding team session.
 

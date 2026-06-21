@@ -2,6 +2,38 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-21 (FIRST dedicated consolidation session in castr — Volcanic Charring Hearth / 89120c)
+
+First `/engraph-consolidate-until-done` pass in this repo. Drained both HARD drainable buffers to healthy
+(open-questions: all 5 Q's resolved → skeleton; pending-graduations: 10 items → 0, four graduated, rest
+routed/stale/tombstone), graduated the F6/N10 monitor-coalescing doctrine into the two watcher rules, fixed
+repo-continuity §Active-Threads stale present-tense framing, and homed four candidates: three host patterns
+(`transplanted-surface-carries-source-phenotype`, `inherited-classification-is-a-claim-to-measure`,
+`green-test-proves-only-its-layer`) + ADR-050 (single-workspace-TS override). End-state 0 HARD/0 CRITICAL; all
+doc gates green.
+
+- **FRICTION (transplanted-skill drift — the consolidation skills carry Oak script/path phenotype).** Three
+  worked instances, all the same shape as the pattern this very session graduated
+  (`transplanted-surface-carries-source-phenotype`): (1) `consolidate-until-done` + `consolidate-docs` name
+  `pnpm practice:fitness:informational` / `:strict-hard` / `practice:fitness` — **none exist in castr**; the real
+  validator is `pnpm --filter @engraph/agent-tools validate-practice-fitness` (Oak-alias phenotype). (2)
+  `consolidate-docs` §7d hardcodes the Oak bidirectional pair `dont-break-build-without-fix-plan ↔
+gate-recovery-cadence.plan.md`, but that plan does **not exist in castr** — the castr rule correctly QUOTES the
+  Oak plan cross-host, so 7d's "both directions must resolve" has no valid castr pair. (3) `consolidate-docs` §7b
+  still says "ADR estate, 001–047" (048 existed before this session, 050 after). **Cure (candidate, friction-fix /
+  parity lane):** reconcile the transplanted consolidation skills to castr's real script names + estate — a
+  `validate-no-stale-script-invocations`-style sweep already exists for root scripts; extend the principle to skill
+  bodies, or localise these skills' Oak-phenotype references. Routed as a friction observation, not yet a lane item.
+- **Method note that worked: drain the buffer, do NOT reflow the long lines.** Both HARD buffers read HARD on
+  prose-line-width. The owner's 2026-06-21 frame correction (fitness is a SIGNAL, never a goal) means reflowing to
+  clear the number is the trap. Draining the spent/routed/graduated items (real curation) cleared both HARDs as a
+  pure side-effect — exactly the conservation invariant in action. The 9 residual SOFT (directives + Core trinity)
+  are reported, not chased (no un-homed substance).
+- **No napkin rotation this pass (reasoned, not skipped).** 518 lines / ~500 convention, but: last rotation was
+  2026-06-20 (1 day prior), content is fresh, lessons are conserved in distilled/user-memory/rules, and the large
+  first-run-friction block is the active controlling detail for the friction-fix lane (rotating would orphan the
+  lane pointer). Falsifiable: next pass, if the friction-fix lane has executed and the napkin exceeds ~550, rotate.
+
 ## 2026-06-21 (Oak parity Tranche 2 — A2+A3 hook-policy unit — Igneous Flaring Hearth / 611206)
 
 Executed the A2+A3 hook-policy concept/reappraisal upgrade, RED-first against the founding 2026-06-11 host-DOS busy-loop

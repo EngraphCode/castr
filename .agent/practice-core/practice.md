@@ -2,8 +2,14 @@
 provenance: provenance.yml
 fitness_line_target: 500
 fitness_line_limit: 625
-fitness_char_limit: 35000
+fitness_char_limit: 40000
 fitness_line_length: 100
+fitness_rationale: >-
+  char_limit raised 35000→40000 by owner approval (2026-06-21 consolidation): the
+  blueprint grew legitimately as the Practice matured (37509 chars at the raise,
+  no un-homed substance to graduate out), not from accumulated low-value entries.
+  Line target/limit unchanged (510/500 soft, well within 625). practice-fitness is
+  informational-only (not in the blocking gate chain).
 ---
 
 # The Practice

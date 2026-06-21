@@ -82,6 +82,29 @@ watcher heartbeat-file, because the highest-awareness seat is the one nobody
 else watches: a frozen watcher is caught only from outside (a peer's stall
 diagnostic; owner transport).
 
+### Idle-window coalescing — catch-up sweep on every wake
+
+An armed persistent watcher does **not** guarantee one actionable wake per
+event. Measured firsthand (first director-led concurrent stream,
+2026-06-20): when many watcher stdout lines fire while a session is
+**idle** (no turn in flight), the harness **coalesces** the notifications
+and only the latest surfaces as an actionable wake — so a correctly-armed
+agent can go silently dark across an idle gap (the idle seat's seen-file
+had consumed all 27 events; the CLI was correct, the gap was harness
+notification _delivery_). Continuously-active seats caught every event;
+only the idle one missed several.
+
+Therefore: **treat any watcher wake as "something changed, go look at the
+whole stream", not "here is every event."** On every wake, run a full
+catch-up sweep — `comms list --tail <n>` (or the fallback `ls` sweep
+below) — and reconcile against the seen-file before acting. Keep the
+≤120s message-sweep cadence **mandatory**, not optional: an unverified
+watcher that has silently stopped delivering reads identically to "nothing
+is happening." This is the comms-stream instance of the general caveat in
+[`use-monitor-for-event-driven-wake`](use-monitor-for-event-driven-wake.md)
+§ Idle-Window Coalescing; graduated to user-memory
+`monitor-watcher-coalesces-idle-notifications`.
+
 ### Seen-file convention
 
 The `<agent-codename>.json` seen-file lives in
