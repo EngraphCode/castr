@@ -46,4 +46,19 @@ commit and the permanent doc are the record (no tombstone; see
 
 <!-- Entries appended below by napkin drains and consolidation passes. -->
 
-_No pending graduations._
+## dependency-currency-discipline → PDR (candidate)
+
+- **Substance:** a reusable method for keeping a types/codegen library's dependency estate current without
+  regressing type fidelity, executed firsthand 2026-06-21 (DC0/DC0b/DC6/DC7/DC8). The method: split bumps by
+  **type/emission/runtime-risk, not semver size**; classify each dep by its **actual call-sites firsthand**,
+  not its reputation as "tooling"; **one type-affecting major per commit**; **capture an emitted/CLI baseline
+  BEFORE install, diff AFTER** (a non-empty diff is STOP-and-understand); for tooling whose changelog is poorly
+  version-mapped, the **empirical consumer-side test** is the decisive proof; **roll-forward-only** (revert a
+  bad bump with a forward commit).
+- **Candidate home:** PDR in `.agent/practice-core/decision-records/` (governance, or `pdr_kind: pattern` —
+  portable: this is how any Practice-bearing repo should run dependency currency). Currently captured in
+  [`../../plans/current/dependency-currency.md`](../../plans/current/dependency-currency.md) (controlling) +
+  four `distilled.md` entries.
+- **Trigger:** graduate when a SECOND dependency-currency execution confirms the method (e.g. the DC1–DC5
+  emission tier of the current plan, or a currency pass in another Practice repo). Instance 1 only so far.
+- `[captured: 2026-06-21 | source: dependency-currency lane (Woodland Bending Glade / dc3825)]`
