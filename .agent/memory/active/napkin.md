@@ -2,6 +2,46 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-21 (Oak parity Tranche 2 — A2+A3 hook-policy unit — Igneous Flaring Hearth / 611206)
+
+Executed the A2+A3 hook-policy concept/reappraisal upgrade, RED-first against the founding 2026-06-11 host-DOS busy-loop
+(PDR-092). Three commits `511326f`→`abe580f`→`31caf78`; full `pnpm check:ci` green at the tip.
+
+- **The "stale-dist / new-policy mismatch" the Oak design comments warn about BIT ME LIVE, mid-transplant.** After I
+  restructured `policy.json`'s scoped_blocks from per-pattern entries to grouped-by-concept, my very next `Write` (a test
+  file) was BLOCKED by the live PreToolUse content guard with "scoped_blocks was malformed" — because the built
+  `agent-tools/dist` still carried the OLD per-pattern schema, which rejects the new grouped SHAPE outright (not just a
+  missing-optional-field; the `pattern`→`patterns[]` change is a hard parse failure). The guard failed closed and blocked
+  my edit. **Cure: when you change policy.json's SHAPE (not merely add optional fields), `pnpm --filter @engraph/agent-tools build`
+  immediately so the live hook runs the new schema — before any further Write.** This is exactly why the Oak load-time
+  schemas keep teaching fields OPTIONAL (brick-safety) — but a structural shape change is outside that safety net, and the
+  in-tree guard runs against `dist`, not `src`. Mechanical surprise worth keeping.
+- **The distilled "false §-cites are pervasive in Oak" lesson applies to PRE-EXISTING transplanted siblings, not just the
+  surfaces you bring.** Oak's policy.json + tests cite `principles.md §Architectural Excellence Over Expediency`; castr's
+  real heading is `§Core Philosophy: Engineering Excellence Over Speed`. I reconciled policy.json + 4 test files at
+  write-time — but config-expert caught a leak I would have missed: `no-hedging-vocabulary.md:99` (a rule landed by an
+  EARLIER transplant) still carried the Oak heading while lines 4 & 22 of the SAME file already used castr's. Verified
+  firsthand, fixed (`511326f`), then swept all live surfaces for the string (only that one; CHANGELOG/reference-closure
+  correctly retain it as history). Lesson: a reviewer pass over the host's ALREADY-LANDED siblings catches §-cite leaks
+  the current bring never touches — same family as [[verify-agent-claims-firsthand]] + the negative-space-search lesson.
+- **A parity-bring's DATA can narrow on measurement just like its scope (Tranche-1 pattern, again).** Oak's policy.json
+  ships a 4th content group `indefinite-deferral` (parked/shelved/on-hold regex) citing `no-hedging-vocabulary.md
+§Indefinite-deferral vocabulary` + `principles.md §Strict and Complete`. Measured firsthand: castr's
+  no-hedging-vocabulary has NO such §section → bringing it would be a costume (PDR-092), plus false-positive blast radius
+  on castr's own continuity surfaces (which discuss parking-as-antipattern). Recorded OUT of A2 as a deferred
+  content-doctrine slice, not silently dropped. The mechanism upgrade (substring + concept/reappraisal) is separable from
+  the doctrine-data expansion.
+- **RED-first against the founding instance via `tsx` gives a clean RUNTIME red even when the new type doesn't exist yet.**
+  esbuild (tsx/vitest) strips types without type-checking, so a test passing `{pattern:'for(;;)', match:'substring'}` to
+  the OLD `findBlockedPattern` (whose type lacks `match`) RAN and failed at the assertion (old code returns null) — a
+  genuine assertion-level RED, not a compile error. 6 failures confirmed the quoted-token evasion before I implemented
+  substring matching. The `type-check` gate would have flagged the type later; the RED proof came from the runtime first.
+- **All three reviewers were accurate and high-value; firsthand verification confirmed each load-bearing claim.**
+  config-expert's §-cite find (real, fixed); test-reviewer's coverage gaps (forkbomb/stress-ng/spaced-loop canonical
+  tests, `concept-empty` validator case, menu-framing canonical pin) — all valid, all cheap, all closed (+4 tests);
+  type-reviewer found nothing to fix and I confirmed its readonly/exhaustiveness/schema-SSoT claims firsthand. The
+  `stress-ng` substring false-positive (`libstress-ng`) is real but ACCEPTED as Oak-pin-faithful (PDR-044 design property).
+
 ## 2026-06-20 (Oak parity Tranche 1 — Clouded Floating Gust / 8de446)
 
 Executed parity Tranche 1 (C1/C2/C6/C4/C5/C7/C8) solo, RED-first TDD on the code gaps, each gap verified firsthand

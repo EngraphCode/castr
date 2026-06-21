@@ -42,11 +42,11 @@ todos:
     status: completed
   - id: A2
     content: Upgrade hook-policy to Oak concept/reappraisal model (content-deny-response, richer types/matchers, substring match) + host-load patterns + no-unbounded-host-load rule + start-right §7
-    status: pending
+    status: completed
     depends_on: []
   - id: A3
     content: Bring validate-policy-reappraisal validator + wire into repo-validators:check
-    status: pending
+    status: completed
     depends_on: [A2]
   - id: A4
     content: Statusline session-shape coordination indicators (team-shape/director/role) + --role declaration
@@ -169,6 +169,24 @@ measurement against the live pin (per `plan-body-first-principles-check`):**
   deadline castr does not yet implement; that is C3 (Tranche 4). Bringing the rule text now would be a costume
   mechanism (PDR-092). Deferred to C3, not a non-gap.
 
+**Added by Tranche-2 firsthand verification (2026-06-21, Igneous Flaring Hearth) — A2 scope decisions recorded so a
+future audit does not re-flag:**
+
+- **Oak's `indefinite-deferral` content scoped-block group — OUT of A2 scope (deferred parity item, not a non-gap).**
+  Oak's policy.json ships a fourth content group (`parked`/`shelved`/`on hold`/… regex) citing
+  `no-hedging-vocabulary.md §Indefinite-deferral vocabulary` and `principles.md §Strict and Complete`. Measured
+  firsthand: castr's `no-hedging-vocabulary.md` has NO such section, so bringing the group would cite a section castr
+  lacks — a costume (PDR-092). It also has false-positive blast radius on castr's own continuity surfaces, which discuss
+  parking-as-an-antipattern. Bringing it properly first needs the no-hedging-vocabulary §Indefinite-deferral section +
+  the principles §Strict-and-Complete reconciliation + a castr-surface false-positive assessment. Recorded as a future
+  content-doctrine slice, sequenced separately from the mechanism upgrade.
+- **`stress-ng` substring breadth — ACCEPTED (deliberate-localisation, Oak-pin-faithful).** config-expert measured that
+  `match: "substring"` for `stress-ng` also blocks benign substrings (`libstress-ng`, `distress-ng-test`). This is
+  Oak's verbatim design and PDR-044 names innate-layer false positives a design property; the deny TEACHES and is
+  overridable, and `stress-ng` should essentially never appear in a legitimate castr command (headless schema lib).
+  Tightening to word-boundary matching would diverge from the pin and expand A2's matcher beyond the brought capability;
+  preserved as-is. The three sibling host-load shapes (`for(;;)`, `while(1)`, fork bomb) showed no benign false positive.
+
 ## Sequencing (low-risk high-value first; couple dependent units)
 
 1. **Tranche 1 — doctrine + correctness quick wins (S): ✅ COMPLETE (2026-06-20, Clouded Floating Gust).** B2 ✅ →
@@ -177,9 +195,15 @@ measurement against the live pin (per `plan-body-first-principles-check`):**
    (workstreams, agent-capability-vocabulary, skillOverrides) + one deferral to C3 (watcher per-step deadline). Full
    `pnpm check` green at the tranche; code/test/config reviewers run, all load-bearing claims re-verified firsthand
    (the code-reviewer's `KNOWN_OPTION_KEYS` defect was confirmed + fixed RED-first).
-2. **Tranche 2 — hook-policy capability unit (L):** A2 + A3 together (shared types/data + the validator that guards
-   them). TDD; RED-first against the founding busy-loop shape (PDR-092). The reconciled `no-unbounded-host-load.md`
-   (untracked in-tree) + start-right §7 + host-load patterns land inside A2.
+2. **Tranche 2 — hook-policy capability unit (L): ✅ COMPLETE (2026-06-21, Igneous Flaring Hearth / 611206).** A2 + A3
+   landed in three roll-forward commits (`511326f` no-hedging §-cite fix → `abe580f` A2 → `31caf78` A3). RED-first
+   against the founding 2026-06-11 host-DOS busy-loop (PDR-092): six failing tests confirmed the quoted-token evasion
+   before substring matching was added, then green. `no-unbounded-host-load.md` is now IN-TREE (with wrappers +
+   RULES_INDEX + start-right §7); the prior "untracked, can't commit until A2 adds the patterns" blocker is resolved —
+   policy.json ships the four host-load shapes (`for(;;)`, `while(1)`, fork bomb, `stress-ng`, `match: "substring"`)
+   the rule's Enforcement section claims, so the PDR-092 costume concern is discharged. Full `pnpm check:ci` green at the
+   tip; config/type/test reviewers run, all load-bearing claims re-verified firsthand (the config-expert's false-§-cite
+   find in `no-hedging-vocabulary.md` was confirmed + fixed; four review-driven test-coverage additions landed).
 3. **Tranche 3 — statusline + ArcAngel (M):** A4 → A1 (A1's wing depends on A4's session-shape surface). A1 scope is
    owner-confirmable (partly Oak infra; owner named it explicitly so default = bring).
 4. **Tranche 4 — delivery + remaining capability (M):** B1 (merge the D4 branch — coordinate-dependent), then B3, B4,

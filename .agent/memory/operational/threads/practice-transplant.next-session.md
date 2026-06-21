@@ -28,6 +28,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director    | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor    | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor    | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor    | 2026-06-21    | 2026-06-21   |
 
 ## Lanes
 
@@ -54,17 +55,25 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   → C7/C8 (`707731d` skillListingBudgetFraction + log-hook-errors wrapper wired to SessionStart; **skillOverrides +
   enabledPlugins NON-gaps**) → `5b444b7` review-driven hardening (KNOWN_OPTION_KEYS `--role` defect caught by
   code-reviewer, fixed RED-first; +bare-URL/prefix-miss coverage). Full `pnpm check` green; code/test/config reviewers
-  run, all load-bearing claims re-verified firsthand. **Next: Tranche 2 (A2+A3 hook-policy concept/reappraisal unit).**
-- **Progress:** B2 metacognition directive ✅ (`fcda10a`). The `no-unbounded-host-load.md` rule was reconciled this
-  session but **NOT kept in-tree** (an untracked canonical rule breaks `portability:check` — missing wrappers +
-  RULES_INDEX entry — and it can't be committed until A2 adds the policy.json busy-loop patterns its Enforcement claims,
-  per PDR-092 costume rule). It is fully reproducible: in A2, `git show practice/castr-pin:.agent/rules/no-unbounded-host-load.md`
-  then re-apply the two reconciliations — (1) drop the `never-ignore-signals` Related-Surfaces bullet (that rule does
-  NOT exist at the Oak pin either → an upstream Oak dangling ref, recorded in the feedback report); (2) neutralise the
-  Oak `graph-team-session-operations…` session-ops-report path. Then add the 3 host-load patterns (`for(;;)`,
-  `while(1)`, `stress-ng`) + a fork-bomb literal to `policy.json`, a RED-first test, start-right §7, and regenerate
-  wrappers.
-- **Sequencing:** Tranche 1 (C1/C2 bug fixes → C6 dirs → C4/C5/C7/C8) → Tranche 2 (A2+A3 hook-policy unit, TDD) →
+  run, all load-bearing claims re-verified firsthand.
+- **Tranche 2 ✅ COMPLETE (2026-06-21, Igneous Flaring Hearth / 611206):** the A2+A3 hook-policy concept/reappraisal
+  unit. Three roll-forward commits: `511326f` (fix: `no-hedging-vocabulary.md` false §-cite, surfaced by config-expert)
+  → `abe580f` (feat A2: Oak concept/reappraisal model — schema-derived grouped types, `ContentDenyInput` union,
+  `match: "substring"` matching, content-deny-response split; policy.json restructured to concept/citation/reappraisal
+  objects + four host-load shapes; `no-unbounded-host-load.md` rule + wrappers + RULES_INDEX + start-right §7) →
+  `31caf78` (feat A3: `validate-policy-reappraisal` validator wired into `repo-validators:check`). RED-first against the
+  founding 2026-06-11 host-DOS busy-loop (PDR-092) — six failing tests confirmed the quoted-token evasion, then green.
+  Full `pnpm check:ci` green at the tip; config/type/test reviewers run, every load-bearing claim re-verified firsthand;
+  four review-driven test-coverage additions landed. Two scope decisions recorded in the plan: `indefinite-deferral`
+  content group OUT of A2 (cites a no-hedging §section castr lacks — costume risk, deferred); `stress-ng` substring
+  breadth ACCEPTED (Oak-pin-faithful, PDR-044 design property). **Next: Tranche 3 (A4 statusline → A1 ArcAngel).**
+- **Progress:** B2 metacognition directive ✅ (`fcda10a`). `no-unbounded-host-load.md` is now **IN-TREE** (`abe580f`,
+  with `.claude/.agents/.cursor` wrappers + RULES_INDEX + start-right §7); the prior "untracked, can't commit until A2
+  adds the busy-loop patterns" blocker is RESOLVED — policy.json ships the four host-load shapes the rule's Enforcement
+  section claims, so the PDR-092 costume concern is discharged. Pin reconciliations applied: `never-ignore-signals`
+  Related-Surfaces bullet dropped (absent at the pin too — upstream Oak dangling ref); Oak session-ops-report path
+  neutralised; `codex-helper` §timeouts ref reconciled to castr's real heading (§Timeout and Long-Running Tasks).
+- **Sequencing:** Tranche 1 ✅ (C1/C2 → C6 → C4/C5/C7/C8) → Tranche 2 ✅ (A2+A3 hook-policy unit, TDD) →
   Tranche 3 (A4 statusline → A1 ArcAngel) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
 - **Acceptance:** every ledger row applied-or-decided; gap re-audit clean; then the P9 closure gate.
 
