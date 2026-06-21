@@ -24,6 +24,57 @@ describe('findBlockedPattern', () => {
     expect(findBlockedPattern('pnpm lint', ['git push --force'])).toBeNull();
   });
 
+  it('matches substring-mode patterns inside quoted arguments (the 2026-06-11 founding DOS shape)', () => {
+    const blockedPatterns = [
+      { pattern: 'for(;;)', match: 'substring' as const },
+      { pattern: 'while(1)', match: 'substring' as const },
+    ];
+
+    expect(
+      findBlockedPattern('node -e "for(;;){Math.sqrt(Math.random())}"', blockedPatterns),
+    ).toStrictEqual({ pattern: 'for(;;)', match: 'substring' });
+    expect(findBlockedPattern("node -e 'while(1){}' &", blockedPatterns)).toStrictEqual({
+      pattern: 'while(1)',
+      match: 'substring',
+    });
+  });
+
+  it('substring-mode matching tolerates whitespace inside the shape (spaced busy-loops)', () => {
+    const blockedPatterns = [
+      { pattern: 'for(;;)', match: 'substring' as const },
+      { pattern: 'while(1)', match: 'substring' as const },
+    ];
+
+    expect(findBlockedPattern('node -e "for (;;) {}"', blockedPatterns)).toStrictEqual({
+      pattern: 'for(;;)',
+      match: 'substring',
+    });
+    expect(findBlockedPattern('node -e "while ( 1 ) {}"', blockedPatterns)).toStrictEqual({
+      pattern: 'while(1)',
+      match: 'substring',
+    });
+  });
+
+  it('substring-mode matches a load tool however it is pathed', () => {
+    const blockedPatterns = [{ pattern: 'stress-ng', match: 'substring' as const }];
+
+    expect(findBlockedPattern('./tools/stress-ng --cpu 8', blockedPatterns)).toStrictEqual({
+      pattern: 'stress-ng',
+      match: 'substring',
+    });
+  });
+
+  it('substring-mode matching is case-insensitive and leaves benign commands alone', () => {
+    const blockedPatterns = [{ pattern: 'for(;;)', match: 'substring' as const }];
+
+    expect(findBlockedPattern('node -e "FOR(;;){}"', blockedPatterns)).toStrictEqual({
+      pattern: 'for(;;)',
+      match: 'substring',
+    });
+    expect(findBlockedPattern('node -e "console.log(1)"', blockedPatterns)).toBeNull();
+    expect(findBlockedPattern('for i in 1 2 3; do echo $i; done', blockedPatterns)).toBeNull();
+  });
+
   it('limits guardrail-bypass flags to git commands when the policy requires git', () => {
     expect(findBlockedPattern('git commit --no-verify', ['git --no-verify'])).toStrictEqual({
       pattern: 'git --no-verify',
@@ -176,5 +227,36 @@ describe('buildPreToolUseDenyResponse', () => {
           'Blocked by repo hook policy: matched dangerous pattern "git add .". Citation: distilled.md §Stage by explicit pathspec.',
       },
     });
+  });
+
+  it('frames the block as a concept to reappraise when the entry carries a concept', () => {
+    const response = buildPreToolUseDenyResponse({
+      pattern: 'git reset --hard',
+      concept: 'history-destruction',
+      reappraisal:
+        'Preserve in-flight work; never use git to remove work — make forward-going filesystem changes instead.',
+      citation: '.agent/rules/never-use-git-to-remove-work.md',
+    });
+
+    expect(response.hookSpecificOutput.permissionDecision).toBe('deny');
+    const reason = response.hookSpecificOutput.permissionDecisionReason;
+    // The reason must TEACH, not only refuse: name the pattern and its concept,
+    // carry the positive reappraisal direction and the citation, and steer the
+    // agent away from swapping in a sibling destructive command.
+    expect(reason).toContain('git reset --hard');
+    expect(reason).toContain('history-destruction');
+    expect(reason).toContain('never use git to remove work');
+    expect(reason).toContain('not a command to swap for a sibling');
+    expect(reason).toContain('Citation: .agent/rules/never-use-git-to-remove-work.md');
+  });
+
+  it('falls back to a default reappraisal when a concept entry omits its own', () => {
+    const reason = buildPreToolUseDenyResponse({
+      pattern: 'git clean -fd',
+      concept: 'worktree-destruction',
+    }).hookSpecificOutput.permissionDecisionReason;
+
+    expect(reason).toContain('worktree-destruction');
+    expect(reason).toContain('Step back and reappraise');
   });
 });

@@ -43,10 +43,13 @@ function normaliseEntry(entry: RawBlockedPattern): BlockedPatternEntry {
 }
 
 /**
- * Match a blocked pattern against a command by token subsequence.
+ * Match a blocked pattern against a command — by token subsequence by
+ * default, or by case-insensitive substring for entries with
+ * `match: 'substring'`.
  *
- * This catches reordered Git arguments such as `git push origin HEAD --force`
- * for the policy pattern `git push --force`. Each entry may be a bare pattern
+ * Token subsequence catches reordered Git arguments such as
+ * `git push origin HEAD --force` for the policy pattern `git push --force`;
+ * substring mode catches shapes hidden inside one quoted token. Each entry may be a bare pattern
  * string or an object carrying a doctrinal citation; the citation is surfaced
  * in the deny payload so the agent learns *why* the pattern is forbidden, not
  * only *that* it is.
@@ -56,9 +59,23 @@ export function findBlockedPattern(
   blockedPatterns: readonly RawBlockedPattern[],
 ): BlockedPatternEntry | null {
   const commandTokens = tokenizeCommand(command);
+  // Substring probes are whitespace-stripped on BOTH sides so spacing cannot
+  // smuggle a shape past the trip (`for (;;)` vs `for(;;)`).
+  const strippedCommand = command.toLowerCase().replace(/\s+/gu, '');
 
   for (const blockedPattern of blockedPatterns) {
     const entry = normaliseEntry(blockedPattern);
+
+    // Substring mode exists because token equality cannot see inside quoted
+    // arguments: the 2026-06-11 founding DOS command carried its busy-loop as
+    // one quoted token, sailing past a token-sequence trip for the same shape.
+    if (entry.match === 'substring') {
+      if (strippedCommand.includes(entry.pattern.toLowerCase().replace(/\s+/gu, ''))) {
+        return entry;
+      }
+      continue;
+    }
+
     const patternTokens = tokenizeCommand(entry.pattern);
     let patternIndex = 0;
 
@@ -77,20 +94,55 @@ export function findBlockedPattern(
 }
 
 /**
+ * The default reappraisal direction surfaced when a concept-bearing entry has no
+ * `reappraisal` of its own. The load-time schema leaves `reappraisal` optional
+ * so a missing value never fails the guard closed; the
+ * `validate-policy-reappraisal` repo validator enforces presence on object
+ * entries at commit-time, so this default is a safety net, not the intended
+ * path.
+ */
+const DEFAULT_BASH_REAPPRAISAL =
+  'Step back and reappraise whether this operation is the right move before proceeding.';
+
+/**
+ * Build the deny reason for a matched Bash pattern.
+ *
+ * When the entry names the `concept` the command is a fingerprint of, the reason
+ * TEACHES: it carries the positive `reappraisal` direction (defaulted if absent)
+ * and steers the agent away from swapping in a sibling destructive command,
+ * rather than only refusing. A concept-less entry (the legacy/bare form) falls
+ * back to the plain matched-pattern reason, with the citation appended when
+ * present.
+ */
+function buildBlockedPatternReason(entry: BlockedPatternEntry): string {
+  if (entry.concept === undefined) {
+    const baseReason = `Blocked by repo hook policy: matched dangerous pattern "${entry.pattern}".`;
+    return entry.citation === undefined ? baseReason : `${baseReason} Citation: ${entry.citation}.`;
+  }
+  const reappraisal = entry.reappraisal ?? DEFAULT_BASH_REAPPRAISAL;
+  const citation = entry.citation === undefined ? '' : ` Citation: ${entry.citation}.`;
+  return (
+    `Blocked by repo hook policy: "${entry.pattern}" is a ${entry.concept} operation. ` +
+    `${reappraisal} The block signals a concept to reappraise, not a command to swap for a ` +
+    `sibling — do not reach for an equivalent destructive command to bypass it.${citation}`
+  );
+}
+
+/**
  * Build the structured deny payload Claude expects for `PreToolUse`.
  *
- * When the entry carries a citation, it is appended to the reason so the
- * doctrinal anchor travels to the agent at the moment of denial.
+ * The reason teaches when the entry carries a concept (positive reappraisal
+ * direction plus citation) and otherwise falls back to the plain matched-pattern
+ * reason. The concept framing exists because a block that only says "no" leaves
+ * the agent to reach for a sibling destructive command rather than reappraise
+ * the operation (PDR-044 §Innate immunity, as amended).
  */
 export function buildPreToolUseDenyResponse(entry: BlockedPatternEntry): PreToolUseDenyResponse {
-  const baseReason = `Blocked by repo hook policy: matched dangerous pattern "${entry.pattern}".`;
-  const reason =
-    entry.citation === undefined ? baseReason : `${baseReason} Citation: ${entry.citation}.`;
   return {
     hookSpecificOutput: {
       hookEventName: PRE_TOOL_USE_EVENT_NAME,
       permissionDecision: 'deny',
-      permissionDecisionReason: reason,
+      permissionDecisionReason: buildBlockedPatternReason(entry),
     },
   };
 }

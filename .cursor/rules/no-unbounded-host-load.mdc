@@ -1,0 +1,6 @@
+---
+description: No Unbounded Host Load
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/no-unbounded-host-load.md`.

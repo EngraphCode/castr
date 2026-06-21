@@ -1,45 +1,169 @@
 {
-  "description": "Canonical agent-hook policy for @engraph/castr. Guardrail-only: grounding reminder, quality-gate reminder, and blocking dangerous git/history-bypass commands.",
-  "version": "1.0.0",
+  "description": "Canonical agent-hook policy for @engraph/castr. Guardrail-only: grounding reminder, quality-gate reminder, and blocking dangerous git/history-bypass/host-load commands. Each blocked entry carries a concept + citation + reappraisal so a deny TEACHES (PDR-044 §Innate immunity, as amended), enforced at commit-time by the validate-policy-reappraisal repo validator.",
+  "version": "1.1.0",
   "hooks": {
     "preToolUse": {
       "blocked_patterns": [
-        "git push --force",
-        "git push -f",
-        "git reset --hard",
-        "git rebase -i",
-        "git --no-verify",
-        "git --no-gpg-sign",
-        "git clean -fd",
-        "git checkout --",
-        "git checkout HEAD",
-        "git checkout -- .",
-        "git restore",
-        "git restore --worktree",
-        "git restore --staged",
-        "git stash drop",
-        "git stash clear",
+        {
+          "pattern": "git push --force",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never overwrite or rewrite it; integrate forward with new commits and reconcile branches without force-pushing or interactive rebase."
+        },
+        {
+          "pattern": "git push -f",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never overwrite or rewrite it; integrate forward with new commits and reconcile branches without force-pushing or interactive rebase."
+        },
+        {
+          "pattern": "git rebase -i",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never rewrite it with interactive rebase; layer corrections as new commits instead."
+        },
+        {
+          "pattern": "git --no-verify",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "Hooks are safety guardrails, not friction — never bypass them; understand and fix what they flag, and treat --no-verify as needing fresh per-commit owner authorisation."
+        },
+        {
+          "pattern": "git --no-gpg-sign",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "Commit signing is a safety guardrail, not friction — do not bypass it; resolve the signing setup rather than skipping the gate."
+        },
+        {
+          "pattern": "git reset --hard",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This silently discards uncommitted work — including parallel agents' edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git clean -fd",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This deletes untracked files irrecoverably, including peers' in-flight work; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout --",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites in-flight edits — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout HEAD",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites in-flight edits — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout -- .",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites every in-flight edit in the tree — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore --worktree",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore --staged",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git stash drop",
+          "concept": "stash-discard",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Never use git stash to park, hide, or discard work; keep in-progress work as live working-tree edits."
+        },
+        {
+          "pattern": "git stash clear",
+          "concept": "stash-discard",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Never use git stash to park, hide, or discard work; keep in-progress work as live working-tree edits."
+        },
         {
           "pattern": "git add -A",
-          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
         },
         {
           "pattern": "git add --all",
-          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
         },
         {
           "pattern": "git add .",
-          "citation": ".agent/rules/stage-by-explicit-pathspec.md"
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
+        },
+        {
+          "pattern": "for(;;)",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": "while(1)",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": ":(){ :|:&",
+          "concept": "host-dos-forkbomb",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": "stress-ng",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
         }
       ],
-      "description": "Block shell commands that bypass safety guardrails, destroy history, or overwrite live working-tree edits. Working-tree-overwrite commands (checkout/restore variants) are blocked because they silently throw away in-flight edits — including peer-agent edits in parallel sessions — and `git fsck --lost-found` cannot recover them. Wildcard staging commands (`git add -A` / `--all` / `.`) are blocked under the explicit-pathspec discipline (.agent/rules/stage-by-explicit-pathspec.md) so a continuity-deferral commit cannot accidentally bundle parallel-thread plan work or unrelated plugin enables. We never use git to remove work; forward-going filesystem changes only. See `.agent/rules/never-use-git-to-remove-work.md`."
+      "description": "Block shell commands that destroy history, bypass safety gates, overwrite live working-tree edits, discard stashed work, stage by wildcard, or saturate the shared host. Each entry carries a `concept` (the pattern family it is a fingerprint of), a `citation` (the doctrinal anchor), and a `reappraisal` (the positive direction the firing signals) so the deny message TEACHES: it names a concept to reappraise and steers the agent away from reaching for a sibling destructive command, rather than only refusing (PDR-044 §Innate immunity, as amended). The concepts: `history-destruction` (`git push --force` / `-f`, `git rebase -i`); `gate-bypass` (`git --no-verify`, `git --no-gpg-sign`); `worktree-destruction` (`git reset --hard`, `git clean -fd`, checkout/restore variants — these silently throw away in-flight edits, including peer-agent edits in parallel sessions, and `git fsck --lost-found` cannot recover them); `stash-discard` (`git stash drop` / `clear`); `wildcard-staging` (`git add -A` / `--all` / `.`, blocked under the explicit-pathspec discipline so a commit cannot accidentally bundle parallel-thread or unrelated work); `host-dos-unbounded-load` / `host-dos-forkbomb` (inline busy-loops, fork bombs, load tools — the host is a shared substrate and unbounded load is a denial of service against the owner and every session; these use `match: \"substring\"` because the shape hides inside one quoted token and a token-sequence trip cannot see into it; see `.agent/rules/no-unbounded-host-load.md`). We never use git to remove work; forward-going filesystem changes only. Entries may be bare strings (legacy) or objects; `concept` and `reappraisal` are optional at load time so a missing value never fails the guard closed (which would brick the worktree on a stale-dist/new-policy mismatch — a stale Bash guard blocks every command including the rebuild), and the `validate-policy-reappraisal` repo validator enforces their presence on object entries at commit-time. See `.agent/rules/never-use-git-to-remove-work.md`, `.agent/rules/no-verify-requires-fresh-authorisation.md`, `.agent/rules/stage-by-explicit-pathspec.md`, and `.agent/rules/no-unbounded-host-load.md`."
     },
     "preToolUseContent": {
       "blocked_patterns": ["-- jc:", "-- JC:"],
       "scoped_blocks": [
         {
-          "pattern": "carve out",
+          "concept": "expediency-hedging",
           "kind": "literal",
+          "patterns": [
+            "carve out",
+            "carve-out",
+            "carve around",
+            "an exception to",
+            "with the exception of",
+            "make an exception",
+            "for these arcs",
+            "honest framing for",
+            "permitted variant",
+            "land it then iterate",
+            "cheap cure",
+            "good enough",
+            "quick fix"
+          ],
           "include_paths": [
             ".agent/practice-core/",
             ".agent/plans/",
@@ -58,287 +182,13 @@
             "/tests/",
             ".test.ts"
           ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed",
+          "reappraisal": "Re-assess whether the design is actually uniform — in which case state it positively — or whether you are about to encode expediency."
         },
         {
-          "pattern": "carve-out",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "carve around",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "an exception to",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "with the exception of",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "make an exception",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "for these arcs",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "honest framing for",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "permitted variant",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "land it then iterate",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "cheap cure",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "good enough",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "quick fix",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts"
-          ],
-          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "\\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b",
+          "concept": "sha-in-permanent-doc",
           "kind": "regex",
+          "patterns": ["\\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b"],
           "include_paths": [
             ".agent/practice-core/",
             ".agent/rules/",
@@ -349,11 +199,13 @@
           "exclude_paths": ["provenance.yml", "archive/", "fixtures/", "/tests/", ".test.ts"],
           "excludes_inline_code": true,
           "excludes_lines_with": ["(historical reference)"],
-          "citation": "Moving targets do not belong in permanent docs (PDR-079 portable surfaces only — ADRs are repo-bound and out of scope)"
+          "citation": "Moving targets do not belong in permanent docs (PDR-079 portable surfaces only — ADRs are repo-bound and out of scope)",
+          "reappraisal": "State the durable fact rather than this pointer; if a genuine historical reference is needed, mark it explicitly as one. The fix removes the dependence on a moving target."
         },
         {
-          "pattern": "for owner verdict",
+          "concept": "menu-framing",
           "kind": "literal",
+          "patterns": ["for owner verdict", "for owner decision", "for owner ratification"],
           "include_paths": [
             ".agent/practice-core/",
             ".agent/plans/",
@@ -373,58 +225,11 @@
             ".test.ts",
             "re-apply-first-question-at-elaboration-boundaries.md"
           ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "for owner decision",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts",
-            "re-apply-first-question-at-elaboration-boundaries.md"
-          ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
-        },
-        {
-          "pattern": "for owner ratification",
-          "kind": "literal",
-          "include_paths": [
-            ".agent/practice-core/",
-            ".agent/plans/",
-            "docs/architecture/",
-            "docs/governance/",
-            "**/*.plan.md"
-          ],
-          "exclude_paths": [
-            "principles.md",
-            "distilled.md",
-            "PDR-043",
-            "PDR-044",
-            "PDR-047",
-            "archive/",
-            "fixtures/",
-            "/tests/",
-            ".test.ts",
-            "re-apply-first-question-at-elaboration-boundaries.md"
-          ],
-          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed"
+          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed",
+          "reappraisal": "If you have analysed the situation to a verdict, present the verdict with its evidence; reserve owner questions for genuine permission gates and decisions only the owner can make."
         }
       ],
-      "description": "Block agents from writing user-approved markers into file content (only the project owner can approve eslint-disable approvals with the JC: prefix). The path-scoped scoped_blocks are write-time fingerprints per PDR-044 §Innate immunity. Three kinds: (literal) the hedging-vocabulary trip-list — language that means 'I know the rule applies, but this situation is special' rejected on doctrine surfaces (PDRs, plans, ADRs, governance), with doctrine-defining surfaces excluded so principles.md, distilled.md, PDR-043 and PDR-044 may catalogue the words they forbid; (regex) the SHA-in-permanent-doc fingerprint — 7- to 40-character hex tokens with at least one a-f character on portable-permanent-doc paths (practice-core, rules, memory/active/patterns, principles.md, testing-strategy.md; ADRs are repo-bound and out of scope per PDR-079), with fenced code blocks, inline-code spans, and `(historical reference)` marker lines excluded so the discipline 'moving targets do not belong in permanent docs' (.agent/rules/no-moving-targets-in-permanent-docs.md) is enforced at write-time without tripping intentional code-block examples or explicit historical citations; (literal) the menu-framing trip-list — owner-decision phrasings ('for owner verdict' / 'for owner decision' / 'for owner ratification') rejected on architectural surfaces ('for owner approval' was considered and rejected at design time — too high false-positive rate in legitimate governance prose) (plans, PDRs, ADRs, governance) so menu-shaped option-sets do not slip past the re-apply-first-question-at-elaboration-boundaries discipline; the rule file itself is excluded so it may catalogue the phrases it forbids. PDR-044 names false positives as a design property of the innate layer."
+      "description": "Block agents from writing user-approved markers into file content (only the project owner can approve eslint-disable approvals with the JC: prefix). The path-scoped scoped_blocks are write-time fingerprints per PDR-044 §Innate immunity, grouped by `concept` so a citation and a positive `reappraisal` direction are authored once per concept rather than once per pattern; a firing teaches a concept to reappraise, not a word to rephrase. Three concept groups: (literal) `expediency-hedging` — language that means 'I know the rule applies, but this situation is special' rejected on doctrine surfaces (PDRs, plans, ADRs, governance), with doctrine-defining surfaces excluded so principles.md, distilled.md, PDR-043 and PDR-044 may catalogue the words they forbid; (regex) `sha-in-permanent-doc` — 7- to 40-character hex tokens with at least one a-f character on portable-permanent-doc paths (practice-core, rules, memory/active/patterns, principles.md, testing-strategy.md; ADRs are repo-bound and out of scope per PDR-079), with fenced code blocks, inline-code spans, and `(historical reference)` marker lines excluded so the discipline 'moving targets do not belong in permanent docs' (.agent/rules/no-moving-targets-in-permanent-docs.md) is enforced at write-time without tripping intentional code-block examples or explicit historical citations; (literal) `menu-framing` — owner-decision phrasings ('for owner verdict' / 'for owner decision' / 'for owner ratification') rejected on architectural surfaces ('for owner approval' was considered and rejected at design time — too high a false-positive rate in legitimate governance prose) so menu-shaped option-sets do not slip past the re-apply-first-question-at-elaboration-boundaries discipline; the rule file itself is excluded so it may catalogue the phrases it forbids. `reappraisal` is optional at load time so a missing value never fails the guard closed; the `validate-policy-reappraisal` repo validator enforces its presence at commit-time. PDR-044 names false positives as a design property of the innate layer."
     },
     "sessionStart": {
       "grounding_reminder": "Read .agent/directives/AGENT.md and .agent/memory/active/distilled.md before starting work.",

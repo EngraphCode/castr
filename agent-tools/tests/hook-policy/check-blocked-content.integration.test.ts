@@ -48,7 +48,7 @@ describe('runPreToolUseContentGuard', () => {
     expect(result).toStrictEqual({ exitCode: 0 });
     expect(stderrChunks).toStrictEqual([]);
     expect(JSON.parse(stdoutChunks.join(''))).toStrictEqual(
-      buildPreToolUseDenyResponse('secret-marker'),
+      buildPreToolUseDenyResponse({ kind: 'owner-marker', pattern: 'secret-marker' }),
     );
   });
 
@@ -155,9 +155,11 @@ describe('runPreToolUseContentGuard', () => {
       blockedPatterns: [],
       scopedBlocks: [
         {
-          pattern: 'carve out',
+          concept: 'expediency-hedging',
+          patterns: ['carve out'],
           include_paths: ['**/*.plan.md'],
           citation: 'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
+          reappraisal: 'Re-assess the concept.',
         },
       ],
     });
@@ -165,10 +167,13 @@ describe('runPreToolUseContentGuard', () => {
     expect(result).toStrictEqual({ exitCode: 0 });
     expect(stderrChunks).toStrictEqual([]);
     expect(JSON.parse(stdoutChunks.join(''))).toStrictEqual(
-      buildPreToolUseDenyResponse(
-        'carve out',
-        'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
-      ),
+      buildPreToolUseDenyResponse({
+        kind: 'concept',
+        pattern: 'carve out',
+        concept: 'expediency-hedging',
+        citation: 'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed',
+        reappraisal: 'Re-assess the concept.',
+      }),
     );
   });
 
@@ -192,7 +197,8 @@ describe('runPreToolUseContentGuard', () => {
       blockedPatterns: [],
       scopedBlocks: [
         {
-          pattern: 'carve out',
+          concept: 'expediency-hedging',
+          patterns: ['carve out'],
           include_paths: ['**/*.plan.md', '.agent/practice-core/'],
           citation: 'PDR-044',
         },
@@ -209,8 +215,8 @@ describe('canonical policy: hedging-vocabulary trip-list (WS3)', () => {
     'PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed';
 
   it('the canonical policy registers a hedging-vocabulary trip-list scoped to doctrine surfaces', async () => {
-    const blocks = await loadScopedContentBlocks();
-    const hedgingPatterns = new Set([
+    const groups = await loadScopedContentBlocks();
+    const hedgingPhrases = [
       'carve out',
       'carve-out',
       'carve around',
@@ -223,37 +229,56 @@ describe('canonical policy: hedging-vocabulary trip-list (WS3)', () => {
       'cheap cure',
       'good enough',
       'quick fix',
-    ]);
-    const hedgingBlocks = blocks.filter(
-      (block) => (block.kind ?? 'literal') === 'literal' && hedgingPatterns.has(block.pattern),
+    ];
+    const hedging = groups.find((group) => group.concept === 'expediency-hedging');
+
+    expect(hedging).toBeDefined();
+    expect(hedging?.kind).toBe('literal');
+    expect(hedging?.patterns).toEqual(expect.arrayContaining(hedgingPhrases));
+    expect(hedging?.citation).toBe(expectedCitation);
+    expect(hedging?.include_paths).toEqual(
+      expect.arrayContaining(['.agent/practice-core/', '.agent/plans/']),
     );
+    expect(hedging?.reappraisal).toBeTruthy();
+  });
+});
 
-    const patterns = hedgingBlocks.map((block) => block.pattern);
-    expect(patterns).toEqual(expect.arrayContaining([...hedgingPatterns]));
+describe('canonical policy: menu-framing trip-list', () => {
+  it('the canonical policy ships the menu-framing group with its phrases, citation, and reappraisal', async () => {
+    const groups = await loadScopedContentBlocks();
+    const menuFraming = groups.find((group) => group.concept === 'menu-framing');
 
-    for (const block of hedgingBlocks) {
-      expect(block.citation).toBe(expectedCitation);
-      expect(block.include_paths.length).toBeGreaterThan(0);
-    }
+    expect(menuFraming).toBeDefined();
+    expect(menuFraming?.kind).toBe('literal');
+    expect(menuFraming?.patterns).toEqual(
+      expect.arrayContaining(['for owner verdict', 'for owner decision', 'for owner ratification']),
+    );
+    expect(menuFraming?.citation).toContain('re-apply-first-question-at-elaboration-boundaries.md');
+    expect(menuFraming?.exclude_paths).toEqual(
+      expect.arrayContaining(['re-apply-first-question-at-elaboration-boundaries.md']),
+    );
+    expect(menuFraming?.reappraisal).toBeTruthy();
   });
 });
 
 describe('canonical policy: SHA-in-permanent-doc regex (WS4)', () => {
-  it('registers a regex scoped block detecting 7- to 40-char hex with code-block and historical-reference exclusions', async () => {
-    const blocks = await loadScopedContentBlocks();
-    const regexBlocks = blocks.filter((block) => block.kind === 'regex');
+  it('registers a regex scoped block group detecting 7- to 40-char hex with code-block and historical-reference exclusions', async () => {
+    const groups = await loadScopedContentBlocks();
+    const regexGroups = groups.filter((group) => group.kind === 'regex');
 
-    expect(regexBlocks.length).toBeGreaterThanOrEqual(1);
-    const shaBlock = regexBlocks.find((block) => /\[0-9a-f\]/u.test(block.pattern));
-    expect(shaBlock).toBeDefined();
-    expect(shaBlock?.excludes_inline_code).toBe(true);
-    expect(shaBlock?.excludes_lines_with).toEqual(
+    expect(regexGroups.length).toBeGreaterThanOrEqual(1);
+    const shaGroup = regexGroups.find((group) =>
+      group.patterns.some((pattern) => /\[0-9a-f\]/u.test(pattern)),
+    );
+    expect(shaGroup).toBeDefined();
+    expect(shaGroup?.excludes_inline_code).toBe(true);
+    expect(shaGroup?.excludes_lines_with).toEqual(
       expect.arrayContaining(['(historical reference)']),
     );
-    expect(shaBlock?.include_paths).toEqual(
+    expect(shaGroup?.include_paths).toEqual(
       expect.arrayContaining(['.agent/practice-core/', '.agent/rules/']),
     );
-    expect(shaBlock?.citation).toContain('Moving targets');
+    expect(shaGroup?.citation).toContain('Moving targets');
   });
 
   it('the wired-up guard denies a SHA added on a permanent-doc path and surfaces the citation', async () => {

@@ -1,24 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
 import { findAddedScopedBlock } from '../../src/hook-policy/matchers.js';
-import type { ScopedContentBlock } from '../../src/hook-policy/types.js';
+import type { ScopedContentBlockGroup } from '../../src/hook-policy/types.js';
 
 /**
  * B1 enforcement: menu-framing trip-list for architectural decisions.
  *
- * The cure is named at `.agent/rules/re-apply-first-question-at-elaboration-boundaries.md`
- * §"Failure Mode 1: Elaboration Without Re-Asking" and §"Failure Mode 2: Carry-On vs Adopt".
+ * The cure is named at `.agent/rules/re-apply-first-question-at-elaboration-boundaries.md`.
  * Surfacing (a)/(b)/(c) as a peer-option menu "for owner verdict" presupposes that the
  * owner is the right resolver — that framing is itself the failure mode the rule names.
  *
  * The scoped-block trip-list operationalises the rule at the Edit/Write hook layer
  * per `.agent/hooks/policy.json` `preToolUseContent.scoped_blocks`. The three canonical
- * menu-frame phrases (`for owner verdict` / `decision` / `ratification`) each ship as a
- * separate literal scoped_block, citing the rule. ("for owner approval" was considered
+ * menu-frame phrases (`for owner verdict` / `decision` / `ratification`) ship as patterns
+ * of the `menu-framing` group, citing the rule. ("for owner approval" was considered
  * and rejected at design time — too high a false-positive rate in legitimate governance
- * prose; see assumptions-expert finding 2026-05-25.) This test file exercises the
- * canonical block shape against findAddedScopedBlock — the helper that the hook script
- * wraps — so the substance of the cure has regression coverage.
+ * prose.) This test file exercises the canonical group shape against findAddedScopedBlock —
+ * the helper that the hook script wraps — so the substance of the cure has regression coverage.
  */
 
 const sharedIncludePaths = [
@@ -45,9 +43,10 @@ const sharedExcludePaths = [
 const sharedCitation =
   're-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed';
 
-function buildMenuFrameBlock(phrase: string): ScopedContentBlock {
+function buildMenuFrameGroup(phrase: string): ScopedContentBlockGroup {
   return {
-    pattern: phrase,
+    concept: 'menu-framing',
+    patterns: [phrase],
     kind: 'literal',
     include_paths: sharedIncludePaths,
     exclude_paths: sharedExcludePaths,
@@ -60,7 +59,7 @@ const menuFramePhrases = ['for owner verdict', 'for owner decision', 'for owner 
 describe.each(menuFramePhrases)(
   'findAddedScopedBlock — menu-framing trip-list for %s (B1)',
   (phrase) => {
-    const block = buildMenuFrameBlock(phrase);
+    const group = buildMenuFrameGroup(phrase);
 
     it('fires when an agent adds the menu-frame phrase to a plan file', () => {
       expect(
@@ -68,9 +67,9 @@ describe.each(menuFramePhrases)(
           `Options: (a) refactor; (b) inline patch; (c) hybrid — ${phrase}.`,
           'Options under discussion.',
           '/repo/.agent/plans/agent-tooling/current/example.plan.md',
-          [block],
+          [group],
         ),
-      ).toStrictEqual(block);
+      ).toStrictEqual({ group, matchedText: phrase });
     });
 
     it('fires when an agent adds the menu-frame phrase to a PDR draft', () => {
@@ -79,9 +78,9 @@ describe.each(menuFramePhrases)(
           `Verdict (c) plus partial (a) — ${phrase}.`,
           'Verdict pending.',
           '/repo/.agent/practice-core/decision-records/PDR-XXX-example.md',
-          [block],
+          [group],
         ),
-      ).toStrictEqual(block);
+      ).toStrictEqual({ group, matchedText: phrase });
     });
 
     it('does not fire on the rule file itself (rule catalogues the phrase it forbids)', () => {
@@ -90,7 +89,7 @@ describe.each(menuFramePhrases)(
           `The failure-mode framing is "${phrase}" applied to (a)/(b)/(c) menus.`,
           'Old text.',
           '/repo/.agent/rules/re-apply-first-question-at-elaboration-boundaries.md',
-          [block],
+          [group],
         ),
       ).toBeNull();
     });
@@ -98,7 +97,7 @@ describe.each(menuFramePhrases)(
     it('does not fire outside the architectural-doc include scope', () => {
       expect(
         findAddedScopedBlock(`Some code comment ${phrase}.`, 'Old code.', '/repo/src/index.ts', [
-          block,
+          group,
         ]),
       ).toBeNull();
     });
@@ -109,7 +108,7 @@ describe.each(menuFramePhrases)(
           `Verdict (c) — ${phrase}.\nMore text added later.`,
           `Verdict (c) — ${phrase}.`,
           '/repo/.agent/plans/example.plan.md',
-          [block],
+          [group],
         ),
       ).toBeNull();
     });
