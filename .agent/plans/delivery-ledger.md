@@ -24,10 +24,11 @@ the transplant branch already contained every other branch's content. **All work
 `feat/rewrite` (remote-only, ~170 unique commits, a historical session-3.x line) is **not** part of current work and
 was left untouched.
 
-**Branch push state (owner, 2026-06-20):** the owner pushed `feat/transplant-engraph-practice` to `origin` (through
-`f8b4910`); subsequent commits land locally until the owner pushes again. This does **not** change the delivery shape
-above (split, D3-gated PRs to `main`) — pushing the working branch to its own origin remote is continuity/backup, not
-the delivery merge act. The active deep-enhancement workstream is now the
+**Branch push state (2026-06-21):** `feat/transplant-engraph-practice` pushed to `origin` through the
+2026-06-21 dependency-currency session tip — parity Tranches 1–2, the full dependency-currency cycles
+DC0/DC0b/DC6/DC7/DC8/DC1/DC2, and Q-006/ADR-049 (owner-authorised push at session-handoff). This does **not** change
+the delivery shape above (split, D3-gated PRs to `main`) — pushing the working branch to its own origin remote is
+continuity/backup, not the delivery merge act. The active deep-enhancement workstream is now the
 [Oak Parity-or-Better Program](./transplant/oak-parity-program.md) (estate-wide upgrade; transplant Phase 9 reframed as
 its closure gate).
 

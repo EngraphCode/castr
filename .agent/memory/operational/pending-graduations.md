@@ -67,3 +67,20 @@ commit and the permanent doc are the record (no tombstone; see
   `complete/`, which would otherwise orphan the method). Instances so far: the low-risk tier
   (DC0/DC0b/DC6/DC7/DC8) and the DC1 emission crown jewel.
 - `[captured: 2026-06-21 | source: dependency-currency lane (Woodland Bending Glade / dc3825); home+trigger sharpened 2026-06-21 (Soaring Lifting Current / f7e30d, owner four-lenses pass)]`
+
+## dissolve-owner-gating-with-four-lenses → PDR amendment (candidate)
+
+- **Substance:** before surfacing a question as owner-gated, run it through **strict / everywhere / all-the-time
+  / long-term-architectural-excellence**; a question only survives to the owner if its defensible outcomes
+  genuinely diverge under those lenses (a real product/strategy/governance fork). Engineering-correctness
+  questions almost always collapse to one determination — present the verdict, don't ask. Owner directive
+  2026-06-21 (twice this session). It is a **sharpening of existing doctrine** (`present-verdicts-not-menus`
+  rule + PDR-057 apply-don't-ask + PDR-058 stop-inventing-optionality), not wholly new.
+- **Candidate home:** an amendment to PDR-057/PDR-058 (or `present-verdicts-not-menus.md`) adding the four-lens
+  dissolution test; possibly a `pdr_kind: pattern`. Currently captured in user-memory
+  `dissolve-owner-gating-with-four-lenses` + the napkin.
+- **Trigger:** graduate on a SECOND independent instance (a future session where the lenses dissolve a gated
+  item), OR owner-graduate now (owner stated the doctrine and is the Practice-governance authority). Instance 1:
+  the 2026-06-21 four-lenses decision-pass (Q-006 + the currency-PDR home/timing dissolved; only the Node-support
+  stance + Oak-governance survived).
+- `[captured: 2026-06-21 | source: owner four-lenses decision-pass (Soaring Lifting Current / f7e30d)]`

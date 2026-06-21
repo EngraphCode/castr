@@ -41,6 +41,19 @@ slice. Commits: `00750da` (@types/node ^24), `43d7f8a` (tsconfig), `d1fcdda` (AD
   type-reviewer, verified firsthand. Orthogonal to DC2 (zero `as` added); own follow-up slice. Family:
   [[castr-doctrine-vs-reality]].
 
+**Session-close (deep handoff + consolidation, session-completion mode).** Continuity surfaces refreshed
+(repo-continuity CURRENT TRUTH + Active-threads were STALE — said "DC1 next" while DC1+DC2 landed; adversarial
+falsification caught it). 7 commits pushed. NO napkin rotation (reasoned HOLD, 3rd pass — sharpened): napkin is
+689 lines but the dominant mass is the FIRST-RUN friction block (308-546, ~238 lines) which is **live
+pending-work detail** for the un-executed friction-fix lane (rotation archives _processed_ capture, not live
+work); all other lessons are conserved in distilled/rules/user-memory. Per fitness-is-a-signal, a partial
+archival nets ~510-547 (still over) = number-chasing, forbidden. **Falsifiable structural cure: when the
+friction-fix lane EXECUTES, graduate the FIRST-RUN F/N detail into that lane's plan/records, THEN rotate.**
+ADR/PDR candidates surfaced: (1) [[dissolve-owner-gating-with-four-lenses]] — owner doctrine this session, a
+sharpening of present-verdicts-not-menus + PDR-057/058; routed to pending-graduations (single instance; owner
+may graduate now or gate on a 2nd). (2) the strict-lens-scope-creep correction (this entry, headline) — pattern
+candidate, single instance, left in napkin until a 2nd.
+
 ## 2026-06-21 (dependency-currency — DC1 ts-morph 27->28, the crown jewel — Soaring Lifting Current / f7e30d)
 
 Executed DC1 (ts-morph 27->28), the highest-risk cycle, its own session, full baseline-capture protocol.

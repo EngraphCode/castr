@@ -18,13 +18,21 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > session: **Q-003 statusline wiring** (`ebf08b5`); **PDR-currency sync COMPLETE** — 4 new + 9 folded PDRs current with
 > Oak `ad359a4f` (`5c40adb`, `3787928`); **B2 metacognition directive** upgraded 16→122 lines (`fcda10a`). Standing
 > directive saved to user-memory `castr-parity-or-better-with-oak` (distinguish deliberate-localisation → preserve, from
-> unbuilt-gap → upgrade). **The branch is PUSHED to origin (owner pushed, through `f8b4910`); last 2 commits unpushed.**
-> Parity **Tranche 1 ✅** (C1/C2/C6/C4/C5/C7/C8) and **Tranche 2 ✅** (A2+A3 hook-policy concept/reappraisal unit —
-> `511326f`/`abe580f`/`31caf78`, `pnpm check:ci` green) are COMPLETE; the **decision ledger is clean (Q-001…Q-005 all
-> resolved)**. **Next session (owner-chosen 2026-06-21) = the dependency-currency lane** — controlling plan
-> [`plans/current/dependency-currency.md`](../plans/current/dependency-currency.md) (READY: 9 type-risk-classified
-> cycles, reviewed firsthand; handle slowly/carefully — castr is entirely about managing types). **Tranche 3 (A4
-> statusline → A1 ArcAngel, full unit) follows.** All "finish Phase 9" framing below is superseded by the parity-program framing.
+> unbuilt-gap → upgrade). Parity **Tranche 1 ✅** (C1/C2/C6/C4/C5/C7/C8) and **Tranche 2 ✅** (A2+A3 hook-policy unit —
+> `511326f`/`abe580f`/`31caf78`) are COMPLETE.
+>
+> **2026-06-21 dependency-currency UPDATE (current truth; supersedes the "lane is READY/next-session" framing above).**
+> The lane is IN PROGRESS — dev-tooling + low-risk + the two highest-risk emission/IR cycles are DONE and **pushed**:
+> DC0 (`f761e12`), DC0b sonarjs (`dcad36b`), DC6 @types/node (`a731765`), DC7 commitlint (`0fd4a4c`), DC8 degit
+> (`bb653c9`), **DC1 ts-morph 27→28 crown jewel (`c8c0a9a` — emission byte-identical), DC2 @scalar IR-input trio
+> (`43419d0` — IR-fidelity preserved + dangling-ref fail-fast locked in).** Also: @types/node pinned ^24 (Q-006 →
+> **ADR-049**, `00750da`) + stale tsconfig include fixed (`43d7f8a`). Decision ledger clean (**Q-001…Q-006 resolved**).
+> **NEXT = DC3 prettier 3.8.3→3.8.4** (emission-formatter; baseline-capture + emitted diff), then DC4 ink (agent-tools
+> runtime), DC5 commander (lib CLI), then **lane-close → graduate dependency-currency-discipline to a practice-core
+> pattern-PDR.** Then **Tranche 3 (A4 statusline → A1 ArcAngel, full unit).** Controlling plan
+> [`plans/current/dependency-currency.md`](../plans/current/dependency-currency.md) §Progress (live) is authoritative.
+> Finding routed (own slice): repo-local `type-assertion-policy` ESLint rule unregistered in `lib/eslint.config.ts`.
+> All "finish Phase 9" framing below is superseded by the parity-program framing.
 
 > **2026-06-20 close UPDATE (supersedes the stale bullets below where they conflict):** Phases 6 **and 7** are ✅
 > COMPLETE + tagged (`transplant/phase-6` `a63aee3`; `transplant/phase-7` 2026-06-20). **D1 lint is ✅ RESOLVED**
