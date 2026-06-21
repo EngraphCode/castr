@@ -2,7 +2,45 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-06-21 (FIRST dedicated consolidation session in castr — Volcanic Charring Hearth / 89120c)
+## 2026-06-21 (dependency-currency — dev-tooling tier: DC0 + sonarjs adoption — Woodland Bending Glade / dc3825)
+
+Executed the type-neutral dev-tooling tier of the dependency-currency plan. Two green commits: `f761e12` (DC0
+six-package in-range refresh) → `dcad36b` (sonarjs 4.0.3→4.1.0 + adopt its 5 new rules, owner-directed).
+
+- **A lint-plugin MINOR bump can newly-enable several rules in its `recommended` preset — the empirical lint
+  diff is the proof, not the changelog.** sonarjs 4.1.0 wasn't even in the plan's DC0 set; `pnpm -r outdated`
+  surfaced it and the first-principles shape-check caught the divergence. 4.1.0's `recommended` enabled FIVE
+  new rules (18 prefer-specific-assertions + 2 no-floating-point-equality + 2 no-trivial-assertions + 2
+  assertions-in-tests + 1 no-redundant-optional = 25 sites) on a previously-green tree. The plugin's changelog
+  is notoriously poorly version-mapped (archived old repo; 4.x ships from SonarSource/SonarJS) — I burned a few
+  WebFetches chasing it before recognising the descent-into-mechanism: for a lint-plugin bump the lint run IS
+  the firsthand verdict. Cure: bump → `pnpm lint` → read each violation firsthand. Same "STOP-and-understand a
+  non-empty diff" discipline the plan mandates for emitted snapshots, applied to a lint diff.
+- **D1-FAMILY CATCH (the headline): a type-aware lint rule's advice can be WRONG against the actual type
+  config — the type-checker is the authority.** `sonarjs/no-redundant-optional` flagged `value?: ... | undefined`
+  as redundant; I removed `| undefined` and it BROKE type-check (3× TS2345) — under `exactOptionalPropertyTypes:
+true` (tsconfig.json:8) `?` and `| undefined` are DISTINCT, and estree nodes carry an explicit `undefined`, so
+  the union member is required for structural compatibility. Reverted to a per-line disable with a
+  type-checker-justified comment. This is exactly the distilled D1 lesson (sonarjs's bundled-TS TypeFlags skew)
+  in a new shape: when a type-aware rule and the code disagree, MEASURE — and the TS compiler outranks the
+  rule's heuristic. The catch came from `check:ci` (type-check gate) AFTER lint was green — green-one-gate ≠
+  green-all-gates.
+- **`prefer-specific-assertions` deliberately SKIPS optional-chained `.length` — a blanket sed would have
+  silently broken 3 correct assertions.** 21 lines matched `.length).toBe(` but only 18 were flagged; the 3
+  unflagged (input-coverage:242/257/265) use `x?.y?.length` — `expect(x?.y).toHaveLength(n)` changes nullish
+  semantics (throws on undefined vs `undefined === n`). The rule is smarter than the substring. Cure: target the
+  exact flagged line NUMBERS (line-addressed sed), never a global substring replace; review every changed line.
+- **The git-restore hook block surfaced a real conceptual binary, not just an obstacle.** When the sonarjs bump
+  reddened lint, I reflexively reached for `git restore` to get a clean tree to ask the owner from — blocked by
+  `never-use-git-to-remove-work`. Reappraising: reverting an IN-RANGE dep bump to "exactly committed" isn't even
+  achievable forward-only (the caret `^4.0.2` permits 4.1.0, so install re-pulls it), so the choice is genuinely
+  binary — ADOPT 4.1.0, or a deliberate forward PIN to hold. The hook's "reappraise the concept" framing was
+  correct: there was no clean revert, only a decision. Surfaced it to the owner (AskUserQuestion) → adopt-now.
+- **My owner-facing scope claim was incomplete and I corrected it mid-flight.** I asked the owner framing the 25
+  as "generic test assertions (prefer-specific)" but the full unfiltered lint showed FIVE rules, 7 of which were
+  non-mechanical (potential real test issues: trivial/missing/float-equality assertions). My first grep had
+  dropped non-prefer-specific lines. Re-ran unfiltered, corrected the characterisation in-chat before fixing.
+  Lesson: a filtered tool view is a claim; get the complete artefact before acting (read-diagnostic-artefacts).
 
 First `/engraph-consolidate-until-done` pass in this repo. Drained both HARD drainable buffers to healthy
 (open-questions: all 5 Q's resolved → skeleton; pending-graduations: 10 items → 0, four graduated, rest

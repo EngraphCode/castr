@@ -19,8 +19,12 @@ review_note: >-
 todos:
   - id: DC0
     content: Type-neutral DEV-tooling patch/minor sweep (one chore(deps) commit) — eslint, @typescript-eslint/*, typescript-eslint, turbo, vitest, knip. (prettier, @scalar/json-magic, ink REMOVED — they are type/runtime-affecting, see DC2/DC3/DC4.)
-    status: pending
+    status: done # f761e12 (2026-06-21). In-range lockfile+manifest-floor refresh of the six; sonarjs/prettier/ink held back; check:ci green; lint+knip confirmed clean under new versions.
     depends_on: []
+  - id: DC0b
+    content: 'eslint-plugin-sonarjs 4.0.3->4.1.0 — SURFACED from `pnpm -r outdated` (NOT in original DC0; the typed-lint plugin from the D1 TypeFlags arc, so own micro-cycle). 4.1.0 still declares typescript>=5 as a regular dep -> single-TS override stays (Q-002). Its `recommended` preset newly enables 5 rules (25 sites); owner directed ADOPT NOW (parity-or-better). 18 prefer-specific (mechanical) + 7 nuanced fixes (2 exact-preservation float disables, drift `.every`, narrowing opaque-value strengthen, snapshot-assertion-visibility restructure, 1 no-redundant-optional reverted-to-disable after it BROKE type-check under exactOptionalPropertyTypes).'
+    status: done # dcad36b (2026-06-21). check:ci green; test-reviewer COMPLIANT; claims re-verified firsthand.
+    depends_on: [DC0]
   - id: DC1
     content: ts-morph 27->28 (CROWN-JEWEL — emission source-of-truth, lib-ONLY). Read breaking changes; map to lib/src/schema-processing/{parsers,writers,ast,conversion} + rendering; capture emitted baseline BEFORE install; firsthand diff must be byte-identical or every diff understood + IR-honest. Its own session.
     status: pending
@@ -65,6 +69,22 @@ owner's constraint governs every cycle: castr exists to **losslessly manage and 
 dependency bump that touches the type machinery or the emission/IR path is handled **thoughtfully,
 slowly, carefully** — one major at a time, each proven not just gate-green but **type-fidelity-green**
 by a firsthand diff of the emitted output against a baseline captured before the bump.
+
+## Progress (live)
+
+- **2026-06-21 (Woodland Bending Glade / dc3825) — type-neutral dev-tooling tier COMPLETE (2 commits):**
+  - **DC0 done — `f761e12`.** `pnpm update -r` of the six (in-range; pnpm v11 bumped the caret floors too,
+    benign). sonarjs/prettier/ink held back (all in-range but out of scope — named the six explicitly).
+    Single-TS override untouched. `pnpm check:ci` green; lint + knip (the two behaviour-risk gates) confirmed
+    clean firsthand under the new versions.
+  - **DC0b done — `dcad36b`.** sonarjs 4.1.0 surfaced from `outdated` (not in the plan), handled as its own
+    micro-cycle. Owner directed ADOPT-NOW. The empirical `pnpm lint` diff was the proof a lint-plugin bump
+    needs: 4.1.0 enables 5 new `recommended` rules (25 sites). Notable: removing `| undefined` for
+    `no-redundant-optional` BROKE type-check (TS2345 under exactOptionalPropertyTypes) — a D1-family worked
+    instance (the type-checker is the authority over a type-aware lint rule's heuristic); reverted to a
+    type-checker-justified per-line disable. test-reviewer COMPLIANT; claims re-verified firsthand.
+- **Remaining:** the emission/IR/runtime tier — DC1 (ts-morph, own session), DC2 (@scalar trio), DC3
+  (prettier), DC4 (ink), DC5 (commander), DC6 (@types/node), DC7 (commitlint), DC8 (degit). None started.
 
 ## End goal / mechanism / means / non-goals
 

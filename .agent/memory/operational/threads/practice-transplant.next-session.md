@@ -30,6 +30,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor     | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor     | 2026-06-21    | 2026-06-21   |
 
 ## Lanes
 
@@ -208,9 +209,19 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   surface) describing the precision improvement for upstream adoption.
 - Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
 
-### Lane: dependency currency — active-next, PLAN READY (owner-directed 2026-06-21; `pnpm -r outdated` assessed)
+### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling tier done 2026-06-21; emission tier remains)
 
-- **Controlling plan (NEW, READY): [`../../../plans/current/dependency-currency.md`](../../../plans/current/dependency-currency.md)**
+- **Progress (2026-06-21, Woodland Bending Glade / dc3825):** the type-neutral DEV-tooling tier is COMPLETE —
+  two green commits on the single branch. **DC0 `f761e12`** (in-range refresh of eslint/@typescript-eslint/\*/
+  typescript-eslint/turbo/vitest/knip; sonarjs/prettier/ink held back; check:ci green). **DC0b `dcad36b`** —
+  eslint-plugin-sonarjs 4.0.3->4.1.0, SURFACED from `outdated` (not in the original plan), owner-directed
+  ADOPT-NOW: its `recommended` preset newly enables 5 rules (25 sites), all fixed firsthand (incl. a
+  D1-family catch where `no-redundant-optional`'s advice BROKE type-check under exactOptionalPropertyTypes ->
+  type-checker-justified per-line disable). test-reviewer COMPLIANT; firsthand-verified. **Remaining = the
+  emission/IR/runtime tier: DC1 ts-morph (its own session), DC2 @scalar trio, DC3 prettier, DC4 ink, DC5
+  commander, DC6 @types/node, DC7 commitlint, DC8 degit — none started.** Next safe step: DC6/DC7/DC8 (low-risk
+  non-emission) can batch in a follow session; DC1 (crown jewel) needs its own dedicated session per the plan.
+- **Controlling plan: [`../../../plans/current/dependency-currency.md`](../../../plans/current/dependency-currency.md)** (§Progress (live) carries the cycle-by-cycle record)
   — executable, 9 cycles (DC0 dev-tooling sweep → DC1 ts-morph → DC2 @scalar IR trio → DC3 prettier → DC4 ink →
   DC5 commander → DC6 @types/node → DC7 commitlint → DC8 degit). Authored + reviewed (type-reviewer + assumptions-expert,
   both verified firsthand) 2026-06-21; the type-risk table was CORRECTED by the review — `prettier` (runtime emission
