@@ -72,6 +72,34 @@ Executed the A2+A3 hook-policy concept/reappraisal upgrade, RED-first against th
   this serve parity-or-better-and-contribute-back?" Routed to [[castr-parity-or-better-with-oak]] (sharpened). Same family
   as fluency-is-a-warning (metacognition directive) + [[dont-dismiss-tools-as-false-positive]].
 
+## 2026-06-21 (dependency-currency plan + the type-risk misclassification catch — Igneous Flaring Hearth / 611206)
+
+Authored the dependency-currency plan (`.agent/plans/current/dependency-currency.md`) for the next session, then ran
+readiness reviewers (assumptions-expert + type-reviewer) — both caught REAL errors, all verified firsthand.
+
+- **A "type-neutral / tooling" dependency classification is a CLAIM to verify against call-sites firsthand — two
+  type-affecting deps hid in plain sight as "tooling."** My plan's type-risk table put `prettier` and
+  `@scalar/json-magic` in the gate-only "type-neutral tooling" tier. type-reviewer (verified firsthand): **`prettier`
+  is a RUNTIME `dependencies` entry in `lib` used by `maybe-pretty.ts` → `rendering/templating.ts:99` to format EMITTED
+  code** (the dev formatter and the emission formatter are the SAME package version, so the sweep WOULD bump the
+  emission-affecting one); **`@scalar/json-magic` is the IR-input pipeline's `bundle()` stage** (`load-openapi-document/
+bundle/bundle-document.ts`) feeding parser→IR. Both are type/IR-affecting — the OPPOSITE of the careful handling the
+  owner asked for. In a types-library, classify a dep by its actual call-sites (grep the import + where it's wired),
+  NOT by its reputation as "a linter/formatter/tooling." Same family as [[verify-agent-claims-firsthand]] +
+  green-gates-mask-gaps, applied to dependency triage.
+- **Other firsthand-verified review corrections:** ts-morph is **lib-only** (0 usages in agent-tools — the "agent-tools
+  generators" in my call-site map don't exist; ts-morph lives in `lib/src/schema-processing/{parsers,writers,ast,...}`);
+  the reconciliation file is `lib/src/shared/openapi-types.ts` (I wrote `shared/openapi-types.ts`); `ink` is an
+  agent-tools RUNTIME dep (own cycle, agent-tools test surface); `degit` is knip-config-only (no runtime path found).
+- **The headline mitigation was procedurally impossible as first written (assumptions-expert M1).** The plan's
+  "firsthand diff emitted output vs pre-bump baseline" requires CAPTURING the baseline BEFORE `pnpm install` regenerates
+  it — I had no capture step, so the diff couldn't actually be performed. Added a Baseline-capture protocol
+  (capture→bump→regen+diff→lockfile check). A mitigation you can't execute is not a mitigation.
+- **My conservatism-bias correction held in the other direction too:** the plan had over-strict non-goals (forbidding ALL
+  major-batching when the owner scoped "careful" to type-affecting bumps) — manufacturing a prohibition stricter than the
+  owner gave (inverse of [[no-manufactured-permission]]). Re-scoped to type-affecting majors (dev-only DC7/DC8 may share
+  a commit).
+
 ## 2026-06-20 (Oak parity Tranche 1 — Clouded Floating Gust / 8de446)
 
 Executed parity Tranche 1 (C1/C2/C6/C4/C5/C7/C8) solo, RED-first TDD on the code gaps, each gap verified firsthand

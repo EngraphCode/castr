@@ -64,9 +64,10 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   `31caf78` (feat A3: `validate-policy-reappraisal` validator wired into `repo-validators:check`). RED-first against the
   founding 2026-06-11 host-DOS busy-loop (PDR-092) — six failing tests confirmed the quoted-token evasion, then green.
   Full `pnpm check:ci` green at the tip; config/type/test reviewers run, every load-bearing claim re-verified firsthand;
-  four review-driven test-coverage additions landed. Two scope decisions recorded in the plan: `indefinite-deferral`
-  content group OUT of A2 (cites a no-hedging §section castr lacks — costume risk, deferred); `stress-ng` substring
-  breadth ACCEPTED (Oak-pin-faithful, PDR-044 design property). **Next: Tranche 3 (A4 statusline → A1 ArcAngel).**
+  four review-driven test-coverage additions landed. Scope decisions: `indefinite-deferral` content group OUT of A2
+  (cites a no-hedging §section castr lacks — costume risk, deferred); the host-load-tool substring breadth was first
+  recommended ACCEPT (Oak-pin-faithful) but the **owner overrode (2026-06-21, Q-005) → INVEST in matcher precision +
+  Oak back-flow** (see the hook-matcher-precision lane). **Next session = the dependency-currency lane; Tranche 3 follows.**
 - **Progress:** B2 metacognition directive ✅ (`fcda10a`). `no-unbounded-host-load.md` is now **IN-TREE** (`abe580f`,
   with `.claude/.agents/.cursor` wrappers + RULES_INDEX + start-right §7); the prior "untracked, can't commit until A2
   adds the busy-loop patterns" blocker is RESOLVED — policy.json ships the four host-load shapes the rule's Enforcement
@@ -205,23 +206,27 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   surface) describing the precision improvement for upstream adoption.
 - Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
 
-### Lane: dependency currency — active-next (owner-directed 2026-06-21; `pnpm -r outdated` assessed)
+### Lane: dependency currency — active-next, PLAN READY (owner-directed 2026-06-21; `pnpm -r outdated` assessed)
 
+- **Controlling plan (NEW, READY): [`../../../plans/current/dependency-currency.md`](../../../plans/current/dependency-currency.md)**
+  — executable, 9 cycles (DC0 dev-tooling sweep → DC1 ts-morph → DC2 @scalar IR trio → DC3 prettier → DC4 ink →
+  DC5 commander → DC6 @types/node → DC7 commitlint → DC8 degit). Authored + reviewed (type-reviewer + assumptions-expert,
+  both verified firsthand) 2026-06-21; the type-risk table was CORRECTED by the review — `prettier` (runtime emission
+  formatter) and `@scalar/json-magic` (IR-input bundler) moved OUT of the type-neutral sweep into the type-affecting tier;
+  a baseline-capture protocol + lockfile discipline were added. The plan is the authoritative scope; the bullets below are
+  the original assessment context.
 - Assessment (2026-06-21): castr is **current, not behind** — no security lag, no multi-major rot except dev-only
   commitlint. Real workspaces are `lib` (@engraph/castr) + `agent-tools` (the `data-descriptions-transforms-monorepo`
   dependent is just the repo-root package name, not a hidden project). A 24h `minimumReleaseAge` supply-chain cooldown
   is deliberate.
-- Concrete items:
-  - **Trivial patch/minor sweep (one `chore` commit, gates as the net):** @typescript-eslint/\* + typescript-eslint
-    8.61.0→.1, prettier 3.8.3→.4, turbo →.18, vitest →4.1.9, eslint 10.4.1→10.5.0, ink →7.1.0, knip →6.17.1,
-    @scalar/json-magic →0.12.16, eslint-plugin-sonarjs 4.0.3→4.1.0 (KEEP the single-TS override — 4.1.0 still vendors TS).
-  - **Per-major, each behind its test surface (never auto-bump):** `ts-morph` 27→28 (emission source-of-truth — highest
-    care; snapshot/gen/transforms tests); `@scalar/openapi-parser` 0.25.7→0.28.7 + `openapi-types` 0.6.1→0.9.1 (core IR
-    vendor, 0.x breaking-allowed — IR-fidelity/e2e + the `shared/openapi-types.ts` reconciliation); `commander` 14→15
-    (CLI option parsing); `@commitlint/cli`+`config-conventional` 19→21 (dev-only, advisory); `@types/node` 25→26,
-    `degit` 2→3 (low risk).
-- Acceptance bar: trivial sweep green; each major bump lands individually with its test surface green or is recorded as
-  deliberately-held with reason.
+- **The per-cycle breakdown + type-risk classification lives in the controlling plan (authoritative).** The original
+  assessment grouped bumps by semver size; the firsthand review CORRECTED that — `prettier` (runtime emission formatter,
+  `lib` dep) and `@scalar/json-magic` (IR-input `bundle()` stage) are **type-affecting**, NOT trivial tooling, and moved
+  into their own cycles (DC3 / DC2); `ink` is an agent-tools runtime dep (DC4); `ts-morph` is lib-only. The DC0 sweep is
+  now genuinely-type-neutral DEV tooling only (eslint, @typescript-eslint/\*, typescript-eslint, turbo, vitest, knip).
+  See the plan's §Type/runtime-risk classification + §Baseline-capture protocol for the executable detail.
+- Acceptance bar: per the plan — DC0 sweep gate-green; each type-affecting bump lands individually, proven type-fidelity-
+  green by a baseline-captured emitted-output diff (not just gate-green), or recorded deliberately-held with reason.
 
 ### Lane: statusline identity wiring (Q-003) — ✅ LANDED (2026-06-20, `ebf08b5`)
 
