@@ -212,9 +212,6 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.5.0(jiti@2.7.0))
-      '@types/degit':
-        specifier: ^2.8.6
-        version: 2.8.6
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -225,8 +222,8 @@ importers:
         specifier: ^8.61.1
         version: 8.61.1(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)
       degit:
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^3.4.7
+        version: 3.4.7
       dependency-cruiser:
         specifier: ^17.3.10
         version: 17.4.3
@@ -1271,9 +1268,6 @@ packages:
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
 
-  '@types/degit@2.8.6':
-    resolution: {integrity: sha512-y0M7sqzsnHB6cvAeTCBPrCQNQiZe8U4qdzf8uBVmOWYap5MMTN/gB2iEqrIqFiYcsyvP74GnGD5tgsHttielFw==}
-
   '@types/eslint@9.6.1':
     resolution: {integrity: sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==}
 
@@ -1887,9 +1881,9 @@ packages:
   defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
 
-  degit@2.8.6:
-    resolution: {integrity: sha512-UzjEf67itNZtQF4ZFSNYT+JY78VKtkRJPnksn1tVDAX74Ar0zMqnB5UvsiAjIOBiIHv3BbAPCEJDn/zasbV5rw==}
-    engines: {node: '>=8.0.0'}
+  degit@3.4.7:
+    resolution: {integrity: sha512-jcFOCSHRTzxTS99A26nSbv+/3YfEhTo3qhDJGk7QvaIP1BxOqZJgfWefWw9CINgEQjY0L/iA9yXC4CN2LcdnlA==}
+    engines: {node: '>=20.0.0'}
     hasBin: true
 
   depd@2.0.0:
@@ -4544,8 +4538,6 @@ snapshots:
 
   '@types/deep-eql@4.0.2': {}
 
-  '@types/degit@2.8.6': {}
-
   '@types/eslint@9.6.1':
     dependencies:
       '@types/estree': 1.0.9
@@ -5122,7 +5114,7 @@ snapshots:
     dependencies:
       clone: 1.0.4
 
-  degit@2.8.6: {}
+  degit@3.4.7: {}
 
   depd@2.0.0: {}
 
