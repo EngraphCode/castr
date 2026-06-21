@@ -96,7 +96,7 @@ When the impulse to hedge surfaces:
 ## Doctrinal Anchors
 
 - PDR-044 §Carve-out vocabulary; §Innate immunity
-- principles.md §Architectural Excellence Over Expediency
+- principles.md §Core Philosophy: Engineering Excellence Over Speed
 - This rule: no hedging vocabulary on doctrine surfaces
 - PDR-038 §2026-05-04 amendment (stated principles require structural enforcement)
 
