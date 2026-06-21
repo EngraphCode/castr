@@ -50,7 +50,7 @@
     "ci-turbo-report": "cd .. && pnpm exec tsx agent-tools/src/ci/ci-turbo-report.ts"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.0.0",
+    "@commitlint/cli": "^21.0.2",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.0",
     "@types/react": "^19.2.15",
