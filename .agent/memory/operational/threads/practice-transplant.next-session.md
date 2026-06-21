@@ -31,6 +31,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor     | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor     | 2026-06-21    | 2026-06-21   |
 
 ## Lanes
 
@@ -209,7 +210,17 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   surface) describing the precision improvement for upstream adoption.
 - Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
 
-### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling tier done 2026-06-21; emission tier remains)
+### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling tier + DC1 crown-jewel done 2026-06-21; DC2-DC5 remain)
+
+- **DC1 ts-morph 27->28 DONE (2026-06-21, Soaring Lifting Current / f7e30d) — `c8c0a9a`, the crown jewel.**
+  The 27->28 breaking change is the bundled-TypeScript major: `@ts-morph/common` 0.28.1 (vendors TS 5.9.2) ->
+  0.29.0 (vendors TS 6.0.2), bundled into common's `dist` so the workspace `typescript: 6.0.3` override never
+  reached it -> the bump ALIGNS ts-morph's emission compiler with the workspace TS (closing a latent dual-TS
+  skew; parity-or-better, proven harmless — 0 cross-instance flag reads in lib/src). Emitted output proven
+  BYTE-IDENTICAL (full surface counts == a pre-bump baseline captured first; snapshot oracle fails-loud and
+  did not); type-check + check:ci green; type-reviewer COMPLIANT, claims re-verified firsthand. A combined-run
+  stderr TypeError was MEASURED pre-existing at 27 (firsthand revert+rerun), not a regression. **Remaining =
+  DC2 @scalar trio, DC3 prettier, DC4 ink, DC5 commander — each its own baseline-capture + diff + reviewers.**
 
 - **Progress (2026-06-21, Woodland Bending Glade / dc3825):** the type-neutral DEV-tooling tier is COMPLETE —
   two green commits on the single branch. **DC0 `f761e12`** (in-range refresh of eslint/@typescript-eslint/\*/

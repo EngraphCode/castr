@@ -27,7 +27,7 @@ todos:
     depends_on: [DC0]
   - id: DC1
     content: ts-morph 27->28 (CROWN-JEWEL — emission source-of-truth, lib-ONLY). Read breaking changes; map to lib/src/schema-processing/{parsers,writers,ast,conversion} + rendering; capture emitted baseline BEFORE install; firsthand diff must be byte-identical or every diff understood + IR-honest. Its own session.
-    status: pending
+    status: done # c8c0a9a (2026-06-21, Soaring Lifting Current / f7e30d). The 27->28 breaking change = bundled TS major (@ts-morph/common 0.28.1/TS5.9.2 -> 0.29.0/TS6.0.2, vendored in dist so the `typescript: 6.0.3` override never reached it). Bump ALIGNS emission compiler with workspace TS (6.0.2 vs 6.0.3), closing a latent dual-TS skew (parity-or-better). Emitted output BYTE-IDENTICAL (full surface counts == pre-bump baseline; snapshot oracle fails-loud, did not). A combined-run stderr TypeError was MEASURED pre-existing at 27 (firsthand revert+rerun), ts-morph-independent. .d.ts diff purely additive (printStructure only); 0 TypeFlags/SyntaxKind cross-instance reads in lib/src; type-reviewer COMPLIANT, claims re-verified firsthand; lockfile scoped to ts-morph+common, `pnpm why` single version. check:ci green.
     depends_on: [DC0]
   - id: DC2
     content: '@scalar IR-input vendor TRIO (coupled) — openapi-parser 0.25.7->0.28.7 + openapi-types 0.6.1->0.9.1 + json-magic 0.12.4->0.12.16. Reconcile lib/src/shared/openapi-types.ts (+ its drift test); IR-fidelity + openapi snapshot + input-pipeline char + e2e prove IR honesty preserved.'
@@ -89,9 +89,24 @@ by a firsthand diff of the emitted output against a baseline captured before the
     relies on changed; validator accept-good/reject-bad proof). degit 2→3 (consumer is the manual
     examples-fetcher.mts, NOT knip-only — `.mts` hid it; degit-3 ships own types so @types/degit dropped;
     API + real-clone smoke test both pass). Each its own commit; check:ci green per cycle.
-- **Remaining:** the emission/IR/type-machinery tier — **DC1 (ts-morph, its own session)**, DC2 (@scalar
-  trio), DC3 (prettier), DC4 (ink), DC5 (commander). None started. These need baseline-capture + emitted/CLI
-  diff + the relevant reviewers per the plan.
+- **2026-06-21 (Soaring Lifting Current / f7e30d) — DC1 ts-morph 27->28 DONE (`c8c0a9a`), the crown jewel:**
+  The 27->28 breaking change is the **bundled TypeScript major** — `@ts-morph/common` 0.28.1 (vendors TS 5.9.2)
+  -> 0.29.0 (vendors TS 6.0.2); TS is bundled into common's `dist/typescript.js` (a devDep only), so castr's
+  `pnpm-workspace.yaml` `typescript: 6.0.3` override never reached it. The bump therefore **aligns** ts-morph's
+  internal emission compiler with the workspace TS (6.0.2 vs 6.0.3, same major/minor), **closing a latent
+  5.9-vs-6.0 dual-TS skew on the emission path** (parity-or-better — the D1 skew family, but proven harmless
+  here: 0 `TypeFlags`/non-test `SyntaxKind` cross-instance reads in `lib/src`). **Proof:** full test surface
+  green with counts IDENTICAL to a pre-bump baseline captured first (snapshot 154, transforms 575
+  round-trip/idempotence, gen 27, character 152, e2e 8+1, unit 1669+995) -> emitted output **byte-identical**;
+  type-check + check:ci green; ts-morph 28 `.d.ts` diff purely additive (`printStructure`+`PrintStructureOptions`
+  only — castr imports neither); lockfile scoped to ts-morph+@ts-morph/common, `pnpm why` single version, no
+  transitive drift; type-reviewer COMPLIANT, every load-bearing claim re-verified firsthand. **A combined-run
+  stderr `TypeError: Cannot read properties of null` scare was MEASURED to be pre-existing negative-path logging
+  present identically at ts-morph 27 (firsthand revert + re-run) — ts-morph-independent, zero test delta.**
+- **Remaining:** the emission/IR/type-machinery tier — DC2 (@scalar trio), DC3 (prettier), DC4 (ink),
+  DC5 (commander). None started. These need baseline-capture + emitted/CLI diff + the relevant reviewers per
+  the plan. (`pnpm -r outdated` re-confirmed at DC1 start: ts-morph 28, prettier 3.8.4, ink 7.1.0, commander 15,
+  @scalar trio 0.28.7/0.9.1/0.12.16 all still current targets.)
 - **Findings routed (not in scope to fix here):** (1) `lib/tsconfig.json` include lists `examples-fetcher.mts`
   but the file is at `scripts/examples-fetcher.mts` → the degit-using script is NOT type-checked (stale
   include; its own follow-up slice). (2) @types/node dev-only posture sits 2 majors ahead of `engines.node`

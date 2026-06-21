@@ -2,6 +2,43 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-21 (dependency-currency — DC1 ts-morph 27->28, the crown jewel — Soaring Lifting Current / f7e30d)
+
+Executed DC1 (ts-morph 27->28), the highest-risk cycle, its own session, full baseline-capture protocol.
+Committed `c8c0a9a`; emission proven byte-identical. New lessons:
+
+- **The headline "breaking change" of a codegen-engine bump can be its BUNDLED COMPILER, and a workspace
+  `typescript` override does NOT reach it.** ts-morph's emission/parse engine is `@ts-morph/common`, which
+  **vendors TypeScript into its own `dist/typescript.js`** (TS is a devDep of common, bundled at build time via
+  rollup) — so castr's `pnpm-workspace.yaml` `overrides: { typescript: 6.0.3 }` never touched it. ts-morph 27
+  emitted via vendored **TS 5.9.2** while the workspace type-checked at **6.0.3** — a latent dual-TS skew (the
+  D1 family) hiding on the emission path. ts-morph 28 (common 0.29.0) vendors **TS 6.0.2**, ALIGNING the two
+  (parity-or-better). Verify firsthand: `cat node_modules/.pnpm/@ts-morph+common@*/.../package.json` (devDep TS)
+  - `ls .../dist/typescript.js`. Lesson: for a bump whose package embeds a compiler/parser, the real risk vector
+    is the embedded engine's version, and a workspace override is NOT a control surface over a vendored bundle.
+- **D1 dual-TS skew proved HARMLESS here only by measurement, not by the override's presence.** It cannot recur
+  on castr's zod-parser because castr reads AST via ts-morph's high-level type-guards (`Node.isCallExpression`,
+  `getName()`), never numeric flags across two TS instances: `grep "TypeFlags" lib/src` -> 0; `SyntaxKind`
+  non-test -> 0 (one closed-loop test use). The single bundled-TS reach-through is `String(callExpr.compilerNode.
+escapedText)` (zod-parser.endpoint.ts:290), string-coerced. Measured, not assumed.
+- **THE STOP (headline metacognition catch): my own grep was the false-firing instrument, not a regression.**
+  Scanning the combined `test:all` run I grepped `TypeError|Cannot read` and read the matches as FAILURES and
+  STOPPED — but the test FILES all passed. The matches were **stderr from negative-path tests** (`schema-type-
+wrong-case > rejected by strict validation`, `version-validation > MUST be rejected`, `doctor > repair
+aggressively non-compliant`) that deliberately feed null/invalid OpenAPI docs and assert rejection. The
+  fluent conclusion "ts-morph can't touch OpenAPI-doc-null handling -> false alarm" was treated as the TRIPWIRE
+  to ground the fact (fluency-is-a-warning), not permission to proceed: I reverted to 27 + re-ran the identical
+  combined surface and MEASURED the same stderr present at baseline -> pre-existing, ts-morph-independent. Same
+  family as [[verify-own-observer-instruments]] + [[dont-dismiss-tools-as-false-positive]] ("false positive" is
+  a measured verdict, never a dismissal). **Cure (process refinement): when scanning a large run for a
+  regression, grep for FAILURE STATUS (`failed`/`✗`/non-zero exit), NOT error-shaped STRINGS (`TypeError`/
+  `Cannot read`) — negative-path tests legitimately log error-shaped text to stderr while passing.** The STOP
+  itself was correct procedure (a non-empty diff is stop-and-understand); the trigger was a measurement artefact.
+- **The baseline-capture protocol's real value was a re-runnable GREEN BASELINE, not the `.snap` fixtures.**
+  What cleared the scare was reverting + re-running the identical surface at 27 — the protocol gave a reversible
+  before/after measurement apparatus. For committed fixtures, git IS the baseline and vitest (no `-u`) fails
+  loud on mismatch, so the test surface itself is the byte-diff oracle.
+
 ## 2026-06-21 (dependency-currency — dev-tooling tier: DC0 + sonarjs adoption — Woodland Bending Glade / dc3825)
 
 Executed the type-neutral dev-tooling tier of the dependency-currency plan. Two green commits: `f761e12` (DC0
