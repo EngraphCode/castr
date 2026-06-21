@@ -112,3 +112,22 @@ git:(branch) ✗ ctx:N% [model]`; empty stdin + missing adapter both soft-fail t
   [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md) +
   [`delivery-ledger.md`](../../plans/delivery-ledger.md).
 - **Status:** OPEN — owner names the release strategy; non-blocking.
+
+## Q-005 — Tighten the `stress-ng` host-load matcher to word-boundary (parity-or-better refinement)?
+
+- **Captured:** 2026-06-21 (Oak parity Tranche 2 / A2 hook-policy; config-expert measured + metacognition surfaced).
+- **Question:** the four host-load shapes in `policy.json` all use `match: "substring"` (whitespace-stripped raw
+  `includes`). For `for(;;)` / `while(1)` / the fork bomb this is **correct** — they hide inside one quoted token with no
+  clean word boundary. But `stress-ng` is a binary NAME, and substring mode also blocks benign substrings
+  (`libstress-ng`, `apt install …`, a path/test containing `distress-ng`). Should `stress-ng` specifically move to a
+  word-boundary/token match — catching `stress-ng --cpu 8` and `./tools/stress-ng` while sparing benign substrings?
+- **Why it shapes future work:** the owner directive is parity-**or-better** ("not meant to stay simple"); this is a
+  candidate "better-than-Oak" precision improvement to the innate-immunity matcher. It would add a per-pattern matcher
+  variation beyond the Oak pin, so it is a deliberate-divergence decision, not a bug fix.
+- **Why not cheaply answerable now / why owner-owned:** it trades pin-fidelity + matcher simplicity against precision;
+  PDR-044 names innate-layer false positives a design property and the deny TEACHES + is overridable, so the current
+  Oak-faithful behaviour is defensible. The owner weighs whether "better-than-Oak precision" is worth the divergence.
+- **Owning artefact / home:** the `stress-ng` ACCEPTED decision in
+  [`oak-parity-program.md`](../../plans/transplant/oak-parity-program.md) §Tranche-2 firsthand verification; the matcher
+  lives at `agent-tools/src/hook-policy/blocked-patterns.ts`.
+- **Status:** OPEN — non-blocking; accepted Oak-faithful for now, surfaced as a parity-or-better refinement.

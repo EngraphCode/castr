@@ -183,3 +183,16 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
     owner direction. **status:** pending — recorded in `oak-parity-program.md` §Learning loop as a noted
     meta-gap; folds into the parity program.
     `[captured: 2026-06-20 | source: engraph-plan skill run during parity-program planning]`
+
+- **A `principles.md` §-citation-resolution validator (structural cure for the recurring false-§-cite class).**
+  **substance:** doctrine surfaces (rules, PDRs, policy.json, plans) cite `principles.md §<heading>`; transplanted-from-Oak
+  surfaces repeatedly carry Oak headings (`§Architectural Excellence Over Expediency`) that castr's principles.md does not
+  have. The distilled "false §-cites are pervasive in Oak" lesson keeps recurring — Tranche 2 found one in an
+  already-landed sibling rule (`no-hedging-vocabulary.md:99`, fixed `511326f`) that the bring itself never touched. The
+  current cure is a per-session reviewer sweep + a napkin vigilance-clause; per PDR-092 (mechanical firing moments over
+  vigilance clauses) and the metacognition Cure-Shape directive, the durable cure is mechanical. **graduation-target:** a
+  new `agent-tools` validator (sibling to `validate-drift`) that parses every `principles.md §<heading>` citation across
+  `.agent/` + `docs/` and fails if the heading does not resolve in `principles.md`; wired into `repo-validators:check`.
+  Possibly generalise to any `<file> §<heading>` cite. **trigger-condition:** a third instance of a false-§-cite found
+  in review, OR the friction-fix tranche, OR owner direction. **status:** pending — candidate mechanism, not yet drafted.
+  `[captured: 2026-06-21 | source: Oak parity Tranche 2 metacognition pass; config-expert §-cite find]`

@@ -36,6 +36,17 @@ Executed the A2+A3 hook-policy concept/reappraisal upgrade, RED-first against th
   the OLD `findBlockedPattern` (whose type lacks `match`) RAN and failed at the assertion (old code returns null) — a
   genuine assertion-level RED, not a compile error. 6 failures confirmed the quoted-token evasion before I implemented
   substring matching. The `type-check` gate would have flagged the type later; the RED proof came from the runtime first.
+- **OWNER CORRECTION (frame, not action) — fitness numbers are a SIGNAL of knowledge-to-curate, NEVER a goal.**
+  Jim, 2026-06-21: _"we NEVER tweak memory or state to hit fitness limits, the fitness numbers are a signal that there
+  is knowledge to be curated, they are NOT a goal to be met."_ Trigger: during this consolidation I saw
+  open-questions/pending-graduations read HARD on prose-line-length and reflexively asked "did my edits regress the
+  number? should I reflow my lines to be a good citizen?" — I did NOT trim anything (correct), but the _framing_ slipped
+  toward number-management. **The corrected reflex:** a fitness signal has exactly two valid responses — curate/home the
+  knowledge it points at, or note the curation need — and never adjust content to move the number or treat hitting it as
+  the objective. Even the question "did I make the number worse" is the wrong question; the number only ever means "there
+  is knowledge here to curate." Routed to [[never-trim-always-curate]] (sharpened) + distilled. **castr already has the
+  full Oak fitness doctrine at parity (verified firsthand): `knowledge-preservation-over-fitness-warnings` rule,
+  `substance-before-fitness` pattern, PDR-067, consolidate-docs Conservation Invariant — no new Oak bring needed.**
 - **All three reviewers were accurate and high-value; firsthand verification confirmed each load-bearing claim.**
   config-expert's §-cite find (real, fixed); test-reviewer's coverage gaps (forkbomb/stress-ng/spaced-loop canonical
   tests, `concept-empty` validator case, menu-framing canonical pin) — all valid, all cheap, all closed (+4 tests);
