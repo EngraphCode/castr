@@ -140,7 +140,8 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
   (discard). **graduation-target:** `hook-policy-substring-discipline.md` already names the hazard — this is the
   strongest worked instance; graduate to an actual matcher fix (anchor on command-leading position / word boundary, not
   free substring) in the hook-policy code, + a rule note. **trigger-condition:** a third instance OR owner direction
-  (two independent instances this session already). **status:** pending — conserved in napkin N7/N11.
+  (two independent instances this session already). **status:** DUE — owner directed INVEST (2026-06-21, Q-005);
+  scheduled in the **hook-matcher-precision lane** (thread record), parity-or-better + Oak back-flow. No longer "accept".
   `[captured: 2026-06-20 | source: napkin N7/N11 + comms 3bbcb36d]`
 - **agent-tools CLI hardening backlog (F1/F2/F4/F5/F7/N5/N6 + alias/flag friction).** Read-only claims actions ENOENT
   on a fresh home instead of reporting empty (F2); `comms watch` does not auto-create the seen-file parent dir (F4);
@@ -168,7 +169,8 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
   against silent drift if `agent-tools/` ever relocates — the shim's own `CLAUDE_PROJECT_DIR`-preference comment names
   exactly this risk. **graduation-target:** a new validator under `agent-tools/src/validators/` wired into
   `repo-validators:check`. **trigger-condition:** the friction-fix tranche (Lane 1), OR a third drift incident, OR owner
-  direction. **status:** pending — out of scope for the wiring itself (which is proven + green); not a blocker.
+  direction. **status:** DUE — owner folded it into the **first-run friction-fix tranche** (2026-06-21) as one
+  "validator hardening" slice with the §-cite resolver below.
   `[captured: 2026-06-20 | source: config-expert + code-reviewer PASS reviews of the Q-003 wiring]`
 
 ## 2026-06-20 capture (Oak parity-program planning — meta-gap)
@@ -194,5 +196,6 @@ watcher.md` (both currently ASSUME per-event wake) to name the caveat and mandat
   new `agent-tools` validator (sibling to `validate-drift`) that parses every `principles.md §<heading>` citation across
   `.agent/` + `docs/` and fails if the heading does not resolve in `principles.md`; wired into `repo-validators:check`.
   Possibly generalise to any `<file> §<heading>` cite. **trigger-condition:** a third instance of a false-§-cite found
-  in review, OR the friction-fix tranche, OR owner direction. **status:** pending — candidate mechanism, not yet drafted.
+  in review, OR the friction-fix tranche, OR owner direction. **status:** DUE — owner folded it into the **first-run
+  friction-fix tranche** (2026-06-21) as one "validator hardening" slice with `validate-statusline-routing` above.
   `[captured: 2026-06-21 | source: Oak parity Tranche 2 metacognition pass; config-expert §-cite find]`

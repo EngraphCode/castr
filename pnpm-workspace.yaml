@@ -41,8 +41,12 @@ minimumReleaseAgeExclude:
 # lockstep with the `typescript` devDependency in the root/lib/agent-tools package.json
 # (currently ^6.0.3) on any TypeScript bump. (`$typescript` reference syntax is
 # deprecated in pnpm 11 — it prints a stdout WARN that pollutes piped tool output — and a
-# pnpm catalog is heavier machinery than this single pin needs.) Revisit if sonarjs ships
-# a TS-6 peer.
+# pnpm catalog is heavier machinery than this single pin needs.) This is the CORRECT
+# PERMANENT fix, not a workaround awaiting upstream: TS 6 is fine; the bug is sonarjs
+# pulling its OWN typescript copy (a dual-TS-instance skew). Measured 2026-06-21:
+# eslint-plugin-sonarjs@4.1.0 (latest) STILL declares `typescript: ">=5"` as a regular
+# dependency, so bumping sonarjs does NOT retire this override. The only change that would
+# is sonarjs moving typescript to a peer dependency (~indefinite). (Q-002, RESOLVED.)
 overrides:
   esbuild: 0.25.11
   typescript: 6.0.3

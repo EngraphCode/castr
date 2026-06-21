@@ -67,7 +67,13 @@ owning artefact / discussion home (if any), and a status line.
   re-evaluate at a dependency-cooldown/`pnpm outdated` pass.
 - **Owning artefact / home:** `pnpm-workspace.yaml` (the override + its comment) + the D1 ADR
   candidate in [`pending-graduations.md`](pending-graduations.md).
-- **Status:** OPEN — watch for a sonarjs TS-6-peer release; low priority.
+- **Status:** ✅ RESOLVED (owner challenge + firsthand measurement, 2026-06-21). The "wait for a sonarjs TS-6 peer"
+  framing was WRONG. Measured: `eslint-plugin-sonarjs@4.1.0` (latest) STILL declares `typescript: ">=5"` as a regular
+  **dependency** (not a peer), so it keeps pulling its own TS copy — bumping sonarjs does NOT retire the override. TS 6 is
+  not the problem (SonarQube Cloud, a different product, runs TS 6 fine); the dual-TS-instance TypeFlags skew is. **The
+  single-TS pnpm override is the correct PERMANENT fix** (pre-override lock had 80 `typescript@5.9.3` refs incl. sonarjs's
+  own; post-override has zero). Optional refinement: adopt a pnpm `catalog` as the single-source mechanism. The only
+  (~indefinite) event that would change this is sonarjs moving `typescript` to a peer dep. Drainable.
 
 ## Q-003 — Wire the PDR-027 statusline now, or defer to the friction tranche?
 
@@ -111,7 +117,9 @@ git:(branch) ✗ ctx:N% [model]`; empty stdin + missing adapter both soft-fail t
 - **Owning artefact / home:** the **release-automation deferred lane** in
   [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md) +
   [`delivery-ledger.md`](../../plans/delivery-ledger.md).
-- **Status:** OPEN — owner names the release strategy; non-blocking.
+- **Status:** ✅ RESOLVED (owner, 2026-06-21) — **changesets.** Lower-ceremony, single-package/monorepo-friendly fit;
+  semantic-release was considered (Oak parity) but heavier. Execution stays deferred until delivery is on the table
+  (delivery deprioritised). The release-automation lane in the thread record now carries `tooling = changesets`. Drainable.
 
 ## Q-005 — Tighten the `stress-ng` host-load matcher to word-boundary (parity-or-better refinement)?
 
@@ -130,4 +138,9 @@ git:(branch) ✗ ctx:N% [model]`; empty stdin + missing adapter both soft-fail t
 - **Owning artefact / home:** the `stress-ng` ACCEPTED decision in
   [`oak-parity-program.md`](../../plans/transplant/oak-parity-program.md) §Tranche-2 firsthand verification; the matcher
   lives at `agent-tools/src/hook-policy/blocked-patterns.ts`.
-- **Status:** OPEN — non-blocking; accepted Oak-faithful for now, surfaced as a parity-or-better refinement.
+- **Status:** ✅ RESOLVED (owner, 2026-06-21) — **INVEST in precision** (overrode my "keep Oak-faithful"
+  recommendation). Build word-boundary matching for binary-name patterns (`stress-ng`) + command-position anchoring for
+  the git over-match family (N7/N11), RED-first against the founding false positives, **with comprehensive Oak back-flow
+  notes** so the precision returns upstream (castr improves Oak, not just consumes it). Substring stays correct for the
+  shapes that genuinely hide inside one quoted token (`for(;;)`/`while(1)`/fork bomb). Now a tracked work item — the
+  hook-matcher-precision lane in the thread record; folds the N7/N11 pending-graduation item. Drainable.

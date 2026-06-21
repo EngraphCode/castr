@@ -150,18 +150,17 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   deep enhancement, named position — not a paused continuity thread).
 - Acceptance bar: feature lands with parser/writer lockstep + tests.
 
-### Lane: release automation — deferred (trigger: owner names release strategy)
+### Lane: release automation — TOOLING DECIDED (changesets); execution deferred (trigger: delivery un-deprioritised)
 
 - Controlling plan: transplant tracker §Deep-enhancement arc (release surface) + [`delivery-ledger.md`](../../../plans/delivery-ledger.md).
 - Origin: surfaced 2026-06-20 by the D3 stream (Seat 1, Stratospheric Wheeling Horizon). castr has **no release tooling**
   (no `.changeset`, no changesets/semantic-release in any package.json, no `release` script); the inherited `publish.yml`
   called a non-existent `pnpm release` via `changesets/action@v1` and was REMOVED in the D3 slice (Director ruling, comms
   `fa53d0af`). Removal is fail-fast (a disabled stub would be a tombstone).
-- Next safe step: **owner-owned decision** — adopt semantic-release (Oak parity) vs changesets. Cross-surface
-  (package.json + config), outside D3's `.github/workflows/` surface, so a separate lane. Non-blocking; delivery is
-  deprioritised.
-- Acceptance bar: a working release path lands with the chosen tooling + a CI release job, or owner classifies
-  release-out-of-scope.
+- **DECISION (owner, 2026-06-21, Q-004): tooling = `changesets`** (lower-ceremony, single-package/monorepo-friendly;
+  semantic-release considered for Oak parity but heavier). Execution deferred until delivery is on the table.
+- Next safe step: when delivery is scheduled — add `@changesets/cli` + config + a CI release job; wire a `release` script.
+- Acceptance bar: a working changesets release path lands + a CI release job.
 
 ### Lane: first-run friction-fix tranche — active-next (trigger: owner-recommended; before the next team session)
 
@@ -174,18 +173,55 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   - **Monitor idle-coalescing sweep doctrine (F6/N10, headline)** — amend `use-monitor-for-event-driven-wake.md` +
     `comms-all-channels-watcher.md` to mandate a full `comms list` catch-up sweep on every wake (already live as team
     doctrine + user-memory; the rule-text amendment is what's pending).
-  - **Dangerous-pattern hook over-match (N7/N11)** — anchor the matcher on command-leading position / word boundary,
-    not free substring (it blocks safe `git checkout -b` and innocent prose containing "checkout").
+  - **Dangerous-pattern hook over-match (N7/N11)** — MOVED to its own **hook-matcher-precision lane** below (owner,
+    2026-06-21, chose to INVEST + Oak back-flow; it is now a parity-or-better enhancement, not just a friction fix).
   - **Seen-file naming (N4/N12)** — write seen-files as `<slug>.seen` (not `<Codename>.json`; the `.json`-on-non-JSON
     broke `format:check`), or add `comms-seen/` to `.prettierignore`.
   - **agent-tools CLI hardening (F2/F4/F5/F7/N5/N6)** — read-only claims ENOENT on a fresh home; `comms watch`
     seen-dir auto-create; pre-claim heartbeat ordering; commit-skill phantom root alias; `--intent-id` canonical source;
     `platform` field consistency.
-  - **`validate-statusline-routing` validator (NEW, 2026-06-20)** — assert `settings.json.statusLine.command` → an
-    extant shim whose adapter target resolves, sibling to the existing `validate-pretooluse-guard-routing`. Surfaced
-    independently by config-expert + code-reviewer during the Q-003 statusline landing (`ebf08b5`); there are now THREE
-    classes of `.claude/`→`agent-tools/dist` wiring but only one is validated. Detail in `pending-graduations.md`.
+  - **Two structural-cure validators (owner, 2026-06-21 — folded into this tranche):** (1) `validate-statusline-routing`
+    — assert `settings.json.statusLine.command` → an extant shim whose adapter target resolves, sibling to
+    `validate-pretooluse-guard-routing` (surfaced by config-expert + code-reviewer at the Q-003 landing `ebf08b5`; THREE
+    classes of `.claude/`→`agent-tools/dist` wiring exist, only one validated). (2) `validate-principles-section-cites`
+    — assert every `principles.md §<heading>` citation across `.agent/`+`docs/` resolves to a real heading (the recurring
+    false-§-cite class: Tranche-2 found one in an already-landed sibling rule). Both in `pending-graduations.md`; build as
+    one "validator hardening" slice, TDD, wired into `repo-validators:check`.
 - Acceptance bar: each item lands as code/rule-text with TDD where code is touched; solo or a small dogfooding team session.
+
+### Lane: hook-matcher precision (parity-or-BETTER + Oak back-flow) — active-next (owner-directed 2026-06-21, Q-005)
+
+- Origin: A2 (Tranche 2) brought Oak's matcher verbatim (token-subsequence + substring). Two measured false-positive
+  edges remain: `stress-ng` substring catches benign substrings (`libstress-ng`); token-subsequence over-matches across
+  compound git commands / prose (N7/N11). **Owner decision (2026-06-21): INVEST in precision** (overrode the
+  "keep Oak-faithful" recommendation), **with comprehensive Oak back-flow notes** so Oak gets the improvement too —
+  castr is a two-way Practice node (user-memory `castr-parity-or-better-with-oak`, bidirectional sharpening).
+- Scope: word-boundary matching for binary-name patterns (`stress-ng`); command-leading-position anchoring for the git
+  family (so `git checkout -b` / prose mentioning "checkout" do not trip while `git checkout --` still does). Keep
+  substring for shapes that genuinely hide inside one quoted token (`for(;;)`/`while(1)`/fork bomb). This SUPERSEDES the
+  friction-fix N7/N11 bullet and the Q-005 "accept" framing.
+- Next safe step: RED-first against the founding false positives (`libstress-ng`, `git checkout -b`, the N7/N11 prose
+  cases) in `agent-tools/src/hook-policy/`; then write the Oak back-flow note (home: the `oak-backflow/` feedback
+  surface) describing the precision improvement for upstream adoption.
+- Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
+
+### Lane: dependency currency — active-next (owner-directed 2026-06-21; `pnpm -r outdated` assessed)
+
+- Assessment (2026-06-21): castr is **current, not behind** — no security lag, no multi-major rot except dev-only
+  commitlint. Real workspaces are `lib` (@engraph/castr) + `agent-tools` (the `data-descriptions-transforms-monorepo`
+  dependent is just the repo-root package name, not a hidden project). A 24h `minimumReleaseAge` supply-chain cooldown
+  is deliberate.
+- Concrete items:
+  - **Trivial patch/minor sweep (one `chore` commit, gates as the net):** @typescript-eslint/\* + typescript-eslint
+    8.61.0→.1, prettier 3.8.3→.4, turbo →.18, vitest →4.1.9, eslint 10.4.1→10.5.0, ink →7.1.0, knip →6.17.1,
+    @scalar/json-magic →0.12.16, eslint-plugin-sonarjs 4.0.3→4.1.0 (KEEP the single-TS override — 4.1.0 still vendors TS).
+  - **Per-major, each behind its test surface (never auto-bump):** `ts-morph` 27→28 (emission source-of-truth — highest
+    care; snapshot/gen/transforms tests); `@scalar/openapi-parser` 0.25.7→0.28.7 + `openapi-types` 0.6.1→0.9.1 (core IR
+    vendor, 0.x breaking-allowed — IR-fidelity/e2e + the `shared/openapi-types.ts` reconciliation); `commander` 14→15
+    (CLI option parsing); `@commitlint/cli`+`config-conventional` 19→21 (dev-only, advisory); `@types/node` 25→26,
+    `degit` 2→3 (low risk).
+- Acceptance bar: trivial sweep green; each major bump lands individually with its test surface green or is recorded as
+  deliberately-held with reason.
 
 ### Lane: statusline identity wiring (Q-003) — ✅ LANDED (2026-06-20, `ebf08b5`)
 
@@ -196,6 +232,12 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
 ## Standing decisions this thread carries
 
+- **Decision pass (owner, 2026-06-21) — decision-complete before Tranche-3 planning:** Q-002 RESOLVED (single-TS pnpm
+  override is the permanent fix — sonarjs 4.1.0 still vendors TS as a regular dep; not awaiting upstream); Q-004 RESOLVED
+  (release tooling = `changesets`, execution deferred); Q-005 RESOLVED (INVEST in hook-matcher precision + Oak back-flow
+  — its own lane); A1/ArcAngel = full unit (doc+dir+watcher-pairing+statusline wing); the two structural-cure validators
+  fold into the friction-fix tranche; new dependency-currency lane (castr is current). castr is a **bidirectional**
+  Practice node — improvements flow back to Oak (user-memory `castr-parity-or-better-with-oak`).
 - Single branch `feat/transplant-engraph-practice`; roll-forward only; each
   transplant phase = one atomic commit + `transplant/phase-N` tag, green-gated at
   the tag. (Full invariant set: [`../repo-continuity.md §Repo-Wide Invariants`](../repo-continuity.md#repo-wide-invariants--non-goals).)

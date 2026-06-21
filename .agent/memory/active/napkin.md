@@ -51,7 +51,26 @@ Executed the A2+A3 hook-policy concept/reappraisal upgrade, RED-first against th
   config-expert's §-cite find (real, fixed); test-reviewer's coverage gaps (forkbomb/stress-ng/spaced-loop canonical
   tests, `concept-empty` validator case, menu-framing canonical pin) — all valid, all cheap, all closed (+4 tests);
   type-reviewer found nothing to fix and I confirmed its readonly/exhaustiveness/schema-SSoT claims firsthand. The
-  `stress-ng` substring false-positive (`libstress-ng`) is real but ACCEPTED as Oak-pin-faithful (PDR-044 design property).
+  `stress-ng` substring false-positive (`libstress-ng`) is real; I recommended ACCEPT (Oak-pin-faithful) but the owner
+  OVERRODE → INVEST in matcher precision + Oak back-flow (see the decision-walk bullet below).
+- **DECISION WALK (owner, 2026-06-21) — "decision complete before we plan."** Outcomes: **Q-004 → changesets**
+  (release tooling; execution deferred until delivery). **Q-005 + N7/N11 → INVEST in matcher precision** (word-boundary
+  for binary-name patterns like `stress-ng`; command-position anchoring for git over-match) **+ comprehensive Oak
+  back-flow notes** — owner overrode my "keep Oak-faithful". **A1/ArcAngel → full unit** (doc+dir+watcher-pairing+
+  statusline wing). **Validators (validate-statusline-routing + the new principles.md §-cite resolver) → fold into the
+  first-run friction-fix tranche.** **Q-002 → RESOLVED, reframed:** measured firsthand that `eslint-plugin-sonarjs@4.1.0`
+  STILL declares `typescript: ">=5"` as a regular dep (not a peer) → the single-TS pnpm override is the CORRECT PERMANENT
+  fix, not a workaround awaiting upstream; "wait for a sonarjs TS-6 peer" was a mis-framing (TS6 is fine; the dual-TS-
+  instance skew is the issue; SonarQube Cloud ≠ eslint-plugin-sonarjs). **NEW: dependency-currency lane** (`pnpm -r outdated`
+  shows castr current — trivial patch/minor sweep + per-major assessment for ts-morph 27→28, @scalar/openapi-parser
+  0.25→0.28 + types 0.6→0.9, commander 14→15; commitlint 19→21 dev-only; 24h supply-chain cooldown is deliberate).
+- **META (the decision walk's through-line) — I have a conservatism bias that under-serves the owner's parity-or-BETTER
+  ambition.** Three recommendations this session were overridden/reframed by owner challenge, all the same shape:
+  _preserve-the-pin / wait-for-upstream / keep-Oak-faithful / don't-chase-the-number_. The defer-frame arrives smoothly
+  and I trust it — that fluency is the tripwire. The owner wants measure-then-make-it-better-and-contribute-back (castr
+  as a two-way Practice node that improves Oak, not a sink). Cure: when I reach for keep-as-is / wait-for-X, re-ask "does
+  this serve parity-or-better-and-contribute-back?" Routed to [[castr-parity-or-better-with-oak]] (sharpened). Same family
+  as fluency-is-a-warning (metacognition directive) + [[dont-dismiss-tools-as-false-positive]].
 
 ## 2026-06-20 (Oak parity Tranche 1 — Clouded Floating Gust / 8de446)
 

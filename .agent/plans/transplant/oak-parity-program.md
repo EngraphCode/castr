@@ -180,12 +180,16 @@ future audit does not re-flag:**
   parking-as-an-antipattern. Bringing it properly first needs the no-hedging-vocabulary §Indefinite-deferral section +
   the principles §Strict-and-Complete reconciliation + a castr-surface false-positive assessment. Recorded as a future
   content-doctrine slice, sequenced separately from the mechanism upgrade.
-- **`stress-ng` substring breadth — ACCEPTED (deliberate-localisation, Oak-pin-faithful).** config-expert measured that
-  `match: "substring"` for `stress-ng` also blocks benign substrings (`libstress-ng`, `distress-ng-test`). This is
-  Oak's verbatim design and PDR-044 names innate-layer false positives a design property; the deny TEACHES and is
-  overridable, and `stress-ng` should essentially never appear in a legitimate castr command (headless schema lib).
-  Tightening to word-boundary matching would diverge from the pin and expand A2's matcher beyond the brought capability;
-  preserved as-is. The three sibling host-load shapes (`for(;;)`, `while(1)`, fork bomb) showed no benign false positive.
+- **`stress-ng` substring breadth + the N7/N11 git/prose over-match — owner directed INVEST in precision (2026-06-21,
+  Q-005), overriding my "keep Oak-faithful" recommendation.** config-expert measured that `match: "substring"` for
+  `stress-ng` also blocks benign substrings (`libstress-ng`); the token-subsequence default over-matches across compound
+  git commands / prose (N7/N11). I recommended ACCEPT (PDR-044 names innate-layer false positives a design property; the
+  deny teaches + is overridable). **The owner chose parity-or-BETTER:** build word-boundary matching for binary-name
+  patterns + command-position anchoring for git, **with comprehensive Oak back-flow notes** so Oak gets the precision too
+  (castr is a bidirectional Practice node). Substring stays correct for shapes that hide inside one quoted token
+  (`for(;;)`/`while(1)`/fork bomb). Now its own **hook-matcher-precision lane** (thread record), not a parked accept.
+- **A1 / ArcAngel scope — owner confirmed FULL UNIT (2026-06-21).** Bring the doc + `.agent/collaboration/rapid-comms/`
+  dir + watcher-pairing clauses + the A4-dependent statusline wing (A4 lands first). Not minimal/deferred-wing.
 
 ## Sequencing (low-risk high-value first; couple dependent units)
 
