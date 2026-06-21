@@ -2,6 +2,45 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-21 (dependency-currency — DC2 @scalar IR-input trio + Q-006/ADR-049 — Soaring Lifting Current / f7e30d)
+
+Executed DC2 (@scalar trio, the IR-input vendor) + the Q-006 @types/node decision (ADR-049) + the stale-tsconfig
+slice. Commits: `00750da` (@types/node ^24), `43d7f8a` (tsconfig), `d1fcdda` (ADR-049 docs), `43419d0` (DC2).
+
+- **SCOPE-CREEP CORRECTION (headline, owner steered "strict everywhere / long-term" twice this session): the
+  lens is for the FORCED fix, NOT a licence to refactor adjacent vendor boundaries.** A vendor bump (validate()
+  input `any`->`unknown`) forced ONE lint fix (upgrade-validate.ts destructure of a now-`any` `specification`).
+  I reached past it to "consistently" migrate the load-pipeline's `AnyObject`(Record<string,any>) param/return
+  types -> `UnknownObject` — and it FOUGHT the vendor: `bundle()` returns a loose `object` not assignable to
+  Record<string,unknown>, and the param change cascaded into the tests. Reverted to gate-forced scope. **Cure:
+  the vendor's loose type stays AT the boundary where castr immediately guards it (ADR-020 validate-at-boundary);
+  `AnyObject` in a guarded vendor-boundary param is NOT an `any`-leak (the object ref is typed; only its values
+  are any) and lint doesn't flag it. The strict lens is satisfied by the boundary GUARD, not by renaming the
+  vendor type.** Owner's strict/long-term steer = "don't take the expedient shortcut," NOT "refactor
+  unboundedly" — proportionality still governs. Family: metacognition friction-inflation ("descend into
+  mechanism") + the [[dissolve-owner-gating-with-four-lenses]] discipline applied to scope.
+- **A vendor's stricter validation can be a FIDELITY IMPROVEMENT — measure a "broken test" against the CONTRACT,
+  not the old behavior.** @scalar/openapi-parser 0.28 rejects dangling `$ref`s the old (0.25) silently tolerated.
+  One test "failed" (1668/1669): a fixture referencing `#/components/schemas/Error` without defining it. The
+  reflex "the bump broke a test" was wrong — `requirements.md` lists "Unresolvable `$ref` pointers" under REJECT
+  and ADR-001 is fail-fast, so the OLD leniency violated castr's own contract; the new strictness CLOSES the gap.
+  Cure = define the schema (make the fixture valid) + ADD a load-level negative test codifying the now-enforced
+  contract (it would have FAILED at baseline — a legitimate lock-in). The doctor's lenient report-and-continue
+  path is preserved (safeValidate try/catches). Verify a "broken test" against the spec contract before assuming
+  regression. Family: green-gates-mask-gaps inverse (a RED that's actually correctness arriving).
+- **Boundary type-guard beats a cast for `any`->strict at a vendor seam; `unknown` is the sanctioned sink for a
+  vendor `any`.** validate() input tightened to Record<string,unknown> (castr's strict OpenAPIDocument has no
+  general index signature by design) -> narrowed via the canonical `isRecord` guard (no `as`/no `any`).
+  `upgrade().specification` degrades to `any` (the `@scalar/openapi-types/3.1` subpath doesn't resolve in
+  castr's NodeNext workspace) -> read it then `const upgraded: unknown = ...` before the existing guard;
+  `no-unsafe-assignment` exempts assignment of `any` to an explicit `unknown` (lint-clean = proof).
+- **FINDING (doctrine-vs-reality, routed): the repo-local `type-assertion-policy` ESLint rule is NOT registered
+  in `lib/eslint.config.ts`** (only `no-magic-string-comparison` + `max-files-per-dir` are) though
+  `no-type-shortcuts.md` claims it "enforces part of this structurally via the repo-local type-assertion-policy
+  ESLint rule." So the no-`as` policy is `@typescript-eslint`-defaults + review-discipline only. Surfaced by
+  type-reviewer, verified firsthand. Orthogonal to DC2 (zero `as` added); own follow-up slice. Family:
+  [[castr-doctrine-vs-reality]].
+
 ## 2026-06-21 (dependency-currency — DC1 ts-morph 27->28, the crown jewel — Soaring Lifting Current / f7e30d)
 
 Executed DC1 (ts-morph 27->28), the highest-risk cycle, its own session, full baseline-capture protocol.

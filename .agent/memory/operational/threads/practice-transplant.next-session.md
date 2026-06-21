@@ -210,8 +210,18 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   surface) describing the precision improvement for upstream adoption.
 - Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
 
-### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling tier + DC1 crown-jewel done 2026-06-21; DC2-DC5 remain)
+### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling + DC1 + DC2 done 2026-06-21; DC3-DC5 remain)
 
+- **DC2 @scalar IR-input trio DONE (2026-06-21, Soaring Lifting Current / f7e30d) — `43419d0`.** parser
+  0.25.7->0.28.7 + types 0.6.1->0.9.1 + json-magic 0.12.4->0.12.16, one coupled commit (parser pins exact
+  versions of the other two). IR-fidelity preserved (full surface == baseline); openapi-types.ts seam needed no
+  reconciliation (drift green @0.9.1). Bump-forced boundary reconciliation (isRecord guards + unknown-widen, no
+  as/no any, ADR-020). IMPROVEMENT locked in: the new parser rejects dangling $refs the old tolerated
+  (requirements.md REJECT + ADR-001) -> fixed 1 latent fixture + added a load-level negative test. openapi-expert
+  - type-reviewer COMPLIANT, firsthand-verified. Also landed this session: @types/node ^24 (Q-006/ADR-049,
+    `00750da`), stale tsconfig include (`43d7f8a`). Finding routed: `type-assertion-policy` ESLint rule unregistered
+    in eslint.config (doctrine-vs-reality gap; own slice). **Remaining = DC3 prettier, DC4 ink, DC5 commander, then
+    lane-close -> graduate dependency-currency-discipline (practice-core pattern-PDR).**
 - **DC1 ts-morph 27->28 DONE (2026-06-21, Soaring Lifting Current / f7e30d) — `c8c0a9a`, the crown jewel.**
   The 27->28 breaking change is the bundled-TypeScript major: `@ts-morph/common` 0.28.1 (vendors TS 5.9.2) ->
   0.29.0 (vendors TS 6.0.2), bundled into common's `dist` so the workspace `typescript: 6.0.3` override never

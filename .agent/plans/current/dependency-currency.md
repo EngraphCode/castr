@@ -31,7 +31,7 @@ todos:
     depends_on: [DC0]
   - id: DC2
     content: '@scalar IR-input vendor TRIO (coupled) — openapi-parser 0.25.7->0.28.7 + openapi-types 0.6.1->0.9.1 + json-magic 0.12.4->0.12.16. Reconcile lib/src/shared/openapi-types.ts (+ its drift test); IR-fidelity + openapi snapshot + input-pipeline char + e2e prove IR honesty preserved.'
-    status: pending
+    status: done # 43419d0 (2026-06-21, Soaring Lifting Current / f7e30d). Trio dep-coupled (parser pins exact json-magic+types) -> one commit; transitive helpers 0.4->0.8 + upgrader 0.2.3->0.2.9. IR-fidelity preserved (full surface counts == baseline). openapi-types.ts seam needed NO reconciliation (drift test green @0.9.1). Bump-forced boundary reconciliation (no as/no any, ADR-020): validate() input any->unknown -> isRecord guard at the 2 call sites; ValidateResult became discriminated union -> doctor mocks reconciled; upgrade().specification degrades to any (unresolved openapi-types/3.1 subpath) -> read+widen to unknown then re-narrow via existing guard. IMPROVEMENT: new parser rejects dangling $refs (requirements.md REJECT + ADR-001) the old one tolerated -> fixed 1 latent fixture + added a load-level negative test (locks the previously-unenforced contract). openapi-expert + type-reviewer COMPLIANT, claims re-verified firsthand. check:ci green. FINDING routed: repo-local type-assertion-policy ESLint rule is NOT registered in lib/eslint.config.ts though no-type-shortcuts.md claims structural enforcement (own follow-up; DC2 added zero `as`).
     depends_on: [DC0]
   - id: DC3
     content: prettier 3.8.3->3.8.4 (RUNTIME emission formatter — lib dep, used by maybe-pretty.ts -> rendering/templating.ts; same package as the dev formatter). Patch, but touches emitted formatting → capture baseline + firsthand emitted-output diff.
@@ -103,10 +103,30 @@ by a firsthand diff of the emitted output against a baseline captured before the
   transitive drift; type-reviewer COMPLIANT, every load-bearing claim re-verified firsthand. **A combined-run
   stderr `TypeError: Cannot read properties of null` scare was MEASURED to be pre-existing negative-path logging
   present identically at ts-morph 27 (firsthand revert + re-run) — ts-morph-independent, zero test delta.**
-- **Remaining:** the emission/IR/type-machinery tier — DC2 (@scalar trio), DC3 (prettier), DC4 (ink),
-  DC5 (commander). None started. These need baseline-capture + emitted/CLI diff + the relevant reviewers per
-  the plan. (`pnpm -r outdated` re-confirmed at DC1 start: ts-morph 28, prettier 3.8.4, ink 7.1.0, commander 15,
-  @scalar trio 0.28.7/0.9.1/0.12.16 all still current targets.)
+- **2026-06-21 (Soaring Lifting Current / f7e30d) — DC2 @scalar IR-input trio DONE (`43419d0`):**
+  parser 0.25.7->0.28.7 + types 0.6.1->0.9.1 + json-magic 0.12.4->0.12.16, one coupled commit (the parser
+  pins exact versions of the other two — coupling verified firsthand). **IR-fidelity preserved** — full input
+  surface green with counts identical to the pre-bump baseline (snapshot 154, transforms round-trip/idempotence,
+  character 152, gen 27, e2e, openapi-types.drift). The `openapi-types.ts` seam needed **no** reconciliation
+  (drift test green @0.9.1 — the 0.6->0.9 changes were in entrypoints/literal-unions castr doesn't consume).
+  **Bump-forced boundary reconciliation** (no `as`/no `any`, ADR-020 validate-at-boundary): validate() input
+  tightened `any`->`unknown` -> `isRecord` guard at the 2 call sites (not weakening castr's strict
+  OpenAPIDocument); ValidateResult became a discriminated union -> doctor test mocks reconciled;
+  `upgrade().specification` degrades to `any` (unresolved `@scalar/openapi-types/3.1` subpath) -> read + widen
+  to `unknown`, re-narrow via the existing guard. **Behaviour IMPROVEMENT locked in:** the new parser rejects
+  dangling `$ref`s (requirements.md "Unresolvable `$ref` pointers" REJECT + ADR-001 fail-fast) the old one
+  silently tolerated -> fixed 1 latent buggy fixture + added a load-level negative test codifying the
+  previously-unenforced contract. openapi-expert + type-reviewer COMPLIANT, every load-bearing claim re-verified
+  firsthand. **A scope-creep correction mid-cycle:** an opportunistic `AnyObject`->`UnknownObject` migration of
+  the bundle/upgrade param types (beyond the gate-forced fix) fought the vendor's loose `bundle()` return and
+  cascaded — reverted; the vendor's loose type stays at the boundary where it is immediately guarded.
+- **Remaining:** DC3 (prettier 3.8.3->3.8.4, emission-formatter — baseline-capture + emitted diff), DC4 (ink
+  7.0.5->7.1.0, agent-tools runtime — agent-tools test surface), DC5 (commander 14->15, lib CLI — --help/parse
+  baseline diff). None started. Then lane close -> graduate dependency-currency-discipline (practice-core
+  pattern-PDR, owner-decided).
+- **Finding routed (not fixed in DC2):** the repo-local `type-assertion-policy` ESLint rule (with a test file
+  in `lib/eslint-rules/`) is **NOT registered** in `lib/eslint.config.ts`, yet `no-type-shortcuts.md` claims it
+  enforces the no-`as` policy structurally — a doctrine-vs-reality gap (own follow-up slice; DC2 added zero `as`).
 - **Findings routed (not in scope to fix here):** (1) `lib/tsconfig.json` include lists `examples-fetcher.mts`
   but the file is at `scripts/examples-fetcher.mts` → the degit-using script is NOT type-checked (stale
   include; its own follow-up slice). (2) @types/node dev-only posture sits 2 majors ahead of `engines.node`
