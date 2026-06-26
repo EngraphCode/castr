@@ -112,17 +112,30 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 direction` + `validate-machine-local-paths` validators, each its own bring-by-default plan.
 - **Acceptance:** every transplant-origin reference resolves; the structural catch (TC3b) decided.
 
-### Lane: reason-skill parity bring — complete the thinking-discipline pair (active-next, owner-flagged 2026-06-26)
+### Lane: reason-skill parity bring — ✅ COMPLETE (2026-06-26, Stratospheric Kiting Breeze / c56a0f, `4f0bfe3`)
 
-- Controlling plan: [`../../../plans/transplant/reason-skill-parity-bring.md`](../../../plans/transplant/reason-skill-parity-bring.md).
-  castr has `metacognition` (inward) but not its outward pair `reason` nor the 1432-line
-  `grammar-of-thinking.md` reference — a Tier-A capability gap. Footprint MEASURED: deps resolve (PDR-029/035
-  present), localisation mechanical (4 `oak-` naming tokens), grammar-of-thinking has zero outbound cites.
-- **Next safe step:** **R1** (bring reason skill + grammar-of-thinking + the 2-line metacognition back-link,
-  localise) → **R2** (generate `engraph-` adapters + gates green + confirm the skill FIRES, not just present).
-  The `citation-as-reasoning` pattern is a sibling bring (bring-by-default); ADR-191 + the experience file are
-  DON'T-BRING.
-- **Acceptance:** the reason skill is invocable and **fires** (the napkin `passive-guidance-loses-to-artefact-gravity` bar).
+- Controlling plan: [`../../../plans/transplant/reason-skill-parity-bring.md`](../../../plans/transplant/reason-skill-parity-bring.md)
+  (R1✅/R2✅).
+- **Outcome (`4f0bfe3`, `feat(transplant)`):** the outward `reason` skill + the 1432-line
+  `grammar-of-thinking.md` reference brought verbatim from Oak live `main` then localised
+  (`oak-reason`→`reason`, `oak-metacognition`→`metacognition`, `oak-plan`→`plan`); diff-vs-Oak confirmed only
+  the intended token lines changed; zero residual `oak-` tokens; zero outbound cites in the reference; **full
+  eyeball review of all 1432 lines clean** (line-374 teacher example is one of 4 generic problem-framing
+  illustrations, kept faithful). The 2-line `metacognition` back-link added → metacognition now byte-identical to
+  Oak (the inward/outward pair is complete). Adapters generated (`.claude`/`.agents` `engraph-reason`);
+  **discoverability CONFIRMED** (the harness lists `engraph-reason` as an available skill — the
+  `passive-guidance-loses-to-artefact-gravity` "fires, not just present" bar). `Skill(engraph-reason)` wired into
+  `.claude/settings.json` (owner-approved past the self-modification guard). Gates green: skills, format,
+  portability (**19 canonical skills**), repo-validators.
+- **Verify-don't-trust catch:** the `citation-as-reasoning` pattern was found **already-present** (phase-6
+  `795d935`) and correctly localised (`proven_in: imported` + a castr-convention `use_this_when` field) — its
+  "BRING micro-slice" disposition was **stale**; overwriting with Oak's raw copy would have regressed the
+  localisation. Both its cites (`no-hedging-vocabulary` rule, `breadth-as-evasion` pattern) resolve. No action.
+- **Plan inaccuracy fixed (recorded in the plan):** the documented adapter-generate invocation
+  (`pnpm --filter @engraph/agent-tools skills-adapter-generate`) ENOENTs on `.agent/skills` (wrong cwd); the
+  working form is from-root via the built js (`… -s build && node agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-`).
+- **Lifecycle:** add the parity-program ledger row; archive the plan per ADR-117 (R2 landed green); the
+  consolidation/learning-loop for this capability surface is a close-out candidate.
 
 ### Lane: transplant Phase 9 — GATED by the parity program (was: deferred)
 

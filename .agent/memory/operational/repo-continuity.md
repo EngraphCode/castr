@@ -99,6 +99,21 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-26, Stratospheric Kiting Breeze / c56a0f): the reason-skill bring is ✅ DONE; the
+> active-next positions are TC2 and DC3.** The **reason-skill parity bring lane is COMPLETE** (`4f0bfe3`,
+> `feat(transplant)`): the outward `reason` skill + 1432-line `grammar-of-thinking.md` brought from Oak live
+> `main`, localised, full eyeball review clean; `metacognition` back-link completes the pair (now byte-identical
+> to Oak); `engraph-reason` adapter generated + discoverable + `Skill(engraph-reason)` wired; gates green
+> (portability now **19 skills**). Verify-don't-trust catch: the `citation-as-reasoning` pattern was already
+> present (phase-6) and correctly localised — its plan "BRING" disposition was stale, no action. The prior 5
+> local commits were **pushed** to origin first (owner call); **`4f0bfe3` is LOCAL/unpushed** (push = owner's
+> call). **Active-next now:** **TC2** (the completeness lane's plan-templates library — recorded next-priority)
+> and **DC3** (dependency-currency prettier — its own untouched position); the owner names which. **Surfaced
+> (out-of-lane, for the next consolidation):** the advisory fitness pre-screen flags a **CRITICAL** prose-width
+> signal on `pending-graduations.md` (42 lines > 150 chars) + a **HARD** on `open-questions.md` — both were
+> recorded empty at 2026-06-21, so content landed since (likely the 48b4a5 session); not mine, not blocking,
+> catalogued here. The two 2026-06-26 lines below stay authoritative for the completeness lane (TC1/TC3a) detail.
+
 > **CURRENT TRUTH (2026-06-26, Coppery Warming Magma / 48b4a5): the Oak READ MODEL changed and two new
 > sub-programs are active under the parity umbrella.** (1) **Oak is read live from `main`, no pin** (owner;
 > `practice/castr-pin` deleted) — §Repo-Wide Invariants is authoritative. (2) **Transplant completeness —
