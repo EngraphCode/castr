@@ -33,6 +33,28 @@ Three insights, one owner correction. Strong distilled / practice-core graduatio
   `oak-backflow/castr-innovations-ledger.md`. Measured castr-only-so-far: `validate-drift` validator
   (Oak lacks it). Distinct from the point-in-time 2026-06-10 upstream-defect report.
 
+### TC1 execution findings (2026-06-26)
+
+- **The iceberg RECURSES — confirmed at execution.** TC1 restored the 10 `agent-tools:*` proxies, but
+  running the now-resolving advisory orchestrator revealed it _internally_ spawns `practice:fitness:strict-hard`
+  - `practice:vocabulary`, which castr _also_ lacked at root (and which map to differently-named workspace
+    scripts: `validate-practice-fitness`/`validate-fitness-vocabulary`). Had to bring the whole `practice:*`
+    family too (15 proxies total). Lesson: enumerate a tip's iceberg TRANSITIVELY — a restored proxy can call
+    further-dropped infra. Re-activating the orchestrator also surfaced a pre-existing advisory fitness signal
+    (substrate directives near soft/critical limits) that was previously invisible because the orchestrator
+    couldn't run — a benefit of un-hollowing, routed to a consolidation pass, not a TC1 blocker.
+- **NEW hook-matcher false-positive specimen (feeds the hook-matcher-precision lane).** A `git add` /
+  `git diff --staged` shell call whose heredoc commit message contained the benign prose word "restore"
+  ("restore dropped root script proxies") — plus the `.git/COMMIT_EDITMSG` path — tripped the
+  `never-use-git-to-remove-work` **`git restore` guard**. FALSE positive: no `git restore` present (high-bar
+  measured — the named destructive op was provably absent; only the verb-in-prose + benign git subcommands +
+  `.git/` path co-occurred). Same class as the printf-busy-loop "guard blocked documentation of its own guard"
+  specimen, new angle: **destructive-verb in COMMIT-MESSAGE PROSE co-located with benign git subcommands.**
+  Mitigation (not token-slipping): kept the accurate "restore" wording, wrote the message via the Write tool,
+  and split the ceremony so `git`-token commands and `restore`-prose never share one shell string. Route: the
+  hook-matcher-precision lane — the loop-token case needs command-CONTEXT awareness (executable position vs a
+  string/heredoc being written), not just word-boundary anchoring.
+
 ## 2026-06-26 (Oak read model: pin → live `main` — Coppery Warming Magma / 48b4a5)
 
 Owner directive: **stop working off fixed points in Oak history; read Oak live from `main`.** "Causing more

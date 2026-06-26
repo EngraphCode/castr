@@ -47,6 +47,7 @@
     "validate-drift": "cd .. && pnpm exec tsx agent-tools/src/validators/drift/validate-drift.ts",
     "validate-patterns-index": "cd .. && pnpm exec tsx agent-tools/src/validators/patterns-index/validate-patterns-index.ts",
     "validate-patterns-index:fix": "cd .. && pnpm exec tsx agent-tools/src/validators/patterns-index/validate-patterns-index.ts --fix",
+    "validate-markdown-links": "cd .. && pnpm exec tsx agent-tools/src/validators/markdown-links/validate-markdown-links.ts",
     "ci-turbo-report": "cd .. && pnpm exec tsx agent-tools/src/ci/ci-turbo-report.ts"
   },
   "devDependencies": {

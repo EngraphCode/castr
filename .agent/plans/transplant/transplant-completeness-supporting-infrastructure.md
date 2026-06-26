@@ -49,21 +49,26 @@ todos:
     depends_on: [TC3a]
   - id: TC3a
     content: >-
-      Structural cure, step 1 — bring the catch-validators in REPORT mode. Port Oak's
-      validate-markdown-links + validate-reference-direction (with their tests) into castr's
-      agent-tools validators. Run NON-blocking to ENUMERATE every dangling reference repo-wide —
-      the iceberg census that drives TC2 + TC4. TDD (the ported tests are the RED->GREEN evidence).
-      Assess machine-local-paths validator (Oak has it; castr has the rule).
-    status: pending
+      Structural cure — bring `validate-markdown-links` ONLY (scope narrowed after firsthand
+      exploration + assumptions-expert/config-expert review). Port the 4 Oak files VERBATIM (zero Oak
+      tokens; deps all present; already BLOCKING=false). Add the agent-tools script; do NOT wire into
+      repo-validators:check (castr's chain is uniformly blocking — a non-blocking member breaks the
+      invariant + buries new findings in pre-push noise; config-expert Option B). 34 ported tests green
+      (RED->GREEN port contract) is the precondition; produce + commit the dangling-reference census
+      artifact (completeness-reconciled) as the TC2/TC4 input. reference-direction + machine-local-paths
+      are SPLIT OUT to their own bring-by-default plans (different concern / topology reconciliation).
+    status: done # 2026-06-26: 4 files ported verbatim, 34 tests green, census = 225 broken/642 scanned
+      (reconciled), artifact at dangling-reference-census.md. Catches the known templates + ADR-117 gaps.
     depends_on: []
   - id: TC3b
     content: >-
-      Structural cure, step 2 — wire blocking. Add validate-markdown-links + validate-reference-direction
-      to repo-validators:check ONLY after every TC3a finding is resolved (TC1/TC1b/TC2/TC4), so the gate
-      lands green. Wiring blocking while dangling refs remain would red the gate
-      (dont-break-build-without-fix-plan / local-broken-code-never-leaves).
+      DECISION (not a foregone blocking-wire) — the gate end-state for markdown-links, informed by the
+      TC3a census. "Wire blocking after repo-wide zero" was REMOVED: Oak ships markdown-links report-only
+      INDEFINITELY (never burned its backlog), and castr's non-goals exclude the non-transplant debt a
+      repo-wide-zero needs. Choose: (a) Oak-parity report-only in-gate, (b) scoped-blocking on
+      transplant-completed surfaces via globs, or (c) standalone-forever. Likely owner-facing.
     status: pending
-    depends_on: [TC1, TC1b, TC2, TC4]
+    depends_on: [TC2, TC4]
   - id: TC4
     content: >-
       Bounded dangling-reference sweep. Run the new markdown-links validator + a command-resolution
@@ -153,9 +158,13 @@ the iceberg that was left behind, which is precisely why the gaps went undetecte
 - **TC2:** `.agent/plans/templates/` present; the plan skill's references resolve; every
   brought template's internal links resolve (proven by TC3's markdown-links validator green).
   Proof level: `non-code` (validator + reference-closure).
-- **TC3:** markdown-links + reference-direction validators present, TDD-proven (a fixture
-  with a dangling reference fails RED, resolves GREEN), wired into `repo-validators:check`,
-  full chain green. Proof level: `unit` + `integration` (gate wiring).
+- **TC3a (done):** `validate-markdown-links` ported (4 files verbatim), 34 helper tests green
+  (port RED->GREEN contract), standalone agent-tools script added (NOT chain-wired — preserves
+  castr's all-blocking-chain invariant), census artifact committed (`dangling-reference-census.md`,
+  225 broken / 642 scanned, reconciled). Proof level: `unit` (tests) + `non-code` (census). Note:
+  `reference-direction` + `machine-local-paths` validators split to their own bring-by-default plans.
+- **TC3b (decision):** the gate end-state for markdown-links — Oak-parity report-only / scoped-blocking /
+  standalone — informed by the census; NOT a foregone blocking-wire (Oak never burned its backlog).
 - **TC4:** every dangling-reference finding across transplanted skills/docs has a recorded
   disposition; zero unresolved references remain that are not an explicit deferral with a
   named owner-decision. Proof level: `non-code` (disposition ledger + validator green).
@@ -211,11 +220,13 @@ itself tripped on `pr-watch`/`install-cursor-statusline` before correction). Thi
 
 ## Promotion / sequencing
 
-Order: **TC1** (independent quick win — unblocks the commit + plan skills immediately) →
-**TC3a** (bring the catch-validators in report mode → enumerate the iceberg census) →
-**TC1b/TC2/TC4** (resolve every enumerated finding: bring the 2 capabilities, the templates
-library, and disposition the rest) → **TC3b** (wire the validators blocking, now that the
-gate stays green). The 3a→3b split is the load-bearing constraint: the validator that proves
-completeness cannot land blocking until what it flags is fixed. Move to `active/` when TC1
-starts; archive per ADR-117 on TC3b green. Lifecycle: run the consolidation/learning-loop on
-completion; candidate graduation — a practice-core pattern "transplant completeness = tip + iceberg".
+Order (done so far): **TC1 ✅** (proxies — unblocked the commit + plan skills) → **TC3a ✅**
+(`validate-markdown-links` ported standalone → census of 225 broken links is the TC2/TC4 input) →
+next: **TC1b/TC2/TC4** (resolve the transplant-origin subset: bring the 2 capabilities + the templates
+library; disposition the rest — pre-existing castr debt is out of scope) → **TC3b** (DECIDE the
+markdown-links gate end-state, census-informed — not a foregone blocking wire). `reference-direction`
+
+- `machine-local-paths` validators are separate bring-by-default plans. Move to `active/` (in progress);
+  archive per ADR-117 on TC3b decision + TC2/TC4 disposition-complete. Lifecycle: run the
+  consolidation/learning-loop on completion; candidate graduation — a practice-core pattern
+  "transplant completeness = tip + iceberg".
