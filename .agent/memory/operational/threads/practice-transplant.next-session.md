@@ -34,6 +34,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor     | 2026-06-26    | 2026-06-26   |
 | claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-26   |
+| claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
 
 ## Lanes
 
@@ -107,9 +108,9 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - **Next safe steps (priority order):** **TC2** (bring the 21-file plan-templates library — census confirms
   why) → **TC1b** (bring `pr-watch` + `install-cursor-statusline` capabilities, bring-by-default) → **TC4**
   (disposition the **transplant-origin** census subset; pre-existing castr debt is out of scope) → **TC3b**
-  (markdown-links gate end-state DECISION — Oak-parity report-only / scoped-blocking / standalone; census-
-  informed, owner-facing — NOT a foregone blocking wire). **Split-out (NOT started):** `validate-reference-
-direction` + `validate-machine-local-paths` validators, each its own bring-by-default plan.
+  (markdown-links gate end-state — **DECIDED 2026-06-26: scoped-blocking on transplant-completed surfaces**,
+  conditioned on the archive-exclusion false-positive fix + TC4 surface-set; was Q-007). **Split-out (NOT started):**
+  `validate-reference-direction` + `validate-machine-local-paths` validators, each its own bring-by-default plan.
 - **Acceptance:** every transplant-origin reference resolves; the structural catch (TC3b) decided.
 
 ### Lane: reason-skill parity bring — ✅ COMPLETE (2026-06-26, Stratospheric Kiting Breeze / c56a0f, `4f0bfe3`)
@@ -288,7 +289,9 @@ direction` + `validate-machine-local-paths` validators, each its own bring-by-de
   - type-reviewer COMPLIANT, firsthand-verified. Also landed this session: @types/node ^24 (Q-006/ADR-049,
     `00750da`), stale tsconfig include (`43d7f8a`). Finding routed: `type-assertion-policy` ESLint rule unregistered
     in eslint.config (doctrine-vs-reality gap; own slice). **Remaining = DC3 prettier, DC4 ink, DC5 commander, then
-    lane-close -> graduate dependency-currency-discipline (practice-core pattern-PDR).**
+    lane-close. NOTE: the `dependency-currency-discipline` pattern-PDR already GRADUATED early as PDR-097 (owner
+    direction, 2026-06-26 consolidation — the method core was proven across DC0–DC2); lane-close now just closes the
+    lane, and DC3–DC5 amend PDR-097 only if they refine the method.**
 - **DC1 ts-morph 27->28 DONE (2026-06-21, Soaring Lifting Current / f7e30d) — `c8c0a9a`, the crown jewel.**
   The 27->28 breaking change is the bundled-TypeScript major: `@ts-morph/common` 0.28.1 (vendors TS 5.9.2) ->
   0.29.0 (vendors TS 6.0.2), bundled into common's `dist` so the workspace `typescript: 6.0.3` override never

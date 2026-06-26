@@ -255,3 +255,16 @@ format:check`.** The implementers' `comms watch` seen-files were named `<codenam
   first concurrent stream does, and it fails closed with a confusing ENOENT unless the operator already knows to seed.
 - **`claim_id` is schema `format: "uuid"`** — cannot pass a human-readable `--claim-id`; omit it and capture the
   generated v4 from stdout JSON.
+
+### New friction (2026-06-26, Eclipsed Lurking Moth consolidation — same agent-tools-CLI class as F7/N5)
+
+- **`check-commit-message`'s `-F <file>` / `--file <file>` flag fails through the `pnpm --filter` wrapper (exit 2,
+  "invalid usage"), but `< file` stdin works.** `pnpm --filter @engraph/agent-tools check-commit-message -- -F <path>`
+  returned exit 2; `pnpm exec tsx agent-tools/src/commit-advisories/check-commit-message.ts < <path>` (stdin, no flags)
+  returned exit 0. The `--`-forwarded `-F` arg does not reach the script intact through the workspace wrapper. **Cure:**
+  pipe the message via stdin for validation, or fix the wrapper's arg-forwarding so `-F` survives `--`. Compounds the
+  general `pnpm … --` cwd/arg-forwarding hazard already logged above. Same first-class-tooling-feedback class as F7.
+- **`claims open` requires `--now <iso>` and `claims close` requires `--now` + `--closed <path>` + `--platform` +
+  `--model`** — none defaulted; each missing one is a separate exit-2 round-trip (the help lists them but the failure
+  surfaces them one at a time). Minor; cure: default `--now` to current time and `--closed` to the conventional sibling
+  path, or list all required flags in one error.
