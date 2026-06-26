@@ -24,6 +24,18 @@ stated cure). The 2026-06-26 entries below are kept live (current session work).
   gate end-state must not blocking-wire a check that flags the rotation convention. Cure candidate for the markdown-links
   lane: resolve link _targets_ into `archive/` (existence-only) even while excluding archive files from _scanning_.
 
+- **Two pending-graduations candidates graduated (owner-approved this pass), via the step-7 owner-walk.** I ate my
+  own dogfood first: ran each of the 3 register items through the four-lens dissolution test. `dependency-currency`
+  was already owner-settled as event-gated (DC3–DC5) → stated verdict, did NOT re-ask. The 2 PDR-shaped candidates'
+  _understanding_ was already conserved in-repo (distilled #46 / register / user-memory), so nothing was at risk —
+  what remained was Core enforcement-surface ELEVATION, which step 7a/15 genuinely require the owner to approve
+  (survives all four lenses as a real governance fork). Owner approved both: `transplant-completeness` → portable
+  **PDR-096** (bring-the-iceberg pattern; made portable — Notes must not cite host `.agent/plans/` paths per the
+  Core portability constraint; only PDR-055 did before, it's not the norm); `dissolve-owner-gating` → **PDR-057
+  §Four-Lens Dissolution Test** amendment + the `present-verdicts-not-menus` rule Pre-Pose Viability Check. Adding a
+  PDR bumped the drift count to 97 — `validate-drift` recomputes from source (no manual count-claim edit needed; the
+  distilled "let the validator define the counts" lesson held). Register now holds only the event-gated item.
+
 ## 2026-06-26 (reason-skill bring R1/R2 — Stratospheric Kiting Breeze / c56a0f)
 
 Forward exemplar of bring-by-default executed clean. `4f0bfe3` + `bb97128`. Three reusable findings for

@@ -4,6 +4,11 @@ Changes to the Practice Core files, newest first. Each entry records the repo
 that made the change and what was changed. This file travels with the
 Practice Core package.
 
+## [castr] 2026-06-26 — Two graduations from a dedicated consolidation (Eclipsed Lurking Moth)
+
+- Authored **PDR-096** (`pdr_kind: pattern`) — "Bring the Iceberg: A Transplanted Capability Is Complete Only When Its Supporting Infrastructure Resolves" — graduating the owner-named `transplant-completeness` candidate (instances: TC1 recursive proxies, TC3a self-dropped catch-validator, the reason-skill forward exemplar). Portable: a hollow transplant is cured by bringing the missing infrastructure, never by patching the doc to match the gap.
+- Amended **PDR-057** (Empirical-Answerability Pre-Question Gate) with the **Four-Lens Dissolution Test** — after the empirical gate clears, run a surviving question through strict / everywhere / all-the-time / long-term-architectural-excellence; only a genuine product/strategy/governance fork survives as owner-bound. Operationalised in the `present-verdicts-not-menus` rule's Pre-Pose Viability Check. Graduates the `dissolve-owner-gating-with-four-lenses` candidate (owner-stated doctrine, instance-2 fired 2026-06-26).
+
 ## [castr] 2026-06-05 — Phase-1b Practice Core transplant (Oak generation merge)
 
 - Merged Oak's current Practice Core generation into castr's branch as a three-way history merge (common ancestor 2026-03-09; ours = castr's local divergence; theirs = Oak's current generation) rather than a wholesale replace

@@ -69,7 +69,16 @@ the same judgement you would apply if no owner were present:
 1. Name the evidence and doctrine that supports each option.
 2. Ask whether you would actually take that option yourself.
 3. Remove every option you would refuse to take.
-4. Count the survivors:
+4. **Run each survivor through the four dissolution lenses** — _strict_
+   (engineering correctness / doctrine), _everywhere_ (does the same
+   answer hold in every comparable case), _all-the-time_ (every session,
+   not just now), and _long-term architectural excellence_. A question
+   survives as a genuine owner fork only if its defensible outcomes still
+   diverge under these lenses. Most engineering-correctness questions
+   collapse to a single determination here — present that verdict. Only a
+   real product / strategy / governance fork survives. (PDR-057
+   §Four-Lens Dissolution Test.)
+5. Count the survivors:
    - **Zero**: keep analysing; you do not yet have a viable action.
    - **One**: state the verdict and invite correction, not selection.
    - **Two or three**: `AskUserQuestion` is legitimate if the choice still

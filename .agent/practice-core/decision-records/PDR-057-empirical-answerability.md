@@ -228,6 +228,45 @@ prompt that asks _"which empirical surfaces did you read?"_ before
 the question is sent) but the substance is the discipline itself,
 not its automation.
 
+## Amendment: Four-Lens Dissolution Test (2026-06-26)
+
+The empirical-answerability gate governs the **first** filter: is the
+question determinately answerable from a surface? A question that
+clears that gate (genuinely not surface-answerable) faces a **second**
+filter before it reaches the owner.
+
+**Run the surviving question through four normative lenses — _strict_
+(engineering correctness / doctrine), _everywhere_ (does the same
+answer hold in every comparable case), _all-the-time_ (every session,
+not just this one), and _long-term architectural excellence_. A
+question survives as a genuine owner fork only if its defensible
+outcomes still diverge under those lenses. Most questions that clear
+empirical-answerability still collapse to a single determination here —
+an engineering-correctness question has one defensible answer once the
+lenses are applied. Only a genuine product / strategy / governance fork,
+whose outcomes truly diverge under the four lenses, is owner-bound.**
+
+This sharpens part 3 of the Decision ("What remains for the owner"):
+the three owner-bound classes are precisely those whose answers diverge
+under the four lenses. The discipline is _dissolution before
+escalation_ — most apparent forks dissolve into determinations, and
+presenting a dissolved question as a fork is the
+[`present-verdicts-not-menus`](../../rules/present-verdicts-not-menus.md)
+failure mode (the rule's Pre-Pose Viability Check operationalises this
+test). It is also the inbound mirror of
+[PDR-058](PDR-058-three-tier-optionality-decomposition.md): where
+PDR-058 decomposes _outcome_ optionality, the four-lens test dissolves
+_decision_ optionality before it is posed.
+
+**Instances**: the 2026-06-21 owner four-lenses decision-pass (Q-006 +
+the dependency-currency-PDR home/timing dissolved to determinations;
+only the Node-support stance and the Oak-governance question survived);
+the 2026-06-26 bring-by-default correction (a manufactured "owner
+disposition" gate for `pr-watch` / `install-cursor-statusline`
+dissolved to "bring" under the long-term / parity-or-better lens).
+Owner-stated doctrine on both occasions; graduated at the 2026-06-26
+dedicated consolidation.
+
 ## Source
 
 This PDR graduates the QUAR-1 entry of
