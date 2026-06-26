@@ -283,6 +283,16 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
 ## Standing decisions this thread carries
 
+- **Bring-by-default + transplant completeness (owner, 2026-06-26):** "the default for all capabilities is to bring
+  them over, always." The default disposition for any Oak capability is **BRING**; the burden of proof is on _not_
+  bringing (a positive deliberate-localisation reason — Oak product tooling / fail-fast-over-result-pattern), never
+  uncertainty (punting uncertainty to the owner is the `no-manufactured-permission` failure). Corollary — **transplant
+  completeness**: bring a capability's supporting infrastructure (script proxies, template libraries, catch-validators),
+  not just the tip; a hollow transplant is fixed by bringing the missing infra, never by patching the doc to match the
+  gap. Plans: [`../../../plans/transplant/transplant-completeness-supporting-infrastructure.md`](../../../plans/transplant/transplant-completeness-supporting-infrastructure.md)
+  (backward remediation + structural catch) + [`../../../plans/transplant/reason-skill-parity-bring.md`](../../../plans/transplant/reason-skill-parity-bring.md)
+  (forward exemplar). Innovations back-flow record kept current at
+  [`../../../plans/transplant/oak-backflow/castr-innovations-ledger.md`](../../../plans/transplant/oak-backflow/castr-innovations-ledger.md).
 - **Decision pass (owner, 2026-06-21) — decision-complete before Tranche-3 planning:** Q-002 RESOLVED (single-TS pnpm
   override is the permanent fix — sonarjs 4.1.0 still vendors TS as a regular dep; not awaiting upstream); Q-004 RESOLVED
   (release tooling = `changesets`, execution deferred); Q-005 RESOLVED (INVEST in hook-matcher precision + Oak back-flow

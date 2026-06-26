@@ -2,6 +2,37 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-26 (transplant completeness + bring-by-default — Coppery Warming Magma / 48b4a5)
+
+Three insights, one owner correction. Strong distilled / practice-core graduation candidates.
+
+- **Incomplete transplant ≠ doc-drift — and the cure is opposite (headline, owner-named).** Two
+  gaps I hit (the commit skill's `pnpm agent-tools:check-commit-message` / `-skill-advisories`
+  root proxies don't exist; the plan skill's `.agent/plans/templates/` dir doesn't exist) I first
+  classified as "doctrine-vs-reality drift." Owner reclassified: **incomplete transplants — bring
+  the supporting infrastructure, not just the tip of the iceberg.** This INVERTS the cure: doc-drift
+  → "patch the doc to match reality" (which DELETES the reference to the missing infra, hiding the
+  gap, cementing the corpse); incomplete-transplant → "bring the missing infra so the reference
+  resolves." Same symptom (a reference that doesn't resolve), opposite fix. I was about to apply the
+  wrong cure-by-analogy. Family: doctrine-by-analogy (metacognition retrospective mode).
+- **The catch-infra is itself the iceberg.** Measured: Oak wires `validate-markdown-links` +
+  `validate-reference-direction`; castr has neither. The validator that would FAIL THE GATE on a
+  hollow transplant was itself left un-transplanted — which is _exactly why_ the gaps went
+  undetected. The structural cure (bring + wire those validators) is higher-leverage than patching
+  the two instances. Generalises: when a class of defect "slips through," check whether the
+  detector for that class is part of what was dropped. Plan: `transplant-completeness-supporting-infrastructure.md`.
+- **Bring-by-default (owner standing directive, 2026-06-26): "the default for all capabilities is to
+  bring them over, always."** I manufactured an "OWNER DISPOSITION" gate for `pr-watch` /
+  `install-cursor-statusline` — punting "should we bring this?" to the owner. Wrong: the default IS
+  bring; the burden of proof is on NOT bringing (a positive deliberate-localisation reason — Oak
+  product tooling, fail-fast-over-result-pattern). Uncertainty is not such a reason. This is the
+  `no-manufactured-permission` + [[dissolve-owner-gating-with-four-lenses]] failure AGAIN (long-term
+  - parity-or-better lens dissolves it to "bring"). Strengthens user-memory
+    `castr-parity-or-better-with-oak`. Recorded as a thread-record standing decision.
+- **Oak back-flow innovations record is now a running ledger** (owner: keep it up to date):
+  `oak-backflow/castr-innovations-ledger.md`. Measured castr-only-so-far: `validate-drift` validator
+  (Oak lacks it). Distinct from the point-in-time 2026-06-10 upstream-defect report.
+
 ## 2026-06-26 (Oak read model: pin → live `main` — Coppery Warming Magma / 48b4a5)
 
 Owner directive: **stop working off fixed points in Oak history; read Oak live from `main`.** "Causing more
