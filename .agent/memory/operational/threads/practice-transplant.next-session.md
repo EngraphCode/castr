@@ -224,8 +224,10 @@ direction` + `validate-machine-local-paths` validators, each its own bring-by-de
 
 ### Lane: first-run friction-fix tranche — active-next (trigger: owner-recommended; before the next team session)
 
-- Controlling detail: [`../../active/napkin.md` §FIRST RUN of the collaboration setup](../../active/napkin.md) (F1–F12,
-  N1–N12, measured firsthand by the first concurrent stream). The concrete cures are the lane bullets below.
+- Controlling plan: [`../../../plans/transplant/first-run-friction-inventory.md`](../../../plans/transplant/first-run-friction-inventory.md)
+  (F1–F12, N1–N12, measured firsthand by the first concurrent stream; relocated there from the napkin at the
+  2026-06-26 rotation — also conserved in [`../../active/archive/napkin-2026-06-20-to-21.md`](../../active/archive/napkin-2026-06-20-to-21.md)).
+  The concrete cures are the lane bullets below.
 - Why: highest-leverage hardening before the next team session — fixes the agent-tools/hook/doctrine walls the first
   concurrent stream hit, so the collaboration framework (Phase 8's deliverable) is genuinely dogfoodable.
 - Concrete items (each pickup-able; durable detail in the two homes above):
