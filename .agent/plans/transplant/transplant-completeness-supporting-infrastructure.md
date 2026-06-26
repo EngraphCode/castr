@@ -174,8 +174,13 @@ validator."** Portable kernel graduated to [PDR-096](../../practice-core/decisio
   castr's all-blocking-chain invariant), census artifact committed (`dangling-reference-census.md`,
   225 broken / 642 scanned, reconciled). Proof level: `unit` (tests) + `non-code` (census). Note:
   `reference-direction` + `machine-local-paths` validators split to their own bring-by-default plans.
-- **TC3b (decision):** the gate end-state for markdown-links — Oak-parity report-only / scoped-blocking /
-  standalone — informed by the census; NOT a foregone blocking-wire (Oak never burned its backlog).
+- **TC3b (decision — DECIDED 2026-06-26, owner; was Q-007):** the gate end-state is **scoped-blocking on
+  transplant-completed surfaces** (per PDR-096's plural-catch doctrine — new dangling refs there must fail the
+  gate), conditioned on **(1)** fixing the `validate-markdown-links` archive-exclusion false-positive (it flags
+  legitimate archive-ledger links — resolve link _targets_ into `archive/` even while excluding archive files
+  from _scanning_) and **(2)** TC4 defining the transplant-completed surface set (the blocking globs). NOT
+  repo-wide blocking (the 225-census is mostly pre-existing castr debt + archive-ledger false-positives; Oak
+  never burned its backlog). Implementation: wire the scoped-blocking globs once (1) and (2) hold.
 - **TC4:** every dangling-reference finding across transplanted skills/docs has a recorded
   disposition; zero unresolved references remain that are not an explicit deferral with a
   named owner-decision. Proof level: `non-code` (disposition ledger + validator green).

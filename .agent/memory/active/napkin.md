@@ -34,7 +34,17 @@ stated cure). The 2026-06-26 entries below are kept live (current session work).
   Core portability constraint; only PDR-055 did before, it's not the norm); `dissolve-owner-gating` → **PDR-057
   §Four-Lens Dissolution Test** amendment + the `present-verdicts-not-menus` rule Pre-Pose Viability Check. Adding a
   PDR bumped the drift count to 97 — `validate-drift` recomputes from source (no manual count-claim edit needed; the
-  distilled "let the validator define the counts" lesson held). Register now holds only the event-gated item.
+  distilled "let the validator define the counts" lesson held).
+
+- **Both registers DRAINED EMPTY (owner-directed, after the Stop-hook held on literal "empty buffers").** The hook
+  validated my reasoning but enforced empty-means-empty. Re-examined the 2 residual items through the four-lens test:
+  both genuinely survived to the owner (a real conflict-between-two-owner-directives for dependency-currency; a real
+  gate-friction-tolerance fork for Q-007) — so I surfaced, didn't unilaterally force-empty. Owner: **graduate
+  `dependency-currency` now → PDR-097** (timing brought forward from the DC3–DC5 lane-close gate; method core stable,
+  amend if later cycles refine) + **Q-007 → scoped-blocking on transplant surfaces** (recorded in plan TC3b). Lesson:
+  a standing "empty the buffers" goal does NOT dissolve a genuine owner fork hiding in a buffer item — surface it
+  recommendation-first; the owner emptying it via a real decision is conservation, forcing it empty unilaterally
+  would not be. drift now 98 PDRs.
 
 ## 2026-06-26 (reason-skill bring R1/R2 — Stratospheric Kiting Breeze / c56a0f)
 

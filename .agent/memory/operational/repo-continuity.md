@@ -93,11 +93,13 @@ relocated to its permanent home** [`../../plans/transplant/first-run-friction-in
 (the friction-fix lane's new controlling plan, pointer updated) — this **structurally resolves the multi-pass
 rotation HOLD** (the prior cure was "relocate the FIRST-RUN detail to the lane's plan, then rotate"). **open-questions:**
 Q-006 drained (RESOLVED, home ADR-049); Q-007 remains open (genuinely gated on TC2/TC4). **pending-graduations:**
-the two PDR-shaped candidates were **graduated** (owner-approved this pass): `transplant-completeness` → new
-portable **PDR-096** (bring-the-iceberg pattern); `dissolve-owner-gating-with-four-lenses` → **PDR-057 §Four-Lens
-Dissolution Test** amendment + the `present-verdicts-not-menus` rule's Pre-Pose Viability Check. The register now
-holds only `dependency-currency-discipline`, which remains event-gated (graduates at DC3–DC5 lane-close;
-owner-decided 2026-06-21, insight conserved in distilled + plan). **Fitness:** the residual CRITICAL
+**both drainable registers are now EMPTY** (owner-directed full drain this pass). Graduations: `transplant-completeness`
+→ portable **PDR-096** (bring-the-iceberg pattern); `dissolve-owner-gating-with-four-lenses` → **PDR-057 §Four-Lens
+Dissolution Test** amendment + the `present-verdicts-not-menus` rule; `dependency-currency-discipline` → portable
+**PDR-097** (owner brought the timing forward from DC3–DC5 lane-close to graduate-now; the method core was proven
+across DC0–DC2, amend if later cycles refine it). Open-questions: Q-006 → ADR-049; **Q-007 decided** (owner) — the
+`validate-markdown-links` gate end-state is **scoped-blocking on transplant-completed surfaces** (recorded in the
+transplant-completeness plan TC3b, conditioned on the archive-exclusion false-positive fix + TC4 surface-set). **Fitness:** the residual CRITICAL
 (pending-graduations) + HARD (open-questions) are prose-width on those still-live gated items — reported, not chased
 (no un-homed substance; the conservation invariant). Per-closeout detail lives in git history and the artefacts each
 pass homed — not accumulated here, per

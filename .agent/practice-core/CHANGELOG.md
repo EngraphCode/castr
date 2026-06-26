@@ -4,6 +4,11 @@ Changes to the Practice Core files, newest first. Each entry records the repo
 that made the change and what was changed. This file travels with the
 Practice Core package.
 
+## [castr] 2026-06-26 — Buffer-empty graduations (dedicated consolidation, Eclipsed Lurking Moth)
+
+- Authored **PDR-097** (`pdr_kind: pattern`) — "Dependency Currency for a Types/Codegen Library: Split by Risk, Classify by Call-Site, Prove Consumer-Side" — graduating the `dependency-currency-discipline` candidate. Owner brought the timing forward (from the DC3–DC5 lane-close gate to graduate-now) to empty the register; the method's core was proven across DC0–DC2 and later cycles apply the same moves (amend if they refine it). This empties `pending-graduations.md`.
+- Recorded the **Q-007 decision** (owner): the ported `validate-markdown-links` gate end-state is **scoped-blocking on transplant-completed surfaces** (per PDR-096's catch doctrine), conditioned on fixing the archive-exclusion false-positive + TC2/TC4 defining the surface set. Routed to the transplant-completeness plan TC3b/TC4; `open-questions.md` drained.
+
 ## [castr] 2026-06-26 — Two graduations from a dedicated consolidation (Eclipsed Lurking Moth)
 
 - Authored **PDR-096** (`pdr_kind: pattern`) — "Bring the Iceberg: A Transplanted Capability Is Complete Only When Its Supporting Infrastructure Resolves" — graduating the owner-named `transplant-completeness` candidate (instances: TC1 recursive proxies, TC3a self-dropped catch-validator, the reason-skill forward exemplar). Portable: a hollow transplant is cured by bringing the missing infrastructure, never by patching the doc to match the gap.
