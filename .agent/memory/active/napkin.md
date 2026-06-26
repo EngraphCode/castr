@@ -2,6 +2,33 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-26 (reason-skill bring R1/R2 — Stratospheric Kiting Breeze / c56a0f)
+
+Forward exemplar of bring-by-default executed clean. `4f0bfe3` + `bb97128`. Three reusable findings for
+the next skill-bring:
+
+- **A skill's activation iceberg includes a `.claude/settings.json` `Skill(<name>)` permission entry —
+  and adding it trips the auto-mode self-modification guard.** Generating adapters is not enough:
+  `portability:check` fails until `permissions.allow` carries `Skill(engraph-<name>)`. But that edit is a
+  permission self-modification, so the harness classifier **denies it as unrequested** — it needs fresh
+  owner approval (I asked; owner approved; retry succeeded). So every future skill bring has a known
+  owner-approval beat at the settings.json wiring step. This is the transplant-completeness iceberg
+  recursing into the _permissions surface_, not just scripts/templates. Do NOT try to route around the
+  guard (heredoc/sed would bypass its intent) — surface and ask.
+- **The documented `skills-adapter-generate` invocation is wrong (cwd trap).** Both plans say
+  `pnpm --filter @engraph/agent-tools skills-adapter-generate --prefix=engraph-`; `--filter` sets cwd to
+  the workspace so the generator ENOENTs on `agent-tools/.agent/skills`. The working form is **from repo
+  root via the built js**: `pnpm --filter @engraph/agent-tools -s build && node
+agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-` (the generator uses
+  `process.cwd()` as repoRoot; the root `skills:check` script already uses this form). Recorded in both
+  plans.
+- **verify-don't-trust caught a stale plan disposition.** The reason-skill plan said BRING the
+  `citation-as-reasoning` pattern as a micro-slice; it was **already present** (phase-6 `795d935`) and
+  correctly localised (`proven_in: imported` — castr must not claim Oak's 2026-05-21 session as its own
+  history — plus a castr `use_this_when` field). The fluent path (the plan said BRING) would have
+  overwritten with Oak's raw copy and regressed the localisation. A carefully-authored plan's
+  disposition is still a claim to measure, not a verdict to execute. [[inherited-classification-is-a-claim-to-measure]]
+
 ## 2026-06-26 (transplant completeness + bring-by-default — Coppery Warming Magma / 48b4a5)
 
 Three insights, one owner correction. Strong distilled / practice-core graduation candidates.
