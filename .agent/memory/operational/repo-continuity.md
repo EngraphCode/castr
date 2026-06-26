@@ -192,18 +192,19 @@ Continuity invariants (the non-negotiables a resuming agent must hold):
 - **Each transplant phase = one atomic commit + `transplant/phase-N` tag**,
   green-gated (full `pnpm check`) + reference-closure-clean **at the tag**;
   intermediate commits may carry intra-phase forward-refs.
-- **Oak sync pin is a rebased branch, not a frozen SHA** (owner, 2026-06-20). castr
-  syncs from the local Oak checkout's `practice/castr-pin` branch — created off Oak
-  `main` and **rebased off `main` at controlled points** (see the rebase tripwire in
-  the [transplant tracker](../../plans/transplant/README.md)). The pin **may go
-  stale** — its only job is to control _when_ castr absorbs Oak's living Practice,
-  not to freeze it; a frozen SHA would eventually import stale doctrine. Currently
-  synced to `ad359a4f` (= Oak `main` HEAD, 2026-06-20). **Always read the pin via
-  `git -C <oak> show practice/castr-pin:<path>` — NEVER the Oak working tree** (it
-  may sit on an unrelated branch; that exact trap produced a false-absence error
-  2026-06-20). This is distinct from `no-moving-targets-in-permanent-docs` (which
-  governs castr's _own_ docs citing moving Oak _plans_) — a living upstream source
-  is correctly a controlled-moving target.
+- **Oak is read live from `main`, no pin** (owner, 2026-06-26 — supersedes the
+  2026-06-20 rebased-branch pin and every earlier frozen-SHA model). The
+  `practice/castr-pin` branch is **deleted**; controlled-sync points (frozen SHA,
+  then rebased branch) caused more issues than they solved. castr reads Oak's living
+  Practice directly from the local checkout's `main` at whatever it currently is.
+  **Always read via `git -C <oak> show main:<path>`** (deterministic; avoids the
+  dirty/other-branch working-tree trap that produced a false-absence error
+  2026-06-20). The owner keeps `<oak>` =
+  `/Users/jim/code/oak-open-curriculum-ecosystem` pulled current.
+  **Never anchor a live Oak SHA into castr's permanent docs as a baseline** —
+  reference Oak by path/concept and capture what was brought in castr's _own_
+  commits. This keeps `no-moving-targets-in-permanent-docs` satisfied: a living
+  upstream _source_ read on demand is not a cited moving target.
 - **Nothing is parked — named positions only**
   ([`no-manufactured-permission`](../../rules/no-manufactured-permission.md)); a
   deferral without a named position is drift.

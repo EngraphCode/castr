@@ -105,9 +105,10 @@ This block is current truth only. Branch/delivery state lives in
   (the earlier "collides with discriminated-union returns" claim was disproven) per
   [`../plans/transplant/d1-sonarjs-findings.md`](../plans/transplant/d1-sonarjs-findings.md) (suspect — re-derive); (b)
   **remediation 02** (IR-fidelity harness, in `active/`); (c) **transplant Phase 6** (Sub-agents / memory / state).
-- **Oak:** RE-PINNED to Oak `main` `ad359a4f` (owner, 2026-06-17) — a clean superset of the former pin `4470266`
-  (+429 commits, no merge cost); Phases 6–9 source from main. Back-flow target is now OPEN (deferred to Phase 9). The
-  pin→main bring-manifest with named positions is in `relevance-ledger.md` §Main re-pin delta.
+- **Oak:** read **LIVE from `main`, no pin** (owner, 2026-06-26 — supersedes the 2026-06-20 `practice/castr-pin`
+  rebased branch and the 2026-06-17 frozen `ad359a4f`; the pin branch is **deleted**, controlled-sync caused more
+  issues than it solved). Read via `git -C <oak> show main:<path>`. Back-flow target is OPEN (deferred to Phase 9).
+  The historical pin→main bring-manifest is in `relevance-ledger.md` §Main re-pin delta.
 
 ---
 
@@ -154,7 +155,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
   grounding folded into the start-right core; `jc-*`/`distillation`/`napkin`/`castr-start-right` retired; blocking
   `skills:check`); tag `transplant/phase-3`. Phase 2 = `@engraph/agent-tools` (340 files) + hook policy + LIVE
   PreToolUse guards + §6 `validate-drift`; tag `transplant/phase-2` (commit `55a6788`).
-  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak was held at `ad649710` through Phase 4, pinned at `4470266` for Phase 5, and is now RE-PINNED to `main` `ad359a4f` (owner, 2026-06-17) for Phases 6–9 — a clean superset of the pin (the `ad649710`→pin rules-delta was folded at Phase 5; the pin→main delta is the bring-manifest in `relevance-ledger.md`).**
+  Commits: see `git log --oneline transplant/phase-1..HEAD` — Phase 2 = `55a6788`; then handoff + diagnosis-correction commits. Oak advanced `2c85bc01`→`ad649710`; **Step 0 (2026-06-07) reviewed the whole estate (see the tracker); Oak was held at `ad649710` through Phase 4, pinned at `4470266` for Phase 5, and was RE-PINNED to `main` `ad359a4f` (owner, 2026-06-17) for Phases 6–9 — a clean superset of the pin (the `ad649710`→pin rules-delta was folded at Phase 5; the pin→main delta is the bring-manifest in `relevance-ledger.md`). **Oak is now read live from `main`, no pin (owner, 2026-06-26) — that whole pin timeline is history.\*\*
 - **LIVE NOW (operational):** Claude PreToolUse guards are wired (`.claude/settings.json`) — tool calls are guarded
   (dangerous-git + PDR-044 content fingerprints denied; unbuilt `dist` fails OPEN, never bricks). agent-tools `test` is
   INFORMATIONAL (`--filter=!@engraph/agent-tools`; **13**/885 failures are later-phase content — the RULES_INDEX slice
@@ -293,7 +294,7 @@ now resolve on disk), `ephemeral-to-permanent-homing.md` is in place, and the ge
 enforcement data is contract-tested (change data ↔ its tests together); directive-section cites in Oak surfaces are
 claims to verify against castr's actual headings (Phase 5 caught a false `§Code Quality` TDD cite → `§Testing
 Standards`); Oak-local plan citations in permanent docs violate `no-moving-targets` — de-link them; protection labels
-mean edit-with-rigour, never park-the-defect. **Oak baseline: RE-PINNED to Oak `main` `ad359a4f` (owner, 2026-06-17)** —
+mean edit-with-rigour, never park-the-defect. **Oak baseline: read live from `main`, no pin (owner, 2026-06-26; superseded the 2026-06-17 `ad359a4f` pin)** —
 a clean superset of the former pin `4470266` (`4470266` is a direct ancestor of main, +429 commits, no merge cost);
 Phases 6–9 source from main. The `ad649710`→pin rules-delta was folded at Phase 5; the pin→main delta is enumerated with
 named positions in `relevance-ledger.md` §Main re-pin delta.
@@ -350,7 +351,7 @@ maintains → a Phase-9 back-flow improvement; then flip portability/subagents g
   channels✅). This is **one deep enhancement**. **Owner re-order (2026-06-19): finish the FULL Practice transplant
   first** (Phases 7–9 + arc D2/D4 parity), **then** remediation backlog 02–07 (named position after, not parked —
   `no-manufactured-permission` holds), then the feature slice; "not in a rush to merge" (delivery deprioritised). All
-  still required; a fresh reproduced product regression still pre-empts the sequence. **Oak is RE-PINNED to `main` `ad359a4f`** (owner, 2026-06-17).
+  still required; a fresh reproduced product regression still pre-empts the sequence. **Oak is read live from `main`, no pin** (owner, 2026-06-26; superseded the 2026-06-17 `ad359a4f` pin).
   **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
   sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
   half-built expert system** castr's own `invoke-*` rules already required (3 dangling rules, one owner standing

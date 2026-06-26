@@ -191,31 +191,24 @@ directory shape. Measured split: memory-governing **rules** unchanged `ad649710`
 substrate-contract, `orientation`) byte-identical pin→main; the **skills** moved (`consolidate-docs`/`session-handoff`/
 `curator-pass`/`start-right`). See the sub-plan §2.
 
-**PIN MODEL CHANGED (2026-06-20, owner — supersedes the frozen-SHA model): the pin is a rebased BRANCH, not a frozen
-ref.** castr syncs from the local Oak checkout's `practice/castr-pin` branch (created off Oak `main`, currently at
-`ad359a4f` = Oak `main` HEAD). **The pin may go stale by design** — its only purpose is to control _when_ castr absorbs
-Oak's living Practice; a frozen SHA would eventually import a corpse (stale doctrine/processes), and "a moving target is
-a hell of a lot better than doing days of work to import stale doctrine." This supersedes the prior "fixed ref, not a
-moving target" framing — a living upstream source is correctly a controlled-moving target (distinct from
-`no-moving-targets-in-permanent-docs`, which governs castr's own docs citing moving Oak plans).
-
-### Pin rebase tripwire (run regularly — at minimum each session-open on this thread and at each phase boundary)
+**OAK READ MODEL CHANGED (2026-06-26, owner — supersedes the 2026-06-20 rebased-branch pin and every earlier
+frozen-SHA model): Oak is read LIVE from `main`, no pin.** The `practice/castr-pin` branch is **deleted** —
+controlled-sync points (frozen SHA, then rebased branch) caused more issues than they solved. castr reads Oak's living
+Practice directly from the local checkout's `main` at whatever it currently is. **Always read via
+`git -C "$OAK" show main:<path>`** (deterministic; avoids the dirty/other-branch working-tree trap that produced a
+false-absence error 2026-06-20, when the tree sat on the since-deleted `practice/transplant-to-castr` branch). The
+owner keeps `$OAK` = `/Users/jim/code/oak-open-curriculum-ecosystem` pulled current.
 
 ```bash
 OAK=/Users/jim/code/oak-open-curriculum-ecosystem
-git -C "$OAK" fetch origin main
-behind=$(git -C "$OAK" rev-list --count practice/castr-pin..origin/main)
-echo "pin is $behind commits behind Oak main"
-# When behind > 0 and it is a controlled moment to absorb upstream:
-git -C "$OAK" branch -f practice/castr-pin origin/main   # rebase the pin to current main
-# then re-assess the estate against the new pin (what upstream changed since last sync) and record the new synced SHA + date here.
+git -C "$OAK" show main:<path>          # read any Oak Practice file at current main
+git -C "$OAK" ls-tree -r main           # enumerate the live estate
 ```
 
-Record each rebase: `synced YYYY-MM-DD → <new-SHA> (was <old-SHA>, +N upstream commits absorbed)`. **Always read the pin
-via `git -C "$OAK" show practice/castr-pin:<path>`, never the Oak working tree** — on 2026-06-20 the working tree sat on
-an unrelated branch (`practice/transplant-to-castr`, since deleted) and a disk-based search produced a false-absence
-error. **Sync log:** `synced 2026-06-20 → ad359a4f (initial branch-pin off Oak main; supersedes the frozen ad359a4f).`
-The historical pin notes below are retained as the record of the 2026-06-10→2026-06-17 frozen baselines.
+**Never anchor a live Oak SHA into castr permanent docs as a baseline** — reference Oak by path/concept and capture
+what was brought in castr's _own_ commits (`no-moving-targets-in-permanent-docs`: a living upstream source read on
+demand is not a cited moving target). The historical pin notes below are retained as the record of the
+2026-06-10→2026-06-20 frozen/rebased baselines.
 
 **Baseline (2026-06-10, supersedes the `ad649710` hold): Oak is PINNED on a dedicated work branch** —
 `practice/transplant-to-castr` @ `4470266` (owner-created; no more moving target; castr may commit AND push there,
@@ -272,13 +265,13 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   resolved (Q-001: yes — D3 before the merge, split PRs); see [`delivery-ledger.md`](../../plans/delivery-ledger.md). **D3 is also a prerequisite for _safe_
   Phase-8 concurrency** (concurrent branches must be gate-enforced per branch) — the coupling is mapped in
   [`08-collaboration-active.md` §3](./08-collaboration-active.md).
-- **D4 — Quality-gate + further Practice/agent-tools parity.** "Plenty more" still to import from the pinned Oak
-  branch beyond Phases 5–9's named estates (additional rules, agent-tools capabilities, agentic-engineering and
-  quality-gate machinery). Enumerate against the pinned Oak branch at the Phase-9 verification sweep; until then this
+- **D4 — Quality-gate + further Practice/agent-tools parity.** "Plenty more" still to import from Oak's live
+  `main` beyond Phases 5–9's named estates (additional rules, agent-tools capabilities, agentic-engineering and
+  quality-gate machinery). Enumerate against Oak `main` at the Phase-9 verification sweep; until then this
   is the named placeholder so the arc's incompleteness is explicit, not forgotten. **Elevated by the owner's
   2026-06-19 "bring over the FULL Practice" steer:** "transplant finished" is only honest after a **measured gap-scan
-  against Oak `ad359a4f`** (`git -C /Users/jim/code/oak-open-curriculum-ecosystem ls-tree -r ad359a4f` — the pin is
-  locally inspectable) — what surfaces/rules/agent-tools/protocols exist on the pin but not yet on the branch. Tagging
+  against Oak `main`** (`git -C /Users/jim/code/oak-open-curriculum-ecosystem ls-tree -r main` — read live) — what
+  surfaces/rules/agent-tools/protocols exist on Oak main but not yet on the branch. Tagging
   Phase 9 without that scan would be a green-but-incomplete claim (the Phase-1b skipped-gate failure mode).
 
 **Completion of the deep enhancement requires the arc AND Phases 0–9 — D1 (every in-flight lint rule back at `error`)

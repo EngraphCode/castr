@@ -4,7 +4,7 @@
 **Tracker:** [`./README.md`](./README.md) · **Tag on completion:** `transplant/phase-7`
 **Status:** ✅ COMPLETE 2026-06-20 — native generator built (TDD), all adapters generated, `portability`+`subagents`
 gates flipped blocking-green, bespoke script retired, full `pnpm check:ci` green. Tag: `transplant/phase-7`.
-**Oak baseline:** pinned `main` `ad359a4f` (fixed ref for Phases 6–9)
+**Oak baseline:** Phase 7 read its estate at Oak `main` `ad359a4f` (2026-06-20, historical). Oak is now read live from `main`, no pin (owner, 2026-06-26) — the Phase-9 sweep re-scans against current `main`.
 
 > **Owner steer (2026-06-19):** _"Not in a rush to merge; bring over the FULL Practice — the Practice, agent tools,
 > agentic frameworks, processes and protocols. Leave the remediation and focus on finishing the transplant."_

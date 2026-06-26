@@ -295,8 +295,9 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 - Delivery: D3 before merge + split reviewable PRs (owner, Q-001). Delivery
   deprioritised ("not in a rush to merge") — commits land locally, push at the
   owner's call.
-- Oak sync pin is the rebased branch `practice/castr-pin` (off Oak `main`, rebased
-  at controlled points; may go stale by design), not a frozen SHA — owner, 2026-06-20.
-  Currently synced to `ad359a4f` (= Oak `main` HEAD). Read the pin via
-  `git -C <oak> show practice/castr-pin:<path>`, never the Oak working tree. Full
-  doctrine: `repo-continuity.md §Repo-Wide Invariants`.
+- Oak is read **live from `main`, no pin** — owner, 2026-06-26 (supersedes the
+  2026-06-20 `practice/castr-pin` rebased-branch model; the branch is **deleted** —
+  controlled-sync points caused more issues than they solved). Read via
+  `git -C <oak> show main:<path>`, never the working tree; never anchor a live Oak
+  SHA into castr permanent docs. Full doctrine: `repo-continuity.md
+§Repo-Wide Invariants`.

@@ -88,9 +88,10 @@ incomplete.
 
 ## End goal / mechanism / means / non-goals
 
-- **End goal:** every castr agentic subsystem is at least as sophisticated and powerful as Oak's at
-  pin `ad359a4f`, with castr's deliberate localisations preserved. castr is a peer agentic platform,
-  not a simplified fork.
+- **End goal:** every castr agentic subsystem is at least as sophisticated and powerful as Oak's on live
+  `main`, with castr's deliberate localisations preserved. castr is a peer agentic platform,
+  not a simplified fork. (The verified gap map below was audited at Oak `ad359a4f` on 2026-06-20; re-scan
+  against live `main` at the Phase-9 sweep — see §Program acceptance.)
 - **Mechanism:** a firsthand Oak↔castr gap audit (done) classifies each difference as
   **deliberate-localisation** (preserve) or **unbuilt-capability gap** (upgrade). Each gap upgrades
   to Oak's capability with TDD where it is code, gated green, reviewed, and committed roll-forward.
@@ -105,8 +106,9 @@ incomplete.
 
 ## Method + classification
 
-- Read the Oak pin via `git -C /Users/jim/code/oak-open-curriculum-ecosystem show practice/castr-pin:<path>`
-  (ref `ad359a4f`), NEVER the Oak working tree.
+- Read Oak live via `git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>`, NEVER the Oak
+  working tree (Oak read model changed 2026-06-26 — live `main`, pin deleted; see the tracker README +
+  repo-continuity invariants).
 - Each difference is classified **deliberate localisation** (preserve) vs **unbuilt-capability gap** (upgrade).
 - The 2026-06-20 audit fanned out 5 read-only subagents; **all load-bearing claims were re-verified
   firsthand** (per `verify-agent-claims-firsthand`). Three agent errors were caught + corrected
@@ -226,7 +228,7 @@ future audit does not re-flag:**
   tokens neutralised per castr convention. Proof = `format:check` + `repo-validators:check` green + a reverse-closure
   ref sweep clean.
 - **Program acceptance:** every ledger row is `applied` or has a recorded non-gap/deferral decision; a re-run gap
-  audit against `ad359a4f` surfaces no new unbuilt-capability gap; `transplant/phase-9` cut green.
+  audit against Oak live `main` surfaces no new unbuilt-capability gap; `transplant/phase-9` cut green.
 
 ## Risk assessment
 

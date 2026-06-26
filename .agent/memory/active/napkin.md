@@ -2,6 +2,34 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-26 (Oak read model: pin → live `main` — Coppery Warming Magma / 48b4a5)
+
+Owner directive: **stop working off fixed points in Oak history; read Oak live from `main`.** "Causing more
+issues than it is solving." This supersedes the entire pin lineage — frozen `ad649710`/`4470266`, the
+2026-06-17 frozen `ad359a4f`, and the 2026-06-20 rebased-branch `practice/castr-pin` model (the [[2026-06-20
+pin-model reframe entry below]] is now itself history).
+
+- **What changed, mechanically:** deleted `practice/castr-pin` in the Oak checkout (`git branch -d`, safe — it
+  sat at `ad359a4f` which is an ancestor of Oak `main` `57075093`, so zero commits lost). Going forward read via
+  `git -C <oak> show main:<path>` (owner-chosen over reading the working tree — deterministic, avoids the
+  2026-06-20 dirty/other-branch false-absence trap). Owner keeps `<oak>` pulled current.
+- **The guardrail that SURVIVES the change:** never anchor a live Oak SHA into castr's _permanent_ docs as a
+  baseline. Reference Oak by path/concept; capture what was brought in castr's own commits. That keeps
+  `no-moving-targets-in-permanent-docs` satisfied — a living upstream _source_ read on demand is not a cited
+  moving target (the same distinction the old pin invariant drew; only the sync mechanism changed).
+- **Forward-vs-history edit discipline applied (the load-bearing judgement call):** flipped only FORWARD
+  read-instructions + standing doctrine (repo-continuity invariant, thread-record standing decision, transplant
+  README pin-model + Phase-9 enumeration, oak-parity-program end-goal/read/acceptance, 07 baseline header,
+  session-continuation Oak bullet + 3 present-tense "is RE-PINNED" assertions). PRESERVED as history: provenance
+  notes ("template brought from pin `ad359a4f`"), completed-phase records (reference-closure, 06/08,
+  relevance-ledger), archived napkin, the dated 2026-06-20 team prompt, and the immutable gitignored `comms/*.json`.
+  Rewriting those would be tombstoning true history — the gap-map WAS audited at `ad359a4f`; that fact stays, the
+  re-scan just moves to live `main`.
+- **Open question surfaced by the owner (not yet resolved):** the prior next-session opener targeted DC3 (prettier
+  emission-formatter bump) — DC3 is Oak-pin-INDEPENDENT (pure castr dependency bump) so it remains technically
+  valid, but the session has pivoted; the new Oak `reason` skill is a candidate parity-or-better bring. Owner to
+  steer priority. See [[castr-parity-or-better-with-oak]].
+
 ## 2026-06-21 (dependency-currency — DC2 @scalar IR-input trio + Q-006/ADR-049 — Soaring Lifting Current / f7e30d)
 
 Executed DC2 (@scalar trio, the IR-input vendor) + the Q-006 @types/node decision (ADR-049) + the stale-tsconfig
