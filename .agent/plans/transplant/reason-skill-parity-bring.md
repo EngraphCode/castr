@@ -31,7 +31,14 @@ todos:
       the measured Oak-adapter tokens only: oak-reason->reason, oak-metacognition->
       metacognition, oak-plan->plan. Eyeball-review the full 1432-line reference for
       any stray Oak-product example the token scan missed.
-    status: pending
+    status: done # 2026-06-26 (Stratospheric Kiting Breeze, c56a0f): grammar-of-thinking.md (1432 lines)
+      + reason/SKILL-CANONICAL.md brought verbatim then localised (oak-reason->reason, oak-metacognition->
+      metacognition, oak-plan->plan); diff-vs-Oak confirms only the intended token lines changed; zero residual
+      oak- tokens; zero outbound cites in the reference (firsthand); full eyeball review clean (line-374 teacher
+      example is one of 4 generic problem-framing illustrations, kept faithful). metacognition back-link added ->
+      now byte-identical to Oak. citation-as-reasoning pattern: ALREADY PRESENT (phase-6 795d935), correctly
+      localised (proven_in: imported + use_this_when field) -- NO action; the "BRING micro-slice" disposition
+      was stale. Both its cites resolve.
     depends_on: []
   - id: R2
     content: >-
@@ -41,7 +48,13 @@ todos:
       skills:check, portability:check, format:check, repo-validators:check (drift +
       reference-closure + subagents). Confirm the skill is DISCOVERABLE/firing (the
       acceptance is "invocable and surfaced", not "file exists"). One commit.
-    status: pending
+    status: done # 2026-06-26 (Stratospheric Kiting Breeze, c56a0f): adapters generated (.claude/.agents
+      engraph-reason). NB the plan's `--filter @engraph/agent-tools skills-adapter-generate` invocation resolves
+      cwd to the workspace and ENOENTs on .agent/skills; the working form is from-root via the built js:
+      `pnpm --filter @engraph/agent-tools -s build && node agent-tools/dist/src/bin/skills-adapter-generate.js
+      --prefix=engraph-`. Discoverability CONFIRMED (the harness now lists engraph-reason). portability:check
+      required one wiring line -- Skill(engraph-reason) in .claude/settings.json permissions.allow (owner-approved
+      past the self-modification guard). Gates green: skills/format/portability(19 skills)/repo-validators.
     depends_on: [R1]
 ---
 
@@ -100,12 +113,12 @@ castr's decision-records; `ADR-172` (metacognition's cite) already resolves
 
 ## Disposition ledger — the rest of Oak's `reason` estate (nothing silently dropped)
 
-| Oak surface                                                                   | Decision                    | Reason                                                                                                                                                                                                               |
-| ----------------------------------------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/.../191-deterministic-data-surface-agent-reasons.md` (ADR-191)          | **DON'T-BRING**             | Read firsthand: Oak _product_ architecture ("the Agent Is the Only Reasoner" — MCP server / teacher-product boundary, relates ADR-194/107/123). The `reason` skill does not cite it. Out of the capability's scope.  |
-| `.agent/memory/operational/threads/reasoning-grammar.next-session.md`         | **DON'T-BRING**             | Oak-instance thread/continuity state, not the portable capability.                                                                                                                                                   |
-| `.agent/experience/2026-05-21-reasoning-hygiene-correction-mid-verdict.md`    | **DON'T-BRING**             | Oak-instance experience record (a specific dated session correction) — instance history, not a portable capability. Same class as Oak comms/thread state.                                                            |
-| `.agent/memory/active/patterns/citation-as-reasoning-at-moment-of-verdict.md` | **BRING** (own micro-slice) | A portable Practice _pattern_ → bring-by-default (owner 2026-06-26). Not a hard dependency of the reason skill (not referenced by it), so its own small slice rather than blocking R1; localise + reference-closure. |
+| Oak surface                                                                   | Decision                        | Reason                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/.../191-deterministic-data-surface-agent-reasons.md` (ADR-191)          | **DON'T-BRING**                 | Read firsthand: Oak _product_ architecture ("the Agent Is the Only Reasoner" — MCP server / teacher-product boundary, relates ADR-194/107/123). The `reason` skill does not cite it. Out of the capability's scope.                                                                                                                                                                                                                                                                                                           |
+| `.agent/memory/operational/threads/reasoning-grammar.next-session.md`         | **DON'T-BRING**                 | Oak-instance thread/continuity state, not the portable capability.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `.agent/experience/2026-05-21-reasoning-hygiene-correction-mid-verdict.md`    | **DON'T-BRING**                 | Oak-instance experience record (a specific dated session correction) — instance history, not a portable capability. Same class as Oak comms/thread state.                                                                                                                                                                                                                                                                                                                                                                     |
+| `.agent/memory/active/patterns/citation-as-reasoning-at-moment-of-verdict.md` | **ALREADY PRESENT** (no action) | Found in castr since the phase-6 patterns import (`795d935`), correctly localised (`proven_in: imported` — castr must not claim Oak's 2026-05-21 session as its own history — plus a castr-convention `use_this_when` field). The 2026-06-26 "BRING micro-slice" disposition was **stale** (it overlooked the phase-6 import); overwriting with Oak's raw copy would have regressed the localisation. Both its cites (`no-hedging-vocabulary` rule, `breadth-as-evasion` pattern) resolve. Verified firsthand by diff-vs-Oak. |
 
 ## Acceptance criteria
 
