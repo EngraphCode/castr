@@ -71,7 +71,9 @@ agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-` (the gene
   (markdown-links, TC3), skill-activation wiring (portability), `pnpm <script>` command refs (the TC4
   command-resolution check, possibly a new validator). Routes to: the completeness plan's **TC3b** gate
   end-state decision + **TC4** command-resolution scope (enrich, don't author standalone). Not an ADR/PDR on
-  its own yet — a sharpening of an active plan. Captured here additively; Moth's dedicated pass owns promotion.
+  its own yet — a sharpening of an active plan. **PROMOTED 2026-06-26 (Moth's dedicated pass):** the host detail
+  landed in the completeness plan's §Catch-validator gap (TC3b/TC4 routing), and the portable kernel
+  (catch-is-plural, union of detectors by reference kind) sharpened PDR-096 §Decision part 3. Disposition complete.
 
 ## 2026-06-26 (transplant completeness + bring-by-default — Coppery Warming Magma / 48b4a5)
 

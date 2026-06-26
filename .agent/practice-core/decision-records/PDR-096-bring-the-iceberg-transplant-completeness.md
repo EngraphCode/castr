@@ -83,11 +83,15 @@ The pattern has four load-bearing parts:
    when the transitive closure of references resolves.
 
 3. **The structural catch is a validator that fails on a dangling
-   reference — and it is often itself un-transplanted.** The detector
-   for a class of defect is part of what a hollow transplant drops,
-   which is _why_ the defect class slips through. When a class of defect
-   "slips through" a transplant, check whether the detector for that
-   class was itself dropped, and bring it.
+   reference — often plural, and often itself un-transplanted.** The
+   detector for a class of defect is part of what a hollow transplant
+   drops, which is _why_ the defect class slips through; when a defect
+   class "slips through", check whether its detector was itself dropped,
+   and bring it. The catch is frequently a **union of detectors by
+   reference _kind_** rather than one validator — path/link references,
+   activation/permission wiring, and command references are each
+   invisible to the others' detectors, so a complete-transplant gate is
+   their union, not a single check.
 
 4. **Generalisation: a capability is only as good as the supporting
    context it carries.** The same shape recurs beyond transplant — a

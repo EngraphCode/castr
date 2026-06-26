@@ -149,6 +149,17 @@ path/link references and would have failed the gate on the templates gap. This i
 crux finding: **the validating infrastructure that catches hollow transplants is part of
 the iceberg that was left behind, which is precisely why the gaps went undetected.** → TC3.
 
+**The structural catch is PLURAL, not a single validator** (firsthand, reason-skill bring,
+2026-06-26): a complete-transplant gate is the **union of detectors by reference _kind_**,
+because each kind is invisible to the others' detectors. Path/link refs → `markdown-links`
+(TC3); skill-activation wiring (e.g. a `.claude/settings.json` `Skill(<name>)` permission
+entry, which markdown-links cannot see) → `portability:check`; `pnpm <script>` command refs →
+the TC4 command-resolution check (the `validate-no-stale-script-invocations` family, possibly
+extended). TC3b's gate-end-state decision and TC4's command-resolution scope should treat the
+catch as this union — **enrich the existing detectors, do not author a standalone "completeness
+validator."** Portable kernel graduated to [PDR-096](../../practice-core/decision-records/PDR-096-bring-the-iceberg-transplant-completeness.md)
+§Decision part 3.
+
 ## Acceptance criteria
 
 - **TC1:** all 10 restored proxies resolve — `pnpm agent-tools:check-commit-message`,
