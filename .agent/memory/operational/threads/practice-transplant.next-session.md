@@ -32,6 +32,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor     | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor     | 2026-06-26    | 2026-06-26   |
 
 ## Lanes
 
@@ -79,7 +80,48 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   neutralised; `codex-helper` §timeouts ref reconciled to castr's real heading (§Timeout and Long-Running Tasks).
 - **Sequencing:** Tranche 1 ✅ (C1/C2 → C6 → C4/C5/C7/C8) → Tranche 2 ✅ (A2+A3 hook-policy unit, TDD) →
   Tranche 3 (A4 statusline → A1 ArcAngel) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
+  **2026-06-26 INSERTION (owner-directed, ahead of dependency-currency + Tranche 3):** the Oak read-model flip
+  (live main, no pin) + two sub-programs — **transplant completeness** (TC1✅/TC3a✅, see its lane below) and
+  **reason-skill bring** (lane below). The earlier "Next session = dependency-currency" framing is superseded as
+  the active slice; **DC3 remains the dependency-currency lane's own untouched next position**, not dropped.
 - **Acceptance:** every ledger row applied-or-decided; gap re-audit clean; then the P9 closure gate.
+
+### Lane: transplant completeness — bring the iceberg (ACTIVE, started 2026-06-26, Coppery Warming Magma / 48b4a5)
+
+- Controlling plan: [`../../../plans/transplant/transplant-completeness-supporting-infrastructure.md`](../../../plans/transplant/transplant-completeness-supporting-infrastructure.md).
+  Thesis: a transplanted capability is complete only when its supporting infrastructure (script proxies,
+  template libraries, catch-validators) resolves; cure a hollow transplant by BRINGING the missing infra,
+  never by patching the doc to hide the gap. Forward exemplar = the reason-skill lane below.
+- **Origin:** the commit skill's advisory pre-screen + the plan skill's templates dir were dead (referenced
+  un-transplanted infra). Owner reframed "doc-drift" → **incomplete transplants**; governing rule
+  **bring-by-default** (see Standing decisions). Census driver mechanised so the rest is found, not lucked into.
+- **TC1 ✅ (`4283520`):** restored 15 dropped root proxies (10 `agent-tools:*` + 5 `practice:*`). Un-hollowed
+  the commit skill; **iceberg RECURSES** — the orchestrator's own sub-infra was also dropped (transitive
+  enumeration lesson, napkin).
+- **TC3a ✅ (`e2e67cc`):** ported `validate-markdown-links` (4 files verbatim, 34 tests green), **STANDALONE**
+  — NOT chain-wired (castr's chain is uniformly blocking; config-expert Option B, firsthand-confirmed). Census
+  = **225 broken / 642 scanned** (reconciled), artifact `dangling-reference-census.md` = the TC2/TC4 input;
+  catches the known templates + ADR-117 gaps. Scope refined by assumptions-expert + config-expert (every claim
+  re-verified firsthand): split markdown-links from reference-direction; TC3b reframed.
+- **Next safe steps (priority order):** **TC2** (bring the 21-file plan-templates library — census confirms
+  why) → **TC1b** (bring `pr-watch` + `install-cursor-statusline` capabilities, bring-by-default) → **TC4**
+  (disposition the **transplant-origin** census subset; pre-existing castr debt is out of scope) → **TC3b**
+  (markdown-links gate end-state DECISION — Oak-parity report-only / scoped-blocking / standalone; census-
+  informed, owner-facing — NOT a foregone blocking wire). **Split-out (NOT started):** `validate-reference-
+direction` + `validate-machine-local-paths` validators, each its own bring-by-default plan.
+- **Acceptance:** every transplant-origin reference resolves; the structural catch (TC3b) decided.
+
+### Lane: reason-skill parity bring — complete the thinking-discipline pair (active-next, owner-flagged 2026-06-26)
+
+- Controlling plan: [`../../../plans/transplant/reason-skill-parity-bring.md`](../../../plans/transplant/reason-skill-parity-bring.md).
+  castr has `metacognition` (inward) but not its outward pair `reason` nor the 1432-line
+  `grammar-of-thinking.md` reference — a Tier-A capability gap. Footprint MEASURED: deps resolve (PDR-029/035
+  present), localisation mechanical (4 `oak-` naming tokens), grammar-of-thinking has zero outbound cites.
+- **Next safe step:** **R1** (bring reason skill + grammar-of-thinking + the 2-line metacognition back-link,
+  localise) → **R2** (generate `engraph-` adapters + gates green + confirm the skill FIRES, not just present).
+  The `citation-as-reasoning` pattern is a sibling bring (bring-by-default); ADR-191 + the experience file are
+  DON'T-BRING.
+- **Acceptance:** the reason skill is invocable and **fires** (the napkin `passive-guidance-loses-to-artefact-gravity` bar).
 
 ### Lane: transplant Phase 9 — GATED by the parity program (was: deferred)
 

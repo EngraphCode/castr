@@ -84,3 +84,26 @@ commit and the permanent doc are the record (no tombstone; see
   the 2026-06-21 four-lenses decision-pass (Q-006 + the currency-PDR home/timing dissolved; only the Node-support
   stance + Oak-governance survived).
 - `[captured: 2026-06-21 | source: owner four-lenses decision-pass (Soaring Lifting Current / f7e30d)]`
+- **INSTANCE 2 FIRED (2026-06-26, Coppery Warming Magma / 48b4a5):** I manufactured an "OWNER DISPOSITION"
+  gate for `pr-watch`/`install-cursor-statusline` instead of classifying them BRING; owner corrected with the
+  bring-by-default directive (long-term + parity lens dissolves it to "bring"). Trigger condition met — this
+  candidate is now **due** (second independent instance; owner may also graduate directly). Same family as the
+  transplant-completeness candidate below (both are "acting on incomplete context").
+
+## transplant-completeness — bring the iceberg → PDR pattern (candidate)
+
+- **Substance:** a transplanted capability is complete only when its supporting infrastructure (script proxies,
+  template libraries, catch-validators) resolves. An "incomplete transplant" presents as doc-drift, but the cure
+  is the OPPOSITE of a doc-patch: **bring the missing infrastructure** so the reference resolves — patching the
+  doc deletes the reference and hides the gap. The structural enforcement is a validator that fails the gate on a
+  dangling reference; the iceberg must be enumerated TRANSITIVELY (a restored proxy can call further-dropped
+  infra). Generalises to: **a capability is only as good as the supporting context it carries** (the session
+  through-line — the same shape recurred at the Oak pin, the hollow skills, the recursive proxies, and twice in
+  my own reasoning). Owner-named 2026-06-26.
+- **Candidate home:** a Practice-governance PDR with `pdr_kind: pattern` (portable — every Practice-bearing repo
+  that hydrates from another faces this). Currently lives in `transplant-completeness-supporting-infrastructure.md`,
+  the `oak-backflow/castr-innovations-ledger.md` insights table, the thread standing decision, and the napkin.
+- **Trigger:** graduate after the transplant-completeness program lands a second sub-program cleanly (proving the
+  pattern generalises beyond the first instance), OR owner-graduate now (owner named the principle). Instance 1:
+  the commit/plan-skill hollow-transplant gaps + the recursive proxy iceberg (2026-06-26, this session).
+- `[captured: 2026-06-26 | source: transplant-completeness program (Coppery Warming Magma / 48b4a5)]`
