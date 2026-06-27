@@ -98,6 +98,28 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-27, Stratospheric Kiting Breeze / c56a0f): a firsthand by-loop audit of the Practice
+> found a real, under-counted enforcement-layer gap; the [loop-closure remediation plan](../../plans/transplant/practice-loop-closure-remediation.md)
+> is a NEW ACTIVE lane and the recommended next-priority.** Owner challenged "have you brought the claims
+> mechanism over / how much has been written off." Firsthand by-loop audit (5 read-only subagents, all
+> load-bearing claims re-verified) found the Practice has real teeth (skill-adapter/reviewer/hook-policy loops
+> CLOSED; 9 wired validators) BUT three failure classes: **(A) genuinely missing enforcement Oak has** — F-95
+> coordination gate (`claims open` is ungated → coordination is honor-system), `semantic-merge` executor (absent
+> though PDR-049/050 + 9 `merge_class` files demand it → memory-corruption risk), machine-local-paths validator,
+> watcher deadline, fitness staleness axes; **(B) doctrine-vs-reality FALSE claims** (verified firsthand: the
+> commit skill's pre-commit/commit-msg enforcement model is fictional — pre-commit is prettier-only, commitlint +
+> version-guard run nowhere; type-enum/no-type-shortcuts/markdownlint refs all wrong); **(C) deliberate/planned**
+> (not gaps). **ROOT: completeness was measured by artefact-presence, never loop-closure — the audit METHOD was the
+> bug** (it under-counted the same layer twice → parity **C4 + reference-closure Task-6 RE-OPENED**). Cure: plan
+> **LC0** = a loop-closure meta-validator (recur-proof, first), then LC1–LC5. Plan ONLY landed this session
+> (`a22ec2c`, no code) + the loop-closure insight conserved in `distilled.md`. **All session work is committed +
+> pushed; origin is in sync after the closeout push** (Moth's 6 consolidation commits + my `a22ec2c` loop-closure
+> plan + `acd98ef` prompt edit + this closeout). **Owner
+> names the next slice** — recommended: loop-closure LC0→LC2 (coordination-safety + memory-integrity outrank the
+> earlier TC2/DC3 framing); TC2 (templates), DC3 (prettier), and the parity Tranche-3 (A4→A1) remain valid
+> positions. The 2026-06-26 line below is SUPERSEDED on "active-next" by this block but keeps its reason-skill +
+> consolidation detail.
+
 > **CURRENT TRUTH (2026-06-26, Stratospheric Kiting Breeze / c56a0f): the reason-skill bring is ✅ DONE; the
 > active-next positions are TC2 and DC3.** The **reason-skill parity bring lane is COMPLETE** (`4f0bfe3`,
 > `feat(transplant)`): the outward `reason` skill + 1432-line `grammar-of-thinking.md` brought from Oak live

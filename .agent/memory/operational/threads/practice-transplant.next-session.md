@@ -33,7 +33,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor     | 2026-06-21    | 2026-06-21   |
 | claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor     | 2026-06-26    | 2026-06-26   |
-| claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-26   |
+| claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-27   |
 | claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
 
 ## Lanes
@@ -112,6 +112,27 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   conditioned on the archive-exclusion false-positive fix + TC4 surface-set; was Q-007). **Split-out (NOT started):**
   `validate-reference-direction` + `validate-machine-local-paths` validators, each its own bring-by-default plan.
 - **Acceptance:** every transplant-origin reference resolves; the structural catch (TC3b) decided.
+
+### Lane: Practice loop-closure remediation — ACTIVE (plan authored 2026-06-27, Stratospheric Kiting Breeze / c56a0f, `a22ec2c`)
+
+- Controlling plan: [`../../../plans/transplant/practice-loop-closure-remediation.md`](../../../plans/transplant/practice-loop-closure-remediation.md)
+  (LC0–LC5 + LC-reopen). **Extends PDR-096** with loop-closure-as-completeness-test + the Class-B (doctrine-vs-reality
+  false-claim) failure mode. Insight conserved in `distilled.md`.
+- **Origin:** owner challenged whether Oak's claims mechanism was actually brought / how much was written off. A
+  firsthand by-loop audit (5 read-only subagents; every load-bearing claim re-verified) found the Practice has real
+  teeth (skill-adapter/reviewer/hook-policy loops CLOSED; 9 wired validators) BUT three failure classes — (A) genuinely
+  missing enforcement Oak has (F-95 coordination gate → `claims open` ungated; `semantic-merge` executor → memory
+  corruption risk; machine-local-paths validator; watcher deadline; fitness axes), (B) doctrine-vs-reality FALSE
+  claims (the commit skill's pre-commit/commit-msg model is fictional; type-enum/no-type-shortcuts/markdownlint refs
+  wrong), (C) deliberate/planned (not gaps). **ROOT: completeness measured by artefact-presence, not loop-closure —
+  the audit METHOD was the bug** (under-counted the coordination-safety layer twice → **parity C4 + reference-closure
+  Task-6 RE-OPENED**, both re-pointed to this plan).
+- **Next safe step (recommended next-priority):** **LC0** (loop-closure meta-validator — recur-proof structural cure,
+  TDD) → **LC1** (F-95 gate) + **LC2** (semantic-merge executor) in parallel → **LC3** (machine-local-paths validator,
+  PDR-063 handoff/adopt, watcher deadline, fitness axes) → **LC4** (Class-B doc-vs-reality, gated by LC0) → **LC5**
+  (owner-facing: Claude-only-enforcement scope). **Plan ONLY landed this session — no code yet** (owner-directed).
+- **Acceptance:** every loop CLOSES (D→M→W→S verified firsthand); LC0 catches the class going forward; C4/Task-6
+  corrected; graduate the loop-closure completeness test as a PDR-096 amendment on completion.
 
 ### Lane: reason-skill parity bring — ✅ COMPLETE (2026-06-26, Stratospheric Kiting Breeze / c56a0f, `4f0bfe3`)
 
