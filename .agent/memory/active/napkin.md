@@ -56,6 +56,26 @@ Landed LC0 (`0c859bd`, full `pnpm qg` green). Durable discoveries:
   path. Per bidirectional-sharpening: record as a parity-or-better slice + back-flow note, don't silently diverge in
   the bring. A castr-ONLY defect (e.g. the env-var phenotype, the doc landmine) gets fixed in-place.
 
+### LC2 (semantic-merge) — Hidden Veiling Mirror
+
+- **"Passive skill that can't fire" is a real loop-closure shape — and the cure is a TRIPWIRE, not an auto-merger.**
+  LC2's semantic-merge can't be automated (a concept-merge of prose is agent-work; git can't, nor can a script). The
+  loop-closer is a `.gitattributes` refuse-and-route merge driver that exits non-zero + routes to the skill — it turns
+  a SILENT corruption (git's default line-merge of memory files) into a LOUD halt. When a mechanism inherently needs a
+  human/agent, "fires" = "halts loud + routes", not "does it automatically".
+- **A git merge-driver answers "uncommittable per-checkout config makes the loop not fire on a fresh clone".**
+  `.gitattributes` (committed) names the driver; the registration (`git config --local merge.X.driver`) is per-checkout
+  → register it in the existing `postinstall` bootstrap (idempotent, guarded for non-git envs). A fresh un-installed
+  clone falls back to git's default merge, so the skill's human discipline stays the backstop — documented honestly,
+  not pretended-always-armed.
+- **Prove a git-driver loop closes with a REAL `git merge` in a throwaway repo, not just a bin smoke-test.** Verified
+  the driver FIRES end-to-end (conflict on `.agent/memory/**/*.md` → driver ran → routed → file unmerged) + `git
+check-attr`/`git config --get` for live wiring. Test-the-real-path-at-the-real-layer.
+- **The self-modification guard correctly halted my `.claude/settings.json` permission edit — that is the guard
+  working.** It can't see chat authorization; surface the one-line change + let the owner clear it (they did via
+  "carry on"). The portability gate REQUIRED the entry, so it was a genuine owner-gated step — don't work around a
+  self-mod guard.
+
 ## 2026-06-26 (consolidation rotation — Eclipsed Lurking Moth / 1dfcd1)
 
 Dedicated knowledge-curation pass. Rotated the 2026-06-20 → 2026-06-21 windows to

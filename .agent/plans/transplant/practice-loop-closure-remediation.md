@@ -95,8 +95,24 @@ todos:
       `.agent/skills/semantic-merge/`, localise, generate `engraph-` adapter, and surface it
       at conflict-time (consider a `.gitattributes` merge-driver pointer so it FIRES, not just
       exists — the passive-guidance-loses bar). Skill+adapter bring.
-    status: pending
+    status: completed
     depends_on: []
+    as_built: >-
+      DONE (Hidden Veiling Mirror, 2026-06-27, stage-1 `7351b88` + stage-2 `c3484da`).
+      FRAMING CORRECTED firsthand: there is NO Oak "executor" — Oak's semantic-merge is a single
+      PASSIVE `SKILL-CANONICAL.md` ("git cannot do it; you must"), no merge-driver, no code. So
+      LC2 = a skill bring + a castr-ORIGINAL firing tripwire (parity-or-better; owner-approved
+      stage-1+2). STAGE-1: brought the skill, taxonomy RECONCILED to castr's real MERGE_CLASSES
+      tokens (Oak's curated-learning-register/active-register-shard/curation-ledger/index-narrative
+      would fail the substrate validator as invalid); engraph-semantic-merge adapter pair generated
+      + Skill permission registered (owner cleared the self-modification guard); discoverable.
+      STAGE-2: a refuse-and-route git merge driver (`agent-tools/src/semantic-merge/` + bin) that
+      exits non-zero + routes to the skill on a conflict (does NOT line-merge — nothing can
+      auto-merge prose meaning); `.gitattributes` maps `.agent/memory/**/*.md`; the postinstall
+      bootstrap registers `merge.engraph-semantic-merge.driver` per-checkout (config is not
+      committable). LOOP CLOSURE PROVEN by a real `git merge` in a throwaway repo (driver fired,
+      routed, left file unmerged). Pure helper unit-tested; full `pnpm qg` green. Fresh un-installed
+      clone falls back to git's default merge → the skill's human discipline is the backstop.
   - id: LC3
     content: >-
       Class-A — remaining missing enforcement, each its own slice: (a) machine-local-paths

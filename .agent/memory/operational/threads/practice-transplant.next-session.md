@@ -35,6 +35,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor     | 2026-06-26    | 2026-06-26   |
 | claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-27   |
 | claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
+| claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor     | 2026-06-27    | 2026-06-27   |
 
 ## Lanes
 
@@ -144,14 +145,17 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   PASSIVE `SKILL-CANONICAL.md` doc ("git cannot do it; you must"); no merge-driver, no executor. So LC2 = a SKILL bring
   (stage 1, ready) + a castr-original conflict-time firing tripwire (stage 2, owner-gated). See plan LC2 + the
   understand-workflow synthesis.
-- **Next safe step:** **LC2 stage-1** (bring the semantic-merge skill + `engraph-semantic-merge` adapter pair + bare
-  settings entry, class-table RECONCILED to castr's 7-value merge_class enum — a verbatim Oak table names classes castr
-  rejects as invalid; low-risk, lands but does NOT close the loop) → **LC2 stage-2** (owner-gated: `.gitattributes`
-  refuse-and-route merge-driver + per-checkout bootstrap; needs the owner decision on the uncommittable-bootstrap
-  mechanism + whether this session's near-collision satisfies PDR-049's promotion trigger) → **LC3** (machine-local-paths
-  validator, PDR-063 handoff/adopt, **watcher step-deadline** [the C3 item, in the same cli-comms-watch Oak file LC1
-  drew from], fitness axes) → **LC4** (Class-B, protected by LC0's gate) → **LC5** (Claude-only-enforcement + the
-  CI-doesn't-run-qg finding).
+- **LC2 ✅ DONE (2026-06-27, Hidden Veiling Mirror, stage-1 `7351b88` + stage-2 `c3484da`).** Skill brought
+  (taxonomy reconciled to castr's MERGE_CLASSES) + engraph-semantic-merge adapter + Skill permission (owner cleared
+  the self-mod guard); stage-2 refuse-and-route git merge driver + `.gitattributes` (`.agent/memory/**/*.md`) +
+  postinstall registration. **Loop closure proven by a real `git merge`** (driver fired, routed, left file unmerged).
+  Parity-or-better (Oak ships only the passive skill). Full `pnpm qg` green. As-built: plan § LC2 as_built.
+- **Next safe step:** **LC3** (machine-local-paths validator + wire into repo-validators:check; PDR-063 claim
+  handoff/adopt; **watcher step-deadline** — the C3 `comms-watch-errors`/WatcherTimeoutError item, in the same
+  cli-comms-watch Oak file LC1 drew from, deliberately NOT brought in LC1; fitness staleness axes) → **LC4** (Class-B
+  doctrine-vs-reality, protected by LC0's gate) → **LC5** (Claude-only-enforcement scope + the CI-doesn't-run-qg
+  finding). Plus the two LC1 Oak-faithful fail-opens (future `--now`; cwd-relative heartbeat path) → a hardening slice
+  - Oak back-flow (own slice, see plan § As-built (LC1)).
 - **Acceptance:** every loop CLOSES (D→M→W→S verified firsthand); LC0 catches the class going forward; C4/Task-6
   corrected; graduate the loop-closure completeness test as a PDR-096 amendment on completion.
 

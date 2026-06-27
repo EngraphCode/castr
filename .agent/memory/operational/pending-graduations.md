@@ -46,6 +46,14 @@ commit and the permanent doc are the record (no tombstone; see
 
 <!-- Entries appended below by napkin drains and consolidation passes. -->
 
-_Register empty (2026-06-26). All captured candidates have graduated to their permanent homes — the PDRs/rules
-are the record, not a tombstone here. New capture is appended below by future napkin drains and consolidation
-passes._
+### Loop-closure completeness test + the "verify workflow output firsthand" sharpening
+
+The loop-closure-as-completeness-test (doctrine→mechanism→wiring→signal) + the Class-B false-claim failure mode +
+the sharpening that **an adversarially-verified workflow/subagent bring-plan is still a claim to measure firsthand,
+especially for transitive dependencies** (the audit-method-under-counts root recurs at the workflow-output level —
+worked LC1 instance: the bring-plan missed the heartbeat-path writer dependency). Candidate permanent home: a
+**PDR-096 amendment** (or sibling PDR) graduated when the loop-closure remediation lane (LC0–LC5) completes; the
+firsthand-verify sharpening may instead amend `verify-agent-claims-firsthand`. Live in `distilled.md` (two entries)
+
+- `practice-loop-closure-remediation.md`. `[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
+  trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done). status: pending.
