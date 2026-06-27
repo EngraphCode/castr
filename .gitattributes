@@ -1,0 +1,14 @@
+# LC2 — semantic-merge conflict-time tripwire (PDR-049 / PDR-050).
+#
+# Memory and state files are concept-bearing narratives and indexes; git's
+# default 3-way LINE merge silently corrupts their meaning (stacked entries,
+# dropped sessions, split tables). Route conflicts on these surfaces to the
+# `engraph-semantic-merge` driver, which FAILS LOUD and routes to the
+# semantic-merge skill instead of producing a silent line-merge.
+#
+# The driver is REGISTERED per-checkout by the agent-tools `postinstall`
+# bootstrap (`merge.engraph-semantic-merge.driver` — git merge-driver config is
+# not committable). On a fresh clone that has not run `pnpm install`, git falls
+# back to its default merge for these paths, so the human discipline in
+# `.agent/skills/semantic-merge/SKILL-CANONICAL.md` remains the backstop.
+.agent/memory/**/*.md merge=engraph-semantic-merge
