@@ -63,8 +63,8 @@ short and full SHAs work behind the prefix.
 In Oak (cross-host origin) the discipline is operationalised at
 gitleaks config: `.gitleaks.toml` `[[allowlists]]` with
 `regexTarget = "line"` + regex `'''SHA: ?[0-9a-f]{7,40}\b'''`, surfacing
-at `pnpm secrets:scan` and pre-push. castr currently has no secrets-scan
-gate (the Oak Sonar/secrets infra was deliberately not brought); the
+through Oak's `secrets:scan` gate and pre-push. castr currently has no
+secrets-scan gate (the Oak Sonar/secrets infra was deliberately not brought); the
 discipline is write-time authoring practice here, and any future castr
 secrets gate should honour the same `SHA:` allowlist shape.
 

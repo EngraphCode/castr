@@ -127,10 +127,16 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   wrong), (C) deliberate/planned (not gaps). **ROOT: completeness measured by artefact-presence, not loop-closure —
   the audit METHOD was the bug** (under-counted the coordination-safety layer twice → **parity C4 + reference-closure
   Task-6 RE-OPENED**, both re-pointed to this plan).
-- **Next safe step (recommended next-priority):** **LC0** (loop-closure meta-validator — recur-proof structural cure,
-  TDD) → **LC1** (F-95 gate) + **LC2** (semantic-merge executor) in parallel → **LC3** (machine-local-paths validator,
-  PDR-063 handoff/adopt, watcher deadline, fitness axes) → **LC4** (Class-B doc-vs-reality, gated by LC0) → **LC5**
-  (owner-facing: Claude-only-enforcement scope). **Plan ONLY landed this session — no code yet** (owner-directed).
+- **LC0 ✅ DONE (2026-06-27, Hidden Veiling Mirror).** `validate-loop-closure-references` built (TDD, 40 unit tests) +
+  WIRED blocking into `repo-validators:check`; owner chose "cure all 7 now" so all 7 hollow refs were cured in the same
+  slice (check:profile dropped-proxy restored; markdownlint BROUGHT MD040-only + 29 language-tags; cruise→depcruise;
+  secrets:scan + test:mutation reworded). Reviewers run; tilde-fence + `pnpm run <mgmt-word>` false-negatives fixed
+  firsthand; workspace parser extracted + tested. Full `pnpm qg` green. As-built + deferred findings in the plan
+  § As-built (LC0). **Deferred from LC0 → LC5:** CI doesn't run qg (new gates enforce local-pre-push only).
+- **Next safe step:** **LC1** (F-95 coordination gate) + **LC2** (semantic-merge executor) in parallel → **LC3**
+  (machine-local-paths validator, PDR-063 handoff/adopt, watcher deadline, fitness axes) → **LC4** (Class-B
+  doc-vs-reality, now protected by LC0's gate) → **LC5** (owner-facing: Claude-only-enforcement scope, now also carries
+  the CI-doesn't-run-qg finding). **LC-reopen** lands with LC1.
 - **Acceptance:** every loop CLOSES (D→M→W→S verified firsthand); LC0 catches the class going forward; C4/Task-6
   corrected; graduate the loop-closure completeness test as a PDR-096 amendment on completion.
 

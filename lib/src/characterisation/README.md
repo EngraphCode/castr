@@ -19,7 +19,7 @@ pnpm test
 
 ## Directory Structure
 
-```
+```text
 characterisation/
 ├── README.md                           # This file
 ├── generation.char.test.ts             # Core generation pipeline tests (15 tests)

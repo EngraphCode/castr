@@ -16,7 +16,7 @@ This document summarizes key differences between OpenAPI 3.0.x and 3.1.x that af
 
 Castr uses Scalar's `upgrade()` function to convert all input to **OpenAPI 3.1 syntax BEFORE parsing**. This means parsers only handle 3.1 syntax.
 
-```
+```text
 Input → bundle() → validate() → upgrade() → [PARSER] → IR
                                       ^
                                       |

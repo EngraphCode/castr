@@ -1,0 +1,48 @@
+// markdownlint-cli2 configuration — scope/ignore doctrine for the Markdown gate.
+//
+// Rules live in `.markdownlint.json` (auto-read by cli2 as the `config` object);
+// this file owns ONLY the lint footprint (`globs` + `ignores`). castr enforces a
+// single markdown rule today — MD040 (fenced code blocks must declare a
+// language), the rule asserted by
+// `.agent/rules/markdown-code-blocks-must-have-language.md`. The broader Oak
+// ruleset is a deliberate-localisation: castr lints exactly what its doctrine
+// claims (LC0 loop-closure), and a fuller markdown-quality ruleset is a future
+// lane, not a silent import.
+//
+// Scope discipline: canon surfaces lint by default; reference / synthesis /
+// archive / generated material is excluded. Moving a folder in or out of this
+// list is a deliberate governance act.
+//
+// Footprint model: cli2's `**/*.md` DOES traverse dot-directories (it would lint
+// `.cursor/`, `.claude/`, `.agents/` without a `--dot` flag), so non-canon
+// dot-dirs are excluded EXPLICITLY in `ignores`.
+//
+// HARD RULE (brought from Oak): never add an `ignores` entry beginning with `!`
+// or `#`. In cli2 v0.22.x such an entry silently zeroes the entire run to
+// "0 error(s)" (a false-green gate), not a re-include. Express exclusions
+// positively only.
+{
+  "globs": ["**/*.md"],
+  "ignores": [
+    // Non-canon `.agent` surfaces (reference / research / synthesis / reports).
+    ".agent/reference/**",
+    ".agent/reference-local/**",
+    ".agent/research/**",
+    ".agent/report/**",
+    ".agent/experience/**",
+    // Generated / runtime collaboration material.
+    ".agent/state/collaboration/shared-comms-log.md",
+    // Adapter mirrors and harness dot-dirs (canon source is `.agent/`).
+    ".cursor/**",
+    ".claude/**",
+    ".agents/**",
+    // Archives and generated artefacts everywhere.
+    "**/archive/**",
+    "**/reference/**",
+    "**/research/**",
+    "**/CHANGELOG.md",
+    "**/node_modules/**",
+    "node_modules/**",
+  ],
+  "gitignore": false,
+}

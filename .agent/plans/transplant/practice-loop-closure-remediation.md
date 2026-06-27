@@ -38,8 +38,23 @@ todos:
       / cruise all passed green). Product code -> TDD (RED: a hollow ref fixture must fail
       the new validator before it exists). Wire into repo-validators:check. This is the
       cure for the ROOT (completeness measured by artefact-presence, not loop-closure).
-    status: pending
+    status: completed
     depends_on: []
+    as_built: >-
+      DONE (Hidden Veiling Mirror, 2026-06-27). `validate-loop-closure-references` built
+      (pure helper `findHollowScriptReferences` + FS runtime; resolve universe RECOMPUTED
+      each run from all workspace package.json scripts ∪ node_modules/.bin; scans
+      .agent/rules|skills|directives in code-context only — inline + fenced incl. nested
+      ``` / ~~~ fences) and WIRED blocking into repo-validators:check. 40 unit tests, full
+      `pnpm qg` green. Owner chose "cure all 7 now" (Shape B): all 7 hollow refs cured in
+      the same slice — check:profile (dropped Oak root proxy restored: `pnpm agent-tools:
+      repo-check profile`); markdownlint-check:root/markdownlint:root (BROUGHT markdownlint,
+      MD040-only `.markdownlint.json` + localised `.markdownlint-cli2.jsonc`, wired into qg,
+      29 MD040 language-tags added across 21 canon files); cruise -> depcruise correction;
+      secrets:scan + test:mutation reworded (honest Oak-cross-ref / planned-future, not
+      runnable pnpm forms). Reviewers code/test/config run; their findings folded in
+      firsthand (tilde-fence + `pnpm run <mgmt-word>` false-negatives FIXED; workspace
+      parser extracted + unit-tested). See § As-built (LC0).
   - id: LC1
     content: >-
       Class-A — bring the F-95 coordination-safety gate (the founding-pilot-failure guard).
@@ -237,3 +252,47 @@ corrections cannot silently regress) -> **LC5** (owner-facing scope decision). *
 lands with LC1 (it re-points C4 at LC1). Move to `active/` when LC0 starts; archive per
 ADR-117 when the loop map is all-CLOSED-or-decided. Lifecycle: graduate the loop-closure
 completeness test + Class-B failure mode as a PDR-096 amendment on completion.
+
+## As-built (LC0) — 2026-06-27 (Hidden Veiling Mirror)
+
+LC0 landed self-contained (owner chose "cure all 7 now" over wire-now-with-known-debt or
+standalone-defer). The validator design and the cures are recorded in the LC0 todo
+`as_built`. Two design decisions worth conserving:
+
+- **Code-context-only + resolve-against-(scripts ∪ .bin).** The validator only flags
+  `pnpm <script>` refs inside inline/fenced code (English prose like "prefer pnpm scripts"
+  is never flagged), and resolves against workspace scripts UNION `node_modules/.bin`
+  (so `pnpm turbo` fall-through binaries resolve). This is what drove the FP count from 11
+  (naive) to 0. Precision is mandatory for a blocking gate.
+- **markdownlint brought MD040-only (deliberate localisation).** Oak's config lints the
+  full default ruleset; bringing that faithfully would surface hundreds of un-doctrined
+  violations. castr has exactly one markdown rule (MD040), so the bring enforces exactly
+  the claimed capability. A fuller markdown-quality ruleset is a future lane, not a silent
+  import (bring-by-default applies to the CLAIMED capability).
+
+### Reviewer findings folded in (firsthand-verified) and deferred
+
+Code/test/config reviewers all rated the change mergeable; no blocking bugs. **Fixed in
+LC0** (verified firsthand before + after): tilde (`~~~`) fenced blocks were invisible
+(false negative) — fence tracking now keys on fence char + length; `pnpm run <mgmt-word>`
+(e.g. `pnpm run install`) was wrongly skipped — the management-subcommand guard is now
+bypassed after a `run` unwrap; the workspace-yaml parser (`parseWorkspacePackages`) +
+`stripQuotes` were extracted to the pure helper and unit-tested (the recompute claim was
+otherwise unproven); `JSON.parse` now rethrows with the offending path + `cause`.
+
+**Deferred (recorded, not LC0 scope):**
+
+- **CI does not run `qg`/`check:ci` (config-expert MEDIUM).** `.github/workflows/ci.yml`
+  runs only `lib` build+test, path-filtered to `lib/**`; markdownlint + every repo-validator
+  (incl. LC0) enforce ONLY via the local `pre-push` hook (bypassable). This is the
+  cross-cutting two-tier enforcement-scope gap this plan already names (-> **LC5**); LC0's
+  new gates inherit it. A CI job running `pnpm check:ci` (+ broadened path filter) is the
+  cure — folded into LC5's scope.
+- **markdownlint ignore-glob hardening (config-expert LOW).** `**/reference/**`,
+  `**/research/**`, `**/archive/**` match those dir names anywhere; a future canon dir so
+  named would be silently excluded. `gitignore:false` + no `**/dist/**` ignore means future
+  generated markdown could enter the lint set. Harmless today (footprint reconciles exactly:
+  620 linted). Tighten if it bites.
+- **Validator surface hardening (code-reviewer LOW).** No vendored-skill exclusion (sibling
+  excludes `clerk-backend-api/SKILL.md`); latent — no vendored skills under the scanned
+  roots today.

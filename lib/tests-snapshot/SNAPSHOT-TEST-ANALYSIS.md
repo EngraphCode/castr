@@ -5,7 +5,7 @@
 
 ## Current State
 
-```
+```text
 Test Files: 4 failed | 71 passed (75)
 Tests: 3 failed | 139 passed | 10 skipped (152)
 ```
@@ -95,7 +95,7 @@ When tests were moved from `lib/tests/` to `lib/tests-snapshot/`, the YAML fixtu
 
 ## Expected Outcome
 
-```
+```text
 Test Files: 75 passed (75)
 Tests: 152 passed (152)
 Skipped: 0

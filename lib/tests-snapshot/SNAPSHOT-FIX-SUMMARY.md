@@ -7,7 +7,7 @@
 
 After reorganizing tests into separate directories, snapshot tests were failing and some were skipped:
 
-```
+```text
 Before Fix:
 Test Files: 4 failed | 71 passed (75)
 Tests: 3 failed | 139 passed | 10 skipped (152)
@@ -50,7 +50,7 @@ Updated path references in 4 test files:
 
 ## Results
 
-```
+```text
 After Fix:
 Test Files: 75 passed (75) ✅
 Tests: 152 passed (152) ✅

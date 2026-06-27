@@ -129,5 +129,5 @@ Off-chain development aids (not in the canonical gate, green, documented honestl
 
 If/when added, they must be implemented as `package.json` scripts and added to the gate list above in the same PR.
 
-- Mutation testing (planned): `pnpm test:mutation`
+- Mutation testing (planned) — would add a `test:mutation` script
 - Dependency auditing (planned): `pnpm audit`

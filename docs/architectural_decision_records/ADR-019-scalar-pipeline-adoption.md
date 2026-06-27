@@ -76,7 +76,7 @@ export async function loadOpenApiDocument(
 
 ### Pipeline Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Input: string | URL | OpenAPIObject (3.0 or 3.1)            │
 └────────────────────────┬────────────────────────────────────┘

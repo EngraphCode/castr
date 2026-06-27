@@ -132,7 +132,7 @@ practice:vocabulary → practice:fitness:informational → test:all`. Strict `pr
 
 ## 4. Per-phase verification harness
 
-```
+```bash
 pnpm clean && pnpm install                 # postinstall rebuilds agent-tools/dist
 test -f agent-tools/dist/src/bin/agent-tools.js && test -x agent-tools/dist/src/bin/agent-tools.js
 pnpm format <new files> && commit          # .agent is NOT prettier-ignored (seam A)

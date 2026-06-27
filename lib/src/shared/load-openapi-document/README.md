@@ -6,7 +6,7 @@ This module provides the `loadOpenApiDocument()` function — the entry point fo
 
 ## Pipeline
 
-```
+```text
 Input → bundle() → validate() → validatePathTemplates() → upgrade() → Output
 ```
 
@@ -49,7 +49,7 @@ The `validation-errors.ts` module provides user-friendly error messages with con
 
 ### Example Output
 
-```
+```text
 Invalid OpenAPI 3.0.3 document:
 
 ❌ Error 1:

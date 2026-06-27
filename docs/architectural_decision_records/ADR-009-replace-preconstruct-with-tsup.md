@@ -93,7 +93,7 @@ export default defineConfig({
 
 ### Output Structure
 
-```
+```text
 dist/
   ├── index.js          # ESM entry
   ├── index.cjs         # CJS entry

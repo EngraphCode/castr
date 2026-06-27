@@ -271,7 +271,7 @@ For each rejection pattern in Parts 2 and 3:
 
 ### 4.3 Transform Validation Tests (Sample Input)
 
-```
+```text
 OpenAPI -> IR1 -> Zod -> IR2
          (IR1 ~= IR2)
 ```

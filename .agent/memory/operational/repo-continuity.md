@@ -98,6 +98,19 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-27, Hidden Veiling Mirror / e8b57e): loop-closure LC0 is ✅ DONE + WIRED; next is
+> LC1 + LC2.** Owner named LC0 and chose "cure all 7 now." `validate-loop-closure-references` (the loop-closure
+> meta-validator) is built (TDD, 40 unit tests), WIRED blocking into `repo-validators:check`, and all 7 hollow
+> `pnpm <script>` doctrine refs are cured in the same slice: `check:profile` (dropped Oak root proxy restored),
+> markdownlint BROUGHT (MD040-only config + 29 language-tags across 21 canon files, wired into `qg`),
+> `cruise`→`depcruise`, and `secrets:scan`/`test:mutation` reworded (honest cross-ref/planned, not runnable forms).
+> Code/test/config reviewers run; two false-negatives (tilde fences, `pnpm run <mgmt-word>`) fixed firsthand; the
+> workspace parser extracted + unit-tested. Full `pnpm qg` GREEN. **One finding deferred to LC5:** CI runs only
+> `lib` build+test (path-filtered), so the new gates enforce via the local `pre-push` hook only. Scope + as-built:
+> [`practice-loop-closure-remediation.md § As-built (LC0)`](../../plans/transplant/practice-loop-closure-remediation.md).
+> **Next: LC1 (F-95 coordination gate) + LC2 (semantic-merge executor) in parallel** (owner names the slice). The block
+> below stays authoritative for the audit/root-cause narrative and the LC1–LC5 framing.
+
 > **CURRENT TRUTH (2026-06-27, Stratospheric Kiting Breeze / c56a0f): a firsthand by-loop audit of the Practice
 > found a real, under-counted enforcement-layer gap; the [loop-closure remediation plan](../../plans/transplant/practice-loop-closure-remediation.md)
 > is a NEW ACTIVE lane and the recommended next-priority.** Owner challenged "have you brought the claims

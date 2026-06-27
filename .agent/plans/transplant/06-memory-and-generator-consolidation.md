@@ -50,7 +50,7 @@ directory shape.
 
 ## 3. Target layout (Oak `main` `memory/README.md` — three modes)
 
-```
+```text
 .agent/memory/
   README.md                         # three-mode taxonomy + authority order
   active/                           # learning-loop (read: start-right step 3)
