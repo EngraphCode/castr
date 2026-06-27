@@ -133,10 +133,25 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   secrets:scan + test:mutation reworded). Reviewers run; tilde-fence + `pnpm run <mgmt-word>` false-negatives fixed
   firsthand; workspace parser extracted + tested. Full `pnpm qg` green. As-built + deferred findings in the plan
   § As-built (LC0). **Deferred from LC0 → LC5:** CI doesn't run qg (new gates enforce local-pre-push only).
-- **Next safe step:** **LC1** (F-95 coordination gate) + **LC2** (semantic-merge executor) in parallel → **LC3**
-  (machine-local-paths validator, PDR-063 handoff/adopt, watcher deadline, fitness axes) → **LC4** (Class-B
-  doc-vs-reality, now protected by LC0's gate) → **LC5** (owner-facing: Claude-only-enforcement scope, now also carries
-  the CI-doesn't-run-qg finding). **LC-reopen** lands with LC1.
+- **LC1 ✅ DONE (2026-06-27, Hidden Veiling Mirror, `6372024`).** F-95 comms-watcher-presence gate brought from Oak +
+  wired into `claims open` (refuses a blind claim into a populated registry; solo fast-path preserved; anti-spoof
+  identity-binding); `comms assert-watcher-live` registered; dead detectStaleWatcher now has a caller. **Firsthand
+  catch beyond the workflow's bring-plan:** the `comms watch` writer must auto-derive the heartbeat path or the gate
+  falsely blocks every claim (brought it). Reviewers run; 2 Oak-faithful fail-opens (future `--now`; cwd-relative path)
+  recorded for a hardening slice + Oak back-flow. **LC-reopen ✅ closed:** parity C4 + reference-closure Task-6
+  corrected (the F-95 layer is genuinely brought). Full `pnpm qg` green. As-built: plan § As-built (LC1).
+- **LC2 corrected (firsthand): there is NO "semantic-merge executor" to bring** — Oak's semantic-merge is a single
+  PASSIVE `SKILL-CANONICAL.md` doc ("git cannot do it; you must"); no merge-driver, no executor. So LC2 = a SKILL bring
+  (stage 1, ready) + a castr-original conflict-time firing tripwire (stage 2, owner-gated). See plan LC2 + the
+  understand-workflow synthesis.
+- **Next safe step:** **LC2 stage-1** (bring the semantic-merge skill + `engraph-semantic-merge` adapter pair + bare
+  settings entry, class-table RECONCILED to castr's 7-value merge_class enum — a verbatim Oak table names classes castr
+  rejects as invalid; low-risk, lands but does NOT close the loop) → **LC2 stage-2** (owner-gated: `.gitattributes`
+  refuse-and-route merge-driver + per-checkout bootstrap; needs the owner decision on the uncommittable-bootstrap
+  mechanism + whether this session's near-collision satisfies PDR-049's promotion trigger) → **LC3** (machine-local-paths
+  validator, PDR-063 handoff/adopt, **watcher step-deadline** [the C3 item, in the same cli-comms-watch Oak file LC1
+  drew from], fitness axes) → **LC4** (Class-B, protected by LC0's gate) → **LC5** (Claude-only-enforcement + the
+  CI-doesn't-run-qg finding).
 - **Acceptance:** every loop CLOSES (D→M→W→S verified firsthand); LC0 catches the class going forward; C4/Task-6
   corrected; graduate the loop-closure completeness test as a PDR-096 amendment on completion.
 

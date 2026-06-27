@@ -98,6 +98,19 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-27, Hidden Veiling Mirror / e8b57e): loop-closure LC0 ✅ + LC1 ✅ DONE; next is LC2
+> (skill bring + owner-gated firing tripwire).** **LC1 (`6372024`):** the F-95 comms-watcher-presence gate was
+> brought from Oak and wired into `claims open` — a session blind to comms can no longer stake a claim into a
+> populated registry (founding-pilot-failure guard); solo bootstrap preserved; identity-bound anti-spoof; dead
+> detectStaleWatcher now consumed. A firsthand catch beyond the understand-workflow's bring-plan: the `comms watch`
+> writer must auto-derive the heartbeat path or the gate falsely blocks every claim (brought it). **LC-reopen closed:**
+> parity C4 + reference-closure Task-6 corrected. **LC2 reframed (firsthand): Oak's semantic-merge is a PASSIVE skill,
+> not an executor** — LC2 = skill bring (stage-1, ready) + a castr-original conflict-time firing tripwire (stage-2,
+> owner-gated). Two Oak-faithful fail-opens (future `--now`; cwd-relative heartbeat path) recorded for a hardening slice
+>
+> - Oak back-flow. Full `pnpm qg` green; commits LOCAL (push = owner's call). Detail: [`practice-loop-closure-remediation.md`](../../plans/transplant/practice-loop-closure-remediation.md)
+>   § As-built (LC1). The LC0 block below stays authoritative for LC0.
+>
 > **CURRENT TRUTH (2026-06-27, Hidden Veiling Mirror / e8b57e): loop-closure LC0 is ✅ DONE + WIRED; next is
 > LC1 + LC2.** Owner named LC0 and chose "cure all 7 now." `validate-loop-closure-references` (the loop-closure
 > meta-validator) is built (TDD, 40 unit tests), WIRED blocking into `repo-validators:check`, and all 7 hollow

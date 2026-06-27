@@ -33,6 +33,15 @@ before claiming it — Oak main moves.
   the hook-matcher-precision lane in
   [`../../../memory/operational/threads/practice-transplant.next-session.md`](../../../memory/operational/threads/practice-transplant.next-session.md);
   the Oak back-flow note is written as part of that lane's acceptance.
+- **F-95 gate fail-opens (BOTH repos)** — two fail-open vectors in the comms-watcher-presence
+  gate, verified firsthand to exist in Oak too (so they are Oak bugs castr surfaced, not castr
+  regressions): (1) the populated-vs-solo check trusts the claim's `--now` while the watcher
+  half uses the real clock, so a future-dated `--now` beyond the freshness window silently
+  skips the gate; (2) `resolveOpenClaimWatcherVerdict` resolves the comms-seen dir against
+  `process.cwd()` while the registry is the explicit `--active` path, so running from another
+  repo's cwd can read a foreign heartbeat and admit a blind claim. Cure candidates + full
+  detail: [`../practice-loop-closure-remediation.md`](../practice-loop-closure-remediation.md)
+  § As-built (LC1) → Deferred. Back-flow note to be written when the castr hardening slice lands.
 
 ## Open / unmeasured candidates (verify before promoting to a row above)
 

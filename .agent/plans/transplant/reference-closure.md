@@ -672,6 +672,16 @@ suite 943/0 and `turbo test --filter=!@engraph/agent-tools` removed, so agent-to
 
 ### Task 6 generic-surface reconciliation — disposition: **triaged clean for phase-8 scope (done)** (2026-06-20)
 
+> **CORRECTION 2026-06-27 (Hidden Veiling Mirror): this triage UNDER-COUNTED — it measured
+> filename set-difference, not loop closure, and so missed the F-95 coordination-safety GATE
+> layer** (`watcher-presence`, `claims-open-watcher-gate`, `cli-comms-assert-watcher-live`,
+> `watcher-staleness-io` — ~4 source files + the heartbeat-path auto-derivation in
+> `cli-comms-watch`). "All named surfaces present" was true at the filename level while the
+> behaviour (a blind claim refused when peers are live) was absent. Brought + wired in LC1
+> (`6372024`); the audit-method-is-the-bug root and the cure are in
+> [`practice-loop-closure-remediation.md`](practice-loop-closure-remediation.md) § As-built (LC1).
+> The disposition below stands for the surfaces it DID name; it was not exhaustive.
+
 Firsthand engine-vs-Oak-pin (`ad359a4f`) set-difference of `agent-tools/src/collaboration-state/` (Oak 82 path entries
 vs castr 52). All four _named_ task-6 surfaces are already present in castr: PEEN coordinator-state hardening (proven
 collision-safe in task 3b; no PEEN source surface at the pin either), TTL presence (`watcher-heartbeat`/

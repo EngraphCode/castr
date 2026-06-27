@@ -65,8 +65,26 @@ todos:
       subcommand. TDD against the blind-claim collision. Also consume castr's currently-DEAD
       `detectStaleWatcher` (watcher-staleness.ts has no caller). Bring-by-default; no
       deliberate-localisation reason — it is agent-coordination Practice infra.
-    status: pending
+    status: completed
     depends_on: []
+    as_built: >-
+      DONE (Hidden Veiling Mirror, 2026-06-27, `6372024`). 4 Oak files brought verbatim
+      (throw-based, zero error-model translation) + wired: openClaim resolves the watcher
+      verdict OUTSIDE the lock then refuses INSIDE the transactional transform when the locked
+      snapshot holds another live agent AND this session is blind (no write on refusal); solo
+      bootstrap fast-path preserved; `comms assert-watcher-live` registered; dead
+      detectStaleWatcher now has a production caller. TRANSITIVE infra caught firsthand (the
+      understand-workflow's bring-plan MISSED it): the `comms watch` writer now auto-derives the
+      heartbeat path (<seen-file>.heartbeat.json, --no-heartbeat opt-out) so it writes where the
+      gate reads — without it the gate would falsely block every team claim. Prereq edits:
+      stale-no-emit shape (agedMs/thresholdMs), HEARTBEAT_FILE_SUFFIX, export liveAgentIdentities,
+      option-key sets. The C3 watcher step-deadline in the same Oak file was deliberately NOT
+      brought (it is LC3, not LC1). TDD: brought Oak's 2 gate unit tests + a wired integration
+      test (blind-with-peer refusal + no write; anti-spoof foreign-heartbeat refusal; present
+      opens; NaN --now rejected); concurrency test reconciled (arms a live heartbeat per session,
+      proves collision-safety WITH the gate). comms-watcher rule updated (heartbeat on-by-default;
+      gate reads canonical path only). Code/test reviewers run, findings folded firsthand. Full
+      `pnpm qg` green. See § As-built (LC1) for the two deferred fail-open findings.
   - id: LC2
     content: >-
       Class-A — bring the `semantic-merge` executor (HIGHEST knowledge-integrity risk).
@@ -132,7 +150,7 @@ todos:
       parity `oak-parity-program.md` C4 (status completed on a false "code primitives present"
       premise) -> pending, re-pointed to LC1; `reference-closure.md` Task-6 ("nothing to bring
       in phase-8 scope" — under-counted by ~6 source files) -> correction note re-pointed here.
-    status: pending
+    status: completed
     depends_on: []
 ---
 
@@ -296,3 +314,40 @@ otherwise unproven); `JSON.parse` now rethrows with the offending path + `cause`
 - **Validator surface hardening (code-reviewer LOW).** No vendored-skill exclusion (sibling
   excludes `clerk-backend-api/SKILL.md`); latent — no vendored skills under the scanned
   roots today.
+
+## As-built (LC1) — 2026-06-27 (Hidden Veiling Mirror)
+
+LC1 landed (`6372024`, full `pnpm qg` green) — see the LC1 todo `as_built` for the bring +
+wiring detail. The pivotal firsthand correction: the understand-workflow's bring-plan listed
+the 4 gate files + 3 prereq edits but MISSED the transitive dependency that the `comms watch`
+writer must auto-derive the heartbeat path (Oak's `resolveHeartbeatFile`) so it writes where
+the gate reads — without it the gate reads "absent" and falsely blocks every team claim. Caught
+by reading the writer + gate sources firsthand (bring-the-iceberg recurs; the audit method
+under-counts). LC-reopen is closed by this landing: the F-95 layer is genuinely brought, so
+parity C4 and reference-closure Task-6 are corrected (notes added there).
+
+### Deferred from LC1 (Oak-faithful fail-opens → hardening slice + Oak back-flow)
+
+Both exist in Oak too (verified firsthand), so fixing them unilaterally would diverge from Oak
+on a load-bearing path; per the bidirectional-sharpening directive they are recorded as a
+parity-or-better slice with an Oak back-flow note (see the innovations ledger), NOT silently
+changed in LC1:
+
+- **Future-dated `--now` defeats the population check (code-reviewer IMPORTANT).** The watcher
+  half uses `Date.now()` but `assertNotBlindWithOtherAgents` computes `hasOtherLiveAgents` with
+  the claim's `--now`; a `--now` beyond a peer's freshness window (default 14400 s) marks every
+  peer stale → the gate is skipped. The NaN guard catches malformed, not future-dated. Bounded
+  (requires a >4 h-future `--now`), but a real fail-open. Cure candidate: evaluate population
+  liveness at the real clock.
+- **cwd-relative heartbeat path vs explicit `--active` (code-reviewer IMPORTANT).**
+  `resolveOpenClaimWatcherVerdict` resolves `DEFAULT_COMMS_SEEN_DIR` against `process.cwd()`
+  while the registry is the explicit `--active` path. Running `claims open --active /repoA/...`
+  from a cwd in repoB where this identity has a live heartbeat reads repoB's heartbeat → admits
+  a blind claim into repoA (fail-open); the common cwd≠root case is fail-closed (false block).
+  Cure candidate: derive the comms-seen dir from the `--active` path's repo root.
+
+Minor (code-reviewer suggestions, not actioned): `--now` validation message overstates "ISO-8601"
+(`Date.parse` is lenient); the writer re-concats the heartbeat suffix rather than calling
+`heartbeatFileForSeen` (matches Oak — both use the shared `HEARTBEAT_FILE_SUFFIX` constant, so
+declined); an initial synchronous heartbeat at watcher startup would close a sub-second
+launch window.

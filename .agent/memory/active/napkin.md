@@ -28,6 +28,34 @@ Landed LC0 (`0c859bd`, full `pnpm qg` green). Durable discoveries:
   2026-06-15); advisory/skill-driven" — so this Class-B item (LC4) is partly a DELIBERATE owner decision, not a
   pure false claim. LC4 should reconcile the skill prose to that decision, not just "add the hook".
 
+### LC1 (F-95 gate bring) + ultracode understand-workflow — Hidden Veiling Mirror
+
+- **An understand-workflow's bring-plan is a CLAIM to verify, not a checklist — its file list under-counts the
+  TRANSITIVE infra exactly like the audit method it was meant to beat.** The LC1 synthesis listed the 4 gate files +
+  3 prereq edits but MISSED that the `comms watch` WRITER must auto-derive the heartbeat path (`<seen-file>.heartbeat.json`)
+  or the gate reads "absent" → blind → falsely blocks EVERY team claim. Caught only by reading the writer + gate
+  sources firsthand and asking "do these two derive the SAME path?". Bring-the-iceberg recurs at the writer/reader
+  seam; the cure for a brought GATE is to also bring the WRITER-side path agreement. (Owner mandate: assess all
+  subagent output incl. sources — this is why.)
+- **"Bring the executor" can be a framing error: verify the artefact's NATURE before sizing the bring.** The plan
+  called LC2 "bring the semantic-merge EXECUTOR"; firsthand, Oak's semantic-merge is a single PASSIVE
+  `SKILL-CANONICAL.md` ("git cannot do it; you must") — no merge-driver, no code. A concept-merge of prose is
+  inherently agent-driven; the most an automated layer can do is a refuse-and-route tripwire (halt the line-merge,
+  route to the skill), which Oak lacks → that tripwire is parity-or-BETTER, not parity. Check skill-vs-executor by
+  `ls`-ing the dir + grepping `.gitattributes`/merge-driver code BEFORE planning the bring shape.
+- **A brought gate changes a PRECONDITION, so it can break an existing test that predates it — reconcile the test to
+  the new reality, never weaken the gate.** LC1's gate broke the task-3b concurrency test (8 blind sessions racing →
+  the 2nd+ correctly refused). Cure: arm a live identity-matching heartbeat per session (the realistic team
+  precondition) + `chdir` into the temp repo so the gate's cwd-relative path resolves there (clean under vitest
+  `pool:forks`+`isolate`). The test now proves collision-safety WITH the gate active — better coverage, not a bypass.
+- **A verbatim test bring carries the source's ENV-VAR phenotype too.** The brought gate unit test used Oak's
+  `OAK_AGENT_IDENTITY_OVERRIDE`; castr renamed it `ENGRAPH_AGENT_IDENTITY_OVERRIDE`. lint/knip passed; only
+  type-check caught it (green-one-gate ≠ green-all). Sweep brought test files for `OAK_`/`oak-`/`@oaknational` tokens.
+- **Distinguish "fix now" from "record + Oak-back-flow" by whether the defect is Oak-FAITHFUL.** LC1's two fail-opens
+  (future `--now`; cwd-relative path) exist in Oak too — fixing them unilaterally diverges from Oak on a load-bearing
+  path. Per bidirectional-sharpening: record as a parity-or-better slice + back-flow note, don't silently diverge in
+  the bring. A castr-ONLY defect (e.g. the env-var phenotype, the doc landmine) gets fixed in-place.
+
 ## 2026-06-26 (consolidation rotation — Eclipsed Lurking Moth / 1dfcd1)
 
 Dedicated knowledge-curation pass. Rotated the 2026-06-20 → 2026-06-21 windows to
