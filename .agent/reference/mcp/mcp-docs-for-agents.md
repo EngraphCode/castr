@@ -2447,7 +2447,7 @@ Before you begin, it helps to have gone through our [Build an MCP Server](/docs/
     uv run client.py ./server/weather.py
 
     # Absolute path
-    uv run client.py /Users/username/projects/mcp-server/weather.py
+    uv run client.py /Users/<username>/projects/mcp-server/weather.py
 
     # Windows path (either format works)
     uv run client.py C:/projects/mcp-server/weather.py
@@ -2844,7 +2844,7 @@ Before you begin, it helps to have gone through our [Build an MCP Server](/docs/
     node build/index.js ./server/build/index.js
 
     # Absolute path
-    node build/index.js /Users/username/projects/mcp-server/build/index.js
+    node build/index.js /Users/<username>/projects/mcp-server/build/index.js
 
     # Windows path (either format works)
     node build/index.js C:/projects/mcp-server/build/index.js
@@ -3436,7 +3436,7 @@ Before you begin, it helps to have gone through our [Build an MCP Server](/docs/
     java -jar build/libs/client.jar ./server/build/libs/server.jar
 
     # Absolute path
-    java -jar build/libs/client.jar /Users/username/projects/mcp-server/build/libs/server.jar
+    java -jar build/libs/client.jar /Users/<username>/projects/mcp-server/build/libs/server.jar
 
     # Windows path (either format works)
     java -jar build/libs/client.jar C:/projects/mcp-server/build/libs/server.jar
@@ -5632,8 +5632,8 @@ The process involves configuring Claude Desktop to automatically start the Files
             "args": [
               "-y",
               "@modelcontextprotocol/server-filesystem",
-              "/Users/username/Desktop",
-              "/Users/username/Downloads"
+              "/Users/<username>/Desktop",
+              "/Users/<username>/Downloads"
             ]
           }
         }
@@ -5731,11 +5731,11 @@ If you encounter issues setting up or using the Filesystem Server, these solutio
 
     <CodeGroup>
       ```bash macOS/Linux theme={null}
-      npx -y @modelcontextprotocol/server-filesystem /Users/username/Desktop /Users/username/Downloads
+      npx -y @modelcontextprotocol/server-filesystem /Users/<username>/Desktop /Users/<username>/Downloads
       ```
 
       ```powershell Windows theme={null}
-      npx -y @modelcontextprotocol/server-filesystem C:\Users\username\Desktop C:\Users\username\Downloads
+      npx -y @modelcontextprotocol/server-filesystem C:\Users\<username>\Desktop C:\Users\<username>\Downloads
       ```
     </CodeGroup>
 
@@ -6585,7 +6585,7 @@ Roots are a mechanism for clients to communicate filesystem access boundaries to
 
 ```json theme={null}
 {
-  "uri": "file:///Users/agent/travel-planning",
+  "uri": "file:///Users/<agent>/travel-planning",
   "name": "Travel Planning Workspace"
 }
 ```
@@ -6598,13 +6598,13 @@ A travel agent working with multiple client trips benefits from roots to organiz
 
 The client provides filesystem roots to the travel planning server:
 
-- `file:///Users/agent/travel-planning` - Main workspace containing all travel files
-- `file:///Users/agent/travel-templates` - Reusable itinerary templates and resources
-- `file:///Users/agent/client-documents` - Client passports and travel documents
+- `file:///Users/<agent>/travel-planning` - Main workspace containing all travel files
+- `file:///Users/<agent>/travel-templates` - Reusable itinerary templates and resources
+- `file:///Users/<agent>/client-documents` - Client passports and travel documents
 
 When the agent creates a Barcelona itinerary, well-behaved servers respect these boundaries—accessing templates, saving the new itinerary, and referencing client documents within the specified roots. Servers typically access files within roots by using relative paths from the root directories or by utilizing file search tools that respect the root boundaries.
 
-If the agent opens an archive folder like `file:///Users/agent/archive/2023-trips`, the client updates the roots list via `roots/list_changed`.
+If the agent opens an archive folder like `file:///Users/<agent>/archive/2023-trips`, the client updates the roots list via `roots/list_changed`.
 
 For a complete implementation of a server that respects roots, see the [filesystem server](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) in the official servers repository.
 
@@ -7071,7 +7071,7 @@ A common way to start server packages from [NPM](https://npmjs.com) or [PyPi](ht
     ```bash  theme={null}
     npx -y @modelcontextprotocol/inspector npx <package-name> <args>
     # For example
-    npx -y @modelcontextprotocol/inspector npx @modelcontextprotocol/server-filesystem /Users/username/Desktop
+    npx -y @modelcontextprotocol/inspector npx @modelcontextprotocol/server-filesystem /Users/<username>/Desktop
     ```
   </Tab>
 
@@ -10534,7 +10534,7 @@ To retrieve roots, servers send a `roots/list` request:
   "result": {
     "roots": [
       {
-        "uri": "file:///home/user/projects/myproject",
+        "uri": "file:///home/<user>/projects/myproject",
         "name": "My Project"
       }
     ]
@@ -10586,7 +10586,7 @@ Example roots for different use cases:
 
 ```json theme={null}
 {
-  "uri": "file:///home/user/projects/myproject",
+  "uri": "file:///home/<user>/projects/myproject",
   "name": "My Project"
 }
 ```
@@ -10596,11 +10596,11 @@ Example roots for different use cases:
 ```json theme={null}
 [
   {
-    "uri": "file:///home/user/repos/frontend",
+    "uri": "file:///home/<user>/repos/frontend",
     "name": "Frontend Repository"
   },
   {
-    "uri": "file:///home/user/repos/backend",
+    "uri": "file:///home/<user>/repos/backend",
     "name": "Backend Repository"
   }
 ]

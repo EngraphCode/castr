@@ -19,11 +19,11 @@ manual so castr does not re-discover the friction.
 
 ## The three repos
 
-| Role                         | Path                                                | What it is                                                                                                                                      |
-| ---------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Source** (transplant FROM) | `/Users/jim/code/oak-open-curriculum-ecosystem`     | The Practice origin; the full, current generation — bring all of it                                                                             |
-| **Guide** (field report)     | `/Users/jim/code/project-explorer-especially-names` | Already wholesale-transplanted oak's full Practice + `agent-tools`; report at `.agent/reports/practice-integration-feedback.md` — read it FIRST |
-| **Target** (transplant INTO) | `/Users/jim/code/castr` (this repo)                 | A lighter ≈March snapshot carrying castr's own deep product doctrine                                                                            |
+| Role                         | Path                                | What it is                                                                                                                                      |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Source** (transplant FROM) | `<oak>`                             | The Practice origin; the full, current generation — bring all of it                                                                             |
+| **Guide** (field report)     | `project-explorer-especially-names` | Already wholesale-transplanted oak's full Practice + `agent-tools`; report at `.agent/reports/practice-integration-feedback.md` — read it FIRST |
+| **Target** (transplant INTO) | `<repo>` (this repo)                | A lighter ≈March snapshot carrying castr's own deep product doctrine                                                                            |
 
 > ⚠️ This is a **wholesale Practice transplant** (oak PDR-005). PEEN already paid the friction bill once. Read its
 > report before touching files.
@@ -189,7 +189,7 @@ regardless of fit, and not pre-filter or guess. (Agent collaboration is substrat
 
 ## Read first (orientation)
 
-- PEEN report: `/Users/jim/code/project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
+- PEEN report: `project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 - Oak source: `…/oak-open-curriculum-ecosystem/.agent/` (Core incl. `decision-records/`, `provenance.yml`,
   `practice-verification.md`; `skills/`, `rules/`, `hooks/`, `directives/`, `sub-agents/`, `memory/`, `state/`),
   `…/agent-tools/`, `…/RULES_INDEX.md`.

@@ -81,8 +81,8 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 
 **Files changed:**
 
-- [MODIFY] [validators.schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.schema.ts)
-- [MODIFY] [validators.unit.test.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.unit.test.ts)
+- [MODIFY] [validators.schema.ts](../../../../lib/src/schema-processing/ir/validation/validators.schema.ts)
+- [MODIFY] [validators.unit.test.ts](../../../../lib/src/schema-processing/ir/validation/validators.unit.test.ts)
 
 ---
 
@@ -111,9 +111,9 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 
 **Files changed:**
 
-- [MODIFY] [schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/models/schema.ts)
-- [MODIFY] [validators.schema.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.schema.ts)
-- [MODIFY] [validators.unit.test.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.unit.test.ts)
+- [MODIFY] [schema.ts](../../../../lib/src/schema-processing/ir/models/schema.ts)
+- [MODIFY] [validators.schema.ts](../../../../lib/src/schema-processing/ir/validation/validators.schema.ts)
+- [MODIFY] [validators.unit.test.ts](../../../../lib/src/schema-processing/ir/validation/validators.unit.test.ts)
 - Likely additional files identified by the Phase 2 investigation grep
 
 ---
@@ -131,8 +131,8 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 
 **Files changed:**
 
-- [MODIFY] [validators.document.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.document.ts)
-- [MODIFY] [validators.unit.test.ts](file:///Users/jim/code/personal/castr/lib/src/schema-processing/ir/validation/validators.unit.test.ts)
+- [MODIFY] [validators.document.ts](../../../../lib/src/schema-processing/ir/validation/validators.document.ts)
+- [MODIFY] [validators.unit.test.ts](../../../../lib/src/schema-processing/ir/validation/validators.unit.test.ts)
 
 ---
 
@@ -144,8 +144,8 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 
 **Files changed:**
 
-- [MODIFY] [session-entry.prompt.md](file:///Users/jim/code/personal/castr/.agent/prompts/session-entry.prompt.md)
-- [MODIFY] [roadmap.md](file:///Users/jim/code/personal/castr/.agent/plans/roadmap.md)
+- [MODIFY] [session-entry.prompt.md](../../../../.agent/prompts/session-entry.prompt.md)
+- [MODIFY] [roadmap.md](../../../../.agent/plans/roadmap.md)
 
 ---
 

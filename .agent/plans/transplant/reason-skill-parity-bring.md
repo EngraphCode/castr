@@ -19,7 +19,7 @@ parity_gap: >-
   whole agent-reasoning capability, not a doc nit.
 read_model_note: >-
   Oak is read live from `main`, no pin (owner 2026-06-26). All Oak paths below
-  are read via `git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>`.
+  are read via `git -C <oak> show main:<path>`.
 todos:
   - id: R1
     content: >-

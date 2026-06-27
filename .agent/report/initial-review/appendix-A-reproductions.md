@@ -130,7 +130,7 @@ eslint.config.ts: no no-restricted-syntax/-properties rule for Object.*/Reflect.
 ## A.8 — Probe script source (Probe 1, abbreviated)
 
 The full scripts used were `/tmp/castr-probe.mjs` and `/tmp/castr-probe2.mjs`. They import from the built dist
-(`/Users/jim/code/castr/lib/dist/schema-processing/index.js` for `parseZodSource`/`buildIR`/`writeOpenApi`/
+(`lib/dist/schema-processing/index.js` for `parseZodSource`/`buildIR`/`writeOpenApi`/
 `serializeIR`/`deserializeIR`; `.../conversion/zod/index.js` for `getZodSchema`; `.../parsers/json-schema/index.js` for
 `parseJsonSchema`; `.../conversion/typescript/index.js` for `getTypescriptFromOpenApi`) and exercise each input listed in
 A.3–A.5, printing the resulting IR / emitted code / thrown error. They are reproducible verbatim against any clean build

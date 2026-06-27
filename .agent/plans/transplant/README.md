@@ -197,10 +197,10 @@ controlled-sync points (frozen SHA, then rebased branch) caused more issues than
 Practice directly from the local checkout's `main` at whatever it currently is. **Always read via
 `git -C "$OAK" show main:<path>`** (deterministic; avoids the dirty/other-branch working-tree trap that produced a
 false-absence error 2026-06-20, when the tree sat on the since-deleted `practice/transplant-to-castr` branch). The
-owner keeps `$OAK` = `/Users/jim/code/oak-open-curriculum-ecosystem` pulled current.
+owner keeps the local Oak checkout (`$OAK`) pulled current.
 
 ```bash
-OAK=/Users/jim/code/oak-open-curriculum-ecosystem
+OAK=<oak>
 git -C "$OAK" show main:<path>          # read any Oak Practice file at current main
 git -C "$OAK" ls-tree -r main           # enumerate the live estate
 ```
@@ -270,7 +270,7 @@ each has a position, none blocks Phase 5 from proceeding. Sequence within the ar
   quality-gate machinery). Enumerate against Oak `main` at the Phase-9 verification sweep; until then this
   is the named placeholder so the arc's incompleteness is explicit, not forgotten. **Elevated by the owner's
   2026-06-19 "bring over the FULL Practice" steer:** "transplant finished" is only honest after a **measured gap-scan
-  against Oak `main`** (`git -C /Users/jim/code/oak-open-curriculum-ecosystem ls-tree -r main` — read live) — what
+  against Oak `main`** (`git -C <oak> ls-tree -r main` — read live) — what
   surfaces/rules/agent-tools/protocols exist on Oak main but not yet on the branch. Tagging
   Phase 9 without that scan would be a green-but-incomplete claim (the Phase-1b skipped-gate failure mode).
 

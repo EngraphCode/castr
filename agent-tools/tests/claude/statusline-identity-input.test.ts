@@ -6,7 +6,7 @@ describe('planStatuslineExecution', () => {
       planStatuslineExecution(
         JSON.stringify({
           session_id: 'c32a7d1d-a40b-4864-b4cd-bc4332a3e362',
-          workspace: { current_dir: '/Users/dev/engraph-wt-eef' },
+          workspace: { current_dir: '/Users/<user>/engraph-wt-eef' },
           model: { display_name: 'Opus 4.7' },
           context_window: { used_percentage: 12 },
         }),
@@ -15,7 +15,7 @@ describe('planStatuslineExecution', () => {
       kind: 'render',
       inputs: {
         seed: 'c32a7d1d-a40b-4864-b4cd-bc4332a3e362',
-        cwd: '/Users/dev/engraph-wt-eef',
+        cwd: '/Users/<user>/engraph-wt-eef',
         model: 'Opus 4.7',
         usedPercentage: 12,
       },

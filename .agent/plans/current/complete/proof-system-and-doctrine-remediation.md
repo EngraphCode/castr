@@ -65,16 +65,16 @@ Rationale:
 
 ### Phase 2: Suite-Name and Proof-Wording Honesty
 
-6. **Generated-code suites:** rename or re-document `runtime-validation.gen.test.ts` and `lint-validation.gen.test.ts` to describe what they actually assert (structural existence, import presence, parser readability). Update [FIXTURES.md](file:///Users/jim/code/personal/castr/lib/tests-generated/FIXTURES.md) and [vitest.generated.config.ts](file:///Users/jim/code/personal/castr/lib/vitest.generated.config.ts) comments to match.
-7. **Transform README and config:** rewrite Scenario 6 and 7 descriptions in [tests-transforms/README.md](file:///Users/jim/code/personal/castr/lib/tests-transforms/README.md) to describe the exact assertions (supported-subset schema-name comparisons, payload parity, Zod reparsing, shallow JSON Schema bundle shape). Do the same for Scenario 2 and 4 descriptions.
+6. **Generated-code suites:** rename or re-document `runtime-validation.gen.test.ts` and `lint-validation.gen.test.ts` to describe what they actually assert (structural existence, import presence, parser readability). Update [FIXTURES.md](../../../../lib/tests-generated/FIXTURES.md) and [vitest.generated.config.ts](../../../../lib/vitest.generated.config.ts) comments to match.
+7. **Transform README and config:** rewrite Scenario 6 and 7 descriptions in [tests-transforms/README.md](../../../../lib/tests-transforms/README.md) to describe the exact assertions (supported-subset schema-name comparisons, payload parity, Zod reparsing, shallow JSON Schema bundle shape). Do the same for Scenario 2 and 4 descriptions.
 8. **ADR-035 current-state caveat:** ensure the ADR plainly distinguishes the historical transform-matrix vision from the current proof scope.
 
 ### Phase 3: Acceptance-Criteria and Durable-Doc Cleanup
 
 9. **Acceptance criteria:** add current-state caveats to:
-   - [json-schema-and-parity-acceptance-criteria.md](file:///Users/jim/code/personal/castr/.agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md)
-   - [zod-output-acceptance-criteria.md](file:///Users/jim/code/personal/castr/.agent/acceptance-criteria/zod-output-acceptance-criteria.md)
-   - [zod-parser-acceptance-criteria.md](file:///Users/jim/code/personal/castr/.agent/acceptance-criteria/zod-parser-acceptance-criteria.md)
+   - [json-schema-and-parity-acceptance-criteria.md](../../../../.agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md)
+   - [zod-output-acceptance-criteria.md](../../../../.agent/acceptance-criteria/zod-output-acceptance-criteria.md)
+   - [zod-parser-acceptance-criteria.md](../../../../.agent/acceptance-criteria/zod-parser-acceptance-criteria.md)
 10. **ADR and architecture doc caveats:**
     - ADR-031, ADR-032: metadata language narrowed (already started in March 21 consolidation — verify current state, tighten if still over-claiming).
     - Native-capability matrix: current datetime offset narrowing note.

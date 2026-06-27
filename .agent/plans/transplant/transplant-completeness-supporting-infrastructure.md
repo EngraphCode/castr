@@ -17,7 +17,7 @@ sibling_plan: >-
   remediation (transplants already landed tip-only) plus the STRUCTURAL catch.
 read_model_note: >-
   Oak is read live from `main`, no pin (owner 2026-06-26), via
-  `git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>`.
+  `git -C <oak> show main:<path>`.
   Re-measure at execution: counts/inventories below were taken 2026-06-26 and Oak main moves.
 todos:
   - id: TC1

@@ -106,7 +106,7 @@ incomplete.
 
 ## Method + classification
 
-- Read Oak live via `git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>`, NEVER the Oak
+- Read Oak live via `git -C <oak> show main:<path>`, NEVER the Oak
   working tree (Oak read model changed 2026-06-26 — live `main`, pin deleted; see the tracker README +
   repo-continuity invariants).
 - Each difference is classified **deliberate localisation** (preserve) vs **unbuilt-capability gap** (upgrade).

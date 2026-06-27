@@ -10,7 +10,7 @@ something Oak would want.
 Maintenance directive (owner, 2026-06-26): _"keep the record of innovations in this repo that
 we should eventually feed back to Oak up to date."_ Add a row when you build a castr-only
 capability or distil a portable insight; measure Oak-absence firsthand
-(`git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>` / `ls-tree -r main`)
+(`git -C <oak> show main:<path>` / `ls-tree -r main`)
 before claiming it — Oak main moves.
 
 ## Tooling / validators castr has that Oak lacks
