@@ -46,8 +46,18 @@ export const commsWatchOptions = [
   'max-events',
   'heartbeat-file',
   'heartbeat-interval-ms',
+  'no-heartbeat',
   'seed-from-now',
   'no-auto-seed',
+] as const;
+
+export const commsAssertWatcherLiveOptions = [
+  'comms-seen-dir',
+  'heartbeat-file',
+  'agent-name',
+  'session-prefix',
+  'platform',
+  'model',
 ] as const;
 
 export const commsInboxOptions = [

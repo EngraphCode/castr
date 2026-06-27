@@ -1,6 +1,10 @@
 import { seedSeenStateIfNeeded } from './comms-watch-auto-seed.js';
 import { drainRelevantEvents, watchCommsLoop, type WatcherTickStatus } from './comms-use-cases.js';
-import { writeWatcherHeartbeat, WATCHER_HEARTBEAT_SCHEMA_VERSION } from './watcher-heartbeat.js';
+import {
+  HEARTBEAT_FILE_SUFFIX,
+  writeWatcherHeartbeat,
+  WATCHER_HEARTBEAT_SCHEMA_VERSION,
+} from './watcher-heartbeat.js';
 import { optional, optionalPositiveInteger, required, type Options } from './cli-options.js';
 import {
   cliIo,
@@ -36,7 +40,11 @@ export async function watchComms(
   const self = resolveSelfIdentity(options, env);
   const pollMs = optionalPositiveInteger(options, 'poll-ms') ?? DEFAULT_POLL_MS;
   const maxEvents = optionalPositiveInteger(options, 'max-events');
-  const heartbeatFile = optional(options, 'heartbeat-file');
+  const heartbeatFile = resolveHeartbeatFile({
+    explicit: optional(options, 'heartbeat-file'),
+    seenFile,
+    noHeartbeat: optional(options, 'no-heartbeat') !== undefined,
+  });
   const heartbeatIntervalMs =
     optionalPositiveInteger(options, 'heartbeat-interval-ms') ?? DEFAULT_HEARTBEAT_INTERVAL_MS;
   const seedFromNow = optional(options, 'seed-from-now') !== undefined;
@@ -64,6 +72,26 @@ export async function watchComms(
   });
 
   return runtime.stdout === undefined ? output : '';
+}
+
+/**
+ * Resolve the watcher heartbeat path. Liveness is ON BY DEFAULT: with no
+ * `--heartbeat-file`, the path is derived from the seen-file
+ * (`<seen-file>.heartbeat.json`) so the always-armed surface is consumable by
+ * a staleness/presence check (the F-95 `claims open` gate and
+ * `comms assert-watcher-live`); an explicit `--heartbeat-file` overrides the
+ * derived default (but NOT `--no-heartbeat`, which opts out entirely and takes
+ * precedence over both).
+ */
+function resolveHeartbeatFile(input: {
+  readonly explicit: string | undefined;
+  readonly seenFile: string;
+  readonly noHeartbeat: boolean;
+}): string | undefined {
+  if (input.noHeartbeat) {
+    return undefined;
+  }
+  return input.explicit ?? `${input.seenFile}${HEARTBEAT_FILE_SUFFIX}`;
 }
 
 function composeHeartbeatTick(input: {

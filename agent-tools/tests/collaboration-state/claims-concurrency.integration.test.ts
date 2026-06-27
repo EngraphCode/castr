@@ -1,13 +1,21 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
 import { runCollaborationStateCli } from '../../src/collaboration-state';
+import { resolveIdentity } from '../../src/collaboration-state/cli-identity';
+import { parseOptions } from '../../src/collaboration-state/cli-options';
 import {
   parseClosedClaimsArchive,
   parseCollaborationRegistry,
 } from '../../src/collaboration-state/state-io';
+import {
+  commsSeenFileForCodename,
+  DEFAULT_COMMS_SEEN_DIR,
+  heartbeatFileForSeen,
+} from '../../src/collaboration-state/watcher-presence';
+import { WATCHER_HEARTBEAT_SCHEMA_VERSION } from '../../src/collaboration-state/watcher-heartbeat';
 import {
   makeTempCollaborationRepo,
   removeDirectory,
@@ -94,6 +102,39 @@ function closeArgv(
   ];
 }
 
+// Each session arms a live, identity-matching comms-watcher heartbeat at the
+// canonical path so it passes the F-95 watcher-presence gate (LC1): the gate
+// refuses a blind claim into a populated registry, which is exactly the
+// concurrent scenario here. The heartbeat is resolved from the SAME identity
+// the CLI derives, written fresh (mtime ~= now -> classified `live`). The test
+// chdir's into the temp repo so the gate's cwd-relative comms-seen path resolves
+// under it; arming the watcher is the realistic team precondition, not a
+// weakening of the gate.
+async function armLiveWatcher(root: string, index: number): Promise<void> {
+  const identity = resolveIdentity(
+    parseOptions(openArgv(activeClaimsPath(root), index)),
+    sessionEnv(index),
+  ).agent_id;
+  const heartbeatPath = join(
+    root,
+    heartbeatFileForSeen(commsSeenFileForCodename(identity.agent_name, DEFAULT_COMMS_SEEN_DIR)),
+  );
+  await mkdir(dirname(heartbeatPath), { recursive: true });
+  const nowIso = new Date().toISOString();
+  const heartbeat = {
+    schema_version: WATCHER_HEARTBEAT_SCHEMA_VERSION,
+    pid: process.pid,
+    started_at: nowIso,
+    last_drain_at: nowIso,
+    last_emit_at: nowIso,
+    last_error_at: null,
+    emitted_count: 1,
+    heartbeat_interval_ms: 30000,
+    watcher_identity: identity,
+  };
+  await writeFile(heartbeatPath, `${JSON.stringify(heartbeat, null, 2)}\n`, 'utf8');
+}
+
 function claimIdFromOpenStdout(stdout: string): string {
   const parsed: unknown = JSON.parse(stdout);
   if (
@@ -111,7 +152,12 @@ describe('claims concurrency (real filesystem, full CLI stack)', () => {
   it('serializes concurrent claim opens without losing any write', async () => {
     const root = await makeTempCollaborationRepo();
     const activePath = activeClaimsPath(root);
+    const prevCwd = process.cwd();
     try {
+      process.chdir(root);
+      for (let index = 1; index <= SESSIONS; index += 1) {
+        await armLiveWatcher(root, index);
+      }
       const results = await Promise.all(
         Array.from({ length: SESSIONS }, (_, offset) => {
           const index = offset + 1;
@@ -131,6 +177,7 @@ describe('claims concurrency (real filesystem, full CLI stack)', () => {
       expect(new Set(registry.claims.map((claim) => claim.claim_id)).size).toBe(SESSIONS);
       expect(new Set(registry.claims.map((claim) => claim.agent_id.id)).size).toBe(SESSIONS);
     } finally {
+      process.chdir(prevCwd);
       await removeDirectory(root);
     }
   });
@@ -139,7 +186,12 @@ describe('claims concurrency (real filesystem, full CLI stack)', () => {
     const root = await makeTempCollaborationRepo();
     const activePath = activeClaimsPath(root);
     const closedPath = closedClaimsPath(root);
+    const prevCwd = process.cwd();
     try {
+      process.chdir(root);
+      for (let index = 1; index <= SESSIONS; index += 1) {
+        await armLiveWatcher(root, index);
+      }
       const opened = await Promise.all(
         Array.from({ length: SESSIONS }, (_, offset) => {
           const index = offset + 1;
@@ -169,6 +221,7 @@ describe('claims concurrency (real filesystem, full CLI stack)', () => {
       expect(archive.claims).toHaveLength(SESSIONS);
       expect(new Set(archive.claims.map((claim) => claim.claim_id)).size).toBe(SESSIONS);
     } finally {
+      process.chdir(prevCwd);
       await removeDirectory(root);
     }
   });

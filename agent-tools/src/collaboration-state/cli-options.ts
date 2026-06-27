@@ -18,7 +18,7 @@ export interface Options {
  * `--seed-from-now` would either be required to take a value or, if absent
  * from KNOWN_OPTION_KEYS, would silently consume the next non-`--` token.
  */
-const BOOLEAN_OPTION_KEYS = new Set(['seed-from-now', 'no-auto-seed']);
+const BOOLEAN_OPTION_KEYS = new Set(['seed-from-now', 'no-auto-seed', 'no-heartbeat']);
 
 const KNOWN_OPTION_KEYS = new Set([
   'active',
@@ -32,6 +32,7 @@ const KNOWN_OPTION_KEYS = new Set([
   'claim-id',
   'closed',
   'comms-dir',
+  'comms-seen-dir',
   'created-at',
   'closure-summary',
   'current-cycle-label',
@@ -40,6 +41,8 @@ const KNOWN_OPTION_KEYS = new Set([
   'events-dir',
   'file',
   'format',
+  'heartbeat-file',
+  'heartbeat-interval-ms',
   'help',
   'intent',
   'intent-id',
@@ -56,6 +59,7 @@ const KNOWN_OPTION_KEYS = new Set([
   'role',
   'shared-log',
   'seen-file',
+  'session-prefix',
   'subject',
   'summary',
   'tag',

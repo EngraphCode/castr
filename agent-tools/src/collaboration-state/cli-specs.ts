@@ -11,6 +11,7 @@ import { inboxComms } from './cli-comms-inbox.js';
 import { listComms, showComms } from './cli-comms-query.js';
 import { directComms, replyComms } from './cli-comms-messages.js';
 import { validateComms } from './cli-comms-validate.js';
+import { assertWatcherLive } from './cli-comms-assert-watcher-live.js';
 import { watchComms } from './cli-comms-watch.js';
 import { preflightIdentity } from './cli-identity.js';
 import { auditIdentity } from './cli-identity-audit.js';
@@ -22,6 +23,7 @@ import {
   claimsCloseOptions,
   claimsOpenOptions,
   commsAppendOptions,
+  commsAssertWatcherLiveOptions,
   commsDirectOptions,
   commsInboxOptions,
   commsReplyOptions,
@@ -40,6 +42,7 @@ import {
   claimsShowHelp,
   claimsStatusHelp,
   commsAppendHelp,
+  commsAssertWatcherLiveHelp,
   commsDirectHelp,
   commsInboxHelp,
   commsListHelp,
@@ -126,6 +129,11 @@ export const specs: Readonly<Record<string, CommandSpec>> = {
     help: commsWatchHelp,
     options: commsWatchOptions,
     handler: watchComms,
+  }),
+  'comms:assert-watcher-live': commandSpec({
+    help: commsAssertWatcherLiveHelp,
+    options: commsAssertWatcherLiveOptions,
+    handler: assertWatcherLive,
   }),
   'comms:direct': commandSpec({
     help: commsDirectHelp,

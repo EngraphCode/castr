@@ -62,19 +62,31 @@ Codex use their equivalent watch primitives.
 
 ### Liveness self-check (cycle boundaries)
 
-Pass `--heartbeat-file <path>` to make the watcher write a substrate-typed
-liveness heartbeat (the FM-2 cure surface, default interval 30 s, tunable via
-`--heartbeat-interval-ms`). The heartbeat records the watcher's drain/emit
+The watcher writes a substrate-typed liveness heartbeat **on by default** (the
+FM-2 cure surface, default interval 30 s, tunable via `--heartbeat-interval-ms`):
+with no `--heartbeat-file`, the path is derived from the seen-file
+(`<seen-file>.heartbeat.json`). The heartbeat records the watcher's drain/emit
 state and pid. At cycle boundaries, classify the watcher's liveness from this
 surface rather than trusting the supervisor's "running" status: a hung process
 cannot self-report, so an external staleness check is the only detection path
 for a hang that sits where no signal is armed. Use the `collaboration-state`
 staleness classifier, or stat the heartbeat file and treat an mtime older than
-`3 ×` the interval as stale. The heartbeat is **opt-in** — a watcher started
-without `--heartbeat-file` has no liveness surface, so always pass it in a team
-window. (Per-step `drain`/`emit`/`markSeen` deadlines that fail the watcher
-loud on a hung step are a planned hardening, tracked as the Oak-parity C3 item;
-until they land, the external staleness check above is the sole hang detector.)
+`3 ×` the interval as stale.
+
+**The heartbeat is the F-95 `claims open` backstop — keep it on the canonical
+path.** `claims open` refuses to stake a claim into a populated registry while
+this session is blind to comms, and `comms assert-watcher-live` is the move-1
+check; **both read ONLY the canonical heartbeat derived from the session's
+codename** (`.agent/state/collaboration/comms-seen/<agent_name>.json.heartbeat.json`)
+— they offer no path override, by design (a planted heartbeat must not satisfy
+the load-bearing backstop). So in a team window arm the watcher with the
+canonical `--seen-file` and do **not** pass a non-canonical `--heartbeat-file`
+or override `--agent-name`: a relocated or foreign-identity heartbeat is invisible
+to the gate and would make `claims open` falsely refuse every claim. `--no-heartbeat`
+opts out entirely (disables the liveness surface — and therefore the backstop).
+(Per-step `drain`/`emit`/`markSeen` deadlines that fail the watcher loud on a hung
+step are a planned hardening, tracked as the Oak-parity C3 item; until they land,
+the external staleness check above is the sole hang detector.)
 
 **Mutual cover — the detector cannot detect itself.** In a team window,
 every agent's cycle-boundary sweep ALSO staleness-checks the DIRECTOR'S
