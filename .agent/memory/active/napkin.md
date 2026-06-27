@@ -2,6 +2,32 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-27 (LC0 loop-closure meta-validator — Hidden Veiling Mirror / e8b57e)
+
+Landed LC0 (`0c859bd`, full `pnpm qg` green). Durable discoveries:
+
+- **"Cure a hollow `pnpm <script>` ref" is usually "bring a dropped Oak proxy", not "fix the doc" —
+  bring-the-iceberg recurs at the script-reference layer.** Of the 7 hollow refs LC0 caught, `check:profile`
+  was a real Oak root proxy (`pnpm agent-tools:repo-check profile`, and castr already had `repo-check profile`)
+  and `markdownlint-check:root`/`markdownlint:root` were real Oak gates — all DROPPED, not erroneous. Only
+  `cruise`→`depcruise` was a genuine doc typo. Before correcting a hollow ref, grep Oak `main` for the script
+  name; the cure is usually BRING (PDR-096), not edit. Same family as the bring-the-iceberg distilled entry.
+- **A `pnpm <script>` resolver must resolve against scripts ∪ `node_modules/.bin` — pnpm falls through to package
+  binaries** (`pnpm turbo` works, exit 0, even though `turbo` is not a package.json script). Measured firsthand;
+  without `.bin` the validator false-flags every binary invocation. Plus: code-context-only scanning (inline +
+  fenced) kills English-prose false positives ("prefer pnpm scripts…"), and fence tracking must key on the fence
+  CHARACTER (` ``` ` vs `~~~`) and length, or tilde fences (and nested fences) silently escape the catch.
+- **markdownlint bring: localise to the CLAIMED rule, not Oak's full ruleset.** Oak's `.markdownlint.json` lints
+  the whole default set; bringing it faithfully would surface hundreds of un-doctrined violations. castr has one
+  markdown rule (MD040), so `{ "default": false, "MD040": true }` enforces exactly what doctrine claims —
+  bring-by-default applies to the CLAIMED capability, the rest is a future lane. (Strict-lens-for-the-forced-fix.)
+- **MISTAKE (commit): subject-case.** First commit-message draft led the subject with "LC0 …" — commitlint
+  `subject-case` rejects an upper-case start. Lead the subject with a lowercase verb ("add …(LC0)…").
+- **Self-referential finding:** the commit skill claims a `.husky/commit-msg` hook runs commitlint, but
+  `commitlint.config.mjs` itself documents "No enforcing .husky/commit-msg hook is installed (owner decision,
+  2026-06-15); advisory/skill-driven" — so this Class-B item (LC4) is partly a DELIBERATE owner decision, not a
+  pure false claim. LC4 should reconcile the skill prose to that decision, not just "add the hook".
+
 ## 2026-06-26 (consolidation rotation — Eclipsed Lurking Moth / 1dfcd1)
 
 Dedicated knowledge-curation pass. Rotated the 2026-06-20 → 2026-06-21 windows to
