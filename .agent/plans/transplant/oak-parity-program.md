@@ -30,7 +30,7 @@ todos:
     status: completed
   - id: C4
     content: Re-add watcher liveness self-check + mutual-cover (opt-in --heartbeat-file reality); "Hardened against silent hangs" deferred to C3 (asserts unbuilt --step-timeout-ms, would be a costume)
-    status: completed
+    status: pending # RE-OPENED 2026-06-27 (Stratospheric Kiting Breeze, firsthand loop-closure audit): the "code primitives present" premise was DISPROVEN — the F-95 presence-GATE layer (claims-open-watcher-gate, watcher-presence, assert-watcher-live) is ABSENT and detectStaleWatcher is dead code (0 callers). Authoritative home: practice-loop-closure-remediation.md LC1.
   - id: C5
     content: Re-add liveness-heartbeat-cron loop-hygiene + remote cross-check sections
     status: completed
@@ -139,16 +139,16 @@ incomplete.
 
 ### Tier C — small / correctness
 
-| #   | Gap                                         | castr state (VERIFIED)                                                                                                   | Size   |
-| --- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------ |
-| C1  | practice-fitness URL-aware width (real bug) | `evaluate.ts:95` uses raw `line.text.length` → false-flags long-URL lines                                                | S      |
-| C2  | `assertClaimMatches` fail-loud guard        | `heartbeatClaim` silently `.map`-no-ops on no-match; `--role` dropped (fail-fast regression)                             | S      |
-| C3  | watcher silent-hang hardening               | loop has error taxonomy but no per-step timeout race (`WatcherTimeoutError`)                                             | M      |
-| C4  | watcher liveness self-check + mutual-cover  | code primitives present, rule guidance stripped                                                                          | S      |
-| C5  | liveness-heartbeat-cron loop hygiene        | 238L vs 283L, hygiene + remote cross-check sections missing                                                              | S      |
-| C6  | memory machinery dirs                       | quarantine/curator-passes/workstreams/operational-archive/memory-collaboration + agent-capability-vocabulary all MISSING | S each |
-| C7  | Claude settings keys                        | lacks `skillListingBudgetFraction` + `skillOverrides`                                                                    | S      |
-| C8  | hook error-logging lib                      | lacks `.claude/hooks/_lib/log-hook-errors.sh` (secrets hooks = assess coupling)                                          | S      |
+| #   | Gap                                         | castr state (VERIFIED)                                                                                                      | Size   |
+| --- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------ |
+| C1  | practice-fitness URL-aware width (real bug) | `evaluate.ts:95` uses raw `line.text.length` → false-flags long-URL lines                                                   | S      |
+| C2  | `assertClaimMatches` fail-loud guard        | `heartbeatClaim` silently `.map`-no-ops on no-match; `--role` dropped (fail-fast regression)                                | S      |
+| C3  | watcher silent-hang hardening               | loop has error taxonomy but no per-step timeout race (`WatcherTimeoutError`)                                                | M      |
+| C4  | watcher liveness self-check + mutual-cover  | RE-OPENED 2026-06-27: F-95 presence-GATE layer ABSENT (NOT "primitives present"); detector dead — see loop-closure plan LC1 | S      |
+| C5  | liveness-heartbeat-cron loop hygiene        | 238L vs 283L, hygiene + remote cross-check sections missing                                                                 | S      |
+| C6  | memory machinery dirs                       | quarantine/curator-passes/workstreams/operational-archive/memory-collaboration + agent-capability-vocabulary all MISSING    | S each |
+| C7  | Claude settings keys                        | lacks `skillListingBudgetFraction` + `skillOverrides`                                                                       | S      |
+| C8  | hook error-logging lib                      | lacks `.claude/hooks/_lib/log-hook-errors.sh` (secrets hooks = assess coupling)                                             | S      |
 
 ### Confirmed NON-gaps (deliberate localisation / product-coupling — recorded so a future audit does not re-flag)
 

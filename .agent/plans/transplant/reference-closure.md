@@ -680,6 +680,12 @@ carveout (parity in `stage-by-explicit-pathspec.md`). The four `.ts` deltas are 
 other names — `agent-id.ts`→`types`/`identity`, `cli-claim-areas.ts`→`cli-claim-commands`, `cli-comms-send.ts`→
 `cli-comms-commands`, `comms-watch-errors.ts`→`comms-watch-loop` (each verified at the identifier level: `uuidV5Schema`,
 `areaFromOptions`, `sendComms`, `WatcherErrorKind`). **Verdict: nothing to bring in phase-8 scope.**
+**[CORRECTED 2026-06-27 (Stratospheric Kiting Breeze, firsthand loop-closure audit) — this VERDICT WAS WRONG:**
+the set-difference under-counted. It omitted the entire F-95 presence-GATE layer (`claims-open-watcher-gate`,
+`watcher-presence`, `cli-comms-assert-watcher-live`), `coordination-home`, and `cli-claim-handoff-commands` (~6
+source files); and the `comms-watch-errors`→`comms-watch-loop` "covered" claim is only the `WatcherErrorKind`
+type — the `runWithDeadline`/`WatcherTimeoutError` deadline machinery is absent. Authoritative remediation home:
+[`practice-loop-closure-remediation.md`](./practice-loop-closure-remediation.md) LC1/LC3.]
 
 - **D4 back-bring item ✅ LANDED (2026-06-20, branch `feat/d4-archive-provenance-backbring`@`0a75231`, unpushed):** the
   two genuinely-new Oak-pin collaboration subsystems castr lacked were brought by Seat 2 (Secret Watching Candle) in the
