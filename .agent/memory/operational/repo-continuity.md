@@ -100,6 +100,23 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-27, Open Lofting Feather / c82112): loop-closure LC3 sub-slice (a) machine-local-paths ✅ DONE; next is LC3(b/c/d).**
+> Brought Oak's `validate-no-machine-local-paths` validator (validator + pure helpers + unit tests), localised to castr's
+> direct-`git` convention; added a `machine-local-path` regex scoped_block to `policy.json` (single-sources the pattern set
+> AND lights the PreToolUse write-time guard repo-wide); wired blocking into `repo-validators:check`. **Loop proven at the
+> real layer:** validator found **324 real machine-local hits** across 29 tracked files → exit 1; doctrine-scoped, category-
+> aware cure (`archive/` exempt per the rule's own Detection scope; stale self-links → repo-relative; Oak-checkout → `<oak>`;
+> vendored/test placeholders → `<user>`) → exit 0 (2240 files clean). The write-guard then fired live blocking a literal path
+> in a plan edit. Reviewers (code/test/config) run, findings folded firsthand: `'u'` flag added; an inaccurate "never drift"
+> claim corrected; the blocking contract proven (exit 0/1/2 + fail-loud, extracted to testable helpers, parity-or-better over
+> Oak). Case-SENSITIVE kept by MEASUREMENT (adding `i` false-positives on lowercase OpenAPI route fixtures). Full `pnpm check`
+> green. **Commits LOCAL (push = owner's call); origin still at `4799886`.** **Owner correction this session:** don't gate the
+> ordering of independent, reversible, all-must-be-done items — choose, signpost, proceed (memory `dissolve-owner-gating-with-four-lenses`
+> sharpened). **Next: LC3(b)** PDR-063 claim handoff/adopt, **(c)** watcher step-deadline [C3], **(d)** fitness staleness axes
+> → LC4 → LC5. Deferred (recorded, not done): 5 pre-existing dead links surfaced by the cure (doc-hygiene sweep); the
+> published-archive-PII question (archive is rule-exempt). Detail:
+> [`practice-loop-closure-remediation.md`](../../plans/transplant/practice-loop-closure-remediation.md) § As-built (LC3a).
+
 > **CURRENT TRUTH (2026-06-27, Hidden Veiling Mirror / e8b57e): loop-closure LC0 ✅ + LC1 ✅ + LC2 ✅ DONE; next is LC3.**
 > Six commits this session, all `pnpm qg` green, **LOCAL (push = owner's call); origin still at `4799886`.**
 > **LC0 (`0c859bd`+`f829783`):** `validate-loop-closure-references` meta-validator (TDD, 40 tests) wired blocking into
@@ -273,8 +290,8 @@ Continuity invariants (the non-negotiables a resuming agent must hold):
   Practice directly from the local checkout's `main` at whatever it currently is.
   **Always read via `git -C <oak> show main:<path>`** (deterministic; avoids the
   dirty/other-branch working-tree trap that produced a false-absence error
-  2026-06-20). The owner keeps `<oak>` =
-  `/Users/jim/code/oak-open-curriculum-ecosystem` pulled current.
+  2026-06-20). The owner keeps the local Oak checkout (`<oak>`) pulled
+  current.
   **Never anchor a live Oak SHA into castr's permanent docs as a baseline** —
   reference Oak by path/concept and capture what was brought in castr's _own_
   commits. This keeps `no-moving-targets-in-permanent-docs` satisfied: a living

@@ -36,6 +36,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-27   |
 | claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
 | claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor     | 2026-06-27    | 2026-06-27   |
+| claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-27   |
 
 ## Lanes
 
@@ -150,12 +151,19 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   the self-mod guard); stage-2 refuse-and-route git merge driver + `.gitattributes` (`.agent/memory/**/*.md`) +
   postinstall registration. **Loop closure proven by a real `git merge`** (driver fired, routed, left file unmerged).
   Parity-or-better (Oak ships only the passive skill). Full `pnpm qg` green. As-built: plan § LC2 as_built.
-- **Next safe step:** **LC3** (machine-local-paths validator + wire into repo-validators:check; PDR-063 claim
-  handoff/adopt; **watcher step-deadline** — the C3 `comms-watch-errors`/WatcherTimeoutError item, in the same
-  cli-comms-watch Oak file LC1 drew from, deliberately NOT brought in LC1; fitness staleness axes) → **LC4** (Class-B
-  doctrine-vs-reality, protected by LC0's gate) → **LC5** (Claude-only-enforcement scope + the CI-doesn't-run-qg
-  finding). Plus the two LC1 Oak-faithful fail-opens (future `--now`; cwd-relative heartbeat path) → a hardening slice
-  - Oak back-flow (own slice, see plan § As-built (LC1)).
+- **LC3(a) ✅ DONE (2026-06-27, Open Lofting Feather / c82112).** machine-local-paths validator brought from Oak +
+  wired blocking into `repo-validators:check`; `machine-local-path` scoped_block added to policy.json (single-sources
+  the validator's patterns AND lights the PreToolUse write-time guard). Loop proven at the real layer: 324 real hits →
+  exit 1 → doctrine-scoped cure (`archive/` exempt per the rule) → exit 0 (2240 files clean); the write-guard fired live
+  on a literal path. Reviewers folded firsthand (`'u'` flag; "never drift" wording corrected; blocking contract proven —
+  parity-or-better, exit/skip/fail-loud extracted + tested). Case-sensitive kept by measurement. Full `pnpm check` green.
+  Deferred: 5 pre-existing dead links (doc-hygiene); published-archive-PII question. As-built: plan § As-built (LC3a).
+- **Next safe step:** **LC3(b)** PDR-063 claim handoff/adopt (`cli-claim-handoff-commands.ts` — confirm-or-bring the
+  recorded forward-deferral); **LC3(c)** watcher step-deadline — the C3 `comms-watch-errors`/WatcherTimeoutError item, in
+  the same cli-comms-watch Oak file LC1 drew from, deliberately NOT brought in LC1; **LC3(d)** fitness staleness axes →
+  **LC4** (Class-B doctrine-vs-reality, protected by LC0's gate) → **LC5** (Claude-only-enforcement scope + the
+  CI-doesn't-run-qg finding). Plus the two LC1 Oak-faithful fail-opens (future `--now`; cwd-relative heartbeat path) → a
+  hardening slice + Oak back-flow (own slice, see plan § As-built (LC1)).
 - **Acceptance:** every loop CLOSES (D→M→W→S verified firsthand); LC0 catches the class going forward; C4/Task-6
   corrected; graduate the loop-closure completeness test as a PDR-096 amendment on completion.
 

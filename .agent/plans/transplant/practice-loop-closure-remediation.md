@@ -18,7 +18,7 @@ controlling_lane: >-
   § Lane: Oak Parity-or-Better Program
 read_model_note: >-
   Oak read live from `main` via
-  `git -C /Users/jim/code/oak-open-curriculum-ecosystem show main:<path>`. Re-measure
+  `git -C <oak> show main:<path>`. Re-measure
   at execution: the loop map below was measured 2026-06-26/27 and Oak main moves.
 method_loop_closure_test: >-
   A Practice feedback loop is CLOSED only if all four links exist and connect:
@@ -118,14 +118,34 @@ todos:
       Class-A — remaining missing enforcement, each its own slice: (a) machine-local-paths
       validator (Oak `validators/machine-local-paths/`) + wire into repo-validators:check —
       the `no-machine-local-paths` rule is prose-only today, and castr's own repo-continuity
-      carries a /Users/jim path nothing catches; (b) PDR-063 claim handoff/adopt
+      carries a machine-local path nothing catches; (b) PDR-063 claim handoff/adopt
       (`cli-claim-handoff-commands.ts` — `set-handoff`/`adopt`); (c) comms-watch per-step
       deadline (`comms-watch-errors.ts` — WatcherTimeoutError/runWithDeadline) so a hung
       watcher fails loud instead of looking alive; (d) fitness staleness axes
       (decision-debt/dwell/item-count/categories) — castr fitness is size/token-only, blind
       to register rot. TDD per code slice; (b) is partly a recorded forward-deferral
       (handoffs/README) — confirm or bring.
-    status: pending
+    status: in_progress
+    as_built: >-
+      (a) DONE (Open Lofting Feather, 2026-06-27). machine-local-paths validator brought from
+      Oak (validator + pure helpers + unit tests), localised to castr's direct-`git` convention
+      (no trusted-git.ts; matches commit-queue/git.ts). `machine-local-path` regex scoped_block
+      added to policy.json (single-sources the pattern set AND lights the PreToolUse write-time
+      guard repo-wide via empty-string include scope); wired blocking into repo-validators:check.
+      LOOP PROVEN AT THE REAL LAYER: the validator found 324 real machine-local hits across 29
+      tracked files → exit 1; after a doctrine-scoped, category-aware cure → exit 0 (2240 files
+      clean). Cure: archive/ EXCLUDED (the rule's own Detection greps outside archive/ — frozen
+      records); stale old-`personal/castr`-layout self-links → repo-relative (depth-correct);
+      doctrinal Oak-checkout paths → `<oak>` placeholder; cross-repo research refs → prefix-stripped;
+      vendored mcp-docs tutorial placeholders + 2 test fixtures → bracketed `<user>`. Reviewers
+      (code/test/config) run, findings folded firsthand: added `'u'` flag to validator regex
+      (schema-parity, drift foot-gun); corrected an inaccurate "never drift" claim to name the two
+      deliberate scan/case differences (a Class-B false-claim cured in-lane); extracted
+      exit/skip/fail-loud logic to testable helpers + proved the BLOCKING contract (exit 0/1/2 +
+      fail-loud-on-unreadable, 10 tests). Case-SENSITIVE kept by MEASUREMENT (adding `i`
+      false-positives on lowercase OpenAPI route fixtures). The write-time guard was confirmed live
+      when it blocked this very as_built edit's literal path. Full `pnpm check` green. See
+      § As-built (LC3a). (b)/(c)/(d) remain pending — each its own slice.
     depends_on: []
   - id: LC4
     content: >-
@@ -361,6 +381,57 @@ changed in LC1:
   from a cwd in repoB where this identity has a live heartbeat reads repoB's heartbeat → admits
   a blind claim into repoA (fail-open); the common cwd≠root case is fail-closed (false block).
   Cure candidate: derive the comms-seen dir from the `--active` path's repo root.
+
+## As-built (LC3a) — 2026-06-27 (Open Lofting Feather)
+
+LC3 sub-slice **(a) machine-local-paths validator** landed (full `pnpm check` green). The bring +
+cure detail is in the LC3 todo `as_built`. Design + process points worth conserving:
+
+- **Doctrine defines the gate's scope — read the rule before sizing the cure.** The
+  `no-machine-local-paths` rule's own Detection section greps outside `archive/` and states matches
+  must be zero "outside archive/ directories." So `archive/` is a DELIBERATE exemption (frozen
+  historical records; rewriting them corrupts the record). The validator's exclude_paths encodes
+  exactly that — it is NOT a hollow gate, it is the documented invariant scope. The rule does NOT
+  exempt research/ or reference/, so those were cured, not excluded.
+- **Loop proven at the real layer, not just unit-green.** The validator found 324 real hits → exit
+  1; cure → exit 0. Then the PreToolUse write-time guard (same single-sourced block) fired live
+  when it blocked a literal machine-local path in a plan edit. Both halves of D→M→W→S demonstrated
+  firing on real input, the loop-closure completeness bar (not artefact presence).
+- **Case-sensitivity is a MEASURED determination, not a copy-from-Oak default.** Two reviewers
+  flagged that the validator compiles patterns case-sensitively while the write-hook uses `iu`.
+  Rather than "align them," I measured: case-insensitive would match lowercase route segments that
+  appear in real OpenAPI writer test fixtures under `lib/`, i.e. false-positive on legitimate
+  non-paths. macOS canonical is capitalised; case-sensitive is correct for the backstop scan. The
+  `'u'` flag WAS added (schema-parity; closes a latent drift foot-gun). The asymmetry is documented
+  in the helper module as deliberate, not drift.
+- **A bulk cure under-scopes — verify the diff of every category, not just the validator.** The
+  category sed transforms collaterally mangled the rule file's own teaching example (a literal
+  user-home `code/oak/...` illustration got prefix-stripped, destroying the thing it teaches) and
+  produced malformed `file://../` URIs (a relative path cannot follow the `file://` authority
+  marker). Both caught only by reading the diffs firsthand (the same bring-the-iceberg /
+  verify-firsthand pattern that recurs across this lane).
+
+### Reviewer findings folded (firsthand) and deferred
+
+Code/test/config reviewers all rated the change mergeable. **Folded in LC3a:** the `'u'` flag; the
+"never drift" wording correction (now names the scan + case differences); the blocking-contract
+test gap (extracted exit/skip/fail-loud to pure helpers + 5 new tests, incl. fail-loud-on-unreadable
+via an injected reader — parity-or-BETTER over Oak, whose validator leaves the wrapper untested).
+
+**Deferred (recorded, not LC3a scope):**
+
+- **5 pre-existing dead links surfaced by the cure (code-reviewer LOW).** The prefix-swap faithfully
+  preserved already-stale link suffixes in historical/complete records (e.g. a moved
+  `session-entry.prompt.md`, a removed e2e test). They predate this change and are machine-local-clean
+  now; their target-staleness is a separate doc-hygiene concern → a future markdown-links sweep.
+- **PII-in-archive consideration.** `archive/` is rule-exempt (frozen records), but archived napkins
+  still contain real user-home segments that would leak if the repo is published. Honoring the rule
+  as written; flagging the published-archive-PII question as an owner/rule-scope item, not a
+  unilateral stricter gate.
+- **LC5 CI-scope gap reconfirmed (config-expert).** `.github/workflows/ci.yml` does not run
+  `check:ci`/`repo-validators`, and its path filter is `lib/**` — so this gate (like its siblings)
+  enforces local-pre-push only and would not even trigger for this `.agent`/`agent-tools` change.
+  Already folded into LC5.
 
 Minor (code-reviewer suggestions, not actioned): `--now` validation message overstates "ISO-8601"
 (`Date.parse` is lenient); the writer re-concats the heartbeat suffix rather than calling
