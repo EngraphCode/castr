@@ -87,11 +87,13 @@ export const commsWatchHelp =
   'comms watch --comms-dir <dir> --seen-file <path> ' +
   '--platform <platform> --model <model> ' +
   '[--session-prefix <prefix>] ' +
-  '[--poll-ms <n>] [--max-events <n>] ' +
+  '[--poll-ms <n>] [--max-events <n>] [--step-timeout-ms <n>] ' +
   '[--heartbeat-file <path>] [--heartbeat-interval-ms <n>] ' +
   '[--seed-from-now] [--no-auto-seed] ' +
   '(emits every relevant event — broadcast, group, directed, observed, lifecycle — ' +
-  'with self-exclusion only; heartbeat-file is the FM-2 cure liveness surface, default interval 30000ms; ' +
+  'with self-exclusion only; step-timeout-ms (default 60000) is the per-step deadline on ' +
+  'drain/emit/markSeen — a step that hangs past it makes the watcher exit non-zero (fail-loud) ' +
+  'instead of silently muting; heartbeat-file is the FM-2 cure liveness surface, default interval 30000ms; ' +
   'auto-seed-on-empty default seeds the seen-file with current events so a fresh ' +
   'watcher starts forward from now rather than replaying full history; ' +
   'pass --no-auto-seed to replay the full event history on an empty seen-file; ' +

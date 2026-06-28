@@ -17,6 +17,13 @@ import { type CollaborationAgentId, type CollaborationStateEnvironment } from '.
 
 const DEFAULT_POLL_MS = 500;
 const DEFAULT_HEARTBEAT_INTERVAL_MS = 30000;
+/**
+ * Generous per-step deadline (drain/emit/markSeen). 120x the default poll
+ * interval — wide enough that a slow filesystem never false-positives, tight
+ * enough that a genuinely hung step dies loud rather than muting the watcher
+ * silently for minutes (the 2026-06-10 hang-but-run incident).
+ */
+const DEFAULT_STEP_TIMEOUT_MS = 60000;
 
 /**
  * Watch the comms stream. Emits every non-self event under the current
@@ -40,6 +47,8 @@ export async function watchComms(
   const self = resolveSelfIdentity(options, env);
   const pollMs = optionalPositiveInteger(options, 'poll-ms') ?? DEFAULT_POLL_MS;
   const maxEvents = optionalPositiveInteger(options, 'max-events');
+  const stepTimeoutMs =
+    optionalPositiveInteger(options, 'step-timeout-ms') ?? DEFAULT_STEP_TIMEOUT_MS;
   const heartbeatFile = resolveHeartbeatFile({
     explicit: optional(options, 'heartbeat-file'),
     seenFile,
@@ -62,6 +71,7 @@ export async function watchComms(
 
   const output = await watchCommsLoop({
     maxEvents,
+    stepTimeoutMs,
     drain: (remainingEvents) => drainComms({ commsDir, seenFile, self, remainingEvents, io }),
     waitForChange: () => waitForCommsChange(runtime, { directory: commsDir, pollMs }),
     emit: async (text) => {

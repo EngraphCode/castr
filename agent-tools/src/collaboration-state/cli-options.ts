@@ -60,6 +60,7 @@ const KNOWN_OPTION_KEYS = new Set([
   'shared-log',
   'seen-file',
   'session-prefix',
+  'step-timeout-ms',
   'subject',
   'summary',
   'tag',
