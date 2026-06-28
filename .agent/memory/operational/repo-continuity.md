@@ -124,13 +124,14 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > (LC3c)** — FULLY SCOPED with a firsthand integration map in the gap-rescan backlog (comms-watch-errors.ts +
 > comms-watch-loop refactor + step-timeout-ms CLI threading + a fatal-timeout loop-closure test; timer-based, do not
 > rush) — then provenance+archive → claims-handoff → reference-direction → Oak-ADR cite-repair → plan-templates,
-> bringing freely per PDR-005 §Default. **TWO OWNER-ONLY ACTIONS pending from CI-runs-gates (NOT yet done):** (1) the
-> CI workflow only fires on push/PR to `main`, so it will first execute when the PR to main is opened (not on this
-> feature-branch push); (2) set `quality-gates` as a required status check in the main branch ruleset (GitHub repo
-> setting). Parallel
+> bringing freely per PDR-005 §Default. **DELIVERY: PR #3 (feat → main) OPEN + CI GREEN + MERGEABLE/CLEAN as of
+> 2026-06-28** (https://github.com/EngraphCode/castr/pull/3; quality-gates ran `check:ci` server-side, success; the
+> first run caught `main`'s unformatted PR-#2 research file, fixed by merging origin/main + reformatting). **ONE
+> OWNER-ONLY ACTION remaining:** set `quality-gates` as a required status check in the main branch ruleset (GitHub repo
+> setting) — now unblocked since CI is proven green. Parallel
 > castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
 > LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
-> commit-time (`.husky/commit-msg`). **`origin/feat` = `3954e1a` (pushed 2026-06-28: trusted-git + gitleaks + CI-runs-gates, owner-approved); the coordination-home commits + this continuity refresh are the newest local-unpushed. ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call.**
+> commit-time (`.husky/commit-msg`). **`origin/feat` = `2a853a4` (pushed 2026-06-28: trusted-git + gitleaks + CI-runs-gates + coordination-home + origin/main merged in + the prettier fix; all on PR #3, CI green). ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); a docs/continuity commit may be the newest local-unpushed; push = owner's call.**
 
 > **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
 > A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the
