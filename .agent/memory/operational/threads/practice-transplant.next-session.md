@@ -398,10 +398,15 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
 ## Standing decisions this thread carries
 
-- **Bring-by-default + transplant completeness (owner, 2026-06-26):** "the default for all capabilities is to bring
-  them over, always." The default disposition for any Oak capability is **BRING**; the burden of proof is on _not_
-  bringing (a positive deliberate-localisation reason — Oak product tooling / fail-fast-over-result-pattern), never
-  uncertainty (punting uncertainty to the owner is the `no-manufactured-permission` failure). Corollary — **transplant
+- **Bring-by-default + transplant completeness (owner, 2026-06-26; SHARPENED 2026-06-28):** "the default for all
+  capabilities is to bring them over, always." The default disposition for any Oak capability is **BRING**. **The bar
+  for NOT bringing is "utterly irrelevant to castr"** (genuinely product-coupled Oak tooling with no castr analogue) or
+  "not cleanly reversible" — NOT merely "an articulable deliberate-localisation reason." Bringing is reversible ("we can
+  always delete things later"), so err toward bringing; **never gate a bring behind a manufactured "case", "evidence",
+  or a deferred wire-vs-correct decision** when the item is plainly relevant infra (that hand-wringing is the
+  `no-manufactured-permission` failure the owner has now corrected repeatedly). A prior narrower owner decision is
+  superseded by this default unless re-confirmed. Graduated to **PDR-005 §Default disposition: bring by default**
+  (2026-06-28) + user-memory `bring-everything-by-default`. Corollary — **transplant
   completeness**: bring a capability's supporting infrastructure (script proxies, template libraries, catch-validators),
   not just the tip; a hollow transplant is fixed by bringing the missing infra, never by patching the doc to match the
   gap. Plans: [`../../../plans/transplant/transplant-completeness-supporting-infrastructure.md`](../../../plans/transplant/transplant-completeness-supporting-infrastructure.md)

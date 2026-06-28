@@ -1,7 +1,8 @@
 # PDR-005: Wholesale Practice Transplantation as a Third Genesis Scenario
 
 **Status**: Accepted (2026-04-18); amended 2026-04-22 Session 6
-(memory-feedback) — §Source-side preservation and seeding added.
+(memory-feedback) — §Source-side preservation and seeding added; amended
+2026-06-28 (owner directive) — §Default disposition: bring by default added.
 **Date**: 2026-04-18
 **Related**: [PDR-001](PDR-001-location-of-practice-decision-records.md)
 (numbering); [PDR-004](PDR-004-explorations-as-durable-design-space-tier.md)
@@ -57,6 +58,33 @@ legibility happens by eyeball and fails silently.
 **Wholesale Practice transplantation is a named third genesis scenario
 with its own process, vocabulary, and success criteria, distinct from
 plasmid integration and cold-start hydration.**
+
+### Default disposition: bring by default (owner, 2026-06-28)
+
+**The default disposition for any source capability is BRING.** The only
+admissible reason to NOT bring something is that it is **utterly irrelevant**
+to the destination (genuinely product-coupled source tooling with no
+destination analogue) — or, narrowly, that the bring is not cleanly reversible
+(it would corrupt data or could not be removed). Everything else comes over.
+
+The warrant is **asymmetry under reversibility**: a wrongly-brought artefact
+costs a cheap later deletion, while a wrongly-omitted one is a silent,
+recurring capability gap. Because bringing is reversible ("we can always
+delete it later"), the burden of proof sits entirely on _not_ bringing, and
+the bar is "utterly irrelevant," not "an articulable deliberate-localisation
+reason." An agent MUST NOT gate a bring behind a manufactured "case,"
+"evidence," or a deferred wire-vs-correct decision when the item is plainly
+relevant infrastructure — that hand-wringing is the failure mode this clause
+exists to kill (it is the same conservatism-costume the
+[`no-manufactured-permission`](../../rules/no-manufactured-permission.md) rule
+and the four-lens dissolution test in PDR-057 already forbid).
+
+The portability gradient below governs **how** to bring (copy verbatim,
+copy-and-adapt, extract-and-rewrite, or rebuild a local equivalent) — it is
+**not** a license to skip. The `local` position means "rebuild a destination
+equivalent," never "omit." A prior, narrower owner decision that declined a
+specific capability is superseded by this standing default unless the owner
+re-confirms it against this clause; record the supersession and bring it.
 
 ### The portability gradient
 
@@ -350,6 +378,33 @@ already-generalised get classified quickly as fully-portable). The
 two disciplines reinforce each other.
 
 ## Amendment Log
+
+### 2026-06-28 — Owner directive: Default disposition is bring by default
+
+**Driver**: the owner corrected the agent twice for gating a bring behind a
+manufactured justification (most recently: framing the wiring of a
+`.husky/commit-msg` guardrail as "evidence for a later decision" rather than
+just bringing it). Owner, verbatim: _"Bring everything over, it's a simple
+position, bring it all. The ONLY time to not bring something is where it is
+utterly irrelevant, but err on the side of bringing things over rather than
+hand-wringing, we can always delete things later."_ Plus: _"you don't need a
+bloody case to wire up husky."_
+
+**Change**: added §Default disposition: bring by default to §Decision. It sets
+the default to BRING, fixes the no-bring bar at "utterly irrelevant" (or
+not-cleanly-reversible), names the asymmetry-under-reversibility warrant,
+forbids gating a relevant bring behind a manufactured case, clarifies that the
+portability gradient governs HOW not WHETHER, and states that a prior narrower
+owner decision is superseded by this default unless re-confirmed.
+
+**Routing**: governance disposition → PDR amendment (here). Behavioural
+reinforcement → user-memory `bring-everything-by-default` and the thread
+standing-decisions block. Operational reframe → the loop-closure plan's LC4
+(wire-vs-correct framing dropped; the guardrail infra is simply brought).
+This composes with PDR-096 (bring-the-iceberg completeness — bring the
+supporting infra, not just the tip) and the dissolve-owner-gating / PDR-057
+four-lens test (most "should I bring?" questions are determinations, not
+decisions).
 
 ### 2026-04-22 — Session 6 (memory-feedback): Source-side preservation and seeding
 

@@ -38,8 +38,10 @@ COMMIT GATE]`. Orchestrates the commit skill's pre-`git commit` advisory
   practice vocabulary (`practice:vocabulary`), then the commit-message check
   (`pnpm agent-tools:check-commit-message`). Exits with the first non-zero exit
   code. **Use BEFORE every `git commit`** — but the exit is **advisory, not
-  blocking**. The blocking commit-time enforcement is `.husky/pre-commit`,
-  a separate enforcement surface (see "Quality Gates Are Always Blocking; the
+  blocking**. The blocking commit-time enforcement is `.husky/pre-commit`
+  (formatting) plus `.husky/commit-msg` (commitlint + the accidental-major-version
+  guard, installed 2026-06-28 — superseding the prior advisory-only posture),
+  separate enforcement surfaces (see "Quality Gates Are Always Blocking; the
   Orchestrator Is Advisory" below). Run via
   `pnpm agent-tools:check-commit-skill-advisories` and forward the
   same arguments you would pass to the message check (`-F file`,

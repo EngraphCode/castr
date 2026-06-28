@@ -150,13 +150,13 @@ todos:
   - id: LC4
     content: >-
       Class-B — doctrine-vs-reality FALSE enforcement claims (the insidious class: agents
-      trust them). Per item, DECIDE wire-vs-correct (default: make the claim TRUE by wiring,
-      bring-by-default): (1) HEADLINE — the commit skill claims pre-commit runs the full
-      lint/test chain + a commit-msg hook runs commitlint + prevent-accidental-major-version;
-      reality (verified firsthand) = pre-commit is prettier-only, there is NO commit-msg hook,
-      commitlint + version-guard run NOWHERE automated. Cure: add a `.husky/commit-msg`
-      running commitlint + version-guard (make commit-time enforcement real) AND correct the
-      skill's enforcement-model prose. (2) commit-skill type-enum table says 11 types; config
+      trust them). WIRE BY DEFAULT (PDR-005 §Default disposition: bring by default — make the
+      claim TRUE by bringing/wiring the enforcement; "correct the prose instead" is ONLY for the
+      rare item where there is genuinely nothing to wire). (1) HEADLINE ✅ DONE 2026-06-28
+      (brought, not gated): `.husky/commit-msg` now runs commitlint + version-guard (commit-time
+      enforcement is real; supersedes the provisional 2026-06-15 advisory-only decision); the
+      commit skill's enforcement-model prose corrected to match; commitlint.config.mjs note
+      updated. (2) commit-skill type-enum table says 11 types; config
       allows 7 [feat,fix,refactor,test,docs,chore,perf] — correct the table. (3)
       `no-type-shortcuts` cites a repo-local `type-assertion-policy` ESLint rule that does not
       exist (orphan .test.ts; real ban is upstream consistent-type-assertions) — implement the

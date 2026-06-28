@@ -2,6 +2,12 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-28 (bring-everything disposition recorded + husky commit-msg guardrail — Open Lofting Feather / c82112)
+
+- **OWNER CORRECTION (repeated) — STOP gating brings behind a "case"; bring everything by default.** I framed wiring `.husky/commit-msg` as "live evidence for LC4" — coy hand-wringing. Owner: _"Bring everything over, it's a simple position, bring it all. The ONLY time to not bring something is where it is utterly irrelevant … we can always delete things later … you don't need a bloody case to wire up husky."_ The position: default = BRING; bar for NOT bringing = "utterly irrelevant" (or not cleanly reversible); bringing is reversible so err toward it; never demand a justification for plainly-relevant infra. Recorded to STICK in ACTIVE governance: user-memory `bring-everything-by-default`, **PDR-005 §Default disposition: bring by default**, thread standing-decisions (bar sharpened), LC4 reframed (wire-vs-correct → wire-by-default).
+- **A recorded-but-passive disposition recurs until it has an ACTIVE home loaded at session start.** bring-by-default was already in the thread standing-decisions (2026-06-26) and I STILL gated husky. A passively-held disposition loses to artefact gravity exactly like a passive rule (`passive-guidance-loses-to-artefact-gravity`); the cure is the user-memory entry (loaded every session) + the PDR, not another napkin line.
+- **Brought the husky commit-msg guardrail (the coy instance) — proven blocking.** `.husky/commit-msg` runs `prevent-accidental-major-version` then `commitlint --edit`. Tested firsthand: blocks a subject-case-bad message (exit 1), passes a good one (exit 0) — it would have caught BOTH my subject-case trips this session. Every prerequisite already existed in castr (the version-guard script, `@commitlint/cli`, the config); it was a 6-line hook + two doc reconciliations, no "case" needed. Superseded the provisional 2026-06-15 advisory-only decision (whose own note said "for now"). Next bring (not gated, sequencing only): Oak's richer pre-commit (markdownlint-staged + clearer messages).
+
 ## 2026-06-27 (LC3a machine-local-paths validator — Open Lofting Feather / c82112)
 
 Landed LC3(a): brought Oak's machine-local-paths validator, cured 324 real hits, wired blocking, full `pnpm check` green. Durable discoveries:
