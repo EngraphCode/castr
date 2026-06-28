@@ -33,6 +33,20 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **🧭 CURRENT FRONTIER (2026-06-28) — supersedes the "Phase 7 in progress" bullets below.** Transplant Phases 0–8 are
+> ✅ done + tagged. The work is now the **Oak Parity-or-Better Program** under the governing **bring-everything**
+> disposition (PDR-005 §Default disposition: bring unless utterly irrelevant). The **single authoritative Axis-A bring
+> backlog** is [`transplant/oak-castr-gap-rescan-2026-06-28.md`](./transplant/oak-castr-gap-rescan-2026-06-28.md)
+> (a two-pass firsthand-validated rescan; it folds the LC/TC/parity-tranche next-steps into one ordered spine). The
+> **live next-step pointer is [`repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
+> this roadmap is the durable product-milestone frame, not the daily next-step source. **Three axes** make up the "one
+> deep enhancement": **(A)** transplant/parity (active — the gap-rescan backlog), **(B)** product-correctness
+> remediation [`remediation/`](./remediation/) 02–07 (the 6 reproduced Criticals — currently dormant), **(C)** delivery
+> ([`delivery-ledger.md`](./delivery-ledger.md) — deprioritised). The A/B/C sequencing is an open owner decision
+> (`open-questions.md` Q-011): does B stay parked behind a now-much-larger A, given the no-undefined-later doctrine
+> below? The doctrine block below stays authoritative on the "one deep enhancement = both, nothing parked to an
+> undefined later" principle.
+
 > **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
 > skill+rule+subagent+hook definitions AND fix castr's known issues — the same goal, not competing priorities.** Owner
 > doctrine (2026-06-09): "all issues MUST be fixed, mostly now; sequencing with a named position is acceptable; an

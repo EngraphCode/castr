@@ -85,6 +85,11 @@ todos:
 
 # Oak Parity-or-Better Program
 
+> **🧭 GAP INVENTORY SUPERSEDED (2026-06-28) by [`oak-castr-gap-rescan-2026-06-28.md`](./oak-castr-gap-rescan-2026-06-28.md)** —
+> the single ordered Axis-A backlog (Tranche-3 A1 ArcAngel + A4 statusline + B/C3 items appear there). This plan is
+> retained as the executable parity-tranche RECORD (Tranche 1/2 as-built + the standing directive); it is no longer the
+> next-step source.
+
 Standing owner directive (2026-06-20): castr's agentic systems reach **parity-or-better** with Oak's,
 estate-wide. See user-memory `castr-parity-or-better-with-oak`. This plan is the authoritative gap
 inventory + execution plan; it **supersedes the transplant manifest's inventory**, which was

@@ -2,6 +2,13 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-06-28 (plan-system coherence review + consolidation — Open Lofting Feather / c82112)
+
+- **A multi-plan estate needs ONE next-step spine + CURRENT orientation surfaces — supersession banners aren't enough if the "read this first" doc itself goes stale.** Owner-asked review found next-steps were NOT single-sourced: the 3 designated orientation surfaces gave 3 contradictory "next" answers, 2 badly stale — `roadmap.md` "Phase 7 in progress" (7+8 done); `session-continuation.prompt.md` (continuity's "read this first") "NEXT = DC3 prettier" (2026-06-21, a week + the whole reason/LC/bring-everything/gap-rescan arc out of date); only `repo-continuity.md`'s top block was current. AND the same items were owned by 3–4 live plans (LC/TC/parity/gap-rescan all "ACTIVE").
+- **Root = castr LACKS Oak's PDR-096 "atomic-propagation-across-reader-surfaces" — the stale surfaces ARE the proof of why castr needs it** (it's in the gap-rescan backlog). When you fix a frontier you must propagate it to EVERY reader surface that claims to be an entry point, atomically, or they diverge.
+- **Cure (done this turn):** de-staled the 3 surfaces (banners → the gap-rescan backlog); made `oak-castr-gap-rescan-2026-06-28.md` the SINGLE Axis-A backlog (folded LC/TC/parity in as detail/as-built, bannered each plan); one continuity SINGLE-FRONTIER block (3 axes + single next + Q-011); recorded **Q-011** (axis A/B/C sequencing — product-remediation 02–07 is dormant behind a now-much-larger Axis A, in tension with the owner's own "nothing parked to undefined later / advancing transplant doesn't demote remediation" doctrine). Q-011 is the one genuine owner fork the review surfaced.
+- **Verdict shape that worked:** present-verdicts-not-menus — answered the owner's two questions directly (next-steps well-defined? partially; do plans bridge to the goal? transplant axis yes-once-consolidated, product + delivery axes dormant), with a per-surface evidence table, then did the mechanical fixes and surfaced only the genuine fork.
+
 ## 2026-06-28 (deep Oak→castr gap rescan — workflow-design lessons — Open Lofting Feather / c82112)
 
 Ran a two-pass ultracode rescan (49 agents) → authoritative bring backlog (`oak-castr-gap-rescan-2026-06-28.md`, `d08a569`). Durable workflow-design lessons:

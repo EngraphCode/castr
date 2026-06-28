@@ -8,6 +8,22 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **🧭 CURRENT TRUTH (2026-06-28) — READ THIS FIRST; supersedes the "NEXT = DC3 prettier" + all earlier next-step
+> framing below.** Transplant Phases 0–8 ✅ done + tagged. Since the dated banners below: the reason-skill bring landed
+> (`4f0bfe3`); the loop-closure lane LC0/LC1/LC2 + LC3(a) machine-local-paths validator landed; the **bring-everything
+> disposition** was ratified (PDR-005 §Default disposition + user-memory `bring-everything-by-default`); the
+> `.husky/commit-msg` guardrail was brought (commits are now linted at commit-time); and a **two-pass firsthand-validated
+> Oak→castr gap rescan** produced the **single authoritative Axis-A bring backlog**:
+> [`../plans/transplant/oak-castr-gap-rescan-2026-06-28.md`](../plans/transplant/oak-castr-gap-rescan-2026-06-28.md)
+> (it folds the LC/TC/parity-tranche next-steps into one ordered spine). **The live next-step pointer is
+> [`../memory/operational/repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
+> read that for the current frontier. Governing disposition: bring everything unless utterly irrelevant. Three axes —
+> (A) transplant/parity (active, the gap-rescan backlog), (B) product-remediation `remediation/02–07` (dormant),
+> (C) delivery (deprioritised) — with the A/B/C sequencing an open owner decision (`open-questions.md` Q-011). The
+> dependency-currency DC3–5 lane is a separate castr-internal lane, not Axis A. **`origin/feat` = `c86d4e1` as of
+> 2026-06-28 (the owner pushes between turns — re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice`;
+> only the newest local commit(s) are unpushed); push = owner's call.** Everything below is retained as dated history; trust this banner + repo-continuity for "what's next."
+
 > **2026-06-20 SCOPE-EXPANSION UPDATE (supersedes everything below it on scope — read this first).** The owner expanded
 > the work from "finish the transplant (Phases 0–9)" to the **[Oak Parity-or-Better Program](../plans/transplant/oak-parity-program.md)**:
 > _"upgrade everything in castr that is less sophisticated or powerful than Oak; castr is not meant to stay simple"_

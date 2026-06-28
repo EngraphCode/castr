@@ -19,18 +19,18 @@ only.
 
 ## Status
 
-| Phase | Surface                                                                                      | Status                  | Tag                           |
-| ----- | -------------------------------------------------------------------------------------------- | ----------------------- | ----------------------------- |
-| 0     | Setup — branch, baseline, plan promotion, park product plan                                  | ✅ done                 | `transplant/phase-0-baseline` |
-| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context     | ✅ done                 | `transplant/phase-1`          |
-| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                     | ✅ done                 | `transplant/phase-2`          |
-| 3     | Skills + commands→skills                                                                     | ✅ done                 | `transplant/phase-3`          |
-| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                                   | ✅ done                 | `transplant/phase-4`          |
-| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                      | ✅ done                 | `transplant/phase-5`          |
-| 6     | Sub-agents / memory / state                                                                  | ✅ done                 | `transplant/phase-6`          |
-| 7     | Adapters + flip portability/subagents gates                                                  | ✅ done (2026-06-20)    | `transplant/phase-7`          |
-| 8     | Collaboration machinery ACTIVE                                                               | 🔶 partial (2026-06-20) | `transplant/phase-8`          |
-| 9     | closure gate (practice-verification + relevance ledger + handoff) — AFTER the parity program | ⬜ gated by parity      | `transplant/phase-9`          |
+| Phase | Surface                                                                                      | Status               | Tag                           |
+| ----- | -------------------------------------------------------------------------------------------- | -------------------- | ----------------------------- |
+| 0     | Setup — branch, baseline, plan promotion, park product plan                                  | ✅ done              | `transplant/phase-0-baseline` |
+| 1     | Practice Core + ~90 PDRs + provenance + verification + fitness + retire practice-context     | ✅ done              | `transplant/phase-1`          |
+| 2     | `@engraph/agent-tools` + hook policy (+ live guards, §6 drift validator)                     | ✅ done              | `transplant/phase-2`          |
+| 3     | Skills + commands→skills                                                                     | ✅ done              | `transplant/phase-3`          |
+| 4     | Rules + RULES_INDEX + reference-closure (36 Oak-ADR cites)                                   | ✅ done              | `transplant/phase-4`          |
+| 5     | Directives (7 generic, additive) + Oak rules-delta fold                                      | ✅ done              | `transplant/phase-5`          |
+| 6     | Sub-agents / memory / state                                                                  | ✅ done              | `transplant/phase-6`          |
+| 7     | Adapters + flip portability/subagents gates                                                  | ✅ done (2026-06-20) | `transplant/phase-7`          |
+| 8     | Collaboration machinery ACTIVE                                                               | ✅ done (2026-06-20) | `transplant/phase-8`          |
+| 9     | closure gate (practice-verification + relevance ledger + handoff) — AFTER the parity program | ⬜ gated by parity   | `transplant/phase-9`          |
 
 ## Resume point (next session)
 
@@ -83,6 +83,13 @@ roster, the castr gate chain) into the start-right shared core; retired castr's 
   `relevance-ledger.md` §"Deferred-validator …".
 
 ## Next steps (in order)
+
+> \*\*🧭 SUPERSEDED (2026-06-28) — the live next-step source is the [Oak→castr gap rescan backlog](./oak-castr-gap-rescan-2026-06-28.md)
+>
+> - [`repo-continuity.md` Next Safe Steps](../../memory/operational/repo-continuity.md#next-safe-steps).\*\* Phases 0–8 ✅
+>   done; Phase 9 is the post-parity closure gate. The "Oak held at `ad649710`" baseline below is RETIRED — Oak is now
+>   read live from `main` (no pin), per [`repo-continuity.md` §Repo-Wide Invariants](../../memory/operational/repo-continuity.md#repo-wide-invariants--non-goals).
+>   Everything below is dated history.
 
 **Step 0 — review the updated Oak agentic estate (owner-directed). ✅ DONE 2026-06-07.** Scanned `2c85bc01..ad649710`
 whole-estate by surface. **Finding:** the delta is dominated by DON'T-BRING runtime event data (two ~2,900-line

@@ -192,6 +192,11 @@ todos:
 
 # Practice loop-closure remediation — close the open feedback loops
 
+> **🧭 FOLDED (2026-06-28): next-step source is now [`oak-castr-gap-rescan-2026-06-28.md`](./oak-castr-gap-rescan-2026-06-28.md)** —
+> LC3(b/c/d), LC4, LC5 appear there as Tier-1/2 backlog entries (LC0/LC1/LC2/LC3a ✅ done; LC4-item-1 commit-msg hook ✅).
+> This plan is retained for the loop-closure-completeness thesis + per-item as-built/TDD detail, not as a competing
+> "what's next" source.
+
 ## Problem and intent
 
 The owner challenged whether Oak's coordination machinery was actually brought, and

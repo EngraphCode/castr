@@ -97,7 +97,11 @@ tension); pending-graduations multi-agent-audit-harness pattern candidate. Buffe
 rotation); `distilled.md` ~54 (<200); `pending-graduations.md` 2 items (PDR-096-amendment + audit-harness, both
 trigger-NOT-fired); `open-questions.md` 3 open (Q-008/009/010, all owner-facing); incoming box empty; entry points
 thin pointers, no drift; no track cards / open conversations / escalations; all session claims closed. No Practice-Core
-amendment beyond the owner-directed PDR-005 §Default. The commits + permanent homes are the record. **Next deep
+amendment beyond the owner-directed PDR-005 §Default. **Follow-on (2026-06-28, same session): plan-system coherence
+review + consolidation** — de-staled the 3 orientation surfaces (roadmap / transplant-tracker / session-continuation
+prompt) to point at the single Axis-A backlog; folded LC/TC/parity plans into `oak-castr-gap-rescan-2026-06-28.md`
+(one ordered spine + banners); collapsed Next Safe Steps to one SINGLE-FRONTIER block (3 axes); recorded Q-011 (axis
+A/B/C sequencing). The commits + permanent homes are the record. **Next deep
 consolidation: not due** until a new trigger (napkin rotation cadence, a fresh capture batch, or a milestone close —
 e.g. the loop-closure lane completing → PDR-096 amendment, or a 2nd audit-harness instance → the pattern-PDR).
 
@@ -105,6 +109,19 @@ e.g. the loop-closure lane completing → PDR-096 amendment, or a 2nd audit-harn
 artefacts it homed (memory layout, substrate contract, patterns import, sub-agent roster, the phase tags). -->
 
 ## Next Safe Steps
+
+> **🧭 SINGLE FRONTIER (2026-06-28) — this block + the one below are the ONLY current "what's next"; every dated block
+> further down is history (superseded on next-step).** The "one deep enhancement" has **three axes**: **(A)
+> transplant/parity** — ACTIVE; its single ordered backlog is
+> [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (the LC / TC /
+> parity-tranche plans are FOLDED into it — see its "single ordered backlog" section). **(B) product-remediation**
+> `remediation/02–07` (6 reproduced Criticals) — DORMANT. **(C) delivery** — DEPRIORITISED. **The single next action**
+> = start the Axis-A Tier-1 spine (trusted-git first → CI-runs-gates + gitleaks → coordination-home → watcher-deadline →
+> provenance+archive → claims-handoff → reference-direction → Oak-ADR cite-repair → plan-templates), bringing freely per
+> PDR-005 §Default. **Open owner decision: Q-011** (A/B/C sequencing — is B parked behind a now-larger A?). Parallel
+> castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
+> LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
+> commit-time (`.husky/commit-msg`). **HEAD `73af09a`; `origin/feat` = `c86d4e1` as of 2026-06-28 (the owner pushes between turns — ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice`; only the newest local commit(s) are unpushed); push = owner's call.**
 
 > **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
 > A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the
@@ -130,7 +147,7 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > in a plan edit. Reviewers (code/test/config) run, findings folded firsthand: `'u'` flag added; an inaccurate "never drift"
 > claim corrected; the blocking contract proven (exit 0/1/2 + fail-loud, extracted to testable helpers, parity-or-better over
 > Oak). Case-SENSITIVE kept by MEASUREMENT (adding `i` false-positives on lowercase OpenAPI route fixtures). Full `pnpm check`
-> green. **Only the 3 LC3a-session commits are LOCAL (push = owner's call); `origin/feat` has ADVANCED to `4615abb`** —
+> green. **(Historical SHA note, superseded by the SINGLE-FRONTIER block above — re-verify origin live.)** `origin/feat` has ADVANCED (was `4799886` → `4615abb` → `c86d4e1`; the owner pushes between turns) —
 > the owner pushed the LC0/LC1/LC2 closeout since 2026-06-27, so every prior block's "origin still at `4799886` /
 > unpushed" push-state is SUPERSEDED (4799886 is now an ancestor). **Owner correction this session:** don't gate the
 > ordering of independent, reversible, all-must-be-done items — choose, signpost, proceed (memory `dissolve-owner-gating-with-four-lenses`

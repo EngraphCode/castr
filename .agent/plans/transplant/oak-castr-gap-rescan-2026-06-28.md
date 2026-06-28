@@ -33,6 +33,27 @@ everything not marked OUT-OF-SCOPE; "utterly irrelevant" (product-coupled) is th
 no-bring bar. Items are impact-ordered within tiers, each with its `oak_path` so any line
 can be re-verified firsthand.
 
+## This is the single ordered backlog for Axis A — folded plans (2026-06-28)
+
+To end the "same item owned by 3–4 plans" problem, this doc is the **single source of truth
+for the next-step ordering of Axis A** (the Oak→castr bring program). The earlier per-theme
+plans are **folded in** — their items appear here as Tier entries; those plans are retained
+for **as-built history + per-item TDD/bring detail**, not as competing "what's next" sources:
+
+- [`practice-loop-closure-remediation.md`](./practice-loop-closure-remediation.md) — LC3(b)
+  claims-handoff, LC3(c) watcher-deadline, LC3(d) fitness-axes, LC4 (Class-B doctrine-vs-reality
+  incl. the 1 done = commit-msg hook), LC5 (CI-runs-gates) → all appear in Tier 1/2 here.
+- [`transplant-completeness-supporting-infrastructure.md`](./transplant-completeness-supporting-infrastructure.md) —
+  TC2 plan-templates, TC4 dangling-ref disposition, TC1b (pr-watch + install-cursor-statusline) → Tier 1/2 here.
+- [`oak-parity-program.md`](./oak-parity-program.md) — its **executable tranche record stays**; its **gap inventory
+  is superseded by this doc**. Tranche-3 A1 ArcAngel + A4 statusline + the B/C3 items → Tier 1/2 here.
+
+**Parallel castr-internal lanes — NOT Axis A (not Oak-gaps; tracked separately in the thread record):**
+dependency-currency DC3–5; the first-run friction-fix tranche; hook-matcher precision; the two LC1 Oak-faithful
+fail-opens (hardening plus Oak back-flow); and the two open castr-internal cleanups Q-009 (PDR 096/097 renumber)
+and Q-010 (principles.md Result-vs-fail-fast). **Axis B** = product-remediation `remediation/02–07`. **Axis C** =
+delivery. A/B/C sequencing is open owner decision Q-011.
+
 ## Firsthand corrections to the subagent findings (owner mandate: "critically analyse all subagent findings and sources")
 
 The authoring agent re-verified the load-bearing and contradiction-prone claims directly.

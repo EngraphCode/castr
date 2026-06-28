@@ -81,6 +81,22 @@ now:** needs an owner call on whether Result has any sanctioned place in castr o
 superseded by fail-fast. **Owning artefact:** `principles.md` + `oak-castr-gap-rescan-2026-06-28.md`
 §Firsthand corrections. **Status:** open — castr-internal cleanup, owner-facing.
 
+### Q-011 — how should the three axes (A transplant/parity, B product-remediation, C delivery) be sequenced?
+
+`Captured: 2026-06-28 | source: plan-system coherence review`
+
+**Question:** the "one deep enhancement" has three axes: **(A)** the Oak→castr Practice transplant + parity-or-better
+(active — the gap-rescan backlog, which the 2026-06-28 rescan just enlarged substantially); **(B)** the deep-review
+product-correctness remediation `remediation/02–07` (6 reproduced Critical defects — currently dormant, every plan
+"deferred, trigger: after the transplant"); **(C)** delivery (the one PR to `main` — deprioritised). The review found
+B sits in tension with the owner's own roadmap doctrine ("all issues MUST be fixed, mostly now; an undefined 'later'
+is never; advancing the transplant does not demote remediation") — and Axis A just grew, pushing B further out.
+**Why it shapes future work:** it decides whether the next slices come from the gap-rescan backlog (A) or whether B
+(the reproduced Criticals) is interleaved/promoted; it is the top-level priority call for the whole programme.
+**Why not cheaply now:** a genuine owner priority/risk decision (ship-correctness-first vs finish-the-substrate-first),
+not an engineering determination. **Owning artefacts:** `roadmap.md` §Current Workstream Status, `remediation/README.md`,
+and `oak-castr-gap-rescan-2026-06-28.md`. **Status:** open — owner-facing (the one genuine fork from the plan-system review).
+
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling, hook-matcher
 precision) are carried by
 [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md)

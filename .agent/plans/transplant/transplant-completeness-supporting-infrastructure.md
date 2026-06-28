@@ -82,6 +82,10 @@ todos:
 
 # Transplant completeness — bring the iceberg, not the tip
 
+> **🧭 FOLDED (2026-06-28): next-step source is now [`oak-castr-gap-rescan-2026-06-28.md`](./oak-castr-gap-rescan-2026-06-28.md)** —
+> TC2/TC4/TC1b appear there as Tier-1/2 backlog entries. This plan is retained for the iceberg thesis + per-item
+> as-built/detail, not as a competing "what's next" source.
+
 ## Problem and intent
 
 Skills/capabilities transplanted from Oak landed as **tips without their iceberg**:

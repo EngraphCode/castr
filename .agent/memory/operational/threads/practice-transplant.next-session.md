@@ -41,9 +41,16 @@ updates `last_session` rather than adding a row.
 ## Lanes
 
 A lane is an independently pickup-able arc — its own state, branch, and pickup
-trigger, active OR deferred. There is no single thread-level "next safe step";
-several lanes can be "next" at once. Branch is `feat/transplant-engraph-practice`
+trigger, active OR deferred. Branch is `feat/transplant-engraph-practice`
 for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
+
+> **🧭 FOLDED (2026-06-28): Axis-A next-step source is the single backlog
+> [`../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md`](../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
+> The **Oak Parity-or-Better Program**, **transplant completeness**, and **Practice loop-closure remediation** lanes
+> below are FOLDED into it (their items are its Tier-1/2 entries; the lanes/plans are retained for as-built + detail).
+> Still-separate parallel lanes (NOT Axis A): dependency-currency (DC3–5), first-run friction-fix, hook-matcher
+> precision, the LC1 fail-opens hardening. Axis B = remediation 02–07 (deferred). Axis C = delivery (deprioritised).
+> A/B/C sequencing = open owner decision Q-011. The single live next-step pointer is `repo-continuity.md` Next Safe Steps.
 
 ### Lane: Oak Parity-or-Better Program — ACTIVE, DOMINANT (started 2026-06-20)
 
