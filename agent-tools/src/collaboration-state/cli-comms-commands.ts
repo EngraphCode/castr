@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
-import { dirname, join, parse } from 'node:path';
+import { join } from 'node:path';
 
+import { resolveCoordinationHome } from './coordination-home.js';
 import { renderCommsLog, writeCommsEventWithReadback } from './comms-use-cases.js';
 import { resolveIdentity } from './cli-identity.js';
 import { optional, required, valueOrDefault, type Options } from './cli-options.js';
@@ -184,7 +184,7 @@ export function commsSendDefaults(
 }
 
 function collaborationRepoRoot(options: Options): string {
-  return optional(options, 'repo-root') ?? findCollaborationRepoRoot(process.cwd());
+  return optional(options, 'repo-root') ?? resolveCoordinationHome(process.cwd());
 }
 
 export function formatCommsSendResult(options: Options, eventId: string): string {
@@ -204,20 +204,6 @@ function commsSendResult(
     event_path: join(required(options, 'comms-dir'), `${eventId}.json`),
     shared_log_path: required(options, 'output'),
   };
-}
-
-function findCollaborationRepoRoot(start: string): string {
-  let current = start;
-  const root = parse(start).root;
-  while (true) {
-    if (existsSync(join(current, '.agent', 'state', 'collaboration'))) {
-      return current;
-    }
-    if (current === root) {
-      return start;
-    }
-    current = dirname(current);
-  }
 }
 
 function withDefaults(options: Options, defaults: Readonly<Record<string, string>>): Options {

@@ -1,6 +1,6 @@
-import { existsSync } from 'node:fs';
-import { dirname, join, parse } from 'node:path';
+import { join } from 'node:path';
 
+import { resolveCoordinationHome } from '../coordination-home.js';
 import { optional, optionalPositiveInteger, type Options } from '../cli-options.js';
 
 const DEFAULT_ACTIVE = '.agent/state/collaboration/active-claims.json';
@@ -25,7 +25,7 @@ export function collaborationTuiConfig(
   runtime?: CollaborationTuiConfigRuntime,
 ): CollaborationTuiConfig {
   const resolvedRuntime = runtime ?? { cwd: process.cwd() };
-  const repoRoot = optional(options, 'repo-root') ?? findCollaborationRepoRoot(resolvedRuntime.cwd);
+  const repoRoot = optional(options, 'repo-root') ?? resolveCoordinationHome(resolvedRuntime.cwd);
   const nowIso = optional(options, 'now');
 
   return {
@@ -35,18 +35,4 @@ export function collaborationTuiConfig(
     pollMs: optionalPositiveInteger(options, 'poll-ms') ?? DEFAULT_POLL_MS,
     ...(nowIso === undefined ? {} : { nowIso }),
   };
-}
-
-function findCollaborationRepoRoot(start: string): string {
-  let current = start;
-  const root = parse(start).root;
-  while (true) {
-    if (existsSync(join(current, '.agent', 'state', 'collaboration'))) {
-      return current;
-    }
-    if (current === root) {
-      return start;
-    }
-    current = dirname(current);
-  }
 }
