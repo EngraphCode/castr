@@ -24,17 +24,26 @@ note: >-
 | 8   | P2  | `version-guard/prevent-accidental-major-version.ts:60` | **TRUE** — regex `/^(feat\|fix\|…)!:/m` misses scoped breaking syntax `feat(api)!:` (no optional `(scope)` before `!`); a major-bump signal bypasses the now-live commit-msg guard.                                                             | THIS SESSION-adjacent (commit-msg hook wired `3838662`; regex pre-existing) |
 | 9   | P2  | `commit-queue/commit-workflow.ts`                      | **LIKELY** — workflow's `runVerifyStage` drops the `getFreshEntriesAhead` queue-ahead check the standalone `verify-staged` has → can commit out of queue order.                                                                                 | pre-existing                                                                |
 
-## Recommended disposition
+## Disposition (Decision-Lens-determined 2026-06-28 — not owner-gated)
 
-- **Quick + this-session, fix now-ish:** #8 (add optional `(\([^)]+\))?` before `!` in the regex + a test) — trivial,
-  closes a live commit-msg-guard bypass. #6 (gitleaks) needs a CURE CHOICE: (a) document as a prereq + bootstrap-install,
-  (b) `secrets:scan` skips-with-loud-warning when gitleaks absent (weakens local gate), or (c) leave (CI enforces) — owner call.
-- **P1 pre-existing, real, queue for a focused fix:** #1 (MultiEdit guard — add the matcher + teach the guard the
-  multi-edit payload) and #2 (commit-queue commit `--cached`/`-i` not worktree pathspec) — both genuine integrity holes.
-- **P2 pre-existing brought-infra (hollow brings), queue:** #4 (transaction-lock stale-no-metadata reap), #5 (repo-check
-  Oak-task reconciliation), #7 (claude-agent-ops → dist), #9 (commit-queue queue-ahead in workflow). #5/#7 are
-  iceberg-style hollow brings (PDR-096 family).
-- **Dismissed (measured):** #3.
+Ran through `principles.md` § Decision Lenses. Lens 2 (strict, everywhere, all the time), the
+`never-disable-checks` rule, and the no-park doctrine settle the apparent "fix now vs queue" and
+"gitleaks cure" forks into determinations — none were genuine owner forks:
+
+- ✅ **#8 — DONE** (this turn). Fixed the regex to accept the scoped bang `feat(scope)!:`; extracted the detection
+  into testable `prevent-accidental-major-version-helpers.ts` + a 6-case unit test (RED proven: old regex returns
+  `false` on `feat(api)!:`).
+- ✅ **#6 — DONE** (this turn). Lens determination: (b) silently disabling a security gate violates `never-disable-checks`;
+  (c) leaving it broken-locally fails "everywhere"; (a) document-as-prereq is robust + simplest + **matches Oak** (parity).
+  Created `CONTRIBUTING.md` documenting gitleaks as a local-dev prerequisite (CI provides its own pinned binary).
+- **#1, #2 — DEFINED NEXT SLICE (P1, fix-not-park).** Real integrity holes: #1 add a `MultiEdit` PreToolUse matcher +
+  teach the content guard the multi-edit payload; #2 commit the verified index (`git commit` without a worktree
+  pathspec, or `-i`/`--cached` semantics) not the worktree. Next collaboration-safety/enforcement slice.
+- **#4, #5, #7, #9 — DEFINED (fold into existing items).** #5 (repo-check Oak Turbo tasks) + #7 (claude-agent-ops →
+  dist) are iceberg-style hollow brings → Oak-ADR-cite-repair / iceberg lane. #4 (transaction-lock stale-no-metadata
+  reap) + #9 (commit-queue queue-ahead in workflow) → commit-queue/collaboration-state robustness slice. Verify each
+  firsthand before fixing.
+- **Dismissed (measured):** #3 (CI log shows `turbo clean` runs pre-install; green).
 
 Codex hit usage limits, so the reference-direction layer is unreviewed by it; a `/code-review ultra` or a re-trigger
 (`@codex review`) would cover the rest.

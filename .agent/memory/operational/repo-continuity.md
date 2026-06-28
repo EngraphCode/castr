@@ -125,10 +125,17 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > **REFERENCE-DIRECTION LAYER LANDED 2026-06-28 (owner-taught permanence/portability hierarchy):** ✅ PDR-105
 > keystone (`fc3b1cb`, at castr-105; Q-009 decided = mapping-table/transient), ✅ `validate-reference-direction`
 > validator (`280762a`), ✅ burned down all **83** wrong-direction refs across 45 doctrine files via a 90-agent
-> workflow + firsthand review, validator now BLOCKING + wired (`8def837`). **The single next action** = continue the
+> workflow + firsthand review, validator now BLOCKING + wired (`8def837`). **ALSO LANDED 2026-06-28:** the Oak
+> **Decision Lenses — Order of Resolution** are now in `.agent/directives/principles.md` (owner-approved genotype
+> edit: long-term-excellence → strict-everywhere-all-the-time → simpler/First-Question → dissolve-by-changing-the-system
+> → user-value; dissolution before escalation, connects to `PDR-057` four-lens test). Applying them dissolved the two
+> Codex-review questions into determinations: ✅ **#8** scoped-bang version-guard regex fixed + tested, ✅ **#6** gitleaks
+> documented as a dev prereq (`CONTRIBUTING.md`, Oak parity). **The single next action** = continue the
 > collaboration-safety cluster at **pre-archive provenance + class-tiered archive-move** (PDR-094 doctrine present,
-> mechanism absent; inline-quote-first self-containment enforcement — PDR-105-aligned), then claims-handoff
-> (LC3b/PDR-063) → **Oak-ADR cite-repair** (the 18 rule→ADR dangling links — see below) → plan-templates, bringing
+> mechanism absent; inline-quote-first self-containment enforcement — PDR-105-aligned), then the two real **P1
+> Codex findings** (#1 MultiEdit content-guard bypass; #2 commit-queue commits worktree not verified index — see
+> `pr-3-codex-review-findings.md`), claims-handoff (LC3b/PDR-063) → **Oak-ADR cite-repair** (the 18 rule→ADR dangling
+> links — see below; also folds Codex #5/#7) → plan-templates, bringing
 > freely per PDR-005 §Default. **RULES-CLASSIFICATION RESOLVED 2026-06-28 (owner): genotype vs phenotype** —
 > operationalised rules/ADRs/hooks are the repo's PHENOTYPE (context-specific expression of the portable Practice-Core
 > genotype), so a rule is correctly `repo-doctrine` and rule→ADR is phenotype→phenotype (NOT a portability violation);
@@ -142,7 +149,7 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > > setting) — now unblocked since CI is proven green. Parallel
 > > castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
 > > LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
-> > commit-time (`.husky/commit-msg`). **`origin/feat` = `402be50` (reference-direction layer PUSHED + CI green + PR #3 mergeable); this consolidation commit (genotype/phenotype resolution + surface refresh) is the newest local, being pushed this turn. ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call (already authorised this branch + delivery).\*\*
+> > commit-time (`.husky/commit-msg`). **`origin/feat` = `7907d1f` (reference-direction layer + g/p resolution + Codex-findings triage PUSHED; CI green + PR #3 mergeable); the Decision-Lenses + #8/#6 + handoff commits are the newest local, being pushed this turn. ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call (already authorised this branch + delivery).\*\*
 
 > **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
 > A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the
