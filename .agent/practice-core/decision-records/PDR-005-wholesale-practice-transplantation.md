@@ -76,7 +76,7 @@ reason." An agent MUST NOT gate a bring behind a manufactured "case,"
 "evidence," or a deferred wire-vs-correct decision when the item is plainly
 relevant infrastructure — that hand-wringing is the failure mode this clause
 exists to kill (it is the same conservatism-costume the
-[`no-manufactured-permission`](../../rules/no-manufactured-permission.md) rule
+`no-manufactured-permission` rule
 and the four-lens dissolution test in PDR-057 already forbid).
 
 The portability gradient below governs **how** to bring (copy verbatim,

@@ -54,6 +54,6 @@ Corollaries:
   rather than at a consumer's runtime.
 - Reverses the DC6 `@types/node` 25→26 bump (a sanctioned roll-forward — revert
   a bad bump with a forward commit); see
-  [`.agent/plans/current/dependency-currency.md`](../../.agent/plans/current/dependency-currency.md).
+  `.agent/plans/current/dependency-currency.md`.
 - One surface-set to change on any future Node bump; no silent drift between
   "what the type-checker believes about Node" and "what Node castr runs."

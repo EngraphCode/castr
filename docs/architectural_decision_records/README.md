@@ -112,7 +112,7 @@ Each ADR follows this structure:
 | [050](./ADR-050-single-workspace-typescript-override.md)                          | Pin a Single Workspace TypeScript via a pnpm-workspace.yaml Override  | Accepted | 2026-06-21 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
-> See: [roadmap.md](../../.agent/plans/roadmap.md)
+> See: `roadmap.md`
 
 ## Decision Dependencies
 

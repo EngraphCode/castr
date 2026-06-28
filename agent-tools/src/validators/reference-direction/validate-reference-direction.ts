@@ -17,14 +17,13 @@ import {
  * repo-specific one (portability axis), or a durable doc citing an ephemeral
  * surface (durability axis).
  *
- * **Report-first (PDR-105 §Enforcement rollout).** Brought ahead of the
- * wrong-direction burndown. While debt exists it reports the violations and the
- * by-file burndown WITHOUT being wired into `repo-validators:check` — a hard-failing
- * gate before the burndown would brick the build. Once the debt reaches zero it
- * escalates to blocking (set `process.exitCode`) and is wired into the gate, so any
- * future wrong-direction reference fails CI + `pnpm check` — enforcement is mechanical,
- * not prose (PDR-105 §Consequences). Run directly: `pnpm --filter @engraph/agent-tools
- * validate-reference-direction -- --verbose`.
+ * **Blocking (PDR-105 §Enforcement).** The wrong-direction debt has been burned down
+ * to zero (83 references de-linked across 45 doctrine files), so the validator fails the
+ * gate on any wrong-direction reference — enforcement is mechanical, not prose
+ * (PDR-105 §Consequences). It ran report-first while the debt existed (a hard-failing gate
+ * would have bricked the build) and escalated once the floor was reached. Wired into root
+ * `repo-validators:check` (CI and `pnpm check`). Run directly with `--verbose` for
+ * per-reference detail.
  *
  * @packageDocumentation
  */
@@ -71,7 +70,7 @@ function reportViolations(violations: readonly ReferenceViolation[], verbose: bo
   writeLine(
     `validate-reference-direction: ${String(violations.length)} wrong-direction reference(s) — ` +
       `${String(byAxis.portability)} portability (Core → repo-specific), ` +
-      `${String(byAxis.durability)} durability (doctrine → ephemeral). REPORT-FIRST (not yet wired; PDR-105 §Enforcement rollout).`,
+      `${String(byAxis.durability)} durability (doctrine → ephemeral). BLOCKING (PDR-105 §Consequences).`,
   );
   writeLine('');
   writeLine('  Reference direction must flow toward the more fundamental artefact (PDR-105):');
@@ -109,9 +108,9 @@ async function main(): Promise<void> {
   }
 
   reportViolations(violations, process.argv.includes('--verbose'));
-  // Report-first rollout (PDR-105 §Enforcement): do NOT fail while the burndown is
-  // in progress and the validator is unwired. Escalates to `process.exitCode = 1` +
-  // wiring into repo-validators:check once the debt reaches zero.
+  // Blocking (PDR-105 §Enforcement): the debt is burned down to zero, so any
+  // wrong-direction reference now fails the gate (repo-validators:check — CI + `pnpm check`).
+  process.exitCode = 1;
 }
 
 await main();

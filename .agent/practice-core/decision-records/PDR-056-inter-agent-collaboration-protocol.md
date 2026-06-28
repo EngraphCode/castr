@@ -64,12 +64,12 @@ M1 round-trip and follow-on sessions. The failure modes are:
     cannot rely on the deadline.
 
 Source surfaces: experience file
-[`experience/2026-05-03-pelagic-two-way-agent-communication-reflection.md`](../../experience/2026-05-03-pelagic-two-way-agent-communication-reflection.md);
+`experience/2026-05-03-pelagic-two-way-agent-communication-reflection.md`;
 napkin entries from Pelagic Washing Anchor and Misty Ebbing Pier on
 2026-05-03; the empirical hypothesis-evolution surfaces at
-[`prompts/agentic-engineering/collaboration/hypothesis.md`](../../prompts/agentic-engineering/collaboration/hypothesis.md) +
-[`falsification-criteria.md`](../../prompts/agentic-engineering/collaboration/falsification-criteria.md) +
-[`experiments.md`](../../prompts/agentic-engineering/collaboration/experiments.md).
+`prompts/agentic-engineering/collaboration/hypothesis.md` +
+`falsification-criteria.md` +
+`experiments.md`.
 
 ## Decision
 
@@ -286,6 +286,6 @@ gaps surfaced by Pelagic ↔ Misty Task M1 round-trip"_ (captured
 across multiple sessions until owner reframe in the
 `knowledge graduation` session 2026-05-10). The empirical
 hypothesis-evolution surfaces at
-[`prompts/agentic-engineering/collaboration/hypothesis.md`](../../prompts/agentic-engineering/collaboration/hypothesis.md) +
+`prompts/agentic-engineering/collaboration/hypothesis.md` +
 falsification + experiments remain the live empirical surface where
 each cure's evidence accumulates; this PDR is the substance index.

@@ -3,7 +3,7 @@
 **Status:** Proposed
 **Date:** 2026-06-19
 **Related:** [ADR-043](./ADR-043-core-vs-companion-workspaces.md) (clarifies its scope), [ADR-023](./ADR-023-ir-based-architecture.md), [ADR-036](./ADR-036-limit-directory-complexity.md), [ADR-037](./ADR-037-strict-architectural-domain-boundaries.md)
-**Source research:** [`.agent/research/zod-compiler/`](../../.agent/research/zod-compiler/) · **Forward plan:** [`.agent/plans/future/castr-surface-architecture-and-verb-model.md`](../../.agent/plans/future/castr-surface-architecture-and-verb-model.md)
+**Source research:** `.agent/research/zod-compiler/` · **Forward plan:** `.agent/plans/future/castr-surface-architecture-and-verb-model.md`
 
 ---
 
@@ -96,10 +96,10 @@ this decision; this ADR is not a licence to split now.
 
 ## References
 
-- Research: [`.agent/research/zod-compiler/`](../../.agent/research/zod-compiler/)
+- Research: `.agent/research/zod-compiler/`
   (comparison §3 Altitude-2 — why representability belongs in a per-target plan
   layer, not the canonical IR; reasoning trail §4 — the dogma error corrected).
-- Forward plan: [`.agent/plans/future/castr-surface-architecture-and-verb-model.md`](../../.agent/plans/future/castr-surface-architecture-and-verb-model.md)
+- Forward plan: `.agent/plans/future/castr-surface-architecture-and-verb-model.md`
   (Phases A–B make this decision answerable).
 - [ADR-043](./ADR-043-core-vs-companion-workspaces.md) — core vs companion
   workspace model (scope clarified here).

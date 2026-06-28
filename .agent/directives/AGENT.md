@@ -50,7 +50,7 @@
 - Rules: [`rules/`](../rules/)
 - Sub-agents: [`sub-agents/`](../sub-agents/)
 - Prompts: [`prompts/`](../prompts/)
-- Plans: [`plans/`](../plans/)
+- Plans: `plans/`
 - Memory: [`memory/`](../memory/)
 - Experience: [`experience/`](../experience/)
 

@@ -160,5 +160,5 @@ Remediation involves:
 ## References
 
 - [ADR-014: Migrate tanu to ts-morph](./ADR-014-migrate-tanu-to-ts-morph.md)
-- [Roadmap (Session 3.3a): ADR-026 Enforcement + Strictness Remediation](../../.agent/plans/roadmap.md)
+- `Roadmap (Session 3.3a): ADR-026 Enforcement + Strictness Remediation` (.agent/plans/roadmap.md)
 - [ts-morph documentation](https://ts-morph.com/)

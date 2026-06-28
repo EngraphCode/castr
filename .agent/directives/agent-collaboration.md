@@ -301,7 +301,7 @@ parallel agent sessions inside a 48-hour window (Frodo prettier
 2026-04-24, Pippin auto-staging 2026-04-24, Jazzy knip 2026-04-25)
 motivated this directive. The pattern is captured at
 [`parallel-track-pre-commit-gate-coupling`][founding-pattern]; new
-instances surface in [`napkin.md`][napkin] and feed
+instances surface in `napkin.md` and feed
 WS5's seed harvest. Commit-window claims apply the same lesson to the
 narrower git transaction surface: expose intent and queue order before
 staging or commit.
@@ -338,7 +338,6 @@ layer.
 [stage-by-explicit-pathspec]: ../rules/stage-by-explicit-pathspec.md
 [founding-pattern]: ../memory/collaboration/parallel-track-pre-commit-gate-coupling.md
 [lifecycle]: ../memory/operational/collaboration-state-lifecycle.md
-[napkin]: ../memory/active/napkin.md
 [active-claims]: ../state/collaboration/active-claims.json
 [closed-claims]: ../state/collaboration/closed-claims.archive.json
 [conversation-schema]: ../state/collaboration/conversation.schema.json

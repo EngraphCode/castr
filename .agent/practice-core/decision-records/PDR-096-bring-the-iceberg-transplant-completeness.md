@@ -144,7 +144,7 @@ The standing **bring-by-default** policy — the default for every
 capability is to bring it; the burden of proof is on _not_ bringing (a
 positive deliberate-localisation reason), never uncertainty — is the
 operational stance this pattern's cure assumes. Contrast
-[`documentation-hygiene`](../../rules/documentation-hygiene.md): its
+`documentation-hygiene`: its
 patch-the-doc-to-match-reality cure is correct when the absent target
 was never meant to exist; this pattern is the exception — when the
 target was dropped in transplant, bring it back rather than delete the
@@ -155,8 +155,8 @@ and bridge index, not here, per the Core portability constraint.
 ## Source
 
 Graduates the `transplant-completeness — bring the iceberg` candidate
-from [`pending-graduations.md`](../../memory/operational/pending-graduations.md)
+from `pending-graduations.md`
 (captured 2026-06-26, owner-named). Owner-approved for graduation at the
 2026-06-26 dedicated consolidation (Eclipsed Lurking Moth). The
 host-local distilled instance is the transplant-method block entry in
-[`.agent/memory/active/distilled.md`](../../memory/active/distilled.md).
+`.agent/memory/active/distilled.md`.

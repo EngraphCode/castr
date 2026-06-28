@@ -4,7 +4,7 @@ Operationalises the no-compatibility-layers doctrine of
 [`principles.md` §Core Philosophy: Engineering Excellence Over Speed](../directives/principles.md)
 — the corrected design replaces the old shape; it never bridges to it —
 and the active tripwire doctrine in
-[`passive-guidance-loses-to-artefact-gravity.md`](../memory/active/patterns/passive-guidance-loses-to-artefact-gravity.md).
+`passive-guidance-loses-to-artefact-gravity.md`.
 
 This rule exists because "no compatibility layers" is easy to agree
 with abstractly and easy to rationalise away under delivery pressure.
@@ -98,7 +98,7 @@ failure shape.
 - [`principles.md`](../directives/principles.md) — source doctrine
 - [`apply-architectural-principles.md`](apply-architectural-principles.md)
   — broad architectural rule layer
-- [`workaround-debt-compounds-through-rationalisation.md`](../memory/active/patterns/workaround-debt-compounds-through-rationalisation.md)
+- `workaround-debt-compounds-through-rationalisation.md`
   — failure mode this rule counters
-- [`passive-guidance-loses-to-artefact-gravity.md`](../memory/active/patterns/passive-guidance-loses-to-artefact-gravity.md)
+- `passive-guidance-loses-to-artefact-gravity.md`
   — why this had to become an always-applied rule

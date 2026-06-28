@@ -133,11 +133,11 @@ portability constraint.
 ## Source
 
 Graduates the `dependency-currency-discipline` candidate from
-[`pending-graduations.md`](../../memory/operational/pending-graduations.md)
+`pending-graduations.md`
 (captured 2026-06-21, home pre-decided by the owner four-lenses pass;
 timing brought forward to graduate-now at the 2026-06-26 dedicated
 consolidation by owner direction — the method's core was proven across
 the DC0–DC2 cycles, with later cycles applying the same moves). The
 host-local distilled instances are the dependency-classification,
 baseline-capture, and consumer-side-test entries in
-[`.agent/memory/active/distilled.md`](../../memory/active/distilled.md).
+`.agent/memory/active/distilled.md`.

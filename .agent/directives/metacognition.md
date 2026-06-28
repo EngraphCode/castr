@@ -106,7 +106,7 @@ Naming this does not inoculate against it (the conservation reflex — PDR-089 �
 while you document it): a fluent move under context pressure overrides a passively-held lesson.
 So the cure is structural, not vigilance — the fluent arrival is _itself_ the tripwire to
 re-ground, and the smoother the move, the harder the check must be. See
-[`passive-guidance-loses-to-artefact-gravity`](../memory/active/patterns/passive-guidance-loses-to-artefact-gravity.md):
+`passive-guidance-loses-to-artefact-gravity`:
 a passive lesson needs an active firing gate.
 
 ## Cure Shape — Structural, Not Doc-Patch

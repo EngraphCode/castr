@@ -166,4 +166,4 @@ In particular:
 - [ADR-031: Zod 4 Output Strategy](./ADR-031-zod-output-strategy.md)
 - [ADR-032: Zod 4 Input Strategy](./ADR-032-zod-input-strategy.md)
 - [ADR-038: Object Unknown-Key Semantics and Parsed-Output Parity](./ADR-038-object-unknown-key-semantics.md)
-- [strict-object-semantics-enforcement.md](../../.agent/plans/current/complete/strict-object-semantics-enforcement.md)
+- `strict-object-semantics-enforcement.md`

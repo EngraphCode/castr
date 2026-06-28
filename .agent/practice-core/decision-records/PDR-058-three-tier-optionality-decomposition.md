@@ -23,7 +23,7 @@ surface).
 **Supersedes**: the quarantined `stop-inventing-optionality`
 doctrine candidate, recorded alongside `apply-don't-ask` in the
 combined quarantine entry
-([`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`](../../memory/operational/quarantine/apply-dont-ask-doctrine.md)),
+(`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`),
 under the 2026-05-01 owner-named reformulation.
 
 ## Amendment Log
@@ -174,12 +174,12 @@ optional surface).
 **Cure**: the closed-shape rule. Author the closed shape that the
 known instances need. The configurable / extensible surface is
 deferred until a real second instance forces the decomposition
-(see also: [`consolidate-at-third-consumer`](../../rules/consolidate-at-third-consumer.md);
+(see also: `consolidate-at-third-consumer`;
 two is not three; speculative configurability is not consolidation).
 
 The landing of this PDR requires the rule sibling for this surface
 to be recorded as a candidate at
-[`.agent/memory/operational/pending-graduations.md`](../../memory/operational/pending-graduations.md)
+`.agent/memory/operational/pending-graduations.md`
 with the routing label _"design optionality"_. Graduation requires
 its own evidence trail; this PDR does not pre-graduate it.
 
@@ -397,10 +397,10 @@ before the cure, exactly as the decomposition required.
 ## Source
 
 This PDR graduates the QUAR-1 entry of
-[`pending-graduations.md`](../../memory/operational/pending-graduations.md)
+`pending-graduations.md`
 under the 2026-05-01 owner-named reformulation, partner-PDR with
 [PDR-057](PDR-057-empirical-answerability.md). The original
 candidate (`stop-inventing-optionality`) is preserved in
-[`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`](../../memory/operational/quarantine/apply-dont-ask-doctrine.md)
+`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`
 as historical evidence; that file is updated to mark the
 quarantine cleared by this PDR pair.

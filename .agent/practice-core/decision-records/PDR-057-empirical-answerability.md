@@ -18,7 +18,7 @@ PDR-026 disciplines what the agent defers);
 surface this PDR governs, alongside two sibling surfaces).
 
 **Supersedes**: the quarantined `apply-don't-ask` doctrine candidate
-([`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`](../../memory/operational/quarantine/apply-dont-ask-doctrine.md))
+(`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`)
 under the 2026-05-01 owner-named reformulation.
 
 ## Context
@@ -203,9 +203,9 @@ The gate has two named failure modes when it is misapplied:
    _question_. Destructive operations remain owner-authorised
    regardless of empirical-answerability. The destructive-action
    discipline family
-   ([`never-use-git-to-remove-work`](../../rules/never-use-git-to-remove-work.md),
-   [`never-disable-checks`](../../rules/never-disable-checks.md),
-   [`no-verify-requires-fresh-authorisation`](../../rules/no-verify-requires-fresh-authorisation.md),
+   (`never-use-git-to-remove-work`,
+   `never-disable-checks`,
+   `no-verify-requires-fresh-authorisation`,
    the commit-skill safety rules) is fully load-bearing under this
    PDR. Empirical-answerability never discharges destructive-action
    authorisation; the two gates compose.
@@ -218,7 +218,7 @@ The gate has two named failure modes when it is misapplied:
 ## Implementation
 
 The gate is presently agent-side discipline. The
-[`read-before-asking`](../../rules/read-before-asking.md) rule is its
+`read-before-asking` rule is its
 operational expression for the Claude / Codex / Cursor surfaces.
 That rule's substance subsumes part of this PDR; this PDR provides
 the doctrinal frame the rule implements.
@@ -251,7 +251,7 @@ the three owner-bound classes are precisely those whose answers diverge
 under the four lenses. The discipline is _dissolution before
 escalation_ — most apparent forks dissolve into determinations, and
 presenting a dissolved question as a fork is the
-[`present-verdicts-not-menus`](../../rules/present-verdicts-not-menus.md)
+`present-verdicts-not-menus`
 failure mode (the rule's Pre-Pose Viability Check operationalises this
 test). It is also the inbound mirror of
 [PDR-058](PDR-058-three-tier-optionality-decomposition.md): where
@@ -270,9 +270,9 @@ dedicated consolidation.
 ## Source
 
 This PDR graduates the QUAR-1 entry of
-[`pending-graduations.md`](../../memory/operational/pending-graduations.md)
+`pending-graduations.md`
 under the 2026-05-01 owner-named reformulation. The original
 candidate (`apply-don't-ask`) is preserved in
-[`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`](../../memory/operational/quarantine/apply-dont-ask-doctrine.md)
+`.agent/memory/operational/quarantine/apply-dont-ask-doctrine.md`
 as historical evidence; that file is updated to mark the
 quarantine cleared by this PDR.

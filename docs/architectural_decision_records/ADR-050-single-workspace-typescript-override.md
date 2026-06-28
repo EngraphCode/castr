@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-21
-**Related:** [ADR-021](./ADR-021-legacy-dependency-removal.md) (dependency hygiene) · **Evidence:** [`.agent/plans/transplant/d1-sonarjs-findings.md` §0](../../.agent/plans/transplant/d1-sonarjs-findings.md) · **Mechanism:** [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml) `overrides`
+**Related:** [ADR-021](./ADR-021-legacy-dependency-removal.md) (dependency hygiene) · **Evidence:** `.agent/plans/transplant/d1-sonarjs-findings.md` §0 · **Mechanism:** [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml) `overrides`
 
 ---
 
