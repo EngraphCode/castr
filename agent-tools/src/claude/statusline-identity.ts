@@ -27,6 +27,8 @@ import { existsSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { resolveTrustedGit } from '../core/trusted-git.js';
+
 import { planStatuslineExecution, type StatuslinePlan } from './statusline-identity-input.js';
 import { renderStatusline } from './statusline-render.js';
 
@@ -109,7 +111,17 @@ function gatherGitState(cwd: string): GitState {
 }
 
 function runGit(cwd: string, args: readonly string[]): string | undefined {
-  const result = spawnSync('git', ['-C', cwd, ...args], { encoding: 'utf8' });
+  // Execute git by its absolute path (resolveTrustedGit) so a writable PATH entry
+  // cannot shadow it (SonarCloud S4036). The statusline is a soft cosmetic surface:
+  // a missing trusted git (resolveTrustedGit throws) degrades the git segment to
+  // empty, exactly like a non-zero spawn, never a render crash.
+  let gitBinary: string;
+  try {
+    gitBinary = resolveTrustedGit();
+  } catch {
+    return undefined;
+  }
+  const result = spawnSync(gitBinary, ['-C', cwd, ...args], { encoding: 'utf8' });
   if (result.status !== 0) {
     return undefined;
   }

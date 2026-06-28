@@ -25,6 +25,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { resolveTrustedGit } from '../../core/trusted-git.js';
 import { writeErrorLine, writeLine } from '../../core/terminal-output.js';
 import { loadScopedContentBlocks } from '../../hook-policy/policy-loader.js';
 
@@ -37,7 +38,7 @@ import {
 
 /** List every tracked file, NUL-delimited so paths with spaces survive. */
 function listTrackedFiles(repoRoot: string): string[] {
-  const stdout = execFileSync('git', ['ls-files', '-z'], {
+  const stdout = execFileSync(resolveTrustedGit(), ['ls-files', '-z'], {
     cwd: repoRoot,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
