@@ -117,16 +117,20 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > parity-tranche plans are FOLDED into it — see its "single ordered backlog" section). **(B) product-remediation**
 > — **5 reproduced Criticals remain (C2–C6); C1 done.** DORMANT but now a DEFINED "after Tier-1" (Q-011 decided), not
 > an undefined later. **(C) delivery** — DEPRIORITISED. **Q-011 DECIDED 2026-06-28 (owner) → Axis A first.**
-> **Tier-1 enforcement-integrity cluster LANDED 2026-06-28 (Open Lofting Feather):** ✅ trusted-git (`2ca01be`),
-> ✅ gitleaks secret-scan wired into qg (`ec53da7`), ✅ CI-runs-gates server-side in-repo (`38073f1`). **The single
-> next action** = continue the Tier-1 spine at the **collaboration-safety cluster**: coordination-home (now unblocked —
-> trusted-git done) → watcher step-deadline → provenance+archive → claims-handoff → reference-direction → Oak-ADR
-> cite-repair → plan-templates, bringing freely per PDR-005 §Default. **TWO OWNER-ONLY ACTIONS pending from CI-runs-gates:**
-> (1) push the branch so CI runs server-side for the first time (verifies the 11 stacked local commits); (2) set
-> `quality-gates` as a required status check in the main branch ruleset (GitHub repo setting). Parallel
+> **Tier-1 LANDED + PUSHED 2026-06-28 (Open Lofting Feather), origin = `16cedbf`:** enforcement-integrity cluster —
+> ✅ trusted-git (`2ca01be`), ✅ gitleaks secret-scan wired into qg (`ec53da7`), ✅ CI-runs-gates server-side in-repo
+> (`38073f1`); collaboration-safety cluster — ✅ worktree-aware coordination-home + dedup of castr's two FS-walk
+> resolvers (`16cedbf`). **The single next action** = continue the collaboration-safety cluster at **watcher step-deadline
+> (LC3c)** — FULLY SCOPED with a firsthand integration map in the gap-rescan backlog (comms-watch-errors.ts +
+> comms-watch-loop refactor + step-timeout-ms CLI threading + a fatal-timeout loop-closure test; timer-based, do not
+> rush) — then provenance+archive → claims-handoff → reference-direction → Oak-ADR cite-repair → plan-templates,
+> bringing freely per PDR-005 §Default. **TWO OWNER-ONLY ACTIONS pending from CI-runs-gates (NOT yet done):** (1) the
+> CI workflow only fires on push/PR to `main`, so it will first execute when the PR to main is opened (not on this
+> feature-branch push); (2) set `quality-gates` as a required status check in the main branch ruleset (GitHub repo
+> setting). Parallel
 > castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
 > LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
-> commit-time (`.husky/commit-msg`). **HEAD `38073f1` + this continuity commit; `origin/feat` = `c86d4e1` as of 2026-06-28 (the owner pushes between turns — ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice`; the local commits since `c86d4e1` are unpushed); push = owner's call.**
+> commit-time (`.husky/commit-msg`). **`origin/feat` = `3954e1a` (pushed 2026-06-28: trusted-git + gitleaks + CI-runs-gates, owner-approved); the coordination-home commits + this continuity refresh are the newest local-unpushed. ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call.**
 
 > **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
 > A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the

@@ -112,8 +112,19 @@ adjudicating presence.
   trusted-git) and **deduped castr's TWO** identical `findCollaborationRepoRoot` FS-walk resolvers
   (cli-comms-commands.ts + tui/config.ts) into it; now fails loud outside a git tree (was a silent
   fallback). Docstring localised (no dangling Oak F-41/ADR-197 refs). qg green.
-- **Watcher per-step deadline** (LACK = LC3c) — `agent-tools/src/collaboration-state/comms-watch-errors.ts` —
-  `runWithDeadline`/`WatcherTimeoutError`; the 2026-06-10 hang-but-look-alive failure is uncured.
+- **Watcher per-step deadline** (LACK = LC3c) — **NEXT ITEM; fully scoped 2026-06-28 (firsthand integration map
+  below).** Cure for the 2026-06-10 hang-but-look-alive failure. **Surgical diff (Oak → castr):**
+  (1) bring `agent-tools/src/collaboration-state/comms-watch-errors.ts` (`WatcherTimeoutError`, `runWithDeadline`,
+  `reportTimeout`, `emitWatcherError`, `WatcherErrorKind` — clean, no Oak tokens; Oak has NO separate test, behaviour
+  is proven via the loop test). (2) Refactor `comms-watch-loop.ts`: import those (delete castr's INLINE
+  `emitWatcherError`+`WatcherErrorKind`), add `stepTimeoutMs?` to `WatchCommsLoopInput`, wrap each `runStep` with
+  `runWithDeadline` when set, re-throw `WatcherTimeoutError` as **fatal** (never demote to recoverable), and in
+  `watchCommsLoop` wrap the while-loop in try/catch → `reportTimeout` + re-throw (non-zero exit). (3) Thread the
+  option: `cli-comms-watch.ts` (`DEFAULT_STEP_TIMEOUT_MS = 60000`, `optionalPositiveInteger(options,'step-timeout-ms')`),
+  register `step-timeout-ms` in `cli-options.ts` + `cli-spec-options.ts`, document in `cli-spec-help.ts`. (4) Loop
+  closure proof: a test where a step exceeds the deadline → `kind=timeout` WATCHER ERROR line + the loop rejects
+  (fatal). Note: castr's CLI imports `watchCommsLoop` via `comms-use-cases.js` (check its re-export). Timer-based
+  test — use vitest fake timers carefully.
 - **Pre-archive provenance + class-tiered archive-move** (LACK) —
   `agent-tools/src/collaboration-state/{provenance/cited-event-provenance.ts, archive/archive-move.ts}` —
   no fail-closed gate stopping archival of a comms event cited (by 8-hex id) in a permanent doc;
