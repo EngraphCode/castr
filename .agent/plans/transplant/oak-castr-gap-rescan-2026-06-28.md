@@ -153,9 +153,12 @@ adjudicating presence.
   handled, only-flagged-touched). Cure = de-link (`[label](path)` → backticked concept-name), Oak-proven.
   **REMAINING (separate item, the Oak-ADR-cite-repair below):** **18 rule→ADR markdown links** to Oak's absent path
   scheme are still present — they are **dangling links, NOT reference-direction violations** (rules classify as
-  `repo-doctrine`, and `repo-doctrine`→ADR is unpoliced on both axes — a faithful Oak-parity behaviour; rules-as-
-  repo-doctrine-vs-portable-Core is a latent doctrine question). Cure them by **wiring `validate-markdown-links`**
-  (castr has the validator, unwired) + de-link/repoint, and bring ADR-127 as a castr-scheme ADR.
+  `repo-doctrine`, and `repo-doctrine`→ADR is unpoliced on both axes — a faithful Oak-parity behaviour). **RESOLVED
+  2026-06-28 (owner): genotype vs phenotype** — operationalised rules/ADRs/hooks are the repo's PHENOTYPE (the
+  context-specific expression of the portable Practice-Core genotype), so a rule is correctly `repo-doctrine` and
+  rule→ADR is phenotype→phenotype, not a portability violation; the validator needs NO change. Cure the 18 as pure
+  dangling links by **wiring `validate-markdown-links`** (castr has the validator, unwired) + de-link/repoint, and
+  bring ADR-127 as a castr-scheme ADR.
 - **Plan-templates library + ADR-117** (LACK = TC2) — `.agent/plans/templates/` (21 files) — the
   shipped `plan` skill points at this non-existent dir on every invocation. Bring the tree + author a
   castr-scheme ADR-117; fix the skill link path + number.

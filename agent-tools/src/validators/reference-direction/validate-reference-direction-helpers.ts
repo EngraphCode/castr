@@ -28,7 +28,7 @@ export { isStableIndex } from './validate-reference-direction-allowlists.js';
 /** Artefact layers, ordered by fundamentality (most fundamental last). */
 export type ArtefactLayer =
   | 'ephemeral' // plans, threads, operational memory/state — most volatile
-  | 'repo-doctrine' // ADRs, rules, directives — durable, repo-specific
+  | 'repo-doctrine' // ADRs, rules, directives — the repo's PHENOTYPE (context-specific expression of the portable-core genotype, PDR-105); durable, repo-specific. So rule→ADR is phenotype→phenotype, NOT a portability violation.
   | 'portable-core' // practice-core (PDRs, trinity) — durable AND portable
   | 'other'; // code and everything not policed as a reference source
 
