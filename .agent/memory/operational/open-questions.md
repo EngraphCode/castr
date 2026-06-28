@@ -65,7 +65,13 @@ castr's two originals and take Oak's 096/097 (restore correspondence, churn cast
 (c) a mapping table. **Why it shapes future work:** every one of the 23 PDR brings + their
 cross-references depends on the scheme; choosing late means rework. **Why not cheaply now:**
 governance decision about the castr↔Oak PDR-numbering invariant (is shared numbering a goal?).
-**Owning artefact:** `oak-castr-gap-rescan-2026-06-28.md` §PDRs. **Status:** open — owner-facing.
+**Owning artefact:** `oak-castr-gap-rescan-2026-06-28.md` §PDRs. **Status:** **DECIDED 2026-06-28 (owner) →
+mapping table.** Keep castr's own 096/097; import each Oak PDR at its Oak number where free; for the 096/097
+collisions assign the next free castr number and record the Oak↔castr correspondence in a **transient import
+artifact** (plan-level/ephemeral, in the transplant area) that is **DELETED once the bulk PDR import completes** —
+nothing permanent may reference it (durability axis); imported PDRs end self-contained at their final castr numbers.
+**PDR-105 (reference-direction) has no collision → lands at castr-105 directly** (its deps PDR-007/019 + the two
+rules already exist in castr); the map is only load-bearing for the colliding/bulk import. (Drained at next consolidate-docs.)
 
 ### Q-010 — reconcile principles.md `Result<T,E>` examples with castr's fail-fast doctrine
 
