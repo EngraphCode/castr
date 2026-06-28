@@ -36,7 +36,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-27   |
 | claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
 | claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor     | 2026-06-27    | 2026-06-27   |
-| claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-27   |
+| claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-28   |
 
 ## Lanes
 
