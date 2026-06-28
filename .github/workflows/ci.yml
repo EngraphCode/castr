@@ -1,48 +1,71 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# Quality-gate pipeline for pushes and PRs to main. A single `quality-gates`
+# job runs the full local gate (`pnpm check:ci` = clean + frozen install + qg)
+# server-side, so the guardrails that were previously local-pre-push-only —
+# every repo validator, type-check, lint, secret scan, knip/depcruise, the full
+# test suite — now also run in CI and can be made a required status check.
+#
+# No `paths:` filter: changes anywhere (agent-tools, .agent, .husky, docs, lib)
+# trigger CI. The old library-only filter meant tooling/Practice changes were
+# never verified server-side.
+#
+# `quality-gates` is intended to be the required status check (set in the branch
+# ruleset — a repo setting, not expressible here). CodeQL stays as its own job.
 
 name: CI
 
 on:
   push:
     branches: [main]
-    paths:
-      - lib/**
-      - lib/pnpm-lock.yaml
-      - lib/package.json
-      - lib/tsconfig.json
   pull_request:
     branches: [main]
-    paths:
-      - lib/**
-      - lib/pnpm-lock.yaml
-      - lib/package.json
-      - lib/tsconfig.json
+
+# Cancel superseded PR runs; never cancel main-branch runs (each commit on main
+# must stay verified).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    name: Build
+  quality-gates:
+    name: quality-gates
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # secrets:scan runs gitleaks --branches --tags; needs full history
+
+      - name: Install pinned gitleaks
+        run: |
+          version=8.30.0
+          asset="gitleaks_${version}_linux_x64.tar.gz"
+          # SHA-256 of the v8.30.0 linux_x64 asset, pinned inline so a tampered
+          # download fails loud (sha256sum -c) rather than running. gitleaks is a
+          # security control, so its binary is content-pinned, not just version-pinned.
+          expected=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
+          curl -sSfL -o "$asset" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${asset}"
+          echo "${expected}  ${asset}" | sha256sum -c -
+          sudo tar -xz -C /usr/local/bin -f "$asset" gitleaks
+          gitleaks version
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 11
+
       - name: Use Node.js 24.x
         uses: actions/setup-node@v3
         with:
           node-version: 24.x
           cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
-      - name: Test
-        working-directory: ./lib
-        run: pnpm test
+
+      - name: Run full quality gate (clean + frozen install + qg)
+        run: pnpm check:ci
+
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
