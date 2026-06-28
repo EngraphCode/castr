@@ -84,17 +84,22 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**session-completion consolidation run this session — 2026-06-28 (Open Lofting Feather).** Triggered by the LC3a
-sub-slice close + owner-invoked `session-handoff`/`consolidate-docs`. Done inline: LC3a lesson homed (napkin +
-one compact `distilled.md` entry — brought-gate-must-prove-it-fires + scope-from-the-rule + bulk-cure-under-scopes +
-measure-before-complying); Q-008 captured in `open-questions.md` (should the machine-local invariant clean `archive/`
-before any publish? — surfaced to owner). Buffers healthy: napkin 260 lines (no rotation, <500); `distilled.md` 52
-lines (<200); `pending-graduations.md` carries the single PDR-096-amendment item, trigger NOT fired (LC3 b/c/d + LC4/
-LC5 remain); `open-questions.md` 1 open (Q-008); incoming box empty; entry points (`CLAUDE.md`/`AGENTS.md`) thin
-pointers, no drift; no track cards, no open conversations/escalations; the LC3a claim was closed explicitly. No
-Practice-Core amendment this pass. The commits + permanent homes are the record. **Next deep consolidation: not due**
-until a new trigger fires (napkin rotation cadence, a fresh capture batch, or a plan/milestone close — e.g. the
-loop-closure lane completing, which fires the PDR-096 amendment graduation).
+**Deep handoff + consolidation run this session — 2026-06-28 (Open Lofting Feather).** Owner-invoked deep-deep handoff
+(`session-handoff`/`consolidate-docs`) + a recursive "what would be lost?" scan, after a generative session: LC3a
+machine-local-paths validator; the bring-everything disposition (PDR-005 §Default amendment + user-memory + thread
+standing-decision); the husky commit-msg guardrail (LC4-1); and a two-pass Oak→castr gap rescan (the authoritative
+bring backlog, `oak-castr-gap-rescan-2026-06-28.md`). Captured this pass (durable, in-repo): workflow-design
+meta-lessons (napkin + a `distilled.md` entry — completeness-critic + 2nd-pass audit harness, critic-presence-rechecks-
+unreliable, firsthand-ground-truth-arms-verification); Oak-backflow ledger extended (loop-closure-references,
+agent-adapter-generate, semantic-merge module, schema reviewers, bring-by-default §Default disposition, the audit
+harness); open decisions Q-009 (PDR 096/097 numbering-collision scheme) + Q-010 (principles.md Result-vs-fail-fast
+tension); pending-graduations multi-agent-audit-harness pattern candidate. Buffers healthy: napkin ~290 (<500, no
+rotation); `distilled.md` ~54 (<200); `pending-graduations.md` 2 items (PDR-096-amendment + audit-harness, both
+trigger-NOT-fired); `open-questions.md` 3 open (Q-008/009/010, all owner-facing); incoming box empty; entry points
+thin pointers, no drift; no track cards / open conversations / escalations; all session claims closed. No Practice-Core
+amendment beyond the owner-directed PDR-005 §Default. The commits + permanent homes are the record. **Next deep
+consolidation: not due** until a new trigger (napkin rotation cadence, a fresh capture batch, or a milestone close —
+e.g. the loop-closure lane completing → PDR-096 amendment, or a 2nd audit-harness instance → the pattern-PDR).
 
 <!-- Historical Phase-6/7/8 closeout detail collapsed 2026-06-21; it lives in git history and in the
 artefacts it homed (memory layout, substrate contract, patterns import, sub-agent roster, the phase tags). -->

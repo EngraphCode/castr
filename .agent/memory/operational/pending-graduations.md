@@ -57,3 +57,16 @@ firsthand-verify sharpening may instead amend `verify-agent-claims-firsthand`. L
 
 - `practice-loop-closure-remediation.md`. `[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
   trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done). status: pending.
+
+### Multi-agent audit harness — completeness-critic + 2nd-pass + firsthand-ground-truth
+
+A decomposed multi-agent audit (decompose-and-cover) under-counts at the lane-DESIGN level, so the harness
+needs: (1) a completeness-critic phase that independently re-derives the full surface and names what the lanes
+don't cover; (2) a 2nd pass over the named-uncovered set; (3) firsthand ground-truth set-diffs computed by the
+orchestrator before reading the synthesis (arms the critical analysis); plus the calibration that a critic's
+value is naming uncovered MODALITIES, not adjudicating presence (its drive-by presence re-checks were 3/3 wrong),
+and that raw subagent synthesis must not be enshrined (carries corrected-but-present errors). Candidate permanent
+home: a **practice-core pattern-PDR** (`pdr_kind: pattern`, ecosystem-agnostic — multi-agent audit doctrine).
+Live in `distilled.md` (2026-06-28 entry) + the gap-rescan workflow scripts.
+`[captured: 2026-06-28 | source: distilled.md + oak-castr-gap-rescan-2026-06-28.md]`
+trigger-condition: a 2nd independent decomposed multi-agent audit reuses the harness (2nd instance). status: pending.

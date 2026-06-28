@@ -52,6 +52,35 @@ archives should be rewritten (history-altering) vs scrubbed-at-export. Owner-dec
 **Owning artefact:** the `no-machine-local-paths` rule + the LC3 lane (`practice-loop-closure-remediation.md`).
 **Status:** open — surfaced to owner at the LC3a closeout (2026-06-28).
 
+### Q-009 — how to renumber the 23 incoming Oak PDRs given the 096/097 collision?
+
+`Captured: 2026-06-28 | source: Oak→castr gap rescan`
+
+**Question:** the bring backlog includes 23 Oak PDRs (Oak 096–119). castr's own PDR-096
+(bring-the-iceberg) and PDR-097 (dependency-currency) are castr-originals occupying those
+numbers — Oak's 096/097 are different PDRs. So the cross-repo PDR-number correspondence
+(shared for 001–095) already broke at 096. Bringing Oak's 096–119 needs a renumbering scheme:
+(a) import Oak's as castr 098+ (accept permanent number-skew from Oak), or (b) renumber
+castr's two originals and take Oak's 096/097 (restore correspondence, churn castr refs), or
+(c) a mapping table. **Why it shapes future work:** every one of the 23 PDR brings + their
+cross-references depends on the scheme; choosing late means rework. **Why not cheaply now:**
+governance decision about the castr↔Oak PDR-numbering invariant (is shared numbering a goal?).
+**Owning artefact:** `oak-castr-gap-rescan-2026-06-28.md` §PDRs. **Status:** open — owner-facing.
+
+### Q-010 — reconcile principles.md `Result<T,E>` examples with castr's fail-fast doctrine
+
+`Captured: 2026-06-28 | source: Oak→castr gap rescan (use-result-pattern reclassification)`
+
+**Question:** `.agent/directives/principles.md` carries `Result<T,E>` error-handling examples
+(lines 854/939/1199/1796) while castr's codebase doctrine is fail-fast/throw (it rejected
+`@oaknational/result`→throw in the D4 lane, and declined to bring Oak's `use-result-pattern`
+rule on those grounds). The rescan surfaced this as a castr-internal doctrine-vs-reality
+tension. **Resolution path:** rewrite principles.md's Result examples to throw-based, OR scope
+`Result<T,E>` to a narrow explicitly-allowed use and state the boundary. **Why not cheaply
+now:** needs an owner call on whether Result has any sanctioned place in castr or is fully
+superseded by fail-fast. **Owning artefact:** `principles.md` + `oak-castr-gap-rescan-2026-06-28.md`
+§Firsthand corrections. **Status:** open — castr-internal cleanup, owner-facing.
+
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling, hook-matcher
 precision) are carried by
 [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md)

@@ -48,7 +48,13 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 ### Lane: Oak Parity-or-Better Program — ACTIVE, DOMINANT (started 2026-06-20)
 
 - Controlling plan: [`../../../plans/transplant/oak-parity-program.md`](../../../plans/transplant/oak-parity-program.md)
-  (authoritative executable plan + verified gap map; supersedes the transplant manifest's inventory).
+  (executable parity-tranche record). **AUTHORITATIVE BRING BACKLOG (2026-06-28):**
+  [`oak-castr-gap-rescan-2026-06-28.md`](../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) — a two-pass
+  firsthand-validated rescan (owner updated OOCE) that SUPERSEDES the 2026-06-20 gap inventory. Disposition =
+  bring-everything (PDR-005 §Default). Tier-1 spine: CI-runs-gates-server-side (LC5), gitleaks, trusted-git,
+  worktree-aware coordination-home, watcher-deadline (LC3c), provenance+archive-move, claims-handoff (LC3b/PDR-063),
+  reference-direction validator+PDR-105, Oak-ADR cite-repair+ADR-127, plan-templates+ADR-117 (TC2); + 23 Oak PDRs
+  (renumber for the 096/097 collision, Q-009). OUT-OF-SCOPE carve-outs + castr_extras recorded in the rescan doc.
 - **Owner directive (2026-06-20):** upgrade every castr agentic system that is simpler than Oak's to parity-or-better;
   "castr is not meant to stay simple." Standing directive in user-memory `castr-parity-or-better-with-oak`. Classify each
   diff: deliberate-localisation (preserve) vs unbuilt-gap (upgrade).
