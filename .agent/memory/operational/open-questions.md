@@ -87,10 +87,14 @@ superseded by fail-fast. **Owning artefact:** `principles.md` + `oak-castr-gap-r
 
 **Question:** the "one deep enhancement" has three axes: **(A)** the Oak→castr Practice transplant + parity-or-better
 (active — the gap-rescan backlog, which the 2026-06-28 rescan just enlarged substantially); **(B)** the deep-review
-product-correctness remediation `remediation/02–07` (6 reproduced Critical defects — currently dormant, every plan
-"deferred, trigger: after the transplant"); **(C)** delivery (the one PR to `main` — deprioritised). The review found
-B sits in tension with the owner's own roadmap doctrine ("all issues MUST be fixed, mostly now; an undefined 'later'
-is never; advancing the transplant does not demote remediation") — and Axis A just grew, pushing B further out.
+product-correctness remediation — **5 reproduced Critical defects remain (C2–C6); C1 is already FIXED** (plan 01,
+`a2c86ab`/merged `8ed2b0a`). Firsthand status (verified 2026-06-28): plan **02** (C2/C3/C4 + H1–H4/M10 — silent
+content loss/corruption while gates stay green; the plan's own words: _"the single highest-leverage item in the
+review"_) sits in `.agent/plans/active/02-ir-fidelity-proof-harness.md` but is marked **Status: Backlog** (promoted-
+then-parked); plans **03 (C6)** and **04 (C5)** are dormant in `.agent/plans/remediation/`. So B is parked, not
+demoted-by-completion. **(C)** delivery (the one PR to `main` — deprioritised). The review found B sits in tension with
+the owner's own roadmap doctrine ("all issues MUST be fixed, mostly now; an undefined 'later' is never; advancing the
+transplant does not demote remediation") — and Axis A just grew, pushing B further out.
 **Why it shapes future work:** it decides whether the next slices come from the gap-rescan backlog (A) or whether B
 (the reproduced Criticals) is interleaved/promoted; it is the top-level priority call for the whole programme.
 **Why not cheaply now:** a genuine owner priority/risk decision (ship-correctness-first vs finish-the-substrate-first),
