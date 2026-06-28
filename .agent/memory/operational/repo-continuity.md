@@ -101,6 +101,20 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
+> A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the
+> deduped HAVE/HOLLOW/LACK map + bring backlog, superseding the 2026-06-20 gap inventory in
+> `oak-parity-program.md`. **Tier-1 spine** (do first): CI-runs-gates-server-side (= LC5), gitleaks
+> secret-scan, trusted-git (unblocks coordination-home + statusline), worktree-aware coordination-home,
+> watcher step-deadline (LC3c), pre-archive provenance + archive-move, claims handoff/adopt (LC3b/PDR-063),
+> reference-direction validator + PDR-105, Oak-ADR dangling-cite repair + ADR-127, plan-templates + ADR-117 (TC2).
+> 23 Oak PDRs missing (096–119, **renumber for the castr-096/097 collision**). Disposition = bring-everything
+> (PDR-005 §Default); OUT-OF-SCOPE carve-outs (Oak product stack) recorded in the rescan doc. Firsthand
+> corrections folded: `use-result-pattern` is a deliberate non-bring (castr is fail-fast); 3 pass-1
+> completeness-critic false-presence claims (pr-watch, .cursor/hooks, reference-docs) corrected — trust the
+> lane audits, not critic re-checks. **No repo brings done yet — this is the map; LC3(b/c/d) below + the
+> Tier-1 spine are the next execution slices (owner names the order, or bring freely per PDR-005).**
+
 > **CURRENT TRUTH (2026-06-27, Open Lofting Feather / c82112): loop-closure LC3 sub-slice (a) machine-local-paths ✅ DONE; next is LC3(b/c/d).**
 > Brought Oak's `validate-no-machine-local-paths` validator (validator + pure helpers + unit tests), localised to castr's
 > direct-`git` convention; added a `machine-local-path` regex scoped_block to `policy.json` (single-sources the pattern set

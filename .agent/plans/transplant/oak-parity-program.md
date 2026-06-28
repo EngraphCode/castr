@@ -8,7 +8,11 @@ supersedes_scope: >-
   Reframes transplant Phase 9 from "transplant closure" to one gate inside a
   broader estate-wide parity program. The transplant manifest's inventory was
   incomplete (it never tracked ArcAngel, the hook-policy concept model, the
-  memory-machinery dirs); this plan's verified gap map is now authoritative.
+  memory-machinery dirs); this plan's verified gap map WAS authoritative.
+  GAP INVENTORY SUPERSEDED 2026-06-28 by the two-pass firsthand-validated rescan
+  in `oak-castr-gap-rescan-2026-06-28.md` (Oak was updated; that rescan is more
+  complete). This plan stays the executable parity-tranche record; the rescan doc
+  is now the authoritative bring backlog.
 owner_directive: >-
   "wherever castr's agentic systems are simpler, upgrade them to be at least as
   sophisticated and powerful as those in the Oak repo. castr may be relatively
