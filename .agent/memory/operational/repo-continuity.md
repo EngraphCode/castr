@@ -121,6 +121,14 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > [`practice-loop-closure-remediation.md`](../../plans/transplant/practice-loop-closure-remediation.md) § As-built (LC3a).
 > Supersedes the Hidden Veiling Mirror block below on "what's next" (LC3(a) now done); that block stays authoritative
 > for the LC0/LC1/LC2 landing detail.
+>
+> **ALSO LANDED 2026-06-28 (`3838662`): LC4 item 1 + a STANDING GOVERNANCE CHANGE.** (1) Owner directive recorded to
+> stick — **default is BRING; the only no-bring reason is "utterly irrelevant" (or not-cleanly-reversible); never gate a
+> relevant bring behind a "case"** (PDR-005 §Default disposition + user-memory `bring-everything-by-default` + thread
+> standing-decisions; LC4 reframed wire-vs-correct → wire-by-default). (2) **`.husky/commit-msg` is now LIVE** — every
+> `git commit` runs `prevent-accidental-major-version` + `commitlint --edit`, so a non-conforming message is BLOCKED at
+> commit (proven: blocks subject-case-bad, passes good); supersedes the provisional 2026-06-15 advisory-only posture.
+> Next session: your commit messages are linted at commit-time now (lowercase subject, 7 allowed types).
 
 > **CURRENT TRUTH (2026-06-27, Hidden Veiling Mirror / e8b57e): loop-closure LC0 ✅ + LC1 ✅ + LC2 ✅ DONE; next is LC3.**
 > Six commits this session, all `pnpm qg` green, **LOCAL (push = owner's call); origin still at `4799886`.**
