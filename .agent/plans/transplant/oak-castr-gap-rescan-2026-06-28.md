@@ -128,22 +128,39 @@ adjudicating presence.
   **Introduced `vi.useFakeTimers` to castr** (deterministic deadline tests; clean new pattern). 25 watcher +
   348 collaboration-state tests green; qg green. Fail-loud → non-zero exit verified end-to-end (`cli.ts` top
   catch → `exitCode: 2`).
-- **Pre-archive provenance + class-tiered archive-move** (LACK) —
-  `agent-tools/src/collaboration-state/{provenance/cited-event-provenance.ts, archive/archive-move.ts}` —
-  no fail-closed gate stopping archival of a comms event cited (by 8-hex id) in a permanent doc;
-  direct knowledge-integrity/lossless risk. Bring provenance first, then archive-move; wire into curator-pass.
+- **Pre-archive provenance + class-tiered archive-move** (MECHANISM LACK; doctrine PRESENT) —
+  `agent-tools/src/collaboration-state/{provenance/cited-event-provenance.ts, archive/archive-move.ts}` — castr HAS
+  the doctrine (PDR-094, archive-not-delete + Invariant 3 provenance) but LACKS the code. **Reframed 2026-06-28
+  (firsthand PDR-094/105 read):** the gate is NOT "protect a permanent-doc citation of an ephemeral event" (that
+  would be maintaining a durable→ephemeral dependency, which PDR-105 forbids). PDR-094 Invariant 3 is
+  **inline-quote-first**: the gate refuses to rotate a cited event until the permanent record carries the verbatim
+  excerpt INLINE (self-contained) — i.e. it ENFORCES PDR-105 self-containment before the ephemeral event leaves.
+  Downstream of the reference-direction doctrine layer (PDR-105 + validator); bring after that. Bring provenance
+  first, then archive-move; wire into curator-pass. (Also check PDR-094 Invariant 6: castr untracked comms → the
+  curation-standing-obligation must be wired into session-close/consolidation — verify it is.)
 - **`claims set-handoff` / `adopt` + `handoff_record_path`** (LACK+HOLLOW = LC3b / PDR-063) —
   `agent-tools/src/collaboration-state/cli-claim-handoff-commands.ts` + the `handoff_record_path`
   field (in the schema, missing from the TS type). PDR-063 is non-functional without both.
-- **reference-direction validator + PDR-105** (LACK) — `agent-tools/src/validators/reference-direction/`
-  (4 files) — no validator, no script, no PDR-105 doctrine. Port, wire into `repo-validators:check`,
-  bring PDR-105, reconcile POLICED_ROOTS to castr surfaces. (castr substituted `drift` — keep both.)
-- **Oak-ADR dangling-cite repair + ADR-127** (HOLLOW) — ~17 rules + `plan/SKILL` + PDRs link into
-  `docs/architecture/architectural-decisions/` which does not exist in castr (castr uses
-  `docs/architectural_decision_records/`, ADR-001..050). Content is already transplanted via the
-  PDR scheme → **repoint citations** (do NOT bulk-copy Oak ADR bodies, PDR-079). Bring ADR-127
-  (documentation-as-foundational-infrastructure) as a castr-scheme ADR first — a documentation-hygiene
-  rule's own link is the defect it names.
+- **reference-direction doctrine (PDR-105) + validator** (LACK) — **owner-elevated 2026-06-28 to the
+  FOUNDATIONAL collaboration-safety item; firsthand findings below.** The permanence-hierarchy + reference-direction
+  law is Oak's **PDR-105** ("reference-direction invariants": two orthogonal axes — Durability ephemeral→durable,
+  Portability specific→general; unifying invariant = target availability ≥ referrer availability; stable-index
+  corollary = link the stable _surface_ `comms/`/`active-claims.json`/`*.schema.json`, never a volatile item inside).
+  **castr already has the whole supporting cluster — PDR-032/067/079/080/094 — but NOT the keystone PDR-105, and NOT
+  the `validate-reference-direction` validator (`agent-tools/src/validators/reference-direction/`, 4 files).** Comms
+  events ARE gitignored in castr (ephemeral, matches Oak) ✓. **Bring = PDR-105 + the validator (both axes), wired into
+  `repo-validators:check`, reconcile POLICED_ROOTS; then the violation burndown below.** **BLOCKER:** PDR-105 is in the
+  096–119 range → bringing it needs **Q-009** (PDR-renumbering scheme) resolved first. (castr substituted `drift` — keep both.)
+- **Wrong-direction citation burndown (was "Oak-ADR dangling-cite repair")** (HOLLOW + DEFECT) — firsthand-verified
+  2026-06-28: **5 PDRs (060/074/075/077) and ~11 rules** markdown-link to ADRs at Oak's path scheme
+  `docs/architecture/architectural-decisions/` — which **does not exist in castr** (castr uses
+  `docs/architectural_decision_records/`, ADR-001..050). Each is BOTH a portability-axis violation (PDR/rule → ADR)
+  AND a dangling link. Plus PDR-055 → `.agent/plans/agent-tooling/` (durability-axis). **CURE CORRECTION:** the prior
+  "repoint citations" plan is WRONG for the PDR/rule cases — repointing a PDR/rule link to castr's ADR path still
+  violates the PDR-105 portability axis (a PDR/rule must not depend on a repo-specific ADR). Correct cure = **remove or
+  invert** the dependency (drop the link / let the ADR cite the PDR), per PDR-105 §Consequences ("wrong-direction
+  citations are defects to retire, not patterns to maintain"). This burndown is what the brought validator will flag;
+  do it WITH the validator. Bring ADR-127 (documentation-as-foundational-infrastructure) as a castr-scheme ADR.
 - **Plan-templates library + ADR-117** (LACK = TC2) — `.agent/plans/templates/` (21 files) — the
   shipped `plan` skill points at this non-existent dir on every invocation. Bring the tree + author a
   castr-scheme ADR-117; fix the skill link path + number.
