@@ -9,14 +9,10 @@ import { readFileSync } from 'node:fs';
 import { argv, exit } from 'node:process';
 import { writeErrorLine } from '../core/terminal-output.js';
 
-const BREAKING_CHANGE_INDICATORS = [
-  'BREAKING CHANGE:',
-  'BREAKING CHANGES:',
-  'BREAKING-CHANGE:',
-  'BREAKING CHANGE',
-  'BREAKING CHANGES',
-  'BREAKING-CHANGE',
-];
+import {
+  checkForBangCommit,
+  checkForBreakingChanges,
+} from './prevent-accidental-major-version-helpers.js';
 
 // ANSI color codes
 const RED = '\x1b[31m';
@@ -41,23 +37,6 @@ function getCommitMessage(): string {
     exit(1);
     return '';
   }
-}
-
-function checkForBreakingChanges(message: string): boolean {
-  const upperMessage = message.toUpperCase();
-
-  for (const indicator of BREAKING_CHANGE_INDICATORS) {
-    if (upperMessage.includes(indicator)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function checkForBangCommit(message: string): boolean {
-  // Check for feat!, fix!, refactor!, etc.
-  return /^(feat|fix|refactor|perf|test|build|ci|chore|docs|style|revert)!:/m.test(message);
 }
 
 function printErrorHeader(line: string): void {
