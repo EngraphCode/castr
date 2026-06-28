@@ -99,7 +99,12 @@ transplant does not demote remediation") — and Axis A just grew, pushing B fur
 (the reproduced Criticals) is interleaved/promoted; it is the top-level priority call for the whole programme.
 **Why not cheaply now:** a genuine owner priority/risk decision (ship-correctness-first vs finish-the-substrate-first),
 not an engineering determination. **Owning artefacts:** `roadmap.md` §Current Workstream Status, `remediation/README.md`,
-and `oak-castr-gap-rescan-2026-06-28.md`. **Status:** open — owner-facing (the one genuine fork from the plan-system review).
+and `oak-castr-gap-rescan-2026-06-28.md`. **Status:** **DECIDED 2026-06-28 (owner) → Axis A first** — execute the
+gap-rescan Tier-1 bring spine (trusted-git → CI/gitleaks → collaboration-safety cluster → …). The owner chose A over
+the recommended B-first. This makes Axis B a **defined** sequencing ("after the Tier-1 spine"), not an undefined later,
+so the no-park-doctrine tension is resolved by an explicit owner call: the 5 reproduced Criticals (C2–C6, plan 02
+parked) are addressed after Tier-1, not abandoned. Re-surface B for promotion at Tier-1 close. (Drained at next
+consolidate-docs.)
 
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling, hook-matcher
 precision) are carried by
