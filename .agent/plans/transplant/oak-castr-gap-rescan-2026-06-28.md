@@ -107,10 +107,11 @@ adjudicating presence.
   (best-effort degrade). Firsthand correction to the bring-plan: **Oak does NOT route all git execs** — it
   leaves commit-path execs (runtime, commit-queue, check-commit-message) by-name; castr now matches that
   disposition (parity). version-guard execs no git; coordination-home is the next item. `pnpm check` green.
-- **Worktree-aware coordination-home** (LACK) — `agent-tools/src/collaboration-state/coordination-home.ts` —
-  castr's `findCollaborationRepoRoot` is a plain FS walk; agents in different linked worktrees
-  resolve to different collaboration dirs and go mutually invisible. Bring `resolveCoordinationHome`
-  (depends on trusted-git).
+- **Worktree-aware coordination-home** ✅ **DONE 2026-06-28 (`16cedbf`)** — brought `resolveCoordinationHome`
+  (+ unit test; git-native, returns the primary checkout via `git worktree list --porcelain` through
+  trusted-git) and **deduped castr's TWO** identical `findCollaborationRepoRoot` FS-walk resolvers
+  (cli-comms-commands.ts + tui/config.ts) into it; now fails loud outside a git tree (was a silent
+  fallback). Docstring localised (no dangling Oak F-41/ADR-197 refs). qg green.
 - **Watcher per-step deadline** (LACK = LC3c) — `agent-tools/src/collaboration-state/comms-watch-errors.ts` —
   `runWithDeadline`/`WatcherTimeoutError`; the 2026-06-10 hang-but-look-alive failure is uncured.
 - **Pre-archive provenance + class-tiered archive-move** (LACK) —
