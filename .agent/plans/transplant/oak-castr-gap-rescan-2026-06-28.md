@@ -85,12 +85,15 @@ adjudicating presence.
 
 ## Tier 1 — highest impact (security / enforcement-integrity / coordination-safety / knowledge-integrity)
 
-- **CI does not run the gates server-side** (HOLLOW) — `.github/workflows/ci.yml` is
-  `paths:[lib/**]`-filtered and runs only `build`+`test`; `qg`/`check:ci` and every
-  repo-validator are local-pre-push-only, and agent-tools/.agent/docs/.husky changes don't
-  even trigger CI. **Cure:** a CI job running `pnpm check:ci`; drop/loosen the path filter;
-  make it the required status. _The single biggest integrity hole — castr's guardrails are
-  currently advisory/local._ (= the long-tracked LC5 finding.)
+- **CI does not run the gates server-side** ✅ **DONE (in-repo) 2026-06-28 (`38073f1`)** — replaced the
+  lib-only `build` job (gated behind `paths:[lib/**]`) with a single `quality-gates` job running
+  `pnpm check:ci` (clean + frozen install + qg) on every push/PR to main, any path; pinned gitleaks
+  (sha256-verified) + full-history checkout for the secret scan; CodeQL retained. Closes the gitleaks-in-CI
+  sub-item too. **OWNER-ONLY to fully close the loop:** (1) push the branch so CI runs server-side for the
+  first time (delivery = owner's call); (2) set `quality-gates` as a required status check in the main
+  branch ruleset (a GitHub repo setting, not expressible in-repo). _Was the single biggest integrity hole
+  = the long-tracked LC5 finding._ **Future enhancement (not a gap):** Oak splits this into parallel
+  per-check jobs with a `run-quality-gates` fan-in; castr's single job is correct + simpler-appropriate.
 - **No secret scanning** ✅ **DONE (qg side) 2026-06-28 (`ec53da7`)** — brought a castr-localised
   `.gitleaks.toml` (useDefault + reference-docs/test-fixture/SHA-prefix allowlists; dropped Clerk +
   SonarCloud-key + Oak wide-sweep-commit + OAK/Notion-rule items) and the `secrets:scan{,:all,:all-refs}`
