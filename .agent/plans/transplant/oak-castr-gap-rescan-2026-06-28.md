@@ -94,10 +94,13 @@ adjudicating presence.
 - **No secret scanning anywhere** (LACK) — `.gitleaks.toml` + `secrets:scan{,:all,:all-refs}`
   scripts + a CI secret-scan job. Bring `.gitleaks.toml` (drop Clerk allowlist; keep
   reference-docs/test-fixture/SHA-prefix allowlists), wire into `qg` + CI.
-- **trusted-git core** (HOLLOW) — `agent-tools/src/core/trusted-git.ts` — castr execs `git`
-  by name across call-sites (the pattern Oak's docstring says does NOT clear S4036). Bring +
-  route branch-touched-files, machine-local-paths validator, version-guard, statusline-git-io,
-  coordination-home through `resolveTrustedGit`. _Shared dependency of the next two items._
+- **trusted-git core** ✅ **DONE 2026-06-28 (`2ca01be`)** — brought `agent-tools/src/core/trusted-git.ts`
+  (`resolveTrustedGit` + unit test) and routed the security-sensitive consumers, matching Oak's _actual_
+  routed set: branch-touched-files (replaced the superseded `env.PATH`-pinning that does NOT clear S4036 —
+  contract-test rewritten RED-first), the machine-local-paths validator, and the statusline git read
+  (best-effort degrade). Firsthand correction to the bring-plan: **Oak does NOT route all git execs** — it
+  leaves commit-path execs (runtime, commit-queue, check-commit-message) by-name; castr now matches that
+  disposition (parity). version-guard execs no git; coordination-home is the next item. `pnpm check` green.
 - **Worktree-aware coordination-home** (LACK) — `agent-tools/src/collaboration-state/coordination-home.ts` —
   castr's `findCollaborationRepoRoot` is a plain FS walk; agents in different linked worktrees
   resolve to different collaboration dirs and go mutually invisible. Bring `resolveCoordinationHome`
