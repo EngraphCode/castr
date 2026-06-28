@@ -141,26 +141,21 @@ adjudicating presence.
 - **`claims set-handoff` / `adopt` + `handoff_record_path`** (LACK+HOLLOW = LC3b / PDR-063) —
   `agent-tools/src/collaboration-state/cli-claim-handoff-commands.ts` + the `handoff_record_path`
   field (in the schema, missing from the TS type). PDR-063 is non-functional without both.
-- **reference-direction doctrine (PDR-105) + validator** (LACK) — **owner-elevated 2026-06-28 to the
-  FOUNDATIONAL collaboration-safety item; firsthand findings below.** The permanence-hierarchy + reference-direction
-  law is Oak's **PDR-105** ("reference-direction invariants": two orthogonal axes — Durability ephemeral→durable,
-  Portability specific→general; unifying invariant = target availability ≥ referrer availability; stable-index
-  corollary = link the stable _surface_ `comms/`/`active-claims.json`/`*.schema.json`, never a volatile item inside).
-  **castr already has the whole supporting cluster — PDR-032/067/079/080/094 — but NOT the keystone PDR-105, and NOT
-  the `validate-reference-direction` validator (`agent-tools/src/validators/reference-direction/`, 4 files).** Comms
-  events ARE gitignored in castr (ephemeral, matches Oak) ✓. **Bring = PDR-105 + the validator (both axes), wired into
-  `repo-validators:check`, reconcile POLICED_ROOTS; then the violation burndown below.** **BLOCKER:** PDR-105 is in the
-  096–119 range → bringing it needs **Q-009** (PDR-renumbering scheme) resolved first. (castr substituted `drift` — keep both.)
-- **Wrong-direction citation burndown (was "Oak-ADR dangling-cite repair")** (HOLLOW + DEFECT) — firsthand-verified
-  2026-06-28: **5 PDRs (060/074/075/077) and ~11 rules** markdown-link to ADRs at Oak's path scheme
-  `docs/architecture/architectural-decisions/` — which **does not exist in castr** (castr uses
-  `docs/architectural_decision_records/`, ADR-001..050). Each is BOTH a portability-axis violation (PDR/rule → ADR)
-  AND a dangling link. Plus PDR-055 → `.agent/plans/agent-tooling/` (durability-axis). **CURE CORRECTION:** the prior
-  "repoint citations" plan is WRONG for the PDR/rule cases — repointing a PDR/rule link to castr's ADR path still
-  violates the PDR-105 portability axis (a PDR/rule must not depend on a repo-specific ADR). Correct cure = **remove or
-  invert** the dependency (drop the link / let the ADR cite the PDR), per PDR-105 §Consequences ("wrong-direction
-  citations are defects to retire, not patterns to maintain"). This burndown is what the brought validator will flag;
-  do it WITH the validator. Bring ADR-127 (documentation-as-foundational-infrastructure) as a castr-scheme ADR.
+- **reference-direction doctrine (PDR-105) + validator** ✅ **DONE 2026-06-28 (`fc3b1cb` PDR-105, `280762a`
+  validator, `8def837` burndown+wiring).** Brought PDR-105 (the two-axis law: Durability ephemeral→durable +
+  Portability specific→general; availability invariant; stable-index corollary) at castr-105 (Q-009 = mapping-table,
+  transient). Ported `validate-reference-direction` (helpers + allowlists + main + 33-test spec), reconciled to castr
+  (ADR dir `docs/architectural_decision_records/`; `.agent/research` ephemeral; allowlists match castr 1:1); now
+  BLOCKING + wired into `repo-validators:check`. Comms gitignored ✓. Validator reports 0.
+- **Wrong-direction citation burndown** ✅ **DONE 2026-06-28 (`8def837`).** Validator surfaced **83** wrong-direction
+  refs (53 portability + 30 durability) across **45 files** — 5× the grep estimate. Burned down via a 90-agent
+  de-link + adversarial-verify workflow, **firsthand-reviewed** (oracle 0; diffs confirm de-link correctness, ref-defs
+  handled, only-flagged-touched). Cure = de-link (`[label](path)` → backticked concept-name), Oak-proven.
+  **REMAINING (separate item, the Oak-ADR-cite-repair below):** **18 rule→ADR markdown links** to Oak's absent path
+  scheme are still present — they are **dangling links, NOT reference-direction violations** (rules classify as
+  `repo-doctrine`, and `repo-doctrine`→ADR is unpoliced on both axes — a faithful Oak-parity behaviour; rules-as-
+  repo-doctrine-vs-portable-Core is a latent doctrine question). Cure them by **wiring `validate-markdown-links`**
+  (castr has the validator, unwired) + de-link/repoint, and bring ADR-127 as a castr-scheme ADR.
 - **Plan-templates library + ADR-117** (LACK = TC2) — `.agent/plans/templates/` (21 files) — the
   shipped `plan` skill points at this non-existent dir on every invocation. Bring the tree + author a
   castr-scheme ADR-117; fix the skill link path + number.

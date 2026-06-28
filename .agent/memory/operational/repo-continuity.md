@@ -122,17 +122,23 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > (`38073f1`); collaboration-safety cluster — ✅ worktree-aware coordination-home + dedup of castr's two FS-walk
 > resolvers (`16cedbf`), ✅ watcher step-deadline (LC3c, `86be5fb` — comms-watch-errors.ts + loop refactor to
 > fatal per-step deadline + step-timeout-ms CLI threading + loop-closure proof; introduced `vi.useFakeTimers`).
-> **The single next action** = continue the collaboration-safety cluster at **pre-archive provenance + class-tiered
-> archive-move** (fail-closed gate stopping archival of a comms event cited by 8-hex id in a permanent doc — a
-> knowledge-integrity/lossless risk), then claims-handoff (LC3b/PDR-063) → reference-direction → Oak-ADR cite-repair →
-> plan-templates, bringing freely per PDR-005 §Default. **DELIVERY: PR #3 (feat → main) OPEN + CI GREEN + MERGEABLE/CLEAN as of
-> 2026-06-28** (https://github.com/EngraphCode/castr/pull/3; quality-gates ran `check:ci` server-side, success; the
-> first run caught `main`'s unformatted PR-#2 research file, fixed by merging origin/main + reformatting). **ONE
-> OWNER-ONLY ACTION remaining:** set `quality-gates` as a required status check in the main branch ruleset (GitHub repo
-> setting) — now unblocked since CI is proven green. Parallel
-> castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
-> LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
-> commit-time (`.husky/commit-msg`). **`origin/feat` was `2a853a4`; the watcher-deadline feat (`86be5fb`) + docs are being pushed this turn onto PR #3 (CI re-runs). ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call (already authorised this branch + delivery).**
+> **REFERENCE-DIRECTION LAYER LANDED 2026-06-28 (owner-taught permanence/portability hierarchy):** ✅ PDR-105
+> keystone (`fc3b1cb`, at castr-105; Q-009 decided = mapping-table/transient), ✅ `validate-reference-direction`
+> validator (`280762a`), ✅ burned down all **83** wrong-direction refs across 45 doctrine files via a 90-agent
+> workflow + firsthand review, validator now BLOCKING + wired (`8def837`). **The single next action** = continue the
+> collaboration-safety cluster at **pre-archive provenance + class-tiered archive-move** (PDR-094 doctrine present,
+> mechanism absent; inline-quote-first self-containment enforcement — PDR-105-aligned), then claims-handoff
+> (LC3b/PDR-063) → **Oak-ADR cite-repair** (NEW firsthand finding: 18 rule→ADR dangling links remain — NOT
+> ref-direction violations [rules = repo-doctrine, unpoliced]; cure by wiring `validate-markdown-links` [castr has it,
+>
+> > unwired] + de-link/repoint + bring ADR-127) → plan-templates, bringing freely per PDR-005 §Default. **DELIVERY: PR #3 (feat → main) OPEN + CI GREEN + MERGEABLE/CLEAN as of
+> > 2026-06-28** (https://github.com/EngraphCode/castr/pull/3; quality-gates ran `check:ci` server-side, success; the
+> > first run caught `main`'s unformatted PR-#2 research file, fixed by merging origin/main + reformatting). **ONE
+> > OWNER-ONLY ACTION remaining:** set `quality-gates` as a required status check in the main branch ruleset (GitHub repo
+> > setting) — now unblocked since CI is proven green. Parallel
+> > castr-internal lanes (NOT Axis A, in the thread record): dependency-currency DC3–5, friction-fix, hook-matcher,
+> > LC1 fail-opens; castr-internal cleanups Q-009 (PDR renumber) + Q-010 (Result-vs-fail-fast). Commits are now linted at
+> > commit-time (`.husky/commit-msg`). **`origin/feat` was `24c6ae1` (watcher-deadline pushed); the reference-direction layer (PDR-105 `fc3b1cb` + validator `280762a` + 83-ref burndown/wiring `8def837`) + docs are the newest local, being pushed this turn onto PR #3 (CI re-runs). ALWAYS re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice` (the owner pushes between turns); push = owner's call (already authorised this branch + delivery).**
 
 > **CURRENT TRUTH (2026-06-28, Open Lofting Feather / c82112): the authoritative Oak→castr bring backlog is [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
 > A two-pass ultracode rescan (owner updated OOCE; 26+23 agents, firsthand-validated) produced the
