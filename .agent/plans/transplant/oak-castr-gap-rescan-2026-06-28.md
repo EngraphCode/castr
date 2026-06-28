@@ -91,9 +91,12 @@ adjudicating presence.
   even trigger CI. **Cure:** a CI job running `pnpm check:ci`; drop/loosen the path filter;
   make it the required status. _The single biggest integrity hole — castr's guardrails are
   currently advisory/local._ (= the long-tracked LC5 finding.)
-- **No secret scanning anywhere** (LACK) — `.gitleaks.toml` + `secrets:scan{,:all,:all-refs}`
-  scripts + a CI secret-scan job. Bring `.gitleaks.toml` (drop Clerk allowlist; keep
-  reference-docs/test-fixture/SHA-prefix allowlists), wire into `qg` + CI.
+- **No secret scanning** ✅ **DONE (qg side) 2026-06-28 (`ec53da7`)** — brought a castr-localised
+  `.gitleaks.toml` (useDefault + reference-docs/test-fixture/SHA-prefix allowlists; dropped Clerk +
+  SonarCloud-key + Oak wide-sweep-commit + OAK/Notion-rule items) and the `secrets:scan{,:all,:all-refs}`
+  scripts; wired `secrets:scan` as the first step of `qg`. Verified clean (working tree + 312-commit
+  branch/tag history). **Remaining (folds into CI-runs-gates):** the CI secret-scan job + installing
+  gitleaks in CI.
 - **trusted-git core** ✅ **DONE 2026-06-28 (`2ca01be`)** — brought `agent-tools/src/core/trusted-git.ts`
   (`resolveTrustedGit` + unit test) and routed the security-sensitive consumers, matching Oak's _actual_
   routed set: branch-touched-files (replaced the superseded `env.PATH`-pinning that does NOT clear S4036 —
