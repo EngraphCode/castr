@@ -12,7 +12,7 @@
 > you integrate it, **split it to its proper homes**: the plan sections belong
 > under `.agent/plans/` (likely a new Phase plan + a `castr check`/surface atomic
 > plan), the atomisation decision belongs in a new ADR (it supersedes part of
-> ADR-043's *scope*, see §7), the zod-compiler findings belong under
+> ADR-043's _scope_, see §7), the zod-compiler findings belong under
 > `.agent/research/zod-compiler/`, and the report's correction table belongs with
 > the architecture-review provenance. Do not lose the **reasoning trail** (§4) —
 > it is the part most likely to be discarded and most expensive to re-derive.
@@ -30,28 +30,28 @@
    it; decide policy (fail-fast / fall back / report) separately.** §3.
 3. Castr is not "a transformer." It is a **multi-verb fidelity compiler** whose
    real surfaces — **doctor, upgrade, transform, validate** — already exist in
-   code but are *implicit*. Only **check** is net-new. Making the verb model
+   code but are _implicit_. Only **check** is net-new. Making the verb model
    explicit is the unlock, and it is what reveals where real package seams are. §5–§6.
 4. Workspace atomisation is **an open value question, not a closed one**. Judge it
    on value with a written trigger + stability gate (§7). The first real consumer
    that wants a lean embeddable core is the Oak SDK / Phase 5 companions.
-5. The metric that aligns everything: **zod-compiler measures *compilation
-   coverage %* against *speed*; Castr should measure *preservation coverage %*
-   against *fidelity*.** `castr check` is the fidelity analogue of `zod-compiler check`.
+5. The metric that aligns everything: **zod-compiler measures _compilation
+   coverage %_ against _speed_; Castr should measure _preservation coverage %_
+   against _fidelity_.** `castr check` is the fidelity analogue of `zod-compiler check`.
 
 ---
 
 ## 1. Provenance & verification status
 
-| Claim source | Status | Evidence |
-|---|---|---|
-| HEAD = `393e476`, prior report's claimed commit | ✅ verified | `git log` |
-| Single workspace (`lib`) | ✅ verified | `pnpm-workspace.yaml` |
-| Package `@engraph/castr@1.18.3`, deps incl. ts-morph/mcp-sdk/ajv/scalar/zod | ✅ verified | `lib/package.json` |
-| `repository`/`homepage` still point to `jimcresswell/openapi-zod-validation` | ✅ verified (stale) | `lib/package.json:8,27` |
-| Broad semantic IR (`CastrDocument`, `CastrSchema`) | ✅ verified | `lib/src/schema-processing/ir/models/*` |
-| OpenAPI canonical **output** target is 3.2.0; 3.1 is input-only | ✅ verified | roadmap "3.x input → 3.2.0 output"; `CastrDocument.openApiVersion` |
-| zod-compiler internals (IR, codegen, check) | ✅ verified via source fetch | `gajus/zod-compiler@main` `src/core/types.ts`, `src/core/codegen/context.ts`, `src/cli/commands/check.ts`, README |
+| Claim source                                                                 | Status                       | Evidence                                                                                                          |
+| ---------------------------------------------------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| HEAD = `393e476`, prior report's claimed commit                              | ✅ verified                  | `git log`                                                                                                         |
+| Single workspace (`lib`)                                                     | ✅ verified                  | `pnpm-workspace.yaml`                                                                                             |
+| Package `@engraph/castr@1.18.3`, deps incl. ts-morph/mcp-sdk/ajv/scalar/zod  | ✅ verified                  | `lib/package.json`                                                                                                |
+| `repository`/`homepage` still point to `jimcresswell/openapi-zod-validation` | ✅ verified (stale)          | `lib/package.json:8,27`                                                                                           |
+| Broad semantic IR (`CastrDocument`, `CastrSchema`)                           | ✅ verified                  | `lib/src/schema-processing/ir/models/*`                                                                           |
+| OpenAPI canonical **output** target is 3.2.0; 3.1 is input-only              | ✅ verified                  | roadmap "3.x input → 3.2.0 output"; `CastrDocument.openApiVersion`                                                |
+| zod-compiler internals (IR, codegen, check)                                  | ✅ verified via source fetch | `gajus/zod-compiler@main` `src/core/types.ts`, `src/core/codegen/context.ts`, `src/cli/commands/check.ts`, README |
 
 **Verification instruction for future agents:** re-pin both repos to exact commits
 before implementing. zod-compiler's IR is coupled to Zod internals and will drift.
@@ -65,15 +65,15 @@ The prior report is well-structured and appropriately hedged, but it sampled ~10
 files and missed code that changes its conclusions. **Verified corrections** —
 future agents should not repeat the prior report's framing:
 
-| Prior report claim | Reality (verified) |
-|---|---|
+| Prior report claim                                                                | Reality (verified)                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Zod-first `defineEndpoint({...})` DSL is "a conceptual sketch, not a decided API" | **Already implemented.** `lib/src/schema-processing/parsers/zod/endpoints/` has `parseEndpointDefinition`, `buildCastrOperationFromEndpoint`, extractors, types, unit tests; exported from `parsers/zod/index.ts`. A top-level `lib/src/endpoints/` module exists (`definition.types.ts`, `parameter-metadata.ts`). Parsed **statically** via ts-morph, no execution. |
-| "Draft an ADR for the product/repo + companion boundary" | **Already exists:** ADR-043 (Accepted, 2026-04-02), reflected in README + roadmap Phase 5. |
-| Strictness should *become* a constitution (Insight 4) | **Already is:** "Input-Output Pair Compatibility Model" in `principles.md`, `requirements.md`, `AGENT.md`, `.agent/rules/input-output-pair-compatibility.md`; plus ADR-040/041. |
-| Verify whether 3.2.0 is the latest target | Repo **already** canonicalises 3.0/3.1/3.2 → 3.2.0 output. Report **missed** that 3.1 is *input-only*, not a peer output. |
-| Split compiler into core/spec/format packages (as if blocked) | Initially I said this "conflicts with ADR-043/036." **Corrected:** ADR-043 governs compiler-core vs *runtime/framework companions*, **not** a compiler-internal split. The conflict was overstated. See §7 — it is an open value question. |
-| `castr check` is the key novel idea | **True and valuable**, but the report overlooked that the *inputs already exist*: round-trip/idempotence proof rigs (ADR-027, ADR-035) and the `doctor` surface. `check` is mostly aggregation + presentation, not greenfield. |
-| Heavy `CastrCheckReport` schema proposed | zod-compiler's leaner shape is a better starting point (§3, Appendix A). |
+| "Draft an ADR for the product/repo + companion boundary"                          | **Already exists:** ADR-043 (Accepted, 2026-04-02), reflected in README + roadmap Phase 5.                                                                                                                                                                                                                                                                            |
+| Strictness should _become_ a constitution (Insight 4)                             | **Already is:** "Input-Output Pair Compatibility Model" in `principles.md`, `requirements.md`, `AGENT.md`, `.agent/rules/input-output-pair-compatibility.md`; plus ADR-040/041.                                                                                                                                                                                       |
+| Verify whether 3.2.0 is the latest target                                         | Repo **already** canonicalises 3.0/3.1/3.2 → 3.2.0 output. Report **missed** that 3.1 is _input-only_, not a peer output.                                                                                                                                                                                                                                             |
+| Split compiler into core/spec/format packages (as if blocked)                     | Initially I said this "conflicts with ADR-043/036." **Corrected:** ADR-043 governs compiler-core vs _runtime/framework companions_, **not** a compiler-internal split. The conflict was overstated. See §7 — it is an open value question.                                                                                                                            |
+| `castr check` is the key novel idea                                               | **True and valuable**, but the report overlooked that the _inputs already exist_: round-trip/idempotence proof rigs (ADR-027, ADR-035) and the `doctor` surface. `check` is mostly aggregation + presentation, not greenfield.                                                                                                                                        |
+| Heavy `CastrCheckReport` schema proposed                                          | zod-compiler's leaner shape is a better starting point (§3, Appendix A).                                                                                                                                                                                                                                                                                              |
 
 **Accurate in the prior report (keep):** single `lib` workspace; broad
 semantic IR; no built-in HTTP client; "API contract compiler" is a sharper
@@ -89,30 +89,30 @@ same strict diagnostics; premature atomisation is a real risk.
 
 **Framing.** Both are compilers with an IR, but they optimise different axes:
 
-- **zod-compiler:** Zod → JavaScript, optimises **execution speed**. *One* target.
+- **zod-compiler:** Zod → JavaScript, optimises **execution speed**. _One_ target.
   Metric: **compilation coverage %**. Promise: "2–75× faster, no code changes,
   still a real Zod object."
 - **Castr:** any-format → IR → any-format, optimises **semantic fidelity**.
-  *Many* targets. Natural metric: **preservation coverage %**. Promise (proposed):
+  _Many_ targets. Natural metric: **preservation coverage %**. Promise (proposed):
   "round-trips losslessly, or tells you exactly what it can't — and never invents
   semantics."
 
 > **The mapping that makes zod-compiler legible for Castr:**
-> *compilation coverage : speed :: preservation coverage : fidelity.*
+> _compilation coverage : speed :: preservation coverage : fidelity._
 
 ### Altitude 1 — low-level code mechanisms
 
 - **`FastGen` returns `string | null` (null = ineligible); ineligibility bubbles
   up.** zod-compiler does not throw at the first node it cannot express as a pure
-  boolean — it returns `null`, and a parent is fast-path-eligible only if *all
-  children* return non-null. **Representability is computed as data and
+  boolean — it returns `null`, and a parent is fast-path-eligible only if _all
+  children_ return non-null. **Representability is computed as data and
   propagated; policy is decided separately.**
-  - *Castr today does the opposite:* writers **throw on the first unsupported
-    node** (fail-fast baked into traversal). Correct as *policy*, but it means
-    Castr cannot enumerate what *else* it couldn't represent — it dies at node 1.
+  - _Castr today does the opposite:_ writers **throw on the first unsupported
+    node** (fail-fast baked into traversal). Correct as _policy_, but it means
+    Castr cannot enumerate what _else_ it couldn't represent — it dies at node 1.
   - **Lesson (keystone):** separate "can target T represent node N?" (pure
     computation → typed result) from "what do we do about it?" (fail-fast / fall
-    back / report). Fail-fast becomes a *policy applied to* the representability
+    back / report). Fail-fast becomes a _policy applied to_ the representability
     map. This single change makes `castr check` fall out for free and powers
     per-pair divergence tables.
 - **Content-addressed dedup:** `effectFnCache` (keyed by source text),
@@ -124,20 +124,20 @@ same strict diagnostics; premature atomisation is a real risk.
 ### Altitude 2 — model / seam definitions
 
 - **`FallbackIR { reason: "transform"|"refine"|"superRefine"|"custom"|"lazy"|
-  "unsupported"|"coalesced", refIndex? }`.** zod-compiler reifies "I can't compile
+"unsupported"|"coalesced", refIndex? }`.** zod-compiler reifies "I can't compile
   this" as a **first-class IR node carrying a typed reason**. This is exactly the
-  prior report's status-taxonomy idea — proven in production — *with a crucial
-  nuance the report got wrong:*
+  prior report's status-taxonomy idea — proven in production — _with a crucial
+  nuance the report got wrong:_
   > zod-compiler can put fallback **inside** its IR because its IR is
   > **target-specific** (one target: runtime JS). **Castr's IR is
   > target-independent**, so an equivalent marker must live in a **per-target plan
   > layer (`TargetPlan<T>`), never in `CastrDocument`/`CastrSchema`.**
-  This is the concrete justification for "target plans": the reason Castr needs a
-  separate plan layer is precisely that it has N targets and a canonical IR that
-  must stay format-neutral. Putting representability in the IR would corrupt it.
+  > This is the concrete justification for "target plans": the reason Castr needs a
+  > separate plan layer is precisely that it has N targets and a canonical IR that
+  > must stay format-neutral. Putting representability in the IR would corrupt it.
 - **Extraction seam: runtime reflection vs source AST.** zod-compiler's
   `extractSchema()` reaches into Zod's internal `_def` at build time — sees the
-  *actually constructed* schema (including dynamic composition) but is brittle
+  _actually constructed_ schema (including dynamic composition) but is brittle
   against Zod internals and **requires executing user code**. Castr chose the
   other seam: **ts-morph source-AST, no execution** (ADR-026). Trade-off to state
   plainly: Castr cannot see dynamically-constructed schemas, but is immune to
@@ -154,12 +154,12 @@ same strict diagnostics; premature atomisation is a real risk.
   flags: --json, --fail-under <n>  (exit 1 if minCoverage < n)
   ```
   Castr generalises this one way only: **per `(source → target)` pair** instead of
-  per-schema. Note the **`hint`** field carries *actionable remediation*
+  per-schema. Note the **`hint`** field carries _actionable remediation_
   ("Extract transform into a separate post-processing step"), not just diagnosis —
   Castr's fail-fast messages already say "Genuinely impossible…"; the lesson is to
-  make them *aggregatable and machine-readable* rather than thrown-and-fatal.
+  make them _aggregatable and machine-readable_ rather than thrown-and-fatal.
 - **`mode: "inline" | "lean"` + `virtual:zod-compiler/runtime`.** Separates
-  *what to emit* from *how to package shared helpers* (inline everything vs
+  _what to emit_ from _how to package shared helpers_ (inline everything vs
   reference a shared runtime module). Relevant only if Castr ships runtime
   validation helpers (the `validators.ts` output); if it does, copy this rather
   than reinvent.
@@ -168,7 +168,7 @@ same strict diagnostics; premature atomisation is a real risk.
 
 - **Two-phase validation:** zero-allocation fast path for the valid case; lazy
   error-collecting walk only on failure. Doesn't transfer literally (Castr doesn't
-  execute validation as its product), but the *concept* does: **the happy path and
+  execute validation as its product), but the _concept_ does: **the happy path and
   the diagnostic path are different programs.** Castr currently conflates "emit the
   artifact" with "explain what it couldn't preserve" by throwing inside the emit
   path. Splitting them is the same move as the keystone in Altitude 1.
@@ -176,14 +176,14 @@ same strict diagnostics; premature atomisation is a real risk.
   compiled output differs from Zod (unknown keys not stripped by default; output
   returned by identity; record iteration only over enumerable string keys).
   Honesty-as-a-feature — the **user-facing artifact** of exactly Castr's IO-Pair
-  Compatibility Model. Castr keeps "format tensions" tables *internal* (roadmap,
+  Compatibility Model. Castr keeps "format tensions" tables _internal_ (roadmap,
   plan docs); it should **publish a per-pair semantic-divergence table** as product.
 
 ### Altitude 5 — intent
 
 - **A bounded, measurable promise + ruthless honesty about the boundary.**
   zod-compiler's real discipline isn't packaging; it's "2–75×, no code changes,
-  still a real Zod object," followed *immediately* by the exact fallback list,
+  still a real Zod object," followed _immediately_ by the exact fallback list,
   side-effect hazards, and behavioral deltas. Castr's analogue is a **fidelity**
   promise measured by `castr check` coverage.
 - **"Still a real Zod object / no code changes" = preserve the user's ecosystem
@@ -195,9 +195,9 @@ same strict diagnostics; premature atomisation is a real risk.
   interception, `include`/`exclude`, content-addressed cache) as things "Castr
   should learn from." But Castr's Zod path is **static ts-morph parsing that never
   executes user modules** (ADR-026; `parseEndpointDefinition` parses source text).
-  Castr has already *designed out* the entire problem class. **Inverted lesson:**
-  zod-compiler's side-effect pain is *positive evidence for Castr's static-only
-  stance.* Castr should resist any future temptation to runtime-load Zod contract
+  Castr has already _designed out_ the entire problem class. **Inverted lesson:**
+  zod-compiler's side-effect pain is _positive evidence for Castr's static-only
+  stance._ Castr should resist any future temptation to runtime-load Zod contract
   files, not import mitigations for a problem it doesn't have.
 
 ### Lower-novelty items (recorded for completeness)
@@ -213,7 +213,7 @@ same strict diagnostics; premature atomisation is a real risk.
 
 ## 4. Metacognitive reasoning trail (do not discard)
 
-This section preserves *how* the conclusions were reached, per
+This section preserves _how_ the conclusions were reached, per
 `.agent/directives/metacognition.md`. It is the part most likely to be cut and
 most expensive to re-derive.
 
@@ -223,11 +223,11 @@ most expensive to re-derive.
    asserted "Castr doesn't execute validation." Wrong — there is a full
    `ir/validation/` validator suite, `upgrade-validate.ts`, `openapi-validator.ts`
    (AJV output validation), `doctor/preflight-validator.ts`, and validation-parity
-   rigs that run real data. **Root cause:** I let the *thin public surface* (one
+   rigs that run real data. **Root cause:** I let the _thin public surface_ (one
    CLI verb `castr <in> -o <out>`; a grab-bag of root exports) stand in for the
-   *actual responsibilities*. The capabilities exist; their articulation doesn't.
+   _actual responsibilities_. The capabilities exist; their articulation doesn't.
 2. **Dogma.** I dismissed compiler atomisation because "there's an Accepted ADR."
-   That is argument from authority, and it was *imprecise* authority — ADR-043 is
+   That is argument from authority, and it was _imprecise_ authority — ADR-043 is
    about runtime/framework companions, not a compiler-internal split. **Root
    cause:** status-quo bias dressed as principle, to avoid re-opening a question.
 
@@ -237,20 +237,21 @@ boundaries are a value question" (point 2) are linked by a dependency: **you
 cannot honestly judge atomisation until the verb model is explicit, because the
 verb model is what reveals where the real seams are. You atomise along articulated
 contracts, not along a blur.** Hence the plan sequences surface articulation
-*before* the atomisation decision.
+_before_ the atomisation decision.
 
 **The four metacognition questions, answered:**
-- *What changed?* Castr reframed from "a transformer" to "a multi-verb fidelity
+
+- _What changed?_ Castr reframed from "a transformer" to "a multi-verb fidelity
   compiler whose public surface under-represents it"; atomisation reframed from
   "closed" to "open, gated on contract stability."
-- *Why?* I anchored on existing artifacts (one CLI verb; an ADR) instead of on
+- _Why?_ I anchored on existing artifacts (one CLI verb; an ADR) instead of on
   what the system does and what creates value.
-- *Would I solve it differently now?* Yes — surfaces first, diagnostics as
+- _Would I solve it differently now?_ Yes — surfaces first, diagnostics as
   connective tissue, atomisation as a value-gated decision the surface work makes
   answerable. (The plan, §6–§7.)
-- *Outcome → impact → value?* Explicit verbs + shared diagnostics + value-gated
+- _Outcome → impact → value?_ Explicit verbs + shared diagnostics + value-gated
   split → public surface matches reality and the IR↔adapter boundary becomes a
-  tested contract → **trust** (strictness becomes *observable* via `check`),
+  tested contract → **trust** (strictness becomes _observable_ via `check`),
   **adoptability** (lean core embeds in Oak/SDK), **cheap optionality** (atomise
   when proven, because seams are already real).
 
@@ -261,13 +262,13 @@ contracts, not along a blur.** Hence the plan sequences surface articulation
 Castr already performs all of these; only **check** is net-new. Each is a distinct
 operation with a distinct contract, currently implicit in code.
 
-| Verb | What it does | Exists today? | Where (verified) |
-|---|---|---|---|
-| **doctor** | Repair/normalise malformed input; preflight diagnostics | ✅ implicit | `shared/doctor/` (`preflight-validator.ts`, `runtime-diagnostics.ts`, `repairOpenApiDocument`) |
-| **upgrade** | Canonicalise 3.0/3.1/3.2 → 3.2.0, validating as it goes | ✅ implicit | `shared/load-openapi-document/upgrade-validate.ts`, `validation-errors.ts`, path-template & additional-operations validation |
-| **transform** | any-format → IR → any-format | ✅ (core) | `parsers/*`, `writers/*`, `ir/*` |
-| **validate** | IR-invariant validation; output (AJV) validation; runtime data validation/parity | ✅ implicit | `ir/validation/validators.*`, `writers/openapi/openapi-validator.ts`, validation-parity rigs |
-| **check** | Semantic-preservation report per `(source→target)` pair; coverage %, findings, round-trip status | ❌ net-new | builds on `doctor` + ADR-027/035 rigs + the new representability map |
+| Verb          | What it does                                                                                     | Exists today? | Where (verified)                                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **doctor**    | Repair/normalise malformed input; preflight diagnostics                                          | ✅ implicit   | `shared/doctor/` (`preflight-validator.ts`, `runtime-diagnostics.ts`, `repairOpenApiDocument`)                               |
+| **upgrade**   | Canonicalise 3.0/3.1/3.2 → 3.2.0, validating as it goes                                          | ✅ implicit   | `shared/load-openapi-document/upgrade-validate.ts`, `validation-errors.ts`, path-template & additional-operations validation |
+| **transform** | any-format → IR → any-format                                                                     | ✅ (core)     | `parsers/*`, `writers/*`, `ir/*`                                                                                             |
+| **validate**  | IR-invariant validation; output (AJV) validation; runtime data validation/parity                 | ✅ implicit   | `ir/validation/validators.*`, `writers/openapi/openapi-validator.ts`, validation-parity rigs                                 |
+| **check**     | Semantic-preservation report per `(source→target)` pair; coverage %, findings, round-trip status | ❌ net-new    | builds on `doctor` + ADR-027/035 rigs + the new representability map                                                         |
 
 The public surface (one CLI verb; grab-bag exports such as
 `generateZodClientFromOpenAPI`, `writeOpenApi`, `loadOpenApiDocument`,
@@ -287,22 +288,22 @@ treats current code design as changeable where change earns value (prerelease).
 
 - Introduce a pure pass per target: `assess(ir, target) → RepresentabilityMap`,
   where each IR node maps to `{ kind: "native" | "normalised" | "runtime-helper" |
-  "widened" | "unsupported" | "impossible", path, reason? }` (Appendix B). Modeled
+"widened" | "unsupported" | "impossible", path, reason? }` (Appendix B). Modeled
   on zod-compiler's `FastGen → string | null` eligibility propagation and its
   typed `FallbackIR.reason`, **but stored in a per-target plan layer, not the IR**.
 - Writers consume the map. **Fail-fast becomes a policy applied to the map**
   (default: reject on any `unsupported`/`impossible`), not control flow inside
   traversal. Strict-by-default doctrine is preserved exactly — nothing widens,
-  invents, or silently drops; the difference is the map is computed *before* the
+  invents, or silently drops; the difference is the map is computed _before_ the
   policy decision, so the full set of problems is known.
 - Acceptance: existing fail-fast behavior is byte-identical for currently-supported
-  inputs; for unsupported inputs the error now enumerates *all* offending paths,
+  inputs; for unsupported inputs the error now enumerates _all_ offending paths,
   not just the first; all quality gates green (`pnpm check:ci`).
 
 ### Phase B — `TargetPlan<T>` layer
 
 - Promote the `RepresentabilityMap` into a typed `TargetPlan<"openapi" | "zod" |
-  "json-schema" | "typescript" | "validators" | "mcp">`. The plan is the single
+"json-schema" | "typescript" | "validators" | "mcp">`. The plan is the single
   source for: (1) writer codegen decisions, (2) `check` reports, (3) published
   divergence tables. Canonical IR stays format-neutral (the §3 Altitude-2 nuance).
 - Decision to record: is `TargetPlan` public API and serialisable? Recommend
@@ -320,7 +321,7 @@ treats current code design as changeable where change earns value (prerelease).
 ### Phase D — `castr check` (the net-new verb)
 
 - CLI `castr check <input> --from <fmt> --to <fmt,...> [--round-trip <fmt>]
-  [--json] [--fail-under <n>]`. Start from zod-compiler's lean report shape
+[--json] [--fail-under <n>]`. Start from zod-compiler's lean report shape
   (Appendix A), generalised per `(source→target)` pair. Reuse the existing
   round-trip/idempotence rigs (ADR-027/035) for `--round-trip`.
 - Acceptance: deterministic JSON output; `--fail-under` exits non-zero below
@@ -344,7 +345,7 @@ treats current code design as changeable where change earns value (prerelease).
 **Sequencing rationale:** A is foundational (everything else reads its output). B
 generalises A. C unifies reporting. D and F are presentation layers over B/C. E is
 the user-facing reshape. **None of these requires atomisation** — they make the
-seams *explicit*, which is the prerequisite for §7.
+seams _explicit_, which is the prerequisite for §7.
 
 ---
 
@@ -353,12 +354,13 @@ seams *explicit*, which is the prerequisite for §7.
 Per the user's correction: a prior decision is not permanent; judge change on
 value. The honest position is **gated, not closed.**
 
-**ADR-043 scope clarification.** ADR-043 rules on compiler-core vs *runtime /
-transport / framework* companions. It does **not** rule on whether the *compiler
-itself* splits into `castr-core` + format-adapter packages. A new ADR should
-explicitly take up *that* question and supersede the relevant scope.
+**ADR-043 scope clarification.** ADR-043 rules on compiler-core vs _runtime /
+transport / framework_ companions. It does **not** rule on whether the _compiler
+itself_ splits into `castr-core` + format-adapter packages. A new ADR should
+explicitly take up _that_ question and supersede the relevant scope.
 
 **Value of splitting `castr-core` out:**
+
 - Lean, embeddable core — a consumer wanting Zod→IR→OpenAPI should not install
   `ts-morph` (large), `@modelcontextprotocol/sdk`, `ajv`. **Phase 5 / the Oak SDK
   is exactly this consumer.**
@@ -366,16 +368,18 @@ explicitly take up *that* question and supersede the relevant scope.
 - Enables third-party format adapters (e.g. `castr-protobuf`) without forking core.
 
 **Cost:**
+
 - Freezing the IR↔adapter contract while it still churns (the `additionalProperties`
   policy landed the same week as this analysis). Premature = the prior report's Risk 2.
 - Monorepo release/versioning overhead.
 
 **Decision gate (write into the new ADR):** split when **both**
+
 1. a concrete consumer needs core-without-heavy-deps (Oak/companion qualifies), **and**
 2. the IR↔adapter contract has survived **N (≥2–3) feature cycles unchanged**,
 
-…and *not before*. Internal boundaries are already lint-enforced
-(`eslint-plugin-boundaries`, ADR-036/037), so the cost of *waiting* is low and the
+…and _not before_. Internal boundaries are already lint-enforced
+(`eslint-plugin-boundaries`, ADR-036/037), so the cost of _waiting_ is low and the
 seams are already exercised by Phase A–B. **Phase A–B make this decision
 answerable; do not pre-empt it.**
 
@@ -402,8 +406,8 @@ answerable; do not pre-empt it.**
   path instead of the `TargetPlan`, docs and behavior drift. Mitigate: single
   source (Phase B), enforced by Phase F generating tables from it.
 - **R3 — Premature atomisation.** §7 gate exists precisely to prevent this.
-- **R4 — Strictness erosion.** The representability map must never *enable* silent
-  widening; it makes the unsupported set *visible*, policy still rejects by
+- **R4 — Strictness erosion.** The representability map must never _enable_ silent
+  widening; it makes the unsupported set _visible_, policy still rejects by
   default. Keep "strict, everywhere, all the time."
 
 ## 10. Next-agent actions & verification checklist
@@ -422,17 +426,17 @@ answerable; do not pre-empt it.**
 
 ```ts
 type CheckPairReport = {
-  source: string;                       // input identifier
+  source: string; // input identifier
   from: SchemaFormat;
   to: SchemaFormat;
   coverage: { total: number; preserved: number; percent: number };
   roundTrip?: { lossless: boolean; idempotent: boolean; changedPaths: string[] };
   findings: Array<{
     path: string;
-    status: NodePlanKind;               // see Appendix B
-    severity: "info" | "warning" | "error";
+    status: NodePlanKind; // see Appendix B
+    severity: 'info' | 'warning' | 'error';
     reason: string;
-    hint?: string;                      // actionable remediation (zod-compiler lesson)
+    hint?: string; // actionable remediation (zod-compiler lesson)
   }>;
 };
 // file-level: { file, pairs: CheckPairReport[] }; flags: --json, --fail-under <n>
@@ -442,12 +446,12 @@ type CheckPairReport = {
 
 ```ts
 type NodePlanKind =
-  | "native"          // 1:1 in target
-  | "normalised"      // semantics preserved, shape changed
-  | "runtime-helper"  // preserved via emitted runtime check (e.g. Zod .refine)
-  | "widened"         // governed widening, must be reported (never silent)
-  | "unsupported"     // implementation gap — fail-fast policy by default
-  | "impossible";     // genuinely impossible for this target — always fail-fast
+  | 'native' // 1:1 in target
+  | 'normalised' // semantics preserved, shape changed
+  | 'runtime-helper' // preserved via emitted runtime check (e.g. Zod .refine)
+  | 'widened' // governed widening, must be reported (never silent)
+  | 'unsupported' // implementation gap — fail-fast policy by default
+  | 'impossible'; // genuinely impossible for this target — always fail-fast
 
 type TargetNodePlan = { path: string; kind: NodePlanKind; reason?: string };
 type TargetPlan<T extends SchemaFormat> = { target: T; nodes: TargetNodePlan[] };
@@ -460,10 +464,10 @@ because Castr has many targets and a format-neutral IR.
 
 ```ts
 type Diagnostic = {
-  verb: "doctor" | "upgrade" | "transform" | "validate" | "check";
+  verb: 'doctor' | 'upgrade' | 'transform' | 'validate' | 'check';
   path: string;
-  severity: "info" | "warning" | "error";
-  status?: NodePlanKind;   // when transform/check-derived
+  severity: 'info' | 'warning' | 'error';
+  status?: NodePlanKind; // when transform/check-derived
   reason: string;
   hint?: string;
 };
@@ -487,5 +491,5 @@ type Diagnostic = {
   `.agent/directives/principles.md`
 - zod-compiler: `gajus/zod-compiler` `src/core/types.ts`,
   `src/core/codegen/context.ts`, `src/cli/commands/check.ts`, README
-</content>
-</invoke>
+  </content>
+  </invoke>
