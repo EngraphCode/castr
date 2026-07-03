@@ -398,11 +398,12 @@ dated team prompts).
 
 - **Doctrine re-sync wave (rules/skills/directives castr already carries):** Oak renamed
   `consolidate-at-third-consumer` → **`consolidate-at-second-consumer`** (threshold-lowering doctrine change;
-  **castr's copy verified still on the OLD third-consumer body** — rule + adapters + RULES_INDEX + citation ripple
-  to re-sync); 18 amended rules (highest-value verified: `verify-dont-trust` ×4 additions incl.
+  ✅ rename + adapters + RULES_INDEX + citation ripple LANDED 2026-07-03, pre-castr-doctrine-sync RS-2 — incl.
+  the PDR-014/058 consumer-threshold hunks and both code-comment citations); 18 amended rules (highest-value
+  verified: `verify-dont-trust` ×4 additions incl.
   self-state-claims-verify-first; `comms-all-channels-watcher` + `use-monitor-for-event-driven-wake` gain the
   `--supervisor-pid` orphan cure; `no-unbounded-host-load` §4 macOS-correct saturation signals — load-avg on macOS
-  over-reads, use CPU-idle% + memory-pressure; `precedence-is-not-approval` recorded-grants-are-claims;
+  over-reads, use CPU-idle% + memory-pressure (✅ LANDED 2026-07-03, RS-2); `precedence-is-not-approval` recorded-grants-are-claims;
   `present-verdicts-not-menus` no-deferral-status-lines; `hook-policy-substring-discipline` known-git-over-blocks
   section; `ship-independent-coordinate-dependent` same-lines dependence test); skills doctrine wave
   (`consolidate-docs` +112 / `consolidate-until-done` +90: impact-placement conservation; `semantic-merge`

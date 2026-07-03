@@ -314,8 +314,8 @@ not force a single choice:
 - **Principle line without operationalising rule** — passive
   guidance, the exact failure mode
   `passive-guidance-loses-to-artefact-gravity` names.
-- **Third consumer without canonicalisation** — two local copies may
-  still be proving a shape; a third consumer makes the shape
+- **second-consumer without canonicalisation** — one local copy may
+  still be proving a shape; a second consumer makes the shape
   load-bearing and requires a canonical owner or named consolidation
   route.
 - **Pattern without a graduation path** — captures forever, never

@@ -174,7 +174,7 @@ optional surface).
 **Cure**: the closed-shape rule. Author the closed shape that the
 known instances need. The configurable / extensible surface is
 deferred until a real second instance forces the decomposition
-(see also: `consolidate-at-third-consumer`;
+(see also the `consolidate-at-second-consumer` discipline;
 two is not three; speculative configurability is not consolidation).
 
 The landing of this PDR requires the rule sibling for this surface
@@ -329,7 +329,7 @@ authored at host-specific shapes only as evidence forces them.
   Surface 3 and Surface 4 cures. Their active layer is a clause on
   the host's existing authoring-time check, not a new rule file
   (rule-vs-clause routing; always-loaded directive budget).
-- Replace consolidate-at-third-consumer. The third-consumer rule
+- Replace consolidate-at-second-consumer. The second-consumer rule
   governs _when to extract_; design-optionality governs _when to
   shape_. They compose; they do not substitute.
 

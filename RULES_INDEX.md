@@ -68,7 +68,7 @@ without proportional value.
 | `.agent/rules/closed-shape-design-optionality.md`                          | always-on      | —                                                                                                |
 | `.agent/rules/collaboration-is-value-contingent.md`                        | always-on      | —                                                                                                |
 | `.agent/rules/comms-all-channels-watcher.md`                               | trigger-loaded | Team session bootstrap                                                                           |
-| `.agent/rules/consolidate-at-third-consumer.md`                            | always-on      | —                                                                                                |
+| `.agent/rules/consolidate-at-second-consumer.md`                           | always-on      | —                                                                                                |
 | `.agent/rules/continuity-surface-commits-as-orphans.md`                    | always-on      | —                                                                                                |
 | `.agent/rules/directive-file-context-budget.md`                            | always-on      | —                                                                                                |
 | `.agent/rules/documentation-hygiene.md`                                    | always-on      | —                                                                                                |
