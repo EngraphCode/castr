@@ -8,6 +8,14 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **🔀 CURRENT TRUTH (2026-07-03) — READ THIS FIRST; supersedes every branch-model statement in this file.**
+> **The transplant branch MERGED to `main` in PR #3 (`5529436`, 2026-07-03) and is deleted on origin.** The
+> branching model is now **feature branches off `main`, one PR per slice, merges owner-invoked** — the
+> single-branch mode referenced throughout the dated banners below was a circumstance of the transplant era,
+> never an invariant (authoritative statement: `repo-continuity.md §Repo-Wide Invariants`). Any instruction
+> below to re-verify `origin/feat/transplant-engraph-practice` is dead — that ref no longer exists. The live
+> next-step pointer remains [`../memory/operational/repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps).
+
 > **🧭 CURRENT TRUTH (2026-06-28) — READ THIS FIRST; supersedes the "NEXT = DC3 prettier" + all earlier next-step
 > framing below.** Transplant Phases 0–8 ✅ done + tagged. Since the dated banners below: the reason-skill bring landed
 > (`4f0bfe3`); the loop-closure lane LC0/LC1/LC2 + LC3(a) machine-local-paths validator landed; the **bring-everything

@@ -50,8 +50,10 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
 > skill+rule+subagent+hook definitions AND fix castr's known issues — the same goal, not competing priorities.** Owner
 > doctrine (2026-06-09): "all issues MUST be fixed, mostly now; sequencing with a named position is acceptable; an
-> undefined 'later' is never." All components live on the single branch `feat/transplant-engraph-practice` (2026-06-15
-> consolidation; see the [delivery ledger](./delivery-ledger.md)), none parked, and the owner names the next slice:
+> undefined 'later' is never." ~~All components live on the single branch `feat/transplant-engraph-practice`~~
+> **(branch model superseded 2026-07-03: the transplant branch merged to `main` in PR #3; work proceeds on feature
+> branches off `main`, one PR per slice — see the [delivery ledger](./delivery-ledger.md) current-model banner)**,
+> none parked, and the owner names the next slice:
 >
 > - **Practice transplant** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md), tracker
 >   [`transplant/README.md`](./transplant/README.md)) — Phases 0–6 complete and tagged; **Phase 7 is in progress**

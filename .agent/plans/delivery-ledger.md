@@ -6,6 +6,15 @@ plan's outcome to reach its beneficiary (per PDR-085, value that has not reached
 delivered). This ledger is the **single home (DRY)** for delivery state. Other surfaces (roadmap,
 session-continuation, trackers) point here and never duplicate the table.
 
+> **🔀 BRANCHING MODEL — CURRENT (owner, 2026-07-03): feature branches off `main`, one PR per
+> slice, merges owner-invoked.** PR #3 merged the transplant branch to `main` (`5529436`,
+> 2026-07-03) and `feat/transplant-engraph-practice` is deleted on origin. The single-branch
+> working mode below was a circumstance of the transplant era, never an invariant (owner
+> wording recorded in `repo-continuity.md §Repo-Wide Invariants`, the authoritative home).
+> Everything from here down to the era's last dated block is the historical record of that
+> mode — truthful for its dates, superseded as doctrine. Live branch state: `feat/ci-enhancement`
+> (PR #4 — CI split + turbo caching), further slices each on their own branch.
+
 **Single-branch consolidation (owner, 2026-06-15):** the earlier multi-branch model — remediation on `fix/*` branches
 off `docs/initial-deep-review`, each PR'd to `main` independently — was **retired**. The coordination overhead (branch
 confusion, cross-branch CI drift, multiple PRs to monitor) outweighed its "ship Criticals independently" benefit, and
@@ -32,7 +41,11 @@ continuity/backup, not the delivery merge act. The active deep-enhancement works
 [Oak Parity-or-Better Program](./transplant/oak-parity-program.md) (estate-wide upgrade; transplant Phase 9 reframed as
 its closure gate).
 
-## Main→branch sync discipline (owner sign-off 2026-06-20)
+## Main→branch sync discipline (owner sign-off 2026-06-20; RETIRED 2026-07-03 with the single-branch mode)
+
+> Retired: under the feature-branch model, `main`-side commits are the norm, not a leak; the
+> living discipline is "feature branches stay current with `main`" (repo-continuity
+> §Repo-Wide Invariants). The text below is the era record.
 
 The single-branch invariant ("`feat/transplant-engraph-practice` carries everything; one eventual PR to `main`") can
 **leak**: work occasionally lands on `main` through a _separate_ branch — e.g. a Claude-web review branch

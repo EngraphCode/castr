@@ -2,7 +2,7 @@
 
 **Status:** ACTIVE — primary plan
 **Created/Promoted:** 2026-06-05
-**Branch:** `feat/transplant-engraph-practice` (baseline tag `transplant/phase-0-baseline` = e0541f6). **Single-branch (owner, 2026-06-15):** this branch now holds ALL work. Its former base `docs/initial-deep-review` (which held the PRESERVE set — initial-review report, remediation backlog, ADR-047, the brief) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and **deleted (local + remote, verified lossless)**; PR #1 was closed. Everything reaches `main` via one eventual PR `feat/transplant-engraph-practice → main` carrying the full history. See [`../delivery-ledger.md`](../delivery-ledger.md).
+**Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges owner-invoked** (see the [`../delivery-ledger.md`](../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
 **Authoritative spec:** [`practice-alignment-brief.md`](../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 **Phase tracker:** [`../transplant/README.md`](../transplant/README.md)
