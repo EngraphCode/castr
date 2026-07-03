@@ -2,6 +2,37 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (statusline S1 landed + Codex wave-4 fix-or-reject — Windswept Winging Cliff / 0ceb5f, session part 2)
+
+- **S1 landed (`7a37dec`) with two deliberate Oak divergences, both recorded as back-flow candidates:**
+  (1) the renderer consumes RESOLVED logo rows (Oak's own pending modularisation-plan WS4.1 target,
+  applied early because castr ships zero mark art — an as-built port would have made the logo mechanism
+  untestable dead code against a 'none'-only asset); (2) the absent-registry → `unknown` → blank-icon
+  defect fixed in-slice (ENOENT → empty registry → truthful solo; unreadable/corrupt stays unknown),
+  per known-issues-are-blocking. The reviewer loop earned its cost again: test-reviewer's Medium
+  (the ENOENT discrimination was untested adapter logic, not a thin pass-through) was cured by the
+  LC3a-family extraction (`statusline-registry-read.ts`, pure, injected reader, three branches proven).
+- **A guard I added blocked its own documentation within MINUTES (hook-matcher specimen #3, new
+  sub-shape):** the wave-4 `--force-with-lease` policy entry fired on the commit message DOCUMENTING it
+  (heredoc prose naming the pattern). Same class as the busy-loop and "restore" specimens; the napkin
+  mitigation held (message via Write tool + `git commit -F file` with a clean command string). The
+  hook-matcher-precision lane now has three first-party specimens.
+- **The `git add <already-staged-deletion>` abort refired and the cure held:** a tracked file deleted
+  via `git rm` earlier fails pathspec inside a wider `git add`, aborting the WHOLE add (nothing staged).
+  Cure confirmed: add the worktree paths only; the staged deletion rides along in the pathspec-scoped
+  commit. Same class as Moth's morning instance — two firings in one day strengthens the case for the
+  commit-skill noting it inline.
+- **Codex wave-4 dispositioned fix-or-reject same work item (4/4 fixed, `3acf8e5`):** lock-reap NaN
+  wedge (unparsable created_at → dir-mtime fallback); `git push --force-with-lease` + `git add -u/--update`
+  guard gaps (both MEASURED as real bypasses before fixing — the engine probe is cheap and decisive);
+  scoped-regex grandfathering (matcher now set-compares matched TEXTS between prior and new, so one
+  sanctioned match no longer covers a different new one). Every fix TDD-paired; 21/21 threads resolved;
+  CI green at every pushed tip (`a0e53b3`, `3acf8e5`).
+- **`pnpm check`'s clean phase transiently deletes agent-tools dist and breaks peer CLI invocations**
+  (my comms ACK + one heartbeat tick died MODULE_NOT_FOUND during Moth's gate run) — for concurrent
+  sessions, treat a peer's announced whole-repo check as a window where built-CLI calls may fail;
+  retry after dist returns (Moth captured the same finding to pending-graduations).
+
 ## 2026-07-03 (owner-directed OCE↔castr delta review + statusline/logo manifests — Windswept Winging Cliff / 0ceb5f)
 
 - **A DELTA rescan against a verified base map is the right-sized answer to "review both repos again" — and it is
