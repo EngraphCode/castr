@@ -173,10 +173,15 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > feature-branch isolation, live coordination substrate — and Q-011's "Axis A first" condition is
 > already satisfied (its Tier-1 spine is complete). Remediation-02 (IR-fidelity harness) may open
 > any time after the doctrine slice; the OCE stream continues in parallel uncompromised.
-> **THE NEXT SESSION EXECUTES [`pre-castr-doctrine-sync.md`](../../plans/current/pre-castr-doctrine-sync.md)**
-> (RS-1 use-result-pattern reconciled to the composition ruling → RS-2 rule re-syncs → RS-3
-> validation-strategy overlap-merge → RS-4 TSDoc enforcement), on ONE fresh feature branch off
-> `main`; on its completion, product work is UNGATED.**
+> ~~**THE NEXT SESSION EXECUTES [`pre-castr-doctrine-sync.md`](../../plans/current/pre-castr-doctrine-sync.md)**~~
+> **✅ EXECUTED 2026-07-03 evening (Cirrus Spiralling Airstream / 8bff79): all four RS cycles are
+> LANDED on `feat/pre-castr-doctrine-sync`** (RS-1 `1538663` use-result-pattern + composition
+> ruling + `preserve-caught-error` enforcement; RS-2 `889c4b9` second-consumer rename ripple +
+> host-load §4 macOS reading; RS-3 `887ca6e` validation-strategy stub, testing-strategy
+> authoritative; RS-4 `123840d` tsdoc/syntax gate proven-firing in both workspaces, 385
+> violations fixed). The plan's §As-built carries the detail. One PR; the merge is the owner's.
+> **On that merge, product/remediation work is UNGATED — remediation-02 (IR-fidelity harness) or
+> a feature slice may open immediately; the substrate backlog stays parallel-safe.**
 >
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see

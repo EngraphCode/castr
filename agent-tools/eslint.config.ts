@@ -18,7 +18,9 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    // Same file-class glob as lib's config so a future .mts/.cts script cannot
+    // silently escape the shared enforcement surface.
+    files: ['**/*.{ts,tsx,mts,cts}'],
     languageOptions: {
       globals: { ...globals.node },
     },
@@ -29,8 +31,11 @@ export default tseslint.config(
     },
   },
   {
-    // TSDoc syntax discipline: any /** */ doc comment must parse as valid TSDoc
-    files: ['**/*.{ts,tsx}'],
+    // TSDoc syntax discipline: any /** */ doc comment must parse as valid TSDoc.
+    // Registered raw (no runtime boundary guard): tseslint.config's FlatConfig
+    // plugin type accepts the plugin's own types without the core-type mismatch
+    // lib's asPlugin predicate exists to bridge.
+    files: ['**/*.{ts,tsx,mts,cts}'],
     plugins: { tsdoc: tsdocPlugin },
     rules: { 'tsdoc/syntax': 'error' },
   },

@@ -23,7 +23,13 @@ import tsdocPlugin from 'eslint-plugin-tsdoc';
  * validate the plugin shape at runtime instead of propagating the mismatch.
  */
 function isEslintPlugin(candidate: unknown): candidate is ESLint.Plugin {
-  return typeof candidate === 'object' && candidate !== null && 'rules' in candidate;
+  return (
+    typeof candidate === 'object' &&
+    candidate !== null &&
+    'rules' in candidate &&
+    typeof candidate.rules === 'object' &&
+    candidate.rules !== null
+  );
 }
 
 /**

@@ -2,21 +2,36 @@
 todos:
   - id: RS-1
     content: Bring use-result-pattern reconciled to the Result+fail-fast composition ruling
-    status: pending
+    status: completed
   - id: RS-2
     content: Re-sync the product-facing rule bodies (second-consumer rename; host-load §4)
-    status: pending
+    status: completed
   - id: RS-3
     content: Bring the validation-strategy directive (firsthand overlap-merge with testing-strategy)
-    status: pending
+    status: completed
   - id: RS-4
     content: Bring TSDoc enforcement so the standard precedes the first new product module
-    status: pending
+    status: completed
 ---
 
 # Pre-castr doctrine sync — the one slice that gates product work
 
-**Status:** READY FOR NEXT SESSION (authored 2026-07-03 at session close; owner-directed).
+**Status:** ✅ EXECUTED 2026-07-03 evening (Cirrus Spiralling Airstream / 8bff79) on
+`feat/pre-castr-doctrine-sync` off `main` `c5f288e`; one PR; owner merges.
+
+**As-built:** RS-1 `1538663` (rule native to castr carrying the Q-010 composition ruling
+verbatim substance + wrappers + RULES_INDEX + `preserve-caught-error` enforcement in both
+workspaces, one real `{ cause }` fix; retired-framing live surfaces re-aimed). RS-2 `889c4b9`
+(second-consumer rename + full citation ripple incl. PDR-014/058 hunks matching Oak's genotype;
+host-load §4 macOS-correct reading). RS-3 `887ca6e` (validation-strategy localised seeded stub;
+testing-strategy authoritative for the Test leg, stated in both files; cross-refs mirror Oak's
+wiring — not in start-right, matching Oak). RS-4 `123840d` (root `tsdoc.json` +
+`eslint-plugin-tsdoc` `tsdoc/syntax: 'error'` both workspaces; 385-violation surface fixed incl.
+the 293-file `@module` sweep; gate proven firing by deliberate-RED negative control in each
+workspace). Deviations from plan: none of substance; RS-4's "TDD if a validator" branch did not
+apply (Oak's mechanism is a lint rule, measured firsthand — prove-it-fires replaced TDD as the
+proof shape, per the plan's own acceptance line).
+
 **Branch model:** open ONE feature branch off `main` for this plan; one PR; owner merges.
 
 **End goal:** a product/remediation session (remediation-02 first, features after) can open
