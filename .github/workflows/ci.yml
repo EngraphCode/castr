@@ -8,8 +8,11 @@
 # trigger CI. The old library-only filter meant tooling/Practice changes were
 # never verified server-side.
 #
-# `quality-gates` is intended to be the required status check (set in the branch
-# ruleset — a repo setting, not expressible here). CodeQL stays as its own job.
+# `quality-gates` is the required status check on `main` (enforced by the
+# branch ruleset — a repo setting, not expressible here). CodeQL runs via
+# GitHub's default code-scanning setup (repo Security settings), not as a
+# workflow job here: default setup rejects SARIF uploads from advanced-setup
+# workflows for the same languages, so the two modes cannot coexist.
 
 name: CI
 
@@ -32,6 +35,7 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
+      code-quality: write # coverage upload (actions/upload-code-coverage)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -66,22 +70,24 @@ jobs:
       - name: Run full quality gate (clean + frozen install + qg)
         run: pnpm check:ci
 
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    strategy:
-      matrix:
-        language: ['javascript']
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+      # Coverage is a signal, not a gate: the ruleset's code_coverage rule
+      # (min 10%, max drop 2) consumes these uploads; the correctness bar
+      # stays the behaviour-proof suites run by check:ci above.
+      - name: Generate coverage for in-process suites (unit + integration)
+        run: pnpm test:coverage
+
+      - name: Upload lib coverage
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@v1
         with:
-          languages: javascript
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+          file: lib/coverage/cobertura-coverage.xml
+          language: TypeScript
+          label: code-coverage/lib
+
+      - name: Upload agent-tools coverage
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: agent-tools/coverage/cobertura-coverage.xml
+          language: TypeScript
+          label: code-coverage/agent-tools
