@@ -1,18 +1,33 @@
-# Quality-gate pipeline for pushes and PRs to main. A single `quality-gates`
-# job runs the full local gate (`pnpm check:ci` = clean + frozen install + qg)
-# server-side, so the guardrails that were previously local-pre-push-only —
-# every repo validator, type-check, lint, secret scan, knip/depcruise, the full
-# test suite — now also run in CI and can be made a required status check.
+# Quality-gate pipeline for pushes and PRs to main, split into parallel jobs
+# (brought from OCE's CI architecture, 2026-07-03) so each gate reports as its
+# own check and superseded PR runs cancel. A final `quality-gates` fan-in job is
+# the single required status check: it fails unless EVERY gate succeeded (failed,
+# cancelled, and skipped all block), and it reuses the context name the branch
+# ruleset already requires, so the ruleset needs no change.
+#
+# The job set maps 1:1 onto the local `pnpm qg` chain — no gate is dropped:
+#   secret-scan          — secrets:scan (pinned gitleaks; no pnpm install)
+#   install              — warms the pnpm store cache (the one network install)
+#     static-checks      — format:check, markdownlint-check:root,
+#                          portability:check, repo-validators:check (tsx-based;
+#                          none of these need a build)
+#     build              — turbo build; saves dist + .turbo local cache by sha
+#       unit-tests       — type-check, lint, test (as test:coverage) + coverage
+#                          uploads and the workspace-enumeration guard
+#       structure-checks — madge:circular/orphans, depcruise, knip,
+#                          packaging:check, skills:check, agents:check
+#       proof-suites     — character, snapshot, gen, transforms, e2e
+#   quality-gates        — fail-closed fan-in; the required status check
+#
+# Caching strategy: castr has no Turbo remote cache, so the `build` job saves
+# the workspace dist outputs + turbo's LOCAL cache under a per-sha actions/cache
+# key; build-dependent jobs restore it and their `turbo run` calls resolve FULL
+# TURBO from the local cache instead of rebuilding.
 #
 # No `paths:` filter: changes anywhere (agent-tools, .agent, .husky, docs, lib)
-# trigger CI. The old library-only filter meant tooling/Practice changes were
-# never verified server-side.
-#
-# `quality-gates` is the required status check on `main` (enforced by the
-# branch ruleset — a repo setting, not expressible here). CodeQL runs via
-# GitHub's default code-scanning setup (repo Security settings), not as a
-# workflow job here: default setup rejects SARIF uploads from advanced-setup
-# workflows for the same languages, so the two modes cannot coexist.
+# trigger CI. CodeQL runs via GitHub's default code-scanning setup (repo
+# Security settings), not as a workflow job here: default setup rejects SARIF
+# uploads from advanced-setup workflows for the same languages.
 
 name: CI
 
@@ -29,16 +44,17 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  quality-gates:
-    name: quality-gates
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+  # Branch + tag secret scan. Independent of node_modules, so it runs from t=0
+  # in parallel with `install`. gitleaks is a security control, so its binary is
+  # content-pinned (sha256), not just version-pinned.
+  secret-scan:
+    name: secret-scan
     permissions:
       contents: read
-      code-quality: write # coverage upload (actions/upload-code-coverage)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0 # secrets:scan runs gitleaks --branches --tags; needs full history
 
@@ -46,9 +62,6 @@ jobs:
         run: |
           version=8.30.0
           asset="gitleaks_${version}_linux_x64.tar.gz"
-          # SHA-256 of the v8.30.0 linux_x64 asset, pinned inline so a tampered
-          # download fails loud (sha256sum -c) rather than running. gitleaks is a
-          # security control, so its binary is content-pinned, not just version-pinned.
           expected=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
           curl -sSfL -o "$asset" \
             "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${asset}"
@@ -56,33 +69,110 @@ jobs:
           sudo tar -xz -C /usr/local/bin -f "$asset" gitleaks
           gitleaks version
 
-      - name: Install pnpm (version from the root packageManager field)
+      - name: Install pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
 
-      - name: Use Node.js 24.x
+      - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 24.x
-          cache: 'pnpm'
+          node-version: '24'
 
-      - name: Run full quality gate (clean + frozen install + qg)
-        run: pnpm check:ci
+      - name: Scan for secrets
+        run: pnpm secrets:scan
 
-      # Coverage is a signal, not a gate: the ruleset's code_coverage rule
-      # consumes these uploads (thresholds live in the ruleset, a repo
-      # setting); the correctness bar stays the behaviour-proof suites run
-      # by check:ci above.
-      - name: Generate coverage for in-process suites (unit + integration)
+  # Cold-cache install gate: performs the one network install on a changed
+  # lockfile and saves the pnpm store cache, so dependent jobs install offline.
+  install:
+    name: install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+
+  # Static analysis that needs node_modules but no build. Runs in parallel with
+  # `build`. repo-validators + portability run from agent-tools SOURCE via tsx.
+  static-checks:
+    name: static-checks
+    permissions:
+      contents: read
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+      - name: Check formatting
+        run: pnpm format:check
+      - name: Check markdown
+        run: pnpm markdownlint-check:root
+      - name: Validate portability
+        run: pnpm portability:check
+      - name: Run workspace-owned repo validators
+        run: pnpm repo-validators:check
+
+  # Builds every workspace and saves the outputs + turbo's local cache under a
+  # per-sha key, so the build-dependent jobs below restore instead of rebuilding.
+  build:
+    name: build
+    permissions:
+      contents: read
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+      - name: Build
+        run: pnpm exec turbo run build --log-order=grouped
+      - name: Save build outputs (dist + turbo local cache)
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            lib/dist
+            agent-tools/dist
+          key: build-${{ runner.os }}-${{ github.sha }}
+
+  # Type-check, lint, and the in-process test suites with coverage. Coverage is
+  # a signal, not a gate: the ruleset's code_coverage rule consumes the uploads
+  # (thresholds live in the ruleset); the correctness bar stays the
+  # behaviour-proof suites.
+  unit-tests:
+    name: unit-tests
+    permissions:
+      contents: read
+      code-quality: write # coverage upload (actions/upload-code-coverage)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+      - name: Restore build outputs
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            lib/dist
+            agent-tools/dist
+          key: build-${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Type-check and lint
+        run: pnpm exec turbo run type-check lint --continue --log-order=grouped
+      - name: Unit + integration tests with coverage
         run: pnpm test:coverage
 
       # Fail-loud workspace-enumeration guard: the upload steps below name each
-      # workspace explicitly (the upload action takes one file per invocation),
-      # so a NEW workspace must appear in three places — pnpm-workspace.yaml,
-      # its vitest coverage config, and an upload step here. This guard derives
-      # the workspace list from pnpm (the repo-level source of truth) and fails
-      # the job when any workspace lacks a coverage report, so the enumeration
-      # below can never rot silently. Deliberate exclusions go in EXCLUDED with
-      # a reason — an empty list means every workspace reports coverage.
+      # workspace explicitly, so a NEW workspace must appear in three places —
+      # pnpm-workspace.yaml, its vitest coverage config, and an upload step
+      # here. This guard derives the workspace list from pnpm and fails the job
+      # when any workspace lacks a coverage report, so the enumeration below can
+      # never rot silently. Deliberate exclusions go in EXCLUDED with a reason.
       - name: Assert every workspace produced a coverage report
         run: |
           EXCLUDED=""
@@ -112,3 +202,100 @@ jobs:
           file: agent-tools/coverage/cobertura-coverage.xml
           language: TypeScript
           label: code-coverage/agent-tools
+
+  # Structure, dependency-direction, unused-code, and packaging checks. These
+  # resolve through built dist/ outputs (knip, publint/attw, the adapter
+  # --check binaries), so restore the build first.
+  structure-checks:
+    name: structure-checks
+    permissions:
+      contents: read
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+      - name: Restore build outputs
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            lib/dist
+            agent-tools/dist
+          key: build-${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Circular-dependency and orphan checks (madge)
+        run: pnpm madge:circular && pnpm madge:orphans
+      - name: Dependency-direction check (depcruise)
+        run: pnpm depcruise
+      - name: Unused-code check (knip)
+        run: pnpm knip
+      - name: Packaging check (publint + attw)
+        run: pnpm packaging:check
+      - name: Skills adapter check
+        run: pnpm skills:check
+      - name: Agent adapter check
+        run: pnpm agents:check
+
+  # The behaviour-proof suites beyond unit/integration — the long pole, so it
+  # gets its own lane parallel to unit-tests and structure-checks.
+  proof-suites:
+    name: proof-suites
+    permissions:
+      contents: read
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/actions/setup
+      - name: Restore build outputs
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            lib/dist
+            agent-tools/dist
+          key: build-${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Character, snapshot, gen, transforms, e2e suites
+        run: >-
+          pnpm exec turbo run character test:snapshot test:gen test:transforms
+          test:e2e --continue --log-order=grouped
+
+  # Single required status check: fans in every gate above and fails unless
+  # every one succeeded — failed, cancelled, AND skipped results all block
+  # (fail-closed, so adding an `if:` guard to a gate later cannot silently
+  # bypass it). Reusing the existing `quality-gates` context keeps the branch
+  # ruleset unchanged while each split job blocks merge.
+  quality-gates:
+    name: quality-gates
+    permissions: {}
+    needs:
+      - secret-scan
+      - install
+      - static-checks
+      - build
+      - unit-tests
+      - structure-checks
+      - proof-suites
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Require EVERY gate result to be `success`. The expression is read via an
+      # env var so no `${{ }}` value is interpolated into the shell.
+      - name: Verify every quality gate passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ',') }}
+        run: |
+          echo "Gate results: $RESULTS"
+          IFS=',' read -ra results <<< "$RESULTS"
+          for result in "${results[@]}"; do
+            if [ "$result" != "success" ]; then
+              echo "::error::Quality gate result '$result' is not 'success' — blocking merge."
+              exit 1
+            fi
+          done
+          echo "All quality gates passed."
