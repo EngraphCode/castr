@@ -36,6 +36,20 @@ comms sweep left the title reading `comms`). Owner determination 2026-07-03; pur
 unit tests in `statusline-git-location.ts`. Suggest to Oak as an option or default; castr
 holds it as a deliberate localisation either way.
 
+### Composite setup action — prefer-offline warm path (improvement over source)
+
+The brought composite setup action installs with `--prefer-offline`, making the documented
+one-network-install-per-run behaviour actually true on the warm path (upstream's action lacks the
+flag). Surfaced by a Copilot review on castr PR #4, fixed at source. Suggest upstream.
+
+### Skills-adapter generator — prettier-unstable YAML quoting (defect + detection recipe)
+
+The generator double-quotes a frontmatter description containing colon-space; prettier prefers
+single quotes, so a repo with pre-commit auto-format re-drifts the generated adapters after every
+regeneration (two refused pushes on castr before root-cause). Upstream never hit it (no colon in
+any description). Structural fix belongs generator-side (emit prettier-stable quoting); detection
+recipe: run the generator, then `prettier --check` its OUTPUT — any diff is a future gate refusal.
+
 ## Practice insights / patterns castr has articulated
 
 | Insight                                                               | Statement                                                                                                                                                                                                                                                                                                                                                      | Back-flow note                                                                                                                                                                                                                                                                               |

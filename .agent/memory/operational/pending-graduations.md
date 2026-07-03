@@ -37,8 +37,8 @@ Each entry should record: the captured substance, its candidate permanent home
 (PDR / ADR / rule / distilled / pattern / README), and a
 `[captured: <date> | source: <surface>]` provenance stamp. When an item
 graduates, route its substance to the permanent home and remove it here — the
-commit and the permanent doc are the record (no tombstone; see
-[`permanent-doc-is-the-consolidation-record`](../../rules/permanent-doc-is-the-consolidation-record.md)).
+commit and the permanent doc are the record (no tombstone; see the
+[consolidation-record rule](../../rules/permanent-doc-is-the-consolidation-record.md)).
 
 > **Materialised 2026-06-18 (Practice transplant Phase 6).** The register is new
 > in castr. Items below are populated by napkin drains and consolidation passes
@@ -59,3 +59,16 @@ Live in `distilled.md` (two entries) + `practice-loop-closure-remediation.md`.
 `[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
 trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done; as of
 2026-07-03 LC0/1/2/3a/3c are done — LC3b, LC3d, LC4, LC5 remain). status: pending.
+
+### Generator-output must be formatter-stable (fixpoint contract)
+
+Any generator whose output lands in a prettier-formatted tree must emit formatter-stable bytes,
+or pre-commit auto-format re-drifts the artefacts and the drift gate refuses every subsequent
+push (worked castr instance: skills-adapter YAML quoting, two refused pushes, 2026-07-03;
+cure recipe: prettier-check the generator OUTPUT inside the generator's own tests). Candidate
+permanent
+home: a **generator-fixpoint clause** in the relevant validator/generator doctrine (PDR-096
+family or a testing-strategy corollary) + the generator-side quoting fix.
+`[captured: 2026-07-03 | source: napkin part-3 + PR #4 push refusals]`
+trigger-condition: a 2nd generator-formatter fixpoint instance, or the generator-side fix lands.
+status: pending.

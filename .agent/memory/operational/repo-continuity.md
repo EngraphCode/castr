@@ -160,6 +160,14 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > **consolidation** (917d989 + walk outcomes `a16682a`/`1226d9f`: PDR-124 Accepted, Q-008 → the
 > [`archive-pii-scrub`](../../plans/current/archive-pii-scrub.md) full-tool plan, **Q-010 RULED: Result and
 > fail-fast COMPOSE** → `use-result-pattern` is now a BRING + a D4 Result-migration slice is in the backlog).
+> **🧭 SESSION-CLOSE TRUTH (2026-07-03, Fiery Flaring Bellows): PR #4 MERGED to `main` (`32c3f2b`) —
+> the CI split (~5 min, fail-closed fan-in), turbo caching (truthful hash, cross-job sharing), the
+> feature-branch reconciliation, and the pr-lifecycle skill + pr-watch CLI are ALL LIVE; the
+> controlling plan is COMPLETE (moved to `plans/current/complete/`). No feature branch is open.
+> OWNER-CONFIRMED READING at close: the SUBSTRATE TRANCHE below comes BEFORE any castr
+> functionality or remediation work — the next session starts at (2), opening its own feature
+> branch off `main`.**
+>
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see
 > §Repo-Wide Invariants, the authoritative statement) and the single-branch text is reconciled across
@@ -167,7 +175,7 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > the CI SPLIT (OCE architecture — parallel gate jobs, fail-closed `quality-gates` fan-in, composite setup;
 > ~5min wall-clock; exposed + fixed two latent turbo dependsOn defects) and TURBO CACHING ON with measured
 > exceptions (agent-tools#test root-reach; mutating/network tasks) + cross-job cache sharing — plan
-> [`turbo-caching-and-branch-model.md`](../../plans/active/turbo-caching-and-branch-model.md).**
+> [`turbo-caching-and-branch-model.md`](../../plans/current/complete/turbo-caching-and-branch-model.md).**
 > **(2) BEFORE PRODUCT WORK RESUMES — the substrate
 > tranche:** doctrine re-sync wave (consolidate-at-SECOND-consumer rename leads; now also carries the
 > `use-result-pattern` bring per Q-010), plan-templates (TC2), validation-strategy directive, tsdoc enforcement,
