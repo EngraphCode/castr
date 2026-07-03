@@ -109,16 +109,26 @@ export function renderStatusline(
  * dropped so no blank row renders.
  */
 function renderNoLogo(seg: Segments): string {
-  const summaryLine = joinPresent([
-    seg.identity,
-    seg.indicators,
-    seg.rateLimits,
-    seg.model,
-    seg.context,
-  ]);
-  return [seg.error, summaryLine, ...seg.locationRows]
+  const summaryLine = joinPresent([seg.identity, seg.indicators, seg.rateLimits, seg.model]);
+  return [seg.error, summaryLine, ...locationRowsWithContext(seg)]
     .filter((line): line is string => line !== undefined && line.length > 0)
     .join('\n');
+}
+
+/**
+ * Location rows with the context gauge appended to the repo-title row (owner
+ * layout preference, 2026-07-03 — a deliberate castr divergence from Oak's
+ * model-row placement): `ctx:` reads alongside WHERE the session is working,
+ * after the checkout/directory title, not in the identity summary. Outside
+ * any location row the gauge still renders on its own line rather than being
+ * dropped.
+ */
+function locationRowsWithContext(seg: Segments): readonly string[] {
+  if (seg.context === undefined) {
+    return seg.locationRows;
+  }
+  const [titleRow, ...rest] = seg.locationRows;
+  return titleRow === undefined ? [seg.context] : [joinPresent([titleRow, seg.context]), ...rest];
 }
 
 /**
@@ -132,8 +142,8 @@ function renderWithLogo(
 ): string {
   const rowTexts = [
     joinPresent([seg.identity, seg.indicators, seg.rateLimits]),
-    joinPresent([seg.model, seg.context]),
-    ...seg.locationRows,
+    joinPresent([seg.model]),
+    ...locationRowsWithContext(seg),
   ];
   const content = composeWithLogo(logoRows, rowTexts);
   const separatorRow = buildLogoSeparator(options.logoSeparator, logoRows);

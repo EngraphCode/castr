@@ -43,21 +43,30 @@ const lineIndexOf = (out: string, needle: string): number =>
 const ANSI_CODE = new RegExp(String.raw`${String.fromCharCode(27)}\[[0-9;]*m`, 'g');
 const stripAnsi = (text: string): string => text.replaceAll(ANSI_CODE, '');
 
-describe('renderStatusline — model and context', () => {
-  // Behaviour, not row index: model and context belong on one line, in either layout.
+describe('renderStatusline — model and context placement', () => {
+  // Owner layout preference (2026-07-03, deliberate castr divergence from Oak's
+  // model-row placement): ctx reads on the repo-title row, AFTER the title.
   it.each([
     ['no-logo', {}],
     ['logo', { logoRows: FIXTURE_ROWS_WIDE }],
   ] as const)(
-    'renders the model and the context percentage on the same line (%s layout)',
+    'renders the context percentage after the repo title, not on the model line (%s layout)',
     (_label, options) => {
       const out = renderStatusline(
-        { ...base, model: 'Opus 4.8', usedPercentage: 38, branch: 'main' },
+        { ...base, model: 'Opus 4.8', usedPercentage: 38, dir: 'castr', branch: 'main' },
         options,
       );
-      expect(lineWith(out, 'Opus 4.8')).toContain('ctx:38%');
+      const titleLine = stripAnsi(lineWith(out, 'ctx:38%'));
+      expect(titleLine).toContain('castr');
+      expect(titleLine.indexOf('castr')).toBeLessThan(titleLine.indexOf('ctx:38%'));
+      expect(lineWith(out, 'Opus 4.8')).not.toContain('ctx:');
     },
   );
+
+  it('renders the context gauge on its own line when no location row exists', () => {
+    const out = renderStatusline({ ...base, dir: '', usedPercentage: 41 });
+    expect(out).toContain('ctx:41%');
+  });
 });
 
 describe('renderStatusline — primary checkout', () => {
