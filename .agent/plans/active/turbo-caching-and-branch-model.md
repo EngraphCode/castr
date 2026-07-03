@@ -2,19 +2,27 @@
 todos:
   - id: TC-1
     content: Flip turbo caching on per task with measured exceptions + inputs; declare missing dependsOn edges
-    status: in_progress
+    status: completed
   - id: TC-2
     content: Wire the now-live turbo cache across CI jobs (save in build, restore in downstream lanes)
-    status: pending
+    status: completed
   - id: TC-3
     content: Prove caching locally (hit + invalidation) and green on PR 4; config-expert review
-    status: pending
+    status: completed
   - id: BM-1
     content: Retire the single-branch model across all forward continuity/plan/doctrine surfaces (feature-branch model)
-    status: pending
+    status: completed
 ---
 
 # Turbo caching + branch-model reconciliation (owner-directed, same-session)
+
+**Status: COMPLETE (2026-07-03, same session).** As-built: TC-1 `9e3686c` (caching on; exceptions
+as designed; local proofs — build 2.4s→28ms FULL TURBO, MISS-on-content-change/HIT-on-restore,
+castr#test HIT vs agent-tools#test MISS after one green run); TC-2 same commit (cache shared via
+`.turbo/cache` actions/cache; CI run 28675402984 green 5m16s, structure-checks' explicit build
+replayed FULL TURBO); BM-1 `58a9601` (seven forward surfaces reconciled, era history preserved,
+acceptance grep clean). config-expert review: dispatched post-landing (see session record).
+Archive per ADR-117 at the next lifecycle pass.
 
 **End goal:** every gate run (local and CI) stops paying the full-rebuild tax, and every
 continuity surface states the true branching model, so future sessions neither wait on
