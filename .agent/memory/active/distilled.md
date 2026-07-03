@@ -47,6 +47,19 @@ High-signal learnings from the napkin belong here once they have proved worth ke
   Same family as green-gates-mask-gaps (the "gate" was off, which reads identically to "gate green" from the
   settings page).
 
+- **A root-of-monorepo config file "resolved by walking up" can be DEAD CONFIG — many resolvers
+  stop at the first folder containing `package.json`/`tsconfig.json`, so the walk never leaves
+  the workspace.** Worked instance (2026-07-03, RS-4): `@microsoft/tsdoc-config`'s
+  `findConfigPathForFolder` stops at the workspace root, so a repo-root `tsdoc.json` was inert
+  for BOTH workspaces while the gate looked configured (green only because the custom tag was
+  not yet used — the first legitimate `@generated` would have failed lint with a config on disk
+  appearing to permit it). Cure: per-workspace config files `extends`-ing the root, then PROBE
+  resolution from a leaf source file in both polarities (custom tag accepted, bad tag refused).
+  The finding itself came from a reviewer who probed, contradicting a reviewer who relayed the
+  plausible walk-up mechanism without probing — when two agents contradict, the probe wins,
+  pending your own. Same family as green-gates-mask-gaps + prove-it-fires +
+  [[verify-agent-claims-firsthand]].
+
 - **A pipe eats the exit code you are relying on — never pipe a command whose EXIT STATUS is the signal.** In
   zsh/bash (no pipefail), `cmd | tail` exits with tail's 0, so a failing `gh run watch --exit-status`, a failing
   `commit-queue commit`, or a failing anything reads as success and the next `&&`/close step runs on a false

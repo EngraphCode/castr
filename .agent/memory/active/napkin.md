@@ -29,6 +29,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   agents, zero collisions by file-disjoint batching, each self-verified with scoped eslint; my
   firsthand re-verify: whole-workspace lint + type-check + unit suite green). Balanced by
   violation count, not file count.
+- **PR #7 wave dispositions (both decided by measurement):** (1) Copilot's asPlugin
+  error-message nit — real, fixed `a40d9b2`. (2) Codex P1 "lint will fail immediately on
+  existing `catch {}` sites" — REJECTED with falsifying evidence: `preserve-caught-error` only
+  fires when a NEW error is thrown inside the catch; all four named sites are non-throwing
+  fallback catches, lint exit 0 on the exact files + both whole workspaces + server-side CI at
+  both heads. A bot's assertion about a LINT RULE'S SEMANTICS is an inherited classification to
+  measure against the rule's actual firing condition — same family as
+  dont-dismiss-tools-as-false-positive, in the inverse direction (here the TOOL RUN was the
+  ground truth and the reviewer's model of the rule was wrong).
+- **Reviewer disagreement resolved by probe, worked instance:** config-expert live-probed the
+  root tsdoc.json as DEAD (resolver stops at each workspace's package.json) while the gateway
+  code-reviewer asserted the opposite mechanism ("walks up from each source file") without
+  probing. My own probe decided it (1 = undefined-tag error at lib/src). When two reviewers
+  contradict, the one with a probe wins pending your own; never average them.
 
 ## 2026-07-03 (external note: resonance Tranche-1 transplant — Resonance transplant coordinator / claude-fable-5)
 

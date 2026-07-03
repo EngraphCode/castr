@@ -14,8 +14,12 @@ session-continuation, trackers) point here and never duplicate the table.
 > Everything from here down to the era's last dated block is the historical record of that
 > mode — truthful for its dates, superseded as doctrine. Live branch state (2026-07-03 close):
 > **PR #4 MERGED to `main` (`32c3f2b` — CI split, turbo caching, branch-model reconciliation,
-> pr-lifecycle skill + pr-watch CLI) and its branch deleted; no feature branch is currently
-> open.** The next slice opens its own branch off `main`.
+> pr-lifecycle skill + pr-watch CLI) and its branch deleted. PR #7 MERGED to `main`
+> (`6b6642a`, 2026-07-03 evening — the pre-castr doctrine-sync slice RS-1..RS-4:
+> use-result-pattern + preserve-caught-error enforcement, second-consumer rename ripple,
+> host-load §4, validation-strategy stub, tsdoc/syntax enforcement in both workspaces; the
+> controlling plan is COMPLETE and product/remediation work is UNGATED).** The next slice
+> opens its own branch off `main`.
 
 **Single-branch consolidation (owner, 2026-06-15):** the earlier multi-branch model — remediation on `fix/*` branches
 off `docs/initial-deep-review`, each PR'd to `main` independently — was **retired**. The coordination overhead (branch

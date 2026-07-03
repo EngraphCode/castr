@@ -179,11 +179,14 @@ adjudicating presence.
   (owner-decided changesets, execution deferred until delivery is scheduled) — tracked there, not here.
 - shell-lint gate (LACK) — `bash -n` over castr's own `.sh`; wire into `qg`+CI.
 - stryker mutation testing (LACK) — `stryker.config.base.ts` + 3 devdeps + script (manual-run posture).
-- ~~tsdoc enforcement (HOLLOW)~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-4): root `tsdoc.json`
-  (Oak's body: standard tags + `@generated`) + `eslint-plugin-tsdoc@^0.5.2` wired `tsdoc/syntax: 'error'`
-  in BOTH workspace eslint configs; the full pre-existing violation surface fixed (385: 293-file `@module`
-  sweep per the skill's own checklist + escaping/link/tag repairs); gate prove-it-fires by deliberate-RED
-  negative control in both workspaces. The `engraph-tsdoc` skill's sources-of-truth now resolve.
+- ~~tsdoc enforcement (HOLLOW)~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-4): `tsdoc.json` at root
+  (Oak's body: standard tags + `@generated`) PLUS per-workspace `lib/tsdoc.json` + `agent-tools/tsdoc.json`
+  extending it — the root file alone is DEAD config (the resolver stops at each workspace's `package.json`;
+  config-expert probe, fixed `b4c5253`); `eslint-plugin-tsdoc@^0.5.2` wired `tsdoc/syntax: 'error'` in BOTH
+  workspace eslint configs; the full pre-existing violation surface fixed (385: 293-file `@module` sweep per
+  the skill's own checklist + escaping/link/tag repairs); gate prove-it-fires by deliberate-RED negative
+  control + `@generated`-accepted probe in both workspaces. The `engraph-tsdoc` skill's sources-of-truth now
+  resolve.
 - no-network e2e for `lib` (HOLLOW minor) — wire `test.setup.no-network.ts` into `lib/vitest.e2e.config.ts`.
 
 **Agent-tools modules**

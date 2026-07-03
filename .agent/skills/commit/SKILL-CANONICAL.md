@@ -219,7 +219,7 @@ prettier-staged` or a targeted Prettier command). If formatting mutates a
    file, re-read the diff, re-stage the exact pathspecs, and record a fresh
    fingerprint.
 
-   Two measured staging gotchas (three firings across 2026-07-03):
+   Three measured staging gotchas (four firings across 2026-07-03):
 
    - **An already-staged deletion fails `git add` pathspec and aborts the
      WHOLE add** (nothing staged): a file deleted via `git rm` earlier no
@@ -231,6 +231,13 @@ prettier-staged` or a targeted Prettier command). If formatting mutates a
      byte-equality with HEAD, so status-derived intents include no-op files
      whose re-add equals HEAD — they read as "missing" from the staged set
      and the verify-staged guard abandons the intent.
+   - **The pathspec-scoped commit can leave a STALE INDEX BLOB for a file
+     the pre-commit formatter touched**: the hook formats the worktree and
+     the scoped commit lands the formatted version, but the index keeps the
+     earlier pre-format `git add` blob, so the file later reads `MM` with a
+     staged diff that appears to REVERT the formatting. Harmless; cure is
+     re-`git add` that file to re-sync the index with the worktree (= HEAD)
+     before the next ceremony.
 
    ```bash
    # Resolve the session's UUID v5 id once (PDR-076a):
