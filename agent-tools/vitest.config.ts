@@ -17,5 +17,11 @@ export default defineConfig({
     pool: 'forks',
     include: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'tests/**/*.test.ts', 'tests/**/*.spec.ts'],
     exclude: ['node_modules', 'dist', 'coverage', '**/*.e2e.test.ts', 'stryker-tmp'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'dist/**'],
+      reporter: ['text-summary', 'html', 'lcov', 'cobertura'],
+    },
   },
 });

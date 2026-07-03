@@ -3,15 +3,14 @@ import { defineConfig } from 'vitest/config';
 /**
  * Main Vitest Configuration - Canonical `pnpm test` Collector
  *
- * Excludes:
+ * Collects the in-process (unit + integration) suites. Excludes:
  * - Characterisation tests (use `pnpm character`)
  * - Snapshot tests (use `pnpm test:snapshot`)
+ * - The scalar-guard suite (use `pnpm test:scalar-guard`)
  *
- * Current Pack 7 scope note:
- * - despite the historical "unit" nickname, this collector still matches
- *   `src/tests-e2e/openapi-fidelity.test.ts` via the broad `src` test glob
- *
- * Run with: `pnpm test`
+ * Run with: `pnpm test` (append `--coverage` for a code-path coverage report;
+ * coverage is a signal that routes attention, never a target to hit — the
+ * behaviour-proof suites in testing-strategy.md remain the correctness bar)
  */
 export default defineConfig({
   test: {
@@ -22,5 +21,16 @@ export default defineConfig({
       'tests-snapshot/**/*.test.ts',
       'node_modules/**',
     ],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**', 'eslint-rules/**'],
+      exclude: [
+        'src/**/*.test.ts',
+        'eslint-rules/**/*.test.ts',
+        'src/characterisation/**',
+        'dist/**',
+      ],
+      reporter: ['text-summary', 'html', 'lcov', 'cobertura'],
+    },
   },
 });

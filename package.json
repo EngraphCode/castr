@@ -18,6 +18,7 @@
     "lint:fix": "turbo lint -- --fix",
     "test": "turbo test",
     "test:watch": "turbo test -- --watch",
+    "test:coverage": "turbo test -- --coverage",
     "agent-tools:test": "pnpm --filter @engraph/agent-tools test",
     "agent-tools": "pnpm --filter @engraph/agent-tools agent-tools",
     "agent-tools:build": "pnpm --filter @engraph/agent-tools build",
