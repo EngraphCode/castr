@@ -1,0 +1,6 @@
+---
+description: Lint After Edit
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/lint-after-edit.md`.

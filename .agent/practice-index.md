@@ -42,13 +42,12 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 
 | Tool                                                                        | Purpose                                                                 |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [jc-start-right](commands/jc-start-right.md)                                | Re-anchor on doctrine, context, and the current entrypoint              |
-| [jc-gates](commands/jc-gates.md)                                            | Run the full canonical quality-gate chain                               |
-| [jc-plan](commands/jc-plan.md)                                              | Create or revise a decision-complete plan                               |
-| [jc-consolidate-docs](commands/jc-consolidate-docs.md)                      | Promote durable truth, audit cohesion, and integrate practice learnings |
-| [castr-start-right](skills/castr-start-right/SKILL.md)                      | Repo-specific start-right bootstrap skill                               |
-| [napkin](skills/napkin/SKILL.md)                                            | Continuous capture stage of the knowledge flow                          |
-| [distillation](skills/distillation/SKILL.md)                                | Distill the napkin into durable high-signal learnings                   |
+| [start-right-quick](skills/start-right-quick/SKILL-CANONICAL.md)            | Re-anchor on doctrine, context, and the current entrypoint              |
+| [start-right-thorough](skills/start-right-thorough/SKILL-CANONICAL.md)      | Deep re-anchor after a context switch or long gap                       |
+| [gates](skills/gates/SKILL-CANONICAL.md)                                    | Run the full canonical quality-gate chain                               |
+| [plan](skills/plan/SKILL-CANONICAL.md)                                      | Create or revise a decision-complete plan                               |
+| [consolidate-docs](skills/consolidate-docs/SKILL-CANONICAL.md)              | Promote durable truth, audit cohesion, and integrate practice learnings |
+| [napkin](skills/napkin/SKILL-CANONICAL.md)                                  | Continuous capture stage of the knowledge flow                          |
 | [invoke-reviewers](rules/invoke-reviewers.md)                               | Installed reviewer and domain-expert invocation contract                |
 | [quality-gate-failures](rules/quality-gate-failures.md)                     | All gate failures are blocking                                          |
 | [tdd](rules/tdd.md)                                                         | TDD applies at all levels                                               |
@@ -58,21 +57,19 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 
 ## Artefact Directories
 
-| Location                                        | What lives there                                                                         |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                                                     |
-| [`.agent/prompts/`](prompts/)                   | Session continuation context bridge                                                      |
-| [`.agent/commands/`](commands/)                 | Canonical command workflows                                                              |
-| [`.agent/skills/`](skills/)                     | Canonical skills                                                                         |
-| [`.agent/rules/`](rules/)                       | Operationalized doctrine                                                                 |
-| [`.agent/sub-agents/`](sub-agents/)             | Canonical reviewer and domain-expert prompt architecture                                 |
-| [`.agent/plans/`](plans/)                       | Active, paused, completed, archived, and future plans                                    |
-| [`.agent/memory/`](memory/)                     | Napkin, distilled learnings, and code-pattern scaffolding                                |
-| [`.agent/experience/`](experience/)             | Experience records                                                                       |
-| [`.agent/practice-core/`](practice-core/)       | Portable Practice Core package                                                           |
-| [`.agent/practice-context/`](practice-context/) | Optional exchange support context                                                        |
-| [`.husky/`](../.husky/)                         | Repo-local Git hooks; `pre-commit` formats staged files, `pre-push` runs `pnpm check:ci` |
-| [`.agents/skills/`](../.agents/skills/)         | Codex skill wrappers for skills and `jc-*` workflows                                     |
-| [`.cursor/`](../.cursor/)                       | Cursor-specific wrappers and settings                                                    |
-| [`.codex/`](../.codex/)                         | Codex project-agent registration and thin reviewer/expert adapters                       |
-| [`.codex/agents/`](../.codex/agents/)           | Thin Codex project-agent adapters pointing back to canonical templates                   |
+| Location                                  | What lives there                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [`.agent/directives/`](directives/)       | Doctrine and operational entrypoints                                                     |
+| [`.agent/prompts/`](prompts/)             | Session continuation context bridge                                                      |
+| [`.agent/skills/`](skills/)               | Canonical skills                                                                         |
+| [`.agent/rules/`](rules/)                 | Operationalized doctrine                                                                 |
+| [`.agent/sub-agents/`](sub-agents/)       | Canonical reviewer and domain-expert prompt architecture                                 |
+| [`.agent/plans/`](plans/)                 | Active, paused, completed, archived, and future plans                                    |
+| [`.agent/memory/`](memory/)               | Napkin, distilled learnings, and code-pattern scaffolding                                |
+| [`.agent/experience/`](experience/)       | Experience records                                                                       |
+| [`.agent/practice-core/`](practice-core/) | Portable Practice Core package                                                           |
+| [`.husky/`](../.husky/)                   | Repo-local Git hooks; `pre-commit` formats staged files, `pre-push` runs `pnpm check:ci` |
+| [`.agents/skills/`](../.agents/skills/)   | Generated `engraph-` skill adapters for Codex and other platforms                        |
+| [`.cursor/`](../.cursor/)                 | Cursor-specific wrappers and settings                                                    |
+| [`.codex/`](../.codex/)                   | Codex project-agent registration and thin reviewer/expert adapters                       |
+| [`.codex/agents/`](../.codex/agents/)     | Thin Codex project-agent adapters pointing back to canonical templates                   |

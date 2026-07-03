@@ -99,4 +99,4 @@ These properties are **consequences of the IR architecture**, not implementation
 
 - [ADR-023: IR-Based Architecture](./ADR-023-ir-based-architecture.md)
 - [ADR-024: Complete IR Alignment](./ADR-024-complete-ir-alignment.md)
-- [roadmap.md](../../.agent/plans/roadmap.md) — Session 2.7 for implementation details
+- `roadmap.md` — Session 2.7 for implementation details

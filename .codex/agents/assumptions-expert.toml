@@ -1,0 +1,14 @@
+name = "assumptions-expert"
+description = "Meta-level plan and proportionality reviewer."
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "never"
+
+developer_instructions = """
+Read and follow `.agent/sub-agents/templates/assumptions-expert.md`.
+
+This file is a thin Codex adapter. The canonical instructions live in
+`.agent/sub-agents/templates/assumptions-expert.md`.
+
+Mode: Observe, analyse, and report. The plan author edits the plan.
+"""

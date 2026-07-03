@@ -62,7 +62,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       expectNoParseErrors(fixture.name, 'Scenario 2 generated-output parse', result2);
 
       // Schema count should be preserved
-      expect(result2.ir.components.length).toBe(originalSchemaCount);
+      expect(result2.ir.components).toHaveLength(originalSchemaCount);
     });
   });
 

@@ -10,14 +10,7 @@ type ComplexityFn = (args: {
   schema: SchemaObject | ReferenceObject | undefined;
 }) => number;
 type CompositeType =
-  | 'oneOf'
-  | 'anyOf'
-  | 'allOf'
-  | 'enum'
-  | 'array'
-  | 'empty-object'
-  | 'object'
-  | 'record';
+  'oneOf' | 'anyOf' | 'allOf' | 'enum' | 'array' | 'empty-object' | 'object' | 'record';
 
 /**
  * Calculates complexity for a composition schema (oneOf, anyOf, allOf)

@@ -18,10 +18,10 @@ The high-level planning homes for the three Oak use cases now live in:
 
 Reviewed code and docs in:
 
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk`
-- `/Users/jim/code/oak/oak-openapi`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk`
+- `oak/oak-openapi`
 
 Also reviewed existing Castr-side research and plans under:
 
@@ -40,9 +40,9 @@ Also reviewed existing Castr-side research and plans under:
 The current owner input is now clear enough to lock as durable truth:
 
 1. **Oak needs to move to OAS 3.2 shortly.**
-2. **First Castr use case:** fully replace `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`, including its dependency on `openapi-zod-client`, and remove the need to reference `Zod <4` anywhere in that repo.
+2. **First Castr use case:** fully replace `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`, including its dependency on `openapi-zod-client`, and remove the need to reference `Zod <4` anywhere in that repo.
 3. **Second Castr use case:** replace **all OpenAPI-related third-party libraries** in the Oak Open Curriculum Ecosystem repo. It is **not yet decided** whether this should include `openapi-fetch`. If Castr grows a lightweight HTTP harness or adapter layer for this, that belongs in a separate companion workspace rather than core `@engraph/castr`.
-4. **Third Castr use case:** replace the libraries currently used for **OpenAPI generation** in `/Users/jim/code/oak/oak-openapi`. The intention is for that API codebase to move into a new workspace inside the Oak Open Curriculum Ecosystem repo.
+4. **Third Castr use case:** replace the libraries currently used for **OpenAPI generation** in `oak/oak-openapi`. The intention is for that API codebase to move into a new workspace inside the Oak Open Curriculum Ecosystem repo.
 5. Oak is the **first** use case, not the entire product. Castr should not overfit to Oak's current implementation details, but Oak is now the first concrete proving ground.
 
 ---
@@ -69,7 +69,7 @@ OAS 3.2 matters more now because Oak itself expects to move there soon. The acti
 
 ### 1. The first replacement target is a compatibility boundary, not just a generator
 
-The adapter workspace at `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter` is a hard quarantine boundary around `openapi-zod-client`.
+The adapter workspace at `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter` is a hard quarantine boundary around `openapi-zod-client`.
 
 What it currently does:
 
@@ -92,9 +92,9 @@ This means the first migration target is not merely "generate some Zod schemas".
 
 Current package evidence:
 
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/package.json` pins `zod: 3.25.76`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/package.json` uses `zod: ^4.3.6`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/package.json` uses `zod: ^4.3.6`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/package.json` pins `zod: 3.25.76`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/package.json` uses `zod: ^4.3.6`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/package.json` uses `zod: ^4.3.6`
 - other visible Oak workspaces also use Zod 4
 
 So the first use case is concrete and measurable: deleting the adapter workspace should remove the only package-level need for Zod 3 in the repo.
@@ -223,7 +223,7 @@ That means Castr's OAS 3.2 work now has direct external pressure:
 
 Primary Oak surface:
 
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter`
 
 Libraries implicated:
 
@@ -244,8 +244,8 @@ Minimum Castr outcome:
 
 Primary Oak surfaces:
 
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk`
 
 Libraries implicated:
 
@@ -264,7 +264,7 @@ Likely Castr implications:
 
 Primary Oak surface:
 
-- `/Users/jim/code/oak/oak-openapi`
+- `oak/oak-openapi`
 
 Detailed review:
 
@@ -520,30 +520,30 @@ That is a much more concrete strategy ladder than the repo had before this revie
 
 ### Oak Open Curriculum Ecosystem
 
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/README.md`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/package.json`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/generate-zod-schemas.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/get-endpoint-definitions.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/endpoint-transformers.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/zod-v3-to-v4-transform.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/package.json`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/zodgen-core.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/codegen-core.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/typegen/client-types/generate-client-types.ts`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/package.json`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/README.md`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/docs/architecture.md`
-- `/Users/jim/code/oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/src/client/oak-base-client.ts`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/README.md`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/package.json`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/generate-zod-schemas.ts`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/get-endpoint-definitions.ts`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/endpoint-transformers.ts`
+- `oak/oak-mcp-ecosystem/packages/core/openapi-zod-client-adapter/src/zod-v3-to-v4-transform.ts`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/package.json`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/zodgen-core.ts`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/codegen-core.ts`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-sdk-codegen/code-generation/typegen/client-types/generate-client-types.ts`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/package.json`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/README.md`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/docs/architecture.md`
+- `oak/oak-mcp-ecosystem/packages/sdks/oak-curriculum-sdk/src/client/oak-base-client.ts`
 
 ### Oak OpenAPI
 
-- `/Users/jim/code/oak/oak-openapi/package.json`
-- `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
-- `/Users/jim/code/oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/trpc.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/openapi-generation.md`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/decision-records/0003-zod-openapi-generation.md`
+- `oak/oak-openapi/package.json`
+- `oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
+- `oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
+- `oak/oak-openapi/src/lib/trpc.ts`
+- `oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
+- `oak/oak-openapi/docs/architecture/openapi-generation.md`
+- `oak/oak-openapi/docs/architecture/decision-records/0003-zod-openapi-generation.md`
 
 ### Castr
 

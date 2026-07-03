@@ -1,14 +1,14 @@
 import { expect, test, describe } from 'vitest';
-import { attemptNonStandardPropertyRescue } from './prefix-nonstandard.js';
+import {
+  attemptNonStandardPropertyRescue,
+  type ScalarValidationResult,
+} from './prefix-nonstandard.js';
 
 describe('prefix-nonstandard', () => {
   test('does nothing if the document is not an object', async () => {
     const warnings: { readonly message: string }[] = [];
-    const result = await attemptNonStandardPropertyRescue(
-      null,
-      { valid: false, errors: [] },
-      warnings,
-    );
+    const initialResult: ScalarValidationResult = { valid: false, errors: [] };
+    const result = await attemptNonStandardPropertyRescue(null, initialResult, warnings);
     expect(result.valid).toBe(false);
     expect(warnings).toHaveLength(0);
   });
@@ -21,7 +21,7 @@ describe('prefix-nonstandard', () => {
       extraDocs: 'This should be x-nonstandard-extraDocs',
     };
 
-    const initialResult = {
+    const initialResult: ScalarValidationResult = {
       valid: false,
       errors: [{ message: 'Property extraDocs is not expected to be here', path: [] }],
     };
@@ -57,7 +57,7 @@ describe('prefix-nonstandard', () => {
       },
     };
 
-    const initialResult = {
+    const initialResult: ScalarValidationResult = {
       valid: false,
       errors: [
         {
@@ -89,7 +89,7 @@ describe('prefix-nonstandard', () => {
       propE: 'e',
     };
 
-    const initialResult = {
+    const initialResult: ScalarValidationResult = {
       valid: false,
       errors: [{ message: 'Property propA is not expected to be here', path: [] }],
     };
@@ -136,7 +136,7 @@ describe('prefix-nonstandard', () => {
       },
     };
 
-    const initialResult = {
+    const initialResult: ScalarValidationResult = {
       valid: false,
       errors: [
         {
@@ -177,8 +177,11 @@ describe('prefix-nonstandard', () => {
       'x-custom-extension': 'already valid',
     };
 
-    const initialResult = {
+    const initialResult: ScalarValidationResult = {
       valid: true,
+      version: '3.1',
+      specification: doc,
+      schema: doc,
       errors: [],
     };
 

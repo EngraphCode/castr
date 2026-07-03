@@ -53,7 +53,12 @@ export function isBundledOpenApiDocument(value: unknown): value is BundledOpenAp
 export function upgradeAndValidate(
   bundledDocument: string | AnyObject | Filesystem,
 ): BundledOpenApiDocument {
-  const { specification: upgraded } = upgrade(bundledDocument);
+  // upgrade()'s `specification` is typed via @scalar/openapi-types/3.1, which does not
+  // resolve to a concrete type in this workspace (it degrades to `any` post-bump). Read
+  // it and widen to `unknown`, then narrow through the boundary guard (ADR-020, no
+  // casting) — never let the vendor `any` flow downstream.
+  const upgradeResult = upgrade(bundledDocument);
+  const upgraded: unknown = upgradeResult.specification;
 
   if (!isBundledOpenApiDocument(upgraded)) {
     throw new Error('Failed to produce valid OpenAPI 3.2 document');

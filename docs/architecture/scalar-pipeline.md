@@ -187,7 +187,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'  # Preserved!
+                $ref: '#/components/schemas/User' # Preserved!
 ```
 
 **Output:** Bundled OpenAPI document with internal `$refs` preserved and canonicalised to `openapi: 3.2.0`
@@ -299,9 +299,7 @@ Generated code quality comparison:
 **With `$refs` (current):**
 
 ```typescript
-export const AddressSchema = z.object({
-  /* ... */
-});
+export const AddressSchema = z.object({/* ... */});
 export const UserSchema = z.object({
   address: AddressSchema, // Clean reference
 });
@@ -311,9 +309,7 @@ export const UserSchema = z.object({
 
 ```typescript
 export const UserSchema = z.object({
-  address: z.object({
-    /* entire Address schema inlined */
-  }), // Duplicated!
+  address: z.object({/* entire Address schema inlined */}), // Duplicated!
 });
 ```
 

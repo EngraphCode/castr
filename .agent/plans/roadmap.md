@@ -25,7 +25,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 - **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer transform validation with sample input).
 - **Atomic plans**: Small, linear steps stored under `./current/` and linked below.
 - **Primary active atomic plan**: The primary next atomic plan lives under `./active/`.
-- **Parked-in-place exception**: A user may explicitly keep non-primary unfinished plans physically in `./active/`; if so, they must be labelled as parked-in-place context rather than companions.
+- **No parking (owner, 2026-06-09)**: nothing is ever "parked" to an undefined later — **all issues MUST be fixed, mostly now; sequencing with a named position in the current plan is acceptable**. Non-primary unfinished work moves to `./current/paused/` carrying its named sequence position. (A former "parked-in-place exception" entry here was applied on 2026-06-05 with a claimed user instruction the owner never gave; the owner repudiated the parking framing outright.)
 - **Paused workstreams**: Incomplete but non-primary workstreams live under `./current/paused/` until they become the next atomic slice again.
 - **Completed atomic plans (staged)**: Completed atomic plans are moved to `./current/complete/` and only archived in batches when a group of work is complete.
 
@@ -33,9 +33,54 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **🧭 CURRENT FRONTIER (2026-06-28) — supersedes the "Phase 7 in progress" bullets below.** Transplant Phases 0–8 are
+> ✅ done + tagged. The work is now the **Oak Parity-or-Better Program** under the governing **bring-everything**
+> disposition (PDR-005 §Default disposition: bring unless utterly irrelevant). The **single authoritative Axis-A bring
+> backlog** is [`transplant/oak-castr-gap-rescan-2026-06-28.md`](./transplant/oak-castr-gap-rescan-2026-06-28.md)
+> (a two-pass firsthand-validated rescan; it folds the LC/TC/parity-tranche next-steps into one ordered spine). The
+> **live next-step pointer is [`repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
+> this roadmap is the durable product-milestone frame, not the daily next-step source. **Three axes** make up the "one
+> deep enhancement": **(A)** transplant/parity (active — the gap-rescan backlog), **(B)** product-correctness
+> remediation [`remediation/`](./remediation/) 02–07 (the 6 reproduced Criticals — currently dormant), **(C)** delivery
+> ([`delivery-ledger.md`](./delivery-ledger.md) — deprioritised). The A/B/C sequencing is an open owner decision
+> (`open-questions.md` Q-011): does B stay parked behind a now-much-larger A, given the no-undefined-later doctrine
+> below? The doctrine block below stays authoritative on the "one deep enhancement = both, nothing parked to an
+> undefined later" principle.
+
+> **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
+> skill+rule+subagent+hook definitions AND fix castr's known issues — the same goal, not competing priorities.** Owner
+> doctrine (2026-06-09): "all issues MUST be fixed, mostly now; sequencing with a named position is acceptable; an
+> undefined 'later' is never." All components live on the single branch `feat/transplant-engraph-practice` (2026-06-15
+> consolidation; see the [delivery ledger](./delivery-ledger.md)), none parked, and the owner names the next slice:
+>
+> - **Practice transplant** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md), tracker
+>   [`transplant/README.md`](./transplant/README.md)) — Phases 0–6 complete and tagged; **Phase 7 is in progress**
+>   (sub-plan [`transplant/07-adapters-and-gate-flips.md`](./transplant/07-adapters-and-gate-flips.md)).
+> - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
+> - **Deep-review remediation backlog** ([`remediation/`](./remediation/) 02–07; 01 complete + merged in) — the 6
+>   shipped Criticals must be fixed; a required component, not a gate that blocks the transplant.
+> - **Product feature slice** [`current/paused/explicit-additional-properties-support.md`](./current/paused/explicit-additional-properties-support.md).
+>
+> A 2026-06-05 record framed the feature slice as "parked-in-place per a user instruction" — **the owner never gave
+> that instruction and repudiated the framing on 2026-06-09**. The 2026-06-09 "sequence positions 1/2/3" were an
+> ordering guide, not a gate; advancing the transplant does not demote remediation.
+>
+> **Branches/PRs per plan live in the [delivery ledger](./delivery-ledger.md)** (single DRY home; a plan's
+> _delivery_ = the branches, PRs, and release acts that carry its outcome to a beneficiary, per PDR-085). PR
+> comment/CI monitoring discipline is defined there.
+
+> **Deep Review (2026-06-04; report + ADR-047 now on `feat/transplant-engraph-practice`):** a first-hand-verified review found **46 issues
+> (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
+> [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
+> backlog: [`.agent/plans/remediation/`](./remediation/) (promote one into `active/` at a time; `01-packaging` fixes the
+> shipped C1 types/`./parsers/zod` break). Nine completed plans + this roadmap carry dated ⚠️ correction banners (P1-P9).
+> The link-aware bulk-archive of settled completions is **sequenced into transplant Phase 9** (named slot, owner
+> 2026-06-09; disposition history in report §11). "Complete" labels below predate the review — treat the review
+> report as current truth where they disagree.
+
 The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, architecture review remediation arc, JSON Schema parser expansion, Schema Completeness Arc, and OAS 3.2 version plumbing slice are complete.
 
-The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor is now the primary active plan [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md).
+The OAS 3.2 parent workstream is now also complete. Its staged closure record lives at [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-full-feature-support.md), and the Phase A₂ closure record lives at [phase-a2-type-migration.md](./current/complete/phase-a2-type-migration.md). The ePerusteet real-spec validation slice is complete at [eperusteet-real-spec-validation.md](./current/complete/eperusteet-real-spec-validation.md), and its directly related successor [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md) holds position 3 in the plan-of-record sequence.
 
 Current product truth:
 
@@ -54,7 +99,7 @@ Current product truth:
 - Phase E is now honestly closed: native OpenAPI 3.2 `itemSchema` and `additionalOperations` survive parser -> IR -> OpenAPI writer -> shared load boundary reparse; custom verbs from `additionalOperations` now flow through endpoint/MCP/TypeScript surfaces; endpoint/MCP/TypeScript fail fast on reachable `itemSchema`; the reviewer loop is closed with no open findings; and repo-root `pnpm check` is green on the final close-out rerun
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026 as the reproduction/predecessor slice: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduced rejection at IR-build / generated seams exposed a policy mismatch around explicit `additionalProperties`
 - user clarification on Thursday, 16 April 2026 established the intended boundary: Castr accepts and emits explicit `additionalProperties`, but never invents them from input that did not declare them
-- the current primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md); if a user reports a fresh gate or runtime issue, reproduce it first, otherwise execute that slice honestly
+- **the plan-of-record sequence was RE-ORDERED by the owner (2026-06-19):** finish the FULL Practice transplant first, then remediation. New sequence: (1) [Oak → castr Practice transplant](./active/oak-practice-transplant.md) Phases 7–9 + arc D2/D4 (parity = part of "the full Practice"; Phase 7 in progress); (2) [remediation backlog](./remediation/) 02–07 (a **named position after the transplant**, not parked — `no-manufactured-permission` holds; 01 done); (3) [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md). "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) is deprioritised. _Supersedes the 2026-06-09 "(1) remediation; (2) transplant" order._ If a user reports a fresh product gate/runtime issue, reproduce it first (it pre-empts the sequence)
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - `lib` / `@engraph/castr` remains the core compiler boundary; typed fetch, runtime handler, framework, and code-first integration work belongs in companion workspaces
 
@@ -146,9 +191,10 @@ Current sweep record:
 
 - **Phase 1: Close existing semantic gaps** ✅ — All 9 Zod fail-fast guards that were implementation gaps upgraded to semantic `.refine()` runtime validation closures. TS `booleanSchema: true` upgraded to `unknown`. All TS genuinely impossible fail-fast error messages audited and improved with "Genuinely impossible" prefix and detailed explanations.
   - New `refinements/` subdirectory: `object.ts` (patternProperties, propertyNames, dependentSchemas, dependentRequired, unevaluatedProperties, if/then/else) and `array.ts` (contains/minContains/maxContains, unevaluatedItems)
+  - ⚠️ **Correction (2026-06-04, ADR-047):** these closures are NOT all "semantic". Verified by executing the built `dist`: `dependentSchemas` and `if/then/else` emit `.refine(… return true)` no-ops, and `contains`/`patternProperties`/`unevaluated*` use `typeof x === '<jsonSchemaType>'` checks that reject valid data (review finding **C6**). Only `dependentRequired` is correct. This also contradicts Phase 1.5 below, which marks `if/then/else` "genuinely impossible (❌)" = fail-fast. Resolution: **ADR-047** + `.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md`.
   - All quality gates green, 41/41 Zod tests + 14/14 TS tests passing
 - **Phase 1.5: TS ❓ resolution** ✅ — completed Saturday, 29 March 2026. `dependentRequired` and `dependentSchemas` implemented as discriminated union types. `unevaluatedProperties` (schema-valued) and `if/then/else` confirmed genuinely impossible (❌). Format tensions table resolved: zero ❓ markers.
-- **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor` preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in `2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
+- **Phase 2: IR expansion for $anchor/$dynamicRef/$dynamicAnchor** ✅ COMPLETE — All three keywords added to IR model, JSON Schema parser, JSON Schema writer, OpenAPI parser, IR validator. Zod/TS fail-fast wired for `$dynamicRef`/`$dynamicAnchor` (genuinely impossible). `$anchor`preserved in round-trip (reference marker, no code-gen impact). Full test coverage, round-trip proofs in`2020-12-keywords.json` fixture. Plan: [anchor-and-dynamic-references.md](current/complete/anchor-and-dynamic-references.md) (✅ complete).
 
 **Completed Workstream: OAS 3.2 Full Feature Support**
 
@@ -158,7 +204,7 @@ Closure record: [oas-3.2-full-feature-support.md](./current/complete/oas-3.2-ful
 - Phase C is complete: OAuth 2.0 Device Authorization flow, XML `nodeType`, and strict top-level path-templating validation/proof are landed honestly
 - Phase D is complete: Example Object `dataValue` / `serializedValue` semantics are landed honestly across the native 3.2 seam
 - Phase E is complete: `itemSchema` streaming is preserved through the OpenAPI parser/IR/writer path, `additionalOperations` is stored separately per ADR-046 and exposed end to end downstream, and non-OpenAPI downstreams fail fast on reachable `itemSchema`
-- The direct successor primary active plan is [explicit-additional-properties-support.md](./active/explicit-additional-properties-support.md)
+- The direct successor primary active plan is [explicit-additional-properties-support.md](./current/paused/explicit-additional-properties-support.md)
 
 **Deferred: Reference Resolution Enhancements** (separate future arc):
 

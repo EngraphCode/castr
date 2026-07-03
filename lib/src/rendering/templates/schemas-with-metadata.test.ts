@@ -99,6 +99,18 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
             required: ['id', 'name'],
             additionalProperties: false,
           },
+          // Defines the schema referenced by the 500 response below. Previously
+          // dangling: @scalar/openapi-parser <0.28 silently tolerated the unresolved
+          // $ref; 0.28+ correctly rejects it (aligns with castr fail-fast, ADR-001).
+          Error: {
+            type: 'object' as const,
+            properties: {
+              code: { type: 'string' as const },
+              message: { type: 'string' as const },
+            },
+            required: ['code', 'message'],
+            additionalProperties: false,
+          },
         },
       },
       paths: {

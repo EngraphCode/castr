@@ -43,3 +43,4 @@ dist
 .eslintcache
 /.idea/
 tmp/
+.logs/

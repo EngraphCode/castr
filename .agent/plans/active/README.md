@@ -160,16 +160,22 @@ At the time of writing, this repo allows:
 
 This is stricter than an open-ended “many active plans” model, but more realistic than insisting the directory be literally empty except for one file at all times.
 
-## Explicit User-Directed Parking Exception
+## No Parking — Sequenced Positions Only (owner, 2026-06-09)
 
-If a user explicitly instructs that a non-primary unfinished workstream remain physically in `active/` while a different plan becomes the next slice, do not silently treat that as normal companion-plan usage.
+There is no parking exception. The owner has stated they never instructed any plan to be "parked in place" and never
+would: **all issues MUST be fixed, mostly now; sequencing with a named position in the current plan-of-record is
+acceptable; leaving work to an undefined "later" is never acceptable.** (A former "Explicit User-Directed Parking
+Exception" section here was invoked on 2026-06-05 with a claimed user instruction the owner never gave; the owner
+repudiated the parking framing outright on 2026-06-09.)
 
-Instead:
+When a workstream is unfinished but not the next slice:
 
 - still name exactly one **primary** active plan in `session-continuation.prompt.md` and `roadmap.md`
-- explicitly label the other plans as **parked-in-place non-primary context**
-- do not describe parked plans as tightly coupled companions if they are not
-- return to the normal lifecycle model once the exception is no longer needed
+- move the non-primary workstream to `./current/paused/` carrying its **named position** in the roadmap's
+  plan-of-record sequence
+- never label work "parked", "untouched", or "resumes later" without a named sequence position
+- an attributed owner decision in any continuity surface is precedence, not approval — it must trace to the owner's
+  actual words, and when the owner contradicts it, the record is wrong and gets fixed everywhere it propagated
 
 ## Paused Workstreams
 

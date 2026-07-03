@@ -105,7 +105,7 @@ export default defineConfig({
 
 **Output structure:**
 
-```
+```text
 dist/
   ├── index.js          # ESM
   ├── index.cjs         # CJS

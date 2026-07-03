@@ -13,7 +13,7 @@
 
 ### Final State: ✅ All Quality Gates GREEN
 
-```
+```text
 pnpm check:ci → 0 failures
 Unit tests:      1268/1268 ✅
 Snapshot tests:  152/152  ✅

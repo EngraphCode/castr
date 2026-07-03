@@ -1,0 +1,336 @@
+{
+  "description": "Canonical agent-hook policy for @engraph/castr. Guardrail-only: grounding reminder, quality-gate reminder, and blocking dangerous git/history-bypass/host-load commands. Each blocked entry carries a concept + citation + reappraisal so a deny TEACHES (PDR-044 §Innate immunity, as amended), enforced at commit-time by the validate-policy-reappraisal repo validator.",
+  "version": "1.1.0",
+  "hooks": {
+    "preToolUse": {
+      "blocked_patterns": [
+        {
+          "pattern": "git push --force",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never overwrite or rewrite it; integrate forward with new commits and reconcile branches without force-pushing or interactive rebase."
+        },
+        {
+          "pattern": "git push -f",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never overwrite or rewrite it; integrate forward with new commits and reconcile branches without force-pushing or interactive rebase."
+        },
+        {
+          "pattern": "git push --force-with-lease",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — a leased force-push still rewrites remote history; integrate forward with new commits and reconcile branches without force-pushing."
+        },
+        {
+          "pattern": "git rebase -i",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never rewrite it with interactive rebase; layer corrections as new commits instead."
+        },
+        {
+          "pattern": "git rebase --interactive",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never rewrite it with interactive rebase (long or short spelling); layer corrections as new commits instead."
+        },
+        {
+          "pattern": "git commit --amend",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only and roll-forward only — amending rewrites the previous commit; land the correction as a new commit instead."
+        },
+        {
+          "pattern": "git --no-verify",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "Hooks are safety guardrails, not friction — never bypass them; understand and fix what they flag, and treat --no-verify as needing fresh per-commit owner authorisation."
+        },
+        {
+          "pattern": "git commit -n",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "-n is the short alias of --no-verify (it bypasses pre-commit and commit-msg hooks); hooks are safety guardrails — never bypass them without fresh per-commit owner authorisation."
+        },
+        {
+          "pattern": "git --no-gpg-sign",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "Commit signing is a safety guardrail, not friction — do not bypass it; resolve the signing setup rather than skipping the gate."
+        },
+        {
+          "pattern": "git reset --hard",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This silently discards uncommitted work — including parallel agents' edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git clean -f",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This deletes untracked files irrecoverably, including peers' in-flight work; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git clean --force",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This deletes untracked files irrecoverably, including peers' in-flight work; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout --",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites in-flight edits — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout HEAD",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites in-flight edits — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git checkout -- .",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This overwrites every in-flight edit in the tree — including parallel agents' uncommitted work — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore --worktree",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git restore --staged",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Restore overwrites or unstages in-flight work — including parallel agents' uncommitted edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git stash drop",
+          "concept": "stash-discard",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Never use git stash to park, hide, or discard work; keep in-progress work as live working-tree edits."
+        },
+        {
+          "pattern": "git stash clear",
+          "concept": "stash-discard",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "Never use git stash to park, hide, or discard work; keep in-progress work as live working-tree edits."
+        },
+        {
+          "pattern": "git add -A",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
+        },
+        {
+          "pattern": "git add --all",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
+        },
+        {
+          "pattern": "git add .",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
+        },
+        {
+          "pattern": "git add -u",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; git add -u stages every tracked modification and deletion in the tree — name the exact files."
+        },
+        {
+          "pattern": "git add --update",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; git add --update stages every tracked modification and deletion in the tree — name the exact files."
+        },
+        {
+          "pattern": "for(;;)",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": "while(1)",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": ":(){ :|:&",
+          "concept": "host-dos-forkbomb",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        },
+        {
+          "pattern": "stress-ng",
+          "concept": "host-dos-unbounded-load",
+          "citation": ".agent/rules/no-unbounded-host-load.md",
+          "reappraisal": "The host is a shared substrate — unbounded load is a denial of service against the owner and every session. Provoke effects in-process (fake timers, injected delays); if load is truly needed it must be timeout-bounded, niced, announced, and reaped with a verified census.",
+          "match": "substring"
+        }
+      ],
+      "description": "Block shell commands that destroy history, bypass safety gates, overwrite live working-tree edits, discard stashed work, stage by wildcard, or saturate the shared host. Each entry carries a `concept` (the pattern family it is a fingerprint of), a `citation` (the doctrinal anchor), and a `reappraisal` (the positive direction the firing signals) so the deny message TEACHES: it names a concept to reappraise and steers the agent away from reaching for a sibling destructive command, rather than only refusing (PDR-044 §Innate immunity, as amended). The concepts: `history-destruction` (`git push --force` / `-f`, `git rebase -i`); `gate-bypass` (`git --no-verify`, `git --no-gpg-sign`); `worktree-destruction` (`git reset --hard`, `git clean -fd`, checkout/restore variants — these silently throw away in-flight edits, including peer-agent edits in parallel sessions, and `git fsck --lost-found` cannot recover them); `stash-discard` (`git stash drop` / `clear`); `wildcard-staging` (`git add -A` / `--all` / `.`, blocked under the explicit-pathspec discipline so a commit cannot accidentally bundle parallel-thread or unrelated work); `host-dos-unbounded-load` / `host-dos-forkbomb` (inline busy-loops, fork bombs, load tools — the host is a shared substrate and unbounded load is a denial of service against the owner and every session; these use `match: \"substring\"` because the shape hides inside one quoted token and a token-sequence trip cannot see into it; see `.agent/rules/no-unbounded-host-load.md`). We never use git to remove work; forward-going filesystem changes only. Entries may be bare strings (legacy) or objects; `concept` and `reappraisal` are optional at load time so a missing value never fails the guard closed (which would brick the worktree on a stale-dist/new-policy mismatch — a stale Bash guard blocks every command including the rebuild), and the `validate-policy-reappraisal` repo validator enforces their presence on object entries at commit-time. See `.agent/rules/never-use-git-to-remove-work.md`, `.agent/rules/no-verify-requires-fresh-authorisation.md`, `.agent/rules/stage-by-explicit-pathspec.md`, and `.agent/rules/no-unbounded-host-load.md`."
+    },
+    "preToolUseContent": {
+      "blocked_patterns": ["-- jc:", "-- JC:"],
+      "scoped_blocks": [
+        {
+          "concept": "expediency-hedging",
+          "kind": "literal",
+          "patterns": [
+            "carve out",
+            "carve-out",
+            "carve around",
+            "an exception to",
+            "with the exception of",
+            "make an exception",
+            "for these arcs",
+            "honest framing for",
+            "permitted variant",
+            "land it then iterate",
+            "cheap cure",
+            "good enough",
+            "quick fix"
+          ],
+          "include_paths": [
+            ".agent/practice-core/",
+            ".agent/plans/",
+            "docs/architecture/",
+            "docs/governance/",
+            "**/*.plan.md"
+          ],
+          "exclude_paths": [
+            "principles.md",
+            "distilled.md",
+            "PDR-043",
+            "PDR-044",
+            "PDR-047",
+            "archive/",
+            "fixtures/",
+            "/tests/",
+            ".test.ts"
+          ],
+          "citation": "PDR-044; principles.md §Core Philosophy: Engineering Excellence Over Speed",
+          "reappraisal": "Re-assess whether the design is actually uniform — in which case state it positively — or whether you are about to encode expediency."
+        },
+        {
+          "concept": "sha-in-permanent-doc",
+          "kind": "regex",
+          "patterns": ["\\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b"],
+          "include_paths": [
+            ".agent/practice-core/",
+            ".agent/rules/",
+            ".agent/memory/active/patterns/",
+            "principles.md",
+            "testing-strategy.md"
+          ],
+          "exclude_paths": ["provenance.yml", "archive/", "fixtures/", "/tests/", ".test.ts"],
+          "excludes_inline_code": true,
+          "excludes_lines_with": ["(historical reference)"],
+          "citation": "Moving targets do not belong in permanent docs (PDR-079 portable surfaces only — ADRs are repo-bound and out of scope)",
+          "reappraisal": "State the durable fact rather than this pointer; if a genuine historical reference is needed, mark it explicitly as one. The fix removes the dependence on a moving target."
+        },
+        {
+          "concept": "menu-framing",
+          "kind": "literal",
+          "patterns": ["for owner verdict", "for owner decision", "for owner ratification"],
+          "include_paths": [
+            ".agent/practice-core/",
+            ".agent/plans/",
+            "docs/architecture/",
+            "docs/governance/",
+            "**/*.plan.md"
+          ],
+          "exclude_paths": [
+            "principles.md",
+            "distilled.md",
+            "PDR-043",
+            "PDR-044",
+            "PDR-047",
+            "archive/",
+            "fixtures/",
+            "/tests/",
+            ".test.ts",
+            "re-apply-first-question-at-elaboration-boundaries.md"
+          ],
+          "citation": "re-apply-first-question-at-elaboration-boundaries.md; principles.md §Core Philosophy: Engineering Excellence Over Speed",
+          "reappraisal": "If you have analysed the situation to a verdict, present the verdict with its evidence; reserve owner questions for genuine permission gates and decisions only the owner can make."
+        },
+        {
+          "concept": "machine-local-path",
+          "kind": "regex",
+          "patterns": [
+            "/Users/[A-Za-z0-9_-]+",
+            "/home/[A-Za-z0-9_-]+",
+            "C:\\\\Users\\\\[A-Za-z0-9_-]+",
+            "[-/]Users-[A-Za-z0-9]+-",
+            "/private/tmp",
+            "/private/var/folders",
+            "/var/folders"
+          ],
+          "include_paths": [""],
+          "exclude_paths": [
+            "no-machine-local-paths.md",
+            "important-state-not-in-temp-files.md",
+            "hooks/policy.json",
+            "validate-no-machine-local-paths",
+            "archive/"
+          ],
+          "citation": "no-machine-local-paths.md; principles.md §No machine-local paths; org policy — no PII (a user-home absolute path leaks a username)",
+          "reappraisal": "Use a repo-root-relative path for in-repo targets, or a platform-provided variable / tilde form (~/...) for per-user surfaces. A user-home or machine-temp absolute path resolves only on one machine and often leaks a username (PII). Portable system paths (/usr/bin, /opt/homebrew/bin) are fine; placeholder forms (/Users/<user>/) are fine."
+        }
+      ],
+      "description": "Block agents from writing user-approved markers into file content (only the project owner can approve eslint-disable approvals with the JC: prefix). The path-scoped scoped_blocks are write-time fingerprints per PDR-044 §Innate immunity, grouped by `concept` so a citation and a positive `reappraisal` direction are authored once per concept rather than once per pattern; a firing teaches a concept to reappraise, not a word to rephrase. Four concept groups: (literal) `expediency-hedging` — language that means 'I know the rule applies, but this situation is special' rejected on doctrine surfaces (PDRs, plans, ADRs, governance), with doctrine-defining surfaces excluded so principles.md, distilled.md, PDR-043 and PDR-044 may catalogue the words they forbid; (regex) `sha-in-permanent-doc` — 7- to 40-character hex tokens with at least one a-f character on portable-permanent-doc paths (practice-core, rules, memory/active/patterns, principles.md, testing-strategy.md; ADRs are repo-bound and out of scope per PDR-079), with fenced code blocks, inline-code spans, and `(historical reference)` marker lines excluded so the discipline 'moving targets do not belong in permanent docs' (.agent/rules/no-moving-targets-in-permanent-docs.md) is enforced at write-time without tripping intentional code-block examples or explicit historical citations; (literal) `menu-framing` — owner-decision phrasings ('for owner verdict' / 'for owner decision' / 'for owner ratification') rejected on architectural surfaces ('for owner approval' was considered and rejected at design time — too high a false-positive rate in legitimate governance prose) so menu-shaped option-sets do not slip past the re-apply-first-question-at-elaboration-boundaries discipline; the rule file itself is excluded so it may catalogue the phrases it forbids; (regex) `machine-local-path` — user-home and machine-temp absolute paths (`/Users/<seg>`, `/home/<seg>`, `C:\\Users\\<seg>`, flattened `-Users-<seg>-` project ids, `/private/tmp`, `/var/folders`) blocked EVERYWHERE (`include_paths: [\"\"]`; owner-directed invariant: the repo MUST NOT contain machine-local paths, a user-home path also leaks a username = PII), with the pattern-defining surfaces (no-machine-local-paths.md, important-state-not-in-temp-files.md, this policy file, the validator) excluded so they may name the patterns, and `archive/` directories excluded as frozen historical records (per the rule's Detection scope, which greps outside archive/); portable system paths and placeholder forms (`/Users/<user>/`) are exempt by construction (the regex requires a concrete segment); the same invariant is enforced over all tracked files at commit/CI by the `validate-no-machine-local-paths` repo-validator, which single-sources its pattern set from this block. `reappraisal` is optional at load time so a missing value never fails the guard closed; the `validate-policy-reappraisal` repo validator enforces its presence at commit-time. PDR-044 names false positives as a design property of the innate layer."
+    },
+    "sessionStart": {
+      "grounding_reminder": "Read .agent/directives/AGENT.md and .agent/memory/active/distilled.md before starting work.",
+      "practice_box_check": "Check .agent/practice-core/incoming/ for new Practice Core files.",
+      "description": "Remind the agent to ground itself at session start."
+    },
+    "preCommit": {
+      "quality_gate_reminder": "Run the required quality gates; `pnpm check` is the canonical aggregate gate.",
+      "description": "Remind the agent to run quality gates before committing."
+    }
+  },
+  "platform_support": {
+    "claude_code": {
+      "status": "supported",
+      "native_surface": ".claude/settings.json hooks.PreToolUse",
+      "notes": "Bash PreToolUse is natively activated for blocked-pattern enforcement. sessionStart and preCommit remain documented-only because grounding and quality-gate reminders already live in rules, skills, and onboarding flows."
+    },
+    "cursor": {
+      "status": "unsupported",
+      "native_surface": null,
+      "notes": "No native agent hook surface at time of writing."
+    },
+    "gemini_cli": {
+      "status": "unsupported",
+      "native_surface": null,
+      "notes": "No native agent hook surface at time of writing."
+    },
+    "github_copilot": {
+      "status": "unsupported",
+      "native_surface": null,
+      "notes": "No native agent hook surface at time of writing."
+    },
+    "codex": {
+      "status": "unsupported",
+      "native_surface": null,
+      "notes": "No native agent hook surface at time of writing."
+    }
+  }
+}

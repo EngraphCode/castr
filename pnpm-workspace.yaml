@@ -1,6 +1,41 @@
 packages:
   - lib
+  - agent-tools
 
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+
+# Supply-chain cooldown: refuse to install a dependency version until it has
+# been on the registry for at least this many minutes (1440 = 24h). pnpm v11
+# defaults to 1440, but we set it EXPLICITLY so the value is intentional and
+# visible rather than an implicit version-dependent default. `pnpm outdated` and
+# `pnpm update` both honour this: they report/adopt only the newest age-eligible
+# version and annotate "(X is available)" for anything they hold back.
+minimumReleaseAge: 1440
+
+# Fail-fast when a version range can ONLY be satisfied by a too-new release:
+# strict makes resolution error out (ERR_PNPM_NO_MATURE_MATCHING_VERSION) instead
+# of silently installing the fresh release and auto-appending it to the exclude
+# list below. pnpm already derives `true` whenever minimumReleaseAge is set
+# explicitly, but we state it outright so the fail-fast intent is unmistakable and
+# survives any future change to that derivation rule.
+minimumReleaseAgeStrict: true
+
+# Packages exempt from the cooldown above. Matching is by package NAME (all
+# versions), and globs are supported — NOT name@version. turbo is our build
+# orchestrator pinned via `packageManager`/devDeps; every script runs through it,
+# so it must link immediately even right after a bump, before the 24h window has
+# elapsed. Listing it by name keeps this durable across turbo version bumps.
+minimumReleaseAgeExclude:
+  - turbo
+  - '@turbo/*'
+
+overrides:
+  typescript: '>=6.0.3'
+  # Security floors for vulnerable transitives (pnpm audit, 2026-07-03).
+  # Remove each once the direct dependency's own range clears the floor:
+  # hono arrives via @modelcontextprotocol/sdk (GHSA-88fw-hqm2-52qc high CORS
+  # + 4 moderate); esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low).
+  hono: '>=4.12.25'
+  esbuild: '>=0.28.1'

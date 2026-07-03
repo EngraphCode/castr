@@ -1,0 +1,6 @@
+---
+description: No Machine-Local Paths
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/no-machine-local-paths.md`.

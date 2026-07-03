@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Block accidental major version bumps first.
+pnpm agent-tools:prevent-accidental-major-version "$1" || exit 1
+
+# Then lint the commit message from the repo-pinned commitlint config.
+pnpm exec commitlint --edit "$1"

@@ -4,7 +4,7 @@ The **Intermediate Representation (IR)** is the single source of truth for all p
 
 ## Architecture
 
-```
+```text
 Input (OpenAPI, Zod, etc.) → Parser → IR (CastrDocument) → Writer → Output
 ```
 

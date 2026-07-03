@@ -1,0 +1,6 @@
+---
+description: Strict Validation at External Boundaries
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/strict-validation-at-boundary.md`.

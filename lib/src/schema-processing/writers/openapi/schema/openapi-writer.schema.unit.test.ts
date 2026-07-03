@@ -242,6 +242,10 @@ describe('number constraints', () => {
 
     const result = writeOpenApiSchema(schema);
 
+    // Exact-preservation assertion: the writer must round-trip the literal
+    // multipleOf unchanged (IR fidelity). No float arithmetic occurs here, so a
+    // range matcher would wrongly tolerate value drift.
+    // eslint-disable-next-line sonarjs/no-floating-point-equality -- asserts exact pass-through, not a computed float comparison
     expect(result.multipleOf).toBe(0.01);
   });
 });

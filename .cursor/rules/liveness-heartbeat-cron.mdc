@@ -1,0 +1,6 @@
+---
+description: Liveness Heartbeat Cron
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/liveness-heartbeat-cron.md`.

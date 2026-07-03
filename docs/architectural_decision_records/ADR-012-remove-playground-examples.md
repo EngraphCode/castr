@@ -63,7 +63,7 @@ The project's goal evolved: modernize the `lib` workspace to be extracted and po
 
 #### Playground Workspace
 
-```
+```text
 playground/
   ├── src/
   │   ├── Playground/
@@ -83,7 +83,7 @@ playground/
 
 #### Examples Workspace
 
-```
+```text
 examples/
   ├── basic/
   │   └── package.json
@@ -124,7 +124,7 @@ examples/
 
 ### Before
 
-```
+```text
 @engraph/castr/
   ├── lib/              # Core library
   ├── playground/       # Interactive UI
@@ -135,7 +135,7 @@ examples/
 
 ### After
 
-```
+```text
 @engraph/castr/
   ├── lib/              # Core library (only workspace)
   ├── pnpm-workspace.yaml
@@ -171,7 +171,7 @@ packages:
 
 The goal is to port `lib` to another repository:
 
-```
+```text
 engraph-monorepo/
   packages/
     ├── @engraph/castr/   # Ported from this repo

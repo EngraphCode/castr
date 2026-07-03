@@ -507,4 +507,27 @@ export default defineConfig(
       'sonarjs/no-empty-test-file': 'off',
     },
   },
+
+  // ---------------------------------------------------------------------------
+  // D1 — RESOLVED (2026-06-19): both rules restored to 'error'.
+  // ---------------------------------------------------------------------------
+  // The 126 violations (121 sonarjs/function-return-type S3800 + 5
+  // sonarjs/in-operator-type-error S3785) that prompted the 2026-06-10 error->warn
+  // downgrade were NOT code smells. Root cause, measured firsthand at the bit
+  // level: a TypeScript-version skew — eslint-plugin-sonarjs resolved its own
+  // bundled typescript 5.9.3 while the typescript-eslint parser built Type objects
+  // with the workspace's 6.0.3, and the two releases renumber `ts.TypeFlags`
+  // (Union 0x08000000 in TS6 falls inside TS5.9.3's StringLike mask; Undefined is
+  // 4 vs 32768 so `isNullLike` missed it). The rules therefore masked the wrong
+  // bits and mis-fired on type-safe object-union `in` guards and `X | undefined`
+  // returns. The fix is the single-TypeScript pnpm override in
+  // pnpm-workspace.yaml; under aligned TypeScript both rules compute correctly and
+  // report ZERO violations, so 'error' is green. Full root-cause analysis:
+  // .agent/plans/transplant/d1-sonarjs-findings.md §Resolution.
+  {
+    rules: {
+      'sonarjs/function-return-type': 'error',
+      'sonarjs/in-operator-type-error': 'error',
+    },
+  },
 );

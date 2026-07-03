@@ -1,4 +1,6 @@
 # Inherit the session model so reviewer calls stay aligned with the parent run.
+name = "type-reviewer"
+description = "Type flow and strictness reviewer."
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 approval_policy = "never"

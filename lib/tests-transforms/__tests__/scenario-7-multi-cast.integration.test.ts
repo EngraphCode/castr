@@ -117,7 +117,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
 
         const { zodResult } = await generateParsedZod(openApiOutput);
         expectNoParseErrors(_name, 'Scenario 7 Zod parse', zodResult);
-        expect(zodResult.ir.components.length).toBe(expectedCount);
+        expect(zodResult.ir.components).toHaveLength(expectedCount);
       },
     );
 
@@ -134,7 +134,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
 
         const { zodResult } = await generateParsedZod(openApiOutput);
         expectNoParseErrors(_name, 'Scenario 7 Zod parse', zodResult);
-        expect(zodResult.ir.components.length).toBe(expectedCount);
+        expect(zodResult.ir.components).toHaveLength(expectedCount);
       },
     );
   });
@@ -167,7 +167,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
           const bundleDefs = bundle['$defs'];
           expect(bundleDefs).toBeDefined();
           if (bundleDefs) {
-            expect(Object.keys(bundleDefs).length).toBe(schemaComponents.length);
+            expect(Object.keys(bundleDefs)).toHaveLength(schemaComponents.length);
           }
         }
       },

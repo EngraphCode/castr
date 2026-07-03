@@ -55,7 +55,7 @@ You are required to perform an **Architectural Domain Refactoring**, not just a 
 
 When you believe you have successfully created or extracted a Bounded Context, you must verify it using our 5-tool static analysis symphony. Evaluate these signals honestly:
 
-1. **`pnpm run cruise` (`dependency-cruiser`)**: Validates the global dependency graph. It guarantees you haven't bypassed an `index.ts` barrel file or tangled domains illegally. **Listen to its feedback; do not loosen its rules to simply pass CI.**
+1. **`pnpm depcruise` (`dependency-cruiser`)**: Validates the global dependency graph. It guarantees you haven't bypassed an `index.ts` barrel file or tangled domains illegally. **Listen to its feedback; do not loosen its rules to simply pass CI.**
 2. **`pnpm lint`**:
    - Verifies the `castr/max-files-per-dir` complexity rule count is within bounds.
    - Runs `eslint-plugin-boundaries` to provide semantic structural validation.

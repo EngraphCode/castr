@@ -83,7 +83,7 @@ Landed result:
 - Native `{ openapi: '3.2.0' }` input is accepted at this guard
 - `3.1.x` remains accepted as the documented bridge version
 
-```
+```text
 upgrade-validate.ts:
   - OPENAPI_VERSION_MINOR_1 → ACCEPTED_OPENAPI_MINOR_VERSIONS = new Set(['1', '2'])
   - Error message: 'Failed to produce valid OpenAPI 3.2 document' (not '3.1')

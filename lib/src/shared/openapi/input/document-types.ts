@@ -187,6 +187,4 @@ export type OpenAPI32InputDocument = OpenAPIInputVersionedDocument<
 >;
 
 export type OpenAPIInputDocument =
-  | OpenAPI30InputDocument
-  | OpenAPI31InputDocument
-  | OpenAPI32InputDocument;
+  OpenAPI30InputDocument | OpenAPI31InputDocument | OpenAPI32InputDocument;

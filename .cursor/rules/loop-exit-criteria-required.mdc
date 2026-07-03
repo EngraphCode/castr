@@ -1,0 +1,6 @@
+---
+description: Templated Loops Require Exit Criteria
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/loop-exit-criteria-required.md`.

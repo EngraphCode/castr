@@ -1,6 +1,4 @@
----
-trigger: always_on
----
+# Quality Gate Failures Are Blocking
 
 All quality gate failures are blocking, regardless of location, cause, or context.
 

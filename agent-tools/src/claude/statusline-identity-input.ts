@@ -1,0 +1,170 @@
+/**
+ * Pure input parser for the Claude Code statusline adapter.
+ *
+ * @remarks
+ * The Claude Code harness invokes the configured statusline command with a
+ * JSON object on stdin. This parser validates that boundary with explicit type
+ * guards and extracts the fields the statusline renders (session id for the
+ * agent-identity seed, working directory for git queries, model name, and
+ * context-window usage). The statusline is a soft surface: empty input, invalid
+ * JSON, or a non-object payload short-circuits to a no-op; individual malformed
+ * fields are tolerated and simply render as absent segments.
+ *
+ * @packageDocumentation
+ */
+
+import { isPlainObject, nonBlankString } from '../core/json-narrowing.js';
+
+/**
+ * Fields extracted from the statusline stdin payload.
+ */
+export interface StatuslineInputs {
+  /** `session_id` — seed for the deterministic agent-identity name. */
+  readonly seed: string | undefined;
+  /** `workspace.current_dir` (or top-level `cwd`) — base for git queries. */
+  readonly cwd: string | undefined;
+  /** `model.display_name`. */
+  readonly model: string | undefined;
+  /** `context_window.used_percentage`. */
+  readonly usedPercentage: number | undefined;
+  /** `rate_limits.five_hour.used_percentage` — Claude.ai Pro/Max only, after the first response. */
+  readonly fiveHourPercentage: number | undefined;
+  /** `rate_limits.five_hour.resets_at` — Unix epoch seconds when the 5-hour window resets. */
+  readonly fiveHourResetsAt: number | undefined;
+  /** `rate_limits.seven_day.used_percentage` — Claude.ai Pro/Max only, after the first response. */
+  readonly sevenDayPercentage: number | undefined;
+  /** `rate_limits.seven_day.resets_at` — Unix epoch seconds when the 7-day window resets. */
+  readonly sevenDayResetsAt: number | undefined;
+}
+
+/**
+ * Plan for the Claude Code statusline adapter.
+ */
+export type StatuslinePlan =
+  { readonly kind: 'noop' } | { readonly kind: 'render'; readonly inputs: StatuslineInputs };
+
+/** Expected top-level shape of the statusline stdin payload. */
+interface StatuslinePayload {
+  readonly session_id?: unknown;
+  readonly cwd?: unknown;
+  readonly workspace?: unknown;
+  readonly model?: unknown;
+  readonly context_window?: unknown;
+  readonly rate_limits?: unknown;
+}
+
+/** Expected shape of a nested object field (`workspace`, `model`, `context_window`, a rate-limit window). */
+interface NestedField {
+  readonly current_dir?: unknown;
+  readonly display_name?: unknown;
+  readonly used_percentage?: unknown;
+  readonly resets_at?: unknown;
+}
+
+/** Expected shape of the `rate_limits` object: one nested field per window. */
+interface RateLimitsField {
+  readonly five_hour?: unknown;
+  readonly seven_day?: unknown;
+}
+
+/**
+ * Translate Claude Code statusline stdin JSON into an execution plan.
+ *
+ * @param rawJson - The raw JSON text Claude Code passes on stdin.
+ * @returns `noop` when the payload is empty, invalid JSON, or not a JSON
+ *   object; otherwise `render` with whatever fields could be extracted. Each
+ *   field is narrowed from `unknown` through an explicit guard, so a malformed
+ *   field renders as absent rather than failing the whole parse.
+ *
+ * @example
+ * ```ts
+ * const plan = planStatuslineExecution('{"session_id":"abc-123"}');
+ * if (plan.kind === 'render') {
+ *   // derive identity from plan.inputs.seed, gather git, render
+ * }
+ * ```
+ */
+export function planStatuslineExecution(rawJson: string): StatuslinePlan {
+  if (rawJson.length === 0) {
+    return { kind: 'noop' };
+  }
+
+  const payload = parsePayload(rawJson);
+  if (payload === undefined) {
+    return { kind: 'noop' };
+  }
+
+  return {
+    kind: 'render',
+    inputs: {
+      seed: nonBlankString(payload.session_id),
+      cwd: workspaceDir(payload.workspace) ?? nonBlankString(payload.cwd),
+      model: modelName(payload.model),
+      usedPercentage: contextUsage(payload.context_window),
+      fiveHourPercentage: rateLimitNumber(payload.rate_limits, 'five_hour', 'used_percentage'),
+      fiveHourResetsAt: rateLimitNumber(payload.rate_limits, 'five_hour', 'resets_at'),
+      sevenDayPercentage: rateLimitNumber(payload.rate_limits, 'seven_day', 'used_percentage'),
+      sevenDayResetsAt: rateLimitNumber(payload.rate_limits, 'seven_day', 'resets_at'),
+    },
+  };
+}
+
+/** Parse stdin JSON to the expected payload shape, or `undefined` if unusable. */
+function parsePayload(rawJson: string): StatuslinePayload | undefined {
+  try {
+    const parsed: unknown = JSON.parse(rawJson);
+    return isStatuslinePayload(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Extract the working directory from the nested `workspace` object. */
+function workspaceDir(value: unknown): string | undefined {
+  return isNestedField(value) ? nonBlankString(value.current_dir) : undefined;
+}
+
+/** Extract the display name from the nested `model` object. */
+function modelName(value: unknown): string | undefined {
+  return isNestedField(value) ? nonBlankString(value.display_name) : undefined;
+}
+
+/** Extract the context-window usage from the nested `context_window` object. */
+function contextUsage(value: unknown): number | undefined {
+  return isNestedField(value) ? finiteNumber(value.used_percentage) : undefined;
+}
+
+/**
+ * Extract one numeric field of one rate-limit window from the `rate_limits` object.
+ * Each window and field is independently optional (absent for non-Claude.ai
+ * sessions and before the first response), so a missing object, window, or value
+ * is `undefined`.
+ */
+function rateLimitNumber(
+  value: unknown,
+  window: keyof RateLimitsField,
+  field: 'used_percentage' | 'resets_at',
+): number | undefined {
+  if (!isRateLimitsField(value)) {
+    return undefined;
+  }
+  const windowField = value[window];
+  return isNestedField(windowField) ? finiteNumber(windowField[field]) : undefined;
+}
+
+function isStatuslinePayload(value: unknown): value is StatuslinePayload {
+  return isPlainObject(value);
+}
+
+function isNestedField(value: unknown): value is NestedField {
+  return isPlainObject(value);
+}
+
+function isRateLimitsField(value: unknown): value is RateLimitsField {
+  return isPlainObject(value);
+}
+
+/** Narrow an unknown value to a finite number, or `undefined`. */
+function finiteNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}

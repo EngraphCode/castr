@@ -1,0 +1,6 @@
+---
+description: Important State Not In Temp Files
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/important-state-not-in-temp-files.md`.

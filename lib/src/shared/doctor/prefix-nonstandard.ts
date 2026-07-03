@@ -10,8 +10,9 @@ import type { ValidationError } from '../load-openapi-document/validation-errors
 import { preflightValidate } from './preflight-validator.js';
 import type { PreflightValidationError } from './preflight-validator.js';
 import { extractPropertyName, traverseInstancePath, traversePointerPath } from './pointer-utils.js';
+import { isRecord, type UnknownRecord } from '../type-utils/types.js';
 
-type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
+export type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
 
 export interface NonStandardPropertyRescueDiagnostics {
   retryCount: number;
@@ -154,7 +155,7 @@ async function runPreflightRescue(
 }
 
 async function runScalarFallback(
-  bundledDocument: object,
+  bundledDocument: UnknownRecord,
   validationResult: ScalarValidationResult,
   warnings: { readonly message: string }[],
 ): Promise<{ readonly result: ScalarValidationResult; readonly fallbackCount: number }> {
@@ -187,7 +188,7 @@ export async function attemptNonStandardPropertyRescue(
   if (diagnostics) {
     diagnostics.retryCount = 0;
   }
-  if (typeof bundledDocument !== 'object' || bundledDocument === null) {
+  if (!isRecord(bundledDocument)) {
     return initialValidationResult;
   }
 

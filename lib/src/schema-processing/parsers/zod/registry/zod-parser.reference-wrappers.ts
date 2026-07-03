@@ -8,9 +8,7 @@ const ZOD_CHAIN_NULLISH_PRESENCE = '.nullish()';
 const SCHEMA_TYPE_NULL = 'null';
 
 export type ReferenceWrapperMethod =
-  | typeof ZOD_METHOD_OPTIONAL
-  | typeof ZOD_METHOD_NULLABLE
-  | typeof ZOD_METHOD_NULLISH;
+  typeof ZOD_METHOD_OPTIONAL | typeof ZOD_METHOD_NULLABLE | typeof ZOD_METHOD_NULLISH;
 
 export function classifyReferenceWrapper(methodName: string): ReferenceWrapperMethod | undefined {
   if (methodName === ZOD_METHOD_OPTIONAL) {

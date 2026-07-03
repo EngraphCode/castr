@@ -8,14 +8,7 @@ import {
 } from './schema-complexity.helpers.js';
 
 type CompositeType =
-  | 'oneOf'
-  | 'anyOf'
-  | 'allOf'
-  | 'enum'
-  | 'array'
-  | 'empty-object'
-  | 'object'
-  | 'record';
+  'oneOf' | 'anyOf' | 'allOf' | 'enum' | 'array' | 'empty-object' | 'object' | 'record';
 
 export type ComplexityFn = (args: {
   current: number;

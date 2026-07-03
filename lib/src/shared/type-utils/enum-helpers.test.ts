@@ -70,6 +70,7 @@ describe('enumHelpers', () => {
     it('should return numbers as-is', () => {
       expect(nonStringEnumValueToZodLiteral(42)).toBe(42);
       expect(nonStringEnumValueToZodLiteral(0)).toBe(0);
+      // eslint-disable-next-line sonarjs/no-floating-point-equality -- asserts the number is returned byte-identical (as-is), not a computed float
       expect(nonStringEnumValueToZodLiteral(-3.14)).toBe(-3.14);
     });
 

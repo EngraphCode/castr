@@ -14,23 +14,23 @@ Its future planning home is now `.agent/plans/future/oak-code-first-openapi-gene
 
 Reviewed:
 
-- `/Users/jim/code/oak/oak-openapi/package.json`
-- `/Users/jim/code/oak/oak-openapi/src/lib/router.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/trpc.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/protect.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
-- `/Users/jim/code/oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
-- `/Users/jim/code/oak/oak-openapi/src/app/api/v0/swagger.json/route.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/endpoint-docs/helpers.ts`
-- `/Users/jim/code/oak/oak-openapi/src/components/documentationPages/EndpointBlock.tsx`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/README.md`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/addExamplesToZodSchema.mjs`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/addOpenApiMeta.mjs`
-- `/Users/jim/code/oak/oak-openapi/__tests__/openapi-schema.test.ts`
-- representative handlers and schemas under `/Users/jim/code/oak/oak-openapi/src/lib/handlers/*`
-- representative generated artefacts under `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/generated/*`
-- architecture and ADR docs under `/Users/jim/code/oak/oak-openapi/docs/architecture/*`
+- `oak/oak-openapi/package.json`
+- `oak/oak-openapi/src/lib/router.ts`
+- `oak/oak-openapi/src/lib/trpc.ts`
+- `oak/oak-openapi/src/lib/protect.ts`
+- `oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
+- `oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
+- `oak/oak-openapi/src/app/api/v0/swagger.json/route.ts`
+- `oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
+- `oak/oak-openapi/src/lib/endpoint-docs/helpers.ts`
+- `oak/oak-openapi/src/components/documentationPages/EndpointBlock.tsx`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/README.md`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/addExamplesToZodSchema.mjs`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/addOpenApiMeta.mjs`
+- `oak/oak-openapi/__tests__/openapi-schema.test.ts`
+- representative handlers and schemas under `oak/oak-openapi/src/lib/handlers/*`
+- representative generated artefacts under `oak/oak-openapi/src/lib/zod-openapi/generated/*`
+- architecture and ADR docs under `oak/oak-openapi/docs/architecture/*`
 
 Inventory notes from this review:
 
@@ -521,26 +521,26 @@ The current stack's value is real, but its implementation is fragile enough that
 
 ## Evidence Index
 
-- `/Users/jim/code/oak/oak-openapi/package.json`
-- `/Users/jim/code/oak/oak-openapi/src/lib/router.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/trpc.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/protect.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
-- `/Users/jim/code/oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
-- `/Users/jim/code/oak/oak-openapi/src/app/api/v0/swagger.json/route.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/endpoint-docs/helpers.ts`
-- `/Users/jim/code/oak/oak-openapi/src/components/documentationPages/EndpointBlock.tsx`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/README.md`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/addExamplesToZodSchema.mjs`
-- `/Users/jim/code/oak/oak-openapi/bin/zod-openapi-schema-gen/addOpenApiMeta.mjs`
-- `/Users/jim/code/oak/oak-openapi/src/lib/handlers/lesson/lesson.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/handlers/lesson/schemas/lessonSummaryResponse.schema.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/generated/lesson/lessonSummaryRequest.openapi.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/zod-openapi/generated/lesson/lessonSummaryResponse.openapi.ts`
-- `/Users/jim/code/oak/oak-openapi/src/lib/errorResponses.ts`
-- `/Users/jim/code/oak/oak-openapi/__tests__/openapi-schema.test.ts`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/overview.md`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/openapi-generation.md`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/decision-records/0002-trpc-openapi.md`
-- `/Users/jim/code/oak/oak-openapi/docs/architecture/decision-records/0003-zod-openapi-generation.md`
+- `oak/oak-openapi/package.json`
+- `oak/oak-openapi/src/lib/router.ts`
+- `oak/oak-openapi/src/lib/trpc.ts`
+- `oak/oak-openapi/src/lib/protect.ts`
+- `oak/oak-openapi/src/lib/zod-openapi/schema/generateDocument.ts`
+- `oak/oak-openapi/src/app/api/v0/[...trpc]/route.ts`
+- `oak/oak-openapi/src/app/api/v0/swagger.json/route.ts`
+- `oak/oak-openapi/src/lib/endpoint-docs/getEndpointDocs.ts`
+- `oak/oak-openapi/src/lib/endpoint-docs/helpers.ts`
+- `oak/oak-openapi/src/components/documentationPages/EndpointBlock.tsx`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/README.md`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/addExamplesToZodSchema.mjs`
+- `oak/oak-openapi/bin/zod-openapi-schema-gen/addOpenApiMeta.mjs`
+- `oak/oak-openapi/src/lib/handlers/lesson/lesson.ts`
+- `oak/oak-openapi/src/lib/handlers/lesson/schemas/lessonSummaryResponse.schema.ts`
+- `oak/oak-openapi/src/lib/zod-openapi/generated/lesson/lessonSummaryRequest.openapi.ts`
+- `oak/oak-openapi/src/lib/zod-openapi/generated/lesson/lessonSummaryResponse.openapi.ts`
+- `oak/oak-openapi/src/lib/errorResponses.ts`
+- `oak/oak-openapi/__tests__/openapi-schema.test.ts`
+- `oak/oak-openapi/docs/architecture/overview.md`
+- `oak/oak-openapi/docs/architecture/openapi-generation.md`
+- `oak/oak-openapi/docs/architecture/decision-records/0002-trpc-openapi.md`
+- `oak/oak-openapi/docs/architecture/decision-records/0003-zod-openapi-generation.md`

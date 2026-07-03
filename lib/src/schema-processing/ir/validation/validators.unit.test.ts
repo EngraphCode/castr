@@ -733,15 +733,7 @@ describe('isCastrOperation', () => {
 
   it('should return true for all standard HTTP methods including trace and query', () => {
     const methods: (
-      | 'get'
-      | 'post'
-      | 'put'
-      | 'patch'
-      | 'delete'
-      | 'head'
-      | 'options'
-      | 'trace'
-      | 'query'
+      'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'trace' | 'query'
     )[] = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'query'];
 
     methods.forEach((method) => {

@@ -1,68 +1,114 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# Quality-gate pipeline for pushes and PRs to main. A single `quality-gates`
+# job runs the full local gate (`pnpm check:ci` = clean + frozen install + qg)
+# server-side, so the guardrails that were previously local-pre-push-only —
+# every repo validator, type-check, lint, secret scan, knip/depcruise, the full
+# test suite — now also run in CI and can be made a required status check.
+#
+# No `paths:` filter: changes anywhere (agent-tools, .agent, .husky, docs, lib)
+# trigger CI. The old library-only filter meant tooling/Practice changes were
+# never verified server-side.
+#
+# `quality-gates` is the required status check on `main` (enforced by the
+# branch ruleset — a repo setting, not expressible here). CodeQL runs via
+# GitHub's default code-scanning setup (repo Security settings), not as a
+# workflow job here: default setup rejects SARIF uploads from advanced-setup
+# workflows for the same languages, so the two modes cannot coexist.
 
 name: CI
 
 on:
   push:
     branches: [main]
-    paths:
-      - lib/**
-      - lib/pnpm-lock.yaml
-      - lib/package.json
-      - lib/tsconfig.json
   pull_request:
     branches: [main]
-    paths:
-      - lib/**
-      - lib/pnpm-lock.yaml
-      - lib/package.json
-      - lib/tsconfig.json
+
+# Cancel superseded PR runs; never cancel main-branch runs (each commit on main
+# must stay verified).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    name: Build
+  quality-gates:
+    name: quality-gates
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
-      - name: Test
-        working-directory: ./lib
-        run: pnpm test
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
-      actions: read
       contents: read
-      security-events: write
-    strategy:
-      matrix:
-        language: ['javascript']
+      code-quality: write # coverage upload (actions/upload-code-coverage)
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          languages: ${{ matrix.language }}
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+          fetch-depth: 0 # secrets:scan runs gitleaks --branches --tags; needs full history
+
+      - name: Install pinned gitleaks
+        run: |
+          version=8.30.0
+          asset="gitleaks_${version}_linux_x64.tar.gz"
+          # SHA-256 of the v8.30.0 linux_x64 asset, pinned inline so a tampered
+          # download fails loud (sha256sum -c) rather than running. gitleaks is a
+          # security control, so its binary is content-pinned, not just version-pinned.
+          expected=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
+          curl -sSfL -o "$asset" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${asset}"
+          echo "${expected}  ${asset}" | sha256sum -c -
+          sudo tar -xz -C /usr/local/bin -f "$asset" gitleaks
+          gitleaks version
+
+      - name: Install pnpm (version from the root packageManager field)
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.x
+          cache: 'pnpm'
+
+      - name: Run full quality gate (clean + frozen install + qg)
+        run: pnpm check:ci
+
+      # Coverage is a signal, not a gate: the ruleset's code_coverage rule
+      # consumes these uploads (thresholds live in the ruleset, a repo
+      # setting); the correctness bar stays the behaviour-proof suites run
+      # by check:ci above.
+      - name: Generate coverage for in-process suites (unit + integration)
+        run: pnpm test:coverage
+
+      # Fail-loud workspace-enumeration guard: the upload steps below name each
+      # workspace explicitly (the upload action takes one file per invocation),
+      # so a NEW workspace must appear in three places — pnpm-workspace.yaml,
+      # its vitest coverage config, and an upload step here. This guard derives
+      # the workspace list from pnpm (the repo-level source of truth) and fails
+      # the job when any workspace lacks a coverage report, so the enumeration
+      # below can never rot silently. Deliberate exclusions go in EXCLUDED with
+      # a reason — an empty list means every workspace reports coverage.
+      - name: Assert every workspace produced a coverage report
+        run: |
+          EXCLUDED=""
+          missing=0
+          for dir in $(pnpm -r ls --depth -1 --parseable | tail -n +2); do
+            ws=$(basename "$dir")
+            case " $EXCLUDED " in *" $ws "*) continue ;; esac
+            if [ ! -f "$dir/coverage/cobertura-coverage.xml" ]; then
+              echo "::error::workspace '$ws' produced no coverage report ($dir/coverage/cobertura-coverage.xml missing) — wire vitest coverage + an upload step, or add it to EXCLUDED with a reason"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - name: Upload lib coverage
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@abb5995db9e0199b0e2bb9dbd136fce4cb1ec4d3 # v1.3.0
+        with:
+          file: lib/coverage/cobertura-coverage.xml
+          language: TypeScript
+          label: code-coverage/lib
+
+      - name: Upload agent-tools coverage
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@abb5995db9e0199b0e2bb9dbd136fce4cb1ec4d3 # v1.3.0
+        with:
+          file: agent-tools/coverage/cobertura-coverage.xml
+          language: TypeScript
+          label: code-coverage/agent-tools

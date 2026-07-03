@@ -1,0 +1,6 @@
+---
+description: Subagents Must Not Modify the Practice Core
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/subagent-practice-core-protection.md`.

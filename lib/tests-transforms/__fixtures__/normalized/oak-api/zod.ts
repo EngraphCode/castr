@@ -767,8 +767,7 @@ export type LessonSummaryResponseSchema = {
       }[]
     | null;
   /** The ID of the supervision level for the identified type of content. See ‘What are the types of content guidance?’ for more information. */ supervisionLevel:
-    | string
-    | null;
+    string | null;
   /** Whether the lesson currently has any downloadable assets availableNote: this field reflects the current availability of downloadable assets, which reflects the availability of early-release content available for the hackathon. All lessons will eventually have downloadable assets available. */ downloadsAvailable: boolean;
 };
 export type LessonSearchResponseSchema = {

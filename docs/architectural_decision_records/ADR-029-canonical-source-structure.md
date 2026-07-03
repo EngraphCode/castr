@@ -10,7 +10,7 @@
 
 The following directory structure is THE canonical organization for all format transforms in Castr:
 
-```
+```text
 lib/src/
 ├── ir/                        # Intermediate Representation (the core)
 │   ├── schema.ts              # CastrDocument, CastrSchema types

@@ -1,0 +1,28 @@
+title = "castr gitleaks config"
+minVersion = "8.30.0"
+
+[extend]
+useDefault = true
+
+# `.agent/reference/**` is third-party reference material (schema specs, vendor
+# migration docs, example eslint configs). It can contain example tokens/keys
+# that look like secrets; we intentionally ignore it.
+[[allowlists]]
+description = "Ignore third-party reference docs (.agent/reference/**)"
+paths = ['''^\.agent/reference/''']
+
+# Test fixture API keys in unit/integration tests are not real secrets.
+# Pattern: 'oak-key-12345', 'elastic-key-12345', 'search-key-12345' etc.
+[[allowlists]]
+description = "Test fixture keys in test files"
+paths = ['''\.test\.ts$''']
+
+# Git commit SHAs explicitly prefixed with `SHA:` are audit references
+# in collaboration content (comms events, shared-comms-log, claim notes,
+# handoff records, napkin entries, plans, threads). The prefix is the
+# agent's discipline marker declaring intent; gitleaks honours it.
+# See `.agent/rules/sha-prefix-in-collaboration-content.md`.
+[[allowlists]]
+description = "SHA-prefixed git commit hashes are audit references, not credentials"
+regexTarget = "line"
+regexes = ['''SHA: ?[0-9a-f]{7,40}\b''']

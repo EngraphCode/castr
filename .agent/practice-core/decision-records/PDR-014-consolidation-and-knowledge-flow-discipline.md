@@ -1,0 +1,689 @@
+---
+pdr_kind: governance
+---
+
+# PDR-014: Consolidation and Knowledge-Flow Discipline
+
+**Status**: Accepted
+**Date**: 2026-04-18
+**Related**:
+[PDR-007](PDR-007-promoting-pdrs-and-patterns-to-first-class-core.md)
+(new Core contract);
+[PDR-011](PDR-011-continuity-surfaces-and-surprise-pipeline.md)
+(surprise pipeline that feeds consolidation; this PDR governs what
+happens inside consolidation);
+[PDR-046](PDR-046-layered-knowledge-processing.md)
+(layered knowledge processing — archive-scale historical synthesis
+re-enters historical capture material into the same bottom-up
+staircase).
+
+## Context
+
+The knowledge flow (napkin → distilled → permanent docs / patterns /
+PDRs) is the mechanism by which ephemeral session learning becomes
+stable Practice. Consolidation is the workflow that operates the
+flow. Three disciplines emerged as load-bearing for consolidation
+quality:
+
+1. **Cross-session pattern visibility.** Each session captures its
+   own surprises and local observations. Session handoffs record
+   these faithfully. But the most important patterns — architectural
+   drift, compounding debt, fundamental misframings — only become
+   visible when observations from multiple sessions are read
+   together. A consolidation that reviews only the current session's
+   napkin misses the patterns that require multi-session synthesis.
+
+2. **Learning before fitness.** When writing a concept to a permanent
+   home, artificially constraining the concept to stay under a character
+   or line budget produces under-weighted content that fails to teach.
+   Fitness is a post-writing health signal — not a writing constraint.
+   Concepts should be written, captured, distilled, and graduated at the
+   weight they deserve first; fitness pressure is handled holistically
+   afterwards through refinement of redundant content elsewhere,
+   graduation to a permanent home, splitting, or owner-approved hard
+   limit changes.
+
+3. **Current-plan promotion discipline.** A plan is only truly
+   `current/` when it is both **decision-ready** (scope, acceptance
+   criteria, and dependencies settled) and **session-entry-ready**
+   (a cold-start agent can pick it up and act). A plan that points
+   at "current" but lacks cold-start context creates a false
+   promise: the queue surface says "here is your next step" but the
+   plan itself requires prior-session context to understand.
+
+4. **Archive-scale historical synthesis.** Cross-session consolidation
+   over a recent thread or rotation is necessary but not sufficient.
+   Historical capture archives accumulate after each individual napkin
+   has already been processed. Reading those archives later as a
+   corpus can reveal patterns no earlier pass could see: long-wave
+   failure modes, overfit doctrine, repeated graduation bottlenecks,
+   and learning-loop throughput problems.
+
+Underlying cause: consolidation's value depends on four qualities —
+cross-session breadth, archive-scale hindsight, full-weight
+substance, and executable promotion. Each has an anti-pattern that
+looks acceptable locally but corrodes the flow over time.
+
+## Amendment 2026-04-29 — Pattern routing follows PDR-007 retirement
+
+PDR-007's 2026-04-29 amendment retires the previous `patterns/`
+Core directory. This PDR's "Knowledge artefact roles" table is
+updated accordingly: the `pattern` row's "Typical home" column
+lists the host's pattern memory surface for engineering instances
+and **PDR-shaped artefacts** (PDRs with `pdr_kind: pattern`
+frontmatter, or PDR amendments) for Practice-governance patterns.
+There is no Core-pattern destination.
+
+The bidirectional flow described in §"Bidirectional flow" still
+operates; the only change is that the "general pattern abstraction"
+output of cross-instance synthesis lands as a PDR (with
+`pdr_kind: pattern`) rather than in the retired Core-pattern
+directory.
+
+## Decision
+
+**Consolidation runs across sessions (not just the current one), and
+has a distinct archive-scale synthesis cadence for historical capture
+corpora. Concepts are written at the weight they deserve, with
+fitness handled structurally afterwards. Plans promoted to
+`current/` are both decision-ready and session-entry-ready.**
+
+### Cross-session consolidation
+
+Consolidation reads the full span of recent sessions on a thread,
+not just the most-recent session's napkin. Patterns that only
+emerge across sessions (compounding debt, repeated corrections at
+different abstraction layers, drift visible only in aggregate)
+require the multi-session read.
+
+Practically:
+
+- When a thread spans multiple sessions, consolidation reviews
+  the rotated napkins, the distilled entries added during the
+  thread window, the consolidation reports from prior sessions,
+  and the current napkin — as one corpus.
+- Patterns observed in a single session are candidate; patterns
+  observed across ≥2 sessions on the same thread are stronger
+  candidates for graduation.
+- A consolidation report from a cross-session review is more durable
+  than a single-session handoff — it captures the emergent patterns
+  that single-session handoffs cannot.
+
+### Archive-scale historical synthesis
+
+Archive-scale historical synthesis is a separate cadence from recent
+cross-session consolidation. Recent cross-session consolidation asks
+what a thread or current rotation knows together. Historical synthesis
+asks what the archive knows now that no individual rotation could have
+known when it was processed.
+
+Practically:
+
+- Historical synthesis is triggered, not routine. Valid triggers
+  include owner request, repeated patterns spanning multiple napkin
+  rotations, repeated consolidation reports naming the same family
+  without a deeper cause, or a deliberate Practice-health review.
+- The corpus is bounded before reading begins. The consolidator names
+  the selected window: all processed capture since the last historical
+  synthesis marker, the last N archived captures, or all current /
+  archived captures matching a named thread / theme. Current capture
+  only joins the corpus after ordinary per-napkin processing for that
+  pass has completed.
+- Historical synthesis writes a synthesis report before mutating
+  doctrine. The report records corpus window, selection rationale,
+  processed-marker boundary, emergent findings, evidence arcs,
+  rejected near-patterns, and routing decisions.
+- Synthesis reports form the marker ledger. The newest report's
+  processed-marker boundary is the starting point for any later
+  "since last marker" pass.
+- Findings route through the same graduation destinations as any
+  consolidation finding: refined memory, pending-graduations registers,
+  host-local pattern instances, ADRs, PDRs (including PDRs with
+  `pdr_kind: pattern` for ecosystem-agnostic abstractions), rules,
+  command rubrics, scanners, or permanent documentation.
+- Historical capture archives are evidence. Their substance is not
+  rewritten during synthesis; the synthesis report and downstream
+  graduations carry the new understanding.
+
+This cadence preserves two truths at once: archived capture has
+already been processed for ordinary distillation, and holistic
+reprocessing later can still produce new knowledge because hindsight
+changes which relationships are visible.
+
+### Learning before fitness
+
+When writing a concept to a permanent home:
+
+1. **Write the concept fully** at the weight it deserves, in every
+   location where it belongs.
+2. **Preserve the learning fully** through capture, distillation, and
+   graduation even when the destination file is near or over a fitness
+   threshold.
+3. **Then** check fitness across the file's declared metrics.
+4. **Then** handle any fitness signal structurally — through
+   compression of redundant content elsewhere in the file, graduation
+   to a more permanent home, splitting the file, or owner-approved
+   changes to hard limits when the weight is justified. Agents may
+   raise soft targets modestly with rationale; hard limits belong to
+   the owner.
+
+Fitness metrics are signals, not constraints on learning. A concept
+that needs 200 lines to teach properly should be written in 200
+lines; the file's target may need to rise, other content may need
+to compress, or a split may be appropriate — but the concept is
+not shrunk to fit.
+
+### Current-plan promotion
+
+A plan in `current/` satisfies two readiness criteria:
+
+| Readiness               | Means                                                                                                                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Decision-ready**      | Scope, acceptance criteria, dependencies, and trade-offs are explicit. No open decisions remain that would block starting.                                                                                    |
+| **Session-entry-ready** | A cold-start agent can read the plan and begin work — the plan carries the context needed to act, not just the context needed to understand. Cross-references resolve. The "first concrete step" is explicit. |
+
+When a review tranche settles the real next step, promotion to
+`current/` is done in a single pass that ensures both readiness
+criteria. A plan pointed at by a queue surface but missing
+session-entry-readiness is worse than an empty queue — it promises
+executability and delivers confusion.
+
+## Graduation-target routing
+
+When a captured candidate (in napkin, distilled, register, plan
+body, or elsewhere) is ready to graduate, **the home is decided
+from the candidate's shape, not from convenience or proximity**.
+Multiple homes may be appropriate; composition is preferred to
+forcing a single home when a candidate has both empirical and
+governance dimensions.
+
+### Bidirectional flow
+
+Knowledge does not move only from doctrine into examples. It loops.
+
+- Doctrine, rules, and principles may shed examples into recipe books
+  when examples are useful but no longer belong in the authoritative
+  surface.
+- Recipe books can reveal repeated moves. Once those moves are proven,
+  stable, and recurrence-preventing, they may graduate into patterns.
+- Patterns are empirical before they are normative: they record
+  behaviour observed in real practice. Once a pattern becomes
+  load-bearing, it may feed recipes, rules, principles, scanners,
+  quality gates, ADRs, PDRs, or PDR amendments.
+- Enforcement surfaces feed back into practice. Failures, owner
+  corrections, and surprising successes re-enter napkin/distilled as
+  new evidence.
+
+The routing decision below chooses the next durable home for a
+candidate; it does not freeze the candidate's future. Mature content
+may travel again when its shape changes.
+
+### Knowledge artefact roles
+
+These roles define the process foundation for the learning loop. They
+are content roles, not necessarily file names; one file may hold more
+than one role during transition, but settled permanent homes should
+make the primary role explicit.
+
+| Role                | Purpose                                                                          | Typical home                                                                                                                                                                                                  |
+| ------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `doctrine`          | Authoritative why/what: principles, obligations, and a few canonical examples    | The host's directive surface or a governance-docs surface                                                                                                                                                     |
+| `recipe book`       | Concrete how-to: worked examples, common implementations, migration moves        | A focused engineering-patterns or recipe surface in the host's docs                                                                                                                                           |
+| `troubleshooting`   | Symptom-first diagnosis: recognise failure, isolate cause, link to durable fixes | The host's operations or runbooks surface                                                                                                                                                                     |
+| `pattern`           | Empirical behaviour or solution shape proven by recurring practice               | The host's pattern memory surface for engineering instances; ecosystem-agnostic abstract patterns and Practice-governance patterns take PDR shape with `pdr_kind: pattern` (per PDR-007 amendment 2026-04-29) |
+| `rule`              | Always-applied obligation that must fire at a decision point                     | The Practice's canonical rule surface plus per-platform rule adapters                                                                                                                                         |
+| `command rubric`    | Workflow step that operationalises doctrine at a named command boundary          | The Practice's canonical commands surface                                                                                                                                                                     |
+| `scanner or gate`   | Executable enforcement for high-confidence obligations                           | scripts, hooks, CI, quality gates                                                                                                                                                                             |
+| `decision record`   | Durable decision, trade-off, and consequence history                             | ADRs for repo architecture; PDRs for Practice governance                                                                                                                                                      |
+| `operational state` | Current live state and next action, not settled doctrine                         | The host's operational memory surface                                                                                                                                                                         |
+
+When consolidating, first identify the candidate's current role, then
+ask whether that role is still correct. Over-exampled doctrine may
+shed recipes; repeated recipes may reveal patterns; mature patterns may
+produce rules or scanners; troubleshooting entries may become links
+once the durable recipe or runbook exists.
+
+### Surfaces and what each holds
+
+| Surface                                                              | Holds                                                                                                                                                     |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern` (host pattern memory surface)                              | Failure-mode or behaviour shape with concrete instances; recipe-shaped capture                                                                            |
+| `PDR` (new)                                                          | Portable Practice-governance decision in novel scope                                                                                                      |
+| `PDR amendment`                                                      | Extension of an existing PDR's scope (preserves provenance via Amendment Log)                                                                             |
+| `ADR` (or amendment)                                                 | Architectural decision: technology, structure, boundary; see [PDR-019](PDR-019-adr-scope-by-reusability.md) for ADR↔PDR boundary                          |
+| `rule` (canonical rule surface)                                      | Always-applied procedural step requiring per-session/per-handoff firing; platform parity required per [PDR-029](PDR-029-perturbation-mechanism-bundle.md) |
+| `principle line` (host principles directive)                         | Foundation invariant; cardinal, repo-wide, short; typically composed with an operationalising rule or PDR                                                 |
+| `command rubric` (canonical commands surface, one file per workflow) | Operationalises a doctrine at the firing point inside a workflow step                                                                                     |
+| `plan-body`                                                          | Plan-local meta-decision (scope, sequencing, fitness tolerance, deferrals) — not portable beyond the plan                                                 |
+| `practice-md` (the trinity's `practice.md`)                          | Visible Artefact Map presence; cross-cuts other surfaces                                                                                                  |
+| `distilled entry` (host's refined-memory file)                       | Hard-won single-sentence rule-of-thumb that changes behaviour                                                                                             |
+| `register entry`                                                     | Captured candidate awaiting trigger — not yet graduated                                                                                                   |
+
+### Routing decision (run in order; first match wins, then check composition)
+
+1. **Failure-mode or behaviour shape with concrete instances?** →
+   host `pattern` for the concrete instance. If ≥2 instances across
+   repos or ecosystems make an ecosystem-agnostic abstraction legible,
+   author that general form as a PDR with `pdr_kind: pattern`; the
+   concrete instances stay in host pattern memory.
+2. **Novel portable Practice-governance decision?** → `PDR` (new) —
+   but first check: does an existing PDR's scope absorb it? If yes
+   → `PDR amendment` (default to amendment when scope-adjacent;
+   preserves provenance and avoids governance fragmentation).
+3. **Architectural decision (technology, structure, boundary)?** →
+   `ADR` or `ADR amendment` per PDR-019.
+4. **Needs to fire at every session/handoff/consolidation?** →
+   `rule` (always-applied; platform parity required per PDR-029)
+   **or** `command rubric` (operationalises at a specific workflow
+   step). Choose `rule` when the firing is independent of any
+   workflow; choose `command rubric` when the firing belongs to a
+   specific workflow step.
+   Repeated owner correction targeting the same rationalisation also
+   routes here: install a dedicated rule instead of expecting a broad
+   principle to fire indirectly.
+5. **Reads as a foundation invariant (cardinal, always-on,
+   repo-wide)?** → `principle line` in `principles.md`; typically
+   requires composition (see below) with an operationalising rule
+   or PDR.
+6. **Applies only to one plan's local meta-decision?** →
+   `plan-body` (no portable doctrine cost; per
+   [PDR-019](PDR-019-adr-scope-by-reusability.md) §plan-local
+   meta-decisions).
+7. **Otherwise** → `register entry` (pending; trigger on
+   second/third independent instance).
+
+### Composition discipline (multiple homes may be appropriate)
+
+A candidate may legitimately need more than one home. Compose, do
+not force a single choice:
+
+| Composition                   | When to use                                                   | Example                                                                                                                                                                                        |
+| ----------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `principle` + `rule`          | Foundation invariant that needs active firing                 | _Misleading docs are blocking_ + a `documentation-hygiene` rule (canonical rule file is host-local; see practice-index)                                                                        |
+| `PDR` + `command rubric`      | Doctrine ratified portably; fires at a specific workflow step | [PDR-026 §Landing target definition](PDR-026-per-session-landing-commitment.md) + `/session-handoff` close ritual                                                                              |
+| `pattern` + `rule`            | Empirical capture + active prevention at firing point         | The `inherited-framing-without-first-principles-check` pattern instance + a `plan-body-first-principles-check` rule (both host-local; see practice-index Pattern instances and Rules sections) |
+| `pattern` + `PDR`             | Empirical observation + durable portable governance response  | `passive-guidance-loses-to-artefact-gravity` + PDR-029                                                                                                                                         |
+| `principle` + `PDR amendment` | Foundation invariant + extension of existing scope            | _Owner Direction Beats Plan_ + future operationalisation                                                                                                                                       |
+
+### Anti-patterns
+
+- **Rule without companion principle or PDR** — tripwire without
+  doctrine; agents fire the rule without understanding why.
+- **New PDR for scope already in an existing PDR** — fragments
+  governance; amend instead.
+- **Principle line without operationalising rule** — passive
+  guidance, the exact failure mode
+  `passive-guidance-loses-to-artefact-gravity` names.
+- **Third consumer without canonicalisation** — two local copies may
+  still be proving a shape; a third consumer makes the shape
+  load-bearing and requires a canonical owner or named consolidation
+  route.
+- **Pattern without a graduation path** — captures forever, never
+  converts to active prevention.
+- **Picking the surface from convenience** (the file is already
+  open / the PDR is short) rather than from shape — produces
+  ad-hoc routing the owner direction at 2026-04-22 Session 6
+  explicitly forbids.
+
+### When in doubt
+
+Default to **pattern + governance composition**. Pattern alone
+captures the empirical instance; the governance surface (PDR,
+rule, principle) makes the response durable. Choosing one
+prematurely risks either lost provenance (no pattern) or no
+active prevention (no governance).
+
+## Rationale
+
+**Why cross-session consolidation beats single-session.** Some
+patterns have a cross-session cadence — they emerge from the
+accumulation of single-session observations that individually look
+routine. Consolidating only within a session misses them. Examples:
+compounding workaround debt only becomes visible when three sessions'
+worth of workarounds are read together; a repeated failure mode at
+different abstraction layers requires multi-session aggregation.
+
+**Why archive-scale synthesis is distinct from cross-session
+consolidation.** Cross-session consolidation reads a recent thread or
+rotation while its evidence is still close to the work. Archive-scale
+synthesis reads historical capture after several ordinary distillation
+passes have already run. That hindsight changes the question. The
+consolidator is no longer asking only what to lift from this window;
+they are asking whether the sequence of already-processed windows
+reveals a larger mechanism. Treating that as the same step makes the
+historical pass easy to skip, because each archived capture already
+looks "done" when read individually.
+
+**Why learning before fitness.** Fitness limits exist to prevent
+unbounded growth, not to cap individual concepts or suppress
+distillation. When limits constrain writing, concepts are trimmed to fit
+rather than written at their required weight. The result is documentation
+that is technically within limits but substantively under-weighted —
+teaching poorly, requiring repeated explanation, failing the self-teaching
+property. Treating fitness as a structural follow-up signal preserves
+substance; treating it as a constraint sacrifices substance.
+
+**Why decision-ready + session-entry-ready are both required.** A
+plan can be decision-ready (the what is settled) but not
+session-entry-ready (a cold-start agent does not know the starting
+context). A plan can be session-entry-ready (clear starting point)
+but not decision-ready (the what still has open questions). Either
+alone produces plans that fail at the queue surface. Both together
+produce plans that are safe to promote.
+
+Alternatives rejected:
+
+- **Single-session consolidation only.** Faster, but misses the
+  cross-session patterns that are often the most load-bearing.
+- **Recent cross-session consolidation only.** Keeps the loop focused
+  on current rotations, but leaves the historical archive as cold
+  storage and misses patterns that need time-depth to become visible.
+- **Fitness as writing constraint.** Keeps files neat; destroys
+  concept quality. Learning always matters more than line count.
+- **Promotion based on decision-readiness alone.** Leaves
+  session-entry gaps that surface as friction the next time the
+  plan is picked up.
+
+## Consequences
+
+### Required
+
+- Cross-thread consolidation reads the multi-session corpus,
+  not just the current session.
+- Archive-scale historical synthesis runs on explicit trigger, names
+  the corpus window before reading, writes a synthesis report, and
+  routes findings through the ordinary graduation destinations.
+- Permanent-home writes happen at full substance; fitness is
+  handled structurally after preservation, not during writing.
+- Promotion to `current/` verifies both decision-readiness and
+  session-entry-readiness before the promotion completes.
+- Fitness metric overruns triggered by substance-first writing are
+  handled per the fitness model (four-zone; the host's three-zone
+  fitness-model ADR or equivalent — see practice-index Concept ↔
+  ADR map), not by post-hoc concept trimming.
+
+### Forbidden
+
+- Consolidation that reads only the current session's napkin when
+  multi-session material is relevant.
+- Treating archived capture as fully exhausted because it was already
+  processed during its original rotation.
+- Rewriting archived capture during historical synthesis. Archives are
+  evidence; synthesis reports and downstream graduations carry the new
+  understanding.
+- Compressing a concept during initial writing to stay under a
+  fitness limit.
+- Promoting a plan to `current/` without verifying a cold-start
+  agent could begin from it.
+- Treating fitness warnings as a signal to trim substance rather
+  than as a signal to consolidate structure.
+
+### Accepted cost
+
+- Cross-session consolidation takes longer than single-session.
+  Justified by the patterns it surfaces.
+- Archive-scale synthesis is heavier still and should remain
+  triggered. The cost is justified only when time-depth is the source
+  of the expected insight.
+- Substance-first writing produces larger concept weights; fitness
+  pressure rises. Handled editorially.
+- Two-criterion promotion is more work than one-criterion
+  promotion. Handled by making "promote" a deliberate workflow
+  step, not a status toggle.
+
+## Notes
+
+## Amendment Log
+
+### 2026-04-22 — Session 6 (Merry / cursor-opus): Graduation-target routing + workstream→thread terminology refresh
+
+**Driver**. Owner direction at 2026-04-22 Session 6 open: _"we
+shouldn't be making ad-hoc decisions about rules, pdrs, commands
+etc... there should be a right place for this, and there can be
+more than one place if appropriate, but we need to establish a
+pattern for how we handle this sort of thing."_ The
+`graduation-target` field exists in the pending-graduations
+register schema (PDR-028) but the routing criteria — when each
+value is correct, when composition is appropriate — were not
+codified. Ratification proceeds as a PDR-014 amendment because
+PDR-014's existing scope (consolidation and knowledge-flow
+discipline) directly enables routing, and an amendment preserves
+provenance over a new PDR per the routing pattern's own anti-
+pattern guidance.
+
+**Changes**.
+
+1. New top-level §Graduation-target routing between §Decision and
+   §Rationale: surface taxonomy, routing decision tree (run in
+   order, first-match-wins then check composition), composition
+   discipline (multiple-homes-may-be-appropriate with five
+   canonical compositions), anti-patterns, default rule (pattern
+   - governance composition).
+2. Terminology refresh: five `workstream` references in
+   §Cross-session consolidation and §Consequences §Required
+   updated to `thread` (per PDR-027 thread-as-continuity-unit;
+   the `workstreams/` operational surface was retired Session 5
+   per [PDR-027 §Amendment Log 2026-04-21](PDR-027-threads-sessions-and-agent-identity.md)).
+
+**Class A.1 firing** (plan-body first-principles check, the
+host-local `plan-body-first-principles-check` always-applied rule;
+canonical rule file is host-specific — see practice-index Rules
+section). Three clauses passed: shape (PDR-amendment,
+not pattern/rule/distilled), landing-path (PDR-014 tooling
+contract is established; substance-first per its own §Substance
+before fitness), vendor-literal (N/A; internal vocabulary). No
+rewrite. Composition with terminology refresh in single Amendment
+Log entry preserves single-amendment honesty.
+
+**Concrete near-term firing trigger** (per PDR-029 retention
+discipline; counter-pressure to
+`anticipated-surface-installed-then-empirically-unexercised`).
+Session 6 Phase A.2 immediately following — applies the routing
+to five Pending-band candidates: `deferral-honesty-rule` (3/3),
+`manufactured-budget` (2/3),
+`anticipated-surface-installed-then-empirically-unexercised`
+(2/3),
+`owner-mediated-evidence-loop-for-agent-installed-protections`
+(1/3), `default-retire-on-empty`. Plus all subsequent Session 6
+graduation decisions (Phases B.2 lost-substance re-home, E
+PDR-012 amendment for the most-overdue Due-band item).
+
+**Reviewer**. `docs-adr-expert` close-pass at Session 6 close
+per plan §Reviewer discipline.
+
+### 2026-04-24 — Bidirectional knowledge-flow clarification
+
+**Driver**. Owner direction during directive/fitness-pressure review:
+patterns are observations from real practice before they are ideals,
+and the Practice has repeatedly refined multiple knowledge flows.
+The existing ladder and routing sections named bottom-up graduation
+and composition, but did not make the bidirectional loop vivid enough
+for agents working with doctrine, recipe books, and patterns.
+
+**Changes**.
+
+1. Added §Bidirectional flow to clarify that doctrine can shed
+   examples into recipe books, recipes can reveal patterns, patterns
+   can feed recipes and governance/enforcement surfaces, and
+   enforcement failures feed back into capture.
+2. Added §Knowledge artefact roles to define doctrine, recipe books,
+   troubleshooting, patterns, rules, command rubrics, scanners/gates,
+   decision records, and operational state as learning-loop roles.
+3. Clarified that routing chooses the next durable home, not the
+   candidate's final possible home.
+
+**Scope**. Clarification only. No new graduation target, barrier, or
+quality gate.
+
+### 2026-05-10 — Polarity required at pattern graduation
+
+**Driver**. Owner direction 2026-05-05 (Opalescent Threading Nebula's
+promotion pass): the patterns surface had no explicit polarity discipline.
+The host `patterns/README.md` taxonomy split entries by category (code,
+architecture, process, testing, agent) but not by _polarity_ — whether the
+entry described a positive shape to repeat (`pattern`) or a failure mode to
+avoid (`anti-pattern`). The frontmatter criterion `prevents_recurring_mistake`
+implicitly covered anti-patterns without distinguishing them from patterns
+to repeat. A reader skimming a pattern to decide whether to apply or
+recognise it as a failure mode needed the polarity at a glance, not after
+parsing the body.
+
+The host operational form has stabilised
+(`memory/active/patterns/README.md` § Polarity)
+with the polarity required for entries authored 2026-05-05 onwards and a
+backfill pass underway across the pre-2026-05-05 corpus. Per PDR-007 §Routing,
+polarity is a _routing concern_ (how substance is classified into the patterns
+surface) and therefore lands in PDR-014, the consolidation-and-knowledge-flow
+PDR, rather than in PDR-007.
+
+**Changes**.
+
+1. **Polarity required at pattern graduation**. Every pattern instance
+   admitted to the host's pattern memory surface MUST declare its polarity
+   in two places:
+   - `polarity: pattern | anti-pattern` frontmatter field (machine-readable);
+   - Blockquote header in the body immediately after the frontmatter
+     (human-visible at a glance during reading).
+2. **Routing decision step 1 amended** (§Routing decision §1): when
+   classifying a candidate as a pattern instance, polarity classification
+   is part of the routing decision, not a deferred decision. The graduation
+   work is incomplete without polarity.
+3. **Categories remain orthogonal to polarity**. The five categories
+   (code / architecture / process / testing / agent) describe substance
+   domain; polarity describes the pattern's directionality. Every
+   (category, polarity) pair is admissible.
+4. **Host-local README is the operational source**. The polarity vocabulary,
+   header marker text, and frontmatter schema live in
+   `memory/active/patterns/README.md` (host-local, ecosystem-grounded).
+   This PDR ratifies polarity as a Practice-governance requirement;
+   the operational forms travel with the host README.
+
+**Scope**. Practice-governance amendment to the pattern-graduation
+discipline. Applies to every Practice-bearing repo with a pattern memory
+surface. Pre-amendment instances backfill iteratively; new instances must
+carry polarity from authoring time.
+
+**Concrete near-term firing trigger**. The bulk-sweep pass over
+~70 pre-2026-05-05 pattern files in `memory/active/patterns/` runs in the
+same consolidation pass that lands this amendment, completing the host
+operational backfill.
+
+**Reviewer**. `docs-adr-expert` + `onboarding-expert` per
+`invoke-doc-and-onboarding-experts-on-significant-changes`
+(this amendment is a Practice-governance change to the pattern-graduation
+contract).
+
+### 2026-05-22 — Framing-direction discipline at the capture edge
+
+**Driver**. Owner reframing at 2026-05-22 (Mistbound Slipping Night
+session): five session insights surfaced at session-end were framed
+forward-from-session ("things that happened in this peer-primary
+session"). Owner reframed them backward-from-impact ("improve
+coordination surfaces regardless of topology"). Same observations,
+opposite framing direction, profoundly different home —
+session-forward → napkin anecdote; impact-backward → structural-cure
+candidate for rules / PDR amendments / schema work. The substance did
+not change; the framing determined the destination.
+
+**Insight**. The capture edge of the knowledge-flow pipeline carries
+an invisible decision: the framing direction the agent uses to
+articulate the observation. Two framings produce two destinations:
+
+- **Session-forward framing** ("what did I see this session?") — the
+  observation is anchored to its session context. Natural home: the
+  experience file (subjective texture), or a napkin entry as
+  session-scoped capture.
+- **Impact-backward framing** ("what coordination surface does this
+  cure?") — the observation is anchored to the surface it improves.
+  Natural home: a rule, PDR amendment, schema change, or pattern
+  graduation candidate.
+
+The default direction for most agents at session-end is session-forward
+(observations are most vivid in the session that produced them).
+Impact-backward framing is the more durable shape because it travels
+across the session boundary that produced the observation.
+
+**Change**. At the capture edge (napkin entries, consolidation
+candidate identification, pending-graduations entries), the
+consolidator MUST ask both framing questions and prefer the
+impact-backward framing when the substance supports a structural-cure
+target:
+
+- _"What surface does this cure?"_ (impact-backward)
+- _"Where did this observation come from?"_ (session-forward)
+
+When the substance is purely subjective (texture, surprise without
+durable cure-shape), session-forward is correct — the experience file
+is the right home. When the substance names a coordination surface
+that could be improved (a rule, a PDR, a schema, a SKILL), the
+impact-backward framing surfaces that destination explicitly. Without
+the impact-backward question, observations with structural-cure
+potential default to napkin-only and never reach the graduation
+pipeline.
+
+This discipline applies at three moments:
+
+1. **Session-handoff step 6a** (capture surprises): the closing
+   agent asks both framing questions for each observation before
+   recording.
+2. **Consolidate-docs step 7a/7b** (graduation scan): the
+   consolidator re-asks the impact-backward framing for napkin
+   entries from prior sessions that may have been captured
+   session-forward only.
+3. **Owner-direction reframing**: when an owner reframes an agent's
+   forward-framed observation impact-backward (as Mistbound's owner
+   did this session), the agent re-homes the substance to the
+   reframed destination. This is itself a worked-instance of the
+   framing-direction discipline.
+
+**Scope**. Practice-governance amendment to the consolidation
+discipline. Applies to every Practice-bearing repo. No new
+artefact surface; the discipline operates at existing capture
+edges (napkin, pending-graduations, consolidate-docs §7).
+
+**Concrete near-term firing trigger**. The next consolidation pass
+that touches a session's napkin entries asks the impact-backward
+question for each entry before deciding the entry's graduation
+target. If applying the question changes the target for ≥1 entry,
+the discipline is firing usefully.
+
+**Reviewer**. `docs-adr-expert` per
+`invoke-doc-and-onboarding-experts-on-significant-changes`
+(Practice-governance amendment). Owner-direction-evidenced (Mistbound
+reframing worked instance).
+
+### 2026-05-05 — Archive-scale historical synthesis cadence
+
+**Driver**. Owner observation during a metacognition pass: the original
+learning loop included a layer that would process current and archived
+napkins holistically for cross-session patterns not visible until the
+Practice had accumulated and preserved enough history. Existing doctrine
+covered current-window cross-session consolidation, but did not clearly
+separate that from rereading the archive as a historical corpus after
+ordinary per-napkin processing had already happened.
+
+**Changes**.
+
+1. Added archive-scale historical synthesis as a fourth load-bearing
+   consolidation quality in §Context.
+2. Added §Archive-scale historical synthesis under §Decision, naming
+   the trigger cadence, bounded corpus selection, synthesis report,
+   processed-marker boundary, routing destinations, and archive
+   immutability rule.
+3. Extended §Rationale, §Alternatives rejected, and §Consequences to
+   distinguish recent cross-session consolidation from historical
+   time-depth synthesis.
+4. Added PDR-046 to §Related because historical synthesis re-enters
+   historical capture material into the existing bottom-up staircase.
+
+**Concrete near-term firing trigger**. The next archive-scale pass is
+valid when either (a) an owner explicitly asks for a historical napkin
+synthesis, or (b) a consolidation finds the same learning-loop failure
+family spanning two or more archived napkin rotations and no existing
+PDR / rule names the deeper mechanism. That pass writes a synthesis
+report before doctrine mutation and uses the report's processed marker
+as the future boundary.
+
+**Scope**. Governance clarification plus command-rubric backing. No
+new always-applied rule or automated scanner. The operational firing
+point lives in the consolidation command.

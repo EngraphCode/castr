@@ -51,7 +51,7 @@ All internal code (conversion logic, templates, type definitions) will exclusive
 
 ### Pipeline Flow
 
-```
+```text
 Input (3.0 or 3.1 spec: file, URL, or object)
     ↓
 bundle() via @scalar/json-magic

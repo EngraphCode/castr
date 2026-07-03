@@ -8,7 +8,7 @@ They are useful regression coverage, but they do **not** by themselves prove the
 
 ## Directory Structure
 
-```
+```text
 tests-snapshot/
 ├── integration/          # Broad integration-style snapshot cases (3 files)
 ├── schemas/              # Schema handling tests

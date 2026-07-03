@@ -447,5 +447,38 @@ describe('OpenAPI Version Validation', () => {
         loadOpenApiDocument(`${FIXTURES_DIR}/invalid/common/invalid-openapi-version.yaml`),
       ).rejects.toThrow(/openapi|version|pattern|2\.0/i);
     });
+
+    // Codifies requirements.md "Unresolvable `$ref` pointers" under REJECT (fail-fast,
+    // ADR-001). @scalar/openapi-parser <0.28 silently tolerated dangling $refs; 0.28+
+    // rejects them — this test locks the contract in against future vendor leniency.
+    it('REJECTS spec with a dangling $ref to an undefined component', async () => {
+      await expect(
+        loadOpenApiDocument({
+          openapi: '3.0.0',
+          info: { title: 'Dangling ref', version: '1.0.0' },
+          components: {
+            schemas: {
+              User: { type: 'object', properties: { id: { type: 'string' } } },
+            },
+          },
+          paths: {
+            '/users': {
+              get: {
+                responses: {
+                  '200': {
+                    description: 'OK',
+                    content: {
+                      'application/json': {
+                        schema: { $ref: '#/components/schemas/Missing' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ).rejects.toThrow(/resolve reference|\$ref|Missing|not.*resolv/i);
+    });
   });
 });

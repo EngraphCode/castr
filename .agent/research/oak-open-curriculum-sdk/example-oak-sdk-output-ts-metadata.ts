@@ -97,14 +97,7 @@ export function isAllowedMethod(maybeMethod: string): maybeMethod is AllowedMeth
 
 // Helper types derived from schema for path/method/response typing
 export type HttpMethodKeys =
-  | 'get'
-  | 'put'
-  | 'post'
-  | 'delete'
-  | 'options'
-  | 'head'
-  | 'patch'
-  | 'trace';
+  'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace';
 export type AllowedMethodsForPath<P extends ValidPath> = Extract<keyof Paths[P], HttpMethodKeys>;
 
 // Normalize 200 key to always be numeric 200
@@ -220,9 +213,11 @@ export const PATH_PARAMETERS: PathParameters = {
  * Type for path parameter values
  */
 export type PathParameterValues = {
-  [K in keyof typeof PATH_PARAMETERS as (typeof PATH_PARAMETERS)[K] extends readonly unknown[]
-    ? K
-    : never]: (typeof PATH_PARAMETERS)[K] extends readonly unknown[]
+  [
+    K in keyof typeof PATH_PARAMETERS as (typeof PATH_PARAMETERS)[K] extends readonly unknown[]
+      ? K
+      : never
+  ]: (typeof PATH_PARAMETERS)[K] extends readonly unknown[]
     ? (typeof PATH_PARAMETERS)[K][number]
     : never;
 };

@@ -22,7 +22,7 @@
 
 ADR-023 established the Intermediate Representation (IR) architecture as the canonical approach:
 
-```
+```text
 Input Document → IR (AST) → Output Artefacts
 ```
 

@@ -1,0 +1,6 @@
+---
+description: Validate the Full Target Estate
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/validate-full-target-estate.md`.

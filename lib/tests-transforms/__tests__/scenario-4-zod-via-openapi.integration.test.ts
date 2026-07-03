@@ -49,7 +49,7 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
       expectNoParseErrors(fixture.name, 'Scenario 4 generated-output parse', result3);
 
       // Schema count preserved
-      expect(result3.ir.components.length).toBe(originalCount);
+      expect(result3.ir.components).toHaveLength(originalCount);
     });
   });
 

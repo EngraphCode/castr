@@ -1,0 +1,6 @@
+---
+description: No Warning Toleration
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/no-warning-toleration.md`.

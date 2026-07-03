@@ -1,5 +1,10 @@
 # Plan: `patternProperties` and `propertyNames` Parser/Writer Support
 
+> ⚠️ **Stale (2026-06-04, see ADR-047):** this plan's "Zod = ❌ fail-fast … `.refine()` … not a default behaviour"
+> stance was later reversed — `.refine()` is now the default and the implementations are non-compliant (review finding
+> C6: `patternProperties` uses an incorrect `typeof` check). See ADR-047 and
+> `.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md`. Retained as history only.
+
 **Status:** ✅ Complete — implemented and verified, all quality gates green (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** [discovery-and-prioritisation.md](./discovery-and-prioritisation.md)

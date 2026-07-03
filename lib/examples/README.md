@@ -4,7 +4,7 @@ This directory contains OpenAPI and Swagger specification examples used for inte
 
 ## Directory Structure
 
-```
+```text
 lib/examples/
 ├── openapi/          # Official OpenAPI 3.x examples (fetched)
 │   ├── v3.0/        # OpenAPI 3.0.x examples

@@ -1,0 +1,6 @@
+---
+description: Verify Vendor Call Shapes At Plan-Author Time
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/verify-vendor-call-shapes-at-plan-author-time.md`.

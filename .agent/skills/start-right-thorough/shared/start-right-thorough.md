@@ -1,0 +1,189 @@
+---
+prompt_id: start-right-thorough
+title: 'Start Right (Thorough)'
+type: workflow
+status: active
+last_updated: 2026-04-26
+---
+
+# Start Right (Thorough)
+
+Ground yourself rigorously before beginning significant work.
+
+## Foundation Documents
+
+Read and internalise these documents:
+
+1. @.agent/directives/AGENT.md — Entry point and documentation index
+2. @RULES_INDEX.md — canonical list of always-applied `.agent/rules/*.md`
+   files
+3. @.agent/directives/principles.md — authoritative engineering principles
+4. @.agent/directives/tdd-as-design.md — foundational TDD definition: a test
+   describes a system state, product code is the path that guides the system
+   into it
+5. @.agent/directives/testing-strategy.md — test-type taxonomy and shape rules
+6. @.agent/directives/requirements.md + @.agent/directives/DEFINITION_OF_DONE.md — castr product doctrine and gate protocol
+7. @.agent/memory/operational/threads/README.md — thread convention + identity discipline (PDR-027)
+8. Open the [ADR index](../../../../docs/architectural_decision_records/README.md) and read any ADR (001–047) whose
+   slug matches your current work area, plus the durable architecture docs under
+   [`docs/architecture/`](../../../../docs/architecture/) named by the active plan.
+
+**Plans must include regularly re-reading and re-committing to these foundation documents.**
+
+For Codex, Gemini, or any other platform that does not auto-load canonical
+rules, read every canonical `.agent/rules/*.md` file listed in
+`RULES_INDEX.md` before substantive work. Treat `RULES_INDEX.md` as the live
+inventory rather than copying the rule list here.
+
+Thorough grounding extends quick grounding. Also apply
+`.agent/skills/start-right-quick/shared/start-right.md` §Live state
+(operational memory) and §Live branch state so repo-continuity, the touched
+thread record, active claims, shared comms, decision/escalation state, active
+plans, and git status/log are part of the same grounding pass.
+
+## Active-Claims Registry
+
+Before any edit, read `.agent/state/collaboration/active-claims.json` and
+apply the [`register-active-areas-at-session-open`](../../../rules/register-active-areas-at-session-open.md)
+rule. Also scan `.agent/state/collaboration/shared-comms-log.md`, any open
+`.agent/state/collaboration/conversations/*.json` files, and any active
+`.agent/state/collaboration/escalations/*.json` files for the thread
+or areas you will touch. Bootstrap fast-path: if no entries other than
+your own exist, append a "no other agents present" comms event and proceed.
+On overlap, consult the generated log and decision
+threads before deciding how to coordinate (proceed with caution, ping,
+append/open a decision thread, request a sidebar, record a joint
+decision, open or close an escalation, or ask the owner). Then register
+your own claim covering the areas you intend to touch, using the
+collaboration-state helper when available.
+
+When reading `active-claims.json`, surface any fresh root `commit_queue`
+entries as advisory commit-ordering signals: `intent_id`, `agent_id`, files,
+subject, phase, and expiry. Queue entries are discovery and ordering signals,
+not mechanical refusals.
+
+When writing the thread identity row, prefer an existing owner-assigned
+`agent_name` if it matches this identity. For Codex, derive the full PDR-027
+identity block before both thread registration and shared-state writes:
+
+```bash
+pnpm agent-tools:collaboration-state -- identity preflight --platform codex --model GPT-5
+```
+
+For non-Codex platforms or name-only display, use
+`pnpm agent-tools:agent-identity --format display` when a
+`PRACTICE_AGENT_SESSION_ID_*` variable or `CODEX_THREAD_ID` is available; pass
+`--seed "<stable-session-seed>"` explicitly when no platform seed is exposed.
+Do not use personal-email fallback.
+
+Codex sessions with `CODEX_THREAD_ID` available must use the derived
+`agent_name` and `session_id_prefix`, not `Codex` / `unknown`. Codex
+`SessionStart` hooks may inject the same block as developer context, but the
+preflight command remains the correctness check.
+
+Before staging or committing, use the always-active commit skill. It
+checks for fresh `commit_queue` entries and `git:index/head` commit-window
+claims, enqueues your intended bundle before staging, verifies the staged
+bundle exactly before `git commit`, and clears the queue entry after success.
+
+## Learning-Loop Surfaces
+
+Before engaging with the work, scan the active-memory capture surfaces:
+
+- `.agent/memory/active/distilled.md` — refined cross-session lessons
+- `.agent/memory/active/napkin.md` — current session observations
+- `.agent/memory/active/patterns/` — reusable patterns (ADR-150 §Interaction Points)
+- Your own platform's per-user memory and session logs. Scan the
+  surface for the platform you are running on:
+  - Claude Code: `~/.claude/projects/<project>/memory/`
+  - Cursor: `~/.cursor/chats/`, `~/.cursor/prompt_history.json`
+  - Codex: `~/.codex/memories/`, `~/.codex/history.jsonl`
+
+  Read only the surface that matches your current platform at
+  session open. Cross-platform ingestion (reading another
+  platform's surface for insight) is a consolidation-time
+  activity, not a session-open one — see `consolidate-docs`
+  step 3.
+
+## Guiding Questions
+
+Before diving in, pause and ask:
+
+1. **Are we solving the right problem, at the right layer?**
+2. **What value are we delivering, through what impact, for which users?**
+3. **Could it be simpler without compromising quality?**
+4. **What assumptions am I making? Are they valid?**
+
+Step back and consider if work is delivering value through impact at the system level, not just fixing the problem right in front of you.
+
+## Work Shape and Simple Plan
+
+Before the first non-planning edit, leave an observable work-shape
+artefact:
+
+- trivial work uses the landing target or explicit no-landing reason;
+- bounded non-trivial work records a simple plan in chat or the touched
+  thread record, naming goal, scope, validation, and lifecycle touch
+  points;
+- multi-session, architectural, Practice, cross-workspace, or high-risk
+  work uses an executable repo plan in `current/` or `active/`.
+
+Do not force a repo plan file for every small edit. The requirement is
+that the work shape and validation path are visible before mutation.
+
+## Practice Box
+
+Check `.agent/practice-core/incoming/` for practice-core files. If present, alert the user — incoming material may carry learnings from another repo. Full integration happens during `/engraph-consolidate-docs`.
+
+## Commit
+
+**Commit** to excellence in systems architecture, software engineering, and developer experience. Choose architectural correctness over short-term expediency. This requires critical and _long-term_ thinking.
+
+## castr Domain Grounding
+
+The **IR is the source of truth after parsing** (`Any Input → Parser → IR → Writers → Any Output`). Preserve IR honesty even when an interchange format is lossy; **fail fast rather than silently canonicalising away user-visible semantics**. Types and Zod flow from schema (see `requirements.md` and `principles.md`).
+
+Frame the problem precisely: is it a **standards gap, an IR gap, a parser/writer contract issue, a canonicalisation choice, or an upstream runtime/dependency issue?** Name the input→output pair and the output format that constrains support.
+
+When analysing generated files, always analyse the generator code that produced them — the generator (ts-morph emission) is the source of truth.
+
+## After Each Piece of Work
+
+1. **Run the full quality gate suite** one gate at a time
+2. **Wait for all gates to complete** before analysing issues
+3. **Analysis must include**: Are there fundamental architectural issues or opportunities for improvement?
+
+## Documentation Requirements
+
+All plans must include instructions to create:
+
+- **TSDoc**: General on all logic and state, extensive examples on public interfaces
+- **Markdown**: READMEs for each workspace
+- **ADRs**: For significant architectural decisions
+
+## Sub-agent Reviews
+
+Invoke the reviewer and domain-expert layer per [`invoke-reviewers.md`](../../../rules/invoke-reviewers.md) after non-trivial changes. castr's schema-domain experts — `openapi-expert`, `zod-expert`, `json-schema-expert` — review IR fidelity and parser/writer lockstep; the generic reviewers (`code-reviewer`, `test-reviewer`, `type-reviewer`) cover correctness, tests, and type-flow.
+
+## Process
+
+**Do not assume you know the initial step.** Discuss with the user first.
+
+## Quality Gates
+
+Run after making changes. The canonical aggregate is `pnpm check` (local, mutating) or `pnpm check:ci` (non-mutating, `--frozen-lockfile`). Do not invoke `pnpm qg` directly.
+
+```bash
+# From repo root; the qg chain, one at a time (caching prevents duplicate work)
+pnpm build
+pnpm format:check
+pnpm type-check
+pnpm lint
+pnpm madge:circular && pnpm madge:orphans
+pnpm depcruise
+pnpm knip
+pnpm portability:check
+pnpm skills:check
+pnpm repo-validators:check
+pnpm test:all   # test + character + snapshot + gen + transforms + e2e
+```

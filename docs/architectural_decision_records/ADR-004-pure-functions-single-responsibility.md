@@ -79,7 +79,7 @@ When encountering complex functions:
 
 ### Helper File Naming
 
-```
+```text
 module-name.ts              # Main implementation
 module-name.helpers.ts      # General helpers
 module-name.domain.helpers.ts  # Domain-specific helpers (e.g., operation, path)
@@ -173,7 +173,7 @@ function processParameters(params: ParameterObject[], ctx: Context): ParamDef[] 
 
 ### Helper Files Created
 
-```
+```text
 lib/src/zodiosEndpoint.helpers.ts              # General helpers (1 function)
 lib/src/zodiosEndpoint.operation.helpers.ts    # Operation processing (4 functions)
 lib/src/zodiosEndpoint.path.helpers.ts         # Path processing (3 functions)

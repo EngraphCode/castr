@@ -1,0 +1,88 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(engraph-chatgpt-report-normalisation)",
+      "Skill(engraph-codex-helper)",
+      "Skill(engraph-commit)",
+      "Skill(engraph-complex-merge)",
+      "Skill(engraph-consolidate-docs)",
+      "Skill(engraph-consolidate-until-done)",
+      "Skill(engraph-curator-pass)",
+      "Skill(engraph-gates)",
+      "Skill(engraph-go)",
+      "Skill(engraph-metacognition)",
+      "Skill(engraph-napkin)",
+      "Skill(engraph-plan)",
+      "Skill(engraph-reason)",
+      "Skill(engraph-semantic-merge)",
+      "Skill(engraph-session-handoff)",
+      "Skill(engraph-start-right-quick)",
+      "Skill(engraph-start-right-team)",
+      "Skill(engraph-start-right-thorough)",
+      "Skill(engraph-tsdoc)",
+      "Skill(engraph-undo-change)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-pretooluse-guard.mjs\" agent-tools/dist/src/hook-policy/check-blocked-patterns.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-pretooluse-guard.mjs\" agent-tools/dist/src/hook-policy/check-blocked-content.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-pretooluse-guard.mjs\" agent-tools/dist/src/hook-policy/check-blocked-content.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-pretooluse-guard.mjs\" agent-tools/dist/src/hook-policy/check-blocked-content.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/_lib/log-hook-errors.sh node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/practice-session-identity.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ${CLAUDE_PROJECT_DIR}/.claude/scripts/statusline-identity.mjs",
+    "refreshInterval": 10
+  },
+  "skillListingBudgetFraction": 0.03
+}

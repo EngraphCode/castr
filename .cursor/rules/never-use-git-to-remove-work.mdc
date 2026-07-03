@@ -1,0 +1,6 @@
+---
+description: Never Use Git to Remove Work
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/never-use-git-to-remove-work.md`.

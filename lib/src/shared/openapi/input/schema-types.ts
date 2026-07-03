@@ -3,8 +3,7 @@ import type { RawSchemaFields } from './core-types.js';
 
 type OpenAPIInputSchemaOrReferenceObject<TSchemaObject> = ReferenceObject | TSchemaObject;
 type OpenAPIInputSchemaOrReferenceOrBoolean<TSchemaObject> =
-  | OpenAPIInputSchemaOrReferenceObject<TSchemaObject>
-  | boolean;
+  OpenAPIInputSchemaOrReferenceObject<TSchemaObject> | boolean;
 
 export type OpenAPI30InputSchemaOrReferenceObject =
   OpenAPIInputSchemaOrReferenceObject<OpenAPI30InputSchemaObject>;
