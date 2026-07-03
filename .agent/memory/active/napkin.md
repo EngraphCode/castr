@@ -2,7 +2,19 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-07-03 (session part 3: hook hardening + wave 5 + pause window — Windswept Winging Cliff / 0ceb5f, closeout)
+## 2026-07-03 (external note: resonance Tranche-1 transplant — Resonance transplant coordinator / claude-fable-5)
+
+- **`plan` skill references templates that do not exist on disk (hollow reference, PDR-096 shape):**
+  `.agent/skills/plan/SKILL-CANONICAL.md` points at `.agent/plans/templates/README.md` and
+  `templates/components/{quality-gates,lifecycle-triggers}.md` as the "live inventory", but castr has
+  no `.agent/plans/templates/` directory (verified by find during the resonance PDR-005 transplant
+  survey, 2026-07-03). Every plan-authoring pass here follows a dangling pointer. During its
+  Tranche-1 transplant, resonance initially authored minimal scaffolding, then superseded it with
+  the real graft source: **Oak has the full templates estate at
+  `oak:.agent/plans/templates/`** (README + 7 templates + 10 components) — an earlier version of
+  this note wrongly claimed Oak shared the gap; owner-corrected 2026-07-03. The gap is castr-only.
+  Cure: graft the templates estate from Oak (or from resonance's Oak-derived adaptation); either
+  way the `plan` skill's live-inventory reference should stop dangling.
 
 - **Two brought gates fired IN ANGER for the first time, same afternoon — the loop-closure programme
   paying out live:** (1) the LC3c watcher step-deadline killed my comms watcher fail-loud (`drain`
@@ -33,6 +45,33 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   Result-migration slice is named (Bellows landed the reach, `1226d9f`); the corpus-analysis brief's
   "Result→throw adaptation" bring-cost line is superseded in DIRECTION (likely keep `Result<T,E>`,
   compose fail-fast) — the promotion-time re-measure catches the exact shape (noted here so it does).
+
+## 2026-07-03 (pr-lifecycle bring + live application — Fiery Flaring Bellows / bafbac, session part 3)
+
+- **The brought pr-watch proved itself DURING its own bring-PR:** armed on PR #4 it caught the
+  head move, the check-cycle reset, and the thread counts unprompted, one line per state change
+  — and the harvest it prescribes surfaced a real Copilot thread the same minute. The fix
+  (`--prefer-offline` on the composite setup install) IMPROVES on the upstream source action
+  (back-flow candidate): the documented offline-warm-path claim is now actually true.
+- **Generator↔formatter UNSTABLE FIXPOINT class:** the skills-adapter generator double-quotes a
+  frontmatter description containing colon-space; prettier converts to single quotes; the
+  pre-commit auto-format then re-drifts the adapters after every regeneration — the pre-push
+  skills gate refused the same push twice before the root was measured (diff generator-output
+  vs prettier(generator-output)). Content-level cure landed (colon-free description emits
+  unquoted, prettier-stable); the structural cure is generator-side prettier-stable quoting —
+  back-flow candidate, since upstream simply never hit the colon case. Detection recipe: run
+  the generator, then prettier --check its OUTPUT; any diff is a future gate refusal.
+- **A scoped test run is not the pre-commit's test run:** my `vitest run src/pr-watch` was green
+  while `tests/agent-tools-cli.unit.test.ts` (which byte-pins the CLI usage listing) failed on
+  the new topic line — caught only by the full chain. And the first failure READ wrong: validator
+  tests print "Patterns index validation failed" to stdout as fixture noise, which masked the
+  real one-line FAIL further down; grep for FAIL/✗ status, not error-shaped strings (the
+  distilled grep-for-failure-status lesson, refired inside a gate log).
+- **This commit deliberately conserves a peer's stranded napkin note** (the resonance
+  coordinator's plan-templates observation, uncommitted in the tree with no active claim):
+  committing it preserves the knowledge; stranding it risks loss. Its substance (the plan
+  skill's dangling templates references + resonance's authored scaffolding as a graft
+  candidate) is a named backlog input for the next curation pass.
 
 ## 2026-07-03 (CI split bring, post-merge — Fiery Flaring Bellows / bafbac, session part 2)
 
