@@ -11,7 +11,7 @@
 #     static-checks      — format:check, markdownlint-check:root,
 #                          portability:check, repo-validators:check (tsx-based;
 #                          none of these need a build)
-#     build              — turbo build; saves dist + .turbo local cache by sha
+#     build              — turbo build as its own fail-fast gate
 #       unit-tests       — type-check, lint, test (as test:coverage) + coverage
 #                          uploads and the workspace-enumeration guard
 #       structure-checks — madge:circular/orphans, depcruise, knip,
@@ -19,10 +19,13 @@
 #       proof-suites     — character, snapshot, gen, transforms, e2e
 #   quality-gates        — fail-closed fan-in; the required status check
 #
-# Caching strategy: castr has no Turbo remote cache, so the `build` job saves
-# the workspace dist outputs + turbo's LOCAL cache under a per-sha actions/cache
-# key; build-dependent jobs restore it and their `turbo run` calls resolve FULL
-# TURBO from the local cache instead of rebuilding.
+# Caching strategy: the pnpm store cache (composite setup action) is the one
+# shared cache — a changed lockfile costs one network install per run. Turbo
+# task caching is deliberately OFF repo-wide (`cache: false` on every task in
+# turbo.json), so build-dependent jobs re-run `build` via their tasks'
+# `dependsOn: ["build"]` edges (~30s each — correctness over reuse; flipping
+# build caching on is a separate policy decision). The `build` job exists as
+# its own fail-fast gate, not as an artefact warmer.
 #
 # No `paths:` filter: changes anywhere (agent-tools, .agent, .husky, docs, lib)
 # trigger CI. CodeQL runs via GitHub's default code-scanning setup (repo
@@ -115,8 +118,8 @@ jobs:
       - name: Run workspace-owned repo validators
         run: pnpm repo-validators:check
 
-  # Builds every workspace and saves the outputs + turbo's local cache under a
-  # per-sha key, so the build-dependent jobs below restore instead of rebuilding.
+  # Builds every workspace as a fail-fast gate. Downstream jobs re-run build via
+  # their tasks' dependsOn edges (turbo caching is off repo-wide by design).
   build:
     name: build
     permissions:
@@ -129,14 +132,6 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Build
         run: pnpm exec turbo run build --log-order=grouped
-      - name: Save build outputs (dist + turbo local cache)
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            .turbo
-            lib/dist
-            agent-tools/dist
-          key: build-${{ runner.os }}-${{ github.sha }}
 
   # Type-check, lint, and the in-process test suites with coverage. Coverage is
   # a signal, not a gate: the ruleset's code_coverage rule consumes the uploads
@@ -153,15 +148,6 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
-      - name: Restore build outputs
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            .turbo
-            lib/dist
-            agent-tools/dist
-          key: build-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
       - name: Type-check and lint
         run: pnpm exec turbo run type-check lint --continue --log-order=grouped
       - name: Unit + integration tests with coverage
@@ -216,15 +202,6 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
-      - name: Restore build outputs
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            .turbo
-            lib/dist
-            agent-tools/dist
-          key: build-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
       - name: Circular-dependency and orphan checks (madge)
         run: pnpm madge:circular && pnpm madge:orphans
       - name: Dependency-direction check (depcruise)
@@ -250,15 +227,6 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
-      - name: Restore build outputs
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            .turbo
-            lib/dist
-            agent-tools/dist
-          key: build-${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
       - name: Character, snapshot, gen, transforms, e2e suites
         run: >-
           pnpm exec turbo run character test:snapshot test:gen test:transforms

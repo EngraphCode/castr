@@ -35,6 +35,7 @@
     },
     "test:snapshot": {
       "cache": false,
+      "dependsOn": ["build"],
       "outputs": []
     },
     "test:gen": {
@@ -52,6 +53,7 @@
     },
     "test:e2e": {
       "cache": false,
+      "dependsOn": ["build"],
       "outputs": []
     },
     "madge:circular": {
