@@ -38,6 +38,15 @@ If/when this repo adds these layers, document the concrete tooling in the same P
 - **TDD** - ALWAYS use TDD, prefer pure functions and unit tests. Write tests **FIRST**. Red (failing _test_), Green (passing test, because product code is created at this point, _not before_), Refactor (improve the product code implementation, know that the _behaviour_ at the interface will remain proven by the test)
 - **Test real behaviour, not implementation details** - We should be able to change _how_ something works without breaking the test that proves _that_ it works.
 - **Test to interfaces, not internals** - Tests should be written to the interfaces, not the internals. Closely related to test behaviour not implementation.
+- **Prove behaviour, never config or content** - The umbrella over the rules above: a test proves
+  observable behaviour _without constraining implementation or configuration_. Two corollaries
+  (owner doctrine, brought from the upstream 2026-06-26 amendment and restated for castr
+  2026-07-03): hashing a source and pinning the hash is the antithesis — it pins bytes, proves no
+  behaviour, and fails loud on a harmless change; and the cure for a **content-quality invariant**
+  (a firewall over what prose or data may contain) is NOT a grep test but **construction plus
+  human review**. A test that breaks when a constant, path name, colour code, or other
+  configuration value changes — while the behaviour it claims to prove is intact — is
+  constraining configuration, not proving behaviour: loosen it to the behaviour.
 - **No useless tests** - Each test must prove something useful about the product code. If a test is only testing the test or mocks, delete it.
 - **No partial proof posture** - If the repo claims a feature or surface is supported, the proof suite must cover that claim end to end rather than leaving known gaps unproven.
 - **Do not test types** - Tests are for logic, types are explored through creating tests, but types cannot be tested. If test only tests types, delete it.
