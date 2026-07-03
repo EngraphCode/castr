@@ -172,7 +172,11 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > PARALLEL-SAFE with product work — disjoint file estates (`lib/` vs `.agent/`+`agent-tools/`),
 > feature-branch isolation, live coordination substrate — and Q-011's "Axis A first" condition is
 > already satisfied (its Tier-1 spine is complete). Remediation-02 (IR-fidelity harness) may open
-> any time after the doctrine slice; the OCE stream continues in parallel uncompromised.**
+> any time after the doctrine slice; the OCE stream continues in parallel uncompromised.
+> **THE NEXT SESSION EXECUTES [`pre-castr-doctrine-sync.md`](../../plans/current/pre-castr-doctrine-sync.md)**
+> (RS-1 use-result-pattern reconciled to the composition ruling → RS-2 rule re-syncs → RS-3
+> validation-strategy overlap-merge → RS-4 tsdoc enforcement), on ONE fresh feature branch off
+> `main`; on its completion, product work is UNGATED.**
 >
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see
