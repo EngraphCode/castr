@@ -48,6 +48,12 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-07-03 (pr-lifecycle bring + live application — Fiery Flaring Bellows / bafbac, session part 3)
 
+- **A plain `mv` of a tracked file crashes tracked-file validators until the rename is staged:**
+  the machine-local-paths validator reads git's tracked list, so the un-staged plan move made it
+  fail-loud ENOENT mid-`pnpm check` (correct behaviour — a silent skip would have hidden a
+  scan-surface hole). Stage the rename (`git add -- <old> <new>`) in the same breath as the move.
+  Also: session-close `pnpm check` on cache-warm main = 71s with 13 FULL TURBO replays (was ~10
+  min) — the caching slice proven at the local gate too.
 - **The brought pr-watch proved itself DURING its own bring-PR:** armed on PR #4 it caught the
   head move, the check-cycle reset, and the thread counts unprompted, one line per state change
   — and the harvest it prescribes surfaced a real Copilot thread the same minute. The fix
