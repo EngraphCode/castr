@@ -2,6 +2,23 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (dedicated consolidation pass — Fiery Flaring Bellows / bafbac)
+
+- **The gate-collision graduation trigger fired INSIDE the pass that walked it:** Cliff's pre-push
+  `format:check` tripped on my in-flight backflow-ledger edit (a SECOND multi-agent window → worked
+  instance #3) minutes before I dispositioned the register item — and the coordination cure ran
+  exactly as captured (sanctioned mechanical repair + heads-up event + reload-before-write; zero
+  content loss). Graduated same-pass into `check-singleton-per-window` §Peer-In-Flight Collisions,
+  including the dist-clean built-CLI side-effect window both morning sessions measured.
+- **castr-original PDR numbering precedent (Q-009 mapping-table applied):** minted PDR-124 ABOVE
+  Oak main's current highest (123, measured firsthand via `ls-tree`) so a castr original never
+  squats the pending Oak import range (098–123). The next castr original repeats the measurement —
+  Oak main moves.
+- **A peer's context handoff is a claim-set to cross-check, and it earned trust by matching:**
+  Cliff's 6-item curation handoff matched my firsthand reads 6/6 (audit-harness DUE, HARD signals =
+  register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
+  reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
+
 ## 2026-07-03 (statusline S1 landed + Codex wave-4 fix-or-reject — Windswept Winging Cliff / 0ceb5f, session part 2)
 
 - **S1 landed (`7a37dec`) with two deliberate Oak divergences, both recorded as back-flow candidates:**

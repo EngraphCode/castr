@@ -39,6 +39,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-28   |
 | claude-code | claude-fable-5     | 540603            | Penumbral Slipping Moth        | executor     | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor     | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator | 2026-07-03    | 2026-07-03   |
 
 ## Lanes
 
@@ -54,9 +55,12 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 > ([manifests](../../../plans/transplant/statusline-logo-bring-manifests-2026-07-03.md)).**
 > The **Oak Parity-or-Better Program**, **transplant completeness**, and **Practice loop-closure remediation** lanes
 > below are FOLDED into it (their items are its Tier-1/2 entries; the lanes/plans are retained for as-built + detail).
-> Still-separate parallel lanes (NOT Axis A): dependency-currency (DC3–5), first-run friction-fix, hook-matcher
-> precision, the LC1 fail-opens hardening. Axis B = remediation 02–07 (deferred). Axis C = delivery (deprioritised).
-> A/B/C sequencing = open owner decision Q-011. The single live next-step pointer is `repo-continuity.md` Next Safe Steps.
+> Still-separate parallel lanes (NOT Axis A): first-run friction-fix, hook-matcher precision, the LC1 fail-opens
+> hardening (dependency-currency CLOSED 2026-07-03 — see its lane below). Axis B = remediation 02–07 — a DEFINED
+> position after the Tier-1 spine per **Q-011, DECIDED 2026-06-28 (owner): Axis A first**; re-surface B for promotion
+> at Tier-1 close. Axis C = delivery — superseded 2026-07-03: continuous MERGE-READINESS is a standing agent duty and
+> the merge itself is owner-invoked (was "deprioritised"). The single live next-step pointer is `repo-continuity.md`
+> Next Safe Steps.
 
 ### Lane: Oak Parity-or-Better Program — ACTIVE, DOMINANT (started 2026-06-20)
 
@@ -346,6 +350,11 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   case likely needs command-CONTEXT awareness too (literal in an executable position vs inside a string/printf/heredoc
   being written to a doc), not just word-boundary/position anchoring — a harder matching problem. Best false-positive
   specimen yet (the guard blocked the documentation of its own guard). Detail: napkin §guard-firing-is-diagnosis entry.
+  **The class now has THREE first-party specimens (2026-07-03):** the printf-busy-loop original above; Moth's hardened
+  flag-cluster matcher blocking that session's own commit message (heredoc prose naming the blocked pattern); Cliff's
+  wave-4 `--force-with-lease` policy entry firing on the commit message DOCUMENTING it within minutes of landing. The
+  mitigation that reliably works (not token-slipping): write the message via the Write tool, commit with
+  `git commit -F <file>`, keep git commands in a separate clean shell string. The RED-first precision scope stands.
 - Next safe step: RED-first against the founding false positives (`libstress-ng`, `git checkout -b`, the N7/N11 prose
   cases) in `agent-tools/src/hook-policy/`; then write the Oak back-flow note (home: the `oak-backflow/` feedback
   surface) describing the precision improvement for upstream adoption.

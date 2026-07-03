@@ -48,41 +48,14 @@ commit and the permanent doc are the record (no tombstone; see
 
 ### Loop-closure completeness test + the "verify workflow output firsthand" sharpening
 
-The loop-closure-as-completeness-test (doctrine→mechanism→wiring→signal) + the Class-B false-claim failure mode +
-the sharpening that **an adversarially-verified workflow/subagent bring-plan is still a claim to measure firsthand,
-especially for transitive dependencies** (the audit-method-under-counts root recurs at the workflow-output level —
-worked LC1 instance: the bring-plan missed the heartbeat-path writer dependency). Candidate permanent home: a
-**PDR-096 amendment** (or sibling PDR) graduated when the loop-closure remediation lane (LC0–LC5) completes; the
-firsthand-verify sharpening may instead amend `verify-agent-claims-firsthand`. Live in `distilled.md` (two entries)
-
-- `practice-loop-closure-remediation.md`. `[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
-  trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done). status: pending.
-
-### Multi-agent audit harness — completeness-critic + 2nd-pass + firsthand-ground-truth
-
-A decomposed multi-agent audit (decompose-and-cover) under-counts at the lane-DESIGN level, so the harness
-needs: (1) a completeness-critic phase that independently re-derives the full surface and names what the lanes
-don't cover; (2) a 2nd pass over the named-uncovered set; (3) firsthand ground-truth set-diffs computed by the
-orchestrator before reading the synthesis (arms the critical analysis); plus the calibration that a critic's
-value is naming uncovered MODALITIES, not adjudicating presence (its drive-by presence re-checks were 3/3 wrong),
-and that raw subagent synthesis must not be enshrined (carries corrected-but-present errors). Candidate permanent
-home: a **practice-core pattern-PDR** (`pdr_kind: pattern`, ecosystem-agnostic — multi-agent audit doctrine).
-Live in `distilled.md` (2026-06-28 entry) + the gap-rescan workflow scripts.
-`[captured: 2026-06-28 | source: distilled.md + oak-castr-gap-rescan-2026-06-28.md]`
-trigger-condition: a 2nd independent decomposed multi-agent audit reuses the harness (2nd instance). status: **due**
-— the trigger FIRED 2026-07-03: the oak-castr delta review (Windswept Winging Cliff,
-`oak-castr-delta-review-2026-07-03.md`) reused the harness end-to-end as its named second instance (firsthand
-ground-truth diffs first, classify→adversarial-verify lanes, completeness critic scoped to naming-uncovered-only,
-≥13 firsthand re-checks) and added a delta-shaped refinement (delta-rescan-against-verified-base beats full re-run).
-Graduate at the next dedicated consolidation pass: draft the pattern-PDR from the two worked instances.
-
-### Multi-agent-window gate collisions are coordination work, never gate-scoping
-
-Owner ruling (2026-07-03, verbatim substance): whole-repo gates are "a choice and a necessity, not a friction;
-for two agents the answer is coordination, that is all." Worked instances the same day: two pre-push
-`format:check` collisions with a peer's in-flight unformatted `.agent` markdown — cured by the commit skill's
-sanctioned mechanical repair + a heads-up comms event, NOT by scoping the gate (the gate-weakening reflex,
-`never-disable-checks` family). Candidate permanent home: an amendment to `check-singleton-per-window` (or a
-sibling coordination rule) naming the discipline pair — format docs the turn you author them; whole-repo gates
-stay whole-repo. `[captured: 2026-07-03 | source: napkin 2026-07-03 + comms dfa31ec8]`
-trigger-condition: a 2nd multi-agent window hits a whole-repo-gate/peer-in-flight collision. status: pending.
+The loop-closure-as-completeness-test (doctrine→mechanism→wiring→signal) + the Class-B
+false-claim failure mode + the sharpening that **an adversarially-verified workflow/subagent
+bring-plan is still a claim to measure firsthand, especially for transitive dependencies** (the
+audit-method-under-counts root recurs at the workflow-output level — worked LC1 instance: the
+bring-plan missed the heartbeat-path writer dependency). Candidate permanent home: a **PDR-096
+amendment** (or sibling PDR) graduated when the loop-closure remediation lane (LC0–LC5)
+completes; the firsthand-verify sharpening may instead amend `verify-agent-claims-firsthand`.
+Live in `distilled.md` (two entries) + `practice-loop-closure-remediation.md`.
+`[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
+trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done; as of
+2026-07-03 LC0/1/2/3a/3c are done — LC3b, LC3d, LC4, LC5 remain). status: pending.

@@ -18,7 +18,7 @@ If/when this repo adds these layers, document the concrete tooling in the same P
 - ALWAYS test behaviour, NEVER test implementation
 - **Strictness:** No permissive fallbacks and no partial success. If behavior is unsupported, tests must assert a fail-fast error with helpful context.
 - **Completeness:** If we claim a supported surface, tests must prove the whole claimed contract at the seam that owns it. Happy-path subsets and partial proof coverage do not count as done.
-- **Prove System Behaviour**: Tests must prove that the system behaves correctly from the user's or caller's perspective, rather than verifying that specific code paths are executed.
+- **Prove System Behaviour**: Tests must prove that the system behaves correctly from the user's or caller's perspective, rather than verifying that specific code paths are executed. Corollary for coverage reporting (2026-07-03): coverage is a signal, never a target — only the in-process suites (unit + integration) feed it, and the higher-level behaviour-proof suites (character/snapshot/gen/transforms/e2e) deliberately do NOT, so code proven only at those levels legitimately reads as uncovered. Factor that into any threshold or coverage-drop reasoning: a strict drop rule punishes correctly e2e-proven code, and the correctness bar remains the behaviour-proof suites, not the percentage.
 - **Never Constrain Implementation**: Tests must never be coupled to the internal implementation details. Refactoring internals should never break a test if the external behaviour remains the same.
 - **Tests Must Be Useful**: Every test must provide value by proving a specific requirement or preventing a specific regression. If a test doesn't prove anything useful, delete it.
 - Prefer pure functions and unit tests

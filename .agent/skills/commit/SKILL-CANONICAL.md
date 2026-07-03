@@ -96,7 +96,12 @@ Run these steps **before** formulating the commit message.
    constraints are whatever the commitlint preset declares; the rules below are
    the defaults for `@commitlint/config-conventional`, the most common preset
    (currently in use in this repo). If the config `extends` a different preset,
-   or layers on `rules:` overrides, surface those instead.
+   or layers on `rules:` overrides, surface those instead. **This repo layers a
+   `type-enum` override** (`commitlint.config.mjs`): 7 types —
+   `feat`/`fix`/`refactor`/`test`/`docs`/`chore`/`perf`. Notably there is NO
+   `ci` type despite the conventional default below — workflow-file commits
+   take `chore(ci):` (measured 2026-07-03; the repo override always governs
+   over the table).
 
    **`@commitlint/config-conventional` defaults**:
 
@@ -213,6 +218,19 @@ direct CLI commands for inspection and recovery.
 prettier-staged` or a targeted Prettier command). If formatting mutates a
    file, re-read the diff, re-stage the exact pathspecs, and record a fresh
    fingerprint.
+
+   Two measured staging gotchas (three firings across 2026-07-03):
+
+   - **An already-staged deletion fails `git add` pathspec and aborts the
+     WHOLE add** (nothing staged): a file deleted via `git rm` earlier no
+     longer exists in the worktree, so including it in a wider `git add`
+     errors. Only `git add` paths that exist in the worktree — the staged
+     deletion rides along in the pathspec-scoped commit automatically.
+   - **After a formatter pass, enqueue from `git diff HEAD --name-only`,
+     never from `git status --short`**: a formatter can return a file to
+     byte-equality with HEAD, so status-derived intents include no-op files
+     whose re-add equals HEAD — they read as "missing" from the staged set
+     and the verify-staged guard abandons the intent.
 
    ```bash
    # Resolve the session's UUID v5 id once (PDR-076a):

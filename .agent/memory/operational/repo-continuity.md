@@ -84,7 +84,35 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**Deep handoff + consolidation run this session — 2026-06-28 (Open Lofting Feather).** Owner-invoked deep-deep handoff
+**Dedicated knowledge-curation pass — 2026-07-03 (Fiery Flaring Bellows / bafbac).** Owner-invoked
+`consolidate-until-done` in an n=2 window (Windswept Winging Cliff on CI watch; boundaries
+coordinated live). Knowledge homed: **PDR-124** (multi-agent audit-harness pattern, `pdr_kind:
+pattern`, **Proposed** — owner walk in the closeout) authored from its two worked instances (the
+2026-06-28 gap rescan + the 2026-07-03 delta review), numbered above Oak main's highest to honour
+the Q-009 mapping-table decision; the **gate-collision coordination discipline** graduated into
+`check-singleton-per-window` §Peer-In-Flight Collisions (owner ruling + three worked instances
+across two windows, the third firing live inside this pass); the commit skill gained the two
+measured staging gotchas (already-staged deletion aborts `git add`; enqueue from `git diff HEAD`
+after a formatter) + the repo `type-enum` override note (no `ci` type); `testing-strategy.md`
+gained the coverage-is-a-signal corollary (higher-level suites deliberately not coverage-fed);
+`distilled.md` gained the tsx-enclave and scanning-settings-can-disable-a-workflow lessons + the
+zsh-arrays refinement; the oak-backflow ledger gained three measured rows (statusline WS4.1 seam,
+absent-registry solo-floor fix, coverage wiring). Buffers at rest: `open-questions` holds only the
+two owner-facing items (Q-008 publish-PII, Q-010 Result-vs-fail-fast; Q-009/Q-011 drained, homes
+verified); `pending-graduations` holds only the trigger-gated loop-closure item (LC3b/3d/4/5
+outstanding). Fitness at rest: nothing worse than soft. Napkin NOT rotated (below threshold).
+Experience audit clean — the emergent cross-read (a confident frame invalidated by a default that
+should load earlier) is already captured as `passive-guidance-loses-to-artefact-gravity`. Queue
+residue: four self-documenting abandoned intents left in place (no sanctioned CLI cleanup; work
+demonstrably landed). **Named follow-up (pre-merge work, NOT curation): merge-event continuity
+reconciliation** — the single-branch-invariant text and branch-scoped continuity blocks need a
+supersession pass when PR #3 merges (flagged by Cliff 2026-07-03, held as a named position).
+**Owner-walk residue:** PDR-124 status flip; a proposed PDR-097 amendment (audit-to-zero via
+annotated workspace overrides carrying explicit removal conditions). **Next deep consolidation:
+not due** until a fresh trigger (napkin rotation cadence, a fresh capture batch, or the
+loop-closure lane completing → the PDR-096 amendment + the register's last item).
+
+**Prior: deep handoff + consolidation — 2026-06-28 (Open Lofting Feather).** Owner-invoked deep-deep handoff
 (`session-handoff`/`consolidate-docs`) + a recursive "what would be lost?" scan, after a generative session: LC3a
 machine-local-paths validator; the bring-everything disposition (PDR-005 §Default amendment + user-memory + thread
 standing-decision); the husky commit-msg guardrail (LC4-1); and a two-pass Oak→castr gap rescan (the authoritative

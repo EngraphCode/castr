@@ -58,6 +58,39 @@ either retired or stalled.
   `vitest run path/to/spec`); these do not duplicate the
   whole-repo sweep work.
 
+## Peer-In-Flight Collisions Are Coordination Work, Never Gate-Scoping
+
+Amended 2026-07-03 from an owner ruling plus three worked instances across
+two multi-agent windows the same day. A whole-repo gate (pre-push
+`format:check`, `check:ci`) that trips on a PEER's in-flight files is not
+gate friction to engineer away. Owner ruling (verbatim substance):
+whole-repo gates are _"a choice and a necessity, not a friction; for two
+agents the answer is coordination, that is all."_ Proposing to scope the
+gate to tracked/staged files is the gate-weakening reflex
+(`never-disable-checks` family) — the ruling retracted exactly that
+proposal.
+
+The discipline pair:
+
+1. **Format docs the turn you author them.** An author who leaves
+   unformatted `.agent` markdown in the tree hands every peer's pre-push
+   a collision.
+2. **Whole-repo gates stay whole-repo.** When a peer's gate trips on your
+   in-flight file, the cure is the sanctioned mechanical repair: the
+   gate-runner applies `prettier --write` (formatting only, zero content
+   change), broadcasts a heads-up naming the file, and the author
+   **reloads the file before their next write** so the repair is not
+   clobbered. Worked three times (both directions) without content loss.
+
+**Side effect every peer must expect:** a whole-repo `pnpm check` run
+transiently deletes and rebuilds `agent-tools/dist`, so a PEER's built-CLI
+ceremony (comms send, heartbeat tick, claims, queue) can fail
+`MODULE_NOT_FOUND` during the clean→rebuild window (~1 min; two measured
+instances, 2026-07-03). Read the in-flight broadcast as "built-CLI surface
+unavailable too": defer CLI-dependent ceremony until the result event, and
+treat a failed tick inside an announced window as retry-after, not as a
+failure to diagnose.
+
 ## Why
 
 Owner-stated 2026-05-22 during a session-handoff window:
