@@ -38,7 +38,7 @@ function isEslintPlugin(candidate: unknown): candidate is ESLint.Plugin {
  */
 function asPlugin(plugin: unknown): ESLint.Plugin {
   if (!isEslintPlugin(plugin)) {
-    throw new Error('Invalid ESLint plugin: missing rules property');
+    throw new Error('Invalid ESLint plugin: expected an object carrying a rules table');
   }
   return plugin;
 }
