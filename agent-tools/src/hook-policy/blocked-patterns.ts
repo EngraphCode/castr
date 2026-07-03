@@ -80,7 +80,7 @@ export function findBlockedPattern(
     let patternIndex = 0;
 
     for (const commandToken of commandTokens) {
-      if (commandToken === patternTokens[patternIndex]) {
+      if (tokensMatch(commandToken, patternTokens[patternIndex])) {
         patternIndex += 1;
       }
 
@@ -91,6 +91,31 @@ export function findBlockedPattern(
   }
 
   return null;
+}
+
+function tokensMatch(commandToken: string, patternToken: string | undefined): boolean {
+  if (patternToken === undefined) {
+    return false;
+  }
+  return commandToken === patternToken || shortOptionClusterCovers(commandToken, patternToken);
+}
+
+/**
+ * Short-option clusters spell the same flags many ways: `git clean -fd`,
+ * `git clean -df`, and `git clean -fdx` all carry the force bit of `-f`.
+ * A pattern cluster matches a command cluster when every pattern letter is
+ * present in the command's cluster, so flag reordering or aggregation cannot
+ * bypass a block. Only the subset direction is widened — the command must
+ * carry at least all of the pattern's flags — so a dry-run `git clean -nd`
+ * never matches a `-f` pattern.
+ */
+function shortOptionClusterCovers(commandToken: string, patternToken: string): boolean {
+  const cluster = /^-[a-zA-Z]+$/u;
+  if (!cluster.test(commandToken) || !cluster.test(patternToken)) {
+    return false;
+  }
+  const commandLetters = new Set(commandToken.slice(1));
+  return [...patternToken.slice(1)].every((letter) => commandLetters.has(letter));
 }
 
 /**

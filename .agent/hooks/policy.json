@@ -41,7 +41,13 @@
           "reappraisal": "This silently discards uncommitted work — including parallel agents' edits — beyond fsck recovery; never use git to remove work, make forward-going filesystem changes instead."
         },
         {
-          "pattern": "git clean -fd",
+          "pattern": "git clean -f",
+          "concept": "worktree-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "This deletes untracked files irrecoverably, including peers' in-flight work; never use git to remove work, make forward-going filesystem changes instead."
+        },
+        {
+          "pattern": "git clean --force",
           "concept": "worktree-destruction",
           "citation": ".agent/rules/never-use-git-to-remove-work.md",
           "reappraisal": "This deletes untracked files irrecoverably, including peers' in-flight work; never use git to remove work, make forward-going filesystem changes instead."

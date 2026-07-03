@@ -112,7 +112,12 @@ export interface MutableCommitQueueCliOptions {
  * is one source of truth and no import cycle.
  */
 export type CommitWorkflowFailureStage =
-  'load-intent' | 'queue-ahead' | 'verify-staged-before' | 'verify-staged-after' | 'git-commit';
+  | 'load-intent'
+  | 'intent-inactive'
+  | 'queue-ahead'
+  | 'verify-staged-before'
+  | 'verify-staged-after'
+  | 'git-commit';
 
 export type CommitWorkflowCliResult =
   | {

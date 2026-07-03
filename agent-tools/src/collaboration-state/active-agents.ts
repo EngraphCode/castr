@@ -60,12 +60,50 @@ export function activeAgentReports(
   return sortedReports(groups);
 }
 
+/**
+ * Legacy rows whose `agent_id` carries no PDR-076a UUID. Grouping keys on
+ * the id ({@link routingKeyFor} fails fast without one), so these rows are
+ * QUARANTINED out of {@link activeAgentReports} rather than allowed to make
+ * the whole observability report throw. Callers surface the returned
+ * descriptions loudly (no silent legacy passthrough — PDR-076b applies to
+ * write surfaces; a read surface degrades visibly instead of dying).
+ */
+export function idlessLegacyRows(
+  registry: CollaborationRegistry,
+  closedArchive?: ClosedClaimsArchive,
+): readonly string[] {
+  const rows: string[] = [];
+  for (const claim of registry.claims) {
+    if (claim.agent_id.id === undefined) {
+      rows.push(`claim ${claim.claim_id}: ${formatAgent(claim.agent_id)}`);
+    }
+  }
+  for (const entry of registry.commit_queue) {
+    if (entry.agent_id.id === undefined) {
+      rows.push(`commit-queue intent ${entry.intent_id}: ${formatAgent(entry.agent_id)}`);
+    }
+  }
+  for (const claim of closedArchive?.claims ?? []) {
+    if (claim.agent_id.id === undefined) {
+      rows.push(`closed claim ${claim.claim_id}: ${formatAgent(claim.agent_id)}`);
+    }
+  }
+  return rows;
+}
+
+function hasRoutableId(agentId: CollaborationAgentId): boolean {
+  return agentId.id !== undefined;
+}
+
 function addClaimGroups(
   groups: Map<string, MutableActiveAgentReport>,
   registry: CollaborationRegistry,
   nowIso: string,
 ): void {
   for (const claim of registry.claims) {
+    if (!hasRoutableId(claim.agent_id)) {
+      continue; // quarantined — surfaced via idlessLegacyRows
+    }
     const report = claimReport(claim, nowIso);
     const group = reportGroup(groups, claim.agent_id);
     addIdentity(group, claim.agent_id);
@@ -85,6 +123,9 @@ function addCommitQueueGroups(
   nowIso: string,
 ): void {
   for (const entry of registry.commit_queue) {
+    if (!hasRoutableId(entry.agent_id)) {
+      continue; // quarantined — surfaced via idlessLegacyRows
+    }
     const queueStatus = queueStatusFor(entry, nowIso);
     if (queueStatus === 'abandoned') {
       continue;
@@ -107,6 +148,9 @@ function addClosedClaimGroups(
   closedArchive: ClosedClaimsArchive | undefined,
 ): void {
   for (const claim of closedArchive?.claims ?? []) {
+    if (!hasRoutableId(claim.agent_id)) {
+      continue; // quarantined — surfaced via idlessLegacyRows
+    }
     const group = reportGroup(groups, claim.agent_id);
     addIdentity(group, claim.agent_id);
     group.closed_claims.push({

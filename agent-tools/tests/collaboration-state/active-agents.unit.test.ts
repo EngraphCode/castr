@@ -195,3 +195,31 @@ function queueEntry(
     ...overrides,
   };
 }
+
+describe('activeAgentReports — id-less legacy rows', () => {
+  it('does not throw when a legacy id-less row is present, still reports the id-bearing agents, and surfaces the quarantined rows', async () => {
+    const { idlessLegacyRows } = await import('../../src/collaboration-state/active-agents');
+    const legacy = {
+      agent_name: 'Legacy Roaming Fossil',
+      platform: 'codex',
+      model: 'GPT-4',
+      session_id_prefix: '000000',
+    } as CollaborationAgentId;
+    const registry: CollaborationRegistry = {
+      schema_version: '1.3.0',
+      commit_queue: [],
+      claims: [
+        claim({ claim_id: 'fresh-claim', agent_id: woodland }),
+        claim({ claim_id: 'legacy-claim', agent_id: legacy }),
+      ],
+    };
+
+    const reports = activeAgentReports(registry, nowIso);
+    expect(reports).toHaveLength(1);
+    expect(reports[0]?.routing_key.agent_name).toBe('Woodland Creeping Petal');
+
+    const quarantined = idlessLegacyRows(registry);
+    expect(quarantined).toHaveLength(1);
+    expect(quarantined[0]).toContain('Legacy Roaming Fossil');
+  });
+});

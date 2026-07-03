@@ -544,3 +544,46 @@ describe('commit-queue read APIs', () => {
     );
   });
 });
+
+describe('guardStageFiles — PDR-076a id-keyed identity', () => {
+  it('refuses to stage against an intent owned by an agent with the same readable tuple but a different UUID id', () => {
+    const impostor: CommitQueueAgentId = {
+      ...agentId,
+      id: 'ffffffff-ffff-5fff-8fff-ffffffffffff',
+    };
+    const registry: CommitQueueRegistry = {
+      schema_version: '1.3.0',
+      claims: [gitClaim()],
+      commit_queue: [intent()],
+    };
+
+    const result = guardStageFiles({
+      registry,
+      agentId: impostor,
+      files: ['agent-tools/src/commit-queue/index.ts'],
+      nowIso: now,
+    });
+
+    expect(result.ok).toBe(false);
+  });
+});
+
+describe('verifyStagedBundle — recorded fingerprint is required', () => {
+  it('fails when the intent has no recorded staged-bundle fingerprint, so an unrecorded bundle can never reach git commit', () => {
+    const unrecorded = intent();
+
+    const result = verifyStagedBundle({
+      intent: unrecorded,
+      stagedNameOnly: 'agent-tools/src/commit-queue/index.ts\n',
+      stagedNameStatus: 'M\tagent-tools/src/commit-queue/index.ts\n',
+      stagedPatch: 'diff --git a/agent-tools/src/commit-queue/index.ts b/x\n',
+      worktreeShortStatus: 'M  agent-tools/src/commit-queue/index.ts\n',
+      commitSubject: unrecorded.commit_subject,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.reason).toContain('record-staged');
+    }
+  });
+});

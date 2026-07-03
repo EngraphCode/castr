@@ -598,3 +598,32 @@ describe('runCommitWorkflow — worktree-divergence guard on intent files', () =
     expect(calls.gitCommitCalls.current).toBe(1);
   });
 });
+
+describe('runCommitWorkflow — target-intent freshness guard', () => {
+  it('refuses an abandoned intent before running advisory hooks or git commit', async () => {
+    const holder = holderFor(initialRegistry(queuedIntent({ phase: 'abandoned' })));
+    const { deps, calls } = fakeDeps({ holder, stagedBundles: [matchingStagedBundle()] });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.stage).toBe('intent-inactive');
+    }
+    expect(calls.advisoryCalls.current).toBe(0);
+    expect(calls.gitCommitCalls.current).toBe(0);
+  });
+
+  it('refuses an expired intent even when its phase is still queued', async () => {
+    const holder = holderFor(initialRegistry(queuedIntent({ expires_at: '2026-05-22T11:00:00Z' })));
+    const { deps, calls } = fakeDeps({ holder, stagedBundles: [matchingStagedBundle()] });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.stage).toBe('intent-inactive');
+    }
+    expect(calls.gitCommitCalls.current).toBe(0);
+  });
+});

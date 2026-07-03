@@ -260,3 +260,21 @@ describe('buildPreToolUseDenyResponse', () => {
     expect(reason).toContain('Step back and reappraise');
   });
 });
+
+describe('findBlockedPattern — short-option cluster equivalence', () => {
+  const policy = [{ pattern: 'git clean -f', concept: 'worktree-destruction' }];
+
+  it.each([
+    'git clean -fd',
+    'git clean -df',
+    'git clean -d -f',
+    'git clean -fdx',
+    'git clean -xdf',
+  ])('matches the flag-cluster spelling %s against the pattern "git clean -f"', (command) => {
+    expect(findBlockedPattern(command, policy)?.pattern).toBe('git clean -f');
+  });
+
+  it('does not match a git clean dry run that never carries the force flag', () => {
+    expect(findBlockedPattern('git clean -nd', policy)).toBeNull();
+  });
+});

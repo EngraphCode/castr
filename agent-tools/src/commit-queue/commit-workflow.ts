@@ -20,6 +20,7 @@
 import {
   completeCommitIntent,
   getFreshEntriesAhead,
+  isFreshActiveEntry,
   updateCommitIntentPhase,
   verifyStagedBundle,
 } from './core.js';
@@ -106,6 +107,22 @@ export async function runCommitWorkflow(input: CommitWorkflowInput): Promise<Com
   const loaded = await loadIntent(input);
   if (!loaded.ok) {
     return loaded.failure;
+  }
+
+  // Target-intent freshness guard (parity with the pre-stage guard's
+  // active/non-expired filter): an intent that expired or was abandoned
+  // between record-staged and commit must never reach advisory hooks or
+  // git commit. Fail WITHOUT further mutation — the phase already tells
+  // the operator what happened.
+  if (!isFreshActiveEntry(loaded.intent, input.deps.nowIso())) {
+    return {
+      ok: false,
+      stage: 'intent-inactive',
+      reason:
+        `intent ${input.intentId} is not fresh and active ` +
+        `(phase: ${loaded.intent.phase}, expires_at: ${loaded.intent.expires_at})`,
+      intentId: input.intentId,
+    };
   }
 
   // Queue-order guard (parity with the standalone verify-staged command):

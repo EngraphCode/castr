@@ -1,4 +1,4 @@
-import { activeAgentReports } from './active-agents.js';
+import { activeAgentReports, idlessLegacyRows } from './active-agents.js';
 import { claimReport, sameAgent } from './claim-reports.js';
 import { resolveIdentity } from './cli-identity.js';
 import { optional, required, type Options } from './cli-options.js';
@@ -60,6 +60,13 @@ export async function activeAgents(options: Options): Promise<string> {
   const closedPath = optional(options, 'closed');
   const closedArchive =
     closedPath === undefined ? undefined : await readClosedClaimsFile(closedPath);
+
+  // Quarantined legacy rows are surfaced loudly on stderr so the report
+  // stays usable without silently hiding pre-PDR-076a state.
+  const quarantined = idlessLegacyRows(registry, closedArchive);
+  for (const row of quarantined) {
+    process.stderr.write(`warning: id-less legacy row excluded from report: ${row}\n`);
+  }
 
   return `${JSON.stringify(
     activeAgentReports(registry, nowFromOptions(options), closedArchive),

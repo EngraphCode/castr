@@ -214,10 +214,19 @@ function verifyFingerprint(input: {
     patch: input.stagedPatch,
   });
 
-  if (
-    typeof input.intent.staged_bundle_fingerprint === 'string' &&
-    input.intent.staged_bundle_fingerprint !== fingerprint
-  ) {
+  // A missing fingerprint means record-staged never ran for this intent —
+  // skipping the comparison would let an unrecorded bundle reach git commit
+  // after only file-name/subject checks.
+  if (typeof input.intent.staged_bundle_fingerprint !== 'string') {
+    return {
+      ok: false,
+      reason:
+        'intent has no recorded staged-bundle fingerprint; run record-staged ' +
+        'after staging and before verify/commit',
+    };
+  }
+
+  if (input.intent.staged_bundle_fingerprint !== fingerprint) {
     const reason = activeClaimsRestagedReason(input.intent.files);
     if (reason !== undefined) {
       return { ok: false, reason };
@@ -264,7 +273,7 @@ function updateIntentPhase(
   };
 }
 
-function isFreshActiveEntry(entry: CommitIntent, nowIsoValue: string): boolean {
+export function isFreshActiveEntry(entry: CommitIntent, nowIsoValue: string): boolean {
   return (
     isActiveCommitQueuePhase(entry.phase) && secondsUntilExpiry(entry.expires_at, nowIsoValue) >= 0
   );

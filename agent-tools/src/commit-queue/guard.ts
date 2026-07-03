@@ -132,6 +132,10 @@ function claimCoversGitIndexHead(claim: CommitQueueClaim): boolean {
 
 function sameAgent(left: CommitQueueAgentId, right: CommitQueueAgentId): boolean {
   return (
+    // The PDR-076a UUID is the canonical disambiguator: two live sessions can
+    // collide on the whole readable tuple, so identity equality without `id`
+    // would let one agent stage against the other's intent and git claim.
+    left.id === right.id &&
     left.agent_name === right.agent_name &&
     left.platform === right.platform &&
     left.model === right.model &&
