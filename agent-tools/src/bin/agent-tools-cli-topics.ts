@@ -4,6 +4,7 @@ import { runBranchTouchedFilesCli } from '../branch-touched-files/cli.js';
 import { runCodexExecCli } from '../codex-exec/cli.js';
 import { parseCommitQueueArgs, runCommitQueueCli } from '../commit-queue/index.js';
 import { runContextCostCli } from '../context-cost/cli.js';
+import { runPrWatchCli } from '../pr-watch/cli.js';
 import type { AgentToolsCliInput, AgentToolsCliResult } from './agent-tools-cli-types.js';
 
 export class OutputBuffer {
@@ -90,6 +91,22 @@ export async function runCodexExecTopic(
     stderr,
   });
   return { exitCode, stdout: stdout.text(), stderr: stderr.text() };
+}
+
+export async function runPrWatchTopic(
+  input: AgentToolsCliInput,
+  args: readonly string[],
+): Promise<AgentToolsCliResult> {
+  // Watch mode emits one line per PR state change over a long-lived loop, so
+  // output goes DIRECTLY to the live stream (the comms-watch precedent) — a
+  // buffer would hold every line until exit and blind the watching agent.
+  const stderr = new OutputBuffer();
+  const exitCode = await runPrWatchCli({
+    args,
+    stdout: input.stdout ?? process.stdout,
+    stderr,
+  });
+  return { exitCode, stdout: '', stderr: stderr.text() };
 }
 
 function resolveRepoRoot(cwd: string): string {

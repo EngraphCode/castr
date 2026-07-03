@@ -4,6 +4,7 @@ import {
   OutputBuffer,
   runBranchTouchedFilesTopic,
   runCodexExecTopic,
+  runPrWatchTopic,
   runCommitQueueTopic,
   runContextCostTopic,
 } from './agent-tools-cli-topics.js';
@@ -139,6 +140,10 @@ async function dispatchTopic(input: {
     return runCodexExecTopic(input.input, input.parsed.topicArgs);
   }
 
+  if (input.parsed.topic === 'pr-watch') {
+    return runPrWatchTopic(input.input, input.parsed.topicArgs);
+  }
+
   throw new Error(`unknown topic: ${input.parsed.topic ?? ''}`);
 }
 
@@ -187,5 +192,6 @@ function usage(): string {
     '  branch-touched-files',
     '  context-cost',
     '  codex-exec',
+    '  pr-watch',
   ].join('\n');
 }
