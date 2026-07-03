@@ -270,12 +270,12 @@ check-attr`/`git config --get` for live wiring. Test-the-real-path-at-the-real-l
 ## 2026-06-26 (consolidation rotation — Eclipsed Lurking Moth / 1dfcd1)
 
 Dedicated knowledge-curation pass. Rotated the 2026-06-20 → 2026-06-21 windows to
-[`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (239+ lines of processed
+[`archive/napkin-2026-06-20-to-21.md`](napkin-2026-06-20-to-21.md) (239+ lines of processed
 capture). Three behaviour-changing lessons that were not yet conserved were merged into
-[`distilled.md`](distilled.md): the strict-lens-is-for-the-forced-fix scope discipline, grep-for-failure-status
+[`distilled.md`](../distilled.md): the strict-lens-is-for-the-forced-fix scope discipline, grep-for-failure-status
 (not error-shaped strings) when scanning a run for regressions, and embedded-compiler-version-is-the-risk-vector
 (a workspace override is not a control surface over a vendored bundle). The FIRST-RUN friction worklist (F1–F12/N1–N12)
-was relocated to [`../../plans/transplant/first-run-friction-inventory.md`](../../plans/transplant/first-run-friction-inventory.md)
+was relocated to [`../../plans/transplant/first-run-friction-inventory.md`](../../../plans/transplant/first-run-friction-inventory.md)
 as the friction-fix lane's controlling plan, and the lane pointer updated — this unblocked rotation (the prior pass's
 stated cure). The 2026-06-26 entries below are kept live (current session work). All lessons conserved; nothing trimmed.
 

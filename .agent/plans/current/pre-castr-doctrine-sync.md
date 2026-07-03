@@ -43,7 +43,7 @@ body). Wrappers (`.claude`/`.agents` via `portability:check --fix`, `.cursor` tr
 the rule resolves from RULES_INDEX; grep confirms no retired-framing text.
 
 **RS-2 — product-facing rule re-syncs (the re-sync wave's leads).**
-(a) `consolidate-at-third-consumer` → `consolidate-at-SECOND-consumer` (Oak R100 rename):
+(a) `consolidate-at-third-consumer` → `consolidate-at-second-consumer` (Oak R100 rename):
 rename rule + all three wrappers + RULES_INDEX + repo-wide citation ripple (grep
 `third-consumer`); (b) `no-unbounded-host-load` §4 macOS reading (healthy load sits above core
 count; use CPU-idle% + memory pressure — the amendment castr's own false-caution instance
