@@ -24,9 +24,10 @@ for the portable doctrine.
 castr is executing **one deep enhancement** (owner): bring over the entire
 Practice / agentic-engineering framework / agent-tools / skill+rule+subagent+hook
 definitions **and** fix castr's known issues — the same goal, not competing
-priorities. All components live on the single branch
-`feat/transplant-engraph-practice`; nothing is parked; the owner names the next
-slice.
+priorities. **The transplant branch merged to `main` in PR #3 (`5529436`,
+2026-07-03); work now proceeds on FEATURE BRANCHES off `main`, one PR per slice,
+merges owner-invoked** (see §Repo-Wide Invariants). Nothing is parked; the owner
+names the next slice.
 
 This block is a pointer, not a second narrative. The authoritative homes:
 
@@ -159,10 +160,15 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > **consolidation** (917d989 + walk outcomes `a16682a`/`1226d9f`: PDR-124 Accepted, Q-008 → the
 > [`archive-pii-scrub`](../../plans/current/archive-pii-scrub.md) full-tool plan, **Q-010 RULED: Result and
 > fail-fast COMPOSE** → `use-result-pattern` is now a BRING + a D4 Result-migration slice is in the backlog).
-> **NEXT STEPS, in order: (1) PRE-MERGE — the merge-event continuity reconciliation** (supersede the single-branch
-> invariant text here + delivery-ledger + record the post-merge branch model; small, unowned, named) **then the
-> owner invokes the merge of PR #3** (merge stays owner-invoked; babysit the merge-push Codex wave + CI on main;
-> the branch's audit-zero cures main's 48 dependabot findings). **(2) BEFORE PRODUCT WORK RESUMES — the substrate
+> **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
+> post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see
+> §Repo-Wide Invariants, the authoritative statement) and the single-branch text is reconciled across
+> continuity/ledger/thread/prompt/roadmap/plan surfaces. ALSO LANDED same pass (feat/ci-enhancement, PR #4):
+> the CI SPLIT (OCE architecture — parallel gate jobs, fail-closed `quality-gates` fan-in, composite setup;
+> ~5min wall-clock; exposed + fixed two latent turbo dependsOn defects) and TURBO CACHING ON with measured
+> exceptions (agent-tools#test root-reach; mutating/network tasks) + cross-job cache sharing — plan
+> [`turbo-caching-and-branch-model.md`](../../plans/active/turbo-caching-and-branch-model.md).**
+> **(2) BEFORE PRODUCT WORK RESUMES — the substrate
 > tranche:** doctrine re-sync wave (consolidate-at-SECOND-consumer rename leads; now also carries the
 > `use-result-pattern` bring per Q-010), plan-templates (TC2), validation-strategy directive, tsdoc enforcement,
 > encoding-integrity gate, markdown-links wiring + amended ADR-127. **(3) EXECUTION SLICES ANY TIME:** statusline
@@ -435,15 +441,19 @@ D1/single-TS-override decision is now
 
 Continuity invariants (the non-negotiables a resuming agent must hold):
 
-- **Single branch** `feat/transplant-engraph-practice`; one eventual PR → `main`
-  carries everything. Branch/PR state is owned by
+- **Branching model (owner, 2026-07-03): feature branches off `main`, one PR per
+  slice, merges owner-invoked.** The 2026-06→07 single-branch working mode was a
+  CIRCUMSTANCE of the transplant era, never an invariant (owner: _"one branch was
+  never an invariant, we just happened to be working off main to start with, now
+  we use feature branches"_). It ended when PR #3 merged (`5529436`, 2026-07-03).
+  Dated records referencing the "single-branch invariant" describe that era
+  truthfully and are not current doctrine. The collaboration substrate (claims /
+  comms / commit queue) is branch-agnostic. Branch/PR state is owned by
   [`delivery-ledger.md`](../../plans/delivery-ledger.md).
-- **Periodic main→branch sync** (owner sign-off 2026-06-20) — at session open,
-  before any merge act, and on owner direction, run the
-  [`delivery-ledger.md §Main→branch sync discipline`](../../plans/delivery-ledger.md)
-  check so no `main`-side commit (landed via a separate branch) is silently
-  stranded outside the transplant branch. "Nothing to integrate" is a valid,
-  evidence-backed verdict.
+- **Feature branches stay current with `main`** — at session open and before any
+  merge act, fetch and reconcile (`git fetch origin --prune`; rebase or merge
+  `main` forward per the branch's churn). The transplant-era main→branch
+  stranded-commit sweep is retired with the model that needed it.
 - **Roll forward only** — revert; never `reset --hard` / force-push
   ([`never-use-git-to-remove-work`](../../rules/never-use-git-to-remove-work.md)).
 - **Each transplant phase = one atomic commit + `transplant/phase-N` tag**,

@@ -2,7 +2,19 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-07-03 (session part 3: hook hardening + wave 5 + pause window — Windswept Winging Cliff / 0ceb5f, closeout)
+## 2026-07-03 (external note: resonance Tranche-1 transplant — Resonance transplant coordinator / claude-fable-5)
+
+- **`plan` skill references templates that do not exist on disk (hollow reference, PDR-096 shape):**
+  `.agent/skills/plan/SKILL-CANONICAL.md` points at `.agent/plans/templates/README.md` and
+  `templates/components/{quality-gates,lifecycle-triggers}.md` as the "live inventory", but castr has
+  no `.agent/plans/templates/` directory (verified by find during the resonance PDR-005 transplant
+  survey, 2026-07-03). Every plan-authoring pass here follows a dangling pointer. During its
+  Tranche-1 transplant, resonance initially authored minimal scaffolding, then superseded it with
+  the real graft source: **Oak has the full templates estate at
+  `oak:.agent/plans/templates/`** (README + 7 templates + 10 components) — an earlier version of
+  this note wrongly claimed Oak shared the gap; owner-corrected 2026-07-03. The gap is castr-only.
+  Cure: graft the templates estate from Oak (or from resonance's Oak-derived adaptation); either
+  way the `plan` skill's live-inventory reference should stop dangling.
 
 - **Two brought gates fired IN ANGER for the first time, same afternoon — the loop-closure programme
   paying out live:** (1) the LC3c watcher step-deadline killed my comms watcher fail-loud (`drain`
@@ -33,6 +45,61 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   Result-migration slice is named (Bellows landed the reach, `1226d9f`); the corpus-analysis brief's
   "Result→throw adaptation" bring-cost line is superseded in DIRECTION (likely keep `Result<T,E>`,
   compose fail-fast) — the promotion-time re-measure catches the exact shape (noted here so it does).
+
+## 2026-07-03 (pr-lifecycle bring + live application — Fiery Flaring Bellows / bafbac, session part 3)
+
+- **The brought pr-watch proved itself DURING its own bring-PR:** armed on PR #4 it caught the
+  head move, the check-cycle reset, and the thread counts unprompted, one line per state change
+  — and the harvest it prescribes surfaced a real Copilot thread the same minute. The fix
+  (`--prefer-offline` on the composite setup install) IMPROVES on the upstream source action
+  (back-flow candidate): the documented offline-warm-path claim is now actually true.
+- **Generator↔formatter UNSTABLE FIXPOINT class:** the skills-adapter generator double-quotes a
+  frontmatter description containing colon-space; prettier converts to single quotes; the
+  pre-commit auto-format then re-drifts the adapters after every regeneration — the pre-push
+  skills gate refused the same push twice before the root was measured (diff generator-output
+  vs prettier(generator-output)). Content-level cure landed (colon-free description emits
+  unquoted, prettier-stable); the structural cure is generator-side prettier-stable quoting —
+  back-flow candidate, since upstream simply never hit the colon case. Detection recipe: run
+  the generator, then prettier --check its OUTPUT; any diff is a future gate refusal.
+- **A scoped test run is not the pre-commit's test run:** my `vitest run src/pr-watch` was green
+  while `tests/agent-tools-cli.unit.test.ts` (which byte-pins the CLI usage listing) failed on
+  the new topic line — caught only by the full chain. And the first failure READ wrong: validator
+  tests print "Patterns index validation failed" to stdout as fixture noise, which masked the
+  real one-line FAIL further down; grep for FAIL/✗ status, not error-shaped strings (the
+  distilled grep-for-failure-status lesson, refired inside a gate log).
+- **This commit deliberately conserves a peer's stranded napkin note** (the resonance
+  coordinator's plan-templates observation, uncommitted in the tree with no active claim):
+  committing it preserves the knowledge; stranding it risks loss. Its substance (the plan
+  skill's dangling templates references + resonance's authored scaffolding as a graft
+  candidate) is a named backlog input for the next curation pass.
+
+## 2026-07-03 (CI split bring, post-merge — Fiery Flaring Bellows / bafbac, session part 2)
+
+- **The split pipeline EXPOSED two latent repo defects the sequential monolith structurally
+  masked** (the best argument for the split beyond speed): (1) `test:e2e`/`test:snapshot` had NO
+  `dependsOn: build` in turbo.json — the packaging e2e's `pnpm pack` raced a parallel dist
+  rewrite and packed a half-written dist; the monolith's `build && … && test:e2e` chain hid the
+  missing edge for its whole life. A sequential wrapper is an undeclared dependency graph —
+  parallelise it and the missing edges fire. (2) `packaging:check` is a plain pnpm script
+  OUTSIDE turbo's graph, so no edge builds `lib/dist` for it; its green had been riding an
+  artefact another step happened to leave behind.
+- **"Dead mechanism" reasoning must enumerate ALL consumers before removal:** I removed the
+  actions/cache dist transfer as dead (turbo caching is off repo-wide → the .turbo half WAS
+  dead) and broke structure-checks — the dist half was load-bearing for the non-turbo packaging
+  script. Same family as bring-the-iceberg, inverted: remove-the-iceberg needs the same
+  transitive consumer sweep.
+- **Five vitest suites sharing a 2-core runner blow 5s per-test timeouts** — turbo's default
+  in-job parallelism ≠ local `test:all` semantics; `--concurrency=1` inside the job (while jobs
+  stay parallel) is the honest cure, never raising timeouts to mask contention.
+- **hook-matcher specimen #4 (token-subsequence class):** `git add -- <files>` plus a LATER
+  `$(date -u …)` in the same compound command assembled the blocked "git add -u" pattern. The
+  established mitigation (split the ceremony into separate shell strings) held. Also: my own
+  push's pre-push dist-clean window killed my own background heartbeat tick MODULE_NOT_FOUND —
+  the check-singleton rule's dist-window note applies to one's OWN loops, not just peers'.
+- **Prove-cycle discipline that worked:** rerun-failed as the cheap decisive probe
+  (timing-marginal vs structural); reading `--log-order=grouped` output carefully (a turbo
+  cache HIT replays stored logs — build output lines do NOT prove a rebuild); measuring turbo
+  edges via `--dry=json` before claiming the fix.
 
 ## 2026-07-03 (dedicated consolidation pass — Fiery Flaring Bellows / bafbac)
 

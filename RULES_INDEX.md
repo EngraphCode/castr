@@ -116,6 +116,7 @@ without proportional value.
 | `.agent/rules/permanent-doc-is-the-consolidation-record.md`                | always-on      | —                                                                                                |
 | `.agent/rules/ping-before-escalate.md`                                     | always-on      | —                                                                                                |
 | `.agent/rules/plan-body-first-principles-check.md`                         | always-on      | —                                                                                                |
+| `.agent/rules/pr-comments-resolve-and-recheck.md`                          | always-on      | —                                                                                                |
 | `.agent/rules/practice-core-portability.md`                                | always-on      | —                                                                                                |
 | `.agent/rules/precedence-is-not-approval.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/pre-execution-code-expert-review-per-loop-cycle.md`          | always-on      | —                                                                                                |

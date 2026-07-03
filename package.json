@@ -74,7 +74,8 @@
     "check:ci": "pnpm clean && pnpm install --frozen-lockfile && pnpm qg",
     "fetch:examples": "turbo fetch:examples",
     "postinstall": "tsx agent-tools/src/bootstrap/bootstrap.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "agent-tools:pr-watch": "pnpm --filter @engraph/agent-tools pr-watch"
   },
   "license": "MIT",
   "devDependencies": {

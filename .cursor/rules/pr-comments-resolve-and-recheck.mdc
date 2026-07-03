@@ -1,0 +1,6 @@
+---
+description: Every PR comment is addressed, and every push is re-checked for new comments
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/pr-comments-resolve-and-recheck.md`.

@@ -44,8 +44,12 @@ updates `last_session` rather than adding a row.
 ## Lanes
 
 A lane is an independently pickup-able arc — its own state, branch, and pickup
-trigger, active OR deferred. Branch is `feat/transplant-engraph-practice`
-for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
+trigger, active OR deferred. **Branching model since 2026-07-03: each lane takes
+its own FEATURE BRANCH off `main`, one PR per slice, merges owner-invoked** (PR
+#3 `5529436` merged the transplant branch and closed the single-branch era; that
+mode was circumstance, never invariant — authoritative statement in
+`repo-continuity.md §Repo-Wide Invariants`). Branch references in the dated lane
+records below are that era's truthful history.
 
 > **🧭 FOLDED (2026-06-28; DELTA-AMENDED 2026-07-03): Axis-A next-step source is the single backlog
 > [`../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md`](../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md)
@@ -447,9 +451,11 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   — its own lane); A1/ArcAngel = full unit (doc+dir+watcher-pairing+statusline wing); the two structural-cure validators
   fold into the friction-fix tranche; new dependency-currency lane (castr is current). castr is a **bidirectional**
   Practice node — improvements flow back to Oak (user-memory `castr-parity-or-better-with-oak`).
-- Single branch `feat/transplant-engraph-practice`; roll-forward only; each
-  transplant phase = one atomic commit + `transplant/phase-N` tag, green-gated at
-  the tag. (Full invariant set: [`../repo-continuity.md §Repo-Wide Invariants`](../repo-continuity.md#repo-wide-invariants--non-goals).)
+- ~~Single branch `feat/transplant-engraph-practice`~~ **superseded 2026-07-03: feature
+  branches off `main`, one PR per slice, owner-invoked merges** (see the lanes header above);
+  roll-forward only stands; the transplant-phase atomic-commit + `transplant/phase-N` tag
+  discipline is complete history (phases 0–8 tagged; the branch merged in PR #3). (Full
+  invariant set: [`../repo-continuity.md §Repo-Wide Invariants`](../repo-continuity.md#repo-wide-invariants--non-goals).)
 - Delivery: D3 before merge + split reviewable PRs (owner, Q-001). Delivery
   deprioritised ("not in a rush to merge") — commits land locally, push at the
   owner's call.
