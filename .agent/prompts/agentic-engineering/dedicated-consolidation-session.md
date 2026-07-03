@@ -32,4 +32,11 @@ will take care of themselves.
 Subagent results and sources MUST be critically assessed before being accepted or
 synthesised
 
+Subagent results and sources MUST be critically assessed before being accepted or synthesised
+
+Take your time to explore different approaches before you decide how to proceed. It's often a good
+idea to start with all of the raw sources, then the napkin, then distilled, then re-assess the
+situation. Starting with pending graduations means emptying those buffers then filling them
+up again, but sometimes that is the right choice.
+
 Other agents are working in the repo
