@@ -39,3 +39,22 @@ describe('checkForBreakingChanges', () => {
     expect(checkForBreakingChanges('feat: add a field\n\nRoutine body.')).toBe(false);
   });
 });
+
+describe('majorBumpOverrideActive', () => {
+  it('allows an intentional major-version signal when the explicit owner-authorised override is set', async () => {
+    const { majorBumpOverrideActive } =
+      await import('./prevent-accidental-major-version-helpers.js');
+    expect(majorBumpOverrideActive({ ENGRAPH_ALLOW_MAJOR_VERSION: '1' })).toBe(true);
+  });
+
+  it.each([undefined, '', '0', 'true', 'yes'])(
+    'stays blocking when the override variable is %s (only the literal "1" authorises)',
+    async (value) => {
+      const { majorBumpOverrideActive } =
+        await import('./prevent-accidental-major-version-helpers.js');
+      expect(
+        majorBumpOverrideActive(value === undefined ? {} : { ENGRAPH_ALLOW_MAJOR_VERSION: value }),
+      ).toBe(false);
+    },
+  );
+});

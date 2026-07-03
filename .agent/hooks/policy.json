@@ -29,6 +29,12 @@
           "reappraisal": "Hooks are safety guardrails, not friction — never bypass them; understand and fix what they flag, and treat --no-verify as needing fresh per-commit owner authorisation."
         },
         {
+          "pattern": "git commit -n",
+          "concept": "gate-bypass",
+          "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",
+          "reappraisal": "-n is the short alias of --no-verify (it bypasses pre-commit and commit-msg hooks); hooks are safety guardrails — never bypass them without fresh per-commit owner authorisation."
+        },
+        {
           "pattern": "git --no-gpg-sign",
           "concept": "gate-bypass",
           "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",

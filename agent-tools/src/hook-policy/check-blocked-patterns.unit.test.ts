@@ -278,3 +278,19 @@ describe('findBlockedPattern — short-option cluster equivalence', () => {
     expect(findBlockedPattern('git clean -nd', policy)).toBeNull();
   });
 });
+
+describe('findBlockedPattern — no-verify short alias', () => {
+  const policy = [{ pattern: 'git commit -n', concept: 'gate-bypass' }];
+
+  it.each(['git commit -n', 'git commit -an', 'git commit -anm "msg"'])(
+    'matches the hook-bypass spelling %s',
+    (command) => {
+      expect(findBlockedPattern(command, policy)?.pattern).toBe('git commit -n');
+    },
+  );
+
+  it('does not match a plain message commit or an unrelated dry-run flag', () => {
+    expect(findBlockedPattern('git commit -m "msg"', policy)).toBeNull();
+    expect(findBlockedPattern('git clean -n && git status', policy)).toBeNull();
+  });
+});

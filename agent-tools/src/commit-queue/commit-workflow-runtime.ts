@@ -17,6 +17,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 
+import { resolveTrustedGit } from '../core/trusted-git.js';
 import {
   runCommitWorkflow,
   type CommitWorkflowDependencies,
@@ -91,8 +92,11 @@ async function runAdvisoryOrchestrator(
 async function runGitCommit(
   input: CommitWorkflowRuntimeInput & { readonly pathspec: CommitWorkflowPathspec },
 ): Promise<CommitWorkflowGitCommitResult> {
+  // The queued commit is the operation that actually writes history, so it
+  // runs the trusted absolute git binary (S4036): a PATH-shadowed `git`
+  // must never own the commit.
   const commit = await runInheritedProcess({
-    command: 'git',
+    command: resolveTrustedGit(),
     args: ['commit', '-F', input.messageFilePath, '--', ...input.pathspec],
     cwd: input.repoRoot,
   });
@@ -104,7 +108,7 @@ async function runGitCommit(
   return { ...commit, sha: readHeadSha(input.repoRoot) };
 }
 function readHeadSha(repoRoot: string): string {
-  return execFileSync('git', ['rev-parse', 'HEAD'], {
+  return execFileSync(resolveTrustedGit(), ['rev-parse', 'HEAD'], {
     cwd: repoRoot,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],

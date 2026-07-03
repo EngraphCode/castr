@@ -39,3 +39,18 @@ export function checkForBangCommit(message: string): boolean {
     message,
   );
 }
+
+/**
+ * True when the owner-authorised major-version override is active.
+ *
+ * The guard exists to stop ACCIDENTAL major-version signals; an intentional,
+ * owner-approved breaking change re-runs the commit with
+ * `ENGRAPH_ALLOW_MAJOR_VERSION=1` so the breaking marker is preserved for
+ * semver tooling instead of being stripped to sneak past the guard. Only the
+ * literal string '1' authorises — anything else stays blocking.
+ */
+export function majorBumpOverrideActive(
+  env: Readonly<Record<string, string | undefined>>,
+): boolean {
+  return env.ENGRAPH_ALLOW_MAJOR_VERSION === '1';
+}

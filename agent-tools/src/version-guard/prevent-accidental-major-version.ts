@@ -12,6 +12,7 @@ import { writeErrorLine } from '../core/terminal-output.js';
 import {
   checkForBangCommit,
   checkForBreakingChanges,
+  majorBumpOverrideActive,
 } from './prevent-accidental-major-version-helpers.js';
 
 // ANSI color codes
@@ -60,18 +61,14 @@ function printErrorCause(hasBreakingChange: boolean, hasBangCommit: boolean): vo
 }
 
 function printErrorAdvice(): void {
-  writeErrorLine(`${YELLOW}Since this package is still in pre-1.0 development:${RESET}`);
-  writeErrorLine(`• Remove "BREAKING CHANGE" from your commit message`);
-  writeErrorLine(`• Don't use ! in your commit type (feat!, fix!, etc.)`);
-  writeErrorLine(`• Use regular feat: or fix: commits instead`);
-  writeErrorLine(`• Breaking changes in 0.x.x should bump minor version, not major`);
-  writeErrorLine('');
-  writeErrorLine(`${YELLOW}If you really need to indicate breaking changes:${RESET}`);
-  writeErrorLine(`1. Use a regular commit type without !`);
-  writeErrorLine(
-    `2. Document breaking changes in the commit body (without the BREAKING CHANGE footer)`,
-  );
-  writeErrorLine(`3. Update CHANGELOG.md manually if needed`);
+  writeErrorLine(`${YELLOW}Major-version signals are deliberate, owner-gated events:${RESET}`);
+  writeErrorLine(`• If this change is NOT breaking, reword the message — drop the`);
+  writeErrorLine(`  breaking marker rather than mislabelling the change.`);
+  writeErrorLine(`• If it IS an intentional breaking change with owner approval,`);
+  writeErrorLine(`  re-run the commit with ENGRAPH_ALLOW_MAJOR_VERSION=1 so the`);
+  writeErrorLine(`  breaking marker is PRESERVED for semver tooling.`);
+  writeErrorLine(`• Never strip a genuine BREAKING CHANGE footer to slip past this`);
+  writeErrorLine(`  guard — that hides the semver signal from consumers.`);
   writeErrorLine('');
 }
 
@@ -97,6 +94,13 @@ function main(): void {
   const hasBangCommit = checkForBangCommit(commitMessage);
 
   if (hasBreakingChange || hasBangCommit) {
+    if (majorBumpOverrideActive(process.env)) {
+      writeErrorLine(
+        `${YELLOW}⚠️  Major-version signal ALLOWED by ENGRAPH_ALLOW_MAJOR_VERSION=1 ` +
+          `(owner-authorised override).${RESET}`,
+      );
+      exit(0);
+    }
     printError(hasBreakingChange, hasBangCommit);
     exit(1);
   }
