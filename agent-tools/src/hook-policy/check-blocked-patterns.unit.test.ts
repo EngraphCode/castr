@@ -99,6 +99,25 @@ describe('findBlockedPattern', () => {
     expect(findBlockedPattern('git add ./packages/core/foo.ts', [wildcardPattern])).toBeNull();
     expect(findBlockedPattern('git add .gitignore', [wildcardPattern])).toBeNull();
   });
+
+  it('matches the leased force-push spelling, which still rewrites remote history', () => {
+    const pattern = 'git push --force-with-lease';
+    expect(findBlockedPattern('git push --force-with-lease', [pattern])?.pattern).toBe(pattern);
+    expect(findBlockedPattern('git push --force-with-lease origin main', [pattern])?.pattern).toBe(
+      pattern,
+    );
+    // The plain force patterns do NOT cover the leased spelling — that gap is
+    // why the policy carries this pattern explicitly (measured firsthand).
+    expect(findBlockedPattern('git push --force-with-lease', ['git push --force'])).toBeNull();
+  });
+
+  it('matches `git add -u`/`--update` wildcard staging without tripping explicit pathspecs', () => {
+    const patterns = ['git add -u', 'git add --update'];
+    expect(findBlockedPattern('git add -u', patterns)?.pattern).toBe('git add -u');
+    expect(findBlockedPattern('git add --update', patterns)?.pattern).toBe('git add --update');
+    expect(findBlockedPattern('git add -- file.ts', patterns)).toBeNull();
+    expect(findBlockedPattern('git add subdir/file.ts', patterns)).toBeNull();
+  });
 });
 
 describe('extractBashCommand', () => {

@@ -41,7 +41,15 @@ async function removeStaleLock(lockDir: string, staleMs: number): Promise<void> 
     await removeStaleLockByDirTime(lockDir, staleMs);
     return;
   }
-  if (Date.now() - Date.parse(metadata.created_at) > staleMs) {
+  const ageMs = Date.now() - Date.parse(metadata.created_at);
+  if (Number.isNaN(ageMs)) {
+    // Metadata parsed but its created_at is not a date: every age comparison
+    // would be false forever, wedging the lock until manual cleanup. Fall
+    // back to the same directory-mtime recovery path as missing metadata.
+    await removeStaleLockByDirTime(lockDir, staleMs);
+    return;
+  }
+  if (ageMs > staleMs) {
     await rm(lockDir, { recursive: true, force: true });
   }
 }

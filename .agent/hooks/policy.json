@@ -17,6 +17,12 @@
           "reappraisal": "History here is append-only — never overwrite or rewrite it; integrate forward with new commits and reconcile branches without force-pushing or interactive rebase."
         },
         {
+          "pattern": "git push --force-with-lease",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — a leased force-push still rewrites remote history; integrate forward with new commits and reconcile branches without force-pushing."
+        },
+        {
           "pattern": "git rebase -i",
           "concept": "history-destruction",
           "citation": ".agent/rules/never-use-git-to-remove-work.md",
@@ -123,6 +129,18 @@
           "concept": "wildcard-staging",
           "citation": ".agent/rules/stage-by-explicit-pathspec.md",
           "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; name the exact files."
+        },
+        {
+          "pattern": "git add -u",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; git add -u stages every tracked modification and deletion in the tree — name the exact files."
+        },
+        {
+          "pattern": "git add --update",
+          "concept": "wildcard-staging",
+          "citation": ".agent/rules/stage-by-explicit-pathspec.md",
+          "reappraisal": "Stage by explicit pathspec so a commit never bundles parallel-thread or unrelated work; git add --update stages every tracked modification and deletion in the tree — name the exact files."
         },
         {
           "pattern": "for(;;)",

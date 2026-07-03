@@ -202,6 +202,36 @@ describe('file transaction lock — metadata-less lock directories', () => {
     }
   });
 
+  it('reaps a stale lock whose owner metadata carries an unparsable created_at (falls back to dir mtime)', async () => {
+    const { mkdir, utimes, writeFile } = await import('node:fs/promises');
+    const { acquireFileTransactionLock } =
+      await import('../../src/collaboration-state/transaction-lock');
+    const directory = await makeTempDirectory('engraph-collaboration-lock-');
+    const filePath = tempPath(directory, 'state.json');
+    try {
+      const lockDir = `${filePath}.transaction`;
+      await mkdir(lockDir);
+      // Metadata parses but its timestamp is not a date: without the NaN
+      // fallback every age comparison is false and the lock never ages out.
+      await writeFile(
+        `${lockDir}/owner.json`,
+        JSON.stringify({ owner_id: 'corrupt-timestamp-owner', created_at: 'not-a-date' }),
+        'utf8',
+      );
+      const past = new Date(Date.now() - 60_000);
+      await utimes(lockDir, past, past);
+
+      const release = await acquireFileTransactionLock({
+        filePath,
+        staleMs: 1_000,
+        attempts: 3,
+      });
+      await release();
+    } finally {
+      await removeDirectory(directory);
+    }
+  });
+
   it('does not reap a fresh metadata-less lock directory while a peer may still be mid-acquisition', async () => {
     const { mkdir } = await import('node:fs/promises');
     const { acquireFileTransactionLock } =

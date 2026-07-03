@@ -54,18 +54,21 @@ function probeLineForRegex(
 }
 
 /**
- * Scan content line-by-line for a regex match that respects fenced
+ * Scan content line-by-line for EVERY regex match, respecting fenced
  * code blocks, inline code (when configured AND the line is data-shaped),
- * and explicit historical-reference markers.
+ * and explicit historical-reference markers. Returns every matched text in
+ * document order (one entry per occurrence) so callers can compare match
+ * SETS between two contents rather than mere presence.
  */
-function scanLinesForRegex(
+function scanLinesForRegexAll(
   content: string,
   pattern: string,
   group: ScopedContentBlockGroup,
-): string | null {
-  const regex = new RegExp(pattern, 'iu');
+): readonly string[] {
+  const regex = new RegExp(pattern, 'giu');
   const excludesInlineCode = group.excludes_inline_code ?? false;
   const excludeMarkers = group.excludes_lines_with ?? [];
+  const matches: string[] = [];
   let inFence = false;
 
   for (const rawLine of content.split('\n')) {
@@ -80,13 +83,12 @@ function scanLinesForRegex(
     if (probeLine === null) {
       continue;
     }
-    const match = regex.exec(probeLine);
-    if (match !== null) {
-      return match[0];
+    for (const match of probeLine.matchAll(regex)) {
+      matches.push(match[0]);
     }
   }
 
-  return null;
+  return matches;
 }
 
 /**
@@ -105,9 +107,13 @@ function literalMatchAdded(
 }
 
 /**
- * Decide whether a regex pattern is being added — matched in new content
- * (after fence/inline-code/marker exclusions) but unmatched in prior
- * content under the same exclusion rules.
+ * Decide whether a regex pattern is being added — a matched TEXT present in
+ * new content (after fence/inline-code/marker exclusions) that prior content
+ * never matched under the same exclusion rules. Compares the matched texts,
+ * not mere pattern presence: a file that already carries one sanctioned
+ * match must not grandfather in a DIFFERENT new match of the same pattern
+ * (e.g. a second concrete user-home path, or a new SHA alongside an old
+ * one). A match text that merely moves or repeats stays permitted.
  */
 function regexMatchAdded(
   newContent: string,
@@ -115,11 +121,14 @@ function regexMatchAdded(
   group: ScopedContentBlockGroup,
   pattern: string,
 ): string | null {
-  const matched = scanLinesForRegex(newContent, pattern, group);
-  if (matched === null) {
+  const newMatches = scanLinesForRegexAll(newContent, pattern, group);
+  if (newMatches.length === 0) {
     return null;
   }
-  return scanLinesForRegex(priorContent, pattern, group) === null ? matched : null;
+  const priorMatches = new Set(
+    scanLinesForRegexAll(priorContent, pattern, group).map((text) => text.toLowerCase()),
+  );
+  return newMatches.find((text) => !priorMatches.has(text.toLowerCase())) ?? null;
 }
 
 /**

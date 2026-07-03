@@ -296,6 +296,36 @@ describe('findAddedScopedBlock', () => {
     ).toBeNull();
   });
 
+  const tokenRegexGroup = {
+    concept: 'fixture-regex',
+    kind: 'regex',
+    patterns: [String.raw`TOKEN-\d+`],
+    include_paths: [''],
+    exclude_paths: [],
+    citation: 'fixture citation',
+  } as const;
+
+  it('flags a DISTINCT new regex match even when prior content already matches the same pattern', () => {
+    // One sanctioned match must not grandfather in different new matches:
+    // compare matched texts, not pattern presence.
+    expect(
+      findAddedScopedBlock('ids: TOKEN-1 and TOKEN-2', 'ids: TOKEN-1', '/repo/.agent/notes.md', [
+        tokenRegexGroup,
+      ]),
+    ).toStrictEqual({ group: tokenRegexGroup, matchedText: 'TOKEN-2' });
+  });
+
+  it('still permits a regex match text that merely moves or repeats between prior and new', () => {
+    expect(
+      findAddedScopedBlock(
+        'moved: TOKEN-1\nrepeated: TOKEN-1',
+        'original: TOKEN-1',
+        '/repo/.agent/notes.md',
+        [tokenRegexGroup],
+      ),
+    ).toBeNull();
+  });
+
   it('returns null when filePath is undefined', () => {
     expect(
       findAddedScopedBlock('we will carve out today', '', undefined, [carveOutGroup]),
