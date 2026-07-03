@@ -48,6 +48,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-07-03 (pr-lifecycle bring + live application — Fiery Flaring Bellows / bafbac, session part 3)
 
+- **OWNER CORRECTION (post-close): I hardened an owner QUESTION into "owner-confirmed" doctrine.**
+  "That looks like there is more to do before castr work" was a question about WHEN product work
+  can start; I wrote it into the continuity spine as a confirmed substrate-before-product
+  direction. Manufactured-decision family (no-manufactured-permission's inverse: manufacturing a
+  MANDATE rather than a permission-gate). The tell: an owner statement with "to me that looks
+  like" is a hypothesis offered for ANALYSIS, not a ruling — answer it with the dependency
+  structure (what genuinely blocks, what is parallel-safe), never enshrine it. Cure applied: the
+  spine now carries the answered question — one doctrine-sync slice gates new product code; all
+  else parallel-safe; remediation may open any time after.
 - **A plain `mv` of a tracked file crashes tracked-file validators until the rename is staged:**
   the machine-local-paths validator reads git's tracked list, so the un-staged plan move made it
   fail-loud ENOENT mid-`pnpm check` (correct behaviour — a silent skip would have hidden a

@@ -164,9 +164,15 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > the CI split (~5 min, fail-closed fan-in), turbo caching (truthful hash, cross-job sharing), the
 > feature-branch reconciliation, and the pr-lifecycle skill + pr-watch CLI are ALL LIVE; the
 > controlling plan is COMPLETE (moved to `plans/current/complete/`). No feature branch is open.
-> OWNER-CONFIRMED READING at close: the SUBSTRATE TRANCHE below comes BEFORE any castr
-> functionality or remediation work — the next session starts at (2), opening its own feature
-> branch off `main`.**
+> CORRECTED (owner, 2026-07-03, post-close): "substrate before product" was the owner's QUESTION,
+> not a direction — the earlier "owner-confirmed" phrasing here manufactured a decision. The
+> ANSWERED question: castr product/remediation work can start after ONE short doctrine-sync slice
+> (the `use-result-pattern` bring + re-sync of the rules a product agent reads first; tsdoc
+> enforcement lands with or before the first new product module). Everything else in (2)–(4) is
+> PARALLEL-SAFE with product work — disjoint file estates (`lib/` vs `.agent/`+`agent-tools/`),
+> feature-branch isolation, live coordination substrate — and Q-011's "Axis A first" condition is
+> already satisfied (its Tier-1 spine is complete). Remediation-02 (IR-fidelity harness) may open
+> any time after the doctrine slice; the OCE stream continues in parallel uncompromised.**
 >
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see
