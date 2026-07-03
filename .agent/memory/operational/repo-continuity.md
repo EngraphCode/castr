@@ -164,9 +164,19 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > the CI split (~5 min, fail-closed fan-in), turbo caching (truthful hash, cross-job sharing), the
 > feature-branch reconciliation, and the pr-lifecycle skill + pr-watch CLI are ALL LIVE; the
 > controlling plan is COMPLETE (moved to `plans/current/complete/`). No feature branch is open.
-> OWNER-CONFIRMED READING at close: the SUBSTRATE TRANCHE below comes BEFORE any castr
-> functionality or remediation work — the next session starts at (2), opening its own feature
-> branch off `main`.**
+> CORRECTED (owner, 2026-07-03, post-close): "substrate before product" was the owner's QUESTION,
+> not a direction — the earlier "owner-confirmed" phrasing here manufactured a decision. The
+> ANSWERED question: castr product/remediation work can start after ONE short doctrine-sync slice
+> (the `use-result-pattern` bring + re-sync of the rules a product agent reads first; TSDoc
+> enforcement lands with or before the first new product module). Everything else in (2)–(4) is
+> PARALLEL-SAFE with product work — disjoint file estates (`lib/` vs `.agent/`+`agent-tools/`),
+> feature-branch isolation, live coordination substrate — and Q-011's "Axis A first" condition is
+> already satisfied (its Tier-1 spine is complete). Remediation-02 (IR-fidelity harness) may open
+> any time after the doctrine slice; the OCE stream continues in parallel uncompromised.
+> **THE NEXT SESSION EXECUTES [`pre-castr-doctrine-sync.md`](../../plans/current/pre-castr-doctrine-sync.md)**
+> (RS-1 use-result-pattern reconciled to the composition ruling → RS-2 rule re-syncs → RS-3
+> validation-strategy overlap-merge → RS-4 TSDoc enforcement), on ONE fresh feature branch off
+> `main`; on its completion, product work is UNGATED.**
 >
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see
@@ -176,13 +186,14 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > ~5min wall-clock; exposed + fixed two latent turbo dependsOn defects) and TURBO CACHING ON with measured
 > exceptions (agent-tools#test root-reach; mutating/network tasks) + cross-job cache sharing — plan
 > [`turbo-caching-and-branch-model.md`](../../plans/current/complete/turbo-caching-and-branch-model.md).**
-> **(2) BEFORE PRODUCT WORK RESUMES — the substrate
-> tranche:** doctrine re-sync wave (consolidate-at-SECOND-consumer rename leads; now also carries the
-> `use-result-pattern` bring per Q-010), plan-templates (TC2), validation-strategy directive, tsdoc enforcement,
+> **(2) PARALLEL SUBSTRATE STREAM (NOT a product gate — only the doctrine-sync slice above
+> gates product code):** doctrine re-sync wave (consolidate-at-SECOND-consumer rename leads; now also carries the
+> `use-result-pattern` bring per Q-010), plan-templates (TC2), validation-strategy directive, TSDoc enforcement,
 > encoding-integrity gate, markdown-links wiring + amended ADR-127. **(3) EXECUTION SLICES ANY TIME:** statusline
 > S2/S3 (manifests ready), archive-pii-scrub (full tool, owner-decided), D4 Result-migration slice. **(4) AFTER
 > RESUME:** coordination-safety cluster, claims-handoff, provenance/archive-move, PDR batch (27, renumbered),
-> Tier-2 flow, castr mark (owner creative). Axis B (remediation 02 first) follows the substrate tranche per Q-011.
+> Tier-2 flow, castr mark (owner creative). Axis B (remediation 02 first) opens any time after the doctrine-sync slice — Q-011's
+> Tier-1 condition is already discharged; it does NOT wait for this stream.
 >
 > **🟢 PR #3 IS MERGE-READY (2026-07-03, Penumbral Slipping Moth closeout): mergeStateStatus CLEAN / MERGEABLE /
 > 0 unresolved review threads / required `quality-gates` check GREEN at origin tip `2e616bd`.** Merge posture
