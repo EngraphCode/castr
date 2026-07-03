@@ -4,7 +4,6 @@
  * Extracts JSON Schema 2020-12 keywords that are valid in OpenAPI 3.1+
  * and require explicit runtime handling beyond the base schema view.
  *
- * @module ir-builder.json-schema-2020-12
  * @internal
  */
 

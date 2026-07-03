@@ -3,8 +3,6 @@
  *
  * Traverses the IR to find all enum definitions and collects them
  * into a centralized catalog.
- *
- * @module parsers/openapi/builder.enums
  */
 
 import type {

@@ -7,8 +7,6 @@
  * NOTE: This file contains intentionally invalid (Zod 3) syntax.
  * It will NOT compile with Zod 4 — that's the point.
  * Use this as a reference for what the PARSER should reject.
- *
- * @module tests-fixtures/zod-parser/sad-path/zod3-syntax
  */
 
 // =============================================================================

@@ -4,8 +4,6 @@
  * Core JSON Schema field logic is delegated to the shared json-schema-fields
  * module.  This module adds only OAS-specific extras (discriminator, xml,
  * externalDocs) on top of that shared foundation.
- *
- * @module
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

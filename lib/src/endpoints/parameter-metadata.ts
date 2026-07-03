@@ -13,8 +13,8 @@ import type { SchemaConstraints } from './definition.types.js';
  *
  * Combines fields from ParameterObject and SchemaObject using Pick patterns.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
- * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object OpenAPI Schema Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object | OpenAPI Parameter Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object | OpenAPI Schema Object}
  */
 export type ParameterMetadata = Pick<ParameterObject, 'description' | 'deprecated' | 'example'> &
   Pick<SchemaObject, 'default'> & {
@@ -215,7 +215,7 @@ function extractEnumConstraint(schema: SchemaObject, target: Partial<SchemaConst
  * string constraints (minLength, maxLength, pattern), array constraints
  * (minItems, maxItems, uniqueItems), enums, and format hints.
  *
- * Uses library types (SchemaConstraints is Pick<SchemaObject, ...>) - no custom types.
+ * Uses library types (SchemaConstraints is `Pick<SchemaObject, ...>`) - no custom types.
  *
  * @param schema - Schema object to extract constraints from
  * @returns Constraints object with validation rules, or undefined if no constraints
@@ -239,7 +239,7 @@ function extractEnumConstraint(schema: SchemaObject, target: Partial<SchemaConst
  * // { minLength: 3, maxLength: 50, pattern: '^[a-z]+$' }
  * ```
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object OpenAPI Schema Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object | OpenAPI Schema Object}
  * @public
  */
 export function extractSchemaConstraints(schema: SchemaObject): SchemaConstraints | undefined {
@@ -261,8 +261,8 @@ export function extractSchemaConstraints(schema: SchemaObject): SchemaConstraint
  * Follows OpenAPI specification for parameter and schema objects.
  *
  * **Priority order for fields:**
- * - Example: `parameter.example` -> `parameter.examples.default.value` ->
- *   `parameter.examples.default.dataValue` -> `schema.example`
+ * - Example: `parameter.example` `->` `parameter.examples.default.value` `->`
+ *   `parameter.examples.default.dataValue` `->` `schema.example`
  * - Named examples: resolved inline `parameter.examples` entries only
  * - Description: always from parameter
  * - Default: always from schema
@@ -308,7 +308,7 @@ export function extractSchemaConstraints(schema: SchemaObject): SchemaConstraint
  * // }
  * ```
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object | OpenAPI Parameter Object}
  * @see {@link extractSchemaConstraints}
  * @public
  */

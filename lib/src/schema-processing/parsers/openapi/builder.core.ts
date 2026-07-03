@@ -5,7 +5,6 @@
  * This is the bottom layer of the IR builder architecture - it has no
  * dependencies on other IR builder modules.
  *
- * @module ir-builder.core
  * @internal
  */
 

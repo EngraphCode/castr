@@ -9,8 +9,6 @@
  *
  * Uses pure Zod schemas (not imported from fixtures) to test format
  * function behavior directly.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

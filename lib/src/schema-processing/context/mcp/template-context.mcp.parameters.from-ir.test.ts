@@ -4,8 +4,6 @@
  * These tests verify that `collectParameterGroupsFromIR` produces the same
  * output structure as the OpenAPI-based `collectParameterGroups`, but reads
  * from `CastrOperation` instead of raw OpenAPI.
- *
- * @module template-context.mcp.parameters.from-ir.test
  */
 
 import { describe, expect, test } from 'vitest';

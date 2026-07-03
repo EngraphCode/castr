@@ -1,7 +1,6 @@
 /**
  * Input normalization for OpenAPI document loading
  * Converts string/URL/object inputs into normalized form
- * @module
  * @internal
  */
 

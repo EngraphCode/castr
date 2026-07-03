@@ -2,8 +2,6 @@
  * OpenAPI request body component writer — converts IRRequestBodyComponent to OpenAPI.
  *
  * Extracted from openapi-writer.components.ts to keep per-file line counts within limits.
- *
- * @module
  */
 
 import type { RequestBodyObject } from '../../../../shared/openapi-types.js';

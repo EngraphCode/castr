@@ -2,8 +2,6 @@
  * Unit tests for JSON Schema Draft 07 → 2020-12 normalization.
  *
  * TDD: These tests are written FIRST, before the implementation.
- *
- * @module parsers/json-schema/normalization/json-schema-parser.normalization.unit.test
  */
 
 import { isReferenceObject } from '../../../shared/openapi-types.js';

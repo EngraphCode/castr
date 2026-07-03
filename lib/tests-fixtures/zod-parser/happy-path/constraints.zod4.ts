@@ -2,8 +2,6 @@
  * Zod 4 Happy Path Fixtures — Constraints
  *
  * Contains valid Zod 4 constraint expressions for parser testing.
- *
- * @module tests-fixtures/zod-parser/happy-path/constraints
  */
 import { z } from 'zod';
 
@@ -40,16 +38,16 @@ export const NumberLtSchema = z.number().lt(100);
 /** .lte() - less than or equal (inclusive maximum) */
 export const NumberLteSchema = z.number().lte(100);
 
-/** .positive() - > 0 */
+/** .positive() - `> 0` */
 export const NumberPositiveSchema = z.number().positive();
 
-/** .negative() - < 0 */
+/** .negative() - `< 0` */
 export const NumberNegativeSchema = z.number().negative();
 
-/** .nonnegative() - >= 0 */
+/** .nonnegative() - `>= 0` */
 export const NumberNonnegativeSchema = z.number().min(0);
 
-/** .nonpositive() - <= 0 */
+/** .nonpositive() - `<= 0` */
 export const NumberNonpositiveSchema = z.number().max(0);
 
 /** .multipleOf() - must be multiple of N */

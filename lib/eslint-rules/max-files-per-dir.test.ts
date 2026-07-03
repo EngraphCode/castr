@@ -1,5 +1,5 @@
 /**
- * @file Tests for the max-files-per-dir ESLint rule.
+ * Tests for the max-files-per-dir ESLint rule.
  *
  * Uses eslint's RuleTester with Vitest and fs.mkdtempSync to
  * test the Anchor File pattern under real I/O conditions in isolation.

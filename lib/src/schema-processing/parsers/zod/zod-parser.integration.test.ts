@@ -2,8 +2,6 @@
  * Zod Parser Entry Point Tests
  *
  * Integration tests for the main parseZodSource function.
- *
- * @module parsers/zod/integration.test
  */
 
 import { describe, it, expect } from 'vitest';

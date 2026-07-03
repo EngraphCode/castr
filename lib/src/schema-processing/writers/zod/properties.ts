@@ -3,8 +3,6 @@
  *
  * Pure functions for processing object properties during Zod schema writing.
  * Extracted from index.ts to reduce complexity and improve testability.
- *
- * @module writers/zod/properties
  */
 
 import type { CastrSchema, IRPropertySchemaContext } from '../../ir/index.js';

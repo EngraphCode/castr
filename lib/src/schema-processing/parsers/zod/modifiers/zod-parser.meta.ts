@@ -2,8 +2,6 @@
  * Zod Metadata Parsing
  *
  * Parses `.meta({...})` calls into IR metadata fields.
- *
- * @module parsers/zod/meta
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

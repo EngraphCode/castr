@@ -1,5 +1,5 @@
 /**
- * @file ESLint rule: max-files-per-dir
+ * ESLint rule: max-files-per-dir
  *
  * Enforces a strict upper limit on the number of files permitted in a single directory
  * (non-recursive) to prevent "junk drawer" architectures.

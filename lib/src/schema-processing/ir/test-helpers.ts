@@ -3,8 +3,6 @@
  *
  * These helpers reduce test complexity by providing reusable assertion patterns
  * for IR (Intermediate Representation) validation tests.
- *
- * @module ir-test-helpers
  */
 
 import type { CastrSchema, CastrSchemaNode } from './models/schema.js';

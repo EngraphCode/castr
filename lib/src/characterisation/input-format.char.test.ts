@@ -1,7 +1,7 @@
 /**
  * Characterisation Tests: Input Format Support (JSON vs YAML)
  *
- * These tests document and verify that @engraph/castr can accept
+ * These tests document and verify that `@engraph/castr` can accept
  * OpenAPI specifications in both JSON and YAML formats.
  *
  * **What we're proving:**

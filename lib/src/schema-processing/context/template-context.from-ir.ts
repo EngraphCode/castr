@@ -25,14 +25,14 @@ export function getSchemaNamesSortedByDependencies(ir: CastrDocument): string[] 
 }
 
 /**
- * Converts IR dependency graph to the legacy Record<string, Set<string>> format.
+ * Converts IR dependency graph to the legacy `Record<string, Set<string>>` format.
  *
  * This bridges the gap between the new IR structure and legacy code that expects
  * the old deepDependencyGraph format. Over time, consumers should migrate to
  * using ir.dependencyGraph directly.
  *
  * @param ir - The Intermediate Representation document
- * @returns Dependency graph in Record<schemaName, Set<dependencyNames>> format
+ * @returns Dependency graph in `Record<schemaName, Set<dependencyNames>>` format
  *
  * @example
  * ```typescript

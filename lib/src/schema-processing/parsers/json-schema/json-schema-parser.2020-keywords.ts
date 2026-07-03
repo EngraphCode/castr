@@ -9,7 +9,6 @@
  * **Library Types:**
  * Uses JsonSchema2020 (extends the shared OpenAPI seam).
  *
- * @module parsers/json-schema/json-schema-parser.2020-keywords
  * @internal
  */
 

@@ -3,8 +3,6 @@
  *
  * Verifies that the parser correctly parses all happy-path fixtures
  * and produces the exact expected IR JSON.
- *
- * @module parsers/zod/integration-runner.test
  */
 
 import { describe, it, expect } from 'vitest';

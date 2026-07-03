@@ -2,8 +2,6 @@
  * Zod 4 Primitive Parsing Tests
  *
  * TDD tests for parsing Zod 4 specific primitives and formats.
- *
- * @module parsers/zod/primitives.zod4.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -4,7 +4,6 @@
  * Under IDENTITY doctrine, Castr supports one object model only:
  * closed-world objects with explicit properties.
  *
- * @module schema-processing/object-semantics
  * @internal
  */
 

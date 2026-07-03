@@ -3,8 +3,6 @@
  *
  * TDD: These tests are written FIRST, before the implementation.
  * Tests the conversion of JSON Schema 2020-12 objects into CastrSchema IR.
- *
- * @module parsers/json-schema/json-schema-parser.core.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -40,7 +40,7 @@ import type { EndpointDefinition } from '../../../endpoints/definition.types.js'
 
 /**
  * Convert path with colons to OpenAPI bracket format.
- * Example: '/pet/:petId' -> '/pet/{petId}'
+ * Example: `'/pet/:petId' -> '/pet/{petId}'`
  *
  * @internal
  */
@@ -93,7 +93,7 @@ export const getOriginalPathWithBrackets = (path: string): string => {
 
 /**
  * Extract pure schema names from full ref paths.
- * Example: '#/components/schemas/Category' -> 'Category'
+ * Example: `'#/components/schemas/Category' -> 'Category'`
  *
  * @internal
  */

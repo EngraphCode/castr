@@ -3,8 +3,6 @@
  *
  * Pure functions for writing Zod enum schemas.
  * Extracted from index.ts to reduce file size.
- *
- * @module writers/zod/enums
  */
 
 import type { CodeBlockWriter } from 'ts-morph';

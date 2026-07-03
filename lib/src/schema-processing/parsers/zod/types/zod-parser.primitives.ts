@@ -4,7 +4,6 @@
  * Parses primitive Zod types with method chains into CastrSchema structures.
  * Uses ts-morph AST traversal (ADR-026 compliant - no regex).
  *
- * @module parsers/zod/primitives
  *
  * @example
  * ```typescript

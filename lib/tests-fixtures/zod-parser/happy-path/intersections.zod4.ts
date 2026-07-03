@@ -2,8 +2,6 @@
  * Zod 4 Happy Path Fixtures — Intersections
  *
  * Contains valid Zod 4 intersection expressions for parser testing.
- *
- * @module tests-fixtures/zod-parser/happy-path/intersections
  */
 import { z } from 'zod';
 

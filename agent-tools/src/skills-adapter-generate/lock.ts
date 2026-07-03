@@ -32,8 +32,10 @@ type LockError =
  * Result of {@link loadLockedSkillIds}.
  *
  * The shape mirrors `agent-tools/src/bin/agent-identity-cli-parser.ts` so
- * that consolidation into a shared Result module remains straightforward
- * once a third consumer appears.
+ * that consolidation into a shared Result module remains straightforward —
+ * this second consumer is already the extraction trigger under
+ * consolidate-at-second-consumer; the extraction rides the named D4
+ * Result-migration slice.
  */
 export type LoadLockedSkillIdsResult =
   | { readonly kind: 'ok'; readonly value: ReadonlySet<string> }

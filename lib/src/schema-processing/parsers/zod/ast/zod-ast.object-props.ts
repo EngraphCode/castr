@@ -3,8 +3,6 @@
  *
  * Extracts property definitions from z.object() calls using ts-morph AST.
  * Handles PropertyAssignment and GetAccessorDeclaration nodes.
- *
- * @module parsers/zod/zod-ast.object-props
  */
 
 import type { CallExpression, ObjectLiteralExpression, ReturnStatement } from 'ts-morph';

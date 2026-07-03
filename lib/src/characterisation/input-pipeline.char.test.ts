@@ -5,7 +5,7 @@
  * They test WHAT the pipeline should do, not HOW it works.
  *
  * Architecture Note:
- * The unified pipeline uses Scalar (@scalar/json-magic + @scalar/openapi-parser)
+ * The unified pipeline uses Scalar (`@scalar/json-magic` + `@scalar/openapi-parser`)
  * instead of SwaggerParser. Key behaviors:
  * - Auto-upgrade: All specs converted to OpenAPI 3.1 (2.0, 3.0.x → 3.1)
  * - Bundling: External $refs resolved, internal $refs preserved

@@ -4,8 +4,6 @@
  * Under IDENTITY doctrine, all objects are closed-world. The Zod writer
  * always uses `z.strictObject({...})` for object construction.
  * No passthrough, catchall, or strip modifiers are emitted.
- *
- * @module writers/zod/additional-properties
  */
 
 import type { CastrSchema } from '../../ir/index.js';

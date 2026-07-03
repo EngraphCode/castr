@@ -122,7 +122,7 @@ export interface CastrDocument {
    * at the document level means all operations are public by default.
    *
    * @see {@link CastrOperation.security} for operation-level overrides
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object OpenAPI Security Requirement Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
    */
   security?: IRSecurityRequirement[];
 
@@ -130,14 +130,14 @@ export interface CastrDocument {
    * Document-level tags for API categorization.
    * Tags group operations into logical sections.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#tag-object OpenAPI Tag Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#tag-object | OpenAPI Tag Object}
    */
   tags?: TagObject[];
 
   /**
    * Document-level external documentation.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object OpenAPI External Documentation Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object | OpenAPI External Documentation Object}
    */
   externalDocs?: ExternalDocumentationObject;
 
@@ -145,7 +145,7 @@ export interface CastrDocument {
    * Webhooks defined in the document (OpenAPI 3.1+; canonical target 3.2.0).
    * Key is the webhook name, value is the path item defining the webhook operations.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#fixed-fields OpenAPI Webhooks}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#fixed-fields | OpenAPI Webhooks}
    */
   webhooks?: Map<string, PathItemObject>;
 
@@ -153,7 +153,7 @@ export interface CastrDocument {
    * JSON Schema dialect URI (OpenAPI 3.1+; canonical target 3.2.0).
    * Specifies the default JSON Schema dialect for all schemas in the document.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-dialects OpenAPI Schema Dialects}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-dialects | OpenAPI Schema Dialects}
    */
   jsonSchemaDialect?: string;
 }

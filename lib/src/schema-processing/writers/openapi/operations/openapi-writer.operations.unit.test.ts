@@ -3,8 +3,6 @@
  *
  * Tests conversion from CastrOperation[] (IR) to OpenAPI PathsObject.
  * Follows TDD - tests written first, implementation follows.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

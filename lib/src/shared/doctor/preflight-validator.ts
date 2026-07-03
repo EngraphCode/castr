@@ -8,7 +8,6 @@
  * This avoids the one-error-per-pass bottleneck of Scalar's validator (which uses
  * AJV's default `allErrors: false`) and enables batch rescue of non-standard properties.
  *
- * @module
  * @internal
  */
 

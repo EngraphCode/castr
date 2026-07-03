@@ -9,8 +9,6 @@
  * **Library Types:**
  * Uses JsonSchema2020 (extends the shared OpenAPI seam).
  * Uses lodash-es split/join for $ref rewriting (ADR-026 compliant).
- *
- * @module parsers/json-schema/normalization/json-schema-parser.normalization
  */
 
 import { type ReferenceObject, isReferenceObject } from '../../../../shared/openapi-types.js';

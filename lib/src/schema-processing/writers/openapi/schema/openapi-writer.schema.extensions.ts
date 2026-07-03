@@ -7,8 +7,6 @@
  *   - discriminator
  *
  * JSON Schema 2020-12 keywords live in writers/shared/.
- *
- * @module writers/openapi/schema/extensions
  */
 
 import type { JsonSchemaObject } from '../../shared/json-schema-fields.js';

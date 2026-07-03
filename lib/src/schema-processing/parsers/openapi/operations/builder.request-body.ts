@@ -2,8 +2,6 @@
  * IR Builder - Request Body Processing
  *
  * Handles conversion of OpenAPI request body objects to IR request body structures.
- *
- * @module
  */
 
 import type { RequestBodyObject, ReferenceObject } from '../../../../shared/openapi-types.js';

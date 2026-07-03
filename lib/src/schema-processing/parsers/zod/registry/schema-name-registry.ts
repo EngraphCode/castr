@@ -3,8 +3,6 @@
  *
  * Centralized naming rules for deriving schema component names from
  * declaration identifiers.
- *
- * @module parsers/zod/schema-name-registry
  */
 
 /**

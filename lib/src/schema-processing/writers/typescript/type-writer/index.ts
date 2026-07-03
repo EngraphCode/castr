@@ -3,7 +3,6 @@
  *
  * Responsible for emitting TypeScript type definitions from CastrSchema IR.
  *
- * @module type-writer
  * @internal
  */
 export { writeTypeDefinition } from './core.js';

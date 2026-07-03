@@ -3,8 +3,6 @@
  *
  * PROVES that the parser correctly extracts ALL OpenAPI fields into the IR.
  * Tests all fields from openapi-acceptance-criteria.md.
- *
- * @module
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';

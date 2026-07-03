@@ -3,8 +3,6 @@
  *
  * Handles parsing of Zod object schemas, including properties, strictness, and passthrough.
  * Recurses for property schemas via Core Dispatcher.
- *
- * @module parsers/zod/object
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

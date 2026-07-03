@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * CLI Entry Point for @engraph/castr
+ * CLI Entry Point for `@engraph/castr`
  *
  * Architecture Note:
  * The CLI uses prepareOpenApiDocument() for input processing, which ensures

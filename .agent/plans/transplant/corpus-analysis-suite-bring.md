@@ -37,8 +37,11 @@ would import a moving target and buy re-sync churn instead of capability.
   sub-agent templates + workflow wiring + supporting runbooks. Known bring costs,
   verified firsthand: `esbuild` devDep (absent in castr; Oak pins ^0.28.1), four
   package.json scripts (`build:workflows` chained into `build`, `build-run-artefact`,
-  `post-run-driver`, `salvage-driver`), Result→throw adaptation (~25 files use
-  `@oaknational/result` — castr's deliberate non-bring), prompt re-anchoring to the
+  `post-run-driver`, `salvage-driver`), error-model adaptation of the ~25 files using
+  `@oaknational/result` (SUPERSEDED IN DIRECTION by the Q-010 owner ruling 2026-07-03:
+  Result and fail-fast COMPOSE — the likely shape is keep `Result<T,E>` on castr's own
+  `Result` type per `use-result-pattern.md`, not Result→throw; the package
+  `@oaknational/result` itself stays a non-bring), prompt re-anchoring to the
   target corpus. Re-measure ALL of this at promotion time (Oak read live from main).
 
 ## Not deferred with this plan
@@ -60,7 +63,9 @@ guides castr's own judgment work now; only the mechanism suite waits.
 ## Strategic acceptance criteria
 
 The suite lands as its own multi-slice executable plan: gate-green per slice,
-Result→throw adaptation complete (zero `@oaknational/result` imports), the build
+error-model adaptation complete per `use-result-pattern.md` (zero
+`@oaknational/result` imports; Result composed with fail-fast, not Result→throw —
+Q-010 ruling), the build
 chain's canary contract proven in castr's CI, and one live judgment run on a castr
 corpus with the conserve-by-default disposition ledger produced.
 

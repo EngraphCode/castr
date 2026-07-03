@@ -2,8 +2,6 @@
  * Zod Intersection Parser Tests
  *
  * TDD for Intersections (z.intersection and .and()).
- *
- * @module parsers/zod/intersection.test
  */
 
 import { describe, it, expect } from 'vitest';

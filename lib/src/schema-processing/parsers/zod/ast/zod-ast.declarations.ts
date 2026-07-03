@@ -3,8 +3,6 @@
  *
  * Utilities for finding Zod schema declarations in source files.
  * Extracted from zod-ast.ts to reduce file size.
- *
- * @module parsers/zod/ast/declarations
  */
 
 import { Node, type SourceFile, type CallExpression } from 'ts-morph';

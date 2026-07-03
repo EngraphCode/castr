@@ -2,8 +2,6 @@
  * Zod 4 AST Utilities Tests
  *
  * Tests specifically for Zod 4 features (new primitives, namespaces).
- *
- * @module parsers/zod/ast.zod4.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -3,8 +3,6 @@
  *
  * This module handles the conversion of IR operation definitions to valid
  * canonical OpenAPI 3.2 PathsObject. Operations are grouped by path, then by HTTP method.
- *
- * @module
  */
 
 import type { PathsObject, PathItemObject } from '../../../../shared/openapi-types.js';

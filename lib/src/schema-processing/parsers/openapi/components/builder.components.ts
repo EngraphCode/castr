@@ -3,7 +3,6 @@
  *
  * Handles construction of IR components for parameters, responses, request bodies, and security schemes.
  *
- * @module ir-builder.components
  * @internal
  */
 

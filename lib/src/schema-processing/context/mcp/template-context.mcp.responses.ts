@@ -8,8 +8,6 @@
  * to access raw OpenAPI for reference resolution.
  *
  * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
- *
- * @module template-context.mcp.responses
  */
 
 import { includes, split, toLower, trim } from 'lodash-es';

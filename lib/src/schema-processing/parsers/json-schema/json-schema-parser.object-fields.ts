@@ -5,7 +5,6 @@
  * that do not explicitly set `additionalProperties: false` are rejected
  * unless they have no object keywords at all.
  *
- * @module parsers/json-schema/json-schema-parser.object-fields
  * @internal
  */
 

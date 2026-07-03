@@ -23,7 +23,7 @@ import {
  * @param result - The GenerationResult to extract content from
  * @param context - Optional context for error message
  * @returns The content string from single file result
- * @throws {Error} If result is not a single file result
+ * @throws `Error` If result is not a single file result
  */
 export function assertAndExtractContent(result: GenerationResult, context?: string): string {
   const contextPart = context ? ` for ${context}` : '';

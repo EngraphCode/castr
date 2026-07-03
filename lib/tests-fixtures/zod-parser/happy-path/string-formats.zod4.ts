@@ -3,8 +3,6 @@
  *
  * Contains valid Zod 4 string format expressions for parser testing.
  * All expressions use Zod 4 TOP-LEVEL functions, NOT method syntax.
- *
- * @module tests-fixtures/zod-parser/happy-path/string-formats
  */
 import { z } from 'zod';
 

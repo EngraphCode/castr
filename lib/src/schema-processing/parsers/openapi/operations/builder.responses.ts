@@ -2,8 +2,6 @@
  * IR Builder - Response Processing
  *
  * Handles conversion of OpenAPI response objects to IR response structures.
- *
- * @module
  */
 
 import type {

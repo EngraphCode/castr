@@ -10,8 +10,6 @@
  * **Library Types:**
  * Uses the repo's strict OpenAPI seam types exclusively.
  *
- * @module ir-builder
- * @since 1.0.0
  * @public
  */
 

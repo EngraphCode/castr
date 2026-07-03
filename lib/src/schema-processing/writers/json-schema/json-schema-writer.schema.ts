@@ -4,8 +4,6 @@
  * Core JSON Schema field logic is delegated to the shared json-schema-fields
  * module.  Unlike the OpenAPI writer, this module does NOT add OAS-specific
  * extensions (xml, externalDocs, discriminator).
- *
- * @module writers/json-schema/json-schema-writer.schema
  */
 
 import type { CastrSchema } from '../../ir/index.js';

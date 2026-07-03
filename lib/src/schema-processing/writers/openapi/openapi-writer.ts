@@ -4,8 +4,6 @@
  * This is the main entry point for generating OpenAPI specifications from
  * the canonical Intermediate Representation. Assembles all document sections
  * using the specialized sub-writers.
- *
- * @module
  */
 
 import type { OpenAPIDocument, SecurityRequirementObject } from '../../../shared/openapi-types.js';

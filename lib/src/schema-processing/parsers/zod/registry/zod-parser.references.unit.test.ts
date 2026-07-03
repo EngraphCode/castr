@@ -2,8 +2,6 @@
  * Zod Reference Parser Tests
  *
  * TDD for References (Identifiers) and Recursion (z.lazy).
- *
- * @module parsers/zod/references.test
  */
 
 import { describe, it, expect } from 'vitest';

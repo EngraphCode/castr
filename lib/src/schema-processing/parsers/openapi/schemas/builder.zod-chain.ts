@@ -4,7 +4,6 @@
  * Converts IR schema constraints into Zod validation chain strings.
  * Populates schema.metadata.zodChain.validations.
  *
- * @module ir-builder.zod-chain
  * @internal
  */
 

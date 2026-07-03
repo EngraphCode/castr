@@ -4,7 +4,6 @@
  * Type definitions for declarative endpoint definitions used with
  * the `defineEndpoint()` pattern for Zod → OpenAPI transformation.
  *
- * @module parsers/zod/endpoint.types
  *
  * @example
  * ```typescript
@@ -112,7 +111,7 @@ export interface EndpointDefinition {
 
   /**
    * API path with parameter placeholders in OpenAPI format.
-   * @example '/users/{userId}', '/products/{id}/reviews'
+   * @example `/users/{userId}`, `/products/{id}/reviews`
    */
   path: string;
 

@@ -1,7 +1,5 @@
 /**
- * OpenAPI document validation using @scalar/openapi-parser.
- *
- * @module
+ * OpenAPI document validation using `@scalar/openapi-parser`.
  */
 
 import { validate } from '@scalar/openapi-parser';

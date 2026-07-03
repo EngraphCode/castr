@@ -1,5 +1,5 @@
 /**
- * Basic logging utility for @engraph/castr.
+ * Basic logging utility for `@engraph/castr`.
  *
  * This is a temporary logger that uses console under the hood.
  * After extraction to Engraph monorepo, this will be replaced

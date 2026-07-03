@@ -4,7 +4,6 @@
  * Type definitions for the Zod → IR parser. These types define the
  * structure of parse results, recommendations, and errors.
  *
- * @module parsers/zod/types
  * @see {@link parseZodSource} for the main entry point
  *
  * @example

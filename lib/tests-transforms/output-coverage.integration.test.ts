@@ -7,8 +7,6 @@
  * **TDD Strategy:**
  * - Tests for existing writer capabilities: Should PASS (green)
  * - Tests for missing writer capabilities: Will be added in Phase 1.3 after IR expansion (ADR-030)
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

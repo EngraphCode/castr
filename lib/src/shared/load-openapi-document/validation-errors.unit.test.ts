@@ -2,8 +2,6 @@
  * Unit tests for validation error formatting utilities.
  *
  * TDD RED phase: These tests are written BEFORE implementation.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

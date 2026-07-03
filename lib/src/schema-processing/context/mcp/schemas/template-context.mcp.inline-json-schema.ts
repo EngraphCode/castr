@@ -9,8 +9,6 @@
  * to access raw OpenAPI.
  *
  * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
- *
- * @module template-context.mcp.inline-json-schema
  */
 
 import { setKeyword, type MutableJsonSchema } from '../../../conversion/json-schema/index.js';
@@ -178,7 +176,7 @@ const inlineJsonSchemaObjectFromIR = (
  * Handles:
  * - #/definitions/SchemaName
  * - #/components/schemas/SchemaName
- * - #/x-ext/{hash}/components/schemas/SchemaName (Scalar bundle format)
+ * - `#/x-ext/{hash}/components/schemas/SchemaName` (Scalar bundle format)
  * Sanitizes the name to match how IR stores component names.
  */
 const extractSchemaNameFromRef = (ref: string): string | undefined => {

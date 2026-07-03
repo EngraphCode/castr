@@ -4,7 +4,6 @@
  * Writes .meta() calls for Zod 4 schemas with metadata from the IR.
  * Implements ZERO INFORMATION LOSS for schema metadata.
  *
- * @module writers/zod/metadata
  * @internal
  */
 

@@ -36,7 +36,8 @@ directory shape.
 
 - **✅measured — the split is clean: doctrine stable, procedure moved.**
   - Memory-governing **rules** (`per-user-memory-is-a-buffer`, `executive-memory-drift-capture`,
-    `consolidate-at-third-consumer`, `permanent-doc-is-the-consolidation-record`,
+    `consolidate-at-second-consumer` (measured as `consolidate-at-third-consumer` at the time; Oak
+    renamed it and castr re-synced 2026-07-03), `permanent-doc-is-the-consolidation-record`,
     `knowledge-preservation-over-fitness-warnings`, `napkin`, `capture-practice-tool-feedback`): **zero** change
     `ad649710`→main. No rework.
   - Structural **contracts** (`memory/README.md`, `operational/README.md`, `executive/README.md`,

@@ -35,7 +35,6 @@
  *
  * @see ADR-024 for layer boundary architectural decision
  * @see ADR-029 for canonical source structure
- * @module architecture/layer-boundaries
  */
 
 import { describe, it, expect } from 'vitest';
@@ -45,10 +44,10 @@ import path from 'node:path';
 /**
  * Pattern that detects document-shape imports from the shared re-export module.
  * Matches variations like:
- * - import { OpenAPIDocument } from '../shared/openapi-types.js'
- * - import { OpenAPIObject } from '../shared/openapi-types.js'
- * - import type { OpenAPIDocument } from '../../shared/openapi-types.js'
- * - import { OpenAPIObject, SchemaObject } from '../shared/openapi-types.js'
+ * - `import { OpenAPIDocument } from '../shared/openapi-types.js'`
+ * - `import { OpenAPIObject } from '../shared/openapi-types.js'`
+ * - `import type { OpenAPIDocument } from '../../shared/openapi-types.js'`
+ * - `import { OpenAPIObject, SchemaObject } from '../shared/openapi-types.js'`
  *
  * Also catches direct vendor type imports and any legacy OpenAPI package
  * reintroduction in protected layers as safety nets.

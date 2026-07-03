@@ -144,8 +144,8 @@ export interface OTTBundleMetadata {
  *
  * @remarks
  * The pipeline:
- * 1. Bundles via @scalar/json-magic (resolves $refs, adds x-ext)
- * 2. Validates against the declared OpenAPI version via @scalar/openapi-parser
+ * 1. Bundles via `@scalar/json-magic` (resolves $refs, adds x-ext)
+ * 2. Validates against the declared OpenAPI version via `@scalar/openapi-parser`
  * 3. Bridges older specs through OpenAPI 3.1 semantics where needed
  * 4. Canonicalises the final document to OpenAPI 3.2.0
  * 5. Validates and types as an intersection of Scalar + the strict local seam

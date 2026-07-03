@@ -33,10 +33,26 @@ host, so the symptoms get misattributed to tooling.
    `nice`d below interactive priority, never per-core saturation of the
    shared host, and announced (a comms event naming the load, its bound,
    and its purpose) so peers can attribute slowdowns correctly.
-4. **Host health is a first-class signal.** Check load average against
-   core count (and swap pressure) at session bootstrap and before/after
-   any load-bearing experiment. A saturated host is a stop-and-surface
-   signal — never background noise to work around.
+4. **Host health is a first-class signal — read it with platform-correct
+   signals.** Check host saturation at session bootstrap and before/after any
+   load-bearing experiment. A genuinely saturated host is a stop-and-surface
+   signal — never background noise to work around. **But read the right signal
+   for the platform**, or a healthy host reads as a starved one. On Linux,
+   load-average-vs-core-count plus swap pressure is the reading. **On macOS that
+   reading over-reads and false-positives**: macOS load-average counts
+   I/O-blocked / uninterruptible threads, so it sits well above core count on a
+   healthy machine, and a large `vm.swapusage` "used" figure is normal proactive
+   paging of inactive pages, not memory exhaustion. The macOS-correct saturation
+   signals are **CPU idle %** (`top -l1`, Activity Monitor) and the
+   **memory-pressure colour** (green / yellow / red) — not load-avg-vs-cores or
+   raw swap-used. Owner-evidenced upstream (Oak, 2026-06-28): a session-long
+   ~16–22/14 "load" + ~5 GB swap-used, read as host pressure by more than one
+   agent, was shown healthy by Activity Monitor (CPU idle 67.7 %,
+   memory-pressure green) — a Linux-shaped misread; castr's own false-caution
+   instance validated the same amendment. The founding worked instance below
+   was a _genuine_ host-load DoS, so the rule's force is unchanged; what
+   changes is that on macOS load-avg and swap-used alone do not establish
+   saturation.
 
 ## Worked Instance (founding)
 

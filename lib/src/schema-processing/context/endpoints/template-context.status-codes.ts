@@ -2,8 +2,6 @@
  * Canonical endpoint status-code constants and predicates.
  *
  * Centralizes status-string semantics for template-context transformations.
- *
- * @module context/template-context.status-codes
  */
 
 export const STATUS_DEFAULT = 'default';

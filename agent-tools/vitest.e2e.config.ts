@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 /**
- * E2E test configuration for @engraph/agent-tools.
+ * E2E test configuration for `@engraph/agent-tools`.
  *
  * Inlined from Oak's root `vitest.e2e.config.base.ts` (castr has no shared
  * root base) so the package is self-contained — transplanted from Oak

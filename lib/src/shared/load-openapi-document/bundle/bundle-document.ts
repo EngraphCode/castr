@@ -1,6 +1,5 @@
 /**
  * Document bundling via Scalar parser
- * @module
  * @internal
  */
 

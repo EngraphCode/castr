@@ -5,7 +5,6 @@
  * Replaces overloaded `required` field with explicit context types.
  *
  * @see ADR-023 for architectural rationale
- * @module
  */
 
 import type { CastrSchema, CastrSchemaNode } from './models/schema.js';
@@ -28,23 +27,26 @@ export type CastrSchemaContext =
   | CastrParameterSchemaContext;
 
 /**
- * Component schema context (from #/components/schemas/{name}).
+ * Component schema context (from `#/components/schemas/{name}`).
  *
  * Component schemas are reusable type definitions and are NEVER optional.
  * Asking "is this component schema optional?" is a category error.
  *
  * @example
- * // OpenAPI:
+ * ```yaml
+ * # OpenAPI:
  * components:
  *   schemas:
  *     User:
  *       type: object
  *       properties:
  *         id: { type: string }
- *
+ * ```
+ * ```typescript
  * // Generated:
  * export const User = z.object({ id: z.string() }).strict();
  * // NO .optional() - component schemas define types, not instances
+ * ```
  */
 export interface IRComponentSchemaContext {
   contextType: 'component';
@@ -59,18 +61,21 @@ export interface IRComponentSchemaContext {
  * Properties may be optional based on the parent object's required array.
  *
  * @example
- * // OpenAPI:
+ * ```yaml
+ * # OpenAPI:
  * type: object
  * properties:
  *   id: { type: string }
  *   email: { type: string }
  * required: ['id']
- *
+ * ```
+ * ```typescript
  * // Generated:
  * z.object({
  *   id: z.string(),           // required: true  → NO .optional()
  *   email: z.string().optional()  // required: false → YES .optional()
  * })
+ * ```
  */
 export interface IRPropertySchemaContext {
   contextType: 'property';
@@ -128,15 +133,18 @@ export interface IRArrayItemsContext {
  * Parameters may be required or optional based on OpenAPI spec.
  *
  * @example
- * // OpenAPI:
+ * ```yaml
+ * # OpenAPI:
  * parameters:
  *   - name: userId
  *     in: path
  *     required: true
  *     schema: { type: string }
- *
+ * ```
+ * ```typescript
  * // Generated:
  * z.string()  // required: true → NO .optional()
+ * ```
  */
 export interface CastrParameterSchemaContext {
   contextType: 'parameter';

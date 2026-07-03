@@ -2,8 +2,6 @@
  * IR Builder - Shared Types
  *
  * Common types used across IR builder modules.
- *
- * @module
  */
 
 import type { OpenAPIDocument } from '../../../shared/openapi-types.js';

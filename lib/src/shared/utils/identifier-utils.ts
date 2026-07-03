@@ -3,8 +3,6 @@
  *
  * Uses TypeScript's compiler API for identifier validation.
  * Uses lodash for identifier transformation.
- *
- * @module shared/utils/identifier-utils
  */
 
 import { isIdentifierStart, isIdentifierPart, ScriptTarget } from 'typescript';

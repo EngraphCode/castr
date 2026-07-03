@@ -7,8 +7,6 @@
  * Extracted to its own module to avoid circular dependencies: core.ts imports
  * helper functions from helpers.ts and 2020-keywords.ts, which in turn need
  * the JsonSchema2020 type.
- *
- * @module parsers/json-schema/json-schema-parser.types
  */
 
 import type { SchemaObject, ReferenceObject } from '../../../shared/openapi-types.js';

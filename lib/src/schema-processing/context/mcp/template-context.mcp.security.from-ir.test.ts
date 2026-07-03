@@ -4,8 +4,6 @@
  * These tests verify that `resolveOperationSecurityFromIR` produces equivalent
  * output to `resolveOperationSecurity`, but reads from IR types instead of
  * raw OpenAPI.
- *
- * @module template-context.mcp.security.from-ir.test
  */
 
 import { describe, expect, test } from 'vitest';

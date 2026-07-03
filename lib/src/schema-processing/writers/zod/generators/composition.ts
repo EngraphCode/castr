@@ -3,7 +3,6 @@
  *
  * Handles generation of Zod schemas for composition types (oneOf, anyOf, allOf).
  *
- * @module zod-writer.composition
  * @internal
  */
 

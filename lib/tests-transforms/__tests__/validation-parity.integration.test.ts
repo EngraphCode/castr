@@ -11,8 +11,6 @@
  * Uses `.parse()` (throws on failure) rather than `.safeParse()` to align with
  * our strict, fail-fast principle. If data is valid, parse succeeds. If data
  * is invalid, parse throws—and we expect that.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

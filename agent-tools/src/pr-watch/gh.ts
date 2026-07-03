@@ -189,7 +189,9 @@ export function readPrSnapshot(options: ReadPrSnapshotOptions): PrSnapshot {
 function parseGhJson(raw: string, surface: string): unknown {
   try {
     return JSON.parse(raw);
-  } catch {
-    throw new Error(`gh ${surface} returned non-JSON output (is gh installed and authenticated?)`);
+  } catch (error) {
+    throw new Error(`gh ${surface} returned non-JSON output (is gh installed and authenticated?)`, {
+      cause: error,
+    });
   }
 }

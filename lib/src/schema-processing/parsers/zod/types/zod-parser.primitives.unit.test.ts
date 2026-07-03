@@ -2,8 +2,6 @@
  * Zod Primitive Parsing Tests
  *
  * TDD tests for parsing primitive Zod types to IR.
- *
- * @module parsers/zod/primitives.test
  */
 
 import { describe, it, expect } from 'vitest';

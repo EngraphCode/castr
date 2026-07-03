@@ -182,6 +182,8 @@ refactoring. They should be deleted or rewritten as descriptions.
   testing-strategy taxonomy is authoritative on shape. It also carries
   castr's recipe-level worked examples (TDD at all levels, common
   violations and fixes).
+- `validation-strategy.md` — the umbrella that positions tests as one of
+  several validation surfaces (test / evaluate / assure).
 - `.agent/rules/tdd.md`, `tdd-for-refactoring.md`, `no-skipped-tests.md`,
   `no-conditional-tests.md`, `no-global-state-in-tests.md`,
   `test-immediate-fails.md` — the rule surface operationalising this directive.

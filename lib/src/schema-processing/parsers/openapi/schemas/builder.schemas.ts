@@ -4,7 +4,6 @@
  * Handles extraction of schemas from OpenAPI components section.
  * Focused on component-level schema extraction and organization.
  *
- * @module ir-builder.schemas
  * @internal
  */
 
@@ -81,7 +80,7 @@ export function buildCastrSchemas(components: ComponentsObject | undefined): IRC
 import { toIdentifier } from '../../../../shared/utils/identifier-utils.js';
 
 /**
- * Build component schema context (from #/components/schemas/{name}).
+ * Build component schema context (from `#/components/schemas/{name}`).
  *
  * Component schemas are NEVER optional - they define types, not instances.
  *

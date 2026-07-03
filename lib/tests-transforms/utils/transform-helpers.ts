@@ -4,8 +4,6 @@
  * Extracted from the original `transform-samples.integration.test.ts`
  * to enable per-scenario test file splitting and reuse across
  * scenarios 1–7.
- *
- * @module tests-transforms/utils/transform-helpers
  */
 
 import { resolve } from 'node:path';

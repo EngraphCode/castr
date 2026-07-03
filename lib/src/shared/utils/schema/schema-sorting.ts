@@ -29,9 +29,11 @@ function getSchemaNameFromRef(ref: string): string {
  * @returns New dictionary with keys reordered
  *
  * @example
+ * ```ts
  * const schemas = { User: "z.object(...)", Pet: "z.object(...)" };
  * const ordered = sortSchemasByDependencyOrder(schemas, ["#/components/schemas/Pet", "#/components/schemas/User"]);
  * // Result: { Pet: "z.object(...)", User: "z.object(...)" }
+ * ```
  */
 export function sortSchemasByDependencyOrder(
   schemas: Record<string, string>,

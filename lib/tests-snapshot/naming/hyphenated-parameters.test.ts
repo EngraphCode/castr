@@ -5,7 +5,7 @@ import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 /**
  * Tests that hyphenated parameters are correctly handled in path parameter naming.
- * https://github.com/astahmer/@engraph/castr/issues/78
+ * `https://github.com/astahmer/@engraph/castr/issues/78`
  *
  * The valuable behavior being proven:
  * - Hyphens in parameter names are converted to camelCase

@@ -6,8 +6,6 @@
  *
  * **Library Types:**
  * Works from JsonSchema2020, which extends the shared OpenAPI seam for JSON Schema 2020-12.
- *
- * @module parsers/json-schema/json-schema-parser.core
  */
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';

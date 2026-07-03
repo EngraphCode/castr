@@ -15,7 +15,7 @@
  *   npx tsx scripts/generate-normalized-fixtures.ts
  *
  * Output:
- *   lib/tests-transforms/__fixtures__/normalized/{fixture-name}/
+ *   `lib/tests-transforms/__fixtures__/normalized/{fixture-name}/`
  *     - input.yaml (symlink to original)
  *     - normalized.json
  *     - reprocessed.json

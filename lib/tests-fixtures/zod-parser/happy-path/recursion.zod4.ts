@@ -3,8 +3,6 @@
  *
  * Contains valid Zod 4 recursive type expressions using getter syntax.
  * This is the Zod 4 native recursion pattern (no z.lazy required).
- *
- * @module tests-fixtures/zod-parser/happy-path/recursion
  */
 import { z } from 'zod';
 

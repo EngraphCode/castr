@@ -2,8 +2,6 @@
  * OpenAPI request/response body writers — converts IR body types to OpenAPI objects.
  *
  * Extracted from openapi-writer.operations.ts to keep file size within limits.
- *
- * @module
  */
 
 import type {

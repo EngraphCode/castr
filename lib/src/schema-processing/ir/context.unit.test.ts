@@ -3,8 +3,6 @@
  *
  * Tests that CastrSchemaContext discriminated unions properly narrow types.
  * Uses mock factories from ir-test-helpers to create type-safe test data.
- *
- * @module
  */
 import { describe, test, expect } from 'vitest';
 import type { CastrSchemaContext } from './context.js';

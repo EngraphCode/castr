@@ -3,8 +3,6 @@
  *
  * These tests capture expected behavior for schema validation generation.
  * They were written as failing tests (TDD RED) to document regressions.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

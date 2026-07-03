@@ -5,7 +5,6 @@
  * This module provides the foundation for AST-based Zod parsing,
  * replacing fragile regex patterns (ADR-026).
  *
- * @module parsers/zod/ast
  *
  * @example
  * ```typescript

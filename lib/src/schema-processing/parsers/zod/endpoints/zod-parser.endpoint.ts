@@ -4,7 +4,6 @@
  * Parses `defineEndpoint({...})` declarations into endpoint definitions.
  * Builder functions are in `zod-parser.endpoint.builder.ts`.
  *
- * @module parsers/zod/endpoint
  *
  * @example
  * ```typescript

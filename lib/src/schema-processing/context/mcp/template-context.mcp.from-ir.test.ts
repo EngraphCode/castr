@@ -4,8 +4,6 @@
  * These tests verify that `buildMcpToolsFromIR` produces equivalent
  * output to `buildMcpTools`, but reads entirely from `CastrDocument`
  * instead of raw OpenAPI objects.
- *
- * @module template-context.mcp.from-ir.test
  */
 
 import { describe, expect, test } from 'vitest';

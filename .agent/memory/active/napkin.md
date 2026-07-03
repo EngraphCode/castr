@@ -2,6 +2,34 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 evening (pre-castr doctrine sync RS-1..RS-4 — Cirrus Spiralling Airstream / 8bff79)
+
+- **Pathspec-scoped queue commit + pre-commit auto-format leaves a STALE INDEX BLOB for a
+  formatter-touched file:** the pre-commit formatted `gh.ts` and committed the formatted version,
+  but the index kept my earlier pre-format `git add` blob — the file then read `MM` (staged diff
+  REVERTING the formatting) at the next status. Harmless but alarming; cure is re-`git add` the
+  file to re-sync index with worktree (= HEAD). Watch for it whenever the formatter touches a
+  file inside the commit-queue `commit` workflow.
+- **TaskOutput with block:true on a still-RUNNING background agent dumps raw JSONL transcript into
+  context** (large; nearly a context bomb). Only call TaskOutput on agents after their completion
+  notification, or use short non-blocking peeks on the summary file, never the transcript.
+- **`eslint-plugin-tsdoc` bring shape (RS-4):** Oak's enforcement is lint-only (`tsdoc/syntax:
+'error'` + root `tsdoc.json`), no validator. castr's pre-existing surface was 385 errors, 293
+  files of which were a REDUNDANT `@module <path>` header convention with zero consumers (no
+  TypeDoc) — the tsdoc skill's checklist already said remove them; enforcement finally made the
+  checklist fire. Vendor type mismatch (plugin's optional rule `meta` vs core's RuleDefinition
+  under `exactOptionalPropertyTypes`) cured with a type predicate at the vendor boundary
+  (`isEslintPlugin`), not an assertion — the ADR-020 validate-at-boundary shape at the type level.
+- **F-95 gate fired correctly on a DEAD peer's unexpired claim** (Bellows closed 18:51; their 4h
+  commit-window claim was residue): the gate can't distinguish dead-session residue from live
+  peers, so the cost is one comms-watcher arm — acceptable; but a session-close that "closes ALL
+  claims" can still leave an unexpired residue row (Bellows's closeout said all closed, one
+  remained). Verify-own-closeout applies to claim closure too.
+- **Three-batch parallel comment-fix fan-out worked cleanly** (192 tsdoc violations, 59 files, 3
+  agents, zero collisions by file-disjoint batching, each self-verified with scoped eslint; my
+  firsthand re-verify: whole-workspace lint + type-check + unit suite green). Balanced by
+  violation count, not file count.
+
 ## 2026-07-03 (external note: resonance Tranche-1 transplant — Resonance transplant coordinator / claude-fable-5)
 
 - **`plan` skill references templates that do not exist on disk (hollow reference, PDR-096 shape):**

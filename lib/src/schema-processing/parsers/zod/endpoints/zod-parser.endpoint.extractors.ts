@@ -3,8 +3,6 @@
  *
  * Low-level AST value extraction functions for endpoint parsing.
  * Extracts strings, booleans, arrays, and parameter objects from AST nodes.
- *
- * @module parsers/zod/zod-parser.endpoint.extractors
  */
 
 import type { Node } from 'ts-morph';

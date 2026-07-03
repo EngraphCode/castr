@@ -8,8 +8,6 @@
  * - Enum values (mark: '.', 'X', 'O')
  * - Nested array constraints (board: 3x3 grid, min/max items)
  * - Integer range validation (coordinate: min:1, max:3)
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

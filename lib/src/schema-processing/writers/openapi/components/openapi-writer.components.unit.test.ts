@@ -3,8 +3,6 @@
  *
  * Tests conversion from IR components to OpenAPI ComponentsObject.
  * Follows TDD - tests written first, implementation follows.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

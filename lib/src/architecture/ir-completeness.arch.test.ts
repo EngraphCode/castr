@@ -11,7 +11,6 @@
  * 3. No "reach back" to source documents is needed
  *
  * @see ADR-024 for the architectural decision
- * @module architecture/ir-completeness
  */
 
 import { describe, it, expect } from 'vitest';

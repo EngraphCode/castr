@@ -5,8 +5,6 @@
  * `resolvePrimarySuccessResponseSchemaFromIR` produce the same output
  * structure as the OpenAPI-based functions, but read from `CastrOperation`
  * instead of raw OpenAPI.
- *
- * @module template-context.mcp.responses.from-ir.test
  */
 
 import { describe, expect, test } from 'vitest';

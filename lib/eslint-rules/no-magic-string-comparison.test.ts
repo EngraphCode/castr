@@ -1,5 +1,5 @@
 /**
- * @file Tests for the no-magic-string-comparison ESLint rule.
+ * Tests for the no-magic-string-comparison ESLint rule.
  *
  * Uses eslint's RuleTester with Vitest to verify:
  * - String literal comparisons are reported (magic strings)

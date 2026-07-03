@@ -6,8 +6,6 @@
  *
  * Per testing-strategy.md: Integration tests verify the behaviour of a collection of units
  * working together as code.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

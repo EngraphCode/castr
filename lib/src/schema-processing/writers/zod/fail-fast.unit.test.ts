@@ -7,8 +7,6 @@
  * Per the Input-Output Pair Compatibility Model: Zod CAN express these
  * keywords via .refine() runtime validation closures. Fail-fast was
  * an implementation gap, not a genuine impossibility.
- *
- * @module
  */
 
 import { Project, VariableDeclarationKind } from 'ts-morph';

@@ -7,8 +7,6 @@
  * - These tests define REQUIRED end-to-end behavior
  * - They prove IR data is actually USED in code generation
  * - They should FAIL until IR correctly preserves and uses enum values
- *
- * @module ir-enum-integration.test
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';

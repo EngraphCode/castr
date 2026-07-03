@@ -3,8 +3,6 @@
  *
  * Discriminated union of all reusable component types that can appear
  * under OpenAPI `components/`.
- *
- * @module ir/schema.components
  */
 
 import type {
@@ -47,7 +45,7 @@ export interface CastrSchemaComponent {
   type: 'schema';
 
   /**
-   * Component name from #/components/{type}/{name}.
+   * Component name from `#/components/{type}/{name}`.
    */
   name: string;
 

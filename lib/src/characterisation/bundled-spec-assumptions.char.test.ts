@@ -2,7 +2,7 @@
  * Characterisation Tests: Scalar Pipeline Bundling Behavior
  *
  * Architecture Note:
- * The Scalar pipeline (@scalar/json-magic + @scalar/openapi-parser) differs from
+ * The Scalar pipeline (`@scalar/json-magic` + `@scalar/openapi-parser`) differs from
  * SwaggerParser in how it handles $refs:
  *
  * - Scalar's bundle(): Resolves external file references, preserves internal $refs

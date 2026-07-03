@@ -2,13 +2,11 @@
  * Validation Parity Integration Tests - Petstore Expanded (allOf Composition)
  *
  * PROVES that generated Zod schemas for allOf composition validate data correctly.
- * The Pet schema uses allOf composition: NewPet.and(z.object({ id }))
+ * The Pet schema uses allOf composition: `NewPet.and(z.object({ id }))`
  *
  * Key tests:
  * - Intersection types require ALL properties from ALL schemas
- * - NewPet (name required, tag optional) + { id required }
- *
- * @module
+ * - NewPet (name required, tag optional) + `{ id required }`
  */
 
 import { describe, it, expect } from 'vitest';

@@ -2,8 +2,6 @@
  * IR Integration - Complex Parameter Metadata
  *
  * PROVES: Complex parameter metadata (refs, validation constraints, arrays) flows through to correct validation
- *
- * @module ir-parameter-complex.test
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';

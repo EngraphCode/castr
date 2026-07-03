@@ -13,23 +13,32 @@ import globals from 'globals';
 import { noMagicStringComparison } from './eslint-rules/no-magic-string-comparison.js';
 import { maxFilesPerDir } from './eslint-rules/max-files-per-dir.js';
 import * as eslintPluginBoundariesNs from 'eslint-plugin-boundaries';
+import tsdocPlugin from 'eslint-plugin-tsdoc';
 
 /**
- * Minimal structural type for third-party ESLint plugins whose CJS interop
- * produces a module-namespace type that TS cannot structurally match to Plugin.
+ * Type predicate for third-party ESLint plugins. Some plugins ship CJS
+ * module-namespace types, or rule types structurally incompatible with the
+ * workspace's ESLint core types under `exactOptionalPropertyTypes` (e.g. an
+ * optional rule `meta`); treat the import as an unknown vendor boundary and
+ * validate the plugin shape at runtime instead of propagating the mismatch.
  */
-interface ThirdPartyPlugin {
-  rules?: ESLint.Plugin['rules'];
-  [key: string]: unknown;
+function isEslintPlugin(candidate: unknown): candidate is ESLint.Plugin {
+  return (
+    typeof candidate === 'object' &&
+    candidate !== null &&
+    'rules' in candidate &&
+    typeof candidate.rules === 'object' &&
+    candidate.rules !== null
+  );
 }
 
 /**
- * Type-safe identity function for third-party ESLint plugins.
- * Validates the plugin has a `rules` property at runtime.
+ * Boundary-validating narrowing for third-party ESLint plugins.
+ * Throws when the imported value does not carry a `rules` table.
  */
-function asPlugin(plugin: ThirdPartyPlugin): ESLint.Plugin {
-  if (!('rules' in plugin)) {
-    throw new Error('Invalid ESLint plugin: missing rules property');
+function asPlugin(plugin: unknown): ESLint.Plugin {
+  if (!isEslintPlugin(plugin)) {
+    throw new Error('Invalid ESLint plugin: expected an object carrying a rules table');
   }
   return plugin;
 }
@@ -126,6 +135,9 @@ const baseRules: Linter.RulesRecord = {
   'no-constant-condition': 'error',
   'prefer-const': 'error',
   'no-var': 'error',
+  // Result-pattern causal-chain discipline (use-result-pattern rule): a re-thrown
+  // or re-expressed error must carry { cause } so the causal chain survives.
+  'preserve-caught-error': ['error', { requireCatchParameter: true }],
 };
 
 const untypedTsRules: Linter.RulesRecord = {
@@ -222,6 +234,13 @@ export default defineConfig(
   // Untyped checks everywhere
   ...tsUntypedPresets,
   { files: ['**/*.{ts,tsx,mts,cts}'], rules: untypedTsRules },
+
+  // TSDoc syntax discipline: any /** */ doc comment must parse as valid TSDoc
+  {
+    files: ['**/*.{ts,tsx,mts,cts}'],
+    plugins: { tsdoc: asPlugin(tsdocPlugin) },
+    rules: { 'tsdoc/syntax': 'error' },
+  },
 
   // Test file relaxations
   { files: testGlobs, rules: testRules },

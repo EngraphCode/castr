@@ -1,6 +1,5 @@
 /**
  * Metadata creation and formatting utilities
- * @module
  * @internal
  */
 
@@ -36,7 +35,7 @@ export function formatDescriptor(originalDescriptor: string, entrypointUri: stri
  * @param files - Collected file entries
  * @param urls - Collected URL entries
  * @param warnings - Collected warnings
- * @param externalReferences - Map of URI -> usage count
+ * @param externalReferences - Map of `URI -> usage count`
  * @returns Complete bundle metadata
  * @public
  */

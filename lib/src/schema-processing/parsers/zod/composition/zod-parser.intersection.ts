@@ -3,8 +3,6 @@
  *
  * Handles parsing of Zod intersection schemas: z.intersection(A, B).
  * Also handles chained .and() calls.
- *
- * @module parsers/zod/intersection
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

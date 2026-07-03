@@ -179,8 +179,11 @@ adjudicating presence.
   (owner-decided changesets, execution deferred until delivery is scheduled) — tracked there, not here.
 - shell-lint gate (LACK) — `bash -n` over castr's own `.sh`; wire into `qg`+CI.
 - stryker mutation testing (LACK) — `stryker.config.base.ts` + 3 devdeps + script (manual-run posture).
-- tsdoc enforcement (HOLLOW) — `tsdoc.json` + `eslint-plugin-tsdoc`; the landed `engraph-tsdoc` skill
-  names them as sources-of-truth but neither exists. castr is a published TS library — high value.
+- ~~tsdoc enforcement (HOLLOW)~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-4): root `tsdoc.json`
+  (Oak's body: standard tags + `@generated`) + `eslint-plugin-tsdoc@^0.5.2` wired `tsdoc/syntax: 'error'`
+  in BOTH workspace eslint configs; the full pre-existing violation surface fixed (385: 293-file `@module`
+  sweep per the skill's own checklist + escaping/link/tag repairs); gate prove-it-fires by deliberate-RED
+  negative control in both workspaces. The `engraph-tsdoc` skill's sources-of-truth now resolve.
 - no-network e2e for `lib` (HOLLOW minor) — wire `test.setup.no-network.ts` into `lib/vitest.e2e.config.ts`.
 
 **Agent-tools modules**
@@ -225,8 +228,10 @@ adjudicating presence.
 strictly-voluntary doctrine, **@humans: do not modify**, "Why the audit step exists") — castr's is a 157-byte stub
 that `session-handoff`/`consolidate-docs` link as authority (dangling). Drop Oak instance content.
 
-**Directives** (LACK) — `validation-strategy.md` (test/evaluate/assure + risk-tiering — serves castr's
-codegen-correctness claims; closes the testing-strategy HOLLOW), `schema-first-execution.md` (re-domain to
+**Directives** (LACK) — ~~`validation-strategy.md`~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-3:
+brought as a localised seeded stub, overlap reconciled — testing-strategy stays authoritative for the whole
+Test leg; wired into AGENT.md/testing-strategy/tdd-as-design cross-refs mirroring Oak's wiring, which does
+NOT include start-right), `schema-first-execution.md` (re-domain to
 castr's IR/codegen pipeline — pointedly relevant to a schema engine), `editorial-tone.md` (governs VISION.md / outward copy).
 
 **Rules** (LACK, genuine Practice/agent) — `agent-experience-review-lens`, `scope-from-goal-before-approach`
@@ -378,9 +383,10 @@ consumers), `.mcp.json.example` mcpjam pin (amends the Tier-3 MCP item), pnpm-wo
 
 **Owner-ruling additions (2026-07-03 consolidation walk — Result/fail-fast composition, FULL reach):**
 
-- **Bring `use-result-pattern.md`** (Tier 2; reverses the §Firsthand-corrections item-1 non-bring —
-  superseded by the owner ruling that Result and fail-fast compose). Localise to castr's estate on
-  bring; the rule teaches the pattern principles.md already exemplifies.
+- ~~**Bring `use-result-pattern.md`**~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-1): rule
+  authored native to castr carrying the composition ruling verbatim substance + all three wrappers +
+  RULES_INDEX row + `preserve-caught-error` ESLint enforcement wired in both workspaces
+  (`{ cause }` causal-chain discipline; one real violation fixed in `pr-watch/gh.ts`).
 - **Migrate the D4 throw-based error-model seams to `Result<T,E>` with fail-fast composition**
   (Tier 2, castr-internal slice): the D4 archive/provenance reconciliation rewrote Oak's
   Result-based modules to typed throws on the now-retired fail-fast-therefore-no-Result ground;
@@ -397,11 +403,12 @@ dated team prompts).
 
 - **Doctrine re-sync wave (rules/skills/directives castr already carries):** Oak renamed
   `consolidate-at-third-consumer` → **`consolidate-at-second-consumer`** (threshold-lowering doctrine change;
-  **castr's copy verified still on the OLD third-consumer body** — rule + adapters + RULES_INDEX + citation ripple
-  to re-sync); 18 amended rules (highest-value verified: `verify-dont-trust` ×4 additions incl.
+  ✅ rename + adapters + RULES_INDEX + citation ripple LANDED 2026-07-03, pre-castr-doctrine-sync RS-2 — incl.
+  the PDR-014/058 consumer-threshold hunks and both code-comment citations); 18 amended rules (highest-value
+  verified: `verify-dont-trust` ×4 additions incl.
   self-state-claims-verify-first; `comms-all-channels-watcher` + `use-monitor-for-event-driven-wake` gain the
   `--supervisor-pid` orphan cure; `no-unbounded-host-load` §4 macOS-correct saturation signals — load-avg on macOS
-  over-reads, use CPU-idle% + memory-pressure; `precedence-is-not-approval` recorded-grants-are-claims;
+  over-reads, use CPU-idle% + memory-pressure (✅ LANDED 2026-07-03, RS-2); `precedence-is-not-approval` recorded-grants-are-claims;
   `present-verdicts-not-menus` no-deferral-status-lines; `hook-policy-substring-discipline` known-git-over-blocks
   section; `ship-independent-coordinate-dependent` same-lines dependence test); skills doctrine wave
   (`consolidate-docs` +112 / `consolidate-until-done` +90: impact-placement conservation; `semantic-merge`

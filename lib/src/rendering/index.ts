@@ -1,6 +1,5 @@
 /**
  * Rendering module - Template-based code generation
- * @module rendering
  */
 
 export { generateZodClientFromOpenAPI } from './generate-from-context.js';

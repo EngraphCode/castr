@@ -2,8 +2,6 @@
  * Zod Reference Parser
  *
  * Handles parsing of references (Identifiers) and recursion (z.lazy).
- *
- * @module parsers/zod/references
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
@@ -208,7 +206,7 @@ function extractLazyCallback(baseArgNodes: Node[]): ArrowFunction | FunctionExpr
 }
 
 /**
- * Handle z.lazy(() => Schema) calls.
+ * Handle `z.lazy(() => Schema)` calls.
  * @internal
  */
 function handleLazy(

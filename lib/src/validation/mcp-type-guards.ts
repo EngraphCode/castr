@@ -131,7 +131,7 @@ const ensureToolValidators = (tool: Tool): ToolValidators => {
  * @param result - Validation result from AJV (should always be synchronous boolean)
  * @returns The validation result as a boolean
  *
- * @throws {Error} If validation result is a Promise (indicates async validation)
+ * @throws `Error` If validation result is a Promise (indicates async validation)
  *
  * @remarks
  * AJV can perform async validation when schemas use async format validators or
@@ -185,7 +185,7 @@ const ensureSynchronousResult = (result: boolean | Promise<boolean>): boolean =>
  * // TypeScript now knows manifest.tools[0] is a Tool
  * ```
  *
- * @see {@link Tool} from @modelcontextprotocol/sdk/types.js
+ * @see {@link Tool} from `@modelcontextprotocol/sdk/types.js`
  * @see {@link isMcpToolInput} for validating tool inputs
  * @see {@link isMcpToolOutput} for validating tool outputs
  *
@@ -210,7 +210,7 @@ export function isMcpTool(value: unknown): value is Tool {
  * @param tool - MCP tool definition containing the input schema
  * @returns `true` when the payload matches the tool input schema, `false` otherwise
  *
- * @throws {Error} If async validation is detected (should never occur with Draft 07)
+ * @throws `Error` If async validation is detected (should never occur with Draft 07)
  *
  * @example Validate user input before tool execution
  * ```typescript
@@ -244,7 +244,7 @@ export function isMcpTool(value: unknown): value is Tool {
  * });
  * ```
  *
- * @see {@link Tool} from @modelcontextprotocol/sdk/types.js
+ * @see {@link Tool} from `@modelcontextprotocol/sdk/types.js`
  * @see {@link isMcpTool} for validating tool definitions
  * @see {@link isMcpToolOutput} for validating tool outputs
  *
@@ -273,7 +273,7 @@ export function isMcpToolInput(payload: unknown, tool: Tool): boolean {
  * @returns `true` when the payload matches the tool output schema, or when no output
  * schema is defined. Returns `false` when validation fails.
  *
- * @throws {Error} If async validation is detected (should never occur with Draft 07)
+ * @throws `Error` If async validation is detected (should never occur with Draft 07)
  *
  * @example Validate tool execution result
  * ```typescript
@@ -307,7 +307,7 @@ export function isMcpToolInput(payload: unknown, tool: Tool): boolean {
  * }
  * ```
  *
- * @see {@link Tool} from @modelcontextprotocol/sdk/types.js
+ * @see {@link Tool} from `@modelcontextprotocol/sdk/types.js`
  * @see {@link isMcpTool} for validating tool definitions
  * @see {@link isMcpToolInput} for validating tool inputs
  *

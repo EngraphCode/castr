@@ -1,15 +1,13 @@
 /**
  * Scalar Validator Behavior Verification Tests
  *
- * PROVES what the @scalar/openapi-parser validate() function actually
+ * PROVES what the `@scalar/openapi-parser` validate() function actually
  * catches versus what it misses. These are integration tests against
  * the running system, not assumptions.
  *
  * Per official OpenAPI specs:
  * - 3.0.x: Has `nullable: boolean`, `exclusiveMinimum: boolean`
  * - 3.1.x: Uses JSON Schema 2020-12 — no `nullable`, `exclusiveMinimum` is numeric
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

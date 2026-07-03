@@ -34,7 +34,7 @@ export type ParameterType = 'Path' | 'Query' | 'QueryString' | 'Header' | 'Body'
  * Schema constraints subset from OpenAPI SchemaObject.
  * Uses library types directly - no custom types.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object OpenAPI Schema Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object | OpenAPI Schema Object}
  */
 export type SchemaConstraints = Pick<
   SchemaObject,
@@ -56,7 +56,7 @@ export type SchemaConstraints = Pick<
  * Endpoint parameter with schema as CastrSchema.
  * Uses OpenAPI library types for metadata fields - no custom types.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object | OpenAPI Parameter Object}
  */
 export interface EndpointParameter {
   /** Parameter name */

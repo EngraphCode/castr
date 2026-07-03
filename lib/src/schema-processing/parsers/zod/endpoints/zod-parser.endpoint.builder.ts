@@ -3,8 +3,6 @@
  *
  * Builds `CastrOperation` structures from parsed `EndpointDefinition` objects.
  * Separated from parsing logic for single responsibility and reduced file size.
- *
- * @module parsers/zod/endpoint.builder
  */
 
 import type {

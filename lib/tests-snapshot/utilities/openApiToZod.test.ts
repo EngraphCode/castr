@@ -7,7 +7,7 @@ import { getZodSchema } from '../../src/schema-processing/conversion/zod/index.j
  *
  * Note: The old CodeMetaData and ConversionTypeContext types were removed.
  * The meta and ctx parameters are no longer supported in getZodSchema.
- * These tests now use the simplified API that only accepts { schema }.
+ * These tests now use the simplified API that only accepts `{ schema }`.
  */
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsZodString = (schema: SchemaObject) =>
