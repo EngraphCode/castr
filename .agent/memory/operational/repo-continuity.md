@@ -126,13 +126,30 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > claims-handoff → markdown-links wiring + Oak-ADR cite-repair → plan-templates). n=2 session note: Penumbral
 > Slipping Moth landed `7f53bd2` + watched CI this window; team ceremony (watcher/heartbeat/claims/comms) ran live.
 >
+> **🟢 PR #3 IS MERGE-READY (2026-07-03, Penumbral Slipping Moth closeout): mergeStateStatus CLEAN / MERGEABLE /
+> 0 unresolved review threads / required `quality-gates` check GREEN at origin tip `2e616bd`.** Merge posture
+> (owner, explicit): the owner INTENDS to merge and will invoke the merge explicitly; the agents' STANDING duty is
+> keeping the branch continuously merge-correct and merge-safe (supersedes "delivery deprioritised"). The
+> merge-readiness loop shape: **Codex reviews every push and may open a new finding wave** — disposition each wave
+> fix-or-reject in the same work item (user-memory `pr-threads-fix-or-reject`) until a push's wave is empty; this
+> session took three waves (14 → 5 → 3, all closed). Late landings after `7f53bd2`: `cec8bce` action SHA-pins +
+> workspace-coverage guard, `ac0363e` dependency sweep (DC lane CLOSED), `89ac038` turbo 2.10.2, `3cf5972` audit
+> overrides (audit ZERO), `c6df0f8`/`b0355e4`/`2e616bd` the three Codex waves (incl. ENGRAPH_ALLOW_MAJOR_VERSION=1
+> owner override on the version guard; `git commit -n` gate-bypass block; trusted-git in the commit-queue runtime),
+> `966495e` coverage-step test timeout. **Handover residue: `f8111d4` (Cliff's docs bundle) + the Moth closeout
+> commit are LOCAL-ONLY — push duty + CI-wave watch explicitly transferred to Windswept Winging Cliff** (handover
+> comms event; a push re-verifies via pre-push `check:ci` and triggers CI + possibly a fresh Codex wave to
+> disposition). GitHub Code Quality: KEPT (owner-decided; evaluate in operation; GA billing 2026-07-20).
+>
 > **🧭 SINGLE FRONTIER (2026-06-28) — this block + the one below are the ONLY current "what's next"; every dated block
 > further down is history (superseded on next-step).** The "one deep enhancement" has **three axes**: **(A)
 > transplant/parity** — ACTIVE; its single ordered backlog is
 > [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (the LC / TC /
 > parity-tranche plans are FOLDED into it — see its "single ordered backlog" section). **(B) product-remediation**
 > — **5 reproduced Criticals remain (C2–C6); C1 done.** DORMANT but now a DEFINED "after Tier-1" (Q-011 decided), not
-> an undefined later. **(C) delivery** — DEPRIORITISED. **Q-011 DECIDED 2026-06-28 (owner) → Axis A first.**
+> an undefined later. **(C) delivery** — ~~DEPRIORITISED~~ **superseded 2026-07-03: continuous MERGE-READINESS is a
+> standing agent duty; the merge itself is owner-invoked, explicitly (see the 🟢 merge-ready block above).**
+> **Q-011 DECIDED 2026-06-28 (owner) → Axis A first.**
 > **Tier-1 LANDED + PUSHED 2026-06-28 (Open Lofting Feather), origin = `16cedbf`:** enforcement-integrity cluster —
 > ✅ trusted-git (`2ca01be`), ✅ gitleaks secret-scan wired into qg (`ec53da7`), ✅ CI-runs-gates server-side in-repo
 > (`38073f1`); collaboration-safety cluster — ✅ worktree-aware coordination-home + dedup of castr's two FS-walk

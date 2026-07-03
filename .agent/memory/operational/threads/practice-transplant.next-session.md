@@ -351,7 +351,7 @@ for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
   surface) describing the precision improvement for upstream adoption.
 - Acceptance bar: precision lands TDD-green (false positives gone, true positives still caught); Oak back-flow note written.
 
-### Lane: dependency currency — ACTIVE, IN PROGRESS (dev-tooling + DC1 + DC2 done 2026-06-21; DC3-DC5 remain)
+### Lane: dependency currency — ✅ COMPLETE, LANE CLOSED (DC3+DC4+DC5 done 2026-07-03 via the owner-directed full sweep, `ac0363e`; audit ZERO; PDR-097 already graduated — the plan §Progress carries the closing record)
 
 - **DC2 @scalar IR-input trio DONE (2026-06-21, Soaring Lifting Current / f7e30d) — `43419d0`.** parser
   0.25.7->0.28.7 + types 0.6.1->0.9.1 + json-magic 0.12.4->0.12.16, one coupled commit (parser pins exact

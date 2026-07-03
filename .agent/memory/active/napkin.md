@@ -82,6 +82,22 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   repo-wide — that churn rides the bump commit); commander 15 ESM-only probed identical on the paired
   `--no-*` default; @types/node HELD at ^24 per ADR-049 (types track engines runtime). `pnpm audit`
   taken to ZERO via two annotated workspace overrides (hono, esbuild floors) with removal conditions.
+  The sweep CLOSED the dependency-currency lane (DC3 prettier landed at 3.9.4 > the planned 3.8.4 target,
+  same oracle; DC4 ink 7.1.0 via tests + TUI smoke; DC5 commander 15 via firsthand paired-option probe).
+- **Pipe-masking: three instances in one session — graduated to a distilled entry (exit codes vs pipes).**
+  Worst instance: `gh run watch --exit-status | tail` read a FAILED CI run as green; the false "success"
+  then shaped a wrong PR-blocked diagnosis until re-measured via `gh run view --json conclusion`.
+- **Whole-repo `pnpm check` COLLISION SHAPE #2 (peer-reported, Cliff 11:27): the `clean` phase deletes
+  `agent-tools/dist`, so a PEER's comms/heartbeat/queue CLI invocations MODULE_NOT_FOUND during the
+  clean→rebuild window** (Cliff lost one heartbeat tick + one ACK attempt to it). Same coordination-not-
+  gate-scoping family as the format-gate collisions (pending-graduations candidate enriched): the
+  check-singleton broadcast must be read as "built-CLI surface unavailable for ~1 min too", and peers
+  defer CLI-dependent ceremony, not just their own check runs.
+- **The merge-readiness loop shape (for the next session): Codex reviews EVERY push and may open a new
+  finding wave each time** — merge-readiness = disposition each wave (fix-or-reject, same work item,
+  reply + resolve every thread) until a push's wave comes back empty. This session took three waves
+  (14 → 5 → 3 findings, commits `c6df0f8`/`b0355e4`/`2e616bd` + `966495e`); the third wave's push came
+  back clean: **PR #3 = CLEAN / MERGEABLE / 0 unresolved threads / required check green** at `2e616bd`.
 
 ## 2026-07-03 (test-setup review + coverage wiring + CI scanning alignment — Penumbral Slipping Moth / 540603)
 

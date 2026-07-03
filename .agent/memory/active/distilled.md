@@ -30,6 +30,16 @@ High-signal learnings from the napkin belong here once they have proved worth ke
 
 - **Operationalised rules/ADRs/hooks are the repo's PHENOTYPE; the Practice Core (PDRs, principles) is the GENOTYPE — context-specific expression vs portable abstraction.** (Owner, 2026-06-28, dissolving the reference-direction rules-classification question.) So the `validate-reference-direction` (PDR-105) classifying `.agent/rules/` as `repo-doctrine` rather than portable-Core is CORRECT, not a gap: a rule is the host-specific _expression_ of a general Practice rule/PDR, so a rule→ADR citation is phenotype→phenotype (both repo-specific) — not a portability violation. Only PORTABLE-Core (a PDR) → repo-specific is policed on the portability axis; the durability axis still forbids any doctrine→ephemeral. Consequence: the 18 remaining rule→ADR links are a pure DANGLING-LINK defect (Oak-scheme path absent in castr), cured by wiring `validate-markdown-links` + de-link/repoint — NOT a reference-direction violation, and the validator needs no change. This is the through-line of the whole transplant: you bring the GENOTYPE (portable Core) and each repo grows its own PHENOTYPE expressing it in context — which is exactly why "a transplanted surface carries the source repo's phenotype; read the body firsthand and reconcile per-surface" (below). Candidate sharpening of PDR-079 (PDR↔ADR portability distinction) / PDR-105. Same family as [[castr-parity-or-better-with-oak]] (deliberate-localisation = phenotype, preserve; unbuilt-gap = missing genotype expression, upgrade).
 
+- **A pipe eats the exit code you are relying on — never pipe a command whose EXIT STATUS is the signal.** In
+  zsh/bash (no pipefail), `cmd | tail` exits with tail's 0, so a failing `gh run watch --exit-status`, a failing
+  `commit-queue commit`, or a failing anything reads as success and the next `&&`/close step runs on a false
+  premise. THREE worked instances in one session (2026-07-03): a failed CI run read as green (the watch piped to
+  tail; the "success" then shaped a wrong PR-blocked diagnosis until re-measured); a commit-workflow failure piped
+  to tail let the claim-close run after a NO-commit; the same shape earlier masked an enqueue failure. Cure: when
+  the exit code matters, capture it explicitly (`cmd > file 2>&1; RC=$?`) or run the command unpiped; filter the
+  OUTPUT afterwards, never inline. Same family as [[verify-own-observer-instruments]] (the instrument here is the
+  shell pipeline itself).
+
 ## Transplant method (Oak → castr Practice estate)
 
 Distilled from the napkin's Phase 3–6 transplant entries (2026-06-04 → 2026-06-18). The single deepest lesson, re-proven every phase: **a transplanted surface carries the source repo's phenotype; read the body firsthand and reconcile per-surface.**

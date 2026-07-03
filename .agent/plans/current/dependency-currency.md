@@ -120,10 +120,17 @@ by a firsthand diff of the emitted output against a baseline captured before the
   firsthand. **A scope-creep correction mid-cycle:** an opportunistic `AnyObject`->`UnknownObject` migration of
   the bundle/upgrade param types (beyond the gate-forced fix) fought the vendor's loose `bundle()` return and
   cascaded — reverted; the vendor's loose type stays at the boundary where it is immediately guarded.
-- **Remaining:** DC3 (prettier 3.8.3->3.8.4, emission-formatter — baseline-capture + emitted diff), DC4 (ink
-  7.0.5->7.1.0, agent-tools runtime — agent-tools test surface), DC5 (commander 14->15, lib CLI — --help/parse
-  baseline diff). None started. Then lane close -> graduate dependency-currency-discipline (practice-core
-  pattern-PDR, owner-decided).
+- **DC3 + DC4 + DC5 ✅ DONE — LANE CLOSED (2026-07-03, Penumbral Slipping Moth, `ac0363e`, owner-directed full
+  currency sweep).** DC3 prettier landed at **3.9.4** (newer than the planned 3.8.4 — the interval moved), proven
+  by the planned oracle: snapshot (154) + gen (27) suites green = emitted output byte-identical; its new
+  union-wrapping heuristic reformats SOURCE only (repo-wide reformat rode the same commit; transforms 576 +
+  character 152 green over the touched fixture). DC4 ink 7.1.0: agent-tools suite (1167) + collaboration-TUI smoke
+  exit 0. DC5 commander 15 (major): ESM-only fits the ESM-only lib; Node ≥22.12 satisfied by engines 24.x; the
+  paired `--no-with-alias` default-semantics breaking change probed firsthand — identical behaviour (explicit
+  default preserved). Same sweep: `pnpm audit` to ZERO (hono + esbuild workspace-override floors, annotated with
+  removal conditions); @types/node deliberately HELD at ^24 per ADR-049. **Lane-close graduation already
+  satisfied:** `dependency-currency-discipline` graduated early as **PDR-097** (owner, 2026-06-26); DC3–DC5
+  produced no method refinement requiring an amendment. This plan is complete → stage per ADR-117 lifecycle.
 - **Finding routed (not fixed in DC2):** the repo-local `type-assertion-policy` ESLint rule (with a test file
   in `lib/eslint-rules/`) is **NOT registered** in `lib/eslint.config.ts`, yet `no-type-shortcuts.md` claims it
   enforces the no-`as` policy structurally — a doctrine-vs-reality gap (own follow-up slice; DC2 added zero `as`).
