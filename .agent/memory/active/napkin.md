@@ -34,6 +34,34 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   "Result→throw adaptation" bring-cost line is superseded in DIRECTION (likely keep `Result<T,E>`,
   compose fail-fast) — the promotion-time re-measure catches the exact shape (noted here so it does).
 
+## 2026-07-03 (CI split bring, post-merge — Fiery Flaring Bellows / bafbac, session part 2)
+
+- **The split pipeline EXPOSED two latent repo defects the sequential monolith structurally
+  masked** (the best argument for the split beyond speed): (1) `test:e2e`/`test:snapshot` had NO
+  `dependsOn: build` in turbo.json — the packaging e2e's `pnpm pack` raced a parallel dist
+  rewrite and packed a half-written dist; the monolith's `build && … && test:e2e` chain hid the
+  missing edge for its whole life. A sequential wrapper is an undeclared dependency graph —
+  parallelise it and the missing edges fire. (2) `packaging:check` is a plain pnpm script
+  OUTSIDE turbo's graph, so no edge builds `lib/dist` for it; its green had been riding an
+  artefact another step happened to leave behind.
+- **"Dead mechanism" reasoning must enumerate ALL consumers before removal:** I removed the
+  actions/cache dist transfer as dead (turbo caching is off repo-wide → the .turbo half WAS
+  dead) and broke structure-checks — the dist half was load-bearing for the non-turbo packaging
+  script. Same family as bring-the-iceberg, inverted: remove-the-iceberg needs the same
+  transitive consumer sweep.
+- **Five vitest suites sharing a 2-core runner blow 5s per-test timeouts** — turbo's default
+  in-job parallelism ≠ local `test:all` semantics; `--concurrency=1` inside the job (while jobs
+  stay parallel) is the honest cure, never raising timeouts to mask contention.
+- **hook-matcher specimen #4 (token-subsequence class):** `git add -- <files>` plus a LATER
+  `$(date -u …)` in the same compound command assembled the blocked "git add -u" pattern. The
+  established mitigation (split the ceremony into separate shell strings) held. Also: my own
+  push's pre-push dist-clean window killed my own background heartbeat tick MODULE_NOT_FOUND —
+  the check-singleton rule's dist-window note applies to one's OWN loops, not just peers'.
+- **Prove-cycle discipline that worked:** rerun-failed as the cheap decisive probe
+  (timing-marginal vs structural); reading `--log-order=grouped` output carefully (a turbo
+  cache HIT replays stored logs — build output lines do NOT prove a rebuild); measuring turbo
+  edges via `--dry=json` before claiming the fix.
+
 ## 2026-07-03 (dedicated consolidation pass — Fiery Flaring Bellows / bafbac)
 
 - **The gate-collision graduation trigger fired INSIDE the pass that walked it:** Cliff's pre-push
