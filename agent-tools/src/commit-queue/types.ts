@@ -107,10 +107,13 @@ export interface MutableCommitQueueCliOptions {
 /**
  * Outcome of the commit workflow as surfaced to the CLI layer.
  *
- * Mirrors the discriminated union from `commit-workflow.ts` but uses
- * structural types here to avoid an import cycle between types.ts and
- * commit-workflow.ts.
+ * Mirrors the discriminated union from `commit-workflow.ts`. The stage
+ * union lives here (types.ts is upstream of commit-workflow.ts) so there
+ * is one source of truth and no import cycle.
  */
+export type CommitWorkflowFailureStage =
+  'load-intent' | 'queue-ahead' | 'verify-staged-before' | 'verify-staged-after' | 'git-commit';
+
 export type CommitWorkflowCliResult =
   | {
       readonly ok: true;
@@ -120,7 +123,7 @@ export type CommitWorkflowCliResult =
     }
   | {
       readonly ok: false;
-      readonly stage: 'load-intent' | 'verify-staged-before' | 'verify-staged-after' | 'git-commit';
+      readonly stage: CommitWorkflowFailureStage;
       readonly reason: string;
       readonly intentId?: string;
     };

@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, readFileSync, statSync } from 'node:fs';
-import { writeErrorLine } from './terminal-output';
+import { writeErrorLine } from './terminal-output.js';
 
 interface JsonCandidate {
   message?: unknown;

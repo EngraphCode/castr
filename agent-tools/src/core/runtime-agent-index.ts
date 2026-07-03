@@ -1,8 +1,8 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { shouldSkipCompactAgent } from './session-tools';
-import { escapedRepoPath, isSessionId } from './runtime-paths';
+import { shouldSkipCompactAgent } from './session-tools.js';
+import { escapedRepoPath, isSessionId } from './runtime-paths.js';
 
 function projectSessionsPath(root: string, homePath: string): string {
   return join(homePath, '.claude', 'projects', escapedRepoPath(root));

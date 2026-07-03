@@ -38,6 +38,40 @@ export function activeClaimsRestagedReason(files: readonly string[]): string | u
   );
 }
 
+/**
+ * Return the intent files whose worktree content diverges from the staged
+ * index. `git commit -- <pathspec>` commits the WORKTREE version of the
+ * pathspec, so any such divergence means the commit would land content the
+ * staged-bundle fingerprint verification never saw. The active-claims
+ * registry is exempt: its record-staged fingerprint write is a sanctioned,
+ * deliberately-unstaged split state (see the warning above).
+ */
+export function worktreeDivergentIntentFiles(input: {
+  readonly intentFiles: readonly string[];
+  readonly worktreeShortStatus?: string;
+}): readonly string[] {
+  if (input.worktreeShortStatus === undefined) {
+    return [];
+  }
+  const intentFiles = new Set(normalizeFileList(input.intentFiles.join('\n')));
+
+  return input.worktreeShortStatus
+    .split(/\r?\n/u)
+    .filter((line) => line.length > 3 && !isWorktreeCleanStatus(line[1]))
+    .map((line) => statusLinePath(line))
+    .filter((path) => path !== ACTIVE_CLAIMS_PATH && intentFiles.has(path));
+}
+
+function isWorktreeCleanStatus(worktreeColumn: string | undefined): boolean {
+  return worktreeColumn === ' ' || worktreeColumn === '?';
+}
+
+function statusLinePath(line: string): string {
+  const path = line.slice(3);
+  const renameArrow = path.indexOf(' -> ');
+  return renameArrow === -1 ? path : path.slice(renameArrow + 4);
+}
+
 function stagesActiveClaimsRegistry(files: readonly string[]): boolean {
   return normalizeFileList(files.join('\n')).includes(ACTIVE_CLAIMS_PATH);
 }

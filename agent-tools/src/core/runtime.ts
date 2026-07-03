@@ -1,13 +1,13 @@
 import { execSync, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import type { SessionEntry, SubagentSummary } from './session-tools';
-import { shouldSkipCompactAgent } from './session-tools';
-import { escapedRepoPath, isSessionId } from './runtime-paths';
-import { isHistoryRow, isMetaRow, readJsonLines } from './json-parsing';
-import { writeErrorLine } from './terminal-output';
-export { listAgentShortIds, resolveAgentJsonlPath } from './runtime-agent-index';
-export { readAgentEvents } from './runtime-agent-events';
+import type { SessionEntry, SubagentSummary } from './session-tools.js';
+import { shouldSkipCompactAgent } from './session-tools.js';
+import { escapedRepoPath, isSessionId } from './runtime-paths.js';
+import { isHistoryRow, isMetaRow, readJsonLines } from './json-parsing.js';
+import { writeErrorLine } from './terminal-output.js';
+export { listAgentShortIds, resolveAgentJsonlPath } from './runtime-agent-index.js';
+export { readAgentEvents } from './runtime-agent-events.js';
 /** File-system contract used by runtime helpers for dependency injection in tests. */
 interface RuntimeFileSystem {
   /** Check whether the path exists. */

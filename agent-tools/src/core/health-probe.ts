@@ -1,10 +1,10 @@
-import { evaluateParityChecks } from './health-probe-parity';
-import { evaluateStateChecks } from './health-probe-state';
+import { evaluateParityChecks } from './health-probe-parity.js';
+import { evaluateStateChecks } from './health-probe-state.js';
 import type {
   AgentInfrastructureHealthReport,
   HealthCheckResult,
   HealthStatus,
-} from './health-probe-types';
+} from './health-probe-types.js';
 
 export function evaluateAgentInfrastructureHealth(
   repoRoot: string,

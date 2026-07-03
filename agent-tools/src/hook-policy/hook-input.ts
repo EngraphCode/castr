@@ -48,8 +48,37 @@ function resolveInput(hookInput: unknown): JsonObject {
  * already-present pattern without blocking.
  */
 export function extractContentChange(hookInput: unknown): ContentChange {
+  return extractSingleChange(resolveInput(hookInput));
+}
+
+/**
+ * Extract every content change carried by a Claude write-capable tool
+ * payload. Edit and Write carry exactly one change; MultiEdit carries one
+ * change PER edit (`edits: [{ old_string, new_string }, …]`). Per-edit
+ * pairs are essential: concatenating the edits would let a pattern removed
+ * by one edit mask the same pattern being ADDED by another.
+ */
+export function extractContentChanges(hookInput: unknown): readonly ContentChange[] {
   const input = resolveInput(hookInput);
 
+  if (Array.isArray(input.edits)) {
+    const filePathInfo: { filePath?: string } =
+      typeof input.file_path === 'string' ? { filePath: input.file_path } : {};
+    return input.edits.map((edit, index) => {
+      if (!isJsonObject(edit) || typeof edit.new_string !== 'string') {
+        throw new Error(
+          `Claude PreToolUse MultiEdit payload edit ${index} did not include a new_string.`,
+        );
+      }
+      const prior = typeof edit.old_string === 'string' ? edit.old_string : '';
+      return { newContent: edit.new_string, priorContent: prior, ...filePathInfo };
+    });
+  }
+
+  return [extractSingleChange(input)];
+}
+
+function extractSingleChange(input: JsonObject): ContentChange {
   if (typeof input.new_string === 'string') {
     const prior = typeof input.old_string === 'string' ? input.old_string : '';
     const filePathInfo: { filePath?: string } =

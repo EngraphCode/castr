@@ -9,12 +9,12 @@ import {
   type CliArgs,
   type CliCommand,
   type CliHandler,
-} from './claude-agent-ops-cli';
-import { detectPhaseFromEvents, isValidAgentId, resolveDiffCwd } from '../core/agent-ops';
+} from './claude-agent-ops-cli.js';
+import { detectPhaseFromEvents, isValidAgentId, resolveDiffCwd } from '../core/agent-ops.js';
 import {
   evaluateAgentInfrastructureHealth,
   formatAgentInfrastructureHealthReport,
-} from '../core/health-probe';
+} from '../core/health-probe.js';
 import {
   listAgentShortIds,
   nonEmptyLines,
@@ -22,8 +22,8 @@ import {
   repoRoot,
   resolveAgentJsonlPath,
   runGit,
-} from '../core/runtime';
-import { writeErrorLine, writeLine } from '../core/terminal-output';
+} from '../core/runtime.js';
+import { writeErrorLine, writeLine } from '../core/terminal-output.js';
 async function run(): Promise<void> {
   const args = parseCliArgs(process.argv.slice(2));
   const handlers = createHandlers(args);

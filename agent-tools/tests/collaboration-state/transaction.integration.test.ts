@@ -177,3 +177,45 @@ function parseCounterState(text: string): CounterState {
 
   throw new Error('invalid counter state');
 }
+
+describe('file transaction lock — metadata-less lock directories', () => {
+  it('reaps a stale lock directory that has no readable owner metadata and acquires the lock', async () => {
+    const { mkdir, utimes } = await import('node:fs/promises');
+    const { acquireFileTransactionLock } =
+      await import('../../src/collaboration-state/transaction-lock');
+    const directory = await makeTempDirectory('engraph-collaboration-lock-');
+    const filePath = tempPath(directory, 'state.json');
+    try {
+      const lockDir = `${filePath}.transaction`;
+      await mkdir(lockDir);
+      const past = new Date(Date.now() - 60_000);
+      await utimes(lockDir, past, past);
+
+      const release = await acquireFileTransactionLock({
+        filePath,
+        staleMs: 1_000,
+        attempts: 3,
+      });
+      await release();
+    } finally {
+      await removeDirectory(directory);
+    }
+  });
+
+  it('does not reap a fresh metadata-less lock directory while a peer may still be mid-acquisition', async () => {
+    const { mkdir } = await import('node:fs/promises');
+    const { acquireFileTransactionLock } =
+      await import('../../src/collaboration-state/transaction-lock');
+    const directory = await makeTempDirectory('engraph-collaboration-lock-');
+    const filePath = tempPath(directory, 'state.json');
+    try {
+      await mkdir(`${filePath}.transaction`);
+
+      await expect(
+        acquireFileTransactionLock({ filePath, staleMs: 60_000, attempts: 2 }),
+      ).rejects.toThrow('could not acquire state transaction');
+    } finally {
+      await removeDirectory(directory);
+    }
+  });
+});

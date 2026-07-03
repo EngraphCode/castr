@@ -686,3 +686,139 @@ describe('regex matching with prose-vs-code distinction', () => {
     ).toBeNull();
   });
 });
+
+describe('extractContentChanges — MultiEdit payloads', () => {
+  it('returns one content change per MultiEdit edit, each anchored to the payload file_path', async () => {
+    const { extractContentChanges } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const hookInput = {
+      tool_input: {
+        file_path: '/repo/example.ts',
+        edits: [
+          { old_string: 'const a = 1;', new_string: 'const a = 2;' },
+          { old_string: 'const b = 1;', new_string: 'const b = 2;' },
+        ],
+      },
+    };
+
+    expect(extractContentChanges(hookInput)).toStrictEqual([
+      { newContent: 'const a = 2;', priorContent: 'const a = 1;', filePath: '/repo/example.ts' },
+      { newContent: 'const b = 2;', priorContent: 'const b = 1;', filePath: '/repo/example.ts' },
+    ]);
+  });
+
+  it('wraps a single Edit payload as a one-element list', async () => {
+    const { extractContentChanges } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const hookInput = {
+      tool_input: { new_string: 'next', old_string: 'prior' },
+    };
+
+    expect(extractContentChanges(hookInput)).toStrictEqual([
+      { newContent: 'next', priorContent: 'prior' },
+    ]);
+  });
+
+  it('throws fail-loud when a MultiEdit edit omits new_string', async () => {
+    const { extractContentChanges } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const hookInput = {
+      tool_input: {
+        file_path: '/repo/example.ts',
+        edits: [{ old_string: 'const a = 1;' }],
+      },
+    };
+
+    expect(() => extractContentChanges(hookInput)).toThrow('MultiEdit');
+  });
+});
+
+describe('runPreToolUseContentGuard — MultiEdit coverage', () => {
+  it('denies when a later MultiEdit edit adds a blocked pattern, even though the first edit is clean', async () => {
+    const { runPreToolUseContentGuard } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const payload = JSON.stringify({
+      tool_name: 'MultiEdit',
+      tool_input: {
+        file_path: '/repo/example.ts',
+        edits: [
+          { old_string: 'clean before', new_string: 'clean after' },
+          { old_string: 'ordinary', new_string: 'BLOCKED_MARKER now present' },
+        ],
+      },
+    });
+    async function* stdin(): AsyncGenerator<Buffer> {
+      yield Buffer.from(payload);
+    }
+    const written: string[] = [];
+
+    const result = await runPreToolUseContentGuard({
+      stdin: stdin(),
+      stdout: { write: (text: string) => void written.push(text) },
+      stderr: { write: () => undefined },
+      blockedPatterns: ['BLOCKED_MARKER'],
+      scopedBlocks: [],
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(written).toHaveLength(1);
+    expect(written[0]).toContain('BLOCKED_MARKER');
+  });
+
+  it('denies when a MultiEdit removes a pattern in one edit and re-adds it in another (per-edit semantics, no cross-edit masking)', async () => {
+    const { runPreToolUseContentGuard } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const payload = JSON.stringify({
+      tool_name: 'MultiEdit',
+      tool_input: {
+        file_path: '/repo/example.ts',
+        edits: [
+          { old_string: 'BLOCKED_MARKER kept here', new_string: 'now clean' },
+          { old_string: 'clean', new_string: 'BLOCKED_MARKER returns' },
+        ],
+      },
+    });
+    async function* stdin(): AsyncGenerator<Buffer> {
+      yield Buffer.from(payload);
+    }
+    const written: string[] = [];
+
+    const result = await runPreToolUseContentGuard({
+      stdin: stdin(),
+      stdout: { write: (text: string) => void written.push(text) },
+      stderr: { write: () => undefined },
+      blockedPatterns: ['BLOCKED_MARKER'],
+      scopedBlocks: [],
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(written).toHaveLength(1);
+  });
+
+  it('allows a MultiEdit whose edits add no blocked content', async () => {
+    const { runPreToolUseContentGuard } =
+      await import('../../src/hook-policy/check-blocked-content.js');
+    const payload = JSON.stringify({
+      tool_name: 'MultiEdit',
+      tool_input: {
+        file_path: '/repo/example.ts',
+        edits: [{ old_string: 'one', new_string: 'two' }],
+      },
+    });
+    async function* stdin(): AsyncGenerator<Buffer> {
+      yield Buffer.from(payload);
+    }
+    const written: string[] = [];
+
+    const result = await runPreToolUseContentGuard({
+      stdin: stdin(),
+      stdout: { write: (text: string) => void written.push(text) },
+      stderr: { write: () => undefined },
+      blockedPatterns: ['BLOCKED_MARKER'],
+      scopedBlocks: [],
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(written).toHaveLength(0);
+  });
+});

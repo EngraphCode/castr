@@ -1,14 +1,14 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { CODEX_CONFIG_PATH, readCodexAgentRegistrations } from './codex-project-agent-registry';
+import { CODEX_CONFIG_PATH, readCodexAgentRegistrations } from './codex-project-agent-registry.js';
 import {
   CLAUDE_AGENTS_DIR,
   CODEX_AGENTS_DIR,
   CURSOR_AGENTS_DIR,
   listBasenames,
-} from './health-probe-shared';
-import type { HealthCheckResult } from './health-probe-types';
+} from './health-probe-shared.js';
+import type { HealthCheckResult } from './health-probe-types.js';
 
 export function evaluateParityChecks(repoRoot: string): readonly HealthCheckResult[] {
   return [evaluateReviewerAdapterParity(repoRoot), evaluateReviewerRegistrationParity(repoRoot)];

@@ -10,19 +10,23 @@ import {
   collectProfileEnvironmentEvidence,
 } from './repo-check-profile.js';
 
+// castr's turbo-run gate tasks (mirrors the qg chain's turbo-backed steps in
+// turbo.json). turbo fails loud on an unknown task, so drift here breaks
+// check:profile visibly rather than silently under-profiling.
 const CHECK_TURBO_TASKS = [
-  'sdk-codegen',
   'build',
   'type-check',
-  'doc-gen',
   'lint',
+  'madge:circular',
+  'madge:orphans',
+  'depcruise',
+  'knip',
   'test',
-  'test:widget',
+  'character',
+  'test:snapshot',
+  'test:gen',
+  'test:transforms',
   'test:e2e',
-  'test:ui',
-  'test:a11y',
-  'test:widget:ui',
-  'test:widget:a11y',
 ] as const;
 
 function timestampSlug(): string {

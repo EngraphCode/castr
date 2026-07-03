@@ -8,7 +8,11 @@ import {
   type CommitQueueRegistry,
 } from './types.js';
 import { secondsUntilExpiry } from './time.js';
-import { activeClaimsRestagedReason, activeClaimsSplitWarning } from './active-claims-recursion.js';
+import {
+  activeClaimsRestagedReason,
+  activeClaimsSplitWarning,
+  worktreeDivergentIntentFiles,
+} from './active-claims-recursion.js';
 import { formatFileList, normalizeFileList } from './path-list.js';
 
 /**
@@ -74,6 +78,25 @@ export function verifyStagedBundle(input: {
   const fileMismatch = stagedFileMismatch(input.stagedNameOnly, input.intent.files);
   if (fileMismatch !== undefined) {
     return { ok: false, reason: fileMismatch };
+  }
+
+  // git commit -- <pathspec> commits the WORKTREE version of the pathspec,
+  // so an intent file with unstaged worktree changes would land content the
+  // fingerprint verification above never saw. Fail loud; the operator must
+  // stage or revert the divergence first. (The active-claims registry's
+  // sanctioned record-staged split state is exempt inside the helper.)
+  const divergent = worktreeDivergentIntentFiles({
+    intentFiles: input.intent.files,
+    worktreeShortStatus: input.worktreeShortStatus,
+  });
+  if (divergent.length > 0) {
+    return {
+      ok: false,
+      reason:
+        `worktree differs from the verified index for intent file(s): ` +
+        `${divergent.join(', ')} — stage or revert the unstaged changes before ` +
+        `committing (git commit -- <pathspec> commits worktree content)`,
+    };
   }
 
   return verifyFingerprint(input);

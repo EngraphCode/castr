@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'node:url';
-import type { CodexProjectAgent } from '../core/codex-project-agents';
-import { listCodexProjectAgentNames, resolveCodexProjectAgent } from '../core/codex-project-agents';
-import { repoRoot } from '../core/runtime';
-import { writeErrorLine, writeLine } from '../core/terminal-output';
+import type { CodexProjectAgent } from '../core/codex-project-agents.js';
+import {
+  listCodexProjectAgentNames,
+  resolveCodexProjectAgent,
+} from '../core/codex-project-agents.js';
+import { repoRoot } from '../core/runtime.js';
+import { writeErrorLine, writeLine } from '../core/terminal-output.js';
 
 const HELP_TEXT = `Usage: codex-reviewer-resolve <agent-name> [--json]
 

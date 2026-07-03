@@ -11,8 +11,8 @@ import {
   readNestedString,
   readOptionalText,
   SURFACE_MATRIX_PATH,
-} from './health-probe-shared';
-import type { HealthCheckResult } from './health-probe-types';
+} from './health-probe-shared.js';
+import type { HealthCheckResult } from './health-probe-types.js';
 
 interface HookPolicySpineInputs {
   readonly hookPolicyExists: boolean;

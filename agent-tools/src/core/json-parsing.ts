@@ -1,6 +1,6 @@
 import { closeSync, fstatSync, openSync, readFileSync } from 'node:fs';
-import { isSessionId } from './runtime-paths';
-import { writeErrorLine } from './terminal-output';
+import { isSessionId } from './runtime-paths.js';
+import { writeErrorLine } from './terminal-output.js';
 
 interface HistoryRow {
   sessionId: string;

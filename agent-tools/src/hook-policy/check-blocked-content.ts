@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { buildPreToolUseDenyResponse } from './content-deny-response.js';
 import {
-  extractContentChange,
+  extractContentChanges,
   parseHookInput,
   readStreamText,
   resolveContentPair,
@@ -20,7 +20,12 @@ export type { PreToolUseDenyResponse, RunPreToolUseContentGuardOptions } from '.
 
 export { PreToolUseDenyResponseSchema } from './types.js';
 
-export { extractContentChange, parseHookInput, readStreamText } from './hook-input.js';
+export {
+  extractContentChange,
+  extractContentChanges,
+  parseHookInput,
+  readStreamText,
+} from './hook-input.js';
 
 export {
   findAddedBlockedContent,
@@ -77,15 +82,16 @@ function applyGuardDefaults(options: RunPreToolUseContentGuardOptions): {
  * new/prior content pair plus the optional file path. Extracted so the
  * orchestrator stays under the workspace's complexity cap.
  */
-async function readResolvedContent(
+async function readResolvedContents(
   stdin: AsyncIterable<string | Buffer>,
   readPriorContent: (filePath: string) => string | null,
-): Promise<{ newContent: string; priorContent: string; filePath?: string }> {
+): Promise<readonly { newContent: string; priorContent: string; filePath?: string }[]> {
   const inputText = await readStreamText(stdin);
   const hookInput = parseHookInput(inputText);
-  const change = extractContentChange(hookInput);
-  const { newContent, priorContent } = resolveContentPair(change, readPriorContent);
-  return { newContent, priorContent, filePath: change.filePath };
+  return extractContentChanges(hookInput).map((change) => {
+    const { newContent, priorContent } = resolveContentPair(change, readPriorContent);
+    return { newContent, priorContent, filePath: change.filePath };
+  });
 }
 
 /**
@@ -127,10 +133,10 @@ function denyOnScopedBlock(
   filePath: string | undefined,
   blocks: readonly ScopedContentBlockGroup[],
   stdout: { write(text: string): void },
-): void {
+): boolean {
   const matched = findAddedScopedBlock(newContent, priorContent, filePath, blocks);
   if (matched === null) {
-    return;
+    return false;
   }
   stdout.write(
     `${JSON.stringify(
@@ -143,6 +149,7 @@ function denyOnScopedBlock(
       }),
     )}\n`,
   );
+  return true;
 }
 
 /**
@@ -160,18 +167,29 @@ export async function runPreToolUseContentGuard(
   const seams = applyGuardDefaults(options);
 
   try {
-    const { newContent, priorContent, filePath } = await readResolvedContent(
-      seams.stdin,
-      seams.readPriorContent,
-    );
+    const changes = await readResolvedContents(seams.stdin, seams.readPriorContent);
     const patterns = seams.blockedPatterns ?? (await loadBlockedContentPatterns(seams.policyUrl));
 
-    if (denyOnBlockedPattern(newContent, priorContent, patterns, seams.stdout)) {
-      return { exitCode: 0 };
+    for (const change of changes) {
+      if (denyOnBlockedPattern(change.newContent, change.priorContent, patterns, seams.stdout)) {
+        return { exitCode: 0 };
+      }
     }
 
     const blocks = seams.scopedBlocks ?? (await loadScopedContentBlocks(seams.policyUrl));
-    denyOnScopedBlock(newContent, priorContent, filePath, blocks, seams.stdout);
+    for (const change of changes) {
+      if (
+        denyOnScopedBlock(
+          change.newContent,
+          change.priorContent,
+          change.filePath,
+          blocks,
+          seams.stdout,
+        )
+      ) {
+        return { exitCode: 0 };
+      }
+    }
     return { exitCode: 0 };
   } catch (error) {
     seams.stderr.write(`${formatGuardError(error)}\n`);

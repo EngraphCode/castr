@@ -5,10 +5,10 @@ import {
   readCodexAgentRegistrations,
   readRequiredTomlValue,
   resolveCodexAgentConfigFilePath,
-} from './codex-project-agent-registry';
-import type { CodexAgentRegistration } from './codex-project-agent-registry';
+} from './codex-project-agent-registry.js';
+import type { CodexAgentRegistration } from './codex-project-agent-registry.js';
 
-export { parseCodexAgentRegistrations } from './codex-project-agent-registry';
+export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
 
 const DEVELOPER_INSTRUCTIONS_PATTERN = /^developer_instructions\s*=\s*"""\r?\n([\s\S]*?)\r?\n"""/mu;
 const CANONICAL_PATH_PATTERN = /`(\.agent\/[^`]+)`/gu;

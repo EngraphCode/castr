@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 
 export async function acquireFileTransactionLock(input: {
   readonly filePath: string;
@@ -34,10 +34,26 @@ async function tryCreateLock(lockDir: string): Promise<boolean> {
 async function removeStaleLock(lockDir: string, staleMs: number): Promise<void> {
   const metadata = await readLockMetadata(lockDir);
   if (metadata === undefined) {
+    // A lock directory without readable owner metadata (crash between mkdir
+    // and the owner.json write, or corrupt contents) must still age out, or
+    // it wedges every future writer until someone removes it by hand. The
+    // directory's own mtime stands in for the missing created_at.
+    await removeStaleLockByDirTime(lockDir, staleMs);
     return;
   }
   if (Date.now() - Date.parse(metadata.created_at) > staleMs) {
     await rm(lockDir, { recursive: true, force: true });
+  }
+}
+
+async function removeStaleLockByDirTime(lockDir: string, staleMs: number): Promise<void> {
+  try {
+    const stats = await stat(lockDir);
+    if (Date.now() - stats.mtimeMs > staleMs) {
+      await rm(lockDir, { recursive: true, force: true });
+    }
+  } catch {
+    // The lock directory vanished mid-check (released or reaped by a peer).
   }
 }
 

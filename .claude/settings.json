@@ -54,6 +54,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-pretooluse-guard.mjs\" agent-tools/dist/src/hook-policy/check-blocked-content.js",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SessionStart": [

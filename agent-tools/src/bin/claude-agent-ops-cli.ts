@@ -1,4 +1,4 @@
-import { writeErrorLine } from '../core/terminal-output';
+import { writeErrorLine } from '../core/terminal-output.js';
 
 export interface CliArgs {
   command: CliCommand;

@@ -17,9 +17,19 @@
  * `.husky/commit-msg`. See PDR-053 and ADR-176.
  */
 
-import { completeCommitIntent, updateCommitIntentPhase, verifyStagedBundle } from './core.js';
+import {
+  completeCommitIntent,
+  getFreshEntriesAhead,
+  updateCommitIntentPhase,
+  verifyStagedBundle,
+} from './core.js';
 import { narrowIntentPathspec, type CommitWorkflowPathspec } from './pathspec.js';
-import { type CommitIntent, type CommitQueueRegistry, type StagedBundle } from './types.js';
+import {
+  type CommitIntent,
+  type CommitQueueRegistry,
+  type CommitWorkflowFailureStage,
+  type StagedBundle,
+} from './types.js';
 
 /**
  * Outcome of a single sub-process invoked by the workflow.
@@ -52,13 +62,9 @@ export interface CommitWorkflowDependencies {
   readonly nowIso: () => string;
 }
 
-/**
- * Stages at which the workflow may fail. Used as the `stage` field on
- * failure results and as the audit-trail notes prefix when the intent
- * is transitioned to `abandoned`.
- */
-type CommitWorkflowFailureStage =
-  'load-intent' | 'verify-staged-before' | 'verify-staged-after' | 'git-commit';
+// Failure stages are single-sourced in types.ts (CommitWorkflowFailureStage):
+// the stage field on failure results doubles as the audit-trail notes prefix
+// when the intent is transitioned to `abandoned`.
 
 /**
  * Outcome of `runCommitWorkflow`.
@@ -100,6 +106,25 @@ export async function runCommitWorkflow(input: CommitWorkflowInput): Promise<Com
   const loaded = await loadIntent(input);
   if (!loaded.ok) {
     return loaded.failure;
+  }
+
+  // Queue-order guard (parity with the standalone verify-staged command):
+  // a fresh active intent ahead in the queue means it is not this intent's
+  // turn. Fail WITHOUT abandoning — the intent stays queued for a retry
+  // once the peer bundle lands or expires.
+  const entriesAhead = getFreshEntriesAhead(
+    loaded.registry.commit_queue,
+    input.intentId,
+    input.deps.nowIso(),
+  );
+  if (entriesAhead.length > 0) {
+    const aheadIds = entriesAhead.map((entry) => entry.intent_id).join(', ');
+    return {
+      ok: false,
+      stage: 'queue-ahead',
+      reason: `fresh queue entries ahead: ${aheadIds}`,
+      intentId: input.intentId,
+    };
   }
 
   const narrowed = narrowIntentPathspec(loaded.intent);
@@ -146,7 +171,7 @@ export async function runCommitWorkflow(input: CommitWorkflowInput): Promise<Com
 async function loadIntent(
   input: CommitWorkflowInput,
 ): Promise<
-  | { readonly ok: true; readonly intent: CommitIntent }
+  | { readonly ok: true; readonly intent: CommitIntent; readonly registry: CommitQueueRegistry }
   | { readonly ok: false; readonly failure: CommitWorkflowResult }
 > {
   const registry = await input.deps.readRegistry();
@@ -162,7 +187,7 @@ async function loadIntent(
     };
   }
 
-  return { ok: true, intent };
+  return { ok: true, intent, registry };
 }
 
 async function runVerifyStage(

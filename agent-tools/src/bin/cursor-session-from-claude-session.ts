@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { parseCliArgs, type CliArgs } from './cursor-session-from-claude-session-args';
+import { parseCliArgs, type CliArgs } from './cursor-session-from-claude-session-args.js';
 import {
   discoverSessions,
   formatTimestamp,
@@ -12,7 +12,7 @@ import {
   sessionDirectory,
   subagentSummaries,
   targetNeedles,
-} from '../core/runtime';
+} from '../core/runtime.js';
 import {
   buildTakeoverBundle,
   findSessionByPrefix,
@@ -20,8 +20,8 @@ import {
   mergeSessionsById,
   scoreSessionMatch,
   type SessionEntry,
-} from '../core/session-tools';
-import { writeErrorLine, writeLine } from '../core/terminal-output';
+} from '../core/session-tools.js';
+import { writeErrorLine, writeLine } from '../core/terminal-output.js';
 
 const HELP_TEXT =
   'Usage: cursor-session-from-claude-session <find|inspect|takeover> [args] (see agent-tools/README.md for full examples)';

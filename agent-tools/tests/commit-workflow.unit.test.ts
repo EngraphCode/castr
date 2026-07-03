@@ -484,3 +484,117 @@ describe('runCommitWorkflow — audit-trail phase transition', () => {
     expect(observedPhases).toStrictEqual(['pre_commit', '<removed>']);
   });
 });
+
+describe('runCommitWorkflow — queue-order guard (fresh entries ahead)', () => {
+  const aheadIntentId = '22222222-2222-4222-8222-222222222222';
+
+  function registryWithEntryAhead(ahead: CommitIntent): RegistryHolder {
+    return holderFor({
+      schema_version: '1.3.0',
+      claims: [gitClaim()],
+      commit_queue: [ahead, queuedIntent()],
+    });
+  }
+
+  it('refuses to commit while a fresh active intent sits ahead in the queue, leaves the target intent queued (not abandoned), and never invokes git commit', async () => {
+    const holder = registryWithEntryAhead(
+      queuedIntent({
+        intent_id: aheadIntentId,
+        claim_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        files: ['some/other.ts'],
+        commit_subject: 'feat(other): peer bundle',
+      }),
+    );
+    const { deps, calls } = fakeDeps({
+      holder,
+      stagedBundles: [matchingStagedBundle(), matchingStagedBundle()],
+    });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.stage).toBe('queue-ahead');
+      expect(result.reason).toContain(aheadIntentId);
+    }
+    expect(calls.gitCommitCalls.current).toBe(0);
+    const target = holder.current.commit_queue.find((entry) => entry.intent_id === intentId);
+    expect(target?.phase).toBe('queued');
+  });
+
+  it('proceeds when the only entry ahead has already expired', async () => {
+    const holder = registryWithEntryAhead(
+      queuedIntent({
+        intent_id: aheadIntentId,
+        claim_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        files: ['some/other.ts'],
+        commit_subject: 'feat(other): peer bundle',
+        expires_at: '2026-05-22T11:00:00Z',
+      }),
+    );
+    const { deps, calls } = fakeDeps({
+      holder,
+      stagedBundles: [matchingStagedBundle(), matchingStagedBundle()],
+    });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(true);
+    expect(calls.gitCommitCalls.current).toBe(1);
+  });
+});
+
+describe('runCommitWorkflow — worktree-divergence guard on intent files', () => {
+  it('fails verify-staged-before when an intent file has unstaged worktree modifications, because git commit -- <pathspec> commits worktree content the fingerprint verification never saw', async () => {
+    const dirtyBundle: StagedBundle = {
+      stagedNameOnly,
+      stagedNameStatus,
+      stagedPatch,
+      worktreeShortStatus: 'MM agent-tools/src/commit-queue/commit-workflow.ts\n',
+    };
+    const holder = holderFor(initialRegistry());
+    const { deps, calls } = fakeDeps({ holder, stagedBundles: [dirtyBundle] });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.stage).toBe('verify-staged-before');
+      expect(result.reason).toContain('worktree');
+      expect(result.reason).toContain('agent-tools/src/commit-queue/commit-workflow.ts');
+    }
+    expect(calls.gitCommitCalls.current).toBe(0);
+    expect(holder.current.commit_queue[0]?.phase).toBe('abandoned');
+  });
+
+  it('keeps the sanctioned active-claims split state allowed so the registry fingerprint flow still lands', async () => {
+    const activeClaimsPath = '.agent/state/collaboration/active-claims.json';
+    const claimsNameStatus = `M\t${activeClaimsPath}\n`;
+    const claimsPatch = `diff --git a/${activeClaimsPath} b/${activeClaimsPath}\n`;
+    const claimsFingerprint = createStagedBundleFingerprint({
+      nameStatus: claimsNameStatus,
+      patch: claimsPatch,
+    });
+    const intent = queuedIntent({
+      files: [activeClaimsPath],
+      staged_bundle_fingerprint: claimsFingerprint,
+      staged_name_status: claimsNameStatus,
+    });
+    const splitBundle: StagedBundle = {
+      stagedNameOnly: `${activeClaimsPath}\n`,
+      stagedNameStatus: claimsNameStatus,
+      stagedPatch: claimsPatch,
+      worktreeShortStatus: `MM ${activeClaimsPath}\n`,
+    };
+    const holder = holderFor(initialRegistry(intent));
+    const { deps, calls } = fakeDeps({
+      holder,
+      stagedBundles: [splitBundle, splitBundle],
+    });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result.ok).toBe(true);
+    expect(calls.gitCommitCalls.current).toBe(1);
+  });
+});

@@ -1,10 +1,10 @@
-import { countPracticeBoxFiles } from './health-probe-shared';
-import { evaluateContinuityContractFreshness } from './health-probe-continuity-state';
+import { countPracticeBoxFiles } from './health-probe-shared.js';
+import { evaluateContinuityContractFreshness } from './health-probe-continuity-state.js';
 import {
   evaluateHookPolicySpineCoherence,
   evaluatePracticeBoxState,
-} from './health-probe-hook-state';
-import type { HealthCheckResult } from './health-probe-types';
+} from './health-probe-hook-state.js';
+import type { HealthCheckResult } from './health-probe-types.js';
 
 export function evaluateStateChecks(repoRoot: string, now: Date): readonly HealthCheckResult[] {
   const practiceBoxFileCount = countPracticeBoxFiles(repoRoot);

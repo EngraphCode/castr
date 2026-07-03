@@ -4,8 +4,8 @@ import {
   FRESHNESS_WARNING_DAYS,
   readFrontmatterValue,
   readOptionalText,
-} from './health-probe-shared';
-import type { HealthCheckResult } from './health-probe-types';
+} from './health-probe-shared.js';
+import type { HealthCheckResult } from './health-probe-types.js';
 
 const CHECK_KEY = 'continuity-contract-freshness';
 const CHECK_LABEL = 'Continuity contract freshness';
