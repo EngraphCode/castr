@@ -19,13 +19,14 @@
 #       proof-suites     — character, snapshot, gen, transforms, e2e
 #   quality-gates        — fail-closed fan-in; the required status check
 #
-# Caching strategy: the pnpm store cache (composite setup action) is the one
-# shared cache — a changed lockfile costs one network install per run. Turbo
-# task caching is deliberately OFF repo-wide (`cache: false` on every task in
-# turbo.json), so build-dependent jobs re-run `build` via their tasks'
-# `dependsOn: ["build"]` edges (~30s each — correctness over reuse; flipping
-# build caching on is a separate policy decision). The `build` job exists as
-# its own fail-fast gate, not as an artefact warmer.
+# Caching strategy (two layers): the pnpm store cache (composite setup action)
+# means a changed lockfile costs one network install per run; and turbo task
+# caching (ON by default per turbo.json, 2026-07-03 owner decision — mutating,
+# network, and measured-non-hermetic tasks excepted) is shared across jobs via
+# an actions/cache of `.turbo/cache` saved by the `build` job. Downstream jobs
+# restore it and their dependency-edge `build` runs replay FULL TURBO instead
+# of rebuilding. Turbo revalidates every hit by input hash, so a stale cache
+# entry costs bytes, never correctness.
 #
 # No `paths:` filter: changes anywhere (agent-tools, .agent, .husky, docs, lib)
 # trigger CI. CodeQL runs via GitHub's default code-scanning setup (repo
@@ -118,8 +119,8 @@ jobs:
       - name: Run workspace-owned repo validators
         run: pnpm repo-validators:check
 
-  # Builds every workspace as a fail-fast gate. Downstream jobs re-run build via
-  # their tasks' dependsOn edges (turbo caching is off repo-wide by design).
+  # Builds every workspace as a fail-fast gate and warms the shared turbo cache
+  # for the downstream lanes.
   build:
     name: build
     permissions:
@@ -132,6 +133,11 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Build
         run: pnpm exec turbo run build --log-order=grouped
+      - name: Save turbo cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
 
   # Type-check, lint, and the in-process test suites with coverage. Coverage is
   # a signal, not a gate: the ruleset's code_coverage rule consumes the uploads
@@ -148,6 +154,12 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
+      - name: Restore turbo cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
       - name: Type-check and lint
         run: pnpm exec turbo run type-check lint --continue --log-order=grouped
       - name: Unit + integration tests with coverage
@@ -202,8 +214,15 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
+      - name: Restore turbo cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
       # packaging:check is a plain pnpm script (publint + attw), not a turbo
-      # task, so no dependsOn edge builds lib/dist for it — build explicitly.
+      # task, so no dependsOn edge builds lib/dist for it — build explicitly
+      # (replays FULL TURBO from the restored cache on the warm path).
       - name: Build (packaging check inspects lib/dist)
         run: pnpm exec turbo run build --log-order=grouped
       - name: Circular-dependency and orphan checks (madge)
@@ -231,6 +250,12 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
+      - name: Restore turbo cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
       # --concurrency=1 keeps the suites SEQUENTIAL within the job, matching
       # local `test:all` semantics: five vitest processes sharing a 2-core
       # runner blow per-test timeouts (measured — test:transforms zod-roundtrip

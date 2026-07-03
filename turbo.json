@@ -7,12 +7,10 @@
       "outputs": []
     },
     "build": {
-      "cache": false,
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "out/**"]
     },
     "type-check": {
-      "cache": false,
       "dependsOn": ["build"],
       "outputs": []
     },
@@ -21,55 +19,47 @@
       "outputs": []
     },
     "format:check": {
-      "cache": false,
       "outputs": []
     },
     "lint": {
-      "cache": false,
       "outputs": []
     },
     "test": {
+      "outputs": ["coverage/**"]
+    },
+    "@engraph/agent-tools#test": {
       "cache": false,
-
       "outputs": ["coverage/**"]
     },
     "test:snapshot": {
-      "cache": false,
       "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.agent/reference/openapi_schema/**"],
       "outputs": []
     },
     "test:gen": {
-      "cache": false,
       "outputs": []
     },
     "character": {
-      "cache": false,
       "dependsOn": ["build"],
       "outputs": []
     },
     "test:transforms": {
-      "cache": false,
       "outputs": []
     },
     "test:e2e": {
-      "cache": false,
       "dependsOn": ["build"],
       "outputs": []
     },
     "madge:circular": {
-      "cache": false,
       "outputs": []
     },
     "madge:orphans": {
-      "cache": false,
       "outputs": []
     },
     "depcruise": {
-      "cache": false,
       "outputs": []
     },
     "knip": {
-      "cache": false,
       "outputs": []
     },
     "dev": {
