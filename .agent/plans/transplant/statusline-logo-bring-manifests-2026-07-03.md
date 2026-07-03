@@ -17,6 +17,14 @@ provenance: >-
 
 # Statusline + logo-handling bring-manifests (2026-07-03)
 
+> **✅ S1 LANDED (2026-07-03, Windswept Winging Cliff / 0ceb5f, `7a37dec`).** All S1 rows executed as
+> manifested; reviewers folded (code-reviewer APPROVED; test-reviewer Medium cured by extracting the
+> unit-proven `statusline-registry-read.ts` three-way classification; one Low rejected — Oak-faithful
+> test shape). Two Oak back-flow candidates: the WS4.1 resolved-rows renderer seam and the
+> absent-registry solo-floor fix. Follow-on note for the castr-mark slice: gate the frame-store
+> advance on the style actually cycling (the composition root currently advances for any
+> non-`none` style — moot while `'none'`-only). S2 (Cursor wing) and S3 (logo pipeline) remain open.
+
 The per-file execution manifests for the owner-directed statusline and logo-handling
 brings. This document is the bring-slice input; the backlog spine stays
 [`oak-castr-gap-rescan-2026-06-28.md`](./oak-castr-gap-rescan-2026-06-28.md) (its
