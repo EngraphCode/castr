@@ -2,6 +2,38 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (session part 3: hook hardening + wave 5 + pause window — Windswept Winging Cliff / 0ceb5f, closeout)
+
+- **Two brought gates fired IN ANGER for the first time, same afternoon — the loop-closure programme
+  paying out live:** (1) the LC3c watcher step-deadline killed my comms watcher fail-loud (`drain`
+  > 60s, fatal exit, `kind=timeout` line) during a transient FS stall — silent-hang-turned-loud
+  > exactly as designed; catch-up sweep showed zero missed events, re-arm clean. (2) The freshly
+  > hardened pre-commit caught `repo-check markdownlint-staged` as a HOLLOW transplant on its FIRST
+  > real staged-Markdown commit (it exec'd Oak's `markdownlint` binary; castr ships `markdownlint-cli2`)
+  > — my pre-landing green-run had "proven" the chain, but with an EMPTY staged set the action
+  > short-circuited before the broken exec. Lesson sharpening the prove-it-fires bar: a gate's green
+  > run must carry REPRESENTATIVE INPUT for every branch it guards, or the pass proves the
+  > short-circuit, not the gate. Fixed RED→GREEN (`markdownlint-cli2 --no-globs`, literal paths).
+- **Codex wave-5 dispositioned 5/5 fixed (`922e51f`), one going deliberately past a recorded parity
+  disposition:** the staged-bundle reader now resolves trusted git although the rescan recorded
+  Oak's leave-commit-path-execs-by-name posture as matched parity — the fingerprint feeding a
+  TRUSTED commit exec via an UNTRUSTED PATH git was an inconsistency worth the divergence
+  (back-flow candidate). Also: message-file subject verification de-tautologised (fresh-read dep at
+  both verify stages); valued long-option matching fixed at the MATCHER level (stronger than adding
+  a spelling); amend + long interactive-rebase blocked with safe negations proven permitted.
+- **Attribution error under concurrency (3rd stale-snapshot firing today):** I labelled Bellows's
+  claimed in-flight statusline work "owner WIP" — their claim opened AFTER my last registry read.
+  Before attributing ANY dirty file in a team window, re-read the claims registry at that moment;
+  a dirty file + no claim in my snapshot ≠ unclaimed.
+- **Held-bundle pause discipline worked end-to-end:** owner pause → broadcast the exact
+  staged/unstaged inventory with do-not-sweep instructions → peer's pathspec ceremony + the owner's
+  own hand-landing (`9f12d49`) both honoured it; nothing lost, nothing duplicated. The inventory
+  broadcast is the piece that made three concurrent writers safe around one shared index.
+- **Q-010 ruling reach noted for the corpus brief:** `use-result-pattern` is now a BRING and a D4
+  Result-migration slice is named (Bellows landed the reach, `1226d9f`); the corpus-analysis brief's
+  "Result→throw adaptation" bring-cost line is superseded in DIRECTION (likely keep `Result<T,E>`,
+  compose fail-fast) — the promotion-time re-measure catches the exact shape (noted here so it does).
+
 ## 2026-07-03 (dedicated consolidation pass — Fiery Flaring Bellows / bafbac)
 
 - **The gate-collision graduation trigger fired INSIDE the pass that walked it:** Cliff's pre-push

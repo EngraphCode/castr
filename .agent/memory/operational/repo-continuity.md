@@ -144,21 +144,31 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
-> **🧭 CURRENT TRUTH (2026-07-03, Windswept Winging Cliff / 0ceb5f): the Axis-A backlog is DELTA-CURRENT and the
-> owner-directed STATUSLINE + LOGO-PIPELINE lane now LEADS the sequence.** Owner directive this session: full
-> OCE↔castr review; bring the enhanced statusline code+config; NO oak logo art, ALL logo-handling/creation code
-> (castr authors its own mark later). Executed as a delta review (Oak moved 244 commits since the 2026-06-28
-> rescan): plan + as-built [`oak-castr-delta-review-2026-07-03.md`](../../plans/transplant/oak-castr-delta-review-2026-07-03.md);
-> the verified **§Delta amendment (2026-07-03)** now lives IN the single backlog
-> [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (new Tier-1:
-> encoding gate, trusted-gh, coordination-safety hardening cluster, agentic-judgment doctrine PDR-122/123 + rule;
-> new Tier-2 headline: the ~70-file corpus-analysis judgment-pipelines suite; PDR batch now 27; doctrine re-sync
-> wave incl. the consolidate-at-third→SECOND-consumer rename castr still lags). **The single next execution slice =
-> statusline S1** per the per-file manifests + 8 determinations in
-> [`statusline-logo-bring-manifests-2026-07-03.md`](../../plans/transplant/statusline-logo-bring-manifests-2026-07-03.md)
-> (then S2 Cursor wing, S3 logo pipeline, then the Tier-1 continuation below unchanged: provenance+archive-move →
-> claims-handoff → markdown-links wiring + Oak-ADR cite-repair → plan-templates). n=2 session note: Penumbral
-> Slipping Moth landed `7f53bd2` + watched CI this window; team ceremony (watcher/heartbeat/claims/comms) ran live.
+> **🧭 CURRENT TRUTH (2026-07-03 evening, Windswept Winging Cliff / 0ceb5f closeout — THE next-step spine for
+> incoming agents).** The 2026-07-03 three-session day landed, in order: the OCE↔castr **delta review** (plan +
+> as-built [`oak-castr-delta-review-2026-07-03.md`](../../plans/transplant/oak-castr-delta-review-2026-07-03.md);
+> the **§Delta amendment** lives in the single backlog
+> [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md)); **statusline
+> S1** (`7a37dec` + ctx-on-title-row `cb264d7` + checkout-name title `e1d204c` by Bellows — the enhanced statusline
+> is LIVE; S2 Cursor wing + S3 logo pipeline remain, manifests ready); **Codex waves 4+5** fixed 9/9 with
+> regression tests (`3acf8e5`, `922e51f`) — every PR thread resolved; **hardened git hooks** (owner-directed; the
+> Oak-shaped pre-commit chain landed via the owner's `9f12d49`, fired live and caught + cured the hollow
+> `markdownlint-staged` action); the **corpus-analysis suite DEFERRED** to the stabilisation-gated
+> [`corpus-analysis-suite-bring.md`](../../plans/transplant/corpus-analysis-suite-bring.md); the
+> **testing-strategy umbrella** (prove behaviour, never config or content — `c31ca23`); and Bellows's dedicated
+> **consolidation** (917d989 + walk outcomes `a16682a`/`1226d9f`: PDR-124 Accepted, Q-008 → the
+> [`archive-pii-scrub`](../../plans/current/archive-pii-scrub.md) full-tool plan, **Q-010 RULED: Result and
+> fail-fast COMPOSE** → `use-result-pattern` is now a BRING + a D4 Result-migration slice is in the backlog).
+> **NEXT STEPS, in order: (1) PRE-MERGE — the merge-event continuity reconciliation** (supersede the single-branch
+> invariant text here + delivery-ledger + record the post-merge branch model; small, unowned, named) **then the
+> owner invokes the merge of PR #3** (merge stays owner-invoked; babysit the merge-push Codex wave + CI on main;
+> the branch's audit-zero cures main's 48 dependabot findings). **(2) BEFORE PRODUCT WORK RESUMES — the substrate
+> tranche:** doctrine re-sync wave (consolidate-at-SECOND-consumer rename leads; now also carries the
+> `use-result-pattern` bring per Q-010), plan-templates (TC2), validation-strategy directive, tsdoc enforcement,
+> encoding-integrity gate, markdown-links wiring + amended ADR-127. **(3) EXECUTION SLICES ANY TIME:** statusline
+> S2/S3 (manifests ready), archive-pii-scrub (full tool, owner-decided), D4 Result-migration slice. **(4) AFTER
+> RESUME:** coordination-safety cluster, claims-handoff, provenance/archive-move, PDR batch (27, renumbered),
+> Tier-2 flow, castr mark (owner creative). Axis B (remediation 02 first) follows the substrate tranche per Q-011.
 >
 > **🟢 PR #3 IS MERGE-READY (2026-07-03, Penumbral Slipping Moth closeout): mergeStateStatus CLEAN / MERGEABLE /
 > 0 unresolved review threads / required `quality-gates` check GREEN at origin tip `2e616bd`.** Merge posture
