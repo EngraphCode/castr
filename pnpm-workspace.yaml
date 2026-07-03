@@ -33,3 +33,9 @@ minimumReleaseAgeExclude:
 
 overrides:
   typescript: '>=6.0.3'
+  # Security floors for vulnerable transitives (pnpm audit, 2026-07-03).
+  # Remove each once the direct dependency's own range clears the floor:
+  # hono arrives via @modelcontextprotocol/sdk (GHSA-88fw-hqm2-52qc high CORS
+  # + 4 moderate); esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low).
+  hono: '>=4.12.25'
+  esbuild: '>=0.28.1'
