@@ -1,6 +1,5 @@
 /**
  * Document upgrade and validation
- * @module
  * @internal
  */
 
@@ -15,7 +14,7 @@ import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
  *
  * Architecture Note:
  * This type guard validates at the boundary between Scalar's loose types
- * (Record<string, unknown>) and our strict types (BundledOpenApiDocument).
+ * (`Record<string, unknown>`) and our strict types (BundledOpenApiDocument).
  * This follows our "validate at boundaries, no casting" principle (ADR-020).
  *
  * Validation checks:

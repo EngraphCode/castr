@@ -2,8 +2,6 @@
  * Zod Extra Constraints Tests
  *
  * TDD for constraints not yet covered (array length, number gt/lt, string helpers).
- *
- * @module parsers/zod/constraints.extra.test
  */
 
 import { describe, it, expect } from 'vitest';

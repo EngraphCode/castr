@@ -2,8 +2,6 @@
  * Zod 4 Happy Path Fixtures — Arrays and Tuples
  *
  * Contains valid Zod 4 array and tuple expressions for parser testing.
- *
- * @module tests-fixtures/zod-parser/happy-path/arrays-tuples
  */
 import { z } from 'zod';
 

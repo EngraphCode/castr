@@ -3,8 +3,6 @@
  *
  * PROVES that the writer correctly outputs ALL IR fields to valid OpenAPI 3.1.x.
  * Tests all fields from openapi-acceptance-criteria.md.
- *
- * @module
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';

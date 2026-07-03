@@ -3,8 +3,6 @@
  *
  * Maps Zod 4-specific primitive method names to OpenAPI format/encoding values.
  * Extracted from zod-parser.primitives.ts to reduce file size.
- *
- * @module parsers/zod/zod4-formats
  */
 
 import {

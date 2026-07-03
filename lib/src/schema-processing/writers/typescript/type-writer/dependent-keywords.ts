@@ -13,7 +13,6 @@
  * Per the Input-Output Pair Compatibility Model: these keywords ARE expressible
  * in TypeScript and are NOT genuinely impossible.
  *
- * @module type-writer.dependent-keywords
  * @internal
  */
 

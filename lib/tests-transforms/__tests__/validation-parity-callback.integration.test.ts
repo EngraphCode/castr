@@ -7,8 +7,6 @@
  * Key tests:
  * - URL format validation (callbackUrl must be valid URL)
  * - Response schema with inline object validation
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

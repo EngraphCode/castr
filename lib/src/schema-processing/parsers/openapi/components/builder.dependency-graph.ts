@@ -3,7 +3,6 @@
  *
  * Builds IRDependencyGraph from OpenAPI document by analyzing schema references.
  *
- * @module ir-builder.dependency-graph
  * @internal
  */
 

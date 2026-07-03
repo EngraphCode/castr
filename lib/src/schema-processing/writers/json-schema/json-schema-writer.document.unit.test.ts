@@ -3,8 +3,6 @@
  *
  * Tests writeJsonSchemaDocument (standalone mode) and writeJsonSchemaBundle
  * (bundled $defs mode). Follows TDD — tests written first.
- *
- * @module writers/json-schema/json-schema-writer.document.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

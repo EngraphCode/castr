@@ -2,8 +2,6 @@
  * IR Characterization Tests - Complex Schema Patterns
  *
  * PROVES: IR system works correctly on complex schema patterns like circular refs, allOf, oneOf, etc.
- *
- * @module ir-real-world.complex.char.test
  */
 
 import type { OpenAPIDocument } from '../../shared/openapi-types.js';

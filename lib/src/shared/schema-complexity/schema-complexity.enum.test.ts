@@ -6,8 +6,8 @@
  *
  * CONTEXT:
  * - Default complexity threshold is 4
- * - Schemas with complexity < 4 get inlined
- * - Schemas with complexity >= 4 get extracted to variables
+ * - Schemas with `complexity < 4` get inlined
+ * - Schemas with `complexity >= 4` get extracted to variables
  *
  * RATIONALE:
  * The complexity calculation affects code generation. We need to define:

@@ -29,8 +29,6 @@
  * 3. **Code Generation**: The Zod conversion code expects $refs, not inlined schemas.
  *    It handles $refs by generating references to other schema constants, maintaining
  *    clean, readable generated code.
- *
- * @module
  */
 
 import type { OpenAPIInputDocument, OpenAPIDocument } from './openapi-types.js';
@@ -48,8 +46,8 @@ type FilePathInput = string;
  * - In-memory OpenAPI objects
  *
  * The pipeline performs:
- * 1. Bundling via @scalar/json-magic (validates structure, resolves external $refs, keeps internal ones)
- * 2. Strict declared-version validation via @scalar/openapi-parser
+ * 1. Bundling via `@scalar/json-magic` (validates structure, resolves external $refs, keeps internal ones)
+ * 2. Strict declared-version validation via `@scalar/openapi-parser`
  * 3. Upgrade/canonicalisation to OpenAPI 3.2.0 via the shared preparation boundary
  * 4. Type boundary validation to ensure shared OpenAPI seam compatibility
  *
@@ -66,8 +64,8 @@ type FilePathInput = string;
  * @param input - OpenAPI document source: file path string, URL object, or in-memory OpenAPIDocument
  * @returns Validated, bundled, and canonicalised OpenAPIDocument (3.2.0) with internal $refs preserved
  *
- * @throws {Error} When input cannot be loaded (file not found, network error, etc.)
- * @throws {Error} When OpenAPI document fails validation (structural errors)
+ * @throws `Error` When input cannot be loaded (file not found, network error, etc.)
+ * @throws `Error` When OpenAPI document fails validation (structural errors)
  *
  * @example File path input
  * ```typescript

@@ -4,8 +4,6 @@
  * Unit tests for pure functions extracted from writeProperties.
  * Tests property context building, circular reference detection,
  * and property syntax selection.
- *
- * @module writers/zod/properties.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

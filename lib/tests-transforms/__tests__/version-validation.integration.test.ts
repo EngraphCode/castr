@@ -6,8 +6,6 @@
  * - Invalid specs (wrong version features, missing required fields) MUST be rejected
  *
  * Per principles.md: "Fail fast, fail hard, be strict at all times"
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

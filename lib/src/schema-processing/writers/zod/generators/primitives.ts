@@ -4,7 +4,6 @@
  * Handles generation of Zod schemas for primitive types (string, number, integer, boolean, null).
  * Uses Zod 4 format-specific functions for improved precision and tree-shakability.
  *
- * @module writers/zod/primitives
  * @internal
  */
 

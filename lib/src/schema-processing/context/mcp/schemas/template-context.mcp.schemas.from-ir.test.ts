@@ -4,8 +4,6 @@
  * These tests verify that `buildMcpToolSchemasFromIR` produces equivalent
  * output to `buildMcpToolSchemas`, but reads from `CastrDocument` and
  * `CastrOperation` instead of raw OpenAPI.
- *
- * @module template-context.mcp.schemas.from-ir.test
  */
 
 import { describe, expect, test } from 'vitest';

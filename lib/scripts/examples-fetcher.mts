@@ -29,7 +29,7 @@ const EXAMPLES_CONFIG = {
  * 3. Keeps only YAML files (removes JSON variants)
  * 4. Organizes examples into lib/examples/openapi/
  *
- * @throws {Error} When cloning fails or directory operations fail
+ * @throws `Error` When cloning fails or directory operations fail
  *
  * @example
  * ```bash

@@ -4,7 +4,6 @@
  * Handles extraction of constraints from Zod method chains.
  * Split from primitives for reduced file complexity.
  *
- * @module parsers/zod/constraints
  * @internal
  */
 

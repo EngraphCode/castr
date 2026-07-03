@@ -4,8 +4,6 @@
  * Under IDENTITY doctrine, all objects use strict (closed-world) semantics.
  * Non-strict forms (strip, passthrough, catchall) are rejected at parse time.
  * This fixture validates that strict objects with nested structures parse correctly.
- *
- * @module tests-fixtures/zod-parser/happy-path/unknown-key-semantics
  */
 import { z } from 'zod';
 

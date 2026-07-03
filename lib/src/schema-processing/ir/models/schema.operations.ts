@@ -3,8 +3,6 @@
  *
  * Types for endpoint operations, parameters, request bodies,
  * responses, and security requirements.
- *
- * @module ir/schema.operations
  */
 
 import type {
@@ -77,7 +75,7 @@ export interface CastrOperation {
   /**
    * API path with parameter placeholders.
    *
-   * @example '/users/{userId}', '/pets', '/api/v1/products/{id}'
+   * @example `'/users/{userId}'`, '/pets', `'/api/v1/products/{id}'`
    */
   path: string;
 
@@ -206,7 +204,7 @@ export interface CastrAdditionalOperation extends Omit<CastrOperation, 'method'>
   /**
    * Custom HTTP method token carried verbatim from OAS 3.2 `additionalOperations`.
    *
-   * This intentionally stays open-ended so custom methods survive parser -> IR -> writer
+   * This intentionally stays open-ended so custom methods survive `parser -> IR -> writer`
    * round-trips without widening the closed standard-method union used elsewhere.
    */
   method: string;
@@ -218,7 +216,7 @@ export interface CastrAdditionalOperation extends Omit<CastrOperation, 'method'>
  * Represents path, query, header, or cookie parameters with their schema
  * and validation metadata. Preserves all OpenAPI parameter properties.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object | OpenAPI Parameter Object}
  * @public
  */
 export interface CastrParameter {
@@ -285,7 +283,7 @@ export interface CastrParameter {
   /**
    * Style of parameter serialization.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#style-values OpenAPI Style Values}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#style-values | OpenAPI Style Values}
    */
   style?: ParameterObject['style'];
 
@@ -306,7 +304,7 @@ export interface CastrParameter {
  * Represents the request payload for POST, PUT, PATCH operations.
  * Includes content type and schema information.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#request-body-object OpenAPI RequestBody Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#request-body-object | OpenAPI RequestBody Object}
  * @public
  */
 export interface IRRequestBody {
@@ -390,7 +388,7 @@ export interface IRMediaType {
    * }
    * ```
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#encoding-object OpenAPI Encoding Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#encoding-object | OpenAPI Encoding Object}
    */
   encoding?: Record<string, EncodingObject>;
 }
@@ -401,7 +399,7 @@ export interface IRMediaType {
  * Represents an HTTP response with status code, description, and schema.
  * Includes both success responses (2xx) and error responses (4xx, 5xx).
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#response-object OpenAPI Response Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#response-object | OpenAPI Response Object}
  * @public
  */
 export interface CastrResponse {
@@ -447,7 +445,7 @@ export interface CastrResponse {
  * Unlike the previous implementation that only stored the schema,
  * this captures description, required, deprecated, example, etc.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#header-object OpenAPI Header Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#header-object | OpenAPI Header Object}
  * @public
  */
 export interface IRResponseHeader {
@@ -495,7 +493,7 @@ export interface IRResponseHeader {
  *
  * Represents OAuth2 scopes or API key requirements for an operation.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object OpenAPI Security Requirement Object}
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
  * @public
  */
 export interface IRSecurityRequirement {

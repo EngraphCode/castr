@@ -82,7 +82,7 @@ export async function cleanupTempDir(dir: string): Promise<void> {
  * The directory is created if it doesn't exist.
  *
  * @param dir - Absolute path to the temporary directory
- * @param name - Name suffix for the file (e.g., 'tictactoe' becomes 'gen-test-{timestamp}-tictactoe.ts')
+ * @param name - Name suffix for the file (e.g., 'tictactoe' becomes `gen-test-{timestamp}-tictactoe.ts`)
  * @param content - File content to write
  * @returns Promise resolving to the absolute path of the created file
  *

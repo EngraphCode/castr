@@ -2,8 +2,6 @@
  * IR Validation Tests - Operation Metadata
  *
  * PROVES: IR correctly captures operation details, parameters, request bodies, and responses
- *
- * @module ir-validation.operations.test
  */
 
 import { type OpenAPIDocument, isReferenceObject } from '../../../shared/openapi-types.js';

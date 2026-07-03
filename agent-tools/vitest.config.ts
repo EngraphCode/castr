@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
 /**
- * Unit + integration test config for @engraph/agent-tools.
+ * Unit + integration test config for `@engraph/agent-tools`.
  *
  * Inlined from Oak's root `vitest.config.base.ts` (castr has no shared root
  * base) so the package is self-contained — transplanted from Oak 06018bc3.

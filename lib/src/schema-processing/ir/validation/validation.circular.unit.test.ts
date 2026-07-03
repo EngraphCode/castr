@@ -2,8 +2,6 @@
  * IR Validation Tests - Circular Reference Detection
  *
  * PROVES: IR correctly identifies and handles circular references in schemas
- *
- * @module ir-validation.circular.test
  */
 
 import type { OpenAPIDocument } from '../../../shared/openapi-types.js';

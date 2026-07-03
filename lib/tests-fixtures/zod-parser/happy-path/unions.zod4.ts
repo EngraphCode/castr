@@ -2,8 +2,6 @@
  * Zod 4 Happy Path Fixtures — Unions
  *
  * Contains valid Zod 4 union expressions for parser testing.
- *
- * @module tests-fixtures/zod-parser/happy-path/unions
  */
 import { z } from 'zod';
 

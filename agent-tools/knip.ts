@@ -1,5 +1,6 @@
-/** @type {import('knip').KnipConfig} */
-const config = {
+import type { KnipConfig } from 'knip';
+
+const config: KnipConfig = {
   // Reachable-from-outside surfaces: CLI bins, the statusline hook, validator/hook/
   // bootstrap/version-guard entries, and the test estate. Anything not reachable from
   // these is dead code (unused files / dependencies — the checks we keep ON below).

@@ -2,8 +2,6 @@
  * Zod Composition Parser
  *
  * Handles parsing of Zod composition schemas: array, tuple, enum.
- *
- * @module parsers/zod/composition
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

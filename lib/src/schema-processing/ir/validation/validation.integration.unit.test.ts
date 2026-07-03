@@ -2,8 +2,6 @@
  * IR Validation Tests - Real-World Integration
  *
  * PROVES: IR works correctly on realistic API specifications
- *
- * @module ir-validation.integration.test
  */
 
 import type { OpenAPIDocument } from '../../../shared/openapi-types.js';

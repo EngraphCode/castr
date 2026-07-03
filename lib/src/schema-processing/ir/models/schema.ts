@@ -316,7 +316,7 @@ export interface CastrSchema {
    * XML serialization metadata for this schema.
    * Used to customize XML representation of the schema.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#xml-object OpenAPI XML Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#xml-object | OpenAPI XML Object}
    */
   xml?: XMLObject;
 
@@ -324,7 +324,7 @@ export interface CastrSchema {
    * External documentation for this schema.
    * Can be used at the schema level for documentation links.
    *
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object ExternalDocumentation Object}
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object | ExternalDocumentation Object}
    */
   externalDocs?: ExternalDocumentationObject;
 

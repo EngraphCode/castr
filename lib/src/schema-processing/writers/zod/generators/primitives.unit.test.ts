@@ -5,8 +5,6 @@
  * - Integer formats: z.int(), z.int32(), z.int64()
  * - String formats: z.email(), z.url(), z.uuid(), z.iso.*, z.ipv4(), z.ipv6()
  * - filterRedundantValidations()
- *
- * @module writers/zod/primitives.unit.test
  */
 
 import { Project } from 'ts-morph';

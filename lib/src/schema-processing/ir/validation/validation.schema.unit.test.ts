@@ -2,8 +2,6 @@
  * IR Validation Tests - Schema Representation
  *
  * PROVES: IR correctly captures basic schema metadata and complex patterns
- *
- * @module ir-validation.schema.test
  */
 
 import type { OpenAPIDocument } from '../../../shared/openapi-types.js';

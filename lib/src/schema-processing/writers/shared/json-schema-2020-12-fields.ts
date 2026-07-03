@@ -5,7 +5,6 @@
  * core field writers: dependentRequired, dependentSchemas, prefixItems,
  * unevaluatedProperties, unevaluatedItems, minContains, maxContains.
  *
- * @module writers/shared/json-schema-2020-12-fields
  * @internal
  */
 

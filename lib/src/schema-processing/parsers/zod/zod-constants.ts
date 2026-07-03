@@ -6,7 +6,6 @@
  * 1. The parser's method recognition logic
  * 2. The synthetic zod declaration generated for symbol resolution
  *
- * @module parsers/zod/constants
  * @internal
  */
 

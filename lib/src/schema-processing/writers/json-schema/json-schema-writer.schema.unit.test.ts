@@ -3,8 +3,6 @@
  *
  * Tests the writeJsonSchema function that converts a CastrSchema (IR) to a
  * pure JSON Schema 2020-12 object. Follows TDD — tests written first.
- *
- * @module writers/json-schema/json-schema-writer.schema.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -22,8 +22,6 @@
  * // Bundled document (all components under $defs)
  * const bundle = writeJsonSchemaBundle(components);
  * ```
- *
- * @module writers/json-schema
  */
 
 export { writeJsonSchema } from './json-schema-writer.schema.js';

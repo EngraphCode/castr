@@ -1,7 +1,5 @@
 /**
  * Zod AST Utilities Tests
- *
- * @module parsers/zod/ast.test
  */
 
 import { describe, it, expect } from 'vitest';

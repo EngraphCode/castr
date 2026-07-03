@@ -1,5 +1,6 @@
-/** @type {import('knip').KnipConfig} */
-const config = {
+import type { KnipConfig } from 'knip';
+
+const config: KnipConfig = {
   entry: ['tests-transforms/**/*.test.ts', 'tests-snapshot/**/*.test.ts'],
   project: ['src/**/*.ts'],
   ignoreBinaries: ['tsx'],

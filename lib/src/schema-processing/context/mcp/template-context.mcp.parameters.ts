@@ -8,8 +8,6 @@
  * eliminating the need to access raw OpenAPI.
  *
  * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
- *
- * @module template-context.mcp.parameters
  */
 
 import type { SchemaObject } from '../../../shared/openapi-types.js';

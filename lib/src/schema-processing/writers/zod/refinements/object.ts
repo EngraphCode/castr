@@ -6,7 +6,6 @@
  * runtime validation closures, preserving the semantic intent.
  *
  * @see principles.md § Input-Output Pair Compatibility Model
- * @module zod-refinements
  * @internal
  */
 

@@ -2,9 +2,10 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
+import tsdocPlugin from 'eslint-plugin-tsdoc';
 
 /**
- * ESLint flat config for @engraph/agent-tools.
+ * ESLint flat config for `@engraph/agent-tools`.
  *
  * castr has no shared root ESLint config and no `@oaknational/eslint-plugin-standards`
  * (Oak's package-local config was built entirely on it). This is a self-contained,
@@ -26,6 +27,12 @@ export default tseslint.config(
       // or re-expressed error must carry { cause } so the causal chain survives.
       'preserve-caught-error': ['error', { requireCatchParameter: true }],
     },
+  },
+  {
+    // TSDoc syntax discipline: any /** */ doc comment must parse as valid TSDoc
+    files: ['**/*.{ts,tsx}'],
+    plugins: { tsdoc: tsdocPlugin },
+    rules: { 'tsdoc/syntax': 'error' },
   },
   {
     // CLI entry points legitimately write to stdout/stderr.

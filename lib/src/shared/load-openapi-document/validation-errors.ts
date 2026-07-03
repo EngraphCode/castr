@@ -4,7 +4,6 @@
  * Per principles.md: "Fail fast, fail hard, be strict at all times"
  * But also be HELPFUL - show users exactly what's wrong and how to fix it.
  *
- * @module
  * @internal
  */
 
@@ -186,8 +185,10 @@ function unescapePointerSegment(segment: string): string {
  * @returns Human-readable path (e.g., "paths → /test → get → responses → 200")
  *
  * @example
+ * ```typescript
  * formatValidationPath('/paths/~1test/get/responses/200')
  * // => 'paths → /test → get → responses → 200'
+ * ```
  */
 export function formatValidationPath(path: string): string {
   if (path === ROOT_EMPTY_PATH || path === ROOT_SLASH_PATH) {
@@ -207,8 +208,10 @@ export function formatValidationPath(path: string): string {
  * @returns A helpful hint string, or undefined if no hint is available
  *
  * @example
+ * ```typescript
  * getValidationHint('must have required property', '/paths/~1test/get/responses/200')
  * // => "Response objects require a 'description' field (OpenAPI 3.0.x, 3.1.x, and 3.2.x)"
+ * ```
  */
 export function getValidationHint(message: string, path: string): string | undefined {
   for (const { pathMatcher, messageMatcher, hint } of VALIDATION_HINTS) {

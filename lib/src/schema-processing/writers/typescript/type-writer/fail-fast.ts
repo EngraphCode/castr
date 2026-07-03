@@ -8,7 +8,6 @@
  * Per the Input-Output Pair Compatibility Model: fail-fast is
  * reserved for genuinely impossible output mappings only.
  *
- * @module type-writer.fail-fast
  * @internal
  */
 

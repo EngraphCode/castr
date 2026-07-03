@@ -8,8 +8,7 @@
  * - Tests for existing IR fields: Should PASS (green)
  * - Tests for missing IR fields: Will be added in Phase 1.3 after IR expansion (ADR-030)
  *
- * @see {@link https://github.com/OAI/OpenAPI-Specification/tree/main/examples OpenAPI Examples}
- * @module
+ * @see {@link https://github.com/OAI/OpenAPI-Specification/tree/main/examples | OpenAPI Examples}
  */
 
 import { describe, it, expect } from 'vitest';

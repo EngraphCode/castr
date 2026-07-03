@@ -4,7 +4,6 @@
  * Type-safe predicates for runtime type checking.
  * All guards use the `value is Type` syntax for proper type narrowing.
  *
- * @module type-guards
  * @public
  */
 

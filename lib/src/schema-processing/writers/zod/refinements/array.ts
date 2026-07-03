@@ -5,7 +5,6 @@
  * (`contains`, `minContains`, `maxContains`, `unevaluatedItems`).
  *
  * @see principles.md § Input-Output Pair Compatibility Model
- * @module zod-refinements-array
  * @internal
  */
 

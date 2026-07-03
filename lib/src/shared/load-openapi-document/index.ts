@@ -10,8 +10,8 @@
  *
  * **Pipeline Stages:**
  * 1. Normalize Input: Accept string/URL/object, determine entry point
- * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
- * 3. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via @scalar/openapi-parser
+ * 2. Bundle: Resolve external file/URL references via `@scalar/json-magic`
+ * 3. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via `@scalar/openapi-parser`
  * 4. Validate: Type-guard to ensure BundledOpenApiDocument (intersection type)
  *
  * **Key Differences from SwaggerParser:**
@@ -25,7 +25,6 @@
  * - ADR-019: Scalar Pipeline Adoption
  * - ADR-020: Intersection Type Strategy
  *
- * @module
  * @public
  */
 

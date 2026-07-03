@@ -4,8 +4,6 @@
  * Discriminated union types for code generation results.
  * Provides type-safe handling of single-file vs. grouped-file generation.
  *
- * @module generation-result
- * @since 2.0.0
  * @public
  */
 

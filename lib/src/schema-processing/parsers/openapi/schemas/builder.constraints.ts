@@ -3,7 +3,6 @@
  *
  * Handles extraction of validation constraints from OpenAPI schemas.
  *
- * @module ir-builder.constraints
  * @internal
  */
 

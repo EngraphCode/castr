@@ -2,8 +2,6 @@
  * Zod Parser Defaults
  *
  * Shared default values and helpers for Zod parsing.
- *
- * @module parsers/zod/defaults
  */
 
 import type { CastrSchema, CastrSchemaNode, IRZodChainInfo } from '../../../ir/index.js';

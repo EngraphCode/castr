@@ -3,8 +3,6 @@
  *
  * Tests conversion from CastrSchema (IR) to OpenAPI SchemaObject.
  * Follows TDD - tests written first, implementation follows.
- *
- * @module
  */
 
 import { describe, it, expect } from 'vitest';

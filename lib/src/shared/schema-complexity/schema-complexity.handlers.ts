@@ -94,7 +94,7 @@ export function handleCompositionSchema(
 }
 
 /**
- * Handle enum without explicit type (e.g., { enum: ["a", "b"] })
+ * Handle enum without explicit type (e.g., `{ enum: ["a", "b"] }`)
  */
 export function handleEnumWithoutType(current: number): number {
   return current + complexityByComposite('enum') + 1;

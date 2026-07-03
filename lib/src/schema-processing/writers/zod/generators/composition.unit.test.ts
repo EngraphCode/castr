@@ -5,8 +5,6 @@
  * - z.xor() for oneOf (exclusive union)
  * - z.discriminatedUnion() for oneOf + discriminator
  * - z.union() for anyOf (inclusive union)
- *
- * @module writers/zod/composition.unit.test
  */
 
 import { Project, VariableDeclarationKind } from 'ts-morph';

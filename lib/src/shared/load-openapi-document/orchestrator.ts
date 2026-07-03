@@ -1,7 +1,6 @@
 /**
  * Main orchestrator for OpenAPI document loading
  * Coordinates the entire pipeline
- * @module
  * @internal
  */
 
@@ -113,7 +112,7 @@ function createLoadOpenApiDocumentError(
  *
  * **Pipeline Stages:**
  * 1. Normalize Input: Accept string/URL/object, determine entry point
- * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
+ * 2. Bundle: Resolve external file/URL references via `@scalar/json-magic`
  * 3. **Validate**: Strict validation against declared version schema (FAIL FAST)
  * 4. **Validate Path Templates**: Reject malformed top-level `paths` keys before upgrade
  * 5. Upgrade/Canonicalise: Bridge older specs through 3.1 semantics, then stamp 3.2.0
@@ -131,10 +130,10 @@ function createLoadOpenApiDocumentError(
  * @returns Loaded document with canonical OpenAPI 3.2.0 spec and bundle metadata
  * @throws Error if validation, bundling, upgrading, or type guard fails
  *
- * @see {@link https://github.com/scalar/scalar Scalar OpenAPI Parser}
- * @see {@link .agent/architecture/SCALAR-PIPELINE.md Architecture docs}
- * @see {@link docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md ADR-019}
- * @see {@link docs/architectural_decision_records/ADR-020-intersection-type-strategy.md ADR-020}
+ * @see {@link https://github.com/scalar/scalar | Scalar OpenAPI Parser}
+ * @see `.agent/architecture/SCALAR-PIPELINE.md` Architecture docs
+ * @see `docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md` ADR-019
+ * @see `docs/architectural_decision_records/ADR-020-intersection-type-strategy.md` ADR-020
  * @public
  */
 export async function loadOpenApiDocument(

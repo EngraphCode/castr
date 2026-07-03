@@ -8,7 +8,6 @@
  * The x-ext format preserves file provenance in multi-file specs while
  * maintaining backward compatibility with single-file specs.
  *
- * @module ref-resolution
  * @see {@link https://github.com/scalar/scalar} - Scalar bundler documentation
  */
 
@@ -116,7 +115,7 @@ export interface ParsedRef {
  * @param ref - The $ref string to parse, or a bare component name
  * @returns Parsed ref with component type, name, and location metadata
  *
- * @throws {Error} When ref format is invalid or missing required parts
+ * @throws `Error` When ref format is invalid or missing required parts
  *
  * @example Parse standard schema ref
  * ```typescript
@@ -298,7 +297,7 @@ function tryParseBareRef(ref: string): ParsedRef | null {
  * @param ref - The $ref string to extract the name from
  * @returns The component name
  *
- * @throws {Error} When ref format is invalid
+ * @throws `Error` When ref format is invalid
  *
  * @example Standard ref
  * ```typescript

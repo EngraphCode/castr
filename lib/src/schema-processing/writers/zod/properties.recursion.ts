@@ -4,7 +4,6 @@
  * Extracted from `properties.ts` to keep the public helpers small and within
  * the repo's file-size limits.
  *
- * @module writers/zod/properties.recursion
  * @internal
  */
 

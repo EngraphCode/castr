@@ -3,8 +3,6 @@
  *
  * These helpers reduce cyclomatic complexity by extracting common patterns
  * and providing single-responsibility functions with clear semantics.
- *
- * @module ir-test-helpers
  */
 
 import type { GenerationResult } from '../rendering/generation-result.js';

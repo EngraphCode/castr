@@ -3,8 +3,6 @@
  *
  * Extracts validation constraints from CastrSchema for endpoint parameters.
  * Uses explicit type-safe property copying (no dynamic iteration).
- *
- * @module
  */
 
 import type { CastrSchema } from '../../ir/index.js';

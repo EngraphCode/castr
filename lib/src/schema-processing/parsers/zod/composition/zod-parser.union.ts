@@ -2,8 +2,6 @@
  * Zod Union Parser
  *
  * Handles parsing of Zod union schemas: union, discriminatedUnion, xor.
- *
- * @module parsers/zod/union
  */
 
 import type { CastrSchema } from '../../../ir/index.js';

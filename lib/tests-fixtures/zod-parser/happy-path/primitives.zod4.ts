@@ -3,8 +3,6 @@
  *
  * Contains valid Zod 4 primitive type expressions for parser testing.
  * All expressions are VALID Zod 4 syntax that MUST be parsed successfully.
- *
- * @module tests-fixtures/zod-parser/happy-path/primitives
  */
 import { z } from 'zod';
 

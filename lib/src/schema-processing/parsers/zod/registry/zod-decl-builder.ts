@@ -5,7 +5,6 @@
  * known method arrays. This is a build-time utility, not a runtime parser,
  * so string operations on constant data are appropriate here.
  *
- * @module parsers/zod/zod-decl-builder
  * @internal
  */
 

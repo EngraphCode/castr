@@ -43,7 +43,6 @@ export interface TemplateContext {
    * The IR replaces CodeMetaData and provides richer metadata for code generation.
    *
    * @see {@link CastrDocument} for complete IR structure
-   * @since Phase 3 Session 2
    */
   _ir?: CastrDocument;
 }
@@ -59,8 +58,8 @@ export interface TemplateContextOptions {
    * - `'auto-correct'`: Includes endpoints with only default responses, treating
    *   `default` as a success response with generic error handling.
    *
-   * @default 'spec-compliant'
-   * @see {@link https://spec.openapis.org/oas/v3.1.0#responses-object OpenAPI Responses Object}
+   * @defaultValue 'spec-compliant'
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#responses-object | OpenAPI Responses Object}
    * @remarks
    * The OpenAPI specification recommends using explicit status codes (200, 404, etc.)
    * rather than only `default`. This option allows you to control the library's behavior

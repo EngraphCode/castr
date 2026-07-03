@@ -3,8 +3,6 @@
  *
  * Contains valid Zod 4 metadata expressions for parser testing.
  * Uses Zod 4 .meta() API and .describe().
- *
- * @module tests-fixtures/zod-parser/happy-path/metadata
  */
 import { z } from 'zod';
 

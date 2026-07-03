@@ -3,8 +3,6 @@
  *
  * TDD tests for detecting and rejecting Zod 3 syntax.
  * Write tests FIRST, then implement detection logic.
- *
- * @module parsers/zod/detection.test
  */
 
 import { describe, it, expect } from 'vitest';

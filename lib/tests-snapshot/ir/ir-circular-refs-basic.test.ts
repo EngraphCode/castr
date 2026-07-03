@@ -2,8 +2,6 @@
  * IR Integration - Basic Circular Reference Handling
  *
  * PROVES: Basic circular references (self, mutual) detected in IR result in getter-based schemas (Zod 4 native recursion)
- *
- * @module ir-circular-refs-basic.test
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';

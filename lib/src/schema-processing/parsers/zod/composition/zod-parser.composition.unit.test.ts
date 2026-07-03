@@ -2,8 +2,6 @@
  * Zod Composition Parser Tests
  *
  * TDD for Arrays, Tuples, and Enums.
- *
- * @module parsers/zod/composition.test
  */
 
 import { describe, it, expect } from 'vitest';

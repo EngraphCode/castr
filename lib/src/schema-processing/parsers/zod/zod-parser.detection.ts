@@ -4,7 +4,6 @@
  * Detects Zod 3 syntax patterns that are not compatible with Zod 4.
  * Uses ts-morph AST traversal (no regex) per ADR-026.
  *
- * @module parsers/zod/detection
  *
  * @example
  * ```typescript

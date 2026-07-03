@@ -17,10 +17,9 @@ import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
  *
  * If you need readonly TypeScript types, use `Readonly<T>` wrapper after generation.
  *
- * @param params - Conversion parameters
- * @param params.schema - OpenAPI schema to convert
- * @param params.meta - Optional metadata for the type
- * @param params.meta.name - If provided, generates `export type {name} = ...;`
+ * @param params - Conversion parameters: `params.schema` is the OpenAPI schema to
+ *   convert; `params.meta` is optional metadata for the type; `params.meta.name`,
+ *   if provided, generates `export type {name} = ...;`
  * @returns TypeScript type definition as string
  *
  * @example

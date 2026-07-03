@@ -5,7 +5,6 @@
  * discriminated unions in test code. These helpers combine type guards
  * with assertions to fail fast with clear error messages.
  *
- * @module tests-helpers/generation-result-assertions
  * @internal Test utilities only
  */
 
@@ -23,7 +22,7 @@ import {
  * type for caller.
  *
  * @param result - Generation result to check
- * @throws {Error} If result is not a single file result
+ * @throws `Error` If result is not a single file result
  *
  * @example Before (BROKEN - calls string method on union type)
  * ```typescript
@@ -60,7 +59,7 @@ export function assertSingleFileResult(
  * type for caller.
  *
  * @param result - Generation result to check
- * @throws {Error} If result is not a grouped file result
+ * @throws `Error` If result is not a grouped file result
  *
  * @example
  * ```typescript
@@ -93,7 +92,7 @@ export function assertGroupedFileResult(
  *
  * @param result - Generation result to extract content from
  * @returns The content string from single file result
- * @throws {Error} If result is a grouped file result
+ * @throws `Error` If result is a grouped file result
  *
  * @example
  * ```typescript
@@ -120,7 +119,7 @@ export function extractContent(result: GenerationResult): string {
  *
  * @param result - Generation result to extract files from
  * @returns The files record from grouped file result
- * @throws {Error} If result is a single file result
+ * @throws `Error` If result is a single file result
  *
  * @example
  * ```typescript

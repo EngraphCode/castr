@@ -2,7 +2,6 @@
  * Utilities for extracting properties, unescaping pointers, and traversing JSON Pointer
  * paths strictly following ADR-026.
  *
- * @module
  * @internal
  */
 
@@ -80,8 +79,8 @@ function processTildeEscape(
 
 /**
  * Unescapes a JSON pointer segment according to RFC6901 without using replace() or Regex.
- * ~1 -> /
- * ~0 -> ~
+ * `~1 -> /`
+ * `~0 -> ~`
  */
 export function unescapePointerSegment(segment: string): string {
   let result = EMPTY_STRING;

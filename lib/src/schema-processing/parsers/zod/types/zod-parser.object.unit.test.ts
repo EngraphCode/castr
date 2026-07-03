@@ -2,8 +2,6 @@
  * Zod Object Parser Tests
  *
  * TDD for Zod Object schemas, strictness, and property extraction.
- *
- * @module parsers/zod/object.test
  */
 
 import { describe, it, expect } from 'vitest';

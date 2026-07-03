@@ -2,8 +2,6 @@
  * Zod Endpoint Parsing Unit Tests
  *
  * Tests for parsing endpoint definitions from `defineEndpoint({...})` calls.
- *
- * @module parsers/zod/endpoint.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -2,8 +2,6 @@
  * IR Characterization Tests - Operation Complexity
  *
  * PROVES: IR system works correctly on complex operation patterns like multiple content types, many parameters, etc.
- *
- * @module ir-real-world.operations.char.test
  */
 
 import type { OpenAPIDocument } from '../../shared/openapi-types.js';

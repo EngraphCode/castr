@@ -6,12 +6,11 @@
  * interface (defined in `shared/openapi-types.ts`) because both use
  * explicit named properties without index signatures.
  *
- * > **Egress normal form:** The JSON Schema writer normalises `example`
- * > to `examples` (ADR-042). Nullability is represented via `type: [T,
- * > 'null']` arrays. `$ref` schemas are emitted as bare `{ "$ref": ...
- * > }` without siblings.
+ * **Egress normal form:** The JSON Schema writer normalises `example` to
+ * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
+ * arrays. `$ref` schemas are emitted as bare `{ "$ref": ... }` without
+ * siblings.
  *
- * @module writers/shared/json-schema-object
  * @internal
  */
 

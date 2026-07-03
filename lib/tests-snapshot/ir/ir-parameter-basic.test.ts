@@ -2,8 +2,6 @@
  * IR Integration - Basic Parameter Metadata
  *
  * PROVES: Basic parameter metadata (required, optional, mixed) flows through to correct validation
- *
- * @module ir-parameter-basic.test
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';

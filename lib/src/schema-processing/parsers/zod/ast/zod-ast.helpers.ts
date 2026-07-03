@@ -3,8 +3,6 @@
  *
  * Fundamental AST utilities for identifying Zod calls.
  * Extracted to avoid dependency cycles.
- *
- * @module parsers/zod/ast/helpers
  */
 
 import type { CallExpression } from 'ts-morph';

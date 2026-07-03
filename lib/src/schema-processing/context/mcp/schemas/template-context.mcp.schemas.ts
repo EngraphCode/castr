@@ -6,8 +6,6 @@
  *
  * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
  * Use `template-context.mcp.schemas.from-ir.ts` for IR-based schema building.
- *
- * @module template-context.mcp.schemas
  */
 
 import type { Schema as JsonSchema } from 'ajv';

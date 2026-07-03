@@ -1,7 +1,6 @@
 /**
  * Utility to isolate non-standard unprefixed OpenAPI properties into an `x-nonstandard-` namespace.
  *
- * @module
  * @internal
  */
 

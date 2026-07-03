@@ -5,8 +5,6 @@
  *
  * - {@link writeJsonSchemaDocument} — wraps a single schema with `$schema`
  * - {@link writeJsonSchemaBundle} — collects all schema components under `$defs`
- *
- * @module writers/json-schema/json-schema-writer.document
  */
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';

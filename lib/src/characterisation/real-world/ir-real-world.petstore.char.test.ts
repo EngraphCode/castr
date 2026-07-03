@@ -2,8 +2,6 @@
  * IR Characterization Tests - Real-World Petstore Spec
  *
  * PROVES: IR system works correctly on the Petstore Expanded specification
- *
- * @module ir-real-world.petstore.char.test
  */
 
 import { describe, expect, test } from 'vitest';

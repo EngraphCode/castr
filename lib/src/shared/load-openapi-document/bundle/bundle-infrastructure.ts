@@ -1,7 +1,6 @@
 /**
  * Bundle infrastructure setup for OpenAPI document loading
  * Handles file/URL recording and plugin wrapping
- * @module
  * @internal
  */
 

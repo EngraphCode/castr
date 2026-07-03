@@ -1,5 +1,5 @@
 /**
- * @file ESLint rule: no-magic-string-comparison
+ * ESLint rule: no-magic-string-comparison
  *
  * Bans direct equality comparisons against string literals in product code.
  * This enforces ADR-026's prohibition on magic-string comparisons

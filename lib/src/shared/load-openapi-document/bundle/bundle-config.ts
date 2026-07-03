@@ -1,6 +1,5 @@
 /**
  * Bundle configuration for Scalar parser
- * @module
  * @internal
  */
 

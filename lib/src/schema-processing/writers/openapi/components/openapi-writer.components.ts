@@ -3,8 +3,6 @@
  *
  * This module handles the conversion of IR component definitions (schemas,
  * security schemes, parameters, responses) to valid canonical OpenAPI 3.2 ComponentsObject.
- *
- * @module
  */
 
 import type { ComponentsObject } from '../../../../shared/openapi-types.js';

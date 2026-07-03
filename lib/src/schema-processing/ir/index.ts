@@ -4,7 +4,6 @@
  * This module provides the canonical IR types and utilities for Castr.
  * The IR is the single source of truth for all schema transformations.
  *
- * @module ir
  * @see ADR-023 for IR architecture
  * @see ADR-029 for canonical structure
  */

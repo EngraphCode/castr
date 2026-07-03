@@ -4,7 +4,6 @@
  * Main entry point for parsing Zod source code into the canonical IR.
  * Combines detection, primitive parsing, object parsing, and naming.
  *
- * @module parsers/zod/parser
  *
  * @example
  * ```typescript

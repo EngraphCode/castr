@@ -5,7 +5,6 @@
  * Implements strict validation with fail-fast behavior for Zod 3 syntax and
  * dynamic schemas.
  *
- * @module parsers/zod
  *
  * @example
  * ```typescript

@@ -7,7 +7,6 @@
  * JSON Schema 2020-12 extension keywords live in the companion module
  * `json-schema-2020-12-fields.ts`.
  *
- * @module writers/shared/json-schema-fields
  * @internal
  */
 

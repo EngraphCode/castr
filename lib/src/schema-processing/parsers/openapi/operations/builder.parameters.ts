@@ -2,8 +2,6 @@
  * IR Builder - Parameter Processing
  *
  * Handles conversion of OpenAPI parameter objects to IR parameter structures.
- *
- * @module
  */
 
 import type { ParameterObject, ReferenceObject } from '../../../../shared/openapi-types.js';
@@ -215,7 +213,7 @@ function buildConcreteParameter(param: ParameterObject, context: IRBuildContext)
  * Per OpenAPI 3.0+ spec, parameters MUST have either 'schema' or 'content'.
  * When `content` only declares OpenAPI 3.2 `itemSchema`, the derived fallback
  * schema comes from that per-item contract so the lossless content map can still
- * survive parser -> IR -> writer unchanged.
+ * survive `parser -> IR -> writer` unchanged.
  *
  * @param param - OpenAPI parameter object
  * @param context - Build context for schema resolution

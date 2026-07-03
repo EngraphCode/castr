@@ -6,8 +6,6 @@
  *
  * Parser modules register themselves with this dispatcher,
  * breaking the import cycle.
- *
- * @module parsers/zod/core
  */
 
 import type { CastrSchema } from '../../ir/index.js';

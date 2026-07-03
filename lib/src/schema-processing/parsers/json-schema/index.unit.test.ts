@@ -3,8 +3,6 @@
  *
  * Tests the composed pipeline: Draft 07 normalization → core parsing → IR.
  * Also tests document-level parsing (extracting $defs as components).
- *
- * @module parsers/json-schema/index.unit.test
  */
 
 import { describe, it, expect } from 'vitest';

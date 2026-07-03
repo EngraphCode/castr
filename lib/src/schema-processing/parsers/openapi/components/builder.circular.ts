@@ -3,7 +3,6 @@
  *
  * Handles detection of circular references in IR components.
  *
- * @module ir-builder.circular
  * @internal
  */
 

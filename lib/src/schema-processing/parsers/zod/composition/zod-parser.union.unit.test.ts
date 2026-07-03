@@ -2,8 +2,6 @@
  * Zod Union Parser Tests
  *
  * TDD for Unions, Discriminated Unions, and XOR.
- *
- * @module parsers/zod/union.test
  */
 
 import { describe, it, expect } from 'vitest';

@@ -4,8 +4,6 @@
  * Centralises media-type handling so request bodies, responses, parameters,
  * headers, and reusable `components.mediaTypes` all preserve refs and derive
  * effective schemas consistently.
- *
- * @module
  */
 
 import type {
@@ -253,7 +251,7 @@ function getSchemaFromMediaTypeEntry(
  *
  * When a media type only declares OpenAPI 3.2 `itemSchema`, the per-item schema
  * becomes the effective compatibility fallback. The original content map remains
- * the lossless source of truth for parser -> IR -> OpenAPI writer round-trips.
+ * the lossless source of truth for `parser -> IR -> OpenAPI writer` round-trips.
  */
 export function deriveSchemaFromMediaTypeEntries(
   content: Record<string, ReferenceObject | MediaTypeObject> | undefined,

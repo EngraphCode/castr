@@ -3,8 +3,6 @@
  *
  * Resolves operation security requirements from IR types (`CastrDocument`, `CastrOperation`)
  * instead of raw OpenAPI objects, ensuring the IR remains the single source of truth.
- *
- * @module template-context.mcp.security.from-ir
  */
 
 import type { SecuritySchemeObject } from '../../../shared/openapi-types.js';
@@ -34,7 +32,7 @@ const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
  * @param operation - The CastrOperation with optional operation-level security
  * @returns OperationSecurityMetadata with resolved scheme details
  *
- * @throws {Error} When a referenced security scheme is not found in IR components
+ * @throws `Error` When a referenced security scheme is not found in IR components
  *
  * @example Public endpoint (empty security array)
  * ```typescript
@@ -122,7 +120,7 @@ function buildSecuritySchemeLookup(ir: CastrDocument): Map<string, SecuritySchem
  * @param schemes - Lookup map of security scheme definitions
  * @returns Array of resolved scheme requirements (usually 1 element for single requirement)
  *
- * @throws {Error} When the security scheme is not found in the lookup
+ * @throws `Error` When the security scheme is not found in the lookup
  *
  * @internal
  */

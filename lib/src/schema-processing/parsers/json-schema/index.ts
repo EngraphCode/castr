@@ -20,8 +20,6 @@
  *   $defs: { Item: { type: 'object', ... } },
  * });
  * ```
- *
- * @module parsers/json-schema
  */
 
 export type { JsonSchema2020 } from './json-schema-parser.core.js';
@@ -54,12 +52,12 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
  * Parse a JSON Schema document into IR components.
  *
  * Supports standalone schemas, `$defs` bundles, and mixed documents.
- * Root schema naming: `title` > `$id` > `"Root"`.
+ * Root schema naming: `title` \> `$id` \> `"Root"`.
  * Unsupported keywords are rejected with an actionable error.
  *
  * @param input - A JSON Schema document (Draft 07 or 2020-12)
  * @returns Array of IR schema components (root first if present, then `$defs`)
- * @throws {UnsupportedJsonSchemaKeywordError} if unsupported top-level keywords are present
+ * @throws `UnsupportedJsonSchemaKeywordError` if unsupported top-level keywords are present
  * @public
  */
 export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
@@ -201,7 +199,7 @@ function extractRootSchema(doc: JsonSchema2020): JsonSchema2020 | undefined {
 
 /**
  * Derive a component name for the root schema.
- * Priority: `title` > `$id` basename > `"Root"`.
+ * Priority: `title` \> `$id` basename \> `"Root"`.
  *
  * @internal
  */

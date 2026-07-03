@@ -8,7 +8,6 @@
  * This class holds a reference to the known synthetic zod declaration file
  * and provides methods to determine whether identifiers trace back to it.
  *
- * @module parsers/zod/import-resolver
  *
  * @example
  * ```typescript

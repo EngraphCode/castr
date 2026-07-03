@@ -11,8 +11,6 @@
  * const openApiDoc = writeOpenApi(ir);
  * console.log(JSON.stringify(openApiDoc, null, 2));
  * ```
- *
- * @module
  */
 
 export { writeOpenApi } from './openapi-writer.js';

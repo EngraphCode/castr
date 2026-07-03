@@ -3,8 +3,6 @@
  *
  * Tests for CastrDocument population in template context.
  * Separated from main template-context.test.ts to respect file length limits.
- *
- * @module template-context-ir.test
  */
 
 import type { OpenAPIDocument } from '../../shared/openapi-types.js';

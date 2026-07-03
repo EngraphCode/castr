@@ -4,8 +4,6 @@
  * An opt-in repair pipeline strictly separated from the main Strict Pipeline.
  * Designed to take fundamentally problematic OpenAPI specifications and agressively
  * sanitize, patch, and upgrade them to a format the main pipeline can digest.
- *
- * @module
  */
 
 import { validate, upgrade } from '@scalar/openapi-parser';
@@ -228,7 +226,7 @@ function createProfileFromRepair(
 /**
  * Attempts aggressive reparations on an OpenAPI document to produce a valid canonical OpenAPI 3.2.0 spec.
  *
- * @param inputDocument The parsed (but potentially invalid) OpenAPI document object
+ * @param inputDocument - The parsed (but potentially invalid) OpenAPI document object
  * @returns A diagnosis report containing the repaired document and its validation status.
  */
 export async function repairOpenApiDocumentWithRuntimeDiagnostics(
