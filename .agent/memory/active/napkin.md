@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (test-setup review + coverage wiring + CI scanning alignment — Penumbral Slipping Moth / 540603)
+
+- **GitHub Code Quality facts (verified via docs + 2026-06-30 changelog):** the ruleset `code_coverage`
+  rule consumes Cobertura XML uploaded by `actions/upload-code-coverage@v1` (`code-quality: write`
+  permission; `fail-on-error` defaults true = fail-loud), and requires Code Quality ENABLED on the repo
+  (Settings → Code security). Public preview now; **GA + billing from 2026-07-20** — owner review point
+  before that date (keep-and-pay vs drop the code_quality/code_coverage rules).
+- **Default-setup CodeQL rejects advanced-setup SARIF for the same languages** — so removing the ci.yml
+  analyze job was REQUIRED by the owner's default-setup flip, not mere cleanup; and default setup scans
+  MORE (js+ts+actions vs the old js-only job). The stale "CodeQL stays as its own job" comment was
+  reconciled in the same commit (documentation-hygiene).
+- **commit-queue move-2 gotcha: `git add -- <deleted-and-already-staged path>` fails pathspec** (git rm
+  staged the deletion earlier; the path no longer exists in the worktree). The workflow correctly
+  abandoned the intent (rollback discipline proven live). Cure: only `git add` paths that exist in the
+  worktree — an already-staged deletion rides along in the pathspec-scoped commit.
+- **Coverage baselines at wiring time (lines): lib 83.9%, agent-tools 62.4%, aggregate 74.2%.** Wired as
+  signal-not-goal: no local thresholds; the server-side ruleset floor is the only gate, and the
+  behaviour-proof suites stay the correctness bar (testing-strategy.md line 21 forbids path-coverage as
+  a target). Higher-level suites (character/snapshot/gen/transforms/e2e) deliberately NOT coverage-fed —
+  they are user-value assurance, so code proven only there reads as uncovered; factor that into any
+  drop-threshold reasoning (a 0% drop rule punishes legitimately e2e-proven code).
+- **castr commitlint type-enum has NO `ci` type** (7 types: feat/fix/refactor/test/docs/chore/perf) —
+  workflow-file commits take `chore(ci):`. The commit-skill's conventional-defaults table lists `ci` but
+  the repo override governs.
+
 ## 2026-06-28 (plan-system coherence review + consolidation — Open Lofting Feather / c82112)
 
 - **A multi-plan estate needs ONE next-step spine + CURRENT orientation surfaces — supersession banners aren't enough if the "read this first" doc itself goes stale.** Owner-asked review found next-steps were NOT single-sourced: the 3 designated orientation surfaces gave 3 contradictory "next" answers, 2 badly stale — `roadmap.md` "Phase 7 in progress" (7+8 done); `session-continuation.prompt.md` (continuity's "read this first") "NEXT = DC3 prettier" (2026-06-21, a week + the whole reason/LC/bring-everything/gap-rescan arc out of date); only `repo-continuity.md`'s top block was current. AND the same items were owned by 3–4 live plans (LC/TC/parity/gap-rescan all "ACTIVE").
