@@ -21,6 +21,11 @@ export default tseslint.config(
     languageOptions: {
       globals: { ...globals.node },
     },
+    rules: {
+      // Result-pattern causal-chain discipline (use-result-pattern rule): a re-thrown
+      // or re-expressed error must carry { cause } so the causal chain survives.
+      'preserve-caught-error': ['error', { requireCatchParameter: true }],
+    },
   },
   {
     // CLI entry points legitimately write to stdout/stderr.

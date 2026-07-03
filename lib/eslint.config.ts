@@ -126,6 +126,9 @@ const baseRules: Linter.RulesRecord = {
   'no-constant-condition': 'error',
   'prefer-const': 'error',
   'no-var': 'error',
+  // Result-pattern causal-chain discipline (use-result-pattern rule): a re-thrown
+  // or re-expressed error must carry { cause } so the causal chain survives.
+  'preserve-caught-error': ['error', { requireCatchParameter: true }],
 };
 
 const untypedTsRules: Linter.RulesRecord = {

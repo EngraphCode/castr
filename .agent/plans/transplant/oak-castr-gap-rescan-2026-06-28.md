@@ -378,9 +378,10 @@ consumers), `.mcp.json.example` mcpjam pin (amends the Tier-3 MCP item), pnpm-wo
 
 **Owner-ruling additions (2026-07-03 consolidation walk — Result/fail-fast composition, FULL reach):**
 
-- **Bring `use-result-pattern.md`** (Tier 2; reverses the §Firsthand-corrections item-1 non-bring —
-  superseded by the owner ruling that Result and fail-fast compose). Localise to castr's estate on
-  bring; the rule teaches the pattern principles.md already exemplifies.
+- ~~**Bring `use-result-pattern.md`**~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-1): rule
+  authored native to castr carrying the composition ruling verbatim substance + all three wrappers +
+  RULES_INDEX row + `preserve-caught-error` ESLint enforcement wired in both workspaces
+  (`{ cause }` causal-chain discipline; one real violation fixed in `pr-watch/gh.ts`).
 - **Migrate the D4 throw-based error-model seams to `Result<T,E>` with fail-fast composition**
   (Tier 2, castr-internal slice): the D4 archive/provenance reconciliation rewrote Oak's
   Result-based modules to typed throws on the now-retired fail-fast-therefore-no-Result ground;

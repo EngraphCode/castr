@@ -144,6 +144,7 @@ without proportional value.
 | `.agent/rules/use-agent-comms-log.md`                                      | always-on      | —                                                                                                |
 | `.agent/rules/use-built-agent-tools-cli.md`                                | always-on      | —                                                                                                |
 | `.agent/rules/use-monitor-for-event-driven-wake.md`                        | always-on      | —                                                                                                |
+| `.agent/rules/use-result-pattern.md`                                       | always-on      | —                                                                                                |
 | `.agent/rules/validate-full-target-estate.md`                              | always-on      | —                                                                                                |
 | `.agent/rules/validators-must-recompute-not-just-record.md`                | always-on      | —                                                                                                |
 | `.agent/rules/verify-data-supports-shape-before-building.md`               | always-on      | —                                                                                                |
