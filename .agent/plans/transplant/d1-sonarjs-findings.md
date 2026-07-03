@@ -96,13 +96,13 @@ Installed: `eslint-plugin-sonarjs@4.0.3`
 
 - `pnpm lint` → **126 problems, 0 errors, 126 warnings** = **121 S3800 + 5 S3785** (both rules currently `warn`).
 - The **5 S3785 sites** (right operand of each `in`):
-  | Site | `in` expression (right operand's declared type) |
-  | --- | --- |
-  | `lib/src/schema-processing/compatibility/integer-target-capabilities.openapi.ts:84` | `key in pathItem` (`PathItemObject \| ReferenceObject`) |
-  | `…/parsers/openapi/openapi-document.object-semantics.ts:83` | same `hasPathItemMembers` shape |
-  | `…/context/mcp/template-context.mcp.security.from-ir.ts:106` | `'$ref' in component.scheme` (`SecuritySchemeObject \| ReferenceObject`) |
-  | `…/parsers/openapi/operations/builder.operations.ts:170` | `param.in in irOperation.parametersByLocation` (`Record<'query'\|'path'\|'header'\|'cookie', CastrParameter[]> & { querystring?: … }`) |
-  | `…/writers/openapi/openapi-writer.media-types.ts:31` | `'$ref' in mediaType` (`IRMediaType \| IRMediaTypeReference`) |
+  | Site                                                                                | `in` expression (right operand's declared type)                                                                                        |
+  | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+  | `lib/src/schema-processing/compatibility/integer-target-capabilities.openapi.ts:84` | `key in pathItem` (`PathItemObject \| ReferenceObject`)                                                                                |
+  | `…/parsers/openapi/openapi-document.object-semantics.ts:83`                         | same `hasPathItemMembers` shape                                                                                                        |
+  | `…/context/mcp/template-context.mcp.security.from-ir.ts:106`                        | `'$ref' in component.scheme` (`SecuritySchemeObject \| ReferenceObject`)                                                               |
+  | `…/parsers/openapi/operations/builder.operations.ts:170`                            | `param.in in irOperation.parametersByLocation` (`Record<'query'\|'path'\|'header'\|'cookie', CastrParameter[]> & { querystring?: … }`) |
+  | `…/writers/openapi/openapi-writer.media-types.ts:31`                                | `'$ref' in mediaType` (`IRMediaType \| IRMediaTypeReference`)                                                                          |
 - The **121 S3800 sites** are spread across `schema-processing`, concentrated in the zod-parser subsystem. Reproduce
   the exact list: `cd lib && pnpm exec eslint . --format json | node -e '<filter messages by ruleId>'`.
 

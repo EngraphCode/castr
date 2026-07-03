@@ -31,22 +31,5 @@ minimumReleaseAgeExclude:
   - turbo
   - '@turbo/*'
 
-# Force a single TypeScript across the workspace. eslint-plugin-sonarjs declares
-# `typescript: ">=5"` and otherwise resolves its own 5.9.3 in-subtree, while the
-# typescript-eslint parser builds Type objects with the workspace's 6.0.3. The two
-# releases renumber `ts.TypeFlags`, so sonarjs's type-aware rules (function-return-type
-# S3800, in-operator-type-error S3785) mask the wrong bits and mis-fire (D1 arc;
-# `.agent/plans/transplant/d1-sonarjs-findings.md`). This override pins every resolution
-# to the workspace TypeScript so the rules compute correctly. Keep this version in
-# lockstep with the `typescript` devDependency in the root/lib/agent-tools package.json
-# (currently ^6.0.3) on any TypeScript bump. (`$typescript` reference syntax is
-# deprecated in pnpm 11 — it prints a stdout WARN that pollutes piped tool output — and a
-# pnpm catalog is heavier machinery than this single pin needs.) This is the CORRECT
-# PERMANENT fix, not a workaround awaiting upstream: TS 6 is fine; the bug is sonarjs
-# pulling its OWN typescript copy (a dual-TS-instance skew). Measured 2026-06-21:
-# eslint-plugin-sonarjs@4.1.0 (latest) STILL declares `typescript: ">=5"` as a regular
-# dependency, so bumping sonarjs does NOT retire this override. The only change that would
-# is sonarjs moving typescript to a peer dependency (~indefinite). (Q-002, RESOLVED.)
 overrides:
-  esbuild: 0.25.11
-  typescript: 6.0.3
+  typescript: '>=6.0.3'

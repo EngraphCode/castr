@@ -143,9 +143,13 @@ export function isKeyStage(value: string): value is KeyStage {
 <!-- enablement, NOT matching -->
 
 - Confirm the negotiated contract stance (enablement vs. shape matching).
+
 <!-- allow config, default to curly braces -->
+
 - Confirm path format preference and whether both formats must be supported.
+
 <!-- yes, and we will definitely need to iterate on this, but will do so in collaboration with the Oak team -->
+
 - Confirm required Phase 1 outputs (metadata maps, schema collection, endpoint ordering).
 
 ---

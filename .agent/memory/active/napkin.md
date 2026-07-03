@@ -272,7 +272,9 @@ Three insights, one owner correction. Strong distilled / practice-core graduatio
 
 ## 2026-06-26 (Oak read model: pin → live `main` — Coppery Warming Magma / 48b4a5)
 
-Owner directive: **stop working off fixed points in Oak history; read Oak live from `main`.** "Causing more
+Owner directive: **stop working off fixed points in Oak history; read Oak live from `main`
+
+.** "Causing more
 issues than it is solving." This supersedes the entire pin lineage — frozen `ad649710`/`4470266`, the
 2026-06-17 frozen `ad359a4f`, and the 2026-06-20 rebased-branch `practice/castr-pin` model (the [[2026-06-20
 pin-model reframe entry below]] is now itself history).

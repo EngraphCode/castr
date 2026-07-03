@@ -34,8 +34,7 @@ function parseUnion(
   args: Node[],
   parseSchema: ZodSchemaParser,
   outputKey:
-    | typeof UNION_OUTPUT_KEY_ANY_OF
-    | typeof UNION_OUTPUT_KEY_ONE_OF = UNION_OUTPUT_KEY_ANY_OF,
+    typeof UNION_OUTPUT_KEY_ANY_OF | typeof UNION_OUTPUT_KEY_ONE_OF = UNION_OUTPUT_KEY_ANY_OF,
 ): CastrSchema | undefined {
   if (args.length === 0) {
     return undefined;

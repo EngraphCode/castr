@@ -86,7 +86,7 @@ export function parseOptions(argv: readonly string[]): Options {
   const areaPatterns: string[] = [];
   const tags: string[] = [];
 
-  for (let index = 0; index < rest.length; ) {
+  for (let index = 0; index < rest.length;) {
     index = parseToken({ rest, index, values, files, areaPatterns, tags });
   }
 

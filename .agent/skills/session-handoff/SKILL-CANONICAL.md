@@ -633,6 +633,6 @@ than re-inheriting the dispatch obligation.
     discover the dispatch obligation only at session-open.
 
 13. **Keep the boundary clean.** `session-handoff` includes the consolidation
-    gate and can escalate into `engraph-consolidate-docs` when appropriate, but
-    ordinary sessions remain lightweight. It does not smuggle in review or git
-    actions.
+gate and can escalate into `engraph-consolidate-docs` when appropriate, but
+ordinary sessions remain lightweight. It does not smuggle in review or git
+actions.

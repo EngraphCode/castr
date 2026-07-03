@@ -17,12 +17,7 @@ export interface ReferenceObject {
 type SchemaOrReferenceObject = ReferenceObject | SchemaObject;
 type SchemaOrReferenceOrBoolean = SchemaOrReferenceObject | boolean;
 type LinkParameterValue =
-  | boolean
-  | LinkParametersObject
-  | LinkParameterValue[]
-  | null
-  | number
-  | string;
+  boolean | LinkParametersObject | LinkParameterValue[] | null | number | string;
 interface LinkParametersObject {
   [key: string]: LinkParameterValue;
 }

@@ -10,15 +10,7 @@ import {
 } from '../../shared/openapi-types.js';
 
 type StandardOperationMethod =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'patch'
-  | 'delete'
-  | 'head'
-  | 'options'
-  | 'trace'
-  | 'query';
+  'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'trace' | 'query';
 
 /**
  * Type guard to check if a path item value is an operation object
