@@ -25,4 +25,6 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile
+      # --prefer-offline makes the warm path genuinely offline (the documented
+      # intent): resolve from the restored store; network only on a real miss.
+      run: pnpm install --frozen-lockfile --prefer-offline
