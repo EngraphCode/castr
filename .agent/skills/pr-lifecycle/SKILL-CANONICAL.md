@@ -2,7 +2,7 @@
 name: pr-lifecycle
 classification: active
 description: >-
-  Open a pull request and shepherd it to merge-ready: reviewer-facing
+  Open a pull request and shepherd it to merge-ready — reviewer-facing
   description, full-surface harvesting (GraphQL review threads, all comments,
   all checks, server-side scanning findings), root-cause-first triage, budgeted
   watching via the pr-watch CLI, re-fetch after every push, and an honest
