@@ -2,6 +2,40 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (dependency currency + action pins + 14 Codex threads fix-or-reject — Penumbral Slipping Moth / 540603)
+
+- **OWNER DIRECTIVE (standing, recorded to user-memory `pr-threads-fix-or-reject`):** every PR review
+  thread resolves by FIX or measured REJECT in the same work item; "lower priority" deferral is never
+  acceptable anywhere in the repo including GitHub. I had recommended "fix the P1s, then resolve" —
+  corrected. Applied: all 14 Codex threads (9 triaged + 5 from a re-review that arrived mid-session)
+  dispositioned same-session — 13 fixed TDD-green (`c6df0f8`, `b0355e4`, + earlier `ce6207f`/`4d7c85c`),
+  1 rejected with the falsifying CI-run evidence; every thread replied + resolved.
+- **Two of my own new guards fired on my own ceremony within the hour (best dogfooding class):** the
+  worktree-divergence guard abandoned an intent whose file list included four no-op files (their re-add
+  equalled HEAD → "missing" from staged set) — cure: enqueue from `git diff HEAD --name-only`, never from
+  `git status --short` after a formatter pass; then the new `intent-inactive` guard refused the retry
+  against the abandoned intent. Also the hardened flag-cluster matcher blocked THIS session's own commit
+  message for naming the blocked pattern in heredoc prose — the guard-blocks-its-own-documentation
+  specimen AGAIN (route: hook-matcher-precision lane, executable-position awareness; mitigation that
+  works: write the message via the Write tool, keep git commands in a separate clean shell string).
+- **A tsx-only ENCLAVE is a detectable class:** 15 files with extensionless relative imports passed
+  vitest (TS-aware resolution) but broke node ESM from dist — exactly why claude-agent-ops was left on
+  tsx (the hollow bring's root cause, one level deeper than the script line). Sweep:
+  `grep -rn "from '\./" --include='*.ts' | grep -v ".js'"` before migrating any script to dist.
+- **zsh: parameter expansions do NOT word-split** (only command substitutions do) — a `$FILEARGS` string
+  passed as ONE giant arg to the queue CLI. Build zsh arrays (`FILES=(...)`; `"${FILEARGS[@]}"`). Same
+  family as the distilled zsh word-splitting entry, opposite direction.
+- **GitHub default-setup CodeQL migration silently DISABLED the whole CI workflow** (the migration
+  prompt offers to disable "the existing CodeQL workflow" — which was ci.yml, quality-gates included;
+  state `disabled_manually`, zero runs, required check waiting forever). Detected because a pushed
+  commit produced no run; re-enabled + proven green. Check workflow `state` after any code-scanning
+  settings change.
+- **pnpm `-r update --latest` + the DC method scaled to a 23-package sweep in one session:** emission
+  oracle (snapshot+gen byte-identical) cleared prettier 3.9 (whose new union-wrapping reformats SOURCE
+  repo-wide — that churn rides the bump commit); commander 15 ESM-only probed identical on the paired
+  `--no-*` default; @types/node HELD at ^24 per ADR-049 (types track engines runtime). `pnpm audit`
+  taken to ZERO via two annotated workspace overrides (hono, esbuild floors) with removal conditions.
+
 ## 2026-07-03 (test-setup review + coverage wiring + CI scanning alignment — Penumbral Slipping Moth / 540603)
 
 - **GitHub Code Quality facts (verified via docs + 2026-06-30 changelog):** the ruleset `code_coverage`

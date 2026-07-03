@@ -130,12 +130,24 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > edit: long-term-excellence → strict-everywhere-all-the-time → simpler/First-Question → dissolve-by-changing-the-system
 > → user-value; dissolution before escalation, connects to `PDR-057` four-lens test). Applying them dissolved the two
 > Codex-review questions into determinations: ✅ **#8** scoped-bang version-guard regex fixed + tested, ✅ **#6** gitleaks
-> documented as a dev prereq (`CONTRIBUTING.md`, Oak parity). **The single next action** = continue the
+> documented as a dev prereq (`CONTRIBUTING.md`, Oak parity). **CODEX FINDINGS ALL CLOSED (2026-07-03, Penumbral
+> Slipping Moth):** owner directive (standing, user-memory `pr-threads-fix-or-reject`) — every PR thread resolves by
+> fix or measured reject in the same work item, never priority-deferral. All **14** threads (9 triaged + 5 from the
+> mid-session Codex re-review) dispositioned: 13 fixed TDD-green (`c6df0f8` six-finding batch incl. both P1s —
+> MultiEdit guard + worktree-vs-index commit hole; `b0355e4` five re-review fixes incl. UUID-id identity equality,
+> missing-fingerprint fail, intent-inactive stage, id-less-row quarantine, flag-cluster matcher), 1 rejected with
+> falsifying CI evidence; every thread replied + resolved on GitHub; the transient triage doc deleted per its own
+> lifecycle note. **ALSO LANDED 2026-07-03:** coverage reporting wired + proven (v8, in-process suites only —
+> baselines lib 83.9% / agent-tools 62.4% lines; ruleset floors set min 70 / drop 1); CI actions SHA-pinned at
+> latest stable + a fail-loud workspace-coverage-enumeration guard; full dependency-currency sweep (23 pkgs incl.
+> prettier 3.9 emission-proven byte-identical, commander 15, depcruise 18, turbo 2.10.2 via codemod; @types/node
+> HELD ^24 per ADR-049) + `pnpm audit` to ZERO via annotated hono/esbuild workspace overrides; publish.yml deleted;
+> CodeQL moved to default setup (NOTE: the migration silently disabled the whole CI workflow — re-enabled + proven;
+> Code Quality KEPT, evaluate impact-vs-cost before GA billing 2026-07-20). **The single next action** = continue the
 > collaboration-safety cluster at **pre-archive provenance + class-tiered archive-move** (PDR-094 doctrine present,
-> mechanism absent; inline-quote-first self-containment enforcement — PDR-105-aligned), then the two real **P1
-> Codex findings** (#1 MultiEdit content-guard bypass; #2 commit-queue commits worktree not verified index — see
-> `pr-3-codex-review-findings.md`), claims-handoff (LC3b/PDR-063) → **Oak-ADR cite-repair** (the 18 rule→ADR dangling
-> links — see below; also folds Codex #5/#7) → plan-templates, bringing
+> mechanism absent; inline-quote-first self-containment enforcement — PDR-105-aligned), then
+> claims-handoff (LC3b/PDR-063) → **Oak-ADR cite-repair** (the 18 rule→ADR dangling
+> links — see below) → plan-templates, bringing
 > freely per PDR-005 §Default. **RULES-CLASSIFICATION RESOLVED 2026-06-28 (owner): genotype vs phenotype** —
 > operationalised rules/ADRs/hooks are the repo's PHENOTYPE (context-specific expression of the portable Practice-Core
 > genotype), so a rule is correctly `repo-doctrine` and rule→ADR is phenotype→phenotype (NOT a portability violation);
