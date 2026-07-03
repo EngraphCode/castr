@@ -81,7 +81,8 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "node .claude/scripts/statusline-identity.mjs"
+    "command": "node ${CLAUDE_PROJECT_DIR}/.claude/scripts/statusline-identity.mjs",
+    "refreshInterval": 10
   },
   "skillListingBudgetFraction": 0.03
 }

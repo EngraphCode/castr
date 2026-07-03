@@ -43,7 +43,16 @@ export function archiveStaleClaims(input: {
   };
 }
 
-function isClaimStale(claim: CollaborationClaim, nowIso: string): boolean {
+/**
+ * Staleness predicate for one claim (heartbeat-or-claimed-at + TTL window).
+ *
+ * @remarks
+ * Exported (2026-07-03, statusline S1 bring) because the statusline
+ * session-shape resolver shares this exact definition — a divergent copy
+ * would silently change claim-staleness semantics repo-wide. Body verified
+ * identical to Oak's shared definition at export time.
+ */
+export function isClaimStale(claim: CollaborationClaim, nowIso: string): boolean {
   return isExpired({
     startedAtIso: claim.heartbeat_at ?? claim.claimed_at,
     freshnessSeconds: claim.freshness_seconds ?? DEFAULT_CLAIM_TTL_SECONDS,
