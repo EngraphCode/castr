@@ -14,6 +14,11 @@ import { defineConfig } from 'vitest/config';
  */
 export default defineConfig({
   test: {
+    // 30s to match the sibling suites (snapshot/gen/characterisation): under
+    // v8 coverage instrumentation on CI runners, the ts-morph cold-start in
+    // the zod-parser integration tests exceeds vitest's 5s default (measured:
+    // CI run 28654812498 timed out at 5000ms; the same test fits locally).
+    testTimeout: 30000,
     include: ['src/**/*.test.ts', 'eslint-rules/**/*.test.ts'],
     exclude: [
       'src/characterisation/**/*.test.ts',
