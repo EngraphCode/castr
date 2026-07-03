@@ -59,14 +59,18 @@ delivery. A/B/C sequencing is open owner decision Q-011.
 The authoring agent re-verified the load-bearing and contradiction-prone claims directly.
 Four corrections / source-reliability findings:
 
-1. **`use-result-pattern` is a DELIBERATE NON-BRING, not a HOLLOW-to-cure.** The literal
-   claim is true (`principles.md` carries `Result<T,E>` examples, lines 854/939/1199/1796),
-   but bringing a "use-result-pattern" rule contradicts castr's **fail-fast-over-result**
-   doctrine (it rejected `@oaknational/result` → throw in the D4 lane). The rescan actually
-   surfaced a **castr-internal tension** (principles.md teaches `Result<T,E>` while the
-   codebase doctrine is throw) → a castr-original cleanup, NOT an Oak gap. Only the separable
-   ESLint `preserve-caught-error` hygiene (don't-swallow-errors, compatible with fail-fast)
-   is a clean bring.
+1. **`use-result-pattern` non-bring — SUPERSEDED BY OWNER RULING (2026-07-03).** The
+   correction as originally recorded: the rule bring "contradicts castr's
+   fail-fast-over-result doctrine" (D4 rejected `@oaknational/result` → throw), so the rescan
+   classed it a deliberate non-bring and the principles.md `Result<T,E>` examples a
+   castr-internal tension (became Q-010). **The owner ruled at the 2026-07-03 consolidation
+   walk: _"Result in no way precludes fail fast, Result<T,E> IS the correct pattern, and fail
+   fast is absolutely required everywhere"_ — the framing was a false dichotomy; Result and
+   fail-fast COMPOSE.** Reach is FULL (owner, same walk): (a) `use-result-pattern` becomes a
+   **BRING** (moved out of OUT-OF-SCOPE; localise to castr's estate on bring); (b) a named
+   backlog slice migrates the D4 throw-based reconciliation (archive/provenance error model)
+   and similar we-are-fail-fast-not-Result seams to `Result<T,E>` with fail-fast composition
+   — see the 2026-07-03 delta items. The ESLint `preserve-caught-error` hygiene bring stands.
 2. **Source disagreement resolved → `pr-watch` is ABSENT** (gap_map LACK correct; the pass-1
    completeness-critic's "resolved as present on re-check" was FALSE — verified no
    `agent-tools/src/pr-watch`).
@@ -281,7 +285,9 @@ Product-coupled to Oak's curriculum/web stack, no castr analogue:
 - Docs/memory: `design-token-governance-for-self-contained-ui.md` (HTML/CSS UI — castr is ink-TUI only),
   `agent-capability-vocabulary.md` (Oak product-audience axes), Oak product ADR bulk, milestones/strategy/domain/
   agent-guidance tiers (Oak content), `vitest.field-integrity.config.ts` (Elasticsearch field-fidelity).
-- `use-result-pattern.md` (the rule) — castr is fail-fast-over-result by doctrine (deliberate non-bring).
+- ~~`use-result-pattern.md` (the rule) — castr is fail-fast-over-result by doctrine (deliberate non-bring).~~
+  **MOVED TO BRING (owner ruling 2026-07-03: Result and fail-fast compose — see §Firsthand
+  corrections item 1 and the delta items).**
 - `.cursor/plans/` + continual-learning cadence state (ephemeral / IDE-beta byproduct — do not manufacture a mechanism Oak does not have).
 
 ## castr_extras — castr has, Oak lacks (preserve; Oak back-flow candidates)
@@ -369,6 +375,17 @@ lists in the workflow transcript).
 
 **Tier 3 additions:** `cli-arg-parser`/`command-runner`/`path-exists` core utilities (ride along with their
 consumers), `.mcp.json.example` mcpjam pin (amends the Tier-3 MCP item), pnpm-workspace scoped-override pattern.
+
+**Owner-ruling additions (2026-07-03 consolidation walk — Result/fail-fast composition, FULL reach):**
+
+- **Bring `use-result-pattern.md`** (Tier 2; reverses the §Firsthand-corrections item-1 non-bring —
+  superseded by the owner ruling that Result and fail-fast compose). Localise to castr's estate on
+  bring; the rule teaches the pattern principles.md already exemplifies.
+- **Migrate the D4 throw-based error-model seams to `Result<T,E>` with fail-fast composition**
+  (Tier 2, castr-internal slice): the D4 archive/provenance reconciliation rewrote Oak's
+  Result-based modules to typed throws on the now-retired fail-fast-therefore-no-Result ground;
+  re-reconcile those seams (and any sibling justified the same way — grep landed rationale for the
+  retired framing) to the ruled pattern. TDD; one seam family per commit.
 
 **OUT-OF-SCOPE additions (utterly irrelevant, recorded):** `ci-schema-drift-{check,eval}` (fetches Oak's
 curriculum-API swagger against Oak's SDK cache — product-coupled; the _advisory-drift-gate pattern_ is free to

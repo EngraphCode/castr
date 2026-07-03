@@ -20,7 +20,8 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   the use-result-pattern non-bring grounds; the rescan's "tension" item) was a FALSE DICHOTOMY
   laundered across surfaces — inherited-classification family, at the DOCTRINE level this
   time. principles.md's Result examples stand. Scope-of-reach (bring the rule? migrate D4
-  seams?) re-asked, pending. Lesson: when two doctrines look opposed, check whether they
+  seams?) re-asked and DECIDED same session: FULL reach — the rule becomes a bring, the D4
+  seams get a named migration slice. Lesson: when two doctrines look opposed, check whether they
   actually COMPOSE before recording a "tension" — a tension entry repeated verbatim across
   surfaces gains false authority exactly like a blocked/thin label.
 - **Owner process correction: questions go through the AskUserQuestion tool, never prose-only**

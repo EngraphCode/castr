@@ -1,9 +1,9 @@
 # Archive PII scrub — mechanise the pre-publish precondition (Q-008)
 
 **Status:** ACTIVE (owner-decided 2026-07-03: "mechanise scrub now"; supersedes Q-008's
-open/publish-gated framing). **Owner fork pending:** tool shape — build the rewriting scrub
-now, detector-only now, or plan-first (asked 2026-07-03, re-ask queued; the plan below is
-required under every answer).
+open/publish-gated framing). **Tool shape DECIDED (owner, same day): FULL TOOL** — both
+`--check` and `--write` land as slice 1, TDD, in the next implementation session (this plan is
+the controlling artefact; the 2026-07-03 consolidation session landed the plan and records).
 
 ## Context
 

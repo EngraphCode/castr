@@ -97,10 +97,16 @@ after a formatter) + the repo `type-enum` override note (no `ci` type); `testing
 gained the coverage-is-a-signal corollary (higher-level suites deliberately not coverage-fed);
 `distilled.md` gained the tsx-enclave and scanning-settings-can-disable-a-workflow lessons + the
 zsh-arrays refinement; the oak-backflow ledger gained three measured rows (statusline WS4.1 seam,
-absent-registry solo-floor fix, coverage wiring). Buffers at rest: `open-questions` holds only the
-two owner-facing items (Q-008 publish-PII, Q-010 Result-vs-fail-fast; Q-009/Q-011 drained, homes
-verified); `pending-graduations` holds only the trigger-gated loop-closure item (LC3b/3d/4/5
-outstanding). Fitness at rest: nothing worse than soft. Napkin NOT rotated (below threshold).
+absent-registry solo-floor fix, coverage wiring). Buffers at rest (post-walk): `open-questions`
+EMPTY — Q-009/Q-011 drained (homes verified); Q-008 DECIDED mechanise-now → the
+`archive-pii-scrub` plan (full `--check`/`--write` tool = next implementation slice; two-layer
+publish precondition incl. the git-history layer); **Q-010 RULED (owner): Result and fail-fast
+COMPOSE — `Result<T,E>` is the correct pattern AND fail-fast is required everywhere; the
+fail-fast-therefore-no-Result framing is RETIRED, FULL reach** (use-result-pattern becomes a
+bring; a D4-seam Result-migration slice is named — both in the gap-rescan backlog §Owner-ruling
+additions). `pending-graduations` holds only the trigger-gated loop-closure item (LC3b/3d/4/5
+outstanding; owner-walked, confirmed genuinely event-gated). Fitness at rest: nothing worse
+than soft. Napkin NOT rotated (below threshold).
 Experience audit clean — the emergent cross-read (a confident frame invalidated by a default that
 should load earlier) is already captured as `passive-guidance-loses-to-artefact-gravity`. Queue
 residue: four self-documenting abandoned intents left in place (no sanctioned CLI cleanup; work
