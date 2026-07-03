@@ -37,6 +37,8 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
 | claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor     | 2026-06-27    | 2026-06-27   |
 | claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-28   |
+| claude-code | claude-fable-5     | 540603            | Penumbral Slipping Moth        | executor     | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor     | 2026-07-03    | 2026-07-03   |
 
 ## Lanes
 
@@ -44,8 +46,12 @@ A lane is an independently pickup-able arc — its own state, branch, and pickup
 trigger, active OR deferred. Branch is `feat/transplant-engraph-practice`
 for every lane (single-branch invariant) until the split-PR delivery (D3-gated).
 
-> **🧭 FOLDED (2026-06-28): Axis-A next-step source is the single backlog
-> [`../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md`](../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md).**
+> **🧭 FOLDED (2026-06-28; DELTA-AMENDED 2026-07-03): Axis-A next-step source is the single backlog
+> [`../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md`](../../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md)
+> — now carrying the §Delta amendment (2026-07-03) from the owner-directed OCE↔castr delta review
+> ([`oak-castr-delta-review-2026-07-03.md`](../../../plans/transplant/oak-castr-delta-review-2026-07-03.md), complete);
+> the owner-directed statusline+logo-pipeline lane LEADS the updated sequencing
+> ([manifests](../../../plans/transplant/statusline-logo-bring-manifests-2026-07-03.md)).**
 > The **Oak Parity-or-Better Program**, **transplant completeness**, and **Practice loop-closure remediation** lanes
 > below are FOLDED into it (their items are its Tier-1/2 entries; the lanes/plans are retained for as-built + detail).
 > Still-separate parallel lanes (NOT Axis A): dependency-currency (DC3–5), first-run friction-fix, hook-matcher

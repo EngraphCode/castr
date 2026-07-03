@@ -2,8 +2,55 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-03 (owner-directed OCE↔castr delta review + statusline/logo manifests — Windswept Winging Cliff / 0ceb5f)
+
+- **A DELTA rescan against a verified base map is the right-sized answer to "review both repos again" — and it is
+  the SECOND instance of the multi-agent audit-harness pattern (graduation candidate per the 2026-06-28 distilled
+  entry).** Oak had moved 244 commits in 5 days; re-running the 49-agent full rescan would re-derive verified
+  truth. Shape that worked: firsthand ground-truth set-diffs FIRST (name-status by surface, statusline/logo
+  inventories, new-PDR heads — all before any agent ran), then classify→adversarial-verify per lane + directed
+  manifest agents + a completeness critic scoped to NAMING UNCOVERED SURFACES ONLY (its presence-verdict failure
+  mode guarded by prompt), then ≥13 firsthand re-checks of every tier-gating claim. The verify+critic layers earned
+  their cost: 1 refuted lane claim (said castr lacks PDR-078 — castr has it), 1 substantive coverage gap (ADR-127
+  amendment), and the critic caught whole surfaces the lane pathspecs missed (.husky encoding gate,
+  agent-tools/package.json script deltas, patterns/reports planes, root files, the deletions/renames modality —
+  `git show main:<path>` ERRORS on deleted paths, so head-reading lanes silently skip them; enumerate
+  `--diff-filter=DR` separately).
+- **A lane-file shared by two scoped lanes produces a FALSE scope-completeness disagreement** — the a2 verifier
+  flagged a1's 70 corpus paths as "uncovered" because both lanes read the same list file with prose scope splits.
+  Cure next time: give each lane a pre-split file, or tell verifiers the sibling scopes. Union check (a1+a2 = list
+  total) resolved it firsthand.
+- **Oak renamed `consolidate-at-third-consumer` → `consolidate-at-SECOND-consumer` (R100 rename; the threshold
+  doctrine change itself predates the window) — castr's copy verified still on the OLD third-consumer body.**
+  A rules re-sync wave is now in the backlog amendment; the rename leads it as a doctrine change (rule + adapters +
+  RULES_INDEX + citation ripple).
+- **The statusline/logo art seam is mechanism-vs-brand-BYTES, not file boundaries** — only `oak-logo.ts` frame
+  constants (+ their test byte-pins) and the research renders/payloads are art; the cycle engine, frame store, and
+  column composition are brand-free. AND `statusline-logos.md` embeds the acorn SVG under an explicit Oak
+  copyright notice — a bring that copied the "docs" wholesale would have committed Oak's copyrighted mark into
+  castr. Manifest determination: method comes, SVG does not.
+- **Host-load over-read confirmed as a known class:** my session-open stop-and-surface reflex on load-avg 8.77/8
+  cores was the exact macOS over-read Oak's amended `no-unbounded-host-load` §4 now documents (macOS healthy load
+  sits above core count; use CPU-idle% + memory-pressure). The amendment is in the re-sync wave — the rule cured
+  my own false caution within the same session it was discovered.
+- **n=2 live coordination worked end-to-end with a mid-work joiner:** team-start broadcast → Moth ACK with
+  landing-state correction (my "leftover dirty tree" read was their live commit window — the aside from the owner
+  reframed it before I touched anything) → disjoint boundaries → their prettier pre-push repair of my in-flight
+  plan file broadcast as a heads-up (reload-before-write honoured). The session-start-snapshot-goes-stale memory
+  fired twice for real.
+
 ## 2026-07-03 (dependency currency + action pins + 14 Codex threads fix-or-reject — Penumbral Slipping Moth / 540603)
 
+- **THREE OWNER CORRECTIONS (late-session, all absorbed + comms-corrected to the peer):** (1) a decided
+  question stays decided — I re-surfaced the already-answered Code Quality keep-vs-cost as a "pending
+  owner decision"; don't re-litigate. (2) **Merge posture updated: the owner DOES intend to merge PR #3**
+  — merge authority is the owner's, invoked explicitly; the agents' STANDING responsibility is keeping
+  the branch continuously merge-correct and merge-safe (supersedes the older "delivery deprioritised /
+  not in a rush" posture as the operative frame). (3) **Whole-repo gates are a choice and a necessity,
+  never "friction"** — my candidate cure "scope the pre-push format gate to tracked/staged files" was
+  the gate-weakening reflex (never-disable-checks family); for two agents the whole answer is
+  COORDINATION (format docs the turn you author them; coordinate commit/push windows). The friction-lane
+  routing of that item is retracted (comms `dfa31ec8` to Cliff).
 - **OWNER DIRECTIVE (standing, recorded to user-memory `pr-threads-fix-or-reject`):** every PR review
   thread resolves by FIX or measured REJECT in the same work item; "lower priority" deferral is never
   acceptable anywhere in the repo including GitHub. I had recommended "fix the P1s, then resolve" —

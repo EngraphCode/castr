@@ -96,9 +96,9 @@ adjudicating presence.
   ruleset (a GitHub repo setting, not expressible in-repo) — now unblocked (CI is proven green). _Was the
   single biggest integrity hole = the long-tracked LC5 finding._ **Future enhancements (not gaps):**
   (a) Oak splits this into parallel per-check jobs with a `run-quality-gates` fan-in; castr's single job is
-  correct + simpler-appropriate. (b) Bump the workflow's action versions — `actions/checkout@v3`,
-  `actions/setup-node@v3`, `pnpm/action-setup@v2` (Node-20, force-run on 24) and CodeQL `@v2` (deprecated → v3)
-  — to SHA-pinned current majors (Oak's pattern) in a CI-hardening pass.
+  correct + simpler-appropriate. (b) ✅ **DONE 2026-07-03 (`cec8bce`, verified firsthand):** every ci.yml action is
+  SHA-pinned at current majors (Oak's pattern), plus a fail-loud workspace-coverage-enumeration guard. Also since:
+  CodeQL moved to GitHub default setup (`ea8fc1f`), superseding this entry's "CodeQL retained" wording.
 - **No secret scanning** ✅ **DONE (qg side) 2026-06-28 (`ec53da7`)** — brought a castr-localised
   `.gitleaks.toml` (useDefault + reference-docs/test-fixture/SHA-prefix allowlists; dropped Clerk +
   SonarCloud-key + Oak wide-sweep-commit + OAK/Notion-rule items) and the `secrets:scan{,:all,:all-refs}`
@@ -170,8 +170,9 @@ adjudicating presence.
 - markdown-links validator (HOLLOW) — present, byte-identical to Oak, invoked by no gate. Append to
   `repo-validators:check` (report-only; flip blocking after a link-remediation pass).
 - dependency-review supply-chain gate (LACK) — `.github/workflows/dependency-review.yml`.
-- release workflow (HOLLOW) — castr's `publish.yml` calls a non-existent `pnpm release` via changesets
-  with no `.changeset`. Repair (changesets path) or adopt Oak's semantic-release shape; don't leave broken.
+- release workflow — **RESOLVED-BY-DELETION 2026-07-03 (verified: `ea8fc1f` removed the broken `publish.yml`;
+  don't-leave-broken satisfied).** A real release pipeline remains the thread record's release-automation lane
+  (owner-decided changesets, execution deferred until delivery is scheduled) — tracked there, not here.
 - shell-lint gate (LACK) — `bash -n` over castr's own `.sh`; wire into `qg`+CI.
 - stryker mutation testing (LACK) — `stryker.config.base.ts` + 3 devdeps + script (manual-run posture).
 - tsdoc enforcement (HOLLOW) — `tsdoc.json` + `eslint-plugin-tsdoc`; the landed `engraph-tsdoc` skill
@@ -235,7 +236,8 @@ Conditional: `working-with-graphs`, `ground-truth-design/-evaluation` (bring if 
 
 **Hooks-policy** (LACK) — `indefinite-deferral` scoped_block (3 coordinated surfaces) + `.agent/hooks/README.md` (Policy Spine doc).
 
-**PDRs** (LACK — 23: Oak 096–105, 107–119; Oak has no 106). **NUMBER COLLISION: castr's own PDR-096 (bring-the-iceberg)
+**PDRs** (LACK — **27 as of the 2026-07-03 delta amendment**: Oak 096–105, 107–123; Oak has no 106; 120–123 are new
+since the rescan — see §Delta amendment). **NUMBER COLLISION: castr's own PDR-096 (bring-the-iceberg)
 and PDR-097 (dependency-currency) occupy those numbers — renumber the Oak imports before landing.** Overwhelmingly
 Practice-governance (decision-debt pillar, graduation-quorum, director/implementer roles, agent-work-state-model,
 memory-as-event-graph, falsifiable-judgment-gate, reference-direction-invariants, agent-experience-first-class,
@@ -251,7 +253,12 @@ preserve castr's deliberate localisations (e.g. `fitness_char_limit`).
 `.agent/collaboration/rapid-comms/` channel + the watcher-pairing clause + the statusline wing modules.
 
 **Statusline coordination** (HOLLOW/LACK) — session-shape resolver, fail-loud git-io/location, coordination indicators,
-segment builder, ANSI palette (`agent-tools/src/claude/statusline-*.ts`); + Cursor statusline wiring. (oak-logo art = OUT-OF-SCOPE.)
+segment builder, ANSI palette (`agent-tools/src/claude/statusline-*.ts`); + Cursor statusline wiring. **OWNER-DIRECTED
+NEAR-TERM 2026-07-03 (bring the enhanced statusline code+config; no oak logo art, all logo-handling/creation code):
+per-file execution manifests + determinations in
+[`statusline-logo-bring-manifests-2026-07-03.md`](./statusline-logo-bring-manifests-2026-07-03.md)** — supersedes this
+entry's coarse "(oak-logo art = OUT-OF-SCOPE)" note with the precise art/code seam; includes the post-rescan
+usage-gauge/countdown modules (worktree-rows arc, delivered upstream 2026-06-29).
 
 ## Tier 3 — low yield / conditional / owner-gated
 
@@ -295,5 +302,129 @@ Product-coupled to Oak's curriculum/web stack, no castr analogue:
 Tier 1 is the priority spine (security + enforcement-integrity + coordination-safety). Within it, **trusted-git
 first** (it unblocks coordination-home + statusline-git-io), then the CI/gitleaks enforcement-integrity pair, then the
 collaboration-safety cluster (watcher-deadline, provenance+archive, handoff). Tier 2 brings the bulk of the Practice
-completeness in any order (most items are independent, reversible — bring freely per PDR-005). The 23 PDRs land as a
+completeness in any order (most items are independent, reversible — bring freely per PDR-005). The PDRs land as a
 renumbered batch with the collision resolved. Each bring is its own TDD/validator-gated slice where it is product code.
+**Sequencing updated by the 2026-07-03 delta amendment below (owner-directed statusline lane now leads).**
+
+## Delta amendment (2026-07-03) — Oak main since the rescan window
+
+Produced by [`oak-castr-delta-review-2026-07-03.md`](./oak-castr-delta-review-2026-07-03.md) (Windswept Winging
+Cliff / 0ceb5f): Oak advanced **244 commits / 365 delta paths on bring-relevant surfaces** since this doc's window.
+Method: 14-agent classify→adversarial-verify workflow (`wf_929147cf-1a5`) + completeness critic + firsthand
+re-verification of every tier-gating claim (13 named checks incl. every falsification candidate; the one refuted lane
+claim — "PDR-078 absent in castr" — was corrected: castr HAS PDR-078). All ~365 delta paths carry a recorded
+disposition across the classify lanes + the critic's residual groups (disposition-ledger discipline; raw per-path
+lists in the workflow transcript).
+
+### NEW capabilities (delta additions to the tiers)
+
+**Tier 1 additions (enforcement / coordination-safety / knowledge-integrity):**
+
+- **Encoding-integrity gate** — `agent-tools/src/encoding/` (7 files: invalid-UTF-8 / BOM / bidi + control
+  (Trojan-Source) / U+FFFD scanner) + root `encoding:check` proxy + Oak wires it BLOCKING in pre-push. castr lacks
+  the whole class.
+- **`trusted-gh`** — `agent-tools/src/core/trusted-gh.ts` (+test): the S4036 PATH-hijack fix applied to `gh`;
+  joins castr's landed trusted-git cluster.
+- **Coordination-safety hardening cluster** (extends the existing watcher/claims Tier-1 items):
+  `watcher-supervisor.ts` (F-101 supervisor-death self-exit via `--supervisor-pid`), `peer-liveness.ts` (F-75
+  PDR-078 liveness classifier as `comms peer-liveness`; castr HAS PDR-078 — this is its read-model),
+  `work-state-view.ts` (F-98 `claims work-state`: git-worktree ⋈ heartbeat ⋈ claim per-worktree view — pairs with
+  the PDR-118 backlog item), `claim-{active,closed}-path.ts` (claims-CLI coordination-home defaulting,
+  F-85/F-108/F-89), `git-worktree-list.ts`, `cli-spec-factory.ts` (registry plumbing), and `--in-response-to`
+  acknowledgement edges on comms send/append (F-77).
+- **Agentic-judgment doctrine** — new always-on rule `agentic-judgment-conserve-by-default.md` + **PDR-122**
+  (judgment pipelines: atomic LLM judgment, deterministic aggregation, no irreversible discard on a single voter)
+  - **PDR-123** (design panels). The doctrine is Tier-1 knowledge-integrity; the mechanism suite is Tier 2 below.
+
+**Tier 2 additions:**
+
+- **Corpus-analysis / judgment-pipelines suite** (the dominant delta: ~70 files + templates + build chain) —
+  `agent-tools/src/corpus-analysis/` (schemas + frozen deterministic aggregation incl. the measured ~80%
+  single-voter false-kill cure; workflow stage entries + esbuild self-contained-harness build subsystem with
+  canary-enforced output contract; post-run recompute/triage/salvage legs), the four `corpus-*` sub-agent
+  templates + workflow wiring, and the supporting runbook reports. Generic Practice machinery (proven on Oak's
+  napkin corpus — castr has the same convention). Bring costs verified firsthand: `esbuild` devDep (absent in
+  castr), four package.json scripts, Result→throw adaptation (~25 files use `@oaknational/result` — castr's
+  deliberate non-bring), prompt re-anchoring. Its own multi-slice lane.
+- **`session-metadata` topic** (15 files): vendor-transcript locator + token-usage + context-window registry +
+  window computation, surfaced as `agent-tools session-metadata`.
+- **`spawn` topic** (~21 files): one command creates/resumes a sibling worktree from a base ref, builds it, opens
+  a draft PR, emits a seat brief — the spawn-flow for multi-agent seats.
+- **`pr-lifecycle` skill** (new) — open-PR-to-merge-ready shepherding (GraphQL review-thread harvest,
+  root-cause-first triage); pairs with the existing pr-watch LACK item (which Oak also extended since the window).
+- **`prose-expert` reviewer template** (new) — universal prose-craft reviewer; castr's editorial layer would
+  re-anchor to castr voice.
+- **PDR-120** (runbooks are a content kind, not a surface — routes runbook content through skills/reference/plans)
+  - **PDR-121** (planning vocabulary; portable half of Oak ADR-209) — the PDR batch is now **27** (096–105,
+    107–123), renumber-for-collision unchanged.
+- **Sub-agent frontmatter schema validator upgrade** — `validators/subagents/frontmatter-schema.ts` replaces the
+  regex three-field check castr currently has (verified castr's `REQUIRED_FRONTMATTER_FIELDS` form); plus ADR-125
+  amendment: `model` optional in wrappers (inherit invoking model) — fans across all generated adapters on regen.
+- **24 new pattern files** under `.agent/memory/active/patterns/` (castr has the plane, 134 files — content bring)
+  - **8 new experience files** (instances stay Oak; the experience-modality bring is already a Tier-2 item) +
+    reports-plane runbooks (amends the analysis/reports plane item).
+- **ADR-207 DORA-as-structural-property** (adapt-concept; coupled to Oak's intent-graph — concept-level bring
+  only) and **docs/operations runbook-index convention** (PDR-120's host expression), **testing-patterns
+  additions** (rendered-output assertions; rides the validation-strategy bring), **troubleshooting known-gate-caveats**
+  (portable gate gotchas).
+
+**Tier 3 additions:** `cli-arg-parser`/`command-runner`/`path-exists` core utilities (ride along with their
+consumers), `.mcp.json.example` mcpjam pin (amends the Tier-3 MCP item), pnpm-workspace scoped-override pattern.
+
+**OUT-OF-SCOPE additions (utterly irrelevant, recorded):** `ci-schema-drift-{check,eval}` (fetches Oak's
+curriculum-API swagger against Oak's SDK cache — product-coupled; the _advisory-drift-gate pattern_ is free to
+re-derive if castr ever caches vendor schemas), `packages/sdks/*` + `apps/*` churn (Oak product), `docs/strategy`,
+Oak session/coordination state churn (plans/memory/reports instance content, hawthorn handoff deletions,
+dated team prompts).
+
+### AMENDS — existing entries updated by the delta (re-sync ledger)
+
+- **Doctrine re-sync wave (rules/skills/directives castr already carries):** Oak renamed
+  `consolidate-at-third-consumer` → **`consolidate-at-second-consumer`** (threshold-lowering doctrine change;
+  **castr's copy verified still on the OLD third-consumer body** — rule + adapters + RULES_INDEX + citation ripple
+  to re-sync); 18 amended rules (highest-value verified: `verify-dont-trust` ×4 additions incl.
+  self-state-claims-verify-first; `comms-all-channels-watcher` + `use-monitor-for-event-driven-wake` gain the
+  `--supervisor-pid` orphan cure; `no-unbounded-host-load` §4 macOS-correct saturation signals — load-avg on macOS
+  over-reads, use CPU-idle% + memory-pressure; `precedence-is-not-approval` recorded-grants-are-claims;
+  `present-verdicts-not-menus` no-deferral-status-lines; `hook-policy-substring-discipline` known-git-over-blocks
+  section; `ship-independent-coordinate-dependent` same-lines dependence test); skills doctrine wave
+  (`consolidate-docs` +112 / `consolidate-until-done` +90: impact-placement conservation; `semantic-merge`
+  mechanical losslessness proof; `start-right` macOS host-health commands; `start-right-team` standby-seat
+  contract; `commit` adapter-regen cwd fix castr already knows); directives (`principles.md` **Documentation Is
+  Infrastructure** section ← ADR-127 §5 amendment; `testing-strategy` prove-behaviour-never-config;
+  `agent-collaboration` liveness-asymmetry; `continuity-practice` curation runbook; `user-collaboration` ×3).
+- **PDR amendments castr must fold into pending brings:** PDR-014 (third→second consumer, pairs with the rule
+  rename), PDR-063 (+34 lines effectiveness-window), PDR-117 (+42 routing craft) / PDR-118 — the pending PDR batch
+  takes the AMENDED versions; ADR-127 gains §5 (design principles apply to documentation) — the Tier-1
+  Oak-ADR-cite-repair item brings the amended ADR-127.
+- **Statusline entry** — superseded in place above (owner-directed; manifests doc).
+- **pr-watch** — Oak extended it since the window; the LACK entry's bring takes current main.
+- **`.claude/settings.json`** — worktree-safe `${CLAUDE_PROJECT_DIR}` statusline command + `refreshInterval: 10`
+  (rides the statusline lane); **`daily.md`** grew (rides the prompt-library item); collaboration-state schema
+  comment clarifications (freshness_seconds ≠ liveness) ride the schema brings.
+
+### castr-side re-verification (2026-07-03)
+
+All six Tier-1 DONE items re-verified holding on the current branch (named checks in the workflow transcript);
+still-open Tier-1 items re-confirmed still open (provenance/archive-move, claims-handoff, plan-templates,
+markdown-links unwired). Backlog-state corrections applied in place above: release-workflow resolved-by-deletion;
+CI action-pinning done (`cec8bce`); CodeQL default-setup. castr_extras additions since the window (Oak back-flow
+candidates): v8 coverage wiring + ruleset floors (`33bddbc`), the 23-package dependency-currency sweep +
+audit-to-zero, commit-queue/hook-policy hardening from the Codex-findings closure (`c6df0f8`/`b0355e4`).
+
+### Updated sequencing (single spine)
+
+1. **Statusline + logo-pipeline lane (owner-directed, leads):** slices S1–S3 per
+   [`statusline-logo-bring-manifests-2026-07-03.md`](./statusline-logo-bring-manifests-2026-07-03.md); castr-mark
+   authoring is the owner-shaped follow-on.
+2. **Tier-1 continuation as already sequenced:** pre-archive provenance + archive-move → claims-handoff
+   (LC3b/PDR-063 amended) → markdown-links wiring + Oak-ADR cite-repair (ADR-127 amended) → plan-templates (TC2;
+   bring current templates README).
+3. **Tier-1 delta insertions, batched with their clusters:** encoding gate (own slice); trusted-gh (rides the next
+   agent-tools slice); coordination-safety hardening cluster (watcher-supervisor + peer-liveness + work-state-view
+   - claim-path defaulting — one lane, extends LC-era brings); agentic-judgment rule + PDR-122/123 doctrine (rides
+     the PDR batch or lands ahead of any new judgment-pipeline work, whichever comes first).
+4. **Doctrine re-sync wave** (the AMENDS ledger above — batchable, mostly mechanical semantic re-syncs; the
+   consolidate-at-second-consumer rename leads it as a doctrine change).
+5. **Corpus-analysis/judgment-pipelines suite** (own multi-slice lane; largest bring).
+6. **PDR batch (27, renumbered)** + the remaining Tier-2 flow as before.

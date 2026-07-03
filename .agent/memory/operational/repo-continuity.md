@@ -110,6 +110,22 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **🧭 CURRENT TRUTH (2026-07-03, Windswept Winging Cliff / 0ceb5f): the Axis-A backlog is DELTA-CURRENT and the
+> owner-directed STATUSLINE + LOGO-PIPELINE lane now LEADS the sequence.** Owner directive this session: full
+> OCE↔castr review; bring the enhanced statusline code+config; NO oak logo art, ALL logo-handling/creation code
+> (castr authors its own mark later). Executed as a delta review (Oak moved 244 commits since the 2026-06-28
+> rescan): plan + as-built [`oak-castr-delta-review-2026-07-03.md`](../../plans/transplant/oak-castr-delta-review-2026-07-03.md);
+> the verified **§Delta amendment (2026-07-03)** now lives IN the single backlog
+> [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (new Tier-1:
+> encoding gate, trusted-gh, coordination-safety hardening cluster, agentic-judgment doctrine PDR-122/123 + rule;
+> new Tier-2 headline: the ~70-file corpus-analysis judgment-pipelines suite; PDR batch now 27; doctrine re-sync
+> wave incl. the consolidate-at-third→SECOND-consumer rename castr still lags). **The single next execution slice =
+> statusline S1** per the per-file manifests + 8 determinations in
+> [`statusline-logo-bring-manifests-2026-07-03.md`](../../plans/transplant/statusline-logo-bring-manifests-2026-07-03.md)
+> (then S2 Cursor wing, S3 logo pipeline, then the Tier-1 continuation below unchanged: provenance+archive-move →
+> claims-handoff → markdown-links wiring + Oak-ADR cite-repair → plan-templates). n=2 session note: Penumbral
+> Slipping Moth landed `7f53bd2` + watched CI this window; team ceremony (watcher/heartbeat/claims/comms) ran live.
+>
 > **🧭 SINGLE FRONTIER (2026-06-28) — this block + the one below are the ONLY current "what's next"; every dated block
 > further down is history (superseded on next-step).** The "one deep enhancement" has **three axes**: **(A)
 > transplant/parity** — ACTIVE; its single ordered backlog is
