@@ -29,7 +29,7 @@
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { parseCollaborationRegistry } from '../collaboration-state/state-parsers.js';
@@ -39,6 +39,7 @@ import { readRegistryWithSoloFloor } from './statusline-registry-read.js';
 import { BOLD, RED, RESET } from './statusline-ansi.js';
 import { createFsFrameStore, LOGO_FRAME_STATE_DIR } from './statusline-frame-store.js';
 import { gatherGitFacts } from './statusline-git-io.js';
+import { resolveDirLabel } from './statusline-git-location.js';
 import { planStatuslineExecution, type StatuslinePlan } from './statusline-identity-input.js';
 import { isMotionDisabled, readAndAdvanceFrame } from './statusline-logo-cycle.js';
 import { renderStatusline } from './statusline-render.js';
@@ -81,7 +82,7 @@ function renderFromInputs(inputs: Extract<StatuslinePlan, { kind: 'render' }>['i
   return renderStatusline(
     {
       identity,
-      dir: basename(cwd),
+      dir: resolveDirLabel(git.checkoutRoot, cwd),
       branch: git.branch,
       dirty: git.dirty,
       worktree: git.worktree,

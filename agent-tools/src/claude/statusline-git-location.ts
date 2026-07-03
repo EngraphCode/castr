@@ -19,6 +19,7 @@
  *
  * @packageDocumentation
  */
+import { basename } from 'node:path';
 
 /** A raw git invocation result, as produced by `spawnSync('git', …)`. */
 export interface GitExit {
@@ -215,4 +216,27 @@ export function parsePrimaryWorktreeRoot(porcelainOutput: string): string | unde
   }
   const path = firstLine.slice('worktree '.length).trim();
   return path.length === 0 ? undefined : path;
+}
+
+/**
+ * Resolve the statusline's directory label: the name of the directory the
+ * CHECKOUT is in (the working tree's top level — a linked worktree's own
+ * directory when the session works in one), not whatever subdirectory the
+ * session's shell happens to be visiting. Outside any repository there is no
+ * checkout, so the label soft-falls-back to the working directory's own name —
+ * the same fallback also covers a best-effort top-level probe that failed
+ * cosmetically inside a repo (the module's degrade-softly contract).
+ *
+ * Owner determination (2026-07-03): the title row names the checkout, so a
+ * session parked in a deep subdirectory still reads as the repo it is working
+ * on. (This deliberately diverges from the brought behaviour, which labelled
+ * the current working directory; recorded as an Oak back-flow suggestion.)
+ *
+ * @param checkoutRoot - The checkout's top-level directory, or `undefined`
+ *   outside a repository.
+ * @param cwd - The session's working directory (the fallback label source).
+ * @returns The directory label to render.
+ */
+export function resolveDirLabel(checkoutRoot: string | undefined, cwd: string): string {
+  return basename(checkoutRoot ?? cwd);
 }

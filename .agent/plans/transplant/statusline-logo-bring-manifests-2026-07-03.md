@@ -66,7 +66,16 @@ determination under standing doctrine, none an owner gate:
    an explicit Oak National Academy copyright notice — that SVG and every acorn
    render/payload MUST NOT enter castr. The method/recipe/generators come; the mark
    does not.
-8. **Iceberg additions the manifests surfaced:** export castr's private `isClaimStale`
+8. **Title-row dir label names the CHECKOUT, not the cwd (owner determination,
+   2026-07-03, post-S1):** the brought behaviour rendered `basename(current_dir)`, so a
+   session shell parked in a subdirectory titled the row with that subdirectory (worked
+   instance: `comms`). Owner ruled the label must be the checkout's directory name.
+   Landed as `resolveDirLabel(checkoutRoot, cwd)` (pure, unit-tested): the working
+   tree's top-level basename inside a repo (a linked worktree's own directory when in
+   one), cwd basename only outside any repository. A deliberate castr divergence from
+   the as-brought behaviour, recorded as an Oak back-flow suggestion in the innovations
+   ledger — not a layout fork (determination 3 stands).
+9. **Iceberg additions the manifests surfaced:** export castr's private `isClaimStale`
    (verify the two bodies agree — a divergence silently changes claim-staleness
    semantics repo-wide); `statusline-usage` needs no session-metadata dependency
    (gauges read the vendor stdin `rate_limits` fields via `statusline-identity-input`),

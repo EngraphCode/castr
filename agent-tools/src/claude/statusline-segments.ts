@@ -34,7 +34,10 @@ import { formatContext, rateLimitGauge } from './statusline-usage.js';
 export interface StatuslineParts {
   /** Deterministic agent-identity display name (PDR-027). */
   readonly identity: string | undefined;
-  /** Current workspace directory basename. */
+  /**
+   * Checkout directory name: the working tree's top-level basename (owner
+   * determination 2026-07-03); the cwd basename only outside a repository.
+   */
   readonly dir: string;
   /** Current git branch (or short SHA), if inside a repository. */
   readonly branch: string | undefined;

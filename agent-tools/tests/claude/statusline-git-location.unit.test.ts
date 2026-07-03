@@ -12,6 +12,7 @@ import {
   coordinationToParts,
   countWorktrees,
   parsePrimaryWorktreeRoot,
+  resolveDirLabel,
   selectCoordinationBranch,
 } from '../../src/claude/statusline-git-location';
 
@@ -269,5 +270,27 @@ describe('parsePrimaryWorktreeRoot', () => {
     expect(parsePrimaryWorktreeRoot('')).toBeUndefined();
     expect(parsePrimaryWorktreeRoot('fatal: not a git repository')).toBeUndefined();
     expect(parsePrimaryWorktreeRoot('worktree ')).toBeUndefined();
+  });
+});
+
+describe('resolveDirLabel', () => {
+  it('shows the checkout directory name, not the subdirectory the session is in', () => {
+    expect(resolveDirLabel('/pretend/code/castr', '/pretend/code/castr/.agent/state')).toBe(
+      'castr',
+    );
+  });
+
+  it('shows the checkout directory name at the checkout root itself', () => {
+    expect(resolveDirLabel('/pretend/code/castr', '/pretend/code/castr')).toBe('castr');
+  });
+
+  it('shows the linked-worktree checkout name when the session works in one', () => {
+    expect(resolveDirLabel('/pretend/code/castr-wt-fix', '/pretend/code/castr-wt-fix/lib')).toBe(
+      'castr-wt-fix',
+    );
+  });
+
+  it('falls back to the working-directory name outside any repository', () => {
+    expect(resolveDirLabel(undefined, '/pretend/scratch')).toBe('scratch');
   });
 });

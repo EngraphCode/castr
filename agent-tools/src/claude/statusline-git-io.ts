@@ -48,6 +48,12 @@ export interface GitFacts {
   readonly error: string | undefined;
   /** The primary checkout root, for the coordination-shape reads. */
   readonly primaryRoot: string | undefined;
+  /**
+   * The working tree's top-level directory (a linked worktree's own directory
+   * when the session works in one); `undefined` outside a repository. Feeds the
+   * title row's directory label, which names the checkout rather than the cwd.
+   */
+  readonly checkoutRoot: string | undefined;
 }
 
 /**
@@ -72,6 +78,7 @@ export function gatherGitFacts(cwd: string): GitFacts {
     coordinationPlace: coordination.coordinationPlace,
     error: combineErrors(working.error, coordination.error),
     primaryRoot,
+    checkoutRoot: working.checkoutRoot,
   };
 }
 
@@ -79,6 +86,8 @@ interface GitState {
   readonly branch: string | undefined;
   readonly dirty: boolean;
   readonly worktree: string | undefined;
+  /** The working tree's top level; `undefined` outside a repository. */
+  readonly checkoutRoot: string | undefined;
   /** A loud branch-resolution failure; `undefined` when resolved or outside a repository. */
   readonly error: string | undefined;
 }
@@ -88,7 +97,7 @@ function gatherGitState(cwd: string): GitState {
   if (branch === undefined) {
     // No branch — outside a repository (valid, no error) or a loud failure.
     // Either way there is no dirty/worktree detail to gather.
-    return { branch: undefined, dirty: false, worktree: undefined, error };
+    return { branch: undefined, dirty: false, worktree: undefined, checkoutRoot: undefined, error };
   }
 
   // Cosmetic sub-details degrade softly: a failed dirty-check or worktree probe
@@ -105,7 +114,7 @@ function gatherGitState(cwd: string): GitState {
       ? basename(topLevel)
       : undefined;
 
-  return { branch, dirty, worktree, error: undefined };
+  return { branch, dirty, worktree, checkoutRoot: topLevel, error: undefined };
 }
 
 /**

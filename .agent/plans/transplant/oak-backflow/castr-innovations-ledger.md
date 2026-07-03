@@ -26,6 +26,16 @@ before claiming it — Oak main moves.
 | Absent-registry → truthful-solo statusline fix                                 | Oak's session-shape resolver reads an ABSENT claims registry as `unknown` → blank team icon (a known Oak defect). castr fixed it in-slice: unit-proven three-way classification in `statusline-registry-read.ts` (ENOENT → empty registry → truthful solo; unreadable/corrupt stays `unknown`, never a false solo).           | 2026-07-03 S1 (firsthand during the bring): the defect exists in Oak's `statusline-session-shape` path; fix is castr-only.           | Direct back-flow as a defect fix + its four contract tests (known-issues-are-blocking precedent: fix in-slice, back-flow, never silent divergence). Source: `agent-tools/src/claude/statusline-registry-read.ts` + commit `7a37dec`.                      |
 | Coverage-as-signal CI wiring + fail-loud workspace-enumeration guard           | v8 coverage for in-process suites uploaded per-workspace (`actions/upload-code-coverage`), thresholds server-side in the ruleset (signal, not local gate); plus a CI guard that derives the workspace list from pnpm and fails the job if any workspace produced no coverage report — the enumeration can never rot silently. | 2026-07-03 (firsthand): `git -C <oak> show main:.github/workflows/ci.yml` contains zero coverage wiring.                             | Portable as-is — the enumeration guard generalises to any pnpm workspace repo; the signal-not-gate posture is doctrine Oak already shares in spirit. Source: `.github/workflows/ci.yml` coverage steps (Moth, 2026-07-03).                                |
 
+### Statusline dir-label semantics (owner-preference divergence, suggest upstream)
+
+The statusline title's directory label renders the CHECKOUT directory name
+(`resolveDirLabel`: working-tree top-level basename; linked worktree → its own directory
+name; cwd basename only outside a repository) instead of the brought `basename(current_dir)`
+— a session shell visiting a subdirectory no longer retitles the row (worked instance: a
+comms sweep left the title reading `comms`). Owner determination 2026-07-03; pure helper +
+unit tests in `statusline-git-location.ts`. Suggest to Oak as an option or default; castr
+holds it as a deliberate localisation either way.
+
 ## Practice insights / patterns castr has articulated
 
 | Insight                                                               | Statement                                                                                                                                                                                                                                                                                                                                                      | Back-flow note                                                                                                                                                                                                                                                                               |
