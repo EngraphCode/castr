@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 
+import { resolveTrustedGit } from '../core/trusted-git.js';
 import { type StagedBundle } from './types.js';
 
 const STAGED_PATCH_BUFFER_BYTES = 32 * 1024 * 1024;
@@ -45,7 +46,13 @@ export function getStagedBundle(input: GetStagedBundleInput): StagedBundle {
 }
 
 function runGit(repoRoot: string, args: readonly string[]): string {
-  return execFileSync('git', args, {
+  // The staged-bundle read feeds the fingerprint that record-staged,
+  // verify-staged, and the commit workflow trust, and the workflow's
+  // `git commit` already runs the trusted absolute binary (S4036). The
+  // reader must resolve the SAME trusted binary: a PATH-shadowed git here
+  // could report a matching fingerprint while the trusted commit writes
+  // different content.
+  return execFileSync(resolveTrustedGit(), args, {
     cwd: repoRoot,
     encoding: 'utf8',
     maxBuffer: STAGED_PATCH_BUFFER_BYTES,

@@ -29,6 +29,18 @@
           "reappraisal": "History here is append-only — never rewrite it with interactive rebase; layer corrections as new commits instead."
         },
         {
+          "pattern": "git rebase --interactive",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only — never rewrite it with interactive rebase (long or short spelling); layer corrections as new commits instead."
+        },
+        {
+          "pattern": "git commit --amend",
+          "concept": "history-destruction",
+          "citation": ".agent/rules/never-use-git-to-remove-work.md",
+          "reappraisal": "History here is append-only and roll-forward only — amending rewrites the previous commit; land the correction as a new commit instead."
+        },
+        {
           "pattern": "git --no-verify",
           "concept": "gate-bypass",
           "citation": ".agent/rules/no-verify-requires-fresh-authorisation.md",

@@ -118,6 +118,31 @@ describe('findBlockedPattern', () => {
     expect(findBlockedPattern('git add -- file.ts', patterns)).toBeNull();
     expect(findBlockedPattern('git add subdir/file.ts', patterns)).toBeNull();
   });
+
+  it('matches the VALUED spelling of a blocked long option while keeping distinct flags distinct', () => {
+    const pattern = 'git push --force-with-lease';
+    expect(
+      findBlockedPattern('git push --force-with-lease=main:0123abc origin', [pattern])?.pattern,
+    ).toBe(pattern);
+    // The = boundary keeps a shorter flag from covering a longer one and
+    // vice versa: the plain force pattern must not match the leased token.
+    expect(
+      findBlockedPattern('git push --force-with-lease=main:0123abc', ['git push --force']),
+    ).toBeNull();
+  });
+
+  it('matches the amend and long interactive-rebase history rewrites', () => {
+    expect(
+      findBlockedPattern('git commit --amend -F message.txt', ['git commit --amend'])?.pattern,
+    ).toBe('git commit --amend');
+    expect(
+      findBlockedPattern('git rebase --interactive HEAD~3', ['git rebase --interactive'])?.pattern,
+    ).toBe('git rebase --interactive');
+    // The no-amend negation must stay permitted.
+    expect(
+      findBlockedPattern('git commit --no-amend -F message.txt', ['git commit --amend']),
+    ).toBeNull();
+  });
 });
 
 describe('extractBashCommand', () => {

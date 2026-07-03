@@ -97,7 +97,21 @@ function tokensMatch(commandToken: string, patternToken: string | undefined): bo
   if (patternToken === undefined) {
     return false;
   }
-  return commandToken === patternToken || shortOptionClusterCovers(commandToken, patternToken);
+  return (
+    commandToken === patternToken ||
+    longOptionValuedFormCovers(commandToken, patternToken) ||
+    shortOptionClusterCovers(commandToken, patternToken)
+  );
+}
+
+/**
+ * A long option's valued spelling is the same flag: a valued force-with-lease
+ * push token must match its bare pattern token, or the valued form silently
+ * bypasses the guard. The `=` boundary keeps distinct flags distinct (a
+ * `--force` pattern does not cover `--force-with-lease`).
+ */
+function longOptionValuedFormCovers(commandToken: string, patternToken: string): boolean {
+  return patternToken.startsWith('--') && commandToken.startsWith(`${patternToken}=`);
 }
 
 /**

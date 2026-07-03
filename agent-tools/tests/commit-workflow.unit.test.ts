@@ -116,6 +116,8 @@ interface FakeDepsInput {
   readonly advisoryResult?: CommitWorkflowProcessResult;
   readonly gitCommitResult?: CommitWorkflowGitCommitResult;
   readonly nowSequence?: readonly string[];
+  /** First line the fake message file currently carries; defaults to the queued subject. */
+  readonly messageSubject?: string;
 }
 
 interface FakeDepsCallLog {
@@ -171,6 +173,7 @@ function fakeDeps(input: FakeDepsInput): {
       }
       return bundle;
     },
+    readMessageSubject: async () => input.messageSubject ?? subject,
     runAdvisoryOrchestrator: async () => {
       advisoryCalls.current += 1;
       return advisory;
@@ -200,6 +203,28 @@ function fakeDeps(input: FakeDepsInput): {
     },
   };
 }
+
+describe('runCommitWorkflow — message-file subject verification', () => {
+  it('abandons at verify-staged-before when the message file first line diverges from the queued intent subject', async () => {
+    const holder = holderFor(initialRegistry());
+    const { deps, calls } = fakeDeps({
+      holder,
+      stagedBundles: [matchingStagedBundle()],
+      messageSubject: 'feat: edited after enqueue',
+    });
+
+    const result = await runCommitWorkflow({ intentId, deps });
+
+    expect(result).toStrictEqual({
+      ok: false,
+      stage: 'verify-staged-before',
+      reason: 'commit subject does not match queued intent subject',
+      intentId,
+    });
+    expect(calls.gitCommitCalls.current).toBe(0);
+    expect(holder.current.commit_queue[0]?.phase).toBe('abandoned');
+  });
+});
 
 describe('runCommitWorkflow — successful commit landing', () => {
   it('removes the queued intent from the registry and reports the resulting SHA when staged tree matches and git commit succeeds', async () => {

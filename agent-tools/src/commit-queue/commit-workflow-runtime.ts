@@ -56,6 +56,10 @@ export async function runCommitWorkflowRuntime(
     transformRegistry: (transform) => updateRegistry(input.registryPath, transform),
     getStagedBundle: (scopeInput) =>
       getStagedBundle({ repoRoot: input.repoRoot, pathspec: scopeInput.pathspec }),
+    readMessageSubject: async () => {
+      const content = await readFile(input.messageFilePath, 'utf8');
+      return (content.split('\n')[0] ?? '').trim();
+    },
     runAdvisoryOrchestrator: () => runAdvisoryOrchestrator(input),
     runGitCommit: (scopeInput) =>
       runGitCommit({

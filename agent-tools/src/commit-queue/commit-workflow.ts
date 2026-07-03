@@ -56,6 +56,14 @@ export interface CommitWorkflowDependencies {
     transform: (registry: CommitQueueRegistry) => CommitQueueRegistry,
   ) => Promise<void>;
   readonly getStagedBundle: (input: { readonly pathspec: CommitWorkflowPathspec }) => StagedBundle;
+  /**
+   * Read the CURRENT first line (subject) of the commit message file. Read
+   * fresh at each verify stage — never cached, never the intent's own
+   * subject — so a message file that was edited or swapped after enqueue
+   * fails verification instead of landing a commit whose subject diverges
+   * from the reviewed queue intent.
+   */
+  readonly readMessageSubject: () => Promise<string>;
   readonly runAdvisoryOrchestrator: () => Promise<CommitWorkflowProcessResult>;
   readonly runGitCommit: (input: {
     readonly pathspec: CommitWorkflowPathspec;
@@ -214,13 +222,17 @@ async function runVerifyStage(
   stage: 'verify-staged-before' | 'verify-staged-after',
 ): Promise<CommitWorkflowResult | undefined> {
   const staged = input.deps.getStagedBundle({ pathspec });
+  // The subject under verification is the MESSAGE FILE's current first line,
+  // not the intent's own subject — passing the intent value back would make
+  // the subject check tautological and let an edited message file land a
+  // commit whose subject diverges from the reviewed queue intent.
   const result = verifyStagedBundle({
     intent,
     stagedNameOnly: staged.stagedNameOnly,
     stagedNameStatus: staged.stagedNameStatus,
     stagedPatch: staged.stagedPatch,
     worktreeShortStatus: staged.worktreeShortStatus,
-    commitSubject: intent.commit_subject,
+    commitSubject: await input.deps.readMessageSubject(),
   });
   if (result.ok) {
     return undefined;
