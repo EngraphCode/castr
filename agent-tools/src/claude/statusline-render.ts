@@ -8,9 +8,10 @@
  * owns only the line/row layout.
  *
  * Row order puts the short, fixed-width segments first — identity (with
- * indicators) on one row, then model and context % together on the next — and the
- * labelled git-location rows last. A loud error token, when present, leads the
- * output in any layout so it cannot be missed.
+ * indicators and gauges) on one row, the model on the next — and the labelled
+ * git-location rows last, with the context % on the repo-title row after the
+ * title (owner layout preference, 2026-07-03). A loud error token, when
+ * present, leads the output in any layout so it cannot be missed.
  *
  * The git-location rows come pre-composed from `statusline-segments.ts`: the
  * checkout name then its branch when the session's checkout is the only relevant
@@ -88,8 +89,7 @@ export interface StatuslineRenderOptions {
  *   coordinationPlace: undefined,
  *   error: undefined,
  * });
- * // → identity row, "Fable 5 · ctx:12%" row, then the checkout name and its
- * //   branch row.
+ * // → identity row, "Fable 5" row, then "castr · ctx:12%" and the branch row.
  * ```
  */
 export function renderStatusline(
