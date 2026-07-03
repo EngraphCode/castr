@@ -339,13 +339,12 @@ lists in the workflow transcript).
 **Tier 2 additions:**
 
 - **Corpus-analysis / judgment-pipelines suite** (the dominant delta: ~70 files + templates + build chain) —
-  `agent-tools/src/corpus-analysis/` (schemas + frozen deterministic aggregation incl. the measured ~80%
-  single-voter false-kill cure; workflow stage entries + esbuild self-contained-harness build subsystem with
-  canary-enforced output contract; post-run recompute/triage/salvage legs), the four `corpus-*` sub-agent
-  templates + workflow wiring, and the supporting runbook reports. Generic Practice machinery (proven on Oak's
-  napkin corpus — castr has the same convention). Bring costs verified firsthand: `esbuild` devDep (absent in
-  castr), four package.json scripts, Result→throw adaptation (~25 files use `@oaknational/result` — castr's
-  deliberate non-bring), prompt re-anchoring. Its own multi-slice lane.
+  **DEFERRED TO ITS OWN LATER PLAN (owner, 2026-07-03): the subsystem is in ACTIVE upstream development
+  (invariants 5–6 amended 2026-07-02; discovery-run arc still refining it) — bringing a mutable target buys
+  re-sync churn.** Named position + promotion trigger:
+  [`corpus-analysis-suite-bring.md`](./corpus-analysis-suite-bring.md) (strategic brief; the verified
+  bring-cost detail lives there). The stable DOCTRINE half (PDR-122/123 + the always-on
+  `agentic-judgment-conserve-by-default` rule) is NOT deferred — it rides the doctrine/PDR batches above.
 - **`session-metadata` topic** (15 files): vendor-transcript locator + token-usage + context-window registry +
   window computation, surfaced as `agent-tools session-metadata`.
 - **`spawn` topic** (~21 files): one command creates/resumes a sibling worktree from a base ref, builds it, opens
@@ -426,5 +425,8 @@ audit-to-zero, commit-queue/hook-policy hardening from the Codex-findings closur
      the PDR batch or lands ahead of any new judgment-pipeline work, whichever comes first).
 4. **Doctrine re-sync wave** (the AMENDS ledger above — batchable, mostly mechanical semantic re-syncs; the
    consolidate-at-second-consumer rename leads it as a doctrine change).
-5. **Corpus-analysis/judgment-pipelines suite** (own multi-slice lane; largest bring).
+5. ~~Corpus-analysis/judgment-pipelines suite~~ **DEFERRED (owner, 2026-07-03)** — actively mutating
+   upstream; own later plan with a stabilisation trigger
+   ([`corpus-analysis-suite-bring.md`](./corpus-analysis-suite-bring.md)). The PDR-122/123 doctrine +
+   conserve-by-default rule stay in the doctrine/PDR batches.
 6. **PDR batch (27, renumbered)** + the remaining Tier-2 flow as before.
