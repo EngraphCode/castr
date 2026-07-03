@@ -4,8 +4,9 @@ pdr_kind: pattern
 
 # PDR-124: Multi-Agent Audit Harness — Ground Truth First, Adversarial Verify, Completeness Critic
 
-**Status**: Proposed (drafted at the 2026-07-03 dedicated consolidation pass; the register's
-second-instance trigger fired when a second independent audit reused the harness end-to-end)
+**Status**: Accepted (owner-approved at the 2026-07-03 dedicated-consolidation owner walk;
+drafted the same pass after the register's second-instance trigger fired when a second
+independent audit reused the harness end-to-end)
 **Date**: 2026-07-03
 **Related**:
 [PDR-096](PDR-096-bring-the-iceberg-transplant-completeness.md)

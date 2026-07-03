@@ -53,25 +53,32 @@ that is cheap to fix before publish and expensive after.
 repo, and on whether archives should be rewritten (history-altering) vs scrubbed-at-export.
 Owner-decision-class.
 
-**Owning artefact:** the `no-machine-local-paths` rule + the LC3 lane
-(`practice-loop-closure-remediation.md`).
-**Status:** open — surfaced to owner at the LC3a closeout (2026-06-28); re-surfaced at the
-2026-07-03 dedicated consolidation owner-walk.
+**Owning artefact:**
+[`../../plans/current/archive-pii-scrub.md`](../../plans/current/archive-pii-scrub.md).
+**Status:** **DECIDED 2026-07-03 (owner, at the consolidation owner-walk) → mechanise the
+scrub now.** The executable plan (two-layer precondition: working-tree scrub tool now;
+history-level scrub or explicit exposure-acceptance at publish time — a working-tree scrub
+cannot clean git history) is the owning artefact above. One sub-fork re-asked (tool shape:
+rewriting scrub / detector-only / plan-first); the plan is required under every answer and is
+authored. (Drained at next consolidate-docs once the shape answer lands.)
 
 ### Q-010 — reconcile principles.md `Result<T,E>` examples with castr's fail-fast doctrine
 
 `Captured: 2026-06-28 | source: Oak→castr gap rescan (use-result-pattern reclassification)`
 
-**Question:** `.agent/directives/principles.md` carries `Result<T,E>` error-handling examples
-(lines 854/939/1199/1796) while castr's codebase doctrine is fail-fast/throw (it rejected
-`@oaknational/result`→throw in the D4 lane, and declined to bring Oak's `use-result-pattern`
-rule on those grounds). The rescan surfaced this as a castr-internal doctrine-vs-reality
-tension. **Resolution path:** rewrite principles.md's Result examples to throw-based, OR scope
-`Result<T,E>` to a narrow explicitly-allowed use and state the boundary. **Why not cheaply
-now:** needs an owner call on whether Result has any sanctioned place in castr or is fully
-superseded by fail-fast. **Owning artefact:** `principles.md` +
-`oak-castr-gap-rescan-2026-06-28.md` §Firsthand corrections. **Status:** open — castr-internal
-cleanup, owner-facing; re-surfaced at the 2026-07-03 dedicated consolidation owner-walk.
+**Question (original):** `.agent/directives/principles.md` carries `Result<T,E>` examples
+while several castr dispositions were made on we-are-fail-fast-therefore-no-Result grounds
+(the D4 lane reconciled Oak's Result-based modules to typed throws; Oak's
+`use-result-pattern` rule was classified a deliberate non-bring).
+**RULED 2026-07-03 (owner, verbatim substance):** _"Result in no way precludes fail fast,
+Result<T,E> IS the correct pattern, and fail fast is absolutely required everywhere."_ The
+"tension" was a false dichotomy — Result and fail-fast COMPOSE; principles.md's examples are
+CORRECT and stand unchanged. **Remaining open sub-question (narrowed):** how far does the
+ruling reach retroactively — bring the `use-result-pattern` rule? queue a migration of the D4
+throw-based reconciliation (and similar seams) to `Result<T,E>`? or forward-only? Asked
+2026-07-03 (owner away; re-ask queued). **Owning artefact:** `principles.md` (ruling) + this
+entry (scope). **Status:** open-narrowed — scope-of-reach is the only remaining fork; the
+doctrine itself is settled.
 
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling,
 hook-matcher precision) are carried by

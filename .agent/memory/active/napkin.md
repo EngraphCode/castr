@@ -14,6 +14,19 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   Oak main's current highest (123, measured firsthand via `ls-tree`) so a castr original never
   squats the pending Oak import range (098–123). The next castr original repeats the measurement —
   Oak main moves.
+- **OWNER RULING (Q-010, walk): "Result in no way precludes fail fast, Result<T,E> IS the
+  correct pattern, and fail fast is absolutely required everywhere."** The recorded
+  "castr-is-fail-fast-therefore-no-Result" framing (D4 error-model reconciliation rationale;
+  the use-result-pattern non-bring grounds; the rescan's "tension" item) was a FALSE DICHOTOMY
+  laundered across surfaces — inherited-classification family, at the DOCTRINE level this
+  time. principles.md's Result examples stand. Scope-of-reach (bring the rule? migrate D4
+  seams?) re-asked, pending. Lesson: when two doctrines look opposed, check whether they
+  actually COMPOSE before recording a "tension" — a tension entry repeated verbatim across
+  surfaces gains false authority exactly like a blocked/thin label.
+- **Owner process correction: questions go through the AskUserQuestion tool, never prose-only**
+  ("otherwise I have to spot them on the way past, and I am not always looking") — saved to
+  user-memory `surface-questions-via-ask-tool`; a 60s timeout means away, proceed-safe and
+  RE-ASK on return.
 - **A peer's context handoff is a claim-set to cross-check, and it earned trust by matching:**
   Cliff's 6-item curation handoff matched my firsthand reads 6/6 (audit-harness DUE, HARD signals =
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity

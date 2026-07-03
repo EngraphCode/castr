@@ -43,7 +43,7 @@ by a baseline-captured diff, not by the semver size.
 ## Decision
 
 **Keep a types/codegen library's dependency estate current by risk, not
-by semver size. The method has six load-bearing moves:**
+by semver size. The method has seven load-bearing moves:**
 
 1. **Split bumps by type / emission / runtime risk, not semver size.**
    A dev-tooling tier (linters, test runners, build orchestration) can
@@ -79,6 +79,18 @@ by semver size. The method has six load-bearing moves:**
    never by rewriting history (and an in-range caret bump cannot even be
    "reverted" to the committed state forward-only — install re-pulls it,
    so the choice is adopt-or-deliberately-pin, a decision to surface).
+
+7. **Security-audit floors are overrides with REMOVAL CONDITIONS, never
+   silent pins.** (Amendment, owner-approved 2026-07-03.) When taking
+   the audit to zero requires a workspace override floor on a transitive
+   dependency, every such override carries an inline annotation naming
+   the advisory it cures and the explicit condition under which the
+   override is removed (the parent adopting a fixed range, or the
+   advisory's fix reaching the resolved version). An unannotated floor
+   outlives its reason and becomes a permanent silent pin — exactly the
+   un-measured currency drift this method exists to prevent. Worked
+   evidence: the 2026-07-03 sweep took `pnpm audit` to zero via two
+   annotated floors, each with its removal condition recorded beside it.
 
 A bump whose package **embeds** a compiler or parser deserves special
 care: the real risk vector is the _embedded_ engine's version, and a
