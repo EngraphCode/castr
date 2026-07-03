@@ -202,6 +202,10 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
+      # packaging:check is a plain pnpm script (publint + attw), not a turbo
+      # task, so no dependsOn edge builds lib/dist for it — build explicitly.
+      - name: Build (packaging check inspects lib/dist)
+        run: pnpm exec turbo run build --log-order=grouped
       - name: Circular-dependency and orphan checks (madge)
         run: pnpm madge:circular && pnpm madge:orphans
       - name: Dependency-direction check (depcruise)
@@ -227,10 +231,15 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup
+      # --concurrency=1 keeps the suites SEQUENTIAL within the job, matching
+      # local `test:all` semantics: five vitest processes sharing a 2-core
+      # runner blow per-test timeouts (measured — test:transforms zod-roundtrip
+      # timed out under 5-way parallelism), and each suite deserves the whole
+      # machine. The job itself still runs in parallel with the other lanes.
       - name: Character, snapshot, gen, transforms, e2e suites
         run: >-
           pnpm exec turbo run character test:snapshot test:gen test:transforms
-          test:e2e --continue --log-order=grouped
+          test:e2e --continue --log-order=grouped --concurrency=1
 
   # Single required status check: fans in every gate above and fails unless
   # every one succeeded — failed, cancelled, AND skipped results all block
