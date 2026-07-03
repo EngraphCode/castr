@@ -1,5 +1,6 @@
 {
   "$schema": "https://v2-10-2.turborepo.dev/schema.json",
+  "globalDependencies": ["tsconfig.json", ".prettierrc.json", ".prettierignore"],
   "ui": "stream",
   "tasks": {
     "clean": {
