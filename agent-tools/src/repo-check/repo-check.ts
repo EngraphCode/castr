@@ -68,7 +68,12 @@ export async function runMarkdownlintStaged(
     writeLine('repo-check markdownlint-staged: no staged Markdown files');
     return 0;
   }
-  return runtime.runInherited('pnpm', ['exec', 'markdownlint', '--dot', ...files]);
+  // castr localisation (2026-07-03): castr ships markdownlint-cli2, not Oak's
+  // markdownlint binary — the verbatim bring was hollow (caught live by the
+  // hardened pre-commit's first real staged-Markdown run). `--no-globs` makes
+  // the staged paths literal so a filename with glob characters cannot widen
+  // or dodge the lint scope.
+  return runtime.runInherited('pnpm', ['exec', 'markdownlint-cli2', '--no-globs', ...files]);
 }
 
 export async function runPrettierStaged(

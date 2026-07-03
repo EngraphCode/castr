@@ -288,8 +288,10 @@ first.
 ## Quality Gates
 
 Run after making changes. The canonical aggregate is `pnpm check` (local, mutating) or `pnpm check:ci` (non-mutating,
-`--frozen-lockfile`). Do not invoke `pnpm qg` directly. Husky reinforces this — `pre-commit` formats staged files,
-`pre-push` runs `pnpm check:ci` — but a hook run is not a substitute for an explicit aggregate rerun when closing work.
+`--frozen-lockfile`). Do not invoke `pnpm qg` directly. Husky reinforces this — `pre-commit` auto-formats staged files
+then runs the blocking gate chain (markdownlint-staged, secrets scan, repo validators, knip, depcruise, madge, and a
+fail-closed turbo build/type-check/lint/test), `pre-push` runs `pnpm check:ci` — but a hook run is not a substitute for
+an explicit aggregate rerun when closing work.
 
 ```bash
 # From repo root; the qg chain, one at a time (caching prevents duplicate work)

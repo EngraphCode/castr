@@ -1,9 +1,84 @@
-staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
+#!/usr/bin/env sh
 
-if [ -z "$staged_files" ]; then
-  exit 0
+# Disable turbo TUI
+export TURBO_UI=0
+
+echo "🔍 Running pre-commit checks..."
+
+# Auto-format staged files (castr localisation: fix rather than fail — the
+# end state matches Oak's prettier-staged check by construction) and refresh
+# the index so the formatted content is what lands.
+staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$staged_files" ]; then
+  echo "📝 Formatting staged files..."
+  git diff --cached --name-only --diff-filter=ACMR -z \
+    | xargs -0 pnpm exec prettier --write --ignore-unknown --
+  git update-index --again
 fi
 
-git diff --cached --name-only --diff-filter=ACMR -z \
-  | xargs -0 pnpm exec prettier --write --ignore-unknown --
-git update-index --again
+echo "🔍 Running markdownlint on staged Markdown files..."
+if ! pnpm agent-tools:repo-check markdownlint-staged; then
+  echo "❌ Markdownlint issues found!"
+  echo "💡 Run 'pnpm markdownlint:root' to fix markdown issues, then stage the changes"
+  exit 1
+fi
+
+echo "🛡️ Running secret scan..."
+if ! pnpm secrets:scan; then
+  echo "❌ Secret scan failed!"
+  echo "Remove or scrub secret-like values before committing."
+  exit 1
+fi
+
+echo "🧭 Running workspace-owned repo validators..."
+if ! pnpm repo-validators:check; then
+  echo "❌ Repo validator checks failed!"
+  exit 1
+fi
+
+echo "🔗 Checking for unused code (knip)..."
+if ! pnpm knip; then
+  echo "❌ Knip found unused files, exports, or dependencies!"
+  echo "💡 Remove the unused code, or register intended entry points in knip config"
+  exit 1
+fi
+
+echo "🧱 Checking dependency boundaries (depcruise)..."
+if ! pnpm depcruise; then
+  echo "❌ Dependency-boundary violations found!"
+  exit 1
+fi
+
+echo "🌀 Checking for circular and orphan modules (madge)..."
+if ! pnpm madge:circular; then
+  echo "❌ Circular dependencies found!"
+  exit 1
+fi
+if ! pnpm madge:orphans; then
+  echo "❌ Orphan modules found!"
+  exit 1
+fi
+
+echo "🧪 Running build, type-check, lint, and unit tests..."
+# Gate output is teed to a gitignored log so a one-off failure (e.g. a
+# flake) stays characterisable after a re-run instead of evaporating
+# with the terminal scroll. The status protocol is FAIL-CLOSED and
+# set-e-safe: a pipeline reports only tee's exit, the hook runs under
+# set -e (a bare failing command aborts the group before any capture),
+# and a missing status file must read as failure - so the status is
+# pre-truncated, written via && / || (which set -e tolerates), and an
+# absent or empty read defaults to failure.
+mkdir -p .turbo
+: > .turbo/last-gate.status
+{
+  pnpm turbo run --continue --output-logs=errors-only build type-check lint test \
+    && echo 0 > .turbo/last-gate.status \
+    || echo 1 > .turbo/last-gate.status
+} 2>&1 | tee .turbo/last-gate.log
+gate_status="$(cat .turbo/last-gate.status 2>/dev/null || echo 1)"
+if [ "$gate_status" != "0" ]; then
+  echo "❌ Build, type-check, lint, or unit tests failed! (full output: .turbo/last-gate.log)"
+  exit 1
+fi
+
+echo "✅ Pre-commit checks completed!"

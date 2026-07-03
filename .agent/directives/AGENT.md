@@ -128,8 +128,14 @@ Domain experts (castr schema surface):
 
 - Husky is the live repo-local hook runner.
 - `pnpm install` triggers the repo `prepare` step, which activates Husky locally.
-- `pre-commit` formats staged files with Prettier and refreshes the Git index.
-- `pre-push` runs `pnpm check:ci`.
+- `pre-commit` (hardened 2026-07-03, owner-directed) auto-formats staged files with Prettier and
+  refreshes the Git index, then runs the blocking gate chain: markdownlint on staged Markdown,
+  `secrets:scan`, `repo-validators:check`, `knip`, `depcruise`, the `madge` circular/orphan pair,
+  and a fail-closed `turbo run build type-check lint test` (log at `.turbo/last-gate.log`).
+- `commit-msg` runs the accidental-major-version guard, then commitlint.
+- `pre-push` runs `pnpm check:ci` (clean + frozen install + the full qg chain incl. e2e) — the
+  strongest gate; its clean phase transiently removes built workspace dist (announce before
+  pushing in a team window, per `check-singleton-per-window`).
 - Hooks reinforce the local workflow, but they do not replace an explicit repo-root aggregate rerun when closing a slice.
 
 ## Structure

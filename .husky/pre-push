@@ -1,1 +1,11 @@
+#!/usr/bin/env sh
+
+# The full canonical aggregate: clean + frozen install + the whole qg chain
+# (secrets scan, format, type-check, lint, madge, depcruise, knip,
+# portability, skills, repo-validators, all test suites incl. e2e).
+# NOTE for concurrent sessions: the clean phase transiently deletes built
+# workspace dist output, so peer sessions' built-CLI invocations can fail
+# during this window — announce before pushing in a team window
+# (see .agent/rules/check-singleton-per-window.md).
+echo "🚀 pre-push: running full check:ci (clean + frozen install + qg; ~10 min)"
 pnpm check:ci
