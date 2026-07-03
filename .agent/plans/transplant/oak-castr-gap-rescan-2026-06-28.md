@@ -225,8 +225,10 @@ adjudicating presence.
 strictly-voluntary doctrine, **@humans: do not modify**, "Why the audit step exists") — castr's is a 157-byte stub
 that `session-handoff`/`consolidate-docs` link as authority (dangling). Drop Oak instance content.
 
-**Directives** (LACK) — `validation-strategy.md` (test/evaluate/assure + risk-tiering — serves castr's
-codegen-correctness claims; closes the testing-strategy HOLLOW), `schema-first-execution.md` (re-domain to
+**Directives** (LACK) — ~~`validation-strategy.md`~~ ✅ LANDED 2026-07-03 (pre-castr-doctrine-sync RS-3:
+brought as a localised seeded stub, overlap reconciled — testing-strategy stays authoritative for the whole
+Test leg; wired into AGENT.md/testing-strategy/tdd-as-design cross-refs mirroring Oak's wiring, which does
+NOT include start-right), `schema-first-execution.md` (re-domain to
 castr's IR/codegen pipeline — pointedly relevant to a schema engine), `editorial-tone.md` (governs VISION.md / outward copy).
 
 **Rules** (LACK, genuine Practice/agent) — `agent-experience-review-lens`, `scope-from-goal-before-approach`

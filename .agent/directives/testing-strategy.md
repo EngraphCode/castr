@@ -1,7 +1,7 @@
 # Testing and Development Strategy
 
 > [!NOTE]
-> This document focuses on **testing methodology**. For broader engineering standards, see [principles.md](principles.md).
+> This document focuses on **testing methodology**. For broader engineering standards, see [principles.md](principles.md). For the wider validation frame this document's Test leg sits inside (test / evaluate / assure), see [validation-strategy.md](validation-strategy.md) — this document stays authoritative for everything test-shaped.
 
 ## Tooling
 

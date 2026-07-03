@@ -33,6 +33,7 @@
 
 - Authoritative doctrine: [principles.md](./principles.md)
 - Test methodology: [testing-strategy.md](./testing-strategy.md)
+- Validation frame (test / evaluate / assure): [validation-strategy.md](./validation-strategy.md)
 - TDD foundational definition: [tdd-as-design.md](./tdd-as-design.md)
 - Decision guidance: [requirements.md](./requirements.md)
 - Quality gate protocol: [DEFINITION_OF_DONE.md](./DEFINITION_OF_DONE.md)
