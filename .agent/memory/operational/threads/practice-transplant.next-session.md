@@ -40,6 +40,7 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-fable-5     | 540603            | Penumbral Slipping Moth        | executor     | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor     | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | 8bff79            | Cirrus Spiralling Airstream    | executor     | 2026-07-03    | 2026-07-03   |
 
 ## Lanes
 
