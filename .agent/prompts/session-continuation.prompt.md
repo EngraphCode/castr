@@ -15,6 +15,15 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > never an invariant (authoritative statement: `repo-continuity.md §Repo-Wide Invariants`). Any instruction
 > below to re-verify `origin/feat/transplant-engraph-practice` is dead — that ref no longer exists. The live
 > next-step pointer remains [`../memory/operational/repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps).
+>
+> **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`): product/remediation work may open
+> immediately.** The pre-castr doctrine-sync slice is live on `main` (use-result-pattern + the
+> Q-010 composition ruling, second-consumer rename, validation-strategy, tsdoc/syntax
+> enforcement). Axis B below is therefore **no longer dormant** — remediation-02 (IR-fidelity
+> harness) or a feature slice may open on a fresh branch off `main` any time; the substrate
+> backlog stays parallel-safe. **Q-011 is DECIDED and drained** (Axis A first; its Tier-1
+> condition discharged — see `open-questions.md` rest-state note), so every "A/B/C sequencing is
+> an open owner decision" line in the dated banners below is superseded.
 
 > **🧭 CURRENT TRUTH (2026-06-28) — READ THIS FIRST; supersedes the "NEXT = DC3 prettier" + all earlier next-step
 > framing below.** Transplant Phases 0–8 ✅ done + tagged. Since the dated banners below: the reason-skill bring landed

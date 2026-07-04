@@ -33,6 +33,14 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`) — supersedes the "(B) dormant" and
+> "Q-011 open" lines in the frontier block below.** The pre-castr doctrine-sync slice is live on
+> `main`; **Axis B (product-correctness remediation 02–07) is no longer dormant** — remediation-02
+> or a feature slice may open on a fresh branch off `main` immediately, with the substrate backlog
+> parallel-safe. **Q-011 is DECIDED and drained** (Axis A first; Tier-1 discharged 2026-06-28 —
+> home: the gap-rescan doc + `repo-continuity.md`). The live next-step pointer remains
+> `repo-continuity.md §Next Safe Steps`.
+
 > **🧭 CURRENT FRONTIER (2026-06-28) — supersedes the "Phase 7 in progress" bullets below.** Transplant Phases 0–8 are
 > ✅ done + tagged. The work is now the **Oak Parity-or-Better Program** under the governing **bring-everything**
 > disposition (PDR-005 §Default disposition: bring unless utterly irrelevant). The **single authoritative Axis-A bring
