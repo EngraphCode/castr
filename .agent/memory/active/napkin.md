@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
+
+- **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by
+  re-running the initial-review probe recipes against the built dist — AND→OR security collapse,
+  dangling `Basic_Thing` refs, empty-`properties` deserialize throw, silent union-member drop with
+  `errors: []`, and the `typeof item === 'integer'` / `return true` placebo refinements all
+  reproduce verbatim; the same tree passed full `pnpm check` (exit 0, FULL TURBO) minutes later.
+  Green-gates-mask-gaps is the PRESENT state, not history. Home: the review report
+  (`.agent/report/wide-deep-review-2026-07-04.md`).
+- **C6 sharpened: the no-op refinements are deliberate scaffolding, not bugs** — the writer source
+  literally emits `return true` bodies with reassuring messages. Interim doctrine-compliant cure is
+  a fail-fast throw, which is a small diff landable with the first harness PR.
+- **New findings R1–R6 recorded in the report**, headline: `parseJsonSchema` / the JSON Schema
+  writer / the TS writer are NOT exported from any public entry point (verified against dist) while
+  `VISION.md` claims the format complete — and `requirements.md` still says "JSON Schema: Deferred";
+  the IR carries Zod chain strings computed by EVERY parser (`metadata.zodChain`), contradicting
+  the format-agnostic-IR principle; `IRSecurityRequirement` is structurally flat so C2 is an
+  IR-model change, not a builder fix.
+- **A stale doctrine claim one day old:** `principles.md` §Tooling Integration still says no TSDoc
+  lint is wired; RS-4 made `tsdoc/syntax` blocking the day before. Doc-drift latency is now shorter
+  than doc-review latency — strengthens the case for the doctrine-claims validator (report §7 #5).
+- **Verify-firsthand paid out on the workflow inventory:** both spot-checked load-bearing numbers
+  (2323 tracked files; lib non-src composition) matched the subagent census exactly; the census was
+  usable as-is with the two checks recorded.
+
 ## 2026-07-03 evening (pre-castr doctrine sync RS-1..RS-4 — Cirrus Spiralling Airstream / 8bff79)
 
 - **Pathspec-scoped queue commit + pre-commit auto-format leaves a STALE INDEX BLOB for a
