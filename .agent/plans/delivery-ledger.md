@@ -22,11 +22,13 @@ session-continuation, trackers) point here and never duplicate the table.
 > opens its own branch off `main`.
 >
 > **Live branch (2026-07-04→06): `feat/initial-castr-review`** — carries the
-> [wide+deep review](../report/wide-deep-review-2026-07-04.md) (`b313479`) and the
-> strategy-estate recording/fold bundle (this session; commit ceremony in flight). No PR yet;
-> the overhaul plan itself is a `future/` strategic brief
+> [wide+deep review](../report/wide-deep-review-2026-07-04.md) (`b313479`), the strategy-estate
+> recording/fold bundle (`2a6d87d`), and the session close bundle. The overhaul plan itself is a
+> `future/` strategic brief
 > ([`strategy-vision-estate-overhaul.md`](./future/strategy-vision-estate-overhaul.md)) gated
-> on its W0 owner walk. Delivery act: owner-invoked PR when the session's bundles are complete.
+> on its W0 owner walk. Delivery act: push → PR → merge on green CI, **explicitly
+> owner-authorised 2026-07-06** ("commit, push, and merge") after both sessions' handoff +
+> consolidation + context scan.
 
 **Single-branch consolidation (owner, 2026-06-15):** the earlier multi-branch model — remediation on `fix/*` branches
 off `docs/initial-deep-review`, each PR'd to `main` independently — was **retired**. The coordination overhead (branch

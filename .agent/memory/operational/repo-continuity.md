@@ -86,7 +86,18 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**Dedicated knowledge-curation pass — 2026-07-03 (Fiery Flaring Bellows / bafbac).** Owner-invoked
+**Session-completion consolidation completed this handoff — 2026-07-06 (Fragrant Twining Glade /
+5367e2, n=2 closeout owner).** Scope: the review-session capture batch routed to permanent homes
+(report → `.agent/report/`; overhaul brief → `plans/future/`; Q-012..Q-015 with
+fork/determination splits; verified-claims PDR candidate → pending-graduations; two distilled
+entries; napkin capture incl. two tagged candidates from the peer's context scan — the
+closeout-narrative-stales sub-shape and the watcher arm-time drain gap); Mistbound's pre-flight
+brief conserved to the tracked plan estate (`plans/remediation/02-preflight-scouting-2026-07-06.md`);
+entry-point drift sweep clean; buffers healthy (napkin below rotation threshold; registers
+curated, nothing trimmed). **Next dedicated pass: not due** until a fresh trigger; the
+owner-walk venue for the open register items IS the overhaul plan's W0 walk (Q-012..Q-015).
+
+**Prior: dedicated knowledge-curation pass — 2026-07-03 (Fiery Flaring Bellows / bafbac).** Owner-invoked
 `consolidate-until-done` in an n=2 window (Windswept Winging Cliff on CI watch; boundaries
 coordinated live). Knowledge homed: **PDR-124** (multi-agent audit-harness pattern, `pdr_kind:
 pattern`, **Proposed** — owner walk in the closeout) authored from its two worked instances (the

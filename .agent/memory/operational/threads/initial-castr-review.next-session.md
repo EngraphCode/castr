@@ -5,9 +5,10 @@ mandated. Branch: `feat/initial-castr-review`.
 
 ## Participating agent identities (PDR-027, additive — never overwrite)
 
-| platform    | model          | agent_name             | session_id_prefix | role                | first_session | last_session |
-| ----------- | -------------- | ---------------------- | ----------------- | ------------------- | ------------- | ------------ |
-| claude-code | claude-fable-5 | Fragrant Twining Glade | 5367e2            | reviewer + recorder | 2026-07-04    | 2026-07-04   |
+| platform    | model          | agent_name             | session_id_prefix | role                                             | first_session | last_session |
+| ----------- | -------------- | ---------------------- | ----------------- | ------------------------------------------------ | ------------- | ------------ |
+| claude-code | claude-fable-5 | Fragrant Twining Glade | 5367e2            | reviewer + recorder + team driver/closeout owner | 2026-07-04    | 2026-07-06   |
+| claude-code | claude-fable-5 | Mistbound Fading Night | fe1498            | remediation-02 pre-flight scout (boundary b)     | 2026-07-06    | 2026-07-06   |
 
 ## Lane state
 
@@ -27,12 +28,20 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Blockers / low-confidence areas:** W0 owner walk gates W1/W2/W4 shape; W3 validator cycle
   and W2 archaeology are parallel-safe now. principles.md edits need explicit owner approval
   (Q-015).
-- **Next safe step:** ✅ reviewer findings FOLDED (2026-07-06: plan moved to `future/` with W0
-  as promotion trigger; W3 scope widened to roadmap table + cross-surface pairs; owner walk
-  minimised to three genuine forks; orphaned continuity header repaired; delivery-ledger row
-  added) → commit the recording+fold bundle → owner walks the three W0 forks → open
-  remediation-02 on a fresh branch (ungated, highest leverage). Team note: n=2 window opened
-  2026-07-06 (Mistbound Fading Night / fe1498 joined; boundary coordination in comms).
+- **Next safe step (post-merge; owner end-game directive 2026-07-06 executed: stabilise →
+  handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
+  (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS
+  after merge, in order: **(1) remediation-02 implementation on a fresh branch off `main`** —
+  seed = Mistbound's conserved pre-flight brief at
+  [`02-preflight-scouting-2026-07-06.md`](../../../plans/remediation/02-preflight-scouting-2026-07-06.md)
+  (tracked plan-estate copy; announce pickup before acting on it — the git-ignored
+  handoff-record original carries the same content); shape = fixture corpus +
+  machine-readable outcomes extended into
+  `lib/tests-transforms` (NOT a new suite) + the two-site interim fail-fast. **(2) The W0 owner
+  walk** (three genuine forks: second-product name; preservation-coverage as public metric;
+  M1/R5 enforce-vs-amend) — walking it promotes the overhaul brief to `current/`. **(3) Overhaul
+  workstreams per the promoted plan.** Team history: n=2 window 2026-07-06 (Mistbound boundary
+  (b) complete, closeout synthesis folded; both sessions ran handoff + context scan pre-merge).
 - **Active track links:** none.
 - **Promotion watchlist:** verified-claims thesis (pending-graduations → pattern-PDR when W0
   ratifies or W3 lands).

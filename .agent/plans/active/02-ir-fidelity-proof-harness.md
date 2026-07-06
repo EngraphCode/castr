@@ -13,7 +13,9 @@
 > strategy-estate overhaul.
 
 > **🔎 PRE-FLIGHT SCOUTED 2026-07-06 (Mistbound Fading Night / fe1498, read-only; full brief
-> conserved at `.agent/state/collaboration/handoffs/remediation-02-preflight-mistbound.md`):**
+> conserved at [`../remediation/02-preflight-scouting-2026-07-06.md`](../remediation/02-preflight-scouting-2026-07-06.md)
+> — the tracked plan-estate copy; the instance-tier handoff-record original under
+> `.agent/state/collaboration/handoffs/` is git-ignored by two-tier design):**
 > (1) **The harness substrate already EXISTS** — `lib/tests-transforms` scenarios 1–6 run full
 > parse→IR→write→parse with IR equality and are green while C2–C4 reproduce, so this plan's
 > shape is a **fixture corpus + machine-readable outcomes extended into tests-transforms, NOT a

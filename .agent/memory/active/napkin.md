@@ -61,6 +61,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   folding (the git-diff orphan-line confirmation, the roadmap ✅ table, ADR ceiling, ledger
   absence). One BLOCKING finding each; both real; owner-walk minimised to three genuine forks via
   the Four-Lens test.
+- **candidate: a closeout event's "claims ALL closed" is a TIMESTAMPED claim a second same-session
+  work-block can stale** (Mistbound's fold-in): they read my live claim as dead-session residue
+  because my earlier closeout narrative said all closed — the live registry, not the closeout
+  narrative, is the truth surface. New sub-shape of the session-start-snapshot-goes-stale family
+  (user-memory sharpening candidate at next consolidation).
+- **candidate: watcher initial-drain marks pre-arm events SEEN without emitting them** (Mistbound):
+  events landing before the watcher armed are consumed silently; only the catch-up sweep surfaced
+  my earlier team-start to them. Re-proves sweep-on-every-wake AND adds the arm-time variant —
+  candidate sharpening for `comms-all-channels-watcher` §catch-up sweep (run a sweep at ARM time,
+  not just on wakes).
 
 ## 2026-07-03 evening (pre-castr doctrine sync RS-1..RS-4 — Cirrus Spiralling Airstream / 8bff79)
 
