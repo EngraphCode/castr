@@ -1,5 +1,31 @@
 # Plan: IR Fidelity Proof Harness (round-trip + property proofs)
 
+> **🔬 RE-VERIFIED 2026-07-04 ([wide+deep review](../../report/wide-deep-review-2026-07-04.md)):
+> every finding this plan targets still reproduces verbatim against `main` @ `8bfc858`** —
+> C2/C3/C4 re-executed firsthand via the appendix-A probe recipes; `pnpm check` green on the
+> same tree. Additions folded from that review: (1) C2's fix is confirmed an **IR-model change**
+> (`IRSecurityRequirement` is structurally flat — review finding R3; already reflected in the
+> success criteria below). (2) Land the **interim fail-fast on the placebo Zod refinements**
+> (`return true` bodies in `writers/zod/refinements/object.ts` — review §2.3) with this plan's
+> first PR, ahead of plan 03's real implementations. (3) The harness's fixture outcomes feed the
+> **preservation-coverage metric** (overhaul plan §W5) — keep fixture results machine-readable.
+> This plan remains the single highest-leverage product slice and is NOT gated by the
+> strategy-estate overhaul.
+
+> **🔎 PRE-FLIGHT SCOUTED 2026-07-06 (Mistbound Fading Night / fe1498, read-only; full brief
+> conserved at [`../remediation/02-preflight-scouting-2026-07-06.md`](../remediation/02-preflight-scouting-2026-07-06.md)
+> — the tracked plan-estate copy; the instance-tier handoff-record original under
+> `.agent/state/collaboration/handoffs/` is git-ignored by two-tier design):**
+> (1) **The harness substrate already EXISTS** — `lib/tests-transforms` scenarios 1–6 run full
+> parse→IR→write→parse with IR equality and are green while C2–C4 reproduce, so this plan's
+> shape is a **fixture corpus + machine-readable outcomes extended into tests-transforms, NOT a
+> new suite**. (2) C4 re-proven live same day (probe vs current dist; an Explore agent's
+> "benign" code-read was falsified by the probe — probe outranks read). (3) H3's seam is
+> `parseInt` at `template-context.endpoints.from-ir.ts:135`, not the response writer. (4) The
+> interim fail-fast targets are exactly TWO `return true` placebo sites in
+> `writers/zod/refinements/object.ts` (`:130` dependentSchemas, `:183–187` if/then/else); the
+> `unevaluatedProperties` and `additionalProperties` refinements are REAL — leave them alone.
+
 **Status:** Backlog (remediation) · **Findings:** H7 (root) + C2, C3, C4, H1, H2, H3, H4, M10 · **Risk:** Low (tests) → Medium (fixes)
 **References:** report `02`/`03`/`04` and `07-test-quality-and-proof-gaps.md`; `DEFINITION_OF_DONE.md` (byte-for-byte determinism / persistence E2E); `architecture-review-packs.md` Pack 7 (already calls for an IR-fidelity suite)
 

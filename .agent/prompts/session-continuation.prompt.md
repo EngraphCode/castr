@@ -8,7 +8,23 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
-> **🔀 CURRENT TRUTH (2026-07-03) — READ THIS FIRST; supersedes every branch-model statement in this file.**
+> **🔬 CURRENT TRUTH (2026-07-04, wide+deep review) — READ THIS FIRST.** The
+> [wide+deep review](../report/wide-deep-review-2026-07-04.md) re-proved **all five open
+> Criticals (C2–C6) live on today's `main`** while `pnpm check` passed green on the same tree,
+> added findings **R1–R6** (headline: JSON Schema/TS surfaces publicly unreachable; Zod chain
+> strings computed by every parser inside IR metadata; `IRSecurityRequirement` structurally flat;
+> doctrine self-contradictions), and named the repo's **two products** (compiler + the
+> agentic-engineering kernel) under the **verified-claims** thesis. Owner directive (same day):
+> total overhaul of the planning/strategy/vision estate, organised around impacts and principles
+> — controlling plan
+> [`strategy-vision-estate-overhaul.md`](../plans/future/strategy-vision-estate-overhaul.md)
+> (W0 owner walk = Q-012..Q-015 in `open-questions.md`; W3 validator + W2 archaeology
+> parallel-safe). **Remediation-02 (IR-fidelity harness, `plans/active/`) remains the
+> highest-leverage product slice and is NOT gated by the overhaul.** This file's banner
+> stratigraphy is itself overhaul scope (W2); trust this banner + `repo-continuity.md` §Next
+> Safe Steps.
+>
+> **🔀 CURRENT TRUTH (2026-07-03) — supersedes every branch-model statement in this file.**
 > **The transplant branch MERGED to `main` in PR #3 (`5529436`, 2026-07-03) and is deleted on origin.** The
 > branching model is now **feature branches off `main`, one PR per slice, merges owner-invoked** — the
 > single-branch mode referenced throughout the dated banners below was a circumstance of the transplant era,

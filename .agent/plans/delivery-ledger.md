@@ -20,6 +20,15 @@ session-continuation, trackers) point here and never duplicate the table.
 > host-load §4, validation-strategy stub, tsdoc/syntax enforcement in both workspaces; the
 > controlling plan is COMPLETE and product/remediation work is UNGATED).** The next slice
 > opens its own branch off `main`.
+>
+> **Live branch (2026-07-04→06): `feat/initial-castr-review`** — carries the
+> [wide+deep review](../report/wide-deep-review-2026-07-04.md) (`b313479`), the strategy-estate
+> recording/fold bundle (`2a6d87d`), and the session close bundle. The overhaul plan itself is a
+> `future/` strategic brief
+> ([`strategy-vision-estate-overhaul.md`](./future/strategy-vision-estate-overhaul.md)) gated
+> on its W0 owner walk. Delivery act: push → PR → merge on green CI, **explicitly
+> owner-authorised 2026-07-06** ("commit, push, and merge") after both sessions' handoff +
+> consolidation + context scan.
 
 **Single-branch consolidation (owner, 2026-06-15):** the earlier multi-branch model — remediation on `fix/*` branches
 off `docs/initial-deep-review`, each PR'd to `main` independently — was **retired**. The coordination overhead (branch
