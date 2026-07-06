@@ -33,6 +33,17 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Workstream Status
 
+> **🔬 OVERHAUL PENDING (2026-07-04): this roadmap's transplant-era frame ("one deep
+> enhancement", Axis A/B/C) is scheduled for replacement by an impact-organised roadmap** under
+> [`future/strategy-vision-estate-overhaul.md`](./future/strategy-vision-estate-overhaul.md)
+> (strategic brief; promotes to `current/` when the W0 owner walk completes)
+> §W2 (owner directive, following the
+> [wide+deep review](../report/wide-deep-review-2026-07-04.md) — which re-proved Criticals
+> C2–C6 live on `main`, added findings R1–R6, and named the repo's two products under the
+> verified-claims thesis). Until W2 lands, this file remains the durable milestone frame and the
+> block below remains true: **remediation-02 is ungated and is the recommended next product
+> slice.**
+
 > **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`) — supersedes the "(B) dormant" and
 > "Q-011 open" lines in the frontier block below.** The pre-castr doctrine-sync slice is live on
 > `main`; **Axis B (product-correctness remediation 02–07) is no longer dormant** — remediation-02

@@ -70,6 +70,28 @@ High-signal learnings from the napkin belong here once they have proved worth ke
   OUTPUT afterwards, never inline. Same family as [[verify-own-observer-instruments]] (the instrument here is the
   shell pipeline itself).
 
+- **A doctrine claim about tooling/enforcement goes stale FASTER than any review cadence — the
+  only durable form is a claim whose proof is computed.** Worked instance (2026-07-04):
+  `principles.md` §Tooling Integration asserted "no TSDoc lint plugin is wired today" and was
+  falsified within ONE DAY by RS-4 making `tsdoc/syntax` blocking; the same review found
+  requirements/VISION contradicting each other on JSON Schema support ("Deferred" vs "complete")
+  and ✅ rows whose end-to-end claims the probes falsify. Doc-drift latency is now shorter than
+  doc-review latency, so hand-maintained claims are structurally unmaintainable. Cure shape
+  (extends metacognition §Cure Shape + the loop-closure family): every support/enforcement claim
+  cites a resolvable proof anchor and a validator fails the gate on an unresolvable one — the
+  `validate-doctrine-claims` cycle in the strategy-estate-overhaul plan (§W3). Same family as
+  green-gates-mask-gaps + the drift-detector-is-a-hand-edited-literal entry above.
+
+- **Re-reviewing a codebase starts by EXECUTING the prior review's reproduction appendix
+  verbatim — it converts "is the report still true?" from re-analysis into a cheap deterministic
+  probe.** Worked instance (2026-07-04): the initial-review appendix-A recipes re-run against
+  today's dist re-confirmed all five open Criticals in minutes, with `pnpm check` green on the
+  same tree re-proving the headline thesis in both directions; the freed effort went into NEW
+  findings (R1–R6) instead of re-derivation. Corollary: a review worth trusting ships its probes
+  (executable claims), because that is what makes the NEXT review cheap — the report-quality bar
+  and the re-review method are the same fact. Same family as [[verify-agent-claims-firsthand]]
+  applied to one's own predecessors.
+
 ## Transplant method (Oak → castr Practice estate)
 
 Distilled from the napkin's Phase 3–6 transplant entries (2026-06-04 → 2026-06-18). The single deepest lesson, re-proven every phase: **a transplanted surface carries the source repo's phenotype; read the body firsthand and reconcile per-surface.**

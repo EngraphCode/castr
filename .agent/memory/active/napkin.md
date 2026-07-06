@@ -26,6 +26,41 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **Verify-firsthand paid out on the workflow inventory:** both spot-checked load-bearing numbers
   (2323 tracked files; lib non-src composition) matched the subagent census exactly; the census was
   usable as-is with the two checks recorded.
+- **OWNER DIRECTIVE (post-review): record everything across surfaces + plan a TOTAL OVERHAUL of
+  the planning/strategy/vision estate organised around the appropriate impacts and principles.**
+  Landed this session: the overhaul plan
+  (`plans/future/strategy-vision-estate-overhaul.md` — W0 owner walk + W1 vision / W2
+  strategy+continuity / W3 claims-truthing+validator / W4 plans-tree / W5 measurement);
+  Q-012..Q-015 registered (second-product naming, vision topology, preservation-coverage metric,
+  principles.md truthing batch); verified-claims thesis → pending-graduations (PDR candidate);
+  two distilled entries (claims-drift-faster-than-review-cadence → computed claims; re-review =
+  execute the prior probes first); continuity spine + prompt + roadmap + remediation-02 banners.
+- **Double-enqueue specimen (self-inflicted):** my first `commit-queue enqueue` succeeded but its
+  bare-UUID stdout was eaten by my own `grep -E 'intent_id|error'` filter, so I enqueued again →
+  duplicate intent, abandoned with notes. The queue CLI prints ONLY the raw intent UUID on
+  success; filter for UUID shape or take the tail line, never grep for field names. Same
+  verify-own-observer-instruments family as the pipe-eats-exit-code entry.
+
+## 2026-07-06 (n=2 team window: fold + close — Fragrant Twining Glade / 5367e2 + Mistbound Fading Night / fe1498)
+
+- **Contention-flake instance in the n=2 window:** the pre-commit gate's
+  `claims-concurrency.integration.test.ts` failed at 9.65s under a busy 2-core window (the peer's
+  probes ran concurrently), green in isolation at 4.6s — the KNOWN timing-marginal class (CI cure
+  was `--concurrency=1`); local cure is coordinating heavy runs around the commit window (now in
+  the team comms discipline), never timeout inflation. Classified by the rerun-failed probe.
+- **cwd drift masquerading as state loss:** after a `cd agent-tools && vitest` call, the shell
+  cwd PERSISTED; the next repo-root-relative reads reported the comms directory missing and the
+  CLI unloadable — reading as drastic tree damage. `pwd` before concluding ANY state loss; prefer
+  absolute or explicitly re-rooted paths in every compound command.
+- **Probe-outranks-read, peer instance (Mistbound):** an Explore agent's code-read called the C4
+  empty-properties path "benign"; the peer's firsthand probe against dist threw
+  `Invalid CastrDocument structure` — the read was wrong, the probe decisive. Same family as
+  reviewer-disagreement-resolved-by-probe (2026-07-03).
+- **Reviewer-fold shape that worked (overhaul plan):** two readiness reviewers (assumptions +
+  docs-adr) on a same-day strategic brief; every load-bearing claim re-verified firsthand before
+  folding (the git-diff orphan-line confirmation, the roadmap ✅ table, ADR ceiling, ledger
+  absence). One BLOCKING finding each; both real; owner-walk minimised to three genuine forks via
+  the Four-Lens test.
 
 ## 2026-07-03 evening (pre-castr doctrine sync RS-1..RS-4 — Cirrus Spiralling Airstream / 8bff79)
 

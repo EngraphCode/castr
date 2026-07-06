@@ -60,6 +60,20 @@ Live in `distilled.md` (two entries) + `practice-loop-closure-remediation.md`.
 trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done; as of
 2026-07-03 LC0/1/2/3a/3c are done — LC3b, LC3d, LC4, LC5 remain). status: pending.
 
+### Verified-claims engineering (the unifying thesis of both products)
+
+The 2026-07-04 review named the frame that unifies the compiler and the Practice: **a claim is
+only as good as its machine-checkable proof** — product level (lossless/fail-fast must be proven
+by round-trip + executed-validator suites; support claims computed as preservation coverage,
+never asserted) and process level (green-gates-mask-gaps, prove-it-fires, loop-closure,
+inherited-classifications are all instances of the same principle). Candidate permanent home: a
+**pattern-PDR** ("verified-claims engineering" — likely subsuming or federating the
+loop-closure/PDR-096 family) + the umbrella statement in the rebuilt VISION (overhaul plan §W1).
+`[captured: 2026-07-04 | source: wide-deep-review-2026-07-04.md §6.4]`
+trigger-condition: overhaul plan W0 walk ratifies the frame (Q-012..Q-015), or the
+doctrine-claims validator (W3) lands — whichever first gives the thesis an enforced instance.
+status: pending.
+
 ### Generator-output must be formatter-stable (fixpoint contract)
 
 Any generator whose output lands in a prettier-formatted tree must emit formatter-stable bytes,
