@@ -180,10 +180,8 @@ export function parseArrayFields(
   result: CastrSchema,
   parseSchema: ParseSchemaFn,
 ): void {
-  if (input.items !== undefined && !isReferenceObject(input.items)) {
-    result.items = parseSchema(input.items);
-  } else if (input.items !== undefined) {
-    result.items = parseSchema({ $ref: input.items.$ref });
+  if (input.items !== undefined) {
+    result.items = parseSingleSchemaOrRef(input.items, parseSchema);
   }
   if (input.prefixItems !== undefined) {
     result.prefixItems = input.prefixItems.map((i) => parseSingleSchemaOrRef(i, parseSchema));
@@ -222,12 +220,24 @@ export function parseComposition(
 
 // ── Shared utility ────────────────────────────────────────────────────────
 
-function parseSingleSchemaOrRef(
+/**
+ * Parse a schema-or-reference value at a nested position.
+ *
+ * JSON Schema 2020-12 applies keywords that appear next to `$ref`, so
+ * reference values are routed through `parseSchema` in full — its `$ref`
+ * handling carries the siblings (H4) — instead of being stripped to a bare
+ * `{ $ref }`. The OAS-only `summary` field has no IR home and is not
+ * carried.
+ *
+ * @internal
+ */
+export function parseSingleSchemaOrRef(
   value: SchemaObject | ReferenceObject,
   parseSchema: ParseSchemaFn,
 ): CastrSchema {
   if (isReferenceObject(value)) {
-    return parseSchema({ $ref: value.$ref });
+    const { summary: _summary, ...refWithSiblings } = value;
+    return parseSchema(refWithSiblings);
   }
   return parseSchema(value);
 }

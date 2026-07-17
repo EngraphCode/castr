@@ -28,9 +28,9 @@ export { normalizeDraft07 } from './normalization/index.js';
 export type { Draft07Input } from './normalization/index.js';
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
-import { type ReferenceObject, isReferenceObject } from '../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
+import { parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
 import { normalizeDraft07 } from './normalization/index.js';
 import type { Draft07Input } from './normalization/index.js';
 
@@ -82,29 +82,13 @@ function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaCompone
   }
 
   for (const [name, defSchema] of Object.entries(defs)) {
-    const schema = parseJsonSchemaObject(toParsableDefSchema(defSchema));
+    // parseSingleSchemaOrRef carries $ref siblings (H4) and drops only the
+    // OAS-only `summary` field, which has no IR home.
+    const schema = parseSingleSchemaOrRef(defSchema, parseJsonSchemaObject);
     components.push(buildComponent(name, schema));
   }
 
   return components;
-}
-
-/**
- * Widen a `$defs` entry to the parser input type.
- *
- * Reference-typed entries (`$ref`, possibly with sibling keywords) are
- * parsed like any other schema so references and their siblings are
- * carried instead of silently dropped. The OAS-only `summary` field has
- * no IR home and is not carried.
- *
- * @internal
- */
-function toParsableDefSchema(defSchema: JsonSchema2020 | ReferenceObject): JsonSchema2020 {
-  if (!isReferenceObject(defSchema)) {
-    return defSchema;
-  }
-  const { summary: _summary, ...rest } = defSchema;
-  return rest;
 }
 
 function buildComponent(name: string, schema: CastrSchema): CastrSchemaComponent {

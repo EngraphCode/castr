@@ -244,7 +244,7 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     );
   });
 
-  it('converts unevaluatedItems keyword to additionalItems', () => {
+  it('fails fast on boolean unevaluatedItems instead of remapping it', () => {
     const schema: SchemaObject = JSON.parse(
       `{
         "type": "array",
@@ -252,12 +252,19 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
       }`,
     );
 
-    const result = convertOpenApiSchemaToJsonSchema(schema);
+    expect(() => convertOpenApiSchemaToJsonSchema(schema)).toThrow(/unevaluatedItems.*Draft 07/);
+  });
 
-    expect(result).toMatchObject({
-      type: 'array',
-      additionalItems: false,
-    });
+  it('fails fast on schema-valued unevaluatedItems instead of downgrading it', () => {
+    const schema: SchemaObject = JSON.parse(
+      `{
+        "type": "array",
+        "prefixItems": [{ "type": "string" }],
+        "unevaluatedItems": { "type": "number" }
+      }`,
+    );
+
+    expect(() => convertOpenApiSchemaToJsonSchema(schema)).toThrow(/unevaluatedItems.*Draft 07/);
   });
 
   it('converts dependentSchemas to Draft 07 dependencies', () => {
@@ -309,7 +316,6 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
           "https://json-schema.org/draft/2020-12/vocab/core": true
         },
         "$dynamicRef": "#/components/schemas/DynamicRole",
-        "unevaluatedItems": { "type": "null" },
         "dependentSchemas": {
           "manager": { "$ref": "#/components/schemas/Manager" }
         }
@@ -321,7 +327,6 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     expectSchemaObject(result);
     expect(result).toMatchObject({
       type: 'object',
-      additionalItems: { type: 'null' },
       dependencies: {
         manager: { $ref: '#/definitions/Manager' },
       },

@@ -12,12 +12,9 @@
  * @internal
  */
 
-import {
-  type SchemaObject,
-  type ReferenceObject,
-  isReferenceObject,
-} from '../../../shared/openapi-types.js';
+import type { SchemaObject, ReferenceObject } from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
+import { parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
@@ -123,16 +120,6 @@ function parseBoolOrSchemaOrRef(
     };
   }
   return parseSingleSchemaOrRef(value, parseSchema);
-}
-
-function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
-  parseSchema: ParseSchemaFn,
-): CastrSchema {
-  if (isReferenceObject(value)) {
-    return parseSchema({ $ref: value.$ref });
-  }
-  return parseSchema(value);
 }
 
 // ── $anchor / $dynamicRef / $dynamicAnchor ────────────────────────────────

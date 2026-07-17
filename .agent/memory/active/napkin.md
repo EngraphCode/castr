@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-17 (L-F lane, H4 nested $ref siblings + L14 array parity — worktree wf_6f9f06c9-91e-2)
+
+- **A fix wired at one level of a recursive structure is the SAME bug one level down:** the H4
+  sibling-carrying fix landed at the parser's top level while three per-file copies of
+  `parseSingleSchemaOrRef` (helpers, object-fields, 2020-keywords) plus an inline `items` branch
+  still stripped refs to bare `{ $ref }` at every nested position. Red-first proof: 12 of 14 new
+  nested-position tests failed before the fix. The cure was structural, not additive — route the
+  FULL reference object through `parseSchema` (whose `$ref` path already carries siblings) and
+  consolidate the three copies into one exported helper, so no future nested position can drift.
+  Consolidate-at-second-consumer applied late is exactly what left the copies behind.
+- **NEW FINDING (out of this lane's scope, needs a home): `convertUnionSchema`'s
+  `cloneWithoutSharedKeywords` silently deletes `prefixItems`, `unevaluatedItems`,
+  `unevaluatedProperties`, and `dependentSchemas` before union-member conversion**
+  (conversion/json-schema/convert-schema.ts) — so union-typed schemas BYPASS both L14 fail-fast
+  rejections (the keyword is gone before the applier can see it) and silently drop tuple info.
+  The L14 asymmetry cure landed this session (unevaluatedItems now fails fast exactly like
+  unevaluatedProperties in the non-union path); the union hole is shared symmetrically by both
+  keywords and predates this lane. Candidate for the remediation backlog.
+- **`CastrSchema.items` is `CastrSchema | CastrSchema[]`** — tests touching `items` need an
+  `Array.isArray` narrow before member access; caught by tsc, not by the (green) vitest run,
+  re-proving lint+typecheck-after-edit over test-green-only.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by
