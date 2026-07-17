@@ -270,3 +270,30 @@ _2026-06-04 → 2026-06-10 → [`archive/napkin-2026-06-04-to-10.md`](archive/na
 _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026-06-17-to-20.md`](archive/napkin-2026-06-17-to-20.md) (2026-06-20);_
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
+
+## 2026-07-17 — parallel remediation program (Moonlit Threading Nebula)
+
+- **Concurrent `git push` from the primary checkout collides**: two pre-push `check:ci` hooks run
+  in the same working tree simultaneously and both pushes fail with a bare "failed to push some
+  refs" (no hook output when piped through `tail -1` — also a lesson: never `tail -1` a hook-bearing
+  command). Pushes now serialize. A worktree-aware pre-push (or per-branch gate) would remove the
+  bottleneck.
+- **`test:all` is an `&&`-chain**: one failing suite masks whether later suites ran at all. Two lane
+  agents independently re-ran `test:gen`/`test:transforms`/`test:e2e` directly to prove genuine
+  green. Candidate fix: run suites independently and aggregate, or make the chain's skip explicit.
+- **Turbo warns `no output files found for task @engraph/castr#test`** on every run (missing
+  `outputs` key in turbo.json) — standing warning, violates no-warning-toleration in spirit; worth
+  a micro-lane.
+- **`samples.test.ts` prettier `resolveConfig` escaped the repo root** (three lanes confirmed
+  independently; nested worktrees resolve the ENCLOSING repo's config). Two fixes exist: L-D's
+  in-lane anchoring (lib/package.json) and the standalone micro-lane branch — reconcile before
+  L-D's merge; keep one.
+- **Commit-skill gap (capture-practice-tool-feedback)**: the engraph-commit skill references a
+  commit-queue/claims registry (`active-claims.json`) that does not exist in this estate; lane
+  agents fell back to the materialized core discipline (constraint enumeration, message
+  pre-validation, explicit pathspec). Either seed the registry or make the skill state the
+  fallback.
+- **Bot-review rings validated single-source doctrine**: five successive review rounds on PR #10
+  walked the authority fan-out outward (program record → roadmap/README → continuity/prompt →
+  delivery ledger → per-finding plans). Each ring closed only when the supersession reached it;
+  the durable cure was single-sourcing + exhaustive ring-sweeps, not per-comment patches.
