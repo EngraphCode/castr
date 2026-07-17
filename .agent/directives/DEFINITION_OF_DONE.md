@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-06-09  
+**Last Updated:** 2026-07-17  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -121,6 +121,7 @@ Off-chain development aids (not in the canonical gate, green, documented honestl
 - **0 tolerance paths**: invalid/unsupported inputs fail fast with explicit errors
 - **Claimed-support completeness**: every claimed supported behaviour is parser/IR/writer/runtime-validator/test/doc consistent, or explicitly marked unsupported or paused
 - **Determinism**: repeated runs produce byte-for-byte identical output for all fixtures
+- **Fidelity suite**: edge-case fixtures (`lib/tests-transforms/__fixtures__/edge-cases/`) prove IR round-trip, serialization round-trip, and byte-stable rewrite per fixture via the fidelity harness inside `pnpm test:transforms` (see `docs/architecture/fidelity-proof-harness.md`)
 - **IR coverage**: all fields from the currently claimed OpenAPI 3.x surface in `.agent/directives/requirements.md` are representable at the IR boundary
 
 ---
