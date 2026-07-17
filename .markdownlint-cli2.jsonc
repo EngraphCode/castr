@@ -36,6 +36,9 @@
     ".cursor/**",
     ".claude/**",
     ".agents/**",
+    // Untracked local material (reference clones, scratch) — gitignored via `tmp/.gitignore`;
+    // the lint footprint must not depend on what a machine happens to have cloned there.
+    "tmp/**",
     // Archives and generated artefacts everywhere.
     "**/archive/**",
     "**/reference/**",

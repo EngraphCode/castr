@@ -44,3 +44,6 @@ dist
 /.idea/
 tmp/
 .logs/
+
+# Claude Code worktrees (live agent checkouts under the primary repo)
+.claude/worktrees/

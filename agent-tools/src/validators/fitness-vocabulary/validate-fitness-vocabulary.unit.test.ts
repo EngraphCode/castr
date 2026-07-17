@@ -63,6 +63,15 @@ describe('shouldInspectFile', () => {
     expect(shouldInspectFile('.agent/practice-core-backup-2026-03-23/practice.md')).toBe(false);
   });
 
+  it('excludes live agent worktrees (machine-local checkouts, never repo content)', () => {
+    expect(
+      shouldInspectFile(
+        '.claude/worktrees/wf_1234-1/agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts',
+      ),
+    ).toBe(false);
+    expect(shouldInspectFile('.claude/worktrees/some-lane/.agent/directives/AGENT.md')).toBe(false);
+  });
+
   it('excludes non-markdown, non-ts, non-mjs files', () => {
     expect(shouldInspectFile('scripts/foo.sh')).toBe(false);
     expect(shouldInspectFile('package.json')).toBe(false);

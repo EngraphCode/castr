@@ -3,6 +3,12 @@
 lib/examples
 tmp/
 
+# Machine-local, harness-written or harness-managed — never repo content.
+# Worktrees hold full in-progress checkouts; sweeping them makes every gate
+# run hostage to concurrent agents' intermediate file states.
+.claude/worktrees/
+.claude/settings.local.json
+
 # Dependencies
 node_modules
 .pnpm-store

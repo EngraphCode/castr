@@ -51,7 +51,13 @@ const FORBIDDEN_PHRASES = [
 ];
 
 const EXCLUDED_DIRECTORY_NAMES = new Set(['.git', 'coverage', 'dist', 'node_modules']);
-const EXCLUDED_PATH_PREFIXES = ['.agent/practice-core-backup-', '.agent/practice-core/incoming/'];
+const EXCLUDED_PATH_PREFIXES = [
+  '.agent/practice-core-backup-',
+  '.agent/practice-core/incoming/',
+  // Live agent worktrees: full in-progress checkouts of this repo. Machine-local
+  // state — the scan must never depend on what concurrent agents have checked out.
+  '.claude/worktrees/',
+];
 const EXCLUDED_PATH_SEGMENTS = ['/archive/'];
 const EXCLUDED_PATH_PREFIXES_EXTRA = ['.agent/experience/', '.remember/'];
 
