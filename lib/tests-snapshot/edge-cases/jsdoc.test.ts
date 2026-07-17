@@ -112,7 +112,7 @@ test('jsdoc', async () => {
       /** A string with example tag */ example?: string;
       /** A string with examples tag */ examples?: string;
       /** A number with many tags */ manyTagsNum?: number;
-      /** A string with many tags */ manyTagsStr?: string;
+      /** A string with many tags */ manyTagsStr?: "a" | "b" | "c";
       /** A number with maximum tag */ numMax?: number;
       /** A number with minimum tag */ numMin?: number;
       ref?: SimpleObject;

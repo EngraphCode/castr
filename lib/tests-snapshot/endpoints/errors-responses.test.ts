@@ -261,7 +261,7 @@ it('determines which status are considered errors-responses', async () => {
       str: string;
     };
     export type AnotherSuccess = number;
-    export type VeryDeeplyNested = string;
+    export type VeryDeeplyNested = "aaa" | "bbb" | "ccc";
     export type DeeplyNested = VeryDeeplyNested[];
     export type Nested = {
       circularToMain?: Main;
@@ -415,7 +415,7 @@ it('determines which status are considered errors-responses', async () => {
       str: string;
     };
     export type AnotherSuccess = number;
-    export type VeryDeeplyNested = string;
+    export type VeryDeeplyNested = "aaa" | "bbb" | "ccc";
     export type DeeplyNested = VeryDeeplyNested[];
     export type Nested = {
       circularToMain?: Main;

@@ -8,9 +8,20 @@ import {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
-  resolveSchemaTypeString,
 } from './fail-fast.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
+import {
+  arrayItemNeedsParens,
+  renderTypeText,
+  rendersAsTopLevelUnion,
+  writeLiteralValueType,
+  writeTypeArrayUnion,
+} from './literal-types.js';
+
+/** Render a schema body to text for deduplication and parens decisions. @internal */
+function renderSchemaBody(schema: CastrSchema): string {
+  return renderTypeText(writeTypeBody(schema));
+}
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
@@ -71,6 +82,10 @@ function writePrimitiveType(schema: CastrSchema, writer: CodeBlockWriter): void 
     writer.write(scalarTypeToken);
     return;
   }
+  if (Array.isArray(schema.type)) {
+    writeTypeArrayUnion(schema, schema.type, writer, writePrimitiveType);
+    return;
+  }
   switch (schema.type) {
     case 'array':
       writeArrayType(schema, writer);
@@ -93,6 +108,9 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
       return;
     }
     if (writeCompositionType(schema, writer)) {
+      return;
+    }
+    if (writeLiteralValueType(schema, writer)) {
       return;
     }
     writePrimitiveType(schema, writer);
@@ -132,18 +150,14 @@ function writeIntersection(schemas: CastrSchema[], writer: CodeBlockWriter): voi
     if (i > 0) {
       writer.write(' & ');
     }
-    const needsParens = Boolean(s.oneOf ?? s.anyOf);
-    if (needsParens) {
-      writer.write('(');
-    }
+    const needsParens = Boolean(s.oneOf ?? s.anyOf) || rendersAsTopLevelUnion(s, renderSchemaBody);
+    writer.conditionalWrite(needsParens, '(');
     writeTypeBody(s)(writer);
-    if (needsParens) {
-      writer.write(')');
-    }
+    writer.conditionalWrite(needsParens, ')');
   });
 }
 
-/** Write union type. oneOf/anyOf: [A, B] → A | B. Deduplicates type strings. */
+/** Write union type. oneOf/anyOf: [A, B] → A | B. Deduplicates rendered member types. */
 function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
   if (schemas.length === 0) {
     writer.write('unknown');
@@ -152,7 +166,7 @@ function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
   const seen = new Set<string>();
   const uniqueSchemas: CastrSchema[] = [];
   for (const s of schemas) {
-    const typeStr = resolveSchemaTypeString(s);
+    const typeStr = renderSchemaBody(s);
     if (!seen.has(typeStr)) {
       seen.add(typeStr);
       uniqueSchemas.push(s);
@@ -180,7 +194,10 @@ function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
     return;
   }
   if (schema.items && !Array.isArray(schema.items)) {
+    const needsParens = arrayItemNeedsParens(schema.items, renderSchemaBody);
+    writer.conditionalWrite(needsParens, '(');
     writeTypeDefinition(schema.items)(writer);
+    writer.conditionalWrite(needsParens, ')');
     writer.write('[]');
   } else {
     writer.write('unknown[]');

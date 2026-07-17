@@ -2,7 +2,11 @@ import { Project } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import { writeTypeDefinition } from './type-writer/index.js';
 import type { CastrSchema } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
+import {
+  CastrSchemaProperties,
+  createMockCastrSchema,
+  createMockCastrSchemaNode,
+} from '../../ir/index.js';
 
 const project = new Project({ useInMemoryFileSystem: true });
 
@@ -453,6 +457,120 @@ describe('TypeWriter', () => {
       };
       expect(generate(schema)).toBe('unknown');
     });
+  });
+});
+
+describe('Literal Value Types — enum and const', () => {
+  it('generates literal union for a string enum', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: ['a', 'b'] });
+    expect(generate(schema)).toBe('"a" | "b"');
+  });
+
+  it('generates literal union for a number enum', () => {
+    const schema = createMockCastrSchema({ type: 'number', enum: [1, 2, 3] });
+    expect(generate(schema)).toBe('1 | 2 | 3');
+  });
+
+  it('generates literal union for a mixed enum including null', () => {
+    const schema = createMockCastrSchema({ enum: ['a', 1, true, null] });
+    expect(generate(schema)).toBe('"a" | 1 | true | null');
+  });
+
+  it('generates a single literal for a single-value enum', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: ['only'] });
+    expect(generate(schema)).toBe('"only"');
+  });
+
+  it('deduplicates repeated enum values', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: ['a', 'a', 'b'] });
+    expect(generate(schema)).toBe('"a" | "b"');
+  });
+
+  it('generates never for an empty enum (nothing validates)', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: [] });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('generates literal type for a string const', () => {
+    const schema = createMockCastrSchema({ type: 'string', const: 'fixed' });
+    expect(generate(schema)).toBe('"fixed"');
+  });
+
+  it('generates literal type for a number const', () => {
+    const schema = createMockCastrSchema({ type: 'number', const: 42 });
+    expect(generate(schema)).toBe('42');
+  });
+
+  it('appends null to literal unions for nullable enum schemas', () => {
+    const schema = createMockCastrSchema({
+      type: 'string',
+      enum: ['a', 'b'],
+      metadata: createMockCastrSchemaNode({ required: true, nullable: true }),
+    });
+    expect(generate(schema)).toBe('"a" | "b" | null');
+  });
+
+  it('parenthesises enum unions used as array item types', () => {
+    const schema = createMockCastrSchema({
+      type: 'array',
+      items: createMockCastrSchema({ type: 'string', enum: ['a', 'b'] }),
+    });
+    expect(generate(schema)).toBe('("a" | "b")[]');
+  });
+
+  it('parenthesises enum unions inside intersections', () => {
+    const schema = createMockCastrSchema({
+      allOf: [
+        createMockCastrSchema({ type: 'string' }),
+        createMockCastrSchema({ type: 'string', enum: ['a', 'b'] }),
+      ],
+    });
+    expect(generate(schema)).toBe('string & ("a" | "b")');
+  });
+
+  it('does not deduplicate distinct single-value enums in unions', () => {
+    const schema = createMockCastrSchema({
+      oneOf: [
+        createMockCastrSchema({ type: 'string', enum: ['a'] }),
+        createMockCastrSchema({ type: 'string', enum: ['b'] }),
+      ],
+    });
+    expect(generate(schema)).toBe('"a" | "b"');
+  });
+
+  it('throws for enum values that have no TypeScript literal type', () => {
+    const schema = createMockCastrSchema({ enum: [{ nested: 1 }] });
+    expect(() => generate(schema)).toThrow(/Genuinely impossible/);
+  });
+
+  it('throws for a non-finite numeric const', () => {
+    const schema = createMockCastrSchema({ type: 'number', const: Number.POSITIVE_INFINITY });
+    expect(() => generate(schema)).toThrow(/Genuinely impossible/);
+  });
+});
+
+describe('Type Arrays — union output', () => {
+  it('generates union for a heterogeneous type array', () => {
+    const schema = createMockCastrSchema({ type: ['string', 'number'] });
+    expect(generate(schema)).toBe('string | number');
+  });
+
+  it('deduplicates repeated members of a type array', () => {
+    const schema = createMockCastrSchema({ type: ['string', 'string'] });
+    expect(generate(schema)).toBe('string');
+  });
+
+  it('generates never for an empty type array (nothing validates)', () => {
+    const schema = createMockCastrSchema({ type: [] });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('parenthesises type-array unions used as array item types', () => {
+    const schema = createMockCastrSchema({
+      type: 'array',
+      items: createMockCastrSchema({ type: ['string', 'number'] }),
+    });
+    expect(generate(schema)).toBe('(string | number)[]');
   });
 });
 
