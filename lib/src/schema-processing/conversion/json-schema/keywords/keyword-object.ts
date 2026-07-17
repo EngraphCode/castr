@@ -3,7 +3,6 @@ import type { Schema as JsonSchema } from 'ajv';
 
 import {
   assignIfDefined,
-  hasJsonSchemaKeyword,
   isSchemaLikeRecord,
   readSchemaKeyword,
   setKeyword,
@@ -12,22 +11,15 @@ import {
   type MutableJsonSchema,
   type SchemaLike,
 } from './keyword-helpers.js';
-import {
-  RESULT_KIND_BOOLEAN,
-  RESULT_KIND_SCHEMA,
-  SCHEMA_TYPE_OBJECT,
-} from '../json-schema-constants.js';
-
-type UnevaluatedPropertiesResult =
-  | { kind: typeof RESULT_KIND_BOOLEAN; value: boolean }
-  | { kind: typeof RESULT_KIND_SCHEMA; value: SchemaLike }
-  | undefined;
+import { SCHEMA_TYPE_OBJECT } from '../json-schema-constants.js';
 
 export function applyObjectKeywords(
   schema: SchemaObject,
   target: MutableJsonSchema,
   convert: Converter,
 ): void {
+  rejectUnevaluatedProperties(schema);
+
   if (!isObjectLikeSchema(schema)) {
     return;
   }
@@ -38,7 +30,6 @@ export function applyObjectKeywords(
   applyRequiredKeyword(schema, target);
   applyAdditionalPropertiesKeyword(schema, target, convert);
   applyPropertyCountKeywords(schema, target);
-  applyUnevaluatedProperties(schema, target, convert);
   applyDependentSchemas(schema, target, convert);
 }
 
@@ -119,25 +110,26 @@ function applyPropertyCountKeywords(schema: SchemaObject, target: MutableJsonSch
   });
 }
 
-function applyUnevaluatedProperties(
-  schema: SchemaObject,
-  target: MutableJsonSchema,
-  convert: Converter,
-): void {
-  if (hasJsonSchemaKeyword(target, 'additionalProperties')) {
+/**
+ * Fail fast on `unevaluatedProperties` (L14).
+ *
+ * `unevaluatedProperties` is composition-aware (it sees properties
+ * evaluated by `allOf`/`oneOf`/`anyOf` members); Draft 07's
+ * `additionalProperties` is local-only. Remapping one to the other
+ * silently changes validation semantics, so the downgrade is rejected
+ * instead of applied.
+ */
+function rejectUnevaluatedProperties(schema: SchemaObject): void {
+  if (readSchemaKeyword(schema, 'unevaluatedProperties') === undefined) {
     return;
   }
 
-  const unevaluated = readUnevaluatedProperties(schema);
-  if (unevaluated === undefined) {
-    return;
-  }
-
-  if (unevaluated.kind === RESULT_KIND_BOOLEAN) {
-    setKeyword(target, 'additionalProperties', unevaluated.value);
-  } else {
-    setKeyword(target, 'additionalProperties', convert(unevaluated.value));
-  }
+  throw new Error(
+    'Cannot convert unevaluatedProperties to JSON Schema Draft 07: the target dialect has no ' +
+      'composition-aware equivalent, and downgrading it to additionalProperties would change ' +
+      'validation semantics. Remove the keyword or express the constraint with ' +
+      'additionalProperties directly.',
+  );
 }
 
 function applyDependentSchemas(
@@ -169,20 +161,6 @@ function applyDependentSchemas(
   if (hasDependencies) {
     setKeyword(target, 'dependencies', dependencies);
   }
-}
-
-function readUnevaluatedProperties(schema: SchemaObject): UnevaluatedPropertiesResult {
-  const candidate = readSchemaKeyword(schema, 'unevaluatedProperties');
-  if (candidate === undefined) {
-    return undefined;
-  }
-
-  if (typeof candidate === 'boolean') {
-    return { kind: RESULT_KIND_BOOLEAN, value: candidate };
-  }
-
-  const schemaLike = toSchemaLike(candidate);
-  return schemaLike === undefined ? undefined : { kind: RESULT_KIND_SCHEMA, value: schemaLike };
 }
 
 function readDependentSchemas(schema: SchemaObject): Record<string, SchemaLike> | undefined {

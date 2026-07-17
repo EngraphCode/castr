@@ -6,12 +6,17 @@
  *
  * Does NOT mutate the input — always returns a new object.
  *
+ * Sub-schema recursion is driven by the keyword classification on
+ * `Draft07SubSchemaKeywords` (see the normalization types module): every
+ * classified keyword is widened on `Draft07Input` and must be narrowed
+ * back to `JsonSchema2020` by `stripDraft07Keys`, so the compiler rejects
+ * a keyword that misses recursion.
+ *
  * **Library Types:**
  * Uses JsonSchema2020 (extends the shared OpenAPI seam).
  * Uses lodash-es split/join for $ref rewriting (ADR-026 compliant).
  */
 
-import { type ReferenceObject, isReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 import type { Draft07Input } from './json-schema-parser.normalization.types.js';
 import {
@@ -19,7 +24,7 @@ import {
   splitDependencies,
   stripDraft07Keys,
 } from './json-schema-parser.normalization.helpers.js';
-import { rewriteRef, rewriteRefObject } from './json-schema-parser.normalization.refs.js';
+import { rewriteRef } from './json-schema-parser.normalization.refs.js';
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -40,7 +45,6 @@ export function normalizeDraft07(input: Draft07Input): JsonSchema2020 {
   result = splitDependencies(result);
   result = normalizeTupleItems(result);
   result = normalizeExclusiveBounds(result);
-  result = normalizeSubSchemas(result);
   result = rewriteRef(result);
 
   return stripDraft07Keys(result, normalizeDraft07);
@@ -90,85 +94,4 @@ function normalizeOneBound(
     return { ...rest, [exclKey]: boundValue };
   }
   return input;
-}
-
-// ---------------------------------------------------------------------------
-// Step 5: Recurse into sub-schemas
-// ---------------------------------------------------------------------------
-
-function normalizeSubSchemas(input: Draft07Input): Draft07Input {
-  let result = normalizeItems(input);
-  result = normalizeSingleSchema(result, 'additionalProperties');
-  result = normalizeSingleSchema(result, 'not');
-  result = normalizeSchemaArray(result, 'allOf');
-  result = normalizeSchemaArray(result, 'oneOf');
-  result = normalizeSchemaArray(result, 'anyOf');
-  result = normalizeSchemaArray(result, 'prefixItems');
-  result = normalizeSchemaMap(result, '$defs');
-  result = normalizeSchemaMap(result, 'properties');
-  result = normalizeSchemaMap(result, 'dependentSchemas');
-  return result;
-}
-
-/**
- * Normalize single-schema items (not array — array items were already
- * converted to prefixItems by normalizeTupleItems).
- */
-function normalizeItems(input: Draft07Input): Draft07Input {
-  const val = input.items;
-  if (val === undefined || Array.isArray(val)) {
-    return input;
-  }
-  if (isReferenceObject(val)) {
-    return { ...input, items: rewriteRefObject(val) };
-  }
-  return { ...input, items: normalizeDraft07(val) };
-}
-
-function normalizeSingleSchema(
-  input: Draft07Input,
-  key: 'additionalProperties' | 'not',
-): Draft07Input {
-  const val = input[key];
-  if (val === undefined || typeof val === 'boolean') {
-    return input;
-  }
-  if (isReferenceObject(val)) {
-    return { ...input, [key]: rewriteRefObject(val) };
-  }
-  return { ...input, [key]: normalizeDraft07(val) };
-}
-
-function normalizeSchemaArray(
-  input: Draft07Input,
-  key: 'allOf' | 'oneOf' | 'anyOf' | 'prefixItems',
-): Draft07Input {
-  const arr = input[key];
-  if (arr === undefined) {
-    return input;
-  }
-  return {
-    ...input,
-    [key]: arr.map((item) =>
-      isReferenceObject(item) ? rewriteRefObject(item) : normalizeDraft07(item),
-    ),
-  };
-}
-
-function normalizeSchemaMap(
-  input: Draft07Input,
-  key: '$defs' | 'properties' | 'dependentSchemas',
-): Draft07Input {
-  const map = input[key];
-  if (map === undefined) {
-    return input;
-  }
-  const normalized: Record<string, Draft07Input | ReferenceObject> = {};
-  for (const k of Object.keys(map)) {
-    const value = map[k];
-    if (value !== undefined) {
-      normalized[k] = isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
-    }
-  }
-  return { ...input, [key]: normalized };
 }

@@ -1,13 +1,13 @@
 import type { ReferenceObject } from '../../../../shared/openapi-types.js';
-import { split, join } from 'lodash-es';
+import { split, join, drop } from 'lodash-es';
 import type { Draft07Input } from './json-schema-parser.normalization.types.js';
 
 const SLASH = '/';
 const DEFINITIONS_REF_LEADING = '#';
 const DEFINITIONS_REF_SEGMENT = 'definitions';
 const DEFS_SEGMENT = '$defs';
-const EXPECTED_REF_SEGMENT_COUNT = 3;
-const REF_SEGMENT_NAME_INDEX = 2;
+const MINIMUM_REF_SEGMENT_COUNT = 3;
+const PREFIX_SEGMENT_COUNT = 2;
 
 export function rewriteRef(input: Draft07Input): Draft07Input {
   if (input.$ref === undefined) {
@@ -22,15 +22,24 @@ export function rewriteRefObject(ref: ReferenceObject): ReferenceObject {
   return rewritten === ref.$ref ? ref : { ...ref, $ref: rewritten };
 }
 
+/**
+ * Rewrite a Draft 07 `#/definitions/...` pointer to `#/$defs/...` form.
+ *
+ * Swaps the leading `#/definitions/` prefix regardless of remaining depth,
+ * so deep pointers such as `#/definitions/Outer/properties/inner` stay
+ * resolvable after `definitions` is lifted to `$defs`.
+ */
 function rewriteRefPath(path: string): string {
   const segments = split(path, SLASH);
   if (
-    segments.length !== EXPECTED_REF_SEGMENT_COUNT ||
+    segments.length < MINIMUM_REF_SEGMENT_COUNT ||
     segments[0] !== DEFINITIONS_REF_LEADING ||
     segments[1] !== DEFINITIONS_REF_SEGMENT
   ) {
     return path;
   }
-  const name = segments[REF_SEGMENT_NAME_INDEX];
-  return name !== undefined ? join([DEFINITIONS_REF_LEADING, DEFS_SEGMENT, name], SLASH) : path;
+  return join(
+    [DEFINITIONS_REF_LEADING, DEFS_SEGMENT, ...drop(segments, PREFIX_SEGMENT_COUNT)],
+    SLASH,
+  );
 }

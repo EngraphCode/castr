@@ -56,7 +56,7 @@ export function writeTypeField(schema: CastrSchema, result: JsonSchemaObject): v
 }
 
 /**
- * Write string-constraint fields.
+ * Write string-constraint fields (including contentEncoding/contentMediaType).
  * @internal
  */
 export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject): void {
@@ -72,28 +72,86 @@ export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject)
   if (schema.pattern !== undefined) {
     result.pattern = schema.pattern;
   }
+  if (schema.contentEncoding !== undefined) {
+    result.contentEncoding = schema.contentEncoding;
+  }
+  if (schema.contentMediaType !== undefined) {
+    result.contentMediaType = schema.contentMediaType;
+  }
 }
 
 /**
  * Write number-constraint fields.
+ *
+ * Boolean Draft-04-style `exclusiveMinimum`/`exclusiveMaximum` are
+ * normalised to the numeric 2020-12 form using the companion
+ * `minimum`/`maximum` (which is then suppressed), or rejected when no
+ * companion bound exists — never silently dropped.
+ *
  * @internal
  */
 export function writeNumberFields(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.minimum !== undefined) {
+  const exclusiveMinimum = normaliseExclusiveBound(
+    schema.minimum,
+    schema.exclusiveMinimum,
+    'minimum',
+    'exclusiveMinimum',
+  );
+  const exclusiveMaximum = normaliseExclusiveBound(
+    schema.maximum,
+    schema.exclusiveMaximum,
+    'maximum',
+    'exclusiveMaximum',
+  );
+
+  // Boolean exclusive:true consumes its companion bound during promotion.
+  if (schema.minimum !== undefined && schema.exclusiveMinimum !== true) {
     result.minimum = schema.minimum;
   }
-  if (schema.maximum !== undefined) {
+  if (schema.maximum !== undefined && schema.exclusiveMaximum !== true) {
     result.maximum = schema.maximum;
   }
-  if (typeof schema.exclusiveMinimum === 'number') {
-    result.exclusiveMinimum = schema.exclusiveMinimum;
+  if (exclusiveMinimum !== undefined) {
+    result.exclusiveMinimum = exclusiveMinimum;
   }
-  if (typeof schema.exclusiveMaximum === 'number') {
-    result.exclusiveMaximum = schema.exclusiveMaximum;
+  if (exclusiveMaximum !== undefined) {
+    result.exclusiveMaximum = exclusiveMaximum;
   }
   if (schema.multipleOf !== undefined) {
     result.multipleOf = schema.multipleOf;
   }
+}
+
+/**
+ * Normalise one exclusive bound to its numeric 2020-12 form.
+ *
+ * - numeric: already 2020-12 — returned unchanged
+ * - `true` with companion bound: promoted to that numeric value (Draft-04 form)
+ * - `true` without companion bound: fail-fast — there is no numeric form
+ * - `false` or absent: no exclusive bound (Draft-04 inclusive default)
+ *
+ * @internal
+ */
+function normaliseExclusiveBound(
+  bound: number | undefined,
+  exclusive: number | boolean | undefined,
+  boundKey: 'minimum' | 'maximum',
+  exclusiveKey: 'exclusiveMinimum' | 'exclusiveMaximum',
+): number | undefined {
+  if (typeof exclusive === 'number') {
+    return exclusive;
+  }
+  if (exclusive === true) {
+    if (bound === undefined) {
+      throw new Error(
+        `Cannot write boolean ${exclusiveKey}: true without a companion ${boundKey}: ` +
+          'there is no numeric 2020-12 form to normalise it to. ' +
+          `Provide a numeric ${boundKey}, or use the numeric ${exclusiveKey} form directly.`,
+      );
+    }
+    return bound;
+  }
+  return undefined;
 }
 
 /**

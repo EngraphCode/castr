@@ -15,6 +15,7 @@ import {
   parseType,
   parseFormat,
   parseStringConstraints,
+  parseContentKeywords,
   parseNumberConstraints,
   parseEnumConst,
   parseCoreMetadata,
@@ -52,9 +53,34 @@ export function parseJsonSchemaObject(input: JsonSchema2020 | boolean): CastrSch
 function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
   if (input.$ref !== undefined) {
     assertPortableIntegerInputSemanticsSupported('JSON Schema 2020-12', input.type, input.format);
-    return { $ref: input.$ref, metadata: createDefaultMetadata() };
+    return parseRefWithSiblings(input, input.$ref);
   }
 
+  return parseSchemaKeywords(input);
+}
+
+/**
+ * Parse a `$ref` schema, carrying any sibling keywords into the IR.
+ *
+ * JSON Schema 2020-12 applies keywords that appear next to `$ref`, so
+ * siblings must be preserved rather than dropped. Pure references stay
+ * minimal (`{ $ref, metadata }`).
+ */
+function parseRefWithSiblings(input: JsonSchema2020, ref: string): CastrSchema {
+  const { $ref: _ref, ...siblings } = input;
+  if (Object.keys(siblings).length === 0) {
+    return { $ref: ref, metadata: createDefaultMetadata() };
+  }
+
+  const result = parseSchemaKeywords(siblings);
+  result.$ref = ref;
+  return result;
+}
+
+/**
+ * Parse all non-`$ref` schema keywords into a fresh IR node.
+ */
+function parseSchemaKeywords(input: JsonSchema2020): CastrSchema {
   const nullable = computeNullable(input);
   const result: CastrSchema = { metadata: createDefaultMetadata({ nullable }) };
 
@@ -71,6 +97,7 @@ function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
   parseComposition(input, result, parseSchema);
   parseCoreMetadata(input, result);
   parseAccessMetadata(input, result);
+  parseContentKeywords(input, result, parseSchema);
   parse2020Keywords(input, result, parseSchema);
 
   return result;

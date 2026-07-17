@@ -229,6 +229,25 @@ export interface CastrSchema {
    */
   contentEncoding?: string;
 
+  /**
+   * Media type of the (decoded) string content.
+   *
+   * @example 'image/png', 'application/json'
+   *
+   * @remarks
+   * Also defined in JSON Schema Draft 07, 2020-12, and OpenAPI 3.1+.
+   */
+  contentMediaType?: string;
+
+  /**
+   * Schema for the decoded string content (JSON Schema 2020-12).
+   * Only meaningful when `contentMediaType` identifies a parseable format.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1+.
+   */
+  contentSchema?: CastrSchema;
+
   // Number properties
   /**
    * Minimum number value (inclusive).
@@ -290,6 +309,10 @@ export interface CastrSchema {
   /**
    * Reference to another schema.
    * Preserved for dependency tracking even after resolution.
+   *
+   * JSON Schema 2020-12 (and therefore OpenAPI 3.1+) applies sibling
+   * keywords next to `$ref`, so other `CastrSchema` fields may be present
+   * alongside this reference and carry their usual meaning.
    *
    * @example '#/components/schemas/Pet'
    */

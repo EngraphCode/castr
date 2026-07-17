@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "EncodedImage": {
+      "type": "string",
+      "contentEncoding": "base64",
+      "contentMediaType": "image/png"
+    },
+    "EmbeddedDoc": {
+      "type": "string",
+      "contentMediaType": "application/json",
+      "contentSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" }
+        },
+        "required": ["id"]
+      }
+    }
+  }
+}

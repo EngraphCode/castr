@@ -1,6 +1,5 @@
 // Additional parsers not re-exported by context
 export { parseZodSource } from './parsers/zod/index.js';
-export { UnsupportedJsonSchemaKeywordError } from './parsers/json-schema/index.js';
 
 // Writers
 export { writeOpenApi } from './writers/openapi/index.js';

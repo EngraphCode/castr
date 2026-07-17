@@ -1,15 +1,31 @@
-import { type ReferenceObject, isReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
-import type {
-  Draft07Input,
-  Draft07SchemaMap,
-  Draft07SchemaOrRef,
-} from './json-schema-parser.normalization.types.js';
-import { rewriteRefObject } from './json-schema-parser.normalization.refs.js';
+import type { Draft07Input } from './json-schema-parser.normalization.types.js';
+import type { ReferenceObject } from '../../../../shared/openapi-types.js';
+import {
+  applyClassifiedKeywords,
+  applyNumericBounds,
+  applyNormalizedItems,
+} from './json-schema-parser.normalization.apply.js';
 
+type NormalizeFn = (input: Draft07Input) => JsonSchema2020;
+
+/** Draft 07 input minus the flat keys handled directly by `stripDraft07Keys`. */
+type Draft07SubSchemaInput = Omit<
+  Draft07Input,
+  'definitions' | 'dependencies' | 'exclusiveMinimum' | 'exclusiveMaximum' | 'items'
+>;
+
+/**
+ * Narrow a normalized Draft 07 input back to a typed `JsonSchema2020`.
+ *
+ * Destructures every widened keyword (see `Draft07SubSchemaKeywords`) and
+ * re-applies it with recursive normalization. Completeness is
+ * compiler-enforced: a widened keyword left in the rest-spread fails the
+ * `JsonSchema2020` assignment in `rebuildSubSchemaKeywords`.
+ */
 export function stripDraft07Keys(
   input: Draft07Input,
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
+  normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
   const {
     definitions: _definitions,
@@ -17,138 +33,61 @@ export function stripDraft07Keys(
     exclusiveMinimum,
     exclusiveMaximum,
     items,
+    ...rest
+  } = input;
+
+  let result = rebuildSubSchemaKeywords(rest, normalizeDraft07);
+  result = applyNumericBounds(result, exclusiveMinimum, exclusiveMaximum);
+  return applyNormalizedItems(result, items, normalizeDraft07);
+}
+
+/**
+ * Re-apply every sub-schema-bearing keyword with recursive normalization,
+ * grouped by the value-shape classification on `Draft07SubSchemaKeywords`.
+ */
+function rebuildSubSchemaKeywords(
+  input: Draft07SubSchemaInput,
+  normalizeDraft07: NormalizeFn,
+): JsonSchema2020 {
+  const {
     $defs,
     dependentSchemas,
     properties,
+    patternProperties,
     allOf,
     oneOf,
     anyOf,
-    not,
-    additionalProperties,
     prefixItems,
+    not,
+    propertyNames,
+    contains,
+    contentSchema,
+    additionalProperties,
+    if: ifSchema,
+    then: thenSchema,
+    else: elseSchema,
+    unevaluatedProperties,
+    unevaluatedItems,
     ...clean
   } = input;
 
-  let result: JsonSchema2020 = { ...clean };
-  result = applyNumericBounds(result, exclusiveMinimum, exclusiveMaximum);
-  result = applyNormalizedItems(result, items, normalizeDraft07);
-  result = applyNormalizedMaps(result, { $defs, dependentSchemas, properties }, normalizeDraft07);
-  result = applyNormalizedArrays(result, { allOf, oneOf, anyOf, prefixItems }, normalizeDraft07);
-  result = applyNormalizedSingles(result, not, additionalProperties, normalizeDraft07);
-  return result;
-}
-
-function applyNumericBounds(
-  result: JsonSchema2020,
-  exclusiveMinimum: Draft07Input['exclusiveMinimum'],
-  exclusiveMaximum: Draft07Input['exclusiveMaximum'],
-): JsonSchema2020 {
-  if (typeof exclusiveMinimum === 'number') {
-    result.exclusiveMinimum = exclusiveMinimum;
-  }
-  if (typeof exclusiveMaximum === 'number') {
-    result.exclusiveMaximum = exclusiveMaximum;
-  }
-  return result;
-}
-
-function applyNormalizedItems(
-  result: JsonSchema2020,
-  items: Draft07Input['items'],
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): JsonSchema2020 {
-  if (items !== undefined && !Array.isArray(items)) {
-    result.items = narrowSchemaOrRef(items, normalizeDraft07);
-  }
-  return result;
-}
-
-function applyNormalizedMaps(
-  result: JsonSchema2020,
-  maps: {
-    $defs: Draft07Input['$defs'] | undefined;
-    dependentSchemas: Draft07Input['dependentSchemas'] | undefined;
-    properties: Draft07Input['properties'] | undefined;
-  },
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): JsonSchema2020 {
-  if (maps.$defs !== undefined) {
-    result.$defs = narrowSchemaMap(maps.$defs, normalizeDraft07);
-  }
-  if (maps.dependentSchemas !== undefined) {
-    result.dependentSchemas = narrowSchemaMap(maps.dependentSchemas, normalizeDraft07);
-  }
-  if (maps.properties !== undefined) {
-    result.properties = narrowSchemaMap(maps.properties, normalizeDraft07);
-  }
-  return result;
-}
-
-function applyNormalizedArrays(
-  result: JsonSchema2020,
-  arrays: {
-    allOf: Draft07Input['allOf'] | undefined;
-    oneOf: Draft07Input['oneOf'] | undefined;
-    anyOf: Draft07Input['anyOf'] | undefined;
-    prefixItems: Draft07Input['prefixItems'] | undefined;
-  },
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): JsonSchema2020 {
-  if (arrays.allOf !== undefined) {
-    result.allOf = narrowSchemaArray(arrays.allOf, normalizeDraft07);
-  }
-  if (arrays.oneOf !== undefined) {
-    result.oneOf = narrowSchemaArray(arrays.oneOf, normalizeDraft07);
-  }
-  if (arrays.anyOf !== undefined) {
-    result.anyOf = narrowSchemaArray(arrays.anyOf, normalizeDraft07);
-  }
-  if (arrays.prefixItems !== undefined) {
-    result.prefixItems = narrowSchemaArray(arrays.prefixItems, normalizeDraft07);
-  }
-  return result;
-}
-
-function applyNormalizedSingles(
-  result: JsonSchema2020,
-  not: Draft07Input['not'],
-  additionalProperties: Draft07Input['additionalProperties'],
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): JsonSchema2020 {
-  if (not !== undefined) {
-    result.not = narrowSchemaOrRef(not, normalizeDraft07);
-  }
-  if (typeof additionalProperties === 'boolean') {
-    result.additionalProperties = additionalProperties;
-  } else if (additionalProperties !== undefined) {
-    result.additionalProperties = narrowSchemaOrRef(additionalProperties, normalizeDraft07);
-  }
-  return result;
-}
-
-function narrowSchemaOrRef(
-  value: Draft07SchemaOrRef,
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): JsonSchema2020 | ReferenceObject {
-  return isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
-}
-
-function narrowSchemaArray(
-  value: Draft07SchemaOrRef[],
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): (JsonSchema2020 | ReferenceObject)[] {
-  return value.map((item) => narrowSchemaOrRef(item, normalizeDraft07));
-}
-
-function narrowSchemaMap(
-  value: Draft07SchemaMap,
-  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): Record<string, JsonSchema2020 | ReferenceObject> {
-  const out: Record<string, JsonSchema2020 | ReferenceObject> = {};
-  for (const [key, item] of Object.entries(value)) {
-    out[key] = narrowSchemaOrRef(item, normalizeDraft07);
-  }
-  return out;
+  return applyClassifiedKeywords(
+    { ...clean },
+    {
+      maps: { $defs, dependentSchemas, properties, patternProperties },
+      arrays: { allOf, oneOf, anyOf, prefixItems },
+      singles: { not, propertyNames, contains, contentSchema },
+      boolOrSchemas: {
+        additionalProperties,
+        if: ifSchema,
+        then: thenSchema,
+        else: elseSchema,
+        unevaluatedProperties,
+        unevaluatedItems,
+      },
+    },
+    normalizeDraft07,
+  );
 }
 
 export function liftDefinitions(input: Draft07Input): Draft07Input {

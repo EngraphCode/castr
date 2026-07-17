@@ -30,15 +30,25 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
 }
 
 function hasValidSchemaStructure(value: UnknownRecord): boolean {
+  return hasValidSchemaCoreStructure(value) && hasValidSchemaApplicators(value);
+}
+
+function hasValidSchemaCoreStructure(value: UnknownRecord): boolean {
   return (
     hasValidSchemaBooleanSchema(value) &&
     hasValidSchemaType(value) &&
     hasValidSchemaObjectStructure(value) &&
     hasValidSchemaItems(value) &&
+    hasValidSchemaMetadata(value)
+  );
+}
+
+function hasValidSchemaApplicators(value: UnknownRecord): boolean {
+  return (
     hasValidSchemaComposition(value) &&
     hasValidSchemaConditionalApplicators(value) &&
-    hasValidSchemaAnchorKeywords(value) &&
-    hasValidSchemaMetadata(value)
+    hasValidSchemaContentKeywords(value) &&
+    hasValidSchemaAnchorKeywords(value)
   );
 }
 
@@ -76,15 +86,7 @@ function hasValidSchemaType(value: UnknownRecord): boolean {
 function isSchemaTypeEntry(
   value: unknown,
 ): value is NonNullable<Extract<CastrSchema['type'], string>> {
-  if (typeof value !== 'string') {
-    return false;
-  }
-  for (const schemaType of VALID_SCHEMA_TYPES) {
-    if (value === schemaType) {
-      return true;
-    }
-  }
-  return false;
+  return typeof value === 'string' && VALID_SCHEMA_TYPES.some((schemaType) => schemaType === value);
 }
 
 function isSchemaTypeArray(
@@ -210,15 +212,25 @@ function hasValidSchemaComposition(value: UnknownRecord): boolean {
   return !('not' in value && value['not'] !== undefined && !isCastrSchema(value['not']));
 }
 
+// ── content keywords (contentEncoding / contentMediaType / contentSchema) ──
+
+function hasValidSchemaContentKeywords(value: UnknownRecord): boolean {
+  const encoding = value['contentEncoding'];
+  const mediaType = value['contentMediaType'];
+  const contentSchema = value['contentSchema'];
+  return (
+    (encoding === undefined || typeof encoding === 'string') &&
+    (mediaType === undefined || typeof mediaType === 'string') &&
+    (contentSchema === undefined || isCastrSchema(contentSchema))
+  );
+}
+
 // ── if / then / else ──
 
 function hasValidSchemaConditionalApplicators(value: UnknownRecord): boolean {
-  for (const key of ['if', 'then', 'else'] as const) {
-    if (key in value && value[key] !== undefined && !isCastrSchema(value[key])) {
-      return false;
-    }
-  }
-  return true;
+  return (['if', 'then', 'else'] as const).every(
+    (key) => value[key] === undefined || isCastrSchema(value[key]),
+  );
 }
 
 // ── metadata (must be a valid CastrSchemaNode) ──

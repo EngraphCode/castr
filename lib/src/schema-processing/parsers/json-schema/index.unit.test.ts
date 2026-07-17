@@ -166,7 +166,7 @@ describe('parseJsonSchemaDocument', () => {
     expect(components[0]?.name).toBe('Simple');
   });
 
-  it('skips $ref entries in $defs', () => {
+  it('carries $ref entries in $defs as reference components', () => {
     const components = parseJsonSchemaDocument({
       $defs: {
         Address: { type: 'object', additionalProperties: false },
@@ -174,8 +174,10 @@ describe('parseJsonSchemaDocument', () => {
       },
     });
 
-    expect(components).toHaveLength(1);
-    expect(components[0]?.name).toBe('Address');
+    expect(components).toHaveLength(2);
+    expect(components.map((c) => c.name)).toEqual(['Address', 'AliasedAddress']);
+    const alias = components.find((c) => c.name === 'AliasedAddress');
+    expect(alias?.schema.$ref).toBe('#/$defs/Address');
   });
 
   it('normalizes Draft 07 definitions before extracting', () => {

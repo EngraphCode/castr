@@ -34,7 +34,13 @@ export function parseObjectFields(
   parseSchema: ParseSchemaFn,
 ): void {
   result.type = ensureObjectTypeForObjectKeywords(result.type, {
-    hasProperties: input.properties !== undefined,
+    // patternProperties / propertyNames are property-defining keywords too
+    // (L12): they make the schema an object and subject to closed-world
+    // enforcement exactly like `properties`.
+    hasProperties:
+      input.properties !== undefined ||
+      input.patternProperties !== undefined ||
+      input.propertyNames !== undefined,
     hasRequired: input.required !== undefined && input.required.length > 0,
     hasAdditionalProperties: input.additionalProperties !== undefined,
   });
@@ -126,6 +132,8 @@ function isObjectKeywordCandidate(input: JsonSchema2020, result: CastrSchema): b
   return (
     isObjectSchemaType(result.type) ||
     input.properties !== undefined ||
+    input.patternProperties !== undefined ||
+    input.propertyNames !== undefined ||
     (Array.isArray(input.required) && input.required.length > 0) ||
     input.additionalProperties !== undefined
   );

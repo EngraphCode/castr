@@ -510,3 +510,69 @@ describe('parseJsonSchemaObject', () => {
     });
   });
 });
+
+// =========================================================================
+// $ref sibling keywords (2020-12 applies siblings — H4)
+// =========================================================================
+describe('parseJsonSchemaObject — $ref sibling keywords (H4)', () => {
+  it('carries description, minLength, and title siblings alongside $ref', () => {
+    const result = parseJsonSchemaObject({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+
+    expect(result.$ref).toBe('#/$defs/Base');
+    expect(result.description).toBe('hi');
+    expect(result.minLength).toBe(5);
+    expect(result.title).toBe('T');
+  });
+
+  it('carries constraint siblings alongside $ref', () => {
+    const result = parseJsonSchemaObject({
+      $ref: '#/$defs/Amount',
+      minimum: 0,
+      maximum: 10,
+    });
+
+    expect(result.$ref).toBe('#/$defs/Amount');
+    expect(result.minimum).toBe(0);
+    expect(result.maximum).toBe(10);
+  });
+
+  it('keeps pure $ref nodes minimal (no sibling fields invented)', () => {
+    const result = parseJsonSchemaObject({ $ref: '#/$defs/Address' });
+
+    expect(Object.keys(result).sort()).toEqual(['$ref', 'metadata']);
+  });
+});
+
+// =========================================================================
+// Content keywords (contentEncoding / contentMediaType / contentSchema — H4)
+// =========================================================================
+describe('parseJsonSchemaObject — content keywords (H4)', () => {
+  it('parses contentMediaType alongside contentEncoding', () => {
+    const result = parseJsonSchemaObject({
+      type: 'string',
+      contentEncoding: 'base64',
+      contentMediaType: 'image/png',
+    });
+
+    expect(result.contentEncoding).toBe('base64');
+    expect(result.contentMediaType).toBe('image/png');
+  });
+
+  it('parses contentSchema recursively into IR', () => {
+    const result = parseJsonSchemaObject({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: { type: 'string', minLength: 1 },
+    });
+
+    expect(result.contentSchema).toBeDefined();
+    expect(result.contentSchema?.type).toBe('string');
+    expect(result.contentSchema?.minLength).toBe(1);
+    expect(result.contentSchema?.metadata).toBeDefined();
+  });
+});

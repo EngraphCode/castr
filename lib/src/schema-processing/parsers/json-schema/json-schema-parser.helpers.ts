@@ -81,11 +81,32 @@ export function parseStringConstraints(input: JsonSchema2020, result: CastrSchem
   if (input.pattern !== undefined) {
     result.pattern = input.pattern;
   }
+
+  applyInferredUuidVersionFromPattern(result);
+}
+
+/**
+ * Parse content keywords (contentEncoding, contentMediaType, contentSchema).
+ *
+ * All three are valid JSON Schema keywords (contentSchema is 2020-12 only)
+ * and are carried into the IR verbatim; `contentSchema` recurses.
+ *
+ * @internal
+ */
+export function parseContentKeywords(
+  input: JsonSchema2020,
+  result: CastrSchema,
+  parseSchema: ParseSchemaFn,
+): void {
   if (input.contentEncoding !== undefined) {
     result.contentEncoding = input.contentEncoding;
   }
-
-  applyInferredUuidVersionFromPattern(result);
+  if (input.contentMediaType !== undefined) {
+    result.contentMediaType = input.contentMediaType;
+  }
+  if (input.contentSchema !== undefined) {
+    result.contentSchema = parseSingleSchemaOrRef(input.contentSchema, parseSchema);
+  }
 }
 
 /** @internal */

@@ -58,6 +58,28 @@ describe('parseJsonSchemaObject object keyword preservation', () => {
     expect(result.items?.additionalProperties).toBeUndefined();
   });
 
+  it('applies closed-world semantics to patternProperties-only objects', () => {
+    const result = parseJsonSchemaObject({
+      patternProperties: {
+        '^x-': { type: 'string' },
+      },
+    });
+
+    expect(result.type).toBe('object');
+    expect(result.additionalProperties).toBe(false);
+    expect(result.patternProperties?.['^x-']?.type).toBe('string');
+  });
+
+  it('applies closed-world semantics to propertyNames-only objects', () => {
+    const result = parseJsonSchemaObject({
+      propertyNames: { type: 'string', minLength: 2 },
+    });
+
+    expect(result.type).toBe('object');
+    expect(result.additionalProperties).toBe(false);
+    expect(result.propertyNames?.minLength).toBe(2);
+  });
+
   it('rejects additionalProperties: true', () => {
     expect(() =>
       parseJsonSchemaObject({

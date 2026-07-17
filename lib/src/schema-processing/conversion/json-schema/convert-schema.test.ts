@@ -215,7 +215,7 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     });
   });
 
-  it('converts unevaluatedProperties keyword to additionalProperties', () => {
+  it('fails fast on unevaluatedProperties instead of silently downgrading it', () => {
     const schema: SchemaObject = JSON.parse(
       `{
         "type": "object",
@@ -226,15 +226,22 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
       }`,
     );
 
-    const result = convertOpenApiSchemaToJsonSchema(schema);
+    expect(() => convertOpenApiSchemaToJsonSchema(schema)).toThrow(
+      /unevaluatedProperties.*Draft 07/,
+    );
+  });
 
-    expect(result).toMatchObject({
-      type: 'object',
-      properties: {
-        id: { type: 'integer' },
-      },
-      additionalProperties: { type: 'string' },
-    });
+  it('fails fast on boolean unevaluatedProperties instead of remapping it', () => {
+    const schema: SchemaObject = JSON.parse(
+      `{
+        "type": "object",
+        "unevaluatedProperties": false
+      }`,
+    );
+
+    expect(() => convertOpenApiSchemaToJsonSchema(schema)).toThrow(
+      /unevaluatedProperties.*Draft 07/,
+    );
   });
 
   it('converts unevaluatedItems keyword to additionalItems', () => {
@@ -302,7 +309,6 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
           "https://json-schema.org/draft/2020-12/vocab/core": true
         },
         "$dynamicRef": "#/components/schemas/DynamicRole",
-        "unevaluatedProperties": false,
         "unevaluatedItems": { "type": "null" },
         "dependentSchemas": {
           "manager": { "$ref": "#/components/schemas/Manager" }
@@ -315,7 +321,6 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     expectSchemaObject(result);
     expect(result).toMatchObject({
       type: 'object',
-      additionalProperties: false,
       additionalItems: { type: 'null' },
       dependencies: {
         manager: { $ref: '#/definitions/Manager' },

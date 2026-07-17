@@ -28,7 +28,7 @@ export { normalizeDraft07 } from './normalization/index.js';
 export type { Draft07Input } from './normalization/index.js';
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
-import { isReferenceObject } from '../../../shared/openapi-types.js';
+import { type ReferenceObject, isReferenceObject } from '../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { normalizeDraft07 } from './normalization/index.js';
@@ -53,16 +53,13 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
  *
  * Supports standalone schemas, `$defs` bundles, and mixed documents.
  * Root schema naming: `title` \> `$id` \> `"Root"`.
- * Unsupported keywords are rejected with an actionable error.
  *
  * @param input - A JSON Schema document (Draft 07 or 2020-12)
  * @returns Array of IR schema components (root first if present, then `$defs`)
- * @throws `UnsupportedJsonSchemaKeywordError` if unsupported top-level keywords are present
  * @public
  */
 export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
-  rejectUnsupportedDocumentKeywords(normalized);
 
   const components: CastrSchemaComponent[] = [];
 
@@ -85,14 +82,29 @@ function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaCompone
   }
 
   for (const [name, defSchema] of Object.entries(defs)) {
-    if (isReferenceObject(defSchema)) {
-      continue;
-    }
-    const schema = parseJsonSchemaObject(defSchema);
+    const schema = parseJsonSchemaObject(toParsableDefSchema(defSchema));
     components.push(buildComponent(name, schema));
   }
 
   return components;
+}
+
+/**
+ * Widen a `$defs` entry to the parser input type.
+ *
+ * Reference-typed entries (`$ref`, possibly with sibling keywords) are
+ * parsed like any other schema so references and their siblings are
+ * carried instead of silently dropped. The OAS-only `summary` field has
+ * no IR home and is not carried.
+ *
+ * @internal
+ */
+function toParsableDefSchema(defSchema: JsonSchema2020 | ReferenceObject): JsonSchema2020 {
+  if (!isReferenceObject(defSchema)) {
+    return defSchema;
+  }
+  const { summary: _summary, ...rest } = defSchema;
+  return rest;
 }
 
 function buildComponent(name: string, schema: CastrSchema): CastrSchemaComponent {
@@ -148,6 +160,8 @@ const ROOT_SCHEMA_KEYWORDS = new Set([
   'maxLength',
   'pattern',
   'contentEncoding',
+  'contentMediaType',
+  'contentSchema',
   'format',
   'default',
 
@@ -199,7 +213,7 @@ function extractRootSchema(doc: JsonSchema2020): JsonSchema2020 | undefined {
 
 /**
  * Derive a component name for the root schema.
- * Priority: `title` \> `$id` basename \> `"Root"`.
+ * Priority: `title` \> full `$id` (verbatim, including any URI form) \> `"Root"`.
  *
  * @internal
  */
@@ -213,50 +227,4 @@ function deriveRootName(doc: JsonSchema2020): string {
   }
 
   return 'Root';
-}
-
-// ---------------------------------------------------------------------------
-// Unsupported keyword rejection
-// ---------------------------------------------------------------------------
-
-/**
- * Keywords that are explicitly unsupported at the document level.
- * Documents containing these keywords are rejected with an actionable error.
- *
- * @internal
- */
-const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set<string>([
-  // All previously unsupported keywords are now handled by the IR.
-]);
-
-/**
- * Error thrown when `parseJsonSchemaDocument()` encounters top-level keywords
- * outside the governed allowlist.
- *
- * @public
- */
-export class UnsupportedJsonSchemaKeywordError extends Error {
-  readonly unsupportedKeywords: string[];
-
-  constructor(keywords: string[]) {
-    const list = keywords.map((k) => `"${k}"`).join(', ');
-    super(
-      `parseJsonSchemaDocument() encountered unsupported top-level keywords: ${list}. ` +
-        'These keywords are not yet supported. See the JSON Schema parser module docs for the current supported surface.',
-    );
-    this.name = 'UnsupportedJsonSchemaKeywordError';
-    this.unsupportedKeywords = keywords;
-  }
-}
-
-function rejectUnsupportedDocumentKeywords(schema: JsonSchema2020): void {
-  const unsupported: string[] = [];
-  for (const key of Object.keys(schema)) {
-    if (UNSUPPORTED_DOCUMENT_KEYWORDS.has(key)) {
-      unsupported.push(key);
-    }
-  }
-  if (unsupported.length > 0) {
-    throw new UnsupportedJsonSchemaKeywordError(unsupported);
-  }
 }

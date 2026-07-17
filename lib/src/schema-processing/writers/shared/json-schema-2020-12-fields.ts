@@ -85,7 +85,8 @@ export function writeUnevaluatedFields(
 
 /**
  * Write recursive JSON Schema 2020-12 fields
- * (prefixItems, unevaluated*, dependentSchemas).
+ * (prefixItems, contains, contentSchema, unevaluated*, dependentSchemas,
+ * patternProperties, propertyNames, if/then/else).
  * @internal
  */
 export function writeJsonSchema2020RecursiveFields(
@@ -98,6 +99,9 @@ export function writeJsonSchema2020RecursiveFields(
   }
   if (schema.contains !== undefined) {
     result['contains'] = writeSchema(schema.contains);
+  }
+  if (schema.contentSchema !== undefined) {
+    result.contentSchema = writeSchema(schema.contentSchema);
   }
   writeUnevaluatedFields(schema, result, writeSchema);
   if (schema.dependentSchemas !== undefined) {

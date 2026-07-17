@@ -8,8 +8,10 @@
  *
  * **Egress normal form:** The JSON Schema writer normalises `example` to
  * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
- * arrays. `$ref` schemas are emitted as bare `{ "$ref": ... }` without
- * siblings.
+ * arrays. Boolean `exclusiveMinimum`/`exclusiveMaximum` are normalised to
+ * the numeric 2020-12 form (or rejected when no companion bound exists).
+ * The OpenAPI writer emits `$ref` sibling keywords (2020-12 applies them);
+ * the JSON Schema writer currently emits `$ref` schemas bare.
  *
  * @internal
  */
@@ -111,6 +113,7 @@ export interface JsonSchemaObject {
   $dynamicAnchor?: string;
   contentEncoding?: string;
   contentMediaType?: string;
+  contentSchema?: JsonSchemaObject;
 
   // Conditional applicators (JSON Schema 2020-12)
   if?: JsonSchemaObject;

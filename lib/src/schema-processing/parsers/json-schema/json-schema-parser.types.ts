@@ -34,6 +34,7 @@ export interface JsonSchema2020 extends SchemaObject {
   contains?: JsonSchema2020 | ReferenceObject;
   patternProperties?: Record<string, JsonSchema2020 | ReferenceObject>;
   propertyNames?: JsonSchema2020 | ReferenceObject;
+  contentSchema?: JsonSchema2020 | ReferenceObject;
   if?: JsonSchemaOrBool;
   then?: JsonSchemaOrBool;
   else?: JsonSchemaOrBool;
