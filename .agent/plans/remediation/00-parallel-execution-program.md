@@ -249,6 +249,14 @@ deserializeIR` round-trips (red: throws).
   sibling component builders — thread the real document instead of the empty placeholder. Starts
   after L-D merges. Proof: end-to-end reproduction attempt first (red-first if it reproduces, else
   structural proof + note). Reviewers: openapi-expert, code-reviewer.
+- **L-K9** (M9 representable-mapping remainder; added 2026-07-17 from L-K1's PR review — the
+  reviewer correctly rejected wording-only closure because TypeScript can model the sequential
+  item contract): implement the TS-writer/context `itemSchema` mapping so generation emits the
+  contract instead of failing fast. Owned: `src/schema-processing/writers/typescript/**` + the
+  context surfaces where `itemSchema` reaches the TS writer + tests; the L-K1 guard message then
+  drops its unimplemented-mapping fail-fast for TS. **Starts after L-KBATCH merges** (shared
+  type-writer files). Proof: red-first — a fixture with `itemSchema` currently fails fast; after,
+  it emits the sequential contract. Reviewers: type-reviewer, openapi-expert, code-reviewer.
 
 ## Merge waves
 
@@ -273,7 +281,7 @@ Waves and the reference linearisation:
   slot), L-H, L-D, **feature slice**, L-C, L-F — L-C and L-F take their final rebase over the
   feature merge, per the edges above.
 - **Wave 2:** L-B (starts on L-A's merge; final rebase after the feature merge), L-K8 (starts on
-  L-D's merge).
+  L-D's merge), L-K9 (starts on L-KBATCH's merge).
 - **Wave 3:** L-J alone.
 
 Critical path ≈ L-A → L-B → L-J.
