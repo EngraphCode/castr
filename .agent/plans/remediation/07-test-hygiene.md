@@ -32,7 +32,7 @@ Out of scope: refinement-test correctness (plan 03); negative-assertion fix (pla
 - No `fs.*` IO and no `vi.spyOn(console, …)`/global-state mutation in any `*.unit.test.ts`/`*.integration.test.ts` under
   the `pnpm test` glob (add a lint/grep gate to keep it true).
 - `logger` accepts an injected sink; its test asserts on the fake, not global `console`.
-- `pnpm qg` green.
+- ~~`pnpm qg` green.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 
