@@ -54,28 +54,37 @@ describe('assertDocumentSupportsItemSchemaTargetCapabilities', () => {
     ).not.toThrow();
   });
 
-  it('rejects itemSchema for TypeScript with the full policy-honest fail-fast message', () => {
+  it('rejects itemSchema for TypeScript with the full unimplemented-mapping fail-fast message', () => {
     const document = createStreamingResponseDocument();
     const act = (): void =>
       assertDocumentSupportsItemSchemaTargetCapabilities(document, 'TypeScript');
 
     expect(act).toThrow(
-      'Castr does not map OpenAPI 3.2 itemSchema to TypeScript output. ' +
-        'itemSchema is supported on the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
-        'Emitting this document to TypeScript would silently drop the sequential media-type ' +
-        'item contract, so Castr deliberately fails fast. ' +
+      'The OpenAPI 3.2 itemSchema sequential media-type item contract is representable in ' +
+        'TypeScript output, but Castr has not yet implemented that mapping. ' +
+        'itemSchema currently survives the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
+        'Until the mapping lands (named work item L-K9 in ' +
+        '.agent/plans/remediation/00-parallel-execution-program.md), Castr fails fast rather than ' +
+        'silently dropping the item contract. ' +
         'Found itemSchema at GET /stream responses/200/application/x-ndjson.',
     );
   });
 
   it.each(ITEM_SCHEMA_TARGETS)(
-    'states the deliberate policy for %s instead of framing itemSchema as unimplemented work',
+    'states the representable-but-unimplemented mapping for %s and fails fast without claiming impossibility',
     (target) => {
       const document = createStreamingResponseDocument();
       const act = (): void => assertDocumentSupportsItemSchemaTargetCapabilities(document, target);
 
-      expect(act).toThrow(`Castr does not map OpenAPI 3.2 itemSchema to ${target} output.`);
-      expect(act).not.toThrow('does not yet support');
+      expect(act).toThrow(
+        `is representable in ${target} output, but Castr has not yet implemented that mapping.`,
+      );
+      expect(act).toThrow(
+        'named work item L-K9 in .agent/plans/remediation/00-parallel-execution-program.md',
+      );
+      expect(act).toThrow('fails fast rather than silently dropping the item contract');
+      expect(act).not.toThrow('does not map');
+      expect(act).not.toThrow('deliberately fails fast');
     },
   );
 });

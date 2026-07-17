@@ -13,15 +13,17 @@ const CHAR_CODE_LOWER_A = 0x61;
 const CHAR_CODE_LOWER_Z = 0x7a;
 const ASCII_CASE_OFFSET = 0x20;
 
-function createUnsupportedItemSchemaMessage(
+function createUnimplementedItemSchemaMappingMessage(
   target: ItemSchemaCapabilityTarget,
   location: string,
 ): string {
   return (
-    `Castr does not map OpenAPI 3.2 itemSchema to ${target} output. ` +
-    'itemSchema is supported on the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
-    `Emitting this document to ${target} would silently drop the sequential media-type ` +
-    'item contract, so Castr deliberately fails fast. ' +
+    'The OpenAPI 3.2 itemSchema sequential media-type item contract is representable in ' +
+    `${target} output, but Castr has not yet implemented that mapping. ` +
+    'itemSchema currently survives the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
+    'Until the mapping lands (named work item L-K9 in ' +
+    '.agent/plans/remediation/00-parallel-execution-program.md), Castr fails fast rather than ' +
+    'silently dropping the item contract. ' +
     `Found itemSchema at ${location}.`
   );
 }
@@ -34,7 +36,7 @@ function assertMediaTypeEntryHasNoItemSchema(
 ): void {
   const resolved = resolveIRMediaTypeEntry(document, mediaType, location);
   if (resolved.itemSchema !== undefined) {
-    throw new Error(createUnsupportedItemSchemaMessage(target, location));
+    throw new Error(createUnimplementedItemSchemaMappingMessage(target, location));
   }
 }
 
