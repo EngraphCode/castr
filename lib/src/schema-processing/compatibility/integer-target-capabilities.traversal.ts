@@ -86,6 +86,12 @@ export function visitSchemaChildren(
   visitSchemaVariant(schema.unevaluatedProperties, seen, visitSchema);
   visitSchemaVariant(schema.unevaluatedItems, seen, visitSchema);
   visitSchemaCollection(Object.values(schema.dependentSchemas ?? {}), seen, visitSchema);
+  visitSchemaCollection(Object.values(schema.patternProperties ?? {}), seen, visitSchema);
+  visitSchemaValue(schema.propertyNames, seen, visitSchema);
+  visitSchemaValue(schema.if, seen, visitSchema);
+  visitSchemaValue(schema.then, seen, visitSchema);
+  visitSchemaValue(schema.else, seen, visitSchema);
+  visitSchemaValue(schema.contains, seen, visitSchema);
 }
 
 function visitContentSchemas(

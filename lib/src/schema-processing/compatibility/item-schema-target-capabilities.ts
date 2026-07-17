@@ -18,8 +18,10 @@ function createUnsupportedItemSchemaMessage(
   location: string,
 ): string {
   return (
-    `${target} does not yet support OpenAPI 3.2 itemSchema. ` +
-    'itemSchema is currently supported only on the OpenAPI parser -> IR -> OpenAPI writer path. ' +
+    `Castr does not map OpenAPI 3.2 itemSchema to ${target} output. ` +
+    'itemSchema is supported on the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
+    `Emitting this document to ${target} would silently drop the sequential media-type ` +
+    'item contract, so Castr deliberately fails fast. ' +
     `Found itemSchema at ${location}.`
   );
 }

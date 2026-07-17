@@ -219,6 +219,53 @@ const nestedSchemaCases = [
         dependentSchemas: { nested: child },
       }),
   },
+  {
+    label: 'patternProperties',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        type: 'object',
+        patternProperties: { '^x-': child },
+      }),
+  },
+  {
+    label: 'propertyNames',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        type: 'object',
+        propertyNames: child,
+      }),
+  },
+  {
+    label: 'if',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        if: child,
+      }),
+  },
+  {
+    label: 'then',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        if: createMockCastrSchema({ type: 'object' }),
+        then: child,
+      }),
+  },
+  {
+    label: 'else',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        if: createMockCastrSchema({ type: 'object' }),
+        else: child,
+      }),
+  },
+  {
+    label: 'contains',
+    wrap: (child: CastrSchema) =>
+      createMockCastrSchema({
+        type: 'array',
+        contains: child,
+      }),
+  },
 ] as const;
 
 describe('assertSchemaSupportsIntegerTargetCapabilities', () => {
@@ -288,6 +335,68 @@ describe('component and document traversal', () => {
             },
           },
           responses: [{ statusCode: '200' }],
+        },
+      ],
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, 'JSON Schema 2020-12'),
+    ).toThrow(INT64_ERROR);
+  });
+
+  it('rejects unsupported int64 semantics nested under patternProperties in request bodies', () => {
+    const requestBodySchema = createMockCastrSchema({
+      type: 'object',
+      patternProperties: { '^count-': createInt64Schema() },
+    });
+
+    const document = createMockCastrDocument({
+      operations: [
+        {
+          method: 'post',
+          path: '/counts',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': { schema: requestBodySchema },
+            },
+          },
+          responses: [{ statusCode: '200' }],
+        },
+      ],
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, 'JSON Schema 2020-12'),
+    ).toThrow(INT64_ERROR);
+  });
+
+  it('rejects unsupported int64 semantics nested under if/then in response content', () => {
+    const responseSchema = createMockCastrSchema({
+      if: createMockCastrSchema({ type: 'object' }),
+      then: createMockCastrSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({ count: createInt64Schema() }),
+      }),
+    });
+
+    const document = createMockCastrDocument({
+      operations: [
+        {
+          method: 'get',
+          path: '/counts',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [
+            {
+              statusCode: '200',
+              content: {
+                'application/json': { schema: responseSchema },
+              },
+            },
+          ],
         },
       ],
     });
