@@ -40,9 +40,6 @@ importers:
       ajv:
         specifier: ^8.18.0
         version: 8.20.0
-      ajv-draft-04:
-        specifier: ^1.0.0
-        version: 1.0.0(ajv@8.20.0)
       ajv-formats:
         specifier: ^3.0.1
         version: 3.0.1(ajv@8.20.0)
@@ -234,6 +231,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.9)
+      ajv-draft-04:
+        specifier: ^1.0.0
+        version: 1.0.0(ajv@8.20.0)
       degit:
         specifier: ^3.4.7
         version: 3.4.7
