@@ -102,14 +102,40 @@ function normalizeRelativePath(relPath: string): string {
   return relPath.split(path.sep).join('/');
 }
 
-function shouldSkipDirectory(relPath: string): boolean {
+/**
+ * Match a normalized repo-relative path against excluded prefixes with
+ * path-segment-boundary awareness. A prefix ending in `/` (e.g.
+ * `.claude/worktrees/`) matches the directory itself (`.claude/worktrees`)
+ * and any descendant path, but never a sibling like
+ * `.claude/worktrees-archive`. Prefixes without a trailing slash (e.g.
+ * `.agent/practice-core-backup-`) keep plain leading-substring semantics.
+ *
+ * @param normalizedPath - repo-relative path with `/` separators
+ * @param prefixes - excluded prefix entries
+ * @returns true if the path matches any excluded prefix
+ */
+function matchesExcludedPrefix(normalizedPath: string, prefixes: readonly string[]): boolean {
+  return prefixes.some((prefix) =>
+    prefix.endsWith('/')
+      ? normalizedPath === prefix.slice(0, -1) || normalizedPath.startsWith(prefix)
+      : normalizedPath.startsWith(prefix),
+  );
+}
+
+/**
+ * Decide whether the walker should skip a directory entirely.
+ *
+ * @param relPath - repo-relative directory path
+ * @returns true if the directory (and everything under it) should be skipped
+ */
+export function shouldSkipDirectory(relPath: string): boolean {
   const normalized = normalizeRelativePath(relPath);
   const directoryName = normalized.split('/').pop() ?? '';
 
   if (EXCLUDED_DIRECTORY_NAMES.has(directoryName)) {
     return true;
   }
-  if (EXCLUDED_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+  if (matchesExcludedPrefix(normalized, EXCLUDED_PATH_PREFIXES)) {
     return true;
   }
   return EXCLUDED_PATH_SEGMENTS.some((segment) => normalized.includes(segment));
@@ -128,10 +154,10 @@ export function shouldInspectFile(relPath: string): boolean {
     return false;
   }
 
-  if (EXCLUDED_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+  if (matchesExcludedPrefix(normalized, EXCLUDED_PATH_PREFIXES)) {
     return false;
   }
-  if (EXCLUDED_PATH_PREFIXES_EXTRA.some((prefix) => normalized.startsWith(prefix))) {
+  if (matchesExcludedPrefix(normalized, EXCLUDED_PATH_PREFIXES_EXTRA)) {
     return false;
   }
   if (EXCLUDED_PATH_SEGMENTS.some((segment) => normalized.includes(segment))) {

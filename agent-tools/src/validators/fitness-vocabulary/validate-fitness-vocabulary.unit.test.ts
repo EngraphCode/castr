@@ -4,6 +4,7 @@ import {
   findForbiddenPhrases,
   shouldInspectFile,
   shouldReportMatch,
+  shouldSkipDirectory,
 } from './validate-fitness-vocabulary.js';
 
 describe('shouldReportMatch', () => {
@@ -96,6 +97,34 @@ describe('shouldInspectFile', () => {
         'agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts',
       ),
     ).toBe(false);
+  });
+});
+
+describe('shouldSkipDirectory', () => {
+  it('skips the worktrees root itself (prefix matches at the segment boundary)', () => {
+    expect(shouldSkipDirectory('.claude/worktrees')).toBe(true);
+  });
+
+  it('skips directories inside the worktrees root', () => {
+    expect(shouldSkipDirectory('.claude/worktrees/wf_x-1')).toBe(true);
+  });
+
+  it('does not skip sibling directories that merely share the name prefix', () => {
+    expect(shouldSkipDirectory('.claude/worktrees-archive')).toBe(false);
+  });
+
+  it('skips excluded directory names anywhere in the tree', () => {
+    expect(shouldSkipDirectory('node_modules')).toBe(true);
+    expect(shouldSkipDirectory('agent-tools/node_modules')).toBe(true);
+  });
+
+  it('skips backup directories via the non-trailing-slash name prefix', () => {
+    expect(shouldSkipDirectory('.agent/practice-core-backup-2026-03-23')).toBe(true);
+  });
+
+  it('does not skip ordinary live directories', () => {
+    expect(shouldSkipDirectory('docs')).toBe(false);
+    expect(shouldSkipDirectory('.agent/directives')).toBe(false);
   });
 });
 

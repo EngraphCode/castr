@@ -49,9 +49,10 @@ changes applied — see §Readiness).
 
 ## Lane table
 
-The authoritative per-lane specification (owned files, forbidden zones, proof-first specs,
-deterministic DoD commands, reviewer sets, sizes) is carried in the session plan of record for this
-program and reproduced in each lane's PR description. Summary:
+This document is the **authoritative, durable home** of the lane contracts. The full per-lane
+specifications (owned files, forbidden zones, proof-first specs, deterministic DoD commands,
+reviewer sets) live in §Lane specifications below; lane PR descriptions **reference** that section
+rather than restating it. Summary:
 
 | Lane       | Findings                                        | Scope centre                                                      | Size | Depends on                             |
 | ---------- | ----------------------------------------------- | ----------------------------------------------------------------- | ---- | -------------------------------------- |
@@ -70,16 +71,209 @@ program and reproduced in each lane's PR description. Summary:
 | L-K6       | L18                                             | `lib/package.json` devDep (lockfile — merges alone)               | S    | none                                   |
 | L-K8       | M13                                             | `parsers/openapi/components/**` document threading                | S    | after L-D merges                       |
 
+The universal L-A and L-E edges (see §Merge waves) apply to every lane and are not repeated in the
+Depends-on column.
+
+## Lane specifications (authoritative)
+
+Common to every lane: proof-first red evidence captured before the fix; targeted vitest commands
+plus full `pnpm check:ci` green; diff confined to owned files ∪ the lane's new test/fixture files ∪
+additive one-line barrel exports; conventional commits. New transform tests/fixtures are additive
+under `lib/tests-transforms/__tests__/` and `lib/tests-transforms/__fixtures__/edge-cases/`;
+`lib/tests-transforms/utils/transform-helpers.ts` is never edited. All paths below are under
+`lib/` unless noted.
+
+### L-A — Proof-harness substrate + test-truth (H7, L13)
+
+- **Owned:** NEW `tests-transforms/utils/fidelity-harness.ts` (+ outcome recorder); NEW
+  `tests-transforms/__fixtures__/edge-cases/README.md` + smoke fixture + smoke test;
+  `src/rendering/templates/schemas-with-metadata.test.ts` (vacuous negatives → assert on
+  `result.content`); `src/rendering/templating.unit.test.ts` (files-content equality across runs);
+  harness note in `docs/architecture/`; DoD line in `.agent/directives/DEFINITION_OF_DONE.md`.
+- **Forbidden:** all product code; `transform-helpers.ts`.
+- **Proof-first:** smoke test written against the not-yet-created helper (red), then implement. The
+  H7/L13 edits are assertion-strengthening; if one goes red a real suppression bug surfaced — fix
+  or report, never weaken.
+- **DoD:** the two rendering test files + transforms config run + `pnpm check:ci` green.
+- **Reviewers:** test-reviewer, code-reviewer, architecture-expert-betty.
+
+### L-B — Zod writer 2020-12 semantics, executes ADR-047 (C6, H7 substring tests, M7, L16)
+
+- **Owned:** `src/schema-processing/writers/zod/refinements/{object,array,index}.ts` including the
+  two placebo sites (`writeDependentSchemasRefinement`, `writeConditionalApplicatorRefinement`) —
+  silent-wrong `return true` → real-or-fail-fast in ONE cycle (no interim throw; principles.md
+  forbids placeholder fail-fast for expressible features);
+  `writers/zod/generators/collections.ts` (recursion wiring; L16 array-`items` assert-or-throw);
+  `writers/zod/__tests__/fail-fast.unit.test.ts` (rewrite to executed-validator tests) + NEW
+  behaviour test file; `docs/architecture/zod-round-trip-limitations.md`; ADR-047 Consequences.
+- **Forbidden:** `writers/zod/index.ts` (L-D's); `parsers/**`; `writers/shared/**`.
+- **Proof-first:** compile emitted Zod (vm+transpile) and assert conforming input passes /
+  violating input fails per keyword — red today (`return true` validates nothing; `typeof item ===
+'integer'` is always false).
+- **DoD:** no `.refine(... return true ...)` and no `typeof x === '<jsonSchemaType>'` remain in
+  `writers/zod/`; emission order sorted (M7); inexpressible keywords fail fast with a throw proof;
+  `pnpm check:ci` green.
+- **Reviewers:** zod-expert, json-schema-expert, test-reviewer, code-reviewer.
+
+### L-C — Zod parser strict whitelist (C5)
+
+- **Owned:** `src/schema-processing/parsers/zod/composition/**`, `parsers/zod/types/**`,
+  `parsers/zod/modifiers/**` if the chain dispatcher requires, their unit tests;
+  `tests-fixtures/zod-parser/**` only if a fixture relied on silent drop.
+- **Forbidden:** `writers/zod/**`; `zod-parser.runner.integration.test.ts` (L-I's).
+- **Proof-first:** failing tests asserting **non-empty `errors`** (construct + location) for:
+  mixed-coerce union member, tuple middle-member drop, `z.nativeEnum`, `.refine()` on a primitive
+  chain, object-level `.refine()` — all currently `errors: []`.
+- **DoD:** parser suite + transforms scenarios 2/4/6 + `pnpm check:ci` green; no
+  `return undefined`/`continue` path drops a construct without a `PARSE_ERROR`.
+- **Reviewers:** zod-expert, test-reviewer, code-reviewer.
+
+### L-D — OpenAPI fidelity: security AND-groups + component-name identity (C2, C3, M10, M12)
+
+- **Owned:** C2 — `src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts`,
+  `ir/models/schema.operations.ts` (`IRSecurityRequirement` → requirement set),
+  `ir/models/schema-document.ts`, `writers/openapi/openapi-writer.ts`,
+  `writers/openapi/operations/openapi-writer.operations.fields.ts`,
+  `context/mcp/template-context.mcp.security.from-ir.ts` + test. C3 —
+  `parsers/openapi/schemas/builder.schemas.ts` (drop parse-time `toIdentifier`; original name = IR
+  identity), `writers/openapi/components/openapi-writer.components.ts` (+ siblings if needed),
+  `src/shared/utils/identifier-utils.ts`, `writers/typescript/helpers.ts`,
+  `writers/zod/index.ts` (`$ref`-name path). M10 — `!== undefined` guards in the operations
+  builders + `schemas/builder.enums.ts`. M12 — typed access replacing `Reflect.get/set`.
+- **Forbidden:** `parsers/openapi/builder.core.ts` (L-F); `parsers/openapi/components/**` (L-K8);
+  `context/endpoints/**`, `template-context.mcp.responses.ts` (L-H); `writers/zod/refinements/**`,
+  `generators/**` (L-B); `writers/openapi/schema/**` (L-F).
+- **Proof-first:** NEW fidelity transform tests: AND-group `[{apiKey: [], oauth2: ['read']}]`
+  round-trips as ONE requirement object (red: splits to OR); `Basic.Thing` + `$ref` round-trips
+  resolving with the dotted key preserved (red: dangles); `''` description ≠ absent (red: dropped).
+- **DoD:** new fidelity tests + MCP/openapi-writer suites + `pnpm check:ci` green; zero `Reflect.`
+  in the operations-fields builder.
+- **Reviewers:** openapi-expert, security-expert, type-reviewer, test-reviewer, code-reviewer,
+  mcp-expert.
+
+### L-E — Single-source guards (M3, C4, L3, L5)
+
+- **Owned:** `src/shared/type-utils/{types,type-guards,index}.ts` + unit tests;
+  `src/shared/openapi/version.ts`; `src/shared/doctor/preflight-validator.ts`;
+  `src/shared/load-openapi-document/additional-operations-validation/index.ts`;
+  `src/schema-processing/ir/serialization.ts`; ~21 importer files (import-line repoints **plus
+  call-site type adjustments** where the consolidated guard's return type differs — semantic
+  changes stay forbidden); the four local `isCastrSchema` look-alikes (`builder.circular.ts`,
+  `mcp.parameters.ts`, `mcp.schemas.json-schema.ts`, `mcp.inline-json-schema.ts`); NEW C4 fixture
+  test. The canonical deep `isCastrSchema` in `ir/validation/validators.schema.ts` is KEPT.
+- **Proof-first:** `isRecord({}) === true`, `isRecord([]) === false`, `isRecord(null) === false`
+  (red against the divergent copies); C4 `buildIR({type:'object',properties:{}}) → serializeIR →
+deserializeIR` round-trips (red: throws).
+- **DoD:** exactly one `isRecord` + one `isCastrSchema`; `knip`/`depcruise` clean;
+  `pnpm check:ci` green.
+- **Reviewers:** type-reviewer, code-reviewer, test-reviewer.
+
+### L-F — JSON-Schema keyword fidelity pipeline (H1, H2, H4, L9–L12, L14; H6/L8 verify)
+
+- **Owned:** `src/schema-processing/parsers/json-schema/**` (keyword table + arbitrary-depth
+  `$ref` rewriter; `$ref` siblings; content keywords; L10/L11 truth; L12 closed-world);
+  `parsers/openapi/builder.core.ts` (OpenAPI-side `$ref` siblings);
+  `conversion/json-schema/keywords/keyword-object.ts` (L14 fail-fast);
+  `ir/models/schema.ts` (+`contentMediaType`/`contentSchema`);
+  `ir/validation/validators.schema.ts` (new-field validation);
+  `writers/shared/{json-schema-fields,json-schema-object,json-schema-2020-12-fields}.ts`;
+  `writers/openapi/schema/openapi-writer.schema.ts` (L9); NEW fidelity tests/fixtures.
+- **Forbidden:** `parsers/openapi/operations/**`, `parsers/openapi/schemas/**`,
+  `parsers/openapi/components/**`; `writers/zod/**`; `src/shared/type-utils/**`;
+  `ir/models/schema.operations.ts`, `schema-document.ts`.
+- **Proof-first:** failing tests — boolean `exclusiveMinimum` nested in `then` normalised at depth;
+  deep `#/definitions/Outer/properties/inner` rewritten; `$ref` siblings carried; content keywords
+  round-trip; `contentEncoding` emitted; `patternProperties`-only object closed-world.
+- **DoD:** json-schema parser + writers/shared suites + scenario-5 + new fidelity file +
+  `pnpm check:ci` green; H6/L8 probes re-run and residue recorded (resolved by the feature merge).
+- **Reviewers:** json-schema-expert, openapi-expert, type-reviewer, test-reviewer.
+
+### L-H — Endpoints/MCP/CLI correctness (H3, M6, H5, L6, L19)
+
+- **Owned:** `src/schema-processing/context/endpoints/**` (wildcard status tokens; delete dead
+  `getOperationForEndpoint`); `context/mcp/template-context.mcp.responses.ts` + test (success
+  selection incl. `2XX`/`default`); `context/template-context.ts` (`defaultStatusBehavior`,
+  `complexityThreshold`); `src/cli/helpers.ts`, `src/cli/helpers.options.ts`; behaviour docs.
+- **Forbidden:** `template-context.mcp.security.from-ir.ts` (L-D); `context/mcp/schemas/**`;
+  `src/rendering/**`.
+- **H5 verdict path:** implement `defaultStatusBehavior` (the documented behaviour,
+  strictest-of-three) with proof. For each remaining documented-but-dead option the lane lands a
+  **verdict with evidence** — implement where the documented semantics are complete, otherwise
+  remove together with the doc correction — and the owner-invoked PR merge is the approval gate.
+  Nothing is silently removed.
+- **Proof-first:** failing tests — `'4XX'`/`'5XX'` preserved or fail-fast (red: `parseInt` → 4);
+  `outputSchema` present for `'2XX'`-only success (red: skipped); `spec-compliant` filtering
+  effective (red: unread); invalid `--default-status` throws (red: silent undefined).
+- **DoD:** context + cli suites + `pnpm check:ci` green; L6 deleted (knip clean).
+- **Reviewers:** mcp-expert, openapi-expert, code-reviewer, test-reviewer.
+
+### L-I — Test hygiene (M4, M5)
+
+- **Owned:** relocate `parsers/zod/zod-parser.runner.integration.test.ts` to the e2e/generated
+  suite (drop `UPDATE_SNAPSHOTS` write branch + soft-skip); `src/shared/utils/logger.ts` + test
+  (injected sink; delete types-only test); NEW architecture guard in `src/architecture/`
+  (no fs.\* IO / no `vi.spyOn(console, …)` under the `pnpm test` glob — durable gate).
+- **Forbidden:** `parsers/zod/**` source; `lib/eslint.config.ts` (L-J's).
+- **Proof-first:** logger-sink test red (no injection point); guard red while the runner test still
+  does IO, green after relocation.
+- **DoD:** utils + architecture suites + full unit gate + `pnpm check:ci` green.
+- **Reviewers:** test-reviewer, code-reviewer.
+
+### L-J — Doctrine enforcement sweep (M1, M2, L1, L2, L4) — wave 3, runs alone
+
+- **Owned:** `lib/eslint.config.ts`; NEW `lib/eslint-rules/**` + fixture tests; the surviving
+  `Object.*`/`Reflect.*` uses (148/74 files today; fewer post-lanes) — refactor or governed
+  allowance; lodash function-call-form fixes (~20 files); `principles.md` + ADR-026 wording —
+  **owner wording-approval at PR before the doc-edit commit** (direction pre-authorized).
+- **Proof-first:** rule fixture tests red (rules absent) → rules land → `src` refactored green.
+- **Reviewers:** config-expert, architecture-expert-fred, code-reviewer, type-reviewer.
+
+### Micro-lanes
+
+- **L-K1** (M8+M9): `src/schema-processing/compatibility/integer-target-capabilities.traversal.ts`
+  (add the six missing child-bearing keyword visits) + `item-schema-target-capabilities.ts` message
+  honesty — the lane lands the policy-honest wording as its verdict; the PR merge is the approval
+  gate. Proof: `int64` nested under `patternProperties`/`if` caught (red: skipped). Reviewers:
+  code-reviewer, type-reviewer, json-schema-expert.
+- **L-K2** (M11+L17): `src/shared/maybe-pretty.ts` fail-fast + typed omit. Proof: invalid TS input
+  throws naming the source (red: silently returned). Reviewers: code-reviewer, test-reviewer.
+- **L-K3+K5+K7 batch** (L7, L15, N1; one PR, one commit each):
+  `src/validation/mcp-error-formatting.ts` populate `expected`/`received` or remove;
+  `src/shared/load-openapi-document/bundle/bundle-infrastructure.ts` inject clock / drop
+  time+cwd from output-bound metadata; `writers/typescript/type-writer/core.ts` literal
+  unions/tuples or honest fail-fast — each lands as a lane verdict with evidence, approved at the
+  PR merge. Reviewers: mcp-expert, type-reviewer, code-reviewer.
+- **L-K6** (L18): `lib/package.json` devDep `ajv-draft-04` (+ root removal if verified unused);
+  lockfile change — merges alone. Reviewers: config-expert.
+- **L-K8** (M13): `src/schema-processing/parsers/openapi/components/builder.components.ts` +
+  sibling component builders — thread the real document instead of the empty placeholder. Starts
+  after L-D merges. Proof: end-to-end reproduction attempt first (red-first if it reproduces, else
+  structural proof + note). Reviewers: openapi-expert, code-reviewer.
+
 ## Merge waves
 
+**The dependency edges are normative; any merge sequence must be a linearisation of them.** The
+edges (blocker → blocked, with the shared surface that forces the order):
+
+- L-A → every later lane (harness convention adopted on rebase; L-A merges first)
+- L-E → every later lane except L-A (guard import/typing repoints; L-E merges second)
+- L-I → L-C (the relocated runner test lives in L-C's directory)
+- L-D → feature slice (`writers/zod/index.ts` C3 `$ref`-name path)
+- feature slice → L-C (`parsers/zod/types/zod-parser.object.ts` + parser policy files)
+- feature slice → L-F (`builder.core.ts`, `validators.schema.ts`,
+  `json-schema-parser.object-fields.ts`, `json-schema-fields.ts`)
+- feature slice → L-B (`generators/collections.ts`)
+- L-D → L-K8 (`buildSchemaComponents`-adjacent signatures)
+- every lane → L-J (horizontal sweep runs last)
+
+Waves and the reference linearisation:
+
 - **Wave 1** (dispatch simultaneously): L-A, L-C, L-D, L-E, L-F, L-H, L-I, L-K1, L-K2, L-K6,
-  batched L-K3+K5+K7. Merge order: L-A, L-E, L-I, micros (L-K6 alone in its lockfile slot), L-H,
-  L-C, L-D, **feature slice**, L-F.
-- **Explicit merge-order edges:** L-D → feature (`writers/zod/index.ts` C3 `$ref`-name path);
-  feature → L-F (`builder.core.ts`, `validators.schema.ts`, `json-schema-parser.object-fields.ts`,
-  `json-schema-fields.ts`); feature → L-B (`generators/collections.ts`); L-I → L-C; L-E → all
-  (import/typing repoints); L-A → all (harness convention).
-- **Wave 2:** L-B (on L-A's merge), L-K8 (on L-D's merge).
+  batched L-K3+K5+K7. Reference merge order: L-A, L-E, L-I, micros (L-K6 alone in its lockfile
+  slot), L-H, L-D, **feature slice**, L-C, L-F — L-C and L-F take their final rebase over the
+  feature merge, per the edges above.
+- **Wave 2:** L-B (starts on L-A's merge; final rebase after the feature merge), L-K8 (starts on
+  L-D's merge).
 - **Wave 3:** L-J alone.
 
 Critical path ≈ L-A → L-B → L-J.

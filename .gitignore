@@ -47,3 +47,6 @@ tmp/
 
 # Claude Code worktrees (live agent checkouts under the primary repo)
 .claude/worktrees/
+
+# Harness-written local settings — machine-local, never repo content
+.claude/settings.local.json
