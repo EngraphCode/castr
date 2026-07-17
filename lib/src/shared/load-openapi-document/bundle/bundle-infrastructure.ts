@@ -28,11 +28,45 @@ export interface OTTBundleInfrastructure {
 }
 
 /**
+ * Injectable sources for the environment-dependent values captured into
+ * bundle metadata.
+ *
+ * **OTT Domain Type** - Internal coordination for bundle setup.
+ *
+ * @remarks
+ * Bundle metadata is output-bound: `capturedAt` timestamps and resolved
+ * absolute paths end up in {@link OTTBundleFileEntry} values. Injecting the
+ * clock and the fallback base directory keeps those values deterministic and
+ * free of machine-local leakage when the caller needs reproducible runs.
+ * The defaults preserve the previous behaviour (wall clock + `process.cwd()`).
+ */
+export interface OTTBundleCaptureContext {
+  /** Returns the ISO-8601 timestamp recorded as {@link OTTBundleFileEntry.capturedAt}. */
+  readonly now: () => string;
+  /** Base directory for resolving relative paths when the entrypoint is not absolute. */
+  readonly fallbackBaseDirectory: string;
+}
+
+/**
+ * Create the default capture context: wall clock and current working directory.
+ *
+ * @returns Capture context matching the historical implicit behaviour
+ * @internal
+ */
+function createDefaultCaptureContext(): OTTBundleCaptureContext {
+  return {
+    now: () => new Date().toISOString(),
+    fallbackBaseDirectory: process.cwd(),
+  };
+}
+
+/**
  * Create file recorder that tracks loaded files and external references.
  *
  * @param entrypointUri - Absolute path to entrypoint file
  * @param files - Array to populate with file entries
  * @param externalReferences - Map to track reference counts
+ * @param captureContext - Sources for timestamp and relative-path resolution
  * @returns Recorder function to call when a file is loaded
  * @internal
  */
@@ -40,10 +74,13 @@ export function createFileRecorder(
   entrypointUri: string,
   files: OTTBundleFileEntry[],
   externalReferences: Map<string, number>,
+  captureContext: OTTBundleCaptureContext = createDefaultCaptureContext(),
 ): (rawPath: string) => void {
   const seenAbsolutePaths = new Set<string>(files.map((file) => file.absolutePath));
   const entrypointDirectory =
-    entrypointUri && path.isAbsolute(entrypointUri) ? path.dirname(entrypointUri) : process.cwd();
+    entrypointUri && path.isAbsolute(entrypointUri)
+      ? path.dirname(entrypointUri)
+      : captureContext.fallbackBaseDirectory;
 
   return (rawPath: string) => {
     const absolutePath = path.isAbsolute(rawPath)
@@ -53,7 +90,7 @@ export function createFileRecorder(
     if (!seenAbsolutePaths.has(absolutePath)) {
       files.push({
         absolutePath,
-        capturedAt: new Date().toISOString(),
+        capturedAt: captureContext.now(),
       });
       seenAbsolutePaths.add(absolutePath);
     }
@@ -121,16 +158,20 @@ export function wrapLoaderPlugin(
  * Setup complete bundle infrastructure with recorders and plugins.
  *
  * @param entrypointUri - URI of the entrypoint (file path or URL)
+ * @param captureContext - Sources for timestamp and relative-path resolution
  * @returns Infrastructure components ready for bundling
  * @public
  */
-export function setupBundleInfrastructure(entrypointUri: string): OTTBundleInfrastructure {
+export function setupBundleInfrastructure(
+  entrypointUri: string,
+  captureContext: OTTBundleCaptureContext = createDefaultCaptureContext(),
+): OTTBundleInfrastructure {
   const files: OTTBundleFileEntry[] = [];
   const urls: OTTBundleUrlEntry[] = [];
   const warnings: OTTBundleWarning[] = [];
   const externalReferences = new Map<string, number>();
 
-  const fileRecorder = createFileRecorder(entrypointUri, files, externalReferences);
+  const fileRecorder = createFileRecorder(entrypointUri, files, externalReferences, captureContext);
   const urlRecorder = createUrlRecorder(entrypointUri, urls, externalReferences);
   const filePlugin = wrapLoaderPlugin(readFiles(), fileRecorder);
   const urlPlugin = wrapLoaderPlugin(fetchUrls(), urlRecorder);

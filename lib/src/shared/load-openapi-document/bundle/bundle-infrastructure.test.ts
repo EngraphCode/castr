@@ -5,6 +5,7 @@ import {
   createUrlRecorder,
   wrapLoaderPlugin,
   setupBundleInfrastructure,
+  type OTTBundleCaptureContext,
 } from './bundle-infrastructure.js';
 import type { LoaderPlugin } from '@scalar/json-magic/bundle';
 
@@ -67,6 +68,47 @@ describe('bundle-infrastructure', () => {
       recorder(entrypoint);
 
       expect(externalRefs.has(entrypoint)).toBe(false);
+    });
+  });
+
+  describe('capture context injection', () => {
+    const fixedContext: OTTBundleCaptureContext = {
+      now: () => '2024-01-01T00:00:00.000Z',
+      fallbackBaseDirectory: '/project/base',
+    };
+
+    it('two runs with the same capture context produce identical file metadata', () => {
+      const runRecorder = (): OTTBundleFileEntry[] => {
+        const files: OTTBundleFileEntry[] = [];
+        const externalRefs = new Map<string, number>();
+        const recorder = createFileRecorder(
+          '/project/openapi.yaml',
+          files,
+          externalRefs,
+          fixedContext,
+        );
+
+        recorder('/project/schemas/user.yaml');
+        return files;
+      };
+
+      const firstRun = runRecorder();
+      const secondRun = runRecorder();
+
+      expect(firstRun).toEqual(secondRun);
+      expect(firstRun).toEqual([
+        { absolutePath: '/project/schemas/user.yaml', capturedAt: '2024-01-01T00:00:00.000Z' },
+      ]);
+    });
+
+    it('resolves relative paths against the injected fallback base directory', () => {
+      const files: OTTBundleFileEntry[] = [];
+      const externalRefs = new Map<string, number>();
+      const recorder = createFileRecorder('relative-entry.yaml', files, externalRefs, fixedContext);
+
+      recorder('schemas/user.yaml');
+
+      expect(files[0]?.absolutePath).toBe('/project/base/schemas/user.yaml');
     });
   });
 
