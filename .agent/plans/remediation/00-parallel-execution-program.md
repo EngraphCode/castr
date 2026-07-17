@@ -65,11 +65,12 @@ rather than restating it. Summary:
 | L-H        | H3, M6, H5, L6, L19                             | `context/endpoints/**`, MCP responses, CLI options                | M    | none; H5 owner gate at PR              |
 | L-I        | M4, M5                                          | test hygiene: runner relocation, logger sink, no-IO guard         | S    | merges before L-C rebase               |
 | L-J        | M1, M2, L1, L2, L4                              | eslint rules + doctrine wording + horizontal sweep                | L    | ALL other lanes merged (wave 3)        |
-| L-K1       | M8, M9                                          | `compatibility/*target-capabilities*`                             | S    | none                                   |
+| L-K1       | M8, M9 (wording)                                | `compatibility/*target-capabilities*`                             | S    | none                                   |
 | L-K2       | M11, L17                                        | `shared/maybe-pretty.ts`                                          | S    | none                                   |
 | L-K3+K5+K7 | L7, L15, N1                                     | batched micro-PR (MCP error fields; bundle clock; TS type-writer) | S    | none                                   |
 | L-K6       | L18                                             | `lib/package.json` devDep (lockfile — merges alone)               | S    | none                                   |
 | L-K8       | M13                                             | `parsers/openapi/components/**` document threading                | S    | after L-D merges                       |
+| L-K9       | M9 (mapping)                                    | `writers/typescript/**` itemSchema sequential contract            | M    | after L-KBATCH merges                  |
 
 The universal L-A and L-E edges (see §Merge waves) apply to every lane and are not repeated in the
 Depends-on column.
