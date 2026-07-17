@@ -176,7 +176,7 @@ function buildConcreteResponse(
     statusCode,
   };
 
-  if (response.description) {
+  if (response.description !== undefined) {
     irResponse.description = response.description;
   }
 

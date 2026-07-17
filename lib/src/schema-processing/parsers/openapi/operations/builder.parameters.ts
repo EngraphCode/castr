@@ -281,7 +281,7 @@ function addOptionalParameterFields(
 ): CastrParameter {
   const result = { ...irParameter };
 
-  if (param.description) {
+  if (param.description !== undefined) {
     result.description = param.description;
   }
 

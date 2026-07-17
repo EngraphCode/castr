@@ -166,7 +166,7 @@ class EnumExtractor {
       values: schema.enum ?? [],
       schema,
     };
-    if (schema.description) {
+    if (schema.description !== undefined) {
       enumDef.description = schema.description;
     }
     this.enums.set(name, enumDef);

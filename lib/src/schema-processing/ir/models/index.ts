@@ -42,4 +42,5 @@ export type {
   CastrResponse,
   IRResponseHeader,
   IRSecurityRequirement,
+  IRSecuritySchemeRequirement,
 } from './schema.operations.js';

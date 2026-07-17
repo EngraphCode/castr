@@ -489,14 +489,14 @@ export interface IRResponseHeader {
 }
 
 /**
- * Security requirement for operations.
+ * A single security scheme entry inside a security requirement set.
  *
- * Represents OAuth2 scopes or API key requirements for an operation.
+ * Represents one scheme (and its scopes) that must be satisfied as part of
+ * an {@link IRSecurityRequirement} AND-set.
  *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
  * @public
  */
-export interface IRSecurityRequirement {
+export interface IRSecuritySchemeRequirement {
   /**
    * Security scheme name from components/securitySchemes.
    */
@@ -506,4 +506,35 @@ export interface IRSecurityRequirement {
    * OAuth2 scopes required (empty for API keys).
    */
   scopes: string[];
+}
+
+/**
+ * Security requirement set for operations and documents.
+ *
+ * Mirrors one OpenAPI Security Requirement Object: every scheme listed in
+ * {@link IRSecurityRequirement.schemes} must be satisfied together (logical
+ * AND). Alternative requirement sets are expressed as separate entries in the
+ * surrounding `security` array (logical OR).
+ *
+ * @example `security: [{ apiKey: [], oauth2: ['read'] }]` (apiKey AND oauth2)
+ * ```typescript
+ * const requirement: IRSecurityRequirement = {
+ *   schemes: [
+ *     { schemeName: 'apiKey', scopes: [] },
+ *     { schemeName: 'oauth2', scopes: ['read'] },
+ *   ],
+ * };
+ * ```
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
+ * @public
+ */
+export interface IRSecurityRequirement {
+  /**
+   * Schemes that must all be satisfied together (logical AND).
+   *
+   * An empty array mirrors the empty Security Requirement Object (`{}`),
+   * which marks security as optional for that alternative.
+   */
+  schemes: IRSecuritySchemeRequirement[];
 }

@@ -3,7 +3,7 @@ import type { CastrSchema } from '../../../ir/index.js';
 import { getIntegerSemantics } from '../../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
-import { isValidJsIdentifier } from '../../../../shared/utils/identifier-utils.js';
+import { isValidJsIdentifier, safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
 import {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
@@ -22,11 +22,19 @@ export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   };
 }
 
-/** Write a $ref type name. @internal */
+/**
+ * Write a $ref type name.
+ *
+ * The IR carries the ORIGINAL component name; `safeSchemaName` sanitises it
+ * into the emitted code symbol so the reference matches the emitted type
+ * alias for that component.
+ *
+ * @internal
+ */
 function writeRefType(schema: CastrSchema, writer: CodeBlockWriter): boolean {
   if (schema.$ref) {
     const { componentName } = parseComponentRef(schema.$ref);
-    writer.write(componentName);
+    writer.write(safeSchemaName(componentName));
     return true;
   }
   return false;

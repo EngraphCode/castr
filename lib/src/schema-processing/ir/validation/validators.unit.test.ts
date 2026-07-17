@@ -619,8 +619,12 @@ describe('isCastrOperation', () => {
       ],
       security: [
         {
-          schemeName: 'bearerAuth',
-          scopes: [],
+          schemes: [
+            {
+              schemeName: 'bearerAuth',
+              scopes: [],
+            },
+          ],
         },
       ],
       tags: ['users'],

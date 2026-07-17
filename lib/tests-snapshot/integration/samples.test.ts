@@ -13,7 +13,14 @@ let prettierConfig: Options | null;
 const pkgRoot = process.cwd();
 
 beforeAll(async () => {
-  prettierConfig = await resolveConfig(path.resolve(pkgRoot, '../'));
+  // Resolve the prettier config that governs files in this package. Anchoring
+  // on a file INSIDE the package makes resolution deterministic: prettier
+  // searches upward from the file's directory, so this finds the repo-root
+  // config regardless of where the checkout lives. (The previous anchor —
+  // the repo root directory itself — made prettier search the repo's PARENT
+  // directories, resolving null on one machine and an unrelated config on
+  // another.)
+  prettierConfig = await resolveConfig(path.resolve(pkgRoot, 'package.json'));
 });
 
 describe('openapi-examples', () => {

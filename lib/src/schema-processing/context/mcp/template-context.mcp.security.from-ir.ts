@@ -25,7 +25,8 @@ const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
  * @remarks
  * - Operation-level `security` overrides document-level defaults.
  * - An explicit empty array (`security: []`) denotes a public endpoint.
- * - Each `IRSecurityRequirement` in the operation's security array represents an OR clause.
+ * - Each `IRSecurityRequirement` in the operation's security array is one OR alternative;
+ *   every scheme inside its `schemes` set must be satisfied together (logical AND).
  * - The function resolves scheme details from `ir.components` (filtered by `type: 'securityScheme'`).
  *
  * @param ir - The CastrDocument containing component security schemes and optional global security
@@ -43,14 +44,14 @@ const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
  *
  * @example Operation with security
  * ```typescript
- * const operation = { security: [{ schemeName: 'bearerAuth', scopes: [] }] };
+ * const operation = { security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }] };
  * const result = resolveOperationSecurityFromIR(ir, operation);
  * // { isPublic: false, usesGlobalSecurity: false, requirementSets: [...] }
  * ```
  *
  * @example Falling back to global security
  * ```typescript
- * const ir = { security: [{ schemeName: 'bearerAuth', scopes: [] }], ... };
+ * const ir = { security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }], ... };
  * const operation = { security: undefined };
  * const result = resolveOperationSecurityFromIR(ir, operation);
  * // { isPublic: false, usesGlobalSecurity: true, requirementSets: [...] }
@@ -114,13 +115,17 @@ function buildSecuritySchemeLookup(ir: CastrDocument): Map<string, SecuritySchem
 }
 
 /**
- * Resolve a single security requirement to include full scheme details.
+ * Resolve a single security requirement set to include full scheme details.
  *
- * @param requirement - The IR security requirement (scheme name + scopes)
+ * Every scheme in the requirement's AND-set is resolved; the returned array
+ * carries one entry per scheme so the AND-grouping is preserved in the
+ * MCP metadata.
+ *
+ * @param requirement - The IR security requirement set (AND-grouped schemes)
  * @param schemes - Lookup map of security scheme definitions
- * @returns Array of resolved scheme requirements (usually 1 element for single requirement)
+ * @returns Array of resolved scheme requirements (one per scheme in the set)
  *
- * @throws `Error` When the security scheme is not found in the lookup
+ * @throws `Error` When a security scheme is not found in the lookup
  *
  * @internal
  */
@@ -128,19 +133,19 @@ function resolveRequirement(
   requirement: IRSecurityRequirement,
   schemes: Map<string, SecuritySchemeObject>,
 ): SecuritySchemeRequirement[] {
-  const scheme = schemes.get(requirement.schemeName);
+  return requirement.schemes.map((schemeRequirement) => {
+    const scheme = schemes.get(schemeRequirement.schemeName);
 
-  if (!scheme) {
-    throw new Error(`Missing security scheme "${requirement.schemeName}" in IR components`);
-  }
+    if (!scheme) {
+      throw new Error(`Missing security scheme "${schemeRequirement.schemeName}" in IR components`);
+    }
 
-  return [
-    {
-      schemeName: requirement.schemeName,
+    return {
+      schemeName: schemeRequirement.schemeName,
       scheme,
-      scopes: requirement.scopes,
-    },
-  ];
+      scopes: schemeRequirement.scopes,
+    };
+  });
 }
 
 /**

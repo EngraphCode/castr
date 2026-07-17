@@ -136,7 +136,7 @@ function buildConcreteRequestBody(
     content,
   };
 
-  if (requestBody.description) {
+  if (requestBody.description !== undefined) {
     irRequestBody.description = requestBody.description;
   }
 

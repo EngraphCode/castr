@@ -103,18 +103,25 @@ export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
     ],
     returnType: 'Record<string, z.ZodSchema>',
     statements: `
-  const rename = options?.rename ?? ((key: string) => key.replace(/[^A-Za-z0-9_]/g, "_"));
+  const rename = options?.rename ?? ((key: string) => {
+    const identifier = key.replace(/[^A-Za-z0-9_]/g, "_");
+    return /^[0-9]/.test(identifier) ? "_" + identifier : identifier;
+  });
   const result: Record<string, z.ZodSchema> = {};
-  
+
   for (const [key, value] of Object.entries(rawSchemas)) {
     const sanitized = rename(key);
     result[sanitized] = value;
   }
-  
+
   return result;`,
     docs: [
       {
-        description: `Builds a schema registry with sanitized keys for runtime schema lookup.`,
+        description: `Builds a schema registry with sanitized keys for runtime schema lookup.
+ *
+ * The default rename mirrors the identifier sanitisation applied to emitted
+ * schema symbols (invalid characters become underscores; a leading digit gains
+ * an underscore prefix). Pass a custom rename to override the mapping.`,
       },
     ],
   });

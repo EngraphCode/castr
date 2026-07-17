@@ -401,7 +401,7 @@ describe('writeOpenApiPaths', () => {
         createOperation({
           method: 'get',
           path: '/users',
-          security: [{ schemeName: 'bearerAuth', scopes: [] }],
+          security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }],
         }),
       ];
 
@@ -417,7 +417,9 @@ describe('writeOpenApiPaths', () => {
         createOperation({
           method: 'get',
           path: '/users',
-          security: [{ schemeName: 'oauth2', scopes: ['read:users', 'write:users'] }],
+          security: [
+            { schemes: [{ schemeName: 'oauth2', scopes: ['read:users', 'write:users'] }] },
+          ],
         }),
       ];
 

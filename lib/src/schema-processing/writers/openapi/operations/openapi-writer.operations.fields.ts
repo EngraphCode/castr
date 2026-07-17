@@ -5,25 +5,62 @@ import type {
 } from '../../../../shared/openapi-types.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
 import { writeParameterObject } from '../openapi-writer.parameters.js';
-import type { CastrParameter, IRSecurityRequirement } from '../../../ir/index.js';
+import type {
+  CastrParameter,
+  IRSecurityRequirement,
+  IRSecuritySchemeRequirement,
+} from '../../../ir/index.js';
 import type { CastrOperationLike } from './openapi-writer.operations.entries.js';
+
+function compareSchemeRequirements(
+  left: IRSecuritySchemeRequirement,
+  right: IRSecuritySchemeRequirement,
+): number {
+  return left.schemeName.localeCompare(right.schemeName);
+}
+
+function securityRequirementSortKey(requirement: IRSecurityRequirement): string {
+  return requirement.schemes.map((scheme) => scheme.schemeName).join(',');
+}
 
 function compareSecurityRequirements(
   left: IRSecurityRequirement,
   right: IRSecurityRequirement,
 ): number {
-  return left.schemeName.localeCompare(right.schemeName);
+  return securityRequirementSortKey(left).localeCompare(securityRequirementSortKey(right));
 }
 
 function writeParameter(param: CastrParameter): ReturnType<typeof writeParameterObject> {
   return writeParameterObject(param);
 }
 
-function writeSecurity(security: IRSecurityRequirement[]): SecurityRequirementObject[] {
-  const sortedSecurity = [...security].sort(compareSecurityRequirements);
-  return sortedSecurity.map((req) => ({
-    [req.schemeName]: req.scopes,
-  }));
+/**
+ * Converts IR security requirement sets to OpenAPI SecurityRequirementObject[].
+ *
+ * Reconstructs exactly ONE Security Requirement Object per AND-set so the
+ * AND-grouping of schemes survives the round-trip. Schemes within each set
+ * and the alternative sets themselves are sorted for deterministic output.
+ *
+ * @param security - The IR security requirement sets (OR alternatives)
+ * @returns OpenAPI security requirement objects
+ *
+ * @internal
+ */
+export function writeSecurityRequirements(
+  security: IRSecurityRequirement[],
+): SecurityRequirementObject[] {
+  const sortedRequirements = security
+    .map((requirement) => [...requirement.schemes].sort(compareSchemeRequirements))
+    .map((schemes): IRSecurityRequirement => ({ schemes }))
+    .sort(compareSecurityRequirements);
+
+  return sortedRequirements.map((requirement) => {
+    const requirementObject: SecurityRequirementObject = {};
+    for (const scheme of requirement.schemes) {
+      requirementObject[scheme.schemeName] = scheme.scopes;
+    }
+    return requirementObject;
+  });
 }
 
 function writeCoreMetadata(operation: CastrOperationLike, result: OperationObject): void {
@@ -77,17 +114,17 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
   }
 
   if (operation.security !== undefined && operation.security.length > 0) {
-    result.security = writeSecurity(operation.security);
+    result.security = writeSecurityRequirements(operation.security);
   }
 
   return result;
 }
 
 function applyPathItemMetadata(operation: CastrOperationLike, pathItem: PathItemObject): void {
-  if (operation.pathItemSummary && !pathItem.summary) {
+  if (operation.pathItemSummary !== undefined && pathItem.summary === undefined) {
     pathItem.summary = operation.pathItemSummary;
   }
-  if (operation.pathItemDescription && !pathItem.description) {
+  if (operation.pathItemDescription !== undefined && pathItem.description === undefined) {
     pathItem.description = operation.pathItemDescription;
   }
 }

@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info:
+  title: Dotted Component Name Fixture
+  version: 1.0.0
+paths:
+  /refs:
+    get:
+      operationId: getRef
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ref'
+components:
+  schemas:
+    Basic.Thing:
+      type: object
+      properties:
+        a:
+          type: string
+    Ref:
+      type: object
+      properties:
+        b:
+          $ref: '#/components/schemas/Basic.Thing'

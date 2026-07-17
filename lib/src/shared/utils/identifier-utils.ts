@@ -120,30 +120,33 @@ const BUILTIN_GLOBALS = new Set([
 ]);
 
 /**
- * Make a schema name safe by adding 'Schema' suffix if it would shadow
- * a JavaScript built-in global.
+ * Convert a schema name to a safe emitted code symbol.
  *
- * Unlike toIdentifier, this function does NOT transform the name in any
- * other way — it only adds a suffix for built-in globals.
+ * This is the single sanitisation seam for code-symbol emission: the IR
+ * carries the ORIGINAL component name (the round-trip identity), and this
+ * function converts it to a valid JavaScript identifier only at the point
+ * where writers emit code. It also adds a 'Schema' suffix when the
+ * identifier would shadow a JavaScript built-in global.
  *
- * @param name - Schema name to check
- * @returns Safe schema name (with 'Schema' suffix if needed)
+ * @param name - Original schema/component name
+ * @returns Valid identifier safe to emit as a code symbol
  *
  * @example
  * ```typescript
  * safeSchemaName('Error');       // 'ErrorSchema'
  * safeSchemaName('Date');        // 'DateSchema'
  * safeSchemaName('User');        // 'User' (unchanged)
- * safeSchemaName('Basic.Thing'); // 'Basic.Thing' (unchanged)
+ * safeSchemaName('Basic.Thing'); // 'Basic_Thing'
  * ```
  *
  * @public
  */
 export function safeSchemaName(name: string): string {
-  if (BUILTIN_GLOBALS.has(name)) {
-    return `${name}Schema`;
+  const identifier = toIdentifier(name);
+  if (BUILTIN_GLOBALS.has(identifier)) {
+    return `${identifier}Schema`;
   }
-  return name;
+  return identifier;
 }
 
 /**
