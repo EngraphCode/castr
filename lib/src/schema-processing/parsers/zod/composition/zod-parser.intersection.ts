@@ -12,11 +12,44 @@ import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
-import { applyMetaAndReturn } from '../modifiers/zod-parser.meta.js';
+import {
+  assertSupportedChainedMethods,
+  buildCompositeChainMethods,
+  finalizeCompositeSchema,
+  throwUnsupportedMemberSchema,
+} from '../modifiers/zod-parser.chain-whitelist.js';
 import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION } from '../zod-constants.js';
 
 /**
+ * Chained methods recognised on z.intersection().
+ * Anything outside this set fails fast as unsupported (finding C5).
+ * @internal
+ */
+const INTERSECTION_CHAIN_METHODS: ReadonlySet<string> = buildCompositeChainMethods();
+
+const INTERSECTION_MEMBER_CONTEXT = 'z.intersection member';
+const AND_MEMBER_CONTEXT = '.and() intersection member';
+
+/**
+ * Parse one intersection member.
+ * Fails fast on any member the parser cannot represent (finding C5).
+ * @internal
+ */
+function parseIntersectionMember(
+  memberNode: Node,
+  parseSchema: ZodSchemaParser,
+  memberContext: string,
+): CastrSchema {
+  const member = parseSchema(memberNode);
+  if (!member) {
+    throwUnsupportedMemberSchema(memberContext, memberNode);
+  }
+  return member;
+}
+
+/**
  * Validate and extract left/right schemas from intersection arguments.
+ * Fails fast on members the parser cannot represent (finding C5).
  * @internal
  */
 function parseIntersectionArgs(
@@ -34,14 +67,10 @@ function parseIntersectionArgs(
     return undefined;
   }
 
-  const left = parseSchema(leftNode);
-  const right = parseSchema(rightNode);
-
-  if (!left || !right) {
-    return undefined;
-  }
-
-  return { left, right };
+  return {
+    left: parseIntersectionMember(leftNode, parseSchema, INTERSECTION_MEMBER_CONTEXT),
+    right: parseIntersectionMember(rightNode, parseSchema, INTERSECTION_MEMBER_CONTEXT),
+  };
 }
 
 /**
@@ -72,6 +101,13 @@ export function parseIntersectionZodFromNode(
     return undefined;
   }
 
+  assertSupportedChainedMethods(
+    `z.${baseMethod}()`,
+    chainedMethods,
+    INTERSECTION_CHAIN_METHODS,
+    node,
+  );
+
   const args = parseIntersectionArgs(baseArgNodes, parseSchema);
   if (!args) {
     return undefined;
@@ -82,7 +118,7 @@ export function parseIntersectionZodFromNode(
     metadata: createDefaultMetadata(),
   };
 
-  return applyMetaAndReturn(schema, chainedMethods);
+  return finalizeCompositeSchema(schema, chainedMethods);
 }
 
 /**
@@ -113,15 +149,11 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  const left = parseSchema(leftNode);
-  const right = parseSchema(rightNode);
-
-  if (!left || !right) {
-    return undefined;
-  }
-
   return {
-    allOf: [left, right],
+    allOf: [
+      parseIntersectionMember(leftNode, parseSchema, AND_MEMBER_CONTEXT),
+      parseIntersectionMember(rightNode, parseSchema, AND_MEMBER_CONTEXT),
+    ],
     metadata: createDefaultMetadata(),
   };
 }

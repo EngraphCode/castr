@@ -80,6 +80,58 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
     });
   });
 
+  describe('intersections', () => {
+    it('rejects z.intersection with an unrecognised member instead of dropping it', () => {
+      const result = parseZodSource(`
+        export const S = z.intersection(z.string(), z.coerce.number());
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('z.coerce.number()');
+      expect(result.errors[0]?.message).toContain('intersection member');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('rejects an unrecognised right operand of .and() instead of dropping it', () => {
+      const result = parseZodSource(`
+        export const S = z.string().and(z.coerce.number());
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('z.coerce.number()');
+      expect(result.errors[0]?.message).toContain('intersection member');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('rejects an unrecognised left operand of .and() instead of dropping it', () => {
+      const result = parseZodSource(`
+        export const S = z.coerce.number().and(z.string());
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('z.coerce.number()');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('rejects an unsupported chained method on z.intersection instead of dropping it', () => {
+      const result = parseZodSource(`
+        export const S = z.intersection(z.string(), z.number()).refine((value) => true);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.refine(');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+  });
+
   describe('enums', () => {
     it('rejects z.nativeEnum instead of widening it to a plain string', () => {
       const result = parseZodSource(`
@@ -146,6 +198,21 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
       const u = component.schema.properties?.get('u');
       expect(u?.metadata.required).toBe(false);
       expect(component.schema.required).not.toContain('u');
+    });
+
+    it('captures .optional() on an intersection-typed property', () => {
+      const result = parseZodSource(`
+        export const S = z.strictObject({
+          i: z.intersection(z.strictObject({ a: z.string() }), z.strictObject({ b: z.number() })).optional(),
+        });
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      const i = component.schema.properties?.get('i');
+      expect(i?.metadata.required).toBe(false);
+      expect(i?.metadata.zodChain?.presence).toBe('.optional()');
+      expect(component.schema.required).not.toContain('i');
     });
 
     it('captures .nullable() on an enum-typed property', () => {
