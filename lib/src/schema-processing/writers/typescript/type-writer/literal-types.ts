@@ -14,7 +14,12 @@
 
 import { CodeBlockWriter, type WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
+import { getIntegerSemantics } from '../../../ir/index.js';
 import type { SchemaObjectType } from '../../../../shared/openapi-types.js';
+
+const NULL_SCHEMA_TYPE: SchemaObjectType = 'null';
+const NUMBER_SCHEMA_TYPE: SchemaObjectType = 'number';
+const NULL_LITERAL_TOKEN = 'null';
 
 /**
  * Render a writer function to text using a scratch writer.
@@ -32,20 +37,28 @@ export function renderTypeText(write: WriterFunction): string {
 /**
  * Format a primitive IR value as a TypeScript literal type token.
  *
+ * When `asBigIntLiteral` is set (int64/bigint integer semantics), integer
+ * numeric values become bigint literal tokens (`1n`) so the literal type
+ * matches the runtime `bigint` representation those semantics produce.
+ *
  * @throws Error for values with no TypeScript literal type (objects, arrays,
- * non-finite numbers) — fail fast instead of silently widening.
+ * non-finite numbers, non-integer numbers under integer semantics) — fail
+ * fast instead of silently widening.
  *
  * @internal
  */
-function formatLiteralTypeToken(value: unknown): string {
+function formatLiteralTypeToken(value: unknown, asBigIntLiteral: boolean): string {
   if (value === null) {
-    return 'null';
+    return NULL_LITERAL_TOKEN;
   }
   if (typeof value === 'string') {
     return JSON.stringify(value);
   }
-  if (typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value))) {
+  if (typeof value === 'boolean') {
     return String(value);
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return formatNumericLiteralTypeToken(value, asBigIntLiteral);
   }
   throw new Error(
     `Genuinely impossible: enum/const value of type "${typeof value}" cannot be represented ` +
@@ -54,18 +67,61 @@ function formatLiteralTypeToken(value: unknown): string {
 }
 
 /**
+ * Format a finite numeric value as a number or bigint literal type token.
+ *
+ * @throws Error for non-integer values under int64/bigint semantics — no
+ * bigint literal exists for them.
+ *
+ * @internal
+ */
+function formatNumericLiteralTypeToken(value: number, asBigIntLiteral: boolean): string {
+  if (!asBigIntLiteral) {
+    return String(value);
+  }
+  if (!Number.isInteger(value)) {
+    throw new Error(
+      `Genuinely impossible: non-integer enum/const value ${String(value)} under int64/bigint ` +
+        'integer semantics cannot be represented as a TypeScript bigint literal type. ' +
+        'bigint literals exist only for integer values.',
+    );
+  }
+  return `${BigInt(value)}n`;
+}
+
+/**
+ * Whether literal numeric values must be emitted as bigint literals.
+ *
+ * True when the schema carries int64/bigint integer semantics (runtime values
+ * are `bigint`) and its type set has no `number` member that could hold plain
+ * numeric values instead.
+ *
+ * @internal
+ */
+function usesBigIntLiterals(schema: CastrSchema): boolean {
+  if (getIntegerSemantics(schema) === undefined) {
+    return false;
+  }
+  return !(
+    Array.isArray(schema.type) &&
+    schema.type.some((memberType) => memberType === NUMBER_SCHEMA_TYPE)
+  );
+}
+
+/**
  * Resolve the literal union tokens for a schema carrying `const` or `enum`.
  * Returns undefined when the schema carries neither. An empty enum yields an
- * empty token list (nothing validates → `never`).
+ * empty token list (nothing validates → `never`). Integer values under
+ * int64/bigint semantics resolve to bigint literal tokens.
  *
  * @internal
  */
 function resolveLiteralUnionTokens(schema: CastrSchema): string[] | undefined {
+  const asBigIntLiteral = usesBigIntLiterals(schema);
   if (schema.const !== undefined) {
-    return [formatLiteralTypeToken(schema.const)];
+    return [formatLiteralTypeToken(schema.const, asBigIntLiteral)];
   }
   if (schema.enum !== undefined) {
-    return [...new Set(schema.enum.map(formatLiteralTypeToken))];
+    return [...new Set(schema.enum.map((value) => formatLiteralTypeToken(value, asBigIntLiteral)))];
   }
   return undefined;
 }
@@ -110,6 +166,33 @@ export function writeTypeArrayUnion(
     writer.conditionalWrite(index > 0, ' | ');
     writeMember({ ...schema, type: memberType }, writer);
   });
+}
+
+/**
+ * Whether the schema body already renders its own top-level `null` branch —
+ * a `null` literal token (`const: null` or `enum` containing null) or a
+ * `null` member of a type array. The nullable-metadata append must not
+ * duplicate that branch.
+ *
+ * @internal
+ */
+export function rendersOwnNullBranch(schema: CastrSchema): boolean {
+  if (
+    schema.booleanSchema !== undefined ||
+    schema.$ref !== undefined ||
+    schema.allOf !== undefined ||
+    schema.oneOf !== undefined ||
+    schema.anyOf !== undefined
+  ) {
+    return false;
+  }
+  const literalTokens = resolveLiteralUnionTokens(schema);
+  if (literalTokens !== undefined) {
+    return literalTokens.some((token) => token === NULL_LITERAL_TOKEN);
+  }
+  return (
+    Array.isArray(schema.type) && schema.type.some((memberType) => memberType === NULL_SCHEMA_TYPE)
+  );
 }
 
 /**

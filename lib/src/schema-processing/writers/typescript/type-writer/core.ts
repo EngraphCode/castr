@@ -14,6 +14,7 @@ import {
   arrayItemNeedsParens,
   renderTypeText,
   rendersAsTopLevelUnion,
+  rendersOwnNullBranch,
   writeLiteralValueType,
   writeTypeArrayUnion,
 } from './literal-types.js';
@@ -27,7 +28,7 @@ export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
     assertSchemaSupportsIntegerTargetCapabilities(schema, 'TypeScript');
     writeTypeBody(schema)(writer);
-    if (schema.metadata?.nullable) {
+    if (schema.metadata?.nullable && !rendersOwnNullBranch(schema)) {
       writer.write(' | null');
     }
   };
@@ -75,15 +76,23 @@ function resolveScalarTypeToken(schema: CastrSchema): string | undefined {
   }
 }
 
-/** Write a primitive/structured type from the schema type field. @internal */
+/**
+ * Write a primitive/structured type from the schema type field.
+ * Type arrays are dispatched first: the scalar-token resolution below reads
+ * integer semantics from the whole schema, and letting it run on a type array
+ * containing `integer` would collapse the union to `bigint` and silently drop
+ * every other member.
+ *
+ * @internal
+ */
 function writePrimitiveType(schema: CastrSchema, writer: CodeBlockWriter): void {
+  if (Array.isArray(schema.type)) {
+    writeTypeArrayUnion(schema, schema.type, writer, writePrimitiveType);
+    return;
+  }
   const scalarTypeToken = resolveScalarTypeToken(schema);
   if (scalarTypeToken !== undefined) {
     writer.write(scalarTypeToken);
-    return;
-  }
-  if (Array.isArray(schema.type)) {
-    writeTypeArrayUnion(schema, schema.type, writer, writePrimitiveType);
     return;
   }
   switch (schema.type) {

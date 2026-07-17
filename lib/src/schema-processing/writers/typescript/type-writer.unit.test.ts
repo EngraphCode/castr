@@ -510,6 +510,15 @@ describe('Literal Value Types — enum and const', () => {
     expect(generate(schema)).toBe('"a" | "b" | null');
   });
 
+  it('does not duplicate null for nullable enums carrying a null value', () => {
+    const schema = createMockCastrSchema({
+      type: 'string',
+      enum: ['a', null],
+      metadata: createMockCastrSchemaNode({ required: true, nullable: true }),
+    });
+    expect(generate(schema)).toBe('"a" | null');
+  });
+
   it('parenthesises enum unions used as array item types', () => {
     const schema = createMockCastrSchema({
       type: 'array',
@@ -563,6 +572,14 @@ describe('Type Arrays — union output', () => {
   it('generates never for an empty type array (nothing validates)', () => {
     const schema = createMockCastrSchema({ type: [] });
     expect(generate(schema)).toBe('never');
+  });
+
+  it('does not duplicate null for nullable type arrays carrying a null member', () => {
+    const schema = createMockCastrSchema({
+      type: ['string', 'null'],
+      metadata: createMockCastrSchemaNode({ required: true, nullable: true }),
+    });
+    expect(generate(schema)).toBe('string | null');
   });
 
   it('parenthesises type-array unions used as array item types', () => {
