@@ -1,7 +1,6 @@
 # Default Response Behavior Documentation
 
-**Status:** Documented  
-**Date:** November 2025  
+**Status:** Implemented  
 **Related:** `TemplateContextOptions.defaultStatusBehavior`
 
 ---
@@ -219,74 +218,22 @@ const result = await generateZodClientFromOpenAPI({
 
 ## Test Fixtures Affected
 
-The following test fixtures in this codebase trigger the warning because they only define `default` responses:
+The Swagger 2.0 example spec `lib/examples/swagger/petstore.yaml` contains three operations whose only
+response is `default`, so generation from it triggers the warning under `spec-compliant`:
 
-### 1. `lib/examples/openapi/v3.0/default-status-only.yaml`
+- `POST /user` (`createUser`)
+- `GET /user/logout` (`logoutUser`)
+- `PUT /user/{username}` (`updateUser`)
 
-**Endpoint:** `POST /users` (`createUser`)
+The behaviour is pinned by:
 
-```yaml
-paths:
-  /users:
-    post:
-      operationId: createUser
-      responses:
-        default:
-          description: User response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-```
+- `lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.unit.test.ts`
+  (unit proof for filtering, warning, and `auto-correct` promotion)
+- `lib/src/schema-processing/context/template-context.default-status.unit.test.ts`
+  (template-context wiring proof)
+- `lib/tests-snapshot/spec-compliance/defaut-status-behavior.test.ts` (snapshot of both modes)
 
-**Status:** Intentional test fixture to verify warning behavior.
-
-### 2. `lib/examples/openapi/v3.0/logout-endpoint.yaml`
-
-**Endpoint:** `POST /logout` (`logoutUser`)
-
-```yaml
-paths:
-  /logout:
-    post:
-      operationId: logoutUser
-      responses:
-        default:
-          description: Logout response
-```
-
-**Status:** Intentional test fixture to verify warning behavior.
-
-### 3. `lib/examples/openapi/v3.1/update-user.yaml`
-
-**Endpoint:** `PUT /users/{userId}` (`updateUser`)
-
-```yaml
-paths:
-  /users/{userId}:
-    put:
-      operationId: updateUser
-      responses:
-        default:
-          description: User update response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-```
-
-**Status:** Intentional test fixture to verify warning behavior.
-
-### Why Are These Fixtures Like This?
-
-These fixtures are **intentional test cases** to ensure that:
-
-1. `@engraph/castr` correctly detects endpoints with only `default` responses
-2. The warning message is displayed correctly
-3. The `auto-correct` option works as expected
-4. The `spec-compliant` option (default) correctly ignores these endpoints
-
-**These are NOT production examples to follow.** They demonstrate what **not** to do in a real API.
+These fixtures demonstrate what **not** to do in a real API; they are not production examples to follow.
 
 ---
 
@@ -336,32 +283,21 @@ interface TemplateContextOptions {
 
 **Files:**
 
-- `lib/src/schema-processing/context/template-context.ts` (option contract)
-- `lib/src/schema-processing/context/template-context.endpoints.from-ir.ts` (response mapping)
-- `lib/src/schema-processing/context/template-context.status-codes.ts` (centralized status-code semantics)
+- `lib/src/schema-processing/context/template-context.ts` (option contract and wiring)
+- `lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.ts`
+  (`getEndpointDefinitionsFromIR` filtering and promotion)
+- `lib/src/schema-processing/context/endpoints/template-context.status-codes.ts`
+  (centralized status-code semantics and the `DefaultStatusBehavior` type)
 
-The warning is emitted when:
+The behaviour, per operation whose responses contain only `default`:
 
-1. An endpoint has a `responses` object
-2. The only key in `responses` is `default`
-3. The `defaultStatusBehavior` option is set to `spec-compliant`
-
-Example logic:
-
-```typescript
-const statusCodes = Object.keys(operation.responses ?? {});
-const hasOnlyDefault = statusCodes.length === 1 && statusCodes[0] === 'default';
-
-if (hasOnlyDefault && options.defaultStatusBehavior === 'spec-compliant') {
-  warnings.push(`Endpoint ${operationId} has only 'default' status code and was ignored`);
-  return null; // Skip this endpoint
-}
-
-if (hasOnlyDefault && options.defaultStatusBehavior === 'auto-correct') {
-  // Treat 'default' as '200'
-  return handleResponse(operation.responses.default, '200');
-}
-```
+1. Under `spec-compliant` (the default), the operation is excluded from the generated endpoint
+   list, and a single warning lists every ignored operation (by `operationId`, or
+   `METHOD path` when absent).
+2. Under `auto-correct`, the operation is included: the `default` response schema becomes the
+   endpoint's success `response`, and `default` is removed from that endpoint's `errors`.
+3. Operations with at least one explicit status code are never filtered, and their `default`
+   response remains an error fallback in both modes.
 
 ---
 
@@ -439,7 +375,7 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts
 ### With Auto-Correct
 
 ```bash
-npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior auto-correct
+npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status auto-correct
 # No warning, default-only endpoints are included
 ```
 

@@ -13,6 +13,7 @@ import {
 import {
   getEndpointDefinitionsFromIR,
   processEndpointGroupingAndCommonSchemas,
+  type DefaultStatusBehavior,
   type MinimalTemplateContext,
 } from './endpoints/index.js';
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
@@ -74,7 +75,7 @@ export interface TemplateContextOptions {
    * { defaultStatusBehavior: 'auto-correct' }
    * ```
    */
-  defaultStatusBehavior?: 'spec-compliant' | 'auto-correct';
+  defaultStatusBehavior?: DefaultStatusBehavior;
   willSuppressWarnings?: boolean;
   withDescription?: boolean;
   endpointDefinitionRefiner?: (
@@ -129,6 +130,20 @@ function assertNoMixedQueryParameterModels(
 }
 
 /**
+ * Build endpoint definitions from the IR, honoring `defaultStatusBehavior`
+ * (see docs/DEFAULT-RESPONSE-BEHAVIOR.md). Skipped for schemas-only output.
+ */
+function buildEndpointsFromIR(
+  irDocument: CastrDocument,
+  options: TemplateContextOptions | undefined,
+): EndpointDefinition[] {
+  if (options?.template === TEMPLATE_SCHEMAS_ONLY) {
+    return [];
+  }
+  return getEndpointDefinitionsFromIR(irDocument, options?.defaultStatusBehavior);
+}
+
+/**
  * Main function to generate template context from OpenAPI document.
  * Orchestrates the entire process of building template context.
  *
@@ -151,7 +166,7 @@ export const getTemplateContext = (
   const isSchemasOnly = options?.template === TEMPLATE_SCHEMAS_ONLY;
 
   // Generate endpoints from IR (skipped for schemas-only)
-  const endpoints = isSchemasOnly ? [] : getEndpointDefinitionsFromIR(irDocument);
+  const endpoints = buildEndpointsFromIR(irDocument, options);
 
   // Extract inline schemas (e.g. request bodies) to be exported as named components.
   // Operates on a shallow copy to avoid mutating the source IR's components array.
@@ -212,6 +227,7 @@ export const getTemplateContext = (
 
 // Re-export types and functions for external use
 export { type TemplateContextGroupStrategy } from './endpoints/index.js';
+export { type DefaultStatusBehavior } from './endpoints/index.js';
 export { extractSchemaNamesFromDoc } from './schemas/template-context.schemas.js';
 
 /**

@@ -1,28 +1,8 @@
-import type {
-  OpenAPIDocument,
-  OperationObject,
-  PathItemObject,
-} from '../../../shared/openapi-types.js';
-import {
-  getCanonicalStandardHttpMethod,
-  getHttpMethodIdentifier,
-} from '../../../shared/openapi/http-methods.js';
-
-import { logger } from '../../../shared/utils/logger.js';
+import { getHttpMethodIdentifier } from '../../../shared/openapi/http-methods.js';
 
 import { snakeCase, split } from 'lodash-es';
 export type TemplateContextGroupStrategy = 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
 
-const CHAR_CODE_0 = 0x30;
-const CHAR_CODE_9 = 0x39;
-const CHAR_CODE_A = 0x41;
-const CHAR_CODE_Z = 0x5a;
-const CHAR_CODE_a = 0x61;
-const CHAR_CODE_z = 0x7a;
-const CHAR_CODE_UNDERSCORE = 0x5f;
-const COLON_TOKEN = ':';
-const OPEN_BRACE_TOKEN = '{';
-const CLOSE_BRACE_TOKEN = '}';
 const REF_SEPARATOR = '/';
 const DEFAULT_GROUP_NAME = 'Default';
 const GROUP_STRATEGY_TAG = 'tag';
@@ -37,59 +17,6 @@ import {
   type MinimalTemplateContext,
 } from './grouping/index.js';
 import type { EndpointDefinition } from '../../../endpoints/definition.types.js';
-
-/**
- * Convert path with colons to OpenAPI bracket format.
- * Example: `'/pet/:petId' -> '/pet/{petId}'`
- *
- * @internal
- */
-function isWordCharCode(code: number): boolean {
-  return (
-    (code >= CHAR_CODE_0 && code <= CHAR_CODE_9) || // 0-9
-    (code >= CHAR_CODE_A && code <= CHAR_CODE_Z) || // A-Z
-    (code >= CHAR_CODE_a && code <= CHAR_CODE_z) || // a-z
-    code === CHAR_CODE_UNDERSCORE // _
-  );
-}
-
-function findParamEnd(path: string, startIndex: number): number {
-  let paramEnd = startIndex;
-  while (paramEnd < path.length && isWordCharCode(path.charCodeAt(paramEnd))) {
-    paramEnd++;
-  }
-  return paramEnd;
-}
-
-export const getOriginalPathWithBrackets = (path: string): string => {
-  let result = '';
-  let index = 0;
-
-  while (index < path.length) {
-    const char = path[index] ?? '';
-    if (char !== COLON_TOKEN) {
-      result += char;
-      index++;
-      continue;
-    }
-
-    const paramEnd = findParamEnd(path, index + 1);
-    if (paramEnd === index + 1) {
-      result += COLON_TOKEN;
-      index++;
-      continue;
-    }
-
-    result += OPEN_BRACE_TOKEN;
-    for (let i = index + 1; i < paramEnd; i++) {
-      result += path[i] ?? '';
-    }
-    result += CLOSE_BRACE_TOKEN;
-    index = paramEnd;
-  }
-
-  return result;
-};
 
 /**
  * Extract pure schema names from full ref paths.
@@ -132,49 +59,6 @@ export const determineGroupName = (
     return getHttpMethodIdentifier(endpoint.method);
   }
   return snakeCase(DEFAULT_GROUP_NAME);
-};
-
-function getPathItemOperation(
-  pathItem: PathItemObject,
-  method: EndpointDefinition['method'],
-): OperationObject | undefined {
-  const canonicalStandardMethod =
-    typeof method === 'string' ? getCanonicalStandardHttpMethod(method) : undefined;
-
-  return canonicalStandardMethod !== undefined
-    ? pathItem[canonicalStandardMethod]
-    : pathItem.additionalOperations?.[method];
-}
-
-/**
- * Get operation object from OpenAPI document for an endpoint.
- * Data gathering function that extracts operation from paths.
- *
- * @param openApiDoc - The OpenAPI document
- * @param endpoint - The endpoint definition
- * @returns Operation object or null if not found
- *
- * @internal
- */
-export const getOperationForEndpoint = (
-  openApiDoc: OpenAPIDocument,
-  endpoint: EndpointDefinition,
-): OperationObject | null => {
-  const operationPath = getOriginalPathWithBrackets(endpoint.path);
-  const pathItem = openApiDoc.paths?.[endpoint.path] ?? openApiDoc.paths?.[operationPath];
-
-  if (!pathItem) {
-    logger.warn('Missing path', endpoint.path);
-    return null;
-  }
-
-  const operation = getPathItemOperation(pathItem, endpoint.method);
-  if (!operation) {
-    logger.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
-    return null;
-  }
-
-  return operation;
 };
 
 /**

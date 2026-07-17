@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type {
   CastrAdditionalOperation,
   CastrSchema,
@@ -144,6 +144,44 @@ describe('template-context.endpoints.from-ir', () => {
       { status: 299, schema: custom2xxSchema },
       { status: 'default', schema: fallbackErrorSchema },
     ]);
+  });
+
+  it('preserves 4XX and 5XX wildcard status tokens on endpoint errors', () => {
+    const successSchema = createSchema('string');
+    const clientErrorSchema = createSchema('object');
+    const serverErrorSchema = createSchema('number');
+
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          createResponse('200', successSchema),
+          createResponse('4XX', clientErrorSchema),
+          createResponse('5XX', serverErrorSchema),
+        ],
+      }),
+    ]);
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+
+    expect(endpoint?.errors).toEqual([
+      { status: '4XX', schema: clientErrorSchema },
+      { status: '5XX', schema: serverErrorSchema },
+    ]);
+  });
+
+  it('fails fast with an actionable error on malformed response status tokens', () => {
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          createResponse('200', createSchema('string')),
+          createResponse('4xx', createSchema('object')),
+        ],
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(
+      /Unsupported response status token '4xx'/,
+    );
   });
 
   it('selects 201 as primary success response when 200 is absent', () => {
@@ -417,5 +455,83 @@ describe('template-context.endpoints.from-ir', () => {
 
     expect(endpoint?.method).toBe('query');
     expect(endpoint?.path).toBe('/search');
+  });
+
+  describe('defaultStatusBehavior', () => {
+    function createDefaultOnlyDocument(defaultSchema: CastrSchema): CastrDocument {
+      return createDocument([
+        createOperation({
+          operationId: 'logoutUser',
+          path: '/logout',
+          responses: [createResponse('default', defaultSchema)],
+        }),
+        createOperation({
+          operationId: 'listUsers',
+          path: '/users',
+          responses: [createResponse('200', createSchema('object'))],
+        }),
+      ]);
+    }
+
+    it('ignores default-only operations and warns when the option is unset', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      try {
+        const doc = createDefaultOnlyDocument(createSchema('string'));
+
+        const endpoints = getEndpointDefinitionsFromIR(doc);
+
+        expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
+        expect(warnSpy).toHaveBeenCalledOnce();
+        const warning = warnSpy.mock.calls[0]?.join(' ') ?? '';
+        expect(warning).toContain('defaultStatusBehavior');
+        expect(warning).toContain('logoutUser');
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('ignores default-only operations when spec-compliant is explicit', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      try {
+        const doc = createDefaultOnlyDocument(createSchema('string'));
+
+        const endpoints = getEndpointDefinitionsFromIR(doc, 'spec-compliant');
+
+        expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('includes default-only operations under auto-correct, promoting default to success', () => {
+      const defaultSchema = createSchema('string');
+      const doc = createDefaultOnlyDocument(defaultSchema);
+
+      const endpoints = getEndpointDefinitionsFromIR(doc, 'auto-correct');
+      const logout = endpoints.find((e) => e.alias === 'logoutUser');
+
+      expect(endpoints).toHaveLength(2);
+      expect(logout?.response).toEqual(defaultSchema);
+      expect(logout?.errors).toEqual([]);
+    });
+
+    it('keeps default as an error fallback for operations with explicit status codes', () => {
+      const fallbackSchema = createSchema('number');
+      const doc = createDocument([
+        createOperation({
+          operationId: 'getUser',
+          responses: [
+            createResponse('200', createSchema('object')),
+            createResponse('default', fallbackSchema),
+          ],
+        }),
+      ]);
+
+      const specCompliant = getEndpointDefinitionsFromIR(doc, 'spec-compliant');
+      const autoCorrect = getEndpointDefinitionsFromIR(doc, 'auto-correct');
+
+      expect(specCompliant[0]?.errors).toEqual([{ status: 'default', schema: fallbackSchema }]);
+      expect(autoCorrect[0]?.errors).toEqual([{ status: 'default', schema: fallbackSchema }]);
+    });
   });
 });

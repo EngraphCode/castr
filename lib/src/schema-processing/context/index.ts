@@ -4,6 +4,7 @@ export {
   extractSchemaNamesFromDoc,
   type TemplateContext,
   type TemplateContextOptions,
+  type DefaultStatusBehavior,
 } from './template-context.js';
 export { getMcpToolName, getMcpToolHints } from './mcp/index.js';
 export {

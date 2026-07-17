@@ -134,79 +134,6 @@ test('defaut-status-behavior', () => {
                 },
             ],
         },
-        {
-            "alias": "withDefaultResponse",
-            "errors": [
-                {
-                    "description": "Default response",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "get",
-            "parameters": [],
-            "path": "/with-default-response",
-            "requestFormat": "json",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "Default response",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "statusCode": "default",
-                },
-            ],
-        },
     ]
   `);
 
@@ -312,30 +239,7 @@ test('defaut-status-behavior', () => {
         },
         {
             "alias": "withDefaultResponse",
-            "errors": [
-                {
-                    "description": "Default response",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "status": "default",
-                },
-            ],
+            "errors": [],
             "method": "get",
             "parameters": [],
             "path": "/with-default-response",
@@ -352,11 +256,11 @@ test('defaut-status-behavior', () => {
                     "required": false,
                     "zodChain": {
                         "defaults": [],
-                        "presence": "",
+                        "presence": ".optional()",
                         "validations": [],
                     },
                 },
-                "type": "object",
+                "type": "string",
             },
             "responses": [
                 {

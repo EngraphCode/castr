@@ -44,26 +44,64 @@ export function getPackageVersion(): string {
   }
 }
 
+const GROUP_STRATEGY_ALLOWED_VALUES = 'none, tag, method, tag-file, method-file';
+const DEFAULT_STATUS_ALLOWED_VALUES = 'spec-compliant, auto-correct';
+
+function parseGroupStrategy(value: string | undefined): ParsedCliOptions['groupStrategy'] {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (isGroupStrategy(value)) {
+    return value;
+  }
+  throw new Error(
+    `Invalid --group-strategy value '${value}'. Allowed values: ${GROUP_STRATEGY_ALLOWED_VALUES}.`,
+  );
+}
+
+function parseDefaultStatusBehavior(
+  value: string | undefined,
+): ParsedCliOptions['defaultStatusBehavior'] {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (isDefaultStatusBehavior(value)) {
+    return value;
+  }
+  throw new Error(
+    `Invalid --default-status value '${value}'. Allowed values: ${DEFAULT_STATUS_ALLOWED_VALUES}.`,
+  );
+}
+
+function parseComplexityThreshold(value: string | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  const parsed = Number(value);
+  if (value.length === 0 || !Number.isInteger(parsed) || parsed < 0) {
+    throw new Error(
+      `Invalid --complexity-threshold value '${value}'. Expected a non-negative integer.`,
+    );
+  }
+  return parsed;
+}
+
 /**
  * Parse and validate CLI options (groupStrategy, complexityThreshold, defaultStatus).
+ *
+ * Distinguishes "not provided" (returns `undefined` for that option) from
+ * "provided-but-invalid" (throws an actionable error listing allowed values) —
+ * a mistyped value must never be silently dropped.
+ *
  * @param options - Raw CLI options
  * @returns Parsed and validated options
  * @internal
  */
 export function parseCliOptions(options: CliOptions): ParsedCliOptions {
-  const groupStrategy = isGroupStrategy(options.groupStrategy) ? options.groupStrategy : undefined;
-  const complexityThreshold =
-    options.complexityThreshold !== undefined
-      ? parseInt(options.complexityThreshold, 10)
-      : undefined;
-  const defaultStatusBehavior = isDefaultStatusBehavior(options.defaultStatus)
-    ? options.defaultStatus
-    : undefined;
-
   return {
-    groupStrategy,
-    complexityThreshold,
-    defaultStatusBehavior,
+    groupStrategy: parseGroupStrategy(options.groupStrategy),
+    complexityThreshold: parseComplexityThreshold(options.complexityThreshold),
+    defaultStatusBehavior: parseDefaultStatusBehavior(options.defaultStatus),
   };
 }
 

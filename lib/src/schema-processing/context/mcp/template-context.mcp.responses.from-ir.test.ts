@@ -232,4 +232,53 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
 
     expect(result).toBeUndefined();
   });
+
+  test('returns schema when the only success response is the 2XX wildcard', () => {
+    const wildcardSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseWithSchema('500', createMockSchema()),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(wildcardSchema);
+  });
+
+  test('prefers concrete success codes over the 2XX wildcard', () => {
+    const wildcardSchema = createMockSchema();
+    const concreteSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseWithSchema('200', concreteSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(concreteSchema);
+  });
+
+  test('treats 299 as non-success, aligned with endpoint status semantics', () => {
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [createMockResponseWithSchema('299', createMockSchema())],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('returns undefined for default-only responses (default is not a success status)', () => {
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [createMockResponseWithSchema('default', createMockSchema())],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBeUndefined();
+  });
 });

@@ -707,38 +707,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -786,49 +754,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -955,28 +880,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -5285,38 +5188,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -5364,49 +5235,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -5533,28 +5361,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -7784,38 +7590,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -7863,49 +7637,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -8032,28 +7763,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -10283,38 +9992,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -10362,49 +10039,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -10531,28 +10165,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -12782,38 +12394,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -12861,49 +12441,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -13030,28 +12567,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -15281,38 +14796,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -15360,49 +14843,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -15529,28 +14969,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -23444,107 +22862,6 @@ Some useful links:
             ],
         },
         {
-            "alias": "createUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "post",
-            "parameters": [
-                {
-                    "description": "Created user object",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "statusCode": "default",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
             "alias": "getUserByName",
             "errors": [
                 {
@@ -23704,130 +23021,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "404",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "updateUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "put",
-            "parameters": [
-                {
-                    "description": "name that need to be deleted",
-                    "name": "username",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": true,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "type": "Path",
-                },
-                {
-                    "description": "Update an existent user in the store",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user/{username}",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -24258,82 +23451,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "400",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "logoutUser",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "get",
-            "parameters": [],
-            "path": "/user/logout",
-            "requestFormat": "json",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -32959,107 +32076,6 @@ Some useful links:
             ],
         },
         {
-            "alias": "createUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "post",
-            "parameters": [
-                {
-                    "description": "Created user object",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "statusCode": "default",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
             "alias": "getUserByName",
             "errors": [
                 {
@@ -33219,130 +32235,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "404",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "updateUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "put",
-            "parameters": [
-                {
-                    "description": "name that need to be deleted",
-                    "name": "username",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": true,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "type": "Path",
-                },
-                {
-                    "description": "Update an existent user in the store",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user/{username}",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -33773,82 +32665,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "400",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "logoutUser",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "get",
-            "parameters": [],
-            "path": "/user/logout",
-            "requestFormat": "json",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [

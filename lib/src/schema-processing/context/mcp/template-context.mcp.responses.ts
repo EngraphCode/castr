@@ -18,6 +18,7 @@ import {
   type CastrOperation,
   type CastrResponse,
 } from '../../ir/index.js';
+import { isSuccessStatusCode } from '../endpoints/template-context.status-codes.js';
 
 const MEDIA_TYPE_WILDCARD_TYPE = '*';
 const MEDIA_TYPE_WILDCARD_SUBTYPE = '*';
@@ -193,7 +194,22 @@ const extractResponseSchemaFromIR = (
 };
 
 /**
+ * Sort key that orders concrete success codes ascending and places the
+ * `2XX` wildcard after every concrete code (a concrete `200` is a more
+ * specific success declaration than the range wildcard).
+ */
+const successStatusSortKey = (statusCode: string): number => {
+  const numeric = Number(statusCode);
+  return Number.isInteger(numeric) ? numeric : Number.MAX_SAFE_INTEGER;
+};
+
+/**
  * Extracts the primary success response schema from a CastrOperation using the IR.
+ *
+ * Success selection is aligned with the endpoint builder's
+ * {@link isSuccessStatusCode} semantics: `200`-`204` and the `2XX` wildcard
+ * are success statuses; `default` and every other token are not. The lowest
+ * concrete success code wins; the `2XX` wildcard is consulted last.
  */
 export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
@@ -203,20 +219,11 @@ export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
   document: Pick<CastrDocument, 'components'> = { components: [] },
 ): CastrSchema | undefined {
-  const { responses } = operation;
+  const successResponses = operation.responses
+    .filter((response) => isSuccessStatusCode(response.statusCode))
+    .sort((a, b) => successStatusSortKey(a.statusCode) - successStatusSortKey(b.statusCode));
 
-  const sortedResponses = [...responses].sort((a, b) => {
-    const aNum = Number(a.statusCode);
-    const bNum = Number(b.statusCode);
-    return aNum - bNum;
-  });
-
-  for (const response of sortedResponses) {
-    const numeric = Number(response.statusCode);
-    if (!Number.isInteger(numeric) || numeric < 200 || numeric >= 300) {
-      continue;
-    }
-
+  for (const response of successResponses) {
     const schema = extractResponseSchemaFromIR(document, response);
     if (schema) {
       return schema;

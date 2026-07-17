@@ -9672,38 +9672,6 @@ export const createUsersWithListInput_Body = z.array(User);
 export const endpoints = [
   {
     method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
-    method: "post",
     path: "/user/createWithList",
     requestFormat: "json",
     parameters: [
@@ -9785,28 +9753,6 @@ export const endpoints = [
   },
   {
     method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
-  },
-  {
-    method: "get",
     path: "/user/{username}",
     requestFormat: "json",
     parameters: [
@@ -9853,49 +9799,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
