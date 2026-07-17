@@ -176,11 +176,15 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > W0 owner walk (**Q-012..Q-015** in `open-questions.md`: second-product naming, vision
 > topology, preservation-coverage metric, principles.md truthing batch) blocks W1/W2/W4 shape;
 > **W3's `validate-doctrine-claims` TDD cycle and W2's continuity archaeology are
-> parallel-safe now**. **NEXT STEPS, in order: (1) remediation-02 (IR-fidelity harness,
+> parallel-safe now**. **NEXT STEPS, in order: (1) ~~remediation-02 (IR-fidelity harness,
 > `plans/active/02-ir-fidelity-proof-harness.md`) — ungated, highest leverage, NOT blocked by
 > the overhaul; land the interim fail-fast on the placebo Zod refinements with its first PR
-> (review §5). (2) The W0 owner walk. (3) Overhaul workstreams per the plan.** The substrate
-> backlog (gap-rescan spine) stays parallel-safe and unchanged.
+> (review §5)~~ **(Superseded 2026-07-17: remediation 02–07 execute as file-disjoint parallel
+> lanes under [`00-parallel-execution-program.md`](../../plans/remediation/00-parallel-execution-program.md)
+> — the lane contracts there are authoritative; do not open single-slice remediation-02. The
+> interim Zod fail-fast is retired: lane L-B lands C6 silent-wrong → real-or-fail-fast in one
+> cycle, per the program's readiness review.)** (2) The W0 owner walk. (3) Overhaul workstreams
+> per the plan.** The substrate backlog (gap-rescan spine) stays parallel-safe and unchanged.
 
 > **🧭 (2026-07-03 evening, Windswept Winging Cliff / 0ceb5f closeout — history; superseded on
 > "what's next" by the 2026-07-04 block above).** The 2026-07-03 three-session day landed, in order: the OCE↔castr **delta review** (plan +
@@ -220,7 +224,10 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > PR thread fixed-or-rejected with evidence). The completed plan's §As-built carries the
 > detail ([`complete/pre-castr-doctrine-sync.md`](../../plans/current/complete/pre-castr-doctrine-sync.md)).
 > **PRODUCT/REMEDIATION WORK IS NOW UNGATED — remediation-02 (IR-fidelity harness) or a feature
-> slice may open immediately; the substrate backlog stays parallel-safe.**
+> slice may open immediately; the substrate backlog stays parallel-safe.** **(2026-07-17: opened —
+> as parallel lanes under
+> [`00-parallel-execution-program.md`](../../plans/remediation/00-parallel-execution-program.md),
+> not as a single slice.)**
 >
 > **NEXT STEPS, in order: (1) ~~PRE-MERGE — the merge-event continuity reconciliation~~ ✅ DONE 2026-07-03
 > post-merge (Bellows): PR #3 MERGED (`5529436`); the branching model is now feature-branches-off-main (see

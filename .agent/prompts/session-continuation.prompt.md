@@ -35,8 +35,12 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`): product/remediation work may open
 > immediately.** The pre-castr doctrine-sync slice is live on `main` (use-result-pattern + the
 > Q-010 composition ruling, second-consumer rename, validation-strategy, tsdoc/syntax
-> enforcement). Axis B below is therefore **no longer dormant** — remediation-02 (IR-fidelity
-> harness) or a feature slice may open on a fresh branch off `main` any time; the substrate
+> enforcement). Axis B below is therefore **no longer dormant** — ~~remediation-02 (IR-fidelity
+> harness) or a feature slice may open on a fresh branch off `main` any time~~ **(2026-07-17:
+> Axis B is EXECUTING as file-disjoint parallel lanes under
+> [`../plans/remediation/00-parallel-execution-program.md`](../plans/remediation/00-parallel-execution-program.md)
+> — read the lane contracts there before touching remediation scope; single-slice
+> remediation-02 pickup is superseded)**; the substrate
 > backlog stays parallel-safe. **Q-011 is DECIDED and drained** (Axis A first; its Tier-1
 > condition discharged — see `open-questions.md` rest-state note), so every "A/B/C sequencing is
 > an open owner decision" line in the dated banners below is superseded.

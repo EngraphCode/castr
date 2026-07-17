@@ -31,7 +31,10 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Next safe step (post-merge; owner end-game directive 2026-07-06 executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
   (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS
-  after merge, in order: **(1) remediation-02 implementation on a fresh branch off `main`** —
+  after merge, in order: **(1) ~~remediation-02 implementation on a fresh branch off `main`~~
+  (Superseded 2026-07-17: remediation 02–07 execute as parallel lanes under
+  [`00-parallel-execution-program.md`](../../../plans/remediation/00-parallel-execution-program.md);
+  the pre-flight brief below remains valid scouting input for lanes L-A/L-D/L-E/L-F)** —
   seed = Mistbound's conserved pre-flight brief at
   [`02-preflight-scouting-2026-07-06.md`](../../../plans/remediation/02-preflight-scouting-2026-07-06.md)
   (tracked plan-estate copy; announce pickup before acting on it — the git-ignored

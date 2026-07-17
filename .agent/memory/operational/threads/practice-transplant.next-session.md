@@ -278,12 +278,14 @@ records below are that era's truthful history.
   deprioritised; push = owner's call).
 - **Remaining in arc:** release automation (separate deferred lane below); D4 ✅ landed above.
 
-### Lane: remediation 02–07 — deferred (trigger: owner names it after the transplant)
+### Lane: remediation 02–07 — ~~deferred~~ EXECUTING (2026-07-17, owner-approved parallel program)
 
-- Controlling plan: [`../../../plans/active/02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md) (02 active-next; 03–07 follow).
-- Next safe step: the deep-review backlog (5 of 6 reproduced Criticals still
-  unfixed) takes a **named position after** the full transplant (owner steer
-  2026-06-19); not parked — `no-manufactured-permission` holds.
+- Controlling record: [`../../../plans/remediation/00-parallel-execution-program.md`](../../../plans/remediation/00-parallel-execution-program.md)
+  (file-disjoint parallel lanes; the per-finding plans, incl.
+  [`02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md),
+  remain the per-finding authority).
+- Next safe step: read the program record's lane contracts before touching remediation scope;
+  the former "named position after the transplant" trigger fired — the owner named it 2026-07-17.
 - Acceptance bar: each Critical reproduced-then-fixed with a regression test.
 
 ### Lane: explicit additional-properties feature — deferred (trigger: after positions 1–2)
