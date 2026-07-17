@@ -16,7 +16,13 @@ import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
-import { applyMetaAndReturn } from '../modifiers/zod-parser.meta.js';
+import {
+  assertSupportedChainedMethods,
+  buildCompositeChainMethods,
+  describeNodeLocation,
+  finalizeCompositeSchema,
+  throwUnsupportedMemberSchema,
+} from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   ZOD_METHOD_ARRAY,
   ZOD_METHOD_ENUM,
@@ -50,7 +56,7 @@ function parseArray(
 
   const itemSchema = parseSchema(itemArg);
   if (!itemSchema) {
-    return undefined;
+    throwUnsupportedMemberSchema('z.array item', itemArg);
   }
 
   const schema: CastrSchema = {
@@ -104,7 +110,17 @@ function applyArrayConstraints(schema: CastrSchema, methods: ZodMethodCall[]): v
 }
 
 /**
+ * Strict chain whitelists per composition kind (finding C5): the shared
+ * composite modifiers plus each kind's specific constraint methods.
+ * @internal
+ */
+const ARRAY_CHAIN_METHODS = buildCompositeChainMethods(...Object.keys(ARRAY_CONSTRAINT_HANDLERS));
+const TUPLE_CHAIN_METHODS = buildCompositeChainMethods(ZOD_METHOD_REST);
+const ENUM_CHAIN_METHODS = buildCompositeChainMethods();
+
+/**
  * Process rest method for tuple.
+ * Fails fast when the .rest() argument is missing or unrecognised (finding C5).
  */
 function processRestMethod(
   schema: CastrSchema,
@@ -113,11 +129,14 @@ function processRestMethod(
 ): void {
   const restArg = method.argNodes[0];
   if (!restArg) {
-    return;
+    throw new Error(
+      'Unsupported z.tuple() .rest() call without an argument. ' +
+        'The Zod parser fails fast on unrecognised constructs instead of silently dropping them.',
+    );
   }
   const restSchema = parseSchema(restArg);
   if (!restSchema) {
-    return;
+    throwUnsupportedMemberSchema('z.tuple() .rest() argument', restArg);
   }
   schema.items = restSchema;
   delete schema.maxItems;
@@ -136,16 +155,17 @@ function parseTuple(
   }
   const itemsArg = args[0];
 
-  if (!Node.isArrayLiteralExpression(itemsArg)) {
+  if (!itemsArg || !Node.isArrayLiteralExpression(itemsArg)) {
     return undefined;
   }
 
   const prefixItems: CastrSchema[] = [];
   for (const itemNode of itemsArg.getElements()) {
     const itemSchema = parseSchema(itemNode);
-    if (itemSchema) {
-      prefixItems.push(itemSchema);
+    if (!itemSchema) {
+      throwUnsupportedMemberSchema('z.tuple member', itemNode);
     }
+    prefixItems.push(itemSchema);
   }
 
   const schema: CastrSchema = {
@@ -167,10 +187,17 @@ function parseTuple(
 
 /**
  * Parse z.enum(['a', 'b'])
+ *
+ * z.nativeEnum() fails fast: its value set cannot be captured statically
+ * without widening the type to a plain string (finding C5).
  */
 function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
   if (baseMethod === ZOD_METHOD_NATIVE_ENUM) {
-    return { type: ZOD_SCHEMA_TYPE_STRING, metadata: createDefaultMetadata() };
+    throw new Error(
+      `z.nativeEnum() is not supported${describeNodeLocation(args[0])}. ` +
+        'Its value set cannot be captured statically without widening the type ' +
+        'to a plain string; use z.enum([...]) with literal values instead.',
+    );
   }
 
   if (args.length === 0) {
@@ -178,16 +205,17 @@ function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
   }
   const itemsArg = args[0];
 
-  if (!Node.isArrayLiteralExpression(itemsArg)) {
+  if (!itemsArg || !Node.isArrayLiteralExpression(itemsArg)) {
     return undefined;
   }
 
   const enumValues: unknown[] = [];
   for (const itemNode of itemsArg.getElements()) {
     const val = extractLiteralValue(itemNode);
-    if (val !== undefined) {
-      enumValues.push(val);
+    if (val === undefined) {
+      throwUnsupportedMemberSchema('z.enum member', itemNode);
     }
+    enumValues.push(val);
   }
 
   return {
@@ -205,15 +233,34 @@ function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
  * Parse a Zod composition expression from a ts-morph Node.
  * @internal
  */
+function parseCompositionByKind(
+  chainInfo: NonNullable<ReturnType<typeof getZodMethodChain>>,
+  parseSchema: ZodSchemaParser,
+  node: Node,
+): CastrSchema | undefined {
+  const { baseMethod, chainedMethods, baseArgNodes } = chainInfo;
+
+  if (baseMethod === ZOD_METHOD_ARRAY) {
+    assertSupportedChainedMethods(`z.${baseMethod}()`, chainedMethods, ARRAY_CHAIN_METHODS, node);
+    return parseArray(baseArgNodes, chainedMethods, parseSchema);
+  }
+  if (baseMethod === ZOD_METHOD_TUPLE) {
+    assertSupportedChainedMethods(`z.${baseMethod}()`, chainedMethods, TUPLE_CHAIN_METHODS, node);
+    return parseTuple(baseArgNodes, chainedMethods, parseSchema);
+  }
+  if (baseMethod === ZOD_METHOD_ENUM || baseMethod === ZOD_METHOD_NATIVE_ENUM) {
+    assertSupportedChainedMethods(`z.${baseMethod}()`, chainedMethods, ENUM_CHAIN_METHODS, node);
+    return parseEnum(baseArgNodes, baseMethod);
+  }
+  return undefined;
+}
+
 export function parseCompositionZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
-  if (!Node.isCallExpression(node)) {
-    return undefined;
-  }
-  if (!resolver) {
+  if (!Node.isCallExpression(node) || !resolver) {
     return undefined;
   }
 
@@ -222,25 +269,8 @@ export function parseCompositionZodFromNode(
     return undefined;
   }
 
-  const { baseMethod, chainedMethods, baseArgNodes } = chainInfo;
-
-  if (baseMethod === ZOD_METHOD_ARRAY) {
-    return applyMetaAndReturn(
-      parseArray(baseArgNodes, chainedMethods, parseSchema),
-      chainedMethods,
-    );
-  }
-  if (baseMethod === ZOD_METHOD_TUPLE) {
-    return applyMetaAndReturn(
-      parseTuple(baseArgNodes, chainedMethods, parseSchema),
-      chainedMethods,
-    );
-  }
-  if (baseMethod === ZOD_METHOD_ENUM || baseMethod === ZOD_METHOD_NATIVE_ENUM) {
-    return applyMetaAndReturn(parseEnum(baseArgNodes, baseMethod), chainedMethods);
-  }
-
-  return undefined;
+  const schema = parseCompositionByKind(chainInfo, parseSchema, node);
+  return finalizeCompositeSchema(schema, chainInfo.chainedMethods);
 }
 
 // Register this parser with the core dispatcher

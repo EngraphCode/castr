@@ -37,6 +37,7 @@ import {
   processOptionalityMethod,
   processTypeConstraints,
 } from '../modifiers/zod-parser.constraints.js';
+import { assertSupportedPrimitiveChain } from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   applyConstraints,
   applyOptionalFields,
@@ -126,6 +127,13 @@ function handleLiteralSchema(
   // Zod 4 multi-value literal: z.literal(['red', 'green', 'blue'])
   // The value is already an array of literals — spread into enum directly
   const enumValues: unknown[] = Array.isArray(literalValue) ? literalValue : [literalValue];
+  if (enumValues.some((value) => value === undefined)) {
+    throw new Error(
+      'Unsupported z.literal() argument: only statically extractable literal values ' +
+        '(string, number, boolean, null) are supported. The Zod parser fails fast on ' +
+        'unrecognised constructs instead of silently corrupting the literal value.',
+    );
+  }
   const typeSource: unknown = Array.isArray(literalValue) ? literalValue[0] : literalValue;
   const derivedType = deriveLiteralType(typeSource);
 
@@ -217,6 +225,8 @@ export function parsePrimitiveZodFromNode(
   ) {
     return undefined;
   }
+
+  assertSupportedPrimitiveChain(baseMethod, schemaType, chainedMethods, node);
 
   const processed = processChainMethods(baseMethod, chainedMethods);
   const zodChain = buildZodChainInfo(chainedMethods, processed.optionality, processed.defaultValue);

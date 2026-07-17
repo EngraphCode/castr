@@ -11,7 +11,12 @@ import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
-import { applyMetaAndReturn } from '../modifiers/zod-parser.meta.js';
+import {
+  assertSupportedChainedMethods,
+  buildCompositeChainMethods,
+  finalizeCompositeSchema,
+  throwUnsupportedMemberSchema,
+} from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   ZOD_METHOD_DISCRIMINATED_UNION,
   ZOD_METHOD_UNION,
@@ -21,9 +26,51 @@ import {
 const UNION_OUTPUT_KEY_ANY_OF = 'anyOf';
 const UNION_OUTPUT_KEY_ONE_OF = 'oneOf';
 
+/**
+ * Chained methods recognised on union base methods.
+ * Anything outside this set fails fast as unsupported (finding C5).
+ * @internal
+ */
+const UNION_CHAIN_METHODS: ReadonlySet<string> = buildCompositeChainMethods();
+
+/**
+ * Member-slot error context per union base method.
+ * Doubles as the recogniser for union-family base methods.
+ * @internal
+ */
+const UNION_MEMBER_CONTEXTS: Readonly<Record<string, string>> = {
+  [ZOD_METHOD_UNION]: 'z.union member',
+  [ZOD_METHOD_DISCRIMINATED_UNION]: 'z.discriminatedUnion member',
+  [ZOD_METHOD_XOR]: 'z.xor member',
+};
+
 // ============================================================================
 // Helper functions
 // ============================================================================
+
+/**
+ * Parse every member of a union-like array literal.
+ * Fails fast on any member the parser cannot represent (finding C5).
+ * @internal
+ */
+function parseUnionMembers(
+  itemsArg: Node,
+  parseSchema: ZodSchemaParser,
+  memberContext: string,
+): CastrSchema[] {
+  const options: CastrSchema[] = [];
+  if (!Node.isArrayLiteralExpression(itemsArg)) {
+    return options;
+  }
+  for (const itemNode of itemsArg.getElements()) {
+    const optionSchema = parseSchema(itemNode);
+    if (!optionSchema) {
+      throwUnsupportedMemberSchema(memberContext, itemNode);
+    }
+    options.push(optionSchema);
+  }
+  return options;
+}
 
 /**
  * Parse z.union([A, B])
@@ -31,6 +78,7 @@ const UNION_OUTPUT_KEY_ONE_OF = 'oneOf';
 function parseUnion(
   args: Node[],
   parseSchema: ZodSchemaParser,
+  memberContext: string,
   outputKey:
     typeof UNION_OUTPUT_KEY_ANY_OF | typeof UNION_OUTPUT_KEY_ONE_OF = UNION_OUTPUT_KEY_ANY_OF,
 ): CastrSchema | undefined {
@@ -39,17 +87,11 @@ function parseUnion(
   }
   const itemsArg = args[0];
 
-  if (!Node.isArrayLiteralExpression(itemsArg)) {
+  if (!itemsArg || !Node.isArrayLiteralExpression(itemsArg)) {
     return undefined;
   }
 
-  const options: CastrSchema[] = [];
-  for (const itemNode of itemsArg.getElements()) {
-    const optionSchema = parseSchema(itemNode);
-    if (optionSchema) {
-      options.push(optionSchema);
-    }
-  }
+  const options = parseUnionMembers(itemsArg, parseSchema, memberContext);
 
   const schema: CastrSchema = {
     metadata: createDefaultMetadata(),
@@ -87,17 +129,11 @@ function parseDiscriminatedUnion(
     return undefined;
   }
 
-  if (!Node.isArrayLiteralExpression(itemsArg)) {
+  if (!itemsArg || !Node.isArrayLiteralExpression(itemsArg)) {
     return undefined;
   }
 
-  const options: CastrSchema[] = [];
-  for (const itemNode of itemsArg.getElements()) {
-    const optionSchema = parseSchema(itemNode);
-    if (optionSchema) {
-      options.push(optionSchema);
-    }
-  }
+  const options = parseUnionMembers(itemsArg, parseSchema, 'z.discriminatedUnion member');
 
   return {
     oneOf: options,
@@ -121,10 +157,7 @@ export function parseUnionZodFromNode(
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
-  if (!Node.isCallExpression(node)) {
-    return undefined;
-  }
-  if (!resolver) {
+  if (!Node.isCallExpression(node) || !resolver) {
     return undefined;
   }
 
@@ -135,22 +168,21 @@ export function parseUnionZodFromNode(
 
   const { baseMethod, baseArgNodes, chainedMethods } = chainInfo;
 
-  if (baseMethod === ZOD_METHOD_UNION) {
-    return applyMetaAndReturn(parseUnion(baseArgNodes, parseSchema), chainedMethods);
+  const memberContext = UNION_MEMBER_CONTEXTS[baseMethod];
+  if (!memberContext) {
+    return undefined;
   }
 
-  if (baseMethod === ZOD_METHOD_DISCRIMINATED_UNION) {
-    return applyMetaAndReturn(parseDiscriminatedUnion(baseArgNodes, parseSchema), chainedMethods);
-  }
+  assertSupportedChainedMethods(`z.${baseMethod}()`, chainedMethods, UNION_CHAIN_METHODS, node);
 
-  if (baseMethod === ZOD_METHOD_XOR) {
-    return applyMetaAndReturn(
-      parseUnion(baseArgNodes, parseSchema, UNION_OUTPUT_KEY_ONE_OF),
-      chainedMethods,
-    );
-  }
+  const outputKey =
+    baseMethod === ZOD_METHOD_XOR ? UNION_OUTPUT_KEY_ONE_OF : UNION_OUTPUT_KEY_ANY_OF;
+  const schema =
+    baseMethod === ZOD_METHOD_DISCRIMINATED_UNION
+      ? parseDiscriminatedUnion(baseArgNodes, parseSchema)
+      : parseUnion(baseArgNodes, parseSchema, memberContext, outputKey);
 
-  return undefined;
+  return finalizeCompositeSchema(schema, chainedMethods);
 }
 
 // Register this parser with the core dispatcher
