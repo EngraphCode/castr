@@ -262,6 +262,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
 
+## 2026-07-18 (knip strict-gate remediation — arc-bring worktree)
+
+- **knip `project: 'src/**/*.ts'` silently excludes `.tsx`, producing FALSE unused-export findings
+  for real consumers:** the collaboration-state TUI React layer (tui/cli.tsx → app.tsx →
+  controller.ts, reached from the CLI bins via cli-specs.ts) consumed
+  `waitForCollaborationStateChange` / `useCollaborationTuiController` /
+  `CollaborationTuiUpdateSource`, yet all three were reported unused because the tsx files were
+  outside the project glob. Cure: `src/**/*.{ts,tsx}` — a strictness INCREASE (more files
+  analysed), not an ignore. Before deleting any knip-flagged symbol, check the extension coverage
+  of the project/entry globs against the consumer's file type.
+- **Edit-tool escape hazard:** writing `'\u001b'` intent as a bare ESC in an Edit `new_string`
+  lands a RAW control byte in source (visible only via `cat -v`). Verify with `cat -v` and prefer
+  the explicit `\u001b` escape whenever a control character belongs in a string literal.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_

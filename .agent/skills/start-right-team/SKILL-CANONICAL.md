@@ -95,7 +95,16 @@ owner-visible. Run both unless that scope-reduction applies.
 1. **Start the all-channels comms monitor** (see
    [`.agent/rules/comms-all-channels-watcher.md`](../../rules/comms-all-channels-watcher.md)
    — required precondition for incoming visibility; the agent sees every
-   event the team emits).
+   event the team emits). **An ArcAngel / rapid-comms channel watcher
+   never substitutes for this canonical watcher: any session that opens a
+   watcher on an ARC channel MUST also be running this all-channels
+   canonical comms watcher.** ARC carries dialogue only — claims,
+   heartbeats, commit intents, owner gates, and the team-bootstrap
+   coordination events all live on the canonical stream, so a session
+   tailing only an ARC channel is blind to the coordination that matters.
+   The two watchers are paired, always (see
+   [`.agent/reference/arc-rapid-communication.md`](../../reference/arc-rapid-communication.md)
+   §Protocol).
 2. **Start the liveness heartbeat cron** (see
    [`.agent/rules/liveness-heartbeat-cron.md`](../../rules/liveness-heartbeat-cron.md)
    — required precondition for outgoing visibility; the team sees every
@@ -145,7 +154,15 @@ owner-visible. Run both unless that scope-reduction applies.
    (PDR-064 Moment 2) — see §Closeout Contract "Coordinator Handoff
    (Two Moments)".
 8. **Proceed with the work** under the team cadence (§5) and
-   traceability discipline (§4).
+   traceability discipline (§4). **For sustained pairwise (or small-group)
+   collaboration, open an ArcAngel rapid-comms channel** with the partner —
+   protocol home
+   [`.agent/reference/arc-rapid-communication.md`](../../reference/arc-rapid-communication.md):
+   announce it exactly once on the canonical stream (search the stream for
+   an existing announce naming your counterpart BEFORE opening), assign the
+   colour at open (`pnpm agent-tools:arc-next-colour`), append-only always,
+   conserve-at-close. ARC complements the canonical stream; it never
+   replaces it (see the move-1 pairing MUST).
 
 Source-claim opening BEFORE coordination resolves is the recurring
 failure mode this order exists to prevent — see the singleton-lane
@@ -552,7 +569,11 @@ Where an event-driven monitor covers a surface (per
 [`use-monitor-for-event-driven-wake`](../../rules/use-monitor-for-event-driven-wake.md)),
 the monitor _satisfies_ this cadence for that surface — each new event wakes
 the agent, so no separate poll is needed. The 120-second sweep is the
-fallback for surfaces a monitor cannot watch directly.
+fallback for surfaces a monitor cannot watch directly. **An ARC channel
+tail satisfies the cadence only for that channel** — it never satisfies
+the sweep for the canonical surfaces (claims, commit queue, directed
+inbox, shared comms), which the all-channels watcher and the fallback
+sweep continue to own.
 
 The message sweep must cover every live surface that can carry session
 coordination:
