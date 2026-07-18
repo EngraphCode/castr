@@ -85,5 +85,9 @@
     "command": "node ${CLAUDE_PROJECT_DIR}/.claude/scripts/statusline-identity.mjs",
     "refreshInterval": 10
   },
+  "subagentStatusLine": {
+    "type": "command",
+    "command": "node ${CLAUDE_PROJECT_DIR}/.claude/scripts/subagent-statusline.mjs"
+  },
   "skillListingBudgetFraction": 0.03
 }
