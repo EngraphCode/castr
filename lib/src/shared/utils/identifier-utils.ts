@@ -120,30 +120,70 @@ const BUILTIN_GLOBALS = new Set([
 ]);
 
 /**
- * Make a schema name safe by adding 'Schema' suffix if it would shadow
- * a JavaScript built-in global.
+ * Convert a schema name to a safe emitted code symbol.
  *
- * Unlike toIdentifier, this function does NOT transform the name in any
- * other way — it only adds a suffix for built-in globals.
+ * This is the single sanitisation seam for code-symbol emission: the IR
+ * carries the ORIGINAL component name (the round-trip identity), and this
+ * function converts it to a valid JavaScript identifier only at the point
+ * where writers emit code. It also adds a 'Schema' suffix when the
+ * identifier would shadow a JavaScript built-in global.
  *
- * @param name - Schema name to check
- * @returns Safe schema name (with 'Schema' suffix if needed)
+ * @param name - Original schema/component name
+ * @returns Valid identifier safe to emit as a code symbol
  *
  * @example
  * ```typescript
  * safeSchemaName('Error');       // 'ErrorSchema'
  * safeSchemaName('Date');        // 'DateSchema'
  * safeSchemaName('User');        // 'User' (unchanged)
- * safeSchemaName('Basic.Thing'); // 'Basic.Thing' (unchanged)
+ * safeSchemaName('Basic.Thing'); // 'Basic_Thing'
  * ```
  *
  * @public
  */
 export function safeSchemaName(name: string): string {
-  if (BUILTIN_GLOBALS.has(name)) {
-    return `${name}Schema`;
+  const identifier = toIdentifier(name);
+  if (BUILTIN_GLOBALS.has(identifier)) {
+    return `${identifier}Schema`;
   }
-  return name;
+  return identifier;
+}
+
+/**
+ * Assert that every component name in a set projects to a distinct emitted
+ * identifier.
+ *
+ * {@link safeSchemaName} is a per-name projection, so two DISTINCT component
+ * names (`Basic.Thing` and `Basic_Thing`, or `foo-bar` and `foo_bar`) can
+ * normalise to the same identifier. Emitting both would produce duplicate
+ * exported symbols, and every `$ref` to either original name would bind to
+ * whichever declaration survives — a silent wrong-schema binding. The
+ * projection must be injective over the emitted set; when it is not, the
+ * mapping is genuinely ambiguous, so the writer fails fast instead of
+ * inventing a disambiguating suffix (a suffix scheme renames existing
+ * symbols whenever a colliding component is added to the document).
+ *
+ * Repeated occurrences of the SAME name are not collisions.
+ *
+ * @param names - Original component names about to be projected to code symbols
+ * @throws Error naming both colliding component names and the shared identifier
+ *
+ * @public
+ */
+export function assertDistinctSafeSchemaNames(names: readonly string[]): void {
+  const originalNameByIdentifier = new Map<string, string>();
+  for (const name of names) {
+    const identifier = safeSchemaName(name);
+    const existing = originalNameByIdentifier.get(identifier);
+    if (existing !== undefined && existing !== name) {
+      throw new Error(
+        `Schema name collision: components '${existing}' and '${name}' both normalise to the ` +
+          `emitted identifier '${identifier}'. Rename one of the colliding components so every ` +
+          `schema projects to a distinct code symbol.`,
+      );
+    }
+    originalNameByIdentifier.set(identifier, name);
+  }
 }
 
 /**

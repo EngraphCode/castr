@@ -59,6 +59,26 @@ describe('buildSingleParameter strict ref resolution', () => {
     );
   });
 
+  test('throws on parameter refs that only match inherited Object.prototype members', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+      components: { parameters: {} },
+    };
+
+    for (const name of ['constructor', 'toString', '__proto__']) {
+      const ref: ReferenceObject = { $ref: `#/components/parameters/${name}` };
+
+      // A bare bracket lookup returns Object.prototype members for these
+      // names instead of undefined, smuggling a function (or the prototype
+      // itself) through as a "resolved" ParameterObject.
+      expect(() => buildSingleParameter(ref, createContext(doc)), name).toThrow(
+        /Unresolvable parameter reference/,
+      );
+    }
+  });
+
   test('throws on non-parameter component refs with actionable context', () => {
     const doc: OpenAPIDocument = {
       openapi: '3.1.0',

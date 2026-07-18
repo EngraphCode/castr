@@ -401,7 +401,7 @@ describe('writeOpenApiPaths', () => {
         createOperation({
           method: 'get',
           path: '/users',
-          security: [{ schemeName: 'bearerAuth', scopes: [] }],
+          security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }],
         }),
       ];
 
@@ -417,7 +417,9 @@ describe('writeOpenApiPaths', () => {
         createOperation({
           method: 'get',
           path: '/users',
-          security: [{ schemeName: 'oauth2', scopes: ['read:users', 'write:users'] }],
+          security: [
+            { schemes: [{ schemeName: 'oauth2', scopes: ['read:users', 'write:users'] }] },
+          ],
         }),
       ];
 
@@ -425,6 +427,26 @@ describe('writeOpenApiPaths', () => {
       const security = result['/users']?.get?.security;
 
       expect(security).toEqual([{ oauth2: ['read:users', 'write:users'] }]);
+    });
+
+    it('round-trips a scheme named __proto__ as an own property', () => {
+      const operations: CastrOperation[] = [
+        createOperation({
+          method: 'get',
+          path: '/users',
+          security: [{ schemes: [{ schemeName: '__proto__', scopes: [] }] }],
+        }),
+      ];
+
+      const result = writeOpenApiPaths(operations);
+      const requirement = result['/users']?.get?.security?.[0];
+
+      expect(requirement).toBeDefined();
+      // Bracket assignment into a default-prototype object triggers the legacy
+      // __proto__ setter instead of creating an own property, which would make
+      // this protected operation serialise as unauthenticated ({}).
+      expect(Object.keys(requirement ?? {})).toEqual(['__proto__']);
+      expect(JSON.stringify(requirement)).toBe('{"__proto__":[]}');
     });
   });
 

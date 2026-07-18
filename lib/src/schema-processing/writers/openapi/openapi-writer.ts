@@ -6,11 +6,12 @@
  * using the specialized sub-writers.
  */
 
-import type { OpenAPIDocument, SecurityRequirementObject } from '../../../shared/openapi-types.js';
+import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { writeOpenApiComponents } from './components/openapi-writer.components.js';
 import { writeOpenApiXExtMediaTypeComponents } from './components/openapi-writer.components.x-ext.js';
 import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
-import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
+import { writeSecurityRequirements } from './operations/openapi-writer.operations.fields.js';
+import type { CastrDocument } from '../../ir/index.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import {
   CANONICAL_OPENAPI_TARGET_LABEL,
@@ -19,28 +20,6 @@ import {
 
 function getSortedMapEntries<T>(map: Map<string, T>): [string, T][] {
   return [...map.entries()].sort(([leftName], [rightName]) => leftName.localeCompare(rightName));
-}
-
-function compareSecurityRequirements(
-  left: IRSecurityRequirement,
-  right: IRSecurityRequirement,
-): number {
-  return left.schemeName.localeCompare(right.schemeName);
-}
-
-/**
- * Converts IR security requirements to OpenAPI SecurityRequirementObject[].
- *
- * @param security - The IR security requirements
- * @returns OpenAPI security requirement objects
- *
- * @internal
- */
-function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequirementObject[] {
-  const sortedSecurity = [...security].sort(compareSecurityRequirements);
-  return sortedSecurity.map((req) => ({
-    [req.schemeName]: req.scopes,
-  }));
 }
 
 /**
@@ -122,8 +101,11 @@ function addDocumentContent(result: OpenAPIDocument, ir: CastrDocument): void {
       result['x-ext'] = xExtMediaTypes;
     }
   }
-  if (ir.security !== undefined && ir.security.length > 0) {
-    result.security = writeDocumentSecurity(ir.security);
+  // An explicit empty array is a meaningful document-level value ("all
+  // operations are public by default") and must be re-emitted distinct from
+  // absent, matching the operation writer's behaviour.
+  if (ir.security !== undefined) {
+    result.security = writeSecurityRequirements(ir.security);
   }
 }
 

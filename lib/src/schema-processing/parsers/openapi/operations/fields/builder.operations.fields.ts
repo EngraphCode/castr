@@ -37,10 +37,10 @@ export function addOptionalOperationFields(
   operation: OperationObject,
   context: IRBuildContext,
 ): void {
-  if (operation.summary) {
+  if (operation.summary !== undefined) {
     irOperation.summary = operation.summary;
   }
-  if (operation.description) {
+  if (operation.description !== undefined) {
     irOperation.description = operation.description;
   }
   if (operation.requestBody) {
@@ -59,12 +59,8 @@ function addExtendedOperationFields(
   irOperation: CastrOperationLike,
   operation: OperationObject,
 ): void {
-  const deprecatedKey = 'deprecated';
-  if (Object.hasOwn(operation, deprecatedKey)) {
-    const deprecatedValue = Reflect.get(operation, deprecatedKey);
-    if (deprecatedValue === true) {
-      Reflect.set(irOperation, deprecatedKey, true);
-    }
+  if (operation.deprecated === true) {
+    irOperation.deprecated = true;
   }
   if (operation.externalDocs) {
     irOperation.externalDocs = operation.externalDocs;
@@ -78,10 +74,10 @@ function addExtendedOperationFields(
 }
 
 export function addPathItemFields(irOperation: CastrOperationLike, pathItem: PathItemObject): void {
-  if (pathItem.summary) {
+  if (pathItem.summary !== undefined) {
     irOperation.pathItemSummary = pathItem.summary;
   }
-  if (pathItem.description) {
+  if (pathItem.description !== undefined) {
     irOperation.pathItemDescription = pathItem.description;
   }
   if (pathItem.servers) {
@@ -109,12 +105,22 @@ function collectPathItemParameterRefs(pathItem: PathItemObject): string[] {
   return parameterRefs;
 }
 
+/**
+ * Build IR security requirement sets from OpenAPI security requirement objects.
+ *
+ * Each OpenAPI Security Requirement Object is one AND-set: every scheme in it
+ * must be satisfied together. The outer array lists OR alternatives. Both
+ * levels are preserved — flattening the inner object would silently weaken
+ * "A AND B" to "A OR B".
+ */
 export function buildIRSecurity(security: SecurityRequirementObject[]): IRSecurityRequirement[] {
-  return security.flatMap((securityRequirement): IRSecurityRequirement[] => {
-    return Object.entries(securityRequirement).map(([schemeName, scopes]) => ({
-      schemeName,
-      scopes: scopes ?? [],
-    }));
+  return security.map((securityRequirement): IRSecurityRequirement => {
+    return {
+      schemes: Object.entries(securityRequirement).map(([schemeName, scopes]) => ({
+        schemeName,
+        scopes: scopes ?? [],
+      })),
+    };
   });
 }
 

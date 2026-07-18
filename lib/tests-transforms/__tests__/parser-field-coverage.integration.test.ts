@@ -87,7 +87,7 @@ describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
     it('extracts security (document-level)', () => {
       expect(ir.security).toBeDefined();
       expect(ir.security).toHaveLength(1);
-      expect(ir.security?.[0]?.schemeName).toBe('bearerAuth');
+      expect(ir.security?.[0]?.schemes[0]?.schemeName).toBe('bearerAuth');
     });
 
     it('extracts webhooks (3.1.x only)', () => {
@@ -198,7 +198,7 @@ describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
     it('extracts operation security', () => {
       const listUsersOp = ir.operations.find((op) => op.operationId === 'listUsers');
       expect(listUsersOp?.security).toBeDefined();
-      expect(listUsersOp?.security?.[0]?.schemeName).toBe('bearerAuth');
+      expect(listUsersOp?.security?.[0]?.schemes[0]?.schemeName).toBe('bearerAuth');
     });
 
     it('extracts operation servers', () => {
@@ -393,7 +393,9 @@ describe('Parser Field Coverage - Native OpenAPI 3.2', () => {
       throw new Error('Expected deviceFlow to be an inline oauth2 security scheme');
     }
 
-    expect(native32Ir.security).toEqual([{ schemeName: 'deviceFlow', scopes: ['read:devices'] }]);
+    expect(native32Ir.security).toEqual([
+      { schemes: [{ schemeName: 'deviceFlow', scopes: ['read:devices'] }] },
+    ]);
     expect(securityScheme.scheme.flows?.deviceAuthorization?.deviceAuthorizationUrl).toBe(
       'https://auth.example.com/device',
     );

@@ -1,4 +1,8 @@
 import type { SourceFile } from 'ts-morph';
+import {
+  assertDistinctSafeSchemaNames,
+  safeSchemaName,
+} from '../../../shared/utils/identifier-utils.js';
 
 const REQUEST_INPUT_TYPE = `{
     pathParams?: unknown;
@@ -92,7 +96,44 @@ function addValidateResponseHelper(sourceFile: SourceFile): void {
   });
 }
 
-export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
+/**
+ * Compute the default rename entries for the generated schema registry.
+ *
+ * Every entry is produced by the canonical {@link safeSchemaName} seam — the
+ * SAME function that names the emitted schema symbols — so registry keys are
+ * guaranteed to match the generated code symbols. Only names the seam actually
+ * changes are included; all other names pass through unchanged, which is
+ * exactly `safeSchemaName`'s output for them.
+ *
+ * Returned as entry tuples (emitted into a `Map`) rather than a plain-object
+ * literal: component names are user-controlled, and plain-object storage
+ * cannot faithfully carry keys that collide with `Object.prototype` members
+ * (`__proto__`, `constructor`, `toString`, ...).
+ *
+ * @internal
+ */
+function computeDefaultRenameEntries(componentNames: readonly string[]): [string, string][] {
+  const entries: [string, string][] = [];
+  const sortedNames = [...new Set(componentNames)].sort((left, right) => left.localeCompare(right));
+  for (const name of sortedNames) {
+    const safeName = safeSchemaName(name);
+    if (safeName !== name) {
+      entries.push([name, safeName]);
+    }
+  }
+  return entries;
+}
+
+export function addSchemaRegistryHelper(
+  sourceFile: SourceFile,
+  componentNames: readonly string[],
+): void {
+  // The registry maps emitted symbols back to schemas; a collision between
+  // two raw names would leave one key silently validating the wrong schema.
+  assertDistinctSafeSchemaNames(componentNames);
+
+  const defaultRenameEntries = computeDefaultRenameEntries(componentNames);
+
   sourceFile.addFunction({
     name: 'buildSchemaRegistry',
     isExported: true,
@@ -103,18 +144,22 @@ export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
     ],
     returnType: 'Record<string, z.ZodSchema>',
     statements: `
-  const rename = options?.rename ?? ((key: string) => key.replace(/[^A-Za-z0-9_]/g, "_"));
-  const result: Record<string, z.ZodSchema> = {};
-  
-  for (const [key, value] of Object.entries(rawSchemas)) {
-    const sanitized = rename(key);
-    result[sanitized] = value;
-  }
-  
-  return result;`,
+  const DEFAULT_SCHEMA_RENAMES: ReadonlyMap<string, string> = new Map<string, string>(${JSON.stringify(defaultRenameEntries)});
+  const rename = options?.rename ?? ((key: string) => DEFAULT_SCHEMA_RENAMES.get(key) ?? key);
+
+  return Object.fromEntries(
+    Object.entries(rawSchemas).map(([key, value]): [string, z.ZodSchema] => [rename(key), value]),
+  );`,
     docs: [
       {
-        description: `Builds a schema registry with sanitized keys for runtime schema lookup.`,
+        description: `Builds a schema registry with sanitized keys for runtime schema lookup.
+ *
+ * The default rename map is precomputed at generation time from the canonical
+ * code-symbol sanitiser, so every schema this file emitted is keyed exactly by
+ * its exported symbol name. Names outside the emitted set pass through
+ * unchanged. Lookup and registry construction are own-property-safe, so keys
+ * colliding with Object.prototype members round-trip faithfully. Pass a
+ * custom rename to override the mapping.`,
       },
     ],
   });

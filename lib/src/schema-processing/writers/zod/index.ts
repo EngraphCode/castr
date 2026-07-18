@@ -123,7 +123,8 @@ function writeSchemaType(
 ): void {
   const schema = context.schema;
 
-  // Handle $ref - use safeSchemaName to avoid shadowing built-in globals like Error
+  // Handle $ref - safeSchemaName sanitises the ORIGINAL component name into
+  // the emitted code symbol (valid identifier, no built-in global shadowing).
   if (schema.$ref) {
     const { componentName } = parseComponentRef(schema.$ref);
     writer.write(safeSchemaName(componentName));

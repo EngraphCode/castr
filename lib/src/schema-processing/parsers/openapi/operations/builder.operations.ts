@@ -8,6 +8,7 @@ import {
   getAdditionalOperationMethodValidationError,
   STANDARD_HTTP_METHODS,
 } from '../../../../shared/openapi/http-methods.js';
+import { isSpecificationExtensionKey } from '../../../../shared/openapi/specification-extensions.js';
 import type { IRBuildContext } from '../builder.types.js';
 import { buildCastrParameters } from './builder.parameters.js';
 import { buildCastrResponses } from './builder.responses.js';
@@ -32,6 +33,12 @@ export function buildCastrOperations(doc: OpenAPIDocument): CastrOperation[] {
   const operations: CastrOperation[] = [];
 
   for (const [path, pathItem] of Object.entries(doc.paths)) {
+    // Per OAS 3.x the Paths Object MAY carry ^x- Specification Extensions;
+    // those entries are not paths.
+    if (isSpecificationExtensionKey(path)) {
+      continue;
+    }
+
     if (pathItem) {
       const pathOperations = extractPathOperations(path, pathItem, doc);
       operations.push(...pathOperations);
@@ -49,6 +56,12 @@ export function buildCastrAdditionalOperations(doc: OpenAPIDocument): CastrAddit
   const operations: CastrAdditionalOperation[] = [];
 
   for (const [path, pathItem] of Object.entries(doc.paths)) {
+    // Per OAS 3.x the Paths Object MAY carry ^x- Specification Extensions;
+    // those entries are not paths.
+    if (isSpecificationExtensionKey(path)) {
+      continue;
+    }
+
     if (pathItem) {
       const pathOperations = extractPathAdditionalOperations(path, pathItem, doc);
       operations.push(...pathOperations);

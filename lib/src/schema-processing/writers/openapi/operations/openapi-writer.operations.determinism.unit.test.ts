@@ -136,8 +136,8 @@ describe('writeOpenApiPaths determinism', () => {
         path: '/secure',
         responses: [{ statusCode: '200', description: 'ok' }],
         security: [
-          { schemeName: 'oauth2', scopes: ['read'] },
-          { schemeName: 'apiKey', scopes: [] },
+          { schemes: [{ schemeName: 'oauth2', scopes: ['read'] }] },
+          { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
         ],
       }),
     ];

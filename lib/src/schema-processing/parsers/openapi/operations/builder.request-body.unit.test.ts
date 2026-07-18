@@ -111,4 +111,26 @@ describe('buildIRRequestBody - encoding extraction', () => {
       /Unsupported request body reference.*Expected #\/components\/requestBodies\/\{name\}/,
     );
   });
+
+  test('throws on requestBody refs that only match inherited Object.prototype members', () => {
+    const context: IRBuildContext = {
+      doc: {
+        openapi: '3.1.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        components: { requestBodies: {} },
+      },
+      path: [],
+      required: true,
+    };
+    const requestBodyRef: ReferenceObject = {
+      $ref: '#/components/requestBodies/constructor',
+    };
+
+    // A bare bracket lookup returns the inherited constructor function
+    // instead of undefined, bypassing the unresolved-ref guard.
+    expect(() => buildIRRequestBody(requestBodyRef, context)).toThrow(
+      /Unresolvable request body reference/,
+    );
+  });
 });

@@ -218,6 +218,69 @@ describe('IR Serialization', () => {
     );
   });
 
+  /**
+   * Serialized document builder for the security-shape boundary tests.
+   *
+   * The document is valid in every field EXCEPT the injected security values,
+   * so an accepted/rejected pair over the same builder isolates the security
+   * shape as the only variable. `JSON.stringify` drops `undefined` members,
+   * so passing `undefined` produces an absent field.
+   */
+  function serializeDocumentWithSecurity(
+    documentSecurity: unknown,
+    operationSecurity: unknown,
+  ): string {
+    return JSON.stringify({
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      servers: [],
+      components: [],
+      security: documentSecurity,
+      operations: [
+        {
+          operationId: 'getTest',
+          method: 'get',
+          path: '/test',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [],
+          security: operationSecurity,
+        },
+      ],
+      additionalOperations: [],
+      dependencyGraph: { nodes: {}, topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
+      enums: { dataType: 'Map', value: [] },
+    });
+  }
+
+  const REQUIREMENT_SET_SECURITY = [{ schemes: [{ schemeName: 'apiKey', scopes: [] }] }];
+
+  /** The pre-requirement-set IR shape: one flat scheme entry per requirement. */
+  const STALE_FLAT_SECURITY = [{ schemeName: 'apiKey', scopes: [] }];
+
+  it('should deserialize requirement-set security at document and operation level', () => {
+    const json = serializeDocumentWithSecurity(REQUIREMENT_SET_SECURITY, REQUIREMENT_SET_SECURITY);
+
+    const deserialized = deserializeIR(json);
+
+    expect(deserialized.security).toEqual(REQUIREMENT_SET_SECURITY);
+    expect(deserialized.operations[0]?.security).toEqual(REQUIREMENT_SET_SECURITY);
+  });
+
+  it('should reject stale flat operation security at the deserialization boundary', () => {
+    const json = serializeDocumentWithSecurity(undefined, STALE_FLAT_SECURITY);
+
+    expect(() => deserializeIR(json)).toThrow('Invalid CastrDocument structure');
+  });
+
+  it('should reject stale flat document-level security at the deserialization boundary', () => {
+    const json = serializeDocumentWithSecurity(STALE_FLAT_SECURITY, undefined);
+
+    expect(() => deserializeIR(json)).toThrow('Invalid CastrDocument structure');
+  });
+
   it('should reject contradictory integer semantics inside request body schemas during deserialization', () => {
     const invalidIR = {
       ...mockIR,

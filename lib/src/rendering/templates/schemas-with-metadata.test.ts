@@ -596,8 +596,10 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
     // MUST have rename option
     expect(result.content).toMatch(/rename.*:/);
 
-    // MUST sanitize keys by default
-    expect(result.content).toMatch(/replace\(\/\[.*\]\/g/);
+    // The default rename MUST be the safeSchemaName-derived lookup — the
+    // single code-symbol sanitiser seam — not an inline parallel algorithm.
+    expect(result.content).toContain('DEFAULT_SCHEMA_RENAMES.get(key) ?? key');
+    expect(result.content).not.toMatch(/replace\(\/\[.*\]\/g/);
   });
 
   it('should NOT generate schema registry builder when flag is disabled', async () => {

@@ -1,0 +1,12 @@
+openapi: 3.1.0
+info:
+  title: Document-Level Empty Security Fixture
+  version: 1.0.0
+security: []
+paths:
+  /things:
+    get:
+      operationId: getThings
+      responses:
+        '200':
+          description: ok

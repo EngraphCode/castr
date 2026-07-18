@@ -18715,10 +18715,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -18868,10 +18872,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19081,10 +19089,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19314,10 +19326,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19489,14 +19505,22 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19506,6 +19530,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "post",
                 "operationId": "updatePetWithForm",
                 "parameters": [
@@ -19774,10 +19799,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19792,6 +19821,7 @@ Some useful links:
                 "operationId": "deletePet",
                 "parameters": [
                     {
+                        "description": "",
                         "in": "header",
                         "metadata": {
                             "circularReferences": [],
@@ -19879,6 +19909,7 @@ Some useful links:
                     "cookie": [],
                     "header": [
                         {
+                            "description": "",
                             "in": "header",
                             "metadata": {
                                 "circularReferences": [],
@@ -19976,10 +20007,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19989,6 +20024,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "post",
                 "operationId": "uploadFile",
                 "parameters": [
@@ -20207,10 +20243,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -20263,8 +20303,12 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                 ],
                 "summary": "Returns pet inventories by status",
@@ -20919,6 +20963,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "loginUser",
                 "parameters": [
@@ -21196,6 +21241,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "logoutUser",
                 "parameters": [],
@@ -21219,6 +21265,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "getUserByName",
                 "parameters": [
@@ -28230,10 +28277,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28383,10 +28434,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28596,10 +28651,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28829,10 +28888,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29004,14 +29067,22 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29021,6 +29092,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "post",
                 "operationId": "updatePetWithForm",
                 "parameters": [
@@ -29289,10 +29361,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29307,6 +29383,7 @@ Some useful links:
                 "operationId": "deletePet",
                 "parameters": [
                     {
+                        "description": "",
                         "in": "header",
                         "metadata": {
                             "circularReferences": [],
@@ -29394,6 +29471,7 @@ Some useful links:
                     "cookie": [],
                     "header": [
                         {
+                            "description": "",
                             "in": "header",
                             "metadata": {
                                 "circularReferences": [],
@@ -29491,10 +29569,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29504,6 +29586,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "post",
                 "operationId": "uploadFile",
                 "parameters": [
@@ -29722,10 +29805,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29778,8 +29865,12 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                 ],
                 "summary": "Returns pet inventories by status",
@@ -30434,6 +30525,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "loginUser",
                 "parameters": [
@@ -30711,6 +30803,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "logoutUser",
                 "parameters": [],
@@ -30734,6 +30827,7 @@ Some useful links:
                 ],
             },
             {
+                "description": "",
                 "method": "get",
                 "operationId": "getUserByName",
                 "parameters": [

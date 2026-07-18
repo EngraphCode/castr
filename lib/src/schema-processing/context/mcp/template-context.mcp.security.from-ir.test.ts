@@ -113,7 +113,9 @@ describe('resolveOperationSecurityFromIR', () => {
   describe('operation-level security', () => {
     test('resolves single security scheme from operation', () => {
       const ir = createMockIRWithSecurity(['bearerAuth']);
-      const operation = createMockOperationWithSecurity([{ schemeName: 'bearerAuth', scopes: [] }]);
+      const operation = createMockOperationWithSecurity([
+        { schemes: [{ schemeName: 'bearerAuth', scopes: [] }] },
+      ]);
 
       const result = resolveOperationSecurityFromIR(ir, operation);
 
@@ -134,7 +136,7 @@ describe('resolveOperationSecurityFromIR', () => {
         components,
       };
       const operation = createMockOperationWithSecurity([
-        { schemeName: 'oauth2', scopes: ['read:users', 'write:users'] },
+        { schemes: [{ schemeName: 'oauth2', scopes: ['read:users', 'write:users'] }] },
       ]);
 
       const result = resolveOperationSecurityFromIR(ir, operation);
@@ -146,8 +148,8 @@ describe('resolveOperationSecurityFromIR', () => {
     test('resolves multiple OR security requirements', () => {
       const ir = createMockIRWithSecurity(['bearerAuth', 'apiKey']);
       const operation = createMockOperationWithSecurity([
-        { schemeName: 'bearerAuth', scopes: [] },
-        { schemeName: 'apiKey', scopes: [] },
+        { schemes: [{ schemeName: 'bearerAuth', scopes: [] }] },
+        { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
       ]);
 
       const result = resolveOperationSecurityFromIR(ir, operation);
@@ -156,11 +158,33 @@ describe('resolveOperationSecurityFromIR', () => {
       expect(result.requirementSets[0]?.schemes[0]?.schemeName).toBe('bearerAuth');
       expect(result.requirementSets[1]?.schemes[0]?.schemeName).toBe('apiKey');
     });
+
+    test('resolves an AND-grouped requirement as one set carrying every scheme', () => {
+      const ir = createMockIRWithSecurity(['bearerAuth', 'apiKey']);
+      const operation = createMockOperationWithSecurity([
+        {
+          schemes: [
+            { schemeName: 'bearerAuth', scopes: [] },
+            { schemeName: 'apiKey', scopes: [] },
+          ],
+        },
+      ]);
+
+      const result = resolveOperationSecurityFromIR(ir, operation);
+
+      expect(result.requirementSets).toHaveLength(1);
+      expect(result.requirementSets[0]?.schemes.map((scheme) => scheme.schemeName)).toEqual([
+        'bearerAuth',
+        'apiKey',
+      ]);
+    });
   });
 
   describe('global security fallback', () => {
     test('uses global security when operation has no security defined', () => {
-      const globalSecurity: IRSecurityRequirement[] = [{ schemeName: 'bearerAuth', scopes: [] }];
+      const globalSecurity: IRSecurityRequirement[] = [
+        { schemes: [{ schemeName: 'bearerAuth', scopes: [] }] },
+      ];
       const ir = createMockIRWithSecurity(['bearerAuth'], globalSecurity);
       const operation = createMockOperationWithSecurity('omit');
 
@@ -173,9 +197,13 @@ describe('resolveOperationSecurityFromIR', () => {
     });
 
     test('operation security overrides global security', () => {
-      const globalSecurity: IRSecurityRequirement[] = [{ schemeName: 'bearerAuth', scopes: [] }];
+      const globalSecurity: IRSecurityRequirement[] = [
+        { schemes: [{ schemeName: 'bearerAuth', scopes: [] }] },
+      ];
       const ir = createMockIRWithSecurity(['bearerAuth', 'apiKey'], globalSecurity);
-      const operation = createMockOperationWithSecurity([{ schemeName: 'apiKey', scopes: [] }]);
+      const operation = createMockOperationWithSecurity([
+        { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
+      ]);
 
       const result = resolveOperationSecurityFromIR(ir, operation);
 
@@ -188,7 +216,7 @@ describe('resolveOperationSecurityFromIR', () => {
     test('throws when security scheme is not found in IR', () => {
       const ir = createMockIRWithSecurity(['bearerAuth']);
       const operation = createMockOperationWithSecurity([
-        { schemeName: 'unknownScheme', scopes: [] },
+        { schemes: [{ schemeName: 'unknownScheme', scopes: [] }] },
       ]);
 
       expect(() => resolveOperationSecurityFromIR(ir, operation)).toThrow(

@@ -1,19 +1,16 @@
 import { Project, VariableDeclarationKind, type SourceFile } from 'ts-morph';
 import type { TemplateContext } from '../../context/index.js';
+import { addComponentsToSourceFile } from './components.js';
 import { createEndpointWriter } from './endpoints.js';
 import { createMcpToolWriter } from './mcp.js';
 import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
-import { writeZodSchema } from '../zod/index.js';
-import { writeTypeDefinition } from './type-writer/index.js';
-import type { CastrDocument, CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
+import type { CastrDocument } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
-import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 
 export { writeTypeDefinition } from './type-writer/index.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema';
 const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
 
 function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
@@ -87,76 +84,6 @@ function addSchemasAndTypes(
   addComponentsToSourceFile(sourceFile, context, ir, context.sortedSchemaNames);
 }
 
-function addComponentsToSourceFile(
-  sourceFile: SourceFile,
-  context: TemplateContext,
-  ir: CastrDocument,
-  schemaNames: string[],
-): void {
-  const componentsMap = new Map<string, CastrSchemaComponent>();
-  ir.components.forEach((c) => {
-    if (c.type === COMPONENT_TYPE_SCHEMA) {
-      componentsMap.set(c.name, c);
-    }
-  });
-
-  addTypeDefinitions(sourceFile, schemaNames, componentsMap);
-  addZodSchemas(sourceFile, schemaNames, componentsMap, context);
-}
-
-function addTypeDefinitions(
-  sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
-): void {
-  sourceFile.addStatements('// Type Definitions');
-  schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      sourceFile.addTypeAlias({
-        name: safeName,
-        isExported: true,
-        type: writeTypeDefinition(component.schema),
-      });
-    }
-  });
-}
-
-function addZodSchemas(
-  sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
-  context: TemplateContext,
-): void {
-  sourceFile.addStatements('// Zod Schemas');
-  schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      const schemaContext: CastrSchemaContext = {
-        contextType: 'component',
-        name: safeName,
-        schema: component.schema,
-        metadata: component.metadata,
-      };
-
-      sourceFile.addVariableStatement({
-        declarationKind: VariableDeclarationKind.Const,
-        isExported: true,
-        declarations: [
-          {
-            name: safeName,
-            initializer: writeZodSchema(schemaContext, context.options),
-          },
-        ],
-      });
-    }
-  });
-}
-
 function addEndpointsArray(sourceFile: SourceFile, context: TemplateContext): void {
   if (context.endpoints.length === 0) {
     return;
@@ -227,7 +154,12 @@ function addHelpers(sourceFile: SourceFile, context: TemplateContext): void {
   }
 
   if (context.options?.withSchemaRegistry) {
-    addSchemaRegistryHelper(sourceFile);
+    // The registry's default rename must be derived from the same seam that
+    // named the emitted schema symbols, so pass the ORIGINAL component names.
+    const componentNames = context.sortedSchemaNames.map(
+      (ref) => parseComponentRef(ref).componentName,
+    );
+    addSchemaRegistryHelper(sourceFile, componentNames);
   }
 }
 

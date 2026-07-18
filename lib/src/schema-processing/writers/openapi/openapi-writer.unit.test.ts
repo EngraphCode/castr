@@ -272,7 +272,7 @@ describe('writeOpenApi', () => {
   describe('security integration', () => {
     it('includes document-level security', () => {
       const ir = createDocument({
-        security: [{ schemeName: 'bearerAuth', scopes: [] }],
+        security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }],
       });
 
       const result = writeOpenApi(ir);
@@ -284,14 +284,47 @@ describe('writeOpenApi', () => {
     it('sorts document-level security requirements by scheme name', () => {
       const ir = createDocument({
         security: [
-          { schemeName: 'oauth2', scopes: ['read'] },
-          { schemeName: 'apiKey', scopes: [] },
+          { schemes: [{ schemeName: 'oauth2', scopes: ['read'] }] },
+          { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
         ],
       });
 
       const result = writeOpenApi(ir);
 
       expect(result.security).toEqual([{ apiKey: [] }, { oauth2: ['read'] }]);
+    });
+
+    it('writes an AND-grouped requirement set as one requirement object', () => {
+      const ir = createDocument({
+        security: [
+          {
+            schemes: [
+              { schemeName: 'oauth2', scopes: ['read'] },
+              { schemeName: 'apiKey', scopes: [] },
+            ],
+          },
+        ],
+      });
+
+      const result = writeOpenApi(ir);
+
+      expect(result.security).toEqual([{ apiKey: [], oauth2: ['read'] }]);
+    });
+
+    it('emits an explicit document-level security: [] distinct from absent', () => {
+      const ir = createDocument({ security: [] });
+
+      const result = writeOpenApi(ir);
+
+      // CastrDocument.security models [] as "all operations are public by
+      // default"; dropping it changes the document's declared meaning.
+      expect(result.security).toEqual([]);
+    });
+
+    it('omits document-level security when the IR does not define it', () => {
+      const result = writeOpenApi(createDocument());
+
+      expect(result).not.toHaveProperty('security');
     });
   });
 

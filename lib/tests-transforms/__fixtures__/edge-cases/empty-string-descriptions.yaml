@@ -1,0 +1,40 @@
+openapi: 3.1.0
+info:
+  title: Empty String Description Fixture
+  version: 1.0.0
+paths:
+  /items:
+    post:
+      operationId: createItem
+      summary: ''
+      description: ''
+      parameters:
+        - name: verbose
+          in: query
+          description: ''
+          schema:
+            type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    Color:
+      type: string
+      description: ''
+      enum:
+        - red
+        - green

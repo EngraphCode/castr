@@ -91,7 +91,12 @@ function getReferencedRequestBody(
     return throwUnresolvedRequestBodyRefError(ref, context);
   }
 
-  const resolved = requestBodies[requestBodyName];
+  // Own-property-safe lookup: ref names are user-controlled, and a bare
+  // bracket read would return inherited Object.prototype members (e.g.
+  // "constructor") instead of falling through to the unresolved-ref error.
+  const resolved = Object.hasOwn(requestBodies, requestBodyName)
+    ? requestBodies[requestBodyName]
+    : undefined;
   if (!resolved) {
     return throwUnresolvedRequestBodyRefError(ref, context);
   }
@@ -136,7 +141,7 @@ function buildConcreteRequestBody(
     content,
   };
 
-  if (requestBody.description) {
+  if (requestBody.description !== undefined) {
     irRequestBody.description = requestBody.description;
   }
 
