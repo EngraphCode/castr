@@ -100,13 +100,16 @@ export function isTerminalState(snapshot: PrSnapshot): boolean {
  * merge-ready declaration (passing checks alone are not green; an unresolved
  * thread blocks merge-readiness just as hard). At least one check must have
  * attached: a zero-check snapshot is the rollup race just after a push, not a
- * verdict — a genuinely CI-less PR runs to its poll budget instead.
+ * verdict — a genuinely CI-less PR runs to its poll budget instead. The merge
+ * state must also be CLEAN: BLOCKED, BEHIND, DRAFT, or a transient UNKNOWN
+ * all mean merge-readiness is unsatisfied, so the watch keeps polling.
  */
 export function isAllGreen(snapshot: PrSnapshot): boolean {
   return (
     snapshot.checks.passed > 0 &&
     snapshot.checks.failed === 0 &&
     snapshot.checks.pending === 0 &&
-    snapshot.reviewThreads.unresolved === 0
+    snapshot.reviewThreads.unresolved === 0 &&
+    snapshot.mergeStateStatus === 'CLEAN'
   );
 }

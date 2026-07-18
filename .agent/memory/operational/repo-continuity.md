@@ -51,8 +51,9 @@ This block is a pointer, not a second narrative. The authoritative homes:
   [`threads/statusline-owner-adjustments.next-session.md`](threads/statusline-owner-adjustments.next-session.md)
   (same identity / implementer / 2026-07-18).
 - `remediation-parallel-program` — orchestrated by Sylvan Flowering Branch (e6488b) since the
-  09:01Z Moment-2; not this session's boundary. Record:
-  [`threads/remediation-parallel-program.next-session.md`](threads/remediation-parallel-program.next-session.md).
+  09:01Z Moment-2; not this session's boundary. Its thread record lands with PR #10
+  (`docs/remediation-program-record`); until that merge, recompute the program's live state
+  from `gh pr list` and the comms stream.
 
 castr's multi-agent collaboration framework is **built and live** as of Phase 8
 (2026-06-20) — see the supersession note below. The earlier single-stream operation

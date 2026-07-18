@@ -145,7 +145,8 @@ Run the repo's budgeted watcher in the background:
 change, including new comments by author and the unresolved review-thread
 count moving in EITHER direction (a thread arriving or being resolved). The
 watch ends on merged/closed and on ALL GREEN — every attached check settled
-passing AND every review thread resolved; passing checks alone are not green,
+passing AND every review thread resolved AND the merge state clean (protection,
+staleness, and draft all satisfied); passing checks alone are not green,
 because an unresolved thread blocks merge-readiness just as hard. (A PR with
 no checks yet attached does not read as green — that is the rollup race just
 after a push; a genuinely CI-less PR runs to its poll budget.) That exit is the wake

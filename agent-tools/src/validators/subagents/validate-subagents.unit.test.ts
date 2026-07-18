@@ -387,3 +387,20 @@ describe('soleTemplatePath — an adapter references exactly one canonical templ
     expect(result.extras).toEqual([`${DIR}/b.md`]);
   });
 });
+
+describe('hasTomlAssignment — comments never affect multiline tracking (gate-shaped)', () => {
+  it('a full-line comment containing triple quotes does not blind the gate', () => {
+    const content = `# note: this mentions """ in passing\ntools = ["Read"]\n`;
+    expect(hasTomlAssignment(content, 'tools')).toBe(true);
+  });
+
+  it('an inline comment containing triple quotes does not blind the gate', () => {
+    const content = `agent_class = "worker" # """\ntools = ["Read"]\n`;
+    expect(hasTomlAssignment(content, 'tools')).toBe(true);
+  });
+
+  it('a hash inside a string value is not a comment', () => {
+    const content = `notes = "a # b"\ntools = ["Read"]\n`;
+    expect(hasTomlAssignment(content, 'tools')).toBe(true);
+  });
+});

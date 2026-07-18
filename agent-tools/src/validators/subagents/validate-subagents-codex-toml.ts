@@ -94,6 +94,39 @@ export function readTomlBasicStringValue(content: string, key: string): string |
   return null;
 }
 
+/**
+ * Strip a TOML line’s trailing comment, quote-aware: a `#` inside a basic
+ * or literal string is content, not a comment. Applied only OUTSIDE multiline
+ * strings — inside them, every character is string content. Without this,
+ * an ordinary comment containing `"""` would flip the multiline tracker and
+ * blind the gate to every later assignment (gate-shaped code).
+ */
+function stripTomlComment(line: string): string {
+  let inBasic = false;
+  let inLiteral = false;
+  for (let index = 0; index < line.length; index += 1) {
+    const character = line.charAt(index);
+    if (inBasic) {
+      if (character === '\\') {
+        index += 1;
+      } else if (character === '"') {
+        inBasic = false;
+      }
+    } else if (inLiteral) {
+      if (character === "'") {
+        inLiteral = false;
+      }
+    } else if (character === '"') {
+      inBasic = true;
+    } else if (character === "'") {
+      inLiteral = true;
+    } else if (character === '#') {
+      return line.slice(0, index);
+    }
+  }
+  return line;
+}
+
 /** The single-character TOML 1.0 basic-string escapes. */
 const SIMPLE_TOML_KEY_ESCAPES: ReadonlyMap<string, string> = new Map([
   ['b', '\b'],
@@ -166,9 +199,17 @@ function decodeTomlBasicKey(raw: string): string | null {
 export function hasTomlAssignment(content: string, key: string): boolean {
   let inMultilineBasicString = false;
   for (const rawLine of content.split(/\r?\n/u)) {
-    const tripleQuoteCount = rawLine.match(/"""/gu)?.length ?? 0;
-    if (!inMultilineBasicString) {
-      const match = rawLine
+    if (inMultilineBasicString) {
+      const closingQuoteCount = rawLine.match(/"""/gu)?.length ?? 0;
+      if (closingQuoteCount % 2 === 1) {
+        inMultilineBasicString = false;
+      }
+      continue;
+    }
+    const line = stripTomlComment(rawLine);
+    const tripleQuoteCount = line.match(/"""/gu)?.length ?? 0;
+    {
+      const match = line
         .trim()
         .match(
           /^(?:"(?<basic>(?:[^"\\\r\n]|\\.)*)"|'(?<literal>[^'\r\n]*)'|(?<bare>[a-z_]+))\s*=/u,

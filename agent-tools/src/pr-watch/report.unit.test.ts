@@ -115,6 +115,26 @@ describe('isAllGreen', () => {
     ).toBe(false);
   });
 
+  it.each([
+    ['BLOCKED', 'BLOCKED'],
+    ['BEHIND', 'BEHIND'],
+    ['DRAFT', 'DRAFT'],
+    ['UNKNOWN', 'UNKNOWN'],
+  ] as const)(
+    'is not green while the merge state is %s (protection, staleness, or draft unsatisfied)',
+    (_label, mergeStateStatus) => {
+      expect(
+        isAllGreen(
+          makeSnapshot({
+            mergeStateStatus,
+            checks: { total: 4, passed: 4, failed: 0, pending: 0 },
+            reviewThreads: { unresolved: 0, total: 0 },
+          }),
+        ),
+      ).toBe(false);
+    },
+  );
+
   it('is not green before any check has attached (the rollup race, not a no-CI verdict)', () => {
     expect(
       isAllGreen(
