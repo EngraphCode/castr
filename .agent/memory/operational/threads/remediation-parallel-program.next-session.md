@@ -50,11 +50,12 @@ merges, then waves 2–3. The owner merges every PR; the orchestrator never merg
 (program record + gate-footprint fixes + continuity supersessions; 7 bot-review rounds resolved —
 the authority-ring lesson is in `.agent/memory/active/napkin.md`).
 
-**Open PRs** (recompute with `gh pr list`): #10 bootstrap · #11 L-A · #12 L-K1 · #13 L-C ·
-#14 L-K6 (threads clean) · #15 L-KBATCH · #16 L-F · #17 L-H. Merge order (edges normative — program record
-§Merge waves): L-A → L-E → L-I → micros (L-K6 alone: lockfile) → L-H → L-D → **feature slice** →
-L-C → L-F; wave 2: L-B (after L-A + feature), L-K8 (after L-D), L-K9 (after L-KBATCH); wave 3:
-L-J.
+**Open PRs**: NEVER enumerated here — derive the live set with `gh pr list` + the reviewThreads
+query in Next safe steps (hand-enumeration retired across all continuity surfaces, PR #10
+rounds 9/13). Merge order (edges normative — program record §Merge waves, which is the SOLE
+authority for waves and gates): L-A → L-E → L-I → micros (L-K6 alone: lockfile) → L-H → L-D →
+**feature slice** → L-C → L-F; wave 2: L-B (after L-A + feature), L-K8 (after L-D), L-K9 (after
+L-KBATCH + L-D), L-K10 (after L-E + L-D); wave 3: L-J.
 
 **Per-lane state** (worktree names as listed by `git worktree list`):
 
@@ -183,8 +184,10 @@ and Q-016 (owner ruling).
    L-F's lane contract forbids `writers/zod/**`, L-B lands it with C6/M7). Registered
    2026-07-18: the PR #20 MCP-nullability class defect (three ad-hoc converters drop
    `metadata.nullable`; probe-verified) → **micro-lane L-K10** in the program record
-   (§Micro-lanes, starts after L-E merges; edge L-E → L-K10 added), and the disposition table
-   gained a routed-findings row pointing at this section for the remaining named positions.
+   (§Micro-lanes; **starts after L-E AND L-D merge** — L-D's prototype-safety addendum touches
+   one of L-K10's converters, so both edges gate dispatch, per PR #10 rounds 12/13), and the
+   disposition table gained a routed-findings row pointing at this section for the remaining
+   named positions.
 
 ## Next safe steps (in order)
 
