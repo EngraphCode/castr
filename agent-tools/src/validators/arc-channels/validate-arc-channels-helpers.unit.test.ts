@@ -45,6 +45,8 @@ describe('validateArcChannelSurfaces', () => {
   });
 
   it('aggregates findings across files, each anchored to its surface', () => {
+    // Each file reds four ways: malformed header candidate, malformed title,
+    // missing colour, and zero parseable entries (the truncation tell).
     const findings = validateArcChannelSurfaces([
       { name: '2026-07-09-a.md', content: '## [broken\n' },
       { name: '2026-07-09-b.md', content: '## [also broken\n' },
@@ -53,9 +55,27 @@ describe('validateArcChannelSurfaces', () => {
       '2026-07-09-a.md',
       '2026-07-09-a.md',
       '2026-07-09-a.md',
+      '2026-07-09-a.md',
+      '2026-07-09-b.md',
       '2026-07-09-b.md',
       '2026-07-09-b.md',
       '2026-07-09-b.md',
     ]);
+  });
+
+  it('keeps the full repo-relative path as the finding surface while tiering from the basename', () => {
+    // Nested tracked channels must stay distinguishable in gate output — two
+    // channels sharing a basename would otherwise produce indistinguishable
+    // findings — and the basename alone carries the strictness-tier date.
+    const nested = `nested-lane/2026-07-09-fixture-lane-amber-brassy.md`;
+    expect(validateArcChannelSurfaces([{ name: nested, content: GOOD_POST_ADOPTION }])).toEqual([]);
+
+    const findings = validateArcChannelSurfaces([
+      { name: nested, content: GOOD_POST_ADOPTION.replace('Channel-colour: 2\n', '') },
+    ]);
+    expect(findings).toHaveLength(1);
+    expect(findings[0].surface).toBe(nested);
+    const expected: ArcFindingCode = 'missing-colour';
+    expect(findings[0].code).toBe(expected);
   });
 });

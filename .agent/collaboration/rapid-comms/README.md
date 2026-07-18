@@ -17,10 +17,10 @@ evaluation evidence live in
   per live channel.
 - **Assign the colour at open** (channels dated ≥ 2026-07-09): run
   `pnpm agent-tools:arc-next-colour`, record `Channel-colour: <index>` in
-  the opening block. The index keys the pastel background every
-  participating seat's feather wears — colour = conversation, across all
-  panes. Last colour line wins (append-only re-assignment; also the opt-in
-  path for older live channels).
+  the opening block. The index keys the coloured membership bar rendered
+  beside every participating seat's feather — colour = conversation, across
+  all panes. Last colour line wins (append-only re-assignment; also the
+  opt-in path for older live channels).
 - **Structure is schema-gated; bodies are free-form.** `validate-arc-channels`
   (in `repo-validators:check`) binds TRACKED channel files: files dated
   before 2026-07-09 are grandfathered as-is; later files carry the canonical

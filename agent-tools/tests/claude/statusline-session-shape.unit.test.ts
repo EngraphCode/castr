@@ -649,6 +649,37 @@ describe('resolveSessionShape — ARC channel badges', () => {
     ]);
   });
 
+  it('lets a later valid colour line cure an earlier malformed one (the documented append-only cure)', () => {
+    // Last colour CANDIDATE wins: the one-line append-only cure the badge
+    // contract documents must actually clear the invalid state — a historical
+    // malformed line never poisons the badge once superseded.
+    const cured = arc('2026-06-12-cured-monsoon-fixture-cirrus.md', '2026-06-12T11:55:00Z', {
+      content: '# t\n\nChannel-colour: blue\n\nProse.\n\nChannel-colour: 4\n',
+    });
+    const shape = resolveSessionShape({
+      ownAgentName: 'Monsoon Fixture Cirrus',
+      registry: registry([]),
+      experimentsListing: [cured],
+      nowIso: NOW,
+    });
+
+    expect(shape.arcChannels[0].colour).toStrictEqual({ kind: 'indexed', index: 4 });
+  });
+
+  it('reads a malformed colour line appended AFTER the last valid one as invalid', () => {
+    const poisoned = arc('2026-06-12-poisoned-monsoon-fixture-cirrus.md', '2026-06-12T11:55:00Z', {
+      content: '# t\n\nChannel-colour: 4\n\nProse.\n\nChannel-colour: blue\n',
+    });
+    const shape = resolveSessionShape({
+      ownAgentName: 'Monsoon Fixture Cirrus',
+      registry: registry([]),
+      experimentsListing: [poisoned],
+      nowIso: NOW,
+    });
+
+    expect(shape.arcChannels[0].colour).toStrictEqual({ kind: 'invalid' });
+  });
+
   it('reads an out-of-range or malformed colour as invalid', () => {
     const outOfRange = arc('2026-06-12-a-monsoon-fixture-cirrus.md', '2026-06-12T11:55:00Z', {
       content: '# t\n\nChannel-colour: 99\n',

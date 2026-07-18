@@ -40,7 +40,7 @@ import {
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { ARC_ACTIVE_WINDOW_SECONDS } from '../arc/arc-channel-grammar.js';
+import { ARC_ACTIVE_WINDOW_SECONDS, isArcChannelFileName } from '../arc/arc-channel-grammar.js';
 import { parseCollaborationRegistry } from '../collaboration-state/state-parsers.js';
 import { type CollaborationRegistry } from '../collaboration-state/types.js';
 import { resolveLogoRows, resolveLogoStyle, type EngraphLogoStyle } from './engraph-logo.js';
@@ -217,11 +217,11 @@ function listExperiments(
   const experimentsDir = join(primaryRoot, '.agent/collaboration/rapid-comms');
   try {
     const listed = readdirSync(experimentsDir, { recursive: true, withFileTypes: true })
-      // Channel files only — the same `.md` + non-README filter the colour CLI and
-      // the arc-channels validator apply. An unfiltered README inside the liveness
-      // window would burn one of the bounded content-read slots and could displace
-      // a roster-only member's feather past the cap.
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'README.md')
+      // Channel files only — the grammar's shared predicate, the same filter the
+      // colour CLI and the arc-channels validator apply. An unfiltered README
+      // inside the liveness window would burn one of the bounded content-read
+      // slots and could displace a roster-only member's feather past the cap.
+      .filter((entry) => entry.isFile() && isArcChannelFileName(entry.name))
       .map((entry) => statExperimentsEntry(experimentsDir, join(entry.parentPath, entry.name)))
       .filter((entry) => entry !== undefined);
     return attachInWindowContent(experimentsDir, listed, ownAgentName, Date.now());
@@ -231,12 +231,14 @@ function listExperiments(
 }
 
 /**
- * Attach content to in-window entries under the bounded read budget: newest
- * first, at most {@link ARC_CONTENT_READ_CAP} reads of at most
- * {@link ARC_CONTENT_BYTE_CAP} bytes each. Beyond-budget in-window entries are
- * marked `beyond-cap` (the resolver renders overflow) and a failed read marks
- * `unreadable` (renders invalid) — in-window content state is always named,
- * never silently absent. Out-of-window entries pass through untouched.
+ * Attach content to in-window entries under the bounded read budget:
+ * membership-first then newest-first ({@link rankArcContentReads}), at most
+ * {@link ARC_CONTENT_READ_CAP} reads of at most {@link ARC_CONTENT_BYTE_CAP}
+ * bytes each. Beyond-budget in-window entries — a read slot never allocated,
+ * or a file larger than the byte cap — are marked `beyond-cap` (the resolver
+ * renders overflow) and a failed read marks `unreadable` (renders invalid) —
+ * in-window content state is always named, never silently absent.
+ * Out-of-window entries pass through untouched.
  */
 function attachInWindowContent(
   experimentsDir: string,
@@ -265,8 +267,17 @@ function readEntryContent(experimentsDir: string, entry: ExperimentsEntry): Expe
   try {
     const fd = openSync(join(experimentsDir, entry.name), 'r');
     try {
-      const buffer = Buffer.alloc(ARC_CONTENT_BYTE_CAP);
-      const bytesRead = readSync(fd, buffer, 0, ARC_CONTENT_BYTE_CAP, 0);
+      // Read one byte PAST the cap to detect oversize files. A channel larger
+      // than the byte cap must degrade to the honest `beyond-cap` overflow
+      // badge, never parse as a silently head-truncated file: the facts this
+      // read serves are append-only last-wins contracts (latest colour
+      // reassignment, late roster joiners) that live at the TAIL, which a
+      // truncated head read would misreport as complete.
+      const buffer = Buffer.alloc(ARC_CONTENT_BYTE_CAP + 1);
+      const bytesRead = readSync(fd, buffer, 0, ARC_CONTENT_BYTE_CAP + 1, 0);
+      if (bytesRead > ARC_CONTENT_BYTE_CAP) {
+        return { ...entry, contentAbsent: 'beyond-cap' as const };
+      }
       return { ...entry, content: buffer.subarray(0, bytesRead).toString('utf8') };
     } finally {
       closeSync(fd);

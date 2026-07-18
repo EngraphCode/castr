@@ -1,7 +1,8 @@
 /**
  * Next-free colour assignment for the ARC channel-open ceremony: the opener
- * scans the colours worn by currently-active channels and takes the lowest
- * free palette index, so concurrently-live channels stay visually distinct
+ * scans the colours worn by TODAY'S channels (same-day filename date,
+ * mtime-immune — see {@link deriveWornColours}) and takes the lowest free
+ * palette index, so concurrently-live channels stay visually distinct
  * without a coordinator. Pure; the CLI (`arc-next-colour-cli.ts`) supplies
  * the live directory scan.
  *

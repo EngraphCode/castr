@@ -132,14 +132,20 @@ the evaluation evidence (conserved from the live experiment channel on
    the ceremony mandates the token at window open; nothing enforces it.
 
 2. **Assign the channel's colour at open** (2026-07-09, owner-directed):
-   the opener runs `pnpm agent-tools:arc-next-colour` (it scans the worn
-   colours of channels active in the 30-minute window against the PRIMARY
-   checkout and prints the next free palette index) and records the result
-   as a `Channel-colour: <index>` line in the opening block, before the
-   first entry header. Every participating seat's statusline then wears
-   that palette background behind the channel's feather — the index is the
-   cross-session identity of the conversation; the colour VALUES live in
-   the statusline palette module and re-tune centrally. Re-assignment is
+   the opener runs `pnpm agent-tools:arc-next-colour` (it scans the PRIMARY
+   checkout and treats every channel dated TODAY as occupying its worn
+   colour — occupancy is same-day-by-filename and mtime-immune, the cure for
+   the 2026-07-10 double-collision where a quiet-but-live channel lost its
+   colour; the 30-minute window survives only as the command's
+   `active`/`quiet` display label — and prints the next free palette index)
+   and records the result as a `Channel-colour: <index>` line in the opening
+   block, before the first entry header. Every participating seat's
+   statusline then wears that palette colour as foreground ink on the
+   zero-gap membership bar beside the channel's feather (carrier re-ruled at
+   the 2026-07-10 owner sitting from the earlier background treatment —
+   emoji never render inside colour runs) — the index is the cross-session
+   identity of the conversation; the colour VALUES live in the statusline
+   palette module and re-tune centrally. Re-assignment is
    append-only-legal: a later entry may carry a new `Channel-colour` line
    and the LAST one wins — this is also how a grandfathered live channel
    opts into a colour. On the glance surface (corrected 2026-07-09, owner

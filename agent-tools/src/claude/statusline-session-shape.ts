@@ -9,11 +9,14 @@
  * Truth sources are deliberately a small, HARD-BOUNDED read budget per tick:
  * the active-claims registry, the experiments-directory listing, and the
  * CONTENT of at most {@link ARC_CONTENT_READ_CAP} in-window channel files
- * (each capped at {@link ARC_CONTENT_BYTE_CAP} bytes) — the feather badges
+ * (each at most {@link ARC_CONTENT_BYTE_CAP} bytes) — the feather badges
  * constitutively need colour + roster from content, and the caps preserve
  * the original two-reads constraint's intent (no unbounded host load; the
- * window keeps the set tiny in practice). Channels beyond the cap surface
- * honestly as `overflow` badges, never silently. The comms corpus remains
+ * window keeps the set tiny in practice). FILENAME-MATCHED channels beyond
+ * the caps surface honestly as `overflow` badges, never silently;
+ * roster-only membership constitutively needs a content read, so a channel
+ * beyond the caps whose filename never names this seat is undetectable — the
+ * protocol reference documents that bound. The comms corpus remains
  * structurally excluded from this path: the statusline ticks constantly and
  * the large-flat-directory scan class has a documented watcher body count.
  * The imperative adapter (`statusline-identity.ts`) gathers the inputs; this
@@ -45,11 +48,14 @@ import {
  * `mtimeIso` is the file's last-modified instant in ISO 8601 UTC.
  *
  * For channels inside the ARC activity window the gatherer also supplies
- * `content` (capped at {@link ARC_CONTENT_BYTE_CAP} bytes) so the resolver
- * can read the recorded colour and the on-channel roster; when it cannot,
- * `contentAbsent` says why — `beyond-cap` (the bounded read budget ran out;
- * renders as overflow) or `unreadable` (a read error; renders as invalid).
- * Out-of-window entries carry neither field.
+ * `content` (complete, and at most {@link ARC_CONTENT_BYTE_CAP} bytes) so the
+ * resolver can read the recorded colour and the on-channel roster; when it
+ * cannot, `contentAbsent` says why — `beyond-cap` (the bounded read budget
+ * cannot cover it: the per-tick read-slot budget ran out, or the file
+ * exceeds the per-file byte cap and a head-truncated read cannot honestly
+ * resolve its append-only facts; renders as overflow) or `unreadable` (a
+ * read error; renders as invalid). Out-of-window entries carry neither
+ * field.
  */
 export interface ExperimentsEntry {
   readonly name: string;
@@ -60,23 +66,34 @@ export interface ExperimentsEntry {
 
 /**
  * Bounded content-read budget: at most this many in-window channels get a
- * content read per tick (newest first); the byte cap bounds each read. Both
- * are asserted by the gatherer; the resolver treats budget breaches as the
- * defined `overflow` badge state.
+ * content read per tick — filename-member channels first, then the rest
+ * newest-first (the {@link rankArcContentReads} ranking; membership-first is
+ * load-bearing starvation protection, a seat's own channel must never lose
+ * its read slot to unrelated newer channels); the byte cap bounds each read.
+ * Both are asserted by the gatherer; the resolver treats budget breaches as
+ * the defined `overflow` badge state.
  */
 export const ARC_CONTENT_READ_CAP = 8;
 
-/** Per-file byte cap for one channel content read. */
+/**
+ * Per-file byte cap for one channel content read. A channel LARGER than this
+ * reads as `beyond-cap` (the overflow badge), never as a silently truncated
+ * parse: the contracts this resolver serves are append-only last-wins facts
+ * (latest colour reassignment, late roster joiners), which a head-truncated
+ * read would misreport as complete.
+ */
 export const ARC_CONTENT_BYTE_CAP = 256 * 1024;
 
 /**
  * Colour state of one channel badge — a closed shape. `indexed` carries the
- * recorded palette index; `invalid` is loud (missing, malformed, or
- * out-of-range colour, or an unreadable in-window file — regardless of file
- * date: the gate's dated strictness tiers govern FILE conformance, the badge
- * has no quiet grandfathered state); `overflow` marks a channel beyond the
- * bounded read budget. The cure for an invalid badge is one append-only
- * `Channel-colour: <index>` line on the channel.
+ * recorded palette index; `invalid` is loud (missing or out-of-range colour,
+ * a malformed colour line standing as the LATEST colour candidate, or an
+ * unreadable in-window file — regardless of file date: the gate's dated
+ * strictness tiers govern FILE conformance, the badge has no quiet
+ * grandfathered state); `overflow` marks a channel beyond the bounded read
+ * budget. The cure for an invalid badge is one append-only
+ * `Channel-colour: <index>` line on the channel — the latest candidate wins,
+ * so the cure actually clears the state (append-only re-assignment).
  */
 export type ArcBadgeColour =
   | { readonly kind: 'indexed'; readonly index: number }
@@ -336,7 +353,18 @@ function resolveBadgeColour(
     // is a gathering defect and reads loud (invalid), never quiet.
     return entry.contentAbsent === 'beyond-cap' ? { kind: 'overflow' } : { kind: 'invalid' };
   }
-  if (parse.findings.some((finding) => finding.code === 'malformed-colour-line')) {
+  // The latest colour CANDIDATE decides: a malformed colour line reads
+  // invalid only while it stands as the last candidate — a later well-formed
+  // `Channel-colour` line supersedes it, so the documented one-line
+  // append-only cure actually clears the badge (last-colour-wins), while a
+  // malformed line appended AFTER the last valid one is the live defect.
+  // Parse findings arrive in file order, so `.at(-1)` is the last malformed
+  // candidate by position.
+  const lastWellFormed = parse.colourLines.at(-1);
+  const lastMalformed = parse.findings
+    .filter((finding) => finding.code === 'malformed-colour-line')
+    .at(-1);
+  if (lastMalformed !== undefined && lastMalformed.line > (lastWellFormed?.line ?? 0)) {
     return { kind: 'invalid' };
   }
   const colour = resolveChannelColour(parse);

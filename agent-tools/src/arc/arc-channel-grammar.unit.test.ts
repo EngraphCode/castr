@@ -5,6 +5,7 @@ import {
   channelDateFromFileName,
   deriveArcRoster,
   evaluateArcChannelStrictness,
+  isArcChannelFileName,
   isCrossHostChannelName,
   parseArcChannel,
   resolveChannelColour,
@@ -71,6 +72,30 @@ describe('isCrossHostChannelName', () => {
   it('reads ONLY the basename, so a cross-host directory with a plain basename does not match', () => {
     expect(isCrossHostChannelName('cross-host-lane/regular-pair-notes.md')).toBe(false);
   });
+
+  it('strips Windows-separator directories too (path.relative emits backslashes on Windows)', () => {
+    expect(isCrossHostChannelName('cross-host-lane\\regular-pair-notes.md')).toBe(false);
+    expect(isCrossHostChannelName('arc-channels\\2026-07-09-cross-host-window-foo.md')).toBe(true);
+  });
+});
+
+describe('isArcChannelFileName', () => {
+  it('accepts a dated channel file', () => {
+    expect(isArcChannelFileName(PRE_ADOPTION_FILE)).toBe(true);
+  });
+
+  it('excludes only a file whose BASENAME is exactly README.md', () => {
+    expect(isArcChannelFileName('README.md')).toBe(false);
+    expect(isArcChannelFileName('nested/README.md')).toBe(false);
+  });
+
+  it('keeps a dated channel whose topic merely ends in README', () => {
+    expect(isArcChannelFileName('2026-07-18-api-README.md')).toBe(true);
+  });
+
+  it('rejects non-markdown files', () => {
+    expect(isArcChannelFileName('notes.txt')).toBe(false);
+  });
 });
 
 describe('channelDateFromFileName', () => {
@@ -80,6 +105,17 @@ describe('channelDateFromFileName', () => {
 
   it('returns undefined for an undated filename', () => {
     expect(channelDateFromFileName('fixture-notes.md')).toBeUndefined();
+  });
+
+  it('rejects digit-shaped but impossible calendar dates', () => {
+    expect(channelDateFromFileName('2026-99-99-fixture.md')).toBeUndefined();
+    expect(channelDateFromFileName('2026-02-30-fixture.md')).toBeUndefined();
+    expect(channelDateFromFileName('2026-00-01-fixture.md')).toBeUndefined();
+  });
+
+  it('derives the date from the BASENAME, so a nested tracked path stays dated', () => {
+    expect(channelDateFromFileName(`nested/${PRE_ADOPTION_FILE}`)).toBe('2026-07-05');
+    expect(channelDateFromFileName(`nested\\${PRE_ADOPTION_FILE}`)).toBe('2026-07-05');
   });
 });
 
@@ -287,5 +323,41 @@ describe('evaluateArcChannelStrictness — post-adoption (strict) tier', () => {
     expect(evaluateArcChannelStrictness(parse, options).map((v) => v.code)).toEqual([
       'missing-preamble',
     ]);
+  });
+
+  it('rejects a strict channel with a valid opening block but ZERO entries (the truncation tell)', () => {
+    // A post-adoption channel that keeps its title, preamble, and colour line
+    // but has lost every `## [...]` header is the documented non-append
+    // rewrite/truncation corruption signal — it must never pass the gate.
+    const content = [
+      '# ARC channel: fixture lane — Amber Testing Beacon × Brassy Fixture Gong',
+      '',
+      'Pair channel for the fixture team.',
+      'Channel-colour: 3',
+      '',
+    ].join('\n');
+    const parse = parseArcChannel(POST_ADOPTION_FILE, content);
+    expect(evaluateArcChannelStrictness(parse, options).map((v) => v.code)).toEqual([
+      'missing-entries',
+    ]);
+  });
+
+  it('grandfathers a zero-entry pre-adoption channel (append-only forbids retro-editing)', () => {
+    const parse = parseArcChannel(PRE_ADOPTION_FILE, '# ARC — fixture topic\n\nProse only.\n');
+    expect(evaluateArcChannelStrictness(parse, options)).toEqual([]);
+  });
+
+  it('tiers a nested tracked path from its basename while keeping the full path as the surface', () => {
+    const nestedName = `nested/${POST_ADOPTION_FILE}`;
+    const conforming = parseArcChannel(nestedName, conformingPostAdoption);
+    expect(evaluateArcChannelStrictness(conforming, options)).toEqual([]);
+
+    const missingColour = parseArcChannel(
+      nestedName,
+      conformingPostAdoption.replace('Channel-colour: 3\n', ''),
+    );
+    const violations = evaluateArcChannelStrictness(missingColour, options);
+    expect(violations.map((v) => v.code)).toEqual(['missing-colour']);
+    expect(violations[0].surface).toBe(nestedName);
   });
 });

@@ -8,6 +8,7 @@ import { writeLine } from '../core/terminal-output.js';
 import {
   ARC_ACTIVE_WINDOW_SECONDS,
   ARC_PALETTE_SIZE,
+  isArcChannelFileName,
   parseArcChannel,
   resolveChannelColour,
 } from './arc-channel-grammar.js';
@@ -16,10 +17,14 @@ import type { ChannelColourFacts } from './arc-next-colour.js';
 
 /**
  * `pnpm agent-tools:arc-next-colour` — the channel-open assignment helper the
- * protocol convention names: prints each ACTIVE channel's worn colour (mtime
- * within the ARC window) and the next free palette index, so the opener
- * computes the assignment instead of eyeballing it. Reads the directory
- * as-present (statusline semantics — assignment must see live channels).
+ * protocol convention names: prints each of TODAY'S channels with its worn
+ * colour and the next free palette index, so the opener computes the
+ * assignment instead of eyeballing it. Occupancy is same-day-by-filename and
+ * mtime-immune (a quiet-but-live channel keeps its colour — the 2026-07-10
+ * double-collision class; see `arc-next-colour.ts`); the 30-minute mtime
+ * window survives only as the per-channel `active`/`quiet` DISPLAY label.
+ * Reads the directory as-present (statusline semantics — assignment must see
+ * live channels).
  *
  * @packageDocumentation
  */
@@ -47,7 +52,7 @@ const repoRoot = resolvePrimaryRoot();
 
 async function main(): Promise<void> {
   const dir = path.join(repoRoot, CHANNELS_DIR);
-  const names = (await fs.readdir(dir)).filter((n) => n.endsWith('.md') && n !== 'README.md');
+  const names = (await fs.readdir(dir)).filter((n) => isArcChannelFileName(n));
   const nowMs = Date.now();
   const todayIsoDate = new Date(nowMs).toISOString().slice(0, 10);
   const facts: ChannelColourFacts[] = [];

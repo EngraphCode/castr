@@ -68,6 +68,7 @@ export type ArcFindingCode =
   | 'malformed-title'
   | 'missing-preamble'
   | 'missing-colour'
+  | 'missing-entries'
   | 'colour-after-first-entry'
   | 'colour-out-of-range'
   | 'undated-filename';
@@ -145,11 +146,57 @@ const SECONDS_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const FILE_DATE_PATTERN = /^(?<date>\d{4}-\d{2}-\d{2})-/;
 
 /**
- * Extract the channel's calendar date from its filename
- * (`YYYY-MM-DD-<topic...>.md`), or undefined when the filename is undated.
+ * Strip directory segments (either separator convention — `path.relative`
+ * emits backslashes on Windows) down to the channel file's basename. The
+ * single basename home for this module: name-shaped facts (date tier,
+ * cross-host marker, README exclusion) are BASENAME facts, while callers keep
+ * their full repo-relative paths as the finding/reporting surface.
+ */
+function channelBaseName(fileName: string): string {
+  return fileName.split(/[\\/]/).at(-1) ?? fileName;
+}
+
+/**
+ * True when the digit-shaped `YYYY-MM-DD` string names a real calendar date —
+ * a UTC round-trip check, so `2026-99-99` or `2026-02-30` cannot satisfy the
+ * dated-filename requirement (and can never enter the strict tier) on digit
+ * shape alone.
+ */
+function isRealCalendarDate(isoDate: string): boolean {
+  const year = Number(isoDate.slice(0, 4));
+  const month = Number(isoDate.slice(5, 7));
+  const day = Number(isoDate.slice(8, 10));
+  const roundTrip = new Date(Date.UTC(year, month - 1, day));
+  return (
+    roundTrip.getUTCFullYear() === year &&
+    roundTrip.getUTCMonth() === month - 1 &&
+    roundTrip.getUTCDate() === day
+  );
+}
+
+/**
+ * Extract the channel's calendar date from its BASENAME
+ * (`YYYY-MM-DD-<topic...>.md`; directory segments in either separator
+ * convention are stripped first, so a nested tracked path stays dated), or
+ * undefined when the filename is undated or its digits do not form a real
+ * calendar date.
  */
 export function channelDateFromFileName(fileName: string): string | undefined {
-  return FILE_DATE_PATTERN.exec(fileName)?.groups?.['date'];
+  const date = FILE_DATE_PATTERN.exec(channelBaseName(fileName))?.groups?.['date'];
+  return date !== undefined && isRealCalendarDate(date) ? date : undefined;
+}
+
+/**
+ * True when a directory-listing or `git ls-files` name is an ARC channel
+ * file: a markdown file whose BASENAME is not exactly `README.md`. The single
+ * predicate home shared by the gate, the statusline gatherer, and the colour
+ * CLI (consolidate-at-second-consumer) — README exclusion binds on the exact
+ * basename, so a dated channel whose topic merely ends in `README`
+ * (e.g. `2026-07-18-api-README.md`) is a channel, never a skipped README.
+ */
+export function isArcChannelFileName(fileName: string): boolean {
+  const baseName = channelBaseName(fileName);
+  return baseName.endsWith('.md') && baseName !== 'README.md';
 }
 
 /**
@@ -179,7 +226,8 @@ const CROSS_HOST_SEGMENT = /(^|-)cross-host(-|$)/;
  * of trust as a `--role` claim: it holds because the window-open ceremony
  * mandates the `cross-host` token, not because anything enforces it.
  *
- * Directories are stripped (only the basename is tested), and a `YYYY-MM-DD`
+ * Directories are stripped (only the basename is tested, either separator
+ * convention), and a `YYYY-MM-DD`
  * date prefix or `.md` extension may be present. The basename is normalised
  * the way this module's name-matching does — lower-cased with every
  * non-alphanumeric run collapsed to a single dash — before the segment test,
@@ -189,8 +237,7 @@ const CROSS_HOST_SEGMENT = /(^|-)cross-host(-|$)/;
  * `2026-07-09-cross-host-window-sparking-firing-cinder-starlit-threading-dawn.md`.
  */
 export function isCrossHostChannelName(fileName: string): boolean {
-  const basename = fileName.split('/').at(-1) ?? fileName;
-  return CROSS_HOST_SEGMENT.test(normaliseForFilenameMatch(basename));
+  return CROSS_HOST_SEGMENT.test(normaliseForFilenameMatch(channelBaseName(fileName)));
 }
 
 /**
@@ -308,8 +355,10 @@ export interface ArcStrictnessOptions {
  * ALL files (grandfathered included): malformed entry-header/colour
  * candidates, colour-index range, dated filename. Files dated on or after
  * `adoptionDate` additionally: canonical title, a preamble, seconds-precision
- * timestamps on every header, and a colour line whose first occurrence
- * precedes the first entry.
+ * timestamps on every header, at least one entry header (a conforming opening
+ * block with ZERO entries is the documented non-append rewrite/truncation
+ * corruption tell), and a colour line whose first occurrence precedes the
+ * first entry.
  *
  * The returned violations RECOMPUTE everything from the parse — nothing is
  * trusted from recorded state (validators-must-recompute).
@@ -352,6 +401,16 @@ export function evaluateArcChannelStrictness(
       surface: parse.fileName,
       line: 1,
       detail: 'post-adoption channels open with "# ARC channel: <topic> — <names>"',
+    });
+  }
+
+  if (parse.entries.length === 0) {
+    violations.push({
+      code: 'missing-entries',
+      surface: parse.fileName,
+      line: 0,
+      detail:
+        'post-adoption channels carry at least one entry header — a structurally valid opening block with zero entries is the non-append rewrite/truncation tell',
     });
   }
 

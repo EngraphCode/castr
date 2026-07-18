@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import path from 'node:path';
 
+import { isArcChannelFileName } from '../../arc/arc-channel-grammar.js';
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
 
@@ -37,8 +37,10 @@ function listTrackedChannelFiles(): readonly string[] {
   });
   // Keep the FULL repo-relative path (git pathspec `*` matches `/`, so a
   // nested tracked channel must not be basename-collapsed into a phantom
-  // flat path); the grammar tiers on the basename internally.
-  return stdout.split('\0').filter((name) => name !== '' && !name.endsWith('README.md'));
+  // flat path); the grammar tiers on the basename internally, and the shared
+  // predicate excludes only a file whose BASENAME is exactly README.md — a
+  // dated channel whose topic ends in `README` is a channel, not a README.
+  return stdout.split('\0').filter((name) => name !== '' && isArcChannelFileName(name));
 }
 
 /** Read one tracked channel's INDEX blob; a read failure is a loud finding, never a crash. */
@@ -70,7 +72,10 @@ function main(): void {
   for (const relPath of names) {
     const read = readIndexBlob(relPath);
     if ('content' in read) {
-      surfaces.push({ name: path.basename(relPath), content: read.content });
+      // The FULL repo-relative path is the finding surface (nested channels
+      // stay distinguishable); the grammar derives the tier date from the
+      // basename internally.
+      surfaces.push({ name: relPath, content: read.content });
     } else {
       readFindings.push(read.finding);
     }
