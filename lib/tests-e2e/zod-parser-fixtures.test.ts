@@ -3,8 +3,10 @@
  *
  * Verifies that the Zod parser parses every happy-path fixture on disk and
  * produces the exact expected IR JSON. Lives in the e2e gate because it reads
- * fixture files from the filesystem; the in-process `pnpm test` gate stays
- * hermetic (see `src/architecture/test-hygiene.arch.test.ts`).
+ * fixture files from the filesystem — `test-hygiene.arch.test.ts` forbids
+ * filesystem imports in the suites the primary `pnpm test` gate collects
+ * (outside its named shrink-only baseline), so fixture-driven IO belongs
+ * here.
  *
  * Every `<name>.zod4.ts` fixture MUST have a `<name>.expected.json` sibling —
  * a missing expectation fails the suite rather than being skipped.
