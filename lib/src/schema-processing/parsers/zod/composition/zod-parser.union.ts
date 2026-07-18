@@ -24,7 +24,7 @@ import {
   finalizeCompositeSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
 import {
-  ZOD_METHOD_AND,
+  ZOD_CHAIN_COMPOSITION_OPERATORS,
   ZOD_METHOD_DISCRIMINATED_UNION,
   ZOD_METHOD_OR,
   ZOD_METHOD_UNION,
@@ -152,6 +152,34 @@ function parseDiscriminatedUnion(
   };
 }
 
+/**
+ * Hoist member optionality to the union level.
+ *
+ * Zod propagates optionality through unions (verified against zod 4.4.3:
+ * `z.union([...])`, the `.or()` shorthand, `z.xor`, and
+ * `z.discriminatedUnion` all report `optin`/`optout` "optional" and
+ * accept a missing object key when any member accepts undefined —
+ * intersections do NOT propagate, so allOf gets no hoist), so a union
+ * with an optional member makes the enclosing object property optional.
+ * The union's top-level `metadata.required` is what the object parser
+ * consumes to build `required` — optionality round-trips through the
+ * writer via that property-level `required` set, not via member
+ * presence (the writer emits `.optional()` only in property/parameter
+ * contexts).
+ *
+ * @internal
+ */
+function hoistMemberOptionality(schema: CastrSchema | undefined): CastrSchema | undefined {
+  if (!schema) {
+    return undefined;
+  }
+  const members = schema.anyOf ?? schema.oneOf;
+  if (members?.some((member) => member.metadata?.required === false)) {
+    schema.metadata.required = false;
+  }
+  return schema;
+}
+
 // ============================================================================
 // Main exports
 // ============================================================================
@@ -190,7 +218,7 @@ export function parseUnionZodFromNode(
       ? parseDiscriminatedUnion(baseArgNodes, parseSchema)
       : parseUnion(baseArgNodes, parseSchema, memberContext, outputKey);
 
-  return finalizeCompositeSchema(schema, chainedMethods);
+  return hoistMemberOptionality(finalizeCompositeSchema(schema, chainedMethods));
 }
 
 const OR_MEMBER_CONTEXT = '.or() union member';
@@ -214,8 +242,9 @@ function parseOrMember(memberNode: Node, parseSchema: ZodSchemaParser): CastrSch
  * the same `anyOf` IR as `z.union([A, B])`, with the trailing chain
  * enforced against the union whitelist and captured into metadata.
  *
- * Declines chains where an `.and()` link sits outermore than every
- * `.or()` link: the chained-intersection parser owns those.
+ * Declines chains where an `.and()` or `.array()` link sits outermore
+ * than every `.or()` link: the chained-intersection / chained-array
+ * parser owns those.
  *
  * @internal
  */
@@ -227,7 +256,7 @@ export function parseChainedUnionFromNode(
     return undefined;
   }
 
-  const split = splitChainAroundOperator(node, ZOD_METHOD_OR, ZOD_METHOD_AND);
+  const split = splitChainAroundOperator(node, ZOD_METHOD_OR, ZOD_CHAIN_COMPOSITION_OPERATORS);
   if (!split) {
     return undefined;
   }
@@ -251,7 +280,7 @@ export function parseChainedUnionFromNode(
     metadata: createDefaultMetadata(),
   };
 
-  return finalizeCompositeSchema(schema, split.trailingMethods);
+  return hoistMemberOptionality(finalizeCompositeSchema(schema, split.trailingMethods));
 }
 
 // Register parsers with the core dispatcher

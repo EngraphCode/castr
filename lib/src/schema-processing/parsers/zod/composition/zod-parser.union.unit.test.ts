@@ -136,6 +136,71 @@ describe('Zod Union Parsing', () => {
     });
   });
 
+  describe('member optionality hoisting (union accepting undefined => property optional)', () => {
+    // Verified against zod 4.4.3: a union with a member that accepts
+    // undefined reports optin/optout "optional" and accepts a missing
+    // object key, for BOTH the .or() shorthand and canonical z.union.
+
+    it('hoists left-member optionality to the union for the .or() shorthand', () => {
+      const result = parseCode('z.string().optional().or(z.number())');
+      expect(result?.anyOf?.[0]?.metadata.required).toBe(false);
+      expect(result?.metadata.required).toBe(false);
+    });
+
+    it('hoists right-member optionality to the union for the .or() shorthand', () => {
+      const result = parseCode('z.string().or(z.number().optional())');
+      expect(result?.metadata.required).toBe(false);
+    });
+
+    it('hoists member optionality for the canonical z.union form', () => {
+      const result = parseCode('z.union([z.string().optional(), z.number()])');
+      expect(result?.metadata.required).toBe(false);
+    });
+
+    it('keeps a union of required members required', () => {
+      const shorthand = parseCode('z.string().or(z.number())');
+      const canonical = parseCode('z.union([z.string(), z.number()])');
+      expect(shorthand?.metadata.required).toBe(true);
+      expect(canonical?.metadata.required).toBe(true);
+    });
+
+    it('keeps hoisted optionality under a trailing .nullable()', () => {
+      const result = parseCode('z.string().optional().or(z.number()).nullable()');
+      expect(result?.metadata.required).toBe(false);
+      expect(result?.metadata.nullable).toBe(true);
+    });
+
+    it('marks the object property optional for an optional-member .or() union', () => {
+      const result = parseCode('z.strictObject({ p: z.string().optional().or(z.number()) })');
+      expect(result?.required).toEqual([]);
+    });
+
+    it('marks the object property optional for an optional-member z.union', () => {
+      const result = parseCode(
+        'z.strictObject({ p: z.union([z.string().optional(), z.number()]) })',
+      );
+      expect(result?.required).toEqual([]);
+    });
+
+    it('hoists member optionality for the oneOf family (z.xor)', () => {
+      const optionalMember = parseCode('z.xor([z.string().optional(), z.number()])');
+      const control = parseCode('z.xor([z.string(), z.number()])');
+      expect(optionalMember?.oneOf).toHaveLength(2);
+      expect(optionalMember?.metadata.required).toBe(false);
+      expect(control?.metadata.required).toBe(true);
+    });
+
+    it('hoists member optionality for z.discriminatedUnion', () => {
+      const result = parseCode(
+        "z.discriminatedUnion('k', [" +
+          "z.strictObject({ k: z.literal('a') }).optional(), " +
+          "z.strictObject({ k: z.literal('b') })])",
+      );
+      expect(result?.oneOf).toHaveLength(2);
+      expect(result?.metadata.required).toBe(false);
+    });
+  });
+
   describe('Discriminated Unions (oneOf + discriminator)', () => {
     // Note: z.discriminatedUnion expects object schemas with literal discriminators
     it('should parse z.discriminatedUnion', () => {

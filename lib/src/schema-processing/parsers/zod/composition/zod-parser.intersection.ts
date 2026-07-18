@@ -22,7 +22,11 @@ import {
   buildCompositeChainMethods,
   finalizeCompositeSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
-import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION, ZOD_METHOD_OR } from '../zod-constants.js';
+import {
+  ZOD_CHAIN_COMPOSITION_OPERATORS,
+  ZOD_METHOD_AND,
+  ZOD_METHOD_INTERSECTION,
+} from '../zod-constants.js';
 
 /**
  * Chained methods recognised on z.intersection().
@@ -105,15 +109,13 @@ export function parseIntersectionZodFromNode(
     return undefined;
   }
 
-  // z.intersection(A, B).and(C) / z.intersection(A, B).or(C): decline so
-  // the chained-.and() / chained-.or() parser — which owns that
-  // composition operator and its trailing modifiers — claims the whole
-  // chain. Whitelisting the method here instead would accept the name
-  // while dropping its argument (the silent no-op class this module
-  // exists to prevent).
-  if (
-    chainedMethods.some((method) => method.name === ZOD_METHOD_AND || method.name === ZOD_METHOD_OR)
-  ) {
+  // z.intersection(A, B).and(C) / .or(C) / .array(): decline so the
+  // chained-.and() / chained-.or() / chained-.array() parser — which owns
+  // that composition operator and its trailing modifiers — claims the
+  // whole chain. Whitelisting the method here instead would accept the
+  // name while dropping its composition semantics (the silent no-op
+  // class this module exists to prevent).
+  if (chainedMethods.some((method) => ZOD_CHAIN_COMPOSITION_OPERATORS.has(method.name))) {
     return undefined;
   }
 
@@ -143,8 +145,9 @@ export function parseIntersectionZodFromNode(
  * `A.and(B).optional()` both parse, with the trailing chain enforced
  * against the intersection whitelist and captured into metadata.
  *
- * Declines chains where an `.or()` link sits outermore than every
- * `.and()` link: the chained-union parser owns those.
+ * Declines chains where an `.or()` or `.array()` link sits outermore
+ * than every `.and()` link: the chained-union / chained-array parser
+ * owns those.
  *
  * @internal
  */
@@ -156,7 +159,7 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  const split = splitChainAroundOperator(node, ZOD_METHOD_AND, ZOD_METHOD_OR);
+  const split = splitChainAroundOperator(node, ZOD_METHOD_AND, ZOD_CHAIN_COMPOSITION_OPERATORS);
   if (!split) {
     return undefined;
   }

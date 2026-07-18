@@ -185,15 +185,18 @@ function collectTrailingMethod(call: CallExpression, trailingMethods: ZodMethodC
  * `claimOperator` call and collecting the methods chained after it.
  *
  * Returns undefined when the chain contains no `claimOperator` link — or
- * when a `declineOperator` link sits outermore, because the parser owning
- * that operator must claim the chain instead.
+ * when any `declineOperators` link sits outermore, because the parser
+ * owning that composition operator must claim the chain instead. The
+ * claim operator is checked before the decline set, so callers may pass
+ * the full owning-operator set (their own operator included) as
+ * `declineOperators`.
  *
  * @public
  */
 export function splitChainAroundOperator(
   node: CallExpression,
   claimOperator: string,
-  declineOperator: string,
+  declineOperators: ReadonlySet<string>,
 ): OperatorChainSplit | undefined {
   const trailingMethods: ZodMethodCall[] = [];
   let current: Node = node;
@@ -207,7 +210,7 @@ export function splitChainAroundOperator(
     if (methodName === claimOperator) {
       return { operatorCall: current, trailingMethods };
     }
-    if (methodName === declineOperator) {
+    if (declineOperators.has(methodName)) {
       return undefined;
     }
     collectTrailingMethod(current, trailingMethods);

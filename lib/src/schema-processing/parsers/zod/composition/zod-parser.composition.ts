@@ -9,7 +9,9 @@ import { Node } from 'ts-morph';
 import {
   createZodProject,
   getZodMethodChain,
+  isZodOrZodNamespace,
   requireNumericArgument,
+  splitChainAroundOperator,
   throwUnsupportedMemberSchema,
   type ZodMethodCall,
 } from '../ast/zod-ast.js';
@@ -24,6 +26,7 @@ import {
 } from '../modifiers/zod-parser.chain-whitelist.js';
 import { parseEnum } from './zod-parser.enum.js';
 import {
+  ZOD_CHAIN_COMPOSITION_OPERATORS,
   ZOD_METHOD_ARRAY,
   ZOD_METHOD_ENUM,
   ZOD_METHOD_NATIVE_ENUM,
@@ -113,6 +116,63 @@ function applyArrayConstraints(schema: CastrSchema, methods: ZodMethodCall[]): v
 const ARRAY_CHAIN_METHODS = buildCompositeChainMethods(...Object.keys(ARRAY_CONSTRAINT_HANDLERS));
 const TUPLE_CHAIN_METHODS = buildCompositeChainMethods(ZOD_METHOD_REST);
 const ENUM_CHAIN_METHODS = buildCompositeChainMethods();
+
+/**
+ * Handle the `.array()` schema-method shorthand — `z.string().array()` is
+ * equivalent to `z.array(z.string())` (verified against zod 4.4.3).
+ * Trailing chained methods apply to the ARRAY
+ * (`z.string().array().optional()` is an optional array), while methods
+ * before `.array()` stay with the ELEMENT and are parsed recursively
+ * (`z.string().optional().array()` is an array of optional strings).
+ *
+ * Claims a chain only when `.array()` is the outermost composition link:
+ * declines when an `.or()` / `.and()` link sits outermore (the chained
+ * union/intersection parsers own those), and declines the base-call form
+ * `z.array(T)` — receiver is the zod namespace and the element travels as
+ * an argument — so the standard composition parser owns it.
+ *
+ * @internal
+ */
+export function parseChainedArrayFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const split = splitChainAroundOperator(node, ZOD_METHOD_ARRAY, ZOD_CHAIN_COMPOSITION_OPERATORS);
+  if (!split || split.operatorCall.getArguments().length > 0) {
+    return undefined;
+  }
+
+  const arrayExpr = split.operatorCall.getExpression();
+  if (!Node.isPropertyAccessExpression(arrayExpr)) {
+    return undefined;
+  }
+
+  const elementNode = arrayExpr.getExpression();
+  if (resolver && isZodOrZodNamespace(elementNode, resolver)) {
+    return undefined;
+  }
+
+  assertSupportedChainedMethods('.array()', split.trailingMethods, ARRAY_CHAIN_METHODS, node);
+
+  const itemSchema = parseSchema(elementNode);
+  if (!itemSchema) {
+    throwUnsupportedMemberSchema('.array() element', elementNode);
+  }
+
+  const schema: CastrSchema = {
+    type: ZOD_SCHEMA_TYPE_ARRAY,
+    items: itemSchema,
+    metadata: createDefaultMetadata(),
+  };
+
+  applyArrayConstraints(schema, split.trailingMethods);
+  return finalizeCompositeSchema(schema, split.trailingMethods);
+}
 
 /**
  * Process rest method for tuple.
@@ -229,8 +289,9 @@ export function parseCompositionZodFromNode(
   return finalizeCompositeSchema(schema, chainInfo.chainedMethods);
 }
 
-// Register this parser with the core dispatcher
+// Register parsers with the core dispatcher
 registerParser('composition', parseCompositionZodFromNode);
+registerParser('chainedArray', parseChainedArrayFromNode);
 
 /**
  * Parse a Zod composition expression string.
