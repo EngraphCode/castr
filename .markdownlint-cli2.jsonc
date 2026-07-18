@@ -33,8 +33,12 @@
     // Generated / runtime collaboration material.
     ".agent/state/collaboration/shared-comms-log.md",
     // Live ARC channel files — append-only while tailed; a lint --fix rewrite
-    // replays every follower's tail. Positive entry only (HARD RULE above).
-    ".agent/collaboration/rapid-comms/[0-9][0-9][0-9][0-9]-*.md",
+    // replays every follower's tail. A channel is ANY non-README markdown file
+    // at ANY depth under rapid-comms (the `isArcChannelFileName` convention;
+    // nested channels are first-class). Positive extglob entry only (HARD RULE
+    // above — no leading `!`): `!(README)` matches every basename except the
+    // exact `README`, so convention READMEs stay linted.
+    ".agent/collaboration/rapid-comms/**/!(README).md",
     // Adapter mirrors and harness dot-dirs (canon source is `.agent/`).
     ".cursor/**",
     ".claude/**",

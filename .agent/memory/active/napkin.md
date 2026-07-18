@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (statusline merge reconciliation + fixer-ignore widening — arc-bring worktree)
+
+- **The #24×#22 statusline render collision was structurally narrower than the pin overlap
+  suggested:** main's layout change lived entirely in `statusline-render.ts` (which this branch
+  never touched) and the arc feather rides inside `seg.indicators` (which #24's layout kept on the
+  identity row), so the SOURCE auto-merge was a clean take needing no fix — the whole union burden
+  fell on the conflicted test, where our one-line `arcChannels` shape change sat inside a region
+  theirs rewrote. Before assuming a semantic composition break, map WHICH side touched WHICH file
+  since the merge base; the pins colliding does not mean the mechanisms do.
+- **Composed-pin bite proof without leaving the merge state:** temporarily mutating the merged
+  renderer back to the pre-ruling layout (gauges on the identity row) turned exactly the three
+  union pins red (both #24 title-row tests + the new composed indicators-vs-gauges test), then a
+  byte-exact restore (diff vs index = 0) re-greened — a cheap test-immediate-fails proof usable
+  mid-merge where a checkout-based red run is off the table.
+- **markdownlint-cli2 ignores accept mid-pattern extglob negation:** the HARD RULE bans entries
+  BEGINNING with `!` (v0.22 zeroes the run false-green), but
+  `.agent/collaboration/rapid-comms/**/!(README).md` is a positive entry that cli2 honours —
+  nested channels excluded, exact-basename READMEs still linted, 643 files still scanned. The
+  idiom expresses "everything except one basename" without the banned re-include shape.
+- **Out-of-window live probe cure:** the real ARC channel's last write predated the 1800s liveness
+  window, so the composed-render proof used a scratchpad fixture repo (git init + fresh channel
+  file named for the seed-derived identity + `Channel-colour` line) — deterministic feather
+  rendering through the BUILT adapter without touching the primary checkout's live channel.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**
