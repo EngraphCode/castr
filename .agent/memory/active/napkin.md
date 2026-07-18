@@ -271,6 +271,46 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
 
+## 2026-07-18 — deep-handoff loss-scan captures (Stormbound Circling Kite / 62f93c)
+
+- **Wake-on-background-gate is unreliable at high subagent concurrency — poll quiet seats' DISK
+  STATE, never trust silence** (Highland Spiralling Summit's dictated lesson, owner-prompted: five
+  seats stalled after their background gates finished; the notification stream presented the
+  stalls as progress; the owner's "check them NOW" caught it. Silence from an agent whose gate
+  ran ≠ agent progressing — stat the worktree.)
+- **cwd-drift class, instances n+2 and a new sharpening**: a compound command's `cd` sent a push's
+  pre-push hook to the PRIMARY checkout after the announce said "from my worktree" — the announce
+  and the hook ran in different trees (corrected on-stream). Same session: two `cd agent-tools`
+  slips broke root-relative pathspecs. Sharpening: in compound commands that ANNOUNCE where they
+  run, derive the announce from `pwd` at run time, or split announce and action.
+- **PDR-139 estate asymmetry, observed live**: Resonance's comms CLI refuses unthreaded events
+  (thread-at-creation); castr's accepts them — my guest announce tripped their gate. Named
+  position: bring PDR-139 + the threading gate to castr (trigger family: with/after the
+  citations-rule follow-up on Midnight's merge). Stricter-is-better flows BOTH directions in one
+  day: castr→Resonance (tsdoc span, control-regex, glob-expiry) and Resonance→castr (PDR-139).
+- **ARC conservation-gate tension is a castr named position, not just upstream discussion**: an
+  append-only channel carrying a malformed header (observed live, first hour) cannot be edited
+  green, so its conservation commit will red validate-arc-channels. Discussion open with the home
+  estate (guest channel item 7; my lean: gate-recognised erratum convention). castr's first
+  conservation waypoint (post-#22-merge) hits this — resolve before conserving the liaison channel.
+- **candidate: succession-chain pattern (PDR-064 at n=3 in one day)** — Moonlit→Highland→me→Sylvan
+  all transferred cleanly; the load-bearing parts each time: the thread record as transfer
+  artifact (Sylvan Moment-2'd off the record ALONE, no live pre-positioning needed — the
+  strongest validation yet), two-moments authority discipline, standby drift-reports as
+  successor value pre-transfer, and overlap-window division by surface ownership. Pattern/PDR
+  candidate for the register.
+- **candidate: context-loss differential scan + metaloss recursion as a handoff-depth pattern
+  (n=2)** — this session's owner-directed deep scan (differential against the durable estate;
+  then a recursive pass for what the scan itself cannot see: interpretive knowledge, connective
+  dependency graphs, calibration/trust maps, checked-clean negative space) repeats Open Lofting
+  Feather's 2026-06-28 "what would be lost?" scan. Two instances = register candidate. The
+  metaloss layer's concrete yield today: the trust-map line below and the dependency-graph
+  handoff block (both invisible to a fact-inventory scan).
+- **Trust-map for successors (today's calibration)**: probes outranked reads every time tested;
+  all six delegated-agent reports were byte-verified accurate (commits matched staged diffs
+  reviewed); Highland's handoff claims ran 6/6 true; bot findings 3/3 real (two Copilot on #19,
+  one Codex on #16) — none dismissible as noise today.
+
 ## 2026-07-18 — successor session open (Stormbound Circling Kite / 62f93c)
 
 - **The 2026-07-17 registry gap is cured live**: seeded the absent `active-claims.json` with the
