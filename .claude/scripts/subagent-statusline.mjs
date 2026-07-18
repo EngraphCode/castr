@@ -29,14 +29,18 @@ if (!existsSync(adapterPath)) {
   process.exit(0);
 }
 
+// stderr is discarded: an adapter stack trace on this surface would surface
+// as statusline noise, which is exactly what the soft-fail contract forbids.
 const child = spawn(process.execPath, [adapterPath], {
-  stdio: 'inherit',
+  stdio: ['inherit', 'inherit', 'ignore'],
 });
 
 child.on('error', () => {
   process.exit(0);
 });
 
-child.on('exit', (code) => {
-  process.exit(code ?? 0);
+// A non-zero child exit is also a soft failure: exit 0 so the harness falls
+// back to its default subagent rows instead of surfacing an error.
+child.on('exit', () => {
+  process.exit(0);
 });

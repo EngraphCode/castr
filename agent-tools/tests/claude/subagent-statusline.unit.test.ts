@@ -1,4 +1,5 @@
 import {
+  clipVisible,
   formatModelDisplay,
   planSubagentStatusline,
   renderTaskRow,
@@ -118,4 +119,105 @@ describe('planSubagentStatusline', () => {
       expect(planSubagentStatusline(input).kind).toBe('noop');
     },
   );
+});
+
+describe('clipVisible', () => {
+  it('returns the row unchanged when the visible width fits', () => {
+    const row = `${DIM}abc${RESET}def`;
+    expect(clipVisible(row, 6)).toBe(row);
+  });
+
+  it('never counts ANSI codes toward the visible width', () => {
+    const row = `${DIM}${RESET}${DIM}12345${RESET}`;
+    expect(clipVisible(row, 5)).toBe(row);
+  });
+
+  it('clips to the column budget, ending with an ellipsis and a style reset', () => {
+    const clipped = clipVisible('abcdefghij', 5);
+    expect(stripAnsi(clipped)).toBe('abcd…');
+    expect(clipped.endsWith(RESET)).toBe(true);
+  });
+
+  it('clips the VISIBLE text of a styled row, not its bytes', () => {
+    const clipped = clipVisible(`${DIM}abcdefghij${RESET}`, 5);
+    expect(stripAnsi(clipped)).toBe('abcd…');
+  });
+});
+
+describe('planSubagentStatusline — columns budget (one line per task, never wrapped)', () => {
+  it('clips every rendered row to the payload columns', () => {
+    const plan = planSubagentStatusline(
+      JSON.stringify({ columns: 40, tasks: [{ ...task, label: 'x'.repeat(200) }] }),
+    );
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    const content: string = JSON.parse(plan.rows[0] ?? '').content;
+    expect([...stripAnsi(content)].length).toBe(40);
+    expect(stripAnsi(content).endsWith('…')).toBe(true);
+  });
+
+  it('leaves rows under the budget unclipped', () => {
+    const plan = planSubagentStatusline(JSON.stringify({ columns: 120, tasks: [task] }));
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    expect(stripAnsi(JSON.parse(plan.rows[0] ?? '').content)).toBe('review:gateway · Sonnet 5');
+  });
+
+  it.each([
+    ['zero', 0],
+    ['negative', -4],
+    ['fractional', 1.5],
+    ['string-typed', '80'],
+  ] as const)('ignores a %s columns value rather than guessing a budget', (_label, columns) => {
+    const plan = planSubagentStatusline(
+      JSON.stringify({ columns, tasks: [{ ...task, label: 'y'.repeat(200) }] }),
+    );
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    expect([...stripAnsi(JSON.parse(plan.rows[0] ?? '').content)].length).toBeGreaterThan(200);
+  });
+});
+
+describe('planSubagentStatusline — COLUMNS environment fallback (adapter-supplied)', () => {
+  // Platform contract: Claude Code sets COLUMNS/LINES before running the
+  // script (code.claude.com/docs/en/statusline §how-status-lines-work).
+  it('uses the adapter-supplied env columns when the payload carries none', () => {
+    const plan = planSubagentStatusline(
+      JSON.stringify({ tasks: [{ ...task, label: 'z'.repeat(200) }] }),
+      '40',
+    );
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    expect([...stripAnsi(JSON.parse(plan.rows[0] ?? '').content)].length).toBe(40);
+  });
+
+  it('prefers the payload columns over the env value', () => {
+    const plan = planSubagentStatusline(
+      JSON.stringify({ columns: 40, tasks: [{ ...task, label: 'z'.repeat(200) }] }),
+      '200',
+    );
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    expect([...stripAnsi(JSON.parse(plan.rows[0] ?? '').content)].length).toBe(40);
+  });
+
+  it.each([
+    ['non-numeric', 'abc'],
+    ['zero', '0'],
+    ['empty', ''],
+  ] as const)('ignores a %s env columns value', (_label, envColumns) => {
+    const plan = planSubagentStatusline(
+      JSON.stringify({ tasks: [{ ...task, label: 'z'.repeat(200) }] }),
+      envColumns,
+    );
+    if (plan.kind !== 'render') {
+      throw new Error('expected a render plan');
+    }
+    expect([...stripAnsi(JSON.parse(plan.rows[0] ?? '').content)].length).toBeGreaterThan(200);
+  });
 });

@@ -18,7 +18,9 @@ process.stdin.on('data', (chunk) => {
   stdinBuffer += chunk;
 });
 process.stdin.on('end', () => {
-  const plan = planSubagentStatusline(stdinBuffer);
+  // COLUMNS is set by the harness before the script runs (platform contract:
+  // code.claude.com/docs/en/statusline §how-status-lines-work, v2.1.153+).
+  const plan = planSubagentStatusline(stdinBuffer, process.env['COLUMNS']);
   if (plan.kind === 'render' && plan.rows.length > 0) {
     process.stdout.write(`${plan.rows.join('\n')}\n`);
   }
