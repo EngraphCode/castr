@@ -238,6 +238,92 @@ describe('Draft 07 dialect guard — $ref siblings are non-applicative in Draft 
     expect(result.length).toBeGreaterThan(0);
   });
 
+  it('accepts a declared Draft 07 document whose default value merely contains a $ref-shaped object', () => {
+    const result = parseJsonSchemaDocument({
+      $schema: DRAFT_07,
+      type: 'object',
+      properties: {
+        link: { type: 'object' },
+      },
+      additionalProperties: false,
+      default: { $ref: '#/definitions/Base', description: 'instance data, not a schema' },
+      definitions: { Base: { type: 'string' } },
+    });
+
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('accepts $ref-shaped instance data under const, enum, and examples', () => {
+    const constValue = { $ref: '#/x', title: 'just data' };
+
+    const result = parseJsonSchema({
+      $schema: DRAFT_07,
+      type: 'object',
+      const: constValue,
+      enum: [constValue],
+      examples: [{ $ref: '#/x', description: 'sample instance' }],
+    });
+
+    expect(result.const).toEqual(constValue);
+  });
+
+  it('accepts a declared Draft 07 document whose nested property default contains a $ref-shaped object', () => {
+    const result = parseJsonSchemaDocument({
+      $schema: DRAFT_07,
+      type: 'object',
+      properties: {
+        link: {
+          type: 'object',
+          default: { $ref: '#/definitions/Base', description: 'instance data' },
+        },
+      },
+      additionalProperties: false,
+      definitions: { Base: { type: 'string' } },
+    });
+
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('rejects a declared Draft 07 document with $ref siblings under items', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        $schema: DRAFT_07,
+        type: 'array',
+        items: { $ref: '#/definitions/Base', minLength: 5 },
+        definitions: { Base: { type: 'string' } },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
+  it('rejects a declared Draft 07 document with $ref siblings under then', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        $schema: DRAFT_07,
+        type: 'object',
+        if: { type: 'object' },
+        then: { $ref: '#/definitions/Base', description: 'carried?' },
+        definitions: { Base: { type: 'string' } },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
+  it('rejects a declared Draft 07 document with $ref siblings inside a definitions entry', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        $schema: DRAFT_07,
+        type: 'object',
+        properties: {
+          name: { $ref: '#/definitions/Alias' },
+        },
+        additionalProperties: false,
+        definitions: {
+          Base: { type: 'string' },
+          Alias: { $ref: '#/definitions/Base', minLength: 5 },
+        },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
   it('carries $ref siblings for declared 2020-12 documents', () => {
     const result = parseJsonSchema({
       $schema: 'https://json-schema.org/draft/2020-12/schema',
