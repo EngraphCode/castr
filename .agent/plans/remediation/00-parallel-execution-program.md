@@ -71,7 +71,7 @@ rather than restating it. Summary:
 | L-K6       | L18                                             | `lib/package.json` devDep (lockfile — merges alone)               | S    | none                                   |
 | L-K8       | M13                                             | `parsers/openapi/components/**` document threading                | S    | after L-D merges                       |
 | L-K9       | M9 (mapping)                                    | `writers/typescript/**` itemSchema sequential contract            | M    | after L-KBATCH + L-D merge             |
-| L-K10      | MCP nullability fold (PR #20 finding)           | `context/mcp/**` three converters + MCP regression test           | S    | after L-E merges                       |
+| L-K10      | MCP nullability fold (PR #20 finding)           | `context/mcp/**` three converters + MCP regression test           | S    | after L-E + L-D merge                  |
 
 The universal L-A and L-E edges (see §Merge waves) apply to every lane and are not repeated in the
 Depends-on column.
@@ -279,7 +279,7 @@ deserializeIR` round-trips (red: throws).
   fourth-consumer consolidation), then regenerate the PR #20 snapshots. Owned:
   `src/schema-processing/context/mcp/**` (the three converters) + an MCP regression test
   asserting the null union across all four emission surfaces (request body, output schema,
-  parameter sections, `$ref`-inlined). **Starts after L-E merges** (same three files as L-E's
+  parameter sections, `$ref`-inlined). **Starts after L-E AND L-D merge** (same three files as L-E's
   guard-consolidation diff). L-H's Forbidden entry for this surface stands — this is a dedicated
   lane, not an L-H extension. Proof: red-first — nullable IR emits scalar-only MCP schema today.
   Reviewers: mcp-expert, json-schema-expert, code-reviewer, test-reviewer.
@@ -299,6 +299,8 @@ edges (blocker → blocked, with the shared surface that forces the order):
 - feature slice → L-B (`generators/collections.ts`)
 - L-D → L-K8 (`buildSchemaComponents`-adjacent signatures)
 - L-E → L-K10 (the three MCP converter files are in L-E's guard-consolidation diff)
+- L-D → L-K10 (L-D's prototype-safety addendum touches `template-context.mcp.inline-json-schema.ts`,
+  one of L-K10's three converters — L-K10 must start from L-D's entries-assembly shape)
 - every lane → L-J (horizontal sweep runs last)
 
 Waves and the reference linearisation:
@@ -308,7 +310,8 @@ Waves and the reference linearisation:
   slot), L-H, L-D, **feature slice**, L-C, L-F — L-C and L-F take their final rebase over the
   feature merge, per the edges above.
 - **Wave 2:** L-B (starts on L-A's merge; final rebase after the feature merge), L-K8 (starts on
-  L-D's merge), L-K9 (starts on L-KBATCH's merge).
+  L-D's merge), L-K9 (starts on L-KBATCH's AND L-D's merges), L-K10 (starts on L-E's AND L-D's
+  merges — both touch its converter files).
 - **Wave 3:** L-J alone.
 
 Critical path ≈ L-A → L-B → L-J.
