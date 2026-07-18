@@ -341,3 +341,27 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   exception itself fired exactly as the danger list pre-attributed (68/69 files; only that
   test), and the three chain-masked suites proved individually green — evidence banked in the
   thread record; owner chose hold-for-honest-gate over --no-verify.
+- **Grounding-order finding (Case A of the concept-exploration proof, sharpened at closeout):**
+  session-open reads are systematically EARLIER than peer-visible presence because grounding
+  precedes watcher arming by construction — so every "registry empty"/"peer dead" grounding
+  conclusion is a stale-by-design hypothesis, not a fact. Candidate cures: timestamp state
+  assertions in team-start bodies ("empty AS OF <t>"); extend the comms-blind refusal family
+  from claim-opens to state-asserting broadcasts. candidate: pattern/rule sharpening.
+- **False-green-wrapper class: SECOND same-day instance (Stormbound's #22 push, 09:29 event)
+  — the graduation trigger is FIRED.** Same anatomy as mine: background/compound wrapper
+  swallows a pre-push failure, agent reports "landed", firsthand ref-check exposes it. Both
+  cured by read-the-log-in-full + honest exit propagation. Two independent instances, one day,
+  two agents → promote to pending-graduations (rule candidate: push-outcome claims require a
+  ref-check or full-log evidence, never a wrapper exit code).
+- **Localisation-density decision rule (worked twice today):** wholesale-take vs per-hunk
+  semantic merge is decided by MEASURING the host copy's localisation density (grep for
+  host-specific tokens/content), never by diff size. Token-neutral host copies (subagents
+  validator, adapter generator) → wholesale + prettier + token localisation; localisation-dense
+  copies (pr-lifecycle skill, 12 load-bearing local surfaces) → per-hunk. candidate: sharpens
+  the transplant-method distilled family.
+- **Reviewer-trust calibration from this session (for the successor):** the depth sweeps were
+  reliable on structure and WRONG twice on estate-negatives ("castr has no decision lenses";
+  the PDR-numbering-divergence hypothesis) — both caught by apex-tier firsthand §-reads exactly
+  as PDR-142's failure-class table predicts. My OWN fold record over-claimed once (WorkerTool
+  "threaded" when half-applied) — caught by Copilot's round, corrected in the plan. Verify the
+  round-1 fold adversarially (routed to Tempestuous) rather than trusting this list.

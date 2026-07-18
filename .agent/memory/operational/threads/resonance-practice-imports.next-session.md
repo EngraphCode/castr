@@ -43,6 +43,22 @@ confirmation surfaced in the PR body.
 copy of the unpushed branch plus this record. (Local refs are repo-wide; the worktree is the
 working state.)
 
+## Session-close state refresh (2026-07-18 ~09:35Z — Midnight Watching Night closeout)
+
+Supersedes the push-hold block above (conserved as history): PR #19 merged (61e30973) →
+main merged in (9fa057de, napkin semantically unioned) → full honest gate green (samples
+70/70 in this nested worktree) → pushed → **PR #23 OPEN** (12/12 checks green). A Copilot+
+Codex wave (8 threads) was folded ROUND-1 in `098fafa9` (gate-bypass fix, sole-template
+contract, WorkerTool threading completion, pr-watch ALL-GREEN exit implemented, three
+doc-truthing edits — full dispositions in the transplant plan §PR #23 round-1 fold). The fold
+commit + this continuity commit are pushed together at session close. **Owed on the PR: the 8
+thread replies+resolutions citing 098fafa9** — routed with the succession (below), with
+Tempestuous Wheeling Sky's adversarial verify of the fold preceding the replies.
+**Succession**: Tempestuous Wheeling Sky (b51b06) is the owner-designated successor; Moment-1
+pre-positioning broadcast at session close names the full roster/slice state. Residual
+ordering in this record is by load-bearing weight (a deliberate convention — the numbered
+residuals below are ranked, not chronological).
+
 ## Standing residuals (survive the plan's archive — this record owns them)
 
 1. **PDR-139 dangle** (the slice's ONE dangling link, deliberate): PDR-140 §Related →

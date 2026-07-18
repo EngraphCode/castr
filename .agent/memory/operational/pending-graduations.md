@@ -86,3 +86,17 @@ family or a testing-strategy corollary) + the generator-side quoting fix.
 `[captured: 2026-07-03 | source: napkin part-3 + PR #4 push refusals]`
 trigger-condition: a 2nd generator-formatter fixpoint instance, or the generator-side fix lands.
 status: pending.
+
+## push-outcome-claims-require-ref-check-evidence
+
+- **captured-date**: 2026-07-18
+- **source-surface**: napkin 2026-07-18 (Midnight Watching Night session — false-green push
+  specimen; Stormbound Circling Kite's PR #22 push, same day, same anatomy; Sylvan's L-H push
+  makes a third partial instance, cwd-slip variant)
+- **graduation-target**: rule (candidate name `push-claims-require-ref-evidence`): a claim that
+  a push/gated operation succeeded is valid ONLY with a remote ref-check (`git ls-remote`) or a
+  full-log read as evidence — never a wrapper/background exit code alone; compound wrappers and
+  cwd drift both produce exit-0 no-ops ("Everything up-to-date" is a tell, not a success).
+- **trigger-condition**: FIRED — two-plus independent same-day instances (three counting the
+  cwd variant); draft at the next consolidation pass.
+- **status**: due

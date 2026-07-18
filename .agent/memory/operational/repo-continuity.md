@@ -37,6 +37,23 @@ This block is a pointer, not a second narrative. The authoritative homes:
 
 ## Active Threads
 
+**Live thread pointers (2026-07-18 session close, Midnight Watching Night / 900203):**
+
+- `resonance-practice-imports` — PR #23 OPEN (three practice imports + reviewer folds); 8
+  thread replies owed citing 098fafa9; successor Tempestuous Wheeling Sky (b51b06) designated,
+  Moment-1 broadcast at close. Record:
+  [`threads/resonance-practice-imports.next-session.md`](threads/resonance-practice-imports.next-session.md)
+  (claude-code / claude-fable-5 / Midnight Watching Night / sole implementer / 2026-07-18).
+- `statusline-owner-adjustments` — castr slice committed UNPUSHED on
+  `feat/statusline-owner-adjustments` (worktree `statusline-adjust` — never clean it);
+  resonance side coordinated (Grove shape-b), unexecuted; owner-attention bring queued in the
+  record. Record:
+  [`threads/statusline-owner-adjustments.next-session.md`](threads/statusline-owner-adjustments.next-session.md)
+  (same identity / implementer / 2026-07-18).
+- `remediation-parallel-program` — orchestrated by Sylvan Flowering Branch (e6488b) since the
+  09:01Z Moment-2; not this session's boundary. Record:
+  [`threads/remediation-parallel-program.next-session.md`](threads/remediation-parallel-program.next-session.md).
+
 castr's multi-agent collaboration framework is **built and live** as of Phase 8
 (2026-06-20) — see the supersession note below. The earlier single-stream operation
 was a **constraint of the then-unbuilt framework, not a fit** (owner, 2026-06-18):
