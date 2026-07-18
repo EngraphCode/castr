@@ -12,7 +12,8 @@ source of volatile truth. Recompute every live fact below from `git`/`gh` before
 | agent_name                 | platform    | model          | session_id_prefix | role                   | first_session | last_session |
 | -------------------------- | ----------- | -------------- | ----------------- | ---------------------- | ------------- | ------------ |
 | Highland Spiralling Summit | claude-code | claude-fable-5 | 5fb0b5            | orchestrator/closeout  | 2026-07-17    | 2026-07-18   |
-| Stormbound Circling Kite   | claude-code | claude-fable-5 | 62f93c            | successor-orchestrator | 2026-07-18    | 2026-07-18   |
+| Stormbound Circling Kite   | claude-code | claude-fable-5 | 62f93c            | orchestrator (active)  | 2026-07-18    | 2026-07-18   |
+| Sylvan Flowering Branch    | claude-code | (successor)    | (on join)         | successor-orchestrator | (on join)     | (on join)    |
 
 ## Current objective
 
@@ -81,6 +82,27 @@ homed at
 
 Saved PR-thread JSON harvests live in the session job's temp dir (session-mortal) — regenerate
 with the GraphQL query in Next safe steps rather than hunting for them.
+
+## ORCHESTRATOR LIVE STATE (2026-07-18 ~08:55 UTC, Stormbound Circling Kite — supersedes the manifest below on current facts; RECOMPUTE before acting)
+
+Successor designation (owner, 2026-07-18): **Sylvan Flowering Branch** is the eventual
+successor-orchestrator. PDR-064 two-moments governs the transfer; this record is the
+authoritative transfer artifact if the session ends before Moment 2. Danger List unchanged.
+
+Since Highland's manifest: **#11 pushed + 3/3 threads resolved** (64feef9e); **#13 R99n6
+resolved** (fix at head 5a2a14af) — #13 fully clear; **#16 pushed + ALL 10 threads resolved**
+(the nine-round against 64ad35dc + a new Codex P2 fixed root-cause in 912644d4, pushed);
+**#20 opened, NOT draft, gate-verified green** (check:ci exit 0 in its worktree) — merge slot 2
+ready; **#21 opened + undrafted, gate-verified** — ready; **#19 reconciliation RESOLVED with
+probe evidence** (below) and its two Copilot threads are being fixed NOW (owner-flagged BLOCKING:
+Midnight Watching Night's resonance-imports push waits on #19's content reaching main; their
+4 commits hold ready; the citations-rule follow-up queues behind their merge); **#22 opened**
+(feat/arc-rapid-comms-bring — the ARC estate; four-reviewer panel folded; check:ci green).
+**Merge-ready for the owner right now: #10, #12, #13, #14, #15, #17, #20, #21** (order per
+§Merge waves: L-A #11 first, then L-E #20, L-I #21, micros, L-H #17, L-D #18, feature slice,
+L-C #13, L-F #16; #19 merges early by the resolved reconciliation — RAISED PRIORITY per the
+blocking chain). The comms/claims substrate is LIVE (seeded this session); two ARC channels run
+(castr liaison + a Resonance guest window for back-flow). Bot-watch persistent on all PRs.
 
 ## FINAL WORK-LOCATION MANIFEST (2026-07-18 08:15 UTC — session end of Highland Spiralling Summit)
 
