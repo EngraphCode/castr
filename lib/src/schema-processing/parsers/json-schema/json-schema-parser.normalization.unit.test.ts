@@ -410,7 +410,7 @@ describe('normalizeDraft07', () => {
 
       const result = normalizeDraft07(input);
 
-      expect(result.not?.$ref).toBe('#/$defs/Forbidden');
+      expect(getSchemaRef(result.not, 'not')).toBe('#/$defs/Forbidden');
     });
 
     it('preserves non-definitions $ref paths unchanged', () => {
@@ -505,5 +505,363 @@ describe('normalizeDraft07', () => {
 
       expect(result.exclusiveMaximum).toBe(100);
     });
+  });
+});
+
+describe('normalizeDraft07 — Draft 07 additionalItems → 2020-12 items', () => {
+  it('maps additionalItems beside tuple items to 2020-12 items', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }, { type: 'number' }],
+      additionalItems: { type: 'boolean' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['prefixItems']).toEqual([{ type: 'string' }, { type: 'number' }]);
+    expect(result['items']).toEqual({ type: 'boolean' });
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('rewrites a definitions $ref inside additionalItems while mapping', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: { $ref: '#/definitions/Tail' },
+      definitions: { Tail: { type: 'number' } },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(getSchemaRef(result['items'], 'items')).toBe('#/$defs/Tail');
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('normalizes Draft 07 constructs inside a mapped additionalItems schema', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: { type: 'number', minimum: 0, exclusiveMinimum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const items = getSchemaObject(result['items'], 'items');
+    expect(items?.exclusiveMinimum).toBe(0);
+    expect(items?.minimum).toBeUndefined();
+  });
+
+  it('drops additionalItems when items is a single schema (dead per Draft 07)', () => {
+    const input = draft07({
+      type: 'array',
+      items: { type: 'string' },
+      additionalItems: { type: 'number' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['items']).toEqual({ type: 'string' });
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('drops additionalItems when items is absent (dead per Draft 07)', () => {
+    const input = draft07({
+      type: 'array',
+      additionalItems: { type: 'number' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['items']).toBeUndefined();
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+});
+
+describe('normalizeDraft07 — recursion into conditional and 2020-12 applicator keywords (H1)', () => {
+  it('normalizes boolean exclusiveMinimum nested inside then', () => {
+    const input = draft07({
+      type: 'object',
+      if: { properties: { kind: { const: 'bounded' } } },
+      then: { type: 'number', minimum: 10, exclusiveMinimum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const thenSchema = getSchemaObject(result.then, 'then');
+    expect(thenSchema?.exclusiveMinimum).toBe(10);
+    expect(thenSchema?.minimum).toBeUndefined();
+  });
+
+  it('normalizes boolean exclusiveMaximum nested inside else', () => {
+    const input = draft07({
+      type: 'object',
+      if: { properties: { kind: { const: 'bounded' } } },
+      else: { type: 'number', maximum: 99, exclusiveMaximum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const elseSchema = getSchemaObject(result.else, 'else');
+    expect(elseSchema?.exclusiveMaximum).toBe(99);
+    expect(elseSchema?.maximum).toBeUndefined();
+  });
+
+  it('lifts definitions nested inside if', () => {
+    const input = draft07({
+      type: 'object',
+      if: {
+        type: 'object',
+        definitions: { Inner: { type: 'string' } },
+      },
+      then: { type: 'object' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const ifSchema = getSchemaObject(result.if, 'if');
+    expect(ifSchema?.$defs).toEqual({ Inner: { type: 'string' } });
+    expect(ifSchema !== undefined && 'definitions' in ifSchema).toBe(false);
+  });
+
+  it('normalizes patternProperties values', () => {
+    const input = draft07({
+      type: 'object',
+      patternProperties: {
+        '^x-': { type: 'number', minimum: 1, exclusiveMinimum: true },
+      },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const patternSchema = getSchemaObject(
+      result.patternProperties?.['^x-'],
+      'patternProperties.^x-',
+    );
+    expect(patternSchema?.exclusiveMinimum).toBe(1);
+    expect(patternSchema?.minimum).toBeUndefined();
+  });
+
+  it('normalizes propertyNames sub-schema', () => {
+    const input = draft07({
+      type: 'object',
+      propertyNames: { type: 'string', definitions: { NamePattern: { type: 'string' } } },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const propertyNames = getSchemaObject(result.propertyNames, 'propertyNames');
+    expect(propertyNames?.$defs).toEqual({ NamePattern: { type: 'string' } });
+    expect(propertyNames !== undefined && 'definitions' in propertyNames).toBe(false);
+  });
+
+  it('normalizes contains sub-schema', () => {
+    const input = draft07({
+      type: 'array',
+      contains: { type: 'number', minimum: 0, exclusiveMinimum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const contains = getSchemaObject(result.contains, 'contains');
+    expect(contains?.exclusiveMinimum).toBe(0);
+    expect(contains?.minimum).toBeUndefined();
+  });
+
+  it('normalizes schema-valued unevaluatedProperties and unevaluatedItems', () => {
+    const input = draft07({
+      type: 'object',
+      unevaluatedProperties: { type: 'number', minimum: 5, exclusiveMinimum: true },
+      unevaluatedItems: { type: 'number', maximum: 9, exclusiveMaximum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const unevaluatedProperties = getSchemaObject(
+      result.unevaluatedProperties,
+      'unevaluatedProperties',
+    );
+    expect(unevaluatedProperties?.exclusiveMinimum).toBe(5);
+    expect(unevaluatedProperties?.minimum).toBeUndefined();
+    const unevaluatedItems = getSchemaObject(result.unevaluatedItems, 'unevaluatedItems');
+    expect(unevaluatedItems?.exclusiveMaximum).toBe(9);
+    expect(unevaluatedItems?.maximum).toBeUndefined();
+  });
+
+  it('preserves boolean-valued conditional and unevaluated keywords', () => {
+    const input = draft07({
+      type: 'object',
+      if: { type: 'object' },
+      then: true,
+      else: false,
+      unevaluatedProperties: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.then).toBe(true);
+    expect(result.else).toBe(false);
+    expect(result.unevaluatedProperties).toBe(false);
+  });
+
+  it('rewrites $ref inside then at depth', () => {
+    const input = draft07({
+      type: 'object',
+      if: { properties: { kind: { const: 'linked' } } },
+      then: {
+        type: 'object',
+        properties: {
+          link: { $ref: '#/definitions/Link' },
+        },
+      },
+      definitions: { Link: { type: 'string' } },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const thenSchema = getSchemaObject(result.then, 'then');
+    expect(getSchemaRef(thenSchema?.properties?.['link'], 'then.properties.link')).toBe(
+      '#/$defs/Link',
+    );
+  });
+});
+
+describe('normalizeDraft07 — deep $ref rewriting (H1)', () => {
+  it('rewrites deep $ref pointers below a definitions entry', () => {
+    const input = draft07({
+      type: 'object',
+      properties: {
+        inner: { $ref: '#/definitions/Outer/properties/inner' },
+      },
+      definitions: {
+        Outer: {
+          type: 'object',
+          properties: { inner: { type: 'string' } },
+        },
+      },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(getSchemaRef(result.properties?.['inner'], 'properties.inner')).toBe(
+      '#/$defs/Outer/properties/inner',
+    );
+  });
+
+  it('leaves non-leading definitions segments unchanged', () => {
+    const input = draft07({
+      type: 'object',
+      properties: {
+        other: { $ref: '#/$defs/Outer/definitions/inner' },
+      },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(getSchemaRef(result.properties?.['other'], 'properties.other')).toBe(
+      '#/$defs/Outer/definitions/inner',
+    );
+  });
+});
+
+describe('boolean sub-schema honesty', () => {
+  it('rejects boolean root input with guidance (the public parsers accept boolean roots)', () => {
+    expect(() => normalizeDraft07(false)).toThrow(/parseJsonSchema/);
+    expect(() => normalizeDraft07(true)).toThrow(/parseJsonSchema/);
+  });
+
+  it('preserves contentSchema: false as a boolean', () => {
+    const input = draft07({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.contentSchema).toBe(false);
+  });
+
+  it('preserves contentSchema: true as a boolean', () => {
+    const input = draft07({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: true,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.contentSchema).toBe(true);
+  });
+
+  it('preserves a boolean schema under properties (never silently inverted)', () => {
+    const input = draft07({
+      type: 'object',
+      properties: { a: false },
+      additionalProperties: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.properties?.['a']).toBe(false);
+  });
+
+  it('preserves a boolean schema under $defs (never silently inverted)', () => {
+    const input = draft07({ $defs: { Nope: false } });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.$defs?.['Nope']).toBe(false);
+  });
+
+  it('preserves a boolean schema in allOf (never silently inverted)', () => {
+    const input = draft07({ allOf: [false] });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.allOf).toEqual([false]);
+  });
+
+  it('preserves a boolean items schema (never silently inverted)', () => {
+    const input = draft07({ type: 'array', items: false });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.items).toBe(false);
+  });
+
+  it('preserves a boolean not schema (never silently inverted)', () => {
+    const input = draft07({ not: false });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.not).toBe(false);
+  });
+
+  it('maps a boolean additionalItems beside tuple items to 2020-12 items', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.prefixItems).toEqual([{ type: 'string' }]);
+    expect(result.items).toBe(false);
+  });
+
+  it('still preserves booleans at the boolean-capable keywords', () => {
+    const input = draft07({
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      additionalProperties: false,
+      if: false,
+      unevaluatedProperties: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.if).toBe(false);
+    expect(result.unevaluatedProperties).toBe(false);
   });
 });

@@ -12,15 +12,24 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { isObjectSchemaType } from '../../ir/index.js';
-import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+import type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from './json-schema-object.js';
 import { isSchemaObjectType } from './json-schema-object.js';
+import { writeAccessMetadata, writeCoreMetadata } from './json-schema-fields.metadata.js';
 import {
   writeJsonSchema2020SimpleFields,
   writeJsonSchema2020RecursiveFields,
 } from './json-schema-2020-12-fields.js';
 
 // Re-export for convenience
-export type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+export type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from './json-schema-object.js';
 export { isSchemaObjectType } from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------
@@ -56,7 +65,7 @@ export function writeTypeField(schema: CastrSchema, result: JsonSchemaObject): v
 }
 
 /**
- * Write string-constraint fields.
+ * Write string-constraint fields (including contentEncoding/contentMediaType).
  * @internal
  */
 export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject): void {
@@ -72,28 +81,86 @@ export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject)
   if (schema.pattern !== undefined) {
     result.pattern = schema.pattern;
   }
+  if (schema.contentEncoding !== undefined) {
+    result.contentEncoding = schema.contentEncoding;
+  }
+  if (schema.contentMediaType !== undefined) {
+    result.contentMediaType = schema.contentMediaType;
+  }
 }
 
 /**
  * Write number-constraint fields.
+ *
+ * Boolean Draft-04-style `exclusiveMinimum`/`exclusiveMaximum` are
+ * normalised to the numeric 2020-12 form using the companion
+ * `minimum`/`maximum` (which is then suppressed), or rejected when no
+ * companion bound exists — never silently dropped.
+ *
  * @internal
  */
 export function writeNumberFields(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.minimum !== undefined) {
+  const exclusiveMinimum = normaliseExclusiveBound(
+    schema.minimum,
+    schema.exclusiveMinimum,
+    'minimum',
+    'exclusiveMinimum',
+  );
+  const exclusiveMaximum = normaliseExclusiveBound(
+    schema.maximum,
+    schema.exclusiveMaximum,
+    'maximum',
+    'exclusiveMaximum',
+  );
+
+  // Boolean exclusive:true consumes its companion bound during promotion.
+  if (schema.minimum !== undefined && schema.exclusiveMinimum !== true) {
     result.minimum = schema.minimum;
   }
-  if (schema.maximum !== undefined) {
+  if (schema.maximum !== undefined && schema.exclusiveMaximum !== true) {
     result.maximum = schema.maximum;
   }
-  if (typeof schema.exclusiveMinimum === 'number') {
-    result.exclusiveMinimum = schema.exclusiveMinimum;
+  if (exclusiveMinimum !== undefined) {
+    result.exclusiveMinimum = exclusiveMinimum;
   }
-  if (typeof schema.exclusiveMaximum === 'number') {
-    result.exclusiveMaximum = schema.exclusiveMaximum;
+  if (exclusiveMaximum !== undefined) {
+    result.exclusiveMaximum = exclusiveMaximum;
   }
   if (schema.multipleOf !== undefined) {
     result.multipleOf = schema.multipleOf;
   }
+}
+
+/**
+ * Normalise one exclusive bound to its numeric 2020-12 form.
+ *
+ * - numeric: already 2020-12 — returned unchanged
+ * - `true` with companion bound: promoted to that numeric value (Draft-04 form)
+ * - `true` without companion bound: fail-fast — there is no numeric form
+ * - `false` or absent: no exclusive bound (Draft-04 inclusive default)
+ *
+ * @internal
+ */
+function normaliseExclusiveBound(
+  bound: number | undefined,
+  exclusive: number | boolean | undefined,
+  boundKey: 'minimum' | 'maximum',
+  exclusiveKey: 'exclusiveMinimum' | 'exclusiveMaximum',
+): number | undefined {
+  if (typeof exclusive === 'number') {
+    return exclusive;
+  }
+  if (exclusive === true) {
+    if (bound === undefined) {
+      throw new Error(
+        `Cannot write boolean ${exclusiveKey}: true without a companion ${boundKey}: ` +
+          'there is no numeric 2020-12 form to normalise it to. ' +
+          `Provide a numeric ${boundKey}, or use the numeric ${exclusiveKey} form directly.`,
+      );
+    }
+    return bound;
+  }
+  return undefined;
 }
 
 /**
@@ -190,44 +257,6 @@ export function writeCompositionFields(
 }
 
 /**
- * Write core metadata (title, description, default, example, examples).
- * @internal
- */
-function writeCoreMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.title !== undefined) {
-    result.title = schema.title;
-  }
-  if (schema.description !== undefined) {
-    result.description = schema.description;
-  }
-  if (schema.default !== undefined) {
-    result.default = schema.default;
-  }
-  if (schema.example !== undefined) {
-    result.example = schema.example;
-  }
-  if (schema.examples !== undefined) {
-    result.examples = schema.examples;
-  }
-}
-
-/**
- * Write access metadata (deprecated, readOnly, writeOnly).
- * @internal
- */
-function writeAccessMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.deprecated !== undefined) {
-    result.deprecated = schema.deprecated;
-  }
-  if (schema.readOnly !== undefined) {
-    result.readOnly = schema.readOnly;
-  }
-  if (schema.writeOnly !== undefined) {
-    result.writeOnly = schema.writeOnly;
-  }
-}
-
-/**
  * Write enum / const fields.
  * @internal
  */
@@ -249,12 +278,23 @@ export function writeEnumFields(schema: CastrSchema, result: JsonSchemaObject): 
  *
  * Covers core fields + 2020-12 extension keywords.
  * Does NOT write OAS-only fields (xml, externalDocs, discriminator).
+ *
+ * `writeBooleanCapable` is used at boolean-capable keyword positions
+ * (`if`/`then`/`else`, `contentSchema`); it defaults to `writeSchema`, so
+ * writers whose recursion rejects `booleanSchema` nodes keep that policy.
+ * `writeUnreachableBranch` is used at statically-unreachable `then`/`else`
+ * positions (see `isThenBranchStaticallyUnreachable` and
+ * `isElseBranchStaticallyUnreachable` in `json-schema-2020-12-fields.ts`);
+ * it defaults to `writeBooleanCapable`, so writers that do not distinguish
+ * unreachable branches keep their existing behaviour.
  * @internal
  */
 export function writeAllJsonSchemaFields(
   schema: CastrSchema,
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
+  writeBooleanCapable: WriteBooleanCapableSchemaFn = writeSchema,
+  writeUnreachableBranch: WriteBooleanCapableSchemaFn = writeBooleanCapable,
 ): void {
   writeTypeField(schema, result);
   writeStringFields(schema, result);
@@ -266,5 +306,11 @@ export function writeAllJsonSchemaFields(
   writeCoreMetadata(schema, result);
   writeAccessMetadata(schema, result);
   writeJsonSchema2020SimpleFields(schema, result);
-  writeJsonSchema2020RecursiveFields(schema, result, writeSchema);
+  writeJsonSchema2020RecursiveFields(
+    schema,
+    result,
+    writeSchema,
+    writeBooleanCapable,
+    writeUnreachableBranch,
+  );
 }

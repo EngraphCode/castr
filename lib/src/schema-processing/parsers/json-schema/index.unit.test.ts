@@ -91,6 +91,84 @@ describe('parseJsonSchema', () => {
   });
 });
 
+describe('parseJsonSchema — boolean sub-schemas at nested positions (IR fidelity)', () => {
+  it('carries properties: { blocked: false } as a booleanSchema IR node', () => {
+    const result = parseJsonSchema({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        blocked: false,
+        name: { type: 'string' },
+      },
+    });
+
+    expect(result.properties?.get('blocked')?.booleanSchema).toBe(false);
+    expect(result.properties?.get('name')?.type).toBe('string');
+  });
+
+  it('carries properties: { open: true } as a booleanSchema IR node', () => {
+    const result = parseJsonSchema({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        open: true,
+      },
+    });
+
+    expect(result.properties?.get('open')?.booleanSchema).toBe(true);
+  });
+
+  it('carries items: false as a booleanSchema IR node', () => {
+    const result = parseJsonSchema({
+      type: 'array',
+      items: false,
+    });
+
+    expect(Array.isArray(result.items)).toBe(false);
+    const items = result.items;
+    if (items === undefined || Array.isArray(items)) {
+      throw new Error('Expected a single items schema');
+    }
+    expect(items.booleanSchema).toBe(false);
+  });
+
+  it('carries allOf: [false] as a booleanSchema IR member', () => {
+    const result = parseJsonSchema({
+      allOf: [false],
+    });
+
+    expect(result.allOf).toHaveLength(1);
+    expect(result.allOf?.[0]?.booleanSchema).toBe(false);
+  });
+
+  it('maps a Draft 07 boolean additionalItems beside tuple items to booleanSchema items', () => {
+    const result = parseJsonSchema({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: false,
+    });
+
+    expect(result.prefixItems).toHaveLength(1);
+    const items = result.items;
+    if (items === undefined || Array.isArray(items)) {
+      throw new Error('Expected a single items schema');
+    }
+    expect(items.booleanSchema).toBe(false);
+  });
+
+  it('carries a boolean $defs entry as a booleanSchema component', () => {
+    const components = parseJsonSchemaDocument({
+      $defs: {
+        Never: false,
+        Tag: { type: 'string' },
+      },
+    });
+
+    const never = components.find((c) => c.name === 'Never');
+    expect(never?.schema.booleanSchema).toBe(false);
+  });
+});
+
 describe('parseJsonSchemaDocument', () => {
   it('extracts $defs as components', () => {
     const components = parseJsonSchemaDocument({
@@ -166,7 +244,7 @@ describe('parseJsonSchemaDocument', () => {
     expect(components[0]?.name).toBe('Simple');
   });
 
-  it('skips $ref entries in $defs', () => {
+  it('carries $ref entries in $defs as reference components', () => {
     const components = parseJsonSchemaDocument({
       $defs: {
         Address: { type: 'object', additionalProperties: false },
@@ -174,8 +252,10 @@ describe('parseJsonSchemaDocument', () => {
       },
     });
 
-    expect(components).toHaveLength(1);
-    expect(components[0]?.name).toBe('Address');
+    expect(components).toHaveLength(2);
+    expect(components.map((c) => c.name)).toEqual(['Address', 'AliasedAddress']);
+    const alias = components.find((c) => c.name === 'AliasedAddress');
+    expect(alias?.schema.$ref).toBe('#/$defs/Address');
   });
 
   it('normalizes Draft 07 definitions before extracting', () => {

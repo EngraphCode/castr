@@ -2,6 +2,109 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (L-F PR #16 review-response round — worktree wf_6f9f06c9-91e-2)
+
+- **A guard that exempts a position and a writer that re-roots its assertion INTO that position
+  are incoherent by construction** (PR #12 review → L-F fix): the capability preflight traversal
+  (post-L-K1) skips statically-unreachable `then`/`else` (2020-12 §10.2.2: absent `if`, or a
+  literal boolean `if` fixing the outcome), but `writeJsonSchemaObject` re-runs
+  `assertSchemaSupportsIntegerTargetCapabilities` at EVERY recursion node, so the branch content
+  gets asserted as a fresh root mid-write → accepted-but-unwritable. Ruling (b): emit the branch
+  verbatim (dropping it breaks losslessness/round-trip, Rules 1–3) and skip only the assertion
+  (fail-fast is for genuinely impossible mappings, Rule 4 — a branch that can never constrain
+  instances demands nothing). Mechanism: shared `writeConditionalApplicators` routes unreachable
+  branches to a `writeUnreachableBranch` callback (defaults preserve other writers); the JSON
+  Schema writer supplies a verbatim (non-asserting) twin recursion. Fail-closed pins prove
+  reachable branches still throw.
+- **"Reject until carried" guards are debts that mature, and they mature ALL AT ONCE** (Codex P2,
+  PRRT_kwDOQHEhMc6R-Z-4): the boolean-sub-schema rejections were LAYERED — normalization's
+  `narrowSchemaOrRef` (first to fire, despite the review naming `parseSingleSchemaOrRef`), the
+  parser helper, AND the writer's object-form guard — so "carry booleans" meant widening
+  `JsonSchema2020` (Omit + redeclare every sub-schema seam key; interface extension cannot widen
+  inherited properties), collapsing the reject/carry helper dichotomies in BOTH layers
+  (replace-dont-bridge), and choosing the emission form. Emission verdict: boolean literals at
+  boolean-capable container positions; canonical object forms (`true` → `{}`,
+  `false` → `{ not: {} }`) at object-form-only container positions — the established egress
+  normal form ($defs bundle precedent), semantically exact per 2020-12 §4.3.2; byte-literal
+  emission at every nested position would force a narrow/wide split of the shared
+  `JsonSchemaObject`, whose structural assignability to the OAS seam is exercised at 6+ document
+  seams — named as a position, not smuggled in. Bonus fidelity win unlocked: Draft 07 tuple
+  `additionalItems: false` now maps to `items: false` instead of rejecting.
+- **sonarjs/function-return-type (S3800) is suppressed by a TSDoc `@returns` tag** — verified in
+  the rule source (`hasReturnTypeJSDoc`): that is why the union-returning `writeJsonSchema` never
+  fired while its new twin did. The sanctioned cure is documenting `@returns`, not a disable.
+  Companion: ADR-026 `castr/no-magic-string-comparison` bans a `branch === 'then'` parameter
+  comparison — splitting one string-parameterised predicate into two named predicates
+  (`isThenBranchStaticallyUnreachable` / `isElseBranchStaticallyUnreachable`) satisfied the rule
+  and read better anyway.
+- **A type-driven completeness lock only protects keywords the type VOCABULARY knows** (Codex P2,
+  `additionalItems`). The guard's position table is `Record<classified-keywords, shape>` so the
+  compiler forces coverage — but Draft 07 `additionalItems` was absent from `Draft07Input` AND the
+  base `SchemaObject`, so it was invisible to the lock, leaked through `stripDraft07Keys`'
+  rest-spread as an UNTYPED excess property, and silently dropped at parse: valid Draft 07 tuple
+  remainder constraints were ignored. Cure: model the keyword (flat key on `Draft07Input`), map it
+  in the tuple step (`items` array → `prefixItems`, `additionalItems` → 2020-12 `items`), reject
+  boolean forms explicitly, drop only the spec-dead non-tuple form, and add it to the guard table.
+  One-sweep audit (mine + json-schema-expert, independently): `additionalItems` was the ONLY
+  missing sub-schema position — every other Draft 07/2020-12 applicator is present, and
+  `$dynamicRef`/`$recursiveRef`/`$dynamicAnchor` are strings, correctly absent. Red-first: 8 new
+  tests (5 mapping/drop, 1 boolean rejection, 1 guard rejection, 1 end-to-end IR carry) all red
+  before the fix, 84/84 green after; the "drops dead additionalItems" pins were red BEFORE the fix
+  too — proof of the untyped leak, not just the missing mapping.
+- **A document-wide recursive guard is a false-positive engine: recursion must follow the
+  grammar, not the object graph** (912644d4, Codex P2). The Draft 07 `$ref`-sibling guard
+  recursed through EVERY object/array value, so `$ref`-shaped instance data under `default` /
+  `const` / `enum` / `examples` was "detected" as a reference and the document falsely rejected.
+  Class-eliminating cure: recurse only through sub-schema-bearing keyword positions, with the
+  position table typed `Record<keyof Draft07SubSchemaKeywords | flat-keys, shape>` so the
+  compiler forces the guard to track the normalization pipeline's single keyword-classification
+  source. Red-first: 3 acceptance tests failed at `#/default`, `#/const`,
+  `#/properties/link/default` before the fix; 3 new rejection pins (items/then/definitions
+  entry) plus all 5 existing guard cases stayed green throughout.
+- **A carrying fix creates an emission debt at every writer, and reviewers WILL find the one you
+  skipped:** 1bfbdd9 taught the parsers to carry `$ref` siblings and made the OpenAPI writer emit
+  them, but left the JSON Schema writer's bare-`$ref` early-return in place (even documented it as
+  an egress rule). Both review bots flagged it as P1 within hours: carrying data into the IR that
+  your own format's writer then drops is a round-trip regression, not a style choice. Lesson:
+  when ingress fidelity improves, sweep EVERY egress of the affected pair before closing the slice.
+- **`{ ...boolean }` is `{}` — spread-normalisation silently inverts boolean JSON Schemas:**
+  `normalizeDraft07(false)` produced `{}`, turning reject-all into allow-any at every object-typed
+  keyword position (properties, $defs, allOf, items, not, contentSchema, boolean roots). Probes
+  proved four distinct corruption sites from one root cause. Fix shape: preserve booleans where the
+  typed pipeline can carry them (roots, if/then/else, contentSchema, unevaluated*), reject
+  explicitly (with the `{}` / `{ "not": {} }` object-form migration hint) where the shared OAS seam
+  types are object-only. Never let a type-system boundary become a silent semantic rewrite.
+- **Dialect-declared input deserves dialect-faithful handling:** the parser normalises everything
+  to 2020-12 semantics and ignored `$schema`, so a declared Draft 07 document with `$ref` siblings
+  (dead per Draft 07) had them silently ACTIVATED. Resolution: fail fast on declared-Draft-07
+  `$ref` siblings with migration guidance; undeclared/2020-12 input keeps sibling carrying.
+- **Out-of-lane finding recorded for disposition: the Zod writer still emits only the referenced
+  name for `$ref` IR nodes** (writers/zod/index.ts `writeSchemaType`), so carried siblings
+  (e.g. `minLength`) are lost on JSON-Schema → IR → Zod; `writers/zod/**` is forbidden to L-F
+  (L-B surface). Needs a lane or follow-up slice.
+
+## 2026-07-17 (L-F lane, H4 nested $ref siblings + L14 array parity — worktree wf_6f9f06c9-91e-2)
+
+- **A fix wired at one level of a recursive structure is the SAME bug one level down:** the H4
+  sibling-carrying fix landed at the parser's top level while three per-file copies of
+  `parseSingleSchemaOrRef` (helpers, object-fields, 2020-keywords) plus an inline `items` branch
+  still stripped refs to bare `{ $ref }` at every nested position. Red-first proof: 12 of 14 new
+  nested-position tests failed before the fix. The cure was structural, not additive — route the
+  FULL reference object through `parseSchema` (whose `$ref` path already carries siblings) and
+  consolidate the three copies into one exported helper, so no future nested position can drift.
+  Consolidate-at-second-consumer applied late is exactly what left the copies behind.
+- **NEW FINDING (out of this lane's scope, needs a home): `convertUnionSchema`'s
+  `cloneWithoutSharedKeywords` silently deletes `prefixItems`, `unevaluatedItems`,
+  `unevaluatedProperties`, and `dependentSchemas` before union-member conversion**
+  (conversion/json-schema/convert-schema.ts) — so union-typed schemas BYPASS both L14 fail-fast
+  rejections (the keyword is gone before the applier can see it) and silently drop tuple info.
+  The L14 asymmetry cure landed this session (unevaluatedItems now fails fast exactly like
+  unevaluatedProperties in the non-union path); the union hole is shared symmetrically by both
+  keywords and predates this lane. Candidate for the remediation backlog.
+- **`CastrSchema.items` is `CastrSchema | CastrSchema[]`** — tests touching `items` need an
+  `Array.isArray` narrow before member access; caught by tsc, not by the (green) vitest run,
+  re-proving lint+typecheck-after-edit over test-green-only.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**

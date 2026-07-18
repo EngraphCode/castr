@@ -52,9 +52,10 @@ function writeSchemaFields(schema: CastrSchema, result: JsonSchemaObject): void 
 export function writeOpenApiSchema(schema: CastrSchema): JsonSchemaObject {
   if (schema.booleanSchema !== undefined) {
     throw new Error(
-      `Genuinely impossible: boolean schema \`${String(schema.booleanSchema)}\` cannot be ` +
-        'represented in OpenAPI 3.2 output. Boolean schemas are a pure JSON Schema 2020-12 ' +
-        'concept with no OpenAPI equivalent. Use an explicit type instead.',
+      `Boolean schema \`${String(schema.booleanSchema)}\` is rejected by the OpenAPI writer ` +
+        'as a matter of closed-world policy: canonical OpenAPI 3.2 output is restricted to ' +
+        'object-form schemas, even though its JSON Schema 2020-12 dialect permits boolean ' +
+        'schemas. Use an explicit object-form schema instead.',
     );
   }
 
@@ -63,8 +64,8 @@ export function writeOpenApiSchema(schema: CastrSchema): JsonSchemaObject {
   const result: JsonSchemaObject = {};
 
   if (schema.$ref !== undefined) {
+    // 2020-12 applies $ref siblings, so sibling fields are written too.
     result.$ref = schema.$ref;
-    return result;
   }
 
   writeSchemaFields(schema, result);

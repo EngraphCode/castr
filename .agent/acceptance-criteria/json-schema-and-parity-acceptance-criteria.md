@@ -13,7 +13,12 @@
 > significantly addressed the gaps:
 >
 > - `parseJsonSchemaDocument()` is now a full Draft 07 / 2020-12 document parser with standalone round-trip proofs
-> - Unsupported keywords are explicitly rejected via `UnsupportedJsonSchemaKeywordError`
+> - The `UnsupportedJsonSchemaKeywordError` machinery was removed (2026-07-17): its keyword set was
+>   empty and the rejection path was dead. Unrecognised keywords are currently dropped at parse;
+>   the "No Tolerances" bullet below remains **target** doctrine, not yet implemented
+> - Boolean sub-schemas at positions the parser does not yet carry are explicitly rejected
+>   (never silently normalised to `{}`), and declared Draft 07 documents with `$ref` siblings are
+>   rejected rather than silently reinterpreted with 2020-12 semantics (2026-07-18)
 > - `patternProperties`, `propertyNames`, `prefixItems`, `contains`, `if`/`then`/`else`, and `booleanSchema` are in the IR and JSON Schema writer round-trip; Zod/TS writers currently fail-fast (pending semantic mapping evaluation per the compatibility model)
 > - Only `$dynamicRef`/`$dynamicAnchor`/`$anchor` remain unparsed
 >
@@ -28,7 +33,7 @@
 - **Format Support:** The parser MUST accept JSON Schema Draft 07 and 2020-12.
 - **Strict Normalization:**
   - Draft 07 constructs MUST be losslessly normalized to the 2020-12 compatible IR (e.g., `dependencies` → `dependentRequired`/`dependentSchemas`, tuple `items` array → `prefixItems`, `definitions` → local references).
-- **No Tolerances:** Unsupported keywords or extensions MUST throw explicit, actionable errors. No silent bypassing.
+- **No Tolerances:** Unsupported keywords or extensions MUST throw explicit, actionable errors. No silent bypassing. _(Target — not yet implemented for unrecognised keywords, which are currently dropped at parse; see the implementation note above.)_
 
 ### JSON Schema Output Generation
 

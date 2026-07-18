@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Draft07NestedKeywords",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "type": "string" },
+    "inner": { "$ref": "#/definitions/Outer/properties/inner" }
+  },
+  "patternProperties": {
+    "^x-": { "type": "number", "minimum": 1, "exclusiveMinimum": true }
+  },
+  "if": {
+    "properties": {
+      "kind": { "const": "bounded" }
+    }
+  },
+  "then": {
+    "properties": {
+      "amount": { "type": "number", "minimum": 10, "exclusiveMinimum": true }
+    }
+  },
+  "else": {
+    "properties": {
+      "amount": { "type": "number", "maximum": 99, "exclusiveMaximum": true }
+    }
+  },
+  "definitions": {
+    "Outer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inner": { "type": "string" }
+      }
+    },
+    "PatternOnly": {
+      "patternProperties": {
+        "^x-": { "type": "string" }
+      }
+    }
+  }
+}

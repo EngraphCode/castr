@@ -8,8 +8,13 @@
  *
  * **Egress normal form:** The JSON Schema writer normalises `example` to
  * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
- * arrays. `$ref` schemas are emitted as bare `{ "$ref": ... }` without
- * siblings.
+ * arrays. Boolean `exclusiveMinimum`/`exclusiveMaximum` are normalised to
+ * the numeric 2020-12 form (or rejected when no companion bound exists).
+ * `booleanSchema` IR nodes emit as boolean literals at boolean-capable
+ * container positions (`if`/`then`/`else`, `contentSchema`, document root)
+ * and as their canonical object forms (`true` → `{}`,
+ * `false` → `{ "not": {} }`) at object-form-only container positions.
+ * Both writers emit `$ref` sibling keywords (2020-12 applies them).
  *
  * @internal
  */
@@ -28,6 +33,19 @@ import type { CastrSchema } from '../../ir/index.js';
  * @internal
  */
 export type WriteSchemaFn = (schema: CastrSchema) => JsonSchemaObject;
+
+/**
+ * Recursive write callback for boolean-capable keyword positions
+ * (`if`/`then`/`else`, `contentSchema`).
+ *
+ * The JSON Schema writer supplies a function that emits `booleanSchema`
+ * IR nodes as JSON Schema booleans; the OpenAPI writer keeps its
+ * object-form-only {@link WriteSchemaFn}, preserving its closed-world
+ * boolean-schema rejection.
+ *
+ * @internal
+ */
+export type WriteBooleanCapableSchemaFn = (schema: CastrSchema) => JsonSchemaObject | boolean;
 
 /**
  * Mutable JSON Schema output object.
@@ -86,6 +104,8 @@ export interface JsonSchemaObject {
   // Metadata
   title?: string;
   description?: string;
+  /** OAS 3.1+ reference summary, emitted as a `$ref` sibling annotation. */
+  summary?: string;
   default?: unknown;
   example?: unknown;
   examples?: unknown[];
@@ -111,11 +131,12 @@ export interface JsonSchemaObject {
   $dynamicAnchor?: string;
   contentEncoding?: string;
   contentMediaType?: string;
+  contentSchema?: boolean | JsonSchemaObject;
 
   // Conditional applicators (JSON Schema 2020-12)
-  if?: JsonSchemaObject;
-  then?: JsonSchemaObject;
-  else?: JsonSchemaObject;
+  if?: boolean | JsonSchemaObject;
+  then?: boolean | JsonSchemaObject;
+  else?: boolean | JsonSchemaObject;
 
   // JSON Schema document-level
   $defs?: Record<string, JsonSchemaObject>;

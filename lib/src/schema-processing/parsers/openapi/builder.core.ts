@@ -47,16 +47,10 @@ export function buildCastrSchema(
   schema: SchemaObject | ReferenceObject,
   context: IRBuildContext,
 ): CastrSchema {
-  // Handle $ref - preserve reference, metadata is computed later
+  // Handle $ref — preserve the reference and carry any sibling keywords
+  // (OAS 3.1+ uses the JSON Schema 2020-12 dialect, which applies them).
   if (isReferenceObject(schema)) {
-    // For references, create a minimal schema object for metadata building
-    const emptySchema: SchemaObject = {};
-    const metadata = buildCastrSchemaNode(emptySchema, context);
-
-    return {
-      $ref: schema.$ref,
-      metadata,
-    };
+    return buildRefCastrSchema(schema, context);
   }
 
   // Build schema metadata
@@ -77,6 +71,36 @@ export function buildCastrSchema(
   // Update Zod chain with validations from constraints
   updateZodChain(irSchema);
 
+  return irSchema;
+}
+
+/**
+ * Build an IR schema for a `$ref` node, carrying sibling keywords.
+ *
+ * Pure references stay minimal (`{ $ref, metadata }`). When sibling
+ * keywords are present they are built through the ordinary schema path
+ * and the reference is attached, so nothing is silently dropped. The
+ * OAS 3.1+ reference `summary` annotation is carried into the IR
+ * `summary` field.
+ *
+ * @internal
+ */
+function buildRefCastrSchema(schema: ReferenceObject, context: IRBuildContext): CastrSchema {
+  const { $ref, summary, ...siblings } = schema;
+
+  let irSchema: CastrSchema;
+  if (Object.keys(siblings).length === 0) {
+    // For pure references, create a minimal schema object for metadata building
+    const emptySchema: SchemaObject = {};
+    irSchema = { $ref, metadata: buildCastrSchemaNode(emptySchema, context) };
+  } else {
+    irSchema = buildCastrSchema(siblings, context);
+    irSchema.$ref = $ref;
+  }
+
+  if (summary !== undefined) {
+    irSchema.summary = summary;
+  }
   return irSchema;
 }
 

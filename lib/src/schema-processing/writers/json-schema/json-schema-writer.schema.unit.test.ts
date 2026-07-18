@@ -9,6 +9,8 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
+import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
+import { parseJsonSchema } from '../../parsers/json-schema/index.js';
 import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
@@ -111,19 +113,6 @@ describe('writeJsonSchema', () => {
       const result = writeJsonSchemaAsObject(schema);
 
       expect(result.anyOf).toEqual([{ $ref: '#/$defs/LinkedListNode' }, { type: 'null' }]);
-    });
-  });
-
-  describe('$ref passthrough', () => {
-    it('returns $ref without other fields', () => {
-      const schema = createSchema({
-        $ref: '#/$defs/Address',
-        type: 'object',
-      });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ $ref: '#/$defs/Address' });
     });
   });
 
@@ -549,5 +538,342 @@ describe('writeJsonSchema — boolean schemas', () => {
     const result = writeJsonSchema(schema);
 
     expect(result).toBe(true);
+  });
+});
+
+describe('writeJsonSchema — $ref emission', () => {
+  it('returns bare $ref for a pure reference', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Address',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({ $ref: '#/$defs/Address' });
+  });
+
+  it('emits sibling keywords alongside $ref (2020-12 applies them)', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+  });
+
+  it('emits a type: object sibling with closed-world semantics, matching the parser IR', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Address',
+      type: 'object',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Address',
+      type: 'object',
+      additionalProperties: false,
+    });
+  });
+
+  it('emits the reference summary annotation alongside $ref', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Base',
+      summary: 'Short reference summary',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Base',
+      summary: 'Short reference summary',
+    });
+  });
+});
+
+describe('writeJsonSchema — boolean sub-schema emission', () => {
+  it('emits if/then boolean schemas as booleans, not empty objects', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({ type: 'string' }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'string' },
+    });
+  });
+
+  it('emits contentSchema: false as a boolean, not an empty object', () => {
+    const schema = createSchema({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: createSchema({ booleanSchema: false }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: false,
+    });
+  });
+
+  it('emits the canonical object form for booleanSchema: false at an object-form container position', () => {
+    // Egress normal form: positions whose emission container is object-form
+    // only cannot carry a boolean literal, so the semantically-exact
+    // canonical object form is emitted instead (`false` ≡ `{ not: {} }`).
+    const schema = createSchema({
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        flag: createSchema({ booleanSchema: false }),
+      }),
+      additionalProperties: false,
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        flag: { not: {} },
+      },
+      additionalProperties: false,
+    });
+  });
+
+  it('emits the canonical object form for booleanSchema: true at an object-form container position', () => {
+    const schema = createSchema({
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        open: createSchema({ booleanSchema: true }),
+      }),
+      additionalProperties: false,
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        open: {},
+      },
+      additionalProperties: false,
+    });
+  });
+
+  it('emits canonical object forms for boolean items and allOf members', () => {
+    const schema = createSchema({
+      allOf: [createSchema({ booleanSchema: false })],
+      items: createSchema({ booleanSchema: false }),
+      type: 'array',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'array',
+      allOf: [{ not: {} }],
+      items: { not: {} },
+    });
+  });
+});
+
+describe('writeJsonSchema — nested boolean sub-schema round-trip (parse → write)', () => {
+  it('round-trips the reviewer-named shapes to semantically-exact output', () => {
+    const parsed = parseJsonSchema({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        blocked: false,
+        tags: { type: 'array', items: false },
+      },
+      allOf: [false],
+    });
+
+    const result = writeJsonSchemaAsObject(parsed);
+
+    expect(result).toEqual({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        blocked: { not: {} },
+        tags: { type: 'array', items: { not: {} } },
+      },
+      allOf: [{ not: {} }],
+    });
+  });
+});
+
+describe('writeJsonSchema — capability assertions honour conditional branch reachability', () => {
+  const INT64_ERROR = /cannot represent signed 64-bit integer semantics natively/;
+
+  function createInt64Schema(): CastrSchema {
+    return createSchema({
+      type: 'integer',
+      format: 'int64',
+      integerSemantics: 'int64',
+    });
+  }
+
+  it('emits an unreachable then branch verbatim instead of failing its capability assertion', () => {
+    // Guard/writer coherence: the capability preflight skips branches that can
+    // never apply (JSON Schema 2020-12 core §10.2.2 — `if: false` never
+    // validates, so `then` never constrains instances). The writer must apply
+    // the same rule while still emitting the branch verbatim (losslessness).
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('emits an unreachable else branch verbatim when if is literally true', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: true }),
+      else: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: true,
+      else: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('emits then and else verbatim when if is absent (2020-12 ignores them entirely)', () => {
+    const schema = createSchema({
+      then: createInt64Schema(),
+      else: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      then: { type: 'integer', format: 'int64' },
+      else: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('exempts the whole unreachable subtree, not just its root', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          big: createInt64Schema(),
+        }),
+      }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: {
+        type: 'object',
+        properties: {
+          big: { type: 'integer', format: 'int64' },
+        },
+        additionalProperties: false,
+      },
+    });
+  });
+
+  it('exempts nested conditionals inside an unreachable branch', () => {
+    // The nested `if` is object-form (both nested branches would be live),
+    // but the whole subtree sits under `if: false` and can never apply.
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({
+        if: createSchema({ type: 'string' }),
+        then: createInt64Schema(),
+      }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: {
+        if: { type: 'string' },
+        then: { type: 'integer', format: 'int64' },
+      },
+    });
+  });
+
+  it('emits the carrier-less integer shape for bigint semantics inside an unreachable branch', () => {
+    // JSON Schema has no bigint carrier keyword; in a live position that is a
+    // fail-fast. In a branch that can never apply, the capability demand is
+    // vacuous, so the writer emits the honest carrier-less shape instead.
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({ type: 'integer', integerSemantics: 'bigint' }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'integer' },
+    });
+  });
+
+  it('still fails the assertion for a reachable then branch (if: true)', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: true }),
+      then: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
+  });
+
+  it('still fails the assertion for a reachable else branch (if: false)', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      else: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
+  });
+
+  it('still fails the assertion for branches gated by an object-form if', () => {
+    const schema = createSchema({
+      if: createSchema({ type: 'string' }),
+      then: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
   });
 });

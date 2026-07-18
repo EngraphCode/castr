@@ -9,12 +9,7 @@
  * @internal
  */
 
-import {
-  type SchemaObject,
-  type ReferenceObject,
-  type SchemaObjectType,
-  isReferenceObject,
-} from '../../../shared/openapi-types.js';
+import type { ReferenceObject, SchemaObjectType } from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
@@ -80,9 +75,6 @@ export function parseStringConstraints(input: JsonSchema2020, result: CastrSchem
   }
   if (input.pattern !== undefined) {
     result.pattern = input.pattern;
-  }
-  if (input.contentEncoding !== undefined) {
-    result.contentEncoding = input.contentEncoding;
   }
 
   applyInferredUuidVersionFromPattern(result);
@@ -159,10 +151,8 @@ export function parseArrayFields(
   result: CastrSchema,
   parseSchema: ParseSchemaFn,
 ): void {
-  if (input.items !== undefined && !isReferenceObject(input.items)) {
-    result.items = parseSchema(input.items);
-  } else if (input.items !== undefined) {
-    result.items = parseSchema({ $ref: input.items.$ref });
+  if (input.items !== undefined) {
+    result.items = parseSingleSchemaOrRef(input.items, parseSchema);
   }
   if (input.prefixItems !== undefined) {
     result.prefixItems = input.prefixItems.map((i) => parseSingleSchemaOrRef(i, parseSchema));
@@ -201,12 +191,40 @@ export function parseComposition(
 
 // ── Shared utility ────────────────────────────────────────────────────────
 
-function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
+/**
+ * Parse a sub-schema value: a boolean schema, a schema object, or a `$ref`.
+ *
+ * JSON Schema 2020-12 applies keywords that appear next to `$ref`, so
+ * reference values are routed through `parseSchema` in full — its `$ref`
+ * handling carries the siblings (H4) — instead of being stripped to a bare
+ * `{ $ref }`. The reference `summary` annotation (OAS 3.1+ Reference
+ * Object) is carried into the IR `summary` field.
+ *
+ * Boolean schemas are valid at every JSON Schema schema position (core
+ * §4.3.2) and are carried as `{ booleanSchema, metadata }` IR nodes — never
+ * spread or normalised (`{ ...false }` would silently invert reject-all
+ * into allow-any). Output formats that cannot represent a boolean at a
+ * given position decide their own handling at emission time.
+ * Metadata is constructed inline to avoid a circular dependency with
+ * core.ts.
+ *
+ * @internal
+ */
+export function parseSingleSchemaOrRef(
+  value: JsonSchema2020 | ReferenceObject | boolean,
   parseSchema: ParseSchemaFn,
 ): CastrSchema {
-  if (isReferenceObject(value)) {
-    return parseSchema({ $ref: value.$ref });
+  if (typeof value === 'boolean') {
+    return {
+      booleanSchema: value,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
   }
   return parseSchema(value);
 }

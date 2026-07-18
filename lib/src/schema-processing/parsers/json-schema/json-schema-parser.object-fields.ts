@@ -9,11 +9,6 @@
  */
 
 import {
-  type ReferenceObject,
-  type SchemaObject,
-  isReferenceObject,
-} from '../../../shared/openapi-types.js';
-import {
   CastrSchemaProperties,
   ensureObjectTypeForObjectKeywords,
   isObjectSchemaType,
@@ -23,6 +18,7 @@ import {
   buildNonStrictObjectRejectionMessage,
   describePortableNonStrictObjectInput,
 } from '../../object-semantics.js';
+import { parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
@@ -34,7 +30,13 @@ export function parseObjectFields(
   parseSchema: ParseSchemaFn,
 ): void {
   result.type = ensureObjectTypeForObjectKeywords(result.type, {
-    hasProperties: input.properties !== undefined,
+    // patternProperties / propertyNames are property-defining keywords too
+    // (L12): they make the schema an object and subject to closed-world
+    // enforcement exactly like `properties`.
+    hasProperties:
+      input.properties !== undefined ||
+      input.patternProperties !== undefined ||
+      input.propertyNames !== undefined,
     hasRequired: input.required !== undefined && input.required.length > 0,
     hasAdditionalProperties: input.additionalProperties !== undefined,
   });
@@ -126,20 +128,11 @@ function isObjectKeywordCandidate(input: JsonSchema2020, result: CastrSchema): b
   return (
     isObjectSchemaType(result.type) ||
     input.properties !== undefined ||
+    input.patternProperties !== undefined ||
+    input.propertyNames !== undefined ||
     (Array.isArray(input.required) && input.required.length > 0) ||
     input.additionalProperties !== undefined
   );
-}
-
-function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
-  parseSchema: ParseSchemaFn,
-): CastrSchema {
-  if (isReferenceObject(value)) {
-    return parseSchema({ $ref: value.$ref });
-  }
-
-  return parseSchema(value);
 }
 
 function arrayContains(values: readonly string[], expectedValue: string): boolean {
