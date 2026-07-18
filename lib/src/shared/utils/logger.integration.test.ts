@@ -1,3 +1,15 @@
+/**
+ * Logger (integration)
+ *
+ * `createLogger` is an integration point per `testing-strategy.md`: the
+ * {@link LoggerSink} is an IO interface injected as an argument. These tests
+ * therefore carry the `*.integration.test.ts` category — the injected
+ * recording sink is a simple fake (captured calls, no logic), which the
+ * test-quality rules permit in integration tests but ban from unit tests
+ * (`.agent/rules/test-immediate-fails.md` items 11 and 20: unit tests are
+ * pure, and the file name IS the category).
+ */
+
 import { describe, expect, it } from 'vitest';
 import { createLogger, type LoggerSink } from './logger.js';
 

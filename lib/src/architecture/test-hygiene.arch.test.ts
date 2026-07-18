@@ -2,25 +2,31 @@
  * Test Hygiene Enforcement Tests
  *
  * Architectural guard over the suites collected by the primary `pnpm test`
- * gate. It enforces, by textual scan, these rules from `testing-strategy.md`:
+ * gate. It enforces, by TypeScript-AST scan (see `test-hygiene-scanner.ts`
+ * for the predicates), these rules from `testing-strategy.md`:
  *
  * - **No filesystem-module imports** (`fs`, `fs/promises`, `node:fs`,
- *   `node:fs/promises`, `fs-extra` — static, dynamic, or `require`).
- *   Fixture-driven suites that read from disk belong in the e2e
- *   (`tests-e2e/`) or generated (`tests-generated/`) gates.
+ *   `node:fs/promises`, `fs-extra` — static including side-effect imports,
+ *   dynamic, `require`, import-equals, or re-export). Fixture-driven suites
+ *   that read from disk belong in the e2e (`tests-e2e/`) or generated
+ *   (`tests-generated/`) gates.
  * - **No module-registry mocking** — `vi.mock`, `vi.doMock`, `vi.unmock`,
  *   `vi.doUnmock`.
  * - **No global-state mutation via vitest helpers** — `vi.spyOn` on
  *   `console`/`globalThis`/`process`, `vi.stubGlobal`, `vi.stubEnv`.
- * - **No direct assignment to `console.*` or `process.env.*`.**
+ * - **No direct mutation of `console.*` or `process.env.*`** — any
+ *   assignment operator (plain or compound), `delete`, or
+ *   increment/decrement.
  *
  * Scanned files: every `*.test.ts` the primary gate collects — mirroring the
  * `include`/`exclude` globs in `vitest.config.ts` (`src/**` and
  * `eslint-rules/**`; `src/characterisation/**` and
  * `src/validation/scalar-guard.test.ts` are excluded there) — minus the
  * architecture suite itself (`*.arch.test.ts`). Architecture tests are the
- * one exemption: they read the source tree by design and quote the forbidden
- * patterns as data, so they are reviewed by hand instead of scanned.
+ * one exemption: they read the source tree by design, so they really import
+ * `node:fs` and are reviewed by hand instead of scanned. (Quoting forbidden
+ * patterns as string data needs no exemption — the AST scan ignores data, so
+ * the scanner's own unit suite is scanned like any other gated test.)
  *
  * Enforcement is baseline-exact: each check asserts its violations equal a
  * named known-violations list (empty for most checks). Any new violation
@@ -36,56 +42,12 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-
-/**
- * Extracts the module specifier from `import ... from`, `import(...)`, and
- * `require(...)` forms.
- */
-const IMPORT_SPECIFIER_PATTERN = /(?:from|import\s*\(|require\s*\()\s*['"]([^'"]+)['"]/g;
-
-/**
- * Filesystem modules that gated tests must not import.
- */
-const FS_MODULE_SPECIFIERS: ReadonlySet<string> = new Set([
-  'fs',
-  'fs/promises',
-  'node:fs',
-  'node:fs/promises',
-  'fs-extra',
-]);
-
-/**
- * True when the file content imports a filesystem module (static or dynamic).
- */
-function usesFsModule(content: string): boolean {
-  return Array.from(content.matchAll(IMPORT_SPECIFIER_PATTERN)).some(
-    (match) => match[1] !== undefined && FS_MODULE_SPECIFIERS.has(match[1]),
-  );
-}
-
-/**
- * Module-registry mocking: `vi.mock`/`vi.doMock` replace real modules with
- * stubs in the shared registry (`testing-strategy.md` bans `vi.doMock` by
- * name and requires simple fakes passed as arguments instead), and
- * `vi.unmock`/`vi.doUnmock` exist only to manage that same mutation.
- */
-const VI_MODULE_MOCK_PATTERN = /vi\s*\.\s*(?:mock|doMock|unmock|doUnmock)\s*\(/;
-
-/**
- * Global-state mutation via vitest helpers: spying on `console`,
- * `globalThis`, or `process`, and `vi.stubGlobal`/`vi.stubEnv`.
- */
-const VI_GLOBAL_MUTATION_PATTERN =
-  /vi\s*\.\s*(?:spyOn\s*\(\s*(?:console|globalThis|process)\b|stubGlobal\s*\(|stubEnv\s*\()/;
-
-/**
- * Direct assignment to global `console` methods or `process.env` entries
- * (e.g. `console.warn = ...`, `process.env.FOO = ...`,
- * `process.env['FOO'] = ...`). Reads are fine; only assignment mutates
- * global state.
- */
-const DIRECT_GLOBAL_ASSIGNMENT_PATTERN =
-  /(?:console\.\w+|process\.env(?:\.\w+|\[[^\]]+\]))\s*=[^=]/;
+import {
+  mocksModuleRegistry,
+  mutatesConsoleOrProcessEnv,
+  mutatesGlobalStateViaVitestHelpers,
+  usesFsModule,
+} from './test-hygiene-scanner.js';
 
 /**
  * Directories collected by the primary `pnpm test` gate (relative to
@@ -212,25 +174,19 @@ describe('Test Hygiene Enforcement', () => {
   });
 
   it('does not mock the module registry outside the named baseline', () => {
-    const violations = findViolations(libRoot, gatedTestFiles, (content) =>
-      VI_MODULE_MOCK_PATTERN.test(content),
-    );
+    const violations = findViolations(libRoot, gatedTestFiles, mocksModuleRegistry);
 
     expect(violations).toEqual([...KNOWN_MODULE_MOCK_VIOLATIONS]);
   });
 
   it('does not mutate global state via vitest helpers in any gated test', () => {
-    const violations = findViolations(libRoot, gatedTestFiles, (content) =>
-      VI_GLOBAL_MUTATION_PATTERN.test(content),
-    );
+    const violations = findViolations(libRoot, gatedTestFiles, mutatesGlobalStateViaVitestHelpers);
 
     expect(violations).toEqual([]);
   });
 
-  it('does not assign to console or process.env in any gated test', () => {
-    const violations = findViolations(libRoot, gatedTestFiles, (content) =>
-      DIRECT_GLOBAL_ASSIGNMENT_PATTERN.test(content),
-    );
+  it('does not mutate console or process.env in any gated test', () => {
+    const violations = findViolations(libRoot, gatedTestFiles, mutatesConsoleOrProcessEnv);
 
     expect(violations).toEqual([]);
   });

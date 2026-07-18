@@ -128,9 +128,11 @@ describe('Zod Parser Fixture Round-Trip', () => {
         });
       }
 
-      // Structural match — serialize to JSON first to match the
-      // CastrSchemaProperties format.
-      expect(serializedBoundary).toMatchObject(expectedFixture.schemas);
+      // Strict equality — serialize to JSON first to match the
+      // CastrSchemaProperties format. `toEqual` (not `toMatchObject`) so an
+      // unintended extra schema or extra nested IR field fails the round-trip
+      // exactly like a missing one.
+      expect(serializedBoundary).toEqual(expectedFixture.schemas);
     });
   }
 });
