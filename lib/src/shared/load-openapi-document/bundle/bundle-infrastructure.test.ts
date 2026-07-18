@@ -17,9 +17,7 @@ describe('bundle-infrastructure', () => {
 
       recorder('/project/schemas/user.yaml');
 
-      expect(files).toHaveLength(1);
-      expect(files[0]?.absolutePath).toBe('/project/schemas/user.yaml');
-      expect(files[0]?.capturedAt).toBeDefined();
+      expect(files).toStrictEqual([{ absolutePath: '/project/schemas/user.yaml' }]);
     });
 
     it('should resolve relative paths from entrypoint directory', () => {
@@ -67,6 +65,37 @@ describe('bundle-infrastructure', () => {
       recorder(entrypoint);
 
       expect(externalRefs.has(entrypoint)).toBe(false);
+    });
+  });
+
+  describe('deterministic metadata capture', () => {
+    it('two runs produce identical file metadata without injection', () => {
+      const runRecorder = (): OTTBundleFileEntry[] => {
+        const files: OTTBundleFileEntry[] = [];
+        const externalRefs = new Map<string, number>();
+        const recorder = createFileRecorder('/project/openapi.yaml', files, externalRefs);
+
+        recorder('/project/schemas/user.yaml');
+        return files;
+      };
+
+      const firstRun = runRecorder();
+      const secondRun = runRecorder();
+
+      expect(firstRun).toStrictEqual(secondRun);
+      expect(firstRun).toStrictEqual([{ absolutePath: '/project/schemas/user.yaml' }]);
+    });
+
+    it('records relative paths verbatim when the entrypoint has no directory', () => {
+      // URL and in-memory entrypoints have no filesystem directory; the
+      // recorder must not fabricate machine-local absolutes from process.cwd().
+      const files: OTTBundleFileEntry[] = [];
+      const externalRefs = new Map<string, number>();
+      const recorder = createFileRecorder('relative-entry.yaml', files, externalRefs);
+
+      recorder('schemas/user.yaml');
+
+      expect(files).toStrictEqual([{ absolutePath: 'schemas/user.yaml' }]);
     });
   });
 

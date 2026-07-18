@@ -108,7 +108,7 @@ test('array-default-values', async () => {
       id?: number;
       name?: string;
     };
-    export type MyEnum = string;
+    export type MyEnum = "one" | "two" | "three";
     // Zod Schemas
     export const MyComponent = z.strictObject({
       id: z.number().optional(),

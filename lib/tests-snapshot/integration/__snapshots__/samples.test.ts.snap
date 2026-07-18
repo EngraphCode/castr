@@ -5,9 +5,9 @@ exports[`openapi-examples > results by file 1`] = `
     "custom/v3.1/multi-auth": "import { z } from "zod";
 // Type Definitions
 export type CreateUserInput = {
-  /** Optional age in years */ age?: unknown;
+  /** Optional age in years */ age?: number | null;
   email: string;
-  /** Unique handle for the user */ username: unknown;
+  /** Unique handle for the user */ username: string | null;
 };
 // Zod Schemas
 export const CreateUserInput = z.strictObject({
@@ -2244,9 +2244,9 @@ export const mcpTools = [
 // Type Definitions
 export type errorMessage = string;
 export type coordinate = number;
-export type mark = string;
+export type mark = "." | "X" | "O";
 export type board = mark[][];
-export type winner = string;
+export type winner = "." | "X" | "O";
 export type status = {
   board?: board;
   winner?: winner;
@@ -2632,9 +2632,9 @@ export const mcpTools = [
 // Type Definitions
 export type errorMessage = string;
 export type coordinate = number;
-export type mark = string;
+export type mark = "." | "X" | "O";
 export type board = mark[][];
-export type winner = string;
+export type winner = "." | "X" | "O";
 export type status = {
   board?: board;
   winner?: winner;

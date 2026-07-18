@@ -31,8 +31,8 @@ describe('metadata', () => {
     it('should create metadata with all fields', () => {
       const entrypoint = { kind: 'file' as const, uri: '/project/api.yaml' };
       const files: OTTBundleFileEntry[] = [
-        { absolutePath: '/project/api.yaml', capturedAt: '2024-01-01T00:00:00Z' },
-        { absolutePath: '/project/schemas/user.yaml', capturedAt: '2024-01-01T00:00:01Z' },
+        { absolutePath: '/project/api.yaml' },
+        { absolutePath: '/project/schemas/user.yaml' },
       ];
       const urls: OTTBundleUrlEntry[] = [{ url: 'https://example.com/common.yaml' }];
       const warnings: OTTBundleWarning[] = [{ code: 'resolve:error', message: 'Test warning' }];

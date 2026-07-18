@@ -8,15 +8,28 @@ import {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
-  resolveSchemaTypeString,
 } from './fail-fast.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
+import {
+  arrayItemNeedsParens,
+  renderTypeText,
+  rendersAsTopLevelUnion,
+  rendersOwnNullBranch,
+  writeCompositionLiteralConjunction,
+  writeLiteralValueType,
+  writeTypeArrayUnion,
+} from './literal-types.js';
+
+/** Render a schema body to text for deduplication and parens decisions. @internal */
+function renderSchemaBody(schema: CastrSchema): string {
+  return renderTypeText(writeTypeBody(schema));
+}
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
     assertSchemaSupportsIntegerTargetCapabilities(schema, 'TypeScript');
     writeTypeBody(schema)(writer);
-    if (schema.metadata?.nullable) {
+    if (schema.metadata?.nullable && !rendersOwnNullBranch(schema)) {
       writer.write(' | null');
     }
   };
@@ -64,8 +77,20 @@ function resolveScalarTypeToken(schema: CastrSchema): string | undefined {
   }
 }
 
-/** Write a primitive/structured type from the schema type field. @internal */
+/**
+ * Write a primitive/structured type from the schema type field.
+ * Type arrays are dispatched first: the scalar-token resolution below reads
+ * integer semantics from the whole schema, and letting it run on a type array
+ * containing `integer` would collapse the union to `bigint` and silently drop
+ * every other member.
+ *
+ * @internal
+ */
 function writePrimitiveType(schema: CastrSchema, writer: CodeBlockWriter): void {
+  if (Array.isArray(schema.type)) {
+    writeTypeArrayUnion(schema, schema.type, writer, writePrimitiveType);
+    return;
+  }
   const scalarTypeToken = resolveScalarTypeToken(schema);
   if (scalarTypeToken !== undefined) {
     writer.write(scalarTypeToken);
@@ -92,7 +117,13 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
     if (writeRefType(schema, writer)) {
       return;
     }
+    if (writeCompositionLiteralConjunction(schema, writer, writeCompositionType)) {
+      return;
+    }
     if (writeCompositionType(schema, writer)) {
+      return;
+    }
+    if (writeLiteralValueType(schema, writer)) {
       return;
     }
     writePrimitiveType(schema, writer);
@@ -132,18 +163,14 @@ function writeIntersection(schemas: CastrSchema[], writer: CodeBlockWriter): voi
     if (i > 0) {
       writer.write(' & ');
     }
-    const needsParens = Boolean(s.oneOf ?? s.anyOf);
-    if (needsParens) {
-      writer.write('(');
-    }
+    const needsParens = Boolean(s.oneOf ?? s.anyOf) || rendersAsTopLevelUnion(s, renderSchemaBody);
+    writer.conditionalWrite(needsParens, '(');
     writeTypeBody(s)(writer);
-    if (needsParens) {
-      writer.write(')');
-    }
+    writer.conditionalWrite(needsParens, ')');
   });
 }
 
-/** Write union type. oneOf/anyOf: [A, B] → A | B. Deduplicates type strings. */
+/** Write union type. oneOf/anyOf: [A, B] → A | B. Deduplicates rendered member types. */
 function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
   if (schemas.length === 0) {
     writer.write('unknown');
@@ -152,7 +179,7 @@ function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
   const seen = new Set<string>();
   const uniqueSchemas: CastrSchema[] = [];
   for (const s of schemas) {
-    const typeStr = resolveSchemaTypeString(s);
+    const typeStr = renderSchemaBody(s);
     if (!seen.has(typeStr)) {
       seen.add(typeStr);
       uniqueSchemas.push(s);
@@ -180,7 +207,10 @@ function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
     return;
   }
   if (schema.items && !Array.isArray(schema.items)) {
+    const needsParens = arrayItemNeedsParens(schema.items, renderSchemaBody);
+    writer.conditionalWrite(needsParens, '(');
     writeTypeDefinition(schema.items)(writer);
+    writer.conditionalWrite(needsParens, ')');
     writer.write('[]');
   } else {
     writer.write('unknown[]');
@@ -194,20 +224,14 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
   return [...schema.properties.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
+/** Emit: BaseObject & (PresentBranch | AbsentBranch) & ... for dependent keywords. @internal */
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   rejectUnsupportedObjectKeywords(schema);
-  const hasDependentRequired = schema.dependentRequired !== undefined;
-  const hasDependentSchemas = schema.dependentSchemas !== undefined;
-  if (!hasDependentRequired && !hasDependentSchemas) {
-    writeObjectInlineBlock(schema, writer);
-    return;
-  }
-  // Emit: BaseObject & (PresentBranch | AbsentBranch) & ...
   writeObjectInlineBlock(schema, writer);
-  if (hasDependentRequired) {
+  if (schema.dependentRequired !== undefined) {
     writeDependentRequiredUnions(schema, writer, writeProperty);
   }
-  if (hasDependentSchemas) {
+  if (schema.dependentSchemas !== undefined) {
     writeDependentSchemasUnions(schema, writer, writeProperty);
   }
 }

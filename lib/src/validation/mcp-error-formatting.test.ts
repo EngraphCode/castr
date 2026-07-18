@@ -160,6 +160,59 @@ describe('formatMcpValidationError', () => {
     });
   });
 
+  describe('expected and received population', () => {
+    it('populates expected from an invalid_type issue', () => {
+      const schema = z.object({ id: z.string() });
+      const error = expectZodError(schema, { id: 123 });
+      const formatted = formatMcpValidationError(error);
+
+      expect(formatted.data.expected).toBe('string');
+    });
+
+    it('populates expected from an invalid_value issue as the accepted values', () => {
+      const schema = z.enum(['a', 'b']);
+      const error = expectZodError(schema, 'c');
+      const formatted = formatMcpValidationError(error);
+
+      expect(formatted.data.expected).toBe('"a" | "b"');
+    });
+
+    it('populates expected from an invalid_format issue as the format name', () => {
+      const schema = z.email();
+      const error = expectZodError(schema, 'not-an-email');
+      const formatted = formatMcpValidationError(error);
+
+      expect(formatted.data.expected).toBe('email');
+    });
+
+    it('populates received from the issue input when the caller enables input reporting', () => {
+      const schema = z.object({ id: z.string() });
+      let caught: ZodError | undefined;
+      try {
+        schema.parse({ id: 123 }, { reportInput: true });
+      } catch (e) {
+        if (e instanceof ZodError) {
+          caught = e;
+        }
+      }
+      if (!caught) {
+        throw new Error('Expected validation to fail');
+      }
+      const formatted = formatMcpValidationError(caught);
+
+      expect(formatted.data.received).toBe(123);
+    });
+
+    it('omits expected and received when the issue carries neither', () => {
+      const schema = z.string().min(5);
+      const error = expectZodError(schema, 'ab');
+      const formatted = formatMcpValidationError(error);
+
+      expect(Object.hasOwn(formatted.data, 'expected')).toBe(false);
+      expect(Object.hasOwn(formatted.data, 'received')).toBe(false);
+    });
+  });
+
   describe('edge cases', () => {
     it('handles root-level validation errors', () => {
       const schema = z.string();

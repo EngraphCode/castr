@@ -14,9 +14,18 @@ export interface McpValidationError {
   readonly data: {
     /** JSON pointer to the first error location (e.g., "/inputSchema/properties/id") */
     readonly pointer?: string;
-    /** Expected type or format (if available) */
+    /**
+     * Expected type, format, or accepted values, derived from the first issue's
+     * code-specific fields: `invalid_type` → `expected`, `invalid_format` → `format`,
+     * `invalid_value` → the accepted values joined with `" | "`.
+     * Absent for issue codes that carry none of these fields.
+     */
     readonly expected?: string;
-    /** Actual value received (if available) */
+    /**
+     * The value that failed validation, taken from the first issue's `input` field.
+     * Zod only attaches `input` when the caller parses with `reportInput: true`;
+     * absent otherwise.
+     */
     readonly received?: unknown;
     /** Array of all validation issues */
     readonly issues: readonly {
@@ -53,6 +62,46 @@ function pathToPointer(path: readonly (string | number | symbol)[]): string {
     return '/';
   }
   return `/${path.map((segment) => String(segment)).join('/')}`;
+}
+
+/**
+ * A single Zod validation issue as carried on {@link ZodError.issues}.
+ *
+ * @internal
+ */
+type ZodIssueItem = ZodError['issues'][number];
+
+/**
+ * Format a primitive accepted value for the `expected` field.
+ *
+ * @param value - Accepted value from an `invalid_value` issue
+ * @returns Display token (strings JSON-quoted, other primitives stringified)
+ *
+ * @internal
+ */
+function formatExpectedValue(value: unknown): string {
+  return typeof value === 'string' ? JSON.stringify(value) : String(value);
+}
+
+/**
+ * Derive the `expected` description from an issue's code-specific fields.
+ *
+ * @param issue - Zod issue to inspect
+ * @returns Expected type/format/values, or undefined when the issue carries none
+ *
+ * @internal
+ */
+function resolveExpected(issue: ZodIssueItem): string | undefined {
+  switch (issue.code) {
+    case 'invalid_type':
+      return issue.expected;
+    case 'invalid_format':
+      return issue.format;
+    case 'invalid_value':
+      return issue.values.map(formatExpectedValue).join(' | ');
+    default:
+      return undefined;
+  }
 }
 
 /**
@@ -128,6 +177,8 @@ function buildErrorMessage(context?: McpValidationErrorContext): string {
  * - JSON pointer format follows RFC 6901 for precise error location
  * - Original Zod error information is preserved in the issues array
  * - Multiple validation errors are aggregated into a single response
+ * - `data.expected` and `data.received` are derived from the first issue where
+ *   available — see {@link McpValidationError} for the per-code rules
  *
  * @see {@link McpValidationError} for the return type structure
  * @see {@link McpValidationErrorContext} for context options
@@ -143,8 +194,9 @@ export function formatMcpValidationError(
     message: issue.message,
   }));
 
-  const firstPath = issues[0]?.path;
-  const pointer = firstPath ? pathToPointer(firstPath) : '/';
+  const firstIssue = error.issues[0];
+  const pointer = firstIssue === undefined ? '/' : pathToPointer(firstIssue.path);
+  const expected = firstIssue === undefined ? undefined : resolveExpected(firstIssue);
   const message = buildErrorMessage(context);
 
   return {
@@ -152,6 +204,8 @@ export function formatMcpValidationError(
     message,
     data: {
       pointer,
+      ...(expected === undefined ? {} : { expected }),
+      ...(firstIssue !== undefined && 'input' in firstIssue ? { received: firstIssue.input } : {}),
       issues,
     },
   };

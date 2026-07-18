@@ -5194,7 +5194,7 @@ export type Pet = {
   id?: bigint;
   name: string;
   photoUrls: string[];
-  /** pet status in the store */ status?: string;
+  /** pet status in the store */ status?: "available" | "pending" | "sold";
   tags?: Tag[];
 };
 export type Order = {
@@ -5204,7 +5204,7 @@ export type Order = {
   petId?: bigint;
   quantity?: number;
   shipDate?: string;
-  /** Order Status */ status?: string;
+  /** Order Status */ status?: "placed" | "approved" | "delivered";
 };
 export type Address = {
   city?: string;
@@ -7446,7 +7446,7 @@ export type Pet = {
   id?: bigint;
   name: string;
   photoUrls: string[];
-  /** pet status in the store */ status?: string;
+  /** pet status in the store */ status?: "available" | "pending" | "sold";
   tags?: Tag[];
 };
 export type Order = {
@@ -7456,7 +7456,7 @@ export type Order = {
   petId?: bigint;
   quantity?: number;
   shipDate?: string;
-  /** Order Status */ status?: string;
+  /** Order Status */ status?: "placed" | "approved" | "delivered";
 };
 export type Address = {
   city?: string;
@@ -9486,7 +9486,7 @@ export type Pet = {
   id?: bigint;
   name: string;
   photoUrls: string[];
-  /** pet status in the store */ status?: string;
+  /** pet status in the store */ status?: "available" | "pending" | "sold";
   tags?: Tag[];
 };
 export type Order = {
@@ -9496,7 +9496,7 @@ export type Order = {
   petId?: bigint;
   quantity?: number;
   shipDate?: string;
-  /** Order Status */ status?: string;
+  /** Order Status */ status?: "placed" | "approved" | "delivered";
 };
 export type Address = {
   city?: string;

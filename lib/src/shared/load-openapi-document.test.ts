@@ -110,11 +110,31 @@ describe('loadOpenApiDocument', () => {
       openapi: CANONICAL_OPENAPI_VERSION,
     });
     expect(result.metadata.entrypoint).toStrictEqual({ kind: 'file', uri: absoluteEntrypoint });
-    expect(result.metadata.files).toHaveLength(1);
-    expect(result.metadata.files[0]?.absolutePath).toBe(absoluteEntrypoint);
-    expect(typeof result.metadata.files[0]?.capturedAt).toBe('string');
+    expect(result.metadata.files).toStrictEqual([{ absolutePath: absoluteEntrypoint }]);
     expect(result.metadata.urls).toHaveLength(0);
     expect(result.metadata.externalReferences).toHaveLength(0);
+  });
+
+  it('produces identical metadata across repeated public loads (deterministic by construction)', async () => {
+    const entrypoint = './examples/petstore.yaml';
+    const absoluteEntrypoint = path.resolve(entrypoint);
+    const scalarDocument: BundleResult = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    bundleMock.mockImplementation(async (_input: unknown, config: Parameters<typeof bundle>[1]) => {
+      const filePlugin = getLoaderPlugin(config.plugins[0], 'File');
+      await filePlugin.exec(absoluteEntrypoint);
+      return scalarDocument;
+    });
+
+    const firstLoad = await loadOpenApiDocument(entrypoint);
+    const secondLoad = await loadOpenApiDocument(entrypoint);
+
+    expect(firstLoad.metadata).toStrictEqual(secondLoad.metadata);
+    expect(firstLoad.metadata.files).toStrictEqual([{ absolutePath: absoluteEntrypoint }]);
   });
 
   it('tracks multiple local references and aggregates external reference counts', async () => {

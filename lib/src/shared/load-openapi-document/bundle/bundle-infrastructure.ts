@@ -30,6 +30,13 @@ export interface OTTBundleInfrastructure {
 /**
  * Create file recorder that tracks loaded files and external references.
  *
+ * Bundle metadata is output-bound, so the recorder is deterministic by
+ * construction: it records no timestamps and never consults the process
+ * clock or `process.cwd()`. Relative paths resolve against the entrypoint's
+ * directory; when the entrypoint has no filesystem directory (URL or
+ * in-memory entrypoints) they are recorded verbatim rather than fabricating
+ * machine-local absolute paths.
+ *
  * @param entrypointUri - Absolute path to entrypoint file
  * @param files - Array to populate with file entries
  * @param externalReferences - Map to track reference counts
@@ -43,18 +50,16 @@ export function createFileRecorder(
 ): (rawPath: string) => void {
   const seenAbsolutePaths = new Set<string>(files.map((file) => file.absolutePath));
   const entrypointDirectory =
-    entrypointUri && path.isAbsolute(entrypointUri) ? path.dirname(entrypointUri) : process.cwd();
+    entrypointUri && path.isAbsolute(entrypointUri) ? path.dirname(entrypointUri) : undefined;
 
   return (rawPath: string) => {
-    const absolutePath = path.isAbsolute(rawPath)
-      ? rawPath
-      : path.resolve(entrypointDirectory, rawPath);
+    const absolutePath =
+      path.isAbsolute(rawPath) || entrypointDirectory === undefined
+        ? rawPath
+        : path.resolve(entrypointDirectory, rawPath);
 
     if (!seenAbsolutePaths.has(absolutePath)) {
-      files.push({
-        absolutePath,
-        capturedAt: new Date().toISOString(),
-      });
+      files.push({ absolutePath });
       seenAbsolutePaths.add(absolutePath);
     }
 
