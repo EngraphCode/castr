@@ -50,7 +50,7 @@ merges, then waves 2–3. The owner merges every PR; the orchestrator never merg
 the authority-ring lesson is in `.agent/memory/active/napkin.md`).
 
 **Open PRs** (recompute with `gh pr list`): #10 bootstrap · #11 L-A · #12 L-K1 · #13 L-C ·
-#14 L-K6 (threads clean) · #15 L-KBATCH · #16 L-F. Merge order (edges normative — program record
+#14 L-K6 (threads clean) · #15 L-KBATCH · #16 L-F · #17 L-H. Merge order (edges normative — program record
 §Merge waves): L-A → L-E → L-I → micros (L-K6 alone: lockfile) → L-H → L-D → **feature slice** →
 L-C → L-F; wave 2: L-B (after L-A + feature), L-K8 (after L-D), L-K9 (after L-KBATCH); wave 3:
 L-J.
@@ -64,13 +64,20 @@ L-J.
 | L-D      | `wf_6f9f06c9-91e-1`  | 2631981 + follow-up (sanitiser seam + security proofs) — follow-up commit was landing         | verify commit landed → push → open PR (slot before feature)            |
 | L-E      | `wf_718f6e9b-a35-4`  | 31-file guard set + fixture verdict; commit ceremony was running                              | verify commit(s) → full gate → push → PR (**merge slot 2**)            |
 | L-F      | `wf_6f9f06c9-91e-2`  | 1bfbdd9+45d209f pushed (PR #16, 9 threads); harvest-and-fix round was in flight               | finish round → commit → push → reply/resolve                           |
-| L-H      | `wf_6f9f06c9-91e-3`  | bfdbd18 + **20cc130 committed** (round 2 complete, tree clean), UNPUSHED                      | push → open PR                                                         |
+| L-H      | `wf_6f9f06c9-91e-3`  | bfdbd18+20cc130 pushed (**PR #17**)                                                           | done pending bot rounds                                                |
 | L-I      | `wf_6f9f06c9-91e-4`  | 8ac4845 + guard-gap bundle; gate log at machine-temp `castr-li-checkci.log`                   | verify gate → commit → push → PR (merges before L-C rebase)            |
-| L-K1     | `wf_718f6e9b-a35-8`  | caf1d6d+1d9778b pushed (PR #12); **99fe165 committed** (self-contained error), UNPUSHED       | push → reply/resolve PR #12 thread `PRRT_kwDOQHEhMc6R6lbW`             |
+| L-K1     | `wf_718f6e9b-a35-8`  | caf1d6d+1d9778b+99fe165 pushed (PR #12, thread resolved)                                      | done pending bot rounds                                                |
 | L-K2     | `wf_718f6e9b-a35-9`  | NO commits; maybePretty fail-fast work blocked on latent producer bug                         | UNBLOCK gated on L-E prettier evidence (Pending decisions)             |
 | L-K6     | `wf_718f6e9b-a35-11` | 6572ed4+0bb4529 pushed (PR #14, thread resolved)                                              | done pending any new bot round                                         |
 | L-KBATCH | `wf_718f6e9b-a35-10` | 4 commits pushed (PR #15, 5 threads); harvest-and-fix round was in flight                     | finish round → commit → push → reply/resolve                           |
 | samples  | (machine temp)       | `fix/remediation-samples-config-escape`, fix + regression test UNCOMMITTED                    | see Pending decisions (reconcile vs L-D)                               |
+
+**Rapid tier (same-machine):** an ARC comms event ("ARC open: Highland Spiralling Summit ->
+Stormbound Circling Kite") is on the instance-tier comms stream
+(`.agent/state/collaboration/comms/`, git-ignored by two-tier design) with an ops crib and ack
+protocol; on a fresh machine this record alone suffices. The concept-exploration provenance is
+homed at
+[`../../../research/remediation-program-concept-exploration-2026-07-17.md`](../../../research/remediation-program-concept-exploration-2026-07-17.md).
 
 Saved PR-thread JSON harvests live in the session job's temp dir (session-mortal) — regenerate
 with the GraphQL query in Next safe steps rather than hunting for them.
