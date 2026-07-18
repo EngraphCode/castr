@@ -545,3 +545,60 @@ describe('writers/typescript', () => {
     });
   });
 });
+
+describe('writeTypeScript identifier collisions', () => {
+  it('fails fast when two component names collide on one emitted identifier', () => {
+    const componentMetadata = {
+      required: false,
+      nullable: false,
+      zodChain: { presence: '', validations: [], defaults: [] },
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      circularReferences: [],
+    };
+    // Distinct component keys whose identifier-safe projection collides:
+    // both normalise to the symbol `Basic_Thing`. Without the fail-fast the
+    // writer emits duplicate exports and every `$ref` to either original
+    // name binds to whichever declaration survives.
+    const ir: CastrDocument = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: mockInfo,
+      servers: mockServers,
+      enums: new Map(),
+      components: [
+        {
+          type: 'schema',
+          name: 'Basic.Thing',
+          schema: createMockSchema('string'),
+          metadata: componentMetadata,
+        },
+        {
+          type: 'schema',
+          name: 'Basic_Thing',
+          schema: createMockSchema('number'),
+          metadata: componentMetadata,
+        },
+      ],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+    };
+
+    const context: TemplateContext = {
+      sortedSchemaNames: ['#/components/schemas/Basic.Thing', '#/components/schemas/Basic_Thing'],
+      endpoints: [],
+      endpointsGroups: {},
+      mcpTools: [],
+      _ir: ir,
+    };
+
+    expect(() => writeTypeScript(context)).toThrow(
+      "components 'Basic.Thing' and 'Basic_Thing' both normalise to the emitted identifier 'Basic_Thing'",
+    );
+  });
+});

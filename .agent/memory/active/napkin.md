@@ -2,6 +2,36 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-D round 4: PR #18 collision fail-fast + stale-security boundary — Fable subagent)
+
+- **Fail-fast beat deterministic suffixing for identifier collisions on ARCHITECTURAL evidence, not
+  just doctrine:** `safeSchemaName` is a pure per-name seam invoked independently at every `$ref`
+  reference site (zod writer, type-writer core) with no access to the document's name set — a
+  suffix scheme needs a document-scoped rename map threaded through all of them, AND it silently
+  renames the OTHER existing symbol when a colliding key is added later. The collision check
+  therefore lives at the two FULL-SET seams only (`components.ts` emission, registry helper);
+  reference sites stay unchecked because a definition that passed the check is safe to reference.
+- **A validator boundary hole is owned by the lane that changed the MODEL shape:** the
+  `isCastrOperation`/`isCastrDocument` security-shape gap was created by L-D's
+  `IRSecurityRequirement` change; L-E's PR #20 touch on `validators.document.ts` is import-repoint
+  only (semantic changes explicitly forbidden by its grant), so the semantic guard fix ships in
+  L-D's PR with the cause, not routed into L-E's scope. Merge cost bounded: L-E's hunk is the
+  import block; L-D rebases over L-E per wave order.
+- **Migration of stale flat security was REJECTED, not deferred:** the old flat shape had already
+  collapsed AND-groups to OR (the C2 corruption), so a shape migration would launder wrong data
+  as right; boundary rejection forcing a re-parse is the only honest cure.
+- **Three lint ceilings fired on one surgical diff and each forced a BETTER home:** max-lines 220
+  (validators.document.ts, writers/typescript/index.ts), complexity 8 (hasValidOperationShape),
+  max-lines-per-function 500 (the 548-line `describe`). Cures: `validation/operations/` subdir for
+  the security validators (validation/ is AT the 6-file cap — check `castr/max-files-per-dir`
+  BEFORE planning a new top-level file), component emission extracted to
+  `writers/typescript/components.ts` (dir was at 4/6), collision test in its own top-level
+  describe. Source max-lines skips comments/blanks; TEST max-lines-per-function counts every line.
+- **Cheap honest red for "boundary accepts stale shape":** one serialized-document builder taking
+  the security value as a parameter, used by an accept/reject pair — isolates the shape as the
+  only variable (hand-built literals per test would throw for unrelated reasons, e.g. plain-object
+  enums failing the Map-like check).
+
 ## 2026-07-18 (lane L-D round 3: x-* specification-extension iteration — Fable subagent)
 
 - **The x-\*-iteration class lives only where the SPEC declares a map extensible:** sweeping

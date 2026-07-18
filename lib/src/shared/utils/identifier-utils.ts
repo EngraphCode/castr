@@ -150,6 +150,43 @@ export function safeSchemaName(name: string): string {
 }
 
 /**
+ * Assert that every component name in a set projects to a distinct emitted
+ * identifier.
+ *
+ * {@link safeSchemaName} is a per-name projection, so two DISTINCT component
+ * names (`Basic.Thing` and `Basic_Thing`, or `foo-bar` and `foo_bar`) can
+ * normalise to the same identifier. Emitting both would produce duplicate
+ * exported symbols, and every `$ref` to either original name would bind to
+ * whichever declaration survives — a silent wrong-schema binding. The
+ * projection must be injective over the emitted set; when it is not, the
+ * mapping is genuinely ambiguous, so the writer fails fast instead of
+ * inventing a disambiguating suffix (a suffix scheme renames existing
+ * symbols whenever a colliding component is added to the document).
+ *
+ * Repeated occurrences of the SAME name are not collisions.
+ *
+ * @param names - Original component names about to be projected to code symbols
+ * @throws Error naming both colliding component names and the shared identifier
+ *
+ * @public
+ */
+export function assertDistinctSafeSchemaNames(names: readonly string[]): void {
+  const originalNameByIdentifier = new Map<string, string>();
+  for (const name of names) {
+    const identifier = safeSchemaName(name);
+    const existing = originalNameByIdentifier.get(identifier);
+    if (existing !== undefined && existing !== name) {
+      throw new Error(
+        `Schema name collision: components '${existing}' and '${name}' both normalise to the ` +
+          `emitted identifier '${identifier}'. Rename one of the colliding components so every ` +
+          `schema projects to a distinct code symbol.`,
+      );
+    }
+    originalNameByIdentifier.set(identifier, name);
+  }
+}
+
+/**
  * Check if a string is a valid JavaScript identifier.
  * Uses TypeScript's built-in isIdentifierStart and isIdentifierPart.
  *

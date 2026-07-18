@@ -1,5 +1,8 @@
 import type { SourceFile } from 'ts-morph';
-import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+import {
+  assertDistinctSafeSchemaNames,
+  safeSchemaName,
+} from '../../../shared/utils/identifier-utils.js';
 
 const REQUEST_INPUT_TYPE = `{
     pathParams?: unknown;
@@ -125,6 +128,10 @@ export function addSchemaRegistryHelper(
   sourceFile: SourceFile,
   componentNames: readonly string[],
 ): void {
+  // The registry maps emitted symbols back to schemas; a collision between
+  // two raw names would leave one key silently validating the wrong schema.
+  assertDistinctSafeSchemaNames(componentNames);
+
   const defaultRenameEntries = computeDefaultRenameEntries(componentNames);
 
   sourceFile.addFunction({

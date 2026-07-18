@@ -84,6 +84,43 @@ describe('isCastrDocument', () => {
     expect(isCastrDocument(invalidDoc)).toBe(false);
   });
 
+  it('should return true for requirement-set document-level security', () => {
+    const securedDoc: CastrDocument = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      servers: [],
+      components: [],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
+      enums: new Map(),
+      security: [{ schemes: [{ schemeName: 'apiKey', scopes: ['read'] }] }],
+    };
+
+    expect(isCastrDocument(securedDoc)).toBe(true);
+  });
+
+  it('should return false for the stale flat document-level security shape', () => {
+    const staleDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      servers: [],
+      components: [],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
+      enums: new Map(),
+      // Pre-requirement-set IR shape: one flat scheme entry per requirement.
+      security: [{ schemeName: 'apiKey', scopes: [] }],
+    };
+
+    expect(isCastrDocument(staleDoc)).toBe(false);
+  });
+
   it('should return false when a schema component carries contradictory integer semantics', () => {
     const invalidDoc = {
       version: '1.0.0',
@@ -757,6 +794,73 @@ describe('isCastrOperation', () => {
 
       expect(isCastrOperation(operation)).toBe(true);
     });
+  });
+
+  it('should return true for an explicit empty security override', () => {
+    const operation: CastrOperation = {
+      operationId: 'getPublic',
+      method: 'get',
+      path: '/public',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [],
+      security: [],
+    };
+
+    expect(isCastrOperation(operation)).toBe(true);
+  });
+
+  it('should return true for an optional-security empty requirement set', () => {
+    const operation: CastrOperation = {
+      operationId: 'getOptional',
+      method: 'get',
+      path: '/optional',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [],
+      security: [{ schemes: [] }],
+    };
+
+    expect(isCastrOperation(operation)).toBe(true);
+  });
+
+  it('should return false for the stale flat security shape', () => {
+    const staleOperation = {
+      operationId: 'getUser',
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [],
+      // Pre-requirement-set IR shape: one flat scheme entry per requirement.
+      security: [{ schemeName: 'apiKey', scopes: [] }],
+    };
+
+    expect(isCastrOperation(staleOperation)).toBe(false);
+  });
+
+  it('should return false for a malformed scheme requirement', () => {
+    const missingScopes = {
+      operationId: 'getUser',
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [],
+      security: [{ schemes: [{ schemeName: 'apiKey' }] }],
+    };
+    const nonStringScope = {
+      operationId: 'getUser',
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [],
+      security: [{ schemes: [{ schemeName: 'apiKey', scopes: ['read', 7] }] }],
+    };
+
+    expect(isCastrOperation(missingScopes)).toBe(false);
+    expect(isCastrOperation(nonStringScope)).toBe(false);
   });
 });
 

@@ -11,6 +11,7 @@ import {
   isValidMediaTypeEntry,
   isValidResponseHeaders,
 } from './content/validators.content.js';
+import { isValidSecurityRequirementList } from './operations/validators.security.js';
 import { isCastrSchema, isCastrSchemaNode } from './validators.schema.js';
 
 const VALID_PARAMETER_LOCATIONS = new Set<string>([
@@ -79,6 +80,7 @@ export function isCastrDocument(value: unknown): value is CastrDocument {
     typeof value['version'] === 'string' &&
     typeof value['openApiVersion'] === 'string' &&
     isRecord(value['info']) &&
+    isValidSecurityRequirementList(value['security']) &&
     hasValidDocumentCollections(value)
   );
 }
@@ -193,6 +195,10 @@ function isValidRequestBody(value: unknown): boolean {
   return typeof value['required'] === 'boolean' && isValidContentMap(value['content']);
 }
 
+function isValidResponseList(value: unknown): boolean {
+  return Array.isArray(value) && value.every((response) => isValidResponse(response));
+}
+
 function hasValidOperationShape(value: UnknownRecord): boolean {
   return (
     typeof value['path'] === 'string' &&
@@ -200,8 +206,8 @@ function hasValidOperationShape(value: UnknownRecord): boolean {
     value['parameters'].every((parameter) => isValidParameter(parameter)) &&
     isValidParametersByLocation(value['parametersByLocation']) &&
     (value['requestBody'] === undefined || isValidRequestBody(value['requestBody'])) &&
-    Array.isArray(value['responses']) &&
-    value['responses'].every((response) => isValidResponse(response))
+    isValidResponseList(value['responses']) &&
+    isValidSecurityRequirementList(value['security'])
   );
 }
 

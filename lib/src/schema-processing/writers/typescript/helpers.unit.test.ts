@@ -92,4 +92,13 @@ describe('addSchemaRegistryHelper default rename', () => {
     expect(forward).toBe(reversed);
     expect(forward).toContain('["Basic.Thing","Basic_Thing"]');
   });
+
+  it('fails fast when two component names collide on one emitted registry symbol', () => {
+    // Two distinct raw names whose safeSchemaName projection collides would
+    // give the registry one key for two schemas — the surviving entry would
+    // silently validate against the wrong schema.
+    expect(() => generateRegistryHelper(['foo-bar', 'foo_bar'])).toThrow(
+      "components 'foo-bar' and 'foo_bar' both normalise to the emitted identifier 'foo_bar'",
+    );
+  });
 });
