@@ -27,6 +27,11 @@ CHANGELOG.md
 # Cache
 .eslintcache
 
+# Live ARC channel files — append-only while tailed; a format --fix rewrite
+# replays every follower's tail (see .agent/reference/arc-rapid-communication.md
+# §Known limitations). The convention READMEs stay formatted.
+.agent/collaboration/rapid-comms/2026-*.md
+
 # Instance-tier collaboration state — regenerated at runtime, gitignored.
 # Mirrors .agent/state/collaboration/.gitignore so the format gate does not
 # trip on runtime-written JSON/log files (e.g. a claim opened with a
