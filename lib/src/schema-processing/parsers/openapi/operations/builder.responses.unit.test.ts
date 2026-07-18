@@ -5,7 +5,7 @@ import type {
   ResponseObject,
 } from '../../../../shared/openapi-types.js';
 
-import { buildSingleResponse } from './builder.responses.js';
+import { buildCastrResponses, buildSingleResponse } from './builder.responses.js';
 import type { IRBuildContext } from '../builder.types.js';
 
 function createContext(doc: OpenAPIDocument): IRBuildContext {
@@ -15,6 +15,44 @@ function createContext(doc: OpenAPIDocument): IRBuildContext {
     required: false,
   };
 }
+
+describe('buildCastrResponses specification extensions', () => {
+  const emptyDoc: OpenAPIDocument = {
+    openapi: '3.1.0',
+    info: { title: 'Test', version: '1.0.0' },
+    paths: {},
+  };
+
+  test('skips x-* specification-extension entries instead of building them as responses', () => {
+    // Per OAS 3.x, the Responses Object MAY be extended with ^x- Specification
+    // Extensions; those entries are metadata, not responses. The extension
+    // value here is deliberately response-shaped to prove the skip is driven
+    // by the key, not the value's shape.
+    const responses = {
+      '200': { description: 'Success' },
+      default: { description: 'Fallback' },
+      'x-codegen': { description: 'vendor codegen metadata' },
+    };
+
+    const result = buildCastrResponses(responses, createContext(emptyDoc));
+
+    expect(result.map((response) => response.statusCode)).toEqual(['200', 'default']);
+  });
+
+  test('does not resolve ref-shaped x-* extension values as response refs', () => {
+    // An extension value may carry any JSON, including a $ref-shaped object
+    // that points nowhere. Treating it as a response reference aborts parsing
+    // of an otherwise valid document.
+    const responses = {
+      '204': { description: 'No Content' },
+      'x-vendor-link': { $ref: '#/components/responses/DoesNotExist' },
+    };
+
+    const result = buildCastrResponses(responses, createContext(emptyDoc));
+
+    expect(result.map((response) => response.statusCode)).toEqual(['204']);
+  });
+});
 
 describe('buildSingleResponse strict ref resolution', () => {
   test('resolves valid response component refs', () => {

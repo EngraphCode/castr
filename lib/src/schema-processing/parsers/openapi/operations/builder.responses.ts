@@ -16,6 +16,7 @@ import {
   assertNoCircularComponentRef,
   parseComponentNameForType,
 } from '../components/builder.component-ref-resolution.js';
+import { isSpecificationExtensionKey } from '../../../../shared/openapi/specification-extensions.js';
 import type { CastrResponse, IRMediaTypeEntry } from '../../../ir/index.js';
 import { buildIRMediaTypeEntries } from './builder.media-types.js';
 import { buildResponseHeaders } from './responses/index.js';
@@ -45,6 +46,7 @@ function isResponseOrReference(value: unknown): value is ResponseObject | Refere
  * - Component refs are resolved eagerly and fail fast on invalid syntax or missing targets
  * - Each content type is processed independently
  * - Response headers are included when present
+ * - `^x-` specification-extension entries are metadata, not responses, and are skipped
  *
  * @internal
  */
@@ -59,6 +61,12 @@ export function buildCastrResponses(
   const irResponses: CastrResponse[] = [];
 
   for (const [statusCode, responseValue] of Object.entries(responses)) {
+    // Per OAS 3.x the Responses Object MAY carry ^x- Specification
+    // Extensions; those entries are not responses.
+    if (isSpecificationExtensionKey(statusCode)) {
+      continue;
+    }
+
     // OpenAPI library types values as 'any' due to index signature
     // Type guard narrows to ResponseObject | ReferenceObject
     if (isResponseOrReference(responseValue)) {

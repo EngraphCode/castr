@@ -2,6 +2,37 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-D round 3: x-* specification-extension iteration — Fable subagent)
+
+- **The x-\*-iteration class lives only where the SPEC declares a map extensible:** sweeping
+  `parsers/openapi/operations/**` for `Object.entries`/`Object.keys` over spec maps found two
+  genuine gaps (Responses Object in `builder.responses.ts`, Paths Object twice in
+  `builder.operations.ts`) and four look-alikes that must NOT be filtered: content maps
+  (`x-world/x-vrml` is a legal media type), response-header maps (`X-Rate-Limit`-style names),
+  security-requirement objects (`x-api-key` is a legal scheme name), and OAS 3.2
+  `additionalOperations` (custom HTTP method tokens may begin with `x-`). The predicate's TSDoc
+  now carries that inventory so the sweep is not over-applied later.
+- **Strongest red was the abort, not the pollution:** a ref-shaped extension value
+  (`'x-vendor-link': {$ref: '#/components/responses/DoesNotExist'}`) made the parser THROW on a
+  valid document — sharper evidence than the phantom `statusCode: 'x-codegen'` entry, and the
+  case most likely in the wild (extensions carry arbitrary JSON).
+- **ADR-026 shapes where a one-line predicate may live:** inline `key.startsWith('x-')` is
+  lint-banned; the sanctioned form is lodash-es free-function `startsWith` inside a designated
+  centralized data-string utility that is ALSO listed in ADR-026's roster. Homed at
+  `shared/openapi/specification-extensions.ts` (beside `http-methods.ts`) — which simultaneously
+  dodged `castr/max-files-per-dir` (operations/ already sits at the 6-file cap).
+- **`builder.unit.test.ts` is at its max-lines ceiling (1000):** new operations-builder coverage
+  belongs in per-builder test files under `operations/`, not the aggregate file — adding ~40
+  lines there is an instant lint failure.
+- **Extension entries survive the strict `ResponsesObject` index signature only when shaped like
+  responses:** the type (`Record<string, ReferenceObject | ResponseObject>`) cannot express
+  arbitrary extension values, so the key-based-skip test uses a response-SHAPED `x-` value —
+  which is also the sharper proof (skip driven by key, not value shape).
+- **Losslessness position (named, not fixed here):** every builder in the estate copies named
+  fields into closed IR shapes, so x-* specification extensions are dropped estate-wide (the sole
+  deliberate exception is Scalar's structural `x-ext`). Skipping matches convention; CAPTURING
+  extensions would be an IR-model + writer change across all levels, not a parser patch.
+
 ## 2026-07-18 (lane L-D round 2: PR #18 unresolved review threads — Fable subagent)
 
 - **The prototype-unsafe-map class was 7 fix sites, not the 2 flagged:** sweeping the lane's diff

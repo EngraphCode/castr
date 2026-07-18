@@ -103,6 +103,7 @@ String/regex heuristics that derive meaning from TypeScript source code text whe
 - `src/shared/ref-resolution.ts` — OpenAPI `$ref` parsing (canonical, all `$ref` parsing MUST delegate here)
 - `src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` — OpenAPI builder component-ref validation/enforcement (supported prefix checks, expected component-type checks, circular-ref guards). OpenAPI builders must delegate component-ref handling here instead of local parsing/catch logic.
 - `src/schema-processing/context/template-context.status-codes.ts` — endpoint success-status parsing (`200`, `201`, `202`, `203`, `204`, `2XX`, `default`)
+- `src/shared/openapi/specification-extensions.ts` — OpenAPI Specification Extension key detection (`^x-`) for extensible maps (Paths Object, Responses Object)
 - Future: media-type parser, URL-template parser (when created)
 
 **Ad-hoc data-string parsing (e.g., inline `startsWith('#/components/')` in 7 files) is a violation of the centralization requirement** and must be remediated to delegate to the designated utility.
