@@ -46,6 +46,7 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [start-right-thorough](skills/start-right-thorough/SKILL-CANONICAL.md)      | Deep re-anchor after a context switch or long gap                       |
 | [gates](skills/gates/SKILL-CANONICAL.md)                                    | Run the full canonical quality-gate chain                               |
 | [plan](skills/plan/SKILL-CANONICAL.md)                                      | Create or revise a decision-complete plan                               |
+| [concept-exploration](skills/concept-exploration/SKILL-CANONICAL.md)        | Frame unshaped observations before options form (pre-decision)          |
 | [consolidate-docs](skills/consolidate-docs/SKILL-CANONICAL.md)              | Promote durable truth, audit cohesion, and integrate practice learnings |
 | [napkin](skills/napkin/SKILL-CANONICAL.md)                                  | Continuous capture stage of the knowledge flow                          |
 | [invoke-reviewers](rules/invoke-reviewers.md)                               | Installed reviewer and domain-expert invocation contract                |

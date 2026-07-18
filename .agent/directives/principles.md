@@ -73,6 +73,14 @@ test (`PDR-057` § Four-Lens Dissolution Test): most apparent forks dissolve int
 lenses settle; only a genuine product / strategy / governance fork, whose outcomes truly diverge under
 the lenses, is owner-bound. Dissolution before escalation.
 
+### Concept Exploration — the pre-decision workflow
+
+The lenses resolve formed questions. Invoke the
+[`concept-exploration`](../skills/concept-exploration/SKILL-CANONICAL.md) skill before committing
+to an option list, including when an early list exists but may foreclose the real question. It
+alternates `metacognition` and `reason` across four movements, then feeds its warranted,
+falsifiable synthesis into the lenses above and the `PDR-057` § Four-Lens dissolution test.
+
 ---
 
 ## 🎯 Cardinal Rule of This Repository
