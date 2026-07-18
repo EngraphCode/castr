@@ -311,3 +311,16 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   check-singleton specimen, this time from a PEER'S push while my loop ran from the primary
   checkout): the loop self-healed when their build restored dist. Worktree isolation kept the
   work path immune; only the shared-checkout CLI surface was exposed.
+- **FALSE GREEN on my own push — the background wrapper masked the exit code and I never read
+  the log**: `git push > log 2>&1; echo "exit: $?"` run_in_background reports the TASK's exit
+  (the echo = 0), and I took the harness notification's "exit code 0" as push success, told the
+  owner "push landed clean through the full gate", and only discovered the pre-push had FAILED
+  (samples exception) when `gh pr create` said the remote branch did not exist. Compound
+  specimen: verify-own-observer-instruments (the wrapper) + PDR-140 (the unread log) + the
+  pipe-eats-exit-code family, all in one move — with the push's SECOND leg also failing
+  differently (no upstream) behind the same mask. Cure that held: read the captured log IN
+  FULL before claiming any gated operation's outcome; make the wrapper carry the real code
+  (`git push; RC=$?; ... exit $RC`) so the harness notification is honest. The samples
+  exception itself fired exactly as the danger list pre-attributed (68/69 files; only that
+  test), and the three chain-masked suites proved individually green — evidence banked in the
+  thread record; owner chose hold-for-honest-gate over --no-verify.

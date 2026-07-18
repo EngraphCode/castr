@@ -17,10 +17,31 @@ recompute live facts from `git`/`gh` before acting.
 ## State at record authorship (2026-07-18 — RECOMPUTE before acting)
 
 Branch `docs/resonance-practice-imports` (worktree `resonance-imports`, off main 4be99dae):
-three landings — `eee2a735` (concept-exploration skill), `3277ed92` (PDR-142 fleet family +
+four landings — `eee2a735` (concept-exploration skill), `3277ed92` (PDR-142 fleet family +
 lean-task-subagents castr binding + task-worker class), `b295a6c6` (pr-lifecycle re-sync +
-five-reviewer fold). All owner-directed; Task 3 source policy (working-tree latest)
-owner-decided at plan time. PR opens after push; the owner merges (castr posture).
+five-reviewer fold), `ef75d54d` (this record). All owner-directed; Task 3 source policy
+(working-tree latest) owner-decided at plan time.
+
+**⚠️ PUSH HELD — OWNER DECISION (2026-07-18): the branch is LOCAL-ONLY.** The pre-push
+`check:ci` fails in this nested worktree on exactly the pre-attributed samples exception
+(`tests-snapshot/integration/samples.test.ts` — prettier `resolveConfig` escapes the repo
+root; environment bug, fix pending in the remediation program's PR #19 / L-D). The owner
+declined `--no-verify`; the push waits for the honest gate. Evidence banked: every other gate
+green; the three chain-masked suites individually green (gen 6/6, transforms 23/23, e2e 5/5
+files); peer strict-knip dry-run green over these tips.
+
+**Resume trigger:** the samples fix reaching `main` (watch PR #19 / the L-D lane). Then, in
+this worktree: `git fetch origin main` → merge `origin/main` into the branch (semantic-merge
+discipline for any memory-file overlap — expected: napkin, practice-index; Stormbound's
+generator.ts conflict datum: union-keep-both, thirty seconds) → full-gate `git push -u origin
+docs/resonance-practice-imports` → open the PR with the prepared description (see the session
+scratchpad note below; re-derive from the transplant plan if expired) → drop the PR number on
+the ARC channel + canonical stream → owner merge gate, with the principles.md edit-guard
+confirmation surfaced in the PR body.
+
+**⚠️ NEVER clean, reset, or remove the `resonance-imports` worktree** — it carries the only
+copy of the unpushed branch plus this record. (Local refs are repo-wide; the worktree is the
+working state.)
 
 ## Standing residuals (survive the plan's archive — this record owns them)
 
