@@ -2,6 +2,21 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 — ARC live trial, first castr channel (Stormbound Circling Kite / 62f93c)
+
+- **Two documented ARC failure classes fired within FOUR MINUTES of castr's first channel opening**
+  (owner-directed live trial, practice-imports-liaison channel with Midnight Watching Night):
+  (1) the JOINER MIS-ANCHOR — the peer's join entry landed mid-file ABOVE the opening entry, the
+  exact class Resonance observed refire with the lesson in context (re-proves the atomic-append
+  helper as the structural cure, still deliberately unbuilt); (2) a NEW class for the record —
+  GRAMMAR INVISIBILITY: a joiner cannot see the entry-header convention before the estate merges
+  (their header shape + minutes-precision timestamp missed the strict tier; they explicitly asked
+  for the contract). Cure applied per protocol: corrections as NEW entries, never edits; the
+  deviant entry stays as history. Candidate doc sharpening: the announce event should carry the
+  entry-header shape inline until the reference doc is on main.
+- **The feather loop closed live**: the built statusline rendered the peer's channel feather with
+  palette-0 ink from the real primary-checkout directory during the same window the dialogue ran.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by
