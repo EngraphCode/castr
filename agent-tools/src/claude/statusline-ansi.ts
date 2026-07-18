@@ -24,3 +24,13 @@ export const MAGENTA = '\x1b[0;35m';
 
 /** The dim middot that joins present segments on one line. */
 export const HORIZONTAL_SEPARATOR = `${DIM} · ${RESET}`;
+
+/**
+ * Truecolor (24-bit, `38;2`) foreground SGR — pair with {@link RESET}.
+ * Introduced for the ARC feather-badge colour carriers (owner-ruled 2026-07-10:
+ * membership colour travels as INK on an adjacent BMP glyph, not as a
+ * background field); components in [0, 255].
+ */
+export function truecolorForeground(red: number, green: number, blue: number): string {
+  return `\x1b[38;2;${String(red)};${String(green)};${String(blue)}m`;
+}
