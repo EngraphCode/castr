@@ -14,9 +14,13 @@
  *   `vi.doUnmock`.
  * - **No global-state mutation via vitest helpers** — `vi.spyOn` on
  *   `console`/`globalThis`/`process`, `vi.stubGlobal`, `vi.stubEnv`.
- * - **No direct mutation of `console.*` or `process.env.*`** — any
- *   assignment operator (plain or compound), `delete`, or
- *   increment/decrement.
+ * - **No mutation of `console.*` or `process.env.*`** — any assignment
+ *   operator (plain or compound), `delete`, increment/decrement, or a
+ *   standard object-API mutator call
+ *   (`Object.defineProperty`/`defineProperties`/`assign`/`setPrototypeOf`,
+ *   `Reflect.set`/`defineProperty`/`deleteProperty`/`setPrototypeOf`)
+ *   whose first argument resolves to `console`, `process`, `globalThis`,
+ *   or `process.env`. The same calls on local objects are legal.
  * - **No `process.env` reads** — `.agent/rules/test-immediate-fails.md`
  *   item 5 and `.agent/rules/no-global-state-in-tests.md` prohibit
  *   touching `process.env` at all (read OR write) in every in-process
@@ -25,6 +29,13 @@
  *   sanctioned ambient-env location — smoke composition roots (the Vitest
  *   runner config or spawn invocation) — is not a test file and lies
  *   outside the scanned set.
+ * - **No `process.cwd()`/`process.chdir()` touches** —
+ *   `.agent/rules/test-immediate-fails.md` item 6 makes any in-process
+ *   test that touches `process.cwd()` an immediate fail (anchor paths at
+ *   `import.meta.dirname`), and `process.chdir()` writes the same ambient
+ *   state. Any reference to either member counts — called or aliased,
+ *   destructured, `globalThis`-qualified. A `cwd:` option property in an
+ *   object literal built from `import.meta`-derived paths is not a touch.
  *
  * Scanned files: every `*.test.ts` the primary gate collects — mirroring the
  * `include`/`exclude` globs in `vitest.config.ts` (`src/**` and
@@ -54,6 +65,7 @@ import {
   mocksModuleRegistry,
   mutatesConsoleOrProcessEnv,
   mutatesGlobalStateViaVitestHelpers,
+  touchesCwd,
   touchesProcessEnv,
   usesFsModule,
 } from './test-hygiene-scanner.js';
@@ -202,6 +214,12 @@ describe('Test Hygiene Enforcement', () => {
 
   it('does not read or write process.env in any gated test', () => {
     const violations = findViolations(libRoot, gatedTestFiles, touchesProcessEnv);
+
+    expect(violations).toEqual([]);
+  });
+
+  it('does not touch process.cwd or process.chdir in any gated test', () => {
+    const violations = findViolations(libRoot, gatedTestFiles, touchesCwd);
 
     expect(violations).toEqual([]);
   });

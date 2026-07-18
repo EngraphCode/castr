@@ -13,6 +13,7 @@ import {
   mocksModuleRegistry,
   mutatesConsoleOrProcessEnv,
   mutatesGlobalStateViaVitestHelpers,
+  touchesCwd,
   touchesProcessEnv,
   usesFsModule,
 } from './test-hygiene-scanner.js';
@@ -242,6 +243,168 @@ describe('mutatesConsoleOrProcessEnv', () => {
 
   it('ignores the pattern inside a comment', () => {
     expect(mutatesConsoleOrProcessEnv(`// console.warn = fake\nconst x = 1;`)).toBe(false);
+  });
+
+  it('detects Object.defineProperty on console', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(`Object.defineProperty(console, 'warn', { value: fake });`),
+    ).toBe(true);
+  });
+
+  it('detects Object.defineProperties on console', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(`Object.defineProperties(console, { warn: { value: fake } });`),
+    ).toBe(true);
+  });
+
+  it('detects Object.assign onto console', () => {
+    expect(mutatesConsoleOrProcessEnv(`Object.assign(console, { warn: fake });`)).toBe(true);
+  });
+
+  it('detects Object.assign onto process.env', () => {
+    expect(mutatesConsoleOrProcessEnv(`Object.assign(process.env, { CI: '1' });`)).toBe(true);
+  });
+
+  it('detects Object.setPrototypeOf on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`Object.setPrototypeOf(console, fakeProto);`)).toBe(true);
+  });
+
+  it('detects Reflect.set on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.set(console, 'warn', fake);`)).toBe(true);
+  });
+
+  it('detects Reflect.set on process', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.set(process, 'env', fakeEnv);`)).toBe(true);
+  });
+
+  it('detects Reflect.defineProperty on process.env', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(`Reflect.defineProperty(process.env, 'CI', { value: '1' });`),
+    ).toBe(true);
+  });
+
+  it('detects Reflect.deleteProperty on process.env', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.deleteProperty(process.env, 'CI');`)).toBe(true);
+  });
+
+  it('detects Reflect.setPrototypeOf on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.setPrototypeOf(console, fakeProto);`)).toBe(true);
+  });
+
+  it('detects Object.assign onto globalThis', () => {
+    expect(mutatesConsoleOrProcessEnv(`Object.assign(globalThis, { fetch: fake });`)).toBe(true);
+  });
+
+  it('detects a mutator call on a globalThis-qualified console', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(
+        `Object.defineProperty(globalThis.console, 'warn', { value: fake });`,
+      ),
+    ).toBe(true);
+  });
+
+  it('detects a mutator call on an as-asserted console', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.set(console as LoggerSink, 'warn', fake);`)).toBe(
+      true,
+    );
+  });
+
+  it('detects an element-access mutator invocation on console', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(`Object['defineProperty'](console, 'warn', { value: fake });`),
+    ).toBe(true);
+  });
+
+  it('ignores Object.defineProperty on a local object', () => {
+    expect(
+      mutatesConsoleOrProcessEnv(`Object.defineProperty(localObj, 'warn', { value: fake });`),
+    ).toBe(false);
+  });
+
+  it('ignores Object.assign onto a local object', () => {
+    expect(mutatesConsoleOrProcessEnv(`Object.assign(target, { warn: fake });`)).toBe(false);
+  });
+
+  it('ignores Reflect.set on a local object', () => {
+    expect(mutatesConsoleOrProcessEnv(`Reflect.set(schema, 'properties', properties);`)).toBe(
+      false,
+    );
+  });
+
+  it('ignores a non-mutating Object call receiving process.env', () => {
+    expect(mutatesConsoleOrProcessEnv(`const keys = Object.keys(process.env);`)).toBe(false);
+  });
+
+  it('ignores a mutator name on a non-Object base', () => {
+    expect(mutatesConsoleOrProcessEnv(`helper.defineProperty(console, 'warn', d);`)).toBe(false);
+  });
+
+  it('ignores the mutator pattern quoted as string data', () => {
+    expect(mutatesConsoleOrProcessEnv(`const s = "Reflect.set(console, 'warn', fake)";`)).toBe(
+      false,
+    );
+  });
+});
+
+describe('touchesCwd', () => {
+  it('detects a process.cwd() call', () => {
+    expect(touchesCwd(`const root = process.cwd();`)).toBe(true);
+  });
+
+  it('detects a process.chdir() call', () => {
+    expect(touchesCwd(`process.chdir('/tmp');`)).toBe(true);
+  });
+
+  it('detects aliasing process.cwd without calling it', () => {
+    expect(touchesCwd(`const getCwd = process.cwd;`)).toBe(true);
+  });
+
+  it('detects an element-access cwd reference', () => {
+    expect(touchesCwd(`const root = process['cwd']();`)).toBe(true);
+  });
+
+  it('detects a globalThis-qualified cwd call', () => {
+    expect(touchesCwd(`const root = globalThis.process.cwd();`)).toBe(true);
+  });
+
+  it('detects a cwd call through an as-assertion on process', () => {
+    expect(touchesCwd(`const root = (process as NodeJS.Process).cwd();`)).toBe(true);
+  });
+
+  it('detects destructuring cwd from process', () => {
+    expect(touchesCwd(`const { cwd } = process;`)).toBe(true);
+  });
+
+  it('detects renamed destructuring of chdir from process', () => {
+    expect(touchesCwd(`const { chdir: go } = process;`)).toBe(true);
+  });
+
+  it('detects rest destructuring from process', () => {
+    expect(touchesCwd(`const { ...copy } = process;`)).toBe(true);
+  });
+
+  it('ignores a cwd option property in an object literal', () => {
+    expect(touchesCwd(`const eslint = new ESLint({ cwd: repoRoot });`)).toBe(false);
+  });
+
+  it('ignores cwd access on a non-process object', () => {
+    expect(touchesCwd(`const root = fakeProcess.cwd();`)).toBe(false);
+  });
+
+  it('ignores a local variable named cwd', () => {
+    expect(touchesCwd(`const cwd = repoRoot;\nconst file = path.join(cwd, 'x');`)).toBe(false);
+  });
+
+  it('ignores other property reads on process', () => {
+    expect(touchesCwd(`const version = process.version;`)).toBe(false);
+  });
+
+  it('ignores the pattern quoted as string data', () => {
+    expect(touchesCwd(`const s = "process.cwd()";`)).toBe(false);
+  });
+
+  it('ignores the pattern inside a comment', () => {
+    expect(touchesCwd(`// process.cwd()\nconst x = 1;`)).toBe(false);
   });
 });
 
