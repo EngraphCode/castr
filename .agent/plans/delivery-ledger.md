@@ -88,7 +88,9 @@ Open PRs are live surfaces: reviews and CI **will** demand fixes.
 
 - **Session open** (with start-right): for each OPEN row below, run `gh pr status` and per PR `gh pr checks <n>` +
   `gh pr view <n> --comments` before new work. _(Open now, 2026-07-17: PR #10 — program record + gate-footprint
-  bootstrap; PR #11 — lane L-A; PR #12 — lane L-K1. More lane PRs follow per the program record's merge waves.)_
+  bootstrap; PR #11 — lane L-A; PR #12 — lane L-K1; PR #13 — lane L-C; PR #14 — lane L-K6;
+  PR #15 — lanes L-K3+K5+K7; PR #16 — lane L-F. More follow per the program record's merge waves;
+  live orchestration state: [the thread record](../memory/operational/threads/remediation-parallel-program.next-session.md).)_
 - **Session close** (session-handoff): refresh this ledger; a handoff with a stale ledger is incomplete.
 
 ## Deliveries
