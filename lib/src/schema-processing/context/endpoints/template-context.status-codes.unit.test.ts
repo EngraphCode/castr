@@ -9,7 +9,10 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { isSuccessStatusCode } from './template-context.status-codes.js';
+import {
+  isSuccessStatusCode,
+  orderSuccessResponsesByPrecedence,
+} from './template-context.status-codes.js';
 
 describe('isSuccessStatusCode', () => {
   it.each(['200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '299'])(
@@ -36,4 +39,25 @@ describe('isSuccessStatusCode', () => {
       expect(isSuccessStatusCode(statusCode)).toBe(false);
     },
   );
+});
+
+describe('orderSuccessResponsesByPrecedence', () => {
+  const byStatus = (...statusCodes: string[]): { statusCode: string }[] =>
+    statusCodes.map((statusCode) => ({ statusCode }));
+
+  it('places concrete 2xx codes ahead of the 2XX wildcard, keeping document order within each group', () => {
+    const ordered = orderSuccessResponsesByPrecedence(byStatus('2XX', '204', '200'));
+
+    expect(ordered.map((response) => response.statusCode)).toEqual(['204', '200', '2XX']);
+  });
+
+  it('excludes non-success responses, including default and error wildcards', () => {
+    const ordered = orderSuccessResponsesByPrecedence(byStatus('default', '4XX', '500', '201'));
+
+    expect(ordered.map((response) => response.statusCode)).toEqual(['201']);
+  });
+
+  it('returns an empty ordering when no success responses exist', () => {
+    expect(orderSuccessResponsesByPrecedence(byStatus('default', '404'))).toEqual([]);
+  });
 });

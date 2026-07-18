@@ -97,6 +97,40 @@ export function isConcreteStatusToken(value: string): boolean {
 }
 
 /**
+ * Order success responses by primary-success precedence: concrete 2xx codes
+ * before the `2XX` range wildcard, preserving document order within each
+ * group. A concrete code is a more specific success declaration than the
+ * range wildcard, so it always outranks it; ties resolve by document order.
+ * Non-success responses (per {@link isSuccessStatusCode}) are excluded.
+ *
+ * The single primary-success selector shared by the endpoint and MCP
+ * builders: both writers resolve the primary success response as the first
+ * element of this ordering, so they always agree on which schema is primary.
+ *
+ * @param responses - IR responses in document order
+ * @returns Success responses in primary-success precedence order
+ *
+ * @internal
+ */
+export function orderSuccessResponsesByPrecedence<T extends { readonly statusCode: string }>(
+  responses: readonly T[],
+): T[] {
+  const concrete: T[] = [];
+  const wildcard: T[] = [];
+  for (const response of responses) {
+    if (!isSuccessStatusCode(response.statusCode)) {
+      continue;
+    }
+    if (isConcreteStatusToken(response.statusCode)) {
+      concrete.push(response);
+    } else {
+      wildcard.push(response);
+    }
+  }
+  return [...concrete, ...wildcard];
+}
+
+/**
  * Sink for generation-time warnings.
  *
  * Injectable so tests and embedders capture warnings on a fake instead of

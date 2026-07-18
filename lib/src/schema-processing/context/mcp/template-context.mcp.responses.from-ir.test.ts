@@ -194,7 +194,7 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBeUndefined();
   });
 
-  test('returns schema from lowest 2xx status code when multiple exist', () => {
+  test('returns schema from the first concrete 2xx in document order when multiple exist', () => {
     const ok200Schema = createMockSchema();
     const created201Schema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {
@@ -206,8 +206,10 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
 
     const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
 
-    // Should return 200 schema (lowest 2xx status code)
-    expect(result).toBe(ok200Schema);
+    // Document order breaks ties among concrete codes — the same shared
+    // selector the endpoint builder uses (concrete-over-range, then
+    // document order).
+    expect(result).toBe(created201Schema);
   });
 
   test('resolves schemas for the full 2xx class (206, 226), not only 200-204', () => {
@@ -224,7 +226,7 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBe(partialContentSchema);
   });
 
-  test('picks the lowest concrete 2xx even when it is above 204', () => {
+  test('follows document order among concrete 2xx codes, including above 204', () => {
     const resetContentSchema = createMockSchema();
     const imUsedSchema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {
@@ -236,7 +238,7 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
 
     const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
 
-    expect(result).toBe(resetContentSchema);
+    expect(result).toBe(imUsedSchema);
   });
 
   test('handles response with content instead of direct schema', () => {

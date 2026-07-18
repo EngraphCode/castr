@@ -18,7 +18,7 @@ import {
   type CastrOperation,
   type CastrResponse,
 } from '../../ir/index.js';
-import { isSuccessStatusCode } from '../endpoints/template-context.status-codes.js';
+import { orderSuccessResponsesByPrecedence } from '../endpoints/template-context.status-codes.js';
 
 const MEDIA_TYPE_WILDCARD_TYPE = '*';
 const MEDIA_TYPE_WILDCARD_SUBTYPE = '*';
@@ -194,23 +194,14 @@ const extractResponseSchemaFromIR = (
 };
 
 /**
- * Sort key that orders concrete success codes ascending and places the
- * `2XX` wildcard after every concrete code (a concrete `200` is a more
- * specific success declaration than the range wildcard).
- */
-const successStatusSortKey = (statusCode: string): number => {
-  const numeric = Number(statusCode);
-  return Number.isInteger(numeric) ? numeric : Number.MAX_SAFE_INTEGER;
-};
-
-/**
  * Extracts the primary success response schema from a CastrOperation using the IR.
  *
- * Success selection is aligned with the endpoint builder's
- * {@link isSuccessStatusCode} semantics: the full HTTP 2xx class
+ * Success selection uses the selector shared with the endpoint builder
+ * ({@link orderSuccessResponsesByPrecedence}): the full HTTP 2xx class
  * (`200`-`299`, RFC 9110 §15.3) and the `2XX` wildcard are success statuses;
- * `default` and every other token are not. The lowest concrete success code
- * wins; the `2XX` wildcard is consulted last.
+ * `default` and every other token are not. Concrete codes outrank the `2XX`
+ * wildcard; ties resolve by document order. Responses without an extractable
+ * schema are skipped in that same order.
  */
 export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
@@ -220,9 +211,7 @@ export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
   document: Pick<CastrDocument, 'components'> = { components: [] },
 ): CastrSchema | undefined {
-  const successResponses = operation.responses
-    .filter((response) => isSuccessStatusCode(response.statusCode))
-    .sort((a, b) => successStatusSortKey(a.statusCode) - successStatusSortKey(b.statusCode));
+  const successResponses = orderSuccessResponsesByPrecedence(operation.responses);
 
   for (const response of successResponses) {
     const schema = extractResponseSchemaFromIR(document, response);

@@ -139,10 +139,35 @@ describe('template-context.endpoints.from-ir', () => {
 
     const [endpoint] = getEndpointDefinitionsFromIR(doc);
 
-    expect(endpoint?.response).toEqual(wildcardSuccessSchema);
+    // The concrete 299 outranks the 2XX wildcard for the primary success
+    // response (shared concrete-over-range selector), even though the
+    // wildcard appears first in document order.
+    expect(endpoint?.response).toEqual(custom2xxSchema);
     // 299 is inside the HTTP 2xx success class (RFC 9110 §15.3) — it must
     // never be mapped to the errors list.
     expect(endpoint?.errors).toEqual([{ status: 'default', schema: fallbackErrorSchema }]);
+  });
+
+  it('prefers concrete 2xx over the 2XX wildcard, then document order, for the primary success response', () => {
+    const wildcardSchema = createSchema('object');
+    const firstConcreteSchema = createSchema('string');
+    const secondConcreteSchema = createSchema('number');
+
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          createResponse('2XX', wildcardSchema),
+          createResponse('204', firstConcreteSchema),
+          createResponse('200', secondConcreteSchema),
+        ],
+      }),
+    ]);
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+
+    // Concrete codes outrank the range wildcard; among concrete codes the
+    // first in document order wins — the same selector the MCP builder uses.
+    expect(endpoint?.response).toEqual(firstConcreteSchema);
   });
 
   it('treats 205, 206, and 226 as success statuses, not errors', () => {
@@ -325,88 +350,6 @@ describe('template-context.endpoints.from-ir', () => {
     expect(endpoint?.alias).toBe('purgeUsers');
   });
 
-  it('fails fast when endpoint generation encounters itemSchema', () => {
-    const doc = createDocument([
-      createOperation({
-        requestBody: {
-          required: true,
-          content: {
-            'application/x-ndjson': {
-              schema: createSchema('object'),
-              itemSchema: createSchema('string'),
-            },
-          },
-        },
-      }),
-    ]);
-
-    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
-  });
-
-  it('fails fast when endpoint generation encounters itemSchema in parameter content', () => {
-    const doc = createDocument([
-      createOperation({
-        parameters: [
-          {
-            name: 'stream-filter',
-            in: 'query',
-            required: false,
-            schema: createSchema('object'),
-            content: {
-              'application/x-ndjson': {
-                itemSchema: createSchema('string'),
-              },
-            },
-          },
-        ],
-        parametersByLocation: {
-          path: [],
-          query: [
-            {
-              name: 'stream-filter',
-              in: 'query',
-              required: false,
-              schema: createSchema('object'),
-              content: {
-                'application/x-ndjson': {
-                  itemSchema: createSchema('string'),
-                },
-              },
-            },
-          ],
-          header: [],
-          cookie: [],
-        },
-      }),
-    ]);
-
-    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
-  });
-
-  it('fails fast when endpoint generation encounters itemSchema in response headers', () => {
-    const doc = createDocument([
-      createOperation({
-        responses: [
-          {
-            statusCode: '200',
-            headers: {
-              'X-Stream-Acks': {
-                schema: createSchema('object'),
-                content: {
-                  'application/x-ndjson': {
-                    itemSchema: createSchema('string'),
-                  },
-                },
-              },
-            },
-          },
-        ],
-      }),
-    ]);
-
-    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
-  });
-
   it('uses lexicographically first media type for body parameter schema fallback', () => {
     const xmlBodySchema = createSchema('object');
     const textBodySchema = createSchema('string');
@@ -557,5 +500,150 @@ describe('template-context.endpoints.from-ir', () => {
       expect(specCompliant[0]?.errors).toEqual([{ status: 'default', schema: fallbackSchema }]);
       expect(autoCorrect[0]?.errors).toEqual([{ status: 'default', schema: fallbackSchema }]);
     });
+  });
+});
+
+describe('template-context.endpoints.from-ir itemSchema target capabilities', () => {
+  it('fails fast when endpoint generation encounters itemSchema', () => {
+    const doc = createDocument([
+      createOperation({
+        requestBody: {
+          required: true,
+          content: {
+            'application/x-ndjson': {
+              schema: createSchema('object'),
+              itemSchema: createSchema('string'),
+            },
+          },
+        },
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
+  });
+
+  it('fails fast when endpoint generation encounters itemSchema in parameter content', () => {
+    const doc = createDocument([
+      createOperation({
+        parameters: [
+          {
+            name: 'stream-filter',
+            in: 'query',
+            required: false,
+            schema: createSchema('object'),
+            content: {
+              'application/x-ndjson': {
+                itemSchema: createSchema('string'),
+              },
+            },
+          },
+        ],
+        parametersByLocation: {
+          path: [],
+          query: [
+            {
+              name: 'stream-filter',
+              in: 'query',
+              required: false,
+              schema: createSchema('object'),
+              content: {
+                'application/x-ndjson': {
+                  itemSchema: createSchema('string'),
+                },
+              },
+            },
+          ],
+          header: [],
+          cookie: [],
+        },
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
+  });
+
+  it('fails fast when endpoint generation encounters itemSchema in response headers', () => {
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          {
+            statusCode: '200',
+            headers: {
+              'X-Stream-Acks': {
+                schema: createSchema('object'),
+                content: {
+                  'application/x-ndjson': {
+                    itemSchema: createSchema('string'),
+                  },
+                },
+              },
+            },
+          },
+        ],
+      }),
+    ]);
+
+    expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(/itemSchema/i);
+  });
+
+  it('generates endpoints when itemSchema is confined to an ignored default-only operation (spec-compliant)', () => {
+    const warnings: string[] = [];
+    const doc = createDocument([
+      createOperation({
+        operationId: 'streamEvents',
+        path: '/events',
+        responses: [
+          {
+            statusCode: 'default',
+            content: {
+              'application/x-ndjson': {
+                schema: createSchema('object'),
+                itemSchema: createSchema('string'),
+              },
+            },
+          },
+        ],
+      }),
+      createOperation({
+        operationId: 'listUsers',
+        path: '/users',
+        responses: [createResponse('200', createSchema('object'))],
+      }),
+    ]);
+
+    // The default-only operation is dropped before capability checking, so
+    // its itemSchema must not abort generation of the remaining endpoints —
+    // the same contract the MCP builder honors.
+    const endpoints = getEndpointDefinitionsFromIR(doc, 'spec-compliant', (message) =>
+      warnings.push(message),
+    );
+
+    expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain('streamEvents');
+  });
+
+  it('fails fast under auto-correct when an included default-only operation carries itemSchema', () => {
+    const doc = createDocument([
+      createOperation({
+        operationId: 'streamEvents',
+        path: '/events',
+        responses: [
+          {
+            statusCode: 'default',
+            content: {
+              'application/x-ndjson': {
+                schema: createSchema('object'),
+                itemSchema: createSchema('string'),
+              },
+            },
+          },
+        ],
+      }),
+    ]);
+
+    // Under auto-correct the operation is selected, so its itemSchema is a
+    // real capability gap and must still abort.
+    expect(() => getEndpointDefinitionsFromIR(doc, 'auto-correct')).toThrow(/itemSchema/i);
   });
 });

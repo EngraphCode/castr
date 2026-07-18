@@ -14,7 +14,7 @@ import type {
   EndpointResponse,
   ParameterType,
 } from '../../../endpoints/definition.types.js';
-import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
+import { assertOperationSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 import { extractConstraintsFromIR } from '../constraints/index.js';
 import {
   DEFAULT_STATUS_AUTO_CORRECT,
@@ -24,6 +24,7 @@ import {
   isStatusRangeToken,
   isSuccessStatusCode,
   logWarnSink,
+  orderSuccessResponsesByPrecedence,
   selectOperationsByDefaultStatusBehavior,
   STATUS_DEFAULT,
   type DefaultStatusBehavior,
@@ -52,7 +53,6 @@ export function getEndpointDefinitionsFromIR(
   defaultStatusBehavior: DefaultStatusBehavior = DEFAULT_STATUS_SPEC_COMPLIANT,
   warn: WarnSink = logWarnSink,
 ): EndpointDefinition[] {
-  assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'Endpoints');
   const operations = selectOperationsByDefaultStatusBehavior(
     allOperations(ir),
     defaultStatusBehavior,
@@ -60,13 +60,18 @@ export function getEndpointDefinitionsFromIR(
   );
   const promoteDefaultOnly = defaultStatusBehavior === DEFAULT_STATUS_AUTO_CORRECT;
 
-  return operations.map((operation) =>
-    mapOperationToEndpointDefinition(
+  return operations.map((operation) => {
+    // Capability-check only the selected operations, after default-status
+    // filtering — an ignored default-only operation must not abort
+    // generation. The MCP builder applies the same per-selected-operation
+    // check, so both writers honor the same ignore contract.
+    assertOperationSupportsItemSchemaTargetCapabilities(ir, operation, 'Endpoints');
+    return mapOperationToEndpointDefinition(
       ir,
       operation,
       promoteDefaultOnly && hasOnlyDefaultStatusResponses(operation),
-    ),
-  );
+    );
+  });
 }
 
 function mapOperationToEndpointDefinition(
@@ -216,11 +221,13 @@ function mapSuccessResponse(
   responses: CastrResponse[],
   promoteDefaultToSuccess: boolean,
 ): CastrSchema {
-  // Find primary success response using centralized status-code semantics.
-  // Under auto-correct, a default-only operation's `default` response is
-  // promoted to the success position (see docs/DEFAULT-RESPONSE-BEHAVIOR.md).
+  // Find the primary success response via the shared selector (concrete 2xx
+  // over the 2XX wildcard, then document order) so endpoints and MCP tools
+  // always agree on the primary schema. Under auto-correct, a default-only
+  // operation's `default` response is promoted to the success position
+  // (see docs/DEFAULT-RESPONSE-BEHAVIOR.md).
   const success =
-    responses.find((r) => isSuccessStatusCode(r.statusCode)) ??
+    orderSuccessResponsesByPrecedence(responses)[0] ??
     (promoteDefaultToSuccess ? responses.find((r) => r.statusCode === STATUS_DEFAULT) : undefined);
   if (success) {
     return (

@@ -210,6 +210,57 @@ describe('buildMcpToolsFromIR', () => {
       expect(result.map((entry) => entry.operationId)).toEqual(['logoutUser', 'listUsers']);
       expect(warnings).toEqual([]);
     });
+
+    function createDefaultOnlyItemSchemaIr(): CastrDocument {
+      const defaultOnlyWithItemSchema = createMockOperation({
+        operationId: 'streamEvents',
+        method: 'get',
+        path: '/events',
+        responses: [
+          {
+            statusCode: 'default',
+            content: {
+              'application/x-ndjson': {
+                schema: createMockSchema(),
+                itemSchema: createMockSchema('string'),
+              },
+            },
+          },
+        ],
+      });
+      const explicit = createMockOperation({
+        operationId: 'listUsers',
+        method: 'get',
+        path: '/users',
+        responses: [{ statusCode: '200', schema: createMockSchema() }],
+      });
+      return createMockCastrDocument({ operations: [defaultOnlyWithItemSchema, explicit] });
+    }
+
+    test('builds tools when itemSchema is confined to a dropped default-only operation (spec-compliant)', () => {
+      const warnings: string[] = [];
+
+      // The default-only operation is dropped before capability checking, so
+      // its itemSchema must not abort tool generation — the same contract the
+      // endpoint builder honors.
+      const result = buildMcpToolsFromIR(createDefaultOnlyItemSchemaIr(), {
+        warnSink: (message) => warnings.push(message),
+      });
+
+      expect(result.map((entry) => entry.operationId)).toEqual(['listUsers']);
+      expect(warnings).toHaveLength(1);
+    });
+
+    test('fails fast under auto-correct when a kept default-only operation carries itemSchema', () => {
+      // Under auto-correct the operation is selected, so its itemSchema is a
+      // real capability gap and must still abort.
+      expect(() =>
+        buildMcpToolsFromIR(createDefaultOnlyItemSchemaIr(), {
+          defaultStatusBehavior: 'auto-correct',
+          warnSink: () => undefined,
+        }),
+      ).toThrow(/itemSchema/i);
+    });
   });
 
   describe('tool name generation', () => {
