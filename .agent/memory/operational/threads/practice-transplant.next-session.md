@@ -43,6 +43,20 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | 8bff79            | Cirrus Spiralling Airstream    | executor     | 2026-07-03    | 2026-07-03   |
 
+## ARC-bring handover residue (2026-07-18 09:33Z, Stormbound Circling Kite stand-down — owner-directed)
+
+**PR #22** (`feat/arc-rapid-comms-bring`, origin head `c10c7bf2`): the ARC estate bring, complete
+and twice-reviewed (four-reviewer panel + a 16-thread bot wave). **Residue: 14 unresolved review
+threads whose fixes are ALL pushed in `67bf879f`** (in `c10c7bf2`'s ancestry; red-first, 122/122
+targeted suites, full gates green) — only the reply+resolve posting remains. Each reply
+re-derives from `67bf879f`'s diff to the thread's file; 2 further threads were already
+rejected-and-resolved with falsifying grounds. Pickup: any practice-estate session — harvest
+unresolved threads on #22, map each to the commit's change, reply with commit-referenced
+evidence, resolve, expect 0. Post-merge residue (named positions): liaison-channel conservation
+waits on the erratum-convention question (upstream guest-channel item 7); citations-rule +
+PDR-139 brings trigger on PR #23's merge; Resonance back-flow items 1-8 await Shaded Foraging
+Grove's replies on the guest channel.
+
 ## Lanes
 
 A lane is an independently pickup-able arc — its own state, branch, and pickup
