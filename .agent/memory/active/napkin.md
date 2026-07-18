@@ -16,6 +16,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   branches to a `writeUnreachableBranch` callback (defaults preserve other writers); the JSON
   Schema writer supplies a verbatim (non-asserting) twin recursion. Fail-closed pins prove
   reachable branches still throw.
+- **"Reject until carried" guards are debts that mature, and they mature ALL AT ONCE** (Codex P2,
+  PRRT_kwDOQHEhMc6R-Z-4): the boolean-sub-schema rejections were LAYERED — normalization's
+  `narrowSchemaOrRef` (first to fire, despite the review naming `parseSingleSchemaOrRef`), the
+  parser helper, AND the writer's object-form guard — so "carry booleans" meant widening
+  `JsonSchema2020` (Omit + redeclare every sub-schema seam key; interface extension cannot widen
+  inherited properties), collapsing the reject/carry helper dichotomies in BOTH layers
+  (replace-dont-bridge), and choosing the emission form. Emission verdict: boolean literals at
+  boolean-capable container positions; canonical object forms (`true` → `{}`,
+  `false` → `{ not: {} }`) at object-form-only container positions — the established egress
+  normal form ($defs bundle precedent), semantically exact per 2020-12 §4.3.2; byte-literal
+  emission at every nested position would force a narrow/wide split of the shared
+  `JsonSchemaObject`, whose structural assignability to the OAS seam is exercised at 6+ document
+  seams — named as a position, not smuggled in. Bonus fidelity win unlocked: Draft 07 tuple
+  `additionalItems: false` now maps to `items: false` instead of rejecting.
 - **sonarjs/function-return-type (S3800) is suppressed by a TSDoc `@returns` tag** — verified in
   the rule source (`hasReturnTypeJSDoc`): that is why the union-returning `writeJsonSchema` never
   fired while its new twin did. The sanctioned cure is documenting `@returns`, not a disable.

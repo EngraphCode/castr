@@ -53,16 +53,21 @@ export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean
  * Internal writer that satisfies the `WriteSchemaFn` signature.
  *
  * Used as the recursive callback for `writeAllJsonSchemaFields` at
- * object-form-only positions. Boolean schemas are handled at the public
- * `writeJsonSchema` boundary and at boolean-capable keyword positions
- * (`if`/`then`/`else`, `contentSchema`), so a `booleanSchema` node
- * reaching this function means the position cannot represent it — that is
- * rejected explicitly rather than silently emitted as `{}`.
+ * positions whose emission container is object-form only. Boolean-literal
+ * emission happens at the public `writeJsonSchema` boundary and at
+ * boolean-capable keyword positions (`if`/`then`/`else`, `contentSchema`);
+ * a `booleanSchema` node reaching this function is emitted as its
+ * semantically-exact canonical object form (egress normal form:
+ * `true` → `{}`, `false` → `{ "not": {} }`) — never spread, never
+ * silently inverted.
  *
  * @internal
  */
 function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
-  rejectBooleanSchemaAtObjectFormPosition(schema);
+  const canonical = canonicalObjectFormOfBooleanSchema(schema);
+  if (canonical !== undefined) {
+    return canonical;
+  }
   assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
   return writeJsonSchemaObjectShape(schema, writeJsonSchemaObject, writeJsonSchema);
 }
@@ -96,7 +101,10 @@ function writeUnreachableBranchJsonSchema(schema: CastrSchema): JsonSchemaObject
  * @internal
  */
 function writeUnreachableBranchJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
-  rejectBooleanSchemaAtObjectFormPosition(schema);
+  const canonical = canonicalObjectFormOfBooleanSchema(schema);
+  if (canonical !== undefined) {
+    return canonical;
+  }
   return writeJsonSchemaObjectShape(
     schema,
     writeUnreachableBranchJsonSchemaObject,
@@ -105,18 +113,24 @@ function writeUnreachableBranchJsonSchemaObject(schema: CastrSchema): JsonSchema
 }
 
 /**
- * Reject a `booleanSchema` node at an object-form-only position.
+ * Canonical object form of a `booleanSchema` node, for positions whose
+ * emission container is object-form only.
+ *
+ * JSON Schema defines the exact object equivalents `true` ≡ `{}` and
+ * `false` ≡ `{ "not": {} }` (2020-12 core §4.3.2), so this substitution is
+ * semantically lossless. Boolean-capable container positions
+ * (`if`/`then`/`else`, `contentSchema`, and the document root) emit the
+ * boolean literal instead.
+ *
+ * @returns The canonical object form, or `undefined` when the node is not
+ * a boolean schema
  * @internal
  */
-function rejectBooleanSchemaAtObjectFormPosition(schema: CastrSchema): void {
-  if (schema.booleanSchema !== undefined) {
-    const objectForm = schema.booleanSchema ? '`{}`' : '`{ "not": {} }`';
-    throw new Error(
-      `Boolean JSON Schema \`${String(schema.booleanSchema)}\` reached an object-form-only ` +
-        `position in the JSON Schema writer; emitting \`{}\` here would silently change its ` +
-        `semantics. Use the equivalent object form ${objectForm} at this position.`,
-    );
+function canonicalObjectFormOfBooleanSchema(schema: CastrSchema): JsonSchemaObject | undefined {
+  if (schema.booleanSchema === undefined) {
+    return undefined;
   }
+  return schema.booleanSchema ? {} : { not: {} };
 }
 
 /**

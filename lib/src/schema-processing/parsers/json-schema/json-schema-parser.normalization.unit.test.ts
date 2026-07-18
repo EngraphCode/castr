@@ -410,7 +410,7 @@ describe('normalizeDraft07', () => {
 
       const result = normalizeDraft07(input);
 
-      expect(result.not?.$ref).toBe('#/$defs/Forbidden');
+      expect(getSchemaRef(result.not, 'not')).toBe('#/$defs/Forbidden');
     });
 
     it('preserves non-definitions $ref paths unchanged', () => {
@@ -793,48 +793,61 @@ describe('boolean sub-schema honesty', () => {
     expect(result.contentSchema).toBe(true);
   });
 
-  it('rejects a boolean schema under properties instead of silently inverting it', () => {
+  it('preserves a boolean schema under properties (never silently inverted)', () => {
     const input = draft07({
       type: 'object',
       properties: { a: false },
       additionalProperties: false,
     });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*properties/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.properties?.['a']).toBe(false);
   });
 
-  it('rejects a boolean schema under $defs instead of silently inverting it', () => {
+  it('preserves a boolean schema under $defs (never silently inverted)', () => {
     const input = draft07({ $defs: { Nope: false } });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*\$defs/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.$defs?.['Nope']).toBe(false);
   });
 
-  it('rejects a boolean schema in allOf instead of silently inverting it', () => {
+  it('preserves a boolean schema in allOf (never silently inverted)', () => {
     const input = draft07({ allOf: [false] });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*allOf/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.allOf).toEqual([false]);
   });
 
-  it('rejects a boolean items schema instead of silently inverting it', () => {
+  it('preserves a boolean items schema (never silently inverted)', () => {
     const input = draft07({ type: 'array', items: false });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*items/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.items).toBe(false);
   });
 
-  it('rejects a boolean not schema instead of silently inverting it', () => {
+  it('preserves a boolean not schema (never silently inverted)', () => {
     const input = draft07({ not: false });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*not/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.not).toBe(false);
   });
 
-  it('rejects a boolean additionalItems beside tuple items instead of silently inverting it', () => {
+  it('maps a boolean additionalItems beside tuple items to 2020-12 items', () => {
     const input = draft07({
       type: 'array',
       items: [{ type: 'string' }],
       additionalItems: false,
     });
 
-    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*additionalItems/s);
+    const result = normalizeDraft07(input);
+
+    expect(result.prefixItems).toEqual([{ type: 'string' }]);
+    expect(result.items).toBe(false);
   });
 
   it('still preserves booleans at the boolean-capable keywords', () => {

@@ -10,6 +10,7 @@ import { describe, it, expect } from 'vitest';
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
+import { parseJsonSchema } from '../../parsers/json-schema/index.js';
 import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
@@ -630,7 +631,10 @@ describe('writeJsonSchema — boolean sub-schema emission', () => {
     });
   });
 
-  it('fails fast when a boolean schema reaches an object-only position', () => {
+  it('emits the canonical object form for booleanSchema: false at an object-form container position', () => {
+    // Egress normal form: positions whose emission container is object-form
+    // only cannot carry a boolean literal, so the semantically-exact
+    // canonical object form is emitted instead (`false` ≡ `{ not: {} }`).
     const schema = createSchema({
       type: 'object',
       properties: new CastrSchemaProperties({
@@ -639,7 +643,77 @@ describe('writeJsonSchema — boolean sub-schema emission', () => {
       additionalProperties: false,
     });
 
-    expect(() => writeJsonSchema(schema)).toThrow(/[Bb]oolean/);
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        flag: { not: {} },
+      },
+      additionalProperties: false,
+    });
+  });
+
+  it('emits the canonical object form for booleanSchema: true at an object-form container position', () => {
+    const schema = createSchema({
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        open: createSchema({ booleanSchema: true }),
+      }),
+      additionalProperties: false,
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'object',
+      properties: {
+        open: {},
+      },
+      additionalProperties: false,
+    });
+  });
+
+  it('emits canonical object forms for boolean items and allOf members', () => {
+    const schema = createSchema({
+      allOf: [createSchema({ booleanSchema: false })],
+      items: createSchema({ booleanSchema: false }),
+      type: 'array',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'array',
+      allOf: [{ not: {} }],
+      items: { not: {} },
+    });
+  });
+});
+
+describe('writeJsonSchema — nested boolean sub-schema round-trip (parse → write)', () => {
+  it('round-trips the reviewer-named shapes to semantically-exact output', () => {
+    const parsed = parseJsonSchema({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        blocked: false,
+        tags: { type: 'array', items: false },
+      },
+      allOf: [false],
+    });
+
+    const result = writeJsonSchemaAsObject(parsed);
+
+    expect(result).toEqual({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        blocked: { not: {} },
+        tags: { type: 'array', items: { not: {} } },
+      },
+      allOf: [{ not: {} }],
+    });
   });
 });
 

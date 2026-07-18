@@ -10,6 +10,10 @@
  * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
  * arrays. Boolean `exclusiveMinimum`/`exclusiveMaximum` are normalised to
  * the numeric 2020-12 form (or rejected when no companion bound exists).
+ * `booleanSchema` IR nodes emit as boolean literals at boolean-capable
+ * container positions (`if`/`then`/`else`, `contentSchema`, document root)
+ * and as their canonical object forms (`true` → `{}`,
+ * `false` → `{ "not": {} }`) at object-form-only container positions.
  * Both writers emit `$ref` sibling keywords (2020-12 applies them).
  *
  * @internal

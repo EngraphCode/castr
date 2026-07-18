@@ -19,7 +19,6 @@
 
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 import type { Draft07Input } from './json-schema-parser.normalization.types.js';
-import { buildBooleanSubSchemaRejectionMessage } from './json-schema-parser.normalization.apply.js';
 import {
   liftDefinitions,
   splitDependencies,
@@ -74,9 +73,9 @@ export type { Draft07Input } from './json-schema-parser.normalization.types.js';
  * Map the Draft 07 tuple form to 2020-12: array `items` becomes
  * `prefixItems`, and the remainder-item schema `additionalItems` becomes
  * 2020-12 `items` (the same position: it constrains elements beyond the
- * tuple prefix). A boolean `additionalItems` is rejected explicitly —
- * `items` is object-only downstream, and `{ ...false }` would silently
- * invert reject-all into allow-any.
+ * tuple prefix). Boolean forms are carried verbatim —
+ * `additionalItems: false` is the canonical Draft 07 tuple-closing idiom
+ * and maps to `items: false`.
  *
  * Without tuple `items`, Draft 07 says `additionalItems` MUST be ignored
  * (validation §6.4.2); the dead keyword is dropped by `stripDraft07Keys`.
@@ -89,9 +88,6 @@ function normalizeTupleItems(input: Draft07Input): Draft07Input {
   const result: Draft07Input = { ...rest, prefixItems: items };
   if (additionalItems === undefined) {
     return result;
-  }
-  if (typeof additionalItems === 'boolean') {
-    throw new Error(buildBooleanSubSchemaRejectionMessage('additionalItems', additionalItems));
   }
   return { ...result, items: additionalItems };
 }

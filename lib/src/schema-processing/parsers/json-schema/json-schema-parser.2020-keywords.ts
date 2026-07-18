@@ -13,9 +13,9 @@
  * @internal
  */
 
-import type { SchemaObject, ReferenceObject } from '../../../shared/openapi-types.js';
+import type { ReferenceObject } from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
-import { parseBoolOrSchemaOrRef, parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
+import { parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
@@ -43,7 +43,7 @@ export function parseContentKeywords(
     result.contentMediaType = input.contentMediaType;
   }
   if (input.contentSchema !== undefined) {
-    result.contentSchema = parseBoolOrSchemaOrRef(input.contentSchema, parseSchema);
+    result.contentSchema = parseSingleSchemaOrRef(input.contentSchema, parseSchema);
   }
 }
 
@@ -77,7 +77,7 @@ export function parse2020Keywords(
 }
 
 function parseBoolOrSchema(
-  value: SchemaObject | ReferenceObject | boolean | undefined,
+  value: JsonSchema2020 | ReferenceObject | boolean | undefined,
   field: 'unevaluatedProperties' | 'unevaluatedItems',
   result: CastrSchema,
   parseSchema: ParseSchemaFn,
@@ -116,13 +116,13 @@ function parseConditionalApplicators(
   parseSchema: ParseSchemaFn,
 ): void {
   if (input.if !== undefined) {
-    result.if = parseBoolOrSchemaOrRef(input.if, parseSchema);
+    result.if = parseSingleSchemaOrRef(input.if, parseSchema);
   }
   if (input.then !== undefined) {
-    result.then = parseBoolOrSchemaOrRef(input.then, parseSchema);
+    result.then = parseSingleSchemaOrRef(input.then, parseSchema);
   }
   if (input.else !== undefined) {
-    result.else = parseBoolOrSchemaOrRef(input.else, parseSchema);
+    result.else = parseSingleSchemaOrRef(input.else, parseSchema);
   }
 }
 
