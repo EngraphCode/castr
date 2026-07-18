@@ -10,6 +10,7 @@ const config: KnipConfig = {
     'src/bin/**/*.ts',
     'src/arc/arc-next-colour-cli.ts',
     'src/claude/statusline-identity.ts',
+    'src/claude/subagent-statusline-adapter.ts',
     'src/validators/**/validate-*.ts',
     'src/hook-policy/check-*.ts',
     'src/bootstrap/bootstrap.ts',

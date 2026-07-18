@@ -1,3 +1,4 @@
+import { arcBadgeForeground } from '../../src/claude/statusline-arc-palette';
 import { renderStatusline, type StatuslineParts } from '../../src/claude/statusline-render';
 
 const RESET = '\x1b[0m';
@@ -168,32 +169,91 @@ describe('renderStatusline — error and context usage', () => {
 });
 
 describe('renderStatusline — Claude.ai rate-limit gauges', () => {
-  it('shows the session (s) and week (w) consumed percentages with reset countdowns on the identity row', () => {
-    const out = renderStatusline({
-      ...base,
-      identity: 'Wyvern mends Draught',
-      fiveHourPercentage: 33,
-      fiveHourResetSeconds: 2 * 3600 + 14 * 60,
-      sevenDayPercentage: 55,
-      sevenDayResetSeconds: 3 * 86400,
-      branch: 'main',
-    });
-    const topRow = stripAnsi(lineWith(out, 'Wyvern mends Draught'));
-    expect(topRow).toContain('s:33%(2h)');
-    expect(topRow).toContain('w:55%(3d)');
-  });
+  // Owner layout ruling (2026-07-18): the gauges live on the repo-title row,
+  // AFTER the context gauge — `castr · ctx:61% · s:19%(5h) · w:14%(6d)` — not
+  // on the identity summary row.
+  it.each([
+    ['no-logo', {}],
+    ['logo', { logoRows: FIXTURE_ROWS_WIDE }],
+  ] as const)(
+    'renders the gauges on the repo-title row after the context gauge, never on the identity row (%s layout)',
+    (_label, options) => {
+      const out = renderStatusline(
+        {
+          ...base,
+          identity: 'Wyvern mends Draught',
+          usedPercentage: 61,
+          fiveHourPercentage: 33,
+          fiveHourResetSeconds: 2 * 3600 + 14 * 60,
+          sevenDayPercentage: 55,
+          sevenDayResetSeconds: 3 * 86400,
+          dir: 'castr',
+          branch: 'main',
+        },
+        options,
+      );
+      const identityRow = stripAnsi(lineWith(out, 'Wyvern mends Draught'));
+      expect(identityRow).not.toContain('s:33%');
+      expect(identityRow).not.toContain('w:55%');
+      const titleRow = stripAnsi(lineWith(out, 'ctx:61%'));
+      expect(titleRow).toContain('castr');
+      expect(titleRow).toContain('s:33%(2h)');
+      expect(titleRow).toContain('w:55%(3d)');
+      expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('ctx:61%'));
+      expect(titleRow.indexOf('ctx:61%')).toBeLessThan(titleRow.indexOf('s:33%(2h)'));
+      expect(titleRow.indexOf('s:33%(2h)')).toBeLessThan(titleRow.indexOf('w:55%(3d)'));
+    },
+  );
 
-  it('places the gauges after the collaboration icons and before the model', () => {
+  // Composed layout (merge of the 2026-07-18 title-row ruling with the ARC
+  // feather badges): the indicators — team icon and per-channel feather with
+  // its palette-ink membership bar — stay on the identity row before the
+  // model, while the gauges render on the repo-title row, never beside the
+  // indicators. Supersedes the pre-ruling identity-row ordering pin
+  // (icons < gauges < model) with the composed truth.
+  it('keeps the team icon and arc feather on the identity row before the model, with the gauges on the title row', () => {
     const solo = '\u{1F9CD}';
+    const featherBadge = `\u{1FAB6}${arcBadgeForeground(0)}\u{258C}${RESET}`;
     const out = renderStatusline({
       ...base,
       identity: 'Wyvern mends Draught',
-      sessionShape: { ownRole: undefined, teamShape: 'solo', arcChannels: [] },
+      sessionShape: {
+        ownRole: undefined,
+        teamShape: 'solo',
+        arcChannels: [
+          {
+            name: 'arc-fixture-wyvern.md',
+            colour: { kind: 'indexed', index: 0 },
+            crossHost: false,
+          },
+        ],
+      },
       fiveHourPercentage: 23,
       model: 'Opus 4.8',
+      dir: 'castr',
+      branch: 'main',
     });
-    expect(out.indexOf(solo)).toBeLessThan(out.indexOf('s:'));
-    expect(out.indexOf('s:')).toBeLessThan(out.indexOf('Opus 4.8'));
+    const identityRow = lineWith(out, 'Wyvern mends Draught');
+    expect(identityRow).toContain(solo);
+    expect(identityRow).toContain(featherBadge);
+    expect(identityRow.indexOf(solo)).toBeLessThan(identityRow.indexOf(featherBadge));
+    expect(identityRow.indexOf(featherBadge)).toBeLessThan(identityRow.indexOf('Opus 4.8'));
+    expect(stripAnsi(identityRow)).not.toContain('s:23%');
+    const titleRow = stripAnsi(lineWith(out, 's:23%'));
+    expect(titleRow).toContain('castr');
+    expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('s:23%'));
+  });
+
+  it('renders the gauges on the title row even when the context gauge is absent', () => {
+    const out = renderStatusline({ ...base, dir: 'castr', branch: 'main', fiveHourPercentage: 23 });
+    const titleRow = stripAnsi(lineWith(out, 's:23%'));
+    expect(titleRow).toContain('castr');
+    expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('s:23%'));
+  });
+
+  it('renders the gauges on their own line when no location row exists', () => {
+    const out = renderStatusline({ ...base, dir: '', fiveHourPercentage: 23 });
+    expect(out).toContain('s:23%');
   });
 
   it('colour-ramps the percentage the same way as context usage', () => {
