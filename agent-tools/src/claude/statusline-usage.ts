@@ -4,7 +4,7 @@
  * @remarks
  * Pure formatting for the colour-ramped consumed-percentage gauges: the
  * context-window gauge (`ctx:33%`) and the Claude.ai rate-limit gauges
- * (`s:33%(2h)`, `w:55%(3d)`). All share one colour ramp so they read uniformly —
+ * (`5h:33%(2h)`, `w:55%(3d)`). All share one colour ramp so they read uniformly —
  * higher consumption is closer to the limit (green → yellow → red). A rate-limit
  * gauge appends a DIM reset countdown via {@link formatCountdown}. Holds no I/O.
  *
