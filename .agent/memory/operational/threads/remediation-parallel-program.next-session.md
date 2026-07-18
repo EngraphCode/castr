@@ -82,15 +82,48 @@ homed at
 Saved PR-thread JSON harvests live in the session job's temp dir (session-mortal) — regenerate
 with the GraphQL query in Next safe steps rather than hunting for them.
 
+## FINAL WORK-LOCATION MANIFEST (2026-07-18 08:15 UTC — session end of Highland Spiralling Summit)
+
+**Owner safety bar met everywhere: every lane commit is pushed AND in an open or draft PR.**
+Nothing load-bearing remains only in a worktree or only local.
+
+| PR  | Lane      | Branch tip (pushed)                     | State                                                                                                                              |
+| --- | --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| #10 | bootstrap | docs/remediation-program-record         | 8 review rounds resolved; ready to merge                                                                                           |
+| #11 | L-A       | 64feef9e (harness + revalidation round) | 3 threads need reply/resolve against 64feef9e                                                                                      |
+| #12 | L-K1      | 30b30d43                                | all rounds resolved                                                                                                                |
+| #13 | L-C       | 5a2a14af                                | 8 threads resolved; NEW thread R99n6 fixed in 5a2a14af — reply/resolve owed; napkin commit 1815bc7e carries 4 follow-up candidates |
+| #14 | L-K6      | 0bb4529                                 | resolved                                                                                                                           |
+| #15 | L-KBATCH  | 72939c9a                                | 5 threads resolved                                                                                                                 |
+| #16 | L-F       | 64ad35dc (nine-thread round committed)  | 9 threads need reply/resolve against 64ad35dc                                                                                      |
+| #17 | L-H       | 3c3c2e93                                | 4 threads resolved                                                                                                                 |
+| #18 | L-D       | 89035ac2                                | fresh; C3 fix — the feature-slice trigger                                                                                          |
+| #19 | samples   | ee419ae8                                | fresh; generator-escape probe owed before L-D reconciliation ruling                                                                |
+| #20 | L-E       | 881f6fb2 (draft, opened by SCK)         | orchestrator gate-verify owed, then ready (merge slot 2)                                                                           |
+| #21 | L-I       | 9c6a9906 (draft)                        | orchestrator gate-verify owed, then ready                                                                                          |
+
+Worktrees: ALL CLEAN (napkin residues committed on their lane branches). Local-only branches:
+only the feature slice (`feat/explicit-additional-properties-rebased` + its 2026-04 twin) — by
+design, unpushable until #18 merges (Danger List item 2).
+
+Not-yet-dispatched work (successor's, per program record): wave 2 (L-B incl. the enums.ts
+lockstep addition, L-K8, L-K9), wave 3 (L-J), feature-slice integration, reconciliation slice
+remainder, program-end verification; plus the follow-up candidates named on PR #13/#15 threads
+and Q-016 (owner ruling).
+
 ## Pending decisions (orchestrator-level)
 
-1. **samples.test.ts reconciliation:** TWO fixes exist — L-D's in-lane edit (anchors prettier
-   `resolveConfig` on `lib/package.json`; already in L-D's tree; enabled L-D's snapshot
-   regeneration) and the standalone lane `fix/remediation-samples-config-escape` (adds a
-   regression test + checks whether the GENERATOR shares the escape). Intended resolution: the
-   standalone lane merges early (it makes nested-worktree gates honest for every lane); L-D
-   rebases over it, keeping whichever anchoring is stricter and dropping the duplicate hunk.
-   Decide on the standalone agent's generator-escape evidence when it reports.
+1. **samples.test.ts reconciliation — RESOLVED (2026-07-18, orchestrator; probe evidence
+   re-derived after the seat's transcript died):** the generator-escape probe (four-cwd empirical
+   run against built dist + static trace) proved a SPLIT verdict — the library emission core is
+   deterministic (explicit config injection, `maybePretty` never touches disk), but the CLI entry
+   (`lib/src/cli/index.ts:122`) resolves prettier config cwd-dependently (three distinct output
+   shapes by invocation directory, ancestor-decoy config wins) AND silently ignores `--prettier`.
+   PR #19 is therefore a RUNTIME CLI fix, not a test-environment patch: its
+   `resolvePrettierConfigForOutput` (anchor on the emitted file's path; explicit `--prettier` via
+   prettier's `config` option) must survive the reconciliation. Disposition: PR #19 merges early
+   as planned; L-D's rebase drops only its duplicate TEST-side anchoring hunk. Probe evidence:
+   session scratchpad `generator-escape-probe/` (sha256 table in the orchestrator's session log).
 2. **L-K2 unblock:** its maybePretty fail-fast exposed a latent producer bug that is very likely
    the SAME defect L-E's diagnostic found (multi-auth sample output arrives unprettified —
    maybePretty may be swallowing a prettier failure on output generated from the spec-invalid
@@ -101,7 +134,14 @@ with the GraphQL query in Next safe steps rather than hunting for them.
    napkin); L-C's primitive-parser silent drop of non-literal `.describe()` args (in the 8f91b25
    round report); L-H's flagged follow-ups (auto-correct `outputSchema` derivation gap;
    endpoint-vs-MCP primary-success selection difference — documented in
-   `docs/DEFAULT-RESPONSE-BEHAVIOR.md`).
+   `docs/DEFAULT-RESPONSE-BEHAVIOR.md`); L-C seat-close batch (2026-07-18, named positions, not
+   taken): `.meta()` silently drops unrecognised keys (representability boundary, already listed);
+   `z.string().length(n)` sets only minLength not maxLength (C5-family, small); the fixture
+   runner's `toMatchObject` subset-matching makes expected.json a weak lock (H7-family);
+   `.regex(/x/i)` drops regex flags (C5-family, small); L-F round-2 out-of-lane finding
+   (2026-07-18, ROUTED TO L-B — its owned surface): the Zod writer still drops carried `$ref`
+   siblings (`writers/zod/index.ts` `writeSchemaType`; PR #16 thread 8's honest disposition —
+   L-F's lane contract forbids `writers/zod/**`, L-B lands it with C6/M7).
 
 ## Next safe steps (in order)
 
