@@ -258,6 +258,22 @@ deserializeIR` round-trips (red: throws).
   drops its unimplemented-mapping fail-fast for TS. **Starts after L-KBATCH merges** (shared
   type-writer files). Proof: red-first — a fixture with `itemSchema` currently fails fast; after,
   it emits the sequential contract. Reviewers: type-reviewer, openapi-expert, code-reviewer.
+- **L-K10** (MCP nullability fold; added 2026-07-18 from PR #20's review — pre-existing class
+  defect exposed by the multi-auth fixture correction, probe-verified by the L-E triage agent):
+  three ad-hoc CastrSchema→JSON-Schema converters on the MCP context surface drop
+  `metadata.nullable` while `writers/shared/json-schema-fields.ts#writeTypeField` folds it
+  correctly — `castrSchemaToJsonSchemaForMcp`
+  (`context/mcp/schemas/template-context.mcp.schemas.json-schema.ts`),
+  `castrSchemaToJsonSchemaSimple` (`context/mcp/template-context.mcp.parameters.ts`), and
+  `castrSchemaToJsonSchema` (`context/mcp/schemas/template-context.mcp.inline-json-schema.ts`).
+  Fix is class-level: fold nullability once, converging on the shared writer machinery (the
+  fourth-consumer consolidation), then regenerate the PR #20 snapshots. Owned:
+  `src/schema-processing/context/mcp/**` (the three converters) + an MCP regression test
+  asserting the null union across all four emission surfaces (request body, output schema,
+  parameter sections, `$ref`-inlined). **Starts after L-E merges** (same three files as L-E's
+  guard-consolidation diff). L-H's Forbidden entry for this surface stands — this is a dedicated
+  lane, not an L-H extension. Proof: red-first — nullable IR emits scalar-only MCP schema today.
+  Reviewers: mcp-expert, json-schema-expert, code-reviewer, test-reviewer.
 
 ## Merge waves
 
@@ -273,6 +289,7 @@ edges (blocker → blocked, with the shared surface that forces the order):
   `json-schema-parser.object-fields.ts`, `json-schema-fields.ts`)
 - feature slice → L-B (`generators/collections.ts`)
 - L-D → L-K8 (`buildSchemaComponents`-adjacent signatures)
+- L-E → L-K10 (the three MCP converter files are in L-E's guard-consolidation diff)
 - every lane → L-J (horizontal sweep runs last)
 
 Waves and the reference linearisation:
@@ -298,12 +315,13 @@ the resolution of H6/L8 — hence it merges before L-F's final rebase.
 
 ## Disposition table (all 46 IDs)
 
-| Disposition                                     | IDs                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Already fixed (plan 01, merged)                 | C1                                                                                                                                                                                                                                                                                                                                                                                                       |
-| Fixed by lane                                   | C2, C3 (L-D); C4 (L-E); C5 (L-C); C6 (L-B); H1, H2, H4 (L-F); H3, H5 (L-H); H7 (L-A + L-B); M1, M2 (L-J); M3 (L-E); M4, M5 (L-I); M6 (L-H); M7 (L-B); M8 (L-K1); M9 wording (L-K1) + mapping (L-K9); M10, M12 (L-D); M11 (L-K2); M13 (L-K8); L1, L2, L4 (L-J); L3, L5 (L-E); L6, L19 (L-H); L7 (L-K3); L9, L10, L11, L12, L14 (L-F); L13 (L-A); L15 (L-K5); L16 (L-B); L17 (L-K2); L18 (L-K6); N1 (L-K7) |
-| Resolved by the feature slice, verified by lane | H6, L8 (feature merge + L-F residue check)                                                                                                                                                                                                                                                                                                                                                               |
-| Owner-disposition at PR (named, not parked)     | M9 (wording in L-K1; mapping implementation in L-K9), N1 direction, H5 dead-option cluster remainder, `complexityThreshold`                                                                                                                                                                                                                                                                              |
+| Disposition                                       | IDs                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Already fixed (plan 01, merged)                   | C1                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Fixed by lane                                     | C2, C3 (L-D); C4 (L-E); C5 (L-C); C6 (L-B); H1, H2, H4 (L-F); H3, H5 (L-H); H7 (L-A + L-B); M1, M2 (L-J); M3 (L-E); M4, M5 (L-I); M6 (L-H); M7 (L-B); M8 (L-K1); M9 wording (L-K1) + mapping (L-K9); M10, M12 (L-D); M11 (L-K2); M13 (L-K8); L1, L2, L4 (L-J); L3, L5 (L-E); L6, L19 (L-H); L7 (L-K3); L9, L10, L11, L12, L14 (L-F); L13 (L-A); L15 (L-K5); L16 (L-B); L17 (L-K2); L18 (L-K6); N1 (L-K7) |
+| Resolved by the feature slice, verified by lane   | H6, L8 (feature merge + L-F residue check)                                                                                                                                                                                                                                                                                                                                                               |
+| Owner-disposition at PR (named, not parked)       | M9 (wording in L-K1; mapping implementation in L-K9), N1 direction, H5 dead-option cluster remainder, `complexityThreshold`                                                                                                                                                                                                                                                                              |
+| New findings from PR reviews (routed, 2026-07-18) | MCP nullability fold (L-K10, from PR #20); Zod-writer carried `$ref` siblings (L-B, from PR #16 thread 8); the remaining named positions (L-C primitive-parser `.describe()` drop, `.meta()` unknown-key drop, `length(n)`/regex-flag gaps; L-H `outputSchema` derivation gap; L-F `cloneWithoutSharedKeywords`) are carried in the thread record §Pending decisions until dispositioned                 |
 
 ## Readiness
 

@@ -180,7 +180,11 @@ and Q-016 (owner ruling).
    `.regex(/x/i)` drops regex flags (C5-family, small); L-F round-2 out-of-lane finding
    (2026-07-18, ROUTED TO L-B — its owned surface): the Zod writer still drops carried `$ref`
    siblings (`writers/zod/index.ts` `writeSchemaType`; PR #16 thread 8's honest disposition —
-   L-F's lane contract forbids `writers/zod/**`, L-B lands it with C6/M7).
+   L-F's lane contract forbids `writers/zod/**`, L-B lands it with C6/M7). Registered
+   2026-07-18: the PR #20 MCP-nullability class defect (three ad-hoc converters drop
+   `metadata.nullable`; probe-verified) → **micro-lane L-K10** in the program record
+   (§Micro-lanes, starts after L-E merges; edge L-E → L-K10 added), and the disposition table
+   gained a routed-findings row pointing at this section for the remaining named positions.
 
 ## Next safe steps (in order)
 
