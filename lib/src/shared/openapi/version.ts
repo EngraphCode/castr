@@ -1,5 +1,8 @@
 import { split } from 'lodash-es';
 
+import { isRecord } from '../type-utils/type-guards.js';
+import type { UnknownRecord } from '../type-utils/types.js';
+
 const OPENAPI_VERSION_SEPARATOR = '.';
 const OPENAPI_VERSION_MAJOR_3 = '3';
 const OPENAPI_VERSION_MINOR_1 = '1';
@@ -14,16 +17,7 @@ export const CANONICAL_OPENAPI_TARGET_LABEL = 'OpenAPI 3.2';
 
 export type OpenApiPreflightSchemaVersion = '3.1' | '3.2';
 
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-interface UnknownKeyedObject {
-  readonly [key: string]: unknown;
-}
-
-function isRecord(value: unknown): value is UnknownKeyedObject {
-  return typeof value === 'object' && value !== null;
-}
-
-function getStringProperty(value: UnknownKeyedObject, key: string): string | undefined {
+function getStringProperty(value: UnknownRecord, key: string): string | undefined {
   const propertyValue = value[key];
   return typeof propertyValue === 'string' ? propertyValue : undefined;
 }

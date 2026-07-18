@@ -7,8 +7,9 @@
  * @public
  */
 
-import type { CastrSchemaLike, CastrSchemaPropertiesLike } from './castr-schema-properties.js';
+import type { CastrSchemaPropertiesLike } from './castr-schema-properties.js';
 import { hasCastrSchemaPropertiesBrand } from './castr-schema-properties.js';
+import type { UnknownRecord } from './types.js';
 
 /**
  * Type guard for string values.
@@ -33,7 +34,9 @@ export function isString(value: unknown): value is string {
 /**
  * Type guard for Record values.
  *
- * Checks if value is a plain object (not null, not array).
+ * Checks if value is a plain object (not null, not an array). An empty object
+ * (`{}`) is a record. This is the single canonical `isRecord` — do not add
+ * per-file copies.
  *
  * @param value - Value to check
  * @returns True if value is a record object
@@ -49,30 +52,8 @@ export function isString(value: unknown): value is string {
  *
  * @public
  */
-export function isRecord(value: unknown): value is object {
+export function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-/**
- * Type guard for CastrSchema.
- *
- * Checks if value is a valid CastrSchema by verifying required metadata field.
- *
- * @param value - Value to check
- * @returns True if value is an CastrSchema
- *
- * @example
- * ```typescript
- * const data: unknown = deserialize(json);
- * if (isCastrSchema(data)) {
- *   console.log(data.metadata.required); // Type-safe: CastrSchema fields available
- * }
- * ```
- *
- * @public
- */
-export function isCastrSchema(value: unknown): value is CastrSchemaLike {
-  return isRecord(value) && 'metadata' in value;
 }
 
 /**

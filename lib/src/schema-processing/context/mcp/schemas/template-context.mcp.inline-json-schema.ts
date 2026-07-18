@@ -12,11 +12,12 @@
  */
 
 import { setKeyword, type MutableJsonSchema } from '../../../conversion/json-schema/index.js';
-import type {
-  CastrSchema,
-  CastrDocument,
-  CastrSchemaComponent,
-  IRComponent,
+import {
+  isCastrSchema,
+  type CastrSchema,
+  type CastrDocument,
+  type CastrSchemaComponent,
+  type IRComponent,
 } from '../../../ir/index.js';
 import type { CastrSchemaPropertiesLike } from '../../../../shared/type-utils/castr-schema-properties.js';
 import { toIdentifier } from '../../../../shared/utils/identifier-utils.js';
@@ -62,12 +63,6 @@ const findSchemaComponentByName = (
   }
   return undefined;
 };
-
-/**
- * Type guard for CastrSchema (has metadata property).
- */
-const isCastrSchema = (value: unknown): value is CastrSchema =>
-  typeof value === 'object' && value !== null && 'metadata' in value;
 
 /**
  * Convert CastrSchemaProperties to plain object for JSON Schema.

@@ -12,7 +12,7 @@ import {
   getOpenApiDependencyGraph,
   topologicalSort,
 } from '../../../../shared/dependency-graph/index.js';
-import { isRecord } from '../../../../shared/type-utils/types.js';
+import { isRecord } from '../../../../shared/type-utils/type-guards.js';
 
 /**
  * Extract original schema keys from OpenAPI document.

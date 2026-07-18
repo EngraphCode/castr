@@ -12,7 +12,7 @@ import type {
   ReferenceObject,
 } from '../../../../shared/openapi-types.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
-import { isRecord } from '../../../../shared/type-utils/types.js';
+import { isRecord } from '../../../../shared/type-utils/type-guards.js';
 import { isReferenceObject } from '../../../../validation/type-guards.js';
 import type {
   CastrSchema,

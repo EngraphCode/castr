@@ -25,7 +25,7 @@ import {
   buildCastrOperations,
   buildIRSecurity,
 } from './operations/index.js';
-import { isRecord } from '../../../shared/type-utils/types.js';
+import { isRecord } from '../../../shared/type-utils/type-guards.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';

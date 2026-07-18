@@ -33,6 +33,5 @@ export {
   inferRequiredSchema,
   isString,
   isRecord,
-  isCastrSchema,
   isCastrSchemaProperties,
 } from './type-utils/index.js';

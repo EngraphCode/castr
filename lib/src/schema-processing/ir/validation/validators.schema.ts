@@ -1,6 +1,6 @@
 import type { CastrSchema, CastrSchemaNode } from '../models/schema.js';
-import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.js';
-import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
+import { isCastrSchemaProperties, isRecord } from '../../../shared/type-utils/type-guards.js';
+import type { UnknownRecord } from '../../../shared/type-utils/types.js';
 import { isObjectSchemaType } from '../unknown-key-behavior.js';
 import { hasValidSchemaIntegerSemantics } from './validators.integer.js';
 import { hasValidSchemaUuidVersion, hasValidSchemaAnchorKeywords } from './validators.uuid.js';
