@@ -103,3 +103,40 @@ export function deriveLiteralType(literalValue: unknown): LiteralSchemaType {
   }
   return derivedType;
 }
+
+/**
+ * A literal value the IR can carry in an enum: string, number, boolean,
+ * or null.
+ * @internal
+ */
+export function isSupportedLiteralValue(value: unknown): value is string | number | boolean | null {
+  return (
+    value === null ||
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  );
+}
+
+/**
+ * Derive the single schema type shared by every literal value, or
+ * undefined when the values span multiple literal types. A heterogeneous
+ * set carries no `type` at all rather than a contradictory single type;
+ * the `enum` values alone constrain it honestly.
+ *
+ * @internal
+ */
+export function deriveHomogeneousLiteralType(
+  values: readonly unknown[],
+): LiteralSchemaType | undefined {
+  let sharedType: LiteralSchemaType | undefined;
+  for (const value of values) {
+    const valueType = deriveLiteralType(value);
+    if (sharedType === undefined) {
+      sharedType = valueType;
+    } else if (sharedType !== valueType) {
+      return undefined;
+    }
+  }
+  return sharedType;
+}

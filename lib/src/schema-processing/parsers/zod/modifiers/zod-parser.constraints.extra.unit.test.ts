@@ -55,4 +55,60 @@ describe('Zod Extra Constraints Parsing', () => {
       expect(result?.contentEncoding).toBe('base64');
     });
   });
+
+  describe('Signed numeric literals are captured', () => {
+    it('captures a negative .min() bound instead of dropping it', () => {
+      const result = parsePrimitiveZod('z.number().min(-100)');
+      expect(result?.minimum).toBe(-100);
+      expect(result?.metadata.zodChain.validations).toEqual(['.min(-100)']);
+    });
+
+    it('captures a negative .max() bound on an int32 base', () => {
+      const result = parsePrimitiveZod('z.int32().max(-1)');
+      expect(result?.maximum).toBe(-1);
+    });
+
+    it('captures an explicit positive-signed bound', () => {
+      const result = parsePrimitiveZod('z.number().max(+10)');
+      expect(result?.maximum).toBe(10);
+    });
+
+    it('captures a negative .default() value', () => {
+      const result = parsePrimitiveZod('z.number().default(-1)');
+      expect(result?.metadata.default).toBe(-1);
+      expect(result?.metadata.zodChain.defaults).toEqual(['.default(-1)']);
+    });
+  });
+
+  describe('String pattern literals are regex-escaped', () => {
+    it('escapes startsWith(".") so the pattern matches a literal dot', () => {
+      const result = parsePrimitiveZod("z.string().startsWith('.')");
+      expect(result?.pattern).toBe('^\\.');
+    });
+
+    it('escapes endsWith("$") so the pattern matches a literal dollar sign', () => {
+      const result = parsePrimitiveZod("z.string().endsWith('$')");
+      expect(result?.pattern).toBe('\\$$');
+    });
+
+    it('escapes includes("(") so the pattern matches a literal parenthesis', () => {
+      const result = parsePrimitiveZod("z.string().includes('(')");
+      expect(result?.pattern).toBe('\\(');
+    });
+
+    it('escapes backslashes in startsWith literals', () => {
+      const result = parsePrimitiveZod('z.string().startsWith("a\\\\b")');
+      expect(result?.pattern).toBe('^a\\\\b');
+    });
+
+    it('leaves unescaped-safe literals unchanged', () => {
+      const result = parsePrimitiveZod("z.string().startsWith('prefix_')");
+      expect(result?.pattern).toBe('^prefix_');
+    });
+
+    it('passes .regex() patterns through without additional escaping', () => {
+      const result = parsePrimitiveZod('z.string().regex(/^[a-z]+$/)');
+      expect(result?.pattern).toBe('^[a-z]+$');
+    });
+  });
 });

@@ -7,16 +7,57 @@
 
 import type { CastrSchema } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
-import { createZodProject, getZodMethodChain } from '../ast/zod-ast.js';
+import {
+  createZodProject,
+  getZodMethodChain,
+  splitChainAroundOperator,
+  throwUnsupportedMemberSchema,
+} from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
-import { applyMetaAndReturn } from '../modifiers/zod-parser.meta.js';
-import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION } from '../zod-constants.js';
+import {
+  assertSupportedChainedMethods,
+  buildCompositeChainMethods,
+  finalizeCompositeSchema,
+} from '../modifiers/zod-parser.chain-whitelist.js';
+import {
+  ZOD_CHAIN_COMPOSITION_OPERATORS,
+  ZOD_METHOD_AND,
+  ZOD_METHOD_INTERSECTION,
+} from '../zod-constants.js';
+
+/**
+ * Chained methods recognised on z.intersection().
+ * Anything outside this set fails fast as unsupported (finding C5).
+ * @internal
+ */
+const INTERSECTION_CHAIN_METHODS: ReadonlySet<string> = buildCompositeChainMethods();
+
+const INTERSECTION_MEMBER_CONTEXT = 'z.intersection member';
+const AND_MEMBER_CONTEXT = '.and() intersection member';
+
+/**
+ * Parse one intersection member.
+ * Fails fast on any member the parser cannot represent (finding C5).
+ * @internal
+ */
+function parseIntersectionMember(
+  memberNode: Node,
+  parseSchema: ZodSchemaParser,
+  memberContext: string,
+): CastrSchema {
+  const member = parseSchema(memberNode);
+  if (!member) {
+    throwUnsupportedMemberSchema(memberContext, memberNode);
+  }
+  return member;
+}
 
 /**
  * Validate and extract left/right schemas from intersection arguments.
+ * Fails fast on members the parser cannot represent (finding C5).
  * @internal
  */
 function parseIntersectionArgs(
@@ -34,14 +75,10 @@ function parseIntersectionArgs(
     return undefined;
   }
 
-  const left = parseSchema(leftNode);
-  const right = parseSchema(rightNode);
-
-  if (!left || !right) {
-    return undefined;
-  }
-
-  return { left, right };
+  return {
+    left: parseIntersectionMember(leftNode, parseSchema, INTERSECTION_MEMBER_CONTEXT),
+    right: parseIntersectionMember(rightNode, parseSchema, INTERSECTION_MEMBER_CONTEXT),
+  };
 }
 
 /**
@@ -72,6 +109,23 @@ export function parseIntersectionZodFromNode(
     return undefined;
   }
 
+  // z.intersection(A, B).and(C) / .or(C) / .array(): decline so the
+  // chained-.and() / chained-.or() / chained-.array() parser — which owns
+  // that composition operator and its trailing modifiers — claims the
+  // whole chain. Whitelisting the method here instead would accept the
+  // name while dropping its composition semantics (the silent no-op
+  // class this module exists to prevent).
+  if (chainedMethods.some((method) => ZOD_CHAIN_COMPOSITION_OPERATORS.has(method.name))) {
+    return undefined;
+  }
+
+  assertSupportedChainedMethods(
+    `z.${baseMethod}()`,
+    chainedMethods,
+    INTERSECTION_CHAIN_METHODS,
+    node,
+  );
+
   const args = parseIntersectionArgs(baseArgNodes, parseSchema);
   if (!args) {
     return undefined;
@@ -82,11 +136,19 @@ export function parseIntersectionZodFromNode(
     metadata: createDefaultMetadata(),
   };
 
-  return applyMetaAndReturn(schema, chainedMethods);
+  return finalizeCompositeSchema(schema, chainedMethods);
 }
 
 /**
- * Handle chained .and() calls: A.and(B)
+ * Handle chained .and() calls, including trailing chained modifiers the
+ * writer emits (ADR-032 parser/writer lockstep): `A.and(B)` and
+ * `A.and(B).optional()` both parse, with the trailing chain enforced
+ * against the intersection whitelist and captured into metadata.
+ *
+ * Declines chains where an `.or()` or `.array()` link sits outermore
+ * than every `.and()` link: the chained-union / chained-array parser
+ * owns those.
+ *
  * @internal
  */
 export function parseChainedIntersectionFromNode(
@@ -97,33 +159,39 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  const expr = node.getExpression();
-  if (!Node.isPropertyAccessExpression(expr)) {
+  const split = splitChainAroundOperator(node, ZOD_METHOD_AND, ZOD_CHAIN_COMPOSITION_OPERATORS);
+  if (!split) {
     return undefined;
   }
 
-  if (expr.getName() !== ZOD_METHOD_AND) {
+  const andExpr = split.operatorCall.getExpression();
+  if (!Node.isPropertyAccessExpression(andExpr)) {
     return undefined;
   }
 
-  const leftNode = expr.getExpression();
-  const rightNode = node.getArguments()[0];
+  const leftNode = andExpr.getExpression();
+  const rightNode = split.operatorCall.getArguments()[0];
 
   if (!leftNode || !rightNode) {
     return undefined;
   }
 
-  const left = parseSchema(leftNode);
-  const right = parseSchema(rightNode);
+  assertSupportedChainedMethods(
+    '.and() intersection',
+    split.trailingMethods,
+    INTERSECTION_CHAIN_METHODS,
+    node,
+  );
 
-  if (!left || !right) {
-    return undefined;
-  }
-
-  return {
-    allOf: [left, right],
+  const schema: CastrSchema = {
+    allOf: [
+      parseIntersectionMember(leftNode, parseSchema, AND_MEMBER_CONTEXT),
+      parseIntersectionMember(rightNode, parseSchema, AND_MEMBER_CONTEXT),
+    ],
     metadata: createDefaultMetadata(),
   };
+
+  return finalizeCompositeSchema(schema, split.trailingMethods);
 }
 
 // Register parsers with the core dispatcher

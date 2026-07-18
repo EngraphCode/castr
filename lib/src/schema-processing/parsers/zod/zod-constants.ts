@@ -137,7 +137,22 @@ export const ZOD_METHOD_DISCRIMINATED_UNION = 'discriminatedUnion';
 export const ZOD_METHOD_XOR = 'xor';
 export const ZOD_METHOD_INTERSECTION = 'intersection';
 export const ZOD_METHOD_AND = 'and';
+export const ZOD_METHOD_OR = 'or';
 export const ZOD_METHOD_LAZY = 'lazy';
+
+/**
+ * Chained composition operators owned by dedicated chained parsers
+ * (chained-intersection, chained-union, chained-array). Each chained
+ * parser claims a chain only when its own operator is the outermost
+ * composition link and declines when another owning operator sits
+ * outermore — passing this full set as the decline set is safe because
+ * the chain splitter checks the claim operator before the decline set.
+ */
+export const ZOD_CHAIN_COMPOSITION_OPERATORS: ReadonlySet<string> = new Set([
+  ZOD_METHOD_AND,
+  ZOD_METHOD_OR,
+  ZOD_METHOD_ARRAY,
+]);
 
 export const ZOD_BASE_METHOD_STRING = 'string';
 export const ZOD_BASE_METHOD_NUMBER = 'number';

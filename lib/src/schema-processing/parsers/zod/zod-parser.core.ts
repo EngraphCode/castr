@@ -33,6 +33,8 @@ const parserRegistry: {
   identifier?: ParserFn;
   intersection?: ParserFn;
   chainedIntersection?: ParserFn;
+  chainedUnion?: ParserFn;
+  chainedArray?: ParserFn;
   reference?: ParserFn;
   primitive?: ParserFn;
   object?: ParserFn;
@@ -86,7 +88,35 @@ function parseIdentifierSchema(
 }
 
 /**
+ * Try the chained composition-operator parsers (.and(), .or(), .array()).
+ *
+ * The three chained parsers are order-independent between themselves:
+ * each claims a chain only when its own operator is the outermost
+ * composition link.
+ *
+ * @internal
+ */
+function tryChainedOperatorParsers(
+  node: Node,
+  resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
+): CastrSchema | undefined {
+  return (
+    tryParser('chainedIntersection', node, resolver, options) ??
+    tryParser('chainedUnion', node, resolver, options) ??
+    tryParser('chainedArray', node, resolver, options)
+  );
+}
+
+/**
  * Parse a call expression through registered parsers in priority order.
+ *
+ * Ordering invariant: the chained composition-operator parsers must run
+ * before 'primitive' — for chains like `A.and(B).optional()`,
+ * `A.or(B).optional()`, or `A.array()` the primitive parser would fail
+ * fast on the unrecognised `.and`/`.or`/`.array` chained method before
+ * the owning parser could claim the node (ADR-032 writer lockstep).
+ *
  * @internal
  */
 function parseCallExpressionSchema(
@@ -96,7 +126,7 @@ function parseCallExpressionSchema(
 ): CastrSchema | undefined {
   return (
     tryParser('intersection', node, resolver, options) ??
-    tryParser('chainedIntersection', node, resolver, options) ??
+    tryChainedOperatorParsers(node, resolver, options) ??
     tryParser('reference', node, resolver, options) ??
     tryParser('primitive', node, resolver, options) ??
     tryParser('object', node, resolver, options) ??

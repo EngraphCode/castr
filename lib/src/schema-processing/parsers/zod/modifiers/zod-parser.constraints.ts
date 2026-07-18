@@ -7,7 +7,12 @@
  * @internal
  */
 
-import type { ZodMethodCall } from '../ast/zod-ast.js';
+import {
+  requireNumericArgument,
+  requireStringArgument,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
+import { escapeRegexLiteral } from '../../../../shared/utils/index.js';
 import { ZOD_PRIMITIVE_TYPES } from './zod-parser.defaults.js';
 import {
   ZOD_BASE_METHOD_NUMBER,
@@ -20,6 +25,7 @@ import {
   ZOD_METHOD_NULLABLE,
   ZOD_METHOD_NULLISH,
   ZOD_METHOD_OPTIONAL,
+  ZOD_METHOD_REGEX,
 } from '../zod-constants.js';
 
 /**
@@ -52,11 +58,18 @@ export interface ParsedOptionality {
 // String constraints
 // ============================================================================
 
+/** String length-constraint method names. @internal */
+const STRING_LENGTH_METHODS: ReadonlySet<string> = new Set([
+  ZOD_METHOD_MIN,
+  ZOD_METHOD_MAX,
+  ZOD_METHOD_LENGTH,
+]);
+
 function handleStringLengthConstraint(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  const arg = method.args[0];
-  if (typeof arg !== 'number') {
+  if (!STRING_LENGTH_METHODS.has(method.name)) {
     return;
   }
+  const arg = requireNumericArgument(method);
 
   if (method.name === ZOD_METHOD_MIN || method.name === ZOD_METHOD_LENGTH) {
     constraints.minLength = arg;
@@ -79,25 +92,47 @@ const FORMAT_MAP: Record<string, string> = {
 };
 
 /**
- * Try to extract a regex pattern from a string method call.
- * Returns the pattern string if successful, undefined otherwise.
+ * Pattern-producing string methods handled by {@link tryExtractPattern}.
+ * @internal
+ */
+const PATTERN_METHODS = [ZOD_METHOD_REGEX, 'startsWith', 'endsWith', 'includes'] as const;
+
+/**
+ * Chained methods recognised on string-typed base methods.
+ *
+ * Derived from the handler tables in this module so the whitelist can
+ * never drift from what the parser actually captures.
+ *
+ * @internal
+ */
+export const STRING_CHAIN_METHODS: ReadonlySet<string> = new Set([
+  ZOD_METHOD_MIN,
+  ZOD_METHOD_MAX,
+  ZOD_METHOD_LENGTH,
+  ZOD_METHOD_BASE64,
+  ...PATTERN_METHODS,
+  ...Object.keys(FORMAT_MAP),
+]);
+
+/**
+ * Extract a regex pattern from a recognised pattern-producing method.
+ *
+ * startsWith/endsWith/includes literals are regex-escaped so
+ * metacharacters (".", "$", "(", "\\", ...) match themselves.
+ * Returns undefined for methods outside {@link PATTERN_METHODS}.
+ *
  * @internal
  */
 function tryExtractPattern(method: ZodMethodCall): string | undefined {
-  const arg = method.args[0];
-  if (typeof arg !== 'string') {
-    return undefined;
-  }
-
   switch (method.name) {
     case 'regex':
-      return arg;
+      return requireStringArgument(method);
     case 'startsWith':
-      return `^${arg}`;
+      return `^${escapeRegexLiteral(requireStringArgument(method))}`;
     case 'endsWith':
-      return `${arg}$`;
+      return `${escapeRegexLiteral(requireStringArgument(method))}$`;
     case 'includes':
-      return arg;
+      return escapeRegexLiteral(requireStringArgument(method));
     default:
       return undefined;
   }
@@ -137,26 +172,32 @@ export function processStringMethod(method: ZodMethodCall, constraints: ParsedCo
 // Number constraints
 // ============================================================================
 
+/** Map of zero-boundary Zod number methods to constraint setters. @internal */
+const NUMBER_ZERO_CONSTRAINT_SETTERS: Record<string, (c: ParsedConstraints) => void> = {
+  positive: (c) => {
+    c.exclusiveMinimum = 0;
+  },
+  negative: (c) => {
+    c.exclusiveMaximum = 0;
+  },
+  nonnegative: (c) => {
+    c.minimum = 0;
+  },
+  nonpositive: (c) => {
+    c.maximum = 0;
+  },
+};
+
 function handleNumberZeroConstraint(
   method: ZodMethodCall,
   constraints: ParsedConstraints,
 ): boolean {
-  switch (method.name) {
-    case 'positive':
-      constraints.exclusiveMinimum = 0;
-      return true;
-    case 'negative':
-      constraints.exclusiveMaximum = 0;
-      return true;
-    case 'nonnegative':
-      constraints.minimum = 0;
-      return true;
-    case 'nonpositive':
-      constraints.maximum = 0;
-      return true;
-    default:
-      return false;
+  const setter = NUMBER_ZERO_CONSTRAINT_SETTERS[method.name];
+  if (!setter) {
+    return false;
   }
+  setter(constraints);
+  return true;
 }
 
 /** Setter function type for number constraints. @internal */
@@ -187,19 +228,28 @@ const NUMBER_CONSTRAINT_SETTERS: Record<string, NumberConstraintSetter> = {
   },
 };
 
+/**
+ * Chained methods recognised on numeric base methods.
+ *
+ * Derived from the handler tables in this module so the whitelist can
+ * never drift from what the parser actually captures.
+ *
+ * @internal
+ */
+export const NUMBER_CHAIN_METHODS: ReadonlySet<string> = new Set([
+  ...Object.keys(NUMBER_ZERO_CONSTRAINT_SETTERS),
+  ...Object.keys(NUMBER_CONSTRAINT_SETTERS),
+  ZOD_METHOD_INT,
+]);
+
 function handleNumberArgConstraint(method: ZodMethodCall, constraints: ParsedConstraints): boolean {
-  const arg = method.args[0];
-  if (typeof arg !== 'number') {
+  const setter = NUMBER_CONSTRAINT_SETTERS[method.name];
+  if (!setter) {
     return false;
   }
 
-  const setter = NUMBER_CONSTRAINT_SETTERS[method.name];
-  if (setter) {
-    setter(constraints, arg);
-    return true;
-  }
-
-  return false;
+  setter(constraints, requireNumericArgument(method));
+  return true;
 }
 
 /**
@@ -248,7 +298,7 @@ export function processOptionalityMethod(
  *
  * @internal
  */
-const NUMERIC_BASE_METHODS = new Set([
+export const NUMERIC_BASE_METHODS: ReadonlySet<string> = new Set([
   ZOD_BASE_METHOD_NUMBER,
   'int',
   'int32',

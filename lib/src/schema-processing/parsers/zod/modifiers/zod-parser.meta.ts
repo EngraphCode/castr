@@ -6,7 +6,11 @@
 
 import type { CastrSchema } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
-import { extractLiteralValue, type ZodMethodCall } from '../ast/zod-ast.js';
+import {
+  extractStaticJsonValue,
+  throwUnsupportedMethodArgument,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
 import { ZOD_METHOD_META } from '../zod-constants.js';
 import type { UnknownRecord } from '../../../../shared/type-utils/types.js';
 
@@ -24,6 +28,11 @@ type JsonObject = UnknownRecord;
 
 /**
  * Extract metadata from chained `.meta()` calls.
+ *
+ * Fails fast when a `.meta()` argument is not a statically extractable
+ * object literal of supported metadata fields, so a recognised `.meta()`
+ * can never no-op silently.
+ *
  * @internal
  */
 export function extractMetaFromChain(chainedMethods: ZodMethodCall[]): ParsedZodMeta | undefined {
@@ -36,7 +45,11 @@ export function extractMetaFromChain(chainedMethods: ZodMethodCall[]): ParsedZod
 
     const parsed = parseMetaArgument(method.argNodes[0]);
     if (!parsed) {
-      continue;
+      throwUnsupportedMethodArgument(
+        ZOD_METHOD_META,
+        'a statically extractable object literal of supported metadata fields',
+        method.argNodes[0],
+      );
     }
 
     meta = { ...meta, ...parsed };
@@ -115,8 +128,8 @@ function parseMetaArgument(node: Node | undefined): ParsedZodMeta | undefined {
     return undefined;
   }
 
-  const raw = parseGenericObject(node);
-  if (!raw) {
+  const raw = extractStaticJsonValue(node);
+  if (!isPlainObject(raw)) {
     return undefined;
   }
 
@@ -203,72 +216,6 @@ function parseExternalDocs(value: unknown): { url: string; description?: string 
     url: urlValue,
     ...(descriptionValue !== undefined ? { description: descriptionValue } : {}),
   };
-}
-
-/**
- * Parse a single property assignment from an object literal.
- * Returns [name, value] tuple or undefined if invalid.
- * @internal
- */
-function parseObjectProperty(prop: Node): [string, unknown] | undefined {
-  if (!Node.isPropertyAssignment(prop)) {
-    return undefined;
-  }
-
-  const name = prop.getName();
-  if (!name) {
-    return undefined;
-  }
-
-  const initializer = prop.getInitializer();
-  if (!initializer) {
-    return undefined;
-  }
-
-  const value = parseMetaValue(initializer);
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return [name, value];
-}
-
-function parseGenericObject(node: Node): JsonObject | undefined {
-  if (!Node.isObjectLiteralExpression(node)) {
-    return undefined;
-  }
-
-  const result: JsonObject = {};
-
-  for (const prop of node.getProperties()) {
-    const entry = parseObjectProperty(prop);
-    if (!entry) {
-      return undefined;
-    }
-    result[entry[0]] = entry[1];
-  }
-
-  return result;
-}
-
-function parseMetaValue(node: Node): unknown | undefined {
-  if (Node.isArrayLiteralExpression(node)) {
-    const values: unknown[] = [];
-    for (const element of node.getElements()) {
-      const parsed = parseMetaValue(element);
-      if (parsed === undefined) {
-        return undefined;
-      }
-      values.push(parsed);
-    }
-    return values;
-  }
-
-  if (Node.isObjectLiteralExpression(node)) {
-    return parseGenericObject(node);
-  }
-
-  return extractLiteralValue(node);
 }
 
 function isPlainObject(value: unknown): value is JsonObject {

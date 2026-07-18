@@ -13,7 +13,11 @@ import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodParseOptions, ZodSchemaParser } from '../zod-parser.types.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
-import { applyMetaToSchema, extractMetaFromChain } from '../modifiers/zod-parser.meta.js';
+import {
+  assertSupportedChainedMethods,
+  buildCompositeChainMethods,
+  finalizeCompositeSchema,
+} from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   ZOD_METHOD_STRICT,
   ZOD_METHOD_PASSTHROUGH,
@@ -24,6 +28,22 @@ import {
   isZodObjectBaseMethod,
 } from '../zod-constants.js';
 import { enforceObjectPolicy } from '../policy/zod-parser.object-policy.js';
+
+/**
+ * Chained methods recognised on object base methods.
+ *
+ * Widening modifiers are included because they are recognised and then
+ * explicitly rejected by policy with a dedicated message; anything outside
+ * this set fails fast as unsupported (finding C5).
+ *
+ * @internal
+ */
+const OBJECT_CHAIN_METHODS: ReadonlySet<string> = buildCompositeChainMethods(
+  ZOD_METHOD_STRICT,
+  ZOD_METHOD_PASSTHROUGH,
+  ZOD_METHOD_STRIP,
+  ZOD_METHOD_CATCHALL,
+);
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity
@@ -126,10 +146,7 @@ export function parseObjectZodFromNode(
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
-  if (!Node.isCallExpression(node)) {
-    return undefined;
-  }
-  if (!resolver) {
+  if (!Node.isCallExpression(node) || !resolver) {
     return undefined;
   }
 
@@ -148,6 +165,8 @@ export function parseObjectZodFromNode(
     return undefined;
   }
 
+  assertSupportedChainedMethods(`z.${baseMethod}()`, chainedMethods, OBJECT_CHAIN_METHODS, node);
+
   const isStrict = isStrictObjectSchema(baseMethod, chainedMethods);
   rejectContradictoryChains(baseMethod, chainedMethods, isStrict);
   const propertyNodes = extractObjectProperties(baseCallNode, resolver);
@@ -161,7 +180,7 @@ export function parseObjectZodFromNode(
     metadata: createDefaultMetadata(),
   };
 
-  applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
+  finalizeCompositeSchema(schema, chainedMethods);
   enforceObjectPolicy(schema, baseMethod, isStrict);
 
   return schema;

@@ -17,6 +17,7 @@ import type { CastrSchema, IRZodChainInfo } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
 import {
   createZodProject,
+  describeNodeLocation,
   getZodMethodChain,
   type ZodMethodCall,
   type ZodMethodChainInfo,
@@ -26,7 +27,8 @@ import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import {
   createDefaultMetadata,
   ZOD_PRIMITIVE_TYPES,
-  deriveLiteralType,
+  deriveHomogeneousLiteralType,
+  isSupportedLiteralValue,
 } from '../modifiers/zod-parser.defaults.js';
 import { applyMetaAndReturn } from '../modifiers/zod-parser.meta.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
@@ -37,6 +39,11 @@ import {
   processOptionalityMethod,
   processTypeConstraints,
 } from '../modifiers/zod-parser.constraints.js';
+import {
+  assertSupportedPrimitiveChain,
+  extractDefaultArgumentValue,
+  extractDescribeArgumentValue,
+} from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   applyConstraints,
   applyOptionalFields,
@@ -75,14 +82,11 @@ function processChainMethod(
   state: ProcessedChain,
 ): void {
   if (method.name === ZOD_METHOD_DEFAULT) {
-    state.defaultValue = method.args[0];
+    state.defaultValue = extractDefaultArgumentValue(method);
     return;
   }
   if (method.name === ZOD_METHOD_DESCRIBE) {
-    const arg = method.args[0];
-    if (typeof arg === 'string') {
-      state.description = arg;
-    }
+    state.description = extractDescribeArgumentValue(method);
     return;
   }
   if (method.name === ZOD_METHOD_META) {
@@ -113,34 +117,47 @@ function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]
  * Supports both single values (`z.literal('hello')`) and Zod 4 multi-value
  * literal syntax (`z.literal(['red', 'green', 'blue'])`).
  *
+ * Every member must be a supported literal value (string, number,
+ * boolean, null); anything else fails fast. A heterogeneous literal set
+ * carries no single `type` — the `enum` values alone constrain it —
+ * instead of deriving a contradictory type from the first member.
+ *
  * @internal
  */
 function handleLiteralSchema(
-  chainInfo: ReturnType<typeof getZodMethodChain>,
-  optionality: ParsedOptionality,
+  chainInfo: ZodMethodChainInfo,
+  processed: ProcessedChain,
   zodChain: IRZodChainInfo,
-  defaultValue: unknown,
 ): CastrSchema {
-  const literalValue = chainInfo?.baseArgs[0];
+  const { optionality, defaultValue, description } = processed;
+  const literalValue = chainInfo.baseArgs[0];
+  const literalArgNode = chainInfo.baseArgNodes[0];
 
   // Zod 4 multi-value literal: z.literal(['red', 'green', 'blue'])
   // The value is already an array of literals — spread into enum directly
   const enumValues: unknown[] = Array.isArray(literalValue) ? literalValue : [literalValue];
-  const typeSource: unknown = Array.isArray(literalValue) ? literalValue[0] : literalValue;
-  const derivedType = deriveLiteralType(typeSource);
+  if (enumValues.length === 0 || !enumValues.every(isSupportedLiteralValue)) {
+    throw new Error(
+      `Unsupported z.literal() member value${describeNodeLocation(literalArgNode)}: only ` +
+        'statically extractable literal values (string, number, boolean, null) are ' +
+        'supported. The Zod parser fails fast on unrecognised constructs instead of ' +
+        'silently corrupting the literal value.',
+    );
+  }
+  const derivedType = deriveHomogeneousLiteralType(enumValues);
 
   const schema: CastrSchema = {
-    type: derivedType,
+    ...(derivedType === undefined ? {} : { type: derivedType }),
     enum: enumValues,
     metadata: createDefaultMetadata({
       required: !optionality.optional,
-      nullable: literalValue === null || optionality.nullable,
+      nullable: enumValues.some((value) => value === null) || optionality.nullable,
       zodChain,
       defaultValue,
     }),
   };
 
-  applyOptionalFields(schema, defaultValue, undefined);
+  applyOptionalFields(schema, defaultValue, description);
   return schema;
 }
 
@@ -151,13 +168,11 @@ function handleLiteralSchema(
 function handleStandardPrimitive(
   baseMethod: string,
   schemaType: CastrSchema['type'],
-  optionality: ParsedOptionality,
-  constraints: ParsedConstraints,
+  processed: ProcessedChain,
   zodChain: IRZodChainInfo,
-  defaultValue: unknown,
-  description: string | undefined,
   chainedMethods: ZodMethodCall[],
 ): CastrSchema {
+  const { optionality, constraints, defaultValue, description } = processed;
   const schema: CastrSchema = {
     type: schemaType,
     metadata: createDefaultMetadata({
@@ -218,6 +233,8 @@ export function parsePrimitiveZodFromNode(
     return undefined;
   }
 
+  assertSupportedPrimitiveChain(baseMethod, schemaType, chainedMethods, node);
+
   const processed = processChainMethods(baseMethod, chainedMethods);
   const zodChain = buildZodChainInfo(chainedMethods, processed.optionality, processed.defaultValue);
 
@@ -226,23 +243,11 @@ export function parsePrimitiveZodFromNode(
   }
 
   if (baseMethod === ZOD_BASE_METHOD_LITERAL) {
-    return applyMetaAndReturn(
-      handleLiteralSchema(chainInfo, processed.optionality, zodChain, processed.defaultValue),
-      chainedMethods,
-    );
+    return applyMetaAndReturn(handleLiteralSchema(chainInfo, processed, zodChain), chainedMethods);
   }
 
   return applyMetaAndReturn(
-    handleStandardPrimitive(
-      baseMethod,
-      schemaType,
-      processed.optionality,
-      processed.constraints,
-      zodChain,
-      processed.defaultValue,
-      processed.description,
-      chainedMethods,
-    ),
+    handleStandardPrimitive(baseMethod, schemaType, processed, zodChain, chainedMethods),
     chainedMethods,
   );
 }

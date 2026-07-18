@@ -2,6 +2,84 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-C follow-up 2: PR #13 .array() shorthand + union optionality — lane sub-agent / claude-fable-5)
+
+- **Zod 4.4.3 hoists optionality through EVERY union family but NOT through intersections (probed
+  firsthand):** z.union / .or() / z.xor / z.discriminatedUnion with any undefined-accepting member
+  report optin/optout "optional" and accept a missing object key; z.string().optional()
+  .and(z.number().optional()) does NOT (missingKeyOk false, optin null). A gateway-review symmetry
+  suggestion ("consider hoisting allOf too") was falsified by the probe — matching Zod means NO
+  intersection hoist. Probe-outranks-plausible-symmetry, and the same probe closed the reviewer's
+  oneOf-reach coverage gap (xor + discriminatedUnion pinned red-class tests).
+- **The claim/decline chain-split generalises cleanly at the THIRD operator:** .array() joined
+  .or()/.and() as a chain-owning composition operator; the decline side became the shared
+  ZOD_CHAIN_COMPOSITION_OPERATORS set (zod-constants), safe to pass whole because the splitter
+  checks the claim operator before the decline set (documented at the signature). The z.array(T)
+  base-call form is declined by argument-count + zod-namespace-receiver, keeping composition-parser
+  ownership; z.intersection's base-parser decline guard needed the third operator too or
+  z.intersection(A,B).array() died with a misleading whitelist throw (red-first pinned).
+- **The `.includes()` lint ban (ADR-026 string-method family) fires on ARRAY params too** — the
+  rule is syntactic, blind to param types; the cure (ReadonlySet + .has) was the better design
+  anyway (one shared constant, no per-call array scan). Same lesson shape as
+  consolidate-at-second-consumer arriving via lint pressure.
+- **Piped the full gate to `tail` and nearly re-fired the pipe-eats-exit-code trap** (distilled
+  entry exists; I did it anyway on the FIRST gate run) — re-ran with `> log; RC=$?` capture before
+  claiming green. The distilled lesson held only because the re-check ritual is now reflexive.
+
+## 2026-07-18 (lane L-C follow-up: PR #13 .or() union shorthand — lane sub-agent / claude-fable-5)
+
+- **"Recognisable but rejected" is measured against Input-Output Pair Compatibility Rules 1+4, and
+  the ruling was (a) parse, never (b) fail-fast-with-a-pointer:** `.or()` is Zod's union shorthand
+  with the same semantics as `z.union`; Rule 1 requires every valid input-format feature to parse
+  into the IR, and Rule 4 explicitly forbids fail-fast as a placeholder for "not yet implemented".
+  A "use z.union instead" error would have been exactly that placeholder. Same ruling shape as the
+  resolved nativeEnum thread in this PR.
+- **Symmetric chained-operator parsers need OUTERMOST-OPERATOR claim discipline, or the whitelist
+  throw fires with a MISLEADING message on mixed chains:** an outside-in splitter for `.and()` that
+  walks past an outermore `.or()` collects it as a "trailing method" and then throws "unsupported
+  .or() on .and() intersection" — wrong diagnosis for a representable construct. Cure: each split
+  claims only when its own operator is the outermost composition link and DECLINES when the other
+  operator sits outermore, so the owning parser claims. Consolidated into `splitChainAroundOperator`
+  (ast/zod-ast.ts) — the sonarjs cognitive-complexity error (9 > 8) on the two near-duplicate
+  walkers was the consolidate-at-second-consumer signal firing through lint.
+- **Gateway DRY suggestion declined on layering grounds (named, not taken):** collapsing
+  parseOrMember/parseIntersectionMember into a shared ast-module helper would pull
+  ZodSchemaParser/CastrSchema imports into the AST utility layer beneath the parsers — 7 lines of
+  duplication is cheaper than the inversion. Writer-side nested-anyOf round-trip check named for
+  L-B; the writer never emits `.or(` today (verified by grep).
+
+## 2026-07-18 (lane L-C: six PR #13 zod-parser review findings — lane sub-agent / claude-fable-5)
+
+- **A committed expected.json can LOCK IN a silent-drop bug:** the constraints fixture recorded
+  `z.int32().min(-100)` as validations `[".min()"]` with NO `minimum` — the negative literal
+  (PrefixUnaryExpression, not NumericLiteral) was unextractable, silently dropped, and the
+  snapshot enshrined the loss as "expected". Fixing the arg-validation finding (fail fast on
+  unextractable args) surfaced it immediately: the new throw turned the enshrined drop into a
+  visible red. Cure landed: signed-numeric extraction in `zod-ast.literals.ts`. Lesson: when
+  adding fail-fast to a formerly silent path, expect committed snapshots to be complicit.
+- **`UPDATE_SNAPSHOTS=true` on the zod-parser runner is a churn machine:** it rewrites every
+  expected.json with raw `JSON.stringify(...,2)` (breaking prettier array collapsing) and injects
+  a `$schema` key — 8 files / ~350 lines of noise for a 2-entry change. Hand-edit the specific
+  entries instead. Related: the runner compares with `toMatchObject` (expected ⊆ actual), so
+  expected files are a WEAK lock — extra fields in parser output pass silently.
+- **max-files-per-dir (6) + max-lines (220) interact hard with "add a leaf module" fixes:** the
+  fail-fast helper module bounced from modifiers/ (7th file) to ast/ (7th file) before landing
+  merged into `ast/zod-ast.literals.ts` — which also required moving the `ZodMethodCall`
+  interface into the leaf to avoid a madge type-import cycle. Budget-check the target directory
+  BEFORE creating a new module.
+- **Transient PreToolUse-hook MODULE_NOT_FOUND** (`agent-tools/dist/.../check-blocked-content.js`
+  missing): the hook guard resolves against the PRIMARY checkout's built dist, not the worktree;
+  an Edit was blocked once and succeeded on retry. Worktree lanes inherit hook-infrastructure
+  state from the main tree.
+- **Product follow-up candidates surfaced by the L-C diff (c6dd808e), deliberately NOT taken
+  (scope discipline; for triage at the next zod-parser pass):** (1) `.meta()` with only
+  unrecognised keys still no-ops silently — a metadata-representability boundary, not the
+  argument-extractability axis; (2) `z.string().length(n)` sets only `minLength`, never
+  `maxLength` (handleStringLengthConstraint maps LENGTH into the min branch only); (3) the
+  fixture runner's `toMatchObject` is a subset match, so expected.json files under-lock parser
+  output (extra emitted fields pass unnoticed); (4) `.regex(/x/i)` drops regex FLAGS —
+  `extractRegexBody` returns `.source` only.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**

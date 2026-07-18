@@ -20,6 +20,7 @@ import type { CallExpression, SourceFile } from 'ts-morph';
 import { Project, Node } from 'ts-morph';
 import { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import { buildZodDeclarationSource } from '../registry/zod-decl-builder.js';
+import { extractLiteralValue, type ZodMethodCall } from './zod-ast.literals.js';
 
 // Re-export constants so existing consumers don't break
 export {
@@ -32,9 +33,6 @@ export {
   type ZodPrimitiveType,
   type ZodCompositionType,
 } from '../zod-constants.js';
-
-/** Symbol name for the global `undefined` identifier, used for semantic comparison. */
-const GLOBAL_UNDEFINED_SYMBOL_NAME = 'undefined';
 
 /**
  * Method chain information extracted from Zod AST.
@@ -52,17 +50,8 @@ export interface ZodMethodChainInfo {
   baseCallNode?: CallExpression | undefined;
 }
 
-/**
- * A single method call in a Zod chain.
- */
-export interface ZodMethodCall {
-  /** Method name (e.g., 'min', 'optional', 'email') */
-  name: string;
-  /** Raw argument nodes */
-  argNodes: Node[];
-  /** Parsed argument values (for simple literals) */
-  args: unknown[];
-}
+// ZodMethodCall lives in the static-capture leaf so fail-fast helpers can
+// use it without an import cycle; re-exported below with the extraction API.
 
 /**
  * Result of creating a Zod project.
@@ -147,7 +136,14 @@ export { ZodImportResolver } from '../registry/zod-import-resolver.js';
 // Helpers for getZodMethodChain
 // ============================================================================
 
-function extractMethodFromCall(call: CallExpression): ZodMethodCall | undefined {
+/**
+ * Extract a {@link ZodMethodCall} from a call expression whose callee is a
+ * property access (e.g. the `.optional()` link of a chain).
+ * Returns undefined when the callee is not a property access.
+ *
+ * @public
+ */
+export function extractMethodFromCall(call: CallExpression): ZodMethodCall | undefined {
   const expr = call.getExpression();
   if (!Node.isPropertyAccessExpression(expr)) {
     return undefined;
@@ -158,6 +154,70 @@ function extractMethodFromCall(call: CallExpression): ZodMethodCall | undefined 
   const args = argNodes.map((arg) => extractLiteralValue(arg));
 
   return { name: methodName, argNodes, args };
+}
+
+/**
+ * Result of locating the outermost chained composition-operator call
+ * (`.and()` / `.or()`) within a method chain.
+ *
+ * @public
+ */
+export interface OperatorChainSplit {
+  /** The outermost `.<operator>(...)` call expression. */
+  operatorCall: CallExpression;
+  /** Chained methods applied after the operator call, in source order. */
+  trailingMethods: ZodMethodCall[];
+}
+
+/**
+ * Collect one chain link's method call into the trailing-methods list.
+ * @internal
+ */
+function collectTrailingMethod(call: CallExpression, trailingMethods: ZodMethodCall[]): void {
+  const method = extractMethodFromCall(call);
+  if (method) {
+    trailingMethods.unshift(method);
+  }
+}
+
+/**
+ * Walk a call chain from the outside in, locating the outermost
+ * `claimOperator` call and collecting the methods chained after it.
+ *
+ * Returns undefined when the chain contains no `claimOperator` link — or
+ * when any `declineOperators` link sits outermore, because the parser
+ * owning that composition operator must claim the chain instead. The
+ * claim operator is checked before the decline set, so callers may pass
+ * the full owning-operator set (their own operator included) as
+ * `declineOperators`.
+ *
+ * @public
+ */
+export function splitChainAroundOperator(
+  node: CallExpression,
+  claimOperator: string,
+  declineOperators: ReadonlySet<string>,
+): OperatorChainSplit | undefined {
+  const trailingMethods: ZodMethodCall[] = [];
+  let current: Node = node;
+
+  while (Node.isCallExpression(current)) {
+    const expr = current.getExpression();
+    if (!Node.isPropertyAccessExpression(expr)) {
+      return undefined;
+    }
+    const methodName = expr.getName();
+    if (methodName === claimOperator) {
+      return { operatorCall: current, trailingMethods };
+    }
+    if (declineOperators.has(methodName)) {
+      return undefined;
+    }
+    collectTrailingMethod(current, trailingMethods);
+    current = expr.getExpression();
+  }
+
+  return undefined;
 }
 
 function shouldStopChainWalk(expr: Node, resolver: ZodImportResolver): boolean {
@@ -270,82 +330,21 @@ function extractCompositionArg(node: Node): unknown {
   return extractLiteralValue(node);
 }
 
-/**
- * Try to extract a numeric or string literal value.
- * @internal
- */
-function tryExtractTypedLiteral(node: Node): { value: unknown; found: boolean } {
-  if (Node.isStringLiteral(node)) {
-    return { value: node.getLiteralValue(), found: true };
-  }
-  if (Node.isNumericLiteral(node)) {
-    return { value: node.getLiteralValue(), found: true };
-  }
-  return { value: undefined, found: false };
-}
+// ============================================================================
+// Literal extraction and fail-fast reporting
+// ============================================================================
 
-/**
- * Try to extract a boolean, null, or undefined literal value.
- * @internal
- */
-function tryExtractSpecialLiteral(node: Node): { value: unknown; found: boolean } {
-  if (Node.isTrueLiteral(node)) {
-    return { value: true, found: true };
-  }
-  if (Node.isFalseLiteral(node)) {
-    return { value: false, found: true };
-  }
-  if (Node.isNullLiteral(node)) {
-    return { value: null, found: true };
-  }
-  if (Node.isIdentifier(node) && node.getSymbol()?.getName() === GLOBAL_UNDEFINED_SYMBOL_NAME) {
-    return { value: undefined, found: true };
-  }
-  return { value: undefined, found: false };
-}
-
-/**
- * Try to extract a simple literal value (string, number, boolean, null, undefined).
- * @internal
- */
-function tryExtractSimpleLiteral(node: Node): { value: unknown; found: boolean } {
-  const typed = tryExtractTypedLiteral(node);
-  if (typed.found) {
-    return typed;
-  }
-  return tryExtractSpecialLiteral(node);
-}
-
-/**
- * Extract a regex literal body from a RegularExpressionLiteral node.
- *
- * Uses `getLiteralValue()` which returns the parsed `RegExp` object,
- * then reads `.source` to get the pattern body — a semantic API
- * that avoids manual string parsing of the `/body/flags` format.
- *
- * @internal
- */
-function extractRegexBody(node: Node): string | undefined {
-  if (Node.isRegularExpressionLiteral(node)) {
-    const regex: RegExp = node.getLiteralValue();
-    return regex.source;
-  }
-  return undefined;
-}
-
-/**
- * Extract a literal value from an AST node.
- * @param node - AST node
- * @returns Extracted value or undefined
- * @internal
- */
-export function extractLiteralValue(node: Node): unknown {
-  const simple = tryExtractSimpleLiteral(node);
-  if (simple.found) {
-    return simple.value;
-  }
-  return extractRegexBody(node);
-}
+export {
+  extractLiteralValue,
+  extractStaticJsonValue,
+  describeNodeLocation,
+  describeZodExpression,
+  throwUnsupportedMemberSchema,
+  throwUnsupportedMethodArgument,
+  requireNumericArgument,
+  requireStringArgument,
+  type ZodMethodCall,
+} from './zod-ast.literals.js';
 
 // ============================================================================
 // findZodSchemaDeclarations
