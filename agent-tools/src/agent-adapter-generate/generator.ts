@@ -27,18 +27,18 @@ import {
   readCodexDeveloperInstructions,
 } from '../validators/subagents/validate-subagents-helpers.js';
 
-export const TEMPLATE_DIR = '.agent/sub-agents/templates';
-export const PERSONA_DIR = '.agent/sub-agents/components/personas';
-export const CODEX_ADAPTER_DIR = '.codex/agents';
-export const CODEX_CONFIG_FILE = '.codex/config.toml';
-export const CANONICAL_RULES_DIR = '.agent/rules';
-export const CURSOR_AGENTS_DIR = '.cursor/agents';
-export const CLAUDE_AGENTS_DIR = '.claude/agents';
-export const CURSOR_RULES_DIR = '.cursor/rules';
+const TEMPLATE_DIR = '.agent/sub-agents/templates';
+const PERSONA_DIR = '.agent/sub-agents/components/personas';
+const CODEX_ADAPTER_DIR = '.codex/agents';
+const CODEX_CONFIG_FILE = '.codex/config.toml';
+const CANONICAL_RULES_DIR = '.agent/rules';
+const CURSOR_AGENTS_DIR = '.cursor/agents';
+const CLAUDE_AGENTS_DIR = '.claude/agents';
+const CURSOR_RULES_DIR = '.cursor/rules';
 
 /** Model identifiers used in the generated adapter frontmatter, per platform. */
-export const CURSOR_AGENT_MODEL = 'gpt-5.5';
-export const CLAUDE_AGENT_MODEL = 'opus';
+const CURSOR_AGENT_MODEL = 'gpt-5.5';
+const CLAUDE_AGENT_MODEL = 'opus';
 
 /** A reviewer roster entry projected from the Codex adapter layer. */
 export interface AgentRosterEntry {
@@ -218,21 +218,21 @@ export function renderCursorRule(ruleName: string, description: string): string 
   ].join('\n');
 }
 
-export function cursorAgentTargetPath(repoRoot: string, name: string): string {
+function cursorAgentTargetPath(repoRoot: string, name: string): string {
   return join(repoRoot, CURSOR_AGENTS_DIR, `${name}.md`);
 }
 
-export function claudeAgentTargetPath(repoRoot: string, name: string): string {
+function claudeAgentTargetPath(repoRoot: string, name: string): string {
   return join(repoRoot, CLAUDE_AGENTS_DIR, `${name}.md`);
 }
 
-export function agentTargetPath(repoRoot: string, name: string, surface: AgentSurface): string {
+function agentTargetPath(repoRoot: string, name: string, surface: AgentSurface): string {
   return surface === 'cursor'
     ? cursorAgentTargetPath(repoRoot, name)
     : claudeAgentTargetPath(repoRoot, name);
 }
 
-export function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
+function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
   return join(repoRoot, CURSOR_RULES_DIR, `${ruleName}.mdc`);
 }
 
@@ -248,7 +248,7 @@ async function listNames(repoRoot: string, relDir: string, extension: string): P
 /**
  * Reads the Codex layer from disk and projects the reviewer roster.
  */
-export async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
+async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
   const configText = await readFile(join(repoRoot, CODEX_CONFIG_FILE), 'utf8');
   const adapterNames = await listNames(repoRoot, CODEX_ADAPTER_DIR, '.toml');
   const adapterTextByName = new Map<string, string>();

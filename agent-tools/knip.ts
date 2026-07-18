@@ -6,6 +6,7 @@ const config: KnipConfig = {
   // these is dead code (unused files / dependencies — the checks we keep ON below).
   entry: [
     'src/bin/**/*.ts',
+    'src/arc/arc-next-colour-cli.ts',
     'src/claude/statusline-identity.ts',
     'src/validators/**/validate-*.ts',
     'src/hook-policy/check-*.ts',
@@ -21,18 +22,11 @@ const config: KnipConfig = {
     'smoke-tests/**/*.smoke.ts',
     '*.config.ts',
   ],
-  project: ['src/**/*.ts'],
-  // agent-tools is a multi-entry CLI/validator toolkit, not a barrel library: it
-  // legitimately exports many module-API types/functions that aren't cross-imported
-  // (some are Phase-8 collaboration forward-references). Keep the high-value dead-FILE
-  // and dead-DEPENDENCY checks; relax the strict unused-export/type check that fits
-  // barrel libs like `lib`. (Deviation from lib's strictness — revisit if agent-tools
-  // grows public barrels.)
-  rules: {
-    exports: 'off',
-    types: 'off',
-    enumMembers: 'off',
-  },
+  // `.tsx` must be in the project set: the collaboration-state TUI React layer
+  // (tui/cli.tsx → app.tsx → controller.ts) is reached from the CLI bins via
+  // cli-specs.ts, and its imports only count as references when the tsx files
+  // are analysed.
+  project: ['src/**/*.{ts,tsx}', 'tests/**/*.ts', 'e2e-tests/**/*.ts'],
 };
 
 export default config;

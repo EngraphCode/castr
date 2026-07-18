@@ -18,7 +18,7 @@ import { type CollaborationTuiSnapshot } from './snapshot.js';
 
 export type CollaborationTuiPane = 'main' | 'agents' | 'queue' | 'directed';
 
-export interface CollaborationTuiController {
+interface CollaborationTuiController {
   readonly activePane: CollaborationTuiPane;
   readonly offsets: Readonly<Record<CollaborationTuiPane, number>>;
   readonly snapshot: CollaborationTuiSnapshot;
