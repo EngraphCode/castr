@@ -127,12 +127,12 @@ describe('ts-morph API exploration', () => {
       const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
 
       sourceFile.addImportDeclaration({
-        moduleSpecifier: 'fs',
-        namespaceImport: 'fs',
+        moduleSpecifier: 'path',
+        namespaceImport: 'path',
       });
 
       const output = sourceFile.getFullText();
-      expect(output).toContain('import * as fs from "fs"');
+      expect(output).toContain('import * as path from "path"');
     });
   });
 

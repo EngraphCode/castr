@@ -1,1 +1,169 @@
-{ "schemas": {} }
+{
+  "schemas": {
+    "StrictObject": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "known": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          },
+          "nested": {
+            "type": "object",
+            "properties": {
+              "dataType": "CastrSchemaProperties",
+              "value": {
+                "inner": {
+                  "type": "string",
+                  "metadata": {
+                    "required": true,
+                    "nullable": false,
+                    "zodChain": {
+                      "presence": "",
+                      "validations": [],
+                      "defaults": []
+                    },
+                    "dependencyGraph": {
+                      "references": [],
+                      "referencedBy": [],
+                      "depth": 0
+                    },
+                    "circularReferences": []
+                  }
+                }
+              }
+            },
+            "required": ["inner"],
+            "additionalProperties": false,
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          }
+        }
+      },
+      "required": ["known", "nested"],
+      "additionalProperties": false,
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "RecursiveStrictCategory": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "name": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecursiveStrictCategory",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              }
+            },
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          }
+        }
+      },
+      "required": ["name", "children"],
+      "additionalProperties": false,
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    }
+  }
+}
