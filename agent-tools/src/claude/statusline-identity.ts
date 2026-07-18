@@ -217,7 +217,11 @@ function listExperiments(
   const experimentsDir = join(primaryRoot, '.agent/collaboration/rapid-comms');
   try {
     const listed = readdirSync(experimentsDir, { recursive: true, withFileTypes: true })
-      .filter((entry) => entry.isFile())
+      // Channel files only — the same `.md` + non-README filter the colour CLI and
+      // the arc-channels validator apply. An unfiltered README inside the liveness
+      // window would burn one of the bounded content-read slots and could displace
+      // a roster-only member's feather past the cap.
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'README.md')
       .map((entry) => statExperimentsEntry(experimentsDir, join(entry.parentPath, entry.name)))
       .filter((entry) => entry !== undefined);
     return attachInWindowContent(experimentsDir, listed, ownAgentName, Date.now());

@@ -42,7 +42,7 @@ evaluation evidence live in
 Channel files here are tracked and committed at conservation waypoints;
 live-append churn sits as uncommitted working-tree modification in between.
 Dated channel files are excluded from mutating format passes (see the
-`.agent/collaboration/rapid-comms/2026-*.md` entries in `.prettierignore` and
+`.agent/collaboration/rapid-comms/[0-9][0-9][0-9][0-9]-*.md` entries in `.prettierignore` and
 in `.markdownlint-cli2.jsonc` `ignores`) so a `--fix` gate never rewrites a
 live channel mid-tail;
 keep entries lint-clean at compose time as defence in depth.

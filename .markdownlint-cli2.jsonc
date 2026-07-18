@@ -34,7 +34,7 @@
     ".agent/state/collaboration/shared-comms-log.md",
     // Live ARC channel files — append-only while tailed; a lint --fix rewrite
     // replays every follower's tail. Positive entry only (HARD RULE above).
-    ".agent/collaboration/rapid-comms/2026-*.md",
+    ".agent/collaboration/rapid-comms/[0-9][0-9][0-9][0-9]-*.md",
     // Adapter mirrors and harness dot-dirs (canon source is `.agent/`).
     ".cursor/**",
     ".claude/**",

@@ -1,9 +1,9 @@
 /**
  * Fixture-matrix coverage for the pure session-shape resolver: team shape
- * (solo / peer / directed), claim freshness (fresh vs stale vs heartbeat-
- * refreshed), own-role resolution, ARC liveness (present-fresh /
- * present-stale / absent / participant mismatch), soft degradation on
- * missing inputs, and the primary-worktree-root porcelain contract.
+ * (solo / peer / directed / observing / observing-directed), claim
+ * freshness (fresh vs stale vs heartbeat-refreshed), own-role resolution,
+ * ARC channel badges (indexed / invalid / overflow; liveness window;
+ * roster-union membership), and soft degradation on missing inputs.
  *
  * All inputs are explicit literals — no filesystem, no clock, no env.
  */

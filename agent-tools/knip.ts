@@ -3,7 +3,9 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
   // Reachable-from-outside surfaces: CLI bins, the statusline hook, validator/hook/
   // bootstrap/version-guard entries, and the test estate. Anything not reachable from
-  // these is dead code (unused files / dependencies — the checks we keep ON below).
+  // these is dead code — files, dependencies, exports, types, and enum members all
+  // run at knip's default-ON strictness (the former rules-off block is gone;
+  // stricter-is-better, owner directive 2026-07-18).
   entry: [
     'src/bin/**/*.ts',
     'src/arc/arc-next-colour-cli.ts',
@@ -26,6 +28,9 @@ const config: KnipConfig = {
   // (tui/cli.tsx → app.tsx → controller.ts) is reached from the CLI bins via
   // cli-specs.ts, and its imports only count as references when the tsx files
   // are analysed.
+  // tests/ + e2e-tests/ join the project set so dead TEST files are detected too
+  // (they were entry-only before, invisible to the unused-file check) — the same
+  // stricter-is-better sweep that re-enabled the default rules above.
   project: ['src/**/*.{ts,tsx}', 'tests/**/*.ts', 'e2e-tests/**/*.ts'],
 };
 

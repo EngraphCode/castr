@@ -313,7 +313,7 @@ observations below).
   the dated `rapid-comms/*.md` channel files (TRACKED in
   `.agent/collaboration/rapid-comms/`, not gitignored) are excluded
   from the mutating format/lint passes — prettier via the
-  `.agent/collaboration/rapid-comms/2026-*.md` block in `.prettierignore`,
+  `.agent/collaboration/rapid-comms/[0-9][0-9][0-9][0-9]-*.md` block in `.prettierignore`,
   markdownlint via the matching positive `ignores` entry in
   `.markdownlint-cli2.jsonc` — so a `--fix` gate cannot
   rewrite a live dated channel mid-tail. The compose-time
