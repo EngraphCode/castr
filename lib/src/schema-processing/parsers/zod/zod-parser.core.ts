@@ -33,6 +33,7 @@ const parserRegistry: {
   identifier?: ParserFn;
   intersection?: ParserFn;
   chainedIntersection?: ParserFn;
+  chainedUnion?: ParserFn;
   reference?: ParserFn;
   primitive?: ParserFn;
   object?: ParserFn;
@@ -88,10 +89,13 @@ function parseIdentifierSchema(
 /**
  * Parse a call expression through registered parsers in priority order.
  *
- * Ordering invariant: 'chainedIntersection' must run before 'primitive' —
- * for chains like `A.and(B).optional()` the primitive parser would fail
- * fast on the unrecognised `.and` chained method before the intersection
- * parser could claim the node (ADR-032 writer lockstep).
+ * Ordering invariant: 'chainedIntersection' and 'chainedUnion' must run
+ * before 'primitive' — for chains like `A.and(B).optional()` or
+ * `A.or(B).optional()` the primitive parser would fail fast on the
+ * unrecognised `.and`/`.or` chained method before the intersection/union
+ * parser could claim the node (ADR-032 writer lockstep). The two chained
+ * parsers are order-independent between themselves: each claims a chain
+ * only when its own operator is the outermost composition link.
  *
  * @internal
  */
@@ -103,6 +107,7 @@ function parseCallExpressionSchema(
   return (
     tryParser('intersection', node, resolver, options) ??
     tryParser('chainedIntersection', node, resolver, options) ??
+    tryParser('chainedUnion', node, resolver, options) ??
     tryParser('reference', node, resolver, options) ??
     tryParser('primitive', node, resolver, options) ??
     tryParser('object', node, resolver, options) ??

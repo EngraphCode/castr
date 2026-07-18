@@ -6,13 +6,12 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { Node, type CallExpression } from 'ts-morph';
+import { Node } from 'ts-morph';
 import {
   createZodProject,
-  extractMethodFromCall,
   getZodMethodChain,
+  splitChainAroundOperator,
   throwUnsupportedMemberSchema,
-  type ZodMethodCall,
 } from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
@@ -23,7 +22,7 @@ import {
   buildCompositeChainMethods,
   finalizeCompositeSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
-import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION } from '../zod-constants.js';
+import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION, ZOD_METHOD_OR } from '../zod-constants.js';
 
 /**
  * Chained methods recognised on z.intersection().
@@ -106,12 +105,15 @@ export function parseIntersectionZodFromNode(
     return undefined;
   }
 
-  // z.intersection(A, B).and(C): decline so the chained-.and() parser —
-  // which owns .and() composition and its trailing modifiers — claims the
-  // whole chain. Whitelisting .and() here instead would accept the name
+  // z.intersection(A, B).and(C) / z.intersection(A, B).or(C): decline so
+  // the chained-.and() / chained-.or() parser — which owns that
+  // composition operator and its trailing modifiers — claims the whole
+  // chain. Whitelisting the method here instead would accept the name
   // while dropping its argument (the silent no-op class this module
   // exists to prevent).
-  if (chainedMethods.some((method) => method.name === ZOD_METHOD_AND)) {
+  if (
+    chainedMethods.some((method) => method.name === ZOD_METHOD_AND || method.name === ZOD_METHOD_OR)
+  ) {
     return undefined;
   }
 
@@ -136,50 +138,13 @@ export function parseIntersectionZodFromNode(
 }
 
 /**
- * Result of locating the outermost `.and()` call within a method chain.
- * @internal
- */
-interface AndChainSplit {
-  /** The outermost `.and(...)` call expression. */
-  andCall: CallExpression;
-  /** Chained methods applied after `.and(...)`, in source order. */
-  trailingMethods: ZodMethodCall[];
-}
-
-/**
- * Walk a call chain from the outside in, collecting the methods chained
- * after the outermost `.and()` call. Returns undefined when the chain
- * contains no `.and()` link, so other parsers can claim the node.
- *
- * @internal
- */
-function splitChainAroundAnd(node: CallExpression): AndChainSplit | undefined {
-  const trailingMethods: ZodMethodCall[] = [];
-  let current: Node = node;
-
-  while (Node.isCallExpression(current)) {
-    const expr = current.getExpression();
-    if (!Node.isPropertyAccessExpression(expr)) {
-      return undefined;
-    }
-    if (expr.getName() === ZOD_METHOD_AND) {
-      return { andCall: current, trailingMethods };
-    }
-    const method = extractMethodFromCall(current);
-    if (method) {
-      trailingMethods.unshift(method);
-    }
-    current = expr.getExpression();
-  }
-
-  return undefined;
-}
-
-/**
  * Handle chained .and() calls, including trailing chained modifiers the
  * writer emits (ADR-032 parser/writer lockstep): `A.and(B)` and
  * `A.and(B).optional()` both parse, with the trailing chain enforced
  * against the intersection whitelist and captured into metadata.
+ *
+ * Declines chains where an `.or()` link sits outermore than every
+ * `.and()` link: the chained-union parser owns those.
  *
  * @internal
  */
@@ -191,18 +156,18 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  const split = splitChainAroundAnd(node);
+  const split = splitChainAroundOperator(node, ZOD_METHOD_AND, ZOD_METHOD_OR);
   if (!split) {
     return undefined;
   }
 
-  const andExpr = split.andCall.getExpression();
+  const andExpr = split.operatorCall.getExpression();
   if (!Node.isPropertyAccessExpression(andExpr)) {
     return undefined;
   }
 
   const leftNode = andExpr.getExpression();
-  const rightNode = split.andCall.getArguments()[0];
+  const rightNode = split.operatorCall.getArguments()[0];
 
   if (!leftNode || !rightNode) {
     return undefined;

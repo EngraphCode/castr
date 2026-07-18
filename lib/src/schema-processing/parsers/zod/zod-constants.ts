@@ -137,6 +137,7 @@ export const ZOD_METHOD_DISCRIMINATED_UNION = 'discriminatedUnion';
 export const ZOD_METHOD_XOR = 'xor';
 export const ZOD_METHOD_INTERSECTION = 'intersection';
 export const ZOD_METHOD_AND = 'and';
+export const ZOD_METHOD_OR = 'or';
 export const ZOD_METHOD_LAZY = 'lazy';
 
 export const ZOD_BASE_METHOD_STRING = 'string';

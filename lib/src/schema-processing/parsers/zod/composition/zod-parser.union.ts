@@ -2,6 +2,7 @@
  * Zod Union Parser
  *
  * Handles parsing of Zod union schemas: union, discriminatedUnion, xor.
+ * Also handles chained .or() calls (Zod's union shorthand).
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
@@ -10,6 +11,7 @@ import {
   createZodProject,
   extractLiteralValue,
   getZodMethodChain,
+  splitChainAroundOperator,
   throwUnsupportedMemberSchema,
 } from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
@@ -22,7 +24,9 @@ import {
   finalizeCompositeSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
 import {
+  ZOD_METHOD_AND,
   ZOD_METHOD_DISCRIMINATED_UNION,
+  ZOD_METHOD_OR,
   ZOD_METHOD_UNION,
   ZOD_METHOD_XOR,
 } from '../zod-constants.js';
@@ -189,8 +193,70 @@ export function parseUnionZodFromNode(
   return finalizeCompositeSchema(schema, chainedMethods);
 }
 
-// Register this parser with the core dispatcher
+const OR_MEMBER_CONTEXT = '.or() union member';
+
+/**
+ * Parse one .or() union member.
+ * Fails fast on any member the parser cannot represent (finding C5).
+ * @internal
+ */
+function parseOrMember(memberNode: Node, parseSchema: ZodSchemaParser): CastrSchema {
+  const member = parseSchema(memberNode);
+  if (!member) {
+    throwUnsupportedMemberSchema(OR_MEMBER_CONTEXT, memberNode);
+  }
+  return member;
+}
+
+/**
+ * Handle chained .or() calls — Zod's union shorthand — including trailing
+ * chained modifiers: `A.or(B)` and `A.or(B).optional()` both parse into
+ * the same `anyOf` IR as `z.union([A, B])`, with the trailing chain
+ * enforced against the union whitelist and captured into metadata.
+ *
+ * Declines chains where an `.and()` link sits outermore than every
+ * `.or()` link: the chained-intersection parser owns those.
+ *
+ * @internal
+ */
+export function parseChainedUnionFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const split = splitChainAroundOperator(node, ZOD_METHOD_OR, ZOD_METHOD_AND);
+  if (!split) {
+    return undefined;
+  }
+
+  const orExpr = split.operatorCall.getExpression();
+  if (!Node.isPropertyAccessExpression(orExpr)) {
+    return undefined;
+  }
+
+  const leftNode = orExpr.getExpression();
+  const rightNode = split.operatorCall.getArguments()[0];
+
+  if (!leftNode || !rightNode) {
+    return undefined;
+  }
+
+  assertSupportedChainedMethods('.or() union', split.trailingMethods, UNION_CHAIN_METHODS, node);
+
+  const schema: CastrSchema = {
+    anyOf: [parseOrMember(leftNode, parseSchema), parseOrMember(rightNode, parseSchema)],
+    metadata: createDefaultMetadata(),
+  };
+
+  return finalizeCompositeSchema(schema, split.trailingMethods);
+}
+
+// Register parsers with the core dispatcher
 registerParser('union', parseUnionZodFromNode);
+registerParser('chainedUnion', parseChainedUnionFromNode);
 
 /**
  * Parse a Zod union expression string.

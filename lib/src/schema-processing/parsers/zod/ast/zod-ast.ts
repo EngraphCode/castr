@@ -156,6 +156,67 @@ export function extractMethodFromCall(call: CallExpression): ZodMethodCall | und
   return { name: methodName, argNodes, args };
 }
 
+/**
+ * Result of locating the outermost chained composition-operator call
+ * (`.and()` / `.or()`) within a method chain.
+ *
+ * @public
+ */
+export interface OperatorChainSplit {
+  /** The outermost `.<operator>(...)` call expression. */
+  operatorCall: CallExpression;
+  /** Chained methods applied after the operator call, in source order. */
+  trailingMethods: ZodMethodCall[];
+}
+
+/**
+ * Collect one chain link's method call into the trailing-methods list.
+ * @internal
+ */
+function collectTrailingMethod(call: CallExpression, trailingMethods: ZodMethodCall[]): void {
+  const method = extractMethodFromCall(call);
+  if (method) {
+    trailingMethods.unshift(method);
+  }
+}
+
+/**
+ * Walk a call chain from the outside in, locating the outermost
+ * `claimOperator` call and collecting the methods chained after it.
+ *
+ * Returns undefined when the chain contains no `claimOperator` link — or
+ * when a `declineOperator` link sits outermore, because the parser owning
+ * that operator must claim the chain instead.
+ *
+ * @public
+ */
+export function splitChainAroundOperator(
+  node: CallExpression,
+  claimOperator: string,
+  declineOperator: string,
+): OperatorChainSplit | undefined {
+  const trailingMethods: ZodMethodCall[] = [];
+  let current: Node = node;
+
+  while (Node.isCallExpression(current)) {
+    const expr = current.getExpression();
+    if (!Node.isPropertyAccessExpression(expr)) {
+      return undefined;
+    }
+    const methodName = expr.getName();
+    if (methodName === claimOperator) {
+      return { operatorCall: current, trailingMethods };
+    }
+    if (methodName === declineOperator) {
+      return undefined;
+    }
+    collectTrailingMethod(current, trailingMethods);
+    current = expr.getExpression();
+  }
+
+  return undefined;
+}
+
 function shouldStopChainWalk(expr: Node, resolver: ZodImportResolver): boolean {
   if (!Node.isPropertyAccessExpression(expr)) {
     return true;
