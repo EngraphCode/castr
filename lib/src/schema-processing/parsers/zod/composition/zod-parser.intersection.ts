@@ -106,6 +106,15 @@ export function parseIntersectionZodFromNode(
     return undefined;
   }
 
+  // z.intersection(A, B).and(C): decline so the chained-.and() parser —
+  // which owns .and() composition and its trailing modifiers — claims the
+  // whole chain. Whitelisting .and() here instead would accept the name
+  // while dropping its argument (the silent no-op class this module
+  // exists to prevent).
+  if (chainedMethods.some((method) => method.name === ZOD_METHOD_AND)) {
+    return undefined;
+  }
+
   assertSupportedChainedMethods(
     `z.${baseMethod}()`,
     chainedMethods,

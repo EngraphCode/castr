@@ -70,6 +70,24 @@ describe('Zod Intersection Parsing', () => {
     });
   });
 
+  describe('.and() chained onto z.intersection()', () => {
+    it('parses z.intersection(A, B).and(C) instead of rejecting the chain', () => {
+      const result = parseCode('z.intersection(z.string(), z.number()).and(z.boolean())');
+      expect(result).toMatchObject({
+        allOf: [{ allOf: [{ type: 'string' }, { type: 'number' }] }, { type: 'boolean' }],
+      });
+    });
+
+    it('parses z.intersection(A, B).and(C).optional() and captures presence', () => {
+      const result = parseCode(
+        'z.intersection(z.string(), z.number()).and(z.boolean()).optional()',
+      );
+      expect(result?.allOf).toHaveLength(2);
+      expect(result?.metadata.required).toBe(false);
+      expect(result?.metadata.zodChain.presence).toBe('.optional()');
+    });
+  });
+
   describe('.and() with trailing chained modifiers (writer lockstep, ADR-032)', () => {
     it('parses z.string().and(z.number()).optional() and captures presence', () => {
       const result = parseCode('z.string().and(z.number()).optional()');
