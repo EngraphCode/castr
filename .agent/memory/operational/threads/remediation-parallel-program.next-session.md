@@ -90,6 +90,20 @@ Successor designation (owner, 2026-07-18): **Sylvan Flowering Branch** is the ev
 successor-orchestrator. PDR-064 two-moments governs the transfer; this record is the
 authoritative transfer artifact if the session ends before Moment 2. Danger List unchanged.
 
+**SAFE-PAUSE WIND-DOWN (2026-07-18 ~10:45Z, owner-directed):** no new subagents; statusline
+landed first. State at pause: **statusline + subagent statusline MERGED (#24 → `b62d73ab`) and
+IN USE in the primary** (in-use merge `165c9502` + dist rebuild; render probe green;
+cross-verified by the successor seat). **PR #22 reconciled with #24** (merge `1d7cdf4a`, zero
+source fixes — the features compose at the `Segments` seam; every render pin conserved; live
+composed render proven) **+ the final thread's fixer-ignore fix (`9c1a71d1`)** — pushed, last
+thread resolve + owner merge-ask pending CI on the reconciled tip. All lane rounds this session
+pushed + threads resolved (rounds detailed below); every commit is committed+pushed+in-a-PR per
+the owner's safety rule, EXCEPT the standing feature-slice exception (owner decision pending).
+Wind-down routings: PR #16's last two findings joined the registered positions (the `$ref`-
+siblings class now covers the TS writer's `writeRefType` short-circuit too; the
+`cloneWithoutSharedKeywords` stripping is upgraded to guard-bypassing with a concrete instance —
+`{type:[object,null], unevaluatedProperties:false}` bypasses the new Draft-07 fail-fast).
+
 **TRANSFER COMPLETE (2026-07-18 ~09:01Z):** Moment-2 acknowledgement `c3807e39` landed — Sylvan
 Flowering Branch (e6488b) is the active orchestrator; Stormbound retains PR #22 + ARC closeout
 in the overlap window. Fresh bot wave recomputed 09:00Z (unresolved: #10:3, #12:1, #13:1, #15:1,

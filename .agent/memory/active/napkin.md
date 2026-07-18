@@ -380,3 +380,50 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
 - **Red-first was observable even in a same-change port**: writing the ported suites and running
   them BEFORE replacing the modules showed 43 red / 31 green against the old surface — a genuine
   TDD checkpoint worth the two minutes, even when the brief says the retro proof is impossible.
+
+## 2026-07-18 — orchestrator session wind-down (Sylvan Flowering Branch / e6488b, loss-scan + metaloss)
+
+- **Instrument lessons, four in one session:** (1) `comms direct` prints PLAIN TEXT, never JSON —
+  piping it to jq misread success as failure and produced a duplicate directed event (instance #2
+  of the double-send family; take the tail line or match the UUID). (2) Multi-arg
+  `git rev-parse --short A B` failed twice with "Needed a single revision" while per-ref calls
+  succeeded — unexplained instrument anomaly; cure is one rev per call. (3) `grep -c` with zero
+  matches exits 1 and silently kills an `&&` chain — the staging step after it never ran; guard
+  with `|| true` or test output, never chain bare. (4) The Workflow args can arrive as a
+  JSON-encoded STRING despite being sent as JSON — tolerant-parse at the script top
+  (`typeof args === 'string' ? JSON.parse(args) : args`) is the cheap immunity.
+- **The assertion-policy temp-fixture race fired FIVE times in one session** across four gate
+  shapes (type-check sweep, lint+test pair, eslint ENOENT, two lint-only firings): a rule-test's
+  mkdtemp fixture lands inside the workspace where parallel gate tasks sweep it. Rerun-isolated
+  classified it correctly every time (all five green isolated). The cure home is the registered
+  config micro-lane (fixture root outside the tsc/eslint sweep); until it lands, budget one
+  isolated rerun per gate red on `assertion-policy-*` paths.
+- **git can silently combine two SNAPSHOT ERAS without textual conflict:** L-D's pre-#19
+  single-quote multi-auth snap hunk auto-merged into main's pinned-defaults-era file — the suite
+  failure was the only tell. Generated-per-entry files are semantically concept-bearing (a .snap
+  is a register of renders); the cure is era-regeneration under the pin and a diff against main
+  proving the delta is exactly the intended behaviour change (5 lines = the C2 AND-group
+  collapse). Candidate `merge_class` thinking for generated snapshot files.
+- **Push-gate evidence discipline (adopted fleet-wide today):** a push whose captured output
+  lacks the pre-push banner is UNGATED — treat as no-verify and re-run the gate explicitly.
+  Operationalised here as a gate-evidence line count on every push log (47 lines = full chain);
+  caught nothing on my 11 gated pushes and exonerated the fleet when Tempestuous's
+  invocation-layer instance fired.
+- **Statusline in-use probe recipe:** `printf '<session-json>' | CLAUDE_PROJECT_DIR=<repo> bash
+-c "$(jq -r '.statusLine.command' .claude/settings.json)"` — renders the live line through the
+  real settings wiring; the missing-env failure mode is loud (module-not-found on `/.claude/...`).
+- **Ring-sweep metalesson: hand-enumeration is hydra-headed.** The recompute-not-enumerate cure
+  took FIVE bot rounds to converge (delivery ledger, continuity row, merge-ready list, Open-PRs
+  line, edge list) because every surface that ever copied the volatile list was its own head.
+  Candidate structural cure: a continuity-surface validator that flags volatile enumerations
+  (PR lists, merge-ready lists, wave lists) outside their single authority home.
+- **METALOSS (recursive pass):** (a) the program record's routed-findings disposition row is
+  accreting register-grade load (nine routed positions with evidence and priorities) — it is a
+  de-facto findings register without an entry shape or evaluator; home-gap, candidate promotion
+  to a dedicated register mirroring the open-questions evaluator pattern. (b) The PDR-064
+  two-moments protocol held across FIVE authority transfers in ONE day (Moonlit→Highland→
+  Stormbound→Sylvan; Midnight→Tempestuous) with zero authority gaps and zero collisions — n=5
+  worked evidence for the succession-chain pattern candidate already on the promotion watchlist.
+  (c) Three consecutive session closes (Stormbound, Midnight, this one) ran owner-directed
+  loss-scan + metaloss passes — the practice is stabilising toward doctrine; candidate: name the
+  loss-scan as a session-handoff skill step so it fires without owner prompting.
