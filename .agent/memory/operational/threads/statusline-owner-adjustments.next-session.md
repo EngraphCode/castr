@@ -7,9 +7,10 @@ queued owner-attention bring. Pointer and hypothesis — recompute live facts be
 
 ## Participating agent identities (PDR-027)
 
-| agent_name              | platform    | model          | session_id_prefix | role                | first_session | last_session |
-| ----------------------- | ----------- | -------------- | ----------------- | ------------------- | ------------- | ------------ |
-| Midnight Watching Night | claude-code | claude-fable-5 | 900203            | implementer (castr) | 2026-07-18    | 2026-07-18   |
+| agent_name               | platform    | model          | session_id_prefix | role                            | first_session | last_session |
+| ------------------------ | ----------- | -------------- | ----------------- | ------------------------------- | ------------- | ------------ |
+| Midnight Watching Night  | claude-code | claude-fable-5 | 900203            | implementer (castr)             | 2026-07-18    | 2026-07-18   |
+| Tempestuous Wheeling Sky | claude      | claude-fable-5 | b51b06            | successor implementer (PDR-064) | 2026-07-18    | 2026-07-18   |
 
 ## Owner directives (2026-07-18, verbatim anchors)
 
@@ -23,6 +24,17 @@ queued owner-attention bring. Pointer and hypothesis — recompute live facts be
    primary checkout."
 
 ## State at record authorship (2026-07-18 — RECOMPUTE)
+
+**UPDATE (2026-07-18, succession closeout — Tempestuous Wheeling Sky / b51b06):** the castr side
+is COMPLETE AND LIVE. PR #24 merged (b62d73ab) carrying the round-1 review fold 0f9ce471
+(shim soft-fail honesty, ANSI-aware columns clipping with the COLUMNS env fallback per the
+platform docs, both settings.json statusline paths quoted); IN USE verified in the primary at
+165c9502 by live render probes. Owner-directed follow-on: the five-hour gauge label is now
+`5h:` — PR #25 merged (35efaa45). Steps 2 and 3 below remain for the successor (Sylvan
+Flowering Branch per the owner-directed handoff): the resonance side per Grove's shape (b),
+then the owner-attention bring. Named follow-up candidates: clipVisible tail-sacrifice
+(model-always-visible variant) and the pr-watch dual-signal termination (registered in the
+resonance-practice-imports record).
 
 - **castr: DONE, committed, UNPUSHED.** Branch `feat/statusline-owner-adjustments` (worktree
   `.claude/worktrees/statusline-adjust`, based on post-#19 main 61e30973), one commit: the

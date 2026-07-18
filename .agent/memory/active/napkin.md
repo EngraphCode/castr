@@ -365,3 +365,62 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   as PDR-142's failure-class table predicts. My OWN fold record over-claimed once (WorkerTool
   "threaded" when half-applied) — caught by Copilot's round, corrected in the plan. Verify the
   round-1 fold adversarially (routed to Tempestuous) rather than trusting this list.
+
+## 2026-07-18 — statusline endgame + succession chain n=4 (Tempestuous Wheeling Sky / b51b06)
+
+- **NEW tool-layer failure-mode class: JSON-escape transit mangling (three firings, one session).**
+  Content passed through the agent tool-call layer decodes valid JSON escapes in flight: a `o`
+  typed into an Edit/Write parameter arrives as `o` (test escape-rows silently degraded to
+  duplicates, caught only by re-reading on-disk bytes); python-heredoc patches additionally broke
+  on `\\n` mangling and on test content containing `"""` terminating a triple-double-quoted python
+  string (SyntaxError far from the cause). Cure ladder that held: (1) real characters over escape
+  spellings wherever the file allows; (2) placeholder patching for backslash-bearing content
+  (compose with `¤`, replace via `chr(92)` in python); (3) triple-SINGLE-quoted python literals
+  when the payload carries `"""`; (4) after ANY templated write, verify on-disk bytes (sed/Read)
+  BEFORE running tests — the RED run otherwise validates mangled tests. Same
+  verify-own-observer-instruments family; the instrument here is the tool-parameter transit
+  itself.
+- **Ungated-push specimen closed out** (comms 09:52 failure-mode event; user-memory indexed): a
+  `git -C <worktree> push` landed with ZERO pre-push output — effectively --no-verify that nobody
+  authorised. Probed: HUSKY unset, shims complete+executable, hooksPath identical to gated peers;
+  every repo-side cause ruled out; the same invocation shape gated fine on the next two pushes —
+  intermittent invocation-layer, mechanism unpinned. Fleet-adopted cure (Sylvan cross-checked all
+  11 of their pushes gated): **no pre-push banner in captured push output = UNGATED; treat as
+  no-verify, run the gate explicitly, and say so where the work lands.**
+- **Classifier-denial → owner-card authorization path (merge actions).** Auto-mode denies
+  merge-class actions (MCP and gh alike). The shape that worked: AskUserQuestion card carrying the
+  complete merge-ready evidence → owner's textual grant in the card answer → retry succeeds. Card
+  answers are the explicit-authorization surface; a broadcast reading + objection window is the
+  team-visible complement, but the card answer is what flipped the gate.
+- **cwd-drift instance (n+3), new mask**: a root-only pnpm alias invoked from a worktree subdir
+  exits 1 as "command not found" — indistinguishable from a validation failure if only the exit
+  code is read. The validator "failure" that wasn't; rerun-from-root was the whole cure. Never
+  classify an exit code before confirming the command actually ran.
+- **Dist-window collision, lived from the consumer side**: comms append MODULE_NOT_FOUND during a
+  peer's announced primary dist-clean window; bounded-backoff retry (wait for
+  `agent-tools/dist/.../agent-tools.js` to reappear) was sufficient. Long-running watcher/heartbeat
+  processes survived (modules already in memory).
+- **Bot-review trust calibration today: 11/11 real across four waves.** Copilot on #24: 5/5 real (incl. the settings
+  quoting with its pre-existing sibling defect). Codex round-2 on #23: 3/3 real, one of which
+  FALSIFIED my own pre-formed hypothesis (the continuity pointer — I assumed pre-existing-on-main;
+  measurement showed zero main references, branch-introduced). The reject reflex was forming;
+  measurement killed it. In this estate, dismiss no bot finding without a probe.
+- **Adversarial-verify method note (worked)**: per-finding refutation probes beat reading the fix —
+  the escape-spelling probe found a residual hole the fold's own tests missed (`"tools"`
+  bypass, then hardened red-first in cbbde8a3). Probe lists composed per finding-class before the
+  code is read keep the verify honest.
+- **clipVisible tail-sacrifice nuance (v1-accepted, follow-up candidate)**: a pathologically long
+  task label clips away status+model entirely (whole-row budget). If the owner wants
+  model-always-visible, the follow-up is title-first truncation preserving the suffix segments.
+- **Merged ≠ in-use for the live estate**: the owner's statusline reads the PRIMARY checkout's
+  settings+dist; a main merge alone changes nothing they see until the primary's branch merges
+  main forward and rebuilds dist. "In use" verification must probe the surface the owner actually
+  runs.
+- **Succession chain n=4 in one day** (Moonlit→Highland→Stormbound→Sylvan; Midnight→Tempestuous):
+  the two-moments discipline + thread-records-as-transfer held again; the routed-verify slice
+  BEFORE pre-positioning (verify the predecessor's last fold as the successor's first act) is a
+  strong pattern — the verify doubles as context absorption.
+- **Stale-pin sweep discipline (5h-label cycle)**: a label rename's RED must enumerate EVERY pin
+  spelling (s:33/s:23/s:80 lived in different tests); a partial pin update turns the GREEN run
+  into a mixed signal where a helper returning '' masquerades as a render bug. Grep the OLD
+  token across the whole test estate before declaring RED complete.

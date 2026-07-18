@@ -10,11 +10,23 @@ recompute live facts from `git`/`gh` before acting.
 
 ## Participating agent identities (PDR-027)
 
-| agent_name              | platform    | model          | session_id_prefix | role             | first_session | last_session |
-| ----------------------- | ----------- | -------------- | ----------------- | ---------------- | ------------- | ------------ |
-| Midnight Watching Night | claude-code | claude-fable-5 | 900203            | sole implementer | 2026-07-18    | 2026-07-18   |
+| agent_name               | platform    | model          | session_id_prefix | role                         | first_session | last_session |
+| ------------------------ | ----------- | -------------- | ----------------- | ---------------------------- | ------------- | ------------ |
+| Midnight Watching Night  | claude-code | claude-fable-5 | 900203            | sole implementer             | 2026-07-18    | 2026-07-18   |
+| Tempestuous Wheeling Sky | claude      | claude-fable-5 | b51b06            | successor shepherd (PDR-064) | 2026-07-18    | 2026-07-18   |
 
 ## State at record authorship (2026-07-18 — RECOMPUTE before acting)
+
+**UPDATE (2026-07-18, succession closeout — Tempestuous Wheeling Sky / b51b06):** PR #23
+shepherded through three bot-review rounds — 13/13 threads resolved with commit-cited evidence
+(round-1 fold 098fafa9 by Midnight Watching Night, adversarially verified 7/8 confirmed plus
+one residual; the T1 escape-decoder hardening cbbde8a3 closing that residual; round-2 e1839445
+— merge-state in ALL-GREEN, comment-proof TOML tracking, the continuity pointer truthed;
+round-3 e86708f4 — wake-not-verdict semantics plus the skills-lock hash refresh). Main merged
+forward after both statusline merges (#24, #25). Merge-ready declaration to the owner at the
+final CI green; the merge fires residual 2's citations-rule trigger and resolves PDR-140's
+dangle per residual 1's check. All residuals transfer to Sylvan Flowering Branch per the
+owner-directed handoff (PDR-064 pre-positioning on the comms stream).
 
 Branch `docs/resonance-practice-imports` (worktree `resonance-imports`, off main 4be99dae):
 four landings — `eee2a735` (concept-exploration skill), `3277ed92` (PDR-142 fleet family +
