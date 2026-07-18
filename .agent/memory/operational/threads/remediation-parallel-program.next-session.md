@@ -9,11 +9,11 @@ source of volatile truth. Recompute every live fact below from `git`/`gh` before
 
 ## Participating agent identities (PDR-027)
 
-| agent_name                 | platform    | model          | session_id_prefix | role                   | first_session | last_session |
-| -------------------------- | ----------- | -------------- | ----------------- | ---------------------- | ------------- | ------------ |
-| Highland Spiralling Summit | claude-code | claude-fable-5 | 5fb0b5            | orchestrator/closeout  | 2026-07-17    | 2026-07-18   |
-| Stormbound Circling Kite   | claude-code | claude-fable-5 | 62f93c            | orchestrator (active)  | 2026-07-18    | 2026-07-18   |
-| Sylvan Flowering Branch    | claude-code | (successor)    | (on join)         | successor-orchestrator | (on join)     | (on join)    |
+| agent_name                 | platform    | model          | session_id_prefix | role                                           | first_session | last_session |
+| -------------------------- | ----------- | -------------- | ----------------- | ---------------------------------------------- | ------------- | ------------ |
+| Highland Spiralling Summit | claude-code | claude-fable-5 | 5fb0b5            | orchestrator/closeout                          | 2026-07-17    | 2026-07-18   |
+| Stormbound Circling Kite   | claude-code | claude-fable-5 | 62f93c            | orchestrator (handed off, Moment 2 `c3807e39`) | 2026-07-18    | 2026-07-18   |
+| Sylvan Flowering Branch    | claude-code | claude-fable-5 | e6488b            | orchestrator (active)                          | 2026-07-18    | 2026-07-18   |
 
 ## Current objective
 
@@ -89,6 +89,13 @@ Successor designation (owner, 2026-07-18): **Sylvan Flowering Branch** is the ev
 successor-orchestrator. PDR-064 two-moments governs the transfer; this record is the
 authoritative transfer artifact if the session ends before Moment 2. Danger List unchanged.
 
+**TRANSFER COMPLETE (2026-07-18 ~09:01Z):** Moment-2 acknowledgement `c3807e39` landed — Sylvan
+Flowering Branch (e6488b) is the active orchestrator; Stormbound retains PR #22 + ARC closeout
+in the overlap window. Fresh bot wave recomputed 09:00Z (unresolved: #10:3, #12:1, #13:1, #15:1,
+#16:1, #17:1, #18:5, #20:3, #21:4); #19 fix `a62b8bfc` pushed + both threads resolved — #19
+joins #11/#14 as clean, early merge ask per the blocking chain. First lane-agent wave dispatched
+into the L-D/L-E/L-I worktrees 09:04Z.
+
 Since Highland's manifest: **#11 pushed + 3/3 threads resolved** (64feef9e); **#13 R99n6
 resolved** (fix at head 5a2a14af) — #13 fully clear; **#16 pushed + ALL 10 threads resolved**
 (the nine-round against 64ad35dc + a new Codex P2 fixed root-cause in 912644d4, pushed);
@@ -98,16 +105,26 @@ probe evidence** (below) and its two Copilot threads are being fixed NOW (owner-
 Midnight Watching Night's resonance-imports push waits on #19's content reaching main; their
 4 commits hold ready; the citations-rule follow-up queues behind their merge); **#22 opened**
 (feat/arc-rapid-comms-bring — the ARC estate; four-reviewer panel folded; check:ci green).
-**Merge-ready for the owner right now: #10, #12, #13, #14, #15, #17, #20, #21** (order per
-§Merge waves: L-A #11 first, then L-E #20, L-I #21, micros, L-H #17, L-D #18, feature slice,
-L-C #13, L-F #16; #19 merges early by the resolved reconciliation — RAISED PRIORITY per the
-blocking chain). The comms/claims substrate is LIVE (seeded this session); two ARC channels run
-(castr liaison + a Resonance guest window for back-flow). Bot-watch persistent on all PRs.
+**Merge-ready is a RECOMPUTED fact, never a snapshot list** (hand-enumeration retired, PR #10
+round 9 — the earlier list here omitted cleared PRs #11/#16 and could make a successor skip the
+first required merge): derive it live as open PRs with zero unresolved review threads + green
+required checks (`gh pr list` + the reviewThreads GraphQL query in Next safe steps). Merge ORDER
+stays normative per program record §Merge waves: L-A #11 first, then L-E #20, L-I #21, micros,
+L-H #17, L-D #18, feature slice, L-C #13, L-F #16; #19 merges early by the resolved
+reconciliation (RAISED PRIORITY per the blocking chain — MERGED 09:10Z). The comms/claims
+substrate is LIVE (seeded this session); two ARC channels run (castr liaison + a Resonance guest
+window for back-flow). Bot-watch persistent on all PRs.
 
 ## FINAL WORK-LOCATION MANIFEST (2026-07-18 08:15 UTC — session end of Highland Spiralling Summit)
 
-**Owner safety bar met everywhere: every lane commit is pushed AND in an open or draft PR.**
-Nothing load-bearing remains only in a worktree or only local.
+**Owner safety bar met for every LANE: every lane commit is pushed AND in an open or draft PR.**
+**EXCEPTION (by design — truthed in PR #10 round 9):** the feature slice exists ONLY as local
+branches in the primary checkout — `feat/explicit-additional-properties-rebased` @ `a48eced8`
+and its pre-rebase twin `feat/explicit-additional-properties-2026-04` @ `e150a0e8`. They are
+unpushable while their gate-level C3 reproduction is red (Danger List item 2; pre-push runs
+`check:ci`). If this machine is lost before L-D (#18) merges, that work is unrecoverable from
+origin. Preservation-ref decision is surfaced to the owner: authorise an out-of-band
+preservation push, or accept the bounded risk until the L-D merge unblocks the normal push.
 
 | PR  | Lane      | Branch tip (pushed)                     | State                                                                                                                              |
 | --- | --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
