@@ -40,7 +40,8 @@ mandated. Branch: `feat/initial-castr-review`.
   (tracked plan-estate copy; announce pickup before acting on it — the git-ignored
   handoff-record original carries the same content); shape = fixture corpus +
   machine-readable outcomes extended into
-  `lib/tests-transforms` (NOT a new suite) + the two-site interim fail-fast. **(2) The W0 owner
+  `lib/tests-transforms` (NOT a new suite) + ~~the two-site interim fail-fast~~ (retired
+  2026-07-17: lane L-B lands real-or-fail-fast in one cycle; see the program record above). **(2) The W0 owner
   walk** (three genuine forks: second-product name; preservation-coverage as public metric;
   M1/R5 enforce-vs-amend) — walking it promotes the overhaul brief to `current/`. **(3) Overhaul
   workstreams per the promoted plan.** Team history: n=2 window 2026-07-06 (Mistbound boundary
