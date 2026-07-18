@@ -54,10 +54,10 @@ todos:
     depends_on: [A2]
   - id: A4
     content: Statusline session-shape coordination indicators (team-shape/director/role) + --role declaration
-    status: pending
+    status: completed # session-shape indicators landed pre-2026-07-18; the ARC feather layer completed 2026-07-18 with A1 (feat/arc-rapid-comms-bring)
   - id: A1
     content: ArcAngel/ARC rapid-comms protocol (doc + .agent/collaboration/rapid-comms/ + watcher-pairing clauses + statusline wing)
-    status: pending
+    status: completed # FULL UNIT 2026-07-18 via Resonance's living estate (feat/arc-rapid-comms-bring); first live channel opened same-day
     depends_on: [A4]
   - id: B1
     content: Merge/rebase D4 archive+provenance branch (feat/d4-archive-provenance-backbring) onto the transplant branch
