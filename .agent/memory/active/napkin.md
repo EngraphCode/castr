@@ -271,6 +271,19 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
 
+## 2026-07-18 — successor session open (Stormbound Circling Kite / 62f93c)
+
+- **The 2026-07-17 registry gap is cured live**: seeded the absent `active-claims.json` with the
+  canonical empty v1.3.0 shape (schema-derived), created the `comms/` + `comms-seen/` directories,
+  `collaboration-state check` ok; watcher + heartbeat + team-start broadcast all live from this
+  session. Residue: peers coordinating via the workflow harness are not watching this stream —
+  a comms-substrate rendezvous needs owner relay or their next session-open. Candidate durable
+  cure: a committed bootstrap (seed script or CLI auto-create) so first-use never ENOENTs.
+- **Write-time machine-local-path guard fired on a comms BODY naming a temp worktree path**
+  (worked instance, correct firing): the cure was referring to worktrees by their branch names —
+  a portable identifier — not by path. Comms events are quasi-durable content; the branch name is
+  the right handle for a worktree in any durable or shared surface.
+
 ## 2026-07-17 — parallel remediation program (Moonlit Threading Nebula)
 
 - **Concurrent `git push` from the primary checkout collides**: two pre-push `check:ci` hooks run
@@ -297,3 +310,16 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   walked the authority fan-out outward (program record → roadmap/README → continuity/prompt →
   delivery ledger → per-finding plans). Each ring closed only when the supersession reached it;
   the durable cure was single-sourcing + exhaustive ring-sweeps, not per-comment patches.
+
+## 2026-07-18 — ARC statusline graft, slice 6 (lane agent)
+
+- **Scratchpad tsx probes must be `.mts`**: a `.ts` file outside any `package.json` context
+  transpiles as CJS, so top-level `await import(...)` fails ("Top-level await is currently not
+  supported with the cjs output format"). Renaming to `.mts` fixed it with no other change.
+- **The machine-local-path write hook also fires on out-of-repo scratch files**: a probe script
+  with absolute user-home import paths was blocked at write time. Correct cure (not a rephrase):
+  pass roots as argv and resolve imports dynamically — the probe becomes portable, which is what
+  the rule wants.
+- **Red-first was observable even in a same-change port**: writing the ported suites and running
+  them BEFORE replacing the modules showed 43 red / 31 green against the old surface — a genuine
+  TDD checkpoint worth the two minutes, even when the brief says the retro proof is impossible.
