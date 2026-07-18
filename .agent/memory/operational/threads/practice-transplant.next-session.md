@@ -22,6 +22,7 @@ updates `last_session` rather than adding a row.
 
 | platform    | model              | session_id_prefix | agent_name                     | role         | first_session | last_session |
 | ----------- | ------------------ | ----------------- | ------------------------------ | ------------ | ------------- | ------------ |
+| claude-code | claude-fable-5     | 62f93c            | Stormbound Circling Kite       | executor     | 2026-07-18    | 2026-07-18   |
 | claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor     | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer  | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer  | 2026-06-20    | 2026-06-20   |
