@@ -144,9 +144,11 @@ Run the repo's budgeted watcher in the background:
 `pnpm agent-tools:pr-watch <n> --watch --interval 60` — one line per state
 change, including new comments by author and the unresolved review-thread
 count moving in EITHER direction (a thread arriving or being resolved). The
-watch ends on merged/closed and on ALL GREEN — every check passed AND every
-review thread resolved; passing checks alone are not green, because an
-unresolved thread blocks merge-readiness just as hard. That exit is the wake
+watch ends on merged/closed and on ALL GREEN — every attached check settled
+passing AND every review thread resolved; passing checks alone are not green,
+because an unresolved thread blocks merge-readiness just as hard. (A PR with
+no checks yet attached does not read as green — that is the rollup race just
+after a push; a genuinely CI-less PR runs to its poll budget.) That exit is the wake
 signal; the Phase 3 GraphQL harvest remains the authoritative read for which
 threads and what they say. Never hand-roll tight `gh` polling loops (the
 shared API budget); on Claude Code run the watcher under a persistent

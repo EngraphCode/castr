@@ -25,8 +25,12 @@ do not duplicate.
 
 1. **General-work task subagents run `claude-sonnet-5`.** Use the
    [`task-worker`](../../sub-agents/templates/task-worker.md) agent definition —
-   it pins the model, minimum tools, and lean context so every dispatch inherits
-   them.
+   it pins minimum tools and lean context on every platform, and the model pin
+   is realised on the CLAUDE surface (the generated wrapper carries
+   `model: sonnet`). The Codex adapter deliberately inherits the parent
+   session's model (pinning low reasoning effort instead) and the Cursor
+   wrapper pins its platform default — on those surfaces, carry the model
+   expectation in the dispatch itself.
 2. **Briefs are decision-complete, precise, and NARROW — the narrower the
    better.** This class DOES TASKS. Reasoning and synthesis are never
    delegated to it.
@@ -105,7 +109,11 @@ for drift and cost.
   no value — it renders as `tools:` alone on its line, and this is the
   probe-verified zero-tools shape. Do **not** write `tools: []` and do **not**
   omit the field: an empty array and an absent field both fall back to
-  inheriting every tool.
+  inheriting every tool. The GENERATED `task-worker` class is read-only by
+  construction — its projection schema closes the portable grant set to
+  `Read`/`Grep`/`Glob` — so the rare write-granted worker is a DISPATCH-TIME
+  construction (grant the specific write tool in the Agent-tool invocation
+  itself), never a generated template variant.
 - **No extraneous context:** no skills, MCP servers, plugins, or rules the
   task does not need. The `task-worker` definition ships this leanness by
   construction — prefer it over a general-purpose agent, which loads the full
@@ -115,12 +123,15 @@ for drift and cost.
 
 ## Platform note — Cursor workers are COARSE read-only agents
 
-Real least-privilege tool scoping exists only on Claude platforms: Cursor has
-no per-tool permission field, so a Cursor-dispatched worker cannot be
-tools-minimal — it is a COARSE read-only agent, and briefs for it must assume
-the wider surface (design rationale from the lean-task-subagents arc, frozen
-plan record; conserved at the r5 ledger pass 2026-07-06). Design worker
-classes per platform capability, not from the Claude template's assumptions.
+Real, enforcement-verified least-privilege tool scoping exists on the Claude
+surface. The generated Cursor worker wrapper DOES carry the same least-privilege
+`tools:` allowlist plus `readonly: true`, but only the read-only bit is a
+verified platform enforcement — the per-tool list's enforcement semantics are
+platform-side and unprobed here. Treat a Cursor-dispatched worker as a COARSE
+read-only agent and brief it assuming the wider surface (design rationale from
+the lean-task-subagents arc, frozen plan record; conserved at the r5 ledger
+pass 2026-07-06). Design worker classes per platform capability, not from the
+Claude template's assumptions.
 
 ## Dispatching many
 

@@ -8,6 +8,7 @@ import {
   DEFAULT_REVIEWER_PROJECTION,
   readAgentProjection,
 } from '../../agent-adapter-generate/agent-projection.js';
+import { soleTemplatePath } from './validate-subagents-template-checks.js';
 
 import {
   CODEX_CONFIG_PATH,
@@ -186,9 +187,18 @@ for (const codexAdapterFile of codexAdapterFiles) {
   const content = codexAdapterContentByPath.get(codexAdapterFile) ?? '';
   const adapterBasename = path.basename(codexAdapterFile, '.toml');
   const registeredAgent = codexRegistrationsByName.get(adapterBasename) ?? null;
-  const templatePath = extractCanonicalPaths(readCodexDeveloperInstructions(content)).find((p) =>
-    p.startsWith(`${TEMPLATE_DIR}/`),
+  const { templatePath, extras } = soleTemplatePath(
+    extractCanonicalPaths(readCodexDeveloperInstructions(content)),
+    TEMPLATE_DIR,
   );
+  if (extras.length > 0) {
+    addIssue(
+      `${codexAdapterFile}: references more than one canonical template (${[
+        templatePath,
+        ...extras,
+      ].join(', ')}) — the projected class would be lexicographic, not intentional`,
+    );
+  }
   let projection = DEFAULT_REVIEWER_PROJECTION;
   if (templatePath !== undefined) {
     try {

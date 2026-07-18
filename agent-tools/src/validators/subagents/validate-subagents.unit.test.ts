@@ -11,6 +11,8 @@ import {
   requiredReadingDisciplineComponent,
   resolveCodexConfigFilePath,
 } from './validate-subagents-helpers.js';
+import { hasTomlAssignment } from './validate-subagents-codex-toml.js';
+import { soleTemplatePath } from './validate-subagents-template-checks.js';
 
 const REVIEWER_READING_DISCIPLINE =
   'Read and apply `.agent/sub-agents/components/behaviours/reading-discipline.md`.';
@@ -333,5 +335,41 @@ describe('getReadingDisciplineIssues', () => {
     const issues = getReadingDisciplineIssues('t/reviewer.md', 'body only\n', 'reviewer');
     expect(issues).toHaveLength(1);
     expect(issues[0]).toContain('reading-discipline');
+  });
+});
+
+describe('hasTomlAssignment — every legal key spelling (gate-shaped: a missed spelling is a bypass)', () => {
+  it.each([
+    ['bare', 'tools = ["Read"]'],
+    ['basic-quoted', '"tools" = ["Read"]'],
+    ['literal-quoted', "'tools' = ['Read']"],
+  ])('detects the %s spelling', (_label, line) => {
+    expect(hasTomlAssignment(line, 'tools')).toBe(true);
+  });
+
+  it('does not match the quoted key inside a multiline basic string', () => {
+    const content = 'notes = """\n"tools" = ["Read"]\n"""\n';
+    expect(hasTomlAssignment(content, 'tools')).toBe(false);
+  });
+});
+
+describe('soleTemplatePath — an adapter references exactly one canonical template', () => {
+  const DIR = '.agent/sub-agents/templates';
+  it('returns the single template with no extras', () => {
+    expect(soleTemplatePath([`${DIR}/code-reviewer.md`, '.agent/rules/x.md'], DIR)).toEqual({
+      templatePath: `${DIR}/code-reviewer.md`,
+      extras: [],
+    });
+  });
+  it('returns undefined with no extras when no template is referenced', () => {
+    expect(soleTemplatePath(['.agent/rules/x.md'], DIR)).toEqual({
+      templatePath: undefined,
+      extras: [],
+    });
+  });
+  it('surfaces every extra template so ambiguity fails loudly, never lexicographically', () => {
+    const result = soleTemplatePath([`${DIR}/a.md`, `${DIR}/b.md`], DIR);
+    expect(result.templatePath).toBe(`${DIR}/a.md`);
+    expect(result.extras).toEqual([`${DIR}/b.md`]);
   });
 });

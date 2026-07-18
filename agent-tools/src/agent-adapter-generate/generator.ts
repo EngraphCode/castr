@@ -22,13 +22,14 @@
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
-import { readAgentProjection, type AgentClass } from './agent-projection.js';
+import { readAgentProjection, type AgentClass, type WorkerTool } from './agent-projection.js';
 
 import {
   extractCanonicalPaths,
   parseCodexRegistrations,
   readCodexDeveloperInstructions,
 } from '../validators/subagents/validate-subagents-helpers.js';
+import { soleTemplatePath } from '../validators/subagents/validate-subagents-template-checks.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -62,9 +63,11 @@ export interface AgentRosterEntry {
   /**
    * Tools explicitly granted to a worker by canonical template metadata.
    * Empty for reviewers (their toolset is fixed) and for a worker that grants
-   * none — the least-privilege default.
+   * none — the least-privilege default. Typed as the schema's closed union so
+   * an entry constructed outside `readAgentProjection` cannot smuggle an
+   * unsupported tool past the projection gate.
    */
-  readonly tools: readonly string[];
+  readonly tools: readonly WorkerTool[];
 }
 
 export type AgentSurface = 'cursor' | 'claude';
@@ -96,12 +99,19 @@ export function buildAgentRoster(
   for (const name of [...adapterTextByName.keys()].toSorted((a, b) => a.localeCompare(b))) {
     const adapterText = adapterTextByName.get(name) ?? '';
     const canonicalPaths = extractCanonicalPaths(readCodexDeveloperInstructions(adapterText));
-    const templatePath = canonicalPaths.find((p) => p.startsWith(`${TEMPLATE_DIR}/`));
+    const { templatePath, extras } = soleTemplatePath(canonicalPaths, TEMPLATE_DIR);
     const personaPath = canonicalPaths.find((p) => p.startsWith(`${PERSONA_DIR}/`));
 
     if (templatePath === undefined) {
       throw new Error(
         `${CODEX_ADAPTER_DIR}/${name}.toml: references no canonical template under ${TEMPLATE_DIR}`,
+      );
+    }
+    if (extras.length > 0) {
+      throw new Error(
+        `${CODEX_ADAPTER_DIR}/${name}.toml: references more than one canonical template ` +
+          `(${[templatePath, ...extras].join(', ')}) — the projected class would be ` +
+          `lexicographic, not intentional`,
       );
     }
     const description = descriptionByName.get(name);

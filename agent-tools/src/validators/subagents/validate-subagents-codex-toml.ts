@@ -95,16 +95,24 @@ export function readTomlBasicStringValue(content: string, key: string): string |
 }
 
 /**
- * Returns whether a bare TOML key is assigned outside a multiline basic string.
- * The value shape is deliberately irrelevant: callers use this to reject keys
- * whose presence is unsupported, including arrays and inline tables.
+ * Returns whether a TOML key is assigned outside a multiline basic string, in
+ * ANY legal spelling — bare, basic-quoted (`"key"`), or literal-quoted
+ * (`'key'`); the three are semantically identical in TOML, so a gate that
+ * matched only the bare form would be bypassable by quoting (gate-shaped code:
+ * a missed spelling is a silent hole). The value shape is deliberately
+ * irrelevant: callers use this to reject keys whose presence is unsupported,
+ * including arrays and inline tables.
  */
 export function hasTomlAssignment(content: string, key: string): boolean {
   let inMultilineBasicString = false;
   for (const rawLine of content.split(/\r?\n/u)) {
     const tripleQuoteCount = rawLine.match(/"""/gu)?.length ?? 0;
     if (!inMultilineBasicString) {
-      const assignedKey = rawLine.trim().match(/^([a-z_]+)\s*=/u)?.[1];
+      const match = rawLine
+        .trim()
+        .match(/^(?:"(?<basic>[a-z_]+)"|'(?<literal>[a-z_]+)'|(?<bare>[a-z_]+))\s*=/u);
+      const assignedKey =
+        match?.groups?.['basic'] ?? match?.groups?.['literal'] ?? match?.groups?.['bare'];
       if (assignedKey === key) {
         return true;
       }

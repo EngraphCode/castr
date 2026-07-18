@@ -25,6 +25,28 @@ export const REVIEWER_READING_DISCIPLINE_COMPONENT =
 export const WORKER_READING_DISCIPLINE_COMPONENT =
   '.agent/sub-agents/components/behaviours/worker-reading-discipline.md';
 
+/** The sole canonical template an adapter references, with any ambiguous extras. */
+export interface SoleTemplatePath {
+  readonly templatePath: string | undefined;
+  readonly extras: readonly string[];
+}
+
+/**
+ * Select the SOLE canonical template from an adapter's referenced paths. An
+ * adapter that references more than one template is ambiguous: because
+ * canonical paths arrive sorted, a silent `find` would pick a class
+ * lexicographically rather than intentionally, and that class would then govern
+ * every referenced template. The extras are surfaced so callers fail loudly —
+ * the validator as an issue, the generator as a thrown error.
+ */
+export function soleTemplatePath(
+  canonicalPaths: readonly string[],
+  templateDir: string,
+): SoleTemplatePath {
+  const matches = canonicalPaths.filter((path) => path.startsWith(`${templateDir}/`));
+  return { templatePath: matches[0], extras: matches.slice(1) };
+}
+
 /** The reading-discipline component a template of the given class must reference. */
 export function requiredReadingDisciplineComponent(agentClass: SubagentClass): string {
   return agentClass === 'worker'

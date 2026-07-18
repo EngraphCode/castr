@@ -93,3 +93,20 @@ export function diffSnapshots(previous: PrSnapshot, next: PrSnapshot): string[] 
 export function isTerminalState(snapshot: PrSnapshot): boolean {
   return snapshot.state === 'MERGED' || snapshot.state === 'CLOSED';
 }
+
+/**
+ * ALL GREEN: every attached check has settled passing AND zero review threads
+ * are unresolved — the `--watch` exit that wakes the shepherd for the
+ * merge-ready declaration (passing checks alone are not green; an unresolved
+ * thread blocks merge-readiness just as hard). At least one check must have
+ * attached: a zero-check snapshot is the rollup race just after a push, not a
+ * verdict — a genuinely CI-less PR runs to its poll budget instead.
+ */
+export function isAllGreen(snapshot: PrSnapshot): boolean {
+  return (
+    snapshot.checks.passed > 0 &&
+    snapshot.checks.failed === 0 &&
+    snapshot.checks.pending === 0 &&
+    snapshot.reviewThreads.unresolved === 0
+  );
+}

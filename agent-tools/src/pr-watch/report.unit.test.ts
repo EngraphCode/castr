@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { PrSnapshot } from './index.js';
-import { diffSnapshots, formatSnapshot, isTerminalState } from './report.js';
+import { diffSnapshots, formatSnapshot, isAllGreen, isTerminalState } from './report.js';
 
 function makeSnapshot(overrides: Partial<PrSnapshot> = {}): PrSnapshot {
   return {
@@ -84,5 +84,45 @@ describe('isTerminalState', () => {
 
   it('is false while the PR is open', () => {
     expect(isTerminalState(makeSnapshot())).toBe(false);
+  });
+});
+
+describe('isAllGreen', () => {
+  it('is green when every check has settled passing and zero threads are unresolved', () => {
+    expect(
+      isAllGreen(
+        makeSnapshot({
+          checks: { total: 4, passed: 4, failed: 0, pending: 0 },
+          reviewThreads: { unresolved: 0, total: 7 },
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it.each([
+    ['a failed check', { checks: { total: 4, passed: 3, failed: 1, pending: 0 } }],
+    ['a pending check', { checks: { total: 4, passed: 3, failed: 0, pending: 1 } }],
+    ['an unresolved thread', { reviewThreads: { unresolved: 1, total: 1 } }],
+  ] as const)('is not green with %s', (_label, overrides) => {
+    expect(
+      isAllGreen(
+        makeSnapshot({
+          checks: { total: 4, passed: 4, failed: 0, pending: 0 },
+          reviewThreads: { unresolved: 0, total: 0 },
+          ...overrides,
+        }),
+      ),
+    ).toBe(false);
+  });
+
+  it('is not green before any check has attached (the rollup race, not a no-CI verdict)', () => {
+    expect(
+      isAllGreen(
+        makeSnapshot({
+          checks: { total: 0, passed: 0, failed: 0, pending: 0 },
+          reviewThreads: { unresolved: 0, total: 0 },
+        }),
+      ),
+    ).toBe(false);
   });
 });

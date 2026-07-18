@@ -240,10 +240,31 @@ kengraph, Bugbot, Vercel, decision-matrix); §Gate-Shaped Code anchor resolves; 
 - **test-reviewer** ISSUES-FOUND(medium): malformed-YAML fail-fast + frontmatter-sans-projection
   branches uncovered → colocated `agent-projection.unit.test.ts` added (4 tests; applied).
 - **type-reviewer** APPROVED-WITH-SUGGESTIONS: `WorkerTool` union threaded (schema-inferred,
-  single-source; applied); `DEFAULT_REVIEWER_PROJECTION` deduped (applied); Zod-4
-  `strictObject`/`looseObject` modernisation (applied). Config-conflict flag (agent-tools
-  tsconfig lacks `exactOptionalPropertyTypes`) = pre-existing workspace matter, NAMED FOLLOW-UP,
-  not this slice.
+  single-source) — RECORD CORRECTION: the first fold applied only the agent-projection half;
+  the generator's `AgentRosterEntry.tools` widening survived until Copilot's PR round caught
+  it (thread SRL), and the threading completed in the round-1 fold commit;
+  `DEFAULT_REVIEWER_PROJECTION` deduped (applied); Zod-4 `strictObject`/`looseObject`
+  modernisation (applied). Config-conflict flag (agent-tools tsconfig lacks
+  `exactOptionalPropertyTypes`) = pre-existing workspace matter, NAMED FOLLOW-UP, not this
+  slice.
+
+## PR #23 round-1 fold (2026-07-18, 8 threads: 7 Copilot + 1 Codex duplicate)
+
+Code (each red-first): `hasTomlAssignment` now matches every legal TOML key spelling (bare,
+basic-quoted, literal-quoted — the quoted spellings were a gate bypass); `soleTemplatePath`
+shared helper enforces exactly-one-canonical-template in BOTH the validator (issue) and the
+generator (throw) — the class-picked-lexicographically defect fixed at the class level;
+`AgentRosterEntry.tools` retyped to the closed `WorkerTool` union (completing the type-reviewer
+threading); pr-watch gains the ALL-GREEN exit (`isAllGreen`: attached checks all settled
+passing + zero unresolved threads; zero-attached-checks reads as the rollup race, not green —
+a CI-less PR runs to its poll budget; wired at both watch-loop exits) — the deeper fix for the
+two hollow-claim threads (Copilot SRd + Codex P2 duplicate), implementing the documented
+behaviour rather than retracting the doc. Docs truthed: the Sonnet-5 pin scoped to the Claude
+surface (Codex inherits by design, Cursor pins platform default); the generated worker class
+named read-only-by-construction with write grants as dispatch-time constructions; the Cursor
+note reconciled with the generator's emitted allowlist (readonly is the verified bit; per-tool
+enforcement unprobed); pr-lifecycle Phase 5 wording carries the rollup-race/no-CI honesty.
+
 - **assumptions-expert** CONCERNS: I1 PDR-126 consumer-less → wired (pr-lifecycle Phase 7 cites
   it as the shared-credential structural cure; disposition amended above); I2 Workflow-tool
   call shapes → verification made visible in the skill (authored FROM the live harness contract,
