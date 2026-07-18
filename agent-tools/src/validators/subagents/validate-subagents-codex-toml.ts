@@ -48,7 +48,7 @@ export interface CodexRegistration {
    * The `config_file` path declared in the registration block.
    *
    * Typically a path relative to the config file's directory,
-   * e.g. `"agents/code-expert.toml"`.
+   * e.g. `"agents/code-reviewer.toml"`.
    */
   readonly configFile: string;
 }
@@ -92,6 +92,28 @@ export function readTomlBasicStringValue(content: string, key: string): string |
     }
   }
   return null;
+}
+
+/**
+ * Returns whether a bare TOML key is assigned outside a multiline basic string.
+ * The value shape is deliberately irrelevant: callers use this to reject keys
+ * whose presence is unsupported, including arrays and inline tables.
+ */
+export function hasTomlAssignment(content: string, key: string): boolean {
+  let inMultilineBasicString = false;
+  for (const rawLine of content.split(/\r?\n/u)) {
+    const tripleQuoteCount = rawLine.match(/"""/gu)?.length ?? 0;
+    if (!inMultilineBasicString) {
+      const assignedKey = rawLine.trim().match(/^([a-z_]+)\s*=/u)?.[1];
+      if (assignedKey === key) {
+        return true;
+      }
+    }
+    if (tripleQuoteCount % 2 === 1) {
+      inMultilineBasicString = !inMultilineBasicString;
+    }
+  }
+  return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -185,7 +207,7 @@ export const CODEX_CONFIG_PATH = '.codex/config.toml';
  * path semantics.
  *
  * @param configFile - The `config_file` value from the registration block
- *   (e.g. `"agents/code-expert.toml"`).
+ *   (e.g. `"agents/code-reviewer.toml"`).
  * @param configPath - Repository-relative path to the config file that
  *   declares this registration.  Defaults to `.codex/config.toml`.
  * @returns A normalised, repository-relative path to the adapter TOML file.

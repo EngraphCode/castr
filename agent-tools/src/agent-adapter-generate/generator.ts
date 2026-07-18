@@ -9,11 +9,12 @@
  *   - `.claude/agents/<name>.md`  — Claude Code reviewer wrapper (18)
  *   - `.cursor/rules/<name>.mdc`  — Cursor rule trigger (one per canonical rule)
  *
- * The reviewer roster is projected from the Codex layer — `.codex/config.toml`
- * (names + descriptions) and each `.codex/agents/<name>.toml`
- * (`developer_instructions` template + persona references). The Codex adapters
- * remain the hand-authored source of truth; this generator never writes them.
- * Cursor rule triggers are projected from the canonical `.agent/rules/*.md`.
+ * The agent roster is projected from `.codex/config.toml` (registrations and
+ * descriptions), each hand-authored `.codex/agents/<name>.toml` (Codex runtime
+ * configuration and canonical-template references), and canonical template
+ * projection metadata (agent class and portable worker tools). This generator
+ * never writes the Codex layer or canonical templates. Cursor rule triggers
+ * are projected from the canonical `.agent/rules/*.md`.
  *
  * Pure render/derive functions are exported so the drift checker and unit
  * tests can exercise them without filesystem I/O.
@@ -21,26 +22,30 @@
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
+import { readAgentProjection, type AgentClass } from './agent-projection.js';
+
 import {
   extractCanonicalPaths,
   parseCodexRegistrations,
   readCodexDeveloperInstructions,
 } from '../validators/subagents/validate-subagents-helpers.js';
 
-export const TEMPLATE_DIR = '.agent/sub-agents/templates';
-export const PERSONA_DIR = '.agent/sub-agents/components/personas';
-export const CODEX_ADAPTER_DIR = '.codex/agents';
-export const CODEX_CONFIG_FILE = '.codex/config.toml';
-export const CANONICAL_RULES_DIR = '.agent/rules';
-export const CURSOR_AGENTS_DIR = '.cursor/agents';
-export const CLAUDE_AGENTS_DIR = '.claude/agents';
-export const CURSOR_RULES_DIR = '.cursor/rules';
+const TEMPLATE_DIR = '.agent/sub-agents/templates';
+const PERSONA_DIR = '.agent/sub-agents/components/personas';
+const CODEX_ADAPTER_DIR = '.codex/agents';
+const CODEX_CONFIG_FILE = '.codex/config.toml';
+const CANONICAL_RULES_DIR = '.agent/rules';
+const CURSOR_AGENTS_DIR = '.cursor/agents';
+const CLAUDE_AGENTS_DIR = '.claude/agents';
+const CURSOR_RULES_DIR = '.cursor/rules';
 
 /** Model identifiers used in the generated adapter frontmatter, per platform. */
-export const CURSOR_AGENT_MODEL = 'gpt-5.5';
-export const CLAUDE_AGENT_MODEL = 'opus';
+const CURSOR_AGENT_MODEL = 'gpt-5.5';
+const CLAUDE_AGENT_MODEL = 'opus';
+/** Model for the lean task-worker class on the Claude surface (owner doctrine). */
+const CLAUDE_WORKER_MODEL = 'sonnet';
 
-/** A reviewer roster entry projected from the Codex adapter layer. */
+/** A roster entry projected from Codex registrations and canonical templates. */
 export interface AgentRosterEntry {
   readonly name: string;
   readonly description: string;
@@ -48,16 +53,29 @@ export interface AgentRosterEntry {
   readonly templatePath: string;
   /** Persona component path for persona-expanded adapters, if any. */
   readonly personaPath?: string;
+  /**
+   * Reviewer (default) or lean task worker — selects the render shape. Absent
+   * projection metadata on the canonical template defaults to reviewer,
+   * keeping every existing reviewer adapter byte-identical.
+   */
+  readonly agentClass: AgentClass;
+  /**
+   * Tools explicitly granted to a worker by canonical template metadata.
+   * Empty for reviewers (their toolset is fixed) and for a worker that grants
+   * none — the least-privilege default.
+   */
+  readonly tools: readonly string[];
 }
 
 export type AgentSurface = 'cursor' | 'claude';
 
 /**
- * Projects the reviewer roster from the Codex config text and a map of Codex
- * adapter file contents keyed by agent name. Pure — no filesystem access.
+ * Projects the agent roster from supplied Codex and canonical-template text.
+ * Pure — no filesystem access.
  *
  * @param configText - Full text of `.codex/config.toml`.
  * @param adapterTextByName - Map of agent name to its `.codex/agents/<name>.toml` text.
+ * @param templateTextByPath - Map of canonical template path to its Markdown text.
  * @returns Roster entries sorted by agent name.
  * @throws If an adapter has no matching config registration, or references no
  *   canonical template under {@link TEMPLATE_DIR}.
@@ -65,6 +83,7 @@ export type AgentSurface = 'cursor' | 'claude';
 export function buildAgentRoster(
   configText: string,
   adapterTextByName: ReadonlyMap<string, string>,
+  templateTextByPath: ReadonlyMap<string, string>,
 ): AgentRosterEntry[] {
   const descriptionByName = new Map(
     parseCodexRegistrations(configText).map((registration) => [
@@ -89,11 +108,18 @@ export function buildAgentRoster(
     if (description === undefined || description === '') {
       throw new Error(`${name}: no registration with a description in ${CODEX_CONFIG_FILE}`);
     }
+    const templateText = templateTextByPath.get(templatePath);
+    if (templateText === undefined) {
+      throw new Error(`${templatePath}: canonical template text was not supplied`);
+    }
+    const projection = readAgentProjection(templatePath, templateText);
 
     entries.push({
       name,
       description,
       templatePath,
+      agentClass: projection.agentClass,
+      tools: projection.tools,
       ...(personaPath === undefined ? {} : { personaPath }),
     });
   }
@@ -140,25 +166,74 @@ interface SurfaceShape {
 
 const SURFACE_SHAPES: Record<AgentSurface, SurfaceShape> = {
   cursor: {
-    frontmatter: (entry) => [
-      `name: ${entry.name}`,
-      `model: ${CURSOR_AGENT_MODEL}`,
-      `description: ${yamlScalar(entry.description)}`,
-      'readonly: true',
-      'tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch',
-    ],
+    frontmatter: (entry) =>
+      entry.agentClass === 'worker'
+        ? cursorWorkerFrontmatter(entry)
+        : [
+            `name: ${entry.name}`,
+            `model: ${CURSOR_AGENT_MODEL}`,
+            `description: ${yamlScalar(entry.description)}`,
+            'readonly: true',
+            'tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch',
+          ],
   },
   claude: {
-    frontmatter: (entry) => [
-      `name: ${entry.name}`,
-      `description: ${yamlScalar(entry.description)}`,
-      `model: ${CLAUDE_AGENT_MODEL}`,
-      'tools: Read, Grep, Glob, Bash, WebFetch, WebSearch',
-      'disallowedTools: Write, Edit, NotebookEdit',
-      'permissionMode: plan',
-    ],
+    frontmatter: (entry) =>
+      entry.agentClass === 'worker'
+        ? claudeWorkerFrontmatter(entry)
+        : [
+            `name: ${entry.name}`,
+            `description: ${yamlScalar(entry.description)}`,
+            `model: ${CLAUDE_AGENT_MODEL}`,
+            'tools: Read, Grep, Glob, Bash, WebFetch, WebSearch',
+            'disallowedTools: Write, Edit, NotebookEdit',
+            'permissionMode: plan',
+          ],
   },
 };
+
+function cursorWorkerFrontmatter(entry: AgentRosterEntry): string[] {
+  const head = [
+    `name: ${entry.name}`,
+    `model: ${CURSOR_AGENT_MODEL}`,
+    `description: ${yamlScalar(entry.description)}`,
+    'readonly: true',
+  ];
+  return entry.tools.length === 0
+    ? [...head, 'tools:']
+    : [...head, `tools: ${entry.tools.join(', ')}`];
+}
+
+/**
+ * Claude frontmatter lines for a lean task-worker.
+ *
+ * A worker's `tools` is a strict allowlist. It is NEVER omitted — an omitted
+ * `tools` inherits ALL tools (Claude docs), the opposite of least privilege.
+ * There is no `permissionMode: plan` (that is the reviewer's read-only posture;
+ * a worker executes its allowlisted tools and never exceeds the session's own
+ * privilege). Note `Bash` is deliberately absent from any default grant: a shell
+ * is a universal capability (arbitrary write + exec), so it is granted only when
+ * a specific task genuinely needs it, never as part of a "read-only" set.
+ *
+ * A worker with NO granted tools renders the probe-verified zero-tools shape:
+ * `tools` present with an EMPTY value (null). Probed 2026-07-02 (see the Practice donor's
+ * corpus-voter/corpus-reducer wrappers): an empty `tools` value grants nothing,
+ * while `tools: []` and an omitted `tools` both fall back to inherit-all. A
+ * `disallowedTools` wildcard is NOT used — with zero granted there is nothing to
+ * subtract, and a bare `*` is undocumented. So the zero-tools shape is
+ * `tools`-only.
+ */
+function claudeWorkerFrontmatter(entry: AgentRosterEntry): string[] {
+  const head = [
+    `name: ${entry.name}`,
+    `description: ${yamlScalar(entry.description)}`,
+    `model: ${CLAUDE_WORKER_MODEL}`,
+  ];
+  if (entry.tools.length === 0) {
+    return [...head, 'tools:'];
+  }
+  return [...head, `tools: ${entry.tools.join(', ')}`];
+}
 
 /**
  * Renders a Cursor or Claude reviewer adapter for a roster entry. The output is
@@ -184,7 +259,9 @@ export function renderAgentAdapter(entry: AgentRosterEntry, surface: AgentSurfac
     ...personaBlock,
     `Your first action MUST be to read and internalise \`${entry.templatePath}\`.`,
     '',
-    'Review or recommend; do not modify code. The calling agent executes any changes you propose.',
+    entry.agentClass === 'worker'
+      ? 'Do the task exactly as briefed and return the raw result. Do not reason about, synthesise, or decide anything beyond the task — the calling agent owns all judgement.'
+      : 'Review or recommend; do not modify code. The calling agent executes any changes you propose.',
     '',
   ];
   return lines.join('\n');
@@ -218,21 +295,21 @@ export function renderCursorRule(ruleName: string, description: string): string 
   ].join('\n');
 }
 
-export function cursorAgentTargetPath(repoRoot: string, name: string): string {
+function cursorAgentTargetPath(repoRoot: string, name: string): string {
   return join(repoRoot, CURSOR_AGENTS_DIR, `${name}.md`);
 }
 
-export function claudeAgentTargetPath(repoRoot: string, name: string): string {
+function claudeAgentTargetPath(repoRoot: string, name: string): string {
   return join(repoRoot, CLAUDE_AGENTS_DIR, `${name}.md`);
 }
 
-export function agentTargetPath(repoRoot: string, name: string, surface: AgentSurface): string {
+function agentTargetPath(repoRoot: string, name: string, surface: AgentSurface): string {
   return surface === 'cursor'
     ? cursorAgentTargetPath(repoRoot, name)
     : claudeAgentTargetPath(repoRoot, name);
 }
 
-export function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
+function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
   return join(repoRoot, CURSOR_RULES_DIR, `${ruleName}.mdc`);
 }
 
@@ -248,7 +325,7 @@ async function listNames(repoRoot: string, relDir: string, extension: string): P
 /**
  * Reads the Codex layer from disk and projects the reviewer roster.
  */
-export async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
+async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
   const configText = await readFile(join(repoRoot, CODEX_CONFIG_FILE), 'utf8');
   const adapterNames = await listNames(repoRoot, CODEX_ADAPTER_DIR, '.toml');
   const adapterTextByName = new Map<string, string>();
@@ -258,7 +335,16 @@ export async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntr
       await readFile(join(repoRoot, CODEX_ADAPTER_DIR, `${name}.toml`), 'utf8'),
     );
   }
-  return buildAgentRoster(configText, adapterTextByName);
+  const templateTextByPath = new Map<string, string>();
+  for (const adapterText of adapterTextByName.values()) {
+    const templatePath = extractCanonicalPaths(readCodexDeveloperInstructions(adapterText)).find(
+      (path) => path.startsWith(`${TEMPLATE_DIR}/`),
+    );
+    if (templatePath !== undefined && !templateTextByPath.has(templatePath)) {
+      templateTextByPath.set(templatePath, await readFile(join(repoRoot, templatePath), 'utf8'));
+    }
+  }
+  return buildAgentRoster(configText, adapterTextByName, templateTextByPath);
 }
 
 /** A single (target path, rendered content) generation unit. */

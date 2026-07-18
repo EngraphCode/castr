@@ -34,4 +34,16 @@ export {
 
 export { getCodexRegistrationValidation } from './validate-subagents-codex-registration-validation.js';
 
-export { getCodexAdapterValidation } from './validate-subagents-codex-adapter-validation.js';
+export {
+  getCodexAdapterValidation,
+  getCodexPermissionCompositionIssues,
+} from './validate-subagents-codex-adapter-validation.js';
+
+export type { SubagentClass } from './validate-subagents-template-checks.js';
+
+export {
+  REVIEWER_READING_DISCIPLINE_COMPONENT,
+  WORKER_READING_DISCIPLINE_COMPONENT,
+  requiredReadingDisciplineComponent,
+  getReadingDisciplineIssues,
+} from './validate-subagents-template-checks.js';

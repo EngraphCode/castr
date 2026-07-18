@@ -23,9 +23,9 @@ Future consumer layers may be added for Cursor, Claude, Gemini, and other platfo
 
 ## Installed Roster
 
-15 canonical templates. The architecture reviewer is one template (`architecture-expert`)
+16 canonical templates. The architecture reviewer is one template (`architecture-expert`)
 invoked through four persona adapters (`-barney`, `-betty`, `-fred`, `-wilma`), so the
-Codex layer registers 18 agents against 15 templates.
+Codex layer registers 19 agents against 16 templates.
 
 Generic reviewers: `code-reviewer`, `test-reviewer`, `type-reviewer`, `config-expert`,
 `docs-adr-expert`, `onboarding-expert`, `release-readiness-expert`, `security-expert`.
@@ -35,6 +35,10 @@ Architecture reviewers: `architecture-expert` → `architecture-expert-{barney,b
 Meta and plan reviewers: `assumptions-expert`, `subagent-architect`.
 
 Domain experts: `openapi-expert`, `zod-expert`, `json-schema-expert`, `mcp-expert`.
+
+Workers (lean task class, per the `lean-task-subagents` skill): `task-worker` — carries
+`projection:` frontmatter (class + portable tools allowlist) that the adapter generator
+projects into least-privilege platform wrappers (`model: sonnet`, no Bash).
 
 ## Consistency Checklist
 

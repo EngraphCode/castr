@@ -65,6 +65,7 @@ Resolve the **live roster at review time** — enumerate `.agent/sub-agents/temp
 - [ ] **Output Format** structured and fenced
 - [ ] **Delegation** cross-references to real, existing agents
 - [ ] **Three-layer compliance** — components stay leaf nodes; templates are the composition layer; adapters stay thin
+- [ ] **Tier and power appropriate to correlation distance** — the agent's class and model tier match the smallest slice of the problem one mind must hold (PDR-142 three-tier fleet composition; the `lean-task-subagents` skill carries castr's tier→model binding); a worker-class template declares `projection:` metadata and never exceeds the least-privilege grant
 
 ## Boundaries
 

@@ -35,7 +35,10 @@ todos:
       PDR-140, PDR-125, PDR-126), adversarially-verify-subagent-output rule (+ RULES_INDEX +
       generated wrappers), lean-task-subagents skill (+ castr binding section), task-worker
       template (+ component reads), subagent-architect tier criterion, PDR-124 link-drift fix.
-    status: pending
+    status:
+      done # 2026-07-18 (Midnight Watching Night, 900203): landed; PDRs byte-verbatim vs
+      # source; generator worker extension proven red-then-green (25/25); portability 23 skills /
+      # 91 rules x3 surfaces / 19 agents; worked sizing demonstration recorded in the body.
     depends_on: [T1]
   - id: T3
     content: >-
@@ -127,17 +130,54 @@ formed-decision workflow, and the fork was constitutively the owner's (source po
 went to the owner as a formed decision with a recommendation. The boundary text catches the
 near miss exactly as designed → decline path proven.
 
-## T2 — fleet-composition framework (pending; measured cite closure)
+## T2 — fleet-composition framework (LANDED 2026-07-18)
 
-Bring-set: PDR-142 (framework), PDR-141 + Core annex, PDR-140 (cited by 141; boundary
-CONFIRMED with Stormbound Circling Kite on the comms stream 2026-07-18 — PDR-140 ships here,
-their ARC slice drops it), PDR-125, PDR-126; rule `adversarially-verify-subagent-output`;
-skill `lean-task-subagents` + castr binding section (tier→model: swarm=Haiku, depth=Sonnet,
-apex=session frontier model; ordered decision procedure; dynamic-workflow mechanics);
-sub-agent template `task-worker` + its component reads (measure at execution). Compose points:
-cite invoke-assumptions-expert (proportionality FIRST), invoke-reviewers/invoke-code-experts
-(depth-tier catalogue), PDR-003 write-prohibition, PDR-124 (audit phenotype). Fix PDR-124's
-drifted PDR-019 Related-link filename in the same slice.
+Landed footprint (source resonance@d8dc50c; every body read firsthand before landing):
+
+| Surface                                                                                                 | Disposition                                                                                           |
+| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| PDR-125, PDR-126, PDR-140, PDR-141, PDR-142 + compound-agent Core annex                                 | BROUGHT VERBATIM (byte-diffed vs source; Core parity)                                                 |
+| `.agent/rules/adversarially-verify-subagent-output.md`                                                  | BROUGHT VERBATIM + RULES_INDEX row + 3 platform surfaces                                              |
+| `.agent/skills/lean-task-subagents/SKILL-CANONICAL.md`                                                  | BROUGHT + localised (specialist roster) + EXTENDED (castr binding §)                                  |
+| `.agent/sub-agents/templates/task-worker.md` + `worker-reading-discipline.md`                           | BROUGHT (projection frontmatter intact; castr had `subagent-identity` already)                        |
+| `agent-tools` adapter generator worker-class extension (+ `agent-projection.ts` + tests)                | BROUGHT as a red→green code cycle (new tests proven red against the old generator, 25/25 green after) |
+| `.codex/agents/task-worker.toml` + config registration                                                  | BROUGHT / EDITED                                                                                      |
+| Roster docs (AGENT.md 15→16, sub-agents README, practice-index), settings permission, skills-lock entry | EDITED                                                                                                |
+| subagent-architect checklist: tier/power-vs-correlation-distance criterion                              | EDITED (cites PDR-142)                                                                                |
+| PDR-124 Related link `PDR-019-adr-pdr-reusability-test.md` → actual filename                            | FIXED (drift)                                                                                         |
+
+Cite-closure verdicts (all firsthand): PDR-142→{124 ✓, 015 ✓, 141 in-set}; PDR-141→{027, 063,
+064, 077, 094 all ✓; 140 in-set; annex in-set}; PDR-125→{011 ✓, 124 ✓}; PDR-126→{027 ✓, 125
+in-set}. **Known transient dangle, deliberate:** PDR-140's Related block cites PDR-139
+(comms-events-thread-at-creation), which castr lacks. PDR-140 is Core and lands VERBATIM
+(conservation and parity outrank link hygiene — editing a portable PDR forks it from the
+upstream); PDR-139 is comms-estate and sits in Stormbound Circling Kite's ARC territory —
+coordination note broadcast on the comms stream; named follow-up: the link resolves when
+PDR-139 lands (ARC bring or a later slice).
+
+Disposition ledger — the rest of resonance's fleet doctrine estate:
+
+| Resonance surface                                                           | Decision                 | Reason                                                                               |
+| --------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------ |
+| PDR-134, PDR-131, PDR-053, PDR-058-family fleet mentions                    | DON'T-BRING (this slice) | Related-family, not cite-closure; castr has 058; others await their own consumer     |
+| PDR-129 (recomputable-plan-state), PDR-130                                  | DON'T-BRING              | Prose worked-example mention inside lean-task-subagents only (no link); kept as-is   |
+| PDR-139 (comms-events-thread-at-creation)                                   | DEFER (coordinated)      | Stormbound's ARC/comms territory; transient PDR-140 Related-link dangle named above  |
+| resonance UI-expert templates (accessibility/design-system/react-component) | DON'T-BRING              | Web-product phenotype; castr's roster mention localised to its schema-domain experts |
+
+### Worked sizing demonstration (framework applied to a real dispatch decision)
+
+Applied retrospectively to this session's own plan-phase fan-out (four exploration agents,
+dispatched before the framework landed, inheriting the session frontier model): under the
+binding, all four sweeps are DEPTH-tier work (each held one whole estate seam — skill estate,
+landing conventions, doctrine inventory, pr-lifecycle delta), so `model: sonnet` dispatches
+were the right size; none was swarm-shaped (no atomic-judgement decomposition) and none needed
+the frontier tier. The apex pass stayed in-session and EARNED ITS SEAT twice, exactly as
+PDR-142's failure-class table predicts: firsthand cite-closure re-measurement caught one
+explorer's local misjudgement ("castr has no decision-lenses estate" — false; principles.md
+§Decision Lenses exists), and cross-seam synthesis caught the cross-repo PDR-numbering
+divergence hypothesis being wrong. Both were invisible from inside the individual sweeps —
+correlated/local error caught only above them. Verdict recorded: future same-shape
+exploration fan-outs dispatch at Sonnet with explicit `model` overrides.
 
 ## T3 — pr-lifecycle re-sync (pending; source DECLARED MOVING)
 

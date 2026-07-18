@@ -72,3 +72,7 @@ config_file = "agents/security-expert.toml"
 [agents."subagent-architect"]
 description = "Meta-agent for sub-agent definition design and review."
 config_file = "agents/subagent-architect.toml"
+
+[agents."task-worker"]
+description = "Lean single-purpose task worker — runs one briefed task with minimum tools and returns the raw result."
+config_file = "agents/task-worker.toml"

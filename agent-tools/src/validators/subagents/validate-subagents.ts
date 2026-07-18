@@ -4,13 +4,19 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { readAgentProjection } from '../../agent-adapter-generate/agent-projection.js';
 
 import {
   CODEX_CONFIG_PATH,
   type CodexRegistration,
+  type SubagentClass,
   getCodexAdapterValidation,
+  getCodexPermissionCompositionIssues,
   getCodexRegistrationValidation,
+  getReadingDisciplineIssues,
+  extractCanonicalPaths,
   parseCodexRegistrations,
+  readCodexDeveloperInstructions,
 } from './validate-subagents-helpers.js';
 
 const repoRoot = resolveRepoRoot(import.meta.url);
@@ -85,6 +91,12 @@ const templateFiles = await listMarkdownFiles(TEMPLATE_DIR);
 const cursorReferencedTemplates = new Set<string>();
 const codexReferencedTemplates = new Set<string>();
 const codexRegistrationsByName = new Map<string, CodexRegistration>();
+const templateClassByPath = new Map<string, SubagentClass>();
+const templateTextByPath = new Map<string, string>();
+
+for (const templateFile of templateFiles) {
+  templateTextByPath.set(templateFile, await readText(templateFile));
+}
 
 for (const wrapperFile of wrapperFiles) {
   const content = await readText(wrapperFile);
@@ -133,8 +145,10 @@ for (const wrapperFile of wrapperFiles) {
   }
 }
 
+let codexConfigContent = '';
 if (await exists(CODEX_CONFIG_PATH)) {
-  const codexRegistrations = parseCodexRegistrations(await readText(CODEX_CONFIG_PATH));
+  codexConfigContent = await readText(CODEX_CONFIG_PATH);
+  const codexRegistrations = parseCodexRegistrations(codexConfigContent);
   const { issues: registrationIssues, registrationsByName: resolvedRegistrationsByName } =
     getCodexRegistrationValidation({
       registrations: codexRegistrations,
@@ -151,10 +165,31 @@ if (await exists(CODEX_CONFIG_PATH)) {
   addIssue(`Missing Codex project-agent registry: ${CODEX_CONFIG_PATH}`);
 }
 
+const codexAdapterContentByPath = new Map(
+  await Promise.all(
+    codexAdapterFiles.map(
+      async (codexAdapterFile) => [codexAdapterFile, await readText(codexAdapterFile)] as const,
+    ),
+  ),
+);
+for (const issue of getCodexPermissionCompositionIssues({
+  configContent: codexConfigContent,
+  adapterContents: [...codexAdapterContentByPath.values()],
+})) {
+  addIssue(issue);
+}
+
 for (const codexAdapterFile of codexAdapterFiles) {
-  const content = await readText(codexAdapterFile);
+  const content = codexAdapterContentByPath.get(codexAdapterFile) ?? '';
   const adapterBasename = path.basename(codexAdapterFile, '.toml');
   const registeredAgent = codexRegistrationsByName.get(adapterBasename) ?? null;
+  const templatePath = extractCanonicalPaths(readCodexDeveloperInstructions(content)).find((p) =>
+    p.startsWith(`${TEMPLATE_DIR}/`),
+  );
+  const projection =
+    templatePath === undefined
+      ? { agentClass: 'reviewer' as const, tools: [] }
+      : readAgentProjection(templatePath, templateTextByPath.get(templatePath) ?? '');
   const {
     issues: codexAdapterIssues,
     templatePaths,
@@ -162,6 +197,7 @@ for (const codexAdapterFile of codexAdapterFiles) {
   } = getCodexAdapterValidation({
     codexAdapterFile,
     content,
+    agentClass: projection.agentClass,
     registeredAgent,
     templateDir: TEMPLATE_DIR,
   });
@@ -175,18 +211,16 @@ for (const codexAdapterFile of codexAdapterFiles) {
   }
   for (const templatePath of templatePaths) {
     codexReferencedTemplates.add(templatePath);
+    templateClassByPath.set(templatePath, projection.agentClass);
   }
 }
 
 for (const templateFile of templateFiles) {
-  const content = await readText(templateFile);
+  const content = templateTextByPath.get(templateFile) ?? '';
 
-  if (
-    !content.includes(
-      'Read and apply `.agent/sub-agents/components/behaviours/reading-discipline.md`.',
-    )
-  ) {
-    addIssue(`${templateFile}: missing reading-discipline component reference`);
+  const templateClass = templateClassByPath.get(templateFile) ?? 'reviewer';
+  for (const issue of getReadingDisciplineIssues(templateFile, content, templateClass)) {
+    addIssue(issue);
   }
 
   if (!content.includes(REQUIRED_IDENTITY_LINE)) {

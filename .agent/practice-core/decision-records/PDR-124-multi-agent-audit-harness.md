@@ -12,7 +12,7 @@ independent audit reused the harness end-to-end)
 [PDR-096](PDR-096-bring-the-iceberg-transplant-completeness.md)
 (bring-the-iceberg — the audit-method-under-counts root this harness cures recurs one level up,
 at the decomposition itself);
-[PDR-019](PDR-019-adr-pdr-reusability-test.md)
+[PDR-019](PDR-019-adr-scope-by-reusability.md)
 (reusability test — this pattern is re-derived by any Practice repo that runs a decomposed
 multi-agent audit, so it is PDR-shaped, not host-pattern-shaped).
 

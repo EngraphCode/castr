@@ -7,6 +7,7 @@ import {
   renderCursorRule,
   toTitleCase,
 } from '../../src/agent-adapter-generate/generator.js';
+import type { AgentRosterEntry } from '../../src/agent-adapter-generate/generator.js';
 
 const CONFIG_TEXT = `[features]
 multi_agent = true
@@ -48,31 +49,38 @@ This file is a thin Codex adapter. Mode: Observe, analyse, and report. Do not mo
 """
 `;
 
+const TEMPLATE_TEXT_BY_PATH = new Map([
+  ['.agent/sub-agents/templates/code-reviewer.md', '# Code Reviewer\n'],
+  ['.agent/sub-agents/templates/architecture-expert.md', '# Architecture Expert\n'],
+]);
+
 describe('buildAgentRoster', () => {
   it('derives name, description, and template path for a non-persona adapter', () => {
-    const roster = buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', CODE_REVIEWER_TOML]]));
-    expect(roster).toEqual([
-      {
-        name: 'code-reviewer',
-        description: 'Gateway reviewer for non-trivial changes.',
-        templatePath: '.agent/sub-agents/templates/code-reviewer.md',
-      },
-    ]);
+    const roster = buildAgentRoster(
+      CONFIG_TEXT,
+      new Map([['code-reviewer', CODE_REVIEWER_TOML]]),
+      TEMPLATE_TEXT_BY_PATH,
+    );
+    expect(roster).toHaveLength(1);
+    expect(roster[0]).toMatchObject({
+      name: 'code-reviewer',
+      description: 'Gateway reviewer for non-trivial changes.',
+      templatePath: '.agent/sub-agents/templates/code-reviewer.md',
+    });
   });
 
   it('captures the persona path when present', () => {
     const roster = buildAgentRoster(
       CONFIG_TEXT,
       new Map([['architecture-expert-barney', BARNEY_TOML]]),
+      TEMPLATE_TEXT_BY_PATH,
     );
-    expect(roster).toEqual([
-      {
-        name: 'architecture-expert-barney',
-        description: 'Simplification-first architecture reviewer.',
-        templatePath: '.agent/sub-agents/templates/architecture-expert.md',
-        personaPath: '.agent/sub-agents/components/personas/barney.md',
-      },
-    ]);
+    expect(roster).toHaveLength(1);
+    expect(roster[0]).toMatchObject({
+      name: 'architecture-expert-barney',
+      templatePath: '.agent/sub-agents/templates/architecture-expert.md',
+      personaPath: '.agent/sub-agents/components/personas/barney.md',
+    });
   });
 
   it('returns entries sorted by name', () => {
@@ -82,6 +90,7 @@ describe('buildAgentRoster', () => {
         ['code-reviewer', CODE_REVIEWER_TOML],
         ['architecture-expert-barney', BARNEY_TOML],
       ]),
+      TEMPLATE_TEXT_BY_PATH,
     );
     expect(roster.map((entry) => entry.name)).toEqual([
       'architecture-expert-barney',
@@ -94,9 +103,9 @@ describe('buildAgentRoster', () => {
       '.agent/sub-agents/templates/code-reviewer.md',
       '.agent/sub-agents/components/personas/barney.md',
     );
-    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', badToml]]))).toThrow(
-      /no canonical template/,
-    );
+    expect(() =>
+      buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', badToml]]), TEMPLATE_TEXT_BY_PATH),
+    ).toThrow(/no canonical template/);
   });
 
   it('throws when the config has no registration for an adapter', () => {
@@ -104,6 +113,7 @@ describe('buildAgentRoster', () => {
       buildAgentRoster(
         '[features]\nmulti_agent = true\n',
         new Map([['code-reviewer', CODE_REVIEWER_TOML]]),
+        TEMPLATE_TEXT_BY_PATH,
       ),
     ).toThrow(/no registration/);
   });
@@ -114,12 +124,16 @@ describe('renderAgentAdapter', () => {
     name: 'code-reviewer',
     description: 'Gateway reviewer for non-trivial changes.',
     templatePath: '.agent/sub-agents/templates/code-reviewer.md',
+    agentClass: 'reviewer' as const,
+    tools: [],
   };
   const barney = {
     name: 'architecture-expert-barney',
     description: 'Simplification-first architecture reviewer.',
     templatePath: '.agent/sub-agents/templates/architecture-expert.md',
     personaPath: '.agent/sub-agents/components/personas/barney.md',
+    agentClass: 'reviewer' as const,
+    tools: [],
   };
 
   it('renders a Cursor adapter with required frontmatter and the template-load line', () => {
@@ -162,6 +176,115 @@ describe('renderAgentAdapter', () => {
     const tricky = { ...codeReviewer, description: "Reviewer: gateway, it's #1." };
     const out = renderAgentAdapter(tricky, 'cursor');
     expect(out).toContain("description: 'Reviewer: gateway, it''s #1.'");
+  });
+});
+
+describe('renderAgentAdapter — worker class (behaviour through the canonical template → adapter seam)', () => {
+  const WORKER_CONFIG = `[agents."task-worker"]
+description = "Lean single-purpose task worker."
+config_file = ".codex/agents/task-worker.toml"
+`;
+  const workerToml = `model_reasoning_effort = "low"
+developer_instructions = """
+Read and follow \`.agent/sub-agents/templates/task-worker.md\`.
+"""
+`;
+  const workerTemplate = (projection: string): string =>
+    `---
+projection:
+${projection}
+---
+
+# Task Worker
+`;
+  const workerProjection = `  class: worker
+  tools:
+    - Read
+    - Grep
+    - Glob`;
+  const buildWorker = (projection: string): AgentRosterEntry => {
+    const [entry] = buildAgentRoster(
+      WORKER_CONFIG,
+      new Map([['task-worker', workerToml]]),
+      new Map([['.agent/sub-agents/templates/task-worker.md', workerTemplate(projection)]]),
+    );
+    if (entry === undefined) {
+      throw new Error('expected a task-worker roster entry');
+    }
+    return entry;
+  };
+
+  it('projects canonical worker metadata without projection-only Codex keys', () => {
+    const worker = buildWorker(workerProjection);
+
+    expect(worker).toMatchObject({
+      name: 'task-worker',
+      agentClass: 'worker',
+      tools: ['Read', 'Grep', 'Glob'],
+    });
+
+    const claude = renderAgentAdapter(worker, 'claude');
+    expect(claude).toContain('model: sonnet');
+    expect(claude).toContain('tools: Read, Grep, Glob');
+    // Bash is a universal capability, never part of a lean grant.
+    expect(claude).not.toContain('Bash');
+    // A worker does the task; it never carries the reviewer's review posture.
+    expect(claude).not.toContain('Review or recommend');
+    expect(claude).not.toContain('permissionMode: plan');
+
+    const cursor = renderAgentAdapter(worker, 'cursor');
+    expect(cursor).toContain('tools: Read, Grep, Glob');
+    expect(cursor).not.toContain('Shell');
+    expect(cursor).not.toContain('WebFetch');
+    expect(cursor).not.toContain('WebSearch');
+  });
+
+  it('gives a no-tools worker the probe-verified present-but-empty allowlist (no deny-all)', () => {
+    const out = renderAgentAdapter(buildWorker('  class: worker'), 'claude');
+    expect(out).toContain('\ntools:\n');
+    expect(out).not.toContain('disallowedTools');
+  });
+
+  it('defaults templates without projection metadata to reviewer posture', () => {
+    const [entry] = buildAgentRoster(
+      WORKER_CONFIG,
+      new Map([['task-worker', workerToml]]),
+      new Map([['.agent/sub-agents/templates/task-worker.md', '# Task Worker\n']]),
+    );
+
+    expect(entry?.agentClass).toBe('reviewer');
+  });
+
+  it('fails fast when a referenced canonical template has not been supplied', () => {
+    expect(() =>
+      buildAgentRoster(WORKER_CONFIG, new Map([['task-worker', workerToml]]), new Map()),
+    ).toThrow(/task-worker\.md.*template text was not supplied/u);
+  });
+
+  it('fails fast when canonical projection metadata contains an unsupported class', () => {
+    expect(() => buildWorker('  class: supervisor')).toThrow(/projection.*class/u);
+  });
+
+  it('fails fast when canonical projection metadata contains an unsupported key', () => {
+    expect(() => buildWorker(`${workerProjection}\n  permissionMode: bypassPermissions`)).toThrow(
+      /projection metadata/u,
+    );
+  });
+
+  it('fails fast when a worker grant is not portable across generated surfaces', () => {
+    expect(() =>
+      buildWorker(`  class: worker
+  tools:
+    - Bash`),
+    ).toThrow(/projection.*tools/u);
+  });
+
+  it('fails fast when reviewer metadata declares a dead tools grant', () => {
+    expect(() =>
+      buildWorker(`  class: reviewer
+  tools:
+    - Read`),
+    ).toThrow(/projection.*tools/u);
   });
 });
 

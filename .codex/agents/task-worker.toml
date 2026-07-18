@@ -1,0 +1,21 @@
+# Lean worker class: runs one briefed task with the minimum granted tools.
+# Model posture: this adapter pins no `model`, so on Codex it inherits the parent
+# session model; the Sonnet-5 guarantee is realised on the Claude surface, where
+# the generator renders `model: sonnet` from the canonical task-worker template's
+# projection metadata. Reasoning
+# effort is `low` (not the reviewer `high`): a worker executes exactly as briefed
+# and never reasons or synthesises, so it must not spend the reviewer effort tier.
+name = "task-worker"
+description = "Lean single-purpose task worker — runs one briefed task with minimum tools and returns the raw result."
+model_reasoning_effort = "low"
+sandbox_mode = "read-only"
+approval_policy = "never"
+developer_instructions = """
+Read and follow `.agent/sub-agents/templates/task-worker.md`.
+
+This file is a thin Codex adapter. The canonical instructions live in
+`.agent/sub-agents/templates/task-worker.md`.
+
+Mode: Do the task exactly as briefed and return the raw result. Do not reason,
+synthesise, or decide beyond the task — the calling agent owns all judgement.
+"""
