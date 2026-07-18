@@ -4,6 +4,30 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-07-18 (L-F PR #16 review-response round — worktree wf_6f9f06c9-91e-2)
 
+- **A type-driven completeness lock only protects keywords the type VOCABULARY knows** (Codex P2,
+  `additionalItems`). The guard's position table is `Record<classified-keywords, shape>` so the
+  compiler forces coverage — but Draft 07 `additionalItems` was absent from `Draft07Input` AND the
+  base `SchemaObject`, so it was invisible to the lock, leaked through `stripDraft07Keys`'
+  rest-spread as an UNTYPED excess property, and silently dropped at parse: valid Draft 07 tuple
+  remainder constraints were ignored. Cure: model the keyword (flat key on `Draft07Input`), map it
+  in the tuple step (`items` array → `prefixItems`, `additionalItems` → 2020-12 `items`), reject
+  boolean forms explicitly, drop only the spec-dead non-tuple form, and add it to the guard table.
+  One-sweep audit (mine + json-schema-expert, independently): `additionalItems` was the ONLY
+  missing sub-schema position — every other Draft 07/2020-12 applicator is present, and
+  `$dynamicRef`/`$recursiveRef`/`$dynamicAnchor` are strings, correctly absent. Red-first: 8 new
+  tests (5 mapping/drop, 1 boolean rejection, 1 guard rejection, 1 end-to-end IR carry) all red
+  before the fix, 84/84 green after; the "drops dead additionalItems" pins were red BEFORE the fix
+  too — proof of the untyped leak, not just the missing mapping.
+- **A document-wide recursive guard is a false-positive engine: recursion must follow the
+  grammar, not the object graph** (912644d4, Codex P2). The Draft 07 `$ref`-sibling guard
+  recursed through EVERY object/array value, so `$ref`-shaped instance data under `default` /
+  `const` / `enum` / `examples` was "detected" as a reference and the document falsely rejected.
+  Class-eliminating cure: recurse only through sub-schema-bearing keyword positions, with the
+  position table typed `Record<keyof Draft07SubSchemaKeywords | flat-keys, shape>` so the
+  compiler forces the guard to track the normalization pipeline's single keyword-classification
+  source. Red-first: 3 acceptance tests failed at `#/default`, `#/const`,
+  `#/properties/link/default` before the fix; 3 new rejection pins (items/then/definitions
+  entry) plus all 5 existing guard cases stayed green throughout.
 - **A carrying fix creates an emission debt at every writer, and reviewers WILL find the one you
   skipped:** 1bfbdd9 taught the parsers to carry `$ref` siblings and made the OpenAPI writer emit
   them, but left the JSON Schema writer's bare-`$ref` early-return in place (even documented it as

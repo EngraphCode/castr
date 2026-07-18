@@ -65,4 +65,10 @@ export type Draft07Input = Omit<
     exclusiveMinimum?: boolean | number;
     exclusiveMaximum?: boolean | number;
     items?: Draft07SchemaOrRefOrBool | Draft07SchemaOrRefOrBool[];
+    /**
+     * Draft 07 remainder-item schema for the tuple `items` form. Mapped to
+     * 2020-12 `items` beside tuple `items`; dead (spec-ignored) and
+     * dropped otherwise. Never present on {@link JsonSchema2020}.
+     */
+    additionalItems?: Draft07SchemaOrRefOrBool;
   };

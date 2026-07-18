@@ -11,7 +11,12 @@ type NormalizeFn = (input: Draft07Input) => JsonSchema2020;
 /** Draft 07 input minus the flat keys handled directly by `stripDraft07Keys`. */
 type Draft07SubSchemaInput = Omit<
   Draft07Input,
-  'definitions' | 'dependencies' | 'exclusiveMinimum' | 'exclusiveMaximum' | 'items'
+  | 'definitions'
+  | 'dependencies'
+  | 'exclusiveMinimum'
+  | 'exclusiveMaximum'
+  | 'items'
+  | 'additionalItems'
 >;
 
 /**
@@ -26,9 +31,14 @@ export function stripDraft07Keys(
   input: Draft07Input,
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
+  // `additionalItems` reaching this point is the non-tuple Draft 07 form:
+  // the tuple step already mapped the meaningful case to 2020-12 `items`,
+  // and Draft 07 (validation §6.4.2) requires ignoring the rest, so the
+  // dead keyword is dropped here.
   const {
     definitions: _definitions,
     dependencies: _dependencies,
+    additionalItems: _additionalItems,
     exclusiveMinimum,
     exclusiveMaximum,
     items,

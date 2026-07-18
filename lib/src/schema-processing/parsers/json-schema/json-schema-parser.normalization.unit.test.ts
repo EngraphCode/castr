@@ -508,6 +508,75 @@ describe('normalizeDraft07', () => {
   });
 });
 
+describe('normalizeDraft07 — Draft 07 additionalItems → 2020-12 items', () => {
+  it('maps additionalItems beside tuple items to 2020-12 items', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }, { type: 'number' }],
+      additionalItems: { type: 'boolean' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['prefixItems']).toEqual([{ type: 'string' }, { type: 'number' }]);
+    expect(result['items']).toEqual({ type: 'boolean' });
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('rewrites a definitions $ref inside additionalItems while mapping', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: { $ref: '#/definitions/Tail' },
+      definitions: { Tail: { type: 'number' } },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(getSchemaRef(result['items'], 'items')).toBe('#/$defs/Tail');
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('normalizes Draft 07 constructs inside a mapped additionalItems schema', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: { type: 'number', minimum: 0, exclusiveMinimum: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    const items = getSchemaObject(result['items'], 'items');
+    expect(items?.exclusiveMinimum).toBe(0);
+    expect(items?.minimum).toBeUndefined();
+  });
+
+  it('drops additionalItems when items is a single schema (dead per Draft 07)', () => {
+    const input = draft07({
+      type: 'array',
+      items: { type: 'string' },
+      additionalItems: { type: 'number' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['items']).toEqual({ type: 'string' });
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+
+  it('drops additionalItems when items is absent (dead per Draft 07)', () => {
+    const input = draft07({
+      type: 'array',
+      additionalItems: { type: 'number' },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result['items']).toBeUndefined();
+    expect(result).not.toHaveProperty('additionalItems');
+  });
+});
+
 describe('normalizeDraft07 — recursion into conditional and 2020-12 applicator keywords (H1)', () => {
   it('normalizes boolean exclusiveMinimum nested inside then', () => {
     const input = draft07({
@@ -756,6 +825,16 @@ describe('boolean sub-schema honesty', () => {
     const input = draft07({ not: false });
 
     expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*not/s);
+  });
+
+  it('rejects a boolean additionalItems beside tuple items instead of silently inverting it', () => {
+    const input = draft07({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: false,
+    });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*additionalItems/s);
   });
 
   it('still preserves booleans at the boolean-capable keywords', () => {

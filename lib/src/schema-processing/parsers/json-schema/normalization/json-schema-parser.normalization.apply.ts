@@ -229,8 +229,12 @@ function narrowSchemaOrRefValue(
 /**
  * Build the explicit rejection message for a boolean sub-schema at a
  * position the parser does not yet carry booleans.
+ *
+ * Exported for the tuple-items normalization step, which rejects boolean
+ * `additionalItems` before its object-form value is mapped to 2020-12
+ * `items` (an object-only position downstream).
  */
-function buildBooleanSubSchemaRejectionMessage(keyword: string, value: boolean): string {
+export function buildBooleanSubSchemaRejectionMessage(keyword: string, value: boolean): string {
   const objectForm = value ? '`{}`' : '`{ "not": {} }`';
   return (
     `Boolean JSON Schema \`${String(value)}\` at '${keyword}' is valid JSON Schema, but the ` +

@@ -84,7 +84,7 @@ const SCHEMA_SHAPE = 'schema';
 type SubSchemaPositionShape = typeof MAP_SHAPE | typeof SCHEMA_SHAPE;
 
 type SubSchemaPositionKeyword =
-  keyof Draft07SubSchemaKeywords | 'definitions' | 'dependencies' | 'items';
+  keyof Draft07SubSchemaKeywords | 'definitions' | 'dependencies' | 'items' | 'additionalItems';
 
 /**
  * Every keyword position on {@link Draft07Input} whose value carries
@@ -92,9 +92,10 @@ type SubSchemaPositionKeyword =
  *
  * Derived from the single keyword-classification source
  * ({@link Draft07SubSchemaKeywords}) plus the flat Draft 07 keys
- * (`definitions`, `dependencies`, `items`): the `Record` key type makes
- * the compiler reject this table whenever a classified keyword is added
- * or removed, so the guard cannot drift from the normalization pipeline.
+ * (`definitions`, `dependencies`, `items`, `additionalItems`): the
+ * `Record` key type makes the compiler reject this table whenever a
+ * classified keyword is added or removed, so the guard cannot drift from
+ * the normalization pipeline.
  *
  * Instance-data keywords (`default`, `const`, `enum`, `examples`) are
  * deliberately absent: their values are data, not schemas, so a
@@ -112,6 +113,7 @@ const SUB_SCHEMA_POSITIONS: Readonly<Record<SubSchemaPositionKeyword, SubSchemaP
   anyOf: SCHEMA_SHAPE,
   prefixItems: SCHEMA_SHAPE,
   items: SCHEMA_SHAPE,
+  additionalItems: SCHEMA_SHAPE,
   not: SCHEMA_SHAPE,
   propertyNames: SCHEMA_SHAPE,
   contains: SCHEMA_SHAPE,

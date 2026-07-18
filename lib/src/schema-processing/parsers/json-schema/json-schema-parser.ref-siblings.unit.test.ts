@@ -80,6 +80,22 @@ describe('parseJsonSchemaObject — nested $ref sibling carrying (H4)', () => {
     expect(items.description).toBe('One entry');
   });
 
+  it('carries the Draft 07 additionalItems remainder schema into IR items, siblings included', () => {
+    const result = parseJsonSchema({
+      type: 'array',
+      items: [{ type: 'string' }],
+      additionalItems: { $ref: '#/$defs/Tail', minLength: 2 },
+    });
+
+    expect(result.prefixItems).toHaveLength(1);
+    const items = result.items;
+    if (items === undefined || Array.isArray(items)) {
+      throw new Error('Expected a single items schema mapped from additionalItems');
+    }
+    expect(items.$ref).toBe('#/$defs/Tail');
+    expect(items.minLength).toBe(2);
+  });
+
   it('carries $ref siblings under prefixItems', () => {
     const result = parseJsonSchemaObject({
       type: 'array',
@@ -291,6 +307,18 @@ describe('Draft 07 dialect guard — $ref siblings are non-applicative in Draft 
         type: 'array',
         items: { $ref: '#/definitions/Base', minLength: 5 },
         definitions: { Base: { type: 'string' } },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
+  it('rejects a declared Draft 07 document with $ref siblings under additionalItems', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        $schema: DRAFT_07,
+        type: 'array',
+        items: [{ type: 'string' }],
+        additionalItems: { $ref: '#/definitions/Tail', minLength: 2 },
+        definitions: { Tail: { type: 'string' } },
       }),
     ).toThrow(/Draft 07/);
   });
