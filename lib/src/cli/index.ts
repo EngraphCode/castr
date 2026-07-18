@@ -18,7 +18,6 @@
 import { Command } from 'commander';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { resolveConfig } from 'prettier';
 
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { getZodClientTemplateContext } from '../schema-processing/context/index.js';
@@ -30,6 +29,7 @@ import {
   buildGenerationOptions,
   buildGenerationArgs,
 } from './helpers.js';
+import { resolvePrettierConfigForOutput } from './resolve-prettier-config.js';
 import {
   determineEffectiveTemplate,
   buildEffectiveOptions,
@@ -119,8 +119,8 @@ program
   .action(async (input: string, options: CliOptions) => {
     writeCliMessage(`Retrieving OpenAPI document from ${input}`);
     const openApiDoc = await prepareOpenApiDocument(input);
-    const prettierConfig = await resolveConfig(options.prettier ?? './');
     const distPath = options.output ?? input + '.client.ts';
+    const prettierConfig = await resolvePrettierConfigForOutput(distPath, options.prettier);
 
     const parsedOptions = parseCliOptions(options);
     const generationOptions = buildGenerationOptions(options, parsedOptions);
