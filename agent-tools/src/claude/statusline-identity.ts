@@ -14,8 +14,8 @@
  * become opt-in and the logo-column layout activates). The agent-identity name
  * (PDR-027) comes from the built `agent-identity` CLI. Git facts come from
  * {@link gatherGitFacts} against the working directory in the payload; the
- * session-shape glyphs from two cheap reads of the primary checkout's
- * coordination state.
+ * session-shape glyphs from a hard-bounded set of reads of the primary
+ * checkout's coordination state (see `statusline-session-shape.ts`).
  *
  * Failure handling is split by segment. The **location facts** (working branch,
  * coordination branch) fail LOUD — an unexpected git error renders a visible
@@ -28,10 +28,19 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import {
+  closeSync,
+  existsSync,
+  openSync,
+  readFileSync,
+  readSync,
+  readdirSync,
+  statSync,
+} from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { ARC_ACTIVE_WINDOW_SECONDS } from '../arc/arc-channel-grammar.js';
 import { parseCollaborationRegistry } from '../collaboration-state/state-parsers.js';
 import { type CollaborationRegistry } from '../collaboration-state/types.js';
 import { resolveLogoRows, resolveLogoStyle, type EngraphLogoStyle } from './engraph-logo.js';
@@ -44,6 +53,8 @@ import { planStatuslineExecution, type StatuslinePlan } from './statusline-ident
 import { isMotionDisabled, readAndAdvanceFrame } from './statusline-logo-cycle.js';
 import { renderStatusline } from './statusline-render.js';
 import {
+  ARC_CONTENT_BYTE_CAP,
+  rankArcContentReads,
   resolveSessionShape,
   type ExperimentsEntry,
   type SessionShape,
@@ -175,7 +186,8 @@ function gatherSessionShape(
   return resolveSessionShape({
     ownAgentName,
     registry: primaryRoot === undefined ? undefined : readActiveClaimsRegistry(primaryRoot),
-    experimentsListing: primaryRoot === undefined ? undefined : listExperiments(primaryRoot),
+    experimentsListing:
+      primaryRoot === undefined ? undefined : listExperiments(primaryRoot, ownAgentName),
     nowIso: new Date().toISOString(),
   });
 }
@@ -195,17 +207,68 @@ function readActiveClaimsRegistry(primaryRoot: string): CollaborationRegistry | 
   );
 }
 
-function listExperiments(primaryRoot: string): readonly ExperimentsEntry[] | undefined {
-  // ArcAngel channels live in the canonical rapid-comms home (absent in castr
-  // until the ArcAngel bring lands; the wing indicator stays dark, gracefully).
+function listExperiments(
+  primaryRoot: string,
+  ownAgentName: string | undefined,
+): readonly ExperimentsEntry[] | undefined {
+  // ArcAngel channels live in the canonical rapid-comms home (landed with the
+  // ARC bring; an absent or unreadable directory still degrades to no listing
+  // and the feather indicators stay dark, gracefully).
   const experimentsDir = join(primaryRoot, '.agent/collaboration/rapid-comms');
   try {
-    return readdirSync(experimentsDir, { recursive: true, withFileTypes: true })
+    const listed = readdirSync(experimentsDir, { recursive: true, withFileTypes: true })
       .filter((entry) => entry.isFile())
       .map((entry) => statExperimentsEntry(experimentsDir, join(entry.parentPath, entry.name)))
       .filter((entry) => entry !== undefined);
+    return attachInWindowContent(experimentsDir, listed, ownAgentName, Date.now());
   } catch {
     return undefined;
+  }
+}
+
+/**
+ * Attach content to in-window entries under the bounded read budget: newest
+ * first, at most {@link ARC_CONTENT_READ_CAP} reads of at most
+ * {@link ARC_CONTENT_BYTE_CAP} bytes each. Beyond-budget in-window entries are
+ * marked `beyond-cap` (the resolver renders overflow) and a failed read marks
+ * `unreadable` (renders invalid) — in-window content state is always named,
+ * never silently absent. Out-of-window entries pass through untouched.
+ */
+function attachInWindowContent(
+  experimentsDir: string,
+  listed: readonly ExperimentsEntry[],
+  ownAgentName: string | undefined,
+  nowMs: number,
+): readonly ExperimentsEntry[] {
+  const inWindow = (entry: ExperimentsEntry): boolean => {
+    const ageMs = nowMs - Date.parse(entry.mtimeIso);
+    return ageMs >= 0 && ageMs <= ARC_ACTIVE_WINDOW_SECONDS * 1000;
+  };
+  const toRead = rankArcContentReads(listed, ownAgentName, nowMs);
+
+  return listed.map((entry) => {
+    if (!inWindow(entry)) {
+      return entry;
+    }
+    if (!toRead.has(entry.name)) {
+      return { ...entry, contentAbsent: 'beyond-cap' as const };
+    }
+    return readEntryContent(experimentsDir, entry);
+  });
+}
+
+function readEntryContent(experimentsDir: string, entry: ExperimentsEntry): ExperimentsEntry {
+  try {
+    const fd = openSync(join(experimentsDir, entry.name), 'r');
+    try {
+      const buffer = Buffer.alloc(ARC_CONTENT_BYTE_CAP);
+      const bytesRead = readSync(fd, buffer, 0, ARC_CONTENT_BYTE_CAP, 0);
+      return { ...entry, content: buffer.subarray(0, bytesRead).toString('utf8') };
+    } finally {
+      closeSync(fd);
+    }
+  } catch {
+    return { ...entry, contentAbsent: 'unreadable' as const };
   }
 }
 

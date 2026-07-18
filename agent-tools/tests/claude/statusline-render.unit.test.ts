@@ -188,7 +188,7 @@ describe('renderStatusline — Claude.ai rate-limit gauges', () => {
     const out = renderStatusline({
       ...base,
       identity: 'Wyvern mends Draught',
-      sessionShape: { ownRole: undefined, teamShape: 'solo', arcActive: false },
+      sessionShape: { ownRole: undefined, teamShape: 'solo', arcChannels: [] },
       fiveHourPercentage: 23,
       model: 'Opus 4.8',
     });
