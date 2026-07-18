@@ -17,6 +17,10 @@
  * @packageDocumentation
  */
 
+import {
+  ARC_ACTIVE_WINDOW_SECONDS,
+  normaliseForFilenameMatch,
+} from '../arc/arc-channel-grammar.js';
 import { isClaimStale } from '../collaboration-state/claims.js';
 import {
   type CollaborationClaim,
@@ -82,15 +86,12 @@ export interface SessionShape {
 }
 
 /**
- * How recently an experiments channel must have been written to count as a
- * live ArcAngel channel. Claim freshness has its own per-claim TTL; ARC
- * channels have no recorded TTL, so mtime within this window is the proxy.
- * Thirty minutes covers the observed gap between turns in a live rapid
- * channel without keeping the wing up much past a channel quietening; a
- * false wing for a few minutes is harmless for a glance surface. The
- * comparison is inclusive: a write exactly at the window edge still counts.
+ * The liveness window (how recently a channel must have been written to
+ * count as live) is the protocol-level {@link ARC_ACTIVE_WINDOW_SECONDS},
+ * imported from the ARC channel grammar — the single home for protocol
+ * constants (consolidate-at-second-consumer; this module was the second
+ * consumer of the private copy it previously declared).
  */
-const ARC_ACTIVE_WINDOW_SECONDS = 1800;
 
 /**
  * Resolve the session's coordination shape from explicit inputs.
@@ -189,14 +190,5 @@ function resolveArcActive(
   });
 }
 
-/**
- * Normalise a display name or channel filename for participant matching:
- * lower-case with every non-alphanumeric run collapsed to a single dash, so
- * "Monsoon guards Cirrus" matches `arc-monsoon-guards-cirrus-and-fern.md`
- * regardless of the separator convention a channel author chose. Substring
- * matching suffices because the per-pair channel convention embeds each
- * participant's PDR-027 display name verbatim in the channel path.
- */
-function normaliseForFilenameMatch(value: string): string {
-  return value.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-');
-}
+// Participant/name normalisation for channel matching is the grammar module's
+// normaliseForFilenameMatch (imported above) — the single normalisation home.
