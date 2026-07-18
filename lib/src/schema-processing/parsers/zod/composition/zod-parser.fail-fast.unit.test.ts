@@ -132,20 +132,97 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
     });
   });
 
-  describe('enums', () => {
-    it('rejects z.nativeEnum instead of widening it to a plain string', () => {
+  describe('native enums resolve statically (requirements.md § input-output pair compatibility)', () => {
+    it('resolves a local numeric enum with auto-increment semantics', () => {
       const result = parseZodSource(`
         enum Color { Red, Green }
         export const S = z.nativeEnum(Color);
       `);
 
-      expect(result.ir.components).toHaveLength(0);
-      expect(result.errors).toHaveLength(1);
-      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
-      expect(result.errors[0]?.message).toContain('z.nativeEnum');
-      expect(result.errors[0]?.location).toBeDefined();
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.enum).toEqual([0, 1]);
+      expect(component.schema.type).toBe('number');
     });
 
+    it('resolves a local string enum', () => {
+      const result = parseZodSource(`
+        enum Direction { Up = 'UP', Down = 'DOWN' }
+        export const S = z.nativeEnum(Direction);
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.enum).toEqual(['UP', 'DOWN']);
+      expect(component.schema.type).toBe('string');
+    });
+
+    it('resolves explicit initialisers with auto-increment continuation', () => {
+      const result = parseZodSource(`
+        enum Level { Low = 5, High }
+        export const S = z.nativeEnum(Level);
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.enum).toEqual([5, 6]);
+      expect(component.schema.type).toBe('number');
+    });
+
+    it('resolves a heterogeneous enum without assigning a contradictory single type', () => {
+      const result = parseZodSource(`
+        enum Mixed { A = 1, B = 'b' }
+        export const S = z.nativeEnum(Mixed);
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.enum).toEqual([1, 'b']);
+      expect(component.schema.type).toBeUndefined();
+    });
+
+    it('captures trailing presence modifiers on z.nativeEnum()', () => {
+      const result = parseZodSource(`
+        enum Color { Red, Green }
+        export const S = z.strictObject({ c: z.nativeEnum(Color).optional() });
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      const c = component.schema.properties?.get('c');
+      expect(c?.enum).toEqual([0, 1]);
+      expect(c?.metadata.required).toBe(false);
+      expect(component.schema.required).not.toContain('c');
+    });
+
+    it('rejects an enum member whose value is not statically computable', () => {
+      const result = parseZodSource(`
+        enum Unstable { A = Math.random() }
+        export const S = z.nativeEnum(Unstable);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      const parseError = result.errors.find((error) => error.code === 'PARSE_ERROR');
+      expect(parseError).toBeDefined();
+      expect(parseError?.message).toContain('z.nativeEnum');
+      expect(parseError?.location).toBeDefined();
+    });
+
+    it('rejects an argument that does not resolve to an enum declaration', () => {
+      const result = parseZodSource(`
+        const NotAnEnum = { A: 'a' };
+        export const S = z.nativeEnum(NotAnEnum);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      const parseError = result.errors.find((error) => error.code === 'PARSE_ERROR');
+      expect(parseError).toBeDefined();
+      expect(parseError?.message).toContain('z.nativeEnum');
+      expect(parseError?.location).toBeDefined();
+    });
+  });
+
+  describe('enums', () => {
     it('rejects non-literal enum members instead of dropping them', () => {
       const result = parseZodSource(`
         const dynamicValue = 'a';
@@ -174,7 +251,84 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
     });
   });
 
+  describe('recognised chained methods with unextractable arguments fail fast', () => {
+    it('rejects z.array().min() with a non-literal argument instead of dropping the constraint', () => {
+      const result = parseZodSource(`
+        const limit = 1;
+        export const S = z.array(z.string()).min(limit);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.min(');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('rejects a composite .default() with a non-extractable argument instead of dropping it', () => {
+      const result = parseZodSource(`
+        const fallback = ['a'];
+        export const S = z.array(z.string()).default(fallback);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.default(');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('rejects .meta() with a non-extractable argument instead of dropping it', () => {
+      const result = parseZodSource(`
+        const dynamicMeta = { description: 'x' };
+        export const S = z.enum(['a', 'b']).meta(dynamicMeta);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.meta(');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('captures a JSON-literal .default() on an array instead of dropping it', () => {
+      const result = parseZodSource(`
+        export const S = z.array(z.string()).default([]);
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.metadata.default).toEqual([]);
+      expect(component.schema.metadata.zodChain?.defaults).toEqual(['.default([])']);
+    });
+
+    it('serialises a composite string default containing quotes as valid Zod source', () => {
+      const result = parseZodSource(`
+        export const S = z.enum(['a"b', 'c']).default('a"b');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.metadata.default).toBe('a"b');
+      expect(component.schema.metadata.zodChain?.defaults).toEqual(['.default("a\\"b")']);
+    });
+  });
+
   describe('presence modifiers on composites are captured, not dropped', () => {
+    it('captures .optional() on a writer-emitted .and() intersection property', () => {
+      const result = parseZodSource(`
+        export const S = z.strictObject({ i: z.string().and(z.number()).optional() });
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      const i = component.schema.properties?.get('i');
+      expect(i?.allOf).toHaveLength(2);
+      expect(i?.metadata.required).toBe(false);
+      expect(i?.metadata.zodChain?.presence).toBe('.optional()');
+      expect(component.schema.required).not.toContain('i');
+    });
+
     it('captures .optional() on an array-typed property', () => {
       const result = parseZodSource(`
         export const S = z.strictObject({ arr: z.array(z.string()).optional() });

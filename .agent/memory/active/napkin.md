@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-C: six PR #13 zod-parser review findings — lane sub-agent / claude-fable-5)
+
+- **A committed expected.json can LOCK IN a silent-drop bug:** the constraints fixture recorded
+  `z.int32().min(-100)` as validations `[".min()"]` with NO `minimum` — the negative literal
+  (PrefixUnaryExpression, not NumericLiteral) was unextractable, silently dropped, and the
+  snapshot enshrined the loss as "expected". Fixing the arg-validation finding (fail fast on
+  unextractable args) surfaced it immediately: the new throw turned the enshrined drop into a
+  visible red. Cure landed: signed-numeric extraction in `zod-ast.literals.ts`. Lesson: when
+  adding fail-fast to a formerly silent path, expect committed snapshots to be complicit.
+- **`UPDATE_SNAPSHOTS=true` on the zod-parser runner is a churn machine:** it rewrites every
+  expected.json with raw `JSON.stringify(...,2)` (breaking prettier array collapsing) and injects
+  a `$schema` key — 8 files / ~350 lines of noise for a 2-entry change. Hand-edit the specific
+  entries instead. Related: the runner compares with `toMatchObject` (expected ⊆ actual), so
+  expected files are a WEAK lock — extra fields in parser output pass silently.
+- **max-files-per-dir (6) + max-lines (220) interact hard with "add a leaf module" fixes:** the
+  fail-fast helper module bounced from modifiers/ (7th file) to ast/ (7th file) before landing
+  merged into `ast/zod-ast.literals.ts` — which also required moving the `ZodMethodCall`
+  interface into the leaf to avoid a madge type-import cycle. Budget-check the target directory
+  BEFORE creating a new module.
+- **Transient PreToolUse-hook MODULE_NOT_FOUND** (`agent-tools/dist/.../check-blocked-content.js`
+  missing): the hook guard resolves against the PRIMARY checkout's built dist, not the worktree;
+  an Edit was blocked once and succeeded on retry. Worktree lanes inherit hook-infrastructure
+  state from the main tree.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by

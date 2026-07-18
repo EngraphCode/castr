@@ -69,4 +69,27 @@ describe('Zod Intersection Parsing', () => {
       });
     });
   });
+
+  describe('.and() with trailing chained modifiers (writer lockstep, ADR-032)', () => {
+    it('parses z.string().and(z.number()).optional() and captures presence', () => {
+      const result = parseCode('z.string().and(z.number()).optional()');
+      expect(result).toMatchObject({
+        allOf: [{ type: 'string' }, { type: 'number' }],
+      });
+      expect(result?.metadata.required).toBe(false);
+      expect(result?.metadata.zodChain.presence).toBe('.optional()');
+    });
+
+    it('parses .and() followed by .describe() and captures the description', () => {
+      const result = parseCode("z.string().and(z.number()).describe('An intersected value')");
+      expect(result?.allOf).toHaveLength(2);
+      expect(result?.description).toBe('An intersected value');
+    });
+
+    it('rejects an unsupported trailing method after .and() instead of dropping it', () => {
+      expect(() => parseCode('z.string().and(z.number()).refine((value) => true)')).toThrow(
+        /\.refine\(/,
+      );
+    });
+  });
 });

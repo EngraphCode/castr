@@ -428,7 +428,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".min()", ".max(100)"],
+          "validations": [".min(-100)", ".max(100)"],
           "defaults": []
         },
         "dependencyGraph": {
@@ -438,6 +438,7 @@
         },
         "circularReferences": []
       },
+      "minimum": -100,
       "maximum": 100,
       "format": "int32"
     },
@@ -678,10 +679,11 @@
       "metadata": {
         "required": true,
         "nullable": false,
+        "default": [],
         "zodChain": {
           "presence": "",
           "validations": [],
-          "defaults": []
+          "defaults": [".default([])"]
         },
         "dependencyGraph": {
           "references": [],

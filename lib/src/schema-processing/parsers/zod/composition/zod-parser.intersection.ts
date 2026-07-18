@@ -6,8 +6,14 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { Node } from 'ts-morph';
-import { createZodProject, getZodMethodChain } from '../ast/zod-ast.js';
+import { Node, type CallExpression } from 'ts-morph';
+import {
+  createZodProject,
+  extractMethodFromCall,
+  getZodMethodChain,
+  throwUnsupportedMemberSchema,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
@@ -16,7 +22,6 @@ import {
   assertSupportedChainedMethods,
   buildCompositeChainMethods,
   finalizeCompositeSchema,
-  throwUnsupportedMemberSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
 import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION } from '../zod-constants.js';
 
@@ -122,7 +127,51 @@ export function parseIntersectionZodFromNode(
 }
 
 /**
- * Handle chained .and() calls: A.and(B)
+ * Result of locating the outermost `.and()` call within a method chain.
+ * @internal
+ */
+interface AndChainSplit {
+  /** The outermost `.and(...)` call expression. */
+  andCall: CallExpression;
+  /** Chained methods applied after `.and(...)`, in source order. */
+  trailingMethods: ZodMethodCall[];
+}
+
+/**
+ * Walk a call chain from the outside in, collecting the methods chained
+ * after the outermost `.and()` call. Returns undefined when the chain
+ * contains no `.and()` link, so other parsers can claim the node.
+ *
+ * @internal
+ */
+function splitChainAroundAnd(node: CallExpression): AndChainSplit | undefined {
+  const trailingMethods: ZodMethodCall[] = [];
+  let current: Node = node;
+
+  while (Node.isCallExpression(current)) {
+    const expr = current.getExpression();
+    if (!Node.isPropertyAccessExpression(expr)) {
+      return undefined;
+    }
+    if (expr.getName() === ZOD_METHOD_AND) {
+      return { andCall: current, trailingMethods };
+    }
+    const method = extractMethodFromCall(current);
+    if (method) {
+      trailingMethods.unshift(method);
+    }
+    current = expr.getExpression();
+  }
+
+  return undefined;
+}
+
+/**
+ * Handle chained .and() calls, including trailing chained modifiers the
+ * writer emits (ADR-032 parser/writer lockstep): `A.and(B)` and
+ * `A.and(B).optional()` both parse, with the trailing chain enforced
+ * against the intersection whitelist and captured into metadata.
+ *
  * @internal
  */
 export function parseChainedIntersectionFromNode(
@@ -133,29 +182,39 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  const expr = node.getExpression();
-  if (!Node.isPropertyAccessExpression(expr)) {
+  const split = splitChainAroundAnd(node);
+  if (!split) {
     return undefined;
   }
 
-  if (expr.getName() !== ZOD_METHOD_AND) {
+  const andExpr = split.andCall.getExpression();
+  if (!Node.isPropertyAccessExpression(andExpr)) {
     return undefined;
   }
 
-  const leftNode = expr.getExpression();
-  const rightNode = node.getArguments()[0];
+  const leftNode = andExpr.getExpression();
+  const rightNode = split.andCall.getArguments()[0];
 
   if (!leftNode || !rightNode) {
     return undefined;
   }
 
-  return {
+  assertSupportedChainedMethods(
+    '.and() intersection',
+    split.trailingMethods,
+    INTERSECTION_CHAIN_METHODS,
+    node,
+  );
+
+  const schema: CastrSchema = {
     allOf: [
       parseIntersectionMember(leftNode, parseSchema, AND_MEMBER_CONTEXT),
       parseIntersectionMember(rightNode, parseSchema, AND_MEMBER_CONTEXT),
     ],
     metadata: createDefaultMetadata(),
   };
+
+  return finalizeCompositeSchema(schema, split.trailingMethods);
 }
 
 // Register parsers with the core dispatcher

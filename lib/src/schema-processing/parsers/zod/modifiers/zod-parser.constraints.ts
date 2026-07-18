@@ -7,7 +7,12 @@
  * @internal
  */
 
-import type { ZodMethodCall } from '../ast/zod-ast.js';
+import {
+  requireNumericArgument,
+  requireStringArgument,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
+import { escapeRegexLiteral } from '../../../../shared/utils/index.js';
 import { ZOD_PRIMITIVE_TYPES } from './zod-parser.defaults.js';
 import {
   ZOD_BASE_METHOD_NUMBER,
@@ -53,11 +58,18 @@ export interface ParsedOptionality {
 // String constraints
 // ============================================================================
 
+/** String length-constraint method names. @internal */
+const STRING_LENGTH_METHODS: ReadonlySet<string> = new Set([
+  ZOD_METHOD_MIN,
+  ZOD_METHOD_MAX,
+  ZOD_METHOD_LENGTH,
+]);
+
 function handleStringLengthConstraint(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  const arg = method.args[0];
-  if (typeof arg !== 'number') {
+  if (!STRING_LENGTH_METHODS.has(method.name)) {
     return;
   }
+  const arg = requireNumericArgument(method);
 
   if (method.name === ZOD_METHOD_MIN || method.name === ZOD_METHOD_LENGTH) {
     constraints.minLength = arg;
@@ -103,25 +115,24 @@ export const STRING_CHAIN_METHODS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * Try to extract a regex pattern from a string method call.
- * Returns the pattern string if successful, undefined otherwise.
+ * Extract a regex pattern from a recognised pattern-producing method.
+ *
+ * startsWith/endsWith/includes literals are regex-escaped so
+ * metacharacters (".", "$", "(", "\\", ...) match themselves.
+ * Returns undefined for methods outside {@link PATTERN_METHODS}.
+ *
  * @internal
  */
 function tryExtractPattern(method: ZodMethodCall): string | undefined {
-  const arg = method.args[0];
-  if (typeof arg !== 'string') {
-    return undefined;
-  }
-
   switch (method.name) {
     case 'regex':
-      return arg;
+      return requireStringArgument(method);
     case 'startsWith':
-      return `^${arg}`;
+      return `^${escapeRegexLiteral(requireStringArgument(method))}`;
     case 'endsWith':
-      return `${arg}$`;
+      return `${escapeRegexLiteral(requireStringArgument(method))}$`;
     case 'includes':
-      return arg;
+      return escapeRegexLiteral(requireStringArgument(method));
     default:
       return undefined;
   }
@@ -232,18 +243,13 @@ export const NUMBER_CHAIN_METHODS: ReadonlySet<string> = new Set([
 ]);
 
 function handleNumberArgConstraint(method: ZodMethodCall, constraints: ParsedConstraints): boolean {
-  const arg = method.args[0];
-  if (typeof arg !== 'number') {
+  const setter = NUMBER_CONSTRAINT_SETTERS[method.name];
+  if (!setter) {
     return false;
   }
 
-  const setter = NUMBER_CONSTRAINT_SETTERS[method.name];
-  if (setter) {
-    setter(constraints, arg);
-    return true;
-  }
-
-  return false;
+  setter(constraints, requireNumericArgument(method));
+  return true;
 }
 
 /**

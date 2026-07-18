@@ -87,6 +87,12 @@ function parseIdentifierSchema(
 
 /**
  * Parse a call expression through registered parsers in priority order.
+ *
+ * Ordering invariant: 'chainedIntersection' must run before 'primitive' —
+ * for chains like `A.and(B).optional()` the primitive parser would fail
+ * fast on the unrecognised `.and` chained method before the intersection
+ * parser could claim the node (ADR-032 writer lockstep).
+ *
  * @internal
  */
 function parseCallExpressionSchema(

@@ -9,8 +9,9 @@ import { Node } from 'ts-morph';
 import {
   createZodProject,
   getZodMethodChain,
+  requireNumericArgument,
+  throwUnsupportedMemberSchema,
   type ZodMethodCall,
-  extractLiteralValue,
 } from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
@@ -19,10 +20,9 @@ import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import {
   assertSupportedChainedMethods,
   buildCompositeChainMethods,
-  describeNodeLocation,
   finalizeCompositeSchema,
-  throwUnsupportedMemberSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
+import { parseEnum } from './zod-parser.enum.js';
 import {
   ZOD_METHOD_ARRAY,
   ZOD_METHOD_ENUM,
@@ -30,7 +30,6 @@ import {
   ZOD_METHOD_REST,
   ZOD_METHOD_TUPLE,
   ZOD_SCHEMA_TYPE_ARRAY,
-  ZOD_SCHEMA_TYPE_STRING,
 } from '../zod-constants.js';
 
 // ============================================================================
@@ -71,26 +70,23 @@ function parseArray(
 
 /**
  * Dispatch table for array constraint methods.
+ * Each handler requires a statically extractable argument and fails
+ * fast otherwise, so a recognised constraint can never no-op silently.
  * @internal
  */
 const ARRAY_CONSTRAINT_HANDLERS: Readonly<
-  Record<string, (schema: CastrSchema, arg: unknown) => void>
+  Record<string, (schema: CastrSchema, method: ZodMethodCall) => void>
 > = {
-  min: (schema, arg) => {
-    if (typeof arg === 'number') {
-      schema.minItems = arg;
-    }
+  min: (schema, method) => {
+    schema.minItems = requireNumericArgument(method);
   },
-  max: (schema, arg) => {
-    if (typeof arg === 'number') {
-      schema.maxItems = arg;
-    }
+  max: (schema, method) => {
+    schema.maxItems = requireNumericArgument(method);
   },
-  length: (schema, arg) => {
-    if (typeof arg === 'number') {
-      schema.minItems = arg;
-      schema.maxItems = arg;
-    }
+  length: (schema, method) => {
+    const arg = requireNumericArgument(method);
+    schema.minItems = arg;
+    schema.maxItems = arg;
   },
   nonempty: (schema) => {
     schema.minItems = 1;
@@ -104,7 +100,7 @@ function applyArrayConstraints(schema: CastrSchema, methods: ZodMethodCall[]): v
   for (const method of methods) {
     const handler = ARRAY_CONSTRAINT_HANDLERS[method.name];
     if (handler) {
-      handler(schema, method.args[0]);
+      handler(schema, method);
     }
   }
 }
@@ -183,46 +179,6 @@ function parseTuple(
   }
 
   return schema;
-}
-
-/**
- * Parse z.enum(['a', 'b'])
- *
- * z.nativeEnum() fails fast: its value set cannot be captured statically
- * without widening the type to a plain string (finding C5).
- */
-function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
-  if (baseMethod === ZOD_METHOD_NATIVE_ENUM) {
-    throw new Error(
-      `z.nativeEnum() is not supported${describeNodeLocation(args[0])}. ` +
-        'Its value set cannot be captured statically without widening the type ' +
-        'to a plain string; use z.enum([...]) with literal values instead.',
-    );
-  }
-
-  if (args.length === 0) {
-    return undefined;
-  }
-  const itemsArg = args[0];
-
-  if (!itemsArg || !Node.isArrayLiteralExpression(itemsArg)) {
-    return undefined;
-  }
-
-  const enumValues: unknown[] = [];
-  for (const itemNode of itemsArg.getElements()) {
-    const val = extractLiteralValue(itemNode);
-    if (val === undefined) {
-      throwUnsupportedMemberSchema('z.enum member', itemNode);
-    }
-    enumValues.push(val);
-  }
-
-  return {
-    type: ZOD_SCHEMA_TYPE_STRING,
-    enum: enumValues,
-    metadata: createDefaultMetadata(),
-  };
 }
 
 // ============================================================================

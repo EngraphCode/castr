@@ -8,20 +8,25 @@
  * construct being silently dropped or text-captured.
  *
  * Also provides the shared capture of recognised chained modifiers —
- * presence (.optional(), .nullable(), .nullish()), literal .default(),
- * and literal .describe() — into IR metadata so composite parsers
- * (object, array, tuple, enum, union, intersection) preserve them rather
- * than dropping them.
+ * presence (.optional(), .nullable(), .nullish()), statically
+ * extractable .default(), and literal .describe() — into IR metadata so
+ * composite parsers (object, array, tuple, enum, union, intersection)
+ * preserve them rather than dropping them.
  *
- * Known shared limitation: .default() capture only extracts statically
- * extractable literal arguments; non-literal arguments (identifiers,
- * array/object literals) yield no captured default. This mirrors the
- * primitive chain behaviour.
+ * A recognised modifier whose argument cannot be captured statically
+ * (identifiers, computed values) fails fast instead of no-oping, so the
+ * whitelist can never accept a method name while silently discarding
+ * its argument.
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { Node } from 'ts-morph';
-import { extractLiteralValue, type ZodMethodCall } from '../ast/zod-ast.js';
+import type { Node } from 'ts-morph';
+import {
+  describeNodeLocation,
+  extractStaticJsonValue,
+  throwUnsupportedMethodArgument,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
 import type { ParsedOptionality } from './zod-parser.constraints.js';
 import {
   NUMBER_CHAIN_METHODS,
@@ -109,18 +114,44 @@ export function applyChainPresence(schema: CastrSchema, methods: readonly ZodMet
 
 /**
  * Render a captured default value as its canonical Zod chain string list.
+ *
+ * Serialises with JSON.stringify so string defaults containing quotes,
+ * backslashes, or line breaks — and array/object defaults — stay valid
+ * Zod source for the writer.
+ *
  * @internal
  */
 export function collectDefaults(defaultValue: unknown): string[] {
   if (defaultValue === undefined) {
     return [];
   }
-  const val = typeof defaultValue === 'string' ? `"${defaultValue}"` : String(defaultValue);
-  return [`.default(${val})`];
+  return [`.default(${JSON.stringify(defaultValue)})`];
 }
 
 /**
- * Extract the last chained .default() literal value from a method chain.
+ * Extract a .default() argument's statically known value.
+ *
+ * Fails fast when the argument is missing or cannot be extracted
+ * statically (identifiers, computed values), so a recognised .default()
+ * can never no-op silently.
+ *
+ * @internal
+ */
+export function extractDefaultArgumentValue(method: ZodMethodCall): unknown {
+  const argNode = method.argNodes[0];
+  const value = argNode === undefined ? undefined : extractStaticJsonValue(argNode);
+  if (value === undefined) {
+    throwUnsupportedMethodArgument(
+      ZOD_METHOD_DEFAULT,
+      'a statically extractable literal (string, number, boolean, null, array, or object)',
+      argNode,
+    );
+  }
+  return value;
+}
+
+/**
+ * Extract the last chained .default() value from a method chain.
  * @internal
  */
 function extractChainDefaultValue(methods: readonly ZodMethodCall[]): unknown {
@@ -129,15 +160,14 @@ function extractChainDefaultValue(methods: readonly ZodMethodCall[]): unknown {
     if (method.name !== ZOD_METHOD_DEFAULT) {
       continue;
     }
-    const argNode = method.argNodes[0];
-    defaultValue = argNode === undefined ? undefined : extractLiteralValue(argNode);
+    defaultValue = extractDefaultArgumentValue(method);
   }
   return defaultValue;
 }
 
 /**
- * Capture a chained literal .default() into a schema's metadata.
- * No-op when the chain has no .default() with an extractable literal.
+ * Capture a chained .default() into a schema's metadata.
+ * No-op when the chain has no .default() call.
  * @internal
  */
 export function applyChainDefault(schema: CastrSchema, methods: readonly ZodMethodCall[]): void {
@@ -169,18 +199,25 @@ function extractChainDescription(methods: readonly ZodMethodCall[]): string | un
     if (method.name !== ZOD_METHOD_DESCRIBE) {
       continue;
     }
-    const argNode = method.argNodes[0];
-    const value = argNode === undefined ? undefined : extractLiteralValue(argNode);
-    if (typeof value !== 'string') {
-      throw new Error(
-        `Unsupported non-literal .describe() argument${describeNodeLocation(argNode)}. ` +
-          'Only string literal descriptions can be captured statically. The Zod parser ' +
-          'fails fast on unrecognised constructs instead of silently dropping them.',
-      );
-    }
-    description = value;
+    description = extractDescribeArgumentValue(method);
   }
   return description;
+}
+
+/**
+ * Extract a .describe() argument's string literal value.
+ * Fails fast on missing or non-literal arguments: their value cannot be
+ * captured statically, and silently dropping them would be lossy.
+ *
+ * @internal
+ */
+export function extractDescribeArgumentValue(method: ZodMethodCall): string {
+  const argNode = method.argNodes[0];
+  const value = argNode === undefined ? undefined : extractStaticJsonValue(argNode);
+  if (typeof value !== 'string') {
+    throwUnsupportedMethodArgument(ZOD_METHOD_DESCRIBE, 'a string literal', argNode);
+  }
+  return value;
 }
 
 /**
@@ -200,63 +237,8 @@ export function applyChainDescription(
 }
 
 // ============================================================================
-// Fail-fast helpers
+// Chain whitelist enforcement
 // ============================================================================
-
-const MAX_EXPRESSION_DESCRIPTION_DEPTH = 6;
-
-/**
- * Format a node's 1-indexed source position for error messages.
- * Returns an empty string when no node is available.
- *
- * @internal
- */
-export function describeNodeLocation(node: Node | undefined): string {
-  if (!node) {
-    return '';
-  }
-  const { line, column } = node.getSourceFile().getLineAndColumnAtPos(node.getStart());
-  return ` at line ${line}, column ${column}`;
-}
-
-/**
- * Describe an expression for error messages using semantic APIs only
- * (ADR-026): symbol names for identifiers, property names for member
- * accesses, and syntax-kind names as the fallback.
- *
- * @internal
- */
-function describeZodExpression(node: Node, depth = 0): string {
-  if (depth > MAX_EXPRESSION_DESCRIPTION_DEPTH) {
-    return node.getKindName();
-  }
-  if (Node.isIdentifier(node)) {
-    return node.getSymbol()?.getName() ?? node.getKindName();
-  }
-  if (Node.isCallExpression(node)) {
-    return `${describeZodExpression(node.getExpression(), depth + 1)}()`;
-  }
-  if (Node.isPropertyAccessExpression(node)) {
-    return `${describeZodExpression(node.getExpression(), depth + 1)}.${node.getName()}`;
-  }
-  return node.getKindName();
-}
-
-/**
- * Fail fast on a member schema the parser cannot represent.
- *
- * @param memberContext - Human-readable slot description, e.g. "z.union member"
- * @param memberNode - The AST node of the unrecognised member expression
- *
- * @internal
- */
-export function throwUnsupportedMemberSchema(memberContext: string, memberNode: Node): never {
-  throw new Error(
-    `Unsupported ${memberContext} "${describeZodExpression(memberNode)}"` +
-      `${describeNodeLocation(memberNode)}. ` +
-      'The Zod parser fails fast on unrecognised constructs instead of silently dropping them.',
-  );
-}
 
 /**
  * Enforce a strict whitelist over a Zod method chain.

@@ -6,7 +6,12 @@
 
 import type { CastrSchema } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
-import { createZodProject, getZodMethodChain, extractLiteralValue } from '../ast/zod-ast.js';
+import {
+  createZodProject,
+  extractLiteralValue,
+  getZodMethodChain,
+  throwUnsupportedMemberSchema,
+} from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
@@ -15,7 +20,6 @@ import {
   assertSupportedChainedMethods,
   buildCompositeChainMethods,
   finalizeCompositeSchema,
-  throwUnsupportedMemberSchema,
 } from '../modifiers/zod-parser.chain-whitelist.js';
 import {
   ZOD_METHOD_DISCRIMINATED_UNION,
