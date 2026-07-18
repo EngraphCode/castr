@@ -15,6 +15,35 @@ import { buildMcpToolSchemasFromIR } from './schemas/template-context.mcp.schema
 import { resolveOperationSecurityFromIR } from './template-context.mcp.security.from-ir.js';
 import type { CastrAdditionalOperation, CastrDocument, CastrOperation } from '../../ir/index.js';
 import { allOperations } from '../../ir/index.js';
+import {
+  DEFAULT_STATUS_SPEC_COMPLIANT,
+  logWarnSink,
+  selectOperationsByDefaultStatusBehavior,
+  type DefaultStatusBehavior,
+  type WarnSink,
+} from '../endpoints/template-context.status-codes.js';
+
+/**
+ * Options for {@link buildMcpToolsFromIR}.
+ *
+ * @public
+ */
+export interface BuildMcpToolsFromIROptions {
+  /**
+   * How operations whose only response is `default` are handled —
+   * `'spec-compliant'` (the default) drops them with a warning;
+   * `'auto-correct'` keeps them. The same contract the endpoint builder
+   * honors, so endpoints and MCP tools always emit the same operation set.
+   * See docs/DEFAULT-RESPONSE-BEHAVIOR.md.
+   */
+  defaultStatusBehavior?: DefaultStatusBehavior;
+  /**
+   * Sink for the ignored-operations warning; defaults to the shared logger.
+   * Injectable so tests assert on a fake instead of console. Named
+   * consistently with {@link TemplateContextOptions.warnSink}.
+   */
+  warnSink?: WarnSink;
+}
 
 /**
  * Metadata for an MCP tool generated from an OpenAPI operation.
@@ -86,7 +115,13 @@ const normalizeDescriptionFromIR = (
  * This function reads entirely from IR types (`CastrDocument`) and produces
  * `TemplateContextMcpTool[]` compatible with the existing infrastructure.
  *
+ * Honors the same `defaultStatusBehavior` contract as the endpoint builder
+ * (docs/DEFAULT-RESPONSE-BEHAVIOR.md): under `'spec-compliant'` (the
+ * default), operations whose only response is `default` get no MCP tool.
+ *
  * @param ir - The CastrDocument containing operations and components
+ * @param options - Default-status behavior and warn sink; see
+ *   {@link BuildMcpToolsFromIROptions}
  * @returns Array of MCP tools ready for use
  *
  * @example
@@ -101,8 +136,16 @@ const normalizeDescriptionFromIR = (
  *
  * @public
  */
-export const buildMcpToolsFromIR = (ir: CastrDocument): TemplateContextMcpTool[] => {
-  return allOperations(ir).map((operation) => {
+export const buildMcpToolsFromIR = (
+  ir: CastrDocument,
+  options: BuildMcpToolsFromIROptions = {},
+): TemplateContextMcpTool[] => {
+  const operations = selectOperationsByDefaultStatusBehavior(
+    allOperations(ir),
+    options.defaultStatusBehavior ?? DEFAULT_STATUS_SPEC_COMPLIANT,
+    options.warnSink ?? logWarnSink,
+  );
+  return operations.map((operation) => {
     // Build schemas from IR
     const { inputSchema, outputSchema } = buildMcpToolSchemasFromIR(ir, operation);
 

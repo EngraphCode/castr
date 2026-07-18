@@ -707,38 +707,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -786,49 +754,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -955,28 +880,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -2138,60 +2041,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -2319,30 +2168,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -2394,66 +2219,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -4217,60 +3982,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -4398,30 +4109,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -4473,66 +4160,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -5285,38 +4912,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -5364,49 +4959,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -5533,28 +5085,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -6716,60 +6246,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -6897,30 +6373,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -6972,66 +6424,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -7784,38 +7176,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -7863,49 +7223,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -8032,28 +7349,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -9215,60 +8510,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -9396,30 +8637,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -9471,66 +8688,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -10283,38 +9440,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -10362,49 +9487,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -10531,28 +9613,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -11714,60 +10774,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -11895,30 +10901,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -11970,66 +10952,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -12782,38 +11704,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -12861,49 +11751,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -13030,28 +11877,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -14213,60 +13038,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -14394,30 +13165,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -14469,66 +13216,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -15281,38 +13968,6 @@ export const endpoints = [
       "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
   },
   {
-    method: "post",
-    path: "/user",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Created user object",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: User,
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: User,
-        description: "successful operation",
-      },
-    },
-    request: {
-      body: User,
-    },
-    alias: "createUser",
-    description: "This can only be done by the logged in user.",
-  },
-  {
     method: "get",
     path: "/user/{username}",
     requestFormat: "json",
@@ -15360,49 +14015,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "getUserByName",
-  },
-  {
-    method: "put",
-    path: "/user/{username}",
-    requestFormat: "form-url",
-    parameters: [
-      {
-        name: "username",
-        type: "Path",
-        schema: z.string(),
-        description: "name that need to be deleted",
-      },
-      {
-        name: "body",
-        type: "Body",
-        schema: User,
-        description: "Update an existent user in the store",
-      },
-    ],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          username: z.string(),
-        })
-        .strict(),
-      body: User,
-    },
-    alias: "updateUser",
-    description: "This can only be done by the logged in user.",
   },
   {
     method: "delete",
@@ -15529,28 +14141,6 @@ export const endpoints = [
         .strict(),
     },
     alias: "loginUser",
-  },
-  {
-    method: "get",
-    path: "/user/logout",
-    requestFormat: "json",
-    parameters: [],
-    response: z.strictObject({}),
-    errors: [
-      {
-        status: "default",
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    ],
-    responses: {
-      default: {
-        schema: z.strictObject({}),
-        description: "successful operation",
-      },
-    },
-    request: {},
-    alias: "logoutUser",
   },
 ] as const;
 // MCP Tools
@@ -16712,60 +15302,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -16893,30 +15429,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -16968,66 +15480,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -23444,107 +21896,6 @@ Some useful links:
             ],
         },
         {
-            "alias": "createUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "post",
-            "parameters": [
-                {
-                    "description": "Created user object",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "statusCode": "default",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
             "alias": "getUserByName",
             "errors": [
                 {
@@ -23704,130 +22055,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "404",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "updateUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "put",
-            "parameters": [
-                {
-                    "description": "name that need to be deleted",
-                    "name": "username",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": true,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "type": "Path",
-                },
-                {
-                    "description": "Update an existent user in the store",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user/{username}",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -24258,82 +22485,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "400",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "logoutUser",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "get",
-            "parameters": [],
-            "path": "/user/logout",
-            "requestFormat": "json",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -25970,100 +24121,6 @@ Some useful links:
         {
             "httpOperation": {
                 "method": "post",
-                "operationId": "createUser",
-                "originalPath": "/user",
-                "path": "/user",
-            },
-            "method": "post",
-            "operationId": "createUser",
-            "originalPath": "/user",
-            "path": "/user",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": false,
-                    "readOnlyHint": false,
-                },
-                "description": "This can only be done by the logged in user.",
-                "inputSchema": {
-                    "properties": {
-                        "body": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "email": {
-                                    "examples": [
-                                        "john@email.com",
-                                    ],
-                                    "type": "string",
-                                },
-                                "firstName": {
-                                    "examples": [
-                                        "John",
-                                    ],
-                                    "type": "string",
-                                },
-                                "id": {
-                                    "examples": [
-                                        10,
-                                    ],
-                                    "format": "int64",
-                                    "integerSemantics": "int64",
-                                    "type": "integer",
-                                },
-                                "lastName": {
-                                    "examples": [
-                                        "James",
-                                    ],
-                                    "type": "string",
-                                },
-                                "password": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "phone": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "userStatus": {
-                                    "description": "User Status",
-                                    "examples": [
-                                        1,
-                                    ],
-                                    "format": "int32",
-                                    "type": "integer",
-                                },
-                                "username": {
-                                    "examples": [
-                                        "theUser",
-                                    ],
-                                    "type": "string",
-                                },
-                            },
-                            "required": [],
-                            "type": "object",
-                            "xml": {
-                                "name": "user",
-                            },
-                        },
-                    },
-                    "type": "object",
-                },
-                "name": "create_user",
-                "title": "Create user",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "post",
                 "operationId": "createUsersWithListInput",
                 "originalPath": "/user/createWithList",
                 "path": "/user/createWithList",
@@ -26279,37 +24336,6 @@ Some useful links:
         {
             "httpOperation": {
                 "method": "get",
-                "operationId": "logoutUser",
-                "originalPath": "/user/logout",
-                "path": "/user/logout",
-            },
-            "method": "get",
-            "operationId": "logoutUser",
-            "originalPath": "/user/logout",
-            "path": "/user/logout",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": false,
-                    "readOnlyHint": true,
-                },
-                "description": "Logs out current logged in user session",
-                "inputSchema": {
-                    "additionalProperties": false,
-                    "type": "object",
-                },
-                "name": "logout_user",
-                "title": "Logs out current logged in user session",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "get",
                 "operationId": "getUserByName",
                 "originalPath": "/user/{username}",
                 "path": "/user/{username}",
@@ -26413,114 +24439,6 @@ Some useful links:
                     },
                 },
                 "title": "Get user by user name",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "put",
-                "operationId": "updateUser",
-                "originalPath": "/user/{username}",
-                "path": "/user/{username}",
-            },
-            "method": "put",
-            "operationId": "updateUser",
-            "originalPath": "/user/{username}",
-            "path": "/user/{username}",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": true,
-                    "readOnlyHint": false,
-                },
-                "description": "This can only be done by the logged in user.",
-                "inputSchema": {
-                    "properties": {
-                        "body": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "email": {
-                                    "examples": [
-                                        "john@email.com",
-                                    ],
-                                    "type": "string",
-                                },
-                                "firstName": {
-                                    "examples": [
-                                        "John",
-                                    ],
-                                    "type": "string",
-                                },
-                                "id": {
-                                    "examples": [
-                                        10,
-                                    ],
-                                    "format": "int64",
-                                    "integerSemantics": "int64",
-                                    "type": "integer",
-                                },
-                                "lastName": {
-                                    "examples": [
-                                        "James",
-                                    ],
-                                    "type": "string",
-                                },
-                                "password": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "phone": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "userStatus": {
-                                    "description": "User Status",
-                                    "examples": [
-                                        1,
-                                    ],
-                                    "format": "int32",
-                                    "type": "integer",
-                                },
-                                "username": {
-                                    "examples": [
-                                        "theUser",
-                                    ],
-                                    "type": "string",
-                                },
-                            },
-                            "required": [],
-                            "type": "object",
-                            "xml": {
-                                "name": "user",
-                            },
-                        },
-                        "path": {
-                            "properties": {
-                                "username": {
-                                    "type": "string",
-                                },
-                            },
-                            "required": [
-                                "username",
-                            ],
-                            "type": "object",
-                        },
-                    },
-                    "required": [
-                        "path",
-                    ],
-                    "type": "object",
-                },
-                "name": "update_user",
-                "title": "Update user",
             },
         },
         {
@@ -32959,107 +30877,6 @@ Some useful links:
             ],
         },
         {
-            "alias": "createUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "post",
-            "parameters": [
-                {
-                    "description": "Created user object",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "statusCode": "default",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
             "alias": "getUserByName",
             "errors": [
                 {
@@ -33219,130 +31036,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "404",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "updateUser",
-            "description": "This can only be done by the logged in user.",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "put",
-            "parameters": [
-                {
-                    "description": "name that need to be deleted",
-                    "name": "username",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": true,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "string",
-                    },
-                    "type": "Path",
-                },
-                {
-                    "description": "Update an existent user in the store",
-                    "name": "body",
-                    "schema": {
-                        "$ref": "#/components/schemas/User",
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": ".optional()",
-                                "validations": [],
-                            },
-                        },
-                    },
-                    "type": "Body",
-                },
-            ],
-            "path": "/user/{username}",
-            "requestFormat": "form-url",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -33773,82 +31466,6 @@ Some useful links:
                         "type": "object",
                     },
                     "statusCode": "400",
-                },
-            ],
-            "tags": [
-                "user",
-            ],
-        },
-        {
-            "alias": "logoutUser",
-            "errors": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "status": "default",
-                },
-            ],
-            "method": "get",
-            "parameters": [],
-            "path": "/user/logout",
-            "requestFormat": "json",
-            "response": {
-                "metadata": {
-                    "circularReferences": [],
-                    "dependencyGraph": {
-                        "depth": 0,
-                        "referencedBy": [],
-                        "references": [],
-                    },
-                    "nullable": false,
-                    "required": false,
-                    "zodChain": {
-                        "defaults": [],
-                        "presence": "",
-                        "validations": [],
-                    },
-                },
-                "type": "object",
-            },
-            "responses": [
-                {
-                    "description": "successful operation",
-                    "schema": {
-                        "metadata": {
-                            "circularReferences": [],
-                            "dependencyGraph": {
-                                "depth": 0,
-                                "referencedBy": [],
-                                "references": [],
-                            },
-                            "nullable": false,
-                            "required": false,
-                            "zodChain": {
-                                "defaults": [],
-                                "presence": "",
-                                "validations": [],
-                            },
-                        },
-                        "type": "object",
-                    },
-                    "statusCode": "default",
                 },
             ],
             "tags": [
@@ -35485,100 +33102,6 @@ Some useful links:
         {
             "httpOperation": {
                 "method": "post",
-                "operationId": "createUser",
-                "originalPath": "/user",
-                "path": "/user",
-            },
-            "method": "post",
-            "operationId": "createUser",
-            "originalPath": "/user",
-            "path": "/user",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": false,
-                    "readOnlyHint": false,
-                },
-                "description": "This can only be done by the logged in user.",
-                "inputSchema": {
-                    "properties": {
-                        "body": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "email": {
-                                    "examples": [
-                                        "john@email.com",
-                                    ],
-                                    "type": "string",
-                                },
-                                "firstName": {
-                                    "examples": [
-                                        "John",
-                                    ],
-                                    "type": "string",
-                                },
-                                "id": {
-                                    "examples": [
-                                        10,
-                                    ],
-                                    "format": "int64",
-                                    "integerSemantics": "int64",
-                                    "type": "integer",
-                                },
-                                "lastName": {
-                                    "examples": [
-                                        "James",
-                                    ],
-                                    "type": "string",
-                                },
-                                "password": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "phone": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "userStatus": {
-                                    "description": "User Status",
-                                    "examples": [
-                                        1,
-                                    ],
-                                    "format": "int32",
-                                    "type": "integer",
-                                },
-                                "username": {
-                                    "examples": [
-                                        "theUser",
-                                    ],
-                                    "type": "string",
-                                },
-                            },
-                            "required": [],
-                            "type": "object",
-                            "xml": {
-                                "name": "user",
-                            },
-                        },
-                    },
-                    "type": "object",
-                },
-                "name": "create_user",
-                "title": "Create user",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "post",
                 "operationId": "createUsersWithListInput",
                 "originalPath": "/user/createWithList",
                 "path": "/user/createWithList",
@@ -35794,37 +33317,6 @@ Some useful links:
         {
             "httpOperation": {
                 "method": "get",
-                "operationId": "logoutUser",
-                "originalPath": "/user/logout",
-                "path": "/user/logout",
-            },
-            "method": "get",
-            "operationId": "logoutUser",
-            "originalPath": "/user/logout",
-            "path": "/user/logout",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": false,
-                    "readOnlyHint": true,
-                },
-                "description": "Logs out current logged in user session",
-                "inputSchema": {
-                    "additionalProperties": false,
-                    "type": "object",
-                },
-                "name": "logout_user",
-                "title": "Logs out current logged in user session",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "get",
                 "operationId": "getUserByName",
                 "originalPath": "/user/{username}",
                 "path": "/user/{username}",
@@ -35928,114 +33420,6 @@ Some useful links:
                     },
                 },
                 "title": "Get user by user name",
-            },
-        },
-        {
-            "httpOperation": {
-                "method": "put",
-                "operationId": "updateUser",
-                "originalPath": "/user/{username}",
-                "path": "/user/{username}",
-            },
-            "method": "put",
-            "operationId": "updateUser",
-            "originalPath": "/user/{username}",
-            "path": "/user/{username}",
-            "security": {
-                "isPublic": true,
-                "requirementSets": [],
-                "usesGlobalSecurity": false,
-            },
-            "tool": {
-                "annotations": {
-                    "destructiveHint": false,
-                    "idempotentHint": true,
-                    "readOnlyHint": false,
-                },
-                "description": "This can only be done by the logged in user.",
-                "inputSchema": {
-                    "properties": {
-                        "body": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "email": {
-                                    "examples": [
-                                        "john@email.com",
-                                    ],
-                                    "type": "string",
-                                },
-                                "firstName": {
-                                    "examples": [
-                                        "John",
-                                    ],
-                                    "type": "string",
-                                },
-                                "id": {
-                                    "examples": [
-                                        10,
-                                    ],
-                                    "format": "int64",
-                                    "integerSemantics": "int64",
-                                    "type": "integer",
-                                },
-                                "lastName": {
-                                    "examples": [
-                                        "James",
-                                    ],
-                                    "type": "string",
-                                },
-                                "password": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "phone": {
-                                    "examples": [
-                                        "12345",
-                                    ],
-                                    "type": "string",
-                                },
-                                "userStatus": {
-                                    "description": "User Status",
-                                    "examples": [
-                                        1,
-                                    ],
-                                    "format": "int32",
-                                    "type": "integer",
-                                },
-                                "username": {
-                                    "examples": [
-                                        "theUser",
-                                    ],
-                                    "type": "string",
-                                },
-                            },
-                            "required": [],
-                            "type": "object",
-                            "xml": {
-                                "name": "user",
-                            },
-                        },
-                        "path": {
-                            "properties": {
-                                "username": {
-                                    "type": "string",
-                                },
-                            },
-                            "required": [
-                                "username",
-                            ],
-                            "type": "object",
-                        },
-                    },
-                    "required": [
-                        "path",
-                    ],
-                    "type": "object",
-                },
-                "name": "update_user",
-                "title": "Update user",
             },
         },
         {

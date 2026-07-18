@@ -12,6 +12,7 @@ export {
   type RequestFormat,
   type ParameterType,
   type SchemaConstraints,
+  type StatusRangeToken,
 } from './definition.types.js';
 
 // Parameter metadata extraction

@@ -1,7 +1,6 @@
 # Default Response Behavior Documentation
 
-**Status:** Documented  
-**Date:** November 2025  
+**Status:** Implemented  
 **Related:** `TemplateContextOptions.defaultStatusBehavior`
 
 ---
@@ -118,7 +117,7 @@ as the OpenAPI spec recommends. However they could be added by setting
 `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 ```
 
-**Result:** These endpoints are **not included** in the generated client.
+**Result:** These endpoints are **not included** in the generated client, and **no MCP tools are emitted** for them — endpoint definitions and MCP tools always cover the same operation set.
 
 ### Option 2: `auto-correct`
 
@@ -145,7 +144,9 @@ const result = await generateZodClientFromOpenAPI({
 
 **Output:** No warning, endpoints are included in the generated client.
 
-**Result:** These endpoints **are included** in the generated client, with `default` treated as `200`.
+**Result:** These endpoints **are included** in the generated client (and their MCP tools are emitted), with `default` treated as `200`.
+
+**Known asymmetry (documented decision):** under `auto-correct`, the endpoint definition promotes the `default` response schema to the endpoint's success `response`, but the emitted MCP tool does **not** derive an `outputSchema` from the `default` response — the tool is emitted without one (`outputSchema` is optional in the MCP specification). Tool inclusion honors `auto-correct`; output-schema derivation does not yet.
 
 ---
 
@@ -219,74 +220,22 @@ const result = await generateZodClientFromOpenAPI({
 
 ## Test Fixtures Affected
 
-The following test fixtures in this codebase trigger the warning because they only define `default` responses:
+The Swagger 2.0 example spec `lib/examples/swagger/petstore.yaml` contains three operations whose only
+response is `default`, so generation from it triggers the warning under `spec-compliant`:
 
-### 1. `lib/examples/openapi/v3.0/default-status-only.yaml`
+- `POST /user` (`createUser`)
+- `GET /user/logout` (`logoutUser`)
+- `PUT /user/{username}` (`updateUser`)
 
-**Endpoint:** `POST /users` (`createUser`)
+The behaviour is pinned by:
 
-```yaml
-paths:
-  /users:
-    post:
-      operationId: createUser
-      responses:
-        default:
-          description: User response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-```
+- `lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.unit.test.ts`
+  (unit proof for filtering, warning, and `auto-correct` promotion)
+- `lib/src/schema-processing/context/template-context.default-status.unit.test.ts`
+  (template-context wiring proof)
+- `lib/tests-snapshot/spec-compliance/defaut-status-behavior.test.ts` (snapshot of both modes)
 
-**Status:** Intentional test fixture to verify warning behavior.
-
-### 2. `lib/examples/openapi/v3.0/logout-endpoint.yaml`
-
-**Endpoint:** `POST /logout` (`logoutUser`)
-
-```yaml
-paths:
-  /logout:
-    post:
-      operationId: logoutUser
-      responses:
-        default:
-          description: Logout response
-```
-
-**Status:** Intentional test fixture to verify warning behavior.
-
-### 3. `lib/examples/openapi/v3.1/update-user.yaml`
-
-**Endpoint:** `PUT /users/{userId}` (`updateUser`)
-
-```yaml
-paths:
-  /users/{userId}:
-    put:
-      operationId: updateUser
-      responses:
-        default:
-          description: User update response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-```
-
-**Status:** Intentional test fixture to verify warning behavior.
-
-### Why Are These Fixtures Like This?
-
-These fixtures are **intentional test cases** to ensure that:
-
-1. `@engraph/castr` correctly detects endpoints with only `default` responses
-2. The warning message is displayed correctly
-3. The `auto-correct` option works as expected
-4. The `spec-compliant` option (default) correctly ignores these endpoints
-
-**These are NOT production examples to follow.** They demonstrate what **not** to do in a real API.
+These fixtures demonstrate what **not** to do in a real API; they are not production examples to follow.
 
 ---
 
@@ -336,32 +285,34 @@ interface TemplateContextOptions {
 
 **Files:**
 
-- `lib/src/schema-processing/context/template-context.ts` (option contract)
-- `lib/src/schema-processing/context/template-context.endpoints.from-ir.ts` (response mapping)
-- `lib/src/schema-processing/context/template-context.status-codes.ts` (centralized status-code semantics)
+- `lib/src/schema-processing/context/template-context.ts` (option contract and wiring)
+- `lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.ts`
+  (`getEndpointDefinitionsFromIR` filtering and promotion)
+- `lib/src/schema-processing/context/endpoints/template-context.status-codes.ts`
+  (centralized status-code semantics, the `DefaultStatusBehavior` type, and the shared
+  primary-success selector)
+- `lib/src/schema-processing/context/mcp/template-context.mcp.responses.ts`
+  (MCP primary-success schema resolution)
 
-The warning is emitted when:
+The behaviour, per operation whose responses contain only `default`:
 
-1. An endpoint has a `responses` object
-2. The only key in `responses` is `default`
-3. The `defaultStatusBehavior` option is set to `spec-compliant`
+1. Under `spec-compliant` (the default), the operation is excluded from the generated endpoint
+   list, and a single warning lists every ignored operation (by `operationId`, or
+   `METHOD path` when absent).
+2. Under `auto-correct`, the operation is included: the `default` response schema becomes the
+   endpoint's success `response`, and `default` is removed from that endpoint's `errors`.
+3. Operations with at least one explicit status code are never filtered, and their `default`
+   response remains an error fallback in both modes.
 
-Example logic:
+### Shared Primary-Success Selection
 
-```typescript
-const statusCodes = Object.keys(operation.responses ?? {});
-const hasOnlyDefault = statusCodes.length === 1 && statusCodes[0] === 'default';
-
-if (hasOnlyDefault && options.defaultStatusBehavior === 'spec-compliant') {
-  warnings.push(`Endpoint ${operationId} has only 'default' status code and was ignored`);
-  return null; // Skip this endpoint
-}
-
-if (hasOnlyDefault && options.defaultStatusBehavior === 'auto-correct') {
-  // Treat 'default' as '200'
-  return handleResponse(operation.responses.default, '200');
-}
-```
+Endpoint definitions and MCP tools resolve the primary success response through one shared
+selector (`orderSuccessResponsesByPrecedence`): concrete 2xx codes outrank the `2XX` range
+wildcard, and ties resolve by document order. Both writers commit to the selected response —
+when it declares no content (for example `204 No Content`), the endpoint definition emits an
+empty success schema and the MCP tool is emitted **without** an `outputSchema` (`outputSchema`
+is optional in the MCP specification). Neither writer falls through to a later success
+response's schema, so both always agree on which response is primary for the same IR.
 
 ---
 
@@ -439,7 +390,7 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts
 ### With Auto-Correct
 
 ```bash
-npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior auto-correct
+npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status auto-correct
 # No warning, default-only endpoints are included
 ```
 
@@ -483,5 +434,5 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior au
 
 ---
 
-**Last Updated:** January 2026  
+**Last Updated:** July 2026  
 **Architecture:** See `.agent/directives/VISION.md` for details

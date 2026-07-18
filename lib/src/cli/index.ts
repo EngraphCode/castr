@@ -90,7 +90,7 @@ program
   )
   .option(
     '--complexity-threshold <number>',
-    'schema complexity threshold to determine which one (using less than `<` operator) should be assigned to a variable',
+    'ACCEPTED BUT NOT YET APPLIED: intended schema complexity threshold for assigning schemas to variables. The value is validated (non-negative integer) but no generation code path consumes it yet; see initial-review finding H5 for the disposition.',
   )
   .option(
     '--default-status <behavior>',

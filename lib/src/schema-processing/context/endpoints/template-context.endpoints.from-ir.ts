@@ -14,9 +14,22 @@ import type {
   EndpointResponse,
   ParameterType,
 } from '../../../endpoints/definition.types.js';
-import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
+import { assertOperationSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 import { extractConstraintsFromIR } from '../constraints/index.js';
-import { isSuccessStatusCode, STATUS_DEFAULT } from './template-context.status-codes.js';
+import {
+  DEFAULT_STATUS_AUTO_CORRECT,
+  DEFAULT_STATUS_SPEC_COMPLIANT,
+  hasOnlyDefaultStatusResponses,
+  isConcreteStatusToken,
+  isStatusRangeToken,
+  isSuccessStatusCode,
+  logWarnSink,
+  orderSuccessResponsesByPrecedence,
+  selectOperationsByDefaultStatusBehavior,
+  STATUS_DEFAULT,
+  type DefaultStatusBehavior,
+  type WarnSink,
+} from './template-context.status-codes.js';
 import {
   createBodyParameter,
   createEmptySchema,
@@ -24,18 +37,51 @@ import {
   getSchemaFromContent,
 } from './content/index.js';
 
-export function getEndpointDefinitionsFromIR(ir: CastrDocument): EndpointDefinition[] {
-  assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'Endpoints');
-  return allOperations(ir).map((operation) => mapOperationToEndpointDefinition(ir, operation));
+/**
+ * Build endpoint definitions from the IR.
+ *
+ * @param ir - The IR document
+ * @param defaultStatusBehavior - How operations whose only response is
+ *   `default` are handled: `'spec-compliant'` (the default) ignores them with
+ *   a warning; `'auto-correct'` includes them, treating `default` as the
+ *   success response. See docs/DEFAULT-RESPONSE-BEHAVIOR.md.
+ * @param warn - Sink for the ignored-operations warning; defaults to the
+ *   shared logger. Injectable so tests assert on a fake instead of console.
+ */
+export function getEndpointDefinitionsFromIR(
+  ir: CastrDocument,
+  defaultStatusBehavior: DefaultStatusBehavior = DEFAULT_STATUS_SPEC_COMPLIANT,
+  warn: WarnSink = logWarnSink,
+): EndpointDefinition[] {
+  const operations = selectOperationsByDefaultStatusBehavior(
+    allOperations(ir),
+    defaultStatusBehavior,
+    warn,
+  );
+  const promoteDefaultOnly = defaultStatusBehavior === DEFAULT_STATUS_AUTO_CORRECT;
+
+  return operations.map((operation) => {
+    // Capability-check only the selected operations, after default-status
+    // filtering — an ignored default-only operation must not abort
+    // generation. The MCP builder applies the same per-selected-operation
+    // check, so both writers honor the same ignore contract.
+    assertOperationSupportsItemSchemaTargetCapabilities(ir, operation, 'Endpoints');
+    return mapOperationToEndpointDefinition(
+      ir,
+      operation,
+      promoteDefaultOnly && hasOnlyDefaultStatusResponses(operation),
+    );
+  });
 }
 
 function mapOperationToEndpointDefinition(
   ir: Pick<CastrDocument, 'components'>,
   operation: CastrOperation | CastrAdditionalOperation,
+  promoteDefaultToSuccess: boolean,
 ): EndpointDefinition {
   const parameters = mapParameters(operation.parameters);
-  const errors = mapErrors(ir, operation.responses);
-  const response = mapSuccessResponse(ir, operation.responses);
+  const errors = mapErrors(ir, operation.responses, promoteDefaultToSuccess);
+  const response = mapSuccessResponse(ir, operation.responses, promoteDefaultToSuccess);
   const responses = mapAllResponses(ir, operation.responses);
 
   const requestFormat = determineRequestFormat(operation.requestBody);
@@ -123,16 +169,44 @@ function toParameterType(
   return mapping[location] || 'Query';
 }
 
+/**
+ * Reject IR status tokens that endpoint error mapping cannot represent.
+ *
+ * `'default'`, wildcard range tokens (`'1XX'`-`'5XX'`), and concrete
+ * three-digit codes are supported. Any other token is rejected fail-fast —
+ * silently collapsing it (e.g. `parseInt('4XX') === 4`) would corrupt
+ * generated error metadata.
+ */
+function assertSupportedErrorStatusToken(statusCode: string): void {
+  if (
+    statusCode === STATUS_DEFAULT ||
+    isStatusRangeToken(statusCode) ||
+    isConcreteStatusToken(statusCode)
+  ) {
+    return;
+  }
+  throw new Error(
+    `Unsupported response status token '${statusCode}'. Expected a concrete HTTP status code ` +
+      `('100'-'599'), an uppercase status range ('1XX'-'5XX'), or 'default'.`,
+  );
+}
+
 function mapErrors(
   ir: Pick<CastrDocument, 'components'>,
   responses: CastrResponse[],
+  promoteDefaultToSuccess: boolean,
 ): EndpointError[] {
   return responses
     .filter((r) => !isSuccessStatusCode(r.statusCode))
+    .filter((r) => !(promoteDefaultToSuccess && r.statusCode === STATUS_DEFAULT))
     .map((r) => {
+      assertSupportedErrorStatusToken(r.statusCode);
       const schema = r.schema || getSchemaFromContent(ir, r.content, `responses/${r.statusCode}`);
       const error: EndpointError = {
-        status: r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : parseInt(r.statusCode, 10),
+        status:
+          r.statusCode === STATUS_DEFAULT || isStatusRangeToken(r.statusCode)
+            ? r.statusCode
+            : Number(r.statusCode),
         schema: schema || createEmptySchema(),
       };
       if (r.description) {
@@ -145,10 +219,16 @@ function mapErrors(
 function mapSuccessResponse(
   ir: Pick<CastrDocument, 'components'>,
   responses: CastrResponse[],
+  promoteDefaultToSuccess: boolean,
 ): CastrSchema {
-  // Should be CastrSchema
-  // Find primary success response using centralized status-code semantics.
-  const success = responses.find((r) => isSuccessStatusCode(r.statusCode));
+  // Find the primary success response via the shared selector (concrete 2xx
+  // over the 2XX wildcard, then document order) so endpoints and MCP tools
+  // always agree on the primary schema. Under auto-correct, a default-only
+  // operation's `default` response is promoted to the success position
+  // (see docs/DEFAULT-RESPONSE-BEHAVIOR.md).
+  const success =
+    orderSuccessResponsesByPrecedence(responses)[0] ??
+    (promoteDefaultToSuccess ? responses.find((r) => r.statusCode === STATUS_DEFAULT) : undefined);
   if (success) {
     return (
       success.schema ||

@@ -82,11 +82,23 @@ export interface EndpointParameter {
 }
 
 /**
+ * HTTP status range token per OpenAPI (e.g. `'4XX'` matches any 400-499 status).
+ *
+ * OpenAPI permits `1XX`-`5XX` wildcard response keys; the IR stores them
+ * verbatim and endpoint metadata preserves them losslessly.
+ */
+export type StatusRangeToken = '1XX' | '2XX' | '3XX' | '4XX' | '5XX';
+
+/**
  * Endpoint error response with schema as CastrSchema
  */
 export interface EndpointError {
-  /** HTTP status code or 'default' */
-  status: number | 'default';
+  /**
+   * Concrete HTTP status code, a wildcard range token (`'1XX'`-`'5XX'`), or
+   * `'default'`. `'2XX'` never occurs in practice because it is routed to the
+   * success response, mirroring {@link EndpointDefinition.response} selection.
+   */
+  status: number | 'default' | StatusRangeToken;
   /** Schema definition */
   schema: CastrSchema;
   /** Optional description */

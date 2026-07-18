@@ -279,6 +279,56 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
 
+## 2026-07-17 (lane L-H round 2 — endpoints/MCP/CLI remediation follow-up, worktree wf_6f9f06c9-91e-3)
+
+- **`vitest -u` in a nested worktree is a poisoned instrument for `samples.test.ts`:** regenerating
+  snapshots there rewrote EVERY sample with quote/wrap drift (prettier resolution escapes the
+  nested worktree), entangling another lane's pre-attributed failure with this lane's real
+  behavioural change. Cure: restore the committed snapshot (forward-going `git show HEAD:… >` write
+  of my own minutes-old reproducible regeneration, after the hook rightly blocked `git checkout --`),
+  keep `samples.test.ts` as the single attributed red, and let the post-L-D rebase regenerate it once.
+- **A wrong test entrenches a gap symmetrically across suites:** the incomplete
+  `SUCCESS_STATUS_CODES` set was pinned by TWO tests written to "align" surfaces with each other
+  ('299 as error' in endpoints, '299 as non-success, aligned with endpoint status semantics' in
+  MCP) — alignment tests inherit and cement the reference surface's defect. When fixing a
+  derivation, grep for tests asserting the OLD behaviour in every aligned suite, not just the one
+  named by the finding.
+- **Single-warning contract when two builders share one selection helper:** endpoints and MCP both
+  filter default-only operations via `selectOperationsByDefaultStatusBehavior`; `getTemplateContext`
+  hands the MCP builder a silent sink (documented at the call site) because the endpoint builder
+  already warned for the identical set — direct public callers of either builder still get the
+  logger-backed default. Pattern worth reusing when hoisting shared filtering with a side-channel.
+
+## 2026-07-18 (lane L-H round 3 — filter-before-capability-check + shared primary-success selector, worktree wf_6f9f06c9-91e-3)
+
+- **Check placement is part of a filtering contract:** the endpoints builder ran the document-wide
+  `assertDocumentSupportsItemSchemaTargetCapabilities` BEFORE `selectOperationsByDefaultStatusBehavior`,
+  so an ignorable default-only operation's itemSchema aborted generation, while MCP (per-selected-op
+  assert inside the schema builder) sailed through. When two writers share a selection helper, every
+  fail-fast guard must sit AFTER selection, and the red pair is one fixture run through both writers
+  (endpoints threw, MCP passed — verified firsthand before the fix).
+- **"Aligned" selectors can differ in their tiebreak, not just their filter:** both writers agreed on
+  `isSuccessStatusCode` but diverged on primary-success ORDER (endpoints: document order, wildcard
+  could win; MCP: lowest-concrete-first). Unified as `orderSuccessResponsesByPrecedence` in
+  `template-context.status-codes.ts` (concrete-over-`2XX`-range, then document order). Note the JS
+  quirk that hid this: OpenAPI responses objects iterate integer-like keys ascending, so
+  real-parsed IR rarely shows wildcard-first or out-of-order concrete codes — the divergence lives
+  at the IR contract surface and only hand-built IR (or non-OpenAPI parsers) exposes it.
+- **max-lines-per-function on a test describe is a cohesion signal:** the endpoints unit-test
+  describe crossed 500 lines when the itemSchema tests grew; the cure was extracting the five
+  itemSchema capability tests into a sibling top-level describe, not raising the limit.
+
+## 2026-07-18 (lane L-H round 4 — commit to the selected success response, worktree wf_6f9f06c9-91e-3)
+
+- **A shared selector is not enough; both writers must also COMMIT to its selection:** after
+  unifying `orderSuccessResponsesByPrecedence`, endpoints took element `[0]` (204 selected →
+  empty success schema) while MCP looped on "first response with an extractable schema", so a
+  no-content-first success (204 before 200) still advertised the later 200's schema — the
+  divergence survived the unification because the fall-through lived downstream of the selector.
+  When unifying a selection, audit every consumer for skip/fall-through logic that re-decides
+  after the shared decision; the contract is "selected response is the sole source", pinned red
+  by 204-then-200 → `undefined` and 2XX-schema + 204-empty → `undefined`.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_

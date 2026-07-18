@@ -4,6 +4,9 @@ export {
   extractSchemaNamesFromDoc,
   type TemplateContext,
   type TemplateContextOptions,
+  type DefaultStatusBehavior,
+  type WarnSink,
+  logWarnSink,
 } from './template-context.js';
 export { getMcpToolName, getMcpToolHints } from './mcp/index.js';
 export {
@@ -11,6 +14,7 @@ export {
   buildOutputSchemaObject,
   type McpToolSchemaResult,
   buildMcpToolsFromIR,
+  type BuildMcpToolsFromIROptions,
   type TemplateContextMcpTool,
 } from './mcp/index.js';
 

@@ -46,19 +46,19 @@ castr <input> -o <output> [options]
 
 ### Advanced Options
 
-| Option                            | Meaning                                                             |
-| --------------------------------- | ------------------------------------------------------------------- |
-| `--group-strategy <strategy>`     | `none`, `tag`, `method`, `tag-file`, or `method-file`               |
-| `--complexity-threshold <number>` | Controls schema hoisting thresholds during generation               |
-| `--default-status <behavior>`     | Status handling behaviour for default-only responses                |
-| `--implicit-required`             | Treat properties as required by default unless `required` overrides |
-| `--with-deprecated`               | Keep deprecated endpoints in generated output                       |
-| `--base-url <url>`                | Advanced template-context metadata field                            |
-| `--api-client-name <name>`        | Advanced naming option retained for template compatibility          |
-| `--error-expr <expr>`             | Custom error-status expression                                      |
-| `--success-expr <expr>`           | Custom primary-success-status expression                            |
-| `--media-type-expr <expr>`        | Custom media-type filter expression                                 |
-| `--no-client`                     | Convenience flag that selects the metadata-focused generation path  |
+| Option                            | Meaning                                                                                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--group-strategy <strategy>`     | `none`, `tag`, `method`, `tag-file`, or `method-file`                                                                                               |
+| `--complexity-threshold <number>` | Accepted but not yet applied: the value is validated (non-negative integer) but no generation code path consumes it yet (initial-review finding H5) |
+| `--default-status <behavior>`     | Status handling behaviour for default-only responses                                                                                                |
+| `--implicit-required`             | Treat properties as required by default unless `required` overrides                                                                                 |
+| `--with-deprecated`               | Keep deprecated endpoints in generated output                                                                                                       |
+| `--base-url <url>`                | Advanced template-context metadata field                                                                                                            |
+| `--api-client-name <name>`        | Advanced naming option retained for template compatibility                                                                                          |
+| `--error-expr <expr>`             | Custom error-status expression                                                                                                                      |
+| `--success-expr <expr>`           | Custom primary-success-status expression                                                                                                            |
+| `--media-type-expr <expr>`        | Custom media-type filter expression                                                                                                                 |
+| `--no-client`                     | Convenience flag that selects the metadata-focused generation path                                                                                  |
 
 ### Templates
 
@@ -116,20 +116,20 @@ Important current truth:
 
 Common options:
 
-| Field                     | Meaning                                          |
-| ------------------------- | ------------------------------------------------ |
-| `withAlias`               | Include operation aliases                        |
-| `shouldExportAllSchemas`  | Export all component schemas                     |
-| `shouldExportAllTypes`    | Export all object-derived types                  |
-| `withDocs`                | Emit JSDoc comments                              |
-| `withDescription`         | Emit description metadata                        |
-| `allReadonly`             | Emit readonly objects/arrays                     |
-| `groupStrategy`           | Grouping strategy                                |
-| `complexityThreshold`     | Complexity threshold for extraction/hoisting     |
-| `defaultStatusBehavior`   | Behaviour for default-only responses             |
-| `withDeprecatedEndpoints` | Keep deprecated endpoints                        |
-| `baseUrl`                 | Advanced template-context metadata field         |
-| `apiClientName`           | Advanced naming field retained for compatibility |
+| Field                     | Meaning                                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `withAlias`               | Include operation aliases                                                                                        |
+| `shouldExportAllSchemas`  | Export all component schemas                                                                                     |
+| `shouldExportAllTypes`    | Export all object-derived types                                                                                  |
+| `withDocs`                | Emit JSDoc comments                                                                                              |
+| `withDescription`         | Emit description metadata                                                                                        |
+| `allReadonly`             | Emit readonly objects/arrays                                                                                     |
+| `groupStrategy`           | Grouping strategy                                                                                                |
+| `complexityThreshold`     | Accepted but not yet applied: validated, but no generation code path consumes it yet (initial-review finding H5) |
+| `defaultStatusBehavior`   | Behaviour for default-only responses                                                                             |
+| `withDeprecatedEndpoints` | Keep deprecated endpoints                                                                                        |
+| `baseUrl`                 | Advanced template-context metadata field                                                                         |
+| `apiClientName`           | Advanced naming field retained for compatibility                                                                 |
 
 ## Generation Results
 

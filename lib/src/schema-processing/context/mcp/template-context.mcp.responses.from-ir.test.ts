@@ -194,7 +194,7 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBeUndefined();
   });
 
-  test('returns schema from lowest 2xx status code when multiple exist', () => {
+  test('returns schema from the first concrete 2xx in document order when multiple exist', () => {
     const ok200Schema = createMockSchema();
     const created201Schema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {
@@ -206,8 +206,39 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
 
     const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
 
-    // Should return 200 schema (lowest 2xx status code)
-    expect(result).toBe(ok200Schema);
+    // Document order breaks ties among concrete codes — the same shared
+    // selector the endpoint builder uses (concrete-over-range, then
+    // document order).
+    expect(result).toBe(created201Schema);
+  });
+
+  test('resolves schemas for the full 2xx class (206, 226), not only 200-204', () => {
+    const partialContentSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('206', partialContentSchema),
+        createMockResponseWithSchema('400', createMockSchema()),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(partialContentSchema);
+  });
+
+  test('follows document order among concrete 2xx codes, including above 204', () => {
+    const resetContentSchema = createMockSchema();
+    const imUsedSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('226', imUsedSchema),
+        createMockResponseWithSchema('205', resetContentSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(imUsedSchema);
   });
 
   test('handles response with content instead of direct schema', () => {
@@ -226,6 +257,88 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
       responses: [
         createMockResponseEmpty('204'), // No Content - no schema
       ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('returns undefined when the selected no-content success precedes a later success with a schema', () => {
+    const laterSuccessSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseEmpty('204'), // Selected first (document order) — no content
+        createMockResponseWithSchema('200', laterSuccessSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    // The shared selector picks the 204; a selected no-content success means
+    // the operation has no output schema. Falling through to the later 200
+    // would diverge from the endpoint builder, which takes element [0] and
+    // emits an empty success schema for the same IR.
+    expect(result).toBeUndefined();
+  });
+
+  test('does not fall through to the 2XX wildcard when a no-content concrete success is selected', () => {
+    const wildcardSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseEmpty('204'), // Concrete outranks the wildcard — selected, no content
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('returns schema when the only success response is the 2XX wildcard', () => {
+    const wildcardSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseWithSchema('500', createMockSchema()),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(wildcardSchema);
+  });
+
+  test('prefers concrete success codes over the 2XX wildcard', () => {
+    const wildcardSchema = createMockSchema();
+    const concreteSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseWithSchema('200', concreteSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(concreteSchema);
+  });
+
+  test('treats 299 as success, aligned with endpoint status semantics (full 2xx class)', () => {
+    const unregistered2xxSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [createMockResponseWithSchema('299', unregistered2xxSchema)],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(unregistered2xxSchema);
+  });
+
+  test('returns undefined for default-only responses (default is not a success status)', () => {
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [createMockResponseWithSchema('default', createMockSchema())],
     };
 
     const result = resolvePrimarySuccessResponseSchemaFromIR(operation);

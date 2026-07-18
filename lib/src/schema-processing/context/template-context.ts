@@ -13,7 +13,9 @@ import {
 import {
   getEndpointDefinitionsFromIR,
   processEndpointGroupingAndCommonSchemas,
+  type DefaultStatusBehavior,
   type MinimalTemplateContext,
+  type WarnSink,
 } from './endpoints/index.js';
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
 import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './mcp/index.js';
@@ -74,7 +76,14 @@ export interface TemplateContextOptions {
    * { defaultStatusBehavior: 'auto-correct' }
    * ```
    */
-  defaultStatusBehavior?: 'spec-compliant' | 'auto-correct';
+  defaultStatusBehavior?: DefaultStatusBehavior;
+  /**
+   * Sink for generation-time warnings (e.g. the ignored default-only
+   * operations warning under `'spec-compliant'`). Defaults to the shared
+   * logger's `warn`. Injectable so tests and embedders capture warnings
+   * without touching global console state.
+   */
+  warnSink?: WarnSink;
   willSuppressWarnings?: boolean;
   withDescription?: boolean;
   endpointDefinitionRefiner?: (
@@ -102,6 +111,13 @@ export interface TemplateContextOptions {
   shouldExportAllSchemas?: boolean;
   withImplicitRequiredProps?: boolean;
   withDeprecatedEndpoints?: boolean;
+  /**
+   * Accepted and validated, but not yet applied: no generation code path
+   * consumes this threshold today (initial-review finding H5). The value is
+   * strictly validated at the CLI boundary (`--complexity-threshold`); wiring
+   * it into generation is tracked by the remediation program's H5
+   * disposition. Documented here so the surface stays honest until then.
+   */
   complexityThreshold?: number;
   withAlias?: boolean | ((path: string, method: string, operation: OperationObject) => string);
   withDocs?: boolean;
@@ -129,6 +145,46 @@ function assertNoMixedQueryParameterModels(
 }
 
 /**
+ * Build endpoint definitions from the IR, honoring `defaultStatusBehavior`
+ * (see docs/DEFAULT-RESPONSE-BEHAVIOR.md). Skipped for schemas-only output.
+ */
+function buildEndpointsFromIR(
+  irDocument: CastrDocument,
+  options: TemplateContextOptions | undefined,
+): EndpointDefinition[] {
+  if (options?.template === TEMPLATE_SCHEMAS_ONLY) {
+    return [];
+  }
+  return getEndpointDefinitionsFromIR(
+    irDocument,
+    options?.defaultStatusBehavior,
+    options?.warnSink,
+  );
+}
+
+/**
+ * Build MCP tools from the IR, honoring the same `defaultStatusBehavior` as
+ * the endpoint builder. The endpoint builder has already warned about the
+ * identical ignored operation set, so the MCP builder receives a silent sink
+ * to keep the warning single. Skipped for schemas-only output.
+ */
+function buildMcpToolsForContext(
+  irDocument: CastrDocument,
+  options: TemplateContextOptions | undefined,
+  isSchemasOnly: boolean,
+): TemplateContextMcpTool[] {
+  if (isSchemasOnly) {
+    return [];
+  }
+  return buildMcpToolsFromIR(irDocument, {
+    ...(options?.defaultStatusBehavior !== undefined && {
+      defaultStatusBehavior: options.defaultStatusBehavior,
+    }),
+    warnSink: () => undefined,
+  });
+}
+
+/**
  * Main function to generate template context from OpenAPI document.
  * Orchestrates the entire process of building template context.
  *
@@ -151,7 +207,7 @@ export const getTemplateContext = (
   const isSchemasOnly = options?.template === TEMPLATE_SCHEMAS_ONLY;
 
   // Generate endpoints from IR (skipped for schemas-only)
-  const endpoints = isSchemasOnly ? [] : getEndpointDefinitionsFromIR(irDocument);
+  const endpoints = buildEndpointsFromIR(irDocument, options);
 
   // Extract inline schemas (e.g. request bodies) to be exported as named components.
   // Operates on a shallow copy to avoid mutating the source IR's components array.
@@ -191,8 +247,9 @@ export const getTemplateContext = (
 
   const sortedEndpoints = [...endpoints].sort((a, b) => a.path.localeCompare(b.path));
 
-  // Build MCP tools from IR (skipped for schemas-only)
-  const mcpTools = isSchemasOnly ? [] : buildMcpToolsFromIR(irDocument);
+  // Build MCP tools from IR (skipped for schemas-only; see helper for the
+  // single-warning contract).
+  const mcpTools = buildMcpToolsForContext(irDocument, options, isSchemasOnly);
 
   const result: TemplateContext = {
     sortedSchemaNames,
@@ -212,6 +269,7 @@ export const getTemplateContext = (
 
 // Re-export types and functions for external use
 export { type TemplateContextGroupStrategy } from './endpoints/index.js';
+export { type DefaultStatusBehavior, type WarnSink, logWarnSink } from './endpoints/index.js';
 export { extractSchemaNamesFromDoc } from './schemas/template-context.schemas.js';
 
 /**
