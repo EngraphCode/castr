@@ -13,6 +13,14 @@ with a machine-readable outcome.
   named `*.integration.test.ts` so the transforms Vitest config picks it up. A lane's
   test imports `runFidelityProof`/`expectFidelity` from
   `../utils/fidelity-harness.js` and resolves its fixtures from this directory.
+- **Parser-loss fixtures must pin source-level expectations.** IR round-trip
+  equality certifies writer/reparse fidelity, not parser fidelity: the baseline is
+  the post-parse IR, so a semantic the parser flattens (for example
+  operation-security AND-groups) leaves the round-trip green even though the
+  semantic is gone. A lane adding a fixture whose semantics the parser might lose
+  passes `sourceAssertions` to `runFidelityProof` and asserts the trait on the raw
+  loaded source document and on the written output, where the pre-parse truth is
+  still visible.
 - **Shared helpers stay stable.** Lane tests build on `utils/fidelity-harness.ts`
   (or add new util modules); the shared `utils/transform-helpers.ts` remains
   unchanged by lane work.
@@ -23,9 +31,15 @@ with a machine-readable outcome.
 
 ## What the harness proves per fixture
 
-1. `parse → IR → write → reparse` preserves the IR exactly.
+1. `parse → IR → write → revalidate → reparse` preserves the IR exactly. The
+   written output is revalidated through the canonical load boundary
+   (`loadOpenApiDocument`), so parseable-but-spec-invalid writer output is a red
+   proof, never a green one.
 2. `deserializeIR(serializeIR(ir))` reproduces the IR exactly.
 3. Rewriting the reparsed IR is byte-stable.
+4. Optional per-fixture `sourceAssertions` hold against the raw loaded source
+   document and the written output (the only leg that can catch parser-side
+   losses).
 
 See `docs/architecture/fidelity-proof-harness.md` (repo root) for the durable
 description of the harness.
