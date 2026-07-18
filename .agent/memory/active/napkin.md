@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-C follow-up 2: PR #13 .array() shorthand + union optionality — lane sub-agent / claude-fable-5)
+
+- **Zod 4.4.3 hoists optionality through EVERY union family but NOT through intersections (probed
+  firsthand):** z.union / .or() / z.xor / z.discriminatedUnion with any undefined-accepting member
+  report optin/optout "optional" and accept a missing object key; z.string().optional()
+  .and(z.number().optional()) does NOT (missingKeyOk false, optin null). A gateway-review symmetry
+  suggestion ("consider hoisting allOf too") was falsified by the probe — matching Zod means NO
+  intersection hoist. Probe-outranks-plausible-symmetry, and the same probe closed the reviewer's
+  oneOf-reach coverage gap (xor + discriminatedUnion pinned red-class tests).
+- **The claim/decline chain-split generalises cleanly at the THIRD operator:** .array() joined
+  .or()/.and() as a chain-owning composition operator; the decline side became the shared
+  ZOD_CHAIN_COMPOSITION_OPERATORS set (zod-constants), safe to pass whole because the splitter
+  checks the claim operator before the decline set (documented at the signature). The z.array(T)
+  base-call form is declined by argument-count + zod-namespace-receiver, keeping composition-parser
+  ownership; z.intersection's base-parser decline guard needed the third operator too or
+  z.intersection(A,B).array() died with a misleading whitelist throw (red-first pinned).
+- **The `.includes()` lint ban (ADR-026 string-method family) fires on ARRAY params too** — the
+  rule is syntactic, blind to param types; the cure (ReadonlySet + .has) was the better design
+  anyway (one shared constant, no per-call array scan). Same lesson shape as
+  consolidate-at-second-consumer arriving via lint pressure.
+- **Piped the full gate to `tail` and nearly re-fired the pipe-eats-exit-code trap** (distilled
+  entry exists; I did it anyway on the FIRST gate run) — re-ran with `> log; RC=$?` capture before
+  claiming green. The distilled lesson held only because the re-check ritual is now reflexive.
+
 ## 2026-07-18 (lane L-C follow-up: PR #13 .or() union shorthand — lane sub-agent / claude-fable-5)
 
 - **"Recognisable but rejected" is measured against Input-Output Pair Compatibility Rules 1+4, and
