@@ -5,9 +5,9 @@ exports[`openapi-examples > results by file 1`] = `
     "custom/v3.1/multi-auth": "import { z } from "zod";
 // Type Definitions
 export type CreateUserInput = {
-  /** Optional age in years */ age?: number | unknown;
+  /** Optional age in years */ age?: number | null;
   email: string;
-  /** Unique handle for the user */ username: string | unknown;
+  /** Unique handle for the user */ username: string | null;
 };
 // Zod Schemas
 export const CreateUserInput = z.strictObject({

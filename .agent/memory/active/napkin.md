@@ -2,6 +2,38 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (PR #15 runtime-null type-array thread — L-KBATCH lane agent, second round)
+
+- **Runtime-null type-array members: the TS writer was the last of three emitters without the
+  defensive fold.** Scalar's 3.1 pipeline delivers YAML `- null` as a RUNTIME null member where
+  the spec requires the string token; the Zod writer (`writers/zod/index.ts` `!= null` filter)
+  and the JSON Schema converter (`convert-schema.ts` `entry == null` map) already fold it, so
+  TS emitted `string | unknown` beside `z.string().nullable()` — a lockstep break, not just an
+  unknown fallthrough. Cure: one shared `normalizeTypeArrayMember` applied at all four
+  type-array member reads in the type-writer (union emission, own-null-branch predicate,
+  top-level-union predicate, declared-type set for the enum∧type intersection). The enum-side
+  read mattered: `enum: ['a', null]` with a runtime-null type member silently dropped the null
+  literal as a dead branch.
+- **A NESTED worktree makes `resolveConfig(dir)` leak the ENCLOSING repo's prettier config** —
+  prettier starts the search at the directory argument's PARENT, so
+  `.claude/worktrees/<wt>/lib/../` walks out into the host checkout and finds ITS
+  `.prettierrc.json`. The branch's samples snapshot suite is therefore environmentally red at
+  HEAD in a nested worktree (whole-file quote churn) while green in CI (non-nested: search
+  escapes the checkout, finds nothing, prettier defaults). main's ee419ae8 (PR #19) pins
+  `SNAPSHOT_PRETTIER_CONFIG = null` for exactly this; regenerated the snapshot under a
+  TEMPORARY identical pin (then restored the test file) so the snapshot diff carries only the
+  fix and stays byte-compatible with both CI today and the post-merge test.
+- **MCP outputSchema emits the raw runtime null verbatim** (`"type": ["string", null]` in the
+  generated mcpTools JSON — spec-invalid JSON Schema on the wire): the ad-hoc MCP converters
+  pass `schema.type` through untouched. Evidence for the L-K10/L-F boundary named positions;
+  not touched here (out of lane).
+- **Parser boundary misses runtime null entirely**: `builder.core.ts` nullable detection
+  (`typeEntry === 'null'`) reads runtime null as NOT nullable, so `metadata.nullable` is false
+  while the Zod writer independently rediscovers the null from the type array — the IR carries
+  a type lie (`SchemaObjectType[]` holding null). Root fix is strict boundary
+  normalisation/fail-fast in L-F's surface; the writer-side folds become dead code to remove
+  when it lands.
+
 ## 2026-07-18 (PR #15 review-response round, L-K3+K5+K7 — review-response subagent)
 
 - **All five unresolved PR #15 review threads verified real firsthand** before touching code:

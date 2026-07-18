@@ -122,7 +122,23 @@ function isPrimitiveLiteralValue(value: unknown): boolean {
 }
 
 /**
+ * Normalise a type-array member to its IR token. Scalar's OpenAPI 3.1
+ * pipeline delivers a RUNTIME `null` member (YAML `- null`, JSON `null`)
+ * where the specification requires the string token `'null'`; both denote
+ * the null type. The Zod writer and the JSON Schema converter already fold
+ * runtime null the same way — normalising here keeps the TypeScript surface
+ * in lockstep instead of falling through to `unknown`.
+ *
+ * @internal
+ */
+export function normalizeTypeArrayMember(memberType: SchemaObjectType | null): SchemaObjectType {
+  return memberType ?? NULL_SCHEMA_TYPE;
+}
+
+/**
  * The schema's declared type as a set, or undefined when `type` is absent.
+ * Type-array members are normalised so a runtime `null` member counts as
+ * the null type in the conjunctive `type` ∧ `enum`/`const` intersection.
  *
  * @internal
  */
@@ -130,7 +146,7 @@ function resolveDeclaredTypeSet(schema: CastrSchema): readonly SchemaObjectType[
   if (schema.type === undefined) {
     return undefined;
   }
-  return Array.isArray(schema.type) ? schema.type : [schema.type];
+  return Array.isArray(schema.type) ? schema.type.map(normalizeTypeArrayMember) : [schema.type];
 }
 
 /**

@@ -17,7 +17,11 @@
 import { CodeBlockWriter, type WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
 import type { SchemaObjectType } from '../../../../shared/openapi-types.js';
-import { hasCompositionKeywords, resolveLiteralUnionTokens } from './literal-token-resolution.js';
+import {
+  hasCompositionKeywords,
+  normalizeTypeArrayMember,
+  resolveLiteralUnionTokens,
+} from './literal-token-resolution.js';
 
 const NULL_SCHEMA_TYPE: SchemaObjectType = 'null';
 const NULL_LITERAL_TOKEN = 'null';
@@ -97,7 +101,10 @@ export function writeCompositionLiteralConjunction(
 /**
  * Write a union for a multi-type schema (e.g. `type: ['string', 'number']`),
  * rendering each member through the injected single-type writer. An empty
- * type array matches nothing and is written as `never`.
+ * type array matches nothing and is written as `never`. Members are
+ * normalised before dispatch so a runtime `null` member renders as the null
+ * type instead of falling through to `unknown`
+ * (see {@link normalizeTypeArrayMember}).
  *
  * @internal
  */
@@ -107,7 +114,7 @@ export function writeTypeArrayUnion(
   writer: CodeBlockWriter,
   writeMember: (memberSchema: CastrSchema, memberWriter: CodeBlockWriter) => void,
 ): void {
-  const uniqueMemberTypes = [...new Set(memberTypes)];
+  const uniqueMemberTypes = [...new Set(memberTypes.map(normalizeTypeArrayMember))];
   if (uniqueMemberTypes.length === 0) {
     writer.write('never');
     return;
@@ -138,7 +145,8 @@ export function rendersOwnNullBranch(schema: CastrSchema): boolean {
     return literalTokens.some((token) => token === NULL_LITERAL_TOKEN);
   }
   return (
-    Array.isArray(schema.type) && schema.type.some((memberType) => memberType === NULL_SCHEMA_TYPE)
+    Array.isArray(schema.type) &&
+    schema.type.some((memberType) => normalizeTypeArrayMember(memberType) === NULL_SCHEMA_TYPE)
   );
 }
 
@@ -190,7 +198,7 @@ export function rendersAsTopLevelUnion(
   if (literalTokens !== undefined) {
     return literalTokens.length > 1;
   }
-  return Array.isArray(schema.type) && new Set(schema.type).size > 1;
+  return Array.isArray(schema.type) && new Set(schema.type.map(normalizeTypeArrayMember)).size > 1;
 }
 
 /**
