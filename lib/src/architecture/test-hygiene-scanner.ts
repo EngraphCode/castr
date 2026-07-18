@@ -21,6 +21,7 @@ import {
   forEachChild,
   isBinaryExpression,
   isCallExpression,
+  isComputedPropertyName,
   isDeleteExpression,
   isElementAccessExpression,
   isExportDeclaration,
@@ -29,15 +30,17 @@ import {
   isImportDeclaration,
   isImportEqualsDeclaration,
   isNonNullExpression,
+  isObjectBindingPattern,
   isParenthesizedExpression,
   isPostfixUnaryExpression,
   isPrefixUnaryExpression,
   isPropertyAccessExpression,
   isStringLiteralLike,
+  isVariableDeclaration,
   ScriptTarget,
   SyntaxKind,
 } from 'typescript';
-import type { CallExpression, Expression, Node, SourceFile } from 'typescript';
+import type { BindingElement, CallExpression, Expression, Node, SourceFile } from 'typescript';
 
 /**
  * Filesystem modules that gated tests must not import.
@@ -199,6 +202,54 @@ function isProcessEnvExpression(expression: Expression): boolean {
 }
 
 /**
+ * The property name a binding element binds — its explicit property name
+ * (identifier, string literal, or literal-computed) or, for shorthand
+ * bindings, the bound identifier itself. `undefined` when the name is not
+ * statically known.
+ */
+function boundPropertyName(element: BindingElement): string | undefined {
+  const property = element.propertyName ?? element.name;
+  if (isIdentifier(property) || isStringLiteralLike(property)) {
+    return property.text;
+  }
+  if (isComputedPropertyName(property) && isStringLiteralLike(property.expression)) {
+    return property.expression.text;
+  }
+  return undefined;
+}
+
+/**
+ * True when a variable declaration destructures `env` out of the global
+ * `process` — `const { env } = process`, `const { env: alias } = process`,
+ * or a rest pattern (`const { ...copy } = process`), which copies `env`
+ * along with everything else.
+ */
+function destructuresEnvFromProcess(node: Node): boolean {
+  if (!isVariableDeclaration(node) || node.initializer === undefined) {
+    return false;
+  }
+  if (!isObjectBindingPattern(node.name) || !isNamedGlobal(node.initializer, 'process')) {
+    return false;
+  }
+  return node.name.elements.some(
+    (element) => element.dotDotDotToken !== undefined || boundPropertyName(element) === 'env',
+  );
+}
+
+/**
+ * True when the node references `process.env` at all — a property or element
+ * access on it, the bare `process.env` expression itself (aliasing,
+ * enumeration, argument passing), or a destructuring of `env` out of
+ * `process`.
+ */
+function isProcessEnvTouch(node: Node): boolean {
+  if (isPropertyAccessExpression(node) || isElementAccessExpression(node)) {
+    return isProcessEnvExpression(node);
+  }
+  return destructuresEnvFromProcess(node);
+}
+
+/**
  * True when the expression is a forbidden mutation target: a `console`
  * member, `process.env` itself, or a `process.env` entry (property or
  * element access, optionally `globalThis`-qualified).
@@ -312,8 +363,10 @@ export function mutatesGlobalStateViaVitestHelpers(content: string): boolean {
 /**
  * True when the file content mutates the global `console` or `process.env`
  * directly — assignment (plain or compound, e.g. `=`, `+=`, `||=`, `??=`),
- * `delete`, or increment/decrement on those targets. Reads are fine; only
- * mutation changes global state.
+ * `delete`, or increment/decrement on those targets. Reads of `console`
+ * members are fine — only mutation changes console state. Reads of
+ * `process.env` are separately prohibited (`test-immediate-fails.md` item 5,
+ * `no-global-state-in-tests.md`) and detected by {@link touchesProcessEnv}.
  *
  * @param content - TypeScript source text of a gated test file.
  * @returns Whether any direct global `console`/`process.env` mutation is
@@ -321,4 +374,26 @@ export function mutatesGlobalStateViaVitestHelpers(content: string): boolean {
  */
 export function mutatesConsoleOrProcessEnv(content: string): boolean {
   return containsNode(parseSource(content), isDirectGlobalMutation);
+}
+
+/**
+ * True when the file content touches `process.env` at all — read or write.
+ * `.agent/rules/test-immediate-fails.md` item 5 and
+ * `.agent/rules/no-global-state-in-tests.md` prohibit READING `process.env`
+ * in every in-process test, not just mutating it: reads inherit ambient
+ * shell state and hide missing DI seams. Detected forms: property access
+ * (`process.env.CI`), element access (`process.env['CI']`,
+ * `process['env']`), the bare `process.env` expression (aliasing,
+ * enumeration, argument passing), destructuring of an entry
+ * (`const { CI } = process.env`) or of `env` itself
+ * (`const { env } = process`, rest patterns), and
+ * `globalThis`-qualified variants of each. The one sanctioned ambient-env
+ * location — smoke composition roots (the Vitest runner config or spawn
+ * invocation) — is not a test file and lies outside the scanned set.
+ *
+ * @param content - TypeScript source text of a gated test file.
+ * @returns Whether any `process.env` read or write is present.
+ */
+export function touchesProcessEnv(content: string): boolean {
+  return containsNode(parseSource(content), isProcessEnvTouch);
 }

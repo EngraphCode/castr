@@ -13,6 +13,7 @@ import {
   mocksModuleRegistry,
   mutatesConsoleOrProcessEnv,
   mutatesGlobalStateViaVitestHelpers,
+  touchesProcessEnv,
   usesFsModule,
 } from './test-hygiene-scanner.js';
 
@@ -195,5 +196,79 @@ describe('mutatesConsoleOrProcessEnv', () => {
 
   it('ignores the pattern inside a comment', () => {
     expect(mutatesConsoleOrProcessEnv(`// console.warn = fake\nconst x = 1;`)).toBe(false);
+  });
+});
+
+describe('touchesProcessEnv', () => {
+  it('detects a property read in a condition', () => {
+    expect(touchesProcessEnv(`if (process.env.CI) {\n}`)).toBe(true);
+  });
+
+  it('detects an element-access read', () => {
+    expect(touchesProcessEnv(`const mode = process.env['NODE_ENV'];`)).toBe(true);
+  });
+
+  it('detects a read through element access on process', () => {
+    expect(touchesProcessEnv(`const home = process['env'].HOME;`)).toBe(true);
+  });
+
+  it('detects a read in a comparison', () => {
+    expect(touchesProcessEnv(`const isProd = process.env.NODE_ENV === 'production';`)).toBe(true);
+  });
+
+  it('detects aliasing process.env to a local', () => {
+    expect(touchesProcessEnv(`const env = process.env;`)).toBe(true);
+  });
+
+  it('detects destructuring an entry out of process.env', () => {
+    expect(touchesProcessEnv(`const { CI } = process.env;`)).toBe(true);
+  });
+
+  it('detects shorthand destructuring of env from process', () => {
+    expect(touchesProcessEnv(`const { env } = process;`)).toBe(true);
+  });
+
+  it('detects renamed destructuring of env from process', () => {
+    expect(touchesProcessEnv(`const { env: ambient } = process;`)).toBe(true);
+  });
+
+  it('detects rest destructuring from process', () => {
+    expect(touchesProcessEnv(`const { ...copy } = process;`)).toBe(true);
+  });
+
+  it('detects a globalThis-qualified read', () => {
+    expect(touchesProcessEnv(`const path = globalThis.process.env.PATH;`)).toBe(true);
+  });
+
+  it('detects enumeration of process.env', () => {
+    expect(touchesProcessEnv(`const keys = Object.keys(process.env);`)).toBe(true);
+  });
+
+  it('detects a mutation as a touch', () => {
+    expect(touchesProcessEnv(`process.env.FOO = 'x';`)).toBe(true);
+  });
+
+  it('ignores env property access on a non-process object', () => {
+    expect(touchesProcessEnv(`const env = fakeProcess.env;`)).toBe(false);
+  });
+
+  it('ignores a local variable named env', () => {
+    expect(touchesProcessEnv(`const env = { CI: '1' };\nconst ci = env.CI;`)).toBe(false);
+  });
+
+  it('ignores destructuring env from a non-process object', () => {
+    expect(touchesProcessEnv(`const { env } = options;`)).toBe(false);
+  });
+
+  it('ignores other property reads on process', () => {
+    expect(touchesProcessEnv(`const version = process.version;`)).toBe(false);
+  });
+
+  it('ignores the pattern quoted as string data', () => {
+    expect(touchesProcessEnv(`const s = "if (process.env.CI) {}";`)).toBe(false);
+  });
+
+  it('ignores the pattern inside a comment', () => {
+    expect(touchesProcessEnv(`// process.env.CI\nconst x = 1;`)).toBe(false);
   });
 });

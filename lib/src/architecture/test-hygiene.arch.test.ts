@@ -17,6 +17,14 @@
  * - **No direct mutation of `console.*` or `process.env.*`** — any
  *   assignment operator (plain or compound), `delete`, or
  *   increment/decrement.
+ * - **No `process.env` reads** — `.agent/rules/test-immediate-fails.md`
+ *   item 5 and `.agent/rules/no-global-state-in-tests.md` prohibit
+ *   touching `process.env` at all (read OR write) in every in-process
+ *   test: property/element access, aliasing, destructuring (including
+ *   `const { env } = process`), and `globalThis`-qualified forms. The one
+ *   sanctioned ambient-env location — smoke composition roots (the Vitest
+ *   runner config or spawn invocation) — is not a test file and lies
+ *   outside the scanned set.
  *
  * Scanned files: every `*.test.ts` the primary gate collects — mirroring the
  * `include`/`exclude` globs in `vitest.config.ts` (`src/**` and
@@ -46,6 +54,7 @@ import {
   mocksModuleRegistry,
   mutatesConsoleOrProcessEnv,
   mutatesGlobalStateViaVitestHelpers,
+  touchesProcessEnv,
   usesFsModule,
 } from './test-hygiene-scanner.js';
 
@@ -187,6 +196,12 @@ describe('Test Hygiene Enforcement', () => {
 
   it('does not mutate console or process.env in any gated test', () => {
     const violations = findViolations(libRoot, gatedTestFiles, mutatesConsoleOrProcessEnv);
+
+    expect(violations).toEqual([]);
+  });
+
+  it('does not read or write process.env in any gated test', () => {
+    const violations = findViolations(libRoot, gatedTestFiles, touchesProcessEnv);
 
     expect(violations).toEqual([]);
   });
