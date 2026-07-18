@@ -56,6 +56,23 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   output (extra emitted fields pass unnoticed); (4) `.regex(/x/i)` drops regex FLAGS —
   `extractRegexBody` returns `.source` only.
 
+## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
+
+- **A helper built to kill a directory-argument defect can re-import it at another call shape:**
+  `resolvePrettierConfigForOutput` anchored prettier resolution on the OUTPUT PATH, but for the
+  tag-file/method-file grouping strategies the output path IS a directory (the renderer writes
+  `index.ts` and per-group files beneath it), so the parent-walk escape the helper existed to
+  eliminate came straight back for grouped outputs. When a defect is about an argument's KIND
+  (file vs directory), enumerate the kinds at every call site of the cure. Fix: directory targets
+  anchor on a representative child (`<dir>/index.ts`); detection reuses the renderer's own
+  `isFileGroupingStrategy` (now exported — second consumer). Caught by Copilot review; red-first
+  proven at both the pure and real-FS levels.
+- **In-process purity cure shape that worked:** an injected resolver seam (`resolveConfigFn`
+  defaulting to prettier's `resolveConfig`) makes the unit suite pure (it records the anchor path;
+  no FS IO), and the real-filesystem decoy-config proof moved to `tests-snapshot/integration/`
+  beside `samples.test.ts`. Every proof the old FS-touching in-process test carried was re-homed,
+  none dropped.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by
