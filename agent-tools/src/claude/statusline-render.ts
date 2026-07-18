@@ -8,10 +8,11 @@
  * owns only the line/row layout.
  *
  * Row order puts the short, fixed-width segments first — identity (with
- * indicators and gauges) on one row, the model on the next — and the labelled
- * git-location rows last, with the context % on the repo-title row after the
- * title (owner layout preference, 2026-07-03). A loud error token, when
- * present, leads the output in any layout so it cannot be missed.
+ * indicators) on one row, the model beside or beneath it — and the labelled
+ * git-location rows last, with the usage gauges on the repo-title row after
+ * the title: the context % (owner layout preference, 2026-07-03) then the
+ * rate-limit gauges (owner layout ruling, 2026-07-18). A loud error token,
+ * when present, leads the output in any layout so it cannot be missed.
  *
  * The git-location rows come pre-composed from `statusline-segments.ts`: the
  * checkout name then its branch when the session's checkout is the only relevant
@@ -104,31 +105,33 @@ export function renderStatusline(
 }
 
 /**
- * No-logo layout: a loud error first, the identity-and-context summary, then the
+ * No-logo layout: a loud error first, the identity summary, then the
  * pre-composed labelled location rows. Empty lines (all their segments absent) are
  * dropped so no blank row renders.
  */
 function renderNoLogo(seg: Segments): string {
-  const summaryLine = joinPresent([seg.identity, seg.indicators, seg.rateLimits, seg.model]);
-  return [seg.error, summaryLine, ...locationRowsWithContext(seg)]
+  const summaryLine = joinPresent([seg.identity, seg.indicators, seg.model]);
+  return [seg.error, summaryLine, ...locationRowsWithUsage(seg)]
     .filter((line): line is string => line !== undefined && line.length > 0)
     .join('\n');
 }
 
 /**
- * Location rows with the context gauge appended to the repo-title row (owner
- * layout preference, 2026-07-03 — a deliberate castr divergence from Oak's
- * model-row placement): `ctx:` reads alongside WHERE the session is working,
- * after the checkout/directory title, not in the identity summary. Outside
- * any location row the gauge still renders on its own line rather than being
- * dropped.
+ * Location rows with the usage gauges appended to the repo-title row: the
+ * context gauge after the title (owner layout preference, 2026-07-03 — a
+ * deliberate castr divergence from Oak's model-row placement), then the
+ * rate-limit gauges after the context gauge (owner layout ruling, 2026-07-18 —
+ * `castr · ctx:61% · s:19%(5h) · w:14%(6d)`). Usage reads alongside WHERE the
+ * session is working, not in the identity summary. Outside any location row
+ * the gauges still render on their own line rather than being dropped.
  */
-function locationRowsWithContext(seg: Segments): readonly string[] {
-  if (seg.context === undefined) {
+function locationRowsWithUsage(seg: Segments): readonly string[] {
+  const usage = joinPresent([seg.context, seg.rateLimits]);
+  if (usage === undefined || usage.length === 0) {
     return seg.locationRows;
   }
   const [titleRow, ...rest] = seg.locationRows;
-  return titleRow === undefined ? [seg.context] : [joinPresent([titleRow, seg.context]), ...rest];
+  return titleRow === undefined ? [usage] : [joinPresent([titleRow, usage]), ...rest];
 }
 
 /**
@@ -141,9 +144,9 @@ function renderWithLogo(
   options: StatuslineRenderOptions,
 ): string {
   const rowTexts = [
-    joinPresent([seg.identity, seg.indicators, seg.rateLimits]),
+    joinPresent([seg.identity, seg.indicators]),
     joinPresent([seg.model]),
-    ...locationRowsWithContext(seg),
+    ...locationRowsWithUsage(seg),
   ];
   const content = composeWithLogo(logoRows, rowTexts);
   const separatorRow = buildLogoSeparator(options.logoSeparator, logoRows);
