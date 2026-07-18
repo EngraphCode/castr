@@ -21,9 +21,7 @@ function createUnimplementedItemSchemaMappingMessage(
     'The OpenAPI 3.2 itemSchema sequential media-type item contract is representable in ' +
     `${target} output, but Castr has not yet implemented that mapping. ` +
     'itemSchema currently survives the OpenAPI parser -> IR -> OpenAPI writer round-trip only. ' +
-    'Until the mapping lands (named work item L-K9 in ' +
-    '.agent/plans/remediation/00-parallel-execution-program.md), Castr fails fast rather than ' +
-    'silently dropping the item contract. ' +
+    'Castr fails fast rather than silently dropping the item contract. ' +
     `Found itemSchema at ${location}.`
   );
 }
