@@ -88,6 +88,10 @@ describe('mocksModuleRegistry', () => {
     expect(mocksModuleRegistry(`vi['doMock']('./module.js');`)).toBe(true);
   });
 
+  it('detects invocation through an as-assertion on vi', () => {
+    expect(mocksModuleRegistry(`(vi as VitestUtils).mock('./module.js');`)).toBe(true);
+  });
+
   it('ignores the pattern quoted as string data', () => {
     expect(mocksModuleRegistry(`const note = "vi.mock('./module.js')";`)).toBe(false);
   });
@@ -120,6 +124,12 @@ describe('mutatesGlobalStateViaVitestHelpers', () => {
 
   it('detects vi.spyOn targeting globalThis', () => {
     expect(mutatesGlobalStateViaVitestHelpers(`vi.spyOn(globalThis, 'fetch');`)).toBe(true);
+  });
+
+  it('detects vi.spyOn targeting console through an as-assertion', () => {
+    expect(mutatesGlobalStateViaVitestHelpers(`vi.spyOn(console as LoggerSink, 'warn');`)).toBe(
+      true,
+    );
   });
 
   it('ignores vi.spyOn targeting a local object', () => {
@@ -176,8 +186,44 @@ describe('mutatesConsoleOrProcessEnv', () => {
     expect(mutatesConsoleOrProcessEnv(`globalThis.console.warn = fake;`)).toBe(true);
   });
 
+  it('detects assignment through an as-assertion on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`(console as LoggerSink).warn = fake;`)).toBe(true);
+  });
+
+  it('detects assignment through an as-assertion on process.env', () => {
+    expect(mutatesConsoleOrProcessEnv(`(process.env as Record<string, string>).CI = '1';`)).toBe(
+      true,
+    );
+  });
+
+  it('detects assignment through a satisfies expression on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`(console satisfies LoggerSink).warn = fake;`)).toBe(true);
+  });
+
+  it('detects assignment through an angle-bracket assertion on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`(<LoggerSink>console).warn = fake;`)).toBe(true);
+  });
+
+  it('detects assignment through a non-null assertion on console', () => {
+    expect(mutatesConsoleOrProcessEnv(`console!.warn = fake;`)).toBe(true);
+  });
+
+  it('detects assignment through nested mixed wrappers', () => {
+    expect(mutatesConsoleOrProcessEnv(`((console as LoggerSink))!.warn = fake;`)).toBe(true);
+  });
+
+  it('detects delete through an as-assertion on process.env', () => {
+    expect(mutatesConsoleOrProcessEnv(`delete (process.env as Record<string, string>).CI;`)).toBe(
+      true,
+    );
+  });
+
   it('ignores assignment to a non-global look-alike target', () => {
     expect(mutatesConsoleOrProcessEnv(`logger.warn = fake;`)).toBe(false);
+  });
+
+  it('ignores assignment through an as-assertion on a non-global target', () => {
+    expect(mutatesConsoleOrProcessEnv(`(logger as LoggerSink).warn = fake;`)).toBe(false);
   });
 
   it('ignores equality comparison against process.env', () => {
@@ -238,6 +284,22 @@ describe('touchesProcessEnv', () => {
 
   it('detects a globalThis-qualified read', () => {
     expect(touchesProcessEnv(`const path = globalThis.process.env.PATH;`)).toBe(true);
+  });
+
+  it('detects a read through an as-assertion on process', () => {
+    expect(touchesProcessEnv(`const ci = (process as NodeJS.Process).env.CI;`)).toBe(true);
+  });
+
+  it('detects a read through a satisfies expression on process', () => {
+    expect(touchesProcessEnv(`const ci = (process satisfies object).env.CI;`)).toBe(true);
+  });
+
+  it('detects a read through an as-assertion on process.env', () => {
+    expect(touchesProcessEnv(`const ci = (process.env as Record<string, string>).CI;`)).toBe(true);
+  });
+
+  it('detects destructuring env from an as-asserted process', () => {
+    expect(touchesProcessEnv(`const { env } = process as NodeJS.Process;`)).toBe(true);
   });
 
   it('detects enumeration of process.env', () => {

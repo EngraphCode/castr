@@ -19,6 +19,7 @@
 import {
   createSourceFile,
   forEachChild,
+  isAsExpression,
   isBinaryExpression,
   isCallExpression,
   isComputedPropertyName,
@@ -35,7 +36,9 @@ import {
   isPostfixUnaryExpression,
   isPrefixUnaryExpression,
   isPropertyAccessExpression,
+  isSatisfiesExpression,
   isStringLiteralLike,
+  isTypeAssertionExpression,
   isVariableDeclaration,
   ScriptTarget,
   SyntaxKind,
@@ -88,11 +91,23 @@ function containsNode(root: Node, matches: (node: Node) => boolean): boolean {
 }
 
 /**
- * Strip parentheses and non-null assertions from an expression.
+ * Strip every transparent wrapper from an expression — the node kinds that
+ * change only the static type or grouping of the wrapped expression while
+ * evaluating to the very same reference: parentheses, non-null assertions
+ * (`expr!`), `as` assertions, `satisfies` expressions, and angle-bracket
+ * assertions (`<T>expr`). Leaving any of these intact lets ordinary
+ * TypeScript syntax (`(console as Sink).warn = fake`) smuggle a forbidden
+ * global past the base-resolution checks.
  */
 function unwrapExpression(expression: Expression): Expression {
   let current = expression;
-  while (isParenthesizedExpression(current) || isNonNullExpression(current)) {
+  while (
+    isParenthesizedExpression(current) ||
+    isNonNullExpression(current) ||
+    isAsExpression(current) ||
+    isSatisfiesExpression(current) ||
+    isTypeAssertionExpression(current)
+  ) {
     current = current.expression;
   }
   return current;

@@ -2,6 +2,20 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (PR #21 Codex finding — L-I test-hygiene lane, wrapper bypass)
+
+- **Containment predicates are wrapper-immune; target-resolution predicates are wrapper-vulnerable.**
+  The hygiene scanner's `touchesProcessEnv` already caught `(process.env as R).CI` READS without any
+  fix — the walk visits every node, so the inner bare `process.env` access matches regardless of
+  wrappers around it. But the MUTATION guard on the identical syntax was bypassed: assignment
+  detection must resolve the assignment TARGET's base, and `unwrapExpression` stripped only
+  parens + non-null, so `as`/`satisfies`/`<T>expr` wrappers left a non-identifier base. When an AST
+  guard resolves a base (mutation targets, `vi` callee roots, spy targets, destructuring
+  initializers), sweep the FULL transparent-wrapper family: ParenthesizedExpression,
+  NonNullExpression, AsExpression, SatisfiesExpression, TypeAssertionExpression. Red-first probes
+  proved 11 distinct bypass forms across all four base-resolving predicates before the one-function
+  fix went in.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**
