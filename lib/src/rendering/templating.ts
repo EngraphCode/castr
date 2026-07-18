@@ -21,7 +21,14 @@ function getSortedFilePaths(files: Record<string, string>): string[] {
   return Object.keys(files).sort((left, right) => left.localeCompare(right));
 }
 
-function isFileGroupingStrategy(
+/**
+ * Whether the group strategy writes multiple files beneath the output path
+ * (which is then a DIRECTORY, not a file). Shared with the CLI so prettier
+ * config resolution anchors inside the output directory for these strategies.
+ *
+ * @internal
+ */
+export function isFileGroupingStrategy(
   strategy: TemplateContextOptions['groupStrategy'] | undefined,
 ): strategy is typeof GROUP_STRATEGY_TAG_FILE | typeof GROUP_STRATEGY_METHOD_FILE {
   return strategy === GROUP_STRATEGY_TAG_FILE || strategy === GROUP_STRATEGY_METHOD_FILE;
