@@ -42,6 +42,7 @@
     "validate-no-machine-local-paths": "cd .. && pnpm exec tsx agent-tools/src/validators/machine-local-paths/validate-no-machine-local-paths.ts",
     "validate-lifecycle-scripts": "cd .. && pnpm exec tsx agent-tools/src/validators/lifecycle-scripts/validate-lifecycle-scripts.ts",
     "validate-pretooluse-guard-routing": "cd .. && pnpm exec tsx agent-tools/src/validators/pretooluse-guard-routing/validate-pretooluse-guard-routing.ts",
+    "arc-next-colour": "cd .. && pnpm exec tsx agent-tools/src/arc/arc-next-colour-cli.ts",
     "validate-arc-channels": "cd .. && pnpm exec tsx agent-tools/src/validators/arc-channels/validate-arc-channels.ts",
     "validate-policy-reappraisal": "cd .. && pnpm exec tsx agent-tools/src/validators/policy-reappraisal/validate-policy-reappraisal.ts",
     "validate-portability": "cd .. && pnpm exec tsx agent-tools/src/validators/portability/validate-portability.ts",

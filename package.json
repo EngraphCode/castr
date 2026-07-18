@@ -23,6 +23,7 @@
     "agent-tools": "pnpm --filter @engraph/agent-tools agent-tools",
     "agent-tools:build": "pnpm --filter @engraph/agent-tools build",
     "agent-tools:agent-identity": "pnpm --filter @engraph/agent-tools agent-identity",
+    "agent-tools:arc-next-colour": "pnpm --filter @engraph/agent-tools arc-next-colour",
     "agent-tools:collaboration-state": "pnpm --filter @engraph/agent-tools collaboration-state",
     "agent-tools:claude-agent-ops": "pnpm --filter @engraph/agent-tools claude-agent-ops",
     "agent-tools:commit-queue": "pnpm --filter @engraph/agent-tools commit-queue",
