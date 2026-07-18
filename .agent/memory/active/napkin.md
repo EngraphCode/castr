@@ -261,6 +261,30 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   Cliff's 6-item curation handoff matched my firsthand reads 6/6 (audit-harness DUE, HARD signals =
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
+- **Lane L-E (2026-07-18): `node ./node_modules/.bin/<tool>` is wrong — .bin shims are shell
+  scripts**, so node throws `SyntaxError: missing ) after argument list`; execute the shim
+  directly. Compounding: piping to `tail` made the pipeline exit 0, so the crashed background run
+  reported success — check the output body, not just the exit code, for piped commands.
+- **prettier `resolveConfig(arg)` searches from `dirname(arg)`, so passing a DIRECTORY skips that
+  directory's own config.** samples.test.ts passes `path.resolve(pkgRoot, '../')`: in a normal
+  checkout the repo root's `.prettierrc.json` is never found (config null → defaults → the
+  committed double-quote snapshot style); from a nested `.claude/worktrees/*` checkout the upward
+  search escapes into the parent repo and FINDS its config (singleQuote → whole-file snapshot
+  flip). Regenerating the snapshot from a `/tmp` copy of the tree reproduces the CI convention
+  exactly (multi-auth-only diff). Same suite: import 973s in the nested worktree vs 4.1s in the
+  `/tmp` copy with the same symlinked node_modules — the nested-worktree pathology is real and
+  separate from the config escape.
+- **881f6fb2 Lane L-E PR #20 triage (2026-07-18): the three MCP-thread findings are real but
+  out-of-lane.** `metadata.nullable` is dropped by all THREE ad-hoc CastrSchema→JSON-Schema
+  converters on the MCP context surface (`castrSchemaToJsonSchemaForMcp`,
+  `castrSchemaToJsonSchemaSimple` in mcp.parameters, `castrSchemaToJsonSchema` in
+  mcp.inline-json-schema) — each skips/never reads `metadata` — while
+  `writers/shared/json-schema-fields.ts#writeTypeField` folds it correctly (fourth-consumer
+  divergence; consolidation target). Pre-existing, not an L-E regression: the pre-PR snapshot's
+  `type: ["integer", null]` was a YAML **null literal** (parsed nullable=false, invalid Draft 07);
+  the fixture correction exposed the latent drop. L-E's contract forbids semantic changes to these
+  files, and no lane owns `context/mcp/schemas/**` semantics (L-H explicitly forbids it) — routed
+  to the orchestrator as a new-finding follow-up lane sequenced after L-E merges.
 
 ---
 
