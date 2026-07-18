@@ -42,13 +42,13 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
 
     it('rejects an unsupported chained method on a union instead of dropping it', () => {
       const result = parseZodSource(`
-        export const S = z.union([z.string(), z.number()]).describe('a description');
+        export const S = z.union([z.string(), z.number()]).refine((value) => true);
       `);
 
       expect(result.ir.components).toHaveLength(0);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0]?.code).toBe('PARSE_ERROR');
-      expect(result.errors[0]?.message).toContain('.describe(');
+      expect(result.errors[0]?.message).toContain('.refine(');
       expect(result.errors[0]?.location).toBeDefined();
     });
   });
@@ -237,6 +237,79 @@ describe('Zod composition fail-fast (strict whitelist)', () => {
       const e = component.schema.properties?.get('e');
       expect(e?.metadata.default).toBe('a');
       expect(e?.metadata.zodChain?.defaults).toEqual(['.default("a")']);
+    });
+  });
+
+  describe('.describe() on composites is captured, not rejected', () => {
+    it('captures .describe() on an array', () => {
+      const result = parseZodSource(`
+        export const S = z.array(z.string()).describe('An array of names');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.type).toBe('array');
+      expect(component.schema.description).toBe('An array of names');
+    });
+
+    it('captures .describe() on a union', () => {
+      const result = parseZodSource(`
+        export const S = z.union([z.string(), z.number()]).describe('A described union');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.anyOf).toHaveLength(2);
+      expect(component.schema.description).toBe('A described union');
+    });
+
+    it('captures .describe() on a tuple', () => {
+      const result = parseZodSource(`
+        export const S = z.tuple([z.string(), z.number()]).describe('A described tuple');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.prefixItems).toHaveLength(2);
+      expect(component.schema.description).toBe('A described tuple');
+    });
+
+    it('captures .describe() on an enum', () => {
+      const result = parseZodSource(`
+        export const S = z.enum(['a', 'b']).describe('A described enum');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.enum).toEqual(['a', 'b']);
+      expect(component.schema.description).toBe('A described enum');
+    });
+
+    it('captures .describe() on an intersection', () => {
+      const result = parseZodSource(`
+        export const S = z.intersection(
+          z.strictObject({ a: z.string() }),
+          z.strictObject({ b: z.number() }),
+        ).describe('A described intersection');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.allOf).toHaveLength(2);
+      expect(component.schema.description).toBe('A described intersection');
+    });
+
+    it('rejects a non-literal .describe() argument instead of dropping it', () => {
+      const result = parseZodSource(`
+        const dynamicDescription = 'computed';
+        export const S = z.union([z.string(), z.number()]).describe(dynamicDescription);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.describe(');
+      expect(result.errors[0]?.location).toBeDefined();
     });
   });
 });

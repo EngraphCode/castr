@@ -122,4 +122,30 @@ describe('Zod primitive/object fail-fast (strict whitelist)', () => {
       expect(inner?.metadata.zodChain?.presence).toBe('.nullable()');
     });
   });
+
+  describe('.describe() on objects is captured, not rejected', () => {
+    it('captures .describe() on a strict object', () => {
+      const result = parseZodSource(`
+        export const S = z.strictObject({ a: z.string() }).describe('A described object');
+      `);
+
+      expect(result.errors).toHaveLength(0);
+      const component = assertSchemaComponent(result.ir.components[0]);
+      expect(component.schema.type).toBe('object');
+      expect(component.schema.description).toBe('A described object');
+    });
+
+    it('rejects a non-literal .describe() argument instead of dropping it', () => {
+      const result = parseZodSource(`
+        const dynamicDescription = 'computed';
+        export const S = z.strictObject({ a: z.string() }).describe(dynamicDescription);
+      `);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('.describe(');
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+  });
 });

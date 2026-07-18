@@ -8,9 +8,10 @@
  * construct being silently dropped or text-captured.
  *
  * Also provides the shared capture of recognised chained modifiers —
- * presence (.optional(), .nullable(), .nullish()) and literal .default() —
- * into IR metadata so composite parsers (object, array, tuple, enum, union)
- * preserve them rather than dropping them.
+ * presence (.optional(), .nullable(), .nullish()), literal .default(),
+ * and literal .describe() — into IR metadata so composite parsers
+ * (object, array, tuple, enum, union, intersection) preserve them rather
+ * than dropping them.
  *
  * Known shared limitation: .default() capture only extracts statically
  * extractable literal arguments; non-literal arguments (identifiers,
@@ -149,6 +150,56 @@ export function applyChainDefault(schema: CastrSchema, methods: readonly ZodMeth
 }
 
 // ============================================================================
+// Description capture
+// ============================================================================
+
+/**
+ * Extract the last chained .describe() string literal from a method chain.
+ *
+ * `.describe()` is representable (CastrSchema.description), so it must be
+ * captured, not rejected. A non-literal argument (computed string) fails
+ * fast: its value cannot be captured statically, and silently dropping it
+ * would be lossy.
+ *
+ * @internal
+ */
+function extractChainDescription(methods: readonly ZodMethodCall[]): string | undefined {
+  let description: string | undefined;
+  for (const method of methods) {
+    if (method.name !== ZOD_METHOD_DESCRIBE) {
+      continue;
+    }
+    const argNode = method.argNodes[0];
+    const value = argNode === undefined ? undefined : extractLiteralValue(argNode);
+    if (typeof value !== 'string') {
+      throw new Error(
+        `Unsupported non-literal .describe() argument${describeNodeLocation(argNode)}. ` +
+          'Only string literal descriptions can be captured statically. The Zod parser ' +
+          'fails fast on unrecognised constructs instead of silently dropping them.',
+      );
+    }
+    description = value;
+  }
+  return description;
+}
+
+/**
+ * Capture a chained literal .describe() into a schema's description.
+ * No-op when the chain has no .describe() call.
+ * @internal
+ */
+export function applyChainDescription(
+  schema: CastrSchema,
+  methods: readonly ZodMethodCall[],
+): void {
+  const description = extractChainDescription(methods);
+  if (description === undefined) {
+    return;
+  }
+  schema.description = description;
+}
+
+// ============================================================================
 // Fail-fast helpers
 // ============================================================================
 
@@ -248,21 +299,28 @@ export function assertSupportedChainedMethods(
 
 /**
  * Build a composite-parser chain whitelist: the modifiers every composite
- * parser recognises (.meta(), .default(), presence) plus any kind-specific
- * extras (e.g. array constraint methods, tuple .rest()).
+ * parser recognises (.meta(), .default(), .describe(), presence) plus any
+ * kind-specific extras (e.g. array constraint methods, tuple .rest()).
  *
  * @internal
  */
 export function buildCompositeChainMethods(
   ...extraMethods: readonly string[]
 ): ReadonlySet<string> {
-  return new Set([ZOD_METHOD_META, ZOD_METHOD_DEFAULT, ...PRESENCE_CHAIN_METHODS, ...extraMethods]);
+  return new Set([
+    ZOD_METHOD_META,
+    ZOD_METHOD_DEFAULT,
+    ZOD_METHOD_DESCRIBE,
+    ...PRESENCE_CHAIN_METHODS,
+    ...extraMethods,
+  ]);
 }
 
 /**
  * Apply the shared recognised chain modifiers (presence, literal default,
- * meta) to a composite schema and return it. Passes undefined through so
- * callers can chain directly on their kind-specific parse result.
+ * literal describe, meta) to a composite schema and return it. Passes
+ * undefined through so callers can chain directly on their kind-specific
+ * parse result.
  *
  * @internal
  */
@@ -275,6 +333,7 @@ export function finalizeCompositeSchema<T extends CastrSchema>(
   }
   applyChainPresence(schema, chainedMethods);
   applyChainDefault(schema, chainedMethods);
+  applyChainDescription(schema, chainedMethods);
   return applyMetaAndReturn(schema, chainedMethods);
 }
 

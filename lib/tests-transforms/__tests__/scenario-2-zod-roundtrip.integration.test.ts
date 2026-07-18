@@ -12,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { OpenAPIObject } from '../../src/shared/openapi-types.js';
+import { assertSchemaComponent } from '../../src/schema-processing/ir/index.js';
 
 import {
   ZOD_FIXTURES,
@@ -105,6 +106,29 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       expect(zodOutput).toContain('z.hostname()');
       expect(zodOutput).toContain('z.float32()');
       expect(zodOutput).toContain('z.float64()');
+    });
+
+    it('preserves .describe() on a composite schema through the full round-trip', async () => {
+      const source = `
+        import { z } from 'zod';
+        export const DescribedUnionSchema = z
+          .union([z.string(), z.number()])
+          .describe('A described union');
+      `;
+
+      // Zod -> IR: the description must land on the schema
+      const result1 = parseZodSource(source);
+      expectNoParseErrors('inline composite describe test', 'arbitrary-input parse', result1);
+      const component1 = assertSchemaComponent(result1.ir.components[0]);
+      expect(component1.schema.description).toBe('A described union');
+
+      // IR -> OpenAPI -> Zod -> IR: the description must survive the round-trip
+      const openApiOutput = writeOpenApi(result1.ir);
+      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+      const result2 = parseZodSource(zodOutput);
+      expectNoParseErrors('inline composite describe test', 'generated-output parse', result2);
+      const component2 = assertSchemaComponent(result2.ir.components[0]);
+      expect(component2.schema.description).toBe('A described union');
     });
 
     it('rejects un-emittable canonical formats explicitly during generation from IR', async () => {
