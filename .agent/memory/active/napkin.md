@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (lane L-C follow-up: PR #13 .or() union shorthand — lane sub-agent / claude-fable-5)
+
+- **"Recognisable but rejected" is measured against Input-Output Pair Compatibility Rules 1+4, and
+  the ruling was (a) parse, never (b) fail-fast-with-a-pointer:** `.or()` is Zod's union shorthand
+  with the same semantics as `z.union`; Rule 1 requires every valid input-format feature to parse
+  into the IR, and Rule 4 explicitly forbids fail-fast as a placeholder for "not yet implemented".
+  A "use z.union instead" error would have been exactly that placeholder. Same ruling shape as the
+  resolved nativeEnum thread in this PR.
+- **Symmetric chained-operator parsers need OUTERMOST-OPERATOR claim discipline, or the whitelist
+  throw fires with a MISLEADING message on mixed chains:** an outside-in splitter for `.and()` that
+  walks past an outermore `.or()` collects it as a "trailing method" and then throws "unsupported
+  .or() on .and() intersection" — wrong diagnosis for a representable construct. Cure: each split
+  claims only when its own operator is the outermost composition link and DECLINES when the other
+  operator sits outermore, so the owning parser claims. Consolidated into `splitChainAroundOperator`
+  (ast/zod-ast.ts) — the sonarjs cognitive-complexity error (9 > 8) on the two near-duplicate
+  walkers was the consolidate-at-second-consumer signal firing through lint.
+- **Gateway DRY suggestion declined on layering grounds (named, not taken):** collapsing
+  parseOrMember/parseIntersectionMember into a shared ast-module helper would pull
+  ZodSchemaParser/CastrSchema imports into the AST utility layer beneath the parsers — 7 lines of
+  duplication is cheaper than the inversion. Writer-side nested-anyOf round-trip check named for
+  L-B; the writer never emits `.or(` today (verified by grep).
+
 ## 2026-07-18 (lane L-C: six PR #13 zod-parser review findings — lane sub-agent / claude-fable-5)
 
 - **A committed expected.json can LOCK IN a silent-drop bug:** the constraints fixture recorded
