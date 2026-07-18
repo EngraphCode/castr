@@ -78,7 +78,11 @@ residuals below are ranked, not chronological).
 4. **Cross-link follow-up**: `remediation-program-concept-exploration-2026-07-17.md` (lands
    with PR #10) ↔ the installed concept-exploration skill — add the link once both branches
    are merged.
-5. **Named follow-up candidates** (not commitments): invoke-reviewers
+5. **Named follow-up candidates** (not commitments): pr-watch dual-signal
+   termination — extend the snapshot with the reviews connection and gate the
+   ALL-GREEN exit on a fresh review from each per-push re-reviewer citing the
+   current head SHA (the pr-lifecycle §Bot-review rounds recipe; Codex round-3
+   finding, 2026-07-18); invoke-reviewers
    §Verification-Set-Includes-Decision-Record-Corpus sync from upstream; generated
    decision-records README index (the hand-maintained index is the no-moving-targets
    anti-pattern); agent-tools tsconfig `exactOptionalPropertyTypes` (pre-existing workspace

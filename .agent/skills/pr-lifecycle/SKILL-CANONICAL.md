@@ -149,9 +149,10 @@ passing AND every review thread resolved AND the merge state clean (protection,
 staleness, and draft all satisfied); passing checks alone are not green,
 because an unresolved thread blocks merge-readiness just as hard. (A PR with
 no checks yet attached does not read as green — that is the rollup race just
-after a push; a genuinely CI-less PR runs to its poll budget.) That exit is the wake
-signal; the Phase 3 GraphQL harvest remains the authoritative read for which
-threads and what they say. Never hand-roll tight `gh` polling loops (the
+after a push; a genuinely CI-less PR runs to its poll budget.) That exit is a wake,
+never round-completion proof — §Bot-review rounds' dual-signal recipe (fresh review
+per re-reviewer on the current head) governs the merge-ready declaration; the Phase 3
+GraphQL harvest remains the authoritative read for which threads and what they say. Never hand-roll tight `gh` polling loops (the
 shared API budget); on Claude Code run the watcher under a persistent
 Monitor. Between events, continue other work or hold; the watcher wakes you.
 

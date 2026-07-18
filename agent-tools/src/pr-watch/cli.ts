@@ -243,9 +243,9 @@ async function runWatch(input: {
   return 0;
 }
 
-/** The ALL-GREEN watch exit: the wake signal for a merge-ready declaration. */
+/** The ALL-GREEN watch exit: a WAKE for re-verification, never a merge-ready verdict. */
 function allGreenLine(prNumber: number): string {
-  return `PR #${prNumber} ALL GREEN — every check settled passing, zero unresolved threads — watch ending.\n`;
+  return `PR #${prNumber} ALL GREEN — wake for merge-readiness re-verification (bot rounds may still post; harvest before declaring) — watch ending.\n`;
 }
 
 function usage(): string {

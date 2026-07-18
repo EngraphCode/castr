@@ -103,6 +103,14 @@ export function isTerminalState(snapshot: PrSnapshot): boolean {
  * verdict — a genuinely CI-less PR runs to its poll budget instead. The merge
  * state must also be CLEAN: BLOCKED, BEHIND, DRAFT, or a transient UNKNOWN
  * all mean merge-readiness is unsatisfied, so the watch keeps polling.
+ *
+ * This predicate is the WAKE for the shepherd's re-verification, never the
+ * merge-ready verdict: the snapshot does not query the reviews connection,
+ * so a delayed per-push bot round can post after this fires. The
+ * pr-lifecycle dual-signal recipe (a fresh review from each per-push
+ * re-reviewer ON the current head) remains the declaration bar; implementing
+ * review-round completion here is a named follow-up in the
+ * resonance-practice-imports thread record.
  */
 export function isAllGreen(snapshot: PrSnapshot): boolean {
   return (
