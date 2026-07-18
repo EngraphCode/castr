@@ -262,3 +262,30 @@ pending, do not decide unilaterally.
   carries the observation).
 - Tracked-files-only scanning as the structural cure for machine-local gate pollution → pattern
   candidate (landed in the fitness-vocabulary validator).
+
+## PAUSE-POINT CLOSEOUT ADDENDUM (2026-07-18 ~11:15Z — final state; supersedes the wind-down block above on completion facts)
+
+**Estate safety (owner ALL-rule): COMPLETE.** Every branch with unique work is pushed and in a
+PR. New PRs this closeout: #26 (L-K2 red-by-design preservation, producer-bug honesty note),
+#27 (feature slice, integrates after #18 merges — the machine-loss risk is RESOLVED), #28
+(pre-rebase twin, DO-NOT-MERGE preservation), #29 (owner-directed h-label change, merge at the
+owner gate; after merge the primary wants one main-forward + agent-tools build to flip the live
+gauge). Temp-worktree residues EVALUATED per owner instruction and released as superseded
+drafts of landed work (head-check: an earlier draft of the L-KBATCH literal-types wiring now on
+PR #15's branch; main-check: an earlier draft of L-H's landed #17 chain) — worktrees left
+untouched, nothing deleted.
+
+**Inherited at the Tempestuous closeout (their Moment-1 11:05:49Z + amendment, my Moment-2
+11:06:41Z; their records are the transfer):** PR #23 shepherding — now MERGEABLE/CLEAN, all
+checks green, MERGE-READY for the owner; its merge fires two registered triggers (Stormbound's
+citations-rule bring; PDR-140 tree-resolvable) — announce on-stream at merge. Statusline
+aftercare residuals ranked in their statusline-owner-adjustments record (resonance-side slice
+per Grove shape (b); owner-attention glyph bring post-#22; clipVisible tail-sacrifice nuance;
+pr-watch dual-signal termination). The h-label directive is EXECUTED (PR #29).
+
+**Merge-asks at pause (owner-invoked): #23 (ready now), #29 (on CI), #22 (reconciled +
+thread-clear; GitHub recomputing mergeability after the #25 main move — if it reads
+CONFLICTING again the cure is one more main-forward merge in the arc-bring worktree, the
+proven shape), then the remediation waves per §Merge waves (all of #10–#21 thread-clear at
+pause).** Claims: all four Sylvan claims closed at pause; no retained claims — this record is
+the handoff.
