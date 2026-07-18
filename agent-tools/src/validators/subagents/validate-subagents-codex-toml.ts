@@ -48,7 +48,7 @@ export interface CodexRegistration {
    * The `config_file` path declared in the registration block.
    *
    * Typically a path relative to the config file's directory,
-   * e.g. `"agents/code-expert.toml"`.
+   * e.g. `"agents/code-reviewer.toml"`.
    */
   readonly configFile: string;
 }
@@ -92,6 +92,142 @@ export function readTomlBasicStringValue(content: string, key: string): string |
     }
   }
   return null;
+}
+
+/**
+ * Strip a TOML line’s trailing comment, quote-aware: a `#` inside a basic
+ * or literal string is content, not a comment. Applied only OUTSIDE multiline
+ * strings — inside them, every character is string content. Without this,
+ * an ordinary comment containing `"""` would flip the multiline tracker and
+ * blind the gate to every later assignment (gate-shaped code).
+ */
+function stripTomlComment(line: string): string {
+  let inBasic = false;
+  let inLiteral = false;
+  for (let index = 0; index < line.length; index += 1) {
+    const character = line.charAt(index);
+    if (inBasic) {
+      if (character === '\\') {
+        index += 1;
+      } else if (character === '"') {
+        inBasic = false;
+      }
+    } else if (inLiteral) {
+      if (character === "'") {
+        inLiteral = false;
+      }
+    } else if (character === '"') {
+      inBasic = true;
+    } else if (character === "'") {
+      inLiteral = true;
+    } else if (character === '#') {
+      return line.slice(0, index);
+    }
+  }
+  return line;
+}
+
+/** The single-character TOML 1.0 basic-string escapes. */
+const SIMPLE_TOML_KEY_ESCAPES: ReadonlyMap<string, string> = new Map([
+  ['b', '\b'],
+  ['t', '\t'],
+  ['n', '\n'],
+  ['f', '\f'],
+  ['r', '\r'],
+  ['"', '"'],
+  ['\\', '\\'],
+]);
+
+/**
+ * Decodes a TOML basic-string KEY into its plain form across the full TOML
+ * 1.0 escape set — including `\UXXXXXXXX`, which `JSON.parse` (used by
+ * {@link parseTomlBasicString} for values) cannot decode. Escape spellings of
+ * a key are semantically identical to the bare key, so the gate compares
+ * decoded forms.
+ *
+ * @param raw - The key content between the double quotes, escapes intact.
+ * @returns The decoded key, or `null` when an escape is invalid or names a
+ *   non-scalar code point — a malformed key is never a legal spelling of a
+ *   gated key, so no-match is the safe reading.
+ */
+function decodeTomlBasicKey(raw: string): string | null {
+  let decoded = '';
+  let index = 0;
+  while (index < raw.length) {
+    const character = raw.charAt(index);
+    if (character !== '\\') {
+      decoded += character;
+      index += 1;
+      continue;
+    }
+    const escape = raw.charAt(index + 1);
+    if (escape === 'u' || escape === 'U') {
+      const width = escape === 'u' ? 4 : 8;
+      const hex = raw.slice(index + 2, index + 2 + width);
+      if (hex.length !== width || !/^[0-9A-Fa-f]+$/u.test(hex)) {
+        return null;
+      }
+      const codePoint = Number.parseInt(hex, 16);
+      const isSurrogate = codePoint >= 0xd800 && codePoint <= 0xdfff;
+      if (codePoint > 0x10ffff || isSurrogate) {
+        return null;
+      }
+      decoded += String.fromCodePoint(codePoint);
+      index += 2 + width;
+      continue;
+    }
+    const simple = SIMPLE_TOML_KEY_ESCAPES.get(escape);
+    if (simple === undefined) {
+      return null;
+    }
+    decoded += simple;
+    index += 2;
+  }
+  return decoded;
+}
+
+/**
+ * Returns whether a TOML key is assigned outside a multiline basic string, in
+ * ANY legal spelling — bare, basic-quoted (`"key"`), or literal-quoted
+ * (`'key'`); the three are semantically identical in TOML — and basic-quoted
+ * keys may spell characters as escapes (`"to\u006Fls"` is `tools`) — so a gate
+ * matching fewer spellings would be bypassable by quoting or escaping
+ * (gate-shaped code: a missed spelling is a silent hole). The value shape is deliberately
+ * irrelevant: callers use this to reject keys whose presence is unsupported,
+ * including arrays and inline tables.
+ */
+export function hasTomlAssignment(content: string, key: string): boolean {
+  let inMultilineBasicString = false;
+  for (const rawLine of content.split(/\r?\n/u)) {
+    if (inMultilineBasicString) {
+      const closingQuoteCount = rawLine.match(/"""/gu)?.length ?? 0;
+      if (closingQuoteCount % 2 === 1) {
+        inMultilineBasicString = false;
+      }
+      continue;
+    }
+    const line = stripTomlComment(rawLine);
+    const tripleQuoteCount = line.match(/"""/gu)?.length ?? 0;
+    {
+      const match = line
+        .trim()
+        .match(
+          /^(?:"(?<basic>(?:[^"\\\r\n]|\\.)*)"|'(?<literal>[^'\r\n]*)'|(?<bare>[a-z_]+))\s*=/u,
+        );
+      const rawBasic = match?.groups?.['basic'];
+      const assignedKey =
+        rawBasic === undefined
+          ? (match?.groups?.['literal'] ?? match?.groups?.['bare'])
+          : decodeTomlBasicKey(rawBasic);
+      if (assignedKey === key) {
+        return true;
+      }
+    }
+    if (tripleQuoteCount % 2 === 1) {
+      inMultilineBasicString = !inMultilineBasicString;
+    }
+  }
+  return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -185,7 +321,7 @@ export const CODEX_CONFIG_PATH = '.codex/config.toml';
  * path semantics.
  *
  * @param configFile - The `config_file` value from the registration block
- *   (e.g. `"agents/code-expert.toml"`).
+ *   (e.g. `"agents/code-reviewer.toml"`).
  * @param configPath - Repository-relative path to the config file that
  *   declares this registration.  Defaults to `.codex/config.toml`.
  * @returns A normalised, repository-relative path to the adapter TOML file.

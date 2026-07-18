@@ -65,7 +65,7 @@ export function readCodexDeveloperInstructions(content: string): string {
  * referenced inside a developer instructions string.
  *
  * A canonical path reference is any backtick-delimited path beginning with
- * `.agent/`, such as `.agent/sub-agents/templates/code-expert.md`.
+ * `.agent/`, such as `.agent/sub-agents/templates/code-reviewer.md`.
  *
  * @param developerInstructions - The developer instructions body, as returned
  *   by {@link readCodexDeveloperInstructions}.

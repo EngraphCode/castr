@@ -1,5 +1,5 @@
 import type { PrSnapshot } from './index.js';
-import { diffSnapshots, formatSnapshot, isTerminalState } from './report.js';
+import { diffSnapshots, formatSnapshot, isAllGreen, isTerminalState } from './report.js';
 import { parsePrTarget, readPrSnapshot, type PrTarget } from './gh.js';
 
 /**
@@ -213,6 +213,10 @@ async function runWatch(input: {
     stdout.write(`PR #${previous.number} ${previous.state} — watch ending.\n`);
     return 0;
   }
+  if (isAllGreen(previous)) {
+    stdout.write(allGreenLine(previous.number));
+    return 0;
+  }
 
   for (let poll = 0; poll < parsed.maxPolls; poll += 1) {
     await sleep(parsed.intervalSeconds * MILLIS_PER_SECOND);
@@ -229,10 +233,19 @@ async function runWatch(input: {
       stdout.write(`PR #${next.number} ${next.state} — watch ending.\n`);
       return 0;
     }
+    if (isAllGreen(next)) {
+      stdout.write(allGreenLine(next.number));
+      return 0;
+    }
   }
 
   stdout.write(`PR #${previous.number}: max polls (${parsed.maxPolls}) reached — watch ending.\n`);
   return 0;
+}
+
+/** The ALL-GREEN watch exit: a WAKE for re-verification, never a merge-ready verdict. */
+function allGreenLine(prNumber: number): string {
+  return `PR #${prNumber} ALL GREEN — wake for merge-readiness re-verification (bot rounds may still post; harvest before declaring) — watch ending.\n`;
 }
 
 function usage(): string {

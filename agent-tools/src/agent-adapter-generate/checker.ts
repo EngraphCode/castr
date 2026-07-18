@@ -4,7 +4,8 @@
  * Recomputes every generated surface in memory and compares it bytewise
  * against the on-disk files. Read-only. Used by
  * `agent-adapter-generate --check` to gate against drift between the canonical
- * sources (Codex layer + `.agent/rules`) and their generated projections.
+ * sources (Codex layer + canonical agent templates + `.agent/rules`) and their
+ * generated projections.
  */
 import { readFile } from 'node:fs/promises';
 

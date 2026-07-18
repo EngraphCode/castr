@@ -1,4 +1,15 @@
 {
   "version": 1,
-  "skills": {}
+  "skills": {
+    "concept-exploration": {
+      "source": "resonance@d8dc50c:.agent/skills/concept-exploration/SKILL-CANONICAL.md (localised: Routing Boundaries formed-decision pointer)",
+      "sourceType": "sibling-repo-transplant",
+      "computedHash": "sha256:c5e863d1eb74bc0d5339dea99a48fb4d136a7a7d16d2e7ec97c0b4de7c395028"
+    },
+    "lean-task-subagents": {
+      "source": "resonance@d8dc50c:.agent/skills/lean-task-subagents/SKILL-CANONICAL.md (localised: specialist roster; extended: castr fleet-sizing binding per PDR-142)",
+      "sourceType": "sibling-repo-transplant",
+      "computedHash": "sha256:4aebee2bf9a6f2111ebf60c1c62f2061812bc7dc07e0c5c029746c50efbab9af"
+    }
+  }
 }

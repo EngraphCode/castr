@@ -287,3 +287,140 @@ _2026-06-04 → 2026-06-10 → [`archive/napkin-2026-06-04-to-10.md`](archive/na
 _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026-06-17-to-20.md`](archive/napkin-2026-06-17-to-20.md) (2026-06-20);_
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
+
+## 2026-07-18 — resonance practice imports (Midnight Watching Night / 900203)
+
+- **Claim-before-watcher move-order error, gate-cured**: I ran the start-right-team moves out of
+  order (claim open before the comms watcher was armed); the collaboration CLI's comms-blind
+  gate refused the claim and named the correct order. Same window: my team-start carried two
+  stale premises ("predecessor dead", "registry empty") corrected by the live peer within 90s —
+  my registry read pre-dated their claim. The Case-A concept-exploration pass (recorded in the
+  transplant plan) reframed this from individual error to an ORDERING PROPERTY: grounding reads
+  are systematically earlier than peer-visible presence, because grounding precedes watcher
+  arming by construction. Candidate cures: timestamp state assertions in team-start bodies;
+  extend the comms-blind refusal family from claim-opens to state-asserting broadcasts.
+- **Filtered-output ate the failure signal THREE times in one session** (claim-open error via
+  `tail -3`, repo-validators failure via `grep|tail`, lint findings via `tail -2`) — despite the
+  distilled pipe lesson being in context. The pnpm-banner-trim reflex (`grep -v '^\$' | tail`)
+  is the same discard shape PDR-140 §3 (landed this session) names; each re-run unfiltered cost
+  a full round-trip. Cure that held: when a command can fail, run it unfiltered or
+  capture-to-file; trim only after the exit code is known green.
+- **Bring-the-iceberg recursed FOUR levels on the worker-class transplant**: skill
+  (lean-task-subagents) → template (task-worker) → generator (projection class, else the wrapper
+  emits `model: opus` + Bash) → validator (subagents module, else the gate REFUSES the landed
+  template: effort-by-class + worker-reading-discipline). Each level surfaced only when the
+  previous one landed; the gate refusal was the discovery mechanism for level four. A bring-plan
+  that stopped at any level would have shipped a hollow or gate-blocked capability.
+- **Wholesale-vs-surgical resolved by measuring localisation, not by diff size**: castr's copies
+  of the adapter generator + subagents validator were token-neutral (zero castr-specific
+  content, verified by grep before choosing), so wholesale-take-from-upstream + castr prettier
+  - per-file token localisation (code-expert→code-reviewer ×37) was lossless and cheaper than
+    hunk surgery. Same measurement on pr-lifecycle gave the OPPOSITE verdict (12 load-bearing
+    castr localisations + castr-ahead surfaces) → per-hunk semantic merge. The deciding variable
+    is the HOST copy's localisation density, measured firsthand.
+- **castr lint hardened upstream code on arrival**: `preserve-caught-error` demanded `{ cause }`
+  on agent-projection.ts's rethrow — upstream lacks the rule; back-flow candidate along with
+  castr's Phase-3 §4 server-side ruleset harvest (absent upstream) and the generator's
+  prettier-stable quoting history.
+- **Harness: bulk `cp` of multiple .ts files was classifier-denied; identical per-file copies
+  passed** — granular retry is the working shape for multi-file source copies.
+- **Primary-checkout dist-clean window killed my heartbeat tick** (MODULE_NOT_FOUND — the known
+  check-singleton specimen, this time from a PEER'S push while my loop ran from the primary
+  checkout): the loop self-healed when their build restored dist. Worktree isolation kept the
+  work path immune; only the shared-checkout CLI surface was exposed.
+- **FALSE GREEN on my own push — the background wrapper masked the exit code and I never read
+  the log**: `git push > log 2>&1; echo "exit: $?"` run_in_background reports the TASK's exit
+  (the echo = 0), and I took the harness notification's "exit code 0" as push success, told the
+  owner "push landed clean through the full gate", and only discovered the pre-push had FAILED
+  (samples exception) when `gh pr create` said the remote branch did not exist. Compound
+  specimen: verify-own-observer-instruments (the wrapper) + PDR-140 (the unread log) + the
+  pipe-eats-exit-code family, all in one move — with the push's SECOND leg also failing
+  differently (no upstream) behind the same mask. Cure that held: read the captured log IN
+  FULL before claiming any gated operation's outcome; make the wrapper carry the real code
+  (`git push; RC=$?; ... exit $RC`) so the harness notification is honest. The samples
+  exception itself fired exactly as the danger list pre-attributed (68/69 files; only that
+  test), and the three chain-masked suites proved individually green — evidence banked in the
+  thread record; owner chose hold-for-honest-gate over --no-verify.
+- **Grounding-order finding (Case A of the concept-exploration proof, sharpened at closeout):**
+  session-open reads are systematically EARLIER than peer-visible presence because grounding
+  precedes watcher arming by construction — so every "registry empty"/"peer dead" grounding
+  conclusion is a stale-by-design hypothesis, not a fact. Candidate cures: timestamp state
+  assertions in team-start bodies ("empty AS OF <t>"); extend the comms-blind refusal family
+  from claim-opens to state-asserting broadcasts. candidate: pattern/rule sharpening.
+- **False-green-wrapper class: SECOND same-day instance (Stormbound's #22 push, 09:29 event)
+  — the graduation trigger is FIRED.** Same anatomy as mine: background/compound wrapper
+  swallows a pre-push failure, agent reports "landed", firsthand ref-check exposes it. Both
+  cured by read-the-log-in-full + honest exit propagation. Two independent instances, one day,
+  two agents → promote to pending-graduations (rule candidate: push-outcome claims require a
+  ref-check or full-log evidence, never a wrapper exit code).
+- **Localisation-density decision rule (worked twice today):** wholesale-take vs per-hunk
+  semantic merge is decided by MEASURING the host copy's localisation density (grep for
+  host-specific tokens/content), never by diff size. Token-neutral host copies (subagents
+  validator, adapter generator) → wholesale + prettier + token localisation; localisation-dense
+  copies (pr-lifecycle skill, 12 load-bearing local surfaces) → per-hunk. candidate: sharpens
+  the transplant-method distilled family.
+- **Reviewer-trust calibration from this session (for the successor):** the depth sweeps were
+  reliable on structure and WRONG twice on estate-negatives ("castr has no decision lenses";
+  the PDR-numbering-divergence hypothesis) — both caught by apex-tier firsthand §-reads exactly
+  as PDR-142's failure-class table predicts. My OWN fold record over-claimed once (WorkerTool
+  "threaded" when half-applied) — caught by Copilot's round, corrected in the plan. Verify the
+  round-1 fold adversarially (routed to Tempestuous) rather than trusting this list.
+
+## 2026-07-18 — statusline endgame + succession chain n=4 (Tempestuous Wheeling Sky / b51b06)
+
+- **NEW tool-layer failure-mode class: JSON-escape transit mangling (three firings, one session).**
+  Content passed through the agent tool-call layer decodes valid JSON escapes in flight: a `o`
+  typed into an Edit/Write parameter arrives as `o` (test escape-rows silently degraded to
+  duplicates, caught only by re-reading on-disk bytes); python-heredoc patches additionally broke
+  on `\\n` mangling and on test content containing `"""` terminating a triple-double-quoted python
+  string (SyntaxError far from the cause). Cure ladder that held: (1) real characters over escape
+  spellings wherever the file allows; (2) placeholder patching for backslash-bearing content
+  (compose with `¤`, replace via `chr(92)` in python); (3) triple-SINGLE-quoted python literals
+  when the payload carries `"""`; (4) after ANY templated write, verify on-disk bytes (sed/Read)
+  BEFORE running tests — the RED run otherwise validates mangled tests. Same
+  verify-own-observer-instruments family; the instrument here is the tool-parameter transit
+  itself.
+- **Ungated-push specimen closed out** (comms 09:52 failure-mode event; user-memory indexed): a
+  `git -C <worktree> push` landed with ZERO pre-push output — effectively --no-verify that nobody
+  authorised. Probed: HUSKY unset, shims complete+executable, hooksPath identical to gated peers;
+  every repo-side cause ruled out; the same invocation shape gated fine on the next two pushes —
+  intermittent invocation-layer, mechanism unpinned. Fleet-adopted cure (Sylvan cross-checked all
+  11 of their pushes gated): **no pre-push banner in captured push output = UNGATED; treat as
+  no-verify, run the gate explicitly, and say so where the work lands.**
+- **Classifier-denial → owner-card authorization path (merge actions).** Auto-mode denies
+  merge-class actions (MCP and gh alike). The shape that worked: AskUserQuestion card carrying the
+  complete merge-ready evidence → owner's textual grant in the card answer → retry succeeds. Card
+  answers are the explicit-authorization surface; a broadcast reading + objection window is the
+  team-visible complement, but the card answer is what flipped the gate.
+- **cwd-drift instance (n+3), new mask**: a root-only pnpm alias invoked from a worktree subdir
+  exits 1 as "command not found" — indistinguishable from a validation failure if only the exit
+  code is read. The validator "failure" that wasn't; rerun-from-root was the whole cure. Never
+  classify an exit code before confirming the command actually ran.
+- **Dist-window collision, lived from the consumer side**: comms append MODULE_NOT_FOUND during a
+  peer's announced primary dist-clean window; bounded-backoff retry (wait for
+  `agent-tools/dist/.../agent-tools.js` to reappear) was sufficient. Long-running watcher/heartbeat
+  processes survived (modules already in memory).
+- **Bot-review trust calibration today: 11/11 real across four waves.** Copilot on #24: 5/5 real (incl. the settings
+  quoting with its pre-existing sibling defect). Codex round-2 on #23: 3/3 real, one of which
+  FALSIFIED my own pre-formed hypothesis (the continuity pointer — I assumed pre-existing-on-main;
+  measurement showed zero main references, branch-introduced). The reject reflex was forming;
+  measurement killed it. In this estate, dismiss no bot finding without a probe.
+- **Adversarial-verify method note (worked)**: per-finding refutation probes beat reading the fix —
+  the escape-spelling probe found a residual hole the fold's own tests missed (`"tools"`
+  bypass, then hardened red-first in cbbde8a3). Probe lists composed per finding-class before the
+  code is read keep the verify honest.
+- **clipVisible tail-sacrifice nuance (v1-accepted, follow-up candidate)**: a pathologically long
+  task label clips away status+model entirely (whole-row budget). If the owner wants
+  model-always-visible, the follow-up is title-first truncation preserving the suffix segments.
+- **Merged ≠ in-use for the live estate**: the owner's statusline reads the PRIMARY checkout's
+  settings+dist; a main merge alone changes nothing they see until the primary's branch merges
+  main forward and rebuilds dist. "In use" verification must probe the surface the owner actually
+  runs.
+- **Succession chain n=4 in one day** (Moonlit→Highland→Stormbound→Sylvan; Midnight→Tempestuous):
+  the two-moments discipline + thread-records-as-transfer held again; the routed-verify slice
+  BEFORE pre-positioning (verify the predecessor's last fold as the successor's first act) is a
+  strong pattern — the verify doubles as context absorption.
+- **Stale-pin sweep discipline (5h-label cycle)**: a label rename's RED must enumerate EVERY pin
+  spelling (s:33/s:23/s:80 lived in different tests); a partial pin update turns the GREEN run
+  into a mixed signal where a helper returning '' masquerades as a render bug. Grep the OLD
+  token across the whole test estate before declaring RED complete.

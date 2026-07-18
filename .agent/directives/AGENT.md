@@ -71,7 +71,7 @@ The cross-platform `.cursor/agents` + `.claude/agents` wrappers and the `.cursor
 or rule, regenerate and verify with `pnpm portability:check` (the blocking `portability` + `subagents` gates enforce
 parity; `pnpm agents:check` fails on drift).
 
-Installed roster (15 templates; the architecture reviewer ships as four persona adapters):
+Installed roster (16 templates; the architecture reviewer ships as four persona adapters):
 
 Generic reviewers:
 
@@ -102,6 +102,10 @@ Domain experts (castr schema surface):
 - `zod-expert` — Zod parser/writer lockstep and ts-morph specialist
 - `json-schema-expert` — Draft 07 / 2020-12 fidelity and IR mapping specialist
 - `mcp-expert` — castr MCP tool-emission fidelity specialist (the IR→MCP-Tools writer)
+
+Workers (lean task class — see the `lean-task-subagents` skill for dispatch doctrine):
+
+- `task-worker` — lean single-purpose task worker; `model: sonnet`, minimum tools, decision-complete briefs only
 
 ## Development Commands
 
