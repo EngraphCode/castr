@@ -27,15 +27,26 @@ merges, then waves 2–3. The owner merges every PR; the orchestrator never merg
    they live under the primary repo's `.claude/worktrees/` plus one samples-fix worktree in the
    machine temp dir). Dirty files there are PRESERVED, VERIFIED, UNCOMMITTED lane work (see the
    lane table), not junk. A prior session's agents died mid-commit at a usage-limit boundary; the
-   file state IS the work.
+   file state IS the work. _(Superseded on the RATIONALE 2026-07-18 pause: every worktree is now
+   CLEAN and every lane commit pushed — see §Pause-point closeout addendum. The PROHIBITION
+   stands unchanged: never clean, reset, or remove them.)_
 2. **`feat/explicit-additional-properties-rebased` (local branch) CANNOT be pushed** until the C3
    fix (lane L-D) merges — its own Oak round-trip test is red by design (the gate-level C3
    reproduction). Do not "fix" that red test; do not delete the branch. Its twin
    `feat/explicit-additional-properties-2026-04` is the pre-rebase preservation copy.
+   _(Superseded on PUSHABILITY 2026-07-18 pause: BOTH branches are on origin as draft PRs #27/#28
+   under the owner's ALL-work-committed-pushed-in-a-PR order. Mechanism: ref-pushed from the
+   GREEN primary checkout — the pre-push hook gates the pushing tree, the estate's established
+   red-by-design convention. The MERGE constraint stands: #27 integrates only after L-D/#18
+   merges, per the program record §Feature-slice integration. Do not "fix" the red test.)_
 3. **Pushes from the primary checkout must SERIALIZE** — two concurrent pre-push `check:ci` hooks
    in one working tree collide and fail with a bare "failed to push some refs". Never pipe a
    hook-bearing git command through `tail -1` (it blinds you to the cause).
-4. **The "pre-attributed samples exception"**: exactly one failure is expected in NESTED
+4. _(CURED 2026-07-18: PR #19 merged to `main` — `samples.test.ts` now pins
+   `SNAPSHOT_PRETTIER_CONFIG = null`, so branches carrying that merge have NO expected samples
+   failure; a samples red on a post-#19 branch is REAL. The text below applies ONLY to a branch
+   still based before #19 — the cure is merging `origin/main` forward, proven on six lanes.)_
+   **The "pre-attributed samples exception"**: exactly one failure is expected in NESTED
    worktrees — `tests-snapshot/integration/samples.test.ts` (prettier `resolveConfig` escapes the
    repo root; environment bug with two candidate fixes, see Pending decisions). Any OTHER failure
    is real. `test:all` is an `&&`-chain: after that failure, run `test:gen`, `test:transforms`,
@@ -281,7 +292,12 @@ checks green, MERGE-READY for the owner; its merge fires two registered triggers
 citations-rule bring; PDR-140 tree-resolvable) — announce on-stream at merge. Statusline
 aftercare residuals ranked in their statusline-owner-adjustments record (resonance-side slice
 per Grove shape (b); owner-attention glyph bring post-#22; clipVisible tail-sacrifice nuance;
-pr-watch dual-signal termination). The h-label directive is EXECUTED (PR #29).
+pr-watch dual-signal termination). Ranking rationale (conserved here because the fuller record
+lives machine-locally): ordered by owner-visibility then dependency — the resonance slice is
+peer-committed work awaiting symmetry; the glyph bring waits on #22's estate; the clipVisible
+nuance fires only on pathological labels (model can vanish — fix if the owner wants
+model-always-visible); the pr-watch item is registered in the imports record (Codex round 3).
+The h-label directive is EXECUTED (PR #29).
 
 **Merge-asks at pause (owner-invoked): #23 (ready now), #29 (on CI), #22 (reconciled +
 thread-clear; GitHub recomputing mergeability after the #25 main move — if it reads

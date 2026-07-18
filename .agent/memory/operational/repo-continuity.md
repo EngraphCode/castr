@@ -161,6 +161,14 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 ## Next Safe Steps
 
+> **🧭 LIVE SPINE (2026-07-18, Sylvan Flowering Branch / e6488b — safe-pause handoff): the
+> operational frontier is the remediation parallel program at its PAUSE POINT — read
+> [`threads/remediation-parallel-program.next-session.md`](threads/remediation-parallel-program.next-session.md)
+> (Danger List → Pause-point closeout addendum → Next safe steps) FIRST; it carries the merge-ask
+> queue, the inherited statusline aftercare, and the recompute protocol. Every dated block below
+> is history on "what's next" (the 2026-07-04 block remains authoritative only for the
+> overhaul-estate W0 walk context and Q-012..Q-015).**
+
 > **🔬 CURRENT TRUTH (2026-07-04, Fragrant Twining Glade / 5367e2 — wide+deep review + overhaul
 > mandate; THE next-step spine for incoming agents; every block below is history).**
 > The [wide+deep review](../../report/wide-deep-review-2026-07-04.md) (committed `b313479`,
