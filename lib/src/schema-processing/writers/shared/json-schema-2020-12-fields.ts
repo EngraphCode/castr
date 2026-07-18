@@ -94,6 +94,11 @@ export function writeUnevaluatedFields(
  *
  * `writeBooleanCapable` is used at the keyword positions whose IR values
  * may be `booleanSchema` nodes (`contentSchema`, `if`/`then`/`else`).
+ * `writeUnreachableBranch` is used at `then`/`else` positions that are
+ * statically unreachable (see {@link isThenBranchStaticallyUnreachable} and
+ * {@link isElseBranchStaticallyUnreachable}); it defaults to
+ * `writeBooleanCapable`, so writers that do not distinguish unreachable
+ * branches keep their existing behaviour.
  * @internal
  */
 export function writeJsonSchema2020RecursiveFields(
@@ -101,6 +106,7 @@ export function writeJsonSchema2020RecursiveFields(
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
   writeBooleanCapable: WriteBooleanCapableSchemaFn = writeSchema,
+  writeUnreachableBranch: WriteBooleanCapableSchemaFn = writeBooleanCapable,
 ): void {
   if (schema.prefixItems !== undefined) {
     result.prefixItems = schema.prefixItems.map((item) => writeSchema(item));
@@ -121,7 +127,7 @@ export function writeJsonSchema2020RecursiveFields(
   }
   writePatternProperties(schema, result, writeSchema);
   writePropertyNames(schema, result, writeSchema);
-  writeConditionalApplicators(schema, result, writeBooleanCapable);
+  writeConditionalApplicators(schema, result, writeBooleanCapable, writeUnreachableBranch);
 }
 
 // ---------------------------------------------------------------------------
@@ -169,24 +175,74 @@ function writePropertyNames(
 // ---------------------------------------------------------------------------
 
 /**
+ * Is the `then` branch statically unreachable — can it ever constrain
+ * instances?
+ *
+ * JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
+ * MUST be entirely ignored, so they expose no validation semantics. A literal
+ * boolean `if` fixes the conditional outcome the same way: `if: false` never
+ * validates, so `then` never applies. Non-boolean `if` schemas (including
+ * `$ref` nodes, whose outcome is not statically known here) keep the branch
+ * reachable.
+ *
+ * The capability preflight (`compatibility/integer-target-capabilities`
+ * traversal) skips unreachable branches under the same rule; writers that
+ * re-run capability assertions during recursion consult this predicate so the
+ * guard and the writer stay coherent — the branch is still emitted verbatim
+ * (losslessness), only the capability assertion on content that can never
+ * apply is skipped.
+ *
+ * @returns `true` when the `then` branch can never apply
+ * @internal
+ */
+export function isThenBranchStaticallyUnreachable(schema: CastrSchema): boolean {
+  return schema.if === undefined || schema.if.booleanSchema === false;
+}
+
+/**
+ * Is the `else` branch statically unreachable — can it ever constrain
+ * instances?
+ *
+ * Mirror of {@link isThenBranchStaticallyUnreachable}: `else` never applies
+ * when `if` is absent (ignored per 2020-12 core §10.2.2) or when a literal
+ * `if: true` always validates.
+ *
+ * @returns `true` when the `else` branch can never apply
+ * @internal
+ */
+export function isElseBranchStaticallyUnreachable(schema: CastrSchema): boolean {
+  return schema.if === undefined || schema.if.booleanSchema === true;
+}
+
+/**
  * Write `if`/`then`/`else` conditional applicators from IR to JSON Schema output.
  *
  * These positions are boolean-capable: `booleanSchema` IR nodes are
  * emitted as JSON Schema booleans by writers that support them.
+ * Statically-unreachable branches are written via `writeUnreachableBranch`
+ * (see {@link isThenBranchStaticallyUnreachable} and
+ * {@link isElseBranchStaticallyUnreachable}).
  * @internal
  */
 function writeConditionalApplicators(
   schema: CastrSchema,
   result: JsonSchemaObject,
   writeBooleanCapable: WriteBooleanCapableSchemaFn,
+  writeUnreachableBranch: WriteBooleanCapableSchemaFn,
 ): void {
   if (schema.if !== undefined) {
     result.if = writeBooleanCapable(schema.if);
   }
   if (schema.then !== undefined) {
-    result.then = writeBooleanCapable(schema.then);
+    const writeThen = isThenBranchStaticallyUnreachable(schema)
+      ? writeUnreachableBranch
+      : writeBooleanCapable;
+    result.then = writeThen(schema.then);
   }
   if (schema.else !== undefined) {
-    result.else = writeBooleanCapable(schema.else);
+    const writeElse = isElseBranchStaticallyUnreachable(schema)
+      ? writeUnreachableBranch
+      : writeBooleanCapable;
+    result.else = writeElse(schema.else);
   }
 }

@@ -25,7 +25,11 @@ import {
 } from './json-schema-2020-12-fields.js';
 
 // Re-export for convenience
-export type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+export type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from './json-schema-object.js';
 export { isSchemaObjectType } from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------
@@ -278,6 +282,11 @@ export function writeEnumFields(schema: CastrSchema, result: JsonSchemaObject): 
  * `writeBooleanCapable` is used at boolean-capable keyword positions
  * (`if`/`then`/`else`, `contentSchema`); it defaults to `writeSchema`, so
  * writers whose recursion rejects `booleanSchema` nodes keep that policy.
+ * `writeUnreachableBranch` is used at statically-unreachable `then`/`else`
+ * positions (see `isThenBranchStaticallyUnreachable` and
+ * `isElseBranchStaticallyUnreachable` in `json-schema-2020-12-fields.ts`);
+ * it defaults to `writeBooleanCapable`, so writers that do not distinguish
+ * unreachable branches keep their existing behaviour.
  * @internal
  */
 export function writeAllJsonSchemaFields(
@@ -285,6 +294,7 @@ export function writeAllJsonSchemaFields(
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
   writeBooleanCapable: WriteBooleanCapableSchemaFn = writeSchema,
+  writeUnreachableBranch: WriteBooleanCapableSchemaFn = writeBooleanCapable,
 ): void {
   writeTypeField(schema, result);
   writeStringFields(schema, result);
@@ -296,5 +306,11 @@ export function writeAllJsonSchemaFields(
   writeCoreMetadata(schema, result);
   writeAccessMetadata(schema, result);
   writeJsonSchema2020SimpleFields(schema, result);
-  writeJsonSchema2020RecursiveFields(schema, result, writeSchema, writeBooleanCapable);
+  writeJsonSchema2020RecursiveFields(
+    schema,
+    result,
+    writeSchema,
+    writeBooleanCapable,
+    writeUnreachableBranch,
+  );
 }

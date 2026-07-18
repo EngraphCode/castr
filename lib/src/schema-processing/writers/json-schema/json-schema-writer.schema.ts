@@ -8,7 +8,11 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
-import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
+import type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from '../shared/json-schema-fields.js';
 import { writeAllJsonSchemaFields } from '../shared/json-schema-fields.js';
 
 /**
@@ -58,6 +62,53 @@ export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean
  * @internal
  */
 function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
+  rejectBooleanSchemaAtObjectFormPosition(schema);
+  assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
+  return writeJsonSchemaObjectShape(schema, writeJsonSchemaObject, writeJsonSchema);
+}
+
+/**
+ * Verbatim recursion for statically-unreachable conditional branches.
+ *
+ * The capability preflight (`compatibility/integer-target-capabilities`)
+ * skips `then`/`else` branches that can never constrain instances
+ * (JSON Schema 2020-12 core §10.2.2: absent `if`, or a literal boolean `if`
+ * that fixes the outcome). The writer applies the same rule for coherence:
+ * the branch is emitted verbatim — dropping it would break losslessness —
+ * but the capability assertion is not re-rooted into content whose
+ * capability demands can never apply. Everything else (boolean-schema
+ * position policy, field emission, example normalisation) is identical to
+ * the asserting recursion.
+ *
+ * @returns The emitted branch content — a JSON Schema object, or a boolean
+ * for `booleanSchema` IR nodes (the branch positions are boolean-capable)
+ * @internal
+ */
+function writeUnreachableBranchJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean {
+  if (schema.booleanSchema !== undefined) {
+    return schema.booleanSchema;
+  }
+  return writeUnreachableBranchJsonSchemaObject(schema);
+}
+
+/**
+ * Object-form-only counterpart of {@link writeUnreachableBranchJsonSchema}.
+ * @internal
+ */
+function writeUnreachableBranchJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
+  rejectBooleanSchemaAtObjectFormPosition(schema);
+  return writeJsonSchemaObjectShape(
+    schema,
+    writeUnreachableBranchJsonSchemaObject,
+    writeUnreachableBranchJsonSchema,
+  );
+}
+
+/**
+ * Reject a `booleanSchema` node at an object-form-only position.
+ * @internal
+ */
+function rejectBooleanSchemaAtObjectFormPosition(schema: CastrSchema): void {
   if (schema.booleanSchema !== undefined) {
     const objectForm = schema.booleanSchema ? '`{}`' : '`{ "not": {} }`';
     throw new Error(
@@ -66,9 +117,21 @@ function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
         `semantics. Use the equivalent object form ${objectForm} at this position.`,
     );
   }
+}
 
-  assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
-
+/**
+ * Shared emission body for both the asserting and the verbatim recursions.
+ *
+ * Statically-unreachable conditional branches always route through the
+ * verbatim recursion, whichever recursion reaches them.
+ *
+ * @internal
+ */
+function writeJsonSchemaObjectShape(
+  schema: CastrSchema,
+  writeObject: WriteSchemaFn,
+  writeBooleanCapable: WriteBooleanCapableSchemaFn,
+): JsonSchemaObject {
   const result: JsonSchemaObject = {};
 
   if (schema.$ref !== undefined) {
@@ -76,7 +139,13 @@ function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
     result.$ref = schema.$ref;
   }
 
-  writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject, writeJsonSchema);
+  writeAllJsonSchemaFields(
+    schema,
+    result,
+    writeObject,
+    writeBooleanCapable,
+    writeUnreachableBranchJsonSchema,
+  );
   normaliseExampleForJsonSchema(result);
 
   return result;

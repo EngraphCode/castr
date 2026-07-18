@@ -4,6 +4,25 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-07-18 (L-F PR #16 review-response round — worktree wf_6f9f06c9-91e-2)
 
+- **A guard that exempts a position and a writer that re-roots its assertion INTO that position
+  are incoherent by construction** (PR #12 review → L-F fix): the capability preflight traversal
+  (post-L-K1) skips statically-unreachable `then`/`else` (2020-12 §10.2.2: absent `if`, or a
+  literal boolean `if` fixing the outcome), but `writeJsonSchemaObject` re-runs
+  `assertSchemaSupportsIntegerTargetCapabilities` at EVERY recursion node, so the branch content
+  gets asserted as a fresh root mid-write → accepted-but-unwritable. Ruling (b): emit the branch
+  verbatim (dropping it breaks losslessness/round-trip, Rules 1–3) and skip only the assertion
+  (fail-fast is for genuinely impossible mappings, Rule 4 — a branch that can never constrain
+  instances demands nothing). Mechanism: shared `writeConditionalApplicators` routes unreachable
+  branches to a `writeUnreachableBranch` callback (defaults preserve other writers); the JSON
+  Schema writer supplies a verbatim (non-asserting) twin recursion. Fail-closed pins prove
+  reachable branches still throw.
+- **sonarjs/function-return-type (S3800) is suppressed by a TSDoc `@returns` tag** — verified in
+  the rule source (`hasReturnTypeJSDoc`): that is why the union-returning `writeJsonSchema` never
+  fired while its new twin did. The sanctioned cure is documenting `@returns`, not a disable.
+  Companion: ADR-026 `castr/no-magic-string-comparison` bans a `branch === 'then'` parameter
+  comparison — splitting one string-parameterised predicate into two named predicates
+  (`isThenBranchStaticallyUnreachable` / `isElseBranchStaticallyUnreachable`) satisfied the rule
+  and read better anyway.
 - **A type-driven completeness lock only protects keywords the type VOCABULARY knows** (Codex P2,
   `additionalItems`). The guard's position table is `Record<classified-keywords, shape>` so the
   compiler forces coverage — but Draft 07 `additionalItems` was absent from `Draft07Input` AND the

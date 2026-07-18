@@ -9,6 +9,7 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
+import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
@@ -639,5 +640,166 @@ describe('writeJsonSchema — boolean sub-schema emission', () => {
     });
 
     expect(() => writeJsonSchema(schema)).toThrow(/[Bb]oolean/);
+  });
+});
+
+describe('writeJsonSchema — capability assertions honour conditional branch reachability', () => {
+  const INT64_ERROR = /cannot represent signed 64-bit integer semantics natively/;
+
+  function createInt64Schema(): CastrSchema {
+    return createSchema({
+      type: 'integer',
+      format: 'int64',
+      integerSemantics: 'int64',
+    });
+  }
+
+  it('emits an unreachable then branch verbatim instead of failing its capability assertion', () => {
+    // Guard/writer coherence: the capability preflight skips branches that can
+    // never apply (JSON Schema 2020-12 core §10.2.2 — `if: false` never
+    // validates, so `then` never constrains instances). The writer must apply
+    // the same rule while still emitting the branch verbatim (losslessness).
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('emits an unreachable else branch verbatim when if is literally true', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: true }),
+      else: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: true,
+      else: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('emits then and else verbatim when if is absent (2020-12 ignores them entirely)', () => {
+    const schema = createSchema({
+      then: createInt64Schema(),
+      else: createInt64Schema(),
+    });
+
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12'),
+    ).not.toThrow();
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      then: { type: 'integer', format: 'int64' },
+      else: { type: 'integer', format: 'int64' },
+    });
+  });
+
+  it('exempts the whole unreachable subtree, not just its root', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          big: createInt64Schema(),
+        }),
+      }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: {
+        type: 'object',
+        properties: {
+          big: { type: 'integer', format: 'int64' },
+        },
+        additionalProperties: false,
+      },
+    });
+  });
+
+  it('exempts nested conditionals inside an unreachable branch', () => {
+    // The nested `if` is object-form (both nested branches would be live),
+    // but the whole subtree sits under `if: false` and can never apply.
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({
+        if: createSchema({ type: 'string' }),
+        then: createInt64Schema(),
+      }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: {
+        if: { type: 'string' },
+        then: { type: 'integer', format: 'int64' },
+      },
+    });
+  });
+
+  it('emits the carrier-less integer shape for bigint semantics inside an unreachable branch', () => {
+    // JSON Schema has no bigint carrier keyword; in a live position that is a
+    // fail-fast. In a branch that can never apply, the capability demand is
+    // vacuous, so the writer emits the honest carrier-less shape instead.
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({ type: 'integer', integerSemantics: 'bigint' }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'integer' },
+    });
+  });
+
+  it('still fails the assertion for a reachable then branch (if: true)', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: true }),
+      then: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
+  });
+
+  it('still fails the assertion for a reachable else branch (if: false)', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      else: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
+  });
+
+  it('still fails the assertion for branches gated by an object-form if', () => {
+    const schema = createSchema({
+      if: createSchema({ type: 'string' }),
+      then: createInt64Schema(),
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(INT64_ERROR);
   });
 });
