@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type {
   CastrAdditionalOperation,
   CastrSchema,
@@ -122,7 +122,7 @@ describe('template-context.endpoints.from-ir', () => {
     ]);
   });
 
-  it('treats 299 as error status and 2XX as success wildcard', () => {
+  it('treats every 2xx status as success class, including unregistered 299', () => {
     const wildcardSuccessSchema = createSchema('object');
     const custom2xxSchema = createSchema('string');
     const fallbackErrorSchema = createSchema('number');
@@ -140,10 +140,38 @@ describe('template-context.endpoints.from-ir', () => {
     const [endpoint] = getEndpointDefinitionsFromIR(doc);
 
     expect(endpoint?.response).toEqual(wildcardSuccessSchema);
-    expect(endpoint?.errors).toEqual([
-      { status: 299, schema: custom2xxSchema },
-      { status: 'default', schema: fallbackErrorSchema },
+    // 299 is inside the HTTP 2xx success class (RFC 9110 §15.3) — it must
+    // never be mapped to the errors list.
+    expect(endpoint?.errors).toEqual([{ status: 'default', schema: fallbackErrorSchema }]);
+  });
+
+  it('treats 205, 206, and 226 as success statuses, not errors', () => {
+    const partialContentSchema = createSchema('object');
+    const badRequestSchema = createSchema('string');
+
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          createResponse('206', partialContentSchema),
+          createResponse('400', badRequestSchema),
+        ],
+      }),
+      createOperation({
+        path: '/reset',
+        responses: [createResponse('205', createSchema('string'))],
+      }),
+      createOperation({
+        path: '/delta',
+        responses: [createResponse('226', createSchema('number'))],
+      }),
     ]);
+
+    const [partial, reset, delta] = getEndpointDefinitionsFromIR(doc);
+
+    expect(partial?.response).toEqual(partialContentSchema);
+    expect(partial?.errors).toEqual([{ status: 400, schema: badRequestSchema }]);
+    expect(reset?.errors).toEqual([]);
+    expect(delta?.errors).toEqual([]);
   });
 
   it('preserves 4XX and 5XX wildcard status tokens on endpoint errors', () => {
@@ -473,34 +501,30 @@ describe('template-context.endpoints.from-ir', () => {
       ]);
     }
 
-    it('ignores default-only operations and warns when the option is unset', () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-      try {
-        const doc = createDefaultOnlyDocument(createSchema('string'));
+    it('ignores default-only operations and warns via the injected sink when the option is unset', () => {
+      const warnings: string[] = [];
+      const doc = createDefaultOnlyDocument(createSchema('string'));
 
-        const endpoints = getEndpointDefinitionsFromIR(doc);
+      const endpoints = getEndpointDefinitionsFromIR(doc, undefined, (message) =>
+        warnings.push(message),
+      );
 
-        expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
-        expect(warnSpy).toHaveBeenCalledOnce();
-        const warning = warnSpy.mock.calls[0]?.join(' ') ?? '';
-        expect(warning).toContain('defaultStatusBehavior');
-        expect(warning).toContain('logoutUser');
-      } finally {
-        warnSpy.mockRestore();
-      }
+      expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toContain('defaultStatusBehavior');
+      expect(warnings[0]).toContain('logoutUser');
     });
 
     it('ignores default-only operations when spec-compliant is explicit', () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-      try {
-        const doc = createDefaultOnlyDocument(createSchema('string'));
+      const warnings: string[] = [];
+      const doc = createDefaultOnlyDocument(createSchema('string'));
 
-        const endpoints = getEndpointDefinitionsFromIR(doc, 'spec-compliant');
+      const endpoints = getEndpointDefinitionsFromIR(doc, 'spec-compliant', (message) =>
+        warnings.push(message),
+      );
 
-        expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
-      } finally {
-        warnSpy.mockRestore();
-      }
+      expect(endpoints.map((e) => e.alias)).toEqual(['listUsers']);
+      expect(warnings).toHaveLength(1);
     });
 
     it('includes default-only operations under auto-correct, promoting default to success', () => {

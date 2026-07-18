@@ -1,6 +1,7 @@
 // Avoid re-exporting naming utilities if they collide
 export {
   type TemplateContextMcpTool,
+  type BuildMcpToolsFromIROptions,
   buildMcpToolsFromIR,
   getMcpToolName,
   getMcpToolHints,

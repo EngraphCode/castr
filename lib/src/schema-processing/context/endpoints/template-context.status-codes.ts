@@ -5,6 +5,7 @@
  */
 
 import type { StatusRangeToken } from '../../../endpoints/definition.types.js';
+import { logger } from '../../../shared/utils/logger.js';
 
 export const STATUS_DEFAULT = 'default';
 
@@ -23,32 +24,29 @@ export const DEFAULT_STATUS_AUTO_CORRECT = 'auto-correct';
  */
 export type DefaultStatusBehavior =
   typeof DEFAULT_STATUS_SPEC_COMPLIANT | typeof DEFAULT_STATUS_AUTO_CORRECT;
-export const STATUS_200 = '200';
-export const STATUS_201 = '201';
-export const STATUS_202 = '202';
-export const STATUS_203 = '203';
-export const STATUS_204 = '204';
 export const STATUS_2XX = '2XX';
 
-const SUCCESS_STATUS_CODES = new Set<string>([
-  STATUS_200,
-  STATUS_201,
-  STATUS_202,
-  STATUS_203,
-  STATUS_204,
-  STATUS_2XX,
-]);
+const CHAR_CODE_DIGIT_2 = 0x32;
 
 /**
  * Return true when a status code is treated as a success response.
  *
+ * Success statuses are the entire HTTP 2xx class — every concrete code
+ * `'200'`-`'299'`, per RFC 9110 §15.3 ("Successful 2xx"), derived from the
+ * range rather than hand-enumerated — plus the OpenAPI `'2XX'` range
+ * wildcard. `'default'` is never a success status here; default-only
+ * operations are governed by {@link DefaultStatusBehavior}.
+ *
  * @param statusCode - HTTP status code token from IR response
- * @returns `true` for configured success statuses
+ * @returns `true` for 2xx-class statuses and the `2XX` wildcard
  *
  * @internal
  */
 export function isSuccessStatusCode(statusCode: string): boolean {
-  return SUCCESS_STATUS_CODES.has(statusCode);
+  return (
+    statusCode === STATUS_2XX ||
+    (isConcreteStatusToken(statusCode) && statusCode.charCodeAt(0) === CHAR_CODE_DIGIT_2)
+  );
 }
 
 const STATUS_RANGE_TOKENS: readonly StatusRangeToken[] = ['1XX', '2XX', '3XX', '4XX', '5XX'];
@@ -96,4 +94,82 @@ export function isConcreteStatusToken(value: string): boolean {
     return false;
   }
   return isDigitCharCode(value.charCodeAt(1)) && isDigitCharCode(value.charCodeAt(2));
+}
+
+/**
+ * Sink for generation-time warnings.
+ *
+ * Injectable so tests and embedders capture warnings on a fake instead of
+ * touching global console state; defaults to {@link logWarnSink}.
+ */
+export type WarnSink = (message: string) => void;
+
+/**
+ * Default {@link WarnSink}: routes to the shared logger's `warn`.
+ */
+export const logWarnSink: WarnSink = (message) => {
+  logger.warn(message);
+};
+
+/**
+ * The operation surface needed for default-status selection.
+ */
+interface DefaultStatusOperationLike {
+  readonly method: string;
+  readonly path: string;
+  readonly operationId?: string | undefined;
+  readonly responses: readonly { readonly statusCode: string }[];
+}
+
+/**
+ * Return true when an operation declares responses and every one is `default`.
+ *
+ * @internal
+ */
+export function hasOnlyDefaultStatusResponses(
+  operation: Pick<DefaultStatusOperationLike, 'responses'>,
+): boolean {
+  return (
+    operation.responses.length > 0 &&
+    operation.responses.every((response) => response.statusCode === STATUS_DEFAULT)
+  );
+}
+
+function formatIgnoredDefaultOnlyOperationsWarning(
+  ignored: readonly DefaultStatusOperationLike[],
+): string {
+  const identifiers = ignored.map(
+    (operation) => operation.operationId ?? `${operation.method} ${operation.path}`,
+  );
+  return (
+    'The following endpoints have no status code other than `default` and were ignored as the ' +
+    'OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` ' +
+    `to \`${DEFAULT_STATUS_AUTO_CORRECT}\`: ${identifiers.join(', ')}`
+  );
+}
+
+/**
+ * Select the operations an emitter (endpoint definitions, MCP tools) includes
+ * under a {@link DefaultStatusBehavior}.
+ *
+ * Under `'spec-compliant'`, default-only operations are dropped and a single
+ * warning naming them is sent to `warn`. Under `'auto-correct'`, every
+ * operation is kept. Shared by the endpoint and MCP builders so both emit
+ * the same operation set (docs/DEFAULT-RESPONSE-BEHAVIOR.md).
+ *
+ * @internal
+ */
+export function selectOperationsByDefaultStatusBehavior<T extends DefaultStatusOperationLike>(
+  operations: readonly T[],
+  defaultStatusBehavior: DefaultStatusBehavior,
+  warn: WarnSink,
+): T[] {
+  if (defaultStatusBehavior === DEFAULT_STATUS_AUTO_CORRECT) {
+    return [...operations];
+  }
+  const ignored = operations.filter(hasOnlyDefaultStatusResponses);
+  if (ignored.length > 0) {
+    warn(formatIgnoredDefaultOnlyOperationsWarning(ignored));
+  }
+  return operations.filter((operation) => !hasOnlyDefaultStatusResponses(operation));
 }

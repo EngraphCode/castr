@@ -7072,60 +7072,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -7253,30 +7199,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -7328,66 +7250,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -9112,60 +8974,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -9293,30 +9101,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -9368,66 +9152,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,
@@ -11179,60 +10903,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "create_user",
-      title: "Create user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-        },
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "post",
-      path: "/user",
-      originalPath: "/user",
-      operationId: "createUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "create_users_with_list_input",
       title: "Creates list of users with given input array",
       description: "Creates list of users with given input array",
@@ -11360,30 +11030,6 @@ export const mcpTools = [
   },
   {
     tool: {
-      name: "logout_user",
-      title: "Logs out current logged in user session",
-      description: "Logs out current logged in user session",
-      inputSchema: { type: "object", additionalProperties: false },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/user/logout",
-      originalPath: "/user/logout",
-      operationId: "logoutUser",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
       name: "get_user_by_name",
       title: "Get user by user name",
       description: "Get user by user name",
@@ -11435,66 +11081,6 @@ export const mcpTools = [
       path: "/user/{username}",
       originalPath: "/user/{username}",
       operationId: "getUserByName",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "update_user",
-      title: "Update user",
-      description: "This can only be done by the logged in user.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          body: {
-            type: "object",
-            properties: {
-              email: { type: "string", examples: ["john@email.com"] },
-              firstName: { type: "string", examples: ["John"] },
-              id: {
-                type: "integer",
-                format: "int64",
-                integerSemantics: "int64",
-                examples: [10],
-              },
-              lastName: { type: "string", examples: ["James"] },
-              password: { type: "string", examples: ["12345"] },
-              phone: { type: "string", examples: ["12345"] },
-              username: { type: "string", examples: ["theUser"] },
-              userStatus: {
-                type: "integer",
-                format: "int32",
-                description: "User Status",
-                examples: [1],
-              },
-            },
-            required: [],
-            additionalProperties: false,
-            xml: { name: "user" },
-          },
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-      },
-    },
-    httpOperation: {
-      method: "put",
-      path: "/user/{username}",
-      originalPath: "/user/{username}",
-      operationId: "updateUser",
     },
     security: {
       isPublic: true,

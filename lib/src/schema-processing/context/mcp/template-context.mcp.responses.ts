@@ -207,9 +207,10 @@ const successStatusSortKey = (statusCode: string): number => {
  * Extracts the primary success response schema from a CastrOperation using the IR.
  *
  * Success selection is aligned with the endpoint builder's
- * {@link isSuccessStatusCode} semantics: `200`-`204` and the `2XX` wildcard
- * are success statuses; `default` and every other token are not. The lowest
- * concrete success code wins; the `2XX` wildcard is consulted last.
+ * {@link isSuccessStatusCode} semantics: the full HTTP 2xx class
+ * (`200`-`299`, RFC 9110 §15.3) and the `2XX` wildcard are success statuses;
+ * `default` and every other token are not. The lowest concrete success code
+ * wins; the `2XX` wildcard is consulted last.
  */
 export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,

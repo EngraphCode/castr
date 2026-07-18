@@ -19,11 +19,15 @@ import { extractConstraintsFromIR } from '../constraints/index.js';
 import {
   DEFAULT_STATUS_AUTO_CORRECT,
   DEFAULT_STATUS_SPEC_COMPLIANT,
+  hasOnlyDefaultStatusResponses,
   isConcreteStatusToken,
   isStatusRangeToken,
   isSuccessStatusCode,
+  logWarnSink,
+  selectOperationsByDefaultStatusBehavior,
   STATUS_DEFAULT,
   type DefaultStatusBehavior,
+  type WarnSink,
 } from './template-context.status-codes.js';
 import {
   createBodyParameter,
@@ -31,26 +35,6 @@ import {
   determineRequestFormat,
   getSchemaFromContent,
 } from './content/index.js';
-import { logger } from '../../../shared/utils/logger.js';
-
-function hasOnlyDefaultResponses(operation: CastrOperation | CastrAdditionalOperation): boolean {
-  return (
-    operation.responses.length > 0 &&
-    operation.responses.every((r) => r.statusCode === STATUS_DEFAULT)
-  );
-}
-
-function warnIgnoredDefaultOnlyOperations(
-  operations: readonly (CastrOperation | CastrAdditionalOperation)[],
-): void {
-  const identifiers = operations.map((op) => op.operationId ?? `${op.method} ${op.path}`);
-  logger.warn(
-    'The following endpoints have no status code other than `default` and were ignored as the ' +
-      'OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` ' +
-      `to \`${DEFAULT_STATUS_AUTO_CORRECT}\`:`,
-    identifiers.join(', '),
-  );
-}
 
 /**
  * Build endpoint definitions from the IR.
@@ -60,26 +44,28 @@ function warnIgnoredDefaultOnlyOperations(
  *   `default` are handled: `'spec-compliant'` (the default) ignores them with
  *   a warning; `'auto-correct'` includes them, treating `default` as the
  *   success response. See docs/DEFAULT-RESPONSE-BEHAVIOR.md.
+ * @param warn - Sink for the ignored-operations warning; defaults to the
+ *   shared logger. Injectable so tests assert on a fake instead of console.
  */
 export function getEndpointDefinitionsFromIR(
   ir: CastrDocument,
   defaultStatusBehavior: DefaultStatusBehavior = DEFAULT_STATUS_SPEC_COMPLIANT,
+  warn: WarnSink = logWarnSink,
 ): EndpointDefinition[] {
   assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'Endpoints');
-  const operations = allOperations(ir);
-
-  if (defaultStatusBehavior === DEFAULT_STATUS_SPEC_COMPLIANT) {
-    const ignored = operations.filter(hasOnlyDefaultResponses);
-    if (ignored.length > 0) {
-      warnIgnoredDefaultOnlyOperations(ignored);
-    }
-    return operations
-      .filter((operation) => !hasOnlyDefaultResponses(operation))
-      .map((operation) => mapOperationToEndpointDefinition(ir, operation, false));
-  }
+  const operations = selectOperationsByDefaultStatusBehavior(
+    allOperations(ir),
+    defaultStatusBehavior,
+    warn,
+  );
+  const promoteDefaultOnly = defaultStatusBehavior === DEFAULT_STATUS_AUTO_CORRECT;
 
   return operations.map((operation) =>
-    mapOperationToEndpointDefinition(ir, operation, hasOnlyDefaultResponses(operation)),
+    mapOperationToEndpointDefinition(
+      ir,
+      operation,
+      promoteDefaultOnly && hasOnlyDefaultStatusResponses(operation),
+    ),
   );
 }
 

@@ -262,6 +262,26 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
 
+## 2026-07-17 (lane L-H round 2 — endpoints/MCP/CLI remediation follow-up, worktree wf_6f9f06c9-91e-3)
+
+- **`vitest -u` in a nested worktree is a poisoned instrument for `samples.test.ts`:** regenerating
+  snapshots there rewrote EVERY sample with quote/wrap drift (prettier resolution escapes the
+  nested worktree), entangling another lane's pre-attributed failure with this lane's real
+  behavioural change. Cure: restore the committed snapshot (forward-going `git show HEAD:… >` write
+  of my own minutes-old reproducible regeneration, after the hook rightly blocked `git checkout --`),
+  keep `samples.test.ts` as the single attributed red, and let the post-L-D rebase regenerate it once.
+- **A wrong test entrenches a gap symmetrically across suites:** the incomplete
+  `SUCCESS_STATUS_CODES` set was pinned by TWO tests written to "align" surfaces with each other
+  ('299 as error' in endpoints, '299 as non-success, aligned with endpoint status semantics' in
+  MCP) — alignment tests inherit and cement the reference surface's defect. When fixing a
+  derivation, grep for tests asserting the OLD behaviour in every aligned suite, not just the one
+  named by the finding.
+- **Single-warning contract when two builders share one selection helper:** endpoints and MCP both
+  filter default-only operations via `selectOperationsByDefaultStatusBehavior`; `getTemplateContext`
+  hands the MCP builder a silent sink (documented at the call site) because the endpoint builder
+  already warned for the identical set — direct public callers of either builder still get the
+  logger-backed default. Pattern worth reusing when hoisting shared filtering with a side-channel.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_

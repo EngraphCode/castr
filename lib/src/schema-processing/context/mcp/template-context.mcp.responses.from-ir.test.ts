@@ -210,6 +210,35 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBe(ok200Schema);
   });
 
+  test('resolves schemas for the full 2xx class (206, 226), not only 200-204', () => {
+    const partialContentSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('206', partialContentSchema),
+        createMockResponseWithSchema('400', createMockSchema()),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(partialContentSchema);
+  });
+
+  test('picks the lowest concrete 2xx even when it is above 204', () => {
+    const resetContentSchema = createMockSchema();
+    const imUsedSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('226', imUsedSchema),
+        createMockResponseWithSchema('205', resetContentSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBe(resetContentSchema);
+  });
+
   test('handles response with content instead of direct schema', () => {
     const contentSchema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {
@@ -262,14 +291,15 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBe(concreteSchema);
   });
 
-  test('treats 299 as non-success, aligned with endpoint status semantics', () => {
+  test('treats 299 as success, aligned with endpoint status semantics (full 2xx class)', () => {
+    const unregistered2xxSchema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {
-      responses: [createMockResponseWithSchema('299', createMockSchema())],
+      responses: [createMockResponseWithSchema('299', unregistered2xxSchema)],
     };
 
     const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
 
-    expect(result).toBeUndefined();
+    expect(result).toBe(unregistered2xxSchema);
   });
 
   test('returns undefined for default-only responses (default is not a success status)', () => {

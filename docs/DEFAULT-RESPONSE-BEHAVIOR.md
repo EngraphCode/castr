@@ -117,7 +117,7 @@ as the OpenAPI spec recommends. However they could be added by setting
 `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 ```
 
-**Result:** These endpoints are **not included** in the generated client.
+**Result:** These endpoints are **not included** in the generated client, and **no MCP tools are emitted** for them — endpoint definitions and MCP tools always cover the same operation set.
 
 ### Option 2: `auto-correct`
 
@@ -144,7 +144,9 @@ const result = await generateZodClientFromOpenAPI({
 
 **Output:** No warning, endpoints are included in the generated client.
 
-**Result:** These endpoints **are included** in the generated client, with `default` treated as `200`.
+**Result:** These endpoints **are included** in the generated client (and their MCP tools are emitted), with `default` treated as `200`.
+
+**Known asymmetry (documented decision):** under `auto-correct`, the endpoint definition promotes the `default` response schema to the endpoint's success `response`, but the emitted MCP tool does **not** derive an `outputSchema` from the `default` response — the tool is emitted without one (`outputSchema` is optional in the MCP specification). Tool inclusion honors `auto-correct`; output-schema derivation does not yet.
 
 ---
 

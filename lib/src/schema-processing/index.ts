@@ -27,6 +27,7 @@ export {
   buildOutputSchemaObject,
   type McpToolSchemaResult,
   buildMcpToolsFromIR,
+  type BuildMcpToolsFromIROptions,
   type TemplateContextMcpTool,
   buildIR,
   CastrSchemaProperties,
