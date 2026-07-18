@@ -25,6 +25,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   missing): the hook guard resolves against the PRIMARY checkout's built dist, not the worktree;
   an Edit was blocked once and succeeded on retry. Worktree lanes inherit hook-infrastructure
   state from the main tree.
+- **Product follow-up candidates surfaced by the L-C diff (c6dd808e), deliberately NOT taken
+  (scope discipline; for triage at the next zod-parser pass):** (1) `.meta()` with only
+  unrecognised keys still no-ops silently — a metadata-representability boundary, not the
+  argument-extractability axis; (2) `z.string().length(n)` sets only `minLength`, never
+  `maxLength` (handleStringLengthConstraint maps LENGTH into the min branch only); (3) the
+  fixture runner's `toMatchObject` is a subset match, so expected.json files under-lock parser
+  output (extra emitted fields pass unnoticed); (4) `.regex(/x/i)` drops regex FLAGS —
+  `extractRegexBody` returns `.source` only.
 
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
