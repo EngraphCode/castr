@@ -121,7 +121,7 @@ function renderNoLogo(seg: Segments): string {
  * context gauge after the title (owner layout preference, 2026-07-03 — a
  * deliberate castr divergence from Oak's model-row placement), then the
  * rate-limit gauges after the context gauge (owner layout ruling, 2026-07-18 —
- * `castr · ctx:61% · s:19%(5h) · w:14%(6d)`). Usage reads alongside WHERE the
+ * `castr · ctx:61% · 5h:19%(5h) · w:14%(6d)`). Usage reads alongside WHERE the
  * session is working, not in the identity summary. Outside any location row
  * the gauges still render on their own line rather than being dropped.
  */
