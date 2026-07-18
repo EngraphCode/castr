@@ -298,6 +298,8 @@ edges (blocker → blocked, with the shared surface that forces the order):
   `json-schema-parser.object-fields.ts`, `json-schema-fields.ts`)
 - feature slice → L-B (`generators/collections.ts`)
 - L-D → L-K8 (`buildSchemaComponents`-adjacent signatures)
+- L-KBATCH → L-K9 (shared type-writer files)
+- L-D → L-K9 (`writers/typescript/helpers.ts` is L-D-owned inside L-K9's surface)
 - L-E → L-K10 (the three MCP converter files are in L-E's guard-consolidation diff)
 - L-D → L-K10 (L-D's prototype-safety addendum touches `template-context.mcp.inline-json-schema.ts`,
   one of L-K10's three converters — L-K10 must start from L-D's entries-assembly shape)
