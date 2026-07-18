@@ -693,3 +693,83 @@ describe('normalizeDraft07 — deep $ref rewriting (H1)', () => {
     );
   });
 });
+
+describe('boolean sub-schema honesty', () => {
+  it('rejects boolean root input with guidance (the public parsers accept boolean roots)', () => {
+    expect(() => normalizeDraft07(false)).toThrow(/parseJsonSchema/);
+    expect(() => normalizeDraft07(true)).toThrow(/parseJsonSchema/);
+  });
+
+  it('preserves contentSchema: false as a boolean', () => {
+    const input = draft07({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.contentSchema).toBe(false);
+  });
+
+  it('preserves contentSchema: true as a boolean', () => {
+    const input = draft07({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: true,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.contentSchema).toBe(true);
+  });
+
+  it('rejects a boolean schema under properties instead of silently inverting it', () => {
+    const input = draft07({
+      type: 'object',
+      properties: { a: false },
+      additionalProperties: false,
+    });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*properties/s);
+  });
+
+  it('rejects a boolean schema under $defs instead of silently inverting it', () => {
+    const input = draft07({ $defs: { Nope: false } });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*\$defs/s);
+  });
+
+  it('rejects a boolean schema in allOf instead of silently inverting it', () => {
+    const input = draft07({ allOf: [false] });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*allOf/s);
+  });
+
+  it('rejects a boolean items schema instead of silently inverting it', () => {
+    const input = draft07({ type: 'array', items: false });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*items/s);
+  });
+
+  it('rejects a boolean not schema instead of silently inverting it', () => {
+    const input = draft07({ not: false });
+
+    expect(() => normalizeDraft07(input)).toThrow(/[Bb]oolean.*not/s);
+  });
+
+  it('still preserves booleans at the boolean-capable keywords', () => {
+    const input = draft07({
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      additionalProperties: false,
+      if: false,
+      unevaluatedProperties: false,
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.if).toBe(false);
+    expect(result.unevaluatedProperties).toBe(false);
+  });
+});

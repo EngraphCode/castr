@@ -319,6 +319,15 @@ export interface CastrSchema {
   $ref?: string;
 
   /**
+   * Short reference summary (OpenAPI 3.1+ Reference Object `summary`).
+   *
+   * Carried as a `$ref` sibling annotation so OpenAPI references
+   * round-trip losslessly. Pure JSON Schema output emits it verbatim as
+   * an annotation keyword (2020-12 permits unknown annotation keywords).
+   */
+  summary?: string;
+
+  /**
    * Whether this schema is read-only (response only).
    */
   readOnly?: boolean;

@@ -9,7 +9,11 @@
  */
 
 import type { CastrSchema } from '../../ir/index.js';
-import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+import type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -87,12 +91,16 @@ export function writeUnevaluatedFields(
  * Write recursive JSON Schema 2020-12 fields
  * (prefixItems, contains, contentSchema, unevaluated*, dependentSchemas,
  * patternProperties, propertyNames, if/then/else).
+ *
+ * `writeBooleanCapable` is used at the keyword positions whose IR values
+ * may be `booleanSchema` nodes (`contentSchema`, `if`/`then`/`else`).
  * @internal
  */
 export function writeJsonSchema2020RecursiveFields(
   schema: CastrSchema,
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
+  writeBooleanCapable: WriteBooleanCapableSchemaFn = writeSchema,
 ): void {
   if (schema.prefixItems !== undefined) {
     result.prefixItems = schema.prefixItems.map((item) => writeSchema(item));
@@ -101,7 +109,7 @@ export function writeJsonSchema2020RecursiveFields(
     result['contains'] = writeSchema(schema.contains);
   }
   if (schema.contentSchema !== undefined) {
-    result.contentSchema = writeSchema(schema.contentSchema);
+    result.contentSchema = writeBooleanCapable(schema.contentSchema);
   }
   writeUnevaluatedFields(schema, result, writeSchema);
   if (schema.dependentSchemas !== undefined) {
@@ -113,7 +121,7 @@ export function writeJsonSchema2020RecursiveFields(
   }
   writePatternProperties(schema, result, writeSchema);
   writePropertyNames(schema, result, writeSchema);
-  writeConditionalApplicators(schema, result, writeSchema);
+  writeConditionalApplicators(schema, result, writeBooleanCapable);
 }
 
 // ---------------------------------------------------------------------------
@@ -162,20 +170,23 @@ function writePropertyNames(
 
 /**
  * Write `if`/`then`/`else` conditional applicators from IR to JSON Schema output.
+ *
+ * These positions are boolean-capable: `booleanSchema` IR nodes are
+ * emitted as JSON Schema booleans by writers that support them.
  * @internal
  */
 function writeConditionalApplicators(
   schema: CastrSchema,
   result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  writeBooleanCapable: WriteBooleanCapableSchemaFn,
 ): void {
   if (schema.if !== undefined) {
-    result.if = writeSchema(schema.if);
+    result.if = writeBooleanCapable(schema.if);
   }
   if (schema.then !== undefined) {
-    result.then = writeSchema(schema.then);
+    result.then = writeBooleanCapable(schema.then);
   }
   if (schema.else !== undefined) {
-    result.else = writeSchema(schema.else);
+    result.else = writeBooleanCapable(schema.else);
   }
 }

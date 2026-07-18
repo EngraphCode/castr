@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (L-F PR #16 review-response round — worktree wf_6f9f06c9-91e-2)
+
+- **A carrying fix creates an emission debt at every writer, and reviewers WILL find the one you
+  skipped:** 1bfbdd9 taught the parsers to carry `$ref` siblings and made the OpenAPI writer emit
+  them, but left the JSON Schema writer's bare-`$ref` early-return in place (even documented it as
+  an egress rule). Both review bots flagged it as P1 within hours: carrying data into the IR that
+  your own format's writer then drops is a round-trip regression, not a style choice. Lesson:
+  when ingress fidelity improves, sweep EVERY egress of the affected pair before closing the slice.
+- **`{ ...boolean }` is `{}` — spread-normalisation silently inverts boolean JSON Schemas:**
+  `normalizeDraft07(false)` produced `{}`, turning reject-all into allow-any at every object-typed
+  keyword position (properties, $defs, allOf, items, not, contentSchema, boolean roots). Probes
+  proved four distinct corruption sites from one root cause. Fix shape: preserve booleans where the
+  typed pipeline can carry them (roots, if/then/else, contentSchema, unevaluated*), reject
+  explicitly (with the `{}` / `{ "not": {} }` object-form migration hint) where the shared OAS seam
+  types are object-only. Never let a type-system boundary become a silent semantic rewrite.
+- **Dialect-declared input deserves dialect-faithful handling:** the parser normalises everything
+  to 2020-12 semantics and ignored `$schema`, so a declared Draft 07 document with `$ref` siblings
+  (dead per Draft 07) had them silently ACTIVATED. Resolution: fail fast on declared-Draft-07
+  `$ref` siblings with migration guidance; undeclared/2020-12 input keeps sibling carrying.
+- **Out-of-lane finding recorded for disposition: the Zod writer still emits only the referenced
+  name for `$ref` IR nodes** (writers/zod/index.ts `writeSchemaType`), so carried siblings
+  (e.g. `minLength`) are lost on JSON-Schema → IR → Zod; `writers/zod/**` is forbidden to L-F
+  (L-B surface). Needs a lane or follow-up slice.
+
 ## 2026-07-17 (L-F lane, H4 nested $ref siblings + L14 array parity — worktree wf_6f9f06c9-91e-2)
 
 - **A fix wired at one level of a recursive structure is the SAME bug one level down:** the H4

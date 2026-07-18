@@ -114,19 +114,6 @@ describe('writeJsonSchema', () => {
     });
   });
 
-  describe('$ref passthrough', () => {
-    it('returns $ref without other fields', () => {
-      const schema = createSchema({
-        $ref: '#/$defs/Address',
-        type: 'object',
-      });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ $ref: '#/$defs/Address' });
-    });
-  });
-
   describe('string constraints', () => {
     it('writes format', () => {
       const schema = createSchema({ type: 'string', format: 'email' });
@@ -549,5 +536,108 @@ describe('writeJsonSchema — boolean schemas', () => {
     const result = writeJsonSchema(schema);
 
     expect(result).toBe(true);
+  });
+});
+
+describe('writeJsonSchema — $ref emission', () => {
+  it('returns bare $ref for a pure reference', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Address',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({ $ref: '#/$defs/Address' });
+  });
+
+  it('emits sibling keywords alongside $ref (2020-12 applies them)', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+  });
+
+  it('emits a type: object sibling with closed-world semantics, matching the parser IR', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Address',
+      type: 'object',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Address',
+      type: 'object',
+      additionalProperties: false,
+    });
+  });
+
+  it('emits the reference summary annotation alongside $ref', () => {
+    const schema = createSchema({
+      $ref: '#/$defs/Base',
+      summary: 'Short reference summary',
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      $ref: '#/$defs/Base',
+      summary: 'Short reference summary',
+    });
+  });
+});
+
+describe('writeJsonSchema — boolean sub-schema emission', () => {
+  it('emits if/then boolean schemas as booleans, not empty objects', () => {
+    const schema = createSchema({
+      if: createSchema({ booleanSchema: false }),
+      then: createSchema({ type: 'string' }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      if: false,
+      then: { type: 'string' },
+    });
+  });
+
+  it('emits contentSchema: false as a boolean, not an empty object', () => {
+    const schema = createSchema({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: createSchema({ booleanSchema: false }),
+    });
+
+    const result = writeJsonSchemaAsObject(schema);
+
+    expect(result).toEqual({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: false,
+    });
+  });
+
+  it('fails fast when a boolean schema reaches an object-only position', () => {
+    const schema = createSchema({
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        flag: createSchema({ booleanSchema: false }),
+      }),
+      additionalProperties: false,
+    });
+
+    expect(() => writeJsonSchema(schema)).toThrow(/[Bb]oolean/);
   });
 });

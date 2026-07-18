@@ -2,8 +2,16 @@ import type { ReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 
 export type Draft07SchemaOrRef = Draft07Input | ReferenceObject;
-export type Draft07SchemaMap = Record<string, Draft07SchemaOrRef>;
 export type Draft07SchemaOrRefOrBool = Draft07SchemaOrRef | boolean;
+
+/**
+ * Map of named sub-schemas.
+ *
+ * Boolean entries are valid JSON Schema at every map position; positions
+ * the pipeline cannot carry them at are rejected explicitly during
+ * normalization (never silently normalised to `{}`).
+ */
+export type Draft07SchemaMap = Record<string, Draft07SchemaOrRefOrBool>;
 
 /**
  * Sub-schema-bearing keywords, classified by value shape.
@@ -14,6 +22,10 @@ export type Draft07SchemaOrRefOrBool = Draft07SchemaOrRef | boolean;
  * recursively normalized by `stripDraft07Keys` — the compiler rejects any
  * widened keyword the rebuild step fails to narrow back to
  * {@link JsonSchema2020}.
+ *
+ * Boolean sub-schemas are accepted by the input types everywhere (they
+ * are valid JSON Schema at every schema position); keywords outside the
+ * boolean-capable group reject them explicitly during normalization.
  */
 export interface Draft07SubSchemaKeywords {
   /** Map-valued: each entry is a sub-schema. */
@@ -23,18 +35,18 @@ export interface Draft07SubSchemaKeywords {
   patternProperties?: Draft07SchemaMap;
 
   /** Array-valued: each element is a sub-schema. */
-  allOf?: Draft07SchemaOrRef[];
-  oneOf?: Draft07SchemaOrRef[];
-  anyOf?: Draft07SchemaOrRef[];
-  prefixItems?: Draft07SchemaOrRef[];
+  allOf?: Draft07SchemaOrRefOrBool[];
+  oneOf?: Draft07SchemaOrRefOrBool[];
+  anyOf?: Draft07SchemaOrRefOrBool[];
+  prefixItems?: Draft07SchemaOrRefOrBool[];
 
   /** Single-schema-valued. */
-  not?: Draft07SchemaOrRef;
-  propertyNames?: Draft07SchemaOrRef;
-  contains?: Draft07SchemaOrRef;
-  contentSchema?: Draft07SchemaOrRef;
+  not?: Draft07SchemaOrRefOrBool;
+  propertyNames?: Draft07SchemaOrRefOrBool;
+  contains?: Draft07SchemaOrRefOrBool;
 
-  /** Single-schema-valued, or boolean. */
+  /** Single-schema-valued, or boolean (boolean-capable downstream). */
+  contentSchema?: Draft07SchemaOrRefOrBool;
   additionalProperties?: Draft07SchemaOrRefOrBool;
   if?: Draft07SchemaOrRefOrBool;
   then?: Draft07SchemaOrRefOrBool;
@@ -49,8 +61,8 @@ export type Draft07Input = Omit<
 > &
   Draft07SubSchemaKeywords & {
     definitions?: Draft07SchemaMap;
-    dependencies?: Record<string, string[] | Draft07SchemaOrRef>;
+    dependencies?: Record<string, string[] | Draft07SchemaOrRefOrBool>;
     exclusiveMinimum?: boolean | number;
     exclusiveMaximum?: boolean | number;
-    items?: Draft07SchemaOrRef | Draft07SchemaOrRef[];
+    items?: Draft07SchemaOrRefOrBool | Draft07SchemaOrRefOrBool[];
   };

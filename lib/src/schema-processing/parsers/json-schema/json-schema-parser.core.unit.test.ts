@@ -576,3 +576,25 @@ describe('parseJsonSchemaObject — content keywords (H4)', () => {
     expect(result.contentSchema?.metadata).toBeDefined();
   });
 });
+
+describe('parseJsonSchemaObject — boolean contentSchema', () => {
+  it('parses contentSchema: false into a booleanSchema IR node', () => {
+    const result = parseJsonSchemaObject({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: false,
+    });
+
+    expect(result.contentSchema?.booleanSchema).toBe(false);
+  });
+
+  it('parses contentSchema: true into a booleanSchema IR node', () => {
+    const result = parseJsonSchemaObject({
+      type: 'string',
+      contentMediaType: 'application/json',
+      contentSchema: true,
+    });
+
+    expect(result.contentSchema?.booleanSchema).toBe(true);
+  });
+});

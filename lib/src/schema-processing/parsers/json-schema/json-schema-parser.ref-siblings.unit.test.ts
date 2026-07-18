@@ -12,7 +12,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { parseJsonSchemaObject } from './json-schema-parser.core.js';
-import { parseJsonSchemaDocument } from './index.js';
+import { parseJsonSchema, parseJsonSchemaDocument } from './index.js';
 
 describe('parseJsonSchemaObject — nested $ref sibling carrying (H4)', () => {
   it('carries $ref siblings under properties', () => {
@@ -193,5 +193,101 @@ describe('parseJsonSchemaDocument — $defs nested $ref sibling carrying (H4)', 
     }
     expect(alias.schema.$ref).toBe('#/$defs/Base');
     expect(alias.schema.description).toBe('Alias of Base');
+  });
+});
+
+describe('Draft 07 dialect guard — $ref siblings are non-applicative in Draft 07', () => {
+  const DRAFT_07 = 'http://json-schema.org/draft-07/schema#';
+
+  it('rejects a declared Draft 07 document with root-level $ref siblings', () => {
+    expect(() =>
+      parseJsonSchema({
+        $schema: DRAFT_07,
+        $ref: '#/definitions/Base',
+        minLength: 5,
+        definitions: { Base: { type: 'string' } },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
+  it('rejects a declared Draft 07 document with nested $ref siblings', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
+        $schema: DRAFT_07,
+        type: 'object',
+        properties: {
+          name: { $ref: '#/definitions/Base', description: 'carried?' },
+        },
+        additionalProperties: false,
+        definitions: { Base: { type: 'string' } },
+      }),
+    ).toThrow(/Draft 07/);
+  });
+
+  it('accepts a declared Draft 07 document whose references are pure', () => {
+    const result = parseJsonSchemaDocument({
+      $schema: DRAFT_07,
+      type: 'object',
+      properties: {
+        name: { $ref: '#/definitions/Base' },
+      },
+      additionalProperties: false,
+      definitions: { Base: { type: 'string' } },
+    });
+
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('carries $ref siblings for declared 2020-12 documents', () => {
+    const result = parseJsonSchema({
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $ref: '#/$defs/Base',
+      minLength: 5,
+      $defs: { Base: { type: 'string' } },
+    });
+
+    expect(result.$ref).toBe('#/$defs/Base');
+    expect(result.minLength).toBe(5);
+  });
+
+  it('carries $ref siblings for undeclared documents (2020-12 is the canonical ingress dialect)', () => {
+    const result = parseJsonSchema({
+      $ref: '#/$defs/Base',
+      minLength: 5,
+      $defs: { Base: { type: 'string' } },
+    });
+
+    expect(result.$ref).toBe('#/$defs/Base');
+    expect(result.minLength).toBe(5);
+  });
+});
+
+describe('reference summary carrying', () => {
+  it('carries the OAS reference summary on a $defs entry into the IR', () => {
+    const components = parseJsonSchemaDocument({
+      $defs: {
+        Base: { type: 'string' },
+        Alias: { $ref: '#/$defs/Base', summary: 'Short alias summary' },
+      },
+    });
+
+    const alias = components.find((component) => component.name === 'Alias');
+    expect(alias?.schema.$ref).toBe('#/$defs/Base');
+    expect(alias?.schema.summary).toBe('Short alias summary');
+  });
+});
+
+describe('boolean root schemas', () => {
+  it('parses a boolean root schema into a booleanSchema IR node', () => {
+    expect(parseJsonSchema(false).booleanSchema).toBe(false);
+    expect(parseJsonSchema(true).booleanSchema).toBe(true);
+  });
+
+  it('parses a boolean document into a single Root booleanSchema component', () => {
+    const components = parseJsonSchemaDocument(false);
+
+    expect(components).toHaveLength(1);
+    expect(components[0]?.name).toBe('Root');
+    expect(components[0]?.schema.booleanSchema).toBe(false);
   });
 });

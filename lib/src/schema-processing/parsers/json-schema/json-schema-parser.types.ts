@@ -24,6 +24,11 @@ type JsonSchemaOrBool = JsonSchema2020 | ReferenceObject | boolean;
  */
 export interface JsonSchema2020 extends SchemaObject {
   $id?: string;
+  /**
+   * Short reference summary (OAS 3.1+ Reference Object `summary`).
+   * Valid beside `$ref`; carried into the IR as an annotation.
+   */
+  summary?: string;
   $defs?: Record<string, JsonSchema2020 | ReferenceObject>;
   unevaluatedProperties?: JsonSchemaOrBool;
   unevaluatedItems?: JsonSchemaOrBool;
@@ -34,7 +39,7 @@ export interface JsonSchema2020 extends SchemaObject {
   contains?: JsonSchema2020 | ReferenceObject;
   patternProperties?: Record<string, JsonSchema2020 | ReferenceObject>;
   propertyNames?: JsonSchema2020 | ReferenceObject;
-  contentSchema?: JsonSchema2020 | ReferenceObject;
+  contentSchema?: JsonSchemaOrBool;
   if?: JsonSchemaOrBool;
   then?: JsonSchemaOrBool;
   else?: JsonSchemaOrBool;

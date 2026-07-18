@@ -48,23 +48,35 @@ export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean
 /**
  * Internal writer that satisfies the `WriteSchemaFn` signature.
  *
- * Used as the recursive callback for `writeAllJsonSchemaFields`. Boolean
- * schemas are handled at the public `writeJsonSchema` boundary, so this
- * function only needs to handle object schemas.
+ * Used as the recursive callback for `writeAllJsonSchemaFields` at
+ * object-form-only positions. Boolean schemas are handled at the public
+ * `writeJsonSchema` boundary and at boolean-capable keyword positions
+ * (`if`/`then`/`else`, `contentSchema`), so a `booleanSchema` node
+ * reaching this function means the position cannot represent it — that is
+ * rejected explicitly rather than silently emitted as `{}`.
  *
  * @internal
  */
 function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
+  if (schema.booleanSchema !== undefined) {
+    const objectForm = schema.booleanSchema ? '`{}`' : '`{ "not": {} }`';
+    throw new Error(
+      `Boolean JSON Schema \`${String(schema.booleanSchema)}\` reached an object-form-only ` +
+        `position in the JSON Schema writer; emitting \`{}\` here would silently change its ` +
+        `semantics. Use the equivalent object form ${objectForm} at this position.`,
+    );
+  }
+
   assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
 
   const result: JsonSchemaObject = {};
 
   if (schema.$ref !== undefined) {
+    // 2020-12 applies $ref siblings, so sibling fields are written too.
     result.$ref = schema.$ref;
-    return result;
   }
 
-  writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject);
+  writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject, writeJsonSchema);
   normaliseExampleForJsonSchema(result);
 
   return result;

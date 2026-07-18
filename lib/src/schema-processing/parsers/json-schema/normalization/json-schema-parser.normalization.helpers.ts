@@ -1,6 +1,5 @@
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
-import type { Draft07Input } from './json-schema-parser.normalization.types.js';
-import type { ReferenceObject } from '../../../../shared/openapi-types.js';
+import type { Draft07Input, Draft07SchemaMap } from './json-schema-parser.normalization.types.js';
 import {
   applyClassifiedKeywords,
   applyNumericBounds,
@@ -76,8 +75,9 @@ function rebuildSubSchemaKeywords(
     {
       maps: { $defs, dependentSchemas, properties, patternProperties },
       arrays: { allOf, oneOf, anyOf, prefixItems },
-      singles: { not, propertyNames, contains, contentSchema },
+      singles: { not, propertyNames, contains },
       boolOrSchemas: {
+        contentSchema,
         additionalProperties,
         if: ifSchema,
         then: thenSchema,
@@ -102,7 +102,7 @@ export function splitDependencies(input: Draft07Input): Draft07Input {
     return input;
   }
   const dependentRequired: Record<string, string[]> = {};
-  const dependentSchemas: Record<string, Draft07Input | ReferenceObject> = {};
+  const dependentSchemas: Draft07SchemaMap = {};
 
   for (const [key, value] of Object.entries(input.dependencies)) {
     if (Array.isArray(value)) {

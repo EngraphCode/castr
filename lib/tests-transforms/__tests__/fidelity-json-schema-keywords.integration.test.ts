@@ -222,4 +222,23 @@ describe('H4: $ref sibling keywords are carried and emitted', () => {
       title: 'T',
     });
   });
+
+  it('emits the siblings alongside $ref through the JSON Schema writer', async () => {
+    const fixture = await loadJsonSchemaFixture('2020-12-ref-siblings.json');
+    const components = parseJsonSchemaDocument(fixture);
+
+    const bundle = writeJsonSchemaBundle(components);
+
+    expect(bundle.$defs?.['Constrained']).toEqual({
+      $ref: '#/$defs/Base',
+      description: 'hi',
+      minLength: 5,
+      title: 'T',
+    });
+  });
+
+  it('round-trips $ref siblings through the JSON Schema writer with IR equality', async () => {
+    const fixture = await loadJsonSchemaFixture('2020-12-ref-siblings.json');
+    assertRoundTripIrEquality(fixture);
+  });
 });

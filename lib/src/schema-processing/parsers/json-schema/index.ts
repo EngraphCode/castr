@@ -31,19 +31,27 @@ import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
-import { normalizeDraft07 } from './normalization/index.js';
+import { assertNoDraft07RefSiblings, normalizeDraft07 } from './normalization/index.js';
 import type { Draft07Input } from './normalization/index.js';
 
 /**
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.
  *
  * Automatically normalizes Draft 07 constructs to 2020-12 before parsing.
+ * Boolean root schemas become `booleanSchema` IR nodes. Documents that
+ * declare the Draft 07 dialect are rejected when they place sibling
+ * keywords beside `$ref` (Draft 07 ignores them; 2020-12 applies them).
  *
- * @param input - A JSON Schema 2020-12 object (possibly with Draft 07 constructs)
+ * @param input - A JSON Schema 2020-12 object or boolean schema (possibly
+ *   with Draft 07 constructs)
  * @returns CastrSchema IR node
  * @public
  */
-export function parseJsonSchema(input: Draft07Input): CastrSchema {
+export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
+  if (typeof input === 'boolean') {
+    return parseJsonSchemaObject(input);
+  }
+  assertNoDraft07RefSiblings(input);
   const normalized = normalizeDraft07(input);
   return parseJsonSchemaObject(normalized);
 }
@@ -51,14 +59,20 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
 /**
  * Parse a JSON Schema document into IR components.
  *
- * Supports standalone schemas, `$defs` bundles, and mixed documents.
- * Root schema naming: `title` \> `$id` \> `"Root"`.
+ * Supports standalone schemas, boolean schemas, `$defs` bundles, and mixed
+ * documents. Root schema naming: `title` \> `$id` \> `"Root"`. Documents
+ * that declare the Draft 07 dialect are rejected when they place sibling
+ * keywords beside `$ref` (Draft 07 ignores them; 2020-12 applies them).
  *
  * @param input - A JSON Schema document (Draft 07 or 2020-12)
  * @returns Array of IR schema components (root first if present, then `$defs`)
  * @public
  */
-export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
+export function parseJsonSchemaDocument(input: Draft07Input | boolean): CastrSchemaComponent[] {
+  if (typeof input === 'boolean') {
+    return [buildComponent('Root', parseJsonSchemaObject(input))];
+  }
+  assertNoDraft07RefSiblings(input);
   const normalized = normalizeDraft07(input);
 
   const components: CastrSchemaComponent[] = [];
@@ -82,8 +96,8 @@ function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaCompone
   }
 
   for (const [name, defSchema] of Object.entries(defs)) {
-    // parseSingleSchemaOrRef carries $ref siblings (H4) and drops only the
-    // OAS-only `summary` field, which has no IR home.
+    // parseSingleSchemaOrRef carries $ref siblings (H4), including the
+    // reference `summary` annotation.
     const schema = parseSingleSchemaOrRef(defSchema, parseJsonSchemaObject);
     components.push(buildComponent(name, schema));
   }

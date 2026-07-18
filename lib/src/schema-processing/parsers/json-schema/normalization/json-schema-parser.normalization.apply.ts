@@ -27,9 +27,15 @@ type KeywordGroup<K extends keyof Draft07SubSchemaKeywords> = {
 export interface ClassifiedKeywordGroups {
   maps: KeywordGroup<'$defs' | 'dependentSchemas' | 'properties' | 'patternProperties'>;
   arrays: KeywordGroup<'allOf' | 'oneOf' | 'anyOf' | 'prefixItems'>;
-  singles: KeywordGroup<'not' | 'propertyNames' | 'contains' | 'contentSchema'>;
+  singles: KeywordGroup<'not' | 'propertyNames' | 'contains'>;
   boolOrSchemas: KeywordGroup<
-    'additionalProperties' | 'if' | 'then' | 'else' | 'unevaluatedProperties' | 'unevaluatedItems'
+    | 'contentSchema'
+    | 'additionalProperties'
+    | 'if'
+    | 'then'
+    | 'else'
+    | 'unevaluatedProperties'
+    | 'unevaluatedItems'
   >;
 }
 
@@ -68,7 +74,7 @@ export function applyNormalizedItems(
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
   if (items !== undefined && !Array.isArray(items)) {
-    result.items = narrowSchemaOrRef(items, normalizeDraft07);
+    result.items = narrowSchemaOrRef(items, normalizeDraft07, 'items');
   }
   return result;
 }
@@ -79,16 +85,24 @@ function applyNormalizedMaps(
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
   if (maps.$defs !== undefined) {
-    result.$defs = narrowSchemaMap(maps.$defs, normalizeDraft07);
+    result.$defs = narrowSchemaMap(maps.$defs, normalizeDraft07, '$defs');
   }
   if (maps.dependentSchemas !== undefined) {
-    result.dependentSchemas = narrowSchemaMap(maps.dependentSchemas, normalizeDraft07);
+    result.dependentSchemas = narrowSchemaMap(
+      maps.dependentSchemas,
+      normalizeDraft07,
+      'dependentSchemas',
+    );
   }
   if (maps.properties !== undefined) {
-    result.properties = narrowSchemaMap(maps.properties, normalizeDraft07);
+    result.properties = narrowSchemaMap(maps.properties, normalizeDraft07, 'properties');
   }
   if (maps.patternProperties !== undefined) {
-    result.patternProperties = narrowSchemaMap(maps.patternProperties, normalizeDraft07);
+    result.patternProperties = narrowSchemaMap(
+      maps.patternProperties,
+      normalizeDraft07,
+      'patternProperties',
+    );
   }
   return result;
 }
@@ -99,36 +113,37 @@ function applyNormalizedArrays(
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
   if (arrays.allOf !== undefined) {
-    result.allOf = narrowSchemaArray(arrays.allOf, normalizeDraft07);
+    result.allOf = narrowSchemaArray(arrays.allOf, normalizeDraft07, 'allOf');
   }
   if (arrays.oneOf !== undefined) {
-    result.oneOf = narrowSchemaArray(arrays.oneOf, normalizeDraft07);
+    result.oneOf = narrowSchemaArray(arrays.oneOf, normalizeDraft07, 'oneOf');
   }
   if (arrays.anyOf !== undefined) {
-    result.anyOf = narrowSchemaArray(arrays.anyOf, normalizeDraft07);
+    result.anyOf = narrowSchemaArray(arrays.anyOf, normalizeDraft07, 'anyOf');
   }
   if (arrays.prefixItems !== undefined) {
-    result.prefixItems = narrowSchemaArray(arrays.prefixItems, normalizeDraft07);
+    result.prefixItems = narrowSchemaArray(arrays.prefixItems, normalizeDraft07, 'prefixItems');
   }
   return result;
 }
 
 function applyNormalizedSingles(
   result: JsonSchema2020,
-  singles: KeywordGroup<'not' | 'propertyNames' | 'contains' | 'contentSchema'>,
+  singles: KeywordGroup<'not' | 'propertyNames' | 'contains'>,
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
   if (singles.not !== undefined) {
-    result.not = narrowSchemaOrRef(singles.not, normalizeDraft07);
+    result.not = narrowSchemaOrRef(singles.not, normalizeDraft07, 'not');
   }
   if (singles.propertyNames !== undefined) {
-    result.propertyNames = narrowSchemaOrRef(singles.propertyNames, normalizeDraft07);
+    result.propertyNames = narrowSchemaOrRef(
+      singles.propertyNames,
+      normalizeDraft07,
+      'propertyNames',
+    );
   }
   if (singles.contains !== undefined) {
-    result.contains = narrowSchemaOrRef(singles.contains, normalizeDraft07);
-  }
-  if (singles.contentSchema !== undefined) {
-    result.contentSchema = narrowSchemaOrRef(singles.contentSchema, normalizeDraft07);
+    result.contains = narrowSchemaOrRef(singles.contains, normalizeDraft07, 'contains');
   }
   return result;
 }
@@ -136,10 +151,19 @@ function applyNormalizedSingles(
 function applyNormalizedBoolOrSchemas(
   result: JsonSchema2020,
   keywords: KeywordGroup<
-    'additionalProperties' | 'if' | 'then' | 'else' | 'unevaluatedProperties' | 'unevaluatedItems'
+    | 'contentSchema'
+    | 'additionalProperties'
+    | 'if'
+    | 'then'
+    | 'else'
+    | 'unevaluatedProperties'
+    | 'unevaluatedItems'
   >,
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 {
+  if (keywords.contentSchema !== undefined) {
+    result.contentSchema = narrowBoolOrSchema(keywords.contentSchema, normalizeDraft07);
+  }
   if (keywords.additionalProperties !== undefined) {
     result.additionalProperties = narrowBoolOrSchema(
       keywords.additionalProperties,
@@ -171,30 +195,67 @@ function narrowBoolOrSchema(
   value: Draft07SchemaOrRefOrBool,
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 | ReferenceObject | boolean {
-  return typeof value === 'boolean' ? value : narrowSchemaOrRef(value, normalizeDraft07);
+  return typeof value === 'boolean' ? value : narrowSchemaOrRefValue(value, normalizeDraft07);
 }
 
+/**
+ * Narrow a schema-or-reference value at a keyword position that the typed
+ * pipeline models as object-form only.
+ *
+ * Boolean JSON Schemas are valid at every schema position in Draft 07 and
+ * 2020-12, but untyped JSON ingress used to funnel them through
+ * `{ ...boolean }`, silently turning reject-all (`false`) into allow-any
+ * (`{}`). Until booleans are carried at these positions, they are rejected
+ * explicitly — never silently inverted.
+ */
 function narrowSchemaOrRef(
+  value: Draft07SchemaOrRef | boolean,
+  normalizeDraft07: NormalizeFn,
+  keyword: string,
+): JsonSchema2020 | ReferenceObject {
+  if (typeof value === 'boolean') {
+    throw new Error(buildBooleanSubSchemaRejectionMessage(keyword, value));
+  }
+  return narrowSchemaOrRefValue(value, normalizeDraft07);
+}
+
+function narrowSchemaOrRefValue(
   value: Draft07SchemaOrRef,
   normalizeDraft07: NormalizeFn,
 ): JsonSchema2020 | ReferenceObject {
   return isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
 }
 
+/**
+ * Build the explicit rejection message for a boolean sub-schema at a
+ * position the parser does not yet carry booleans.
+ */
+function buildBooleanSubSchemaRejectionMessage(keyword: string, value: boolean): string {
+  const objectForm = value ? '`{}`' : '`{ "not": {} }`';
+  return (
+    `Boolean JSON Schema \`${String(value)}\` at '${keyword}' is valid JSON Schema, but the ` +
+    `parser does not yet carry boolean schemas at this position and refuses to normalise it ` +
+    `silently (\`false\` would invert from reject-all to allow-any). Use the equivalent ` +
+    `object form ${objectForm} instead.`
+  );
+}
+
 function narrowSchemaArray(
-  value: Draft07SchemaOrRef[],
+  value: (Draft07SchemaOrRef | boolean)[],
   normalizeDraft07: NormalizeFn,
+  keyword: string,
 ): (JsonSchema2020 | ReferenceObject)[] {
-  return value.map((item) => narrowSchemaOrRef(item, normalizeDraft07));
+  return value.map((item) => narrowSchemaOrRef(item, normalizeDraft07, keyword));
 }
 
 function narrowSchemaMap(
   value: Draft07SchemaMap,
   normalizeDraft07: NormalizeFn,
+  keyword: string,
 ): Record<string, JsonSchema2020 | ReferenceObject> {
   const out: Record<string, JsonSchema2020 | ReferenceObject> = {};
   for (const [key, item] of Object.entries(value)) {
-    out[key] = narrowSchemaOrRef(item, normalizeDraft07);
+    out[key] = narrowSchemaOrRef(item, normalizeDraft07, `${keyword}.${key}`);
   }
   return out;
 }

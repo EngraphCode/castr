@@ -15,7 +15,6 @@ import {
   parseType,
   parseFormat,
   parseStringConstraints,
-  parseContentKeywords,
   parseNumberConstraints,
   parseEnumConst,
   parseCoreMetadata,
@@ -23,7 +22,7 @@ import {
   parseArrayFields,
   parseComposition,
 } from './json-schema-parser.helpers.js';
-import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
+import { parse2020Keywords, parseContentKeywords } from './json-schema-parser.2020-keywords.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 
 // Re-export for public API compatibility
@@ -63,16 +62,19 @@ function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
  * Parse a `$ref` schema, carrying any sibling keywords into the IR.
  *
  * JSON Schema 2020-12 applies keywords that appear next to `$ref`, so
- * siblings must be preserved rather than dropped. Pure references stay
- * minimal (`{ $ref, metadata }`).
+ * siblings must be preserved rather than dropped. The reference `summary`
+ * annotation (OAS 3.1+ Reference Object) is carried into the IR `summary`
+ * field. Pure references stay minimal (`{ $ref, metadata }`).
  */
 function parseRefWithSiblings(input: JsonSchema2020, ref: string): CastrSchema {
-  const { $ref: _ref, ...siblings } = input;
-  if (Object.keys(siblings).length === 0) {
-    return { $ref: ref, metadata: createDefaultMetadata() };
+  const { $ref: _ref, summary, ...siblings } = input;
+  const result: CastrSchema =
+    Object.keys(siblings).length === 0
+      ? { metadata: createDefaultMetadata() }
+      : parseSchemaKeywords(siblings);
+  if (summary !== undefined) {
+    result.summary = summary;
   }
-
-  const result = parseSchemaKeywords(siblings);
   result.$ref = ref;
   return result;
 }

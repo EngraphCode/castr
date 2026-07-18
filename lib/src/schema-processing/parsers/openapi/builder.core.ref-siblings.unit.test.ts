@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import type { ComponentsObject } from '../../../shared/openapi-types.js';
+import type { ComponentsObject, ReferenceObject } from '../../../shared/openapi-types.js';
 
 import { buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
@@ -58,5 +58,57 @@ describe('buildCastrSchemas $ref sibling carrying', () => {
     }
     const schema = assertSchemaComponent(alias).schema;
     expect(Object.keys(schema).sort()).toEqual(['$ref', 'metadata']);
+  });
+});
+
+describe('buildCastrSchemas reference summary carrying', () => {
+  it('carries the reference summary alongside $ref', () => {
+    const aliasRef: ReferenceObject = {
+      $ref: '#/components/schemas/Base',
+      summary: 'Short alias summary',
+      description: 'Longer alias description',
+    };
+    const components: ComponentsObject = {
+      schemas: {
+        Base: { type: 'string' },
+        Alias: aliasRef,
+      },
+    };
+
+    const result = buildCastrSchemas(components);
+
+    const alias = result.find((component) => component.name === 'Alias');
+    expect(alias).toBeDefined();
+    if (alias === undefined) {
+      throw new Error('Expected Alias component');
+    }
+    const schema = assertSchemaComponent(alias).schema;
+    expect(schema.$ref).toBe('#/components/schemas/Base');
+    expect(schema.summary).toBe('Short alias summary');
+    expect(schema.description).toBe('Longer alias description');
+  });
+
+  it('carries a summary-only reference without inventing other fields', () => {
+    const aliasRef: ReferenceObject = {
+      $ref: '#/components/schemas/Base',
+      summary: 'Only a summary',
+    };
+    const components: ComponentsObject = {
+      schemas: {
+        Base: { type: 'string' },
+        Alias: aliasRef,
+      },
+    };
+
+    const result = buildCastrSchemas(components);
+
+    const alias = result.find((component) => component.name === 'Alias');
+    expect(alias).toBeDefined();
+    if (alias === undefined) {
+      throw new Error('Expected Alias component');
+    }
+    const schema = assertSchemaComponent(alias).schema;
+    expect(schema.summary).toBe('Only a summary');
+    expect(Object.keys(schema).sort()).toEqual(['$ref', 'metadata', 'summary']);
   });
 });

@@ -36,9 +36,22 @@ import { rewriteRef } from './json-schema-parser.normalization.refs.js';
  * Accepts Draft 07 input (with `definitions`, `dependencies`, boolean
  * exclusive bounds, tuple `items`) and returns a clean 2020-12 schema.
  *
+ * Boolean root schemas are already normal in every dialect and have no
+ * object form to build here; they are rejected with guidance (spreading a
+ * boolean would silently produce `{}`). `parseJsonSchema` and
+ * `parseJsonSchemaDocument` accept boolean roots directly.
+ *
  * @public
  */
-export function normalizeDraft07(input: Draft07Input): JsonSchema2020 {
+export function normalizeDraft07(input: Draft07Input | boolean): JsonSchema2020 {
+  if (typeof input === 'boolean') {
+    throw new Error(
+      `Boolean JSON Schema \`${String(input)}\` needs no Draft 07 normalization — it is already ` +
+        'normal in every dialect. Pass boolean schemas directly to `parseJsonSchema`, ' +
+        '`parseJsonSchemaDocument`, or `parseJsonSchemaObject` instead.',
+    );
+  }
+
   let result: Draft07Input = { ...input };
 
   result = liftDefinitions(result);

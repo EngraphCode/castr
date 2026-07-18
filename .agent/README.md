@@ -57,7 +57,11 @@ Then use:
 - **JSON Schema Parser Expansion** (completed Tuesday, 25 March 2026):
   - `parseJsonSchemaDocument()` expanded from `$defs`-only extractor to full document parser
   - Supports standalone schemas, `$defs` bundles, and mixed documents
-  - Unsupported keywords explicitly rejected with `UnsupportedJsonSchemaKeywordError`
+  - Unsupported keywords were explicitly rejected with `UnsupportedJsonSchemaKeywordError` at the
+    time; that machinery was removed on 17 July 2026 (its keyword set had become empty and the
+    rejection path was dead) — unrecognised keywords are currently dropped at parse, with explicit
+    rejection remaining target doctrine in
+    [`json-schema-and-parity-acceptance-criteria.md`](acceptance-criteria/json-schema-and-parity-acceptance-criteria.md)
   - Standalone fixture and `writeJsonSchemaDocument` ↔ `parseJsonSchemaDocument` round-trip proofs
   - 29 unit tests, 520 transform tests, 4 E2E tests — all green
   - Historical remediation context record: [`.agent/plans/current/complete/json-schema-parser.md`](plans/current/complete/json-schema-parser.md)

@@ -12,8 +12,13 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { isObjectSchemaType } from '../../ir/index.js';
-import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+import type {
+  JsonSchemaObject,
+  WriteBooleanCapableSchemaFn,
+  WriteSchemaFn,
+} from './json-schema-object.js';
 import { isSchemaObjectType } from './json-schema-object.js';
+import { writeAccessMetadata, writeCoreMetadata } from './json-schema-fields.metadata.js';
 import {
   writeJsonSchema2020SimpleFields,
   writeJsonSchema2020RecursiveFields,
@@ -248,44 +253,6 @@ export function writeCompositionFields(
 }
 
 /**
- * Write core metadata (title, description, default, example, examples).
- * @internal
- */
-function writeCoreMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.title !== undefined) {
-    result.title = schema.title;
-  }
-  if (schema.description !== undefined) {
-    result.description = schema.description;
-  }
-  if (schema.default !== undefined) {
-    result.default = schema.default;
-  }
-  if (schema.example !== undefined) {
-    result.example = schema.example;
-  }
-  if (schema.examples !== undefined) {
-    result.examples = schema.examples;
-  }
-}
-
-/**
- * Write access metadata (deprecated, readOnly, writeOnly).
- * @internal
- */
-function writeAccessMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
-  if (schema.deprecated !== undefined) {
-    result.deprecated = schema.deprecated;
-  }
-  if (schema.readOnly !== undefined) {
-    result.readOnly = schema.readOnly;
-  }
-  if (schema.writeOnly !== undefined) {
-    result.writeOnly = schema.writeOnly;
-  }
-}
-
-/**
  * Write enum / const fields.
  * @internal
  */
@@ -307,12 +274,17 @@ export function writeEnumFields(schema: CastrSchema, result: JsonSchemaObject): 
  *
  * Covers core fields + 2020-12 extension keywords.
  * Does NOT write OAS-only fields (xml, externalDocs, discriminator).
+ *
+ * `writeBooleanCapable` is used at boolean-capable keyword positions
+ * (`if`/`then`/`else`, `contentSchema`); it defaults to `writeSchema`, so
+ * writers whose recursion rejects `booleanSchema` nodes keep that policy.
  * @internal
  */
 export function writeAllJsonSchemaFields(
   schema: CastrSchema,
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
+  writeBooleanCapable: WriteBooleanCapableSchemaFn = writeSchema,
 ): void {
   writeTypeField(schema, result);
   writeStringFields(schema, result);
@@ -324,5 +296,5 @@ export function writeAllJsonSchemaFields(
   writeCoreMetadata(schema, result);
   writeAccessMetadata(schema, result);
   writeJsonSchema2020SimpleFields(schema, result);
-  writeJsonSchema2020RecursiveFields(schema, result, writeSchema);
+  writeJsonSchema2020RecursiveFields(schema, result, writeSchema, writeBooleanCapable);
 }

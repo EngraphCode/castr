@@ -9,11 +9,10 @@
  * @internal
  */
 
-import {
-  type SchemaObject,
-  type ReferenceObject,
-  type SchemaObjectType,
-  isReferenceObject,
+import type {
+  SchemaObject,
+  ReferenceObject,
+  SchemaObjectType,
 } from '../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
@@ -83,30 +82,6 @@ export function parseStringConstraints(input: JsonSchema2020, result: CastrSchem
   }
 
   applyInferredUuidVersionFromPattern(result);
-}
-
-/**
- * Parse content keywords (contentEncoding, contentMediaType, contentSchema).
- *
- * All three are valid JSON Schema keywords (contentSchema is 2020-12 only)
- * and are carried into the IR verbatim; `contentSchema` recurses.
- *
- * @internal
- */
-export function parseContentKeywords(
-  input: JsonSchema2020,
-  result: CastrSchema,
-  parseSchema: ParseSchemaFn,
-): void {
-  if (input.contentEncoding !== undefined) {
-    result.contentEncoding = input.contentEncoding;
-  }
-  if (input.contentMediaType !== undefined) {
-    result.contentMediaType = input.contentMediaType;
-  }
-  if (input.contentSchema !== undefined) {
-    result.contentSchema = parseSingleSchemaOrRef(input.contentSchema, parseSchema);
-  }
 }
 
 /** @internal */
@@ -226,18 +201,57 @@ export function parseComposition(
  * JSON Schema 2020-12 applies keywords that appear next to `$ref`, so
  * reference values are routed through `parseSchema` in full — its `$ref`
  * handling carries the siblings (H4) — instead of being stripped to a bare
- * `{ $ref }`. The OAS-only `summary` field has no IR home and is not
- * carried.
+ * `{ $ref }`. The reference `summary` annotation (OAS 3.1+ Reference
+ * Object) is carried into the IR `summary` field.
+ *
+ * Boolean values are rejected explicitly: this position is object-form
+ * only, and normalising a boolean would silently invert `false`
+ * (reject-all) into `{}` (allow-any). Boolean-capable keywords route
+ * through {@link parseBoolOrSchemaOrRef} instead.
  *
  * @internal
  */
 export function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
+  value: SchemaObject | ReferenceObject | boolean,
   parseSchema: ParseSchemaFn,
 ): CastrSchema {
-  if (isReferenceObject(value)) {
-    const { summary: _summary, ...refWithSiblings } = value;
-    return parseSchema(refWithSiblings);
+  if (typeof value === 'boolean') {
+    const objectForm = value ? '`{}`' : '`{ "not": {} }`';
+    throw new Error(
+      `Boolean JSON Schema \`${String(value)}\` is valid JSON Schema, but this nested position ` +
+        `carries object-form schemas only and refuses to normalise the boolean silently ` +
+        `(\`false\` would invert from reject-all to allow-any). Use the equivalent object ` +
+        `form ${objectForm} instead.`,
+    );
   }
   return parseSchema(value);
+}
+
+/**
+ * Parse a value that may be a boolean schema, a schema object, or a `$ref`.
+ *
+ * Used at boolean-capable keywords (`if`/`then`/`else`, `contentSchema`).
+ * Boolean schemas are converted to `{ booleanSchema, metadata }` IR nodes.
+ * Metadata is constructed inline to avoid a circular dependency with
+ * core.ts.
+ *
+ * @internal
+ */
+export function parseBoolOrSchemaOrRef(
+  value: SchemaObject | ReferenceObject | boolean,
+  parseSchema: ParseSchemaFn,
+): CastrSchema {
+  if (typeof value === 'boolean') {
+    return {
+      booleanSchema: value,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+  }
+  return parseSingleSchemaOrRef(value, parseSchema);
 }

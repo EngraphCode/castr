@@ -80,21 +80,27 @@ export function buildCastrSchema(
  * Pure references stay minimal (`{ $ref, metadata }`). When sibling
  * keywords are present they are built through the ordinary schema path
  * and the reference is attached, so nothing is silently dropped. The
- * OAS-only reference `summary` field has no IR home and is not carried.
+ * OAS 3.1+ reference `summary` annotation is carried into the IR
+ * `summary` field.
  *
  * @internal
  */
 function buildRefCastrSchema(schema: ReferenceObject, context: IRBuildContext): CastrSchema {
-  const { $ref, summary: _summary, ...siblings } = schema;
+  const { $ref, summary, ...siblings } = schema;
 
+  let irSchema: CastrSchema;
   if (Object.keys(siblings).length === 0) {
     // For pure references, create a minimal schema object for metadata building
     const emptySchema: SchemaObject = {};
-    return { $ref, metadata: buildCastrSchemaNode(emptySchema, context) };
+    irSchema = { $ref, metadata: buildCastrSchemaNode(emptySchema, context) };
+  } else {
+    irSchema = buildCastrSchema(siblings, context);
+    irSchema.$ref = $ref;
   }
 
-  const irSchema = buildCastrSchema(siblings, context);
-  irSchema.$ref = $ref;
+  if (summary !== undefined) {
+    irSchema.summary = summary;
+  }
   return irSchema;
 }
 

@@ -98,3 +98,32 @@ describe('boolean-schema rejection message truth (L9)', () => {
     expect(() => writeOpenApiSchema(schema)).not.toThrow(/no OpenAPI equivalent/);
   });
 });
+
+describe('reference summary emission', () => {
+  it('emits the reference summary alongside $ref', () => {
+    const schema: CastrSchema = {
+      $ref: '#/components/schemas/Base',
+      summary: 'Short reference summary',
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result).toEqual({
+      $ref: '#/components/schemas/Base',
+      summary: 'Short reference summary',
+    });
+  });
+});
+
+describe('boolean-schema closed-world policy at nested positions (L9)', () => {
+  it('still rejects boolean schemas reached through recursive positions', () => {
+    const schema: CastrSchema = {
+      if: { booleanSchema: false, metadata: createMetadata() },
+      then: { type: 'string', metadata: createMetadata() },
+      metadata: createMetadata(),
+    };
+
+    expect(() => writeOpenApiSchema(schema)).toThrow(/policy/);
+  });
+});
