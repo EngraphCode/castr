@@ -2,6 +2,39 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-17 (L-K6 lane: ajv-draft-04 devDep move + knip ignore cleanup — lane subagent / worktree wf_718f6e9b)
+
+- **`qg`'s `&&` chain silently skips later suites when an attributed mid-chain failure fires:**
+  `test:all` = `test && character && test:snapshot && test:gen && test:transforms && test:e2e`, so
+  the KNOWN nested-worktree `samples.test.ts` snapshot failure aborted `test:gen`,
+  `test:transforms`, and `test:e2e` — a "check:ci green except the attributed failure" claim from
+  the check:ci log ALONE is dishonest; the three skipped suites had to be run directly (all green,
+  6572ed4). General shape: an allowed pre-existing failure inside an `&&` chain converts "one
+  attributed failure" into "one attributed failure + N unproven stages"; enumerate and run the
+  skipped stages before claiming the estate green.
+- **knip closes the loop on its own stale ignores:** moving ajv-draft-04 from root to
+  lib/package.json made lib/knip.ts's `ignoreDependencies: ['ajv-draft-04']` entry unused, and
+  knip itself reported it ("Remove from ignoreDependencies" configuration hint) — the ignore was
+  only ever suppressing the phantom-dependency report. Fixing a manifest-honesty finding can
+  REQUIRE deleting the workaround that hid it; scope lanes accordingly (lib/knip.ts needed an
+  explicit orchestrator scope grant here).
+- **Pre-existing infra signal, attributed not fixed (out of lane scope):** turbo warns
+  `no output files found for task @engraph/castr#test` (turbo.json `outputs` key) on every test
+  run in this tree, including pre-commit; untouched by the lane diff.
+- **A "temporary manifest edit" probe mutates THREE surfaces, not one:** removing a devDependency
+  line from lib/package.json to prove the knip gate fires also rewrote pnpm-lock.yaml AND pruned
+  lib/node_modules/ajv-draft-04 — root `pnpm knip` runs an implicit install before the turbo task.
+  With `git restore` hook-blocked (never-use-git-to-remove-work), the forward restore is: re-insert
+  the exact line by edit (sha256 before/after proves byte-identity), `pnpm install --lockfile-only`
+  to regrow the lock, `pnpm install --frozen-lockfile` to regrow node_modules; verify
+  `git status --porcelain` shows only intended changes.
+- **PR-review-accepted deletion (this session):** manifest-honesty.test.ts pinned manifest CONTENT
+  via `readFileSync(process.cwd())` inside the in-process snapshot suite — FS IO + cwd coupling in
+  a behavioural suite, and redundant: with the stale ignore gone, the knip unlisted-dependency
+  report is the structural gate (probe: knip exit 1, `ajv-draft-04/dist/index.js` flagged at
+  openapi-spec-compliance.test.ts:20:26 when the declaration is removed). Structural invariants
+  belong in structural gates, not content-pinning tests.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**
