@@ -65,6 +65,21 @@ under the protected-file approval the walk grants in one batch — principles.md
 edited without explicit owner approval. Home: overhaul plan §W3 + remediation 06.
 Status: OPEN (owner walk — the M1/R5 fork + the batch approval).
 
+## Q-016 — Should OpenAPI 3.0 `enum: [null]` without `nullable: true` imply nullable at the parse boundary?
+
+Captured: 2026-07-18 | source: PR #15 review round (lane L-K3+K5+K7, commit 72939c9a).
+Context: the TS type-writer now applies strict 2020-12 conjunction semantics — a null enum member
+under a non-nullable type is a dead member (drops from the literal union; a null-only enum emits
+`never`). The same question reaches the Zod writer (untouched `z.literal(null)` lines in the
+enum-null snapshot are the evidence). Three candidate policies: (a) strict conjunction (current
+recorded default — dead members drop); (b) lenient inference (treat the widespread real-world
+idiom as implying `nullable`); (c) strictest-of-three: fail fast at the parser on the
+contradiction, forcing the input to say what it means. Whichever is chosen lands ONCE at the
+parser boundary and both writers inherit it.
+Suggested resolution path: owner rules the policy; if (b) or (c), a small parser-lane change +
+writer snapshot updates follow as a named micro-lane.
+Status: OPEN (owner semantics ruling; current default = (a) strict conjunction).
+
 _Register emptied 2026-06-26 and again 2026-07-03. Q-006 graduated to ADR-049; Q-007 decided
 (markdown-links gate end-state → scoped-blocking, transplant-completeness plan TC3b); Q-009
 (PDR mapping-table) and Q-011 (Axis A first) decided and drained 2026-07-03 (homes: the

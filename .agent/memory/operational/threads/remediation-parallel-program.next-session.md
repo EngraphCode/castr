@@ -12,7 +12,7 @@ source of volatile truth. Recompute every live fact below from `git`/`gh` before
 | agent_name                 | platform    | model          | session_id_prefix | role                   | first_session | last_session |
 | -------------------------- | ----------- | -------------- | ----------------- | ---------------------- | ------------- | ------------ |
 | Highland Spiralling Summit | claude-code | claude-fable-5 | 5fb0b5            | orchestrator/closeout  | 2026-07-17    | 2026-07-18   |
-| Stormbound Circling Kite   | claude-code | (successor)    | (on join)         | successor-orchestrator | (on join)     | (on join)    |
+| Stormbound Circling Kite   | claude-code | claude-fable-5 | 62f93c            | successor-orchestrator | 2026-07-18    | 2026-07-18   |
 
 ## Current objective
 
@@ -127,6 +127,27 @@ isResolved path line comments(first: 3) { nodes { author { login } body } } } } 
    `feat/explicit-additional-properties-rebased`, full gate (its Oak test expected green),
    seven-reviewer loop, PR, owner merge; then L-C/L-F final rebases.
 6. Wave-2/3 dispatches per the trigger map; program-end verification per the program record.
+
+## Handoff completion (2026-07-18, session close of Highland Spiralling Summit)
+
+**The handoff is COMPLETE at this session's end** (owner directive 2026-07-18): coordinator
+pre-positioning was broadcast on the comms stream (PDR-064 Moment 1); authority transfers to
+Stormbound Circling Kite at their active acknowledgement or at this session's end, whichever
+first. **This record is the authoritative transfer artifact; where the ARC/comms stream and this
+record disagree, this record wins.**
+
+**Dispatch freeze (owner, 2026-07-18):** no new subagents were started after the freeze. Seven
+in-flight worktree agents were completing at close — L-H r3, L-F/PR#16 round, L-E (commit
+881f6fb2 landed), L-A, L-C batch, L-I, samples (ee419ae8, already PR #19). Whatever they
+committed sits in their worktrees per the lane table: push serially + reply/resolve per the
+protocol above. Any findings they surfaced that would have needed a new dispatch are successor
+work — route as named positions here and in the program record.
+
+**Also landed at close:** L-K1 round 3 (30b30d43 — then/else gated on `if` per 2020-12 §10.2.2,
+BOTH walkers, pushed, PR #12 thread resolved); PR #18 (L-D) and PR #19 (samples) opened;
+delivery-ledger round 8 (global convention superseded; PR list defers to recomputation);
+Q-016 (enum:[null] nullable inference) captured in the open-questions register — owner ruling
+pending, do not decide unilaterally.
 
 ## Blockers / low-confidence areas
 
