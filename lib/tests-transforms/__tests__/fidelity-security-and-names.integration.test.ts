@@ -33,6 +33,10 @@ const EDGE_CASES_DIR = resolve(__dirname, '../__fixtures__/edge-cases');
 const SECURITY_AND_GROUP_FIXTURE = resolve(EDGE_CASES_DIR, 'security-and-group.yaml');
 const DOTTED_COMPONENT_NAME_FIXTURE = resolve(EDGE_CASES_DIR, 'dotted-component-name.yaml');
 const EMPTY_STRING_DESCRIPTIONS_FIXTURE = resolve(EDGE_CASES_DIR, 'empty-string-descriptions.yaml');
+const OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE = resolve(
+  EDGE_CASES_DIR,
+  'security-optional-and-public.yaml',
+);
 
 const SCHEMA_REF_PREFIX = '#/components/schemas/';
 
@@ -106,6 +110,118 @@ describe('C2: security AND-groups survive the round-trip', () => {
       'apiKey',
       'oauth2',
     ]);
+  });
+});
+
+describe('optional security: the empty requirement object {} is preserved', () => {
+  it('carries {} into the IR as an empty requirement set at both levels', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+
+    // Document level: "apiKey OR unauthenticated" — the {} alternative makes
+    // authentication optional and must survive as an empty schemes set.
+    expect(ir.security).toEqual([
+      { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
+      { schemes: [] },
+    ]);
+
+    const optionalOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getOptional',
+    );
+    expect(optionalOperation?.security).toEqual([{ schemes: [] }]);
+  });
+
+  it('re-emits {} as an empty requirement object', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+    const out = writeOpenApi(ir);
+
+    // The writer sorts alternatives deterministically; the empty set sorts first.
+    expect(out.security).toEqual([{}, { apiKey: [] }]);
+    expect(out.paths?.['/optional']?.get?.security).toEqual([{}]);
+  });
+
+  it('represents {} in MCP metadata as an alternative with zero required schemes', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+
+    const optionalOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getOptional',
+    );
+    expect(optionalOperation).toBeDefined();
+    const optionalSecurity = resolveOperationSecurityFromIR(ir, optionalOperation ?? {});
+
+    // Optional auth is NOT public: a requirement set exists, it just demands
+    // no schemes. Collapsing this to isPublic would lose the distinction.
+    expect(optionalSecurity.isPublic).toBe(false);
+    expect(optionalSecurity.usesGlobalSecurity).toBe(false);
+    expect(optionalSecurity.requirementSets).toEqual([{ schemes: [] }]);
+
+    const inheritingOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getInherits',
+    );
+    expect(inheritingOperation).toBeDefined();
+    const inheritedSecurity = resolveOperationSecurityFromIR(ir, inheritingOperation ?? {});
+
+    expect(inheritedSecurity.isPublic).toBe(false);
+    expect(inheritedSecurity.usesGlobalSecurity).toBe(true);
+    expect(inheritedSecurity.requirementSets).toHaveLength(2);
+    expect(inheritedSecurity.requirementSets[0]?.schemes.map((s) => s.schemeName)).toEqual([
+      'apiKey',
+    ]);
+    expect(inheritedSecurity.requirementSets[1]?.schemes).toEqual([]);
+  });
+
+  it('is round-trip stable through a second parse and write', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const out = writeOpenApi(buildIR(document));
+    const out2 = writeOpenApi(buildIR(out));
+
+    expect(out2).toEqual(out);
+  });
+});
+
+describe('operation-level security: [] is an explicit public override, distinct from absent', () => {
+  it('carries the empty array into the IR distinct from undefined', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+
+    const publicOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getPublic',
+    );
+    expect(publicOperation?.security).toEqual([]);
+
+    const inheritingOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getInherits',
+    );
+    expect(inheritingOperation).toBeDefined();
+    expect(inheritingOperation?.security).toBeUndefined();
+  });
+
+  it('writes security: [] back out so the override still disables document security', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+    const out = writeOpenApi(ir);
+
+    // Dropping the empty array would silently re-attach the document-level
+    // requirement to a deliberately public operation.
+    expect(out.paths?.['/public']?.get?.security).toEqual([]);
+    expect(out.paths?.['/inherits']?.get).not.toHaveProperty('security');
+  });
+
+  it('resolves the override as public in MCP metadata, without touching inheritance', async () => {
+    const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+
+    const publicOperation = ir.operations.find(
+      (operation) => operation.operationId === 'getPublic',
+    );
+    expect(publicOperation).toBeDefined();
+    const publicSecurity = resolveOperationSecurityFromIR(ir, publicOperation ?? {});
+
+    expect(publicSecurity.isPublic).toBe(true);
+    expect(publicSecurity.usesGlobalSecurity).toBe(false);
+    expect(publicSecurity.requirementSets).toEqual([]);
   });
 });
 

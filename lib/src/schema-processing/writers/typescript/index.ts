@@ -227,7 +227,12 @@ function addHelpers(sourceFile: SourceFile, context: TemplateContext): void {
   }
 
   if (context.options?.withSchemaRegistry) {
-    addSchemaRegistryHelper(sourceFile);
+    // The registry's default rename must be derived from the same seam that
+    // named the emitted schema symbols, so pass the ORIGINAL component names.
+    const componentNames = context.sortedSchemaNames.map(
+      (ref) => parseComponentRef(ref).componentName,
+    );
+    addSchemaRegistryHelper(sourceFile, componentNames);
   }
 }
 

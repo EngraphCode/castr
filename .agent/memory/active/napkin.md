@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-17 (lane L-D follow-up: reviewer-panel important findings — Fable subagent)
+
+- **`security: []` on an operation was a REAL preservation bug, not just a missing test:** the
+  operations writer guarded emission with `security.length > 0`, so an explicit public override
+  parsed into the IR fine (`[]` is truthy through `if (operation.security)`) and was then silently
+  dropped at write time — the written document re-attached document-level security to a
+  deliberately public operation. Red proof: `expected undefined to deeply equal []` in the lane's
+  fidelity file. The `length > 0` guard pattern is the same absent-vs-empty confusion family as the
+  M10 truthy-guard fixes; when auditing "distinct from absent" fidelity, grep for `.length > 0`
+  emission guards, not just truthy parse guards.
+- **Generated-code sanitiser unification without executing generated text:** the generated
+  `buildSchemaRegistry` default rename now embeds a `DEFAULT_SCHEMA_RENAMES` map precomputed FROM
+  `safeSchemaName` over the emitted component names (identity fallback for names the seam leaves
+  unchanged), so equality with the seam holds by construction for the registry's whole meaningful
+  domain. The proof test extracts the embedded JSON map and recomputes `safeSchemaName` per name —
+  no `eval`/`new Function` needed, and it stays honest because the emitted rename is exactly
+  `map[key] ?? key` (asserted) with no parallel algorithm left (asserted `not.toContain('replace(')`).
+- **Optional-security `[{}]` proofs were green-on-arrival by design:** parser (`{}` →
+  `{schemes: []}`), writer (`[{}]` re-emitted, empty set sorts first → `[{}, {apiKey: []}]`), MCP
+  resolver (`isPublic: false` with one zero-scheme requirement set = optional auth), and second-pass
+  round-trip were all already correct but unpinned; the tests are regression pins, not fixes.
+- **zsh eats `echo ======`:** `=word` triggers zsh equals-expansion → `(eval):1: ===== not found`.
+  Quote separator strings in shell one-liners.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by

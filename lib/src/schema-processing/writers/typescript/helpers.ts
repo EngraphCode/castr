@@ -1,4 +1,5 @@
 import type { SourceFile } from 'ts-morph';
+import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 
 const REQUEST_INPUT_TYPE = `{
     pathParams?: unknown;
@@ -92,7 +93,35 @@ function addValidateResponseHelper(sourceFile: SourceFile): void {
   });
 }
 
-export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
+/**
+ * Compute the default rename map for the generated schema registry.
+ *
+ * Every entry is produced by the canonical {@link safeSchemaName} seam — the
+ * SAME function that names the emitted schema symbols — so registry keys are
+ * guaranteed to match the generated code symbols. Only names the seam actually
+ * changes are included; all other names pass through unchanged, which is
+ * exactly `safeSchemaName`'s output for them.
+ *
+ * @internal
+ */
+function computeDefaultRenames(componentNames: readonly string[]): Record<string, string> {
+  const renames: Record<string, string> = {};
+  const sortedNames = [...new Set(componentNames)].sort((left, right) => left.localeCompare(right));
+  for (const name of sortedNames) {
+    const safeName = safeSchemaName(name);
+    if (safeName !== name) {
+      renames[name] = safeName;
+    }
+  }
+  return renames;
+}
+
+export function addSchemaRegistryHelper(
+  sourceFile: SourceFile,
+  componentNames: readonly string[],
+): void {
+  const defaultRenames = computeDefaultRenames(componentNames);
+
   sourceFile.addFunction({
     name: 'buildSchemaRegistry',
     isExported: true,
@@ -103,10 +132,8 @@ export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
     ],
     returnType: 'Record<string, z.ZodSchema>',
     statements: `
-  const rename = options?.rename ?? ((key: string) => {
-    const identifier = key.replace(/[^A-Za-z0-9_]/g, "_");
-    return /^[0-9]/.test(identifier) ? "_" + identifier : identifier;
-  });
+  const DEFAULT_SCHEMA_RENAMES: Record<string, string> = ${JSON.stringify(defaultRenames)};
+  const rename = options?.rename ?? ((key: string) => DEFAULT_SCHEMA_RENAMES[key] ?? key);
   const result: Record<string, z.ZodSchema> = {};
 
   for (const [key, value] of Object.entries(rawSchemas)) {
@@ -119,9 +146,10 @@ export function addSchemaRegistryHelper(sourceFile: SourceFile): void {
       {
         description: `Builds a schema registry with sanitized keys for runtime schema lookup.
  *
- * The default rename mirrors the identifier sanitisation applied to emitted
- * schema symbols (invalid characters become underscores; a leading digit gains
- * an underscore prefix). Pass a custom rename to override the mapping.`,
+ * The default rename map is precomputed at generation time from the canonical
+ * code-symbol sanitiser, so every schema this file emitted is keyed exactly by
+ * its exported symbol name. Names outside the emitted set pass through
+ * unchanged. Pass a custom rename to override the mapping.`,
       },
     ],
   });

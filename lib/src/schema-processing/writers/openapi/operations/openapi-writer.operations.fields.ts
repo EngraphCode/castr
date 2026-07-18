@@ -113,7 +113,10 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
     result.requestBody = writeRequestBody(operation.requestBody);
   }
 
-  if (operation.security !== undefined && operation.security.length > 0) {
+  // An explicit empty array is a meaningful override (it disables
+  // document-level security for this operation) and must be re-emitted
+  // distinct from absent.
+  if (operation.security !== undefined) {
     result.security = writeSecurityRequirements(operation.security);
   }
 
