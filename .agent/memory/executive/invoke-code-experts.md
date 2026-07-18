@@ -12,7 +12,9 @@ and the domain-specialist pattern is
 
 ## The roster
 
-15 canonical templates. `architecture-expert` is one template invoked through four
+16 canonical templates: 15 reviewer/expert templates plus the `task-worker` lean-worker
+class (not a reviewer — dispatched per the `lean-task-subagents` skill, so it carries no
+triage row here). `architecture-expert` is one template invoked through four
 persona adapters (`-barney`, `-betty`, `-fred`, `-wilma`).
 
 | Reviewer                                        | Owns                                                                                                          | Invoke when the change touches…                                   |

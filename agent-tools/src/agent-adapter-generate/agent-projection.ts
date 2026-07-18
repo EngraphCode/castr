@@ -4,27 +4,33 @@ import { z } from 'zod';
 /** The two agent classes projected into platform-specific wrappers. */
 export type AgentClass = 'reviewer' | 'worker';
 
+/** The closed set of tools a worker may be granted, portable across every generated surface. */
+const workerToolSchema = z.enum(['Read', 'Grep', 'Glob']);
+export type WorkerTool = z.infer<typeof workerToolSchema>;
+
 /** Canonical cross-platform projection metadata for one agent template. */
 export interface AgentProjection {
   readonly agentClass: AgentClass;
-  readonly tools: readonly string[];
+  readonly tools: readonly WorkerTool[];
 }
 
+/** The posture of every template that declares no projection metadata. */
+export const DEFAULT_REVIEWER_PROJECTION: AgentProjection = {
+  agentClass: 'reviewer',
+  tools: [],
+};
+
 const projectionSchema = z.discriminatedUnion('class', [
-  z.object({ class: z.literal('reviewer') }).strict(),
-  z
-    .object({
-      class: z.literal('worker'),
-      tools: z.array(z.enum(['Read', 'Grep', 'Glob'])).default([]),
-    })
-    .strict(),
+  z.strictObject({ class: z.literal('reviewer') }),
+  z.strictObject({
+    class: z.literal('worker'),
+    tools: z.array(workerToolSchema).default([]),
+  }),
 ]);
 
-const templateMetadataSchema = z
-  .object({
-    projection: projectionSchema.optional(),
-  })
-  .passthrough();
+const templateMetadataSchema = z.looseObject({
+  projection: projectionSchema.optional(),
+});
 
 const FRONTMATTER_PATTERN = /^---\r?\n(?<yaml>[\s\S]*?)\r?\n---(?:\r?\n|$)/u;
 
@@ -37,7 +43,7 @@ const FRONTMATTER_PATTERN = /^---\r?\n(?<yaml>[\s\S]*?)\r?\n---(?:\r?\n|$)/u;
 export function readAgentProjection(templatePath: string, templateText: string): AgentProjection {
   const yaml = templateText.match(FRONTMATTER_PATTERN)?.groups?.['yaml'];
   if (yaml === undefined) {
-    return { agentClass: 'reviewer', tools: [] };
+    return DEFAULT_REVIEWER_PROJECTION;
   }
 
   let parsed: unknown;
@@ -58,7 +64,7 @@ export function readAgentProjection(templatePath: string, templateText: string):
 
   const projection = result.data.projection;
   return projection === undefined
-    ? { agentClass: 'reviewer', tools: [] }
+    ? DEFAULT_REVIEWER_PROJECTION
     : {
         agentClass: projection.class,
         tools: projection.class === 'worker' ? projection.tools : [],

@@ -1,3 +1,7 @@
+---
+pdr_kind: governance
+---
+
 # PDR-126: Machine Identities for Agent Fleets — Split the Bypass-Holder from the Daily-Driver
 
 **Status**: Accepted (owner-directed and owner-walked, 2026-07-04; first

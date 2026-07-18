@@ -68,8 +68,11 @@ const REQUIRED_REASONING_EFFORT_BY_CLASS: Readonly<Record<SubagentClass, string>
 const PROJECTION_ONLY_CODEX_KEYS = ['agent_class', 'tools'] as const;
 
 export interface CodexPermissionCompositionInput {
+  /** Full text of `.codex/config.toml`. */
   readonly configContent: string;
+  /** Full text of every `.codex/agents/<name>.toml` adapter. */
   readonly adapterContents: readonly string[];
+  /** Override path label used in issue messages; defaults to the canonical config path. */
   readonly configPath?: string;
 }
 

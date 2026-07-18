@@ -9,7 +9,7 @@
     "lean-task-subagents": {
       "source": "resonance@d8dc50c:.agent/skills/lean-task-subagents/SKILL-CANONICAL.md (localised: specialist roster; extended: castr fleet-sizing binding per PDR-142)",
       "sourceType": "sibling-repo-transplant",
-      "computedHash": "sha256:427030885a7419291a245766e505b0c22a88aa8760ccd078b6e1db8bd36811af"
+      "computedHash": "sha256:bb43b6616a1f059af54c6d36e67b458c1d39354b77791a03b7658004ed363ed7"
     }
   }
 }

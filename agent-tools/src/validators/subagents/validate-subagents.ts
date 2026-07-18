@@ -4,7 +4,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
-import { readAgentProjection } from '../../agent-adapter-generate/agent-projection.js';
+import {
+  DEFAULT_REVIEWER_PROJECTION,
+  readAgentProjection,
+} from '../../agent-adapter-generate/agent-projection.js';
 
 import {
   CODEX_CONFIG_PATH,
@@ -186,10 +189,14 @@ for (const codexAdapterFile of codexAdapterFiles) {
   const templatePath = extractCanonicalPaths(readCodexDeveloperInstructions(content)).find((p) =>
     p.startsWith(`${TEMPLATE_DIR}/`),
   );
-  const projection =
-    templatePath === undefined
-      ? { agentClass: 'reviewer' as const, tools: [] }
-      : readAgentProjection(templatePath, templateTextByPath.get(templatePath) ?? '');
+  let projection = DEFAULT_REVIEWER_PROJECTION;
+  if (templatePath !== undefined) {
+    try {
+      projection = readAgentProjection(templatePath, templateTextByPath.get(templatePath) ?? '');
+    } catch (error) {
+      addIssue(error instanceof Error ? error.message : String(error));
+    }
+  }
   const {
     issues: codexAdapterIssues,
     templatePaths,

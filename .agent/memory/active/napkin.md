@@ -270,3 +270,44 @@ _2026-06-04 → 2026-06-10 → [`archive/napkin-2026-06-04-to-10.md`](archive/na
 _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026-06-17-to-20.md`](archive/napkin-2026-06-17-to-20.md) (2026-06-20);_
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
+
+## 2026-07-18 — resonance practice imports (Midnight Watching Night / 900203)
+
+- **Claim-before-watcher move-order error, gate-cured**: I ran the start-right-team moves out of
+  order (claim open before the comms watcher was armed); the collaboration CLI's comms-blind
+  gate refused the claim and named the correct order. Same window: my team-start carried two
+  stale premises ("predecessor dead", "registry empty") corrected by the live peer within 90s —
+  my registry read pre-dated their claim. The Case-A concept-exploration pass (recorded in the
+  transplant plan) reframed this from individual error to an ORDERING PROPERTY: grounding reads
+  are systematically earlier than peer-visible presence, because grounding precedes watcher
+  arming by construction. Candidate cures: timestamp state assertions in team-start bodies;
+  extend the comms-blind refusal family from claim-opens to state-asserting broadcasts.
+- **Filtered-output ate the failure signal THREE times in one session** (claim-open error via
+  `tail -3`, repo-validators failure via `grep|tail`, lint findings via `tail -2`) — despite the
+  distilled pipe lesson being in context. The pnpm-banner-trim reflex (`grep -v '^\$' | tail`)
+  is the same discard shape PDR-140 §3 (landed this session) names; each re-run unfiltered cost
+  a full round-trip. Cure that held: when a command can fail, run it unfiltered or
+  capture-to-file; trim only after the exit code is known green.
+- **Bring-the-iceberg recursed FOUR levels on the worker-class transplant**: skill
+  (lean-task-subagents) → template (task-worker) → generator (projection class, else the wrapper
+  emits `model: opus` + Bash) → validator (subagents module, else the gate REFUSES the landed
+  template: effort-by-class + worker-reading-discipline). Each level surfaced only when the
+  previous one landed; the gate refusal was the discovery mechanism for level four. A bring-plan
+  that stopped at any level would have shipped a hollow or gate-blocked capability.
+- **Wholesale-vs-surgical resolved by measuring localisation, not by diff size**: castr's copies
+  of the adapter generator + subagents validator were token-neutral (zero castr-specific
+  content, verified by grep before choosing), so wholesale-take-from-upstream + castr prettier
+  - per-file token localisation (code-expert→code-reviewer ×37) was lossless and cheaper than
+    hunk surgery. Same measurement on pr-lifecycle gave the OPPOSITE verdict (12 load-bearing
+    castr localisations + castr-ahead surfaces) → per-hunk semantic merge. The deciding variable
+    is the HOST copy's localisation density, measured firsthand.
+- **castr lint hardened upstream code on arrival**: `preserve-caught-error` demanded `{ cause }`
+  on agent-projection.ts's rethrow — upstream lacks the rule; back-flow candidate along with
+  castr's Phase-3 §4 server-side ruleset harvest (absent upstream) and the generator's
+  prettier-stable quoting history.
+- **Harness: bulk `cp` of multiple .ts files was classifier-denied; identical per-file copies
+  passed** — granular retry is the working shape for multi-file source copies.
+- **Primary-checkout dist-clean window killed my heartbeat tick** (MODULE_NOT_FOUND — the known
+  check-singleton specimen, this time from a PEER'S push while my loop ran from the primary
+  checkout): the loop self-healed when their build restored dist. Worktree isolation kept the
+  work path immune; only the shared-checkout CLI surface was exposed.

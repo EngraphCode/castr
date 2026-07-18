@@ -10,6 +10,31 @@ Use the installed reviewer and domain-expert roster deliberately and consistentl
 - At plan time, invoke `assumptions-expert` (proportionality) and `subagent-architect` (when sub-agent definitions change). See [`invoke-assumptions-expert`](invoke-assumptions-expert.md), [`invoke-mcp-expert`](invoke-mcp-expert.md), and [`invoke-doc-and-onboarding-experts-on-significant-changes`](invoke-doc-and-onboarding-experts-on-significant-changes.md) for the standing dispatch rules.
 - In Codex, these roles are project agents registered in `.codex/config.toml` and `.codex/agents/*.toml`, not skills in `.agents/skills/`.
 
+## Gate-Shaped Code: Adversarial Fixpoint Before First Push
+
+For gate-shaped code — validators, hooks, CI pins, anything whose job is to
+catch other code's defects — a single review pass is not enough: run an
+ADVERSARIAL review loop locally and iterate each cure back through it until
+findings run dry, BEFORE the first push. A gate's own defects are silent by
+nature (a hole in a checker looks exactly like a clean check), and each cure
+creates fresh attack surface, so the fixpoint must be reached somewhere —
+the only choice is locally at minutes per cycle or publicly at PR-review
+tempo with the full battery/CI/review-lag cost per round.
+
+Upstream worked instance (owner-ratified 2026-07-18): a test-purity
+validator went through a 10-round external review arms race (28+ real
+findings). Retrospective: ~24 of the first 25 were locally catchable — the
+one 3-skeptic adversarial workflow actually run pre-push refuted the
+gate's first design empirically AND pre-empted four findings external
+review only surfaced rounds later; every cure shipped after it was
+self-reviewed only, which is exactly where the arms race lived. The
+practice: the adversarial pass is run to CONVERGENCE (fixpoint, findings
+dry), re-running after each cure — not once — and its skeptics probe the
+gate's CLAIMS (what does this promise? what silently disables it?), not
+just its diff. The `pr-lifecycle` skill's Phase 1 names this pass as a
+before-first-push step; the fleet shape for the skeptics is the
+`lean-task-subagents` skill's swarm/depth tiers under `PDR-142`.
+
 ## When Direct Project-Agent Invocation Is Unavailable Or Unreliable
 
 - If the current Codex surface does not expose direct project-agent fan-out, or if that fan-out is not producing useful review signal, perform the required review in the current parent session.

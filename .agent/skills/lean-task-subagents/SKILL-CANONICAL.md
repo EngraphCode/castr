@@ -261,7 +261,11 @@ pass each buy quality that would otherwise be bought with a bigger model.
    [`adversarially-verify-subagent-output`](../../rules/adversarially-verify-subagent-output.md)
    (acceptance means verified, at every tier).
 
-**Dynamic workflows (Claude Code Workflow tool).** The tiers map directly onto workflow
+**Dynamic workflows (Claude Code Workflow tool).** Call shapes below were verified against the
+live Claude Code Workflow tool contract at author time (2026-07-18, this estate — the authoring
+session ran under the tool and transcribed its schema), per
+`verify-vendor-call-shapes-at-plan-author-time`; re-verify against the harness on first use if
+the platform has since moved. The tiers map directly onto workflow
 scripts: set `model`/`effort` per `agent()` call — cheap mechanical stages low
 (swarm: `model: 'haiku'`, low effort), verify/judge stages higher, and omit the override to
 inherit the session model for apex-shaped stages. Schema-forced structured output IS the

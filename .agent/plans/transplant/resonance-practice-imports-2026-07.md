@@ -46,7 +46,10 @@ todos:
       per-hunk semantic merge preserving every castr localisation; co-sync invoke-reviewers
       §Gate-Shaped Code if porting Phase 1 §4; honest Governance provenance line; semantic
       self-review diff vs both parents.
-    status: pending
+    status:
+      done # 2026-07-18 (Midnight Watching Night, 900203): working-tree-latest source
+      # (upstream HEAD 8195b78 + uncommitted); 140->300 ln merge; preserve-list 12/12; foreign
+      # refs 0/7; Gate-Shaped Code co-synced; dispositions ledgered in the body.
     depends_on: [T2]
 ---
 
@@ -148,7 +151,13 @@ Landed footprint (source resonance@d8dc50c; every body read firsthand before lan
 
 Cite-closure verdicts (all firsthand): PDR-142→{124 ✓, 015 ✓, 141 in-set}; PDR-141→{027, 063,
 064, 077, 094 all ✓; 140 in-set; annex in-set}; PDR-125→{011 ✓, 124 ✓}; PDR-126→{027 ✓, 125
-in-set}. **Known transient dangle, deliberate:** PDR-140's Related block cites PDR-139
+in-set}. **PDR-126 disposition amended at the reviewer fold** (assumptions-expert I1: it was
+outside the anchor's cite-closure — an inherited "dependency closure" framing this plan's own
+decline logic contradicted): retained WITH a wired castr consumer — the pr-lifecycle Phase 7
+shared-credential clause now cites it as the structural cure's home, matching castr's live
+shared-gh-credential situation; adoption is a named owner decision point. Its Related mention
+of the upstream `identify-as-agent-under-shared-credentials` rule is prose, not a link (no
+dangle). **Known transient dangle, deliberate:** PDR-140's Related block cites PDR-139
 (comms-events-thread-at-creation), which castr lacks. PDR-140 is Core and lands VERBATIM
 (conservation and parity outrank link hygiene — editing a portable PDR forks it from the
 upstream); PDR-139 is comms-estate and sits in Stormbound Circling Kite's ARC territory —
@@ -179,13 +188,80 @@ divergence hypothesis being wrong. Both were invisible from inside the individua
 correlated/local error caught only above them. Verdict recorded: future same-shape
 exploration fan-outs dispatch at Sonnet with explicit `model` overrides.
 
-## T3 — pr-lifecycle re-sync (pending; source DECLARED MOVING)
+## T3 — pr-lifecycle re-sync (LANDED 2026-07-18)
 
-Method: per-hunk semantic merge, never verbatim (castr is AHEAD on the server-side ruleset
-harvest surface — preserve; resonance's worktree-hygiene + pr-139-ledger cites dangle in castr
-— redirect/genericise). Source policy owner-decided: working-tree latest at execution,
-provenance line records the honest source state. Port-in candidates and preserve-list are
-enumerated in the session plan; re-measure the delta at execution.
+Source re-measured at execution: upstream HEAD 8195b78; the skill (308 ln) and
+`invoke-reviewers.md` still UNCOMMITTED-modified in the upstream working tree → per the
+owner's plan-time ruling, working-tree latest taken; Governance provenance line records it.
+Method executed: per-hunk semantic merge (castr 140 ln + upstream 308 ln → castr 300 ln).
+
+**Ported (each localised to upstream-provenance prose, castr surfaces, castr instances):**
+Phase 1 §4 gate-shaped adversarial fixpoint WITH the coupled `invoke-reviewers`
+§Gate-Shaped Code section (co-synced, cross-linked to lean-task-subagents/PDR-142);
+harvest-denominator paragraph; empty-checks-is-a-fact clause; routed-to-named-successor 4th
+disposition + target-must-exist-in-writing guard; laddered triage protocol (its "decision
+matrix" synthesis step localised to castr's Decision Lenses + PDR-057 dissolution test);
+cancelled-CI-is-infrastructure clause (kengraph-token instance generalised to
+credential-Actions-write); false-premise verification; watch ALL-GREEN exit semantics;
+paired-mutation independent verification; mergeStateStatus-UNKNOWN backlog;
+review-materialisation lag; checks-rollup race; full convergence-discipline block (castr's
+own PR #10 seven-round instance added beside the upstream arc); reflexive-loop JUDGEMENT
+exit + strictly-narrowing tell; volatile-tracker named cost; denominator-naming;
+proportionality damper; mergeable-vs-CLEAN; dual-signal recipe; post-hoc reviewer-gateway;
+shared-credential approval-failure (stated as mechanism + castr-conditional, not asserted as
+castr-observed); Stacked-PR note.
+
+**Preserved castr-local (self-review verified, 12/12 present):** `check:ci` gate name;
+feature-branch model; FOUR-surface harvest incl. server-side ruleset findings +
+scanning-fix-verification (castr is AHEAD of upstream here — back-flow candidate);
+Copilot/Codex bot names; persistent-Monitor watcher note; PR #3 worked instances;
+owner-invoked merge posture; question-tool notification; merge-commit preference; Phase 8
+continuity vocabulary; agent-identity-in-replies note.
+
+**NOT ported (dispositions):**
+
+| Upstream hunk                                                      | Decision    | Reason                                                                                                                                                                          |
+| ------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auto-merge-early arming (Phase 7)                                  | NOT-PORTED  | Contradicts castr's standing owner-invoked merge posture (2026-07-03); adopting it is an owner posture decision, not a sync hunk — surface if the owner revisits the merge gate |
+| worktree-hygiene cites (Phases 1, 8)                               | NOT-PORTED  | Rule absent in castr; castr's feature-branch model + never-use-git-to-remove-work already carry the substance                                                                   |
+| pr-139 disposition-ledger cites                                    | GENERICISED | Ledger absent in castr; instances kept as upstream-provenance prose                                                                                                             |
+| invoke-reviewers §Verification-Set-Includes-Decision-Record-Corpus | DEFERRED    | Valuable but outside the coupled scope; follow-up candidate for a later invoke-reviewers sync                                                                                   |
+
+Self-review proof: foreign-ref scan 0/7 classes present (worktree-hygiene, pr-139, Director,
+kengraph, Bugbot, Vercel, decision-matrix); §Gate-Shaped Code anchor resolves; preserve-list
+12/12.
+
+## Reviewer fold (2026-07-18, five depth-tier reviewers, all findings dispositioned)
+
+- **code-reviewer** APPROVED-WITH-SUGGESTIONS: validator now routes projection throws through
+  its issue list (applied); TSDoc added to `CodexPermissionCompositionInput` (applied);
+  principles.md edit-guard checkpoint SURFACED TO OWNER at the PR gate (the approved plan
+  enumerated the edit; explicit confirmation requested rather than assumed).
+- **test-reviewer** ISSUES-FOUND(medium): malformed-YAML fail-fast + frontmatter-sans-projection
+  branches uncovered → colocated `agent-projection.unit.test.ts` added (4 tests; applied).
+- **type-reviewer** APPROVED-WITH-SUGGESTIONS: `WorkerTool` union threaded (schema-inferred,
+  single-source; applied); `DEFAULT_REVIEWER_PROJECTION` deduped (applied); Zod-4
+  `strictObject`/`looseObject` modernisation (applied). Config-conflict flag (agent-tools
+  tsconfig lacks `exactOptionalPropertyTypes`) = pre-existing workspace matter, NAMED FOLLOW-UP,
+  not this slice.
+- **assumptions-expert** CONCERNS: I1 PDR-126 consumer-less → wired (pr-lifecycle Phase 7 cites
+  it as the shared-credential structural cure; disposition amended above); I2 Workflow-tool
+  call shapes → verification made visible in the skill (authored FROM the live harness contract,
+  not inherited; provenance note added). O1 PDR-139 follow-up ownership → carried in the
+  thread record at closeout (survives this plan's archive). Sequencing labels noted.
+- **docs-adr-expert** GAPS-FOUND (no plan claim falsified; lock hashes byte-confirmed): two
+  executive-memory roster mirrors updated (invoke-code-experts 16 templates;
+  cross-platform matrix 23 skills / 91 rules / 19 adapters / 16 templates — the matrix's
+  pre-existing stale counts corrected in passing); PDR-126 gains `pdr_kind: governance`
+  frontmatter (castr corpus convention over byte-parity — the T2 "byte-verbatim" row is
+  AMENDED for PDR-126: body verbatim, frontmatter castr-added; back-flow candidate); the
+  pr-lifecycle Governance line's transplant-plan pointer replaced with the owner+date (this
+  plan archives on merge); decision-records README index brought current (+7 rows: 105, 124,
+  125, 126, 140, 141, 142 — the hand-maintained index remains the no-moving-targets
+  anti-pattern; generated-index follow-up noted). WAIVED as conserved provenance prose (not
+  links, per the PDR-139 rationale): PDR-126's upstream-rule mention;
+  PDR-141's first-run-report mention; PDR-126 §First-phenotype's upstream-repo naming;
+  `pdr_kind: governance` as an undocumented-but-used value.
 
 ## Foundation alignment & plan-body first-principles check
 
