@@ -343,6 +343,8 @@ describe('hasTomlAssignment — every legal key spelling (gate-shaped: a missed 
     ['bare', 'tools = ["Read"]'],
     ['basic-quoted', '"tools" = ["Read"]'],
     ['literal-quoted', "'tools' = ['Read']"],
+    ['basic-quoted with a \\u escape', String.raw`"to\u006Fls" = ["Read"]`],
+    ['basic-quoted with a \\U escape', String.raw`"to\U0000006Fls" = ["Read"]`],
   ])('detects the %s spelling', (_label, line) => {
     expect(hasTomlAssignment(line, 'tools')).toBe(true);
   });
@@ -350,6 +352,18 @@ describe('hasTomlAssignment — every legal key spelling (gate-shaped: a missed 
   it('does not match the quoted key inside a multiline basic string', () => {
     const content = 'notes = """\n"tools" = ["Read"]\n"""\n';
     expect(hasTomlAssignment(content, 'tools')).toBe(false);
+  });
+
+  it('does not decode escapes in literal-quoted keys (TOML literal strings carry none)', () => {
+    expect(hasTomlAssignment(String.raw`'to\u006Fls' = 1`, 'tools')).toBe(false);
+  });
+
+  it('does not match a basic-quoted key with an invalid escape (malformed TOML is no spelling)', () => {
+    expect(hasTomlAssignment(String.raw`"to\qols" = 1`, 'tools')).toBe(false);
+  });
+
+  it('does not match a basic-quoted key that decodes to a DIFFERENT key', () => {
+    expect(hasTomlAssignment(String.raw`"tools\u0021" = 1`, 'tools')).toBe(false);
   });
 });
 
