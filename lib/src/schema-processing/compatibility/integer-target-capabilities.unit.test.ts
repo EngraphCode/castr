@@ -129,6 +129,37 @@ function createConditionalBigIntWebhookPathItem(includeIf: boolean): PathItemObj
   };
 }
 
+function createBooleanIfConditionalBigIntWebhookPathItem(
+  ifValue: boolean,
+  branch: 'then' | 'else',
+): PathItemObject {
+  const bigIntBranchSchema = {
+    type: 'integer',
+    format: 'bigint',
+  } as const;
+
+  return {
+    post: {
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              if: ifValue,
+              ...(branch === 'then' ? { then: bigIntBranchSchema } : { else: bigIntBranchSchema }),
+            },
+          },
+        },
+      },
+      responses: {
+        '204': {
+          description: 'Accepted',
+        },
+      },
+    },
+  };
+}
+
 function createBigIntQueryWebhookPathItem(): PathItemObject {
   return {
     query: {
@@ -344,6 +375,54 @@ describe('assertSchemaSupportsIntegerTargetCapabilities', () => {
         CANONICAL_OPENAPI_TARGET_LABEL,
       ),
     ).not.toThrow();
+  });
+
+  it('accepts int64 semantics under then when if is the boolean schema false because the branch is unreachable', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({
+          if: createMockCastrSchema({ booleanSchema: false }),
+          then: createInt64Schema(),
+        }),
+        'JSON Schema 2020-12',
+      ),
+    ).not.toThrow();
+  });
+
+  it('accepts int64 semantics under else when if is the boolean schema true because the branch is unreachable', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({
+          if: createMockCastrSchema({ booleanSchema: true }),
+          else: createInt64Schema(),
+        }),
+        'JSON Schema 2020-12',
+      ),
+    ).not.toThrow();
+  });
+
+  it('rejects int64 semantics under then when if is the boolean schema true because the branch always applies', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({
+          if: createMockCastrSchema({ booleanSchema: true }),
+          then: createInt64Schema(),
+        }),
+        'JSON Schema 2020-12',
+      ),
+    ).toThrow(INT64_ERROR);
+  });
+
+  it('rejects int64 semantics under else when if is the boolean schema false because the branch always applies', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({
+          if: createMockCastrSchema({ booleanSchema: false }),
+          else: createInt64Schema(),
+        }),
+        'JSON Schema 2020-12',
+      ),
+    ).toThrow(INT64_ERROR);
   });
 });
 
@@ -598,6 +677,54 @@ describe('component and document traversal', () => {
   it('rejects bigint semantics under then in raw webhook schemas when if is present', () => {
     const document = createMockCastrDocument({
       webhooks: new Map([['newCount', createConditionalBigIntWebhookPathItem(true)]]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
+  it('accepts bigint semantics under then in raw webhook schemas when if is the boolean schema false because the branch is unreachable', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([
+        ['newCount', createBooleanIfConditionalBigIntWebhookPathItem(false, 'then')],
+      ]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).not.toThrow();
+  });
+
+  it('accepts bigint semantics under else in raw webhook schemas when if is the boolean schema true because the branch is unreachable', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([
+        ['newCount', createBooleanIfConditionalBigIntWebhookPathItem(true, 'else')],
+      ]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).not.toThrow();
+  });
+
+  it('rejects bigint semantics under then in raw webhook schemas when if is the boolean schema true because the branch always applies', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([
+        ['newCount', createBooleanIfConditionalBigIntWebhookPathItem(true, 'then')],
+      ]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
+  it('rejects bigint semantics under else in raw webhook schemas when if is the boolean schema false because the branch always applies', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([
+        ['newCount', createBooleanIfConditionalBigIntWebhookPathItem(false, 'else')],
+      ]),
     });
 
     expect(() =>

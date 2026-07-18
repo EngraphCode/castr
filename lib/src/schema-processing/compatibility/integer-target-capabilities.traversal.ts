@@ -64,6 +64,35 @@ function visitMediaTypeSchemas(
   visitSchemaValue(mediaType.itemSchema, seen, visitSchema);
 }
 
+/**
+ * Visit `then`/`else` subject to `if` reachability.
+ *
+ * JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
+ * MUST be entirely ignored, so their subschemas expose no validation
+ * semantics and must not fail capability checks. A literal boolean `if`
+ * fixes the conditional outcome, so the branch it makes unreachable exposes
+ * no validation semantics either: `if: false` never validates (`then` never
+ * applies) and `if: true` always validates (`else` never applies).
+ * Non-boolean `if` schemas (including `$ref` nodes, whose outcome is not
+ * statically known here) keep both branches.
+ */
+function visitConditionalBranchSchemas(
+  schema: CastrSchema,
+  seen: Set<CastrSchema>,
+  visitSchema: SchemaVisitor,
+): void {
+  if (schema.if === undefined) {
+    return;
+  }
+
+  if (schema.if.booleanSchema !== false) {
+    visitSchemaValue(schema.then, seen, visitSchema);
+  }
+  if (schema.if.booleanSchema !== true) {
+    visitSchemaValue(schema.else, seen, visitSchema);
+  }
+}
+
 export function visitSchemaChildren(
   schema: CastrSchema,
   seen: Set<CastrSchema>,
@@ -88,17 +117,10 @@ export function visitSchemaChildren(
   visitSchemaCollection(Object.values(schema.dependentSchemas ?? {}), seen, visitSchema);
   visitSchemaCollection(Object.values(schema.patternProperties ?? {}), seen, visitSchema);
   visitSchemaValue(schema.propertyNames, seen, visitSchema);
+  // `if` itself is always evaluated (annotations are collected even without
+  // `then`/`else`); reachability gating applies only to the branches.
   visitSchemaValue(schema.if, seen, visitSchema);
-
-  // JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
-  // MUST be entirely ignored, so their subschemas expose no validation
-  // semantics and must not fail capability checks. `if` itself is always
-  // evaluated (annotations are collected even without `then`/`else`).
-  if (schema.if !== undefined) {
-    visitSchemaValue(schema.then, seen, visitSchema);
-    visitSchemaValue(schema.else, seen, visitSchema);
-  }
-
+  visitConditionalBranchSchemas(schema, seen, visitSchema);
   visitSchemaValue(schema.contains, seen, visitSchema);
 }
 

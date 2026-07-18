@@ -17,9 +17,6 @@ const OPENAPI_SINGLE_SCHEMA_KEYWORDS = [
   'unevaluatedItems',
   'unevaluatedProperties',
 ] as const;
-// JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
-// MUST be entirely ignored, so they are only visited when `if` is present.
-const OPENAPI_CONDITIONAL_BRANCH_KEYWORDS = ['then', 'else'] as const;
 const OPENAPI_ARRAY_SCHEMA_KEYWORDS = ['prefixItems', 'allOf', 'anyOf', 'oneOf'] as const;
 const OPENAPI_MAP_SCHEMA_KEYWORDS = ['patternProperties', 'dependentSchemas'] as const;
 
@@ -68,6 +65,34 @@ function visitSchemaRecord(
   }
 }
 
+/**
+ * Visit `then`/`else` subject to `if` reachability.
+ *
+ * JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
+ * MUST be entirely ignored, so they are only visited when `if` is present.
+ * A literal boolean `if` fixes the conditional outcome, so the branch it
+ * makes unreachable exposes no validation semantics either: `if: false`
+ * never validates (`then` never applies) and `if: true` always validates
+ * (`else` never applies). Non-boolean `if` schemas keep both branches.
+ */
+function visitConditionalBranches(
+  value: UnknownRecord,
+  seen: WeakSet<object>,
+  visitSchema: OpenApiSchemaVisitor,
+): void {
+  const ifValue: unknown = Reflect.get(value, 'if');
+  if (ifValue === undefined) {
+    return;
+  }
+
+  if (ifValue !== false) {
+    visitOpenApiSchemaNode(Reflect.get(value, 'then'), seen, visitSchema);
+  }
+  if (ifValue !== true) {
+    visitOpenApiSchemaNode(Reflect.get(value, 'else'), seen, visitSchema);
+  }
+}
+
 export function visitOpenApiSchemaNode(
   value: unknown,
   seen: WeakSet<object>,
@@ -85,11 +110,7 @@ export function visitOpenApiSchemaNode(
     visitOpenApiSchemaNode(Reflect.get(value, key), seen, visitSchema);
   }
 
-  if (Reflect.get(value, 'if') !== undefined) {
-    for (const key of OPENAPI_CONDITIONAL_BRANCH_KEYWORDS) {
-      visitOpenApiSchemaNode(Reflect.get(value, key), seen, visitSchema);
-    }
-  }
+  visitConditionalBranches(value, seen, visitSchema);
 
   for (const key of OPENAPI_ARRAY_SCHEMA_KEYWORDS) {
     visitSchemaArray(Reflect.get(value, key), seen, visitSchema);
