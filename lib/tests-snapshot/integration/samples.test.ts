@@ -1,5 +1,4 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
-import { type Options, resolveConfig } from 'prettier';
 import { getZodClientTemplateContext } from '../../src/schema-processing/context/index.js';
 import { writeTypeScript } from '../../src/schema-processing/writers/typescript/index.js';
 import { maybePretty } from '../../src/shared/maybe-pretty.js';
@@ -7,14 +6,22 @@ import { maybePretty } from '../../src/shared/maybe-pretty.js';
 import { sync } from 'fast-glob';
 
 import path from 'node:path';
-import { beforeAll, describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
-let prettierConfig: Options | null;
+/**
+ * The samples snapshot encodes prettier's DEFAULT formatting; `null` pins
+ * "no prettier config" for {@link maybePretty}. The pin keeps the suite
+ * byte-identical wherever the checkout sits on disk: resolving a config from
+ * the filesystem here would tie the snapshot to whatever config the search
+ * happens to find (prettier's `resolveConfig` given a directory path starts
+ * its search at the directory's PARENT, so a checkout nested inside another
+ * repository — e.g. a git worktree — would pick up the enclosing
+ * repository's config). `src/cli/resolve-prettier-config.test.ts` carries
+ * the regression proof for that directory-argument escape.
+ */
+const SNAPSHOT_PRETTIER_CONFIG = null;
+
 const pkgRoot = process.cwd();
-
-beforeAll(async () => {
-  prettierConfig = await resolveConfig(path.resolve(pkgRoot, '../'));
-});
 
 describe('openapi-examples', () => {
   const standardExamplesPath = path.resolve(
@@ -42,7 +49,7 @@ describe('openapi-examples', () => {
         ...data,
         options: { ...data.options, apiClientName: 'api' },
       });
-      const prettyOutput = await maybePretty(output, prettierConfig);
+      const prettyOutput = await maybePretty(output, SNAPSHOT_PRETTIER_CONFIG);
       const relativePath = path.relative(examplesRoot, docPath);
       const key = relativePath.replace(/\.ya?ml$/u, '');
 
