@@ -289,7 +289,10 @@ interface TemplateContextOptions {
 - `lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.ts`
   (`getEndpointDefinitionsFromIR` filtering and promotion)
 - `lib/src/schema-processing/context/endpoints/template-context.status-codes.ts`
-  (centralized status-code semantics and the `DefaultStatusBehavior` type)
+  (centralized status-code semantics, the `DefaultStatusBehavior` type, and the shared
+  primary-success selector)
+- `lib/src/schema-processing/context/mcp/template-context.mcp.responses.ts`
+  (MCP primary-success schema resolution)
 
 The behaviour, per operation whose responses contain only `default`:
 
@@ -300,6 +303,16 @@ The behaviour, per operation whose responses contain only `default`:
    endpoint's success `response`, and `default` is removed from that endpoint's `errors`.
 3. Operations with at least one explicit status code are never filtered, and their `default`
    response remains an error fallback in both modes.
+
+### Shared Primary-Success Selection
+
+Endpoint definitions and MCP tools resolve the primary success response through one shared
+selector (`orderSuccessResponsesByPrecedence`): concrete 2xx codes outrank the `2XX` range
+wildcard, and ties resolve by document order. Both writers commit to the selected response —
+when it declares no content (for example `204 No Content`), the endpoint definition emits an
+empty success schema and the MCP tool is emitted **without** an `outputSchema` (`outputSchema`
+is optional in the MCP specification). Neither writer falls through to a later success
+response's schema, so both always agree on which response is primary for the same IR.
 
 ---
 
@@ -421,5 +434,5 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status auto-correc
 
 ---
 
-**Last Updated:** January 2026  
+**Last Updated:** July 2026  
 **Architecture:** See `.agent/directives/VISION.md` for details

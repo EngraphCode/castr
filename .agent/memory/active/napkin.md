@@ -301,6 +301,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   describe crossed 500 lines when the itemSchema tests grew; the cure was extracting the five
   itemSchema capability tests into a sibling top-level describe, not raising the limit.
 
+## 2026-07-18 (lane L-H round 4 — commit to the selected success response, worktree wf_6f9f06c9-91e-3)
+
+- **A shared selector is not enough; both writers must also COMMIT to its selection:** after
+  unifying `orderSuccessResponsesByPrecedence`, endpoints took element `[0]` (204 selected →
+  empty success schema) while MCP looped on "first response with an extractable schema", so a
+  no-content-first success (204 before 200) still advertised the later 200's schema — the
+  divergence survived the unification because the fall-through lived downstream of the selector.
+  When unifying a selection, audit every consumer for skip/fall-through logic that re-decides
+  after the shared decision; the contract is "selected response is the sole source", pinned red
+  by 204-then-200 → `undefined` and 2XX-schema + 204-empty → `undefined`.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_

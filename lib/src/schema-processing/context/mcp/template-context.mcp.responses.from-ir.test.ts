@@ -264,6 +264,38 @@ describe('resolvePrimarySuccessResponseSchemaFromIR', () => {
     expect(result).toBeUndefined();
   });
 
+  test('returns undefined when the selected no-content success precedes a later success with a schema', () => {
+    const laterSuccessSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseEmpty('204'), // Selected first (document order) — no content
+        createMockResponseWithSchema('200', laterSuccessSchema),
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    // The shared selector picks the 204; a selected no-content success means
+    // the operation has no output schema. Falling through to the later 200
+    // would diverge from the endpoint builder, which takes element [0] and
+    // emits an empty success schema for the same IR.
+    expect(result).toBeUndefined();
+  });
+
+  test('does not fall through to the 2XX wildcard when a no-content concrete success is selected', () => {
+    const wildcardSchema = createMockSchema();
+    const operation: Pick<CastrOperation, 'responses'> = {
+      responses: [
+        createMockResponseWithSchema('2XX', wildcardSchema),
+        createMockResponseEmpty('204'), // Concrete outranks the wildcard — selected, no content
+      ],
+    };
+
+    const result = resolvePrimarySuccessResponseSchemaFromIR(operation);
+
+    expect(result).toBeUndefined();
+  });
+
   test('returns schema when the only success response is the 2XX wildcard', () => {
     const wildcardSchema = createMockSchema();
     const operation: Pick<CastrOperation, 'responses'> = {

@@ -200,8 +200,12 @@ const extractResponseSchemaFromIR = (
  * ({@link orderSuccessResponsesByPrecedence}): the full HTTP 2xx class
  * (`200`-`299`, RFC 9110 §15.3) and the `2XX` wildcard are success statuses;
  * `default` and every other token are not. Concrete codes outrank the `2XX`
- * wildcard; ties resolve by document order. Responses without an extractable
- * schema are skipped in that same order.
+ * wildcard; ties resolve by document order. The selected primary success
+ * response is the sole schema source: when it declares no content (for
+ * example `204 No Content`), the operation has no output schema and this
+ * function returns `undefined` — later success responses are never
+ * consulted, mirroring the endpoint builder, which takes the same selected
+ * response and emits an empty success schema.
  */
 export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
@@ -211,14 +215,10 @@ export function resolvePrimarySuccessResponseSchemaFromIR(
   operation: Pick<CastrOperation, 'responses'>,
   document: Pick<CastrDocument, 'components'> = { components: [] },
 ): CastrSchema | undefined {
-  const successResponses = orderSuccessResponsesByPrecedence(operation.responses);
-
-  for (const response of successResponses) {
-    const schema = extractResponseSchemaFromIR(document, response);
-    if (schema) {
-      return schema;
-    }
+  const [primarySuccess] = orderSuccessResponsesByPrecedence(operation.responses);
+  if (!primarySuccess) {
+    return undefined;
   }
 
-  return undefined;
+  return extractResponseSchemaFromIR(document, primarySuccess);
 }
