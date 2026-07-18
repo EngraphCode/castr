@@ -54,13 +54,12 @@ export function writeSecurityRequirements(
     .map((schemes): IRSecurityRequirement => ({ schemes }))
     .sort(compareSecurityRequirements);
 
-  return sortedRequirements.map((requirement) => {
-    const requirementObject: SecurityRequirementObject = {};
-    for (const scheme of requirement.schemes) {
-      requirementObject[scheme.schemeName] = scheme.scopes;
-    }
-    return requirementObject;
-  });
+  // Object.fromEntries defines own data properties, so every valid scheme
+  // name round-trips — including names like __proto__ that bracket assignment
+  // into a default-prototype object would silently swallow.
+  return sortedRequirements.map((requirement): SecurityRequirementObject =>
+    Object.fromEntries(requirement.schemes.map((scheme) => [scheme.schemeName, scheme.scopes])),
+  );
 }
 
 function writeCoreMetadata(operation: CastrOperationLike, result: OperationObject): void {

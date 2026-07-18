@@ -101,7 +101,10 @@ function addDocumentContent(result: OpenAPIDocument, ir: CastrDocument): void {
       result['x-ext'] = xExtMediaTypes;
     }
   }
-  if (ir.security !== undefined && ir.security.length > 0) {
+  // An explicit empty array is a meaningful document-level value ("all
+  // operations are public by default") and must be re-emitted distinct from
+  // absent, matching the operation writer's behaviour.
+  if (ir.security !== undefined) {
     result.security = writeSecurityRequirements(ir.security);
   }
 }

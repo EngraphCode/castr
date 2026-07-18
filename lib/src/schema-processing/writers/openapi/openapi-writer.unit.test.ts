@@ -310,6 +310,22 @@ describe('writeOpenApi', () => {
 
       expect(result.security).toEqual([{ apiKey: [], oauth2: ['read'] }]);
     });
+
+    it('emits an explicit document-level security: [] distinct from absent', () => {
+      const ir = createDocument({ security: [] });
+
+      const result = writeOpenApi(ir);
+
+      // CastrDocument.security models [] as "all operations are public by
+      // default"; dropping it changes the document's declared meaning.
+      expect(result.security).toEqual([]);
+    });
+
+    it('omits document-level security when the IR does not define it', () => {
+      const result = writeOpenApi(createDocument());
+
+      expect(result).not.toHaveProperty('security');
+    });
   });
 
   describe('empty document', () => {

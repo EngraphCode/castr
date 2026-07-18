@@ -2,7 +2,29 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-07-17 (lane L-D follow-up: reviewer-panel important findings — Fable subagent)
+## 2026-07-18 (lane L-D round 2: PR #18 unresolved review threads — Fable subagent)
+
+- **The prototype-unsafe-map class was 7 fix sites, not the 2 flagged:** sweeping the lane's diff
+  surface for "plain-object map keyed by user-controlled names" found, beyond the two review
+  findings: the generated registry's ACCUMULATION loop (`result[sanitized] = value` swallows a
+  `__proto__` component), the generated map's object-literal embedding (a `"__proto__"` key in an
+  object literal sets the prototype, so JSON.stringify-into-literal can never carry it — emit a
+  `new Map([[...]])` entries literal instead), the MCP inline-JSON-schema property bag, BOTH
+  generic schema walkers behind it, and three parser component-ref lookups whose `if (!x)`
+  dangling-ref guards were bypassed by inherited members (`#/components/requestBodies/constructor`
+  resolved to Object.prototype.constructor with NO error).
+- **First fromEntries fix stayed red — trace the value to the OUTPUT, not the first drop point:**
+  fixing `convertPropertiesToJsonSchema` alone left the `__proto__` property missing because the
+  generic ref-inlining walker re-assembled the same bag through `setKeyword` (`target[key] =
+value`) and re-dropped it. Data-loss fixes need the whole path audited, red kept red until the
+  LAST drop point is gone.
+- **Cheap genuine red for generated-code lookups:** the helpers proof already replicates the
+  emitted lookup expression over the extracted embedded map; adding `constructor`/`toString`/
+  `__proto__` to the name fixture turned the EXISTING seam-agreement assertion red (returned
+  `[Function Object]`) with zero new machinery and no eval.
+- **`Object.keys()`/`JSON.stringify` are the honest assertions for own-`__proto__` properties:**
+  a test expectation literal `{'__proto__': []}` itself sets the prototype and vacuously passes;
+  computed-key or key-list assertions are required.
 
 - **`security: []` on an operation was a REAL preservation bug, not just a missing test:** the
   operations writer guarded emission with `security.length > 0`, so an explicit public override

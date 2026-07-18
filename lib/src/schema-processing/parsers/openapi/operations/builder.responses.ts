@@ -138,7 +138,10 @@ function getReferencedResponse(
     return throwUnresolvedResponseRefError(ref, statusCode, context);
   }
 
-  const response = responses[responseName];
+  // Own-property-safe lookup: ref names are user-controlled, and a bare
+  // bracket read would return inherited Object.prototype members (e.g.
+  // "constructor") instead of falling through to the unresolved-ref error.
+  const response = Object.hasOwn(responses, responseName) ? responses[responseName] : undefined;
   if (!response) {
     return throwUnresolvedResponseRefError(ref, statusCode, context);
   }

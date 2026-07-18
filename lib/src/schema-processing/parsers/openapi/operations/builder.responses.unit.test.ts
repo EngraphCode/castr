@@ -55,6 +55,23 @@ describe('buildSingleResponse strict ref resolution', () => {
     );
   });
 
+  test('throws on response refs that only match inherited Object.prototype members', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+      components: { responses: {} },
+    };
+
+    const ref: ReferenceObject = { $ref: '#/components/responses/constructor' };
+
+    // A bare bracket lookup returns the inherited constructor function
+    // instead of undefined, bypassing the unresolved-ref guard.
+    expect(() => buildSingleResponse('500', ref, createContext(doc))).toThrow(
+      /Unresolvable response reference/,
+    );
+  });
+
   test('throws on non-response component refs with actionable context', () => {
     const doc: OpenAPIDocument = {
       openapi: '3.1.0',

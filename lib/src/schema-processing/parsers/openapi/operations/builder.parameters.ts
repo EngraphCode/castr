@@ -161,7 +161,10 @@ function getReferencedParameter(
     return throwUnresolvedParameterRefError(ref, context);
   }
 
-  const param = parameters[paramName];
+  // Own-property-safe lookup: ref names are user-controlled, and a bare
+  // bracket read would return inherited Object.prototype members (e.g.
+  // "constructor") instead of falling through to the unresolved-ref error.
+  const param = Object.hasOwn(parameters, paramName) ? parameters[paramName] : undefined;
   if (!param) {
     return throwUnresolvedParameterRefError(ref, context);
   }

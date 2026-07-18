@@ -7,10 +7,14 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { createMockCastrDocument, createMockCastrSchemaNode } from '../../../ir/index.js';
+import {
+  CastrSchemaProperties,
+  createMockCastrDocument,
+  createMockCastrSchemaNode,
+} from '../../../ir/index.js';
 import type { MutableJsonSchema } from '../../../conversion/json-schema/index.js';
 import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-schema.js';
-import type { CastrSchemaComponent } from '../../../ir/index.js';
+import type { CastrSchema, CastrSchemaComponent } from '../../../ir/index.js';
 
 /**
  * Create a mock schema component for the IR.
@@ -79,6 +83,57 @@ describe('inlineJsonSchemaRefsFromIR', () => {
         },
       },
     });
+  });
+
+  test('round-trips a property named __proto__ as an own property when inlining', () => {
+    const protoPropertySchema: CastrSchema = {
+      type: 'string',
+      metadata: createMockCastrSchemaNode(),
+    };
+    const propertyEntries: [string, CastrSchema][] = [['__proto__', protoPropertySchema]];
+    const ir = createMockCastrDocument({
+      components: [
+        {
+          type: 'schema',
+          name: 'ProtoBag',
+          schema: {
+            type: 'object',
+            properties: new CastrSchemaProperties(Object.fromEntries(propertyEntries)),
+            metadata: createMockCastrSchemaNode(),
+          },
+          metadata: createMockCastrSchemaNode(),
+        },
+      ],
+    });
+
+    const schema: MutableJsonSchema = {
+      type: 'object',
+      properties: {
+        bag: { $ref: '#/definitions/ProtoBag' },
+      },
+    };
+
+    const result = inlineJsonSchemaRefsFromIR(schema, ir);
+
+    // A plain-object bracket write triggers the legacy __proto__ setter and
+    // silently drops the property from the inlined tool schema. JSON.stringify
+    // serialises only own properties, so equality proves the key is an own
+    // data property. The expected record is built with Object.fromEntries
+    // because an object literal's "__proto__" key would set the prototype.
+    const expectedBagProperties = Object.fromEntries(
+      propertyEntries.map(([name]): [string, MutableJsonSchema] => [name, { type: 'string' }]),
+    );
+    expect(JSON.stringify(result)).toBe(
+      JSON.stringify({
+        type: 'object',
+        properties: {
+          bag: {
+            type: 'object',
+            properties: expectedBagProperties,
+          },
+        },
+      }),
+    );
   });
 
   test('preserves non-definitions refs unchanged', () => {

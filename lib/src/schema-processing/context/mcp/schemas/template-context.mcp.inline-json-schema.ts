@@ -11,7 +11,7 @@
  * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
  */
 
-import { setKeyword, type MutableJsonSchema } from '../../../conversion/json-schema/index.js';
+import { type MutableJsonSchema } from '../../../conversion/json-schema/index.js';
 import type {
   CastrSchema,
   CastrDocument,
@@ -75,14 +75,17 @@ const convertPropertiesToJsonSchema = (
   properties: CastrSchemaPropertiesLike,
   converter: (schema: CastrSchema) => MutableJsonSchema,
 ): Record<string, MutableJsonSchema> => {
-  const result: Record<string, MutableJsonSchema> = {};
+  const entries: [string, MutableJsonSchema][] = [];
   for (const [propName, propSchema] of properties.entries()) {
     if (!isCastrSchema(propSchema)) {
       throw new Error('[mcp-inline-json-schema] Expected CastrSchema property value.');
     }
-    result[propName] = converter(propSchema);
+    entries.push([propName, converter(propSchema)]);
   }
-  return result;
+  // Object.fromEntries defines own data properties, so user-controlled
+  // property names that collide with Object.prototype members (__proto__,
+  // constructor, ...) survive the conversion.
+  return Object.fromEntries(entries);
 };
 
 /**
@@ -116,16 +119,19 @@ const processSchemaEntry = (value: unknown): MutableJsonSchema | unknown[] | unk
  * Strips the metadata field which is IR-specific.
  */
 const castrSchemaToJsonSchema = (schema: CastrSchema): MutableJsonSchema => {
-  const result: MutableJsonSchema = {};
+  const entries: [string, unknown][] = [];
 
   for (const [key, value] of Object.entries(schema)) {
     if (key === METADATA_KEY) {
       continue;
     }
-    setKeyword(result, key, processSchemaEntry(value));
+    entries.push([key, processSchemaEntry(value)]);
   }
 
-  return result;
+  // Object.fromEntries defines own data properties: keys sourced from
+  // user-controlled schemas (property bags flow through this walk) survive
+  // even when they collide with Object.prototype members such as __proto__.
+  return Object.fromEntries(entries);
 };
 
 const inlineJsonSchemaValueFromIR = (
@@ -158,16 +164,18 @@ const inlineJsonSchemaObjectFromIR = (
     return resolveSchemaReferenceFromIR(reference, context);
   }
 
-  const result: MutableJsonSchema = {};
+  const entries: [string, unknown][] = [];
 
   for (const [key, entryValue] of Object.entries(schema)) {
     if (key === DEFINITIONS_KEY) {
       continue;
     }
-    setKeyword(result, key, inlineJsonSchemaValueFromIR(entryValue, context));
+    entries.push([key, inlineJsonSchemaValueFromIR(entryValue, context)]);
   }
 
-  return result;
+  // Own-property-safe assembly: this walk visits nested property bags whose
+  // keys are user-controlled names, not just JSON Schema keywords.
+  return Object.fromEntries(entries);
 };
 
 /**

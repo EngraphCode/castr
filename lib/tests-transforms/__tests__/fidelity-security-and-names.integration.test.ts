@@ -37,6 +37,7 @@ const OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE = resolve(
   EDGE_CASES_DIR,
   'security-optional-and-public.yaml',
 );
+const DOCUMENT_EMPTY_SECURITY_FIXTURE = resolve(EDGE_CASES_DIR, 'security-document-empty.yaml');
 
 const SCHEMA_REF_PREFIX = '#/components/schemas/';
 
@@ -172,10 +173,15 @@ describe('optional security: the empty requirement object {} is preserved', () =
     expect(inheritedSecurity.requirementSets[1]?.schemes).toEqual([]);
   });
 
-  it('is round-trip stable through a second parse and write', async () => {
+  it('is round-trip stable through a second load, parse, and write', async () => {
     const { document } = await loadOpenApiDocument(OPTIONAL_AND_PUBLIC_SECURITY_FIXTURE);
     const out = writeOpenApi(buildIR(document));
-    const out2 = writeOpenApi(buildIR(out));
+
+    // The second pass must cross the real OpenAPI load/validation boundary,
+    // not just buildIR's minimal structural guard. The clone keeps the
+    // equality proof honest if loading mutates its input.
+    const reloaded = await loadOpenApiDocument(structuredClone(out));
+    const out2 = writeOpenApi(buildIR(reloaded.document));
 
     expect(out2).toEqual(out);
   });
@@ -225,6 +231,24 @@ describe('operation-level security: [] is an explicit public override, distinct 
   });
 });
 
+describe('document-level security: [] is an explicit public default, distinct from absent', () => {
+  it('carries the empty document security array into the IR', async () => {
+    const { document } = await loadOpenApiDocument(DOCUMENT_EMPTY_SECURITY_FIXTURE);
+    const ir = buildIR(document);
+
+    expect(ir.security).toEqual([]);
+  });
+
+  it('writes document-level security: [] back out', async () => {
+    const { document } = await loadOpenApiDocument(DOCUMENT_EMPTY_SECURITY_FIXTURE);
+    const out = writeOpenApi(buildIR(document));
+
+    // Dropping the declared empty default would make the written document
+    // silently claim security was never specified.
+    expect(out.security).toEqual([]);
+  });
+});
+
 describe('C3: original component names are the IR identity', () => {
   it('preserves the dotted component key and keeps every $ref resolvable', async () => {
     const { document } = await loadOpenApiDocument(DOTTED_COMPONENT_NAME_FIXTURE);
@@ -242,8 +266,10 @@ describe('C3: original component names are the IR identity', () => {
       expect(schemas[componentKey], `dangling $ref: ${ref}`).toBeDefined();
     }
 
-    // The written document must itself be parseable again.
-    expect(() => buildIR(out)).not.toThrow();
+    // The written document must itself survive the real OpenAPI
+    // load/validation boundary and rebuild into an IR.
+    const reloaded = await loadOpenApiDocument(structuredClone(out));
+    expect(() => buildIR(reloaded.document)).not.toThrow();
   });
 
   it('sanitises component names only when emitting code symbols', async () => {
