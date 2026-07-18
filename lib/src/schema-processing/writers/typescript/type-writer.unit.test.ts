@@ -558,6 +558,83 @@ describe('Literal Value Types — enum and const', () => {
   });
 });
 
+describe('Literal Constraints — conjunction with type and composition', () => {
+  it('drops enum values outside the declared type', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: ['ok', 1] });
+    expect(generate(schema)).toBe('"ok"');
+  });
+
+  it('generates never when no enum value matches the declared type', () => {
+    const schema = createMockCastrSchema({ type: 'string', enum: [1] });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('filters enum values against every member of a type array', () => {
+    const schema = createMockCastrSchema({ type: ['string', 'null'], enum: ['a', null, 5] });
+    expect(generate(schema)).toBe('"a" | null');
+  });
+
+  it('drops non-integer enum values under an integer declared type', () => {
+    const schema = createMockCastrSchema({ type: 'integer', enum: [1, 2.5] });
+    expect(generate(schema)).toBe('1');
+  });
+
+  it('generates never for a const outside the declared type', () => {
+    const schema = createMockCastrSchema({ type: 'string', const: 1 });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('generates never for a const alongside an empty enum', () => {
+    const schema = createMockCastrSchema({ const: 'x', enum: [] });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('generates the const literal when the enum contains it', () => {
+    const schema = createMockCastrSchema({ const: 'x', enum: ['x', 'y'] });
+    expect(generate(schema)).toBe('"x"');
+  });
+
+  it('generates never for a const the enum does not contain', () => {
+    const schema = createMockCastrSchema({ const: 'z', enum: ['x', 'y'] });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('intersects sibling enum constraints with allOf composition', () => {
+    const schema = createMockCastrSchema({
+      allOf: [createMockCastrSchema({ type: 'string' })],
+      enum: ['a', 'b'],
+    });
+    expect(generate(schema)).toBe('string & ("a" | "b")');
+  });
+
+  it('intersects sibling enum constraints with oneOf composition', () => {
+    const schema = createMockCastrSchema({
+      oneOf: [createMockCastrSchema({ type: 'string' }), createMockCastrSchema({ type: 'number' })],
+      enum: ['a'],
+    });
+    expect(generate(schema)).toBe('(string | number) & "a"');
+  });
+
+  it('generates never for composition alongside an empty enum', () => {
+    const schema = createMockCastrSchema({
+      oneOf: [createMockCastrSchema({ type: 'string' })],
+      enum: [],
+    });
+    expect(generate(schema)).toBe('never');
+  });
+
+  it('parenthesises composition-literal conjunctions used as array item types', () => {
+    const schema = createMockCastrSchema({
+      type: 'array',
+      items: createMockCastrSchema({
+        allOf: [createMockCastrSchema({ type: 'string' })],
+        enum: ['a'],
+      }),
+    });
+    expect(generate(schema)).toBe('(string & "a")[]');
+  });
+});
+
 describe('Type Arrays — union output', () => {
   it('generates union for a heterogeneous type array', () => {
     const schema = createMockCastrSchema({ type: ['string', 'number'] });

@@ -15,6 +15,7 @@ import {
   renderTypeText,
   rendersAsTopLevelUnion,
   rendersOwnNullBranch,
+  writeCompositionLiteralConjunction,
   writeLiteralValueType,
   writeTypeArrayUnion,
 } from './literal-types.js';
@@ -114,6 +115,9 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
     }
     rejectDynamicReferenceKeywords(schema);
     if (writeRefType(schema, writer)) {
+      return;
+    }
+    if (writeCompositionLiteralConjunction(schema, writer, writeCompositionType)) {
       return;
     }
     if (writeCompositionType(schema, writer)) {
@@ -220,20 +224,14 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
   return [...schema.properties.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
+/** Emit: BaseObject & (PresentBranch | AbsentBranch) & ... for dependent keywords. @internal */
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   rejectUnsupportedObjectKeywords(schema);
-  const hasDependentRequired = schema.dependentRequired !== undefined;
-  const hasDependentSchemas = schema.dependentSchemas !== undefined;
-  if (!hasDependentRequired && !hasDependentSchemas) {
-    writeObjectInlineBlock(schema, writer);
-    return;
-  }
-  // Emit: BaseObject & (PresentBranch | AbsentBranch) & ...
   writeObjectInlineBlock(schema, writer);
-  if (hasDependentRequired) {
+  if (schema.dependentRequired !== undefined) {
     writeDependentRequiredUnions(schema, writer, writeProperty);
   }
-  if (hasDependentSchemas) {
+  if (schema.dependentSchemas !== undefined) {
     writeDependentSchemasUnions(schema, writer, writeProperty);
   }
 }

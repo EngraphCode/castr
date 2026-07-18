@@ -61,12 +61,16 @@ export interface OTTBundleEntrypoint {
  * - Inspect sizes to understand bundling performance.
  */
 export interface OTTBundleFileEntry {
-  /** Absolute path to the file that was read. */
+  /**
+   * Path to the file that was read: resolved against the entrypoint's
+   * directory, or recorded verbatim when the entrypoint has no filesystem
+   * directory (URL or in-memory entrypoints). Never fabricated from
+   * `process.cwd()` — the metadata is output-bound and must stay
+   * deterministic and free of machine-local leakage.
+   */
   readonly absolutePath: string;
   /** File size in bytes, if it could be determined. */
   readonly byteLength?: number;
-  /** ISO-8601 timestamp when the file metadata was captured. */
-  readonly capturedAt?: string;
 }
 
 /**

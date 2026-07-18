@@ -4,21 +4,22 @@
  * Faithful emission of `const`/`enum` literal types and multi-type
  * (`type: [...]`) unions, plus the parenthesisation predicates the core
  * writer needs to place those unions in higher-precedence positions.
+ * Literal tokens come from `literal-token-resolution.ts`, which applies the
+ * conjunctive `type` ∧ `const` ∧ `enum` intersection.
  *
- * Callback parameters (`renderMember`, `writeMember`) are injected by the
- * core writer to avoid a circular module dependency on its recursive
- * writer functions.
+ * Callback parameters (`renderMember`, `writeMember`, `writeComposition`)
+ * are injected by the core writer to avoid a circular module dependency on
+ * its recursive writer functions.
  *
  * @internal
  */
 
 import { CodeBlockWriter, type WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
-import { getIntegerSemantics } from '../../../ir/index.js';
 import type { SchemaObjectType } from '../../../../shared/openapi-types.js';
+import { hasCompositionKeywords, resolveLiteralUnionTokens } from './literal-token-resolution.js';
 
 const NULL_SCHEMA_TYPE: SchemaObjectType = 'null';
-const NUMBER_SCHEMA_TYPE: SchemaObjectType = 'number';
 const NULL_LITERAL_TOKEN = 'null';
 
 /**
@@ -35,103 +36,12 @@ export function renderTypeText(write: WriterFunction): string {
 }
 
 /**
- * Format a primitive IR value as a TypeScript literal type token.
- *
- * When `asBigIntLiteral` is set (int64/bigint integer semantics), integer
- * numeric values become bigint literal tokens (`1n`) so the literal type
- * matches the runtime `bigint` representation those semantics produce.
- *
- * @throws Error for values with no TypeScript literal type (objects, arrays,
- * non-finite numbers, non-integer numbers under integer semantics) — fail
- * fast instead of silently widening.
- *
- * @internal
- */
-function formatLiteralTypeToken(value: unknown, asBigIntLiteral: boolean): string {
-  if (value === null) {
-    return NULL_LITERAL_TOKEN;
-  }
-  if (typeof value === 'string') {
-    return JSON.stringify(value);
-  }
-  if (typeof value === 'boolean') {
-    return String(value);
-  }
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return formatNumericLiteralTypeToken(value, asBigIntLiteral);
-  }
-  throw new Error(
-    `Genuinely impossible: enum/const value of type "${typeof value}" cannot be represented ` +
-      'as a TypeScript literal type. Literal types exist only for finite primitive JSON values.',
-  );
-}
-
-/**
- * Format a finite numeric value as a number or bigint literal type token.
- *
- * @throws Error for non-integer values under int64/bigint semantics — no
- * bigint literal exists for them.
- *
- * @internal
- */
-function formatNumericLiteralTypeToken(value: number, asBigIntLiteral: boolean): string {
-  if (!asBigIntLiteral) {
-    return String(value);
-  }
-  if (!Number.isInteger(value)) {
-    throw new Error(
-      `Genuinely impossible: non-integer enum/const value ${String(value)} under int64/bigint ` +
-        'integer semantics cannot be represented as a TypeScript bigint literal type. ' +
-        'bigint literals exist only for integer values.',
-    );
-  }
-  return `${BigInt(value)}n`;
-}
-
-/**
- * Whether literal numeric values must be emitted as bigint literals.
- *
- * True when the schema carries int64/bigint integer semantics (runtime values
- * are `bigint`) and its type set has no `number` member that could hold plain
- * numeric values instead.
- *
- * @internal
- */
-function usesBigIntLiterals(schema: CastrSchema): boolean {
-  if (getIntegerSemantics(schema) === undefined) {
-    return false;
-  }
-  return !(
-    Array.isArray(schema.type) &&
-    schema.type.some((memberType) => memberType === NUMBER_SCHEMA_TYPE)
-  );
-}
-
-/**
- * Resolve the literal union tokens for a schema carrying `const` or `enum`.
- * Returns undefined when the schema carries neither. An empty enum yields an
- * empty token list (nothing validates → `never`). Integer values under
- * int64/bigint semantics resolve to bigint literal tokens.
- *
- * @internal
- */
-function resolveLiteralUnionTokens(schema: CastrSchema): string[] | undefined {
-  const asBigIntLiteral = usesBigIntLiterals(schema);
-  if (schema.const !== undefined) {
-    return [formatLiteralTypeToken(schema.const, asBigIntLiteral)];
-  }
-  if (schema.enum !== undefined) {
-    return [...new Set(schema.enum.map((value) => formatLiteralTypeToken(value, asBigIntLiteral)))];
-  }
-  return undefined;
-}
-
-/**
  * Write `const`/`enum` literal value types. Returns `true` if written.
  *
  * - `const: v` → the literal type of `v`
- * - `enum: [...]` → union of the deduplicated literal types
- * - `enum: []` → `never` (nothing validates)
+ * - `enum: [...]` → union of the deduplicated literal types intersected with
+ *   the declared `type` set
+ * - empty intersection (including `enum: []`) → `never` (nothing validates)
  *
  * @internal
  */
@@ -141,6 +51,46 @@ export function writeLiteralValueType(schema: CastrSchema, writer: CodeBlockWrit
     return false;
   }
   writer.write(tokens.length === 0 ? 'never' : tokens.join(' | '));
+  return true;
+}
+
+/**
+ * Write a composition that carries a sibling `const`/`enum` constraint.
+ * JSON Schema applies both conjunctively, so the output is
+ * `(composition) & (literal union)` — an empty literal intersection means
+ * nothing validates and is written as `never`. Returns `true` if written.
+ *
+ * @param schema - Schema carrying both composition and literal keywords
+ * @param writer - Destination writer
+ * @param writeComposition - Renders the composition body (injected by core)
+ *
+ * @internal
+ */
+export function writeCompositionLiteralConjunction(
+  schema: CastrSchema,
+  writer: CodeBlockWriter,
+  writeComposition: (schema: CastrSchema, writer: CodeBlockWriter) => boolean,
+): boolean {
+  if (!hasCompositionKeywords(schema)) {
+    return false;
+  }
+  const literalTokens = resolveLiteralUnionTokens(schema);
+  if (literalTokens === undefined) {
+    return false;
+  }
+  if (literalTokens.length === 0) {
+    writer.write('never');
+    return true;
+  }
+  const compositionNeedsParens = (schema.oneOf ?? schema.anyOf) !== undefined;
+  writer.conditionalWrite(compositionNeedsParens, '(');
+  writeComposition(schema, writer);
+  writer.conditionalWrite(compositionNeedsParens, ')');
+  writer.write(' & ');
+  const literalNeedsParens = literalTokens.length > 1;
+  writer.conditionalWrite(literalNeedsParens, '(');
+  writer.write(literalTokens.join(' | '));
+  writer.conditionalWrite(literalNeedsParens, ')');
   return true;
 }
 
@@ -177,13 +127,10 @@ export function writeTypeArrayUnion(
  * @internal
  */
 export function rendersOwnNullBranch(schema: CastrSchema): boolean {
-  if (
-    schema.booleanSchema !== undefined ||
-    schema.$ref !== undefined ||
-    schema.allOf !== undefined ||
-    schema.oneOf !== undefined ||
-    schema.anyOf !== undefined
-  ) {
+  if (schema.booleanSchema !== undefined || schema.$ref !== undefined) {
+    return false;
+  }
+  if (hasCompositionKeywords(schema)) {
     return false;
   }
   const literalTokens = resolveLiteralUnionTokens(schema);
@@ -196,14 +143,27 @@ export function rendersOwnNullBranch(schema: CastrSchema): boolean {
 }
 
 /**
+ * Whether the schema's rendering can never open with a top-level `|`:
+ * boolean schemas, $refs and allOf intersections.
+ *
+ * @internal
+ */
+function rendersWithoutTopLevelUnion(schema: CastrSchema): boolean {
+  return (
+    schema.booleanSchema !== undefined || schema.$ref !== undefined || schema.allOf !== undefined
+  );
+}
+
+/**
  * Whether the schema renders as a top-level union (`A | B`), and therefore
  * needs parentheses in positions with higher-precedence operators
  * (`[]` suffix, `&` intersection members).
  *
  * Mirrors the core writer's precedence: boolean schemas, $refs and
  * intersections never render a top-level `|`; oneOf/anyOf render one when
- * more than one deduplicated member survives; literal (`enum`) and
- * type-array schemas render one for more than one unique token.
+ * more than one deduplicated member survives (unless a sibling literal
+ * constraint turns the rendering into a top-level `&`); literal (`enum`)
+ * and type-array schemas render one for more than one unique token.
  *
  * @param schema - Schema whose rendering is being placed
  * @param renderMember - Renders a schema body to text (injected by core)
@@ -214,18 +174,19 @@ export function rendersAsTopLevelUnion(
   schema: CastrSchema,
   renderMember: (member: CastrSchema) => string,
 ): boolean {
-  if (
-    schema.booleanSchema !== undefined ||
-    schema.$ref !== undefined ||
-    schema.allOf !== undefined
-  ) {
+  if (rendersWithoutTopLevelUnion(schema)) {
     return false;
   }
+  const literalTokens = resolveLiteralUnionTokens(schema);
   const unionMembers = schema.oneOf ?? schema.anyOf;
   if (unionMembers !== undefined) {
+    if (literalTokens !== undefined) {
+      // Composition ∧ literal renders `(union) & (literals)` — a top-level
+      // `&` (or bare `never` for an empty intersection), never a `|`.
+      return false;
+    }
     return new Set(unionMembers.map((member) => renderMember(member))).size > 1;
   }
-  const literalTokens = resolveLiteralUnionTokens(schema);
   if (literalTokens !== undefined) {
     return literalTokens.length > 1;
   }
@@ -235,7 +196,8 @@ export function rendersAsTopLevelUnion(
 /**
  * Whether an array item type must be parenthesised before the `[]` suffix.
  * True for items rendering a top-level `|` (unions, multi-token literals,
- * type arrays, `| null` from nullable) or a top-level `&` (intersections).
+ * type arrays, `| null` from nullable) or a top-level `&` (intersections,
+ * composition ∧ literal conjunctions).
  *
  * @param item - Array item schema
  * @param renderMember - Renders a schema body to text (injected by core)
@@ -251,6 +213,14 @@ export function arrayItemNeedsParens(
   }
   if (item.booleanSchema !== undefined || item.$ref !== undefined) {
     return false;
+  }
+  if (hasCompositionKeywords(item)) {
+    const literalTokens = resolveLiteralUnionTokens(item);
+    if (literalTokens !== undefined) {
+      // Composition ∧ literal renders `(composition) & (literals)` — a
+      // top-level `&` — unless the intersection is empty (`never`).
+      return literalTokens.length > 0;
+    }
   }
   if (item.allOf !== undefined) {
     return item.allOf.length > 1;

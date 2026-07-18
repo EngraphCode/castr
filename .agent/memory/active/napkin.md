@@ -2,6 +2,33 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (PR #15 review-response round, L-K3+K5+K7 — review-response subagent)
+
+- **All five unresolved PR #15 review threads verified real firsthand** before touching code:
+  first-match dispatch in `writeTypeBody` treats conjunctive JSON Schema keywords as
+  alternatives (literal beats `type`, composition beats literal); `Number.isInteger` admitted
+  unsafe integers into `BigInt(value)` bigint literals; the L15 capture-context seam never
+  reached the production load path (orchestrator called `setupBundleInfrastructure` without it);
+  zod enum generator emits `z.literal(1)` while TS emits `1n` under int64.
+- **Lane-spec alternatives beat API threading**: the reviewer demanded threading the capture
+  context through normalization/orchestration, but the L15 lane spec sanctioned the simpler
+  root-cause remedy — _drop time+cwd from output-bound metadata_. `capturedAt` had zero
+  production consumers (grep-verified), so deleting it made determinism true by construction
+  with no public-API change. Read the lane spec before accepting a reviewer's prescribed remedy.
+- **Strict conjunction semantics flipped the zodios-era `enum-null` snapshot**
+  (`Null1 = null` → `never`, `Null2 = "a" | null` → `"a"`): the OpenAPI 3.0 fixture carries
+  `type: 'string', enum: [null]` with no `nullable: true`, so under 2020-12 conjunction the null
+  member is dead. The Zod lines in the same file still emit `z.literal(null)` — same missing-
+  conjunction root cause as the int64 `z.literal(1)` gap. Whether 3.0 `enum: [null]` should
+  imply nullable at the PARSER boundary is an owner/parser-lane question, flagged not decided.
+- **Existing test inverted, deliberately**: "throws for non-integer literal under integer
+  semantics" became "generates never" — a dead enum member is an empty intersection, not an
+  impossible output mapping; fail-fast stays reserved for genuinely unmappable values (unsafe
+  integers now throw with a precision-loss message).
+- **max-lines pressure is a design signal**: the conjunction logic pushed `literal-types.ts` to
+  252 counted lines; split token resolution into `literal-token-resolution.ts` along the real
+  seam (value admission vs writer/parens predicates) instead of fighting the cap.
+
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
 - **All five open Criticals (C2–C6) re-confirmed firsthand on today's main (`8bfc858`)** by

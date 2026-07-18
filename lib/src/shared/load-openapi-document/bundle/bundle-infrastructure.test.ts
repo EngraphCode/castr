@@ -5,7 +5,6 @@ import {
   createUrlRecorder,
   wrapLoaderPlugin,
   setupBundleInfrastructure,
-  type OTTBundleCaptureContext,
 } from './bundle-infrastructure.js';
 import type { LoaderPlugin } from '@scalar/json-magic/bundle';
 
@@ -18,9 +17,7 @@ describe('bundle-infrastructure', () => {
 
       recorder('/project/schemas/user.yaml');
 
-      expect(files).toHaveLength(1);
-      expect(files[0]?.absolutePath).toBe('/project/schemas/user.yaml');
-      expect(files[0]?.capturedAt).toBeDefined();
+      expect(files).toStrictEqual([{ absolutePath: '/project/schemas/user.yaml' }]);
     });
 
     it('should resolve relative paths from entrypoint directory', () => {
@@ -71,22 +68,12 @@ describe('bundle-infrastructure', () => {
     });
   });
 
-  describe('capture context injection', () => {
-    const fixedContext: OTTBundleCaptureContext = {
-      now: () => '2024-01-01T00:00:00.000Z',
-      fallbackBaseDirectory: '/project/base',
-    };
-
-    it('two runs with the same capture context produce identical file metadata', () => {
+  describe('deterministic metadata capture', () => {
+    it('two runs produce identical file metadata without injection', () => {
       const runRecorder = (): OTTBundleFileEntry[] => {
         const files: OTTBundleFileEntry[] = [];
         const externalRefs = new Map<string, number>();
-        const recorder = createFileRecorder(
-          '/project/openapi.yaml',
-          files,
-          externalRefs,
-          fixedContext,
-        );
+        const recorder = createFileRecorder('/project/openapi.yaml', files, externalRefs);
 
         recorder('/project/schemas/user.yaml');
         return files;
@@ -95,20 +82,20 @@ describe('bundle-infrastructure', () => {
       const firstRun = runRecorder();
       const secondRun = runRecorder();
 
-      expect(firstRun).toEqual(secondRun);
-      expect(firstRun).toEqual([
-        { absolutePath: '/project/schemas/user.yaml', capturedAt: '2024-01-01T00:00:00.000Z' },
-      ]);
+      expect(firstRun).toStrictEqual(secondRun);
+      expect(firstRun).toStrictEqual([{ absolutePath: '/project/schemas/user.yaml' }]);
     });
 
-    it('resolves relative paths against the injected fallback base directory', () => {
+    it('records relative paths verbatim when the entrypoint has no directory', () => {
+      // URL and in-memory entrypoints have no filesystem directory; the
+      // recorder must not fabricate machine-local absolutes from process.cwd().
       const files: OTTBundleFileEntry[] = [];
       const externalRefs = new Map<string, number>();
-      const recorder = createFileRecorder('relative-entry.yaml', files, externalRefs, fixedContext);
+      const recorder = createFileRecorder('relative-entry.yaml', files, externalRefs);
 
       recorder('schemas/user.yaml');
 
-      expect(files[0]?.absolutePath).toBe('/project/base/schemas/user.yaml');
+      expect(files).toStrictEqual([{ absolutePath: 'schemas/user.yaml' }]);
     });
   });
 

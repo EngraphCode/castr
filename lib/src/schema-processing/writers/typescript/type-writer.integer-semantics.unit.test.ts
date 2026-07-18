@@ -156,8 +156,10 @@ describe('TypeWriter integer semantics', () => {
     ).toBe('1.5 | 2');
   });
 
-  it('throws for non-integer literal values under integer semantics', () => {
-    expect(() =>
+  it('generates never for non-integer literal values under integer semantics (dead members)', () => {
+    // 1.5 can never satisfy `type: integer`, so the literal ∧ type conjunction
+    // is empty — the faithful emission is `never`, mirroring `enum: []`.
+    expect(
       generate(
         createMockCastrSchema({
           type: 'integer',
@@ -166,7 +168,23 @@ describe('TypeWriter integer semantics', () => {
           metadata: createMetadata(false),
         }),
       ),
-    ).toThrow(/Genuinely impossible/);
+    ).toBe('never');
+  });
+
+  it('throws for unsafe integer literal values under int64 semantics', () => {
+    // 2^53 survives Number.isInteger but exceeds Number.MAX_SAFE_INTEGER: the
+    // source document's exact int64 value was already rounded at JSON parse,
+    // so emitting a bigint literal from it would silently claim a wrong value.
+    expect(() =>
+      generate(
+        createMockCastrSchema({
+          type: 'integer',
+          integerSemantics: 'int64',
+          enum: [9007199254740992],
+          metadata: createMetadata(false),
+        }),
+      ),
+    ).toThrow(/safe integer/);
   });
 
   it('preserves both number and bigint branches in mixed integer unions', () => {
