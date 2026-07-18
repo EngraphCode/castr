@@ -89,8 +89,16 @@ export function visitSchemaChildren(
   visitSchemaCollection(Object.values(schema.patternProperties ?? {}), seen, visitSchema);
   visitSchemaValue(schema.propertyNames, seen, visitSchema);
   visitSchemaValue(schema.if, seen, visitSchema);
-  visitSchemaValue(schema.then, seen, visitSchema);
-  visitSchemaValue(schema.else, seen, visitSchema);
+
+  // JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
+  // MUST be entirely ignored, so their subschemas expose no validation
+  // semantics and must not fail capability checks. `if` itself is always
+  // evaluated (annotations are collected even without `then`/`else`).
+  if (schema.if !== undefined) {
+    visitSchemaValue(schema.then, seen, visitSchema);
+    visitSchemaValue(schema.else, seen, visitSchema);
+  }
+
   visitSchemaValue(schema.contains, seen, visitSchema);
 }
 

@@ -103,6 +103,32 @@ function createRefSiblingBigIntWebhookPathItem(
   };
 }
 
+function createConditionalBigIntWebhookPathItem(includeIf: boolean): PathItemObject {
+  return {
+    post: {
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              ...(includeIf ? { if: { type: 'object' } } : {}),
+              then: {
+                type: 'integer',
+                format: 'bigint',
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        '204': {
+          description: 'Accepted',
+        },
+      },
+    },
+  };
+}
+
 function createBigIntQueryWebhookPathItem(): PathItemObject {
   return {
     query: {
@@ -292,6 +318,33 @@ describe('assertSchemaSupportsIntegerTargetCapabilities', () => {
       ).toThrow(BIGINT_ERROR);
     },
   );
+
+  it('accepts int64 semantics under then when if is absent because the branch is inert', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({ then: createInt64Schema() }),
+        'JSON Schema 2020-12',
+      ),
+    ).not.toThrow();
+  });
+
+  it('accepts int64 semantics under else when if is absent because the branch is inert', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({ else: createInt64Schema() }),
+        'JSON Schema 2020-12',
+      ),
+    ).not.toThrow();
+  });
+
+  it('accepts bigint semantics under then when if is absent because the branch is inert', () => {
+    expect(() =>
+      assertSchemaSupportsIntegerTargetCapabilities(
+        createMockCastrSchema({ then: createBigIntSchema() }),
+        CANONICAL_OPENAPI_TARGET_LABEL,
+      ),
+    ).not.toThrow();
+  });
 });
 
 describe('component and document traversal', () => {
@@ -525,6 +578,26 @@ describe('component and document traversal', () => {
   it('rejects unsupported bigint semantics in raw webhook path items when nullable type arrays use $ref siblings', () => {
     const document = createMockCastrDocument({
       webhooks: new Map([['newCount', createRefSiblingBigIntWebhookPathItem(['integer', 'null'])]]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).toThrow(BIGINT_ERROR);
+  });
+
+  it('accepts bigint semantics under then in raw webhook schemas when if is absent because the branch is inert', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([['newCount', createConditionalBigIntWebhookPathItem(false)]]),
+    });
+
+    expect(() =>
+      assertDocumentSupportsIntegerTargetCapabilities(document, CANONICAL_OPENAPI_TARGET_LABEL),
+    ).not.toThrow();
+  });
+
+  it('rejects bigint semantics under then in raw webhook schemas when if is present', () => {
+    const document = createMockCastrDocument({
+      webhooks: new Map([['newCount', createConditionalBigIntWebhookPathItem(true)]]),
     });
 
     expect(() =>

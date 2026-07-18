@@ -12,13 +12,14 @@ const OPENAPI_SINGLE_SCHEMA_KEYWORDS = [
   'items',
   'not',
   'if',
-  'then',
-  'else',
   'contains',
   'propertyNames',
   'unevaluatedItems',
   'unevaluatedProperties',
 ] as const;
+// JSON Schema 2020-12 (core §10.2.2): when `if` is absent, `then` and `else`
+// MUST be entirely ignored, so they are only visited when `if` is present.
+const OPENAPI_CONDITIONAL_BRANCH_KEYWORDS = ['then', 'else'] as const;
 const OPENAPI_ARRAY_SCHEMA_KEYWORDS = ['prefixItems', 'allOf', 'anyOf', 'oneOf'] as const;
 const OPENAPI_MAP_SCHEMA_KEYWORDS = ['patternProperties', 'dependentSchemas'] as const;
 
@@ -82,6 +83,12 @@ export function visitOpenApiSchemaNode(
 
   for (const key of OPENAPI_SINGLE_SCHEMA_KEYWORDS) {
     visitOpenApiSchemaNode(Reflect.get(value, key), seen, visitSchema);
+  }
+
+  if (Reflect.get(value, 'if') !== undefined) {
+    for (const key of OPENAPI_CONDITIONAL_BRANCH_KEYWORDS) {
+      visitOpenApiSchemaNode(Reflect.get(value, key), seen, visitSchema);
+    }
   }
 
   for (const key of OPENAPI_ARRAY_SCHEMA_KEYWORDS) {
