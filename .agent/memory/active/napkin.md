@@ -279,6 +279,34 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
 
+## 2026-07-18 (L-K1 follow-up: gate then/else capability traversal on if presence)
+
+- **`then`/`else` are the ONLY schema-valued 2020-12 keywords whose semantics depend on another
+  keyword's PRESENCE** — confirmed firsthand against draft-bhutton-json-schema-01 §10.2.2: "when
+  'if' is not present, both 'then' and 'else' MUST be entirely ignored" (and implementations MUST
+  NOT evaluate them for validation OR annotation collection). `if` itself is always evaluated
+  (annotations collected even without then/else), so it stays unconditionally visited. Swept the
+  rest of the visited set: `items` without `prefixItems` applies to all elements,
+  `dependentSchemas` is instance-property-dependent (§10.2.2.4), unevaluated*/
+  additionalProperties/contains/propertyNames/not/allOf/oneOf/anyOf/prefixItems all
+  standalone-meaningful. `minContains`/`maxContains` depend on `contains` but are numeric (never
+  traversed); `contentSchema` (ignored without `contentMediaType`) is the only other
+  presence-dependent schema-valued keyword in the wider 2020-12 set and the IR does not model it.
+- **The same defect existed in BOTH sibling walkers** — the IR traversal
+  (`integer-target-capabilities.traversal.ts`) and the raw OpenAPI fragment walker
+  (`integer-target-capabilities.openapi-schemas.ts`) each visited `then`/`else` unconditionally;
+  a capability-guard fix scoped to "the traversal" must sweep every walker feeding the same
+  check, or the raw-webhook path keeps the false rejection.
+- **Presence-gating was the incomplete generalisation — boolean `if` schemas make branch
+  reachability statically decidable** (round-2 follow-up on the same thread family): `if: false`
+  never validates so `then` never applies; `if: true` always validates so `else` never applies
+  (2020-12 §10.2.2.1 boolean schemas + §10.2.2 applicability). The round-1 fix gated then/else on
+  `if` PRESENCE only, so `{ if: false, then: <int64> }` still failed capability checks on inert
+  content. The cure keys on the IR `booleanSchema` discriminator (raw walker: literal JSON
+  booleans); non-boolean `if` — including `$ref` nodes whose outcome is not statically known —
+  conservatively keeps both branches. Symmetry re-fired: BOTH walkers needed the identical
+  reachability gate, again.
+
 ---
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_
