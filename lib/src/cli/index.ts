@@ -34,6 +34,7 @@ import {
   determineEffectiveTemplate,
   buildEffectiveOptions,
 } from '../rendering/generate-from-context.js';
+import { isFileGroupingStrategy } from '../rendering/templating.js';
 
 const program = new Command();
 const CURRENT_DIR_DOT = '.';
@@ -120,9 +121,17 @@ program
     writeCliMessage(`Retrieving OpenAPI document from ${input}`);
     const openApiDoc = await prepareOpenApiDocument(input);
     const distPath = options.output ?? input + '.client.ts';
-    const prettierConfig = await resolvePrettierConfigForOutput(distPath, options.prettier);
 
     const parsedOptions = parseCliOptions(options);
+    // The tag-file / method-file grouping strategies make distPath a
+    // DIRECTORY the renderer writes files beneath; prettier config
+    // resolution must then anchor INSIDE that directory, not on it.
+    const prettierConfig = await resolvePrettierConfigForOutput(
+      distPath,
+      options.prettier,
+      isFileGroupingStrategy(parsedOptions.groupStrategy) ? 'directory' : 'file',
+    );
+
     const generationOptions = buildGenerationOptions(options, parsedOptions);
     const generationArgs = buildGenerationArgs(
       openApiDoc,

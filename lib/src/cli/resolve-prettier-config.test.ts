@@ -1,89 +1,122 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { afterEach, describe, expect, test } from 'vitest';
+import type { Options } from 'prettier';
+import { describe, expect, test } from 'vitest';
 
+import type { PrettierConfigResolveFn } from './resolve-prettier-config.js';
 import { resolvePrettierConfigForOutput } from './resolve-prettier-config.js';
 
+/**
+ * Pure contract proofs for the anchoring behaviour: which path the injected
+ * resolver receives, and how an explicit config path is forwarded. The
+ * real-filesystem behaviour proof (decoy configs, prettier's actual config
+ * search) lives in `tests-snapshot/integration/resolve-prettier-config.test.ts`
+ * — in-process suites do no IO.
+ */
 describe('resolvePrettierConfigForOutput', () => {
-  const tempDirs: string[] = [];
+  const resolvedOptions: Options = { printWidth: 42 };
 
-  async function makeTempDir(): Promise<string> {
-    const dir = await mkdtemp(path.join(tmpdir(), 'castr-prettier-config-'));
-    tempDirs.push(dir);
-    return dir;
+  interface RecordedCall {
+    fileUrlOrPath: string;
+    options: { config?: string } | undefined;
   }
 
-  afterEach(async () => {
-    await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
-  });
-
-  test('finds a config that sits in the output directory itself', async () => {
-    // prettier's `resolveConfig` starts its search at the dirname of its
-    // argument. Anchoring on the output FILE path keeps the search inside
-    // the output directory; a directory argument would start the search at
-    // the directory's PARENT and silently skip a config in the directory.
-    const dir = await makeTempDir();
-    await writeFile(path.join(dir, '.prettierrc.json'), JSON.stringify({ printWidth: 42 }));
-
-    const config = await resolvePrettierConfigForOutput(path.join(dir, 'client.ts'));
-
-    expect(config).toEqual({ printWidth: 42 });
-  });
-
-  test('the nearest config wins over an ancestor config', async () => {
-    // Environment-independent encoding of the nested-worktree escape: the
-    // parent directory stands in for an enclosing repository, the child
-    // directory for the checkout. Resolution anchored inside the child must
-    // return the child's config, never the ancestor's.
-    const parent = await makeTempDir();
-    const child = path.join(parent, 'checkout');
-    await mkdir(child);
-    await writeFile(path.join(parent, '.prettierrc.json'), JSON.stringify({ singleQuote: true }));
-    await writeFile(path.join(child, '.prettierrc.json'), JSON.stringify({ printWidth: 55 }));
-
-    const config = await resolvePrettierConfigForOutput(path.join(child, 'client.ts'));
-
-    expect(config).toEqual({ printWidth: 55 });
-  });
-
-  test('an explicit config path is loaded even under a non-discoverable filename', async () => {
-    // The CLI's `--prettier <path>` names a specific config file. It must be
-    // loaded directly (prettier's `config` option), not merely discovered by
-    // filename convention in the searched directories.
-    const dir = await makeTempDir();
-    const configPath = path.join(dir, 'custom-prettier.json');
-    await writeFile(configPath, JSON.stringify({ tabWidth: 7 }));
-
-    const config = await resolvePrettierConfigForOutput(path.join(dir, 'client.ts'), configPath);
-
-    expect(config).toEqual({ tabWidth: 7 });
-  });
-
-  test('an explicit config path overrides a discoverable config in the output directory', async () => {
-    const dir = await makeTempDir();
-    await writeFile(path.join(dir, '.prettierrc.json'), JSON.stringify({ printWidth: 42 }));
-    const configPath = path.join(dir, 'custom-prettier.json');
-    await writeFile(configPath, JSON.stringify({ tabWidth: 7 }));
-
-    const config = await resolvePrettierConfigForOutput(path.join(dir, 'client.ts'), configPath);
-
-    expect(config).toEqual({ tabWidth: 7 });
-  });
-
-  test('walks up over nonexistent path segments to the nearest real config', async () => {
-    // A nonexistent subtree below a real directory exercises the walk-up
-    // over path segments that do not exist on disk (URL-derived output
-    // paths); the search must not throw and must find the nearest real
-    // config above them.
-    const dir = await makeTempDir();
-    await writeFile(path.join(dir, '.prettierrc.json'), JSON.stringify({ semi: false }));
+  test('file output anchors resolution on the output file itself, in discovery mode', async () => {
+    const calls: RecordedCall[] = [];
+    const recordingResolve: PrettierConfigResolveFn = (fileUrlOrPath, options) => {
+      calls.push({ fileUrlOrPath, options });
+      return Promise.resolve(resolvedOptions);
+    };
 
     const config = await resolvePrettierConfigForOutput(
-      path.join(dir, 'https:', 'example.com', 'api.yaml.client.ts'),
+      '/virtual/generated/client.ts',
+      undefined,
+      'file',
+      recordingResolve,
     );
 
-    expect(config).toEqual({ semi: false });
+    expect(calls).toEqual([{ fileUrlOrPath: '/virtual/generated/client.ts', options: undefined }]);
+    expect(config).toBe(resolvedOptions);
+  });
+
+  test('directory output anchors resolution on a child INSIDE the directory', async () => {
+    // For the tag-file / method-file grouping strategies the renderer treats
+    // the output path as a DIRECTORY and writes files beneath it. prettier's
+    // resolveConfig starts its config search at the dirname of its argument,
+    // so the anchor must be a path inside the directory — anchoring on the
+    // directory path itself starts the search at the directory's PARENT and
+    // silently skips a config in the output directory.
+    const anchorDirnames: string[] = [];
+    const recordingResolve: PrettierConfigResolveFn = (fileUrlOrPath) => {
+      anchorDirnames.push(path.dirname(fileUrlOrPath));
+      return Promise.resolve(resolvedOptions);
+    };
+
+    const config = await resolvePrettierConfigForOutput(
+      '/virtual/generated',
+      undefined,
+      'directory',
+      recordingResolve,
+    );
+
+    expect(anchorDirnames).toEqual(['/virtual/generated']);
+    expect(config).toBe(resolvedOptions);
+  });
+
+  test("an explicit config path is loaded via prettier's config option", async () => {
+    const calls: RecordedCall[] = [];
+    const recordingResolve: PrettierConfigResolveFn = (fileUrlOrPath, options) => {
+      calls.push({ fileUrlOrPath, options });
+      return Promise.resolve(resolvedOptions);
+    };
+
+    const config = await resolvePrettierConfigForOutput(
+      '/virtual/generated/client.ts',
+      '/virtual/configs/custom-prettier.json',
+      'file',
+      recordingResolve,
+    );
+
+    expect(calls).toEqual([
+      {
+        fileUrlOrPath: '/virtual/generated/client.ts',
+        options: { config: '/virtual/configs/custom-prettier.json' },
+      },
+    ]);
+    expect(config).toBe(resolvedOptions);
+  });
+
+  test('directory output with an explicit config path anchors inside the directory AND forwards the config', async () => {
+    const calls: RecordedCall[] = [];
+    const recordingResolve: PrettierConfigResolveFn = (fileUrlOrPath, options) => {
+      calls.push({ fileUrlOrPath, options });
+      return Promise.resolve(resolvedOptions);
+    };
+
+    const config = await resolvePrettierConfigForOutput(
+      '/virtual/generated',
+      '/virtual/configs/custom-prettier.json',
+      'directory',
+      recordingResolve,
+    );
+
+    expect(calls.map((call) => path.dirname(call.fileUrlOrPath))).toEqual(['/virtual/generated']);
+    expect(calls.map((call) => call.options)).toEqual([
+      { config: '/virtual/configs/custom-prettier.json' },
+    ]);
+    expect(config).toBe(resolvedOptions);
+  });
+
+  test('returns null unchanged when no config applies', async () => {
+    const nullResolve: PrettierConfigResolveFn = () => Promise.resolve(null);
+
+    const config = await resolvePrettierConfigForOutput(
+      '/virtual/generated/client.ts',
+      undefined,
+      'file',
+      nullResolve,
+    );
+
+    expect(config).toBeNull();
   });
 });
