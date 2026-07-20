@@ -203,7 +203,7 @@ export function joinPresent(segments: readonly (string | undefined)[]): string {
 }
 
 /**
- * The Claude.ai rate-limit gauges — the five-hour window (`5h`) and week (`w`,
+ * The Claude.ai rate-limit gauges — the five-hour window (`h`) and week (`w`,
  * seven-day) consumed percentages, each with a parenthesised countdown to its
  * reset, e.g. `h:33%(2h) · w:55%(3d)`. The percentage carries the consumption
  * colour ramp; the countdown is DIM (secondary context). Each window is
