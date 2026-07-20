@@ -100,6 +100,8 @@ Then use:
 ├── practice-core/          ← Portable Practice Core package
 ├── memory/                 ← Napkin, distilled learnings, code patterns
 ├── experience/             ← Qualitative experience records
+├── collaboration/          ← Tracked collaboration homes (ARC rapid-comms channels, experiments)
+├── state/                  ← Instance-tier runtime state (collaboration registry/comms; two-tier tracked/untracked)
 │
 ├── plans/
 │   ├── roadmap.md               ← Ties all plans together (plan-of-record)

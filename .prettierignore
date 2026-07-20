@@ -27,6 +27,15 @@ CHANGELOG.md
 # Cache
 .eslintcache
 
+# Live ARC channel files — append-only while tailed; a format --fix rewrite
+# replays every follower's tail (see .agent/reference/arc-rapid-communication.md
+# §Known limitations). A channel is ANY non-README markdown file at ANY depth
+# under rapid-comms (the `isArcChannelFileName` convention: nested channels are
+# first-class — recursive readdir in the statusline gatherer, nested paths in
+# the gate). The convention READMEs stay formatted via the re-include.
+.agent/collaboration/rapid-comms/**/*.md
+!.agent/collaboration/rapid-comms/**/README.md
+
 # Instance-tier collaboration state — regenerated at runtime, gitignored.
 # Mirrors .agent/state/collaboration/.gitignore so the format gate does not
 # trip on runtime-written JSON/log files (e.g. a claim opened with a

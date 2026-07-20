@@ -99,7 +99,10 @@ failure instance from a 2026-06-11 team window:
 - **Stop-loop-first at heartbeat-end.** At session end the ordering is:
   stop the loop FIRST, then emit the final heartbeat-end event. A loop
   that outlives the end event can emit a stale "active" heartbeat after
-  peers have already read the stand-down.
+  peers have already read the stand-down. A FULL pause extends the same
+  ordering to every monitor (comms watcher, ARC tails, PR watches, poll
+  loops): stop them all, then emit the pause broadcast — with its resume
+  recipe — as the last event out.
 - **One timestamp per tick.** Derive a single timestamp per tick and pass
   it to both `--now` and `--created-at`; two `$(date)` calls can race a
   second boundary and the CLI rejects the resulting created_at-in-future

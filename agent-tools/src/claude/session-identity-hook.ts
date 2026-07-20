@@ -33,7 +33,7 @@ export interface ClaudeSessionIdentityHookInput {
  * carries `additionalContext` only — `SessionStart` does not support a
  * session-title field. Title-setting is documented as `UserPromptSubmit`-only.
  */
-export interface ClaudeSessionIdentityHookOutput {
+interface ClaudeSessionIdentityHookOutput {
   readonly hookSpecificOutput?: {
     readonly hookEventName: 'SessionStart';
     readonly additionalContext: string;

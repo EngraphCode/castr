@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-07-18 (statusline merge reconciliation + fixer-ignore widening — arc-bring worktree)
+
+- **The #24×#22 statusline render collision was structurally narrower than the pin overlap
+  suggested:** main's layout change lived entirely in `statusline-render.ts` (which this branch
+  never touched) and the arc feather rides inside `seg.indicators` (which #24's layout kept on the
+  identity row), so the SOURCE auto-merge was a clean take needing no fix — the whole union burden
+  fell on the conflicted test, where our one-line `arcChannels` shape change sat inside a region
+  theirs rewrote. Before assuming a semantic composition break, map WHICH side touched WHICH file
+  since the merge base; the pins colliding does not mean the mechanisms do.
+- **Composed-pin bite proof without leaving the merge state:** temporarily mutating the merged
+  renderer back to the pre-ruling layout (gauges on the identity row) turned exactly the three
+  union pins red (both #24 title-row tests + the new composed indicators-vs-gauges test), then a
+  byte-exact restore (diff vs index = 0) re-greened — a cheap test-immediate-fails proof usable
+  mid-merge where a checkout-based red run is off the table.
+- **markdownlint-cli2 ignores accept mid-pattern extglob negation:** the HARD RULE bans entries
+  BEGINNING with `!` (v0.22 zeroes the run false-green), but
+  `.agent/collaboration/rapid-comms/**/!(README).md` is a positive entry that cli2 honours —
+  nested channels excluded, exact-basename READMEs still linted, 643 files still scanned. The
+  idiom expresses "everything except one basename" without the banned re-include shape.
+- **Out-of-window live probe cure:** the real ARC channel's last write predated the 1800s liveness
+  window, so the composed-render proof used a scratchpad fixture repo (git init + fresh channel
+  file named for the seed-derived identity + `Channel-colour` line) — deterministic feather
+  rendering through the BUILT adapter without touching the primary checkout's live channel.
+
 ## 2026-07-18 (PR #19 Copilot findings — samples-config-escape lane)
 
 - **A helper built to kill a directory-argument defect can re-import it at another call shape:**
@@ -18,6 +42,21 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   no FS IO), and the real-filesystem decoy-config proof moved to `tests-snapshot/integration/`
   beside `samples.test.ts`. Every proof the old FS-touching in-process test carried was re-homed,
   none dropped.
+
+## 2026-07-18 — ARC live trial, first castr channel (Stormbound Circling Kite / 62f93c)
+
+- **Two documented ARC failure classes fired within FOUR MINUTES of castr's first channel opening**
+  (owner-directed live trial, practice-imports-liaison channel with Midnight Watching Night):
+  (1) the JOINER MIS-ANCHOR — the peer's join entry landed mid-file ABOVE the opening entry, the
+  exact class Resonance observed refire with the lesson in context (re-proves the atomic-append
+  helper as the structural cure, still deliberately unbuilt); (2) a NEW class for the record —
+  GRAMMAR INVISIBILITY: a joiner cannot see the entry-header convention before the estate merges
+  (their header shape + minutes-precision timestamp missed the strict tier; they explicitly asked
+  for the contract). Cure applied per protocol: corrections as NEW entries, never edits; the
+  deviant entry stays as history. Candidate doc sharpening: the announce event should carry the
+  entry-header shape inline until the reference doc is on main.
+- **The feather loop closed live**: the built statusline rendered the peer's channel feather with
+  palette-0 ink from the real primary-checkout directory during the same window the dialogue ran.
 
 ## 2026-07-04 (wide+deep initial castr review — Fragrant Twining Glade / 5367e2)
 
@@ -278,6 +317,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   Cliff's 6-item curation handoff matched my firsthand reads 6/6 (audit-harness DUE, HARD signals =
   register prose-width, ledger owed, etc.); the one out-of-boundary item (merge-event continuity
   reconciliation) was left NAMED in continuity, not silently absorbed or dropped.
+
+## 2026-07-18 (knip strict-gate remediation — arc-bring worktree)
+
+- **knip `project: 'src/**/*.ts'` silently excludes `.tsx`, producing FALSE unused-export findings
+  for real consumers:** the collaboration-state TUI React layer (tui/cli.tsx → app.tsx →
+  controller.ts, reached from the CLI bins via cli-specs.ts) consumed
+  `waitForCollaborationStateChange` / `useCollaborationTuiController` /
+  `CollaborationTuiUpdateSource`, yet all three were reported unused because the tsx files were
+  outside the project glob. Cure: `src/**/*.{ts,tsx}` — a strictness INCREASE (more files
+  analysed), not an ignore. Before deleting any knip-flagged symbol, check the extension coverage
+  of the project/entry globs against the consumer's file type.
+- **Edit-tool escape hazard:** writing `'\u001b'` intent as a bare ESC in an Edit `new_string`
+  lands a RAW control byte in source (visible only via `cat -v`). Verify with `cat -v` and prefer
+  the explicit `\u001b` escape whenever a control character belongs in a string literal.
 
 ---
 

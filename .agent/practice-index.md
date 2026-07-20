@@ -67,6 +67,8 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [`.agent/plans/`](plans/)                 | Active, paused, completed, archived, and future plans                                    |
 | [`.agent/memory/`](memory/)               | Napkin, distilled learnings, and code-pattern scaffolding                                |
 | [`.agent/experience/`](experience/)       | Experience records                                                                       |
+| [`.agent/collaboration/`](collaboration/) | Tracked collaboration homes: ARC rapid-comms channels and experiment records             |
+| [`.agent/reference/`](reference/)         | Permanent reference material (incl. the ARC rapid-communication protocol)                |
 | [`.agent/practice-core/`](practice-core/) | Portable Practice Core package                                                           |
 | [`.husky/`](../.husky/)                   | Repo-local Git hooks; `pre-commit` formats staged files, `pre-push` runs `pnpm check:ci` |
 | [`.agents/skills/`](../.agents/skills/)   | Generated `engraph-` skill adapters for Codex and other platforms                        |

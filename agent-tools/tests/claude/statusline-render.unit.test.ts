@@ -1,3 +1,4 @@
+import { arcBadgeForeground } from '../../src/claude/statusline-arc-palette';
 import { renderStatusline, type StatuslineParts } from '../../src/claude/statusline-render';
 
 const RESET = '\x1b[0m';
@@ -203,6 +204,45 @@ describe('renderStatusline — Claude.ai rate-limit gauges', () => {
       expect(titleRow.indexOf('s:33%(2h)')).toBeLessThan(titleRow.indexOf('w:55%(3d)'));
     },
   );
+
+  // Composed layout (merge of the 2026-07-18 title-row ruling with the ARC
+  // feather badges): the indicators — team icon and per-channel feather with
+  // its palette-ink membership bar — stay on the identity row before the
+  // model, while the gauges render on the repo-title row, never beside the
+  // indicators. Supersedes the pre-ruling identity-row ordering pin
+  // (icons < gauges < model) with the composed truth.
+  it('keeps the team icon and arc feather on the identity row before the model, with the gauges on the title row', () => {
+    const solo = '\u{1F9CD}';
+    const featherBadge = `\u{1FAB6}${arcBadgeForeground(0)}\u{258C}${RESET}`;
+    const out = renderStatusline({
+      ...base,
+      identity: 'Wyvern mends Draught',
+      sessionShape: {
+        ownRole: undefined,
+        teamShape: 'solo',
+        arcChannels: [
+          {
+            name: 'arc-fixture-wyvern.md',
+            colour: { kind: 'indexed', index: 0 },
+            crossHost: false,
+          },
+        ],
+      },
+      fiveHourPercentage: 23,
+      model: 'Opus 4.8',
+      dir: 'castr',
+      branch: 'main',
+    });
+    const identityRow = lineWith(out, 'Wyvern mends Draught');
+    expect(identityRow).toContain(solo);
+    expect(identityRow).toContain(featherBadge);
+    expect(identityRow.indexOf(solo)).toBeLessThan(identityRow.indexOf(featherBadge));
+    expect(identityRow.indexOf(featherBadge)).toBeLessThan(identityRow.indexOf('Opus 4.8'));
+    expect(stripAnsi(identityRow)).not.toContain('s:23%');
+    const titleRow = stripAnsi(lineWith(out, 's:23%'));
+    expect(titleRow).toContain('castr');
+    expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('s:23%'));
+  });
 
   it('renders the gauges on the title row even when the context gauge is absent', () => {
     const out = renderStatusline({ ...base, dir: 'castr', branch: 'main', fiveHourPercentage: 23 });

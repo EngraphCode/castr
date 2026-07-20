@@ -111,7 +111,9 @@ records below are that era's truthful history.
   Related-Surfaces bullet dropped (absent at the pin too — upstream Oak dangling ref); Oak session-ops-report path
   neutralised; `codex-helper` §timeouts ref reconciled to castr's real heading (§Timeout and Long-Running Tasks).
 - **Sequencing:** Tranche 1 ✅ (C1/C2 → C6 → C4/C5/C7/C8) → Tranche 2 ✅ (A2+A3 hook-policy unit, TDD) →
-  Tranche 3 (A4 statusline → A1 ArcAngel) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
+  Tranche 3 ✅ (A4 statusline → A1 ArcAngel — COMPLETE 2026-07-18 on `feat/arc-rapid-comms-bring`,
+  brought via Resonance's living estate rather than the Oak snapshot; first live channel opened
+  same-day) → Tranche 4 (B1 merge D4 branch, B3/B4/B5/B6/C3).
   **2026-06-26 INSERTION (owner-directed, ahead of dependency-currency + Tranche 3):** the Oak read-model flip
   (live main, no pin) + two sub-programs — **transplant completeness** (TC1✅/TC3a✅, see its lane below) and
   **reason-skill bring** (lane below). The earlier "Next session = dependency-currency" framing is superseded as

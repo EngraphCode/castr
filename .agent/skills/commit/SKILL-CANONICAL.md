@@ -405,6 +405,16 @@ Before opening the four-move protocol above:
 3. Stage selectively — never blindly `git add .`. Skip `.env`,
    credentials, `bulk-downloads/`. The `commit-queue` enqueue +
    guard chain in move 2 enforces explicit pathspecs by design.
+   - **ARC conservation ride-along** (donor owner direction 2026-07-11,
+     standing; brought with the ARC estate): any tracked ARC channel this
+     session authored or custodies that carries uncommitted entries rides
+     the bundle at boundary moments — window closed, ownership transfer,
+     channel close, session closeout. **CITE-FORCES-COMMIT**: a channel
+     digest cited in any durable artefact must reference tracked bytes —
+     commit the channel before (or with) the citing artefact (founding
+     instances in the donor estate: Resonance PR #166 grandfather thread;
+     Resonance PR #165 branch-only citations). The duty owner is the
+     channel CUSTODIAN; coordinator boundary sweeps are the backstop.
 4. Draft the message against the enumerated constraints above. The
    `commit-queue commit` workflow in move 3 invokes the advisory
    orchestrator (which runs the message check) as part of its

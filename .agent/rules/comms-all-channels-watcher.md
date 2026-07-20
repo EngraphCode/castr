@@ -53,7 +53,7 @@ identity seed`. Each event is tagged `[BROADCAST]` / `[GROUP]` /
 `[DIRECTED]` / `[OBSERVED]` / `[LIFECYCLE]` on its first line so the agent
 knows the channel at a glance. `[OBSERVED]` means incidental visibility
 of cross-traffic, not a new work contract (event shape:
-`.agent/state/collaboration/comms-event.schema.json`). `--only-directed`
+`agent-tools/src/collaboration-state/schemas/comms-event.schema.json`). `--only-directed`
 opts into the legacy narrow view.
 
 Run the command via the platform's persistent background-task mechanism:

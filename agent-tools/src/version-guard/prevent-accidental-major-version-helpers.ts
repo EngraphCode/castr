@@ -7,7 +7,7 @@
  */
 
 /** Footer/body markers that signal a breaking change (case-insensitive match). */
-export const BREAKING_CHANGE_INDICATORS = [
+const BREAKING_CHANGE_INDICATORS = [
   'BREAKING CHANGE:',
   'BREAKING CHANGES:',
   'BREAKING-CHANGE:',

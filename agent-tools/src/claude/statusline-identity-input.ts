@@ -18,7 +18,7 @@ import { isPlainObject, nonBlankString } from '../core/json-narrowing.js';
 /**
  * Fields extracted from the statusline stdin payload.
  */
-export interface StatuslineInputs {
+interface StatuslineInputs {
   /** `session_id` — seed for the deterministic agent-identity name. */
   readonly seed: string | undefined;
   /** `workspace.current_dir` (or top-level `cwd`) — base for git queries. */
