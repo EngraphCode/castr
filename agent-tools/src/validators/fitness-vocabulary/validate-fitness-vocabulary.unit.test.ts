@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+import { resolveRepoRoot } from '../../core/repo-root.js';
+
 import {
   findForbiddenPhrases,
+  listScanCandidates,
   shouldInspectFile,
   shouldReportMatch,
 } from './validate-fitness-vocabulary.js';
@@ -63,6 +66,19 @@ describe('shouldInspectFile', () => {
     expect(shouldInspectFile('.agent/practice-core-backup-2026-03-23/practice.md')).toBe(false);
   });
 
+  it('excludes live agent worktrees (defense-in-depth should such a path ever be tracked)', () => {
+    expect(
+      shouldInspectFile(
+        '.claude/worktrees/wf_1234-1/agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts',
+      ),
+    ).toBe(false);
+    expect(shouldInspectFile('.claude/worktrees/some-lane/.agent/directives/AGENT.md')).toBe(false);
+  });
+
+  it('does not exclude sibling paths that merely share the worktrees name prefix', () => {
+    expect(shouldInspectFile('.claude/worktrees-archive/notes.md')).toBe(true);
+  });
+
   it('excludes non-markdown, non-ts, non-mjs files', () => {
     expect(shouldInspectFile('scripts/foo.sh')).toBe(false);
     expect(shouldInspectFile('package.json')).toBe(false);
@@ -87,6 +103,36 @@ describe('shouldInspectFile', () => {
         'agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts',
       ),
     ).toBe(false);
+  });
+});
+
+describe('listScanCandidates', () => {
+  // Enumeration is `git ls-files` (tracked files only): untracked trees are
+  // structurally out of scope, not exclusion-list-dependent. An untracked
+  // `tmp/anything.md` (e.g. a gitignored reference clone) can never appear in
+  // the candidate set, so it can never fail — or pass — the gate.
+  const candidates = listScanCandidates(
+    resolveRepoRoot(import.meta.url, { projectDir: undefined }),
+  );
+
+  it('enumerates tracked live files (sanity: a known tracked markdown file is present)', () => {
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates).toContain('README.md');
+  });
+
+  it('returns no paths under untracked machine-local trees', () => {
+    expect(candidates.filter((candidate) => candidate.startsWith('tmp/'))).toStrictEqual([]);
+    expect(
+      candidates.filter((candidate) => candidate.startsWith('.claude/worktrees/')),
+    ).toStrictEqual([]);
+  });
+
+  it('returns only scannable extensions', () => {
+    const offenders = candidates.filter(
+      (candidate) =>
+        !candidate.endsWith('.md') && !candidate.endsWith('.ts') && !candidate.endsWith('.mjs'),
+    );
+    expect(offenders).toStrictEqual([]);
   });
 });
 

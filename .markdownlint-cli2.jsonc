@@ -43,6 +43,10 @@
     ".cursor/**",
     ".claude/**",
     ".agents/**",
+    // Untracked local material (reference clones, scratch). Contents are ignored by the
+    // repository-root `.gitignore` (`tmp/`); the tracked `tmp/.gitignore` keeps the directory
+    // present. The lint footprint must not depend on what a machine happens to have cloned there.
+    "tmp/**",
     // Archives and generated artefacts everywhere.
     "**/archive/**",
     "**/reference/**",

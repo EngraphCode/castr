@@ -31,13 +31,17 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Next safe step (post-merge; owner end-game directive 2026-07-06 executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
   (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS
-  after merge, in order: **(1) remediation-02 implementation on a fresh branch off `main`** —
+  after merge, in order: **(1) ~~remediation-02 implementation on a fresh branch off `main`~~
+  (Superseded 2026-07-17: remediation 02–07 execute as parallel lanes under
+  [`00-parallel-execution-program.md`](../../../plans/remediation/00-parallel-execution-program.md);
+  the pre-flight brief below remains valid scouting input for lanes L-A/L-D/L-E/L-F)** —
   seed = Mistbound's conserved pre-flight brief at
   [`02-preflight-scouting-2026-07-06.md`](../../../plans/remediation/02-preflight-scouting-2026-07-06.md)
   (tracked plan-estate copy; announce pickup before acting on it — the git-ignored
   handoff-record original carries the same content); shape = fixture corpus +
   machine-readable outcomes extended into
-  `lib/tests-transforms` (NOT a new suite) + the two-site interim fail-fast. **(2) The W0 owner
+  `lib/tests-transforms` (NOT a new suite) + ~~the two-site interim fail-fast~~ (retired
+  2026-07-17: lane L-B lands real-or-fail-fast in one cycle; see the program record above). **(2) The W0 owner
   walk** (three genuine forks: second-product name; preservation-coverage as public metric;
   M1/R5 enforce-vs-amend) — walking it promotes the overhaul brief to `current/`. **(3) Overhaul
   workstreams per the promoted plan.** Team history: n=2 window 2026-07-06 (Mistbound boundary

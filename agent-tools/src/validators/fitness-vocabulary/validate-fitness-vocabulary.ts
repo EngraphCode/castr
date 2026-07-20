@@ -9,11 +9,17 @@
  *
  * Exit 0 = clean. Exit 1 = drift found.
  *
- * Scope: walks all `.md` files under `.agent/`, `docs/`, root `*.md`, and
- * repo `*.md` plan/prompt locations; excludes `archive/`, backup
- * directories, `incoming/` practice boxes, and ADR-144 itself (which is
- * allowed to discuss the retired vocabulary in §Context, §Decision #6,
+ * Scope: all tracked `.md`, `.ts`, and `.mjs` files minus the documented
+ * exclusions — `archive/` segments, practice-core backups, `incoming/`
+ * practice boxes, experience notes, `.remember/`, and ADR-144 itself (which
+ * is allowed to discuss the retired vocabulary in §Context, §Decision #6,
  * and §Consequences).
+ *
+ * Candidates are enumerated from git's tracked-file list (`git ls-files`),
+ * never a filesystem walk, because the gate must not depend on machine-local
+ * state: gitignored trees (reference clones under `tmp/`, live agent
+ * worktrees under `.claude/worktrees/`) differ per machine and can never land
+ * in a commit, so they must never be able to fail — or pass — the gate.
  *
  * Forbidden phrases list (case-sensitive unless noted):
  * - "two-threshold", "Two-Threshold", "Two Threshold" (model name retired)
@@ -29,12 +35,14 @@
  * used and that the three-zone revision retired.
  */
 
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeLine } from '../../core/terminal-output.js';
+import { resolveTrustedGit } from '../../core/trusted-git.js';
 
 const repoRoot = resolveRepoRoot(import.meta.url);
 
@@ -50,8 +58,15 @@ const FORBIDDEN_PHRASES = [
   'not a blocking gate',
 ];
 
-const EXCLUDED_DIRECTORY_NAMES = new Set(['.git', 'coverage', 'dist', 'node_modules']);
-const EXCLUDED_PATH_PREFIXES = ['.agent/practice-core-backup-', '.agent/practice-core/incoming/'];
+const EXCLUDED_PATH_PREFIXES = [
+  '.agent/practice-core-backup-',
+  '.agent/practice-core/incoming/',
+  // Live agent worktrees are untracked, so tracked-file enumeration already
+  // keeps them out of scope structurally. This entry stays as documented
+  // defense-in-depth: should such a path ever become tracked, it is still
+  // machine-local checkout state, never gate-relevant repo content.
+  '.claude/worktrees/',
+];
 const EXCLUDED_PATH_SEGMENTS = ['/archive/'];
 const EXCLUDED_PATH_PREFIXES_EXTRA = ['.agent/experience/', '.remember/'];
 
@@ -96,17 +111,24 @@ function normalizeRelativePath(relPath: string): string {
   return relPath.split(path.sep).join('/');
 }
 
-function shouldSkipDirectory(relPath: string): boolean {
-  const normalized = normalizeRelativePath(relPath);
-  const directoryName = normalized.split('/').pop() ?? '';
-
-  if (EXCLUDED_DIRECTORY_NAMES.has(directoryName)) {
-    return true;
-  }
-  if (EXCLUDED_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
-    return true;
-  }
-  return EXCLUDED_PATH_SEGMENTS.some((segment) => normalized.includes(segment));
+/**
+ * Match a normalized repo-relative path against excluded prefixes with
+ * path-segment-boundary awareness. A prefix ending in `/` (e.g.
+ * `.claude/worktrees/`) matches the directory itself (`.claude/worktrees`)
+ * and any descendant path, but never a sibling like
+ * `.claude/worktrees-archive`. Prefixes without a trailing slash (e.g.
+ * `.agent/practice-core-backup-`) keep plain leading-substring semantics.
+ *
+ * @param normalizedPath - repo-relative path with `/` separators
+ * @param prefixes - excluded prefix entries
+ * @returns true if the path matches any excluded prefix
+ */
+function matchesExcludedPrefix(normalizedPath: string, prefixes: readonly string[]): boolean {
+  return prefixes.some((prefix) =>
+    prefix.endsWith('/')
+      ? normalizedPath === prefix.slice(0, -1) || normalizedPath.startsWith(prefix)
+      : normalizedPath.startsWith(prefix),
+  );
 }
 
 /**
@@ -122,10 +144,10 @@ export function shouldInspectFile(relPath: string): boolean {
     return false;
   }
 
-  if (EXCLUDED_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+  if (matchesExcludedPrefix(normalized, EXCLUDED_PATH_PREFIXES)) {
     return false;
   }
-  if (EXCLUDED_PATH_PREFIXES_EXTRA.some((prefix) => normalized.startsWith(prefix))) {
+  if (matchesExcludedPrefix(normalized, EXCLUDED_PATH_PREFIXES_EXTRA)) {
     return false;
   }
   if (EXCLUDED_PATH_SEGMENTS.some((segment) => normalized.includes(segment))) {
@@ -166,28 +188,27 @@ export function findForbiddenPhrases(content: string): readonly ForbiddenPhraseM
   return findings;
 }
 
-async function walkFiles(relDir = '.'): Promise<readonly string[]> {
-  const absDir = path.join(repoRoot, relDir);
-  const entries = await fs.readdir(absDir, { withFileTypes: true });
-  const files: string[] = [];
-
-  for (const entry of entries) {
-    const relPath = relDir === '.' ? entry.name : path.join(relDir, entry.name);
-
-    if (entry.isDirectory()) {
-      if (shouldSkipDirectory(relPath)) {
-        continue;
-      }
-      files.push(...(await walkFiles(relPath)));
-      continue;
-    }
-
-    if (entry.isFile() && shouldInspectFile(relPath)) {
-      files.push(normalizeRelativePath(relPath));
-    }
-  }
-
-  return files;
+/**
+ * Enumerate scan candidates from git's tracked-file list, filtered through
+ * {@link shouldInspectFile}. A single `git ls-files` invocation (NUL-delimited
+ * so paths with spaces survive) — never a filesystem walk — so the candidate
+ * set is exactly the content that can land in a commit: untracked machine-local
+ * trees (`tmp/` reference clones, `.claude/worktrees/` checkouts) are
+ * structurally out of scope.
+ *
+ * @param root - absolute repository root to enumerate
+ * @returns repo-relative `/`-separated paths of files to scan
+ */
+export function listScanCandidates(root: string): readonly string[] {
+  const stdout = execFileSync(resolveTrustedGit(), ['ls-files', '-z'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  return stdout
+    .split('\u0000')
+    .filter((entry) => entry.length > 0)
+    .filter((entry) => shouldInspectFile(entry));
 }
 
 function formatFileFindings(
@@ -206,11 +227,22 @@ function formatFileFindings(
 }
 
 async function main(): Promise<number> {
-  const files = await walkFiles('.');
+  const files = listScanCandidates(repoRoot);
   const allFindings: { file: string; findings: readonly ForbiddenPhraseMatch[] }[] = [];
 
   for (const file of files) {
-    const content = await fs.readFile(path.join(repoRoot, file), 'utf8');
+    let content: string;
+    try {
+      content = await fs.readFile(path.join(repoRoot, file), 'utf8');
+    } catch (error) {
+      // Fail loud: a silently-skipped tracked file could hide retired vocabulary,
+      // so skipping it would be a green-gate bypass.
+      throw new Error(
+        `Cannot read tracked file '${file}' for the fitness-vocabulary scan. ` +
+          `Restore the file (or commit its deletion) — the scan must not skip a tracked file.`,
+        { cause: error },
+      );
+    }
     const findings = findForbiddenPhrases(content);
     if (findings.length > 0) {
       allFindings.push({ file, findings });

@@ -22,6 +22,7 @@ updates `last_session` rather than adding a row.
 
 | platform    | model              | session_id_prefix | agent_name                     | role         | first_session | last_session |
 | ----------- | ------------------ | ----------------- | ------------------------------ | ------------ | ------------- | ------------ |
+| claude-code | claude-fable-5     | 62f93c            | Stormbound Circling Kite       | executor     | 2026-07-18    | 2026-07-18   |
 | claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor     | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer  | 2026-06-20    | 2026-06-20   |
 | claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer  | 2026-06-20    | 2026-06-20   |
@@ -41,6 +42,20 @@ updates `last_session` rather than adding a row.
 | claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor     | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator | 2026-07-03    | 2026-07-03   |
 | claude-code | claude-fable-5     | 8bff79            | Cirrus Spiralling Airstream    | executor     | 2026-07-03    | 2026-07-03   |
+
+## ARC-bring handover residue (2026-07-18 09:33Z, Stormbound Circling Kite stand-down — owner-directed)
+
+**PR #22** (`feat/arc-rapid-comms-bring`, origin head `c10c7bf2`): the ARC estate bring, complete
+and twice-reviewed (four-reviewer panel + a 16-thread bot wave). **Residue: 14 unresolved review
+threads whose fixes are ALL pushed in `67bf879f`** (in `c10c7bf2`'s ancestry; red-first, 122/122
+targeted suites, full gates green) — only the reply+resolve posting remains. Each reply
+re-derives from `67bf879f`'s diff to the thread's file; 2 further threads were already
+rejected-and-resolved with falsifying grounds. Pickup: any practice-estate session — harvest
+unresolved threads on #22, map each to the commit's change, reply with commit-referenced
+evidence, resolve, expect 0. Post-merge residue (named positions): liaison-channel conservation
+waits on the erratum-convention question (upstream guest-channel item 7); citations-rule +
+PDR-139 brings trigger on PR #23's merge; Resonance back-flow items 1-8 await Shaded Foraging
+Grove's replies on the guest channel.
 
 ## Lanes
 
@@ -280,12 +295,14 @@ records below are that era's truthful history.
   deprioritised; push = owner's call).
 - **Remaining in arc:** release automation (separate deferred lane below); D4 ✅ landed above.
 
-### Lane: remediation 02–07 — deferred (trigger: owner names it after the transplant)
+### Lane: remediation 02–07 — ~~deferred~~ EXECUTING (2026-07-17, owner-approved parallel program)
 
-- Controlling plan: [`../../../plans/active/02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md) (02 active-next; 03–07 follow).
-- Next safe step: the deep-review backlog (5 of 6 reproduced Criticals still
-  unfixed) takes a **named position after** the full transplant (owner steer
-  2026-06-19); not parked — `no-manufactured-permission` holds.
+- Controlling record: [`../../../plans/remediation/00-parallel-execution-program.md`](../../../plans/remediation/00-parallel-execution-program.md)
+  (file-disjoint parallel lanes; the per-finding plans, incl.
+  [`02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md),
+  remain the per-finding authority).
+- Next safe step: read the program record's lane contracts before touching remediation scope;
+  the former "named position after the transplant" trigger fired — the owner named it 2026-07-17.
 - Acceptance bar: each Critical reproduced-then-fixed with a regression test.
 
 ### Lane: explicit additional-properties feature — deferred (trigger: after positions 1–2)

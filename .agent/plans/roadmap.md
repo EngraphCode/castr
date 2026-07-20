@@ -42,7 +42,9 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > C2–C6 live on `main`, added findings R1–R6, and named the repo's two products under the
 > verified-claims thesis). Until W2 lands, this file remains the durable milestone frame and the
 > block below remains true: **remediation-02 is ungated and is the recommended next product
-> slice.**
+> slice.** **(In motion since 2026-07-17: remediation 02–07 execute as parallel lanes under
+> [`remediation/00-parallel-execution-program.md`](./remediation/00-parallel-execution-program.md);
+> "recommended next" is now "executing".)**
 
 > **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`) — supersedes the "(B) dormant" and
 > "Q-011 open" lines in the frontier block below.** The pre-castr doctrine-sync slice is live on
@@ -60,10 +62,13 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > **live next-step pointer is [`repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
 > this roadmap is the durable product-milestone frame, not the daily next-step source. **Three axes** make up the "one
 > deep enhancement": **(A)** transplant/parity (active — the gap-rescan backlog), **(B)** product-correctness
-> remediation [`remediation/`](./remediation/) 02–07 (the 6 reproduced Criticals — currently dormant), **(C)** delivery
+> remediation [`remediation/`](./remediation/) 02–07 (the 6 reproduced Criticals — ~~currently dormant~~
+> **executing as parallel lanes since 2026-07-17 under
+> [`remediation/00-parallel-execution-program.md`](./remediation/00-parallel-execution-program.md)**), **(C)** delivery
 > ([`delivery-ledger.md`](./delivery-ledger.md) — deprioritised). The A/B/C sequencing is an open owner decision
 > (`open-questions.md` Q-011): does B stay parked behind a now-much-larger A, given the no-undefined-later doctrine
-> below? The doctrine block below stays authoritative on the "one deep enhancement = both, nothing parked to an
+> below? **(Superseded: Q-011 is DECIDED and drained — see the 🟢 UNGATED banner above — and B is executing now
+> as parallel lanes, owner-approved 2026-07-17.)** The doctrine block below stays authoritative on the "one deep enhancement = both, nothing parked to an
 > undefined later" principle.
 
 > **ONE DEEP ENHANCEMENT (owner): bring over the ENTIRE Practice / agentic-engineering framework / agent-tools /
@@ -75,11 +80,14 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > none parked, and the owner names the next slice:
 >
 > - **Practice transplant** ([`active/oak-practice-transplant.md`](./active/oak-practice-transplant.md), tracker
->   [`transplant/README.md`](./transplant/README.md)) — Phases 0–6 complete and tagged; **Phase 7 is in progress**
+>   [`transplant/README.md`](./transplant/README.md)) — Phases 0–6 complete and tagged; ~~**Phase 7 is in progress**~~
+>   **(superseded — 🧭 CURRENT FRONTIER above: Phases 0–8 ✅ done + merged, 2026-06-28)**
 >   (sub-plan [`transplant/07-adapters-and-gate-flips.md`](./transplant/07-adapters-and-gate-flips.md)).
 > - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
 > - **Deep-review remediation backlog** ([`remediation/`](./remediation/) 02–07; 01 complete + merged in) — the 6
->   shipped Criticals must be fixed; a required component, not a gate that blocks the transplant.
+>   shipped Criticals must be fixed; a required component, not a gate that blocks the transplant. **Executing now as
+>   parallel lanes (owner-approved 2026-07-17):
+>   [`remediation/00-parallel-execution-program.md`](./remediation/00-parallel-execution-program.md).**
 > - **Product feature slice** [`current/paused/explicit-additional-properties-support.md`](./current/paused/explicit-additional-properties-support.md).
 >
 > A 2026-06-05 record framed the feature slice as "parked-in-place per a user instruction" — **the owner never gave
@@ -93,8 +101,10 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > **Deep Review (2026-06-04; report + ADR-047 now on `feat/transplant-engraph-practice`):** a first-hand-verified review found **46 issues
 > (6 Critical)** the green gates do not catch — see [`.agent/report/initial-review/`](../report/initial-review/) and
 > [ADR-047](../../docs/architectural_decision_records/ADR-047-zod-2020-12-keyword-emission-strategy.md). Remediation
-> backlog: [`.agent/plans/remediation/`](./remediation/) (promote one into `active/` at a time; `01-packaging` fixes the
-> shipped C1 types/`./parsers/zod` break). Nine completed plans + this roadmap carry dated ⚠️ correction banners (P1-P9).
+> backlog: [`.agent/plans/remediation/`](./remediation/) (~~promote one into `active/` at a time~~ **superseded
+> 2026-07-17: executing as parallel lanes under
+> [`remediation/00-parallel-execution-program.md`](./remediation/00-parallel-execution-program.md)**; `01-packaging`
+> fixed the shipped C1 types/`./parsers/zod` break). Nine completed plans + this roadmap carry dated ⚠️ correction banners (P1-P9).
 > The link-aware bulk-archive of settled completions is **sequenced into transplant Phase 9** (named slot, owner
 > 2026-06-09; disposition history in report §11). "Complete" labels below predate the review — treat the review
 > report as current truth where they disagree.

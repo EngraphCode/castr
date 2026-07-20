@@ -5,9 +5,13 @@
 > C2/C3/C4 re-executed firsthand via the appendix-A probe recipes; `pnpm check` green on the
 > same tree. Additions folded from that review: (1) C2's fix is confirmed an **IR-model change**
 > (`IRSecurityRequirement` is structurally flat — review finding R3; already reflected in the
-> success criteria below). (2) Land the **interim fail-fast on the placebo Zod refinements**
+> success criteria below). (2) ~~Land the **interim fail-fast on the placebo Zod refinements**
 > (`return true` bodies in `writers/zod/refinements/object.ts` — review §2.3) with this plan's
-> first PR, ahead of plan 03's real implementations. (3) The harness's fixture outcomes feed the
+> first PR, ahead of plan 03's real implementations.~~ **(Superseded 2026-07-17 by the
+> [parallel execution program](../remediation/00-parallel-execution-program.md) readiness review:
+> no interim throw — lane L-B takes the placebo sites from silent-wrong to real-or-fail-fast in
+> one cycle; principles.md forbids placeholder fail-fast for expressible features.)** (3) The
+> harness's fixture outcomes feed the
 > **preservation-coverage metric** (overhaul plan §W5) — keep fixture results machine-readable.
 > This plan remains the single highest-leverage product slice and is NOT gated by the
 > strategy-estate overhaul.
@@ -67,7 +71,7 @@ which C4 also depends on — sequence 05 alongside this).
   - H3: preserve wildcard status tokens (or fail-fast).
   - M10: `!== undefined` guards for optional string fields.
 - Determinism: compare `files` **content** (not just path keys) across two runs (**L13**).
-- `pnpm qg` green.
+- ~~`pnpm qg` green.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 

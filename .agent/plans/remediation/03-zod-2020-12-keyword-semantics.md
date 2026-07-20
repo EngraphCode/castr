@@ -40,7 +40,7 @@ Out of scope: a governed opt-in lossy mode (may follow later per ADR-047); array
 - Refinement emission order is sorted (M7).
 - `roadmap.md:147` "semantic" wording, the three sub-plans, and `docs/architecture/zod-round-trip-limitations.md`
   reconciled to the actual per-keyword truth (ADR-047 Consequences).
-- `pnpm qg` green.
+- ~~`pnpm qg` green.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 

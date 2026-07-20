@@ -35,7 +35,7 @@ Out of scope: relaxing any doctrine claim (forbidden by the strictest rule).
 - ESLint fails on a new `Object.keys`/`Reflect.get`/lodash-`split`-in-`src` introduction (rule proven by a fixture).
 - The 148 uses are refactored or covered by a governed, documented allowance.
 - `principles.md`/ADR-026 wording matches the enforced reality (after user approval).
-- `pnpm qg` green.
+- ~~`pnpm qg` green.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 

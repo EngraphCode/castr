@@ -19,8 +19,11 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > — controlling plan
 > [`strategy-vision-estate-overhaul.md`](../plans/future/strategy-vision-estate-overhaul.md)
 > (W0 owner walk = Q-012..Q-015 in `open-questions.md`; W3 validator + W2 archaeology
-> parallel-safe). **Remediation-02 (IR-fidelity harness, `plans/active/`) remains the
-> highest-leverage product slice and is NOT gated by the overhaul.** This file's banner
+> parallel-safe). ~~Remediation-02 (IR-fidelity harness, `plans/active/`) remains the
+> highest-leverage product slice and is NOT gated by the overhaul.~~ **(Superseded 2026-07-17/18:
+> remediation executes as file-disjoint parallel lanes under
+> [`../plans/remediation/00-parallel-execution-program.md`](../plans/remediation/00-parallel-execution-program.md)
+> — read the lane contracts there; never open single-slice remediation-02.)** This file's banner
 > stratigraphy is itself overhaul scope (W2); trust this banner + `repo-continuity.md` §Next
 > Safe Steps.
 >
@@ -35,8 +38,12 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > **🟢 UNGATED (2026-07-03 evening, PR #7 merged `6b6642a`): product/remediation work may open
 > immediately.** The pre-castr doctrine-sync slice is live on `main` (use-result-pattern + the
 > Q-010 composition ruling, second-consumer rename, validation-strategy, tsdoc/syntax
-> enforcement). Axis B below is therefore **no longer dormant** — remediation-02 (IR-fidelity
-> harness) or a feature slice may open on a fresh branch off `main` any time; the substrate
+> enforcement). Axis B below is therefore **no longer dormant** — ~~remediation-02 (IR-fidelity
+> harness) or a feature slice may open on a fresh branch off `main` any time~~ **(2026-07-17:
+> Axis B is EXECUTING as file-disjoint parallel lanes under
+> [`../plans/remediation/00-parallel-execution-program.md`](../plans/remediation/00-parallel-execution-program.md)
+> — read the lane contracts there before touching remediation scope; single-slice
+> remediation-02 pickup is superseded)**; the substrate
 > backlog stays parallel-safe. **Q-011 is DECIDED and drained** (Axis A first; its Tier-1
 > condition discharged — see `open-questions.md` rest-state note), so every "A/B/C sequencing is
 > an open owner decision" line in the dated banners below is superseded.

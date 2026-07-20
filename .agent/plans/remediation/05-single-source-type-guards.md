@@ -29,7 +29,7 @@ scope: broader IR validation redesign.
 - `isRecord({}) === true`, `isRecord([]) === false`, `isRecord(null) === false`; unit tests for each.
 - `buildIR({type:'object', properties:{}}) → serializeIR → deserializeIR` round-trips (C4 green) — add the fixture
   (shared with plan 02).
-- `pnpm qg` green; `knip`/`depcruise` clean after the deletions.
+- ~~`pnpm qg` green; `knip`/`depcruise` clean after the deletions.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 

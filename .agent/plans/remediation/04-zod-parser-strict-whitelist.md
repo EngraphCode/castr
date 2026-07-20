@@ -38,7 +38,7 @@ fail-fast, not silently lossy.
   `errors`** (fail-fast), not silent loss.
 - No `return undefined`/`continue` path drops a construct without recording a `PARSE_ERROR`.
 - Behavioural tests assert the fail-fast for each (red first).
-- `pnpm qg` green.
+- ~~`pnpm qg` green.~~ **(Superseded 2026-07-17: use `pnpm check` locally / `pnpm check:ci` non-mutating — never `pnpm qg` directly — per the [parallel execution program](../remediation/00-parallel-execution-program.md) execution rules.)**
 
 ## TDD order
 
