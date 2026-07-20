@@ -169,7 +169,7 @@ describe('renderStatusline — error and context usage', () => {
 
 describe('renderStatusline — Claude.ai rate-limit gauges', () => {
   // Owner layout ruling (2026-07-18): the gauges live on the repo-title row,
-  // AFTER the context gauge — `castr · ctx:61% · h:19%(5h) · w:14%(6d)` — not
+  // AFTER the context gauge — `castr · ctx:61% · s:19%(5h) · w:14%(6d)` — not
   // on the identity summary row.
   it.each([
     ['no-logo', {}],
@@ -192,48 +192,48 @@ describe('renderStatusline — Claude.ai rate-limit gauges', () => {
         options,
       );
       const identityRow = stripAnsi(lineWith(out, 'Wyvern mends Draught'));
-      expect(identityRow).not.toContain('h:33%');
+      expect(identityRow).not.toContain('s:33%');
       expect(identityRow).not.toContain('w:55%');
       const titleRow = stripAnsi(lineWith(out, 'ctx:61%'));
       expect(titleRow).toContain('castr');
-      expect(titleRow).toContain('h:33%(2h)');
+      expect(titleRow).toContain('s:33%(2h)');
       expect(titleRow).toContain('w:55%(3d)');
       expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('ctx:61%'));
-      expect(titleRow.indexOf('ctx:61%')).toBeLessThan(titleRow.indexOf('h:33%(2h)'));
-      expect(titleRow.indexOf('h:33%(2h)')).toBeLessThan(titleRow.indexOf('w:55%(3d)'));
+      expect(titleRow.indexOf('ctx:61%')).toBeLessThan(titleRow.indexOf('s:33%(2h)'));
+      expect(titleRow.indexOf('s:33%(2h)')).toBeLessThan(titleRow.indexOf('w:55%(3d)'));
     },
   );
 
   it('renders the gauges on the title row even when the context gauge is absent', () => {
     const out = renderStatusline({ ...base, dir: 'castr', branch: 'main', fiveHourPercentage: 23 });
-    const titleRow = stripAnsi(lineWith(out, 'h:23%'));
+    const titleRow = stripAnsi(lineWith(out, 's:23%'));
     expect(titleRow).toContain('castr');
-    expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('h:23%'));
+    expect(titleRow.indexOf('castr')).toBeLessThan(titleRow.indexOf('s:23%'));
   });
 
   it('renders the gauges on their own line when no location row exists', () => {
     const out = renderStatusline({ ...base, dir: '', fiveHourPercentage: 23 });
-    expect(out).toContain('h:23%');
+    expect(out).toContain('s:23%');
   });
 
   it('colour-ramps the percentage the same way as context usage', () => {
-    expect(renderStatusline({ ...base, fiveHourPercentage: 80 })).toContain(`${RED}h:80%${RESET}`);
+    expect(renderStatusline({ ...base, fiveHourPercentage: 80 })).toContain(`${RED}s:80%${RESET}`);
   });
 
   it('omits the countdown when a window has no reset instant', () => {
     const out = renderStatusline({ ...base, fiveHourPercentage: 33 });
-    expect(out).toContain('h:33%');
+    expect(out).toContain('s:33%');
     expect(out).not.toContain('(');
   });
 
   it('renders only the window that is present', () => {
     const out = renderStatusline({ ...base, fiveHourPercentage: 23 });
-    expect(out).toContain('h:23%');
+    expect(out).toContain('s:23%');
     expect(out).not.toContain('w:');
   });
 
   it('shows no gauges when both windows are absent', () => {
-    expect(renderStatusline({ ...base, branch: 'main' })).not.toContain('h:');
+    expect(renderStatusline({ ...base, branch: 'main' })).not.toContain('s:');
   });
 });
 

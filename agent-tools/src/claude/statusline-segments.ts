@@ -89,7 +89,7 @@ export interface StatuslineParts {
 export interface Segments {
   readonly identity: string | undefined;
   readonly indicators: string | undefined;
-  /** The Claude.ai rate-limit gauges (`h:…%(…) · w:…%(…)`); absent off Claude.ai or before the first response. */
+  /** The Claude.ai rate-limit gauges (`s:…%(…) · w:…%(…)`); absent off Claude.ai or before the first response. */
   readonly rateLimits: string | undefined;
   readonly model: string | undefined;
   readonly context: string | undefined;
@@ -203,9 +203,9 @@ export function joinPresent(segments: readonly (string | undefined)[]): string {
 }
 
 /**
- * The Claude.ai rate-limit gauges — the five-hour window (`h`) and week (`w`,
+ * The Claude.ai rate-limit gauges — the five-hour window (`s`) and week (`w`,
  * seven-day) consumed percentages, each with a parenthesised countdown to its
- * reset, e.g. `h:33%(2h) · w:55%(3d)`. The percentage carries the consumption
+ * reset, e.g. `s:33%(2h) · w:55%(3d)`. The percentage carries the consumption
  * colour ramp; the countdown is DIM (secondary context). Each window is
  * independently optional (absent for non-Claude.ai sessions and before the first
  * response), and the countdown is dropped when its reset instant is absent; when
@@ -213,7 +213,7 @@ export function joinPresent(segments: readonly (string | undefined)[]): string {
  */
 function formatRateLimits(parts: StatuslineParts): string | undefined {
   const joined = joinPresent([
-    rateLimitGauge('h', parts.fiveHourPercentage, parts.fiveHourResetSeconds),
+    rateLimitGauge('s', parts.fiveHourPercentage, parts.fiveHourResetSeconds),
     rateLimitGauge('w', parts.sevenDayPercentage, parts.sevenDayResetSeconds),
   ]);
   return joined.length === 0 ? undefined : joined;
