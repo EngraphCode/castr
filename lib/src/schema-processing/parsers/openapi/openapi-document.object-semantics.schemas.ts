@@ -14,7 +14,7 @@ import {
   describePortableNonStrictObjectInput,
 } from '../../object-semantics.js';
 import { isObjectSchemaType } from '../../ir/index.js';
-import { isRecord } from '../../../shared/type-utils/types.js';
+import { isRecord } from '../../../shared/type-utils/type-guards.js';
 
 const SINGLE_SCHEMA_KEYWORDS = [
   'items',

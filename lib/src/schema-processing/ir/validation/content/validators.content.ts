@@ -1,6 +1,7 @@
 import { isReferenceObject } from '../../../../shared/openapi-types.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
-import { type UnknownRecord, isRecord } from '../../../../shared/type-utils/types.js';
+import { isRecord } from '../../../../shared/type-utils/type-guards.js';
+import type { UnknownRecord } from '../../../../shared/type-utils/types.js';
 import type { IRMediaTypeReference } from '../../models/schema.operations.js';
 import { isCastrSchema } from '../validators.schema.js';
 

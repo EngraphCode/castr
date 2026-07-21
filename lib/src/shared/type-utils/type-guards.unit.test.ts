@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CastrSchemaProperties } from '../../schema-processing/ir/index.js';
-import { isCastrSchemaProperties } from './type-guards.js';
+import { isCastrSchemaProperties, isRecord } from './type-guards.js';
 
 function createStringSchema() {
   return {
@@ -35,6 +35,30 @@ function createCrossRealmLikeProperties() {
 
   return crossRealmLike;
 }
+
+describe('isRecord', () => {
+  it('accepts an empty plain object', () => {
+    expect(isRecord({})).toBe(true);
+  });
+
+  it('accepts a non-empty plain object', () => {
+    expect(isRecord({ a: 1 })).toBe(true);
+  });
+
+  it('rejects arrays', () => {
+    expect(isRecord([])).toBe(false);
+  });
+
+  it('rejects null', () => {
+    expect(isRecord(null)).toBe(false);
+  });
+
+  it('rejects primitives', () => {
+    expect(isRecord('record')).toBe(false);
+    expect(isRecord(42)).toBe(false);
+    expect(isRecord(undefined)).toBe(false);
+  });
+});
 
 describe('isCastrSchemaProperties', () => {
   it('accepts a live branded instance', () => {

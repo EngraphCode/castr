@@ -4,7 +4,7 @@
 
 import { validate } from '@scalar/openapi-parser';
 import type { OpenAPIDocument } from '../../../shared/openapi-types.js';
-import { isRecord } from '../../../shared/type-utils/types.js';
+import { isRecord } from '../../../shared/type-utils/type-guards.js';
 
 /**
  * Validates an OpenAPI document using external parser.
