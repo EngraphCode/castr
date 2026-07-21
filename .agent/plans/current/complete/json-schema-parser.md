@@ -8,6 +8,15 @@
 
 ---
 
+> [!IMPORTANT]
+> Historical parser-remediation record, superseded in part by the 2026-04-16
+> explicit `additionalProperties` clarification and the 2026-04-17
+> consolidation sweep. References below to schema-valued
+> `additionalProperties` being rejected reflect the Pack 4 review timing, not
+> current doctrine. Current truth is: explicit source-truth
+> `additionalProperties` is preserved where honest, while implicit openness and
+> non-strict runtime modes remain rejected.
+
 ## Resolution Status (2026-03-25)
 
 The following Pack 4 findings have been resolved by the parser expansion:

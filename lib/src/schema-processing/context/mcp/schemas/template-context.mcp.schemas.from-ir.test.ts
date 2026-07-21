@@ -169,6 +169,35 @@ describe('buildMcpToolSchemasFromIR', () => {
     expect(inputSchema['required']).toContain('body');
   });
 
+  test('preserves explicit nested additionalProperties in MCP body schemas', () => {
+    const ir = createMockCastrDocument();
+    const bodySchema: CastrSchema = {
+      type: 'object',
+      additionalProperties: {
+        type: 'string',
+        metadata: createMockCastrSchemaNode(),
+      },
+      metadata: createMockCastrSchemaNode(),
+    };
+    const operation = createMockOperation({
+      method: 'post',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': { schema: bodySchema },
+        },
+      },
+    });
+
+    const result = buildMcpToolSchemasFromIR(ir, operation);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
+
+    const body = inputSchema['properties']?.['body'];
+    assertSchemaObject(body);
+    expect(body['additionalProperties']).toEqual({ type: 'string' });
+  });
+
   test('fails fast when MCP schema generation encounters itemSchema', () => {
     const ir = createMockCastrDocument();
     const operation = createMockOperation({

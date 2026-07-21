@@ -47,16 +47,56 @@ Out of scope:
 3. Where must we fail fast because a target cannot express those semantics safely?
 4. How do we preserve the “never invent from absent input” invariant at every seam?
 
-## Current Reproduced Truth
+## Current Landed Truth
 
-The ePerusteet real-world fixture proved a policy mismatch:
+The Thursday, 16 April 2026 ePerusteet reproduction exposed a real policy mismatch, and the implementation slice that followed is now landed:
 
-- the shared load boundary accepts and canonicalises the document
-- the IR build seam currently rejects schema-valued `additionalProperties`
-- the IR type already allows `additionalProperties?: boolean | CastrSchema`
-- writer and validator assumptions still reflect the stronger closed-world-only doctrine
+- explicit source `additionalProperties` now survives parser -> IR -> portable writer honestly as `false`, `true`, or schema-valued truth
+- portable omission now stays omitted; Castr no longer stamps `additionalProperties: false` onto object schemas merely because they are objects
+- IR validation and schema traversal now admit and walk schema-valued `additionalProperties` consistently
+- OpenAPI raw-surface carriers now prove IR preservation for boolean and schema-valued `additionalProperties`, not just parse acceptance
+- JSON Schema ingest and normalisation now preserve omitted, boolean, and schema-valued `additionalProperties`, including nested and `$ref`-normalised cases
+- `deprecated` is treated as a legitimate OpenAPI Schema Object field and now survives parser -> IR -> writer, including the reproduced ePerusteet seam on schema-valued `additionalProperties`
+- Zod ingest remains strict: `z.looseObject()`, `.passthrough()`, and `.strip()` are still rejected, while plain `z.object(...).catchall(...)` is admitted only as explicit source truth
+- decorated permissive catchalls from `z.any()` / `z.unknown()` no longer collapse to bare `true`; first-pass metadata such as `.default(...)`, description, and `deprecated` survive as schema truth
+- Zod output now supports the safe explicit catchall slice via `.catchall(...)` and fails fast for recursive catchall-preserving output
+- that recursive fail-fast boundary is now proven for direct self-ref catchalls, nested property catchalls, composition-member catchalls, property-only recursive catchall objects, and `prefixItems`-driven recursive catchalls
+- OpenAPI component circular-reference detection now traverses `prefixItems`, so tuple-only recursion receives the same metadata markers as property and item recursion
+- TypeScript still fails fast on reachable explicit `additionalProperties`, preserving the honest target-boundary doctrine
+- MCP Draft 07 conversion preserves explicit nested `additionalProperties`, while the previously settled zero-input synthetic wrapper behavior remains unchanged
+- the latest Oak upstream spec is now committed in the real-world fixture set and has both load-boundary and transform-round-trip proof
+- the duplicate low-signal rejection proof has been removed because stronger transform and generated-suite proofs now exist elsewhere
 
-This plan is the direct successor to that reproduction.
+This plan remains active only because no real successor atomic slice has been
+promoted yet. Semantic implementation closed on Thursday, 16 April 2026, and
+the broad durable-doc / staged-history consolidation pass closed on Friday, 17
+April 2026.
+
+## Resolved Findings
+
+The Thursday, 16 April 2026 reviewer findings that originally opened this slice are now closed in product code and proof:
+
+- `z.looseObject(...).catchall(...)` no longer slips through ingest
+- decorated permissive catchalls no longer lose first-pass source semantics
+- raw-surface OpenAPI proofs now assert IR preservation rather than `not.toThrow()`
+- ePerusteet now has a committed first-pass OpenAPI round-trip proof and repeated-pass idempotence proof
+- first-pass `deprecated: true` loss on ePerusteet is fixed
+- Oak has been refreshed from the live upstream source, moved into the canonical real-world fixture set, committed, and covered by round-trip proof
+- recursive explicit-`additionalProperties` Zod fail-fast coverage now includes tuple-only and property-only recursion paths
+- OpenAPI circular-reference detection now marks tuple-only cycles via `prefixItems`
+
+## Remaining Work
+
+No fresh product regression is currently reproduced. No semantic or
+documentation work remains inside this slice.
+
+The remaining work is operational only:
+
+- keep this plan as the honest regression-first / successor-selection entrypoint
+  until a real successor atomic slice is identified
+- move this plan to a completion record only when that successor exists, or
+  reopen it only if a fresh explicit-`additionalProperties` regression is
+  reproduced
 
 ## Success Criteria
 
@@ -64,7 +104,11 @@ This plan is the direct successor to that reproduction.
 - strict input that omitted `additionalProperties` does not gain them through parsing, IR transforms, or writing
 - OpenAPI / JSON Schema output preserves declared `additionalProperties` honestly
 - downstream targets either emit equivalent semantics or fail fast with actionable errors where genuinely impossible
-- the ePerusteet fixture moves from fail-fast proof to honest supported-surface proof if and only if the landed slice truly covers it end to end
+- the ePerusteet fixture has first-pass proof, repeated-pass idempotence proof, and preserved `deprecated` semantics at the reproduced seam
+- the latest committed Oak fixture survives the real-world transform proof set
+- repo-root `pnpm check` is green on the landed tree
+- durable docs, staged completion notes, and session surfaces reflect the
+  landed boundary without reopening settled earlier phases
 
 ## Stage Map
 
@@ -90,7 +134,8 @@ Chosen. This matches the clarified product intent and the existing IR shape more
 1. write failing tests that capture the clarified product rule at the smallest seam
 2. land the minimal IR / validator / parser change needed to admit explicit `additionalProperties`
 3. wire writers and downstream fail-fast behavior honestly
-4. update durable docs and broader real-world proofs only after the core seam is correct
+4. close reviewer-raised regressions and real-world first-pass round-trip proofs
+5. update durable docs and broader real-world proofs only after the core seam is correct
 
 ## Documentation Outputs
 
@@ -107,3 +152,6 @@ Execute immediately. The issue has already been reproduced and the user has clar
 - targeted red/green at the affected seams first
 - targeted transform/generated reruns as the surface expands
 - full repo-root aggregate rerun before honest close-out
+- the document/practice consolidation pass closed on Friday, 17 April 2026; the
+  remaining promotion trigger is successor selection or a freshly reproduced
+  regression

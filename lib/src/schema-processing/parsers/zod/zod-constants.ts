@@ -141,8 +141,10 @@ export const ZOD_METHOD_LAZY = 'lazy';
 
 export const ZOD_BASE_METHOD_STRING = 'string';
 export const ZOD_BASE_METHOD_NUMBER = 'number';
+export const ZOD_BASE_METHOD_ANY = 'any';
 export const ZOD_BASE_METHOD_NULL = 'null';
 export const ZOD_BASE_METHOD_UNDEFINED = 'undefined';
+export const ZOD_BASE_METHOD_UNKNOWN = 'unknown';
 export const ZOD_BASE_METHOD_LITERAL = 'literal';
 export const ZOD_BASE_METHOD_UUID_V4 = 'uuidv4';
 export const ZOD_BASE_METHOD_UUID_V7 = 'uuidv7';

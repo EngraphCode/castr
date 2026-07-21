@@ -1,8 +1,8 @@
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import { writeZodSchema } from './index.js';
-import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
-import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
+import { writeZodSchema } from '../index.js';
+import type { CastrSchema, CastrSchemaContext } from '../../../ir/index.js';
+import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../../ir/index.js';
 
 describe('ZodWriter', () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -159,6 +159,83 @@ describe('ZodWriter', () => {
 
     const context = createComponentContext(schema);
     expect(generate(context)).toBe('z.array(z.string())');
+  });
+
+  it('generates catchall output for explicit additionalProperties: true', () => {
+    const schema = createMockSchema('object');
+    schema.additionalProperties = true;
+
+    const context = createComponentContext(schema);
+    expect(generate(context)).toBe('z.object({ }).catchall(z.unknown())');
+  });
+
+  it('generates catchall output for schema-valued additionalProperties', () => {
+    const schema = createMockSchema('object');
+    schema.additionalProperties = createMockSchema('string');
+
+    const context = createComponentContext(schema);
+    expect(generate(context)).toBe('z.object({ }).catchall(z.string())');
+  });
+
+  it('preserves decorated permissive catchall defaults on first write', () => {
+    const schema = createMockSchema('object');
+    schema.additionalProperties = {
+      metadata: {
+        required: true,
+        nullable: false,
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+        zodChain: {
+          presence: '',
+          validations: ['__castr_permissive_catchall_any__'],
+          defaults: ['.default("fallback")'],
+        },
+      },
+      default: 'fallback',
+    };
+
+    const context = createComponentContext(schema);
+    expect(generate(context)).toBe('z.object({ }).catchall(z.any().default("fallback"))');
+  });
+
+  it('does not reject safe open objects whose recursive child is outside the catchall path', () => {
+    const schema = createMockSchema('object');
+    schema.additionalProperties = createMockSchema('string');
+    schema.properties = new CastrSchemaProperties({
+      child: {
+        type: 'array',
+        prefixItems: [
+          {
+            $ref: '#/components/schemas/Node',
+            metadata: {
+              required: true,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              circularReferences: ['#/components/schemas/Node'],
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: ['#/components/schemas/Node'],
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      },
+    });
+    schema.metadata = {
+      required: true,
+      nullable: false,
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      circularReferences: ['#/components/schemas/Node'],
+      zodChain: { presence: '', validations: [], defaults: [] },
+    };
+
+    const context = createComponentContext(schema, 'Node');
+    expect(generate(context)).toContain('get child()');
+    expect(generate(context)).toContain('.catchall(z.string())');
   });
 
   it('generates schema with chains', () => {

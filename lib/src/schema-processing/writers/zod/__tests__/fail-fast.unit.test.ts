@@ -11,8 +11,8 @@
 
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import { writeZodSchema } from './index.js';
-import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
+import { writeZodSchema } from '../index.js';
+import type { CastrSchema, CastrSchemaContext } from '../../../ir/index.js';
 
 describe('Zod Writer Fail-Fast Behavior', () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -327,6 +327,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(output).toContain('contains');
     });
   });
+
   describe('boolean schema handling', () => {
     it('emits z.never() for boolean schema false', () => {
       const schema: CastrSchema = {

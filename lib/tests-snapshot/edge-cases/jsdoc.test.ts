@@ -142,6 +142,7 @@ test('jsdoc', async () => {
         .optional()
         .meta({
           description: "A number with many tags",
+          deprecated: true,
           examples: [3],
           externalDocs: { url: "https://example.com" },
         }),
@@ -213,6 +214,7 @@ test('jsdoc', async () => {
                 description: "A number with many tags",
                 default: 5,
                 example: 3,
+                deprecated: true,
                 minimum: 0,
                 maximum: 10,
                 externalDocs: { url: "https://example.com" },
@@ -239,7 +241,6 @@ test('jsdoc', async () => {
                 type: "object",
                 properties: { str: { type: "string" } },
                 required: [],
-                additionalProperties: false,
               },
               refArray: {
                 type: "array",
@@ -248,12 +249,10 @@ test('jsdoc', async () => {
                   type: "object",
                   properties: { str: { type: "string" } },
                   required: [],
-                  additionalProperties: false,
                 },
               },
             },
             required: [],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

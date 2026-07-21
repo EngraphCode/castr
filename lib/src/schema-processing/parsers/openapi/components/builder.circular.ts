@@ -80,6 +80,13 @@ function extractSchemaReferences(irSchema: CastrSchema, location: string): Set<s
   const itemRefs = extractItemsReferences(irSchema.items, `${location}/items`);
   itemRefs.forEach((ref) => refs.add(ref));
 
+  // Check tuple prefixItems
+  const prefixItemRefs = extractPrefixItemsReferences(
+    irSchema.prefixItems,
+    `${location}/prefixItems`,
+  );
+  prefixItemRefs.forEach((ref) => refs.add(ref));
+
   // Check additionalProperties / catchall schemas
   const additionalPropertyRefs = extractAdditionalPropertiesReferences(
     irSchema.additionalProperties,
@@ -149,6 +156,17 @@ function extractItemsReferences(items: CastrSchema['items'], location: string): 
   }
 
   return refs;
+}
+
+function extractPrefixItemsReferences(
+  prefixItems: CastrSchema['prefixItems'],
+  location: string,
+): Set<string> {
+  if (!prefixItems) {
+    return new Set<string>();
+  }
+
+  return extractReferencesFromSchemas(prefixItems, location);
 }
 
 function extractAdditionalPropertiesReferences(

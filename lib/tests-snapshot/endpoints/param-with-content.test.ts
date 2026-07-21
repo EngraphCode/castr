@@ -166,13 +166,11 @@ test('param-with-content', async () => {
                     type: "object",
                     properties: { text1: { type: "string" } },
                     required: [],
-                    additionalProperties: false,
                   },
                   "wrong param": {
                     type: "object",
                     properties: { text2: { type: "number" } },
                     required: [],
-                    additionalProperties: false,
                   },
                 },
               },
@@ -183,7 +181,6 @@ test('param-with-content', async () => {
             type: "object",
             properties: { text3: { type: "boolean" } },
             required: [],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: false,

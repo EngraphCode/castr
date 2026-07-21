@@ -1,9 +1,8 @@
 /**
  * JSON Schema object-field parsing helpers.
  *
- * Under IDENTITY doctrine, all objects are closed-world. Input schemas
- * that do not explicitly set `additionalProperties: false` are rejected
- * unless they have no object keywords at all.
+ * Preserves explicit source `additionalProperties` honestly while leaving
+ * omitted portable input untouched.
  *
  * @internal
  */
@@ -19,10 +18,6 @@ import {
   isObjectSchemaType,
 } from '../../ir/index.js';
 import type { CastrSchema } from '../../ir/index.js';
-import {
-  buildNonStrictObjectRejectionMessage,
-  describePortableNonStrictObjectInput,
-} from '../../object-semantics.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
@@ -45,7 +40,7 @@ export function parseObjectFields(
   if (input.required !== undefined && input.required.length > 0) {
     result.required = input.required;
   }
-  parseAdditionalProps(input, result);
+  parseAdditionalProps(input, result, parseSchema);
   parsePatternProperties(input, result, parseSchema);
   parsePropertyNames(input, result, parseSchema);
 }
@@ -102,24 +97,27 @@ function parseProperties(
   result.properties = new CastrSchemaProperties(parsed);
 }
 
-function parseAdditionalProps(input: JsonSchema2020, result: CastrSchema): void {
+function parseAdditionalProps(
+  input: JsonSchema2020,
+  result: CastrSchema,
+  parseSchema: ParseSchemaFn,
+): void {
   const additionalProperties = input.additionalProperties;
 
   if (!isObjectKeywordCandidate(input, result)) {
     return;
   }
 
-  if (additionalProperties === false || additionalProperties === undefined) {
-    result.additionalProperties = false;
+  if (additionalProperties === undefined) {
     return;
   }
 
-  const inputDescription = describePortableNonStrictObjectInput({ additionalProperties });
-  if (inputDescription === undefined) {
+  if (typeof additionalProperties === 'boolean') {
+    result.additionalProperties = additionalProperties;
     return;
   }
 
-  throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));
+  result.additionalProperties = parseSingleSchemaOrRef(additionalProperties, parseSchema);
 }
 
 function isObjectKeywordCandidate(input: JsonSchema2020, result: CastrSchema): boolean {

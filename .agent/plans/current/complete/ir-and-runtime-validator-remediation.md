@@ -10,6 +10,14 @@
 > [!NOTE]
 > **Completion deviation from original scope:** The plan proposed narrowing both `additionalProperties` and `unevaluatedProperties` to boolean-only in the TypeScript interface. During execution, codebase investigation found that schema-valued `unevaluatedProperties` is **legitimately and actively used** by the OpenAPI 3.1 parser (`builder.json-schema-2020-12.ts`) and JSON Schema parser (`json-schema-parser.2020-keywords.ts`). The validator now accepts schema-valued `unevaluatedProperties` when the value is a valid `CastrSchema`, while `additionalProperties` is enforced as boolean-only per IDENTITY doctrine. The TypeScript interface was **not narrowed** for either field to avoid breaking active parser code paths.
 
+> [!IMPORTANT]
+> Historical record, superseded in part by the 2026-04-16 explicit
+> `additionalProperties` clarification and the 2026-04-17 consolidation sweep.
+> The boolean-only `additionalProperties` posture below reflects the then-live
+> doctrine during RC-3, not current product truth. Current truth is:
+> schema-valued `additionalProperties` is valid explicit source-truth IR when it
+> comes from supported inputs, while invented openness remains rejected.
+
 ---
 
 ## Why RC-3 Is Next (Not RC-4)

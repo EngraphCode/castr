@@ -143,7 +143,6 @@ it('includes errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,
@@ -375,7 +374,6 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,
@@ -529,7 +527,6 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

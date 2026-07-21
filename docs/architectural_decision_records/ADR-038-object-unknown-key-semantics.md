@@ -8,6 +8,9 @@
 > [!IMPORTANT]
 > [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) superseded the forward-looking preservation direction in this ADR.
 > [IDENTITY.md](../../.agent/IDENTITY.md) further supersedes both ADR-038 and ADR-040's strip-normalization compatibility mode.
+> On 2026-04-16, product direction was clarified again and the follow-on slice
+> landed: explicit source-truth `additionalProperties` / `.catchall(...)`
+> semantics are now preserved honestly where the target can represent them.
 >
 > This document remains useful as historical diagnosis:
 >
@@ -18,8 +21,8 @@
 > It is no longer the active product direction. The current doctrine still
 > rejects strip / passthrough runtime modes and keeps no `unknownKeyBehavior` in
 > the IR, but on 2026-04-16 product direction was clarified to admit explicit
-> source `additionalProperties` honestly. Read this ADR as diagnosis for the old
-> multi-mode direction, not as a blanket ban on explicit catchall semantics.
+> source `additionalProperties` honestly. Read all "Decision" language below as
+> historical preservation-direction context, not as current doctrine.
 
 ## Context
 

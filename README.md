@@ -155,6 +155,8 @@ Castr is strict by design:
 
 - object schemas are emitted as strict when the source does not explicitly
   declare otherwise
+- explicit source `additionalProperties` is preserved and emitted honestly when
+  the target can represent it safely
 - Castr never invents object openness that the input did not declare
 - unsupported behaviour fails fast
 - support claims are only honest when code, proofs, and docs agree

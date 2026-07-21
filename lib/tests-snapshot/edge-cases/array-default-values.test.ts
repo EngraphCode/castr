@@ -216,7 +216,6 @@ test('array-default-values', async () => {
                       type: "object",
                       properties: { foo: { type: "string" } },
                       required: [],
-                      additionalProperties: false,
                     },
                   },
                   "array-ref-enum": {
@@ -234,7 +233,6 @@ test('array-default-values', async () => {
                         name: { type: "string" },
                       },
                       required: [],
-                      additionalProperties: false,
                     },
                   },
                   "array-string": {

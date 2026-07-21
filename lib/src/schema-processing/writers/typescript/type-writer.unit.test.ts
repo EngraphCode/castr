@@ -113,6 +113,22 @@ describe('TypeWriter', () => {
     expect(generate(schema)).toBe('{ prop1: string; }');
   });
 
+  it('fails fast for explicit additionalProperties: true', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      additionalProperties: true,
+      metadata: {
+        required: true,
+        nullable: false,
+        circularReferences: [],
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        zodChain: { presence: '', validations: [], defaults: [] },
+      },
+    };
+
+    expect(() => generate(schema)).toThrow(/explicit additionalProperties/i);
+  });
+
   it('generates nullable type', () => {
     const schema: CastrSchema = {
       type: 'string',

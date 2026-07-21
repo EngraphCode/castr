@@ -34,8 +34,8 @@ describe('infer-as-object-when-only-properties-set', () => {
     );
   });
 
-  test('nested schema-valued additionalProperties is rejected', () => {
-    expect(() =>
+  test('nested schema-valued additionalProperties is emitted via catchall', () => {
+    expect(
       getZodSchema({
         schema: {
           properties: {
@@ -46,6 +46,26 @@ describe('infer-as-object-when-only-properties-set', () => {
           },
         },
       }),
-    ).toThrow(/non-strict object input/i);
+    ).toMatchInlineSnapshot(`
+      {
+          "code": "z.strictObject({
+        nested: z.object({
+        }).catchall(z.number()).optional(),
+        str: z.string().optional(),
+      })",
+          "schema": {
+              "properties": {
+                  "nested": {
+                      "additionalProperties": {
+                          "type": "number",
+                      },
+                  },
+                  "str": {
+                      "type": "string",
+                  },
+              },
+          },
+      }
+    `);
   });
 });

@@ -4,9 +4,10 @@ import type { TemplateContextOptions } from '../../../context/index.js';
 import {
   formatPropertyKey,
   buildPropertyContext,
-  shouldUseGetterSyntax,
   getSortedPropertyEntries,
 } from '../properties.js';
+import { shouldUseGetterSyntax } from '../../support/zod/properties.recursion.js';
+import { hasRecursiveCatchallSubtree } from '../../support/zod/catchall-recursion.js';
 import { writeObjectRefinements, writeArrayRefinements } from '../refinements/index.js';
 
 export function writeArraySchema(
@@ -86,16 +87,74 @@ export function writeObjectSchema(
   options?: TemplateContextOptions,
 ): void {
   const schema = context.schema;
+  const hasExplicitCatchall = usesExplicitCatchall(schema);
 
-  writer
-    .write('z.strictObject(')
-    .inlineBlock(() => {
-      if (schema.properties) {
-        writeProperties(schema, writer, writeZodSchemaFn, options);
-      }
-    })
-    .write(')');
+  assertCatchallIsWritable(schema, hasExplicitCatchall);
+  writeObjectConstructor(writer, schema, hasExplicitCatchall, writeZodSchemaFn, options);
+  writeCatchall(writer, schema, hasExplicitCatchall, writeZodSchemaFn, options);
+
   writeObjectRefinements(schema, writer);
+}
+
+function usesExplicitCatchall(schema: CastrSchema): boolean {
+  return schema.additionalProperties !== undefined && schema.additionalProperties !== false;
+}
+
+function assertCatchallIsWritable(schema: CastrSchema, hasExplicitCatchall: boolean): void {
+  if (!hasExplicitCatchall || !hasRecursiveCatchallSubtree(schema)) {
+    return;
+  }
+
+  throw new Error(
+    'Recursive object schemas with explicit additionalProperties cannot yet be emitted safely in Zod. ' +
+      'Recursive catchall output still triggers eager getter evaluation in Zod 4. Stop at IR/OpenAPI/JSON Schema ' +
+      'or remove the recursive catchall semantics.',
+  );
+}
+
+function writeObjectConstructor(
+  writer: CodeBlockWriter,
+  schema: CastrSchema,
+  hasExplicitCatchall: boolean,
+  writeZodSchemaFn: (
+    c: CastrSchemaContext,
+    opts?: TemplateContextOptions,
+  ) => (w: CodeBlockWriter) => void,
+  options?: TemplateContextOptions,
+): void {
+  writer.write(hasExplicitCatchall ? 'z.object(' : 'z.strictObject(').inlineBlock(() => {
+    if (schema.properties) {
+      writeProperties(schema, writer, writeZodSchemaFn, options);
+    }
+  });
+  writer.write(')');
+}
+
+function writeCatchall(
+  writer: CodeBlockWriter,
+  schema: CastrSchema,
+  hasExplicitCatchall: boolean,
+  writeZodSchemaFn: (
+    c: CastrSchemaContext,
+    opts?: TemplateContextOptions,
+  ) => (w: CodeBlockWriter) => void,
+  options?: TemplateContextOptions,
+): void {
+  if (!hasExplicitCatchall) {
+    return;
+  }
+
+  writer.write('.catchall(');
+  if (schema.additionalProperties === true) {
+    writer.write('z.unknown()');
+  } else if (schema.additionalProperties !== undefined && schema.additionalProperties !== false) {
+    const catchallContext: CastrSchemaContext = {
+      contextType: 'arrayItems',
+      schema: schema.additionalProperties,
+    };
+    writeZodSchemaFn(catchallContext, options)(writer);
+  }
+  writer.write(')');
 }
 
 export function writeProperties(

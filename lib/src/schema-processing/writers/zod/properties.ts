@@ -65,10 +65,3 @@ export function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSch
     leftKey.localeCompare(rightKey),
   );
 }
-
-export {
-  detectCircularReference,
-  getNullableReferenceCompositionBaseSchema,
-  isRecursiveObjectSchema,
-  shouldUseGetterSyntax,
-} from './properties.recursion.js';

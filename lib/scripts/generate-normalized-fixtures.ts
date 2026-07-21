@@ -43,7 +43,6 @@ const FIXTURES = [
   'petstore-3.0.yaml',
   'petstore-expanded-3.0.yaml',
   'callback-3.0.yaml',
-  'oak-api.json',
 ];
 
 /** Ensure directory exists, creating if necessary. */

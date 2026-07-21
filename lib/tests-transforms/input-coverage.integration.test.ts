@@ -29,7 +29,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const EXAMPLES_DIR = resolve(__dirname, '../examples/openapi');
 const SWAGGER_DIR = resolve(__dirname, '../examples/swagger');
 const CUSTOM_DIR = resolve(__dirname, '../examples/custom/openapi/v3.1');
-
+const REAL_WORLD_DIR = resolve(__dirname, '../tests-fixtures/openapi-samples/real-world');
 /**
  * All fixtures that MUST be supported with current implementation.
  * Format: [displayName, absolutePath]
@@ -67,13 +67,14 @@ const SUPPORTED_FIXTURES: [string, string][] = [
 
   // Multi-file fixture
   ['multi-file/main.yaml', `${EXAMPLES_DIR}/multi-file/main.yaml`],
-];
 
-const REJECTED_NON_STRICT_FIXTURES: [string, string][] = [
+  // Real-world fixtures supported at load/IR boundaries
   ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
+  ['real-world/eperusteet-ext.json', `${REAL_WORLD_DIR}/eperusteet-ext.json`],
+  ['real-world/oak-api.json', `${REAL_WORLD_DIR}/oak-api.json`],
 ];
 
-// All 21 fixtures now supported including webhook-example (Session 2.6 complete)
+// All fixtures in this suite now load through the shared boundary and IR build successfully.
 
 // ============================================================================
 // Helper Functions
@@ -103,16 +104,6 @@ describe('Input Coverage: OpenAPI → IR', () => {
       expect(ir.info.title).toBeTruthy();
     });
   });
-
-  describe('Rejected non-strict fixtures', () => {
-    it.each(REJECTED_NON_STRICT_FIXTURES)(
-      'rejects %s with a strict object error',
-      async (_name, path) => {
-        await expect(loadAndBuildIR(path)).rejects.toThrow(/Non-strict object input/);
-      },
-    );
-  });
-
   // ==========================================================================
   // Tests: Document-Level Fields (Existing in IR)
   // ==========================================================================

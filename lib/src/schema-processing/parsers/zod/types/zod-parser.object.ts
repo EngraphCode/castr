@@ -5,10 +5,16 @@
  * Recurses for property schemas via Core Dispatcher.
  */
 
+import type { CallExpression } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
 import { CastrSchemaProperties } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
-import { createZodProject, getZodMethodChain, extractObjectProperties } from '../ast/zod-ast.js';
+import {
+  createZodProject,
+  getZodMethodChain,
+  extractObjectProperties,
+  type ZodMethodCall,
+} from '../ast/zod-ast.js';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import type { ZodParseOptions, ZodSchemaParser } from '../zod-parser.types.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
@@ -24,6 +30,7 @@ import {
   isZodObjectBaseMethod,
 } from '../zod-constants.js';
 import { enforceObjectPolicy } from '../policy/zod-parser.object-policy.js';
+import { resolveCatchallAdditionalProperties } from '../policy/zod-parser.object.catchall.js';
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity
@@ -37,10 +44,7 @@ import { enforceObjectPolicy } from '../policy/zod-parser.object-policy.js';
  *
  * @internal
  */
-function isStrictObjectSchema(
-  baseMethod: string,
-  chainedMethods: { name: string; argNodes: Node[] }[],
-): boolean {
+function isStrictObjectSchema(baseMethod: string, chainedMethods: ZodMethodCall[]): boolean {
   if (baseMethod === ZOD_STRICT_OBJECT_METHOD) {
     return true;
   }
@@ -53,7 +57,7 @@ function isStrictObjectSchema(
  * Object-mode widening modifiers that contradict a strict base.
  * @internal
  */
-const WIDENING_MODIFIERS = new Set([ZOD_METHOD_PASSTHROUGH, ZOD_METHOD_STRIP, ZOD_METHOD_CATCHALL]);
+const WIDENING_MODIFIERS = new Set([ZOD_METHOD_PASSTHROUGH, ZOD_METHOD_STRIP]);
 
 /**
  * Reject contradictory strict-object chains.
@@ -66,11 +70,20 @@ const WIDENING_MODIFIERS = new Set([ZOD_METHOD_PASSTHROUGH, ZOD_METHOD_STRIP, ZO
  */
 function rejectContradictoryChains(
   baseMethod: string,
-  chainedMethods: { name: string; argNodes: Node[] }[],
+  chainedMethods: ZodMethodCall[],
   isStrict: boolean,
 ): void {
   if (!isStrict) {
     return;
+  }
+
+  const strictSource = baseMethod === ZOD_STRICT_OBJECT_METHOD ? 'z.strictObject()' : '.strict()';
+  const catchallMethod = findCatchallMethod(chainedMethods);
+  if (catchallMethod) {
+    throw new Error(
+      `Contradictory object chain: ${strictSource} followed by .${catchallMethod.name}(). ` +
+        'A strict object cannot also carry catchall semantics. Remove the conflicting modifier.',
+    );
   }
 
   const widener = chainedMethods.find((m) => WIDENING_MODIFIERS.has(m.name));
@@ -78,11 +91,14 @@ function rejectContradictoryChains(
     return;
   }
 
-  const strictSource = baseMethod === ZOD_STRICT_OBJECT_METHOD ? 'z.strictObject()' : '.strict()';
   throw new Error(
     `Contradictory object chain: ${strictSource} followed by .${widener.name}(). ` +
       'A strict object cannot be widened. Remove the conflicting modifier.',
   );
+}
+
+function findCatchallMethod(chainedMethods: ZodMethodCall[]): ZodMethodCall | undefined {
+  return chainedMethods.find((method) => method.name === ZOD_METHOD_CATCHALL);
 }
 
 /**
@@ -126,45 +142,77 @@ export function parseObjectZodFromNode(
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
-  if (!Node.isCallExpression(node)) {
-    return undefined;
-  }
-  if (!resolver) {
-    return undefined;
-  }
-
-  const chainInfo = getZodMethodChain(node, resolver);
+  const chainInfo = getObjectChainInfo(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
-  const { baseMethod, chainedMethods, baseCallNode } = chainInfo;
-
-  if (!isZodObjectBaseMethod(baseMethod)) {
-    return undefined;
-  }
-
-  if (!baseCallNode) {
-    return undefined;
-  }
-
+  const { baseMethod, chainedMethods, baseCallNode, resolver: resolvedResolver } = chainInfo;
   const isStrict = isStrictObjectSchema(baseMethod, chainedMethods);
+  const catchallMethod = findCatchallMethod(chainedMethods);
+  const hasWideningModifier = chainedMethods.some((method) => WIDENING_MODIFIERS.has(method.name));
   rejectContradictoryChains(baseMethod, chainedMethods, isStrict);
-  const propertyNodes = extractObjectProperties(baseCallNode, resolver);
+  const propertyNodes = extractObjectProperties(baseCallNode, resolvedResolver);
   const { properties, required } = extractPropertiesFromNode(propertyNodes, parseSchema);
+  const additionalProperties =
+    catchallMethod === undefined
+      ? false
+      : resolveCatchallAdditionalProperties(catchallMethod, parseSchema, resolvedResolver);
 
-  const schema: CastrSchema = {
+  const schema: CastrSchema = buildObjectSchema(properties, required, additionalProperties);
+
+  applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
+  enforceObjectPolicy(
+    schema,
+    baseMethod,
+    isStrict,
+    catchallMethod !== undefined,
+    hasWideningModifier,
+  );
+
+  return schema;
+}
+
+function getObjectChainInfo(
+  node: Node,
+  resolver: ZodImportResolver | undefined,
+):
+  | {
+      baseMethod: string;
+      chainedMethods: ZodMethodCall[];
+      baseCallNode: CallExpression;
+      resolver: ZodImportResolver;
+    }
+  | undefined {
+  if (!Node.isCallExpression(node) || !resolver) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(node, resolver);
+  if (!chainInfo || !isZodObjectBaseMethod(chainInfo.baseMethod) || !chainInfo.baseCallNode) {
+    return undefined;
+  }
+
+  return {
+    baseMethod: chainInfo.baseMethod,
+    chainedMethods: chainInfo.chainedMethods,
+    baseCallNode: chainInfo.baseCallNode,
+    resolver,
+  };
+}
+
+function buildObjectSchema(
+  properties: Record<string, CastrSchema>,
+  required: string[],
+  additionalProperties: boolean | CastrSchema,
+): CastrSchema {
+  return {
     type: ZOD_SCHEMA_TYPE_OBJECT,
     properties: new CastrSchemaProperties(properties),
     required,
-    additionalProperties: false,
+    additionalProperties,
     metadata: createDefaultMetadata(),
   };
-
-  applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
-  enforceObjectPolicy(schema, baseMethod, isStrict);
-
-  return schema;
 }
 
 // Register this parser with the core dispatcher

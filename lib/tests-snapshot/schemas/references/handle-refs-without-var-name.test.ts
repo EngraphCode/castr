@@ -51,7 +51,6 @@ test('handle-refs-without-var-name', () => {
                     },
                     "name": "Basic",
                     "schema": {
-                        "additionalProperties": false,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -280,7 +279,6 @@ test('handle-refs-without-var-name', () => {
                         "properties": {
                             "value": {
                                 "items": {
-                                    "additionalProperties": false,
                                     "type": "object",
                                 },
                                 "type": "array",
