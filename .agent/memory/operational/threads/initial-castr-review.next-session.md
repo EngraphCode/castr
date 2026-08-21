@@ -5,10 +5,11 @@ mandated. Branch: `feat/initial-castr-review`.
 
 ## Participating agent identities (PDR-027, additive — never overwrite)
 
-| platform    | model          | agent_name             | session_id_prefix | role                                             | first_session | last_session |
-| ----------- | -------------- | ---------------------- | ----------------- | ------------------------------------------------ | ------------- | ------------ |
-| claude-code | claude-fable-5 | Fragrant Twining Glade | 5367e2            | reviewer + recorder + team driver/closeout owner | 2026-07-04    | 2026-07-06   |
-| claude-code | claude-fable-5 | Mistbound Fading Night | fe1498            | remediation-02 pre-flight scout (boundary b)     | 2026-07-06    | 2026-07-06   |
+| platform    | model          | agent_name               | session_id_prefix | role                                             | first_session | last_session |
+| ----------- | -------------- | ------------------------ | ----------------- | ------------------------------------------------ | ------------- | ------------ |
+| claude-code | claude-fable-5 | Fragrant Twining Glade   | 5367e2            | reviewer + recorder + team driver/closeout owner | 2026-07-04    | 2026-07-06   |
+| claude-code | claude-fable-5 | Mistbound Fading Night   | fe1498            | remediation-02 pre-flight scout (boundary b)     | 2026-07-06    | 2026-07-06   |
+| codex       | GPT-5.6        | Torrid Smouldering Forge | 01a024            | completeness report publisher                    | 2026-08-21    | 2026-08-21   |
 
 ## Lane state
 
@@ -22,6 +23,10 @@ mandated. Branch: `feat/initial-castr-review`.
   overhaul plan is authored and awaiting its W0 owner walk (Q-012..Q-015 in
   `open-questions.md`) plus readiness-reviewer folds (assumptions-expert + docs-adr-expert,
   dispatched 2026-07-04).
+- **2026-08-21 follow-up:**
+  [`Castr completeness and losslessness proof programme`](../../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
+  (Revision 2; implementation instructions, not a proof certificate; baseline
+  `main@63a7e67`).
 - **Current state:** C2–C6 re-proven live on `main` @ `8bfc858`; R1–R6 recorded; all continuity
   surfaces updated (continuity spine, prompt banner, roadmap banner, remediation-02 banner,
   napkin, distilled ×2, pending-graduations, Q-012..Q-015).
