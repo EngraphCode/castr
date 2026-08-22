@@ -518,6 +518,12 @@ The shape rules above are deliberate and binding on the generator:
   finding cannot ride an exact outcome. These sketches illustrate the invariants; the real
   contract is enforced by the generator/validator and the `tsc` gate, and any collection a
   sketch leaves as a plain array is still bound by this rule.
+- **Obligation axes are non-empty too.** On a resolved row, `syntaxForms`, `positions`,
+  `facets`, and `channels` are non-empty tuples — a resolved obligation with no position, facet,
+  or channel is vacuous and cannot enter the discharged accounting. An admitted feature's
+  `edges` may never be `[]`: an admitted feature with no ratified edge instead carries an
+  explicit absent-edge record citing its governing product/admission decision, per the
+  Section 11 intentionally-absent-edge rule, and the validator rejects a bare empty list.
 
 Tranche 00 also needs an explicit, non-certifying planning state so inventory closure does not depend on proofs that the later tranches have not built yet:
 
@@ -700,10 +706,13 @@ inventory would be the programme's single largest executability risk. The stages
   versions/profiles and public entrypoints) and the error-code/atomicity half of decision 21 are
   ratified at the head of Tranche 04, which dispatches those profiles and implements fail-closed
   preflight; decisions 6–9, 12, 13, and 16–18 at the heads of their owning format tranches
-  (05–09); the resource-policy/trust-profile half of decision 21 at the head of Tranche 10.
-  Batching them globally is sequencing preference, not dependency — but deferring one past its
-  first consumer is a defect.
-- **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 10, 11, and 22.
+  (05–09); the resource-policy/trust-profile half of decision 21 at the head of Tranche 10; and
+  decision 10 (governed-widening policies and their exclusion from lossless certification) at
+  the head of whichever of Tranches 08 and 09 opens first — both lanes classify channels as
+  exact, widened, or rejected and therefore consume it before any certification gate. Batching
+  them globally is sequencing preference, not dependency — but deferring one past its first
+  consumer is a defect.
+- **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 11 and 22.
 
 Inventory closure follows the same staging: T00a closes with `planned` rows naming owning
 tranches; each lane resolves its own rows at its T00b head. The decisions themselves:
