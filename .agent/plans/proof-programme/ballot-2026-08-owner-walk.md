@@ -215,6 +215,8 @@ transition, roadmap and continuation-prompt banners, and this ballot marked CLOS
 date. Q-01 (loop readiness) is not gated on this walk and may already have proven the
 Routine. **The Routine un-pauses for real slices only if B-12, B-13, and B-16 each
 carry a success verdict** (the merge and red-head authorisations the loop cannot run
-without); a REJECT or DEFER on any of those leaves the Routine paused and the programme in owner-driven,
+without) — the un-pause is executed by whichever lands second: this walk's follow-up landing
+when Q-01 has already proven the Routine, or the Q-01 completion when this walk closed
+first; a REJECT or DEFER on any of those leaves the Routine paused and the programme in owner-driven,
 per-PR-approval mode until a revised ADR-051 is re-balloted. Closing the walk with verdicts
 recorded never by itself arms anything.

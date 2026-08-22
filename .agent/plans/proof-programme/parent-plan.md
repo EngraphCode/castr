@@ -106,9 +106,14 @@ rule does not apply to it.
 
 **Failure counters are repo state:** each row carries a `failures:` count in this frontmatter
 (absent = 0) and the programme a `zero_progress_streak:` count; every firing increments or
-resets them as part of its landing (progress of any kind resets the streak; a row's success
-resets its count), so a fresh session can evaluate the ADR-051 clause 6 thresholds. Q-01's
-dry run proves cross-session read/write of both.
+resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
+thresholds. The streak resets only on **substantive progress** — a slice PR merged, a new
+commit advancing a claimed slice, a queue row completed, a head-repair fix landed, or a new
+queued decision recorded; the bookkeeping every firing performs regardless of progress
+(completion notification, continuity/handoff, the counter landing itself) never resets it,
+so an idle firing always increments the streak and the clause 6 kill switch stays reachable.
+A row's success resets its `failures:` count. Q-01's dry run proves cross-session read/write
+of both counters.
 
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
@@ -140,10 +145,14 @@ re-ballot or re-plan. Source: report §7 T00a.
 product code; no queue slice execution during the dry run. Acceptance (`e2e`, observed): a
 fresh container completes the full blocking hook chain unattended; the cron Routine is
 created in fresh-session mode, fires once, the spawned session executes the prompt's no-op
-path (STOP-check → report → handoff) and the completion notification reaches the owner; the
-Routine is then paused until Q-00 closes, with the pause posted as a stand-down broadcast
-(loop identity, criterion fired, one-line closeout) per `loop-exit-criteria-required` —
-proving the broadcast path ADR-051 clause 6 requires on every firing-side loop exit. Evidence note: the platform surface
+path (STOP-check → report → handoff), posts the dry-run's stand-down broadcast (loop
+identity, criterion "dry-run complete", one-line closeout) per `loop-exit-criteria-required`
+— proving the broadcast path ADR-051 clause 6 requires on every firing-side loop exit — and
+the completion notification reaches the owner. The Routine is then paused until Q-00 closes
+— or, when Q-00 is already `complete` with success verdicts on B-12, B-13, and B-16,
+un-paused under the ballot's after-walk rule instead: arming is order-independent, performed
+by whichever of Q-00 closure and this slice's proof lands second, so neither ordering
+strands the Routine paused after full authorisation. Evidence note: the platform surface
 (fresh-session-per-fire Routines with completion notifications) is confirmed against the live
 platform API in the authoring session; this slice proves the end-to-end behaviour.
 
