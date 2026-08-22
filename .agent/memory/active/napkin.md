@@ -22,6 +22,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **Six review-bot rounds on PR 30 quantified the convergence cap**: rounds 1–2 caught real
   distinct classes; 3–4 were consequences of fixes; 5–6 sampled an unbounded refinement space.
   Two fix rounds + carry-forward (ADR-051 clause 4) is measured policy, not a guess.
+- **PR 31 rounds 7–11 refine that measurement: authority-machinery text converges differently
+  from code.** Finding counts 4→2→2→4→2 with NO dud round — every finding was a real defect in
+  the permission/liveness/safety machinery (out-of-vocabulary verdict token, DEFER granting
+  undeferred authority, order-dependent arming deadlock, kill-switch counter resettable by
+  mandatory bookkeeping / never initialised / without a merge path, B-15 rejection silencing
+  clause 6 escalations). Clause 4's "blocking defects exempt from the cap" clause carried the
+  whole load: under it, none of these rounds were cappable, and rightly so. Lesson for the
+  ballot rewrite and future ADR text: authority text has a bounded defect surface (each verdict
+  × each clause × each ordering) — enumerate that product deliberately once, rather than letting
+  a reviewer walk it incrementally at one round per push.
 - **PDR-105 fired live: an ADR may not LINK into the plan estate (doctrine→ephemeral), even
   when the plan is the ADR's own acceptance gate** — `validate-reference-direction` blocked
   the commit on ADR-051's two Related-line links to `parent-plan.md`/ballot. Cure: name the
