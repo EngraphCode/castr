@@ -4,7 +4,11 @@ import path from 'node:path';
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
 
-import { findPdrCountDrift, type DriftViolation } from './validate-drift-helpers.js';
+import {
+  findGitleaksPinDrift,
+  findPdrCountDrift,
+  type DriftViolation,
+} from './validate-drift-helpers.js';
 
 /**
  * §6 drift validator — the structural form of the manual catch made during the
@@ -26,6 +30,23 @@ const repoRoot = resolveRepoRoot(import.meta.url);
 
 const PDR_DIR = '.agent/practice-core/decision-records';
 
+/** The single-sourced gitleaks security pin and the config declaring its floor. */
+const GITLEAKS_PIN_FILE = '.claude/hooks/_lib/gitleaks-pin.env';
+const GITLEAKS_CONFIG_FILE = '.gitleaks.toml';
+
+async function findGitleaksPinFileDrift(): Promise<DriftViolation[]> {
+  let pinEnvContent: string;
+  let gitleaksTomlContent: string;
+  try {
+    pinEnvContent = await fs.readFile(path.join(repoRoot, GITLEAKS_PIN_FILE), 'utf8');
+    gitleaksTomlContent = await fs.readFile(path.join(repoRoot, GITLEAKS_CONFIG_FILE), 'utf8');
+  } catch {
+    // A missing file is reported by the anchor check.
+    return [];
+  }
+  return [...findGitleaksPinDrift(pinEnvContent, gitleaksTomlContent)];
+}
+
 /** Handoff/contract surfaces whose definite total-PDR-count claims are checked. */
 const SCANNED_SURFACES: readonly string[] = [
   '.agent/plans/transplant/README.md',
@@ -40,6 +61,8 @@ const REQUIRED_ANCHORS: readonly string[] = [
   ...SCANNED_SURFACES,
   '.agent/practice-core/practice-verification.md',
   '.agent/hooks/policy.json',
+  GITLEAKS_PIN_FILE,
+  GITLEAKS_CONFIG_FILE,
 ];
 
 async function countPdrFiles(): Promise<number> {
@@ -79,6 +102,7 @@ async function main(): Promise<void> {
   const violations: DriftViolation[] = [
     ...(await findMissingAnchors()),
     ...findPdrCountDrift(await readSurfaces(), actualCount),
+    ...(await findGitleaksPinFileDrift()),
   ];
 
   if (violations.length === 0) {

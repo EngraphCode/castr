@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { findPdrCountDrift } from './validate-drift-helpers.js';
+import { findGitleaksPinDrift, findPdrCountDrift } from './validate-drift-helpers.js';
 
 describe('findPdrCountDrift', () => {
   it('passes when a definite estate claim matches the file count', () => {
@@ -40,5 +40,80 @@ describe('findPdrCountDrift', () => {
   it('passes when "all N PDR files" matches', () => {
     const surfaces = [{ name: 'ref.md', content: 'all 91 PDR files transplanted together.' }];
     expect(findPdrCountDrift(surfaces, 91)).toEqual([]);
+  });
+});
+
+describe('findGitleaksPinDrift', () => {
+  const pinEnv = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+
+  it('passes when the pin and minVersion agree', () => {
+    expect(findGitleaksPinDrift(pinEnv, 'minVersion = "8.30.0"\n')).toEqual([]);
+  });
+
+  it('flags a minVersion that disagrees with the pin', () => {
+    expect(findGitleaksPinDrift(pinEnv, 'minVersion = "8.31.0"\n')).toEqual([
+      {
+        surface: '.gitleaks.toml',
+        detail:
+          'minVersion "8.31.0" != pinned GITLEAKS_VERSION "8.30.0" (.claude/hooks/_lib/gitleaks-pin.env) — gitleaks treats minVersion as a warning only, so this drift scans silently',
+      },
+    ]);
+  });
+
+  it('flags any line outside the pin grammar (class-kill: export-form assignment)', () => {
+    const exotic =
+      'GITLEAKS_VERSION=8.30.0\nexport GITLEAKS_VERSION=8.20.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+    expect(findGitleaksPinDrift(exotic, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          'line 2 ("export GITLEAKS_VERSION=8.20.0") is outside the pin-file grammar — only comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= assignments are valid, so shell consumers and this validator cannot diverge',
+      },
+    ]);
+  });
+
+  it('flags any line outside the pin grammar (unknown key)', () => {
+    const exotic = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\nOTHER_KEY=1\n';
+    expect(findGitleaksPinDrift(exotic, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          'line 3 ("OTHER_KEY=1") is outside the pin-file grammar — only comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= assignments are valid, so shell consumers and this validator cannot diverge',
+      },
+    ]);
+  });
+
+  it('accepts comments and blank lines in the pin file', () => {
+    const ok = '# a comment\n\nGITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+    expect(findGitleaksPinDrift(ok, 'minVersion = "8.30.0"\n')).toEqual([]);
+  });
+
+  it('flags duplicate GITLEAKS_VERSION assignments (shell consumers use the LAST)', () => {
+    const dup = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_VERSION=8.20.0\n';
+    expect(findGitleaksPinDrift(dup, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          '2 GITLEAKS_VERSION= assignments found — shell consumers use the last, so the pin must have exactly one',
+      },
+    ]);
+  });
+
+  it('flags an unparseable pin file', () => {
+    expect(findGitleaksPinDrift('# empty\n', 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail: 'GITLEAKS_VERSION= line not found — the security pin has no readable source',
+      },
+    ]);
+  });
+
+  it('flags a gitleaks config with no minVersion', () => {
+    expect(findGitleaksPinDrift(pinEnv, '[allowlist]\n')).toEqual([
+      {
+        surface: '.gitleaks.toml',
+        detail: 'minVersion = "…" line not found — the config no longer declares the version floor',
+      },
+    ]);
   });
 });

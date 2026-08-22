@@ -79,3 +79,85 @@ export function findPdrCountDrift(
   }
   return violations;
 }
+
+/**
+ * Detect drift between the single-sourced gitleaks security pin
+ * (`.claude/hooks/_lib/gitleaks-pin.env`, read by both the SessionStart
+ * provisioning hook and the CI secret-scan step) and `.gitleaks.toml`'s
+ * declared `minVersion`. gitleaks treats `minVersion` as a WARNING only
+ * (measured 2026-08-22: a config requiring 9.99.0 scanned and exited 0 under
+ * 8.30.0), so this drift is silent by construction at scan time — the gate
+ * has to live here, where it fails closed in pre-commit and CI.
+ */
+export function findGitleaksPinDrift(
+  pinEnvContent: string,
+  gitleaksTomlContent: string,
+): DriftViolation[] {
+  // Grammar first (the class-kill): every non-blank, non-comment line must be
+  // a plain assignment of one of the two pinned keys. Any other shell-valid
+  // form (`export KEY=…`, quoting, extra keys, sourcing) is a violation, so
+  // the shell consumers and this validator cannot diverge on what they read.
+  const lines = pinEnvContent.split('\n');
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const trimmed = line.trim();
+    if (trimmed === '' || trimmed.startsWith('#')) {
+      continue;
+    }
+    if (!/^(?:GITLEAKS_VERSION|GITLEAKS_SHA256_LINUX_X64)=\S+$/.test(trimmed)) {
+      return [
+        {
+          surface: '.claude/hooks/_lib/gitleaks-pin.env',
+          detail:
+            `line ${index + 1} ("${trimmed}") is outside the pin-file grammar — only ` +
+            `comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= ` +
+            `assignments are valid, so shell consumers and this validator cannot diverge`,
+        },
+      ];
+    }
+  }
+
+  const pinMatches = [...pinEnvContent.matchAll(/^GITLEAKS_VERSION=(\S+)\s*$/gm)];
+  if (pinMatches.length === 0) {
+    return [
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail: 'GITLEAKS_VERSION= line not found — the security pin has no readable source',
+      },
+    ];
+  }
+  if (pinMatches.length > 1) {
+    return [
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          `${pinMatches.length} GITLEAKS_VERSION= assignments found — shell consumers use ` +
+          `the last, so the pin must have exactly one`,
+      },
+    ];
+  }
+  const pinMatch = pinMatches[0];
+  const minVersionMatch = /^minVersion = "([^"]+)"\s*$/m.exec(gitleaksTomlContent);
+  if (!minVersionMatch) {
+    return [
+      {
+        surface: '.gitleaks.toml',
+        detail: 'minVersion = "…" line not found — the config no longer declares the version floor',
+      },
+    ];
+  }
+  const pinned = pinMatch[1];
+  const declared = minVersionMatch[1];
+  if (declared !== pinned) {
+    return [
+      {
+        surface: '.gitleaks.toml',
+        detail:
+          `minVersion "${declared}" != pinned GITLEAKS_VERSION "${pinned}" ` +
+          `(.claude/hooks/_lib/gitleaks-pin.env) — gitleaks treats minVersion as a warning ` +
+          `only, so this drift scans silently`,
+      },
+    ];
+  }
+  return [];
+}

@@ -60,9 +60,16 @@ mandated. Branch: `feat/initial-castr-review`.
   **Accepted** (amended: three firings per day); the active-lane dispositions are executed
   (both plans in `current/paused/`, banners carry the disposition table and the QD-2
   pointer); the queue is live with Q-14 (B-09 doctrine wave) added.
-- **Next safe step (2026-08-22, current):** Q-01 (loop readiness) — it arms the Routine,
-  since the walk closed before its proof. Then the queue per the parent plan's operating
-  protocol (WIP = 1). Consult the parent plan, not the historical blocks below.
+- **2026-08-22 (close): Q-01 COMPLETE, LOOP LIVE** — PR #33 landed the loop-readiness
+  slice (gitleaks provisioning hook + pinned single-source + drift validator +
+  `routine-prompt.md`) and the Routine mechanism is proven end to end (fresh-session
+  spawn, credentialed landing `689eb9e`, owner notification receipts — evidence record in
+  the parent plan's Q-01 brief). The loop Routine is **enabled**: three firings/day, one
+  slice per firing, ADR-051 clause 3 merges.
+- **Next safe step (2026-08-22, current):** the queue per the parent plan's operating
+  protocol (WIP = 1) — normally driven by the Routine's firings; a human-attended session
+  picking up a slice must first check for open programme PRs and live claims. Consult the
+  parent plan, not the historical blocks below.
   The 2026-07-06 block is retained as history:
 - **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
