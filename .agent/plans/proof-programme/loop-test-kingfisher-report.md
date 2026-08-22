@@ -28,7 +28,7 @@ action is in scope), but their schemas are reachable and callable.
 
 **(b) git remotes / credentialed push**
 
-```
+```text
 origin	https://github.com/EngraphCode/castr (fetch)
 origin	https://github.com/EngraphCode/castr (push)
 ```
@@ -37,7 +37,7 @@ origin	https://github.com/EngraphCode/castr (push)
 `claude/dazzling-shannon-8nxfzz` branch, before this branch was created)
 succeeded:
 
-```
+```text
 To https://github.com/EngraphCode/castr
  * [new branch]      HEAD -> claude/dazzling-shannon-8nxfzz
 ```
@@ -46,7 +46,7 @@ Credentialed push capability: **confirmed**.
 
 **(c) gitleaks**
 
-```
+```console
 $ command -v gitleaks && gitleaks version
 ```
 
@@ -69,7 +69,7 @@ record.
 Read from `.agent/plans/proof-programme/parent-plan.md` frontmatter on
 `origin/main` (read-only; not modified):
 
-```
+```yaml
 zero_progress_streak: 0
 ```
 

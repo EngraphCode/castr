@@ -6,7 +6,7 @@ todos:
     status: completed
   - id: Q-01
     content: 'Loop readiness: fresh-container hook chain green unattended + Routine mechanism proven end to end'
-    status: in_progress
+    status: completed
   - id: Q-02
     content: 'Pre-T01 harness-extraction slice: artifact-agnostic rework of #11 runner mechanics'
     status: pending
@@ -66,8 +66,8 @@ todos:
 **Status:** LIVE — the plan-of-record. The W-0 walk completed 2026-08-22 (interactive,
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
-CLOSED with the verdicts recorded. Eligible now: Q-01 (next — it arms the Routine, since
-the walk closed before its proof), Q-02..Q-09, Q-13 (executes the B-11 RATIFY
+CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
+the Q-01 evidence record). Eligible now: Q-02..Q-09, Q-13 (executes the B-11 RATIFY
 outcome), Q-14, Q-15; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -199,6 +199,37 @@ one-firing proof, without pre-empting that verdict. Evidence note: the platform 
 (fresh-session-per-fire Routines with completion notifications) is confirmed against the live
 platform API in the authoring session; this slice proves the end-to-end behaviour.
 
+**Q-01 evidence record (completed 2026-08-22).** Shipped: the gitleaks SessionStart
+provisioning hook + single-sourced pin (`.claude/hooks/_lib/gitleaks-pin.env`, CI
+secret-scan reads the same pin) + `findGitleaksPinDrift` in the drift validator (15
+red-first tests), and [`routine-prompt.md`](./routine-prompt.md) as the standing firing
+brief. Routine mechanism proven end to end across four firings:
+
+- Probe firings 1–3 (loop Routine, manual `fire_trigger`): fresh cloud sessions spawned as
+  designed, but **a Routine created via the API carries no repo sources** — `create_trigger`
+  cannot attach repos or connectors, so the fired sessions were read-only and landed
+  nothing. The fix is owner UI configuration ("Runs with" on the Routine): division of
+  labour recorded — the agent creates/updates Routines, the owner attaches the repo, once
+  per Routine.
+- Kingfisher proof firing (owner-configured test Routine `trig_014yUGodczfAVVxfq4oftiQ9`
+  with the castr repo attached, fired 17:51 UTC): the spawned session grounded read-only in
+  the repo, exercised the GitHub MCP tool surface (available), and **pushed its capability
+  report with repo credentials** (`routine/loop-test-kingfisher` @ `689eb9e`, report
+  conserved at [`loop-test-kingfisher-report.md`](./loop-test-kingfisher-report.md)) —
+  the credentialed-landing premise the whole loop stands on, observed. Completion
+  notifications reached the owner on push, email, and Slack (owner receipts, platform
+  "3 of 3 succeeded").
+- Known remainders, owned by Q-15 (none block arming): Kingfisher fired against a base
+  that predates this slice's hook, so it measured gitleaks absent and `agent-tools/dist`
+  unbuilt — post-merge firings get the provisioning hook and its dist warning; a pristine
+  checkout has **no git hooks wired until `pnpm install` runs** (commits bypass every
+  gate); fired sessions derive their Practice identity from the raw `session_…` id
+  (degenerate `sessio` prefix) — seed derivation fix queued to Q-15's gap list.
+- Arming: the loop Routine `trig_01X4wYy2gHSb8yFhdhwbADGF` (cron `3 */8 * * *`, three
+  firings/day per amended B-12) is enabled as the last act of this slice, strictly after
+  its PR merges, with the B-15 configuration (push + email, no digest) re-checked at
+  enable.
+
 **Q-02 — Pre-T01 harness extraction.** Surface: artifact-agnostic runner mechanics extracted
 from PR #11 (outcome records, non-vacuity checks, mutant-bite ritual) into the existing
 `lib/tests-transforms` estate — the 2026-07-06 scout proved the substrate exists; extend, do
@@ -306,7 +337,14 @@ fresh container; every gap fixed in-slice or spun into its own queue row. Measur
 (2026-08-22, this container): unbuilt `agent-tools/dist` left the PreToolUse guards failing
 OPEN for hours (`.claude/logs/hook-errors.log` recorded ten fail-open entries) — the guards'
 fail-open posture on missing build artefacts is itself a candidate finding. Q-01 ships the
-gitleaks provisioning half and a dist-presence warning; this slice proves the rest.
+gitleaks provisioning half and a dist-presence warning; this slice proves the rest. Q-01's
+firing evidence (2026-08-22, Kingfisher probe) adds three measured gaps to the list: a
+pristine checkout has **no git hooks wired until `pnpm install` runs**, so unattended
+commits bypass the entire blocking chain (the highest-order gap — the chain isn't merely
+degraded, it is absent); `agent-tools/dist` was unbuilt in the fired container (guards fail
+open, as measured before); and fired sessions derive their Practice identity from the raw
+`session_…` id, yielding the degenerate `sessio` prefix — the seed derivation must strip
+the platform prefix or take an injected seed at spawn.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
@@ -376,12 +414,13 @@ landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's arming**: Q-01.
+- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; the Routine
+  is armed per the Q-01 evidence record).
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-01 (next), Q-02..Q-09, Q-13, Q-14, Q-15.
+- **Eligible now**: Q-02..Q-09, Q-13, Q-14, Q-15.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract

@@ -16,10 +16,13 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > is **Accepted** (amended: three firings per day), and **B-11 RATIFY supersedes the
 > roadmap's 2026-06-19 sequence with
 > [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md)'s
-> queue** (the transplant is paused as a named position — re-entry record QD-2). Next: Q-01
-> (loop readiness — it arms the Routine), then the queue. Resuming sessions: read the
-> parent plan's queue and operating protocol before acting; every banner below predates
-> this contract.
+> queue** (the transplant is paused as a named position — re-entry record QD-2). Q-01
+> (loop readiness) completed 2026-08-22: the autonomous loop Routine is **enabled** (three
+> firings/day, fresh cloud session per firing, `routine-prompt.md` as its brief) — the
+> queue now advances without a human in session, per ADR-051. Resuming sessions: read the
+> parent plan's queue and operating protocol before acting, check for open programme PRs
+> and live claims (a firing may be mid-slice), and respect WIP = 1; every banner below
+> predates this contract.
 
 > **🔬 CURRENT TRUTH (2026-07-04, wide+deep review) — READ THIS FIRST.** The
 > [wide+deep review](../report/wide-deep-review-2026-07-04.md) re-proved **all five open
