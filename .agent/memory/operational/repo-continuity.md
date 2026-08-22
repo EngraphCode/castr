@@ -176,10 +176,13 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > W0 owner walk (**Q-012..Q-015** in `open-questions.md`: second-product naming, vision
 > topology, preservation-coverage metric, principles.md truthing batch) blocks W1/W2/W4 shape;
 > **W3's `validate-doctrine-claims` TDD cycle and W2's continuity archaeology are
-> parallel-safe now**. **NEXT STEPS, in order: (1) remediation-02 (IR-fidelity harness,
-> `plans/current/paused/02-ir-fidelity-proof-harness.md`) — ungated, highest leverage, NOT blocked by
-> the overhaul; land the interim fail-fast on the placebo Zod refinements with its first PR
-> (review §5). (2) The W0 owner walk. (3) Overhaul workstreams per the plan.** The substrate
+> parallel-safe now**. **NEXT STEPS (HISTORICAL — superseded 2026-08-22: the proof-programme
+> W-0 ballot was walked and CLOSED, remediation-02 is paused/partially absorbed into queue
+> slices Q-02..Q-05, and the current next step is Q-01 (loop readiness) per
+> [`plans/proof-programme/parent-plan.md`](../../plans/proof-programme/parent-plan.md) —
+> consult its queue, not this block), as then written: (1) remediation-02 (IR-fidelity
+> harness, `plans/current/paused/02-ir-fidelity-proof-harness.md`); (2) the W0 owner walk;
+> (3) overhaul workstreams per the plan.** The substrate
 > backlog (gap-rescan spine) stays parallel-safe and unchanged.
 
 > **🧭 (2026-07-03 evening, Windswept Winging Cliff / 0ceb5f closeout — history; superseded on

@@ -125,8 +125,9 @@ At most two fix rounds per PR for automated-reviewer findings, then carry-forwar
 dispositions; genuine correctness/security/data-loss defects blocking in every round; human
 comments never capped. This explicitly amends the scope of
 `pr-comments-resolve-and-recheck` for automated-reviewer comments: a recorded carry-forward
-disposition reply IS that rule's measured rejection (scope note lands via Q-14's rule-file
-touch or the first landing that edits the rule). Live evidence: PR #31's own eleven-round
+disposition reply IS that rule's measured rejection (scope note landed in the rule file in
+this same landing, so the loop never runs against a contradictory rule). Live evidence: PR
+#31's own eleven-round
 arc (counts 8-9-3-1-2-3-4-2-2-4-2, every finding real, convergence structurally absent).
 
 **Verdict: RATIFY** (2026-08-22, interactive walk).

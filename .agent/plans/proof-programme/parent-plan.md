@@ -257,7 +257,9 @@ inventories generated from official sources where possible; `SUMMARY.md` claim l
 per B-01. Non-goals: no certification-mode gates yet (Tranche 14). Acceptance (`unit` +
 `integration`): validator rejects vacuous/duplicate/ownerless rows; `tsc` exhaustiveness
 green on the contract types; gates green. Source: report §5.1, §7; PR-30 carried findings.
-Gate: B-01..B-08 and B-09 (success verdicts) where its surfaces are touched.
+Gate: B-01, B-07, B-09, and B-10 (success verdicts — all recorded 2026-08-22; the former
+B-02..B-06 and B-08 are folded into B-01/B-07 per the ballot's reduction log, so they gate
+through those two items).
 
 **Q-11 — Tranche 01 full harness.** Surface: profile-bearing case metadata over the Q-02
 extraction; fixture provenance manifest; oracle independence. Acceptance (`integration`):

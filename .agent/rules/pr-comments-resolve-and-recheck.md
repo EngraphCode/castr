@@ -40,6 +40,16 @@ prior one). Never assume the previous round was the last. The loop is:
 
 Do not merge, and do not report the PR ready, until step 5 holds.
 
+**Scope amendment for automated-reviewer comments (owner-ratified 2026-08-22, W-0 ballot
+B-14; authoritative text ADR-051 clause 4):** after two fix rounds for automated-reviewer
+findings on a PR, a per-comment **carry-forward disposition reply** — recorded on the thread
+before merge, with the substance queued to a named home — IS this rule's "explicitly
+rejected with a stated rationale", and step 5's zero-new-comments bar is then satisfied by
+those dispositions rather than by further fix pushes. Genuine correctness, security, or
+data-loss defects stay blocking in every round and are never carried forward past a merge.
+Human review comments are out of this amendment's scope: the full fix-or-measured-reject
+duty above applies to them unchanged, uncapped.
+
 Re-verify zero-unresolved **at the ready/merge instant**, not only after your last
 push. Bots post asynchronously — a fresh thread routinely lands in the 30–60 seconds
 _between_ your last check and your "threads resolved / ready" declaration. This is a
