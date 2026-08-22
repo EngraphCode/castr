@@ -141,7 +141,8 @@ of both counters.
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
 T00a; the report certifies all of them parallel-safe with the T00a walk itself (§6 named
-exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper.
+exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper
+**and by Q-14** (`depends_on`) — the doctrine wave lands before charter-consuming work.
 Q-01, Q-08, and Q-09 predate no standing order and are eligible immediately.
 
 ### Slice briefs
