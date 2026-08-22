@@ -24,6 +24,23 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   plus `edges?: never` on the sibling variant still leaves `o.edges` possibly-undefined after
   the inner check. Hoist the discriminant to the top level (`status`, `sourceAdmission`, `role`
   as direct string-literal members) whenever a union must pass an exhaustiveness gate.
+- **Rule firing (own miss): `continuity-surface-commits-as-orphans` — I bundled this napkin's
+  entries into the Revision-3 cycle commit (`SHA: 7d2d9dd`) instead of an orphan
+  `chore(continuity)` landing.** Caught by a Codex P1 review finding citing the rule; the rule
+  is real and the miss was mine (the thread-record edit was defensible as reviewed cycle content
+  of PR #30, but napkin entries are session observations). Pushed history stays; the corrective
+  practice applies from this landing onwards — this entry itself lands as the orphan commit.
+  Same family as read-the-rules-before-the-ceremony: I ran the commit skill but had not swept
+  the rules estate for commit-shape rules beyond it.
+- **Two review-court staging defects the same reviewer caught next round:** (a) decisions were
+  staged to gates AFTER their first consumers (decision 5 and half of 21 consumed by Tranche 04
+  but staged at lane heads/T00c) — the durable cure was stating the uniform rule "ratify at the
+  latest gate preceding the first consumer" rather than reshuffling the two flagged rows; (b) a
+  rejection variant with `findings: []` legal and no required diagnostic — closed-shape work is
+  incomplete until every variant carries its OWN mandatory explanation, not just the forbidden
+  fields. Both same-day fixes; the general lesson is that a staging/shape review by a fresh
+  reviewer immediately after a restructure is cheap and catches exactly the classes the author
+  is blind to right after inventing the structure.
 
 ## 2026-07-18 (statusline merge reconciliation + fixer-ignore widening — arc-bring worktree)
 
