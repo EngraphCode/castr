@@ -96,19 +96,19 @@ if [ ! -w "$install_dir" ]; then
     warn "no writable install directory (tried the resolved dir, /usr/local/bin, and \${HOME}/.local/bin)"
     exit 0
   }
-  # The fallback dir may not be on PATH (unattended fresh container): prepend
-  # it for this process now (so the post-install re-verify resolves), but
-  # PERSIST it for subsequent shells only after the verified install succeeds
+  # The fallback dir may be absent from PATH, or present but positioned AFTER
+  # the directory holding a stale binary — either way the fresh install would
+  # not win resolution. Prepend unconditionally for this process (harmless if
+  # already first; makes the post-install re-verify resolve the new binary),
+  # but PERSIST for subsequent shells only after the verified install succeeds
   # — persisting first could point later shells at a stale binary there if
   # any download/verify/install step fails.
   case ":${PATH}:" in
     *":${install_dir}:"*) ;;
-    *)
-      PATH="${install_dir}:${PATH}"
-      export PATH
-      persist_path_dir="$install_dir"
-      ;;
+    *) persist_path_dir="$install_dir" ;;
   esac
+  PATH="${install_dir}:${PATH}"
+  export PATH
 fi
 
 tmp_dir="$(mktemp -d)" || { warn "mktemp failed"; exit 0; }

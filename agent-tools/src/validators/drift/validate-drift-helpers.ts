@@ -93,6 +93,30 @@ export function findGitleaksPinDrift(
   pinEnvContent: string,
   gitleaksTomlContent: string,
 ): DriftViolation[] {
+  // Grammar first (the class-kill): every non-blank, non-comment line must be
+  // a plain assignment of one of the two pinned keys. Any other shell-valid
+  // form (`export KEY=…`, quoting, extra keys, sourcing) is a violation, so
+  // the shell consumers and this validator cannot diverge on what they read.
+  const lines = pinEnvContent.split('\n');
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const trimmed = line.trim();
+    if (trimmed === '' || trimmed.startsWith('#')) {
+      continue;
+    }
+    if (!/^(?:GITLEAKS_VERSION|GITLEAKS_SHA256_LINUX_X64)=\S+$/.test(trimmed)) {
+      return [
+        {
+          surface: '.claude/hooks/_lib/gitleaks-pin.env',
+          detail:
+            `line ${index + 1} ("${trimmed}") is outside the pin-file grammar — only ` +
+            `comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= ` +
+            `assignments are valid, so shell consumers and this validator cannot diverge`,
+        },
+      ];
+    }
+  }
+
   const pinMatches = [...pinEnvContent.matchAll(/^GITLEAKS_VERSION=(\S+)\s*$/gm)];
   if (pinMatches.length === 0) {
     return [

@@ -27,7 +27,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    read-only path from here on — ground by READING the directives only, register NO
    active-area claim, and execute only the bounded no-op work the instruction specifies,
    never claiming, driving, or merging any slice or PR — then report criterion "dry-run
-   complete" in the stand-down broadcast and completion summary, and stop. Detection sits
+   complete" in the stand-down broadcast and completion summary, close with the
+   `engraph-session-handoff` skill exactly as step 9 requires (every firing closes with
+   handoff, dry runs included — the proof must exercise it), and stop. Detection sits
    before grounding because normal grounding registers a claim, and a proof firing must
    leave no collision state behind.
 3. **Ground** (normal firings only): run the `engraph-start-right-quick` skill; register

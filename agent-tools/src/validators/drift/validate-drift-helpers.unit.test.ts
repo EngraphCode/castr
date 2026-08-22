@@ -60,6 +60,34 @@ describe('findGitleaksPinDrift', () => {
     ]);
   });
 
+  it('flags any line outside the pin grammar (class-kill: export-form assignment)', () => {
+    const exotic =
+      'GITLEAKS_VERSION=8.30.0\nexport GITLEAKS_VERSION=8.20.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+    expect(findGitleaksPinDrift(exotic, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          'line 2 ("export GITLEAKS_VERSION=8.20.0") is outside the pin-file grammar — only comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= assignments are valid, so shell consumers and this validator cannot diverge',
+      },
+    ]);
+  });
+
+  it('flags any line outside the pin grammar (unknown key)', () => {
+    const exotic = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\nOTHER_KEY=1\n';
+    expect(findGitleaksPinDrift(exotic, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          'line 3 ("OTHER_KEY=1") is outside the pin-file grammar — only comments, blanks, and plain GITLEAKS_VERSION=/GITLEAKS_SHA256_LINUX_X64= assignments are valid, so shell consumers and this validator cannot diverge',
+      },
+    ]);
+  });
+
+  it('accepts comments and blank lines in the pin file', () => {
+    const ok = '# a comment\n\nGITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+    expect(findGitleaksPinDrift(ok, 'minVersion = "8.30.0"\n')).toEqual([]);
+  });
+
   it('flags duplicate GITLEAKS_VERSION assignments (shell consumers use the LAST)', () => {
     const dup = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_VERSION=8.20.0\n';
     expect(findGitleaksPinDrift(dup, 'minVersion = "8.30.0"\n')).toEqual([
