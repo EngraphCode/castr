@@ -86,6 +86,21 @@ if [ ! -w "$install_dir" ]; then
     warn "no writable install directory (tried the resolved dir, /usr/local/bin, and \${HOME}/.local/bin)"
     exit 0
   }
+  # The fallback dir may not be on PATH (unattended fresh container): prepend
+  # it for this process (so the post-install re-verify resolves) and persist
+  # it for the session's subsequent shells via the SessionStart env file.
+  case ":${PATH}:" in
+    *":${install_dir}:"*) ;;
+    *)
+      PATH="${install_dir}:${PATH}"
+      export PATH
+      if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+        printf 'export PATH="%s:$PATH"\n' "$install_dir" >>"$CLAUDE_ENV_FILE"
+      else
+        warn "installed to ${install_dir}, which was not on PATH, and CLAUDE_ENV_FILE is unset — later shells may not resolve gitleaks"
+      fi
+      ;;
+  esac
 fi
 
 tmp_dir="$(mktemp -d)" || { warn "mktemp failed"; exit 0; }
