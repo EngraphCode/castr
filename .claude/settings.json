@@ -75,6 +75,11 @@
             "type": "command",
             "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/_lib/log-hook-errors.sh node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/practice-session-identity.mjs\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/_lib/log-hook-errors.sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/ensure-gitleaks.sh\"",
+            "timeout": 60
           }
         ]
       }
