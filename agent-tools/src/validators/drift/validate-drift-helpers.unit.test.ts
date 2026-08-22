@@ -60,6 +60,17 @@ describe('findGitleaksPinDrift', () => {
     ]);
   });
 
+  it('flags duplicate GITLEAKS_VERSION assignments (shell consumers use the LAST)', () => {
+    const dup = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_VERSION=8.20.0\n';
+    expect(findGitleaksPinDrift(dup, 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          '2 GITLEAKS_VERSION= assignments found — shell consumers use the last, so the pin must have exactly one',
+      },
+    ]);
+  });
+
   it('flags an unparseable pin file', () => {
     expect(findGitleaksPinDrift('# empty\n', 'minVersion = "8.30.0"\n')).toEqual([
       {

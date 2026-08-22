@@ -93,8 +93,8 @@ export function findGitleaksPinDrift(
   pinEnvContent: string,
   gitleaksTomlContent: string,
 ): DriftViolation[] {
-  const pinMatch = /^GITLEAKS_VERSION=(\S+)\s*$/m.exec(pinEnvContent);
-  if (!pinMatch) {
+  const pinMatches = [...pinEnvContent.matchAll(/^GITLEAKS_VERSION=(\S+)\s*$/gm)];
+  if (pinMatches.length === 0) {
     return [
       {
         surface: '.claude/hooks/_lib/gitleaks-pin.env',
@@ -102,6 +102,17 @@ export function findGitleaksPinDrift(
       },
     ];
   }
+  if (pinMatches.length > 1) {
+    return [
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail:
+          `${pinMatches.length} GITLEAKS_VERSION= assignments found — shell consumers use ` +
+          `the last, so the pin must have exactly one`,
+      },
+    ];
+  }
+  const pinMatch = pinMatches[0];
   const minVersionMatch = /^minVersion = "([^"]+)"\s*$/m.exec(gitleaksTomlContent);
   if (!minVersionMatch) {
     return [

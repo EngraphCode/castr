@@ -326,9 +326,12 @@ mechanics only and cites clauses rather than restating them.
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
    firing with a note, it does not race.
-3. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051 clause 4,
-   merge under clause 3 once the ADR is Accepted, else explicit per-PR owner approval) and do
-   nothing else. Otherwise claim the next eligible brief, mark it
+3. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
+   open — a slice PR or a bookkeeping PR — drive it to merged (CI, review threads under
+   ADR-051 clause 4, merge under clause 3) and do nothing else; driving the bookkeeping PR
+   first is clause 6's own persistence mechanism completing, and implements clause 1(b)'s
+   single-open-PR invariant (an unmerged counter update would let later firings read a
+   stale streak). Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
 4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
    (two dispatches, per
