@@ -96,8 +96,16 @@ slice is in flight at any time (WIP = 1). Each firing either drives the open sli
 merged, or claims the next `pending` queue item whose dependencies are met and whose brief's
 gating note (below) is satisfied.
 
-**Gate semantics:** `depends_on: [Q-00]` is shorthand for "the specific verdicts named in
-this row's Gate line are ratified", never "the ballot is closed" — see Q-00's acceptance.
+**Gate semantics:** `depends_on: [Q-00]` is shorthand for "the specific ballot items named
+in this row's Gate line carry a **success verdict**" (RATIFY/ACCEPT/APPROVE, or AMEND in its
+amended form — one success set, defined in the ballot's vocabulary line; no gate checks an
+exact token), never "the ballot is closed" — see Q-00's acceptance.
+
+**Failure counters are repo state:** each row carries a `failures:` count in this frontmatter
+(absent = 0) and the programme a `zero_progress_streak:` count; every firing increments or
+resets them as part of its landing (progress of any kind resets the streak; a row's success
+resets its count), so a fresh session can evaluate the ADR-051 clause 6 thresholds. Q-01's
+dry run proves cross-session read/write of both.
 
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
@@ -117,10 +125,10 @@ re-adjudicated, not executed.
 landing that synchronises authority surfaces. Non-goals: no product code. Acceptance
 (`non-code`): every ballot item carries a verdict; ADR-051 status updated per the atomic
 B-12 rule; affected surfaces (roadmap, prompts, active-lane banners) synchronised in the
-same landing; ballot marked CLOSED; and every queue row whose required verdicts (its Gate
-line) were not ratified is marked `blocked` in this frontmatter with the declining verdict
+same landing; ballot marked CLOSED; and every queue row whose required Gate items lack a
+success verdict is marked `blocked` in this frontmatter with the declining verdict
 named. **Closure is not ratification**: Q-00 reaching `complete` unlocks a dependent row
-only when that row's named Gate verdicts are RATIFY/ACCEPT — a REJECT or DEFER on a required
+only when that row's named Gate items carry success verdicts — a REJECT or DEFER on a required
 verdict leaves the row `blocked` for scheduled and owner-driven execution alike, pending
 re-ballot or re-plan. Source: report §7 T00a.
 
@@ -140,38 +148,38 @@ from PR #11 (outcome records, non-vacuity checks, mutant-bite ritual) into the e
 not fork a second runner. Non-goals: no profile/artifact-kind binding, no format-lane
 expectations, nothing that pre-empts the product boundary. Acceptance (`integration`): seeded
 wrong-parser/wrong-writer/vacuous-witness mutants are detected; suite green via `pnpm check`.
-Source: report §11.3 #11. Gate: B-11 = RATIFY.
+Source: report §11.3 #11. Gate: B-11 (success verdict).
 
 **Q-03 — F-01 security AND→OR.** Surface: `buildIRSecurity` and the flat
 `IRSecurityRequirement` model (IR-model change per review R3), parser+writer+persistence.
 Non-goals: no broader security-lane work (Tranche 06 owns it). Acceptance (`integration`):
 red-first formula-preserving proof through public parse/write seams — `{A AND B}` vs
 `A OR B` distinguishable end to end; `pnpm check` green. Source: report F-01;
-remediation-02 plan. Gate: B-11 = RATIFY.
+remediation-02 plan. Gate: B-11 (success verdict).
 
 **Q-04 — F-03 nested Boolean schemas.** Surface: the properties-path parse callback lacking
 the boolean branch (`json-schema-parser` object fields vs the `if/then/else` handler).
 Non-goals: no full Tranche 05 position matrix. Acceptance (`integration`): red-first proof
 that nested `false`/`true` survive at the defective positions; `pnpm check` green. Source:
-report F-03. Gate: B-11 = RATIFY.
+report F-03. Gate: B-11 (success verdict).
 
 **Q-05 — F-04 placebo refinements + nested Zod loss.** Surface: the two `return true` sites
 in `writers/zod/refinements/object.ts` (`:130`, `:183–187` per the 2026-07-06 scout — leave
 the real refinements alone) become fail-fast; nested unsupported Zod members fail the
 containing declaration. Non-goals: no Tranche 07 grammar work. Acceptance (`integration`):
-red-first proofs for both behaviours; `pnpm check` green. Source: report F-04. Gate: B-11 = RATIFY.
+red-first proofs for both behaviours; `pnpm check` green. Source: report F-04. Gate: B-11 (success verdict).
 
 **Q-06 — #14 extraction + closure.** Surface: dependency-only Draft-04 AJV slice; PR #14
 closure with commit/file-level verification in the closing commit and closure note.
 Non-goals: no napkin/continuity deltas from the branch (dispositioned, not merged); no Vitest
 assertions over `package.json`. Acceptance (`integration` + `non-code`): Draft-04 behaviour
 proven through public seams; gates green; #14 closed with the verification recorded. Source:
-report §11.3 #14. Gate: B-11 = RATIFY.
+report §11.3 #14. Gate: B-11 (success verdict).
 
 **Q-07 — #21 extraction + closure.** Surface: logger/E2E relocation and concrete isolation
 fixes only. Non-goals: no source-scanning framework, no known-violation baselines, no
 timeout widening. Acceptance (`integration` + `non-code`): salvaged fixes green; #21 closed
-with verification recorded. Source: report §11.3 #21. Gate: B-11 = RATIFY.
+with verification recorded. Source: report §11.3 #21. Gate: B-11 (success verdict).
 
 **Q-08 — ADR estate integrity (mechanical).** Surface: **delete** the
 `.agent/directives/ADR-044/045/046` duplicates outright and repoint every referrer to the
@@ -196,7 +204,7 @@ practice-transplant lane — selective canonical-delta sync then close, or retir
 with commit/file-level verification of unique deltas in the closing commit and closure note.
 Non-goals: no wholesale merge of the stale snapshot. Acceptance (`non-code`): #23 closed with
 the verification recorded and the transplant plan's disposition banner resolved. Source:
-report §11.3 #23. Gate: B-11 = a recorded verdict (this slice executes whichever outcome B-11 ratified; only DEFER blocks it).
+report §11.3 #23. Gate: B-11 (any recorded verdict except DEFER — this slice executes whichever outcome was recorded).
 
 **Q-10 — Tranche 00 contract schema + validator.** Surface: the `ProgrammeObligation` estate
 per report §5.1 shape rules, including the three PR-30 carry-forwards (discriminated no-edge
@@ -206,7 +214,7 @@ inventories generated from official sources where possible; `SUMMARY.md` claim l
 per B-01. Non-goals: no certification-mode gates yet (Tranche 14). Acceptance (`unit` +
 `integration`): validator rejects vacuous/duplicate/ownerless rows; `tsc` exhaustiveness
 green on the contract types; gates green. Source: report §5.1, §7; PR-30 carried findings.
-Gate: B-01..B-08 = RATIFY (or AMENDed equivalents) and B-09 = APPROVE where its surfaces are touched.
+Gate: B-01..B-08 and B-09 (success verdicts) where its surfaces are touched.
 
 **Q-11 — Tranche 01 full harness.** Surface: profile-bearing case metadata over the Q-02
 extraction; fixture provenance manifest; oracle independence. Acceptance (`integration`):
@@ -237,7 +245,7 @@ mechanics only and cites clauses rather than restating them.
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
    firing with a note, it does not race.
-3. **WIP = 1**: if a slice PR is open, drive it (CI, review threads under ADR-051 clause 4,
+3. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051 clause 4,
    merge under clause 3 once the ADR is Accepted, else explicit per-PR owner approval) and do
    nothing else. Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
@@ -251,13 +259,17 @@ mechanics only and cites clauses rather than restating them.
    plan) → full gates → PR → green → merge (clause 3 once Accepted; explicit per-PR owner approval
    while Proposed) → mark `complete` → update the
    delivery ledger and handoff surfaces → orphan continuity commit → stop.
-5. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
+5. **Blocked slices release their PR**: marking a slice `blocked` (ADR-051 clause 6)
+   converts its open PR to a draft with a comment naming the block diagnosis — never closed,
+   the work is preserved — and draft PRs are exempt from step 3's drive rule, so the loop
+   moves on instead of deadlocking; unblocking restores ready-for-review.
+6. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
    [`queued-decisions.md`](./queued-decisions.md) with a recommendation; the firing reroutes
    to the next unblocked item.
-6. **Red head found on arrival**: handled per ADR-051 clause 6's red-head policy (one
+7. **Red head found on arrival**: handled per ADR-051 clause 6's red-head policy (one
    bounded out-of-queue repair slice, recorded in the delivery ledger, then stop-and-notify
    if still red).
-7. **Session end**: every firing closes with the `session-handoff` skill; no firing leaves
+8. **Session end**: every firing closes with the `session-handoff` skill; no firing leaves
    the repo red without a B-16 record, a PR half-driven without the next firing scheduled, or
    continuity drift uncommitted.
 

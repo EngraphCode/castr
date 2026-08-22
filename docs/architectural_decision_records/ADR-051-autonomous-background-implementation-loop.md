@@ -22,7 +22,7 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
 1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. The protocol
    invariants each firing obeys, in order: (a) check the kill switches (clause 6) and the
    collaboration claims register before acting, deferring on any live collision; (b) enforce
-   WIP = 1 — drive the single open slice pull request to merged, otherwise claim exactly one
+   WIP = 1 — drive the single open non-draft slice pull request to merged, otherwise claim exactly one
    eligible queue item; (c) execute one atomic TDD slice (red proof first) through the
    repository's full blocking gates and its mandatory reviewer dispatches — the loop never
    authors, implements, self-approves, and merges without independent review; (d) record
@@ -60,7 +60,12 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
 6. **Escalation and kill switches** (exit criteria per
    `.agent/rules/loop-exit-criteria-required.md`, which owns the doctrine this clause
    instantiates). A slice failing two consecutive firings is marked blocked with a written
-   diagnosis and skipped. Three consecutive zero-progress firings → the firing disables the
+   diagnosis and skipped; its open pull request, if any, is converted to a draft carrying
+   that diagnosis (never closed — the work is preserved) so the WIP rule releases it, and
+   unblocking restores it to ready-for-review. The failure and zero-progress counters this
+   clause evaluates are durable repo state, persisted and reset by each firing in the plan
+   estate's queue (the plan estate owns the concrete surface); the loop-readiness proof must
+   demonstrate cross-session read/write before any product slice runs. Three consecutive zero-progress firings → the firing disables the
    Routine and notifies the owner. **Red head on arrival** (gates failing for causes outside
    the claimed slice): the firing takes at most one bounded out-of-queue green-the-head
    repair slice through the normal TDD/gate/review path, recorded in the delivery ledger and

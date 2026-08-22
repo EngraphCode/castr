@@ -9,7 +9,12 @@ this ballot is the walk's worksheet.
 **Evidence:** [proof-programme report, Revision 3](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 (§1.4, §3.2, §7 T00a); PR #30 review record.
 
-Verdict vocabulary: `RATIFY` (as recommended) · `AMEND: <text>` · `REJECT` · `DEFER: <where>`.
+Verdict vocabulary — four verdict classes, one success set: `RATIFY` (adopt as
+recommended; the tokens `ACCEPT` and `APPROVE`, used naturally for ADR-acceptance and
+doctrine-approval items, are the **same success verdict** and unlock gates identically) ·
+`AMEND: <text>` (success in its amended form — gates treat the item as ratified as amended) ·
+`REJECT` · `DEFER: <where>`. Every gate in the programme checks for "a success verdict",
+never an exact token.
 
 ---
 
@@ -204,8 +209,8 @@ seeded (as Proposed, fleshed out by Q-10..Q-12 slices), the B-09 amendments sche
 early slices, the active-lane dispositions executed per the parent plan's §Active-lane
 transition, roadmap and continuation-prompt banners, and this ballot marked CLOSED with the
 date. Q-01 (loop readiness) is not gated on this walk and may already have proven the
-Routine. **The Routine un-pauses for real slices only if B-12 is ACCEPT and B-13 and B-16
-are RATIFY** (the merge and red-head authorisations the loop cannot run without); a REJECT
-or DEFER on any of those leaves the Routine paused and the programme in owner-driven,
+Routine. **The Routine un-pauses for real slices only if B-12, B-13, and B-16 each
+carry a success verdict** (the merge and red-head authorisations the loop cannot run
+without); a REJECT or DEFER on any of those leaves the Routine paused and the programme in owner-driven,
 per-PR-approval mode until a revised ADR-051 is re-balloted. Closing the walk with verdicts
 recorded never by itself arms anything.
