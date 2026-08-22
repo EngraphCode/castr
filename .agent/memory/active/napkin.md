@@ -32,6 +32,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   ballot rewrite and future ADR text: authority text has a bounded defect surface (each verdict
   × each clause × each ordering) — enumerate that product deliberately once, rather than letting
   a reviewer walk it incrementally at one round per push.
+- **The W-0 walk landed as ten sequenced single questions, not a document** ("that is too much
+  text to parse, put the decisions to me here, one at a time"): AskUserQuestion with one
+  decision per call, recommendation first, the atomic item (B-12) asked LAST so its
+  clause-siblings' verdicts were known facts by then. 10/10 success verdicts in minutes,
+  one amendment (cadence 2→3/day) captured cleanly as a free-text option answer. Owner-walk
+  surfaces should be authored for THIS delivery mode: per-decision question text ≤ ~80 words,
+  document as the record, walk as the medium.
 - **PDR-105 fired live: an ADR may not LINK into the plan estate (doctrine→ephemeral), even
   when the plan is the ADR's own acceptance gate** — `validate-reference-direction` blocked
   the commit on ADR-051's two Related-line links to `parent-plan.md`/ballot. Cure: name the
