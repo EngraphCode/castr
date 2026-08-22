@@ -164,8 +164,14 @@ lets the loop finish things. Recommendation: RATIFY.
 ### B-14 Review-bot convergence rule (ADR-051 clause 4)
 
 In short: at most two fix rounds per PR for automated-reviewer findings, then carry-forward
-dispositions and proceed under clause 3; human review comments are never capped. **The
-authoritative text is ADR-051 clause 4**; this item accepts it. Recommendation: RATIFY.
+dispositions and proceed under clause 3; genuine correctness/security/data-loss defects stay
+blocking in every round; human review comments are never capped. **The authoritative text is
+ADR-051 clause 4**; this item accepts it. **Ratifying this explicitly amends the scope of
+`pr-comments-resolve-and-recheck` for automated-reviewer comments**: a per-comment
+carry-forward disposition reply (recorded before merge, with the substance queued) IS that
+rule's "measured rejection with rationale" — the rule's full fix-or-measured-reject duty
+continues to apply unchanged to human comments, and the follow-up landing writes this scope
+note into the rule file so no silent contradiction stands. Recommendation: RATIFY.
 
 **Verdict:**
 
