@@ -129,7 +129,8 @@ Recommendation: RATIFY with that scope.
 ### B-11 2026-06-19 roadmap sequencing reconciliation
 
 The standing order (transplant first → remediation → explicit-additionalProperties) predates
-the 2026-08-22 planning contract. Recommendation: SUPERSEDE it with this parent plan's queue —
+the 2026-08-22 planning contract. Recommendation: RATIFY — ratifying this item supersedes the
+standing order with this parent plan's queue:
 the pre-02A defect slices (remediation-02's core) and PR extraction/closure run under the
 queue; remaining transplant work (Oak parity phases) is **paused as a named position with a
 concrete re-entry record**: queued-decision QD-2 holds the re-entry question with a named
@@ -147,8 +148,8 @@ Accept
 [ADR-051 (autonomous background implementation loop)](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md):
 fresh-session-per-firing Routine, default cadence twice daily, WIP = 1, bounded firings,
 queued decisions, escalation and kill switches. **Acceptance is atomic with the clause
-verdicts**: ACCEPT here means accepting the ADR _as amended by_ your B-13, B-14, and B-16
-verdicts — any AMEND or REJECT on those items amends or strikes the corresponding clause in
+verdicts**: ACCEPT here means accepting the ADR _as amended by_ your B-13, B-14, B-15, and
+B-16 verdicts (B-15's channel choice rewrites clause 7) — any AMEND or REJECT on those items amends or strikes the corresponding clause in
 the follow-up landing **before** the Status line changes, so the accepted text always equals
 the clause-level verdicts and B-12 can never grant a power a sibling item declined.
 Recommendation: ACCEPT.

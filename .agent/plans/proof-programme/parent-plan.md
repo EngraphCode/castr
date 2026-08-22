@@ -99,7 +99,10 @@ gating note (below) is satisfied.
 **Gate semantics:** `depends_on: [Q-00]` is shorthand for "the specific ballot items named
 in this row's Gate line carry a **success verdict**" (RATIFY/ACCEPT/APPROVE, or AMEND in its
 amended form — one success set, defined in the ballot's vocabulary line; no gate checks an
-exact token), never "the ballot is closed" — see Q-00's acceptance.
+exact token), never "the ballot is closed" — see Q-00's acceptance. A row whose Gate line is
+marked **outcome gate** is the exception: it is eligible on any recorded verdict except DEFER
+— it executes the recorded outcome rather than requiring success — and Q-00's blocked-marking
+rule does not apply to it.
 
 **Failure counters are repo state:** each row carries a `failures:` count in this frontmatter
 (absent = 0) and the programme a `zero_progress_streak:` count; every firing increments or
@@ -125,7 +128,7 @@ re-adjudicated, not executed.
 landing that synchronises authority surfaces. Non-goals: no product code. Acceptance
 (`non-code`): every ballot item carries a verdict; ADR-051 status updated per the atomic
 B-12 rule; affected surfaces (roadmap, prompts, active-lane banners) synchronised in the
-same landing; ballot marked CLOSED; and every queue row whose required Gate items lack a
+same landing; ballot marked CLOSED; and every success-gated queue row whose required Gate items lack a
 success verdict is marked `blocked` in this frontmatter with the declining verdict
 named. **Closure is not ratification**: Q-00 reaching `complete` unlocks a dependent row
 only when that row's named Gate items carry success verdicts — a REJECT or DEFER on a required
@@ -204,7 +207,7 @@ practice-transplant lane — selective canonical-delta sync then close, or retir
 with commit/file-level verification of unique deltas in the closing commit and closure note.
 Non-goals: no wholesale merge of the stale snapshot. Acceptance (`non-code`): #23 closed with
 the verification recorded and the transplant plan's disposition banner resolved. Source:
-report §11.3 #23. Gate: B-11 (any recorded verdict except DEFER — this slice executes whichever outcome was recorded).
+report §11.3 #23. Gate: B-11 **(outcome gate)** — eligible on any recorded verdict except DEFER, exempt from the success-verdict rule; it executes whichever outcome was recorded.
 
 **Q-10 — Tranche 00 contract schema + validator.** Surface: the `ProgrammeObligation` estate
 per report §5.1 shape rules, including the three PR-30 carry-forwards (discriminated no-edge

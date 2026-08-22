@@ -210,7 +210,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 049 — reserved for the Node-version-policy candidate; 050 is taken, so the next free number after 049 is 051)
+2. **Number sequentially** (049 remains reserved for the Node-version-policy candidate; 050 and 051 are taken, so the next free number after 049 is 052)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -254,4 +254,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** 2026-06-21  
-**Next ADR:** 049 (reserved: Node-version policy) · 050 taken · next free after 049 is 051
+**Next ADR:** 049 (reserved: Node-version policy) · 050–051 taken · next free after 049 is 052
