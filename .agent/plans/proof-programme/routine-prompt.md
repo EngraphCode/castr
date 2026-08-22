@@ -36,9 +36,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    identity per `register-active-areas-at-session-open`.
 4. **Claims scan**:
    `pnpm agent-tools:collaboration-state -- claims list --active .agent/state/collaboration/active-claims.json`
-   — any live peer or
-   owner claim touching your target surface defers this firing (land the counter update via
-   the bookkeeping path, note the deferral in the completion summary, stop).
+   — any live peer or owner claim touching your target surface defers this firing. A
+   deferral lands its counter update via the bookkeeping path **only when no non-draft
+   programme PR is already open** (step 5's WIP = 1 invariant binds here too — never open a
+   second programme PR); when one is open, record the deferral and the un-landed counter
+   increment in the completion summary alone, and the next firing that drives the open PR
+   carries the counter state with it. Then stop.
 5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
    open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3) and do nothing else. A bookkeeping PR is WIP for
