@@ -175,17 +175,20 @@ created **disabled** in fresh-session mode and fired once manually; the spawned 
 executes the prompt's no-op path (STOP-check → report → handoff), posts the dry-run's
 stand-down broadcast (loop identity, criterion "dry-run complete", one-line closeout) per
 `loop-exit-criteria-required` — proving the broadcast path ADR-051 clause 6 requires on
-every firing-side loop exit — and the completion notification reaches the owner. The
-Routine is then paused until Q-00 closes — or, when Q-00 is already `complete` with success
-verdicts on B-12, B-13, and B-16, armed under the ballot's after-walk rule instead: arming
-is order-independent, performed by whichever of Q-00 closure and this slice's proof lands
-second, so neither ordering strands the Routine paused after full authorisation.
-**Arming sequences strictly after this slice's own PR merges**: an enabled Routine with
+every firing-side loop exit — and the completion notification reaches the owner. (Platform
+premise verified live 2026-08-22: create_trigger → immediate disable → manual fire_trigger
+spawned a fresh session while the Routine stayed disabled for scheduled firings.) The
+Routine then stays **disabled** until Q-00 closes — or, when Q-00 is already `complete`
+with success verdicts on B-12, B-13, and B-16, is **enabled** under the ballot's after-walk
+rule instead: the enable is order-independent, performed by whichever of Q-00 closure and
+this slice's proof lands second, so neither ordering strands the Routine disabled after
+full authorisation.
+**Enabling sequences strictly after this slice's own PR merges**: an enabled Routine with
 Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step
 (with the B-15 notification configuration re-checked: push and email on, no digest) is the
 last act of the Q-01 firing, performed only once the merged base carries the row's
-`complete` state. The arming step applies the recorded
-B-15 outcome to the Routine's notification configuration **before** un-pausing — including
+`complete` state. The enable step applies the recorded
+B-15 outcome to the Routine's notification configuration **before** enabling — including
 disabling routine completion-notification delivery on a B-15 REJECT — so the running loop's
 channels always match the accepted ADR's clause 7. A B-15 REJECT strikes clause 7's routine
 notifications only: the escalation notifications accepted clause 6 itself mandates (the

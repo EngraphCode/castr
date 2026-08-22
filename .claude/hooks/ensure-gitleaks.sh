@@ -4,7 +4,9 @@
 # containers (proof-programme Q-01; ADR-051 clause 1 evidence line).
 #
 # Contract:
-# - Fast path (correct binary already resolvable): print NOTHING, exit 0.
+# - Fast path (correct binary already resolvable, pin sources consistent,
+#   guards built): print NOTHING, exit 0. Consistency warnings (pin drift,
+#   unbuilt guards) may print before the gitleaks probe on any start.
 # - Provisioning path: download the content-pinned release asset, verify its
 #   sha256 BEFORE extraction, install atomically, re-verify through PATH.
 # - Any failure: print a loud warning to STDOUT (SessionStart stdout is
@@ -26,6 +28,10 @@ if [ ! -f "$pin_file" ]; then
 fi
 # shellcheck source=/dev/null
 . "$pin_file"
+if [ -z "${GITLEAKS_VERSION:-}" ] || [ -z "${GITLEAKS_SHA256_LINUX_X64:-}" ]; then
+  warn "pin file at .claude/hooks/_lib/gitleaks-pin.env is malformed (GITLEAKS_VERSION or GITLEAKS_SHA256_LINUX_X64 missing) — cannot provision gitleaks"
+  exit 0
+fi
 
 # Cross-check the .gitleaks.toml minVersion against the pin (drift is silent
 # by construction: gitleaks treats minVersion as a warning, not an error).
@@ -81,24 +87,26 @@ if [ ! -d "$install_dir" ] || [ ! -w "$install_dir" ]; then
   install_dir="/usr/local/bin"
 fi
 if [ ! -w "$install_dir" ]; then
+  if [ -z "${HOME:-}" ]; then
+    warn "no writable install directory and HOME is unset — cannot fall back to a user-local bin"
+    exit 0
+  fi
   install_dir="${HOME}/.local/bin"
   mkdir -p "$install_dir" 2>/dev/null || {
     warn "no writable install directory (tried the resolved dir, /usr/local/bin, and \${HOME}/.local/bin)"
     exit 0
   }
   # The fallback dir may not be on PATH (unattended fresh container): prepend
-  # it for this process (so the post-install re-verify resolves) and persist
-  # it for the session's subsequent shells via the SessionStart env file.
+  # it for this process now (so the post-install re-verify resolves), but
+  # PERSIST it for subsequent shells only after the verified install succeeds
+  # — persisting first could point later shells at a stale binary there if
+  # any download/verify/install step fails.
   case ":${PATH}:" in
     *":${install_dir}:"*) ;;
     *)
       PATH="${install_dir}:${PATH}"
       export PATH
-      if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-        printf 'export PATH="%s:$PATH"\n' "$install_dir" >>"$CLAUDE_ENV_FILE"
-      else
-        warn "installed to ${install_dir}, which was not on PATH, and CLAUDE_ENV_FILE is unset — later shells may not resolve gitleaks"
-      fi
+      persist_path_dir="$install_dir"
       ;;
   esac
 fi
@@ -125,10 +133,24 @@ if ! install -m 0755 "${tmp_dir}/gitleaks" "${install_dir}/gitleaks" 2>/dev/null
   exit 0
 fi
 
+if ! command -v gitleaks >/dev/null 2>&1; then
+  warn "installed ${GITLEAKS_VERSION} to ${install_dir} but gitleaks is NOT resolvable on PATH — add ${install_dir} to PATH"
+  exit 0
+fi
 resolved_version="$(gitleaks version 2>/dev/null | tr -d '[:space:]')"
 if [ "$resolved_version" != "$GITLEAKS_VERSION" ]; then
   warn "installed ${GITLEAKS_VERSION} to ${install_dir} but PATH resolves gitleaks ${resolved_version:-<none>} — a shadowing binary earlier on PATH is still in effect"
   exit 0
+fi
+
+# Verified install: NOW persist the fallback dir for subsequent shells (doing
+# this earlier could point later shells at a stale binary on install failure).
+if [ -n "${persist_path_dir:-}" ]; then
+  if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+    printf 'export PATH="%s:$PATH"\n' "$persist_path_dir" >>"$CLAUDE_ENV_FILE"
+  else
+    warn "installed to ${persist_path_dir}, which was not on PATH, and CLAUDE_ENV_FILE is unset — later shells may not resolve gitleaks"
+  fi
 fi
 
 printf 'ensure-gitleaks: installed pinned gitleaks %s to %s\n' "$GITLEAKS_VERSION" "$install_dir"

@@ -32,7 +32,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    leave no collision state behind.
 3. **Ground** (normal firings only): run the `engraph-start-right-quick` skill; register
    identity per `register-active-areas-at-session-open`.
-4. **Claims scan**: `pnpm agent-tools:collaboration-state -- claims list` — any live peer or
+4. **Claims scan**:
+   `pnpm agent-tools:collaboration-state -- claims list --active .agent/state/collaboration/active-claims.json`
+   — any live peer or
    owner claim touching your target surface defers this firing (land the counter update via
    the bookkeeping path, note the deferral in the completion summary, stop).
 5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
@@ -79,9 +81,18 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
 ## Stand-down broadcast (used by every loop exit this firing can perform)
 
 ```bash
-pnpm agent-tools:collaboration-state -- comms append --message \
-  "STAND-DOWN proof-programme Routine — criterion: <which>; closeout: <one line of what the loop accomplished>"
+pnpm agent-tools:collaboration-state -- comms send \
+  --title "STAND-DOWN proof-programme Routine" \
+  --body "criterion: <which>; closeout: <one line of what the loop accomplished>" \
+  --platform claude-code --model <your model id>
 ```
+
+The CLI resolves to the built `agent-tools/dist` artefact, which a pristine checkout lacks
+(`use-built-agent-tools-cli`): if the command fails for want of the build, run
+`pnpm install && pnpm --filter @engraph/agent-tools build` first — including on the STOP
+and dry-run branches, where this build is the one permitted piece of work before standing
+down. If the build itself fails, record the stand-down verbatim in your completion summary,
+name the failed build, and stop — never skip the record silently.
 
 Post it on: STOP-file observation, the three-zero-progress disable, and the terminal
 queue-empty exit. An owner pause applied directly to the Routine needs no broadcast from
