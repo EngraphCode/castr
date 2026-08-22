@@ -2,10 +2,7 @@
 
 **Status:** Proposed
 **Date:** 2026-08-22
-**Related:** the proof-programme parent plan and its W-0 ballot (plan estate,
-`.agent/plans/proof-programme/`) hold the queue mechanics and this record's acceptance gate
-(ballot items B-12..B-16); reference direction per PDR-105 keeps this record link-free toward
-them · `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`
+**Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
 ---
 
@@ -22,15 +19,19 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
 
 ## Decision
 
-1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. Each firing
-   executes the operating protocol in the parent plan: STOP-file, Routine-state, and
-   active-claims checks first; WIP = 1 (drive the open slice PR, else claim the next eligible
-   queue item); one atomic TDD slice through the full gates and reviewer dispatches; then
-   session-handoff and stop. No persistent worker session; no parallel workers. Evidence:
-   the platform's fresh-session-per-fire Routine mode and completion notifications are
-   confirmed against the live platform API (2026-08-22, authoring session); the parent
-   plan's Q-01 slice proves the end-to-end behaviour (create → fire → fresh session →
-   notification received) before any product slice runs through it.
+1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. The protocol
+   invariants each firing obeys, in order: (a) check the kill switches (clause 6) and the
+   collaboration claims register before acting, deferring on any live collision; (b) enforce
+   WIP = 1 — drive the single open slice pull request to merged, otherwise claim exactly one
+   eligible queue item; (c) execute one atomic TDD slice (red proof first) through the
+   repository's full blocking gates and its mandatory reviewer dispatches — the loop never
+   authors, implements, self-approves, and merges without independent review; (d) record
+   continuity/handoff per standing practice and stop. No persistent worker session; no
+   parallel workers. The programme's plan estate implements this contract and owns the
+   concrete queue. Evidence: the platform's fresh-session-per-fire Routine mode and
+   completion notifications are confirmed against the live platform API (2026-08-22); an
+   end-to-end dry firing (create → fire → fresh session → notification received) must pass
+   before any product slice runs through the loop.
 2. **Cadence.** Default two firings per day. The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
    slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
@@ -43,19 +44,25 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    a third round of fresh findings is recorded as carry-forward dispositions (reply on each
    thread, queue entry for the substance) and the PR proceeds under clause 3. Human review
    comments are never capped: they are addressed or escalated, always.
-5. **Owner decisions are queued, never made.** A genuine fork is written to the programme's
-   `queued-decisions.md` with a recommendation; the firing reroutes to the next unblocked
-   item. Nothing in this ADR authorises deciding anything the doctrine reserves to the owner
-   (release claims, `principles.md` edits, ADR acceptance, sequencing supersession).
+5. **Owner decisions are queued, never made.** A genuine fork is written to a
+   programme-owned queued-decisions register — a durable, owner-readable surface in the plan
+   estate whose concrete location the plan estate owns — as question + recommendation +
+   what-it-blocks; the firing then reroutes to the next unblocked item. Nothing in this ADR
+   authorises deciding anything the doctrine reserves to the owner (release claims,
+   `principles.md` edits, ADR acceptance, sequencing supersession).
 6. **Escalation and kill switches** (exit criteria per
    `.agent/rules/loop-exit-criteria-required.md`, which owns the doctrine this clause
    instantiates). A slice failing two consecutive firings is marked blocked with a written
    diagnosis and skipped. Three consecutive zero-progress firings → the firing disables the
-   Routine and notifies the owner. A red head found on arrival is handled per the ballot's
-   B-16 policy. The owner can stop everything at any time by pausing/deleting the Routine or
-   committing a `STOP` file in the programme collection; every firing checks both before
-   acting. The loop's terminal exit: the queue empty and the programme-complete acceptance
-   met, or an owner close.
+   Routine and notifies the owner. **Red head on arrival** (gates failing for causes outside
+   the claimed slice): the firing takes at most one bounded out-of-queue green-the-head
+   repair slice through the normal TDD/gate/review path, recorded in the delivery ledger and
+   the completion notification; if the head is not green by the end of that firing, it stops
+   and notifies, and subsequent firings attempt only head repair until green or the owner
+   intervenes; no test is ever skipped, disabled, or quarantined to get green. The owner can
+   stop everything at any time by pausing/deleting the Routine or committing a `STOP` file in
+   the programme collection; every firing checks both before acting. The loop's terminal
+   exit: the queue empty and the programme-complete acceptance met, or an owner close.
 7. **Observability.** Fresh-session firings run with completion notifications on; queued
    decisions, blocked slices, and merges are named in the completion summary. The delivery
    ledger and PR history are the audit trail.

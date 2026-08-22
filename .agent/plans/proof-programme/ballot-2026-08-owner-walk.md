@@ -158,16 +158,15 @@ of running; amend here if you want a different channel or cadence.
 
 **Verdict:**
 
-### B-16 Red-head policy (gates outside the slice)
+### B-16 Red-head policy (ADR-051 clause 6)
 
 `principles.md` makes every gate failure blocking at all times; a firing that arrives to a
 red head (caused outside its slice) can neither proceed nor usefully reroute — a red head
-blocks every item. Recommendation: authorise **one bounded out-of-queue green-the-head repair
-slice per firing** — reproduce, root-cause, fix through the normal TDD/gate/review path,
-record it in the queue history and the completion notification. If the head is not green by
-the end of that firing, the firing stops and notifies; subsequent firings attempt only head
-repair until green or you intervene. No test is ever skipped, disabled, or quarantined to
-get green.
+blocks every item. In short: one bounded out-of-queue green-the-head repair slice per firing
+through the normal TDD/gate/review path, recorded in the delivery ledger and the completion
+notification; still red at firing end → stop and notify, and subsequent firings attempt only
+head repair; no test is ever skipped, disabled, or quarantined to get green. **The
+authoritative text is ADR-051 clause 6**; this item accepts it. Recommendation: RATIFY.
 
 **Verdict:**
 

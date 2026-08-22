@@ -14,7 +14,9 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md) and is the
 > plan-of-record for the programme **once the
 > [W-0 ballot](../plans/proof-programme/ballot-2026-08-owner-walk.md) is ratified** — until
-> then no programme slice starts and the roadmap's 2026-06-19 sequence stands. Resuming
+> then no product/remediation slice starts and the roadmap's 2026-06-19 sequence stands,
+> with exactly three immediately eligible exceptions per the parent plan: Q-01 (loop
+> readiness), Q-08 (mechanical ADR-estate hygiene), and Q-09 (PR #10/#28 closure). Resuming
 > sessions: read the parent plan's queue and operating protocol before acting; the banner
 > below predates this contract.
 

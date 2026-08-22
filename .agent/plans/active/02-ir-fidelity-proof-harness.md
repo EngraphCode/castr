@@ -1,13 +1,16 @@
 # Plan: IR Fidelity Proof Harness (round-trip + property proofs)
 
 > **⏳ DISPOSITION PENDING (2026-08-22):** the
-> [proof-programme parent plan](../proof-programme/parent-plan.md) absorbs this plan's scope
-> into its queue slices Q-02..Q-05 (harness extraction + F-01/F-03/F-04 fixes) **if**
-> [W-0 ballot item B-11](../proof-programme/ballot-2026-08-owner-walk.md) ratifies the
-> sequencing supersession; the Q-00 landing then moves this file to `current/complete/` as
-> the absorbed-record with a pointer. If B-11 goes the other way, this plan reactivates
-> unchanged. Its findings, scout results, and interim fail-fast targets remain the evidence
-> base either way — the queue briefs cite them.
+> [proof-programme parent plan](../proof-programme/parent-plan.md) absorbs this plan's
+> harness shape and its C2/F-01, F-03, and F-04(placebo) findings into queue slices
+> Q-02..Q-05 **if** [W-0 ballot item B-11](../proof-programme/ballot-2026-08-owner-walk.md)
+> ratifies the sequencing supersession; the remaining success criteria below (C3, C4, H1–H4,
+> M10) are NOT covered by those slices — they map to their owning tranches at the Q-12
+> split, and the Q-00 landing moves this file to `current/paused/` as a partially-absorbed
+> record with a per-finding disposition table (never to `complete` while any finding lacks a
+> landed slice). If B-11 goes the other way, this plan reactivates unchanged. Its findings,
+> scout results, and interim fail-fast targets remain the evidence base either way — the
+> queue briefs cite them.
 
 > **🔬 RE-VERIFIED 2026-07-04 ([wide+deep review](../../report/wide-deep-review-2026-07-04.md)):
 > every finding this plan targets still reproduces verbatim against `main` @ `8bfc858`** —

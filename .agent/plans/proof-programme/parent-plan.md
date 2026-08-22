@@ -34,8 +34,12 @@ todos:
     content: 'ADR estate integrity (mechanical): collapse the .agent/directives ADR fork, reconcile both indexes, repair IDENTITY.md link'
     status: pending
   - id: Q-09
-    content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure; #23 only after B-11'
+    content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: pending
+  - id: Q-13
+    content: 'PR #23 disposition: execute the B-11 sequencing outcome (merge-or-retire with value extraction), then close #23'
+    status: pending
+    depends_on: [Q-00]
   - id: Q-10
     content: 'Tranche 00 support-contract schema + planning-state validator (per report section 5.1 shape rules)'
     status: pending
@@ -52,8 +56,8 @@ todos:
 
 # Parent Plan: Castr Proof Programme
 
-**Status:** Awaiting the W-0 owner walk (Q-00). Q-01, Q-08, and Q-09's #10/#28 half are
-eligible now; every other slice waits on the ballot.
+**Status:** Awaiting the W-0 owner walk (Q-00). Q-01, Q-08, and Q-09 are eligible now;
+every other slice waits on the ballot.
 **Owner directive (2026-08-22):** turn the
 [proof-programme report (Revision 3)](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 into one parent plan and a series of incremental implementation plans; those plans include
@@ -95,8 +99,8 @@ gating note (below) is satisfied.
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
 T00a; the report certifies all of them parallel-safe with the T00a walk itself (§6 named
-exceptions, §15.4 step 2). Q-10 is gated by T00a proper. Q-01, Q-08, and Q-09's mechanical
-half predate no standing order and are eligible immediately.
+exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper.
+Q-01, Q-08, and Q-09 predate no standing order and are eligible immediately.
 
 ### Slice briefs
 
@@ -172,10 +176,16 @@ eyeball); no dangling link introduced; gates green. Source: report §7 T00 instr
 
 **Q-09 — PR closure wave 1.** Surface: #10 and #28 — commit/file-level patch-equivalence
 verification, surviving evidence migrated to its named home, closed with verification
-recorded. #23 is in this row but executes only after B-11 (its merge-vs-retire is the
-sequencing decision itself); if B-11 is unresolved at claim time, do #10/#28 and leave #23
-pending in this row. Non-goals: no wholesale branch merges. Acceptance (`non-code`): each
-closed PR's closure note names what moved where and what was retired. Source: report §11.3.
+recorded. Non-goals: no wholesale branch merges; #23 is NOT this row (see Q-13). Acceptance
+(`non-code`): each closed PR's closure note names what moved where and what was retired.
+Source: report §11.3.
+
+**Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
+practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —
+with commit/file-level verification of unique deltas in the closing commit and closure note.
+Non-goals: no wholesale merge of the stale snapshot. Acceptance (`non-code`): #23 closed with
+the verification recorded and the transplant plan's disposition banner resolved. Source:
+report §11.3 #23. Gate: B-11.
 
 **Q-10 — Tranche 00 contract schema + validator.** Surface: the `ProgrammeObligation` estate
 per report §5.1 shape rules, including the three PR-30 carry-forwards (discriminated no-edge
@@ -230,8 +240,9 @@ mechanics only and cites clauses rather than restating them.
 5. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
    [`queued-decisions.md`](./queued-decisions.md) with a recommendation; the firing reroutes
    to the next unblocked item.
-6. **Red head found on arrival**: handled per ballot item B-16's ratified policy (bounded
-   out-of-queue repair, or stop-and-notify — whichever the ballot records).
+6. **Red head found on arrival**: handled per ADR-051 clause 6's red-head policy (one
+   bounded out-of-queue repair slice, recorded in the delivery ledger, then stop-and-notify
+   if still red).
 7. **Session end**: every firing closes with the `session-handoff` skill; no firing leaves
    the repo red without a B-16 record, a PR half-driven without the next firing scheduled, or
    continuity drift uncommitted.
@@ -250,10 +261,10 @@ landing.
 ## Prerequisites
 
 - **Blocking for the loop's arming**: Q-01.
-- **Blocking for remediation-family slices (Q-02–Q-07, #23 half of Q-09)**: ballot B-11 (the
+- **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 (the
   standing 2026-06-19 order), via Q-00.
 - **Blocking for the tranche spine (Q-10 onward)**: T00a, via Q-00.
-- **Eligible immediately**: Q-01, Q-08, Q-09's #10/#28 half.
+- **Eligible immediately**: Q-01, Q-08, Q-09.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
@@ -297,10 +308,13 @@ landing.
 `.agent/plans/active/` currently holds two plans whose disposition this programme affects,
 both now carrying pending-disposition banners pointing here:
 
-- [`02-ir-fidelity-proof-harness.md`](../active/02-ir-fidelity-proof-harness.md) — its scope
-  is absorbed by Q-02–Q-05 if B-11 ratifies; the Q-00 landing then moves it to
-  `current/complete/` as the absorbed-record with a pointer, or reactivates it if B-11 goes
-  the other way.
+- [`02-ir-fidelity-proof-harness.md`](../active/02-ir-fidelity-proof-harness.md) — Q-02–Q-05
+  absorb its harness shape and the C2/F-01, F-03, and F-04(placebo) findings; its remaining
+  success criteria (C3, C4, H1–H4, M10) belong to their owning tranches and are mapped to
+  concrete queue rows at the Q-12 split. If B-11 ratifies, the Q-00 landing moves it to
+  `current/paused/` as a **partially-absorbed record** with a per-finding disposition table;
+  it may reach `complete` only when every finding has a landed slice. If B-11 goes the other
+  way, it reactivates unchanged.
 - [`oak-practice-transplant.md`](../active/oak-practice-transplant.md) — pauses as a named
   position if B-11 ratifies (moves to `current/paused/`), else remains primary.
 

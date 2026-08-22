@@ -55,11 +55,12 @@ mandated. Branch: `feat/initial-castr-review`.
   with the [W-0 ballot](../../../plans/proof-programme/ballot-2026-08-owner-walk.md) as its
   blocking gate (Q-00) and [ADR-051](../../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
   (Proposed) as the autonomous-loop authority. **Resume authority is now the parent plan.**
-- **Next safe step:** SUPERSEDED 2026-08-22 by the owner planning-contract bullet above — the
-  next step is authoring the parent plan from the Revision-3 report, which subsumes and
-  re-adjudicates the remediation-02 shape below (the report's §11.3 reworks the #11 harness
-  lane and §PR #10 retires the old remediation topology as policy once the parent plan is
-  ratified). The 2026-07-06 block is retained as history:
+- **Next safe step (2026-08-22, current):** the parent plan IS authored (see the
+  planning-contract-EXECUTED bullet above) — do not re-author it. The next actions, in
+  order: (1) the owner walks the W-0 ballot; (2) the immediately eligible slices Q-01/Q-08/
+  Q-09 per the parent plan's queue; (3) everything else per the queue once verdicts land.
+  Consult the parent plan's queue and operating protocol, not the historical blocks below.
+  The 2026-07-06 block is retained as history:
 - **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
   (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS
