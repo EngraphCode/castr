@@ -351,7 +351,12 @@ commits bypass the entire blocking chain (the highest-order gap — the chain is
 degraded, it is absent); `agent-tools/dist` was unbuilt in the fired container (guards fail
 open, as measured before); and fired sessions derive their Practice identity from the raw
 `session_…` id, yielding the degenerate `sessio` prefix — the seed derivation must strip
-the platform prefix or take an injected seed at spawn.
+the platform prefix or take an injected seed at spawn. Carried forward from PR #34 review
+(clause 4 disposition, 2026-08-22): the `ensure-gitleaks.sh` version-classification
+branches (same-core prerelease vs higher-core prerelease vs older/newer stable) have only
+live-exercise evidence — this slice adds hermetic automated coverage (fake `gitleaks` on a
+crafted PATH, stubbed installer dependencies) so a regression cannot land while CI stays
+green.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
