@@ -48,6 +48,26 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   real fix was re-attributing the gate's warrant (standing 2026-06-19 order via B-11, not
   T00a) because a report recommendation cannot un-gate an owner order. Verify the
   reviewer's warrant like any other claim.
+- **Q-01 arc: the load-bearing fired-session config is the Routine's repo attachment, and
+  only the owner can set it.** `create_trigger` cannot attach repo sources or connectors —
+  three probe firings spawned fine but arrived read-only with no sources and landed nothing.
+  The working division: agent creates/updates the Routine via API, owner attaches the repo
+  once in the UI ("Runs with"). Corollary: a platform "run succeeded" is NOT landing proof —
+  probes 1–3 all "succeeded" while landing nothing; only Kingfisher's pushed commit
+  (`689eb9e`) proved the path. Demand repo-visible evidence, never runner status.
+- **Fresh-fired containers measured (Kingfisher, 2026-08-22):** no `gitleaks`, no
+  `agent-tools/dist`, and — highest order — a pristine checkout has NO git hooks wired until
+  `pnpm install` runs, so unattended commits bypass the entire blocking chain. Also the
+  Practice identity seed is the raw `session_…` id → degenerate `sessio` prefix. All queued
+  to Q-15's gap list; the gitleaks half is cured by Q-01's SessionStart hook post-merge.
+- **`verify-vendor-call-shapes-at-plan-author-time` violated and caught in-session:** the
+  routine-prompt draft carried `comms append --message` (nonexistent) and `claims list`
+  without `--active` — written from memory, caught only by the pre-push diff review. Any
+  CLI shape written into a standing prompt gets executed live first, no exceptions; the
+  prompt now carries only live-verified shapes.
+- **Ops hygiene from the arc:** never pipe `git push` through anything (`| tail -0` masked
+  a real push failure via tail's exit code); a Routine is born ENABLED — disable immediately
+  after create when arming order matters (C1 arming race).
 
 ## 2026-08-22 (PR #30 review + Revision-3 takeover — Lucent Turning Compass / 5aef07)
 
