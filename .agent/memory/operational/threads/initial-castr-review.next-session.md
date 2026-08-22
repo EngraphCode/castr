@@ -5,10 +5,12 @@ mandated. Branch: `feat/initial-castr-review`.
 
 ## Participating agent identities (PDR-027, additive — never overwrite)
 
-| platform    | model          | agent_name             | session_id_prefix | role                                             | first_session | last_session |
-| ----------- | -------------- | ---------------------- | ----------------- | ------------------------------------------------ | ------------- | ------------ |
-| claude-code | claude-fable-5 | Fragrant Twining Glade | 5367e2            | reviewer + recorder + team driver/closeout owner | 2026-07-04    | 2026-07-06   |
-| claude-code | claude-fable-5 | Mistbound Fading Night | fe1498            | remediation-02 pre-flight scout (boundary b)     | 2026-07-06    | 2026-07-06   |
+| platform    | model          | agent_name               | session_id_prefix | role                                                 | first_session | last_session |
+| ----------- | -------------- | ------------------------ | ----------------- | ---------------------------------------------------- | ------------- | ------------ |
+| claude-code | claude-fable-5 | Fragrant Twining Glade   | 5367e2            | reviewer + recorder + team driver/closeout owner     | 2026-07-04    | 2026-07-06   |
+| claude-code | claude-fable-5 | Mistbound Fading Night   | fe1498            | remediation-02 pre-flight scout (boundary b)         | 2026-07-06    | 2026-07-06   |
+| codex       | GPT-5.6        | Torrid Smouldering Forge | 01a024            | completeness report publisher                        | 2026-08-21    | 2026-08-21   |
+| claude-code | claude-fable-5 | Lucent Turning Compass   | 5aef07            | PR-30 reviewer + Revision-3 steward (owner handover) | 2026-08-22    | 2026-08-22   |
 
 ## Lane state
 
@@ -22,13 +24,36 @@ mandated. Branch: `feat/initial-castr-review`.
   overhaul plan is authored and awaiting its W0 owner walk (Q-012..Q-015 in
   `open-questions.md`) plus readiness-reviewer folds (assumptions-expert + docs-adr-expert,
   dispatched 2026-07-04).
+- **2026-08-21 follow-up:**
+  [`Castr completeness and losslessness proof programme`](../../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
+  (Revision 3 as of 2026-08-22; dated evidence and recommended guidance, not a proof certificate
+  and not the plan-of-record; baseline `main@63a7e67`). Revision 3 (PR #30, owner handover)
+  demoted the report's authority, completed the Tranche-00 reconciliation ledger
+  (principles.md/VISION.md/ADR-017/018/019/027/028/029/037 + the ADR estate fork and both
+  indexes), repaired the support-contract types (top-level discriminants, `impossible` with
+  proof + normative evidence, role-correlated dispositions, per-edge target oracle/witnesses,
+  outcome-discriminated projection envelope), staged Tranche 00 into T00a/T00b/T00c, and derived
+  §11.5 from §6.
+- **2026-08-22 owner directive (planning contract):** the fundamental product intent is a
+  definition of what Castr should and should not be, plus proofs (tests or other correctly typed
+  validation) that go green when true — positive proofs, grounded in canonical OCE
+  principles/testing-strategy/validation-strategy and structured with the OCE cognitive and
+  planning skills. Next planning step: turn the report into **one parent plan and a series of
+  incremental implementation plans**; those plans include **extracting the value from all
+  existing open PRs and then closing them**. No other plan content lands before that parent
+  plan. The parent plan must also reconcile the owner's 2026-06-19 roadmap sequencing decision.
 - **Current state:** C2–C6 re-proven live on `main` @ `8bfc858`; R1–R6 recorded; all continuity
   surfaces updated (continuity spine, prompt banner, roadmap banner, remediation-02 banner,
   napkin, distilled ×2, pending-graduations, Q-012..Q-015).
 - **Blockers / low-confidence areas:** W0 owner walk gates W1/W2/W4 shape; W3 validator cycle
   and W2 archaeology are parallel-safe now. principles.md edits need explicit owner approval
   (Q-015).
-- **Next safe step (post-merge; owner end-game directive 2026-07-06 executed: stabilise →
+- **Next safe step:** SUPERSEDED 2026-08-22 by the owner planning-contract bullet above — the
+  next step is authoring the parent plan from the Revision-3 report, which subsumes and
+  re-adjudicates the remediation-02 shape below (the report's §11.3 reworks the #11 harness
+  lane and §PR #10 retires the old remediation topology as policy once the parent plan is
+  ratified). The 2026-07-06 block is retained as history:
+- **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
   (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS
   after merge, in order: **(1) remediation-02 implementation on a fresh branch off `main`** —
