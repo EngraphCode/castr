@@ -418,14 +418,14 @@ export type ProofObligation =
         readonly admissionDecision: DecisionId;
         readonly diagnostic: DiagnosticCode;
         readonly proof: ProofId;
-        readonly witnesses: readonly WitnessId[];
+        readonly witnesses: readonly [WitnessId, ...WitnessId[]];
       };
     })
   | (SourceFeatureObligationBase & {
       readonly status: 'resolved';
       readonly sourceAdmission: 'admitted';
       readonly admissionProof: ProofId;
-      readonly admissionWitnesses: readonly WitnessId[];
+      readonly admissionWitnesses: readonly [WitnessId, ...WitnessId[]];
       readonly irCarrier: IrCarrierId;
       readonly edges: readonly TransformationEdgeObligation[];
     });
@@ -439,22 +439,24 @@ interface TransformationEdgeBase {
   // rejects any edge channel the obligation does not declare.
   readonly channels: readonly SemanticChannel[];
   readonly targetOracle: OracleId;
-  readonly witnesses: readonly WitnessId[];
 }
 
 export type TransformationEdgeObligation =
   | (TransformationEdgeBase & {
       readonly role: 'native-representation' | 'migration';
+      readonly witnesses: readonly [WitnessId, ...WitnessId[]];
       readonly disposition: ExactDisposition | ImpossibleDisposition;
     })
   | (TransformationEdgeBase & {
       readonly role: 'explicit-projection';
       readonly projectionBoundary: BoundaryContractId;
+      readonly witnesses: readonly [WitnessId, ...WitnessId[]];
       readonly disposition: ExactDisposition | GovernedWideningDisposition | ImpossibleDisposition;
     })
   | (TransformationEdgeBase & {
       readonly role: 'descriptive-rendering';
       readonly assurance: RenderingAssuranceId;
+      readonly witnesses?: never;
       readonly disposition?: never;
     });
 
@@ -510,6 +512,12 @@ The shape rules above are deliberate and binding on the generator:
   `ArtifactSchemaVersion`, `SpecClauseId`, …). A bare `string` cannot cite an unratified profile
   or version. `ArtifactKind` and `SemanticFacet` are single named types reused everywhere; no
   inline literal union may restate them.
+- **Evidence collections are non-empty and loss-classified — as a general invariant, not a
+  per-field accident.** Every witness or finding collection attached to a proof-bearing row is a
+  non-empty tuple, and finding types are discriminated by loss class so that a loss-bearing
+  finding cannot ride an exact outcome. These sketches illustrate the invariants; the real
+  contract is enforced by the generator/validator and the `tsc` gate, and any collection a
+  sketch leaves as a plain array is still bound by this rule.
 
 Tranche 00 also needs an explicit, non-certifying planning state so inventory closure does not depend on proofs that the later tranches have not built yet:
 
@@ -1534,25 +1542,32 @@ interface ProjectedApplicationContractBase {
   readonly boundaryVersion: BoundaryVersionId;
   readonly graphProfile: GraphProfileId;
   readonly projectionProfile: ProjectionProfileId;
-  readonly findings: readonly ProjectionFinding[];
   readonly provenance: ProjectionProvenance;
 }
+
+// ProjectionFinding is discriminated by loss class: an InformationalProjectionFinding
+// records context that weakens nothing; a LossProjectionFinding records a weakened,
+// selected, omitted, or unmapped channel.
+export type ProjectionFinding = InformationalProjectionFinding | LossProjectionFinding;
 
 export type ProjectedApplicationContract =
   | (ProjectedApplicationContractBase & {
       readonly outcome: 'exact';
       readonly valueContract: CastrValueContractDocument;
       readonly locationMapping: ProjectionLocationMap;
+      readonly findings: readonly InformationalProjectionFinding[];
     })
   | (ProjectedApplicationContractBase & {
       readonly outcome: 'widened';
       readonly valueContract: CastrValueContractDocument;
       readonly locationMapping: ProjectionLocationMap;
-      readonly wideningDelta: readonly [ProjectionFinding, ...ProjectionFinding[]];
+      readonly findings: readonly ProjectionFinding[];
+      readonly wideningDelta: readonly [LossProjectionFinding, ...LossProjectionFinding[]];
     })
   | (ProjectedApplicationContractBase & {
       readonly outcome: 'rejected';
       readonly diagnostic: DiagnosticCode;
+      readonly findings: readonly ProjectionFinding[];
       readonly valueContract?: never;
       readonly locationMapping?: never;
     });
@@ -1567,8 +1582,10 @@ channel that Section 2.5 requires; an `exact` outcome structurally cannot carry 
 can never hide in the exact branch. A rejected outcome must carry a stable `diagnostic` — a
 possibly-empty `findings` array is not a rejection reason — and its findings record the
 per-concern detail behind that diagnostic, so the composed certificate can always explain which
-stage failed and why. The base `findings` array remains the general per-stage record; the
-per-variant obligations above are additional, not substitutes. Rejection is an expected outcome on a public boundary, so consumers handle
+stage failed and why. Findings are **loss-classified**: the `exact`
+branch's finding type admits only informational findings, so a loss-bearing finding structurally
+cannot ride an exact outcome into the three-certificate composition path — loss findings live in
+`widened`'s delta or in a rejection's record. Rejection is an expected outcome on a public boundary, so consumers handle
 it through this closed union in the ordinary Result style rather than probing an optional field.
 
 Castr normally consumes only the validated public `valueContract`; the adapter retains graph findings/mappings and composes them with Castr target findings. No opaque RDF dataset, SHACL shape graph, JSON-LD context, or private graph type enters Castr's semantic IR.
