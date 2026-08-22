@@ -22,18 +22,25 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    criterion "STOP file present"), do nothing else — no grounding, no claim — and end the
    session. Check the literal path — no glob, no interpretation. This runs first so the
    kill switch never leaves a live claim behind (ADR-051 clause 1 ordering).
-2. **Ground**: run the `engraph-start-right-quick` skill; register identity per
-   `register-active-areas-at-session-open`.
-3. **Claims scan**: `pnpm agent-tools:collaboration-state -- claims list` — any live peer or
+2. **Dry-run detection (before anything opens a claim)**: when the firing's message
+   carries an explicit DRY-RUN instruction from the arming session or the owner, take the
+   read-only path from here on — ground by READING the directives only, register NO
+   active-area claim, and execute only the bounded no-op work the instruction specifies,
+   never claiming, driving, or merging any slice or PR — then report criterion "dry-run
+   complete" in the stand-down broadcast and completion summary, and stop. Detection sits
+   before grounding because normal grounding registers a claim, and a proof firing must
+   leave no collision state behind.
+3. **Ground** (normal firings only): run the `engraph-start-right-quick` skill; register
+   identity per `register-active-areas-at-session-open`.
+4. **Claims scan**: `pnpm agent-tools:collaboration-state -- claims list` — any live peer or
    owner claim touching your target surface defers this firing (land the counter update via
    the bookkeeping path, note the deferral in the completion summary, stop).
-4. **Dry-run firings**: when the firing's message carries an explicit DRY-RUN instruction
-   from the arming session or the owner, execute only the bounded no-op path that
-   instruction specifies — never claim, drive, or merge any slice or PR — and report
-   criterion "dry-run complete" in the stand-down broadcast and completion summary. This
-   branch precedes WIP handling so a manual proof firing can never act on an open PR.
-5. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051
-   clause 4, merge under clause 3) and do nothing else. Otherwise claim the next `pending`
+5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
+   open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
+   ADR-051 clause 4, merge under clause 3) and do nothing else. A bookkeeping PR is WIP for
+   drive purposes even though merging it never counts as substantive progress — an unmerged
+   counter update left behind would let later firings read a stale streak and keep the
+   three-idle kill switch from ever firing. Otherwise claim the next `pending`
    queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
    parent plan's frontmatter (rides in your slice PR) and re-verify the brief's premises
    against live state — premises moved means re-adjudicate, not execute.
