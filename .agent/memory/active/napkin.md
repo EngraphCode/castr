@@ -68,6 +68,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **Ops hygiene from the arc:** never pipe `git push` through anything (`| tail -0` masked
   a real push failure via tail's exit code); a Routine is born ENABLED — disable immediately
   after create when arming order matters (C1 arming race).
+- **A duty-entails-mechanism argument does not survive precedence (Copilot, PR #34):** I
+  defended bookkeeping-PR merges as "clause 6's persistence duty entails its landing
+  mechanism, held to clause 3's conditions" — but clause 3's unattended grant textually
+  names slice PRs only, and `orientation.md` makes the plan yield to the ADR rather than
+  interpret it. Authority text is read literally; when an accepted ADR's grant is narrower
+  than what a duty implies, the gap is an owner fork (queued-decision), never an inference
+  — `no-manufactured-permission` at the doctrine layer. Same inherited-classification
+  family as the Q-010 false-dichotomy: a plausible reconciliation repeated across surfaces
+  gains false authority.
 
 ## 2026-08-22 (PR #30 review + Revision-3 takeover — Lucent Turning Compass / 5aef07)
 

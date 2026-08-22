@@ -129,12 +129,16 @@ counter update in that slice's PR; an idle or deferring firing lands it as a ded
 non-draft programme PR is already open (WIP = 1 forbids a second), as a counter-only commit
 pushed to that open PR's head branch, which reaches the base at that PR's merge; a
 completion summary is never a counter's landing surface. The
-bookkeeping merge's authority is **ADR-051 clause 6 itself**: the accepted ADR mandates that
-the counters are "persisted and reset by each firing" and delegates the concrete surface to
-this plan — a duty that entails its landing mechanism — so the bookkeeping PR merges as that
-clause-6 mechanism, held to the same four conditions clause 3 sets for slice PRs (every
-check green on the head, every conversation resolved, base not diverged, diff within the
-bookkeeping scope). A bookkeeping PR is not a slice PR — merging one is never substantive
+bookkeeping PR's persistence duty is **ADR-051 clause 6 itself** ("persisted and reset by
+each firing", concrete surface delegated to this plan) — but its **merge authority is
+not**: clause 3's unattended grant names slice PRs only, and a plan that contradicts its
+ADR yields (`orientation.md` precedence) rather than inferring authority
+(`no-manufactured-permission`). So while QD-3 (the clause-scope amendment, queued
+2026-08-22) is open, a bookkeeping PR is driven to the same four conditions clause 3 sets
+for slice PRs (every check green on the head, every conversation resolved, base not
+diverged, diff within the bookkeeping scope) and its **merge queues for the owner** —
+clause 3's stated default for any state outside its grant. Counter commits land on the PR
+branch immediately (nothing is lost); only base visibility waits on the merge. A bookkeeping PR is not a slice PR — merging one is never substantive
 progress and never resets the streak — so idle increments reach the shared base without
 defeating the kill switch. The streak resets only on **substantive progress** — a slice PR merged, a new
 commit advancing a claimed slice, a queue row completed, a head-repair fix landed, or a new
@@ -347,7 +351,12 @@ commits bypass the entire blocking chain (the highest-order gap — the chain is
 degraded, it is absent); `agent-tools/dist` was unbuilt in the fired container (guards fail
 open, as measured before); and fired sessions derive their Practice identity from the raw
 `session_…` id, yielding the degenerate `sessio` prefix — the seed derivation must strip
-the platform prefix or take an injected seed at spawn.
+the platform prefix or take an injected seed at spawn. Carried forward from PR #34 review
+(clause 4 disposition, 2026-08-22): the `ensure-gitleaks.sh` version-classification
+branches (same-core prerelease vs higher-core prerelease vs older/newer stable) have only
+live-exercise evidence — this slice adds hermetic automated coverage (fake `gitleaks` on a
+crafted PATH, stubbed installer dependencies) so a regression cannot land while CI stays
+green.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
@@ -368,11 +377,15 @@ mechanics only and cites clauses rather than restating them.
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
    firing with a note, it does not race.
 3. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
-   open — a slice PR or a bookkeeping PR — drive it to merged (CI, review threads under
-   ADR-051 clause 4, merge under clause 3) and do nothing else; driving the bookkeeping PR
-   first is clause 6's own persistence mechanism completing, and implements clause 1(b)'s
-   single-open-PR invariant (an unmerged counter update would let later firings read a
-   stale streak). Otherwise claim the next eligible brief, mark it
+   open — a slice PR or a bookkeeping PR — drive it (CI, review threads under ADR-051
+   clause 4; a slice PR merges under clause 3, a bookkeeping PR's merge queues for the
+   owner while QD-3 is open, per §Failure counters) and do nothing else; driving the
+   bookkeeping PR first is clause 6's own persistence mechanism completing under clause
+   1(b)'s single-open-PR intent (an unmerged counter update would let later firings read a
+   stale streak). A firing whose only act is driving a bookkeeping PR is itself
+   zero-progress and pushes its own increment onto that PR's head branch before the merge
+   or merge request — the every-firing counter duty is never waived by the drive.
+   Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
 4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
    (two dispatches, per
