@@ -54,7 +54,7 @@ That theorem needs three things before most repairs land:
 2. independent behavioural oracles at source and target boundaries; and
 3. an explicit adjudication of historical Castr compromises so old tests do not turn accidental or undesirable behaviour into the new contract.
 
-The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so lane-local decisions land at lane heads rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) form a named **pre-02A defect slice** that may land in parallel with the T00a walk and Tranche 01 (the one explicit exception to the Section 6 dependency spine, defined there), and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
+The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so each remaining decision is ratified at the latest gate preceding its first consumer rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) form a named **pre-02A defect slice** that may land in parallel with the T00a walk and Tranche 01 (the one explicit exception to the Section 6 dependency spine, defined there), and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
 
 No release may carry a complete/lossless claim broader than its current certificate. Castr's currently advertised broad surface remains blocked until the final certification tranche generates a zero-gap proof record on one integrated current-main commit, or until unsupported surfaces are explicitly removed/unadvertised and a narrower profile passes the shipped-product and certification gates. The present 4,124 passing tests and individually green remediation branches are useful evidence, but they are not that record.
 
@@ -682,10 +682,15 @@ inventory would be the programme's single largest executability risk. The stages
   Tranche 02C builds and every format lane consumes — they are cross-lane, not lane-local. This
   is one owner walk over questions the challenge register already answers with recommendations;
   it requires no inventory work.
-- **T00b — lane charters (gate only their lanes):** decisions 5–9, 12, 13, and 16–18 move to the
-  head of their owning format tranches (05–09) and are ratified there. Batching them globally is
-  sequencing preference, not dependency.
-- **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 10, 11, 21, and 22.
+- **T00b — consumer-head charters:** each remaining decision is ratified at the latest gate that
+  still precedes its **first consumer** — never later. Concretely: decision 5 (exact source
+  versions/profiles and public entrypoints) and the error-code/atomicity half of decision 21 are
+  ratified at the head of Tranche 04, which dispatches those profiles and implements fail-closed
+  preflight; decisions 6–9, 12, 13, and 16–18 at the heads of their owning format tranches
+  (05–09); the resource-policy/trust-profile half of decision 21 at the head of Tranche 10.
+  Batching them globally is sequencing preference, not dependency — but deferring one past its
+  first consumer is a defect.
+- **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 10, 11, and 22.
 
 Inventory closure follows the same staging: T00a closes with `planned` rows naming owning
 tranches; each lane resolves its own rows at its T00b head. The decisions themselves:
@@ -1536,6 +1541,7 @@ export type ProjectedApplicationContract =
     })
   | (ProjectedApplicationContractBase & {
       readonly outcome: 'rejected';
+      readonly diagnostic: DiagnosticCode;
       readonly valueContract?: never;
       readonly locationMapping?: never;
     });
@@ -1544,9 +1550,11 @@ export type ProjectedApplicationContract =
 The envelope is discriminated on `outcome` so illegal states are unrepresentable: a successful
 projection (`exact` or `widened`) always carries its value contract and location mapping, and a
 rejected projection can carry neither — matching the rule that rejection produces no application
-artifact and no downstream stage runs. Rejection is an expected outcome on a public boundary, so
-consumers handle it through this closed union in the ordinary Result style rather than probing an
-optional field.
+artifact and no downstream stage runs. A rejected outcome must carry a stable `diagnostic` — a
+possibly-empty `findings` array is not a rejection reason — and its findings record the
+per-concern detail behind that diagnostic, so the composed certificate can always explain which
+stage failed and why. Rejection is an expected outcome on a public boundary, so consumers handle
+it through this closed union in the ordinary Result style rather than probing an optional field.
 
 Castr normally consumes only the validated public `valueContract`; the adapter retains graph findings/mappings and composes them with Castr target findings. No opaque RDF dataset, SHACL shape graph, JSON-LD context, or private graph type enters Castr's semantic IR.
 
@@ -2602,7 +2610,7 @@ authority note at the top of this report).
 4. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
 5. Introduce versioned value/interaction artifacts and the legacy `CastrDocument` adapter.
 6. Extract #27's application-value input/output/catchall semantics into the new facets, then split the identity/provenance/reference half of #18.
-7. Rederive #20 guards and #12 traversal from the new artifacts, and land the unified admission boundary and fail-closed preflight (Tranche 04).
+7. Rederive #20 guards and #12 traversal from the new artifacts, and land the unified admission boundary and fail-closed preflight (Tranche 04), opening with its T00b charter (decision 5 and the error-code/atomicity half of decision 21).
 8. Run independent JSON #16, Zod #13, OpenAPI interaction #17/#18-security, codegen #15/#26, and MCP projection lanes, each opening with its T00b lane charter.
 9. Execute the typed transformation graph, resource/hostile layer, mutation layer, packed-product smoke, and exact/projection certificates, gated by the T00c certification-policy decisions.
 10. If graph interoperation is advertised, execute conditional Tranche 09G and compose graph/projection/Castr certificates whose exact/widen/reject outcome matches each claim; require all three to be exact for a lossless claim.
