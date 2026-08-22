@@ -17,25 +17,32 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
 
 ## Protocol, in order
 
-1. **Ground**: run the `engraph-start-right-quick` skill; register identity per
+1. **STOP check (exact path, before anything opens a claim)**: if the file
+   `.agent/plans/proof-programme/STOP` exists, post the stand-down broadcast (below,
+   criterion "STOP file present"), do nothing else — no grounding, no claim — and end the
+   session. Check the literal path — no glob, no interpretation. This runs first so the
+   kill switch never leaves a live claim behind (ADR-051 clause 1 ordering).
+2. **Ground**: run the `engraph-start-right-quick` skill; register identity per
    `register-active-areas-at-session-open`.
-2. **STOP check (exact path)**: if the file `.agent/plans/proof-programme/STOP` exists, post
-   the stand-down broadcast (below, criterion "STOP file present"), do nothing else, and end
-   the session. Check the literal path — no glob, no interpretation.
 3. **Claims scan**: `pnpm agent-tools:collaboration-state -- claims list` — any live peer or
    owner claim touching your target surface defers this firing (land the counter update via
    the bookkeeping path, note the deferral in the completion summary, stop).
-4. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051
+4. **Dry-run firings**: when the firing's message carries an explicit DRY-RUN instruction
+   from the arming session or the owner, execute only the bounded no-op path that
+   instruction specifies — never claim, drive, or merge any slice or PR — and report
+   criterion "dry-run complete" in the stand-down broadcast and completion summary. This
+   branch precedes WIP handling so a manual proof firing can never act on an open PR.
+5. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051
    clause 4, merge under clause 3) and do nothing else. Otherwise claim the next `pending`
    queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
    parent plan's frontmatter (rides in your slice PR) and re-verify the brief's premises
    against live state — premises moved means re-adjudicate, not execute.
-5. **Execute one atomic TDD slice** per the parent plan's §Operating protocol step 4:
+6. **Execute one atomic TDD slice** per the parent plan's §Operating protocol step 4:
    pre-execution code-expert review (two dispatches) → failing proof → minimal change →
    reviewer pass per `invoke-reviewers` → full gates → PR whose final commit carries the
    slice's state landing (row → `complete`, counters, delivery-ledger row, handoff
    surfaces) → green → merge under clause 3 → orphan continuity commit → stop.
-6. **Branches** (each is normal operation, not an error):
+7. **Branches** (each is normal operation, not an error):
    - **Red head on arrival** (gates failing for causes outside your slice): at most ONE
      bounded green-the-head repair slice through the normal TDD/gate/review path, recorded
      in the delivery ledger and the completion summary; still red at firing end → stop and
@@ -49,7 +56,7 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      diagnosis, convert its PR to a draft (never close it), and land the queue-state change
      via the bookkeeping path (row `blocked`, `failures:` count, pointer to the draft's
      diagnosis) so the next firing's scan sees it on the base.
-7. **Counters** (durable repo state, parent plan §Failure counters): read
+8. **Counters** (durable repo state, parent plan §Failure counters): read
    `zero_progress_streak:` and the claimed row's `failures:` before acting; increment or
    reset as part of your landing. The streak resets only on substantive progress (slice PR
    merged, commit advancing a claimed slice, row completed, head-repair landed, queued
@@ -57,7 +64,7 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    lands its update as a **bookkeeping PR** (counter/continuity state only, no product
    code; the ADR-051 clause 6 mechanism, merged at the clause 3 bar; not a slice PR, never
    substantive progress).
-8. **Close**: run the `engraph-session-handoff` skill. The completion notification must
+9. **Close**: run the `engraph-session-handoff` skill. The completion notification must
    name: what merged, what advanced, queued decisions written, blocked slices, counter
    values landed. Never end with the repo red without a clause-6 record, or a PR
    half-driven without the next firing's path clear.
