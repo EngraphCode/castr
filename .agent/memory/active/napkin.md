@@ -2,6 +2,29 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-22 (PR #30 review + Revision-3 takeover — Lucent Turning Compass / 5aef07)
+
+- **A strategy report's factual layer and its authority layer fail independently — verify both.**
+  Every code-level defect claim in the completeness-programme report verified firsthand against
+  `main` (security `flatMap` AND→OR at `builder.operations.fields.ts:112`; omitted
+  `additionalProperties`→`false` + non-strict throw at `json-schema-parser.object-fields.ts:112`;
+  boolean-schema handling present in the `if/then/else` callback but absent from the
+  properties-path callback; Draft-07 metaschema hard-wired in `mcp-type-guards.ts`; exact pins
+  Zod 4.4.3 / TS 6.0.3 / SDK 1.29.0). The same document still failed on authority (a report
+  claiming to supersede plan-estate policy from `.agent/report/`), on ledger completeness (the
+  four most-contradicted authorities — principles.md, VISION.md, ADR-018/019, ADR-027 — absent
+  from its own reconciliation list), and on type shape (its own contract unions failed the `tsc`
+  narrowing gate it mandates). Accuracy of evidence is not accuracy of governance.
+- **Reviewer fan-out earned its cost:** assumptions-expert surfaced the un-cited 2026-06-19 owner
+  sequencing decision in `roadmap.md:123`; docs-adr-expert found the forked ADR estate
+  (`.agent/directives/ADR-044/045/046` diverging from the `docs/` copies) and the inverse
+  ADR-002 index mismatch; architecture-expert compiled the report's type block and produced
+  TS18048/TS2339 reproductions. None of these was in my own first-pass read.
+- **Nested discriminants don't narrow parent unions** — `sourceAdmission: { kind: 'admitted' }`
+  plus `edges?: never` on the sibling variant still leaves `o.edges` possibly-undefined after
+  the inner check. Hoist the discriminant to the top level (`status`, `sourceAdmission`, `role`
+  as direct string-literal members) whenever a union must pass an exhaustiveness gate.
+
 ## 2026-07-18 (statusline merge reconciliation + fixer-ignore widening — arc-bring worktree)
 
 - **The #24×#22 statusline render collision was structurally narrower than the pin overlap

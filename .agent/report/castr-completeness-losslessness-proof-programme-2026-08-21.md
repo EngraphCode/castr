@@ -1,11 +1,37 @@
 # Castr application-contract completeness and semantic-losslessness proof programme
 
-**Status:** implementation instructions, not a proof certificate
-**Revision:** 2 — application-contract and semantic-graph boundary amendment
+**Status:** dated evidence and recommended implementation guidance — not a proof certificate and not the plan-of-record
+**Revision:** 3 — authority demotion, reconciliation-ledger completion, support-contract type repair, and graph reconciliation (2026-08-22); Revision 2 was the application-contract and semantic-graph boundary amendment
 **Review cut-off:** 21 August 2026
 **Castr baseline:** [`main@63a7e675caa438d98df5d36ee4ba4f76ef962d08`](https://github.com/EngraphCode/castr/commit/63a7e675caa438d98df5d36ee4ba4f76ef962d08)
 **Canonical OCE baseline:** [`main@1173c1adf252eab2dbe7d95f2494139f51504243`](https://github.com/EngraphCode/oak-open-curriculum-ecosystem/commit/1173c1adf252eab2dbe7d95f2494139f51504243)
 **Audience:** the engineers and agents who will repair Castr, review the repairs, and decide whether a release claim is warranted
+
+## Authority and planning contract (owner directive, 2026-08-22)
+
+This document lives in `.agent/report/` and is **evidence, not plan authority**. Under
+[`orientation.md`](../directives/orientation.md) the plan estate owns scope, sequencing, and
+acceptance; nothing in this report supersedes a live plan, directive, rule, or accepted ADR by
+its own force. Sections 6–9, 11.5, 13, and 15.4–15.5 are **recommended inputs** to planning,
+pending ratification through the decision process they themselves describe.
+
+The owner directed on 2026-08-22:
+
+- **Product intent:** a definition of what Castr should and should not be, plus a set of proofs —
+  tests or other correctly typed validation — that **go green when the claims are true**. Proofs
+  are stated positively; the programme proves the positives rather than attempting to prove
+  negatives.
+- **Grounding:** the work incorporates the canonical OCE `principles.md`, `testing-strategy.md`,
+  and `validation-strategy.md` (Section 1.2), and uses the OCE cognitive and planning skills to
+  structure, plan, and validate it.
+- **Planning contract:** the next planning step is to turn this report into **one parent plan and
+  a series of incremental implementation plans**. Those plans must include **extracting the value
+  from all existing open PRs and then closing them** (Section 11 records the extraction
+  dispositions). No other plan content lands ahead of that parent plan.
+- **Standing sequencing decision:** the owner's 2026-06-19 plan-of-record re-ordering recorded in
+  [`roadmap.md`](../plans/roadmap.md) (practice transplant first, then remediation, then
+  explicit-`additionalProperties`) is **not** superseded by this report. The parent plan must
+  reconcile or explicitly supersede it, in the owner's words, when it is authored.
 
 ## Executive verdict
 
@@ -28,7 +54,7 @@ That theorem needs three things before most repairs land:
 2. independent behavioural oracles at source and target boundaries; and
 3. an explicit adjudication of historical Castr compromises so old tests do not turn accidental or undesirable behaviour into the new contract.
 
-The work is organised into 15 independently reviewable Castr-core tranches plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
+The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so lane-local decisions land at lane heads rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) are parallel-safe on the current root under 02A and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
 
 No release may carry a complete/lossless claim broader than its current certificate. Castr's currently advertised broad surface remains blocked until the final certification tranche generates a zero-gap proof record on one integrated current-main commit, or until unsupported surfaces are explicitly removed/unadvertised and a narrower profile passes the shipped-product and certification gates. The present 4,124 passing tests and individually green remediation branches are useful evidence, but they are not that record.
 
@@ -44,7 +70,7 @@ No release may carry a complete/lossless claim broader than its current certific
 
 **Constraints:** the supported languages are large, some are executable rather than finite declarative grammars, standards evolve, general schema equivalence is undecidable, different properties require different instruments, and graph-shaped semantic objects cannot be made application-shaped merely because their carriers use JSON or contain constraints.
 
-**Success:** a finite, version-pinned support inventory; independent proof per semantic channel and pair; no unexplained exclusions; correct fail-closed treatment of genuine target impossibility; an integrated, reproducible release certificate; and public claims generated from that evidence.
+**Success:** a finite, version-pinned support inventory; independent proof per semantic channel and pair; no unexplained exclusions; correct fail-closed treatment of genuine target impossibility; an integrated, reproducible release certificate; and public claims generated from that evidence. Every proof is stated as a positive claim that goes green when it is true — including rejection behaviour, which is proved positively ("this input produces this stable diagnostic and no output"), never as an open-ended attempt to prove a negative.
 
 ### 1.2 Canonical OCE sources used
 
@@ -256,6 +282,8 @@ No characterisation test is promoted directly to an acceptance proof. It may pro
 
 These inherited decisions are already suspect and must be decided in Tranche 00 before their affected branches land.
 
+Three rows are **already owner-adjudicated in direction** and must not be re-litigated as open questions: `.agent/IDENTITY.md` (banner dated 2026-04-16) already mandates accepting and emitting explicit source `additionalProperties`, and ADR-040 already carries the matching amendment (clause 4 struck per IDENTITY.md on 2026-03-21). For the first, second, and catchall rows below, Tranche 00 therefore ratifies the **mechanism** (facet model, presence separation, migration path), not the direction. The same landing must repair IDENTITY.md's dead plan link — the referenced alignment slice now lives at `.agent/plans/current/paused/explicit-additional-properties-support.md`.
+
 | Inherited behaviour/policy                                                       | Why it is suspect                                                                                                                                                                                             | Recommended first-principles disposition                                                                                                                                                                    |
 | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Reject all non-strict objects and remove unknown-key semantics from IR           | Valid JSON Schema/OpenAPI/Zod inputs include absent/true/schema-valued additional properties, passthrough, catchall, and unevaluated semantics. It contradicts “all valid source features parse into the IR.” | Restore distinct input-acceptance, output-retention/stripping, catchall-validation, and unevaluated semantics to the application-value IR. Target writers may reject only genuinely impossible mappings.    |
@@ -341,18 +369,36 @@ These inherited decisions are already suspect and must be decided in Tranche 00 
 Create one generated/typed support contract. It is product policy and drives behaviour; it is not a prose/config checklist.
 
 ```ts
+type TrancheId =
+  | '00'
+  | '01'
+  | '02A'
+  | '02B'
+  | '02C'
+  | '03'
+  | '04'
+  | '05'
+  | '06'
+  | '07'
+  | '08'
+  | '09'
+  | '09G'
+  | '10'
+  | '11'
+  | '12'
+  | '13'
+  | '14';
+
 interface SourceFeatureObligationBase {
-  readonly id: string;
+  readonly id: ObligationId;
   readonly productProfile: ProductProfileId;
-  readonly artifactKind: 'value-contract' | 'interaction-contract';
-  readonly artifactSchemaVersion: string;
-  readonly facets: readonly (
-    'accepted-input' | 'produced-output' | 'processing' | 'annotations' | 'interaction'
-  )[];
+  readonly artifactKind: ArtifactKind;
+  readonly artifactSchemaVersion: ArtifactSchemaVersion;
+  readonly facets: readonly SemanticFacet[];
   readonly source: {
     readonly language: SourceLanguage;
-    readonly version: string;
-    readonly profile: string;
+    readonly version: SourceVersionId;
+    readonly profile: SourceProfileId;
     readonly construct: string;
     readonly syntaxForms: readonly string[];
     readonly positions: readonly SemanticPosition[];
@@ -360,73 +406,125 @@ interface SourceFeatureObligationBase {
   };
   readonly channels: readonly SemanticChannel[];
   readonly publicEntrypoints: readonly PublicEntrypoint[];
-  readonly witnesses: readonly WitnessId[];
   readonly sourceOracle: OracleId;
   readonly historicalDecision?: DecisionId;
 }
 
 export type ProofObligation =
   | (SourceFeatureObligationBase & {
-      readonly sourceAdmission: {
-        readonly kind: 'out-of-scope';
+      readonly status: 'resolved';
+      readonly sourceAdmission: 'out-of-scope';
+      readonly rejection: {
         readonly diagnostic: DiagnosticCode;
         readonly proof: ProofId;
+        readonly witnesses: readonly WitnessId[];
       };
-      readonly irCarrier?: never;
-      readonly edges?: never;
     })
   | (SourceFeatureObligationBase & {
-      readonly sourceAdmission: {
-        readonly kind: 'admitted';
-        readonly proof: ProofId;
-      };
+      readonly status: 'resolved';
+      readonly sourceAdmission: 'admitted';
+      readonly admissionProof: ProofId;
+      readonly admissionWitnesses: readonly WitnessId[];
       readonly irCarrier: IrCarrierId;
       readonly edges: readonly TransformationEdgeObligation[];
     });
 
-export interface TransformationEdgeObligation {
+interface TransformationEdgeBase {
   readonly id: EdgeId;
   readonly target: TargetProfileId;
   readonly targetArtifactKind: ArtifactKind;
   readonly selectedFacets: readonly SemanticFacet[];
+  // Must be a subset of the owning obligation's `channels`; the generator/validator
+  // rejects any edge channel the obligation does not declare.
   readonly channels: readonly SemanticChannel[];
-  readonly role:
-    'native-representation' | 'explicit-projection' | 'descriptive-rendering' | 'migration';
-  readonly projectionBoundary?: BoundaryContractId;
-  readonly disposition: TargetDisposition;
+  readonly targetOracle: OracleId;
+  readonly witnesses: readonly WitnessId[];
 }
 
-export type TargetDisposition =
+export type TransformationEdgeObligation =
+  | (TransformationEdgeBase & {
+      readonly role: 'native-representation' | 'migration';
+      readonly disposition: ExactDisposition | ImpossibleDisposition;
+    })
+  | (TransformationEdgeBase & {
+      readonly role: 'explicit-projection';
+      readonly projectionBoundary: BoundaryContractId;
+      readonly disposition: ExactDisposition | GovernedWideningDisposition | ImpossibleDisposition;
+    })
+  | (TransformationEdgeBase & {
+      readonly role: 'descriptive-rendering';
+      readonly assurance: RenderingAssuranceId;
+      readonly disposition?: never;
+    });
+
+export type ExactDisposition =
   | { readonly kind: 'exact-native'; readonly proof: ProofId }
   | {
       readonly kind: 'exact-encoded';
       readonly proof: ProofId;
       readonly encoding: EncodingId;
-    }
-  | {
-      readonly kind: 'governed-widening';
-      readonly policy: ProjectionPolicyId;
-      readonly proof: ProofId;
-      readonly findings: FindingContractId;
-    }
-  | { readonly kind: 'impossible'; readonly diagnostic: DiagnosticCode };
+    };
+
+export interface GovernedWideningDisposition {
+  readonly kind: 'governed-widening';
+  readonly policy: ProjectionPolicyId;
+  readonly proof: ProofId;
+  readonly findings: FindingContractId;
+}
+
+export interface ImpossibleDisposition {
+  readonly kind: 'impossible';
+  readonly diagnostic: DiagnosticCode;
+  // Fail-closed rejection proof required by Section 2.4 item 11 and counted in
+  // `discharged` (Section 12.2); without it the release sum is not computable.
+  readonly proof: ProofId;
+  // Normative citation establishing target-language impossibility, per adversarial
+  // review G: lack of code is `unimplemented`, never `impossible`.
+  readonly normativeEvidence: SpecClauseId;
+}
+
+export type TargetDisposition =
+  ExactDisposition | GovernedWideningDisposition | ImpossibleDisposition;
 ```
+
+The shape rules above are deliberate and binding on the generator:
+
+- **Top-level discriminants only.** `status`, `sourceAdmission`, `role`, and `kind` are direct
+  string-literal members because TypeScript does not narrow a parent union from a nested
+  discriminant. The contract itself must pass the same `tsc` exhaustiveness gate this programme
+  demands of generated code; consumers never need `!`, `as`, or ad-hoc `in` guards.
+- **Role constrains disposition.** `governed-widening` is reachable only through an
+  `explicit-projection` edge, and a `descriptive-rendering` edge carries no disposition at all —
+  the two headline laundering defects (F-20, F-21) are unrepresentable, not merely reviewed for.
+- **Every edge names its own target oracle and witnesses.** Section 2.4 item 6 and the Tranche 11
+  rule that no obligation inherits proof from a different source, target, artifact kind, facet,
+  or position require target-side evidence to live on the edge, not on a shared base.
+- **`impossible` carries proof and normative evidence.** The fail-closed rejection test and the
+  normative citation are part of the row; a bare diagnostic cannot discharge an impossibility.
+- **All identifiers are branded** (`ObligationId`, `ProofId`, `SourceProfileId`,
+  `ArtifactSchemaVersion`, `SpecClauseId`, …). A bare `string` cannot cite an unratified profile
+  or version. `ArtifactKind` and `SemanticFacet` are single named types reused everywhere; no
+  inline literal union may restate them.
 
 Tranche 00 also needs an explicit, non-certifying planning state so inventory closure does not depend on proofs that the later tranches have not built yet:
 
 ```ts
 export interface PlannedObligation {
-  readonly id: string;
+  readonly id: ObligationId;
   readonly authoritativeInventoryKey: string;
   readonly status: 'planned';
-  readonly ownerTranche: `0${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}` | `${10 | 11 | 12 | 13}`;
+  readonly ownerTranche: TrancheId;
   readonly unresolvedFields: readonly string[];
   readonly requiredDecision?: DecisionId;
-  readonly blocksCertification: true;
 }
 
 export type ProgrammeObligation = PlannedObligation | ProofObligation;
 ```
+
+`ProgrammeObligation` narrows on `status` (`'planned' | 'resolved'`). Certification blocking is
+derived — `status === 'planned'` always blocks — rather than stored as a constant field no
+validator could compute. `ownerTranche` uses the shared `TrancheId`, which names every real owner
+including `00`, the `02A`–`02C` stages, the conditional `09G`, and `14`.
 
 `planned` is an inventory-accounting state, never a semantic disposition and never evidence. Tranche 00 may close with planned rows only when every row names its owning tranche and unresolved fields. Each format/cross-cutting tranche replaces its planned rows with fully classified, executable obligations. Tranche 14 and every release certificate reject any remaining planned row.
 
@@ -448,7 +546,7 @@ The contract's runtime proof driver must execute the observable behaviour named 
 
 ### 5.2 Suggested estate layout
 
-Keep unit and integration tests beside their owning code, as canonical OCE requires. Reuse existing Castr proof estates rather than creating a second taxonomy.
+Keep unit and integration tests beside their owning code, as canonical OCE requires. Reuse existing Castr proof estates rather than creating a second taxonomy. Before the shared harness lands, inventory the existing `lib/tests-transforms` estate on current `main` firsthand — the 2026-07-06 pre-flight scout recorded it already running full parse→IR→write→parse scenarios — and rehome or upgrade its cases explicitly; this report's Section 11 reasons about the proof estate largely through PR branches, and the on-main estate is a claim to measure, not to assume.
 
 ```text
 lib/src/contracts/
@@ -545,10 +643,10 @@ flowchart TD
     D3 --> D4
     D1 --> D5["09 MCP"]
     D2 --> D5
-    D3 --> D5
+    D3 -.->|"while Zod-origin MCP is claimed"| D5
     T04 --> T10["10 Resource safety (staged)"]
     D4 --> T10
-    D5 --> T10
+    D5 -.->|"only if a protocol runtime ships"| T10
     D1 --> T11["11 Typed edges"]
     D2 --> T11
     D3 --> T11
@@ -563,7 +661,7 @@ flowchart TD
     GA --> GC["Composed claim"]
 ```
 
-Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
+Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. Dashed edges are conditional: they bind only while their labelled condition holds, and an unmet condition removes the edge rather than blocking the chain — Tranche 10's loader/ref and generated-output stages are unconditional, so the certification spine (`T10 → T12 → T13 → T14`) never waits on an MCP runtime surface that does not ship. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
 
 ## 7. Foundational tranches
 
@@ -574,6 +672,20 @@ Every tranche is independently reviewable and leaves main green. A tranche may d
 Make the completeness claim finite, resolve contradictory doctrine, and prevent old implementation choices from becoming acceptance criteria by inertia.
 
 ### Required decisions
+
+The court is **staged**; one global gate holding all 22 decisions plus the whole authoritative
+inventory would be the programme's single largest executability risk. The stages are:
+
+- **T00a — owner charter (gates everything):** decisions 1–4, 19, and 20, plus the Section 1.4
+  product statement. This is one owner walk over questions the challenge register already answers
+  with recommendations; it requires no inventory work.
+- **T00b — lane charters (gate only their lanes):** decisions 5–9, 12, 13, and 16–18 move to the
+  head of their owning format tranches (05–09) and are ratified there. Batching them globally is
+  sequencing preference, not dependency.
+- **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 10, 11, 21, and 22.
+
+Inventory closure follows the same staging: T00a closes with `planned` rows naming owning
+tranches; each lane resolves its own rows at its T00b head. The decisions themselves:
 
 Record one decision for every item below before changing the associated model or tests:
 
@@ -612,7 +724,11 @@ The recommended governing decisions are those in the challenge register: choose 
 - Define a typed directed transformation graph. Do not manufacture edges for Cartesian symmetry.
 - Classify every authoritative source feature as admitted or out-of-scope with its proof/diagnostic; only then populate every obligation on every ratified directed edge with one target disposition and its witness/diagnostic.
 - Give every historical compromise a disposition: retain with normative/user-value warrant, replace, or delete.
-- Maintain a decision-impact ledger for every challenged live authority. At minimum reconcile ADR-023, ADR-024, ADR-030, ADR-031, ADR-032, ADR-035, ADR-038, ADR-039, ADR-040, ADR-041, ADR-042, ADR-043, ADR-044, ADR-045, ADR-046, ADR-047, and ADR-048, plus `.agent/IDENTITY.md` and `.agent/directives/requirements.md`. Record retain/amend/supersede explicitly; when a decision changes, update its status, index, and backlinks and synchronise affected acceptance criteria, vision, and roadmap surfaces in the same landing. Correct the pre-existing ADR-038 index/status mismatch as part of that reconciliation. No implementation may contradict a still-authoritative decision first.
+- Reconcile every challenged live authority, recording retain/amend/supersede **in the authority surface itself** — the ADR file, its indexes, and the landing commit are the record (`permanent-doc-is-the-consolidation-record`); no separate persisted ledger file is created. Reconciliation is **per-landing**, as Section 3.1 already requires: each ADR or directive is adjudicated in the landing that first touches its subject, not in one batch. The full reconciliation surface, in authority order:
+  - **Directives (outrank ADRs; owner-gated):** `.agent/directives/principles.md` — its §Input-Output Pair Compatibility Model and §Strict-By-Default ("Objects: Always strict") are directly reversed by this programme's recommendations, and the file's own header requires **prior explicit owner approval** to edit, so its amendment is a named T00a owner decision, not an agent action; `.agent/directives/VISION.md` ("Universal Schema Conversion … between any supported format" — the identity F-17 retires); `.agent/directives/requirements.md`; `.agent/IDENTITY.md`; and `.agent/rules/input-output-pair-compatibility.md`, which operationalises the superseded model as a reviewer checkpoint.
+  - **ADRs whose theses this programme overturns or amends:** ADR-017 (bundle-only pipeline vs bundled/unbundled reference-graph equivalence), ADR-018 (3.1-first unconditional normalisation vs same-version-by-default with explicit migration edges — until reconciled, Tranches 05 and 06 are unlandable under Section 3.1's own rule), ADR-019 (Scalar `upgrade()` adoption and `x-ext` metadata), **ADR-027** (round-trip validation as correctness proof — the most load-bearing collision in the estate; Section 4.2 and adversarial review B retire its thesis), ADR-028 (IR/OpenAPI consolidation that the discriminated roots replace), ADR-029 and ADR-037 (source structure and domain boundaries, both predating the proposed `lib/src/contracts/` domain and new test roots), plus ADR-011 (AJV runtime validation, renamed as one independent oracle among several) and the originally listed ADR-023, ADR-024, ADR-030, ADR-031, ADR-032, ADR-035, ADR-038, ADR-039, ADR-040, ADR-041, ADR-042, ADR-043, ADR-044, ADR-045, ADR-046, ADR-047, and ADR-048. ADR-047/048 are currently **Proposed** and ADR-038 **Superseded**; their dispositions record that starting state rather than treating all rows as accepted live authority.
+  - **Estate integrity defects to repair in the same reconciliation:** the ADR estate is forked — `.agent/directives/ADR-044/045/046` are divergent duplicates of the `docs/architectural_decision_records/` copies and must collapse to the `docs/` originals with pointers; reconcile file `Status:` lines against **both** indexes (`README.md` and `SUMMARY.md`), fixing the ADR-038 mismatch (file Superseded, indexes Accepted), the inverse ADR-002 mismatch (file Accepted, indexes Superseded), the wrong H1 numbers inside ADR-018 and ADR-019, and `SUMMARY.md`'s staleness (missing rows, non-canonical statuses, and its "universal schema conversion" claim).
+  - When a decision changes, update its status, indexes, and backlinks and synchronise affected acceptance criteria, `VISION.md`, `roadmap.md`, and `SUMMARY.md` in the same landing. No implementation may contradict a still-authoritative decision first.
 - Generate outward support documentation from the contract. Human review approves wording; no Vitest test reads or hashes the prose.
 
 ### Behavioural proof shape
@@ -632,7 +748,8 @@ The inventory generator/validator is a separate build/static gate. It fails if a
 
 ### Acceptance
 
-- Zero contradictory live decisions; every affected accepted ADR and doctrine surface has an explicit, synchronised retain/amend/supersede outcome.
+- Acceptance is per stage: T00a closes on the owner charter alone; each T00b lane charter closes at its lane head; T00c closes before certification-facing tranches. "Complete" below means all stages have closed.
+- Zero contradictory live decisions on any landed surface; every affected doctrine surface and ADR has an explicit, synchronised retain/amend/supersede outcome recorded in the surface itself by the landing that touched it. The `principles.md` amendment carries explicit owner approval.
 - Product boundary, artifact-root, facet, profile/version, widening, and graph-ownership ADRs adopted.
 - Every authoritative inventory item has either a fully classified obligation or an explicit `planned` row naming its owning tranche and unresolved fields.
 - Contract schema and planning-mode validator reject missing, duplicate, orphaned, or ownerless inventory rows.
@@ -803,6 +920,8 @@ it('preserves an empty value-property collection through public persistence', ()
 `valueContractFixture`, `semanticArtifactView`, and `rootValuePropertyEntries` in these examples must be test-owned literal builders/extractors that do not reuse the production serializer's assumptions.
 
 ### Guard and persistence strategy
+
+Scope note: this tranche's guard acceptance covers the artifact roots, discriminators, facets, and non-reference fields it introduces. Reference-bearing guard coverage, and the full mechanically derived guard estate rederived from PR #20, complete after Tranche 03 lands the identity/reference primitives — that ordering is deliberate and matches Section 11.5.
 
 - Generate or mechanically derive runtime validation from the authoritative IR model so later fields cannot be omitted from a hand-maintained deep guard.
 - Validate every external serialized value at the boundary and preserve the cause/path.
@@ -1398,17 +1517,33 @@ The conclusion covers only the intersection of channels named by all three certi
 The adapter owns a public envelope resembling:
 
 ```ts
-interface ProjectedApplicationContract {
-  readonly boundaryVersion: string;
-  readonly graphProfile: string;
-  readonly projectionProfile: string;
-  readonly outcome: 'exact' | 'widened' | 'rejected';
-  readonly valueContract?: CastrValueContractDocument;
+interface ProjectedApplicationContractBase {
+  readonly boundaryVersion: BoundaryVersionId;
+  readonly graphProfile: GraphProfileId;
+  readonly projectionProfile: ProjectionProfileId;
   readonly findings: readonly ProjectionFinding[];
-  readonly locationMapping: ProjectionLocationMap;
   readonly provenance: ProjectionProvenance;
 }
+
+export type ProjectedApplicationContract =
+  | (ProjectedApplicationContractBase & {
+      readonly outcome: 'exact' | 'widened';
+      readonly valueContract: CastrValueContractDocument;
+      readonly locationMapping: ProjectionLocationMap;
+    })
+  | (ProjectedApplicationContractBase & {
+      readonly outcome: 'rejected';
+      readonly valueContract?: never;
+      readonly locationMapping?: never;
+    });
 ```
+
+The envelope is discriminated on `outcome` so illegal states are unrepresentable: a successful
+projection (`exact` or `widened`) always carries its value contract and location mapping, and a
+rejected projection can carry neither — matching the rule that rejection produces no application
+artifact and no downstream stage runs. Rejection is an expected outcome on a public boundary, so
+consumers handle it through this closed union in the ordinary Result style rather than probing an
+optional field.
 
 Castr normally consumes only the validated public `valueContract`; the adapter retains graph findings/mappings and composes them with Castr target findings. No opaque RDF dataset, SHACL shape graph, JSON-LD context, or private graph type enters Castr's semantic IR.
 
@@ -1788,6 +1923,7 @@ Names may follow repository conventions, but responsibilities must remain separa
 - Property seeds rotate in scheduled CI, while fixed seeds remain on PRs.
 - Mutation runs targeted modules on PRs and the full critical set before merge/release according to measured cost; required seeded mutants always run.
 - Smoke runs on the exact packed/built artifact produced for release.
+- Every tranche declares, before it lands, where each of its gates runs — blocking local hook, PR CI, scheduled, or on-demand — with a measured runtime budget. Official corpora, mutation runs, and smoke suites must not silently join the blocking local pre-commit/pre-push chain; growing that chain unbounded violates `no-unbounded-host-load` and makes local landings impractical.
 - The merge commit/current integrated head reruns every gate. Historical branch-tip green checks are not reused as evidence.
 
 ### Certificate contents
@@ -1919,13 +2055,13 @@ A green historical branch check proves only that branch's exercised paths. It is
 | [#27](https://github.com/EngraphCode/castr/pull/27) | Explicit `additionalProperties`   |           Draft |    Mergeable | Red by design, run `29641947801` | **Essential semantic input, not mergeable wholesale. Split and re-prove.**           |
 | [#28](https://github.com/EngraphCode/castr/pull/28) | Pre-rebase preservation twin      |           Draft |   Conflicted | No run                           | **Candidate wholly superseded by #27; verify patch equivalence, then close.**        |
 
-Mergeability and checks are volatile GitHub state, not architectural facts. Re-query them immediately before integration.
+Everything in this table — the PR count, open/draft states, mergeability, CI run IDs, and the dispositions themselves — is a snapshot at the review cut-off, not architectural fact. The same applies to the headline test counts in the Executive verdict. Whoever picks up a disposition re-verifies the PR's live state, diff, and CI on the current head first; a disposition whose premises have moved is re-adjudicated, not executed.
 
 ### 11.3 Detailed disposition of every open PR
 
 #### PR #10 — programme record and machine-local gate footprint
 
-Extract the tracked-file scanner/ignore correction and any still-accurate evidence. Do not migrate universal-compiler assumptions. Do not merge the old remediation topology, finding ledger, or integration sequence as policy: this report and its generated support contract supersede them. Before closure, record a commit/file-level migration or patch-equivalence ledger proving which unique evidence moved and which content was deliberately retired; PR prose alone is insufficient. Close the branch after the small correction and durable evidence have been migrated to Tranche 01/14.
+Extract the tracked-file scanner/ignore correction and any still-accurate evidence. Do not migrate universal-compiler assumptions. Do not merge the old remediation topology, finding ledger, or integration sequence as policy: once the parent plan derived from this report is ratified, that plan replaces them as policy, with this report as its evidence record. Before closure, verify at commit/file level which unique evidence moved and which content was deliberately retired, recording the verification in the closing commit and PR closure note — the destination surfaces are the record; PR prose alone is insufficient and no separate ledger file is created. Close the branch after the small correction and durable evidence have been migrated to Tranche 01/14.
 
 #### PR #11 — fidelity harness and test truth
 
@@ -1969,7 +2105,7 @@ Split and rework. Salvage the logger/E2E relocation and concrete isolation fixes
 
 #### PR #23 — practice transplant
 
-The branch's practice snapshot is stale relative to the pinned canonical OCE source used here and conflicts with current main. Do not merge it as a prerequisite for compiler proof. After the product proof programme stabilises, selectively sync only canonical deltas that have a present consumer and pass Castr's own practice gates. Before closure, record a commit/file-level migration or patch-equivalence ledger for unique deltas. The concepts are useful; this assembled branch is superseded.
+The branch's practice snapshot is stale relative to the pinned canonical OCE source used here and conflicts with current main. Whether it merges before compiler proof is governed by the owner's standing 2026-06-19 sequencing decision (see the authority note at the top of this report), which the parent plan must reconcile — this disposition records the report's recommendation only. If retired, selectively sync only canonical deltas that have a present consumer and pass Castr's own practice gates, and verify unique-delta migration at commit/file level in the closing commit and PR closure note rather than in a separate ledger file. The concepts are useful; this assembled branch is superseded.
 
 #### PR #26 — `maybePretty` fail-fast and typed omit
 
@@ -1981,7 +2117,7 @@ This is the most important semantic correction and directly supersedes two bad p
 
 #### PR #28 — preservation twin
 
-Close without merging only after a commit/file-level patch-equivalence ledger confirms that #27 or another retained location contains every unique semantic change and proof worth preserving. Its own description says the rebased successors live in #27 and marks it “DO NOT MERGE,” but prose/labels alone are not preservation evidence. Retain the remote branch/tag only as long as repository policy requires historical recovery.
+Close without merging only after a commit/file-level patch-equivalence check confirms that #27 or another retained location contains every unique semantic change and proof worth preserving, with the verification recorded in the closing commit and PR closure note. Its own description says the rebased successors live in #27 and marks it “DO NOT MERGE,” but prose/labels alone are not preservation evidence. Retain the remote branch/tag only as long as repository policy requires historical recovery.
 
 ### 11.4 Historical PRs #1–#9, #19, #22, #24, #25 and #29
 
@@ -2002,23 +2138,31 @@ Close without merging only after a commit/file-level patch-equivalence ledger co
 ```mermaid
 flowchart TD
     X["Dependency-only #14: independent early slice"]
-    B["Reworked agnostic harness from #11"] --> C["02A Current-fidelity foundation"]
-    A["Boundary and artifact ADRs"] --> D["Value/interaction roots + legacy adapter"]
+    B["Reworked agnostic harness from #11 (01)"] --> C["02A Current-fidelity foundation"]
+    A["Boundary and artifact ADRs (T00a)"] --> D["Value/interaction roots + legacy adapter (02B)"]
     C --> D
-    D --> E["Value and processing facets #27"]
-    E --> F["Identity/ref half #18"]
+    D --> E["Value and processing facets #27 (02C)"]
+    E --> F["Identity/ref half #18 (03)"]
     F --> G["Guards #20 + traversal #12"]
-    G --> H["JSON #16"]
-    G --> I["Zod #13"]
-    G --> K["Interactions #17 + security #18"]
-    G --> L["Codegen #15/#26 + MCP"]
-    H --> J["Typed transformation fan-in"]
+    F --> ADM["Unified admission boundary + fail-closed preflight (04)"]
+    G --> ADM
+    ADM --> H["JSON #16 (05)"]
+    ADM --> I["Zod #13 (07)"]
+    ADM --> K["Interactions #17 + security #18 (06)"]
+    H --> L["Codegen #15/#26 (08)"]
+    I --> L
+    K --> L
+    H --> M["MCP projection (09)"]
+    K --> M
+    I -.->|"while Zod-origin MCP is claimed"| M
+    H --> J["Typed transformation fan-in (11)"]
     I --> J
     K --> J
     L --> J
+    M --> J
 ```
 
-This graph is semantic, not a command to merge the named branches unchanged. The dependency-only extraction from #14 is an independent early slice, not a prerequisite edge from the boundary/harness work. #21's hygiene rework may proceed in parallel but must validate the new estate before fan-in. #10 and #23 sit outside as migration sources; #28 closes only after patch-equivalence verification. The artifact ADRs, discriminated roots, compatibility adapter, processing algebra, typed profile registry, and graph projection boundary are new work not represented by a current PR.
+This graph is **derived from the Section 6 dependency model** — the bracketed tranche numbers are the correspondence, and any future edit changes Section 6 first and rederives this view; the two graphs must never be maintained independently. It is semantic, not a command to merge the named branches unchanged. The admission-boundary node (Tranche 04) has no current PR: like the artifact ADRs, discriminated roots, compatibility adapter, processing algebra, typed profile registry, and graph projection boundary, it is new work. Guards deliberately land after the identity/reference primitives (see the Tranche 02 scope note). The dependency-only extraction from #14 is an independent early slice, not a prerequisite edge from the boundary/harness work. #21's hygiene rework may proceed in parallel but must validate the new estate before fan-in. #10 and #23 sit outside as migration sources; #28 closes only after patch-equivalence verification.
 
 ### 11.6 Duplicate and conflicting proof ownership
 
@@ -2439,19 +2583,25 @@ Those limits must appear beside public claims, not only in internal notes.
 
 ### 15.4 First safe execution sequence
 
-1. Open Tranche 00's decision court and establish the planning contract/schema. In parallel, extract an artifact-agnostic #11 semantic harness, land #14's dependency-only fix separately, and repair #21's concrete isolation/E2E issues; none of those slices may pre-empt the pending product boundary.
-2. Ratify the application-contract domain, discriminated artifact roots/facets, profile/version model, governed-widening rules, desired public surface, graph ownership, and legacy compatibility ADRs; adjudicate every historical-compromise row. Re-plan if the boundary is rejected.
-3. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
-4. Introduce versioned value/interaction artifacts and the legacy `CastrDocument` adapter.
-5. Extract #27's application-value input/output/catchall semantics into the new facets, then split the identity/provenance/reference half of #18.
-6. Rederive #20 guards and #12 traversal from the new artifacts.
-7. Run independent JSON #16, Zod #13, OpenAPI interaction #17/#18-security, codegen #15/#26, and MCP projection lanes.
-8. Execute the typed transformation graph, resource/hostile layer, mutation layer, packed-product smoke, and exact/projection certificates.
-9. If graph interoperation is advertised, execute conditional Tranche 09G and compose graph/projection/Castr certificates whose exact/widen/reject outcome matches each claim; require all three to be exact for a lossless claim.
-10. Publish only the profile-specific claims generated from the applicable green certificate.
+This sequence is a recommendation to the parent plan, not self-executing policy (see the
+authority note at the top of this report).
+
+1. Author the parent plan and its series of incremental implementation plans from this report (owner directive, 2026-08-22). The plans include extracting the value from all existing open PRs per Section 11 and then closing them, and explicitly reconcile the owner's 2026-06-19 roadmap sequencing decision.
+2. Open the T00a owner charter walk (product boundary, artifact roots, legacy path, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, extract an artifact-agnostic #11 semantic harness, land #14's dependency-only fix separately, repair #21's concrete isolation/E2E issues, and land the parallel-safe 02A defect fixes for the already-reproduced silent-loss defects (F-01, F-03, F-04) on the current root; none of these slices may pre-empt the pending product boundary.
+3. Ratify the remaining T00a decisions — application-contract domain, discriminated artifact roots/facets, profile/version model, governed-widening rules, desired public surface, graph ownership, and legacy compatibility ADRs — adjudicating historical-compromise rows per-landing as their subjects are touched. Re-plan if the boundary is rejected.
+4. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
+5. Introduce versioned value/interaction artifacts and the legacy `CastrDocument` adapter.
+6. Extract #27's application-value input/output/catchall semantics into the new facets, then split the identity/provenance/reference half of #18.
+7. Rederive #20 guards and #12 traversal from the new artifacts, and land the unified admission boundary and fail-closed preflight (Tranche 04).
+8. Run independent JSON #16, Zod #13, OpenAPI interaction #17/#18-security, codegen #15/#26, and MCP projection lanes, each opening with its T00b lane charter.
+9. Execute the typed transformation graph, resource/hostile layer, mutation layer, packed-product smoke, and exact/projection certificates, gated by the T00c certification-policy decisions.
+10. If graph interoperation is advertised, execute conditional Tranche 09G and compose graph/projection/Castr certificates whose exact/widen/reject outcome matches each claim; require all three to be exact for a lossless claim.
+11. Publish only the profile-specific claims generated from the applicable green certificate.
 
 ### 15.5 Present release decision
 
-**No current Castr commit or open PR set proves the revised bounded theorem. Universal or unprofiled “complete/lossless” claims—and any release carrying Castr's currently advertised broad version of those claims—remain blocked.** A narrower release is not categorically forbidden: it must remove or unadvertise unsupported surfaces and pass Tranches 13 and 14 for the exact narrower profile. The repository has a strong base of tests and substantial repair work, but it still lacks adopted product/artifact/profile ADRs, the discriminated root/processing model, an approved support contract, independent all-channel oracles, a zero-gap typed transformation graph, correct integration of conflicting PR semantics, and a current shipped-artifact certificate.
+Release scope is constitutively an owner decision; this section records the evidence basis for it, not a standing prohibition this report could impose.
+
+**No current Castr commit or open PR set proves the revised bounded theorem. The evidence therefore does not support universal or unprofiled “complete/lossless” claims—including Castr's currently advertised broad version of those claims.** A narrower release is not categorically forbidden: it must remove or unadvertise unsupported surfaces and pass Tranches 13 and 14 for the exact narrower profile. The repository has a strong base of tests and substantial repair work, but it still lacks adopted product/artifact/profile ADRs, the discriminated root/processing model, an approved support contract, independent all-channel oracles, a zero-gap typed transformation graph, correct integration of conflicting PR semantics, and a current shipped-artifact certificate.
 
 The shortest credible path is not to merge all remediation branches and not to extend Castr into RDF/SHACL. It is to ratify the application-contract boundary, establish the artifact-agnostic harness, introduce value/interaction roots and the legacy adapter, extract #27's value semantics ahead of #13/#16, integrate the remaining typed lanes, and require one final all-green profile certificate. Graph interoperation remains a separately composed adapter claim.
