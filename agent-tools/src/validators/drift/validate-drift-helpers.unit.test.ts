@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { findPdrCountDrift } from './validate-drift-helpers.js';
+import { findGitleaksPinDrift, findPdrCountDrift } from './validate-drift-helpers.js';
 
 describe('findPdrCountDrift', () => {
   it('passes when a definite estate claim matches the file count', () => {
@@ -40,5 +40,41 @@ describe('findPdrCountDrift', () => {
   it('passes when "all N PDR files" matches', () => {
     const surfaces = [{ name: 'ref.md', content: 'all 91 PDR files transplanted together.' }];
     expect(findPdrCountDrift(surfaces, 91)).toEqual([]);
+  });
+});
+
+describe('findGitleaksPinDrift', () => {
+  const pinEnv = 'GITLEAKS_VERSION=8.30.0\nGITLEAKS_SHA256_LINUX_X64=abc\n';
+
+  it('passes when the pin and minVersion agree', () => {
+    expect(findGitleaksPinDrift(pinEnv, 'minVersion = "8.30.0"\n')).toEqual([]);
+  });
+
+  it('flags a minVersion that disagrees with the pin', () => {
+    expect(findGitleaksPinDrift(pinEnv, 'minVersion = "8.31.0"\n')).toEqual([
+      {
+        surface: '.gitleaks.toml',
+        detail:
+          'minVersion "8.31.0" != pinned GITLEAKS_VERSION "8.30.0" (.claude/hooks/_lib/gitleaks-pin.env) — gitleaks treats minVersion as a warning only, so this drift scans silently',
+      },
+    ]);
+  });
+
+  it('flags an unparseable pin file', () => {
+    expect(findGitleaksPinDrift('# empty\n', 'minVersion = "8.30.0"\n')).toEqual([
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail: 'GITLEAKS_VERSION= line not found — the security pin has no readable source',
+      },
+    ]);
+  });
+
+  it('flags a gitleaks config with no minVersion', () => {
+    expect(findGitleaksPinDrift(pinEnv, '[allowlist]\n')).toEqual([
+      {
+        surface: '.gitleaks.toml',
+        detail: 'minVersion = "…" line not found — the config no longer declares the version floor',
+      },
+    ]);
   });
 });

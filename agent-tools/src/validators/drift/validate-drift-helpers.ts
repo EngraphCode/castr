@@ -79,3 +79,50 @@ export function findPdrCountDrift(
   }
   return violations;
 }
+
+/**
+ * Detect drift between the single-sourced gitleaks security pin
+ * (`.claude/hooks/_lib/gitleaks-pin.env`, read by both the SessionStart
+ * provisioning hook and the CI secret-scan step) and `.gitleaks.toml`'s
+ * declared `minVersion`. gitleaks treats `minVersion` as a WARNING only
+ * (measured 2026-08-22: a config requiring 9.99.0 scanned and exited 0 under
+ * 8.30.0), so this drift is silent by construction at scan time — the gate
+ * has to live here, where it fails closed in pre-commit and CI.
+ */
+export function findGitleaksPinDrift(
+  pinEnvContent: string,
+  gitleaksTomlContent: string,
+): DriftViolation[] {
+  const pinMatch = /^GITLEAKS_VERSION=(\S+)\s*$/m.exec(pinEnvContent);
+  if (!pinMatch) {
+    return [
+      {
+        surface: '.claude/hooks/_lib/gitleaks-pin.env',
+        detail: 'GITLEAKS_VERSION= line not found — the security pin has no readable source',
+      },
+    ];
+  }
+  const minVersionMatch = /^minVersion = "([^"]+)"\s*$/m.exec(gitleaksTomlContent);
+  if (!minVersionMatch) {
+    return [
+      {
+        surface: '.gitleaks.toml',
+        detail: 'minVersion = "…" line not found — the config no longer declares the version floor',
+      },
+    ];
+  }
+  const pinned = pinMatch[1];
+  const declared = minVersionMatch[1];
+  if (declared !== pinned) {
+    return [
+      {
+        surface: '.gitleaks.toml',
+        detail:
+          `minVersion "${declared}" != pinned GITLEAKS_VERSION "${pinned}" ` +
+          `(.claude/hooks/_lib/gitleaks-pin.env) — gitleaks treats minVersion as a warning ` +
+          `only, so this drift scans silently`,
+      },
+    ];
+  }
+  return [];
+}
