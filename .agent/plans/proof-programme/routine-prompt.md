@@ -1,0 +1,74 @@
+# Proof-Programme Firing Prompt
+
+This is the standing prompt each scheduled firing of the proof-programme Routine receives
+(ADR-051, Accepted 2026-08-22; fresh cloud session per firing, three per day). You are a
+zero-context session: this file plus the repo surfaces it names are your whole brief.
+Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating protocol) and
+[ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md).
+
+## Exit criteria (declared before anything runs)
+
+- **This firing** ends when it has driven or advanced exactly one slice (or completed one
+  bounded red-head repair), or determined it must idle/defer — in every case landing its
+  counter update and closing with handoff. One slice per firing, never more.
+- **The loop** ends when the queue is empty and the programme-complete acceptance is met, or
+  the owner closes it, or the kill switches below fire. Three consecutive zero-progress
+  firings → disable the Routine, notify the owner, and post the stand-down broadcast.
+
+## Protocol, in order
+
+1. **Ground**: run the `engraph-start-right-quick` skill; register identity per
+   `register-active-areas-at-session-open`.
+2. **STOP check (exact path)**: if the file `.agent/plans/proof-programme/STOP` exists, post
+   the stand-down broadcast (below, criterion "STOP file present"), do nothing else, and end
+   the session. Check the literal path — no glob, no interpretation.
+3. **Claims scan**: `pnpm agent-tools:collaboration-state -- claims list` — any live peer or
+   owner claim touching your target surface defers this firing (land the counter update via
+   the bookkeeping path, note the deferral in the completion summary, stop).
+4. **WIP = 1**: if a non-draft slice PR is open, drive it (CI, review threads under ADR-051
+   clause 4, merge under clause 3) and do nothing else. Otherwise claim the next `pending`
+   queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
+   parent plan's frontmatter (rides in your slice PR) and re-verify the brief's premises
+   against live state — premises moved means re-adjudicate, not execute.
+5. **Execute one atomic TDD slice** per the parent plan's §Operating protocol step 4:
+   pre-execution code-expert review (two dispatches) → failing proof → minimal change →
+   reviewer pass per `invoke-reviewers` → full gates → PR whose final commit carries the
+   slice's state landing (row → `complete`, counters, delivery-ledger row, handoff
+   surfaces) → green → merge under clause 3 → orphan continuity commit → stop.
+6. **Branches** (each is normal operation, not an error):
+   - **Red head on arrival** (gates failing for causes outside your slice): at most ONE
+     bounded green-the-head repair slice through the normal TDD/gate/review path, recorded
+     in the delivery ledger and the completion summary; still red at firing end → stop and
+     notify; subsequent firings attempt only head repair. Never skip, disable, or
+     quarantine a test.
+   - **Genuine owner fork**: write it to [`queued-decisions.md`](./queued-decisions.md)
+     (question + recommendation + what-it-blocks) and reroute to the next unblocked row.
+     Never decide release claims, `principles.md` edits, ADR acceptance, or sequencing
+     supersession yourself.
+   - **Slice fails its second consecutive firing**: mark the row `blocked` with a written
+     diagnosis, convert its PR to a draft (never close it), and land the queue-state change
+     via the bookkeeping path (row `blocked`, `failures:` count, pointer to the draft's
+     diagnosis) so the next firing's scan sees it on the base.
+7. **Counters** (durable repo state, parent plan §Failure counters): read
+   `zero_progress_streak:` and the claimed row's `failures:` before acting; increment or
+   reset as part of your landing. The streak resets only on substantive progress (slice PR
+   merged, commit advancing a claimed slice, row completed, head-repair landed, queued
+   decision recorded); an idle firing always increments it. An idle or deferring firing
+   lands its update as a **bookkeeping PR** (counter/continuity state only, no product
+   code; the ADR-051 clause 6 mechanism, merged at the clause 3 bar; not a slice PR, never
+   substantive progress).
+8. **Close**: run the `engraph-session-handoff` skill. The completion notification must
+   name: what merged, what advanced, queued decisions written, blocked slices, counter
+   values landed. Never end with the repo red without a clause-6 record, or a PR
+   half-driven without the next firing's path clear.
+
+## Stand-down broadcast (used by every loop exit this firing can perform)
+
+```bash
+pnpm agent-tools:collaboration-state -- comms append --message \
+  "STAND-DOWN proof-programme Routine — criterion: <which>; closeout: <one line of what the loop accomplished>"
+```
+
+Post it on: STOP-file observation, the three-zero-progress disable, and the terminal
+queue-empty exit. An owner pause applied directly to the Routine needs no broadcast from
+you.

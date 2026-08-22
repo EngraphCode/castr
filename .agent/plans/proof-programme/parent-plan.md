@@ -6,7 +6,7 @@ todos:
     status: completed
   - id: Q-01
     content: 'Loop readiness: fresh-container hook chain green unattended + Routine mechanism proven end to end'
-    status: pending
+    status: in_progress
   - id: Q-02
     content: 'Pre-T01 harness-extraction slice: artifact-agnostic rework of #11 runner mechanics'
     status: pending
@@ -56,6 +56,9 @@ todos:
   - id: Q-14
     content: 'Doctrine amendment wave (B-09 APPROVE): rewrite principles.md, VISION.md, requirements.md, IDENTITY.md, and the input-output-pair-compatibility rule to the ratified charter, each landing recording retain/amend/supersede in the surface itself'
     status: pending
+  - id: Q-15
+    content: 'Fresh-container full-chain readiness: run the entire blocking gate chain unattended in a genuinely fresh container, fix or slice every gap found (measured 2026-08-22: unbuilt agent-tools/dist leaves PreToolUse guards failing OPEN for hours)'
+    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -65,7 +68,7 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Eligible now: Q-01 (next — it arms the Routine, since
 the walk closed before its proof), Q-02..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+outcome), Q-14, Q-15; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -168,15 +171,20 @@ re-ballot or re-plan. Source: report §7 T00a.
 8.30.0 install), `routine-prompt.md` in this collection, the Routine itself. Non-goals: no
 product code; no queue slice execution during the dry run. Acceptance (`e2e`, observed): a
 fresh container completes the full blocking hook chain unattended; the cron Routine is
-created in fresh-session mode, fires once, the spawned session executes the prompt's no-op
-path (STOP-check → report → handoff), posts the dry-run's stand-down broadcast (loop
-identity, criterion "dry-run complete", one-line closeout) per `loop-exit-criteria-required`
-— proving the broadcast path ADR-051 clause 6 requires on every firing-side loop exit — and
-the completion notification reaches the owner. The Routine is then paused until Q-00 closes
-— or, when Q-00 is already `complete` with success verdicts on B-12, B-13, and B-16,
-un-paused under the ballot's after-walk rule instead: arming is order-independent, performed
-by whichever of Q-00 closure and this slice's proof lands second, so neither ordering
-strands the Routine paused after full authorisation. The arming step applies the recorded
+created **disabled** in fresh-session mode and fired once manually; the spawned session
+executes the prompt's no-op path (STOP-check → report → handoff), posts the dry-run's
+stand-down broadcast (loop identity, criterion "dry-run complete", one-line closeout) per
+`loop-exit-criteria-required` — proving the broadcast path ADR-051 clause 6 requires on
+every firing-side loop exit — and the completion notification reaches the owner. The
+Routine is then paused until Q-00 closes — or, when Q-00 is already `complete` with success
+verdicts on B-12, B-13, and B-16, armed under the ballot's after-walk rule instead: arming
+is order-independent, performed by whichever of Q-00 closure and this slice's proof lands
+second, so neither ordering strands the Routine paused after full authorisation.
+**Arming sequences strictly after this slice's own PR merges**: an enabled Routine with
+Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step
+(with the B-15 notification configuration re-checked: push and email on, no digest) is the
+last act of the Q-01 firing, performed only once the merged base carries the row's
+`complete` state. The arming step applies the recorded
 B-15 outcome to the Routine's notification configuration **before** un-pausing — including
 disabling routine completion-notification delivery on a B-15 REJECT — so the running loop's
 channels always match the accepted ADR's clause 7. A B-15 REJECT strikes clause 7's routine
@@ -279,11 +287,31 @@ that split is a slice-plan authoring act and takes the assumptions-expert review
 other (per-slice detail is deliberately NOT pre-authored here: the report already carries the
 per-tranche instructions, and duplicating them would rot).
 
-## Operating protocol (the background loop)
+**Q-14 — Doctrine amendment wave (B-09 APPROVE).** Surface: `principles.md` (§Input-Output
+Pair Compatibility Model, §Strict-By-Default's object clause), `VISION.md`,
+`requirements.md`'s universal claims, `IDENTITY.md`, and
+`.agent/rules/input-output-pair-compatibility.md` — rewritten to express the ratified B-01
+charter, each landing recording retain/amend/supersede in the surface itself. Non-goals: no
+product code; no new doctrine beyond the charter's entailments. Acceptance (`non-code`):
+every named surface expresses the charter with its disposition recorded; no surface still
+asserts the universal-IR framing; gates green (including `validate-reference-direction`).
+Source: ballot B-09; report §7. Gate: B-09 (success verdict — recorded 2026-08-22).
+
+**Q-15 — Fresh-container full-chain readiness.** Surface: the entire blocking gate chain
+(SessionStart hooks, PreToolUse guards, pre-commit, pre-push) run unattended in a genuinely
+fresh container; every gap fixed in-slice or spun into its own queue row. Measured evidence
+(2026-08-22, this container): unbuilt `agent-tools/dist` left the PreToolUse guards failing
+OPEN for hours (`.claude/logs/hook-errors.log` recorded ten fail-open entries) — the guards'
+fail-open posture on missing build artefacts is itself a candidate finding. Q-01 ships the
+gitleaks provisioning half and a dist-presence warning; this slice proves the rest.
+Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
+proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
+→ push unattended with every guard active, recorded in the slice PR. Source: Q-01
+pre-execution reviews (2026-08-22). Gate: none (eligible immediately).
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
-(Proposed until B-12; while Proposed, clause-3 merges are NOT in force and every slice PR
-waits for explicit per-PR owner approval) — its clauses own the merge policy (clause 3), review-bot convergence
+(**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
+own the merge policy (clause 3), review-bot convergence
 (clause 4), cadence (clause 2), and escalation/kill switches (clause 6); this section states
 mechanics only and cites clauses rather than restating them.
 
@@ -329,8 +357,8 @@ mechanics only and cites clauses rather than restating them.
    the repo red without a B-16 record, a PR half-driven without the next firing scheduled, or
    continuity drift uncommitted.
 
-The Routine's standalone prompt is authored and proven by Q-01 as
-`.agent/plans/proof-programme/routine-prompt.md` (deliberately not linked until it exists).
+The Routine's standalone prompt is [`routine-prompt.md`](./routine-prompt.md) (authored and
+proven by Q-01).
 
 ## Reviewers
 
@@ -347,7 +375,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-01 (next), Q-02..Q-09, Q-13, Q-14.
+- **Eligible now**: Q-01 (next), Q-02..Q-09, Q-13, Q-14, Q-15.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
