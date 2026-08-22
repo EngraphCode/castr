@@ -54,7 +54,7 @@ That theorem needs three things before most repairs land:
 2. independent behavioural oracles at source and target boundaries; and
 3. an explicit adjudication of historical Castr compromises so old tests do not turn accidental or undesirable behaviour into the new contract.
 
-The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so lane-local decisions land at lane heads rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) are parallel-safe on the current root under 02A and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
+The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so lane-local decisions land at lane heads rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) form a named **pre-02A defect slice** that may land in parallel with the T00a walk and Tranche 01 (the one explicit exception to the Section 6 dependency spine, defined there), and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
 
 No release may carry a complete/lossless claim broader than its current certificate. Castr's currently advertised broad surface remains blocked until the final certification tranche generates a zero-gap proof record on one integrated current-main commit, or until unsupported surfaces are explicitly removed/unadvertised and a narrower profile passes the shipped-product and certification gates. The present 4,124 passing tests and individually green remediation branches are useful evidence, but they are not that record.
 
@@ -661,7 +661,7 @@ flowchart TD
     GA --> GC["Composed claim"]
 ```
 
-Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. Dashed edges are conditional: they bind only while their labelled condition holds, and an unmet condition removes the edge rather than blocking the chain — Tranche 10's loader/ref and generated-output stages are unconditional, so the certification spine (`T10 → T12 → T13 → T14`) never waits on an MCP runtime surface that does not ship. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
+Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. One named exception precedes the spine: the **pre-02A defect slice** — failing-proof-first fixes for the already-reproduced silent-loss defects F-01, F-03, and F-04 on the current root, through current public seams. It may land in parallel with T00a and Tranche 01 because it needs neither the ratified boundary nor the shared harness and blesses nothing about the legacy root; 02A's remaining scope (semantic-equality and persistence conventions, harness integration) keeps the full `T00 → T01 → 02A` dependency. Dashed edges are conditional: they bind only while their labelled condition holds, and an unmet condition removes the edge rather than blocking the chain — Tranche 10's loader/ref and generated-output stages are unconditional, so the certification spine (`T10 → T12 → T13 → T14`) never waits on an MCP runtime surface that does not ship. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
 
 ## 7. Foundational tranches
 
@@ -676,9 +676,12 @@ Make the completeness claim finite, resolve contradictory doctrine, and prevent 
 The court is **staged**; one global gate holding all 22 decisions plus the whole authoritative
 inventory would be the programme's single largest executability risk. The stages are:
 
-- **T00a — owner charter (gates everything):** decisions 1–4, 19, and 20, plus the Section 1.4
-  product statement. This is one owner walk over questions the challenge register already answers
-  with recommendations; it requires no inventory work.
+- **T00a — owner charter (gates everything):** decisions 1–4, 14, 15, 19, and 20, plus the
+  Section 1.4 product statement. Decisions 14 (opaque round-trip preservation) and 15 (normative
+  extensions and unknown fields) sit here because they shape the artifact/extension model that
+  Tranche 02C builds and every format lane consumes — they are cross-lane, not lane-local. This
+  is one owner walk over questions the challenge register already answers with recommendations;
+  it requires no inventory work.
 - **T00b — lane charters (gate only their lanes):** decisions 5–9, 12, 13, and 16–18 move to the
   head of their owning format tranches (05–09) and are ratified there. Batching them globally is
   sequencing preference, not dependency.
@@ -2219,11 +2222,18 @@ source-admission and carriage obligations
     × legal positions × applicable facets/channels
 
 transformation-edge obligations
-  = Σ admitted source obligations applicable to each declared directed edge/profile
+  = Σ admitted source obligations applicable to each declared directed
+    PROOF-BEARING edge/profile (roles: native-representation, migration,
+    explicit-projection; descriptive-rendering edges are excluded)
 
 projection obligations
-  = Σ explicit facet-selection, widening, migration and rendering rules
+  = Σ explicit facet-selection, widening and migration rules
   ⊂ transformation-edge obligations (reported subset; never added again)
+
+descriptive-rendering assurances
+  = Σ advertised rendering edges, each citing its RenderingAssuranceId
+  (reported separately; discharged through the Tranche 13 shipped-product
+  assurance gate, never through the semantic-edge sums below)
 
 discharged
   = admitted-source carriage proofs + out-of-scope admission proofs
@@ -2237,7 +2247,7 @@ unexplained gap
     - discharged
 ```
 
-Release requires `unexplained gap = 0`. A lossless certificate additionally requires `governed-widening = 0`. The projection count is a tagged view of transformation-edge obligations, not a third additive population. Counts must include zero-case assertions so an accidentally empty generated inventory fails before the semantic suite runs. Intentionally absent edges are reported separately with their governing product/admission decision and must be unreachable; they are not zero-row “proofs.”
+Release requires `unexplained gap = 0` **and** every descriptive-rendering assurance green through its Tranche 13 gate — excluding rendering edges from the semantic sums does not exempt them from certification. A lossless certificate additionally requires `governed-widening = 0`. The projection count is a tagged view of transformation-edge obligations, not a third additive population. Counts must include zero-case assertions so an accidentally empty generated inventory fails before the semantic suite runs. Intentionally absent edges are reported separately with their governing product/admission decision and must be unreachable; they are not zero-row “proofs.”
 
 ### 12.3 Proof IDs and bidirectional links
 
@@ -2587,7 +2597,7 @@ This sequence is a recommendation to the parent plan, not self-executing policy 
 authority note at the top of this report).
 
 1. Author the parent plan and its series of incremental implementation plans from this report (owner directive, 2026-08-22). The plans include extracting the value from all existing open PRs per Section 11 and then closing them, and explicitly reconcile the owner's 2026-06-19 roadmap sequencing decision.
-2. Open the T00a owner charter walk (product boundary, artifact roots, legacy path, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, extract an artifact-agnostic #11 semantic harness, land #14's dependency-only fix separately, repair #21's concrete isolation/E2E issues, and land the parallel-safe 02A defect fixes for the already-reproduced silent-loss defects (F-01, F-03, F-04) on the current root; none of these slices may pre-empt the pending product boundary.
+2. Open the T00a owner charter walk (product boundary, artifact roots, legacy path, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, extract an artifact-agnostic #11 semantic harness, land #14's dependency-only fix separately, repair #21's concrete isolation/E2E issues, and land the pre-02A defect slice (the Section 6 exception: F-01, F-03, F-04 on the current root); none of these slices may pre-empt the pending product boundary.
 3. Ratify the remaining T00a decisions — application-contract domain, discriminated artifact roots/facets, profile/version model, governed-widening rules, desired public surface, graph ownership, and legacy compatibility ADRs — adjudicating historical-compromise rows per-landing as their subjects are touched. Re-plan if the boundary is rejected.
 4. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
 5. Introduce versioned value/interaction artifacts and the legacy `CastrDocument` adapter.
