@@ -342,10 +342,11 @@ landing.
 ## Prerequisites
 
 - **Blocking for the loop's arming**: Q-01.
-- **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 (the
-  standing 2026-06-19 order), via Q-00.
-- **Blocking for the tranche spine (Q-10 onward)**: T00a, via Q-00.
-- **Eligible immediately**: Q-01, Q-08, Q-09.
+- **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
+  (RATIFY recorded 2026-08-22).
+- **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
+  (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
+- **Eligible now**: Q-01 (next), Q-02..Q-09, Q-13, Q-14.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
