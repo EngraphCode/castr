@@ -213,7 +213,8 @@ per-tranche instructions, and duplicating them would rot).
 ## Operating protocol (the background loop)
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
-(Proposed until B-12) — its clauses own the merge policy (clause 3), review-bot convergence
+(Proposed until B-12; while Proposed, clause-3 merges are NOT in force and every slice PR
+waits for explicit per-PR owner approval) — its clauses own the merge policy (clause 3), review-bot convergence
 (clause 4), cadence (clause 2), and escalation/kill switches (clause 6); this section states
 mechanics only and cites clauses rather than restating them.
 
@@ -226,7 +227,8 @@ mechanics only and cites clauses rather than restating them.
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
    firing with a note, it does not race.
 3. **WIP = 1**: if a slice PR is open, drive it (CI, review threads under ADR-051 clause 4,
-   merge under clause 3) and do nothing else. Otherwise claim the next eligible brief, mark it
+   merge under clause 3 once the ADR is Accepted, else explicit per-PR owner approval) and do
+   nothing else. Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
 4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
    (two dispatches, per
@@ -235,7 +237,8 @@ mechanics only and cites clauses rather than restating them.
    [`invoke-reviewers`](../../rules/invoke-reviewers.md) (`code-reviewer` always;
    `test-reviewer` on test/harness surfaces; domain expert by surface; `docs-adr-expert` on
    ADR/doctrine surfaces; `assumptions-expert` whenever the firing authors or splits a slice
-   plan) → full gates → PR → green → merge (clause 3) → mark `complete` → update the
+   plan) → full gates → PR → green → merge (clause 3 once Accepted; explicit per-PR owner approval
+   while Proposed) → mark `complete` → update the
    delivery ledger and handoff surfaces → orphan continuity commit → stop.
 5. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
    [`queued-decisions.md`](./queued-decisions.md) with a recommendation; the firing reroutes

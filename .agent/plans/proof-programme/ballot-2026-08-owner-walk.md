@@ -99,13 +99,16 @@ including `.agent/rules/input-output-pair-compatibility.md`.
 
 ### B-10 Wholesale challenge-register ratification
 
-Ratify the report §3.2 register's **recommended dispositions wholesale** (32 rows; the three
-rows the report marks already-owner-adjudicated — non-strict objects, omitted
-`additionalProperties`, Zod catchall — are ratified as mechanism only, direction already
-standing) as the forward direction, with per-landing reconciliation of each affected
-ADR/directive when its subject is first touched (the register's rows become implementation,
-not future decisions). Any row you strike here becomes a queued decision instead.
-Recommendation: RATIFY wholesale.
+Ratify the report §3.2 register's **recommended dispositions** (32 rows; the three rows the
+report marks already-owner-adjudicated — non-strict objects, omitted `additionalProperties`,
+Zod catchall — are ratified as mechanism only, direction already standing) with a
+**stage-respecting scope**: rows whose subject is a T00a matter become implementation
+direction now; rows whose subject the report's staged court reserves for T00b/T00c (decisions
+5–13, 16–18, 21, 22) are endorsed as the **default recommendation each consumer-head charter
+walks in with** — this verdict does not pre-close those staged gates, it sets their
+starting position. Per-landing reconciliation of each affected ADR/directive happens when its
+subject is first touched. Any row you strike here becomes a queued decision instead.
+Recommendation: RATIFY with that scope.
 
 **Verdict:**
 
@@ -114,9 +117,11 @@ Recommendation: RATIFY wholesale.
 The standing order (transplant first → remediation → explicit-additionalProperties) predates
 the 2026-08-22 planning contract. Recommendation: SUPERSEDE it with this parent plan's queue —
 the pre-02A defect slices (remediation-02's core) and PR extraction/closure run under the
-queue; remaining transplant work (Oak parity phases) is **paused as a named position** and
-re-enters the queue only by a future owner decision. Roadmap updated accordingly in the
-follow-up landing.
+queue; remaining transplant work (Oak parity phases) is **paused as a named position with a
+concrete re-entry record**: queued-decision QD-2 holds the re-entry question with a named
+review trigger (revisit at programme completion, or earlier on your ask), and the paused
+plan carries the pointer — the pause cannot strand the work silently. Roadmap updated
+accordingly in the follow-up landing.
 
 **Verdict:**
 
@@ -179,4 +184,8 @@ seeded (as Proposed, fleshed out by Q-10..Q-12 slices), the B-09 amendments sche
 early slices, the active-lane dispositions executed per the parent plan's §Active-lane
 transition, roadmap and continuation-prompt banners, and this ballot marked CLOSED with the
 date. Q-01 (loop readiness) is not gated on this walk and may already have proven the
-Routine; the walk's close is what un-pauses it for real slices.
+Routine. **The Routine un-pauses for real slices only if B-12 is ACCEPT and B-13 and B-16
+are RATIFY** (the merge and red-head authorisations the loop cannot run without); a REJECT
+or DEFER on any of those leaves the Routine paused and the programme in owner-driven,
+per-PR-approval mode until a revised ADR-051 is re-balloted. Closing the walk with verdicts
+recorded never by itself arms anything.

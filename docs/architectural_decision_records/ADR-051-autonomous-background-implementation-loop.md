@@ -40,9 +40,16 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    recorded carry-forward disposition under clause 4); base not diverged from the tested
    head's merge base; diff within the claimed slice's scope. Any other state queues for the
    owner. This generalises the owner's PR-30 instruction (2026-08-22) into standing policy.
-4. **Review-bot convergence.** At most two fix rounds per PR for automated-reviewer findings;
-   a third round of fresh findings is recorded as carry-forward dispositions (reply on each
-   thread, queue entry for the substance) and the PR proceeds under clause 3. Human review
+   **Not in force until this ADR is Accepted**: while the Status line reads Proposed, every
+   slice pull request — including any pre-ballot slice — merges only on explicit per-PR
+   owner approval, exactly as before this record existed.
+4. **Review-bot convergence.** At most two fix rounds per PR for automated-reviewer
+   findings; a third round of fresh findings is recorded as carry-forward dispositions
+   (reply on each thread, queue entry for the substance) and the PR proceeds under clause 3.
+   **The cap applies only to non-blocking refinements.** A bot finding that identifies a
+   genuine correctness, security, or data-loss defect in the change is blocking in every
+   round — it is verified and fixed, or the PR stops and the defect is escalated to the
+   owner; it is never carried forward past a merge (`no-warning-toleration`). Human review
    comments are never capped: they are addressed or escalated, always.
 5. **Owner decisions are queued, never made.** A genuine fork is written to a
    programme-owned queued-decisions register — a durable, owner-readable surface in the plan
