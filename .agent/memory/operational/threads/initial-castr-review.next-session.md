@@ -56,9 +56,11 @@ mandated. Branch: `feat/initial-castr-review`.
   blocking gate (Q-00) and [ADR-051](../../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
   (Proposed) as the autonomous-loop authority. **Resume authority is now the parent plan.**
 - **Next safe step (2026-08-22, current):** the parent plan IS authored (see the
-  planning-contract-EXECUTED bullet above) — do not re-author it. The next actions, in
-  order: (1) the owner walks the W-0 ballot; (2) the immediately eligible slices Q-01/Q-08/
-  Q-09 per the parent plan's queue; (3) everything else per the queue once verdicts land.
+  planning-contract-EXECUTED bullet above) — do not re-author it. Two tracks run **in
+  parallel**: the owner walks the W-0 ballot (owner-only — agents cannot advance it and must
+  not wait on it), while any agent may execute the immediately eligible slices Q-01/Q-08/
+  Q-09 per the parent plan's queue (WIP = 1, pre-ballot active-lane rule in the parent
+  plan's §Active-lane transition). Everything else follows the queue once verdicts land.
   Consult the parent plan's queue and operating protocol, not the historical blocks below.
   The 2026-07-06 block is retained as history:
 - **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →

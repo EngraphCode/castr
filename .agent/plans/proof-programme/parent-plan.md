@@ -1,4 +1,5 @@
 ---
+zero_progress_streak: 0
 todos:
   - id: Q-00
     content: 'Owner walk W-0: ratify the ballot (T00a charter, standing authorisations, sequencing reconciliation)'
@@ -105,7 +106,10 @@ marked **outcome gate** is the exception: it is eligible on any recorded verdict
 rule does not apply to it.
 
 **Failure counters are repo state:** each row carries a `failures:` count in this frontmatter
-(absent = 0) and the programme a `zero_progress_streak:` count; every firing increments or
+(absent = 0 is the declared default, so rows need no initial field) and the programme the
+`zero_progress_streak:` field **explicitly initialised in this frontmatter** — the
+kill-switch counter is never read through an absence default, so a deleted or missing value
+is observable drift rather than a silent zero; every firing increments or
 resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
 thresholds. The streak resets only on **substantive progress** — a slice PR merged, a new
 commit advancing a claimed slice, a queue row completed, a head-repair fix landed, or a new
@@ -152,7 +156,11 @@ the completion notification reaches the owner. The Routine is then paused until 
 — or, when Q-00 is already `complete` with success verdicts on B-12, B-13, and B-16,
 un-paused under the ballot's after-walk rule instead: arming is order-independent, performed
 by whichever of Q-00 closure and this slice's proof lands second, so neither ordering
-strands the Routine paused after full authorisation. Evidence note: the platform surface
+strands the Routine paused after full authorisation. The arming step applies the recorded
+B-15 outcome to the Routine's notification configuration **before** un-pausing — including
+disabling delivery on a B-15 REJECT — so the running loop's channels always match the
+accepted ADR's clause 7; the pre-verdict dry run may prove the notification mechanism with
+delivery on, as a bounded one-firing proof, without pre-empting that verdict. Evidence note: the platform surface
 (fresh-session-per-fire Routines with completion notifications) is confirmed against the live
 platform API in the authoring session; this slice proves the end-to-end behaviour.
 
@@ -362,7 +370,13 @@ both now carrying pending-disposition banners pointing here:
 
 Until the Q-00 landing executes the ratified disposition, the banners keep the lane honest;
 after it, per-slice plans land in `active/` as the single primary atomic plan while in
-flight.
+flight. **Pre-ballot pickups (Q-01/Q-08/Q-09):** the claimed slice's atomic plan lands in
+`active/` as the single primary, and the two banner-carrying plans remain in place as the
+**explicit parked-in-place exception** the `AGENT.md` lane rule names — their
+pending-disposition banners are that parking record — so a pre-ballot slice neither creates
+a second primary contract nor displaces the transplant plan ahead of its B-11 verdict; when
+the slice completes, its plan moves out per lifecycle and the parked plans' banners stand
+unchanged.
 
 ## Foundation alignment and first-principles check
 
