@@ -1,0 +1,84 @@
+# ADR-051: Autonomous Background Implementation Loop for the Proof Programme
+
+**Status:** Proposed
+**Date:** 2026-08-22
+**Related:** the proof-programme parent plan and its W-0 ballot (plan estate,
+`.agent/plans/proof-programme/`) hold the queue mechanics and this record's acceptance gate
+(ballot items B-12..B-16); reference direction per PDR-105 keeps this record link-free toward
+them · `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`
+
+---
+
+## Context
+
+The owner directed (2026-08-22) that the proof programme proceed "gently and slowly but
+continually, in the background, without me, until the plan is complete". The repo's doctrine
+forbids agents from manufacturing permission, and several programme decisions are
+constitutively the owner's. Autonomy therefore requires **standing, written authority** for
+the recurring judgement calls a background worker meets — merge, review-bot handling,
+escalation, pacing — decided once here rather than re-asked per slice. Cloud sessions are
+ephemeral; scheduled Routines can spawn a fresh session per firing, and the Practice estate
+(plans, thread records, napkin, handoff) is designed to be the memory between sessions.
+
+## Decision
+
+1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. Each firing
+   executes the operating protocol in the parent plan: STOP-file, Routine-state, and
+   active-claims checks first; WIP = 1 (drive the open slice PR, else claim the next eligible
+   queue item); one atomic TDD slice through the full gates and reviewer dispatches; then
+   session-handoff and stop. No persistent worker session; no parallel workers. Evidence:
+   the platform's fresh-session-per-fire Routine mode and completion notifications are
+   confirmed against the live platform API (2026-08-22, authoring session); the parent
+   plan's Q-01 slice proves the end-to-end behaviour (create → fire → fresh session →
+   notification received) before any product slice runs through it.
+2. **Cadence.** Default two firings per day. The owner may change cadence at will; agents may
+   lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
+   slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
+3. **Standing merge policy.** A slice PR merges without a per-PR owner ask when all of: every
+   check run green on the current head; every review conversation resolved (fixed, or a
+   recorded carry-forward disposition under clause 4); base not diverged from the tested
+   head's merge base; diff within the claimed slice's scope. Any other state queues for the
+   owner. This generalises the owner's PR-30 instruction (2026-08-22) into standing policy.
+4. **Review-bot convergence.** At most two fix rounds per PR for automated-reviewer findings;
+   a third round of fresh findings is recorded as carry-forward dispositions (reply on each
+   thread, queue entry for the substance) and the PR proceeds under clause 3. Human review
+   comments are never capped: they are addressed or escalated, always.
+5. **Owner decisions are queued, never made.** A genuine fork is written to the programme's
+   `queued-decisions.md` with a recommendation; the firing reroutes to the next unblocked
+   item. Nothing in this ADR authorises deciding anything the doctrine reserves to the owner
+   (release claims, `principles.md` edits, ADR acceptance, sequencing supersession).
+6. **Escalation and kill switches** (exit criteria per
+   `.agent/rules/loop-exit-criteria-required.md`, which owns the doctrine this clause
+   instantiates). A slice failing two consecutive firings is marked blocked with a written
+   diagnosis and skipped. Three consecutive zero-progress firings → the firing disables the
+   Routine and notifies the owner. A red head found on arrival is handled per the ballot's
+   B-16 policy. The owner can stop everything at any time by pausing/deleting the Routine or
+   committing a `STOP` file in the programme collection; every firing checks both before
+   acting. The loop's terminal exit: the queue empty and the programme-complete acceptance
+   met, or an owner close.
+7. **Observability.** Fresh-session firings run with completion notifications on; queued
+   decisions, blocked slices, and merges are named in the completion summary. The delivery
+   ledger and PR history are the audit trail.
+
+## Consequences
+
+- The programme progresses without owner attendance between ballots; owner effort
+  concentrates into ballots and queued-decision batches.
+- A push that would previously have waited on an ad-hoc "you may merge" now merges under
+  clause 3 — the loop can actually finish slices. The cost is accepted: a bad merge is
+  revertible, and the gate surface (full `check:ci`, review convergence, scope check) bounds
+  the risk.
+- Review-bot feedback cannot stall the loop indefinitely (clause 4), at the cost of some
+  valid bot findings landing later via the queue rather than in the originating PR.
+- If the Routine platform is unavailable or the subscription pauses, the loop suspends
+  safely: state is entirely in the repo, so any future firing resumes from the queue.
+
+## Alternatives considered
+
+- **One persistent self-rescheduling session** — rejected: context accumulation, container
+  reclamation, and drift; violates the fresh-grounding practice the estate is built for.
+- **Parallel workers over the claims machinery** — rejected for now: concurrency contradicts
+  "gently and slowly" and buys conflict risk; revisit only by owner decision.
+- **Per-PR owner merge approval** — rejected: throttles the loop to owner availability,
+  contradicting the directive; clause 3's conditions preserve the same bar the owner applied
+  to PR 30.

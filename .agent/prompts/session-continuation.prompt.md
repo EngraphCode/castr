@@ -8,6 +8,16 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **📋 2026-08-22 — PROOF-PROGRAMME PLANNING CONTRACT (owner directive).** The
+> [completeness/losslessness report (Rev 3)](../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
+> merged via PR #30 as dated evidence. Its parent plan is authored at
+> [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md) and is the
+> plan-of-record for the programme **once the
+> [W-0 ballot](../plans/proof-programme/ballot-2026-08-owner-walk.md) is ratified** — until
+> then no programme slice starts and the roadmap's 2026-06-19 sequence stands. Resuming
+> sessions: read the parent plan's queue and operating protocol before acting; the banner
+> below predates this contract.
+
 > **🔬 CURRENT TRUTH (2026-07-04, wide+deep review) — READ THIS FIRST.** The
 > [wide+deep review](../report/wide-deep-review-2026-07-04.md) re-proved **all five open
 > Criticals (C2–C6) live on today's `main`** while `pnpm check` passed green on the same tree,

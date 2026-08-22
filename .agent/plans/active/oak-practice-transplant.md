@@ -1,5 +1,13 @@
 # Oak → castr Practice Transplant (PRIMARY ACTIVE)
 
+> **⏳ DISPOSITION PENDING (2026-08-22):** the
+> [proof-programme parent plan](../proof-programme/parent-plan.md) is authored per the owner's
+> planning contract; its [W-0 ballot item B-11](../proof-programme/ballot-2026-08-owner-walk.md)
+> decides whether this plan's remaining phases **pause as a named position**
+> (move to `current/paused/`) or remain primary. Until that verdict lands, this plan's
+> standing 2026-06-19 primacy holds — do not start proof-programme remediation slices ahead
+> of it.
+
 **Status:** ACTIVE — primary plan
 **Created/Promoted:** 2026-06-05
 **Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges owner-invoked** (see the [`../delivery-ledger.md`](../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.

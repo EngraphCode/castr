@@ -110,6 +110,7 @@ Each ADR follows this structure:
 | [048](./ADR-048-compiler-internal-split-scope-and-value-gate.md)                  | Compiler-Internal Split — ADR-043 Scope Clarification and Value-Gate  | Proposed | 2026-06-19 |
 | [049](./ADR-049-single-node-runtime-and-version-single-source.md)                 | Support a Single Node Runtime (Node 24) and Single-Source the Version | Accepted | 2026-06-21 |
 | [050](./ADR-050-single-workspace-typescript-override.md)                          | Pin a Single Workspace TypeScript via a pnpm-workspace.yaml Override  | Accepted | 2026-06-21 |
+| [051](./ADR-051-autonomous-background-implementation-loop.md)                     | Autonomous Background Implementation Loop for the Proof Programme     | Proposed | 2026-08-22 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: `roadmap.md`
