@@ -125,7 +125,10 @@ is observable drift rather than a silent zero; every firing increments or
 resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
 thresholds. The landing has a merge path in every case: a firing driving a slice carries the
 counter update in that slice's PR; an idle or deferring firing lands it as a dedicated
-**bookkeeping PR** (scope: counter and continuity state only, no product code). The
+**bookkeeping PR** (scope: counter and continuity state only, no product code) — or, when a
+non-draft programme PR is already open (WIP = 1 forbids a second), as a counter-only commit
+pushed to that open PR's head branch, which reaches the base at that PR's merge; a
+completion summary is never a counter's landing surface. The
 bookkeeping merge's authority is **ADR-051 clause 6 itself**: the accepted ADR mandates that
 the counters are "persisted and reset by each firing" and delegates the concrete surface to
 this plan — a duty that entails its landing mechanism — so the bookkeeping PR merges as that

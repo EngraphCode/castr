@@ -98,15 +98,15 @@ if [ ! -w "$install_dir" ]; then
   }
   # The fallback dir may be absent from PATH, or present but positioned AFTER
   # the directory holding a stale binary — either way the fresh install would
-  # not win resolution. Prepend unconditionally for this process (harmless if
-  # already first; makes the post-install re-verify resolve the new binary),
-  # but PERSIST for subsequent shells only after the verified install succeeds
-  # — persisting first could point later shells at a stale binary there if
-  # any download/verify/install step fails.
-  case ":${PATH}:" in
-    *":${install_dir}:"*) ;;
-    *) persist_path_dir="$install_dir" ;;
-  esac
+  # not win resolution, in this process or later shells. Prepend for this
+  # process now (makes the post-install re-verify resolve the new binary) and
+  # mark the dir for persistence in BOTH cases: the persisted export line
+  # re-prepends, so it also cures a mis-ordered existing entry, and is a
+  # harmless no-op when the dir already resolves first. Persistence itself
+  # still waits until after the verified install — persisting first could
+  # point later shells at a stale binary there if any download/verify/install
+  # step fails.
+  persist_path_dir="$install_dir"
   PATH="${install_dir}:${PATH}"
   export PATH
 fi
