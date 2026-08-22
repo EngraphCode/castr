@@ -1,6 +1,6 @@
 # Oak → castr Practice Transplant — Phase Tracker
 
-**Primary plan:** [`../active/oak-practice-transplant.md`](../active/oak-practice-transplant.md)
+**Primary plan:** [`../current/paused/oak-practice-transplant.md`](../current/paused/oak-practice-transplant.md)
 **Spec:** [`../practice-alignment-brief.md`](../practice-alignment-brief.md)
 **Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03) and deleted
 on origin; work now proceeds on feature branches off `main`, one PR per slice** (see the

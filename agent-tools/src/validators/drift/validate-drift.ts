@@ -31,7 +31,7 @@ const SCANNED_SURFACES: readonly string[] = [
   '.agent/plans/transplant/README.md',
   '.agent/plans/transplant/reference-closure.md',
   '.agent/plans/transplant/relevance-ledger.md',
-  '.agent/plans/active/oak-practice-transplant.md',
+  '.agent/plans/current/paused/oak-practice-transplant.md',
   '.agent/prompts/session-continuation.prompt.md',
 ];
 

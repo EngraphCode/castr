@@ -282,7 +282,7 @@ records below are that era's truthful history.
 
 ### Lane: remediation 02–07 — deferred (trigger: owner names it after the transplant)
 
-- Controlling plan: [`../../../plans/active/02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md) (02 active-next; 03–07 follow).
+- Controlling plan: [`../../../plans/current/paused/02-ir-fidelity-proof-harness.md`](../../../plans/current/paused/02-ir-fidelity-proof-harness.md) (02 active-next; 03–07 follow).
 - Next safe step: the deep-review backlog (5 of 6 reproduced Criticals still
   unfixed) takes a **named position after** the full transplant (owner steer
   2026-06-19); not parked — `no-manufactured-permission` holds.

@@ -2,6 +2,53 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-22 (parent plan + autonomous loop — Incandescent Charring Ember / 5aef07, same session, hook-renamed)
+
+- **Designing "without me" autonomy in this estate reduces to one move: convert per-ask owner
+  approvals into standing written authority, and everything else into a queued-decision
+  surface.** The T00a gate, the merge ask, the convergence rule, and escalation each looked
+  like reasons autonomy could not work; all four became ballot items (B-09..B-15) + one
+  Proposed ADR (ADR-051). The loop never decides — it ratifies-forward (standing policy),
+  queues (genuine forks), or escalates (repeated failure). This is `no-manufactured-permission`
+  satisfied by construction rather than by restraint.
+- **The plan-skill's template inventory is another Oak iceberg gap**: `.agent/plans/templates/`
+  does not exist in castr, so the skill's "copy the closest template" step is unexecutable —
+  authored from the skill's requirement list + local plan idiom instead. Candidate Q-08-family
+  slice or transplant note; do not silently re-hit this per firing.
+- **Queue design lesson from the disposition-ledger rule**: the tranche tail is ONE queue row
+  (Q-12, split at execution time), not thirty pre-authored child plans — the report already
+  carries the per-tranche instructions, and pre-authoring would duplicate a moving target into
+  the plan estate.
+- **Six review-bot rounds on PR 30 quantified the convergence cap**: rounds 1–2 caught real
+  distinct classes; 3–4 were consequences of fixes; 5–6 sampled an unbounded refinement space.
+  Two fix rounds + carry-forward (ADR-051 clause 4) is measured policy, not a guess.
+- **PR 31 rounds 7–11 refine that measurement: authority-machinery text converges differently
+  from code.** Finding counts 4→2→2→4→2 with NO dud round — every finding was a real defect in
+  the permission/liveness/safety machinery (out-of-vocabulary verdict token, DEFER granting
+  undeferred authority, order-dependent arming deadlock, kill-switch counter resettable by
+  mandatory bookkeeping / never initialised / without a merge path, B-15 rejection silencing
+  clause 6 escalations). Clause 4's "blocking defects exempt from the cap" clause carried the
+  whole load: under it, none of these rounds were cappable, and rightly so. Lesson for the
+  ballot rewrite and future ADR text: authority text has a bounded defect surface (each verdict
+  × each clause × each ordering) — enumerate that product deliberately once, rather than letting
+  a reviewer walk it incrementally at one round per push.
+- **The W-0 walk landed as ten sequenced single questions, not a document** ("that is too much
+  text to parse, put the decisions to me here, one at a time"): AskUserQuestion with one
+  decision per call, recommendation first, the atomic item (B-12) asked LAST so its
+  clause-siblings' verdicts were known facts by then. 10/10 success verdicts in minutes,
+  one amendment (cadence 2→3/day) captured cleanly as a free-text option answer. Owner-walk
+  surfaces should be authored for THIS delivery mode: per-decision question text ≤ ~80 words,
+  document as the record, walk as the medium.
+- **PDR-105 fired live: an ADR may not LINK into the plan estate (doctrine→ephemeral), even
+  when the plan is the ADR's own acceptance gate** — `validate-reference-direction` blocked
+  the commit on ADR-051's two Related-line links to `parent-plan.md`/ballot. Cure: name the
+  plan-estate surfaces in prose/code-spans without markdown links; the plan side links INTO
+  the ADR freely (toward-the-fundamental direction). Also: an assumptions-expert plan review
+  can be right about a defect and wrong about the cure — F1 said "unblock Q-02..Q-07"; the
+  real fix was re-attributing the gate's warrant (standing 2026-06-19 order via B-11, not
+  T00a) because a report recommendation cannot un-gate an owner order. Verify the
+  reviewer's warrant like any other claim.
+
 ## 2026-08-22 (PR #30 review + Revision-3 takeover — Lucent Turning Compass / 5aef07)
 
 - **A strategy report's factual layer and its authority layer fail independently — verify both.**

@@ -5,19 +5,20 @@ mandated. Branch: `feat/initial-castr-review`.
 
 ## Participating agent identities (PDR-027, additive — never overwrite)
 
-| platform    | model          | agent_name               | session_id_prefix | role                                                 | first_session | last_session |
-| ----------- | -------------- | ------------------------ | ----------------- | ---------------------------------------------------- | ------------- | ------------ |
-| claude-code | claude-fable-5 | Fragrant Twining Glade   | 5367e2            | reviewer + recorder + team driver/closeout owner     | 2026-07-04    | 2026-07-06   |
-| claude-code | claude-fable-5 | Mistbound Fading Night   | fe1498            | remediation-02 pre-flight scout (boundary b)         | 2026-07-06    | 2026-07-06   |
-| codex       | GPT-5.6        | Torrid Smouldering Forge | 01a024            | completeness report publisher                        | 2026-08-21    | 2026-08-21   |
-| claude-code | claude-fable-5 | Lucent Turning Compass   | 5aef07            | PR-30 reviewer + Revision-3 steward (owner handover) | 2026-08-22    | 2026-08-22   |
+| platform    | model          | agent_name                  | session_id_prefix | role                                                             | first_session | last_session |
+| ----------- | -------------- | --------------------------- | ----------------- | ---------------------------------------------------------------- | ------------- | ------------ |
+| claude-code | claude-fable-5 | Fragrant Twining Glade      | 5367e2            | reviewer + recorder + team driver/closeout owner                 | 2026-07-04    | 2026-07-06   |
+| claude-code | claude-fable-5 | Mistbound Fading Night      | fe1498            | remediation-02 pre-flight scout (boundary b)                     | 2026-07-06    | 2026-07-06   |
+| codex       | GPT-5.6        | Torrid Smouldering Forge    | 01a024            | completeness report publisher                                    | 2026-08-21    | 2026-08-21   |
+| claude-code | claude-fable-5 | Lucent Turning Compass      | 5aef07            | PR-30 reviewer + Revision-3 steward (owner handover)             | 2026-08-22    | 2026-08-22   |
+| claude-code | claude-fable-5 | Incandescent Charring Ember | 5aef07            | parent-plan author + loop architect (same session, hook-renamed) | 2026-08-22    | 2026-08-22   |
 
 ## Lane state
 
 - **Owning plan(s):**
   [`strategy-vision-estate-overhaul.md`](../../../plans/future/strategy-vision-estate-overhaul.md)
   (this thread's product); remediation-02
-  ([`02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md))
+  ([`02-ir-fidelity-proof-harness.md`](../../../plans/current/paused/02-ir-fidelity-proof-harness.md))
   is the recommended next product slice but is NOT owned by this thread.
 - **Current objective:** the review is COMPLETE and committed (`b313479`,
   [`wide-deep-review-2026-07-04.md`](../../../report/wide-deep-review-2026-07-04.md)); the
@@ -48,11 +49,21 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Blockers / low-confidence areas:** W0 owner walk gates W1/W2/W4 shape; W3 validator cycle
   and W2 archaeology are parallel-safe now. principles.md edits need explicit owner approval
   (Q-015).
-- **Next safe step:** SUPERSEDED 2026-08-22 by the owner planning-contract bullet above — the
-  next step is authoring the parent plan from the Revision-3 report, which subsumes and
-  re-adjudicates the remediation-02 shape below (the report's §11.3 reworks the #11 harness
-  lane and §PR #10 retires the old remediation topology as policy once the parent plan is
-  ratified). The 2026-07-06 block is retained as history:
+- **2026-08-22 (later): planning contract EXECUTED** — PR #30 merged to `main` (`d4b88dc`,
+  all gates green, all 22 review threads resolved, three findings carried forward). The parent
+  plan is authored at [`plans/proof-programme/parent-plan.md`](../../../plans/proof-programme/parent-plan.md)
+  with the [W-0 ballot](../../../plans/proof-programme/ballot-2026-08-owner-walk.md) as its
+  blocking gate (Q-00) and [ADR-051](../../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
+  (Proposed) as the autonomous-loop authority. **Resume authority is now the parent plan.**
+- **2026-08-22 (latest): W-0 WALKED AND CLOSED** — the owner walked all ten reduced ballot
+  decisions interactively in-session (5aef07), every one a success verdict; ADR-051 is
+  **Accepted** (amended: three firings per day); the active-lane dispositions are executed
+  (both plans in `current/paused/`, banners carry the disposition table and the QD-2
+  pointer); the queue is live with Q-14 (B-09 doctrine wave) added.
+- **Next safe step (2026-08-22, current):** Q-01 (loop readiness) — it arms the Routine,
+  since the walk closed before its proof. Then the queue per the parent plan's operating
+  protocol (WIP = 1). Consult the parent plan, not the historical blocks below.
+  The 2026-07-06 block is retained as history:
 - **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review
   (`b313479`), the recording+fold bundle (`2a6d87d`), and the close bundle. THE CLEAR NEXT STEPS

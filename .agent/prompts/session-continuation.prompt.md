@@ -8,6 +8,19 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 
 ## Current state (2026-06-15 close) — read this first
 
+> **📋 2026-08-22 — PROOF PROGRAMME IS THE PLAN-OF-RECORD (W-0 walked and CLOSED).** The
+> owner walked the
+> [W-0 ballot](../plans/proof-programme/ballot-2026-08-owner-walk.md) interactively on
+> 2026-08-22: all ten decisions carry success verdicts,
+> [ADR-051](../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
+> is **Accepted** (amended: three firings per day), and **B-11 RATIFY supersedes the
+> roadmap's 2026-06-19 sequence with
+> [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md)'s
+> queue** (the transplant is paused as a named position — re-entry record QD-2). Next: Q-01
+> (loop readiness — it arms the Routine), then the queue. Resuming sessions: read the
+> parent plan's queue and operating protocol before acting; every banner below predates
+> this contract.
+
 > **🔬 CURRENT TRUTH (2026-07-04, wide+deep review) — READ THIS FIRST.** The
 > [wide+deep review](../report/wide-deep-review-2026-07-04.md) re-proved **all five open
 > Criticals (C2–C6) live on today's `main`** while `pnpm check` passed green on the same tree,
@@ -169,7 +182,7 @@ This block is current truth only. Branch/delivery state lives in
 > an undefined 'later' is never." Components — all required, all on the single branch
 > `feat/transplant-engraph-practice`, none parked:
 >
-> - **Practice transplant** ([`oak-practice-transplant.md`](../plans/active/oak-practice-transplant.md), tracker
+> - **Practice transplant** ([`oak-practice-transplant.md`](../plans/current/paused/oak-practice-transplant.md), tracker
 >   [`transplant/README.md`](../plans/transplant/README.md)) — Phases 0–5 complete and tagged; **Phase 6 is the
 >   owner-directed next slice**.
 > - **Engineering-infrastructure arc D1–D4** (tracker §Deep-enhancement arc).
@@ -187,7 +200,7 @@ This block is current truth only. Branch/delivery state lives in
 
 **Goal:** wholesale-transplant Oak's Practice estate into castr (localise `@oaknational`→`@engraph`), preserving castr's
 product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
-(baseline `transplant/phase-0-baseline`). **Read first:** `.agent/plans/active/oak-practice-transplant.md` (contract) →
+(baseline `transplant/phase-0-baseline`). **Read first:** `.agent/plans/current/paused/oak-practice-transplant.md` (contract) →
 `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` (the full
 inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions + rule candidate, `2026-06-09` Phase-4 lessons, `2026-06-07` firsthand corrections).
 
@@ -260,7 +273,7 @@ inventory/dispositions) → the napkin's latest entries (`2026-06-10` decisions 
 
 **One deep enhancement, single branch `feat/transplant-engraph-practice`** — all components required, none parked, owner names the next slice (currently **Phase 6**):
 
-- [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 6–9 (0–5 done) + engineering-infrastructure arc D1–D4
+- [Oak → castr Practice transplant](../plans/current/paused/oak-practice-transplant.md) Phases 6–9 (0–5 done) + engineering-infrastructure arc D1–D4
 - [deep-review remediation backlog](../plans/remediation/) 02–07 (01 complete + merged in)
 - [Explicit Additional Properties Support](../plans/current/paused/explicit-additional-properties-support.md) (feature slice)
 
@@ -286,7 +299,7 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 - the reviewer loop is closed with no open findings across `code-reviewer`, `test-reviewer`, `openapi-expert`, and `type-reviewer`
 - the ePerusteet real-spec validation slice closed on Thursday, 16 April 2026: `lib/tests-fixtures/openapi-samples/real-world/eperusteet-ext.json` is committed, the shared load boundary accepts and canonicalises it, and the reproduction exposed that current strict-object policy rejects explicit schema-valued `additionalProperties` at IR-build / generated seams
 - on Thursday, 16 April 2026, user clarification established the intended product boundary: Castr must accept and emit explicit `additionalProperties`, but must never invent them from input that did not declare them
-- the deep enhancement is one body of work (owner): the [Oak → castr Practice transplant](../plans/active/oak-practice-transplant.md) Phases 6–9 + arc D1–D4, the remediation backlog 02–07, and [explicit-additional-properties-support.md](../plans/current/paused/explicit-additional-properties-support.md) are all required components on the single branch — sequenced, never parked, owner names the next slice (currently Phase 6)
+- the deep enhancement is one body of work (owner): the [Oak → castr Practice transplant](../plans/current/paused/oak-practice-transplant.md) Phases 6–9 + arc D1–D4, the remediation backlog 02–07, and [explicit-additional-properties-support.md](../plans/current/paused/explicit-additional-properties-support.md) are all required components on the single branch — sequenced, never parked, owner names the next slice (currently Phase 6)
 
 ---
 
@@ -331,7 +344,7 @@ wired; five new upstream Oak bugs flagged for back-flow. Phase 3 (tag `transplan
 
 **⚠️ LIVE NOW — your tool calls are guarded.** `.claude/settings.json` routes Bash/Edit/Write through `run-pretooluse-guard.mjs`: dangerous-git patterns and PDR-044 content fingerprints are **denied**; an unbuilt `dist` fails **OPEN** (warns, never bricks). A blocked call is the policy in `.agent/hooks/policy.json`, not a bug. agent-tools `test` is **informational** (filtered out of the blocking gate via `--filter=!@engraph/agent-tools`; 13/885 failures, all P6/P8 content); `repo-validators:check` carries **5 green BLOCKING validators** (`lifecycle-scripts`/`pretooluse-guard-routing`/`drift`/`fitness-vocabulary`/`stale-script`), 3 sequenced at their phases (`collaboration-state`→P8, `subagents`→P6, Oak `portability`→P7). **The sequenced validators' "crashes" are NOT bugs — do NOT try to "fix"/silence them: they hard-fail by design on absent infrastructure (Oak tests assert it), truthfully reporting castr's P6/P8 infra isn't installed yet; a 2026-06-07 trial fix was reverted (Oak clean at `ad649710`).** (Note: the guards live on the transplant branch; remediation branches off `docs/initial-deep-review` predate them.) **Gotcha (verified firsthand — it blocked my own command):** the Bash guard substring-matches the WHOLE command, so a blocked pattern anywhere in the command string — including an `echo`/test payload or a dangerous-command literal quoted inside a commit message — is denied. Keep such literals out of commands; when a commit message must discuss them, write it to a file and use `git commit -F <file>`, never `-m`. The guards also activate **mid-session** when `.claude/settings.json` changes, so your current session may already be guarded.
 
-**Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/active/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/active/napkin.md` latest entries (`2026-06-17` + `2026-06-10`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
+**Read first, in order:** `.agent/directives/AGENT.md` → `metacognition.md` → this prompt (§Practice Transplant) → `.agent/plans/current/paused/oak-practice-transplant.md` (execution contract — note **owner-locked scope §6**) → `.agent/plans/transplant/README.md` (tracker + resume point) → `relevance-ledger.md` + `reference-closure.md` → the `.agent/memory/active/napkin.md` latest entries (`2026-06-17` + `2026-06-10`). Cross-session memory may not load — **treat the in-repo surfaces as authoritative**.
 
 **Next executable steps (in order, owner-directed):** Steps 0–2 and **Phase 4 ✅ done** (see the tracker's per-phase
 blocks). **NEXT: Phase 6 — Sub-agents / memory / state:** 13 generic sub-agent templates + `components/`; full
