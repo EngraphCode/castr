@@ -1,7 +1,8 @@
 import type { CastrDocument } from '../models/schema-document.js';
 import type { IRComponent } from '../models/schema.components.js';
 import type { CastrAdditionalOperation, CastrOperation } from '../models/schema.operations.js';
-import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
+import { isRecord } from '../../../shared/type-utils/type-guards.js';
+import type { UnknownRecord } from '../../../shared/type-utils/types.js';
 import {
   getAdditionalOperationMethodValidationError,
   isStandardHttpMethod,

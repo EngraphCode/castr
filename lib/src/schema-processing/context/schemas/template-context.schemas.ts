@@ -4,7 +4,7 @@ import {
   getOpenApiDependencyGraph,
   topologicalSort,
 } from '../../../shared/dependency-graph/index.js';
-import { isRecord } from '../../../shared/type-utils/types.js';
+import { isRecord } from '../../../shared/type-utils/type-guards.js';
 import { asComponentSchema } from '../../../shared/utils/index.js';
 import { sortSchemasByDependencyOrder } from '../../../shared/utils/schema/index.js';
 

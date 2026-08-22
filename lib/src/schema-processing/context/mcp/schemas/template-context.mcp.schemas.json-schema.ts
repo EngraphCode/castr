@@ -1,9 +1,8 @@
 import type { Schema as JsonSchema } from 'ajv';
-import type { CastrSchema } from '../../../ir/index.js';
+import { isCastrSchema, type CastrSchema } from '../../../ir/index.js';
 import type { MutableJsonSchema } from '../../../conversion/json-schema/index.js';
 import type { CastrSchemaPropertiesLike } from '../../../../shared/type-utils/castr-schema-properties.js';
-import { isCastrSchemaProperties } from '../../../../shared/type-utils/type-guards.js';
-import { isRecord } from '../../../../shared/type-utils/types.js';
+import { isCastrSchemaProperties, isRecord } from '../../../../shared/type-utils/type-guards.js';
 
 const SCHEMA_TYPE_OBJECT = 'object';
 const SCHEMA_KEY_REF = '$ref';
@@ -97,16 +96,12 @@ function isLikelyObjectSchema(schema: MutableJsonSchema): boolean {
   return false;
 }
 
-function isCastrSchemaForMcp(value: unknown): value is CastrSchema {
-  return typeof value === 'object' && value !== null && 'metadata' in value;
-}
-
 function convertPropertiesToJsonSchema(
   properties: CastrSchemaPropertiesLike,
 ): Record<string, MutableJsonSchema> {
   const result: Record<string, MutableJsonSchema> = {};
   for (const [propName, propSchema] of properties.entries()) {
-    if (!isCastrSchemaForMcp(propSchema)) {
+    if (!isCastrSchema(propSchema)) {
       throw new Error('[mcp-schemas-from-ir] Expected CastrSchema property value.');
     }
     result[propName] = castrSchemaToJsonSchemaForMcp(propSchema);
@@ -116,7 +111,7 @@ function convertPropertiesToJsonSchema(
 
 function convertArrayToJsonSchema(values: readonly unknown[]): unknown[] {
   return values.map((entry: unknown) =>
-    isCastrSchemaForMcp(entry) ? castrSchemaToJsonSchemaForMcp(entry) : entry,
+    isCastrSchema(entry) ? castrSchemaToJsonSchemaForMcp(entry) : entry,
   );
 }
 
@@ -124,7 +119,7 @@ function convertSchemaFieldValue(value: unknown): unknown {
   if (isCastrSchemaProperties(value)) {
     return convertPropertiesToJsonSchema(value);
   }
-  if (isCastrSchemaForMcp(value)) {
+  if (isCastrSchema(value)) {
     return castrSchemaToJsonSchemaForMcp(value);
   }
   if (Array.isArray(value)) {

@@ -5,20 +5,22 @@ exports[`openapi-examples > results by file 1`] = `
     "custom/v3.1/multi-auth": "import { z } from "zod";
 // Type Definitions
 export type CreateUserInput = {
-  /** Optional age in years */ age?: unknown;
+  /** Optional age in years */ age?: number | null;
   email: string;
-  /** Unique handle for the user */ username: unknown;
+  /** Unique handle for the user */ username: string | null;
 };
 // Zod Schemas
 export const CreateUserInput = z.strictObject({
   age: z
     .int()
-    .nullable()
+    .min(0)
     .optional()
+    .nullable()
     .meta({ description: "Optional age in years" }),
   email: z.email(),
   username: z
     .string()
+    .min(3)
     .nullable()
     .meta({ description: "Unique handle for the user" }),
 });
@@ -85,13 +87,13 @@ export const mcpTools = [
               type: "object",
               properties: {
                 age: {
-                  type: ["integer", null],
+                  type: "integer",
                   description: "Optional age in years",
                   minimum: 0,
                 },
                 email: { type: "string", format: "email" },
                 username: {
-                  type: ["string", null],
+                  type: "string",
                   description: "Unique handle for the user",
                   minLength: 3,
                 },
@@ -131,13 +133,13 @@ export const mcpTools = [
             type: "object",
             properties: {
               age: {
-                type: ["integer", null],
+                type: "integer",
                 description: "Optional age in years",
                 minimum: 0,
               },
               email: { type: "string", format: "email" },
               username: {
-                type: ["string", null],
+                type: "string",
                 description: "Unique handle for the user",
                 minLength: 3,
               },

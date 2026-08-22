@@ -9,7 +9,8 @@ interface SerializedMap {
   value: [unknown, unknown][];
 }
 
-import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
+import { isRecord } from '../../shared/type-utils/type-guards.js';
+import type { UnknownRecord } from '../../shared/type-utils/types.js';
 import type { CastrDocument } from './models/schema-document.js';
 
 const SERIALIZED_DATA_TYPE_MAP = 'Map';

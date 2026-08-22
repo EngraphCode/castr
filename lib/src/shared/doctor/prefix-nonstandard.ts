@@ -9,7 +9,8 @@ import type { ValidationError } from '../load-openapi-document/validation-errors
 import { preflightValidate } from './preflight-validator.js';
 import type { PreflightValidationError } from './preflight-validator.js';
 import { extractPropertyName, traverseInstancePath, traversePointerPath } from './pointer-utils.js';
-import { isRecord, type UnknownRecord } from '../type-utils/types.js';
+import { isRecord } from '../type-utils/type-guards.js';
+import type { UnknownRecord } from '../type-utils/types.js';
 
 export type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
 

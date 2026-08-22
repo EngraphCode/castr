@@ -14,7 +14,7 @@ components:
         username:
           type:
             - string
-            - null
+            - 'null'
           minLength: 3
           description: Unique handle for the user
         email:
@@ -23,7 +23,7 @@ components:
         age:
           type:
             - integer
-            - null
+            - 'null'
           minimum: 0
           description: Optional age in years
   securitySchemes:

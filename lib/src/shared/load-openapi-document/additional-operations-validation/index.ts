@@ -5,6 +5,7 @@ import {
   getAdditionalOperationMethodValidationError,
   STANDARD_HTTP_METHODS,
 } from '../../openapi/http-methods.js';
+import { isRecord } from '../../type-utils/type-guards.js';
 import type { UnknownRecord } from '../../type-utils/types.js';
 import type { ValidationError } from '../validation-errors.js';
 
@@ -18,14 +19,6 @@ const PATH_ITEM_MEMBER_KEYS = [
   'parameters',
   'servers',
 ] as const;
-
-function isObject(value: unknown): value is object {
-  return typeof value === 'object' && value !== null;
-}
-
-function isRecord(value: unknown): value is UnknownRecord {
-  return isObject(value);
-}
 
 function markSeen(value: object, seen: WeakSet<object>): boolean {
   if (seen.has(value)) {

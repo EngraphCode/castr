@@ -21,6 +21,7 @@ import {
   detectOpenApiPreflightSchemaVersion,
   type OpenApiPreflightSchemaVersion,
 } from '../openapi/version.js';
+import type { UnknownRecord } from '../type-utils/types.js';
 
 type Ajv2020Constructor = typeof Ajv2020Factory.default;
 type AjvInstance = InstanceType<Ajv2020Constructor>;
@@ -32,21 +33,12 @@ export interface PreflightValidationError {
   readonly message: string;
   readonly instancePath: string;
   readonly keyword: string;
-  readonly params: Readonly<PreflightErrorParams>;
+  readonly params: Readonly<UnknownRecord>;
 }
 
 export interface PreflightValidationResult {
   readonly valid: boolean;
   readonly errors: readonly PreflightValidationError[];
-}
-
-/**
- * Params shape from AJV validation errors.
- * Uses a named type to satisfy both no-Record-string-unknown and consistent-indexed-object-style rules.
- */
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-export interface PreflightErrorParams {
-  readonly [key: string]: unknown;
 }
 
 function isAnySchemaObject(value: unknown): value is AnySchemaObject {
@@ -108,7 +100,7 @@ function buildPreflightError(e: {
   readonly message?: string;
   readonly instancePath: string;
   readonly keyword: string;
-  readonly params: PreflightErrorParams;
+  readonly params: UnknownRecord;
 }): PreflightValidationError {
   return {
     message: typeof e.message === 'string' ? e.message : 'Unknown error',

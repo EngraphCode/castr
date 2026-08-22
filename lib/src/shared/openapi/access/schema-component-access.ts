@@ -5,7 +5,7 @@ import {
   isReferenceObject,
 } from '../../openapi-types.js';
 import { parseComponentRef } from '../../ref-resolution.js';
-import { isRecord } from '../../type-utils/types.js';
+import { isRecord } from '../../type-utils/type-guards.js';
 import { isSchemaObjectOrRef } from './schema-shape-guards.js';
 
 const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas';

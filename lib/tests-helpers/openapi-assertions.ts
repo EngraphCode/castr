@@ -1,6 +1,6 @@
 import type { OpenAPIObject, ReferenceObject, SchemaObject } from '../src/shared/openapi-types.js';
 import { assertNotReference } from '../src/shared/openapi/component-access.js';
-import { isRecord } from '../src/shared/type-utils/types.js';
+import { isRecord } from '../src/shared/type-utils/type-guards.js';
 import { isOpenAPIDocument } from '../src/validation/cli-type-guards.js';
 
 function describeValue(value: unknown): string {

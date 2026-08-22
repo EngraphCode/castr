@@ -1,5 +1,5 @@
 import { type ReferenceObject, type SchemaObject, isReferenceObject } from '../../openapi-types.js';
-import { isRecord } from '../../type-utils/types.js';
+import { isRecord } from '../../type-utils/type-guards.js';
 
 const OPENAPI_EXTENSION_KEY_LEADER = 'x';
 const OPENAPI_EXTENSION_KEY_SEPARATOR = '-';

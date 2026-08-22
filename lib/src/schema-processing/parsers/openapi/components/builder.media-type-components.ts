@@ -1,5 +1,5 @@
 import type { ComponentsObject, OpenAPIDocument } from '../../../../shared/openapi-types.js';
-import { isRecord } from '../../../../shared/type-utils/types.js';
+import { isRecord } from '../../../../shared/type-utils/type-guards.js';
 import type { IRComponent, IRMediaTypeComponent } from '../../../ir/index.js';
 import { buildIRMediaTypeEntry } from '../operations/index.js';
 import type { IRBuildContext } from '../builder.types.js';

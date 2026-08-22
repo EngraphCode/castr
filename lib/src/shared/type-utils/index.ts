@@ -9,4 +9,4 @@ export {
   type ZodLiteralValue,
 } from './enum-helpers.js';
 export { inferRequiredSchema } from './infer-required-only.js';
-export { isString, isRecord, isCastrSchema, isCastrSchemaProperties } from './type-guards.js';
+export { isString, isRecord, isCastrSchemaProperties } from './type-guards.js';

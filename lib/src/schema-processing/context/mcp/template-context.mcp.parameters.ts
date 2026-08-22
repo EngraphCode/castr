@@ -12,7 +12,12 @@
 
 import type { SchemaObject } from '../../../shared/openapi-types.js';
 import { pathParamToVariableName } from '../../../shared/utils/index.js';
-import type { CastrSchema, CastrOperation, CastrParameter } from '../../ir/index.js';
+import {
+  isCastrSchema,
+  type CastrSchema,
+  type CastrOperation,
+  type CastrParameter,
+} from '../../ir/index.js';
 import type { MutableJsonSchema } from '../../conversion/json-schema/index.js';
 import type { CastrSchemaPropertiesLike } from '../../../shared/type-utils/castr-schema-properties.js';
 import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.js';
@@ -165,12 +170,6 @@ export const createParameterSectionSchemaFromIR = (
 };
 
 /**
- * Type guard for CastrSchema values (has metadata property).
- */
-const isCastrSchemaValue = (value: unknown): value is CastrSchema =>
-  typeof value === 'object' && value !== null && 'metadata' in value;
-
-/**
  * Convert CastrSchemaProperties to plain object.
  */
 const convertPropertiesSimple = (
@@ -179,7 +178,7 @@ const convertPropertiesSimple = (
 ): Record<string, MutableJsonSchema> => {
   const result: Record<string, MutableJsonSchema> = {};
   for (const [name, schema] of props.entries()) {
-    if (!isCastrSchemaValue(schema)) {
+    if (!isCastrSchema(schema)) {
       throw new Error('[mcp-parameters] Expected CastrSchema property value.');
     }
     result[name] = converter(schema);
@@ -193,7 +192,7 @@ const convertPropertiesSimple = (
 const convertArraySimple = (
   arr: unknown[],
   converter: (s: CastrSchema) => MutableJsonSchema,
-): unknown[] => arr.map((item) => (isCastrSchemaValue(item) ? converter(item) : item));
+): unknown[] => arr.map((item) => (isCastrSchema(item) ? converter(item) : item));
 
 /**
  * Process a single schema entry for JSON Schema output.
@@ -202,7 +201,7 @@ const processSchemaEntrySimple = (value: unknown): MutableJsonSchema | unknown[]
   if (isCastrSchemaProperties(value)) {
     return convertPropertiesSimple(value, castrSchemaToJsonSchemaSimple);
   }
-  if (isCastrSchemaValue(value)) {
+  if (isCastrSchema(value)) {
     return castrSchemaToJsonSchemaSimple(value);
   }
   if (Array.isArray(value)) {

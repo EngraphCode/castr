@@ -6,7 +6,7 @@
  * @internal
  */
 
-import type { CastrSchema, IRComponent } from '../../../ir/index.js';
+import { isCastrSchema, type CastrSchema, type IRComponent } from '../../../ir/index.js';
 import { split } from 'lodash-es';
 import { parseComponentNameForType } from './builder.component-ref-resolution.js';
 
@@ -138,12 +138,12 @@ function extractItemsReferences(items: CastrSchema['items'], location: string): 
   if (Array.isArray(items)) {
     for (let index = 0; index < items.length; index++) {
       const item = items[index];
-      if (isCastrSchemaLike(item)) {
+      if (isCastrSchema(item)) {
         const itemRefs = extractSchemaReferences(item, `${location}/${String(index)}`);
         itemRefs.forEach((ref) => refs.add(ref));
       }
     }
-  } else if (isCastrSchemaLike(items)) {
+  } else if (isCastrSchema(items)) {
     const itemRefs = extractSchemaReferences(items, location);
     itemRefs.forEach((ref) => refs.add(ref));
   }
@@ -198,25 +198,13 @@ function extractReferencesFromSchemas(schemas: unknown[], location: string): Set
 
   for (let index = 0; index < schemas.length; index++) {
     const schema = schemas[index];
-    if (isCastrSchemaLike(schema)) {
+    if (isCastrSchema(schema)) {
       const schemaRefs = extractSchemaReferences(schema, `${location}/${String(index)}`);
       schemaRefs.forEach((ref) => refs.add(ref));
     }
   }
 
   return refs;
-}
-
-/**
- * Type guard to check if value looks like an CastrSchema.
- *
- * @param value - Value to check
- * @returns True if value has CastrSchema structure
- *
- * @internal
- */
-function isCastrSchemaLike(value: unknown): value is CastrSchema {
-  return value !== null && typeof value === 'object' && 'metadata' in value;
 }
 
 /**
