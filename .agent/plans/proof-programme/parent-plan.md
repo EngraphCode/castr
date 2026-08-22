@@ -111,7 +111,12 @@ rule does not apply to it.
 kill-switch counter is never read through an absence default, so a deleted or missing value
 is observable drift rather than a silent zero; every firing increments or
 resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
-thresholds. The streak resets only on **substantive progress** — a slice PR merged, a new
+thresholds. The landing has a merge path in every case: a firing driving a slice carries the
+counter update in that slice's PR; an idle or deferring firing lands it as a dedicated
+**bookkeeping PR** (scope: counter and continuity state only, no product code) merged under
+the ADR-051 clause 3 conditions. A bookkeeping PR is not a slice PR — merging one is never
+substantive progress and never resets the streak — so idle increments reach the shared base
+without defeating the kill switch. The streak resets only on **substantive progress** — a slice PR merged, a new
 commit advancing a claimed slice, a queue row completed, a head-repair fix landed, or a new
 queued decision recorded; the bookkeeping every firing performs regardless of progress
 (completion notification, continuity/handoff, the counter landing itself) never resets it,
@@ -158,9 +163,13 @@ un-paused under the ballot's after-walk rule instead: arming is order-independen
 by whichever of Q-00 closure and this slice's proof lands second, so neither ordering
 strands the Routine paused after full authorisation. The arming step applies the recorded
 B-15 outcome to the Routine's notification configuration **before** un-pausing — including
-disabling delivery on a B-15 REJECT — so the running loop's channels always match the
-accepted ADR's clause 7; the pre-verdict dry run may prove the notification mechanism with
-delivery on, as a bounded one-firing proof, without pre-empting that verdict. Evidence note: the platform surface
+disabling routine completion-notification delivery on a B-15 REJECT — so the running loop's
+channels always match the accepted ADR's clause 7. A B-15 REJECT strikes clause 7's routine
+notifications only: the escalation notifications accepted clause 6 itself mandates (the
+zero-progress disable, a failed red-head repair, a blocked-slice stop) keep their delivery
+channel regardless, because striking clause 7 does not strike clause 6's notify duties. The
+pre-verdict dry run may prove the notification mechanism with delivery on, as a bounded
+one-firing proof, without pre-empting that verdict. Evidence note: the platform surface
 (fresh-session-per-fire Routines with completion notifications) is confirmed against the live
 platform API in the authoring session; this slice proves the end-to-end behaviour.
 

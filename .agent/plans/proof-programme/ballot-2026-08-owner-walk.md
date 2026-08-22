@@ -188,7 +188,10 @@ note into the rule file so no silent contradiction stands. Recommendation: RATIF
 
 Completion notifications on every firing; queued decisions and blocked slices surface there.
 Recommendation: **push and email both on, per firing, no digest** — revisit after two weeks
-of running; amend here if you want a different channel or cadence.
+of running; amend here if you want a different channel or cadence. Scope note: a REJECT here
+turns off routine completion notifications only — the escalation notifications clause 6
+mandates (zero-progress disable, red-head stop, blocked-slice stop) are part of the
+B-12/B-16 acceptance and keep a delivery channel regardless.
 
 **Verdict:**
 
