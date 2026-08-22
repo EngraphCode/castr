@@ -120,10 +120,15 @@ is observable drift rather than a silent zero; every firing increments or
 resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
 thresholds. The landing has a merge path in every case: a firing driving a slice carries the
 counter update in that slice's PR; an idle or deferring firing lands it as a dedicated
-**bookkeeping PR** (scope: counter and continuity state only, no product code) merged under
-the ADR-051 clause 3 conditions. A bookkeeping PR is not a slice PR — merging one is never
-substantive progress and never resets the streak — so idle increments reach the shared base
-without defeating the kill switch. The streak resets only on **substantive progress** — a slice PR merged, a new
+**bookkeeping PR** (scope: counter and continuity state only, no product code). The
+bookkeeping merge's authority is **ADR-051 clause 6 itself**: the accepted ADR mandates that
+the counters are "persisted and reset by each firing" and delegates the concrete surface to
+this plan — a duty that entails its landing mechanism — so the bookkeeping PR merges as that
+clause-6 mechanism, held to the same four conditions clause 3 sets for slice PRs (every
+check green on the head, every conversation resolved, base not diverged, diff within the
+bookkeeping scope). A bookkeeping PR is not a slice PR — merging one is never substantive
+progress and never resets the streak — so idle increments reach the shared base without
+defeating the kill switch. The streak resets only on **substantive progress** — a slice PR merged, a new
 commit advancing a claimed slice, a queue row completed, a head-repair fix landed, or a new
 queued decision recorded; the bookkeeping every firing performs regardless of progress
 (completion notification, continuity/handoff, the counter landing itself) never resets it,
