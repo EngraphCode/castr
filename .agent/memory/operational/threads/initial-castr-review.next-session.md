@@ -18,7 +18,7 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Owning plan(s):**
   [`strategy-vision-estate-overhaul.md`](../../../plans/future/strategy-vision-estate-overhaul.md)
   (this thread's product); remediation-02
-  ([`02-ir-fidelity-proof-harness.md`](../../../plans/active/02-ir-fidelity-proof-harness.md))
+  ([`02-ir-fidelity-proof-harness.md`](../../../plans/current/paused/02-ir-fidelity-proof-harness.md))
   is the recommended next product slice but is NOT owned by this thread.
 - **Current objective:** the review is COMPLETE and committed (`b313479`,
   [`wide-deep-review-2026-07-04.md`](../../../report/wide-deep-review-2026-07-04.md)); the
@@ -55,13 +55,14 @@ mandated. Branch: `feat/initial-castr-review`.
   with the [W-0 ballot](../../../plans/proof-programme/ballot-2026-08-owner-walk.md) as its
   blocking gate (Q-00) and [ADR-051](../../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
   (Proposed) as the autonomous-loop authority. **Resume authority is now the parent plan.**
-- **Next safe step (2026-08-22, current):** the parent plan IS authored (see the
-  planning-contract-EXECUTED bullet above) — do not re-author it. Two tracks run **in
-  parallel**: the owner walks the W-0 ballot (owner-only — agents cannot advance it and must
-  not wait on it), while any agent may execute the immediately eligible slices Q-01/Q-08/
-  Q-09 per the parent plan's queue (WIP = 1, pre-ballot active-lane rule in the parent
-  plan's §Active-lane transition). Everything else follows the queue once verdicts land.
-  Consult the parent plan's queue and operating protocol, not the historical blocks below.
+- **2026-08-22 (latest): W-0 WALKED AND CLOSED** — the owner walked all ten reduced ballot
+  decisions interactively in-session (5aef07), every one a success verdict; ADR-051 is
+  **Accepted** (amended: three firings per day); the active-lane dispositions are executed
+  (both plans in `current/paused/`, banners carry the disposition table and the QD-2
+  pointer); the queue is live with Q-14 (B-09 doctrine wave) added.
+- **Next safe step (2026-08-22, current):** Q-01 (loop readiness) — it arms the Routine,
+  since the walk closed before its proof. Then the queue per the parent plan's operating
+  protocol (WIP = 1). Consult the parent plan, not the historical blocks below.
   The 2026-07-06 block is retained as history:
 - **Next safe step (HISTORICAL, 2026-07-06; owner end-game directive executed: stabilise →
   handoff both sessions → commit/push/merge):** the branch merges to `main` carrying the review

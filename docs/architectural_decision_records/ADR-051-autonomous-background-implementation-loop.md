@@ -1,6 +1,7 @@
 # ADR-051: Autonomous Background Implementation Loop for the Proof Programme
 
-**Status:** Proposed
+**Status:** Accepted (2026-08-22, W-0 ballot item B-12, walked interactively by the owner;
+amended at acceptance: clause 2's default cadence is three firings per day)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -32,7 +33,8 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    completion notifications are confirmed against the live platform API (2026-08-22); an
    end-to-end dry firing (create → fire → fresh session → notification received) must pass
    before any product slice runs through the loop.
-2. **Cadence.** Default two firings per day. The owner may change cadence at will; agents may
+2. **Cadence.** Default three firings per day (set by owner amendment at acceptance,
+   2026-08-22; the proposal said two). The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
    slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
 3. **Standing merge policy.** A slice PR merges without a per-PR owner ask when all of: every

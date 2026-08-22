@@ -1,20 +1,22 @@
-# Oak → castr Practice Transplant (PRIMARY ACTIVE)
+# Oak → castr Practice Transplant
 
-> **⏳ DISPOSITION PENDING (2026-08-22):** the
-> [proof-programme parent plan](../proof-programme/parent-plan.md) is authored per the owner's
-> planning contract; its [W-0 ballot item B-11](../proof-programme/ballot-2026-08-owner-walk.md)
-> decides whether this plan's remaining phases **pause as a named position**
-> (move to `current/paused/`) or remain primary. Until that verdict lands, this plan's
-> standing 2026-06-19 primacy holds — do not start proof-programme remediation slices ahead
-> of it.
+> **⏸️ PAUSED AS A NAMED POSITION (2026-08-22, B-11 RATIFY):** the owner ratified
+> [W-0 ballot item B-11](../../proof-programme/ballot-2026-08-owner-walk.md), superseding
+> this plan's standing 2026-06-19 primacy with the
+> [proof-programme parent plan](../../proof-programme/parent-plan.md)'s queue. The
+> remaining phases pause here with a concrete re-entry record: **queued-decision QD-2**
+> in [`queued-decisions.md`](../../proof-programme/queued-decisions.md) holds the re-entry
+> question with its named review trigger (programme completion, or earlier on the owner's
+> ask). The pause cannot strand the work: this pointer and QD-2 are the pair that keeps it
+> named. Selective canonical-delta sync against PR #23 is queue slice Q-13.
 
-**Status:** ACTIVE — primary plan
+**Status:** PAUSED — named position (was primary until 2026-08-22)
 **Created/Promoted:** 2026-06-05
-**Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges owner-invoked** (see the [`../delivery-ledger.md`](../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
-**Authoritative spec:** [`practice-alignment-brief.md`](../practice-alignment-brief.md)
+**Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges owner-invoked** (see the [`../delivery-ledger.md`](../../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
+**Authoritative spec:** [`practice-alignment-brief.md`](../../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
-**Phase tracker:** [`../transplant/README.md`](../transplant/README.md)
-**Sequence position 3 (paused, never "parked"):** [`explicit-additional-properties-support.md`](../current/paused/explicit-additional-properties-support.md) — see [`../roadmap.md`](../roadmap.md) plan-of-record sequence.
+**Phase tracker:** [`../../transplant/README.md`](../../transplant/README.md)
+**Sequence position 3 (paused, never "parked"):** [`explicit-additional-properties-support.md`](./explicit-additional-properties-support.md) — see [`../roadmap.md`](../../roadmap.md) plan-of-record sequence.
 
 > Permanent architecture truth belongs in `docs/architecture/*`, ADRs, and the transplanted `.agent/practice-core/`
 > (PDRs). This plan is the execution contract; it does not duplicate doctrine.
@@ -109,7 +111,7 @@ coordinator-state, TTL presence registry, comms attention pass, plan-mode carveo
 
 > Summary below; the **full Phase-2 design** (gate-adoption schedule, the 7 risk seams A–G incl. the agent-tools-tests-
 > assert-Oak-paths gotcha, workspace/tsconfig/eslint/knip/depcruise specifics, rollback) lives in
-> [`../transplant/02-agent-tools-build-design.md`](../transplant/02-agent-tools-build-design.md).
+> [`../../transplant/02-agent-tools-build-design.md`](../../transplant/02-agent-tools-build-design.md).
 
 `agent-tools/src` has **0** `@oaknational` imports — localise only `package.json` name, a new local `eslint.config.ts`,
 self-contained `tsconfig*.json`, and the path-encoding validators' paths (stale-script-invocations, lifecycle-scripts,

@@ -3,7 +3,7 @@ zero_progress_streak: 0
 todos:
   - id: Q-00
     content: 'Owner walk W-0: ratify the ballot (T00a charter, standing authorisations, sequencing reconciliation)'
-    status: pending
+    status: completed
   - id: Q-01
     content: 'Loop readiness: fresh-container hook chain green unattended + Routine mechanism proven end to end'
     status: pending
@@ -53,12 +53,19 @@ todos:
     content: 'Tranche spine and lanes 02A..14 + remaining PR extractions, authored per-firing from the report'
     status: pending
     depends_on: [Q-11]
+  - id: Q-14
+    content: 'Doctrine amendment wave (B-09 APPROVE): rewrite principles.md, VISION.md, requirements.md, IDENTITY.md, and the input-output-pair-compatibility rule to the ratified charter, each landing recording retain/amend/supersede in the surface itself'
+    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
 
-**Status:** Awaiting the W-0 owner walk (Q-00). Q-01, Q-08, and Q-09 are eligible now;
-every other slice waits on the ballot.
+**Status:** LIVE — the plan-of-record. The W-0 walk completed 2026-08-22 (interactive,
+in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
+(amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
+CLOSED with the verdicts recorded. Eligible now: Q-01 (next — it arms the Routine, since
+the walk closed before its proof), Q-02..Q-09, Q-10, Q-13 (executes the B-11 RATIFY
+outcome), Q-14; Q-11/Q-12 follow their `depends_on`.
 **Owner directive (2026-08-22):** turn the
 [proof-programme report (Revision 3)](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 into one parent plan and a series of incremental implementation plans; those plans include
@@ -364,28 +371,20 @@ landing.
 
 ## Active-lane transition
 
-`.agent/plans/active/` currently holds two plans whose disposition this programme affects,
-both now carrying pending-disposition banners pointing here:
+**Executed 2026-08-22 (Q-00 landing, B-11 RATIFY):**
 
-- [`02-ir-fidelity-proof-harness.md`](../active/02-ir-fidelity-proof-harness.md) — Q-02–Q-05
-  absorb its harness shape and the C2/F-01, F-03, and F-04(placebo) findings; its remaining
-  success criteria (C3, C4, H1–H4, M10) belong to their owning tranches and are mapped to
-  concrete queue rows at the Q-12 split. If B-11 ratifies, the Q-00 landing moves it to
-  `current/paused/` as a **partially-absorbed record** with a per-finding disposition table;
-  it may reach `complete` only when every finding has a landed slice. If B-11 goes the other
-  way, it reactivates unchanged.
-- [`oak-practice-transplant.md`](../active/oak-practice-transplant.md) — pauses as a named
-  position if B-11 ratifies (moves to `current/paused/`), else remains primary.
+- [`02-ir-fidelity-proof-harness.md`](../current/paused/02-ir-fidelity-proof-harness.md)
+  moved to `current/paused/` as a **partially-absorbed record**; its banner carries the
+  per-finding disposition table (harness → Q-02, C2/F-01 → Q-03, F-03 → Q-04, F-04 → Q-05;
+  C3, C4, H1–H4, M10 → owning tranches at the Q-12 split). It may reach `complete` only
+  when every finding has a landed slice.
+- [`oak-practice-transplant.md`](../current/paused/oak-practice-transplant.md) moved to
+  `current/paused/` as a **named position**; its banner points at re-entry record QD-2 in
+  [`queued-decisions.md`](./queued-decisions.md) (trigger: programme completion, or earlier
+  on the owner's ask). PR #23's selective-delta disposition is Q-13.
 
-Until the Q-00 landing executes the ratified disposition, the banners keep the lane honest;
-after it, per-slice plans land in `active/` as the single primary atomic plan while in
-flight. **Pre-ballot pickups (Q-01/Q-08/Q-09):** the claimed slice's atomic plan lands in
-`active/` as the single primary, and the two banner-carrying plans remain in place as the
-**explicit parked-in-place exception** the `AGENT.md` lane rule names — their
-pending-disposition banners are that parking record — so a pre-ballot slice neither creates
-a second primary contract nor displaces the transplant plan ahead of its B-11 verdict; when
-the slice completes, its plan moves out per lifecycle and the parked plans' banners stand
-unchanged.
+`.agent/plans/active/` is now clear: per-slice plans land there as the single primary
+atomic plan while in flight, and move out per lifecycle when the slice completes.
 
 ## Foundation alignment and first-principles check
 

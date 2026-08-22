@@ -1,6 +1,6 @@
 # Phase 7 — Platform Adapters + Flip `portability`/`subagents` Gates
 
-**Parent plan:** [`../active/oak-practice-transplant.md`](../active/oak-practice-transplant.md) (Phase 7 row)
+**Parent plan:** [`../current/paused/oak-practice-transplant.md`](../current/paused/oak-practice-transplant.md) (Phase 7 row)
 **Tracker:** [`./README.md`](./README.md) · **Tag on completion:** `transplant/phase-7`
 **Status:** ✅ COMPLETE 2026-06-20 — native generator built (TDD), all adapters generated, `portability`+`subagents`
 gates flipped blocking-green, bespoke script retired, full `pnpm check:ci` green. Tag: `transplant/phase-7`.

@@ -1,18 +1,24 @@
 # Plan: IR Fidelity Proof Harness (round-trip + property proofs)
 
-> **⏳ DISPOSITION PENDING (2026-08-22):** the
-> [proof-programme parent plan](../proof-programme/parent-plan.md) absorbs this plan's
-> harness shape and its C2/F-01, F-03, and F-04(placebo) findings into queue slices
-> Q-02..Q-05 **if** [W-0 ballot item B-11](../proof-programme/ballot-2026-08-owner-walk.md)
-> ratifies the sequencing supersession; the remaining success criteria below (C3, C4, H1–H4,
-> M10) are NOT covered by those slices — they map to their owning tranches at the Q-12
-> split, and the Q-00 landing moves this file to `current/paused/` as a partially-absorbed
-> record with a per-finding disposition table (never to `complete` while any finding lacks a
-> landed slice). If B-11 goes the other way, this plan reactivates unchanged. Its findings,
-> scout results, and interim fail-fast targets remain the evidence base either way — the
-> queue briefs cite them.
+> **⏸️ PAUSED — PARTIALLY ABSORBED (2026-08-22, B-11 RATIFY):** the owner ratified
+> [W-0 ballot item B-11](../../proof-programme/ballot-2026-08-owner-walk.md), so the
+> [proof-programme parent plan](../../proof-programme/parent-plan.md)'s queue supersedes
+> the standing sequencing and absorbs this plan's harness shape and defect findings.
+> Per-finding disposition table (this plan reaches `complete` only when every row has a
+> landed slice):
+>
+> | Finding                                                                              | Disposition                                                      |
+> | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+> | Harness shape (fixture corpus + machine-readable outcomes in `lib/tests-transforms`) | Queue slice Q-02                                                 |
+> | C2 / F-01 (security AND→OR flattening)                                               | Queue slice Q-03                                                 |
+> | F-03 (nested Boolean schema `false` → `{}`)                                          | Queue slice Q-04                                                 |
+> | F-04 (placebo refinements fail-fast + nested Zod member loss)                        | Queue slice Q-05                                                 |
+> | C3, C4, H1–H4, M10 (remaining success criteria below)                                | Owning tranches; mapped to concrete queue rows at the Q-12 split |
+>
+> The findings, scout results, and interim fail-fast targets below remain the evidence base
+> — the queue briefs cite them.
 
-> **🔬 RE-VERIFIED 2026-07-04 ([wide+deep review](../../report/wide-deep-review-2026-07-04.md)):
+> **🔬 RE-VERIFIED 2026-07-04 ([wide+deep review](../../../report/wide-deep-review-2026-07-04.md)):
 > every finding this plan targets still reproduces verbatim against `main` @ `8bfc858`** —
 > C2/C3/C4 re-executed firsthand via the appendix-A probe recipes; `pnpm check` green on the
 > same tree. Additions folded from that review: (1) C2's fix is confirmed an **IR-model change**
@@ -25,7 +31,7 @@
 > strategy-estate overhaul.
 
 > **🔎 PRE-FLIGHT SCOUTED 2026-07-06 (Mistbound Fading Night / fe1498, read-only; full brief
-> conserved at [`../remediation/02-preflight-scouting-2026-07-06.md`](../remediation/02-preflight-scouting-2026-07-06.md)
+> conserved at [`../remediation/02-preflight-scouting-2026-07-06.md`](../../remediation/02-preflight-scouting-2026-07-06.md)
 > — the tracked plan-estate copy; the instance-tier handoff-record original under
 > `.agent/state/collaboration/handoffs/` is git-ignored by two-tier design):**
 > (1) **The harness substrate already EXISTS** — `lib/tests-transforms` scenarios 1–6 run full

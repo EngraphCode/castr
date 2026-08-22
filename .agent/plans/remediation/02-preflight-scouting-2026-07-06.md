@@ -11,7 +11,7 @@
   (b) of the 2026-07-06 n=2 window with Fragrant Twining Glade)
 - **Purpose:** conserve the remediation-02 scouting output for the NEXT session (owner
   end-game directive 2026-07-06: merge-first, no implementation branch this session).
-- **Consumes:** [`02-ir-fidelity-proof-harness.md`](../active/02-ir-fidelity-proof-harness.md)
+- **Consumes:** [`02-ir-fidelity-proof-harness.md`](../current/paused/02-ir-fidelity-proof-harness.md)
   (controlling plan), [wide+deep review 2026-07-04](../../report/wide-deep-review-2026-07-04.md)
   §2/§5, [initial-review appendix A](../../report/initial-review/appendix-A-reproductions.md).
 - **Verification posture:** every load-bearing claim below was verified firsthand this
