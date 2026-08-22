@@ -50,7 +50,11 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    ADR-051 clause 4, merge under clause 3) and do nothing else. A bookkeeping PR is WIP for
    drive purposes even though merging it never counts as substantive progress — an unmerged
    counter update left behind would let later firings read a stale streak and keep the
-   three-idle kill switch from ever firing. Otherwise claim the next `pending`
+   three-idle kill switch from ever firing. Driving a bookkeeping PR is itself
+   zero-progress, and THIS firing's increment must land too: push it as a counter-only
+   commit onto the bookkeeping PR's head branch **before** merging, so the merge carries
+   both firings' counter state — "do nothing else" never waives step 8's every-firing
+   counter duty. Otherwise claim the next `pending`
    queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
    parent plan's frontmatter (rides in your slice PR) and re-verify the brief's premises
    against live state — premises moved means re-adjudicate, not execute.

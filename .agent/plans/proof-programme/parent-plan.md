@@ -372,7 +372,9 @@ mechanics only and cites clauses rather than restating them.
    ADR-051 clause 4, merge under clause 3) and do nothing else; driving the bookkeeping PR
    first is clause 6's own persistence mechanism completing, and implements clause 1(b)'s
    single-open-PR invariant (an unmerged counter update would let later firings read a
-   stale streak). Otherwise claim the next eligible brief, mark it
+   stale streak). A firing whose only act is merging a bookkeeping PR is itself
+   zero-progress and pushes its own increment onto that PR's head branch before merging —
+   the every-firing counter duty is never waived by the drive. Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
 4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
    (two dispatches, per

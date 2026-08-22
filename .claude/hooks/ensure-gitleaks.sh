@@ -64,7 +64,15 @@ if [ -n "$current_version" ]; then
   if [ "$current_version" = "$GITLEAKS_VERSION" ]; then
     exit 0
   fi
-  if version_ge "$current_version" "$GITLEAKS_VERSION"; then
+  # A prerelease of the pinned core (e.g. 8.30.0-rc1 against pin 8.30.0) is
+  # BELOW the pin in semver, but GNU sort -V orders it above the release —
+  # so it must never take the version_ge newer-than-pin branch. Prereleases
+  # of genuinely higher cores still compare newer, which is correct.
+  is_prerelease_of_pin=false
+  case "$current_version" in
+    "${GITLEAKS_VERSION}-"*) is_prerelease_of_pin=true ;;
+  esac
+  if [ "$is_prerelease_of_pin" = false ] && version_ge "$current_version" "$GITLEAKS_VERSION"; then
     warn "gitleaks ${current_version} on PATH is newer than the pin (${GITLEAKS_VERSION}); leaving it in place — CI runs the pinned binary, so recheck on any scan divergence"
     exit 0
   fi
