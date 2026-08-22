@@ -44,7 +44,7 @@ todos:
   - id: Q-10
     content: 'Tranche 00 support-contract schema + planning-state validator (per report section 5.1 shape rules)'
     status: pending
-    depends_on: [Q-00]
+    depends_on: [Q-00, Q-14]
   - id: Q-11
     content: 'Tranche 01 full harness (consumes the Q-02 extraction)'
     status: pending
@@ -64,8 +64,10 @@ todos:
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Eligible now: Q-01 (next — it arms the Routine, since
-the walk closed before its proof), Q-02..Q-09, Q-10, Q-13 (executes the B-11 RATIFY
-outcome), Q-14; Q-11/Q-12 follow their `depends_on`.
+the walk closed before its proof), Q-02..Q-09, Q-13 (executes the B-11 RATIFY
+outcome), Q-14; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
+charter it implements.
 **Owner directive (2026-08-22):** turn the
 [proof-programme report (Revision 3)](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 into one parent plan and a series of incremental implementation plans; those plans include
@@ -139,7 +141,8 @@ of both counters.
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
 T00a; the report certifies all of them parallel-safe with the T00a walk itself (§6 named
-exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper.
+exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper
+**and by Q-14** (`depends_on`) — the doctrine wave lands before charter-consuming work.
 Q-01, Q-08, and Q-09 predate no standing order and are eligible immediately.
 
 ### Slice briefs
@@ -259,7 +262,9 @@ per B-01. Non-goals: no certification-mode gates yet (Tranche 14). Acceptance (`
 green on the contract types; gates green. Source: report §5.1, §7; PR-30 carried findings.
 Gate: B-01, B-07, B-09, and B-10 (success verdicts — all recorded 2026-08-22; the former
 B-02..B-06 and B-08 are folded into B-01/B-07 per the ballot's reduction log, so they gate
-through those two items).
+through those two items). Ordered after Q-14 (`depends_on`): the B-09 doctrine wave lands
+first, so this charter-consuming slice never grounds in doctrine surfaces that contradict
+the charter it implements.
 
 **Q-11 — Tranche 01 full harness.** Surface: profile-bearing case metadata over the Q-02
 extraction; fixture provenance manifest; oracle independence. Acceptance (`integration`):
@@ -338,10 +343,11 @@ landing.
 ## Prerequisites
 
 - **Blocking for the loop's arming**: Q-01.
-- **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 (the
-  standing 2026-06-19 order), via Q-00.
-- **Blocking for the tranche spine (Q-10 onward)**: T00a, via Q-00.
-- **Eligible immediately**: Q-01, Q-08, Q-09.
+- **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
+  (RATIFY recorded 2026-08-22).
+- **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
+  (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
+- **Eligible now**: Q-01 (next), Q-02..Q-09, Q-13, Q-14.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract

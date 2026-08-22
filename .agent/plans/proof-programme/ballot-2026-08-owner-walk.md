@@ -157,10 +157,12 @@ disabled, or quarantined to get green.
 
 - ADR-051 Status → **Accepted** (clause 2 amended to three firings per day first, then the
   Status line — the atomic B-12 rule).
-- Queue un-gated: Q-00 `completed`; Q-02..Q-07 eligible (B-11 success), Q-10 eligible (T00a
-  charter ratified), Q-13 executes the recorded B-11 RATIFY outcome, Q-14 added for the
-  B-09 doctrine wave. Q-01 remains the next-run slice (loop readiness) — it arms the
-  Routine, since the walk closed before Q-01's proof (the order-independent arming rule).
+- Queue un-gated: Q-00 `completed`; Q-02..Q-07 eligible (B-11 success), Q-13 executes the
+  recorded B-11 RATIFY outcome, Q-14 added for the B-09 doctrine wave; Q-10's charter gates
+  are satisfied (T00a ratified) but it **waits on Q-14** (`depends_on`) so charter-consuming
+  work never grounds in doctrine that contradicts the charter. Q-01 remains the next-run
+  slice (loop readiness) — it arms the Routine, since the walk closed before Q-01's proof
+  (the order-independent arming rule).
 - Active-lane dispositions executed: `02-ir-fidelity-proof-harness.md` →
   `current/paused/` as a partially-absorbed record with its per-finding disposition table;
   `oak-practice-transplant.md` → `current/paused/` as a named position carrying the QD-2

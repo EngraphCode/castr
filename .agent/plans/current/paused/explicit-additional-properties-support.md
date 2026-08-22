@@ -1,13 +1,22 @@
 # Explicit Additional Properties Support
 
-> **⏸️ SEQUENCED — position 3 in the plan-of-record (owner, 2026-06-09).** This feature slice runs after **(1) the
+> **⏸️ SEQUENCING SUPERSEDED (2026-08-22, W-0 ballot B-11 RATIFY):** the position-3
+> sequence in the banner below is history — the
+> [proof-programme parent plan](../../proof-programme/parent-plan.md)'s queue is now the
+> plan-of-record. This plan's subject (explicit `additionalProperties` semantics) is carried
+> by the ratified charter direction (ballot B-10's register rows plus the standing
+> IDENTITY.md 2026-04-16 direction) and re-enters execution through the queue — mapped at
+> the Q-12 split, or earlier on the owner's ask. Named position preserved; nothing here is
+> parked, and the plan's substance below is unchanged.
+
+> **⏸️ SEQUENCED — position 3 in the plan-of-record (owner, 2026-06-09; HISTORICAL, superseded above).** This feature slice runs after **(1) the
 > deep-review remediation backlog** (`.agent/plans/remediation/`, plans 01→07, in flight now) and **(2) the Practice
 > transplant Phases 5–9**. A 2026-06-05 record claimed this plan was "parked-in-place per the user-directed parking
 > exception" — **the owner never gave that instruction and repudiated the parking framing on 2026-06-09** ("all
 > issues MUST be fixed, mostly now; sequencing in the current plan is acceptable; an undefined 'later' is never").
 > This banner is the correction; the plan's substance is unchanged and it holds a named position, not a parking bay.
 
-**Status:** SEQUENCED #3 (paused per the normal lifecycle; named position in `roadmap.md`)  
+**Status:** PAUSED — named position; sequencing governed by the proof-programme queue (was SEQUENCED #3 until 2026-08-22)  
 **Created:** 2026-04-16  
 **Promoted:** 2026-04-16  
 **Predecessor:** [eperusteet-real-spec-validation.md](../current/complete/eperusteet-real-spec-validation.md)  
