@@ -44,7 +44,16 @@ as distinct, independently persisted semantics. Recommendation: RATIFY.
 
 Legacy `CastrDocument` input maps exactly to the new artifacts or returns structured
 findings/rejection; it never becomes a writer dependency; deprecation is explicit and
-versioned. Recommendation: RATIFY.
+versioned. **Rule tension to adjudicate here:** `replace-dont-bridge` requires migrating
+callers and deleting the superseded path in the same change — a "compatibility adapter"
+kept as a live dual contract would violate it. Recommendation: RATIFY with the
+rule-conformant shape — the legacy path is an explicit, directed **migration
+transformation** (legacy document in → new artifacts out, per the report's `migration` edge
+role), never a preserved live authoring path: all internal callers migrate to the new roots
+in the 02B landing, the legacy root type leaves the public authoring surface in that same
+landing, and only the migration edge (an input transformation, not a bridge) remains, with
+its own deprecation horizon. If you prefer a true persistent dual path instead, that is an
+AMEND of `replace-dont-bridge` and must be written here.
 
 **Verdict:**
 
@@ -132,7 +141,12 @@ accordingly in the follow-up landing.
 Accept
 [ADR-051 (autonomous background implementation loop)](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md):
 fresh-session-per-firing Routine, default cadence twice daily, WIP = 1, bounded firings,
-queued decisions, escalation and kill switches. Recommendation: ACCEPT.
+queued decisions, escalation and kill switches. **Acceptance is atomic with the clause
+verdicts**: ACCEPT here means accepting the ADR _as amended by_ your B-13, B-14, and B-16
+verdicts — any AMEND or REJECT on those items amends or strikes the corresponding clause in
+the follow-up landing **before** the Status line changes, so the accepted text always equals
+the clause-level verdicts and B-12 can never grant a power a sibling item declined.
+Recommendation: ACCEPT.
 
 **Verdict:**
 

@@ -31,7 +31,7 @@ todos:
     status: pending
     depends_on: [Q-00]
   - id: Q-08
-    content: 'ADR estate integrity (mechanical): collapse the .agent/directives ADR fork, reconcile both indexes, repair IDENTITY.md link'
+    content: 'ADR estate integrity (mechanical): delete the .agent/directives ADR duplicates (reconcile content into docs/ first), repoint referrers, reconcile both indexes, repair IDENTITY.md link'
     status: pending
   - id: Q-09
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
@@ -165,8 +165,11 @@ fixes only. Non-goals: no source-scanning framework, no known-violation baseline
 timeout widening. Acceptance (`integration` + `non-code`): salvaged fixes green; #21 closed
 with verification recorded. Source: report §11.3 #21. Gate: B-11.
 
-**Q-08 — ADR estate integrity (mechanical).** Surface: collapse the
-`.agent/directives/ADR-044/045/046` duplicates to the `docs/` originals with pointers;
+**Q-08 — ADR estate integrity (mechanical).** Surface: **delete** the
+`.agent/directives/ADR-044/045/046` duplicates outright and repoint every referrer to the
+`docs/` originals in the same landing (`replace-dont-bridge`: no pointer files, no dual
+paths — semantically divergent content is reconciled into the `docs/` original before
+deletion, so nothing unique is lost);
 reconcile every file `Status:` line against both indexes (ADR-038, inverse ADR-002); fix the
 wrong H1 numbers in ADR-018/019; repair `IDENTITY.md`'s dead plan link; refresh `SUMMARY.md`
 rows. Non-goals: `SUMMARY.md`'s universal-schema-conversion product claim is NOT touched here
