@@ -301,13 +301,19 @@ mechanics only and cites clauses rather than restating them.
    [`invoke-reviewers`](../../rules/invoke-reviewers.md) (`code-reviewer` always;
    `test-reviewer` on test/harness surfaces; domain expert by surface; `docs-adr-expert` on
    ADR/doctrine surfaces; `assumptions-expert` whenever the firing authors or splits a slice
-   plan) → full gates → PR → green → merge (clause 3 once Accepted; explicit per-PR owner approval
-   while Proposed) → mark `complete` → update the
-   delivery ledger and handoff surfaces → orphan continuity commit → stop.
-5. **Blocked slices release their PR**: marking a slice `blocked` (ADR-051 clause 6)
-   converts its open PR to a draft with a comment naming the block diagnosis — never closed,
-   the work is preserved — and draft PRs are exempt from step 3's drive rule, so the loop
-   moves on instead of deadlocking; unblocking restores ready-for-review.
+   plan) → full gates → PR, whose **final commit carries the slice's own state landing** (the
+   queue row flipped to `complete`, the counter updates, the delivery-ledger row, and the
+   handoff surfaces — so the merged base shows the row done the moment the PR lands, and no
+   fresh firing can reclaim finished work) → green → merge (clause 3 once Accepted; explicit
+   per-PR owner approval while Proposed) → orphan continuity commit → stop.
+5. **Blocked slices release their PR — and land the block on the shared base**: marking a
+   slice `blocked` (ADR-051 clause 6) converts its open PR to a draft with a comment naming
+   the block diagnosis — never closed, the work is preserved — **and, in the same firing,
+   lands the queue-state change via the bookkeeping path** (the row marked `blocked`, its
+   `failures:` count, and a pointer to the draft PR's diagnosis), so the next firing's
+   claims scan sees the block on the base rather than re-selecting a row whose state lives
+   only on an unmerged draft branch. Draft PRs are exempt from step 3's drive rule, so the
+   loop moves on instead of deadlocking; unblocking restores ready-for-review.
 6. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
    [`queued-decisions.md`](./queued-decisions.md) with a recommendation; the firing reroutes
    to the next unblocked item.
