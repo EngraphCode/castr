@@ -150,8 +150,11 @@ fresh-session-per-firing Routine, default cadence twice daily, WIP = 1, bounded 
 queued decisions, escalation and kill switches. **Acceptance is atomic with the clause
 verdicts**: ACCEPT here means accepting the ADR _as amended by_ your B-13, B-14, B-15, and
 B-16 verdicts (B-15's channel choice rewrites clause 7) — any AMEND or REJECT on those items amends or strikes the corresponding clause in
-the follow-up landing **before** the Status line changes, so the accepted text always equals
-the clause-level verdicts and B-12 can never grant a power a sibling item declined.
+the follow-up landing **before** the Status line changes, and a DEFER on any of them defers
+B-12 itself: the Status line stays Proposed and the programme stays in owner-driven,
+per-PR-approval mode until the deferred item is re-balloted — an undecided clause is neither
+granted nor struck by inference. So the accepted text always equals the clause-level
+verdicts, and B-12 can never grant a power a sibling item declined or left undecided.
 Recommendation: ACCEPT.
 
 **Verdict:**

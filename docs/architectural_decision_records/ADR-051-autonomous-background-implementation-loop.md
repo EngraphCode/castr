@@ -66,7 +66,13 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    clause evaluates are durable repo state, persisted and reset by each firing in the plan
    estate's queue (the plan estate owns the concrete surface); the loop-readiness proof must
    demonstrate cross-session read/write before any product slice runs. Three consecutive zero-progress firings → the firing disables the
-   Routine and notifies the owner. **Red head on arrival** (gates failing for causes outside
+   Routine and notifies the owner. Every firing-side loop exit — this zero-progress disable,
+   a STOP-file observation, and the terminal exit below — additionally posts the stand-down
+   broadcast `.agent/rules/loop-exit-criteria-required.md` §Stand-Down Broadcast Shape
+   requires (loop identity, the exit criterion that fired, a one-line closeout summary) on
+   the standard agent-comms surface, so peers observe that scheduled execution has stopped;
+   an owner stop applied directly to the Routine needs no broadcast from the loop, as no
+   firing may remain to post it. **Red head on arrival** (gates failing for causes outside
    the claimed slice): the firing takes at most one bounded out-of-queue green-the-head
    repair slice through the normal TDD/gate/review path, recorded in the delivery ledger and
    the completion notification; if the head is not green by the end of that firing, it stops

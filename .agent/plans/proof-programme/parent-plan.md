@@ -141,7 +141,9 @@ product code; no queue slice execution during the dry run. Acceptance (`e2e`, ob
 fresh container completes the full blocking hook chain unattended; the cron Routine is
 created in fresh-session mode, fires once, the spawned session executes the prompt's no-op
 path (STOP-check → report → handoff) and the completion notification reaches the owner; the
-Routine is then paused until Q-00 closes. Evidence note: the platform surface
+Routine is then paused until Q-00 closes, with the pause posted as a stand-down broadcast
+(loop identity, criterion fired, one-line closeout) per `loop-exit-criteria-required` —
+proving the broadcast path ADR-051 clause 6 requires on every firing-side loop exit. Evidence note: the platform surface
 (fresh-session-per-fire Routines with completion notifications) is confirmed against the live
 platform API in the authoring session; this slice proves the end-to-end behaviour.
 
