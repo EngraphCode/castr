@@ -2,6 +2,33 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (proof-programme scheduled firing — WIP=1 collision with a concurrent peer — Tidal Drifting Lighthouse)
+
+- **`active-claims.json`'s per-container, untracked nature cannot prevent a real WIP=1
+  collision across fresh-container firings — measured, not hypothetical.** This firing's
+  session-open claims scan found the registry empty ("no other agents present" — correct
+  read of MY container's state) and proceeded to drive PR #35 (Q-02) per WIP=1. A peer
+  session was already actively driving the SAME PR concurrently, invisible to my scan because
+  each fresh-container firing starts with its own empty, ungitted `active-claims.json`
+  (`.agent/state/collaboration/.gitignore` deliberately excludes it — instance-tier state, by
+  design). Discovered only reactively, via two consecutive `git push` rejections
+  ("fetch first", then "cannot lock ref ... is at X but expected Y") as the peer pushed two
+  more review-response rounds while I was mid-reconcile. GitHub's PR/branch state was the
+  only cross-container signal that actually worked, and only after the fact.
+- **Correct response to a mid-drive collision: reconcile once (adopt the peer's equivalent
+  fix verbatim over my redundant one, since theirs was already CI-green and further along),
+  then STOP and defer — don't keep racing a faster-moving peer.** After the second rejection
+  showed the peer was still actively iterating (11 review rounds in under an hour), continuing
+  to push would only produce more redundant work and collisions. Backed off: no further pushes,
+  no merge attempt, no new queue-row claim (WIP=1 slot stays occupied by the peer's active
+  work). My own contribution (the QD-4 carry-forward queue entry, b66df7d) was not lost — it's
+  an ancestor of the peer's continuing chain, so it lands when their drive completes.
+- **Worth a queued finding for Q-15 or a dedicated queue row:** the loop's collision defence is
+  entirely reactive (git's ref-lock rejection) with no proactive cross-container signal at all.
+  A future design could publish claims to a tracked-but-namespaced surface (or lean on the
+  GitHub PR's own state as the primary signal, checked immediately before every push — not just
+  at session open) rather than relying on instance-tier `active-claims.json`.
+
 ## 2026-08-22 (parent plan + autonomous loop — Incandescent Charring Ember / 5aef07, same session, hook-renamed)
 
 - **Designing "without me" autonomy in this estate reduces to one move: convert per-ask owner
