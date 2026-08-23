@@ -2,7 +2,7 @@
 todos:
   - id: W0-frame
     content: 'Owner walk: ratify the two-product frame, the verified-claims principle, and naming'
-    status: pending
+    status: completed
   - id: W1-vision
     content: 'Rebuild the vision layer around impacts (product A vision; product B vision surface)'
     status: pending
@@ -21,6 +21,17 @@ todos:
 ---
 
 # Plan: Strategy, Vision & Planning Estate Overhaul
+
+> **📋 W0 WALKED (2026-08-23, interactive):** the three genuine forks are DECIDED — the
+> second product is named **"the Practice"** (Q-012), **preservation-coverage % adopted**
+> as product A's headline metric with no percentage published before the proof estate
+> computes it (Q-014), and the `Object.*`/`Reflect.*` doctrine is **lint-enforced**, not
+> amended (Q-015); Q-013's topology determination is acknowledged. Verdicts and consuming
+> homes: `.agent/memory/operational/open-questions.md`. **This plan does NOT promote to
+> `current/`**: B-11 (2026-08-22) made the proof-programme queue the plan-of-record, which
+> absorbs this brief's work — W1/W3/W5 substance executes via queue row Q-14 and the Q-12
+> split; W2/W4 enter via the Q-12 split or on owner ask. This brief stays in `future/` as
+> the reference for those slices; do not re-walk W0.
 
 **Status:** STRATEGIC BRIEF (`future/` lane) — authored 2026-07-04 on owner directive ("start
 planning a total overhaul of the current planning, strategy and vision estate so it is organised
