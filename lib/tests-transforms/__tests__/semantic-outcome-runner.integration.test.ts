@@ -296,6 +296,67 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(runSemanticOutcome(mutatingCase).outcome).toEqual(proof.outcome);
   });
 
+  it('throws when a branded class-instance IR is cloned with the default structuredClone', () => {
+    // Mirrors this repo's own CastrSchema/CastrSchemaProperties IR: a class
+    // instance whose behaviour lives in a prototype method, not in an own
+    // enumerable field. structuredClone drops the prototype (and any brand),
+    // so a `write` that calls a method on its cloned IR argument throws —
+    // exactly the failure a real castr parser/writer pair would hit if this
+    // runner cloned its IR with the default and nothing else.
+    class BrandedIR {
+      constructor(readonly value: string) {}
+      describe(): string {
+        return `IR(${this.value})`;
+      }
+    }
+
+    const brandedCaseNoCustomClone: SemanticCase<string, BrandedIR, string, string> = {
+      name: 'branded-ir-no-custom-clone',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => new BrandedIR(source),
+      write: (ir) => ir.describe(),
+      reparse: (output) => new BrandedIR(output.slice(3, -1)),
+      equalIR: (a, b) => a.value === b.value,
+      sourceOracle: (source) => source,
+      targetOracle: (output) => output.slice(3, -1),
+      equalOracle: (a, b) => a === b,
+    };
+
+    expect(() => runSemanticOutcome(brandedCaseNoCustomClone)).toThrow(
+      /describe is not a function/,
+    );
+  });
+
+  it('supports a branded class-instance IR when the case supplies cloneIR', () => {
+    class BrandedIR {
+      constructor(readonly value: string) {}
+      describe(): string {
+        return `IR(${this.value})`;
+      }
+    }
+
+    const brandedCase: SemanticCase<string, BrandedIR, string, string> = {
+      name: 'branded-ir-with-custom-clone',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => new BrandedIR(source),
+      write: (ir) => ir.describe(),
+      reparse: (output) => new BrandedIR(output.slice(3, -1)),
+      equalIR: (a, b) => a.value === b.value,
+      sourceOracle: (source) => source,
+      targetOracle: (output) => output.slice(3, -1),
+      equalOracle: (a, b) => a === b,
+      cloneIR: (ir) => new BrandedIR(ir.value),
+    };
+
+    const proof = runSemanticOutcome(brandedCase);
+
+    expect(proof.artifacts.ir).toBeInstanceOf(BrandedIR);
+    expect(proof.artifacts.ir.value).toBe('alpha');
+    expect(() => expectSemanticOutcome(proof)).not.toThrow();
+  });
+
   it('runs every registered case and returns proofs in registration order', () => {
     const proofs = runAllSemanticOutcomes([
       correctCase('first', 'alpha', 'beta'),

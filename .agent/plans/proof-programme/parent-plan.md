@@ -256,40 +256,56 @@ product profile or artifact kind. Non-vacuity is structural, not opt-in: every c
 `separatingSource`, and the runner recomputes discrimination against it on all three legs
 (`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
 self-reported flag. Every case-supplied callback — all seven: `sourceOracle`, `parse`, `write`,
-`targetOracle`, `reparse`, `equalIR`, `equalOracle` — receives its own independent
-`structuredClone` at every call, taken directly from the value the runner still trusts as
-ground truth, immediately before that one call; no clone is ever reused across two calls. A
-mutating case therefore cannot corrupt the case object across repeated runs, taint a comparison
-the runner still needs to make, corrupt a returned artifact, or leak into a different callback's
-(or a later call to the SAME callback's) supposedly independent view of "the same" value. Proof:
+`targetOracle`, `reparse`, `equalIR`, `equalOracle` — receives its own independent clone at
+every call (`structuredClone` by default, or a case-supplied `cloneSource`/`cloneIR`/
+`cloneOutput`/`cloneOracle` override for values `structuredClone` cannot safely clone), taken
+directly from the value the runner still trusts as ground truth, immediately before that one
+call; no clone is ever reused across two calls. A mutating case therefore cannot corrupt the
+case object across repeated runs, taint a comparison the runner still needs to make, corrupt a
+returned artifact, or leak into a different callback's (or a later call to the SAME callback's)
+supposedly independent view of "the same" value. Proof:
 `lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
 ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wrong-writer,
 bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
 vacuous-witness), a mutation-safety/repeatability regression case exercising all seven
-callbacks, and an empty-registry hard-fail, all red-first (module-not-found) then green,
-11/11 passing.
+callbacks, a pair of branded class-instance IR cases (one proving the default `structuredClone`
+throws, one proving a case-supplied `cloneIR` fixes it), and an empty-registry hard-fail, all
+red-first (module-not-found, or the documented throw for the branded-IR case) then green,
+13/13 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, five rounds of automated PR review (Codex, Copilot) progressively closed the
+opened. Once open, six rounds of automated PR review (Codex, Copilot) progressively closed the
 full mutation-safety surface: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
 single-call leaks (`reparse` mutating the returned `output` artifact; `sourceOracle` mutating
 `source` before `parse`'s own clone was taken), the cross-call leaks (`equalIR`/`equalOracle`,
-each invoked more than once on a value also returned in `artifacts`), and finally a
-retained-alias leak: `write` was still called with `ir`/`separatingIR` themselves rather than a
-clone, so a memoising `parse` that keeps its own reference to the IR it returned could observe
-`write`'s in-place mutation on a second run of the same case. `write` now receives a
-`structuredClone` of `ir`/`separatingIR` at each call site, and the mutation-safety test grew a
-closure-captured `retainedIRs` array (modelling a memoising parser's cache without adding
-branching/stateful logic to the fake) asserting the retained references stay pristine — until,
-across all five rounds, all seven callbacks were confirmed to receive an independent clone at
-every call, with no narrower leak left to find. Also fixed along the way: a missing vacuous-witness mutant (case data
+each invoked more than once on a value also returned in `artifacts`), and a retained-alias leak:
+`write` was still called with `ir`/`separatingIR` themselves rather than a clone, so a memoising
+`parse` that keeps its own reference to the IR it returned could observe `write`'s in-place
+mutation on a second run of the same case (`write` now receives a `structuredClone` of
+`ir`/`separatingIR` at each call site, and the mutation-safety test grew a closure-captured
+`retainedIRs` array — modelling a memoising parser's cache without adding branching/stateful
+logic to the fake — asserting the retained references stay pristine). The sixth round was a
+different root cause, not a narrower instance of the same one: `structuredClone` silently
+de-brands class-instance values, dropping the prototype and any brand, so it cannot safely clone
+this repo's own `CastrSchema`/`CastrSchemaProperties` IR — confirmed empirically (a probe script
+cloning a branded class instance loses its methods) before fixing. Rather than special-casing
+`CastrSchema`, `SemanticCase` grew optional `cloneSource`/`cloneIR`/`cloneOutput`/`cloneOracle`
+overrides (defaulting to `structuredClone`, mirroring the existing case-supplied-callback
+pattern) so a case can substitute a clone that preserves its own branded type. Two new tests
+prove the failure mode and the fix: one shows the default `structuredClone` throws when `write`
+calls a method on a branded IR class instance, the other shows a case-supplied `cloneIR` fixes
+it. Across all six rounds, all seven callbacks were confirmed to receive an independent clone at
+every call, with no narrower leak left to find on the mutation-safety surface, and the clone
+mechanism itself is now confirmed to work for branded, non-plain-data artifact types — the kind
+Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief exists to support. Also fixed
+along the way: a missing vacuous-witness mutant (case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of

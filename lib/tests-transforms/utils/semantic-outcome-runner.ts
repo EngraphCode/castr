@@ -38,16 +38,25 @@
  * produced indistinguishable results somewhere in the pipeline.
  *
  * A case is not required to be pure. Every callback receives its own
- * independent `structuredClone`, taken directly from whichever value this
- * module still trusts as ground truth, immediately before that one call —
- * no clone is ever reused across two calls, and `source`/`separatingSource`
- * are never passed by reference to anything. A mutating callback therefore
- * cannot corrupt the case object (making a second run of the same case
- * produce a different result), taint a comparison this function still needs
- * to make afterward, or leak into a different callback's supposedly
- * independent view of "the same" value — mirroring the OpenAPI-specific
- * precedent this module was extracted from
- * (`loadOpenApiDocument(structuredClone(...))` in PR #11).
+ * independent clone, taken directly from whichever value this module still
+ * trusts as ground truth, immediately before that one call — no clone is
+ * ever reused across two calls, and `source`/`separatingSource` are never
+ * passed by reference to anything. A mutating callback therefore cannot
+ * corrupt the case object (making a second run of the same case produce a
+ * different result), taint a comparison this function still needs to make
+ * afterward, or leak into a different callback's supposedly independent
+ * view of "the same" value — mirroring the OpenAPI-specific precedent this
+ * module was extracted from (`loadOpenApiDocument(structuredClone(...))` in
+ * PR #11).
+ *
+ * Cloning defaults to `structuredClone`, which is unsafe for branded
+ * class-instance values (for example this repo's own `CastrSchema`/
+ * `CastrSchemaProperties` IR): it silently drops the prototype and any
+ * brand, producing a plain object whose methods are gone. A case whose
+ * `TSource`/`TIR`/`TOutput`/`TOracle` is such a type must supply the
+ * matching `cloneSource`/`cloneIR`/`cloneOutput`/`cloneOracle` override so
+ * the mutation-safety guarantee above holds for real, non-plain-data
+ * artifacts too.
  */
 
 import { expect } from 'vitest';
@@ -123,6 +132,37 @@ export interface SemanticCase<TSource, TIR, TOutput, TOracle> {
   readonly targetOracle: (output: TOutput) => TOracle;
   /** Equality over oracle values. */
   readonly equalOracle: (a: TOracle, b: TOracle) => boolean;
+  /**
+   * Overrides the default `structuredClone` used to isolate `source`/
+   * `separatingSource` before each callback call. Supply this when `TSource`
+   * is a branded class instance or otherwise not `structuredClone`-safe.
+   */
+  readonly cloneSource?: (source: TSource) => TSource;
+  /**
+   * Overrides the default `structuredClone` used to isolate IR values before
+   * each callback call. Supply this when `TIR` is a branded class instance
+   * (for example `CastrSchema`) — `structuredClone` would silently strip its
+   * prototype and brand, breaking any method the case's `write`/`equalIR`
+   * calls on it.
+   *
+   * @example Preserving a branded IR class across clones
+   * ```typescript
+   * cloneIR: (ir) => new BrandedIR(ir.value),
+   * ```
+   */
+  readonly cloneIR?: (ir: TIR) => TIR;
+  /**
+   * Overrides the default `structuredClone` used to isolate written-output
+   * values before each callback call. Supply this when `TOutput` is a
+   * branded class instance or otherwise not `structuredClone`-safe.
+   */
+  readonly cloneOutput?: (output: TOutput) => TOutput;
+  /**
+   * Overrides the default `structuredClone` used to isolate oracle values
+   * before each callback call. Supply this when `TOracle` is a branded class
+   * instance or otherwise not `structuredClone`-safe.
+   */
+  readonly cloneOracle?: (oracle: TOracle) => TOracle;
 }
 
 /**
@@ -208,12 +248,14 @@ export interface SemanticProof<TIR, TOutput, TOracle> {
 export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   semanticCase: SemanticCase<TSource, TIR, TOutput, TOracle>,
 ): SemanticProof<TIR, TOutput, TOracle> {
-  // Every case-supplied callback receives its own independent
-  // `structuredClone`, taken directly from the value this function still
-  // trusts as ground truth, immediately before that one call. No clone is
-  // ever reused across two calls, and `semanticCase.source`/
-  // `separatingSource` are never passed by reference to anything. A
-  // callback that mutates its argument in place — a lossy
+  // Every case-supplied callback receives its own independent clone —
+  // `structuredClone` by default, or the case's own `cloneSource`/`cloneIR`/
+  // `cloneOutput`/`cloneOracle` override for values that don't survive
+  // `structuredClone` (branded class instances) — taken directly from the
+  // value this function still trusts as ground truth, immediately before
+  // that one call. No clone is ever reused across two calls, and
+  // `semanticCase.source`/`separatingSource` are never passed by reference
+  // to anything. A callback that mutates its argument in place — a lossy
   // parse/write/reparse/oracle — therefore cannot: (a) corrupt the case
   // object, making a second run of the same case produce a different
   // result; (b) taint a comparison this function still needs to make
@@ -222,26 +264,31 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   // "the same" value (e.g. a mutating `sourceOracle` corrupting what
   // `parse` sees next, or a mutating `targetOracle` corrupting what
   // `reparse` sees next).
-  const sourceOracleValue = semanticCase.sourceOracle(structuredClone(semanticCase.source));
+  const cloneSource: (source: TSource) => TSource = semanticCase.cloneSource ?? structuredClone;
+  const cloneIR: (ir: TIR) => TIR = semanticCase.cloneIR ?? structuredClone;
+  const cloneOutput: (output: TOutput) => TOutput = semanticCase.cloneOutput ?? structuredClone;
+  const cloneOracle: (oracle: TOracle) => TOracle = semanticCase.cloneOracle ?? structuredClone;
+
+  const sourceOracleValue = semanticCase.sourceOracle(cloneSource(semanticCase.source));
   const separatingSourceOracleValue = semanticCase.sourceOracle(
-    structuredClone(semanticCase.separatingSource),
+    cloneSource(semanticCase.separatingSource),
   );
 
-  const ir = semanticCase.parse(structuredClone(semanticCase.source));
-  const pristineIR = structuredClone(ir);
+  const ir = semanticCase.parse(cloneSource(semanticCase.source));
+  const pristineIR = cloneIR(ir);
   // `write` receives a clone of `ir`, not `ir` itself: a memoising `parse`
   // may retain its own alias to the object it returned, and a mutating
   // `write` must not be able to corrupt that retained reference — a second
   // run of the same case could then observe a memoised, already-mutated IR.
-  const output = semanticCase.write(structuredClone(ir));
-  const pristineOutput = structuredClone(output);
-  const targetOracleValue = semanticCase.targetOracle(structuredClone(output));
-  const reparsedIR = semanticCase.reparse(structuredClone(output));
+  const output = semanticCase.write(cloneIR(ir));
+  const pristineOutput = cloneOutput(output);
+  const targetOracleValue = semanticCase.targetOracle(cloneOutput(output));
+  const reparsedIR = semanticCase.reparse(cloneOutput(output));
 
-  const separatingIR = semanticCase.parse(structuredClone(semanticCase.separatingSource));
-  const pristineSeparatingIR = structuredClone(separatingIR);
-  const separatingOutput = semanticCase.write(structuredClone(separatingIR));
-  const separatingTargetOracleValue = semanticCase.targetOracle(structuredClone(separatingOutput));
+  const separatingIR = semanticCase.parse(cloneSource(semanticCase.separatingSource));
+  const pristineSeparatingIR = cloneIR(separatingIR);
+  const separatingOutput = semanticCase.write(cloneIR(separatingIR));
+  const separatingTargetOracleValue = semanticCase.targetOracle(cloneOutput(separatingOutput));
 
   // `pristineIR`/`sourceOracleValue`/`targetOracleValue` are each compared
   // more than once below, and are also returned in `artifacts` — so
@@ -250,29 +297,23 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   // arguments while comparing (e.g. sorting an array in place before
   // structural comparison — a realistic equality implementation, not a
   // contrived one) would leak between calls and corrupt the artifact.
-  const irDiscriminates = !semanticCase.equalIR(
-    structuredClone(pristineIR),
-    structuredClone(pristineSeparatingIR),
-  );
+  const irDiscriminates = !semanticCase.equalIR(cloneIR(pristineIR), cloneIR(pristineSeparatingIR));
   const sourceOracleDiscriminates = !semanticCase.equalOracle(
-    structuredClone(sourceOracleValue),
-    structuredClone(separatingSourceOracleValue),
+    cloneOracle(sourceOracleValue),
+    cloneOracle(separatingSourceOracleValue),
   );
   const targetOracleDiscriminates = !semanticCase.equalOracle(
-    structuredClone(targetOracleValue),
-    structuredClone(separatingTargetOracleValue),
+    cloneOracle(targetOracleValue),
+    cloneOracle(separatingTargetOracleValue),
   );
 
   return {
     outcome: {
       case: semanticCase.name,
-      roundTripEqual: semanticCase.equalIR(
-        structuredClone(pristineIR),
-        structuredClone(reparsedIR),
-      ),
+      roundTripEqual: semanticCase.equalIR(cloneIR(pristineIR), cloneIR(reparsedIR)),
       oraclesAgree: semanticCase.equalOracle(
-        structuredClone(sourceOracleValue),
-        structuredClone(targetOracleValue),
+        cloneOracle(sourceOracleValue),
+        cloneOracle(targetOracleValue),
       ),
       nonVacuous: irDiscriminates && sourceOracleDiscriminates && targetOracleDiscriminates,
     },
