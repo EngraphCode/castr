@@ -74,8 +74,12 @@ intro are covered by nobody. Take the baseline from the outgoing Watcher's
 sign-off when one arrives (it names the ts to watch from); otherwise sweep
 the channel from the outgoing Watcher's last visible activity (its last
 summary, reply, or intro) up to your own intro, handle what that window
-holds, and only then advance the baseline to your intro's `ts`. A fresh
-stand-up with no predecessor baselines at its own intro.
+holds, and only then advance the baseline to your intro's `ts`. A vacancy
+sign-off is the same discipline with an exact boundary: sweep from the
+sign-off's `ts` up to your own intro before advancing, because messages
+posted into the vacant channel are covered by nobody until you do. Only
+when the channel holds no mantle-state post at all does a fresh stand-up
+baseline at its own intro.
 
 ## 3. The watch loop
 
