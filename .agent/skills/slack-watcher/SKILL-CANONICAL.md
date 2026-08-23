@@ -167,7 +167,12 @@ posted over it is void by step 2's validity rule (the latest valid
 mantle-state post before it is the successor's intro, not one naming
 you), so
 no reader — the successor's own ticks included — ever acts on it. Still
-verify after writing: run the resolver once more, and if a successor's
-intro or relief landed in between, delete your void vacancy post — it
-is your own message — as cleanup, then run the handover. Correctness
-rests on the validity rule, not on the deletion or on timing.
+verify after writing: run the resolver once more and compare message
+timestamps — only an intro or relief whose `ts` precedes your vacancy
+post's own `ts` landed in the race window and voids it: delete that
+void vacancy — it is your own message — as cleanup, then run the
+handover. An intro that postdates your vacancy is a fresh stand-up
+answering a genuine vacancy: leave the vacancy in place (its message
+`ts` is the successor's sweep boundary) and stand down with no further
+post. Correctness rests on the validity rule, not on the deletion or
+on timing.
