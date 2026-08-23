@@ -77,6 +77,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   — `no-manufactured-permission` at the doctrine layer. Same inherited-classification
   family as the Q-010 false-dichotomy: a plausible reconciliation repeated across surfaces
   gains false authority.
+- **OWNER RULING (QD-3 + merge doctrine, 2026-08-22): "I don't approve merges, I set the
+  requirements for merge to be safe. All CI passing, all comments properly and
+  proportionately resolved, either fixed or rejected. Once a PR is green and clean it can
+  be merged… any required user intervention is a problem."** Merge authority is
+  CONDITION-based, never PR-kind-based and never a per-PR approval — ADR-051 clauses
+  1(b)/3 amended accordingly, QD-3 struck. Design lesson for the loop: when a safety
+  mechanism's honest reading inserts an owner touchpoint into routine operation, that is a
+  defect to surface and fix (queue the amendment), not a resting state — the owner's role
+  is setting the bar, the loop's role is meeting it unattended. The queue-then-rule cycle
+  took one conversation turn; the machinery worked.
 
 ## 2026-08-22 (PR #30 review + Revision-3 takeover — Lucent Turning Compass / 5aef07)
 
