@@ -24,9 +24,10 @@ updates `last_session` rather than adding a row. (Sessions predating this record
 the W-0/Q-00/Q-01 authoring sessions and the first firings — are recorded in the
 programme's delivery evidence rather than retro-filled here.)
 
-| agent_name            | id                                   | platform    | model          | session_id_prefix | role                          | first_session | last_session |
-| --------------------- | ------------------------------------ | ----------- | -------------- | ----------------- | ----------------------------- | ------------- | ------------ |
-| Cindery Kindling Lava | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings) | 2026-08-23    | 2026-08-23   |
+| agent_name            | id                                   | platform    | model          | session_id_prefix | role                                     | first_session | last_session |
+| --------------------- | ------------------------------------ | ----------- | -------------- | ----------------- | ---------------------------------------- | ------------- | ------------ |
+| Cindery Kindling Lava | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings)            | 2026-08-23    | 2026-08-23   |
+| Fruited Swaying Leaf  | 2c6d968f-db66-55d4-8343-a0eccd1a68a3 | claude-code | claude-fable-5 | 0690b2            | scheduled firing (PR #35 drive to merge) | 2026-08-23    | 2026-08-23   |
 
 ## Next-session landing target
 
