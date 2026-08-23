@@ -50,15 +50,19 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    — any live peer or owner claim touching your target surface defers this firing. A
    deferral lands its counter update via the bookkeeping path **only when no non-draft
    programme PR is already open** (step 5's WIP = 1 invariant binds here too — never open a
-   second programme PR); when one is open, land the increment as a bookkeeping-scope
-   commit pushed to that open PR's head branch (bookkeeping scope: counter, incident, and
-   continuity state only, nothing else — QD-5) — it reaches the base when the PR merges,
-   so later firings read a true streak.
+   second programme PR); when one is open **and not contested**, land the increment as a
+   bookkeeping-scope commit pushed to that open PR's head branch (bookkeeping scope:
+   counter, incident, and continuity state only, nothing else — QD-5) — it reaches the
+   base when the PR merges, so later firings read a true streak. When the open PR is
+   **contested** (overlap guard, step 5), never write to its head — land the increment and
+   incident record as a **draft** bookkeeping PR branched from the base instead (a draft
+   is not WIP and touches no contested ref), for pickup per step 5's draft-pickup rule.
    A completion summary is not repo state and cannot carry a counter; a deferral that
    cannot land its increment durably records that failure as a blocker in the summary
    instead of silently dropping it. In the same scan, read
-   [`incidents.md`](./incidents.md) back to your grounding base — incident context binds
-   this firing: an `environment` entry names hazards to re-verify, a `stand-down` entry
+   [`incidents.md`](./incidents.md) — from your grounding base AND, when a programme PR is
+   open, from that PR's fetched head, since the newest entries may exist only there until
+   it merges — incident context binds this firing: an `environment` entry names hazards to re-verify, a `stand-down` entry
    means establish why the loop exited before proceeding, and a prior `collision` entry
    naming the open programme PR's branch means drive it with the pre-push re-check's care
    — and if THIS firing also ends contested on the same branch, write the repeat up as a
@@ -72,8 +76,13 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    base not diverged from the tested head's merge base, diff within the PR kind's scope)
    and do nothing else. **Overlap guard (QD-5)**: before starting the drive, check when
    the PR head last moved — a push within the last hour means a predecessor firing or its
-   review-fix round is likely still live and driving (incident I-1); defer this firing via
-   step 4's deferral path rather than becoming a second live driver on one branch. A
+   review-fix round is likely still live and driving (incident I-1); defer this firing
+   rather than becoming a second live driver, landing your increment and incident record
+   via step 4's contested route (a draft bookkeeping PR — never a push to the contested
+   head). **Draft pickup**: if a draft bookkeeping PR from an earlier overlap-deferral
+   exists and its contest has cleared (the contested PR merged, or its head quiet past the
+   overlap window), mark that draft ready and drive it to merged under clause 3 before
+   other work, so deferred counter state reaches the base and the streak stays true. A
    bookkeeping PR is WIP for
    drive purposes even though merging it never counts as substantive progress — an unmerged
    counter update left behind would let later firings read a stale streak and keep the

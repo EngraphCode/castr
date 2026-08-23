@@ -114,8 +114,9 @@ When a loop hits its exit criterion, the broadcast names:
    broadcasting instance, plus tracked repo state on a surface
    the audience grounds on whenever a future container or the
    owner is the audience — instance-tier comms state does not
-   cross containers (measured 2026-08-23, proof-programme
-   incident I-1; owner ruling QD-5).
+   cross containers. (Owner-ratified 2026-08-23 after a measured
+   cross-container loop incident; the evidence record lives in
+   the owning loop's own plan estate.)
 
 The broadcast is a stand-down signal, not a request for
 permission. Peers and the owner observe; the loop does not
@@ -137,8 +138,10 @@ explicit owner override carries the five-idle-iteration default.
   consolidation pass that captured the direction (PDR-076
   consolidation pass, separate lane).
 - 2026-08-23 — §Stand-Down Broadcast Shape item 4 added (the
-  broadcast surface follows the audience), executing the
-  proof-programme QD-5 owner ruling: instance-tier comms state
-  proved unobservable across containers (incident I-1), so a
-  cross-container loop's durable broadcast is tracked repo state
-  on a surface its audience grounds on.
+  broadcast surface follows the audience), owner-ratified the
+  same day: a scheduled cross-container loop's stand-down,
+  posted only to instance-tier comms state, proved unobservable
+  to its successor firings, so a cross-container loop's durable
+  broadcast is tracked repo state on a surface its audience
+  grounds on. The measured evidence record lives in the owning
+  loop's own plan estate.

@@ -129,7 +129,10 @@ counter update in that slice's PR; an idle or deferring firing lands it as a ded
 incident records added per QD-5, 2026-08-23) — or, when a
 non-draft programme PR is already open (WIP = 1 forbids a second), as a bookkeeping-scope
 commit (counter, incident, and continuity state)
-pushed to that open PR's head branch, which reaches the base at that PR's merge; a
+pushed to that open PR's head branch, which reaches the base at that PR's merge — or, when
+that open PR is contested under the routine prompt's overlap guard, as a **draft**
+bookkeeping PR (not WIP, touching no contested ref) that the first firing to find the
+contest cleared marks ready and merges; a
 completion summary is never a counter's landing surface. **Incident records share this
 landing path (QD-5)**: [`incidents.md`](./incidents.md) is the programme's incident
 register — collisions, retry exhaustion, environment anomalies, and stand-down broadcasts'
@@ -392,7 +395,8 @@ mechanics only and cites clauses rather than restating them.
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
    firing with a note, it does not race. Read [`incidents.md`](./incidents.md) in the same
-   pre-flight for incident context binding this firing (QD-5).
+   pre-flight — from the grounding base and, when a programme PR is open, from that PR's
+   fetched head too — for incident context binding this firing (QD-5).
 3. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
    open — a slice PR or a bookkeeping PR — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
