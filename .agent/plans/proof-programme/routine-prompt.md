@@ -243,8 +243,8 @@ subordinate to the doctrine above:
 
 - **Second opinion without the owner.** A judgment call that is not an owner fork — a
   review-disposition doubt, an ambiguous brief reading, a merge-instant hesitation — may
-  be posted to the channel addressed to The Watcher. Treat the reply as advisory input
-  (the `ping-before-escalate` ping target), never as owner authority: nothing ADR-051
+  be posted to the channel addressed to The Watcher. Treat the reply as advisory input,
+  never as owner authority: nothing ADR-051
   reserves to owner conditions or owner rulings can be granted by The Watcher, and a
   genuine fork still lands as a QD row.
 - **Owner-alert relay.** For anything blocked on the owner (clause 7 as amended, QD-8),

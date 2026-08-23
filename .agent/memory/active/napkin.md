@@ -10,8 +10,9 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   give you second opinions without involving me." The design insight worth keeping: the
   Watcher is a **liveness bridge** — an interactive session holds capabilities scheduled
   firings lack (richer alerting, a human-adjacent judgment loop), so routing through it
-  converts a firing's capability gap into a message. It is the `ping-before-escalate`
-  ping target made concrete. Authority boundary recorded in the QD register: advisory
+  converts a firing's capability gap into a message. (Not `ping-before-escalate`'s ping
+  target — that rule is strictly a retirement-broadcast pre-check, a misreference Copilot
+  caught on PR #40.) Authority boundary recorded in the QD register: advisory
   and relay only, never owner authority. Capability honesty held: this session probed
   ToolSearch for Slack tools (absent — config post-dates the session) and the doctrine
   carries the unmeasured caveat with Q-15 owning the probe, instead of writing "firings
