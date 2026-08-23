@@ -271,15 +271,17 @@ callbacks, a pair of branded class-instance IR cases (one proving the default `s
 throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
 case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
 both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
-throw for the branded-IR/poisoned-diagnostics cases) then green, 15/15 passing.
+throw for the branded-IR/poisoned-diagnostics cases) then green, 16/16 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, nine rounds of automated PR review (Codex, Copilot) progressively closed the
-full mutation-safety surface: each round's fix protected the callbacks it was shown to be
+opened. Once open, twelve rounds of automated PR review (Codex, Copilot) progressively closed the
+full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
+and a diagnostic-formatting mutation gap (rounds ten through twelve): each round's fix protected
+the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
@@ -388,7 +390,33 @@ array always returns exactly two proofs). Fixed by replacing the `if`/`throw` wi
 `@types/node` declares as `asserts x`): a single function call, not a branching construct, that
 TypeScript's control-flow analysis still narrows on — satisfying both the type system's
 non-optional requirement and item 16's prohibition on visible conditional syntax in the test
-body.
+body. A twelfth round returned to `describeForDiagnostics` itself (product code, not
+test-immediate-fails-governed): its failure-message templates called it directly on the
+retained `proof.artifacts` values, so an oracle or IR artifact with a mutating `toJSON` method
+or enumerable getter would corrupt that same retained artifact merely by being formatted for
+display — defeating the documented "artifacts stay pristine for post-hoc diffing" contract.
+Two changes close this. First, root-cause: `expectSemanticOutcome`'s three checks became
+`if (!condition) throw new Error(...)` instead of `expect(condition, message).toBe(true)`, so
+each message — and the `describeForDiagnostics` calls inside it — is only built once its own
+check has actually failed, not unconditionally for every proof as the ninth round's fix left it;
+a passing proof's artifacts are now never even passed to the formatter (this also let the
+module drop its `vitest` import entirely, since nothing in it calls `expect` any more).
+Second, `describeForDiagnostics` now formats a `structuredClone` of its argument, never the
+argument itself — `JSON.stringify` invokes a `toJSON` method if the value passed to it has one,
+and `structuredClone` produces a plain-data copy with no such method to call. Because
+`structuredClone` itself throws for exactly the kind of value with this vulnerability (an own
+function-valued property, which a `toJSON` method is), the fallback on that throw is a new
+`omitOwnFunctionProperties` helper — a one-level-deep snapshot with any own function-valued
+property filtered out via `Object.entries`, which reads the property without invoking it, so a
+mutating `toJSON`'s body never runs. Confirmed empirically before fixing (a mutating-`toJSON`
+probe corrupted the retained value on the pre-fix code); the existing ninth-round test was
+rebuilt around a genuinely failing (not passing) case, since the new lazy evaluation means a
+passing case no longer reaches `describeForDiagnostics` at all, and a new test proves a
+mutating-`toJSON` oracle's `proof.artifacts` values stay pristine after a failure diagnostic is
+built — confirmed via `git stash` isolation to fail against the pre-fix code and pass against
+the fix. A mutating _getter_ (as opposed to a mutating `toJSON` method) remains a residual,
+inherent limitation: reading a property to know its current value is unavoidable for any
+serializer, `structuredClone` included, so this is documented rather than chased further.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

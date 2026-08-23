@@ -59,24 +59,66 @@
  * artifacts too.
  */
 
-import { expect } from 'vitest';
+/**
+ * Own enumerable properties of `value` whose value is itself a function
+ * (for example a `toJSON` method defined directly on the object, as
+ * opposed to inherited from a prototype) omitted, one level deep.
+ * `structuredClone` cannot clone such a value at all — it throws on any
+ * function-valued property — so this is the fallback that specifically
+ * neutralises a `toJSON` method: `JSON.stringify` only invokes `toJSON` if
+ * the value passed to it has one, and this snapshot never does. Reading
+ * `Object.entries` to find the function does not invoke it, so a mutating
+ * `toJSON`'s body never runs. Non-object values, and any property this
+ * function does not itself recurse into, pass through unexamined — this
+ * is a targeted fix for the reported top-level case, not a general-purpose
+ * deep sanitiser.
+ */
+function omitOwnFunctionProperties(value: unknown): unknown {
+  if (value === null || typeof value !== 'object') {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value.filter((item) => typeof item !== 'function');
+  }
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entry]) => typeof entry !== 'function'),
+  );
+}
 
 /**
  * Format an arbitrary value for a failure message without risking a second,
- * unrelated crash. `JSON.stringify` throws on circular references and on
+ * unrelated crash, and without formatting the caller's own retained
+ * reference. `JSON.stringify` throws on circular references and on
  * `bigint` values — both legitimate for the unbounded `TIR`/`TOutput`/
  * `TOracle` generics this module works with — which would otherwise mask
  * the real assertion failure behind a `TypeError` from the diagnostic
  * message itself. The `String(value)` fallback can itself throw for an
  * artifact whose string coercion (`toString`/`Symbol.toPrimitive`) also
- * throws, so it gets the same guard, one level down.
+ * throws, so it gets the same guard, one level down. Formatting runs on a
+ * `structuredClone` of `value`, not `value` itself: `JSON.stringify` calls
+ * a `toJSON` method if one is defined, and a `toJSON` with a mutating side
+ * effect must not be able to corrupt the artifact this diagnostic is
+ * describing — `structuredClone` never invokes `toJSON`, so the clone it
+ * produces has no such method to call. `structuredClone` itself throws for
+ * exactly this kind of value (an own function-valued property, which
+ * `toJSON` is), so the fallback strips function properties instead of
+ * formatting the original outright.
  */
-function describeForDiagnostics(value: unknown): string {
+function toSafeDiagnosticValue(value: unknown): unknown {
   try {
-    return JSON.stringify(value, (_key, v) => (typeof v === 'bigint' ? `${v}n` : v));
+    return structuredClone(value);
+  } catch {
+    return omitOwnFunctionProperties(value);
+  }
+}
+
+function describeForDiagnostics(value: unknown): string {
+  const safeValue = toSafeDiagnosticValue(value);
+  try {
+    return JSON.stringify(safeValue, (_key, v) => (typeof v === 'bigint' ? `${v}n` : v));
   } catch {
     try {
-      return String(value);
+      return String(safeValue);
     } catch {
       return '<value could not be formatted for diagnostics>';
     }
@@ -386,7 +428,10 @@ export function runAllSemanticOutcomes<TSource, TIR, TOutput, TOracle>(
  * equality — so a case with an intentionally non-structural comparator (for
  * example one that is whitespace- or key-order-insensitive) is judged by its
  * own declared notion of equality, not a stricter one this module imposes.
- * Artifacts appear only inside failure messages, for a diff on failure.
+ * Artifacts appear only inside failure messages, for a diff on failure —
+ * each message is built only once its check has actually failed, not
+ * eagerly for every proof, so a passing proof's artifacts are never even
+ * passed to the diagnostic formatter.
  *
  * Checks non-vacuity first (a vacuous or input-collapsing pipeline makes
  * every other flag meaningless), then oracle agreement, then round-trip
@@ -407,18 +452,21 @@ export function expectSemanticOutcome<TIR, TOutput, TOracle>(
 ): void {
   const { outcome, artifacts } = proof;
 
-  expect(
-    outcome.nonVacuous,
-    `${outcome.case}: equalIR, and equalOracle on both the source and target legs, must all discriminate the declared separating pair — a vacuous comparator or an input-collapsing pipeline proves nothing`,
-  ).toBe(true);
+  if (!outcome.nonVacuous) {
+    throw new Error(
+      `${outcome.case}: equalIR, and equalOracle on both the source and target legs, must all discriminate the declared separating pair — a vacuous comparator or an input-collapsing pipeline proves nothing`,
+    );
+  }
 
-  expect(
-    outcome.oraclesAgree,
-    `${outcome.case}: the target oracle (${describeForDiagnostics(artifacts.targetOracleValue)}) must agree with the source oracle (${describeForDiagnostics(artifacts.sourceOracleValue)}) under equalOracle — parser or writer fidelity loss`,
-  ).toBe(true);
+  if (!outcome.oraclesAgree) {
+    throw new Error(
+      `${outcome.case}: the target oracle (${describeForDiagnostics(artifacts.targetOracleValue)}) must agree with the source oracle (${describeForDiagnostics(artifacts.sourceOracleValue)}) under equalOracle — parser or writer fidelity loss`,
+    );
+  }
 
-  expect(
-    outcome.roundTripEqual,
-    `${outcome.case}: parse → write → reparse (${describeForDiagnostics(artifacts.reparsedIR)}) must preserve the IR (${describeForDiagnostics(artifacts.ir)}) under equalIR`,
-  ).toBe(true);
+  if (!outcome.roundTripEqual) {
+    throw new Error(
+      `${outcome.case}: parse → write → reparse (${describeForDiagnostics(artifacts.reparsedIR)}) must preserve the IR (${describeForDiagnostics(artifacts.ir)}) under equalIR`,
+    );
+  }
 }

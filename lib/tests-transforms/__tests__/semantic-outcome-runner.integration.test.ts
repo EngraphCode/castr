@@ -414,18 +414,18 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
-  it('does not throw from expectSemanticOutcome when an artifact fails both JSON.stringify and String() coercion', () => {
+  it('reports the real semantic failure, not a formatting crash, when an artifact fails both JSON.stringify and String() coercion', () => {
     interface PoisonedOracle {
       readonly value: string;
       toJSON(): never;
       toString(): never;
     }
 
-    // expectSemanticOutcome's failure-message templates call
-    // describeForDiagnostics unconditionally on every artifact, even for a
-    // genuinely passing case — template-literal arguments are evaluated
-    // before `expect(...)` itself runs. An artifact whose JSON.stringify
-    // AND String() coercion both throw must not crash that formatting.
+    // The failure-message templates only run once their check has actually
+    // failed, so this case must genuinely fail (and stay non-vacuous) to
+    // exercise describeForDiagnostics at all. An artifact whose
+    // JSON.stringify AND String() coercion both throw must not crash that
+    // formatting and mask the real semantic-mismatch message.
     const poisoned = (value: string): PoisonedOracle => ({
       value,
       toJSON(): never {
@@ -436,7 +436,7 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       },
     });
 
-    const poisonedCase: SemanticCase<string, string, string, PoisonedOracle> = {
+    const poisonedDisagreeingCase: SemanticCase<string, string, string, PoisonedOracle> = {
       name: 'poisoned-diagnostics',
       source: 'alpha',
       separatingSource: 'beta',
@@ -444,8 +444,11 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       write: (ir) => ir,
       reparse: (output) => output,
       equalIR: (a, b) => a === b,
-      sourceOracle: (source) => poisoned(source),
-      targetOracle: (output) => poisoned(output),
+      sourceOracle: (source) => poisoned(source.toUpperCase()),
+      // Depends on its own argument (so main/separating still discriminate,
+      // keeping nonVacuous true) while deliberately disagreeing with
+      // sourceOracle, so oraclesAgree is what fails.
+      targetOracle: (output) => poisoned(`${output.toUpperCase()}_WRONG`),
       equalOracle: (a, b) => a.value === b.value,
       // structuredClone cannot clone a value with function properties
       // (DataCloneError) — orthogonal to this test's actual point, so
@@ -453,9 +456,52 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       cloneOracle: (oracle) => poisoned(oracle.value),
     };
 
-    const proof = runSemanticOutcome(poisonedCase);
+    const proof = runSemanticOutcome(poisonedDisagreeingCase);
 
-    expect(() => expectSemanticOutcome(proof)).not.toThrow();
+    expect(proof.outcome.nonVacuous).toBe(true);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+    expect(() => expectSemanticOutcome(proof)).toThrow(/target oracle .*must agree/);
+  });
+
+  it('does not corrupt a retained artifact whose toJSON has a mutating side effect when building a failure diagnostic', () => {
+    interface MutatingOracle {
+      value: string;
+      toJSON(): { value: string };
+    }
+
+    const mutatingOracle = (value: string): MutatingOracle => ({
+      value,
+      toJSON(): { value: string } {
+        this.value = 'MUTATED-BY-TOJSON';
+        return { value: this.value };
+      },
+    });
+
+    const mutatingDiagnosticCase: SemanticCase<string, string, string, MutatingOracle> = {
+      name: 'mutating-tojson-diagnostic',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => source,
+      write: (ir) => ir,
+      reparse: (output) => output,
+      equalIR: (a, b) => a === b,
+      sourceOracle: (source) => mutatingOracle(source.toUpperCase()),
+      targetOracle: (output) => mutatingOracle(`${output.toUpperCase()}_WRONG`),
+      equalOracle: (a, b) => a.value === b.value,
+      cloneOracle: (oracle) => mutatingOracle(oracle.value),
+    };
+
+    const proof = runSemanticOutcome(mutatingDiagnosticCase);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+
+    expect(() => expectSemanticOutcome(proof)).toThrow(/target oracle .*must agree/);
+
+    // The diagnostic must have formatted a clone, not the retained artifact
+    // itself — a toJSON with a mutating side effect must not be able to
+    // corrupt proof.artifacts merely by being displayed in a failure
+    // message.
+    expect(proof.artifacts.sourceOracleValue.value).toBe('ALPHA');
+    expect(proof.artifacts.targetOracleValue.value).toBe('ALPHA_WRONG');
   });
 
   it('runs every registered case and returns proofs in registration order', () => {
