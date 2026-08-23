@@ -96,11 +96,11 @@ the channel from the outgoing Watcher's last visible activity (its last
 summary, reply, or intro) up to your own intro, handle what that window
 holds, and only then advance the baseline to your intro's `ts`. A vacancy
 sign-off is the same discipline with an exact boundary: sweep from the
-sign-off's own message `ts` — the Slack timestamp of the vacancy post
-itself, never the tenure `ts` it embeds (that names the tenure it
-closed, which its holder already covered) — up to your own intro before
-advancing, because messages posted into the vacant channel are covered
-by nobody until you do. Only
+last-processed baseline `ts` the sign-off names (the retiring holder's
+final-sweep read boundary; for a legacy sign-off naming none, its own
+message `ts`), never the tenure `ts` it embeds — that names the tenure
+it closed — up to your own intro before advancing, because messages
+posted after that baseline are covered by nobody until you do. Only
 when the channel holds no mantle-state post at all does a fresh stand-up
 baseline at its own intro.
 
@@ -156,9 +156,8 @@ watch from, notify the owner, and stop re-arming. On teardown without a
 successor — owner teardown and the five-idle default alike — delete the
 pending reminder and run one final non-re-arming sweep from the
 current baseline — process, summarise, and alert exactly as a tick
-would, but schedule nothing after it — so every message up to your
-sign-off is processed and the sign-off's own
-`ts` is a true coverage boundary; then resolve the latest valid
+would, but schedule nothing after it — noting the sweep's channel-read
+boundary as your last-processed baseline `ts`; then resolve the latest valid
 mantle-state post (step 2's resolver — void posts skipped) before
 signing off, and branch
 on what it is: a valid intro or relief newer than your own intro means
@@ -166,7 +165,10 @@ a successor took the mantle mid-teardown — run the handover above
 (sign-off reply, baseline `ts`, owner notified) and post no vacancy; a
 valid vacancy, or nothing newer, means the mantle is yours to vacate —
 post the vacancy sign-off, naming your own intro's `ts` as the tenure
-it closes (step 2's tenure binding). The resolve and the post are separate
+it closes (step 2's tenure binding) and your last-processed baseline
+`ts` as the boundary successors sweep from — a read and a post are
+never atomic, so the post's own timestamp can overstate coverage; the
+named baseline is exact. The resolve and the post are separate
 Slack calls, so a successor's intro can land in between — but a vacancy
 posted over it is void by step 2's validity rule (the latest valid
 mantle-state post before it is the successor's intro, not one naming
@@ -180,9 +182,9 @@ handover. A successor post that postdates your vacancy is classified
 by what it observed, not by ordering alone: a relief intro naming you
 (`relieves <your name>`) was prepared against your tenure — answer it
 per section 5 (sign-off reply naming the successor and the baseline
-`ts`, which is your vacancy post's own `ts`, and notify the owner),
+`ts`, which is your last-processed baseline, and notify the owner),
 leaving the vacancy in place as history; a fresh stand-up intro with
 no relief phrase is answering the genuine vacancy — leave the vacancy
-in place (its message `ts` is the successor's sweep boundary) and
+in place (the baseline it names is the successor's sweep boundary) and
 stand down with no further post. Correctness rests on the validity
 rule, not on the deletion or on timing.
