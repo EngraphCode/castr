@@ -614,11 +614,14 @@ last_session` per identity, comma-separated when multiple
     that run: the hook executes `pnpm check:ci` — the non-mutating
     rerun of the canonical aggregate gate (`check` minus the `fix`
     pass, so a green `check:ci` on a tree implies `check` would be
-    green on it) — over the exact tree pushed. The citation binds to
-    the firing's last push, the one carrying the handoff's own
-    continuity edits; an earlier run that predates those edits does
-    not qualify. Name the run in the closeout: hook, head SHA,
-    timestamp. A firing that pushed nothing runs `pnpm check` itself;
+    green on it) — over the working tree at push time. The citation
+    binds to the firing's last push, the one carrying the handoff's
+    own continuity edits, and is valid only when the working tree was
+    clean at that push (no uncommitted tracked changes), so the
+    tested tree IS the pushed HEAD — the hook tests the working tree,
+    not the commit objects. Name the run in the closeout: hook, head
+    SHA, timestamp, and "tree clean at push"; a dirty-tree push run
+    does not qualify — run `pnpm check` instead. A firing that pushed nothing runs `pnpm check` itself;
     a genuinely read-only firing that changed no tracked file records
     "no repo-state change; gate not applicable" as its
     no-landing-session closeout artefact. The multi-agent singleton

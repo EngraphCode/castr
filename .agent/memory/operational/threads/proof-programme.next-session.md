@@ -24,13 +24,28 @@ updates `last_session` rather than adding a row. (Sessions predating this record
 the W-0/Q-00/Q-01 authoring sessions and the first firings — are recorded in the
 programme's delivery evidence rather than retro-filled here.)
 
-| platform    | model          | session_id_prefix | agent_name            | role                          | first_session | last_session |
-| ----------- | -------------- | ----------------- | --------------------- | ----------------------------- | ------------- | ------------ |
-| claude-code | claude-fable-5 | 8fc8a6            | Cindery Kindling Lava | executor (QD-5/QD-6 landings) | 2026-08-23    | 2026-08-23   |
+| agent_name            | id                                   | platform    | model          | session_id_prefix | role                          | first_session | last_session |
+| --------------------- | ------------------------------------ | ----------- | -------------- | ----------------- | ----------------------------- | ------------- | ------------ |
+| Cindery Kindling Lava | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings) | 2026-08-23    | 2026-08-23   |
 
-## Next safe step
+## Next-session landing target
 
-Read the parent plan's frontmatter queue and §Operating protocol; the routine
-prompt is the standing brief for scheduled firings. The next safe step is
-always what the queue and the open programme PR state — this record never
-duplicates them.
+Per PDR-026, externally verifiable, re-derived each session from the queue
+rather than trusted from this record: **drive the single open non-draft
+programme PR to merged, else claim the next eligible queue row** (as recorded
+2026-08-23: PR #35 — Q-02 — is the open PR to drive). Verification: the PR
+merged, or a row's state advanced on the base.
+
+## Session shape and grounding order
+
+Scheduled firings follow the routine prompt end to end (it is the grounding
+order); owner-attended interactive sessions ground via `start-right-quick`
+and then follow the parent plan's §Operating protocol. Either shape updates
+this record's identity table at close.
+
+## Standing decisions
+
+The governing ADR (autonomous-background-implementation-loop) and the
+programme's queued-decisions register carry every standing decision; this
+record points and never duplicates. The queue frontmatter and incident
+register are the live lane state.

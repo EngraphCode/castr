@@ -433,7 +433,7 @@ escape sequence `\u003c` so a note can never break out of the state block.
           'session reads this card and executes. Anything else — reply in ' +
           'the Claude session.</div>';
       }
-      html += '<p class="status" id="status"></p>';
+      html += '<p class="status" id="status" role="status" aria-live="polite"></p>';
       app.innerHTML = html;
       for (const b of app.querySelectorAll('button')) {
         b.addEventListener('click', () => answer(b.dataset.q, b.dataset.a));
@@ -473,7 +473,11 @@ escape sequence `\u003c` so a note can never break out of the state block.
       } catch (err) {
         const code = err && err.code;
         if (code === 'conflict') {
+          // The shell reloads every open view to the winning version;
+          // abort local optimistic UI so a delayed reload never strands
+          // the viewer on disabled buttons.
           statusEl.textContent = 'A newer version just arrived — reloading.';
+          for (const b of document.querySelectorAll('button')) b.disabled = false;
         } else if (code === 'not_writer' || code === 'not_granted') {
           statusEl.textContent =
             'This view is read-only — answers here don’t record. Reply in the Claude session instead.';

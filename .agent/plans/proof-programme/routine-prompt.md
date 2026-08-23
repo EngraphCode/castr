@@ -166,7 +166,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      publish artifacts and deliver a push** (measured only from interactive sessions as
      of 2026-08-23; the fired-session capability probe is on Q-15's gap list). Where it
      cannot, the QD row plus the completion notification's OPEN-decisions list is the
-     alert.
+     alert — and the QD-8 timeliness duty then turns on whether the loop is actually
+     blocked: a fork with an unblocked row to reroute to is a queued decision (batch
+     path; the owner is not blocked because the loop is not), while a fork that leaves
+     NO eligible row — the loop itself blocked on the owner — means land the QD row and
+     close promptly, skipping further work, so the completion notification carries the
+     alert the soonest this session type can deliver it.
    - **Slice fails its second consecutive firing**: mark the row `blocked` with a written
      diagnosis, convert its PR to a draft (never close it), and land the queue-state change
      via the bookkeeping path (row `blocked`, `failures:` count, pointer to the draft's
@@ -185,10 +190,13 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    never narrowed: the landed-outcome record, repo-continuity refresh, napkin capture,
    claims closure, delivery-ledger row, counters, and the programme thread record
    (`threads/proof-programme.next-session.md` — add or update your PDR-027 identity row)
-   bind every firing. The interactive-only steps that do not apply to a firing are
-   exactly these, each still named in the closeout: the entry-point drift sweep (skill
-   step 6d), the cross-platform per-user memory reads (6a auxiliary), and
-   pending-reviewer dispatches for plans the firing did not touch (11a). The
+   bind every firing — and no skill step is skipped: the entry-point drift sweep (skill
+   step 6d) runs as written (it is a short read of the root entry points); the
+   per-user-memory check follows the skill's own absence rule (a fresh container has no
+   populated platform memory surfaces — record "fresh container: surfaces absent" rather
+   than skipping); pending-reviewer dispatches (11a) apply on the skill's own stated
+   condition (the firing touched the plan body) and are otherwise out of scope by the
+   skill's text, not by this profile. The
    consolidation gate (skill steps 9–10) is recorded as `due — <reason>` at most: a
    firing never escalates into consolidate-docs (clause 2's duration bound). The
    cleanliness gate follows the skill's step 12 scheduled-firing clause: cite your LAST
