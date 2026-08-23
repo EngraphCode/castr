@@ -37,6 +37,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   the other writer is a peer firing or an automated bot response. A future design could check
   the PR's live head SHA immediately before every push (not just rely on session-open claims)
   so a collision is detected before attempting the push, not via its rejection.
+- **Resolution (same day, owner-supplied fact):** the writer WAS the previous scheduled firing —
+  the 01:03 session that authored PR #35, still running seven-plus hours in and driving its own
+  review rounds. The epistemic correction above stands (from inside a container the evidence
+  could not distinguish peer from bot — withholding the claim was right), but the fact is now
+  known, and the durable lesson is sharper than either guess: **the loop's cadence never
+  bounded firing duration, so consecutive firings overlap — WIP=1 in PRs never implied one
+  live session.** Closed same-day via the QD-5 landing: ADR-051 clause 2 duration bound (a
+  firing ends before its successor is due; the successor continues the drive from the PR's own
+  state), routine-prompt overlap guard (PR head moved within the last hour → defer, don't
+  become a second driver), incident register I-1 as the worked record.
 
 ## 2026-08-22 (parent plan + autonomous loop — Incandescent Charring Ember / 5aef07, same session, hook-renamed)
 

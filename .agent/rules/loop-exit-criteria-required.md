@@ -94,7 +94,9 @@ work stop quickly.
   stand-down broadcast on loop exit is a standard observable
   event; peers see when an idle loop has stood down.
 - [`use-agent-comms-log`](use-agent-comms-log.md) — the
-  stand-down broadcast uses the standard comms event surface.
+  stand-down broadcast uses the standard comms event surface for
+  same-instance peers; §Stand-Down Broadcast Shape item 4 governs
+  cross-container audiences.
 
 ## Stand-Down Broadcast Shape
 
@@ -107,6 +109,13 @@ When a loop hits its exit criterion, the broadcast names:
    stand-down"_).
 3. A one-line closeout summary — what the loop accomplished
    across its full run, if anything.
+4. The surface the broadcast lands on follows the audience: the
+   standard comms event surface when the audience shares the
+   broadcasting instance, plus tracked repo state on a surface
+   the audience grounds on whenever a future container or the
+   owner is the audience — instance-tier comms state does not
+   cross containers (measured 2026-08-23, proof-programme
+   incident I-1; owner ruling QD-5).
 
 The broadcast is a stand-down signal, not a request for
 permission. Peers and the owner observe; the loop does not
@@ -127,3 +136,9 @@ explicit owner override carries the five-idle-iteration default.
   cancellation incident. Graduated to this rule on the same
   consolidation pass that captured the direction (PDR-076
   consolidation pass, separate lane).
+- 2026-08-23 — §Stand-Down Broadcast Shape item 4 added (the
+  broadcast surface follows the audience), executing the
+  proof-programme QD-5 owner ruling: instance-tier comms state
+  proved unobservable across containers (incident I-1), so a
+  cross-container loop's durable broadcast is tracked repo state
+  on a surface its audience grounds on.
