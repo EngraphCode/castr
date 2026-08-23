@@ -278,10 +278,10 @@ any code was written. Three post-execution gateway reviews (`code-reviewer`, `te
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, thirteen rounds of automated PR review (Codex, Copilot) progressively closed
+opened. Once open, fourteen rounds of automated PR review (Codex, Copilot) progressively closed
 the full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
-and a diagnostic-formatting mutation gap that itself took two rounds to close fully (rounds ten
-through thirteen): each round's fix protected the callbacks it was shown to be
+and a diagnostic-formatting mutation gap that itself took three rounds to close fully (rounds ten
+through fourteen): each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
@@ -428,7 +428,26 @@ structure can never reintroduce an unsanitised alias back into the snapshot. A n
 two-level mutating-`toJSON` structure (an outer value whose own `toJSON` forces the
 `structuredClone` fallback, wrapping a nested value with its own separate mutating `toJSON`)
 proves the nested value also stays pristine; confirmed via `git stash` isolation to fail against
-the pre-fix (one-level) code and pass against the fix.
+the pre-fix (one-level) code and pass against the fix. A fourteenth round found that round
+thirteen's fix had, as a side effect, made the ninth round's own regression test vacuous for the
+guard it was named for: `omitFunctionProperties` now strips a poisoned `toJSON`/`toString` pair
+before `JSON.stringify` ever runs, so that test's fixture no longer reached the `String(value)`
+fallback at all — it would still pass even with that fallback's own `catch` deleted, since
+`JSON.stringify` on the sanitised (function-free) snapshot now succeeds outright. Tracing this
+surfaced a second, more serious gap alongside it: sanitising can itself throw (reading every
+property to know what to strip means a throwing getter surfaces during sanitisation, not just
+during formatting), and that failure mode wasn't caught anywhere, so `describeForDiagnostics`
+could crash uncaught rather than degrade gracefully. `toSafeDiagnosticValue`'s sanitisation
+fallback now has its own `catch`, returning the original value if sanitising itself throws.
+Rewrote the ninth-round test's fixture to add a throwing getter alongside the existing
+poisoned `toJSON`/`toString`, so the full cascade is genuinely exercised — `structuredClone`
+fails (the getter breaks the read needed to clone), sanitisation fails the same way, then
+`JSON.stringify` fails on the raw value's `toJSON`, then `String()` fails on its `toString` —
+finally reaching the constant fallback, which the test now asserts on directly (not only the
+wrapping semantic-mismatch text, which would have passed even with the crash this round found).
+Confirmed empirically that this exact cascade occurs before fixing, and via `git stash`
+isolation that the rewritten test fails against the pre-fix code (the getter's raw error message
+leaking through uncaught) and passes against the fix.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

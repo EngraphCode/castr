@@ -111,13 +111,21 @@ function omitFunctionProperties(value: unknown, seen = new WeakSet<object>()): u
  * produces has no such method to call. `structuredClone` itself throws for
  * exactly this kind of value (an own function-valued property, which
  * `toJSON` is), so the fallback strips function properties instead of
- * formatting the original outright.
+ * formatting the original outright. Sanitising can itself throw — reading
+ * every property to know what to strip means a throwing getter surfaces
+ * during sanitisation too, not just during formatting — so that fallback
+ * gets its own guard, falling back to the original value rather than
+ * propagating an uncaught error out of this function.
  */
 function toSafeDiagnosticValue(value: unknown): unknown {
   try {
     return structuredClone(value);
   } catch {
-    return omitFunctionProperties(value);
+    try {
+      return omitFunctionProperties(value);
+    } catch {
+      return value;
+    }
   }
 }
 

@@ -416,18 +416,23 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
-  it('reports the real semantic failure, not a formatting crash, when an artifact fails both JSON.stringify and String() coercion', () => {
+  it('reports the real semantic failure, not a formatting crash, when every formatting fallback fails', () => {
     interface PoisonedOracle {
       readonly value: string;
+      readonly poison: never;
       toJSON(): never;
       toString(): never;
     }
 
     // The failure-message templates only run once their check has actually
     // failed, so this case must genuinely fail (and stay non-vacuous) to
-    // exercise describeForDiagnostics at all. An artifact whose
-    // JSON.stringify AND String() coercion both throw must not crash that
-    // formatting and mask the real semantic-mismatch message.
+    // exercise describeForDiagnostics at all. A getter that always throws
+    // fails structuredClone (which must read every property to know what
+    // to clone) AND the omitFunctionProperties sanitiser's own
+    // Object.entries read, so both fall back to the raw poisoned value —
+    // at which point toJSON and toString each fail their own formatting
+    // attempt too, genuinely reaching the deepest constant fallback rather
+    // than being short-circuited by an earlier layer's sanitisation.
     const poisoned = (value: string): PoisonedOracle => ({
       value,
       toJSON(): never {
@@ -435,6 +440,9 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
       },
       toString(): never {
         throw new Error('toString fails');
+      },
+      get poison(): never {
+        throw new Error('poison getter fails');
       },
     });
 
@@ -462,7 +470,21 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
 
     expect(proof.outcome.nonVacuous).toBe(true);
     expect(proof.outcome.oraclesAgree).toBe(false);
-    expect(() => expectSemanticOutcome(proof)).toThrow(/target oracle .*must agree/);
+
+    let caught: unknown;
+    try {
+      expectSemanticOutcome(proof);
+    } catch (error) {
+      caught = error;
+    }
+    assert(caught instanceof Error, 'expected expectSemanticOutcome to throw an Error');
+    // Both assertions matter: the wrapping semantic-mismatch message proves
+    // the real failure was reported (not a raw crash), and the constant
+    // placeholder proves every formatting fallback — structuredClone,
+    // sanitisation, JSON.stringify, and String() — genuinely failed rather
+    // than one of them silently succeeding and short-circuiting the rest.
+    expect(caught.message).toMatch(/target oracle .*must agree/);
+    expect(caught.message).toContain('<value could not be formatted for diagnostics>');
   });
 
   it('does not corrupt a retained artifact whose toJSON has a mutating side effect when building a failure diagnostic', () => {
