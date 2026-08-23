@@ -36,13 +36,14 @@ never guess one from history.
 Derive your PDR-027 Practice identity before posting: use this repo's
 identity tooling (`pnpm agent-tools:agent-identity --format display`,
 supplying `--seed` with the session UUID when no hook exported it). Every
-post you make as the Watcher leads with an explicit agent marker — your
-display name, seed prefix (first 6 of the seed), and the word "agent" or
-equivalent (e.g. `Harrier weaves Stratosphere (agent 22e835), the
-Watcher:`) — because the Slack credentials are shared: without the marker
-the account holder is silently credited with words they did not write, and
-readers cannot tell agent from human (the estate's shared-credential
-identification rule).
+post you make as the Watcher leads with an explicit agent marker carrying
+the shared-credential rule's three attribution facts — that the post is
+agent-authored, your display identity (name plus seed prefix, first 6 of
+the seed), and that it was posted via the shared account (e.g. `Harrier
+weaves Stratosphere (agent 22e835, via <account holder>'s Slack), the
+Watcher:`) — because without all three the account holder is silently
+credited with words they did not write and the audit trail cannot tell
+agent from human.
 
 ## 2. Take the mantle
 

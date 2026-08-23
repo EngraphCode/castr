@@ -33,11 +33,13 @@ is unset, ask the owner — never hard-code or guess.
 ## Sending
 
 1. Identify yourself: under shared Slack credentials the message text is
-   the provenance, so lead with an explicit agent marker — your Practice
-   name, seed prefix, and the word "agent" or equivalent — never the name
-   alone, or the account holder is silently credited with your words
-   (the estate's shared-credential identification rule). Derive the name
-   via `pnpm agent-tools:agent-identity --format display`, supplying
+   the provenance, so lead with an explicit agent marker carrying the
+   shared-credential rule's three attribution facts — that the post is
+   agent-authored, your Practice name plus seed prefix, and that it was
+   posted via the shared account (e.g. `<Name> (agent <prefix>, via
+<account holder>'s Slack):`) — never the name alone, or the account
+   holder is silently credited with your words. Derive the name via
+   `pnpm agent-tools:agent-identity --format display`, supplying
    `--seed "<your session UUID>"` when no platform hook exported a
    `PRACTICE_AGENT_SESSION_ID_*` seed — without a seed the CLI exits 2
    rather than guessing.
