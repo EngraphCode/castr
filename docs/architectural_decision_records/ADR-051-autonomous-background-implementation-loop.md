@@ -9,7 +9,9 @@ queued decision QD-5: firing-side reports — the clause 6 stand-down broadcast 
 are durable only as tracked repo state reachable from the loop's grounding path, landed on
 a programme-owned incident register via the plan estate's bookkeeping landing path under
 clauses 6 and 3, because instance-tier collaboration state does not exist across
-containers)
+containers; amended 2026-08-23 by owner direction recorded as QD-8: anything blocked on
+the owner alerts on the owner's mobile channel the moment the block exists, as a clause 7
+interruption class alongside the clause 6 escalations)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -127,7 +129,12 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    exhaustion, environment anomalies, stand-downs — land on the programme-owned incident
    register via the clause 6 bookkeeping path; the report's primary consumer is the next
    firing, with the owner reading in batch, and the owner is interrupted (notification
-   beyond the routine completion summary) only for clause 6 escalation events. No
+   beyond the routine completion summary) only for clause 6 escalation events and for
+   anything **blocked on the owner** — an owner-blocking question alerts on the owner's
+   mobile channel the moment the block exists (amended per QD-8, 2026-08-23; owner
+   direction, verbatim: "Whenever something is blocked on me, and an open question will
+   always become blocking at some point, assume I am not around, and that an alert must
+   be sent via the mobile claude app"). No
    additional live communication channel is introduced for the serialized loop: the shared
    remote is the channel, and its push-time compare-and-swap is the collision primitive,
    checked before every push under the plan estate's firing protocol. Revisiting that

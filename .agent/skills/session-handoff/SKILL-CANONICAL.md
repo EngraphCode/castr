@@ -608,6 +608,24 @@ last_session` per identity, comma-separated when multiple
     blocker) carrying the HEAD SHA at run time. Peers consume the
     result; do not duplicate the run.
 
+    **Scheduled / zero-context firing (owner-ratified 2026-08-23,
+    proof-programme QD-6).** A firing whose **last** push went out
+    through the repo's pre-push hook may satisfy this gate by citing
+    that run: the hook executes `pnpm check:ci` — the non-mutating
+    rerun of the canonical aggregate gate (`check` minus the `fix`
+    pass, so a green `check:ci` on a tree implies `check` would be
+    green on it) — over the exact tree pushed. The citation binds to
+    the firing's last push, the one carrying the handoff's own
+    continuity edits; an earlier run that predates those edits does
+    not qualify. Name the run in the closeout: hook, head SHA,
+    timestamp. A firing that pushed nothing runs `pnpm check` itself;
+    a genuinely read-only firing that changed no tracked file records
+    "no repo-state change; gate not applicable" as its
+    no-landing-session closeout artefact. The multi-agent singleton
+    clause above coordinates through same-instance comms, which do
+    not cross containers — overlapping scheduled firings each cite
+    their own pre-push run instead of coordinating a shared one.
+
 11a. **Dispatch PENDING reviewers if the session touched a plan body.**
 If a thread record's plan carries PENDING reviewer markers AND this
 session touched the plan's body, **dispatch the pending reviewers

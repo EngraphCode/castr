@@ -59,6 +59,9 @@ todos:
   - id: Q-15
     content: 'Fresh-container full-chain readiness: run the entire blocking gate chain unattended in a genuinely fresh container, fix or slice every gap found (measured 2026-08-22: unbuilt agent-tools/dist leaves PreToolUse guards failing OPEN for hours)'
     status: pending
+  - id: Q-16
+    content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
+    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -68,7 +71,7 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
 the Q-01 evidence record). Eligible now: Q-02..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-15; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+outcome), Q-14, Q-15, Q-16; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -307,7 +310,10 @@ with verification recorded. Source: report §11.3 #21. Gate: B-11 (success verdi
 paths — semantically divergent content is reconciled into the `docs/` original before
 deletion, so nothing unique is lost);
 reconcile every file `Status:` line against both indexes (ADR-038, inverse ADR-002); fix the
-wrong H1 numbers in ADR-018/019; repair `IDENTITY.md`'s dead plan link; refresh `SUMMARY.md`
+wrong H1 numbers in ADR-018/019; repair `IDENTITY.md`'s dead plan link; sweep the stale
+`plans/active/` pointers the QD-6 ratification exposes (`.agent/README.md`'s
+explicit-additional-properties links, `AGENT.md`'s active-plan line,
+`session-continuation.prompt.md`'s remediation-02 location); refresh `SUMMARY.md`
 rows. Non-goals: `SUMMARY.md`'s universal-schema-conversion product claim is NOT touched here
 — that single line changes only after B-01, with Q-10's landing. No ADR content
 re-adjudication. Acceptance (`non-code`): zero file/index status divergence (recompute, not
@@ -400,11 +406,31 @@ green. Incident I-1 (2026-08-23) adds cross-container claim visibility to the ga
 `active-claims.json` is per-container instance state, so the session-open claims scan
 cannot see a peer or concurrent writer in another container — the QD-5 pre-push head
 re-check is the standing mitigation, and a proactive cross-container claim signal revisits
-only with ADR-051's parallel-workers alternative.
+only with ADR-051's parallel-workers alternative. The QD-6 review adds a fired-session
+capability probe: can a Routine-spawned session publish an Artifact page and deliver a
+push notification? The owner-decision-ballot mechanism is measured only from interactive
+sessions.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
 pre-execution reviews (2026-08-22). Gate: none (eligible immediately).
+
+**Q-16 — Plan-architecture repair.** Surface: `.agent/skills/plan/SKILL-CANONICAL.md`'s
+unresolvable references — `.agent/plans/templates/README.md` (step 3 and §Choose a
+Template), `templates/components/quality-gates.md` (requirement 4),
+`templates/components/lifecycle-triggers.md` (requirement 13), and the ADR-117 path (this
+repo's ADRs live under `docs/architectural_decision_records/`) — restored from the Oak
+transplant source (the napkin records the Oak inventory: README + 7 templates + 10
+components) or retargeted to what exists; sweep sibling references to the absent templates
+directory in the same landing (`.agent/memory/active/patterns/templates-encode-failure-modes.md`
+cites it at two sites). Non-goals: no wholesale re-transplant of the Oak template estate
+beyond what the skill's steps need; no silent deletion of the skill's document-hierarchy
+section; no change to the general lifecycle model — the QD-6 briefs-are-plans ratification
+is programme-scoped, and a general doctrine change would be its own owner decision.
+Acceptance (`non-code`): every reference in the skill file resolves, recomputed via
+`validate-markdown-links` over the touched files rather than eyeballed; gates green.
+Source: the foundation-alignment note below; the napkin's transplant-gap entries. Gate:
+none (eligible immediately).
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
@@ -485,7 +511,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-02..Q-09, Q-13, Q-14, Q-15.
+- **Eligible now**: Q-02..Q-09, Q-13, Q-14, Q-15, Q-16.
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
@@ -544,8 +570,10 @@ landing.
   [`queued-decisions.md`](./queued-decisions.md) (trigger: programme completion, or earlier
   on the owner's ask). PR #23's selective-delta disposition is Q-13.
 
-`.agent/plans/active/` is now clear: per-slice plans land there as the single primary
-atomic plan while in flight, and move out per lifecycle when the slice completes.
+`.agent/plans/active/` is now clear and stays clear for this programme's rows: the queue
+briefs are the per-slice plans (QD-6, programme-scoped) and plan-authoring acts land as
+parent-plan edits per Q-12's brief; the general `active/` contract for non-programme work
+is untouched.
 
 ## Foundation alignment and first-principles check
 
@@ -562,12 +590,18 @@ re-verified at slice-author time per
 [`verify-vendor-call-shapes-at-plan-author-time`](../../rules/verify-vendor-call-shapes-at-plan-author-time.md).
 Note: the plan skill's template/component references (`plans/templates/`, ADR-117 path) do
 not resolve in this repo — a known transplant gap recorded in the napkin; this plan names its
-gates and lifecycle duties directly instead.
+gates and lifecycle duties directly instead, and the repair is queued as Q-16.
 
 ## Lifecycle
 
-Per-slice plans land in `.agent/plans/active/` as the single primary atomic plan while in
-flight and archive on completion; this parent plan lives in the `proof-programme/` collection
+**The queue briefs ARE the per-slice plans for this programme** (owner-ratified
+2026-08-23, QD-6, via the first owner-decision ballot): each row's brief is the delegation
+contract a firing executes directly — surface, non-goals, acceptance with proof level,
+source, premise re-verification. Plan-authoring acts land as edits to this parent plan,
+per Q-12's own brief. The ratification is programme-scoped: the general plan architecture
+(`.agent/plans/active/` as the home of a standalone primary executable plan) is untouched
+for work outside this programme. This parent plan lives in the
+`proof-programme/` collection
 for the programme's duration and archives when the programme completes or the owner closes
 it. Lifecycle touch points (claim, landing, closure, consolidation) follow the standing
 practice; each firing's session-handoff is the per-firing lifecycle record.

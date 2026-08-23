@@ -86,3 +86,17 @@ family or a testing-strategy corollary) + the generator-side quoting fix.
 `[captured: 2026-07-03 | source: napkin part-3 + PR #4 push refusals]`
 trigger-condition: a 2nd generator-formatter fixpoint instance, or the generator-side fix lands.
 status: pending.
+
+### Autonomous-programme operating pattern → PDR
+
+The `autonomous-background-programme` pattern (with `owner-decision-ballot` as its
+decision-transport companion) is Practice-governance-grade: the operating shape for
+unattended scheduled-session programmes — ballot front-loading, condition-based merge
+authority, queue-as-frontmatter with durable counters, reports-follow-the-audience,
+collision machinery for a shared remote, and the tap-to-answer owner ballot. Candidate
+permanent home: a **PDR** once a second autonomous programme (or a second host repo)
+consumes the pattern, or on owner direction. Live in `.agent/memory/active/patterns/`.
+`[captured: 2026-08-23 | source: QD-6 landing (proof-programme)]`
+trigger-condition: a second autonomous programme is stood up, or the owner directs
+graduation.
+status: pending.
