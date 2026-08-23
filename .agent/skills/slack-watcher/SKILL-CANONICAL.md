@@ -55,7 +55,9 @@ latest post that is a vacancy sign-off, or no mantle-state post at all,
 means the mantle is vacant and this is a fresh stand-up (no relief
 phrase). Then post one intro: your name, that you now hold
 the Watcher mantle, seed prefix and naming-schema id, polling cadence,
-and how to address you (by name or "the Watcher"). When relieving, the
+how to address you (by name or "the Watcher"), and that your sign-off
+will name this intro's `ts` — the tenure declaration the validity rule
+below relies on. When relieving, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
 outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
@@ -72,9 +74,12 @@ before it. A vacancy naming an older tenure or another holder's tenure
 is void — a superseded or stale sign-off, skipped when resolving the
 latest state. A vacancy carrying no tenure `ts` predates this rule:
 judge it by authorship instead — valid only when the latest valid
-mantle-state post before it names its author as the holder — so
-existing channel history keeps its meaning across the cutover. Judge
-each post against the valid
+mantle-state post before it names its author as the holder AND that
+intro does not itself declare tenure binding — so existing channel
+history keeps its meaning across the cutover, while a delayed legacy
+vacancy can never close a new-protocol tenure, even the same author's
+(intros posted under this rule declare the binding; see the intro
+content above). Judge each post against the valid
 state before it, void posts already excluded, so one stale vacancy left
 in the channel cannot void the legitimate teardown that follows it; and
 because binding is by tenure `ts`, not author, a delayed vacancy from a
