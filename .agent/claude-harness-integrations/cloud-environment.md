@@ -76,9 +76,16 @@ repo's hook so other Practice repos' sessions are unaffected.
 
 The script exits non-zero on any failure and session creation then fails
 with the script output in the session-start card — deliberately. A session
-on a half-built environment is worse than no session. Known-benign output:
-the git-core PPA InRelease signature warning (`rsa1024` weak algorithm) is
-a warning, not an error.
+on a half-built environment is worse than no session.
+
+One tracked vendor warning (per no-warning-toleration's third-party
+clause): `apt-get update` reports the git-core PPA's InRelease signature
+uses a weak algorithm (`rsa1024`). The key is Launchpad's, not this
+repo's, so the warning cannot be fixed at source; the signature still
+verifies and provisioning proceeds. Triage disposition: if apt escalates
+this to a rejected signature, provisioning hard-fails loudly at `apt-get
+update` — that failure is the designed signal, and the remedy is moving
+git to a source with a modern key.
 
 ## Provenance (worked instances, 2026-08-23)
 

@@ -94,11 +94,14 @@ re-arm from a stale one.
 
 Exit criteria (per `loop-exit-criteria-required`): the loop stops when a
 mantle-state post newer than your own intro appears (you were relieved or
-superseded — sign off and stand down, section 5) or when the owner tears
-the watch down. A quiet channel is not idleness — the one-line report is
-the tick's commissioned output — so the five-idle-iteration default does
-not retire a healthy watch; those two conditions are this loop's declared
-exit criteria.
+superseded — sign off and stand down, section 5), when the owner tears
+the watch down, or on that rule's default — five consecutive ticks with
+nothing new in the channel — by standing down through the teardown path
+with a vacancy sign-off naming the criterion that fired. The template
+cannot exempt itself from the default: a watch meant to outlive quiet
+spells exists only when the owner names that criterion when
+commissioning the watch (e.g. "hold the watch until stood down"), and
+the intro then records it.
 
 The self-re-arming chain is a single point of failure — a lost reminder
 or platform restart kills the loop silently, and silence is never
