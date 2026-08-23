@@ -46,17 +46,17 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    cannot land its increment durably records that failure as a blocker in the summary
    instead of silently dropping it. Then stop.
 5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
-   open — a slice PR **or a bookkeeping PR** — drive it (CI, review threads under ADR-051
-   clause 4) and do nothing else. A slice PR merges under clause 3. A bookkeeping PR is
-   driven to the same four conditions, but **its merge queues for the owner while QD-3 is
-   open**: clause 3's unattended grant names slice PRs only, a plan that contradicts its
-   ADR yields (`orientation.md` precedence), and the loop asks rather than infers authority
-   (`no-manufactured-permission`). A bookkeeping PR is WIP for
+   open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
+   ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
+   amendment and whose full four-condition bar governs: every check green on the current
+   head, every conversation properly and proportionately resolved — fixed or rejected,
+   base not diverged from the tested head's merge base, diff within the PR kind's scope)
+   and do nothing else. A bookkeeping PR is WIP for
    drive purposes even though merging it never counts as substantive progress — an unmerged
    counter update left behind would let later firings read a stale streak and keep the
    three-idle kill switch from ever firing. Driving a bookkeeping PR is itself
    zero-progress, and THIS firing's increment must land too: push it as a counter-only
-   commit onto the bookkeeping PR's head branch **before** the merge or merge request, so
+   commit onto the bookkeeping PR's head branch **before** merging, so
    one merge carries both firings' counter state — "do nothing else" never waives step 8's
    every-firing counter duty. Otherwise claim the next `pending`
    queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
@@ -87,9 +87,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    merged, commit advancing a claimed slice, row completed, head-repair landed, queued
    decision recorded); an idle firing always increments it. An idle or deferring firing
    lands its update as a **bookkeeping PR** (counter/continuity state only, no product
-   code; the ADR-051 clause 6 persistence mechanism, driven to clause 3's four conditions
-   with its merge queued to the owner while QD-3 is open — see step 5; not a slice PR,
-   never substantive progress).
+   code; the ADR-051 clause 6 persistence mechanism, merged unattended at the clause 3 bar,
+   which covers bookkeeping PRs per the QD-3 amendment; not a slice PR, never substantive
+   progress).
 9. **Close**: run the `engraph-session-handoff` skill. The completion notification must
    name: what merged, what advanced, queued decisions written, blocked slices, counter
    values landed. Never end with the repo red without a clause-6 record, or a PR
