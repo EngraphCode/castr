@@ -2,6 +2,22 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (owner standing directive — blocked-on-owner means mobile alert — Cindery Kindling Lava)
+
+- **Owner standing directive (verbatim intent, 2026-08-23): "Whenever something is blocked on
+  me — and an open question will always become blocking at some point — assume I am not
+  around, and send an alert via the mobile Claude app."** The owner then closed the tab
+  expecting the pending proposals to arrive by push — the directive was applied in the same
+  minute it was given (PushNotification with both proposals, first sentence as the banner).
+  Operational meaning: an open question addressed to the owner is never parked in chat text
+  or a repo surface alone; the moment it exists, it goes out on the channel the owner
+  actually watches (mobile push — for scheduled firings this is the completion notification,
+  which already carries OPEN queued-decisions rows per the #37 landing; for interactive
+  sessions it is the PushNotification tool). This is the QD-5 audience-follows-surface
+  principle applied to the owner as audience. `candidate:` graduate into
+  `owner-attention-at-action-moments` (rule) and/or the routine prompt's owner-interruption
+  line at the playbook landing.
+
 ## 2026-08-23 (proof-programme scheduled firing — WIP=1 collision on PR #35's branch — Tidal Drifting Lighthouse)
 
 - **`active-claims.json`'s per-container, untracked nature cannot prevent a real WIP=1
