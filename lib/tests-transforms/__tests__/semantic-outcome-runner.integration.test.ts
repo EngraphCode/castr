@@ -464,8 +464,11 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
 
     expect(proofs).toHaveLength(2);
     expect(proofs.map((proof) => proof.outcome.case)).toEqual(['first', 'second']);
-    for (const proof of proofs) {
-      expect(() => expectSemanticOutcome(proof)).not.toThrow();
+    const [first, second] = proofs;
+    if (first === undefined || second === undefined) {
+      throw new Error('expected exactly two proofs');
     }
+    expect(() => expectSemanticOutcome(first)).not.toThrow();
+    expect(() => expectSemanticOutcome(second)).not.toThrow();
   });
 });

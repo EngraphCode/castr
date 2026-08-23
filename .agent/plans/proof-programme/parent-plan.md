@@ -374,7 +374,12 @@ asked to be built is the "findings no longer converging" signal for stopping. Th
 both declined marker-mapping/stateful-fake findings is queued at
 [QD-4](./queued-decisions.md) per clause 4's "queue entry for the substance" requirement, so a
 stricter owner reading of `test-immediate-fails.md` item 12 can apply to future semantic-fidelity
-fakes without re-litigating this PR.
+fakes without re-litigating this PR. A tenth round flagged a genuinely separate item-14 issue —
+the "runs every registered case" test asserted its two proofs inside a `for` loop, which is
+literal test-authored control flow around assertions regardless of the fixed, known-size array
+it iterated — fixed by replacing the loop with two explicit assertions against the destructured
+`first`/`second` proofs (guarded by an explicit `undefined` check, since `noUncheckedIndexedAccess`
+means indexed access alone cannot narrow the type `expectSemanticOutcome` requires).
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
