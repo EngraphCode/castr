@@ -412,6 +412,50 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
+  it('does not throw from expectSemanticOutcome when an artifact fails both JSON.stringify and String() coercion', () => {
+    interface PoisonedOracle {
+      readonly value: string;
+      toJSON(): never;
+      toString(): never;
+    }
+
+    // expectSemanticOutcome's failure-message templates call
+    // describeForDiagnostics unconditionally on every artifact, even for a
+    // genuinely passing case — template-literal arguments are evaluated
+    // before `expect(...)` itself runs. An artifact whose JSON.stringify
+    // AND String() coercion both throw must not crash that formatting.
+    const poisoned = (value: string): PoisonedOracle => ({
+      value,
+      toJSON(): never {
+        throw new Error('toJSON fails');
+      },
+      toString(): never {
+        throw new Error('toString fails');
+      },
+    });
+
+    const poisonedCase: SemanticCase<string, string, string, PoisonedOracle> = {
+      name: 'poisoned-diagnostics',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => source,
+      write: (ir) => ir,
+      reparse: (output) => output,
+      equalIR: (a, b) => a === b,
+      sourceOracle: (source) => poisoned(source),
+      targetOracle: (output) => poisoned(output),
+      equalOracle: (a, b) => a.value === b.value,
+      // structuredClone cannot clone a value with function properties
+      // (DataCloneError) — orthogonal to this test's actual point, so
+      // reconstruct a fresh poisoned instance instead.
+      cloneOracle: (oracle) => poisoned(oracle.value),
+    };
+
+    const proof = runSemanticOutcome(poisonedCase);
+
+    expect(() => expectSemanticOutcome(proof)).not.toThrow();
+  });
+
   it('runs every registered case and returns proofs in registration order', () => {
     const proofs = runAllSemanticOutcomes([
       correctCase('first', 'alpha', 'beta'),

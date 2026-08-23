@@ -67,13 +67,19 @@ import { expect } from 'vitest';
  * `bigint` values — both legitimate for the unbounded `TIR`/`TOutput`/
  * `TOracle` generics this module works with — which would otherwise mask
  * the real assertion failure behind a `TypeError` from the diagnostic
- * message itself.
+ * message itself. The `String(value)` fallback can itself throw for an
+ * artifact whose string coercion (`toString`/`Symbol.toPrimitive`) also
+ * throws, so it gets the same guard, one level down.
  */
 function describeForDiagnostics(value: unknown): string {
   try {
     return JSON.stringify(value, (_key, v) => (typeof v === 'bigint' ? `${v}n` : v));
   } catch {
-    return String(value);
+    try {
+      return String(value);
+    } catch {
+      return '<value could not be formatted for diagnostics>';
+    }
   }
 }
 

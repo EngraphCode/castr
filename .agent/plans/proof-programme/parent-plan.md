@@ -270,15 +270,16 @@ bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equal
 vacuous-witness), a mutation-safety/repeatability regression case exercising all seven
 callbacks, a pair of branded class-instance IR cases (one proving the default `structuredClone`
 throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
-case, and an empty-registry hard-fail, all red-first (module-not-found, or the documented throw
-for the branded-IR case) then green, 14/14 passing.
+case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
+both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
+throw for the branded-IR/poisoned-diagnostics cases) then green, 15/15 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, eight rounds of automated PR review (Codex, Copilot) progressively closed the
+opened. Once open, nine rounds of automated PR review (Codex, Copilot) progressively closed the
 full mutation-safety surface: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
@@ -323,31 +324,54 @@ empirically with a probe script before fixing. `reparsedIR` is now snapshotted w
 immediately on return, and a new dedicated test (`parse`/`reparse` sharing one retained,
 mutated-in-place object — the minimal shape able to prove the defect, since two calls returning
 fresh objects never alias) confirmed via `git stash` isolation to fail against the pre-fix code
-and pass against the fix. Across all eight rounds, all seven callbacks were confirmed to receive
-an independent clone at every call, with every one of their return values now snapshotted
-immediately on return wherever a later call to that same callback (or a callback sharing its
-underlying implementation) could otherwise overwrite it — no narrower leak left to find on the
-mutation-safety surface, and the clone mechanism itself is now confirmed to work for branded,
-non-plain-data artifact types — the kind Q-02's own "artifact-agnostic rework of PR #11's
-mechanics" brief exists to support. Also fixed along the way: a missing vacuous-witness mutant
-(case data
+and pass against the fix. The ninth round found one more genuine robustness gap, this time in
+`describeForDiagnostics` itself: its `String(value)` fallback (added to survive
+`JSON.stringify` throwing on circular/`bigint` values) can itself throw for an artifact whose
+own string coercion also throws, and since `expectSemanticOutcome`'s failure-message templates
+call it unconditionally as eagerly-evaluated template-literal arguments — even for a genuinely
+passing case — that second throw would crash `expectSemanticOutcome` outright rather than
+report a semantic mismatch. Confirmed empirically (a poisoned object with throwing
+`toJSON`/`toString`) before fixing. `describeForDiagnostics` now guards the `String(value)`
+fallback with its own try/catch, returning a constant description if both formatting attempts
+fail; a new test proves a poisoned-diagnostics case no longer crashes `expectSemanticOutcome`,
+confirmed via `git stash` isolation to fail against the pre-fix code and pass against the fix.
+Across all nine rounds, all seven callbacks were confirmed to receive an independent clone at
+every call, with every one of their return values now snapshotted immediately on return wherever
+a later call to that same callback (or a callback sharing its underlying implementation) could
+otherwise overwrite it — no narrower leak left to find on the mutation-safety surface, and the
+clone mechanism itself is now confirmed to work for branded, non-plain-data artifact types — the
+kind Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief exists to support. Also
+fixed along the way: a missing vacuous-witness mutant (case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of
 duplicating it), branching/input-interpolating logic in error-message construction inside the
 shared test fixture (`test-immediate-fails.md` item 12 — detection belongs in the runner, not the
 fake), a `JSON.stringify` crash risk on circular/`bigint` oracle values in diagnostic messages,
-and missing mandatory `@example`/`@see` TSDoc on the public API. Two findings were verified and
+and missing mandatory `@example`/`@see` TSDoc on the public API. Three findings were verified and
 declined rather than actioned, each with reasoning posted on its thread rather than a silent
 skip: an async runner variant matching the report's fuller Tranche-01 §5.3 contract is deferred
 to Q-11, which explicitly consumes this Q-02 extraction — building it now risks the
 second-runner fork this brief forbids before a real async consumer exists to derive the actual
-signature from; and a repeated claim that the fixture's core marker-prefixing `write` mapping
-itself violates the no-fake-logic rule is held to be a misapplication of a rule aimed at opaque
+signature from; a repeated claim that the fixture's core marker-prefixing `write` mapping itself
+violates the no-fake-logic rule is held to be a misapplication of a rule aimed at opaque
 dependency mocks (canonical examples: logger, HTTP client) to a fixture that IS the minimal data
 flow the runner's proof depends on — the repo's own `test-reviewer` reviewed this exact line
 across all four rounds and flagged only the (now-fixed) error-message interpolation, never the
-transformation itself.
+transformation itself; and, in the ninth round, a claim that the mutation-safety test's
+closure-retained, mutate-and-return oracle fakes (added in the seventh round specifically to
+reproduce a stateful-oracle aliasing bug that same reviewer reported) are themselves a
+"state machine" barred by `test-immediate-fails.md` item 12 — declined as the same category of
+misapplication: the retained-and-mutated state is not incidental scaffolding but the exact
+mechanic under proof (the runner's documented guarantee that it correctly isolates a stateful
+case), the fake performs no branching and takes no more than one input-dependent step per call
+(matching the item's "captured calls" allowance, not its "state machine" prohibition), and the
+closely analogous `retainedIRs` pattern from the fifth round survived four further review rounds
+unflagged. Held as a genuine rule-interpretation disagreement rather than a correctness defect —
+per ADR-051 clause 4, only correctness/security/data-loss defects are blocking in every round;
+declining a non-blocking refinement after this many rounds of otherwise-converging review is the
+carry-forward path clause 4 itself describes, and a bot revisiting the very proof mechanism it
+asked to be built is the "findings no longer converging" signal for stopping.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
