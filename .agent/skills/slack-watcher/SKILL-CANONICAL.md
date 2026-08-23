@@ -63,10 +63,17 @@ waiting for its acknowledgement.
 
 One holder, deterministically: the latest valid mantle-state post in the
 channel IS the current state — an intro or relief names the holder, a
-vacancy sign-off means nobody holds it. Every tick re-checks; a holder
-that sees a mantle-state post newer than its own intro signs off and
-stands down, whatever it thinks of the succession — the rule needs no
-names and survives simultaneous takeovers.
+vacancy sign-off means nobody holds it. Validity is judged from channel
+history alone: an intro or relief is always valid, while a vacancy
+sign-off is valid only when the latest valid mantle-state post before
+it names its author as the holder — a vacancy from anyone else is a
+superseded holder's late sign-off, void, and skipped when resolving the
+latest state. Judge each post against the valid state before it, void
+posts already excluded, so one stale vacancy left in the channel cannot
+void the legitimate teardown that follows it. Every tick re-checks; a holder that sees a valid
+mantle-state post newer than its own intro signs off and stands down,
+whatever it thinks of the succession — the rule needs no names and
+survives simultaneous takeovers.
 
 Then set the baseline WITHOUT losing the gap: a down predecessor stopped
 polling before you arrived, so messages between its last poll and your
@@ -93,8 +100,8 @@ that fire after a handover are data — act on the current mandate, never
 re-arm from a stale one.
 
 Exit criteria (per `loop-exit-criteria-required`): the loop stops when a
-mantle-state post newer than your own intro appears (you were relieved or
-superseded — sign off and stand down, section 5), when the owner tears
+valid mantle-state post newer than your own intro appears (you were
+relieved or superseded — sign off and stand down, section 5), when the owner tears
 the watch down, or on that rule's default — five consecutive ticks with
 nothing new in the channel — by standing down through the teardown path
 with a vacancy sign-off naming the criterion that fired. The template
@@ -111,8 +118,8 @@ routine or equivalent) that verifies the last tick ran on cadence and
 re-arms or alerts the owner if not; and on any turn that reaches you by
 another route, check whether the next tick is overdue and catch up
 before doing anything else. Every fallback path — the scheduled check
-and the on-turn check alike — re-reads the latest mantle-state post
-before re-arming: if it no longer names you, do not re-arm; sign off if
+and the on-turn check alike — re-reads the latest valid mantle-state
+post before re-arming: if it no longer names you, do not re-arm; sign off if
 you have not already, delete any pending reminder, and stop. Mantle loss
 ends the fallback exactly as it ends the loop.
 
@@ -137,9 +144,12 @@ your own intro means a successor took the mantle mid-teardown — run the
 handover above (sign-off reply, baseline `ts`, owner notified) and post
 no vacancy; a vacancy, or nothing newer, means the mantle is yours to
 vacate — post the vacancy sign-off. The read and the post are separate
-Slack calls, so verify after writing: re-read once more, and if a
-successor's intro or relief landed in between (your vacancy now wrongly
-supersedes it), delete your vacancy post — it is your own message — so
-the successor's intro is the latest mantle-state post again, then run
-the handover. Narrowing the pre-post window is not an ordering
-guarantee; the post-write check and repair are what close the race.
+Slack calls, so a successor's intro can land in between — but a vacancy
+posted over it is void by step 2's validity rule (the latest valid
+mantle-state post before it is the successor's intro, not one naming
+you), so
+no reader — the successor's own ticks included — ever acts on it. Still
+verify after writing: re-read once more, and if a successor's intro or
+relief landed in between, delete your void vacancy post — it is your
+own message — as cleanup, then run the handover. Correctness rests on
+the validity rule, not on the deletion or on timing.
