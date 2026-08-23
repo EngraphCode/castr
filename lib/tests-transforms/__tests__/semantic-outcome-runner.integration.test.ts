@@ -309,7 +309,9 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(mutatingCase.separatingSource).toEqual({ value: 'beta' });
     expect(runSemanticOutcome(mutatingCase).outcome).toEqual(proof.outcome);
   });
+});
 
+describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting robustness', () => {
   it('throws when a branded class-instance IR is cloned with the default structuredClone', () => {
     // Mirrors this repo's own CastrSchema/CastrSchemaProperties IR: a class
     // instance whose behaviour lives in a prototype method, not in an own
@@ -502,6 +504,64 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     // message.
     expect(proof.artifacts.sourceOracleValue.value).toBe('ALPHA');
     expect(proof.artifacts.targetOracleValue.value).toBe('ALPHA_WRONG');
+  });
+
+  it('does not corrupt a nested retained value whose toJSON has a mutating side effect', () => {
+    interface NestedMutating {
+      value: string;
+      toJSON(): { value: string };
+    }
+    interface OuterMutating {
+      outerValue: string;
+      nested: NestedMutating;
+      toJSON(): { outerValue: string; nested: NestedMutating };
+    }
+
+    const makeNested = (value: string): NestedMutating => ({
+      value,
+      toJSON(): { value: string } {
+        this.value = 'MUTATED-NESTED';
+        return { value: this.value };
+      },
+    });
+
+    // The outer value's own toJSON is what forces structuredClone to throw
+    // and fall into the shallow-then-recursive omitFunctionProperties
+    // fallback — the nested value's toJSON is the thing under test: a
+    // sanitiser that only strips function properties one level deep would
+    // leave this nested object as a live, unsanitised reference, so
+    // JSON.stringify would still reach and invoke its toJSON.
+    const makeOuter = (outerValue: string, nestedValue: string): OuterMutating => ({
+      outerValue,
+      nested: makeNested(nestedValue),
+      toJSON(): { outerValue: string; nested: NestedMutating } {
+        this.outerValue = 'MUTATED-OUTER';
+        return { outerValue: this.outerValue, nested: this.nested };
+      },
+    });
+
+    const nestedMutatingCase: SemanticCase<string, string, string, OuterMutating> = {
+      name: 'nested-mutating-tojson-diagnostic',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => source,
+      write: (ir) => ir,
+      reparse: (output) => output,
+      equalIR: (a, b) => a === b,
+      sourceOracle: (source) => makeOuter(source.toUpperCase(), `${source.toUpperCase()}-N`),
+      targetOracle: (output) =>
+        makeOuter(`${output.toUpperCase()}_WRONG`, `${output.toUpperCase()}_WRONG-N`),
+      equalOracle: (a, b) => a.outerValue === b.outerValue,
+      cloneOracle: (oracle) => makeOuter(oracle.outerValue, oracle.nested.value),
+    };
+
+    const proof = runSemanticOutcome(nestedMutatingCase);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+
+    expect(() => expectSemanticOutcome(proof)).toThrow(/target oracle .*must agree/);
+
+    expect(proof.artifacts.sourceOracleValue.outerValue).toBe('ALPHA');
+    expect(proof.artifacts.sourceOracleValue.nested.value).toBe('ALPHA-N');
   });
 
   it('runs every registered case and returns proofs in registration order', () => {

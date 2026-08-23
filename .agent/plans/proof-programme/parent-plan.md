@@ -271,17 +271,17 @@ callbacks, a pair of branded class-instance IR cases (one proving the default `s
 throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
 case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
 both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
-throw for the branded-IR/poisoned-diagnostics cases) then green, 16/16 passing.
+throw for the branded-IR/poisoned-diagnostics cases) then green, 17/17 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, twelve rounds of automated PR review (Codex, Copilot) progressively closed the
-full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
-and a diagnostic-formatting mutation gap (rounds ten through twelve): each round's fix protected
-the callbacks it was shown to be
+opened. Once open, thirteen rounds of automated PR review (Codex, Copilot) progressively closed
+the full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
+and a diagnostic-formatting mutation gap that itself took two rounds to close fully (rounds ten
+through thirteen): each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
@@ -406,17 +406,29 @@ argument itself — `JSON.stringify` invokes a `toJSON` method if the value pass
 and `structuredClone` produces a plain-data copy with no such method to call. Because
 `structuredClone` itself throws for exactly the kind of value with this vulnerability (an own
 function-valued property, which a `toJSON` method is), the fallback on that throw is a new
-`omitOwnFunctionProperties` helper — a one-level-deep snapshot with any own function-valued
-property filtered out via `Object.entries`, which reads the property without invoking it, so a
-mutating `toJSON`'s body never runs. Confirmed empirically before fixing (a mutating-`toJSON`
-probe corrupted the retained value on the pre-fix code); the existing ninth-round test was
-rebuilt around a genuinely failing (not passing) case, since the new lazy evaluation means a
-passing case no longer reaches `describeForDiagnostics` at all, and a new test proves a
-mutating-`toJSON` oracle's `proof.artifacts` values stay pristine after a failure diagnostic is
-built — confirmed via `git stash` isolation to fail against the pre-fix code and pass against
-the fix. A mutating _getter_ (as opposed to a mutating `toJSON` method) remains a residual,
-inherent limitation: reading a property to know its current value is unavoidable for any
-serializer, `structuredClone` included, so this is documented rather than chased further.
+`omitFunctionProperties` helper filtering out own function-valued properties via
+`Object.entries`, which reads the property without invoking it, so a mutating `toJSON`'s body
+never runs. Confirmed empirically before fixing (a mutating-`toJSON` probe corrupted the
+retained value on the pre-fix code); the existing ninth-round test was rebuilt around a
+genuinely failing (not passing) case, since the new lazy evaluation means a passing case no
+longer reaches `describeForDiagnostics` at all, and a new test proves a mutating-`toJSON`
+oracle's `proof.artifacts` values stay pristine after a failure diagnostic is built — confirmed
+via `git stash` isolation to fail against the pre-fix code and pass against the fix. A mutating
+_getter_ (as opposed to a mutating `toJSON` method) remains a residual, inherent limitation:
+reading a property to know its current value is unavoidable for any serializer, `structuredClone`
+included, so this is documented rather than chased further. A thirteenth round found that
+round twelve's fallback snapshot was only one level deep — a nested value with its own mutating
+`toJSON` (not the top-level artifact's) still leaked through as a live, unsanitised reference,
+so `JSON.stringify` still reached and invoked it. Confirmed empirically before fixing (a probe
+with a nested mutating `toJSON` reproduced the corruption exactly as reported). `omitFunctionProperties`
+is now genuinely recursive — it strips function-valued properties at every depth, not just the
+top — and cycle-safe: a value already seen higher in the same recursion is replaced with a
+`'<circular>'` placeholder rather than returned as the original live reference, so a circular
+structure can never reintroduce an unsanitised alias back into the snapshot. A new test with a
+two-level mutating-`toJSON` structure (an outer value whose own `toJSON` forces the
+`structuredClone` fallback, wrapping a nested value with its own separate mutating `toJSON`)
+proves the nested value also stays pristine; confirmed via `git stash` isolation to fail against
+the pre-fix (one-level) code and pass against the fix.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

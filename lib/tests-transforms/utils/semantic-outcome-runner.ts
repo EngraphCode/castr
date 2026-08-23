@@ -60,28 +60,37 @@
  */
 
 /**
- * Own enumerable properties of `value` whose value is itself a function
- * (for example a `toJSON` method defined directly on the object, as
- * opposed to inherited from a prototype) omitted, one level deep.
+ * Deep snapshot of `value` with every own function-valued property (for
+ * example a `toJSON` method defined directly on an object, as opposed to
+ * inherited from a prototype) omitted, at every level — not just the top.
  * `structuredClone` cannot clone such a value at all — it throws on any
- * function-valued property — so this is the fallback that specifically
- * neutralises a `toJSON` method: `JSON.stringify` only invokes `toJSON` if
- * the value passed to it has one, and this snapshot never does. Reading
- * `Object.entries` to find the function does not invoke it, so a mutating
- * `toJSON`'s body never runs. Non-object values, and any property this
- * function does not itself recurse into, pass through unexamined — this
- * is a targeted fix for the reported top-level case, not a general-purpose
- * deep sanitiser.
+ * function-valued property, at any depth — so this is the fallback that
+ * specifically neutralises a `toJSON` method: `JSON.stringify` only
+ * invokes `toJSON` if the value passed to it has one, and this snapshot
+ * never does, anywhere in the tree. Reading `Object.entries` to find the
+ * function does not invoke it, so a mutating `toJSON`'s body never runs. A
+ * value already seen higher in the same recursion (a circular reference)
+ * is replaced with a placeholder rather than returned as the original
+ * live reference, so a cycle can never reintroduce an unsanitised alias
+ * back into the snapshot.
  */
-function omitOwnFunctionProperties(value: unknown): unknown {
+function omitFunctionProperties(value: unknown, seen = new WeakSet<object>()): unknown {
   if (value === null || typeof value !== 'object') {
     return value;
   }
+  if (seen.has(value)) {
+    return '<circular>';
+  }
+  seen.add(value);
   if (Array.isArray(value)) {
-    return value.filter((item) => typeof item !== 'function');
+    return value
+      .filter((item) => typeof item !== 'function')
+      .map((item) => omitFunctionProperties(item, seen));
   }
   return Object.fromEntries(
-    Object.entries(value).filter(([, entry]) => typeof entry !== 'function'),
+    Object.entries(value)
+      .filter(([, entry]) => typeof entry !== 'function')
+      .map(([key, entry]) => [key, omitFunctionProperties(entry, seen)]),
   );
 }
 
@@ -108,7 +117,7 @@ function toSafeDiagnosticValue(value: unknown): unknown {
   try {
     return structuredClone(value);
   } catch {
-    return omitOwnFunctionProperties(value);
+    return omitFunctionProperties(value);
   }
 }
 
