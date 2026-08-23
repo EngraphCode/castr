@@ -65,10 +65,12 @@ One holder, deterministically: the latest valid mantle-state post in the
 channel IS the current state — an intro or relief names the holder, a
 vacancy sign-off means nobody holds it. Validity is judged from channel
 history alone: an intro or relief is always valid, while a vacancy
-sign-off is valid only when the mantle-state post immediately before it
-names its author as the holder — a vacancy from anyone else is a
+sign-off is valid only when the latest valid mantle-state post before
+it names its author as the holder — a vacancy from anyone else is a
 superseded holder's late sign-off, void, and skipped when resolving the
-latest state. Every tick re-checks; a holder that sees a valid
+latest state. Judge each post against the valid state before it, void
+posts already excluded, so one stale vacancy left in the channel cannot
+void the legitimate teardown that follows it. Every tick re-checks; a holder that sees a valid
 mantle-state post newer than its own intro signs off and stands down,
 whatever it thinks of the succession — the rule needs no names and
 survives simultaneous takeovers.
@@ -143,8 +145,9 @@ handover above (sign-off reply, baseline `ts`, owner notified) and post
 no vacancy; a vacancy, or nothing newer, means the mantle is yours to
 vacate — post the vacancy sign-off. The read and the post are separate
 Slack calls, so a successor's intro can land in between — but a vacancy
-posted over it is void by step 2's validity rule (the mantle-state post
-immediately before it is the successor's intro, not one naming you), so
+posted over it is void by step 2's validity rule (the latest valid
+mantle-state post before it is the successor's intro, not one naming
+you), so
 no reader — the successor's own ticks included — ever acts on it. Still
 verify after writing: re-read once more, and if a successor's intro or
 relief landed in between, delete your void vacancy post — it is your
