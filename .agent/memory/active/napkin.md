@@ -2,6 +2,22 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (QD-6/QD-8 landing merged — PR #39 drive-to-green — Cindery Kindling Lava)
+
+- **The full PR-event drive-to-green cycle worked end-to-end on the first try with auto-fix
+  OFF:** Copilot's 7 round-1 findings on PR #39 were all real; fixes committed (`7c9f019`,
+  tree clean at push so the pre-push `check:ci` bound to the pushed HEAD), each thread
+  replied-to with the fix SHA and resolved, 12/12 checks green, merge-instant re-check
+  (threads/base/checks) passed, squash-merged as `68a2e2c` under ADR-051 clause 3, owner
+  push-notified per QD-8. This is the measured proof that the "routine agents explicitly
+  monitor and react to PR state" posture (owner, 2026-08-23) is workable — the event
+  subscription woke the session for every review comment and check-suite completion, and
+  echo events (my own replies arriving back as PR activity) were the only noise to filter.
+- **`collaboration-state claims close` needs explicit `--active`/`--closed` paths, and the
+  closed file is `closed-claims.archive.json`** (not `closed-claims.json` — a wrong guess
+  exits 2 with the error above the pnpm noise). Worth knowing before session-close on any
+  thread with an open claim.
+
 ## 2026-08-23 (owner standing directive — blocked-on-owner means mobile alert — Cindery Kindling Lava)
 
 - **Owner standing directive (verbatim intent, 2026-08-23): "Whenever something is blocked on
