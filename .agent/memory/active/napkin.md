@@ -2,32 +2,41 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-08-23 (proof-programme scheduled firing — WIP=1 collision with a concurrent peer — Tidal Drifting Lighthouse)
+## 2026-08-23 (proof-programme scheduled firing — WIP=1 collision on PR #35's branch — Tidal Drifting Lighthouse)
 
 - **`active-claims.json`'s per-container, untracked nature cannot prevent a real WIP=1
-  collision across fresh-container firings — measured, not hypothetical.** This firing's
-  session-open claims scan found the registry empty ("no other agents present" — correct
-  read of MY container's state) and proceeded to drive PR #35 (Q-02) per WIP=1. A peer
-  session was already actively driving the SAME PR concurrently, invisible to my scan because
-  each fresh-container firing starts with its own empty, ungitted `active-claims.json`
-  (`.agent/state/collaboration/.gitignore` deliberately excludes it — instance-tier state, by
-  design). Discovered only reactively, via two consecutive `git push` rejections
-  ("fetch first", then "cannot lock ref ... is at X but expected Y") as the peer pushed two
-  more review-response rounds while I was mid-reconcile. GitHub's PR/branch state was the
-  only cross-container signal that actually worked, and only after the fact.
-- **Correct response to a mid-drive collision: reconcile once (adopt the peer's equivalent
-  fix verbatim over my redundant one, since theirs was already CI-green and further along),
-  then STOP and defer — don't keep racing a faster-moving peer.** After the second rejection
-  showed the peer was still actively iterating (11 review rounds in under an hour), continuing
-  to push would only produce more redundant work and collisions. Backed off: no further pushes,
-  no merge attempt, no new queue-row claim (WIP=1 slot stays occupied by the peer's active
-  work). My own contribution (the QD-4 carry-forward queue entry, b66df7d) was not lost — it's
-  an ancestor of the peer's continuing chain, so it lands when their drive completes.
-- **Worth a queued finding for Q-15 or a dedicated queue row:** the loop's collision defence is
-  entirely reactive (git's ref-lock rejection) with no proactive cross-container signal at all.
-  A future design could publish claims to a tracked-but-namespaced surface (or lean on the
-  GitHub PR's own state as the primary signal, checked immediately before every push — not just
-  at session open) rather than relying on instance-tier `active-claims.json`.
+  collision on a shared PR branch — measured, not hypothetical, but be precise about what was
+  actually measured.** This firing's session-open claims scan found the registry empty
+  ("no other agents present" — correct read of MY container's state) and proceeded to drive PR
+  #35 (Q-02) per WIP=1. Something else with push access to the same branch landed commits on
+  top of mine twice, each discovered only reactively via a `git push` rejection ("fetch
+  first", then "cannot lock ref ... is at X but expected Y"). **Correction to my own
+  in-the-moment framing**: I initially wrote this up as a "concurrent peer session... actively
+  driving... racing... right now" — the owner correctly challenged that. The evidence (two
+  sequential push rejections, each showing the remote had moved past me sometime after my
+  prior push) proves only _asynchronous, sequential_ collision on a shared remote ref, not
+  simultaneity — an isolated container has no way to observe another's in-flight work except
+  through what lands on the shared remote, exactly as one would expect. I also asserted "peer
+  firing" without grounds to prefer that over the alternative that fits the evidence at least
+  as well: an automated fix-response bot (every commit narrowly targeted the single latest
+  Codex/Copilot comment, landed within minutes of it, was authored as generic
+  `Claude <noreply@anthropic.com>`, and reused the PR's _original_ authoring session's URL
+  verbatim rather than minting a new one — the repo's Codex integration explicitly offers an
+  `@codex address that feedback` auto-fix trigger). Do not restate "concurrent peer session" as
+  settled fact from this incident; the honest claim is narrower.
+- **Correct response to a mid-drive collision, independent of concurrency-vs-sequential:**
+  reconcile once (adopt the equivalent fix verbatim over my redundant one, since it was already
+  CI-green and further along), then stop pushing to the contested branch rather than keep
+  re-colliding. Backed off: no further pushes, no merge attempt, no new queue-row claim (WIP=1
+  slot stays occupied). My own contribution (the QD-4 carry-forward queue entry, b66df7d) was
+  not lost — it's an ancestor of the branch's continuing history, so it lands whenever that PR
+  merges.
+- **Worth a queued finding for Q-15 or a dedicated queue row, stated at the confidence level the
+  evidence actually supports:** the loop's collision defence for a shared PR branch is entirely
+  reactive (git's ref-lock rejection on push), with no proactive signal at all — true whether
+  the other writer is a peer firing or an automated bot response. A future design could check
+  the PR's live head SHA immediately before every push (not just rely on session-open claims)
+  so a collision is detected before attempting the push, not via its rejection.
 
 ## 2026-08-22 (parent plan + autonomous loop — Incandescent Charring Ember / 5aef07, same session, hook-renamed)
 
