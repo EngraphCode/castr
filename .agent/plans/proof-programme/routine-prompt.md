@@ -28,9 +28,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    `.agent/plans/proof-programme/STOP` exists, land the stand-down broadcast (below,
    criterion "STOP file present") and do nothing else — no claim, no slice work, no
    grounding beyond what the landing itself needs. The landing is the one piece of work
-   the kill switch permits (QD-5): a bookkeeping-scope commit on the open programme PR's
-   head when one exists, else a bookkeeping PR driven to merge under clause 3 — the
-   record's only route to the base, since no later firing may exist to merge it. Check the
+   the kill switch permits (QD-5), routed contest-aware exactly like step 4's deferrals: a
+   bookkeeping-scope commit on the open programme PR's head only when that head is
+   uncontested under step 5's overlap guard; when it is contested, or no programme PR is
+   open, a bookkeeping PR (reusing the shared deferral draft if one exists) driven to
+   merge under clause 3 — the record's route to the base cannot rely on a later firing,
+   since none may exist to merge it. Check the
    literal path — no glob, no interpretation. This runs first so the kill switch never
    leaves a live claim behind (ADR-051 clause 1 ordering).
 2. **Dry-run detection (before anything opens a claim)**: when the firing's message
@@ -59,8 +62,14 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    counter, incident, and continuity state only, nothing else — QD-5) — it reaches the
    base when the PR merges, so later firings read a true streak. When the open PR is
    **contested** (overlap guard, step 5), never write to its head — land the increment and
-   incident record as a **draft** bookkeeping PR branched from the base instead (a draft
-   is not WIP and touches no contested ref), for pickup per step 5's draft-pickup rule.
+   incident record on the **single shared deferral draft** instead: reuse the existing
+   overlap-deferral draft bookkeeping PR when one is open (push a commit onto its head —
+   deferral drafts are written only by deferring firings, serialized by the same pre-push
+   re-check), else open it, branched from the base (a draft is not WIP and touches no
+   contested ref), for pickup per step 5's draft-pickup rule. Before incrementing, read
+   the streak from the freshest counter state visible across base, open PR head, and the
+   deferral draft, so stacked deferrals count each firing exactly once and the three-idle
+   kill switch stays true.
    A completion summary is not repo state and cannot carry a counter; a deferral that
    cannot land its increment durably records that failure as a blocker in the summary
    instead of silently dropping it. In the same scan, read
@@ -78,12 +87,20 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    amendment and whose full four-condition bar governs: every check green on the current
    head, every conversation properly and proportionately resolved — fixed or rejected,
    base not diverged from the tested head's merge base, diff within the PR kind's scope)
-   and do nothing else. **Overlap guard (QD-5)**: before starting the drive, check when
-   the PR head last moved — a push within the last hour means a predecessor firing or its
-   review-fix round is likely still live and driving (incident I-1); defer this firing
-   rather than becoming a second live driver, landing your increment and incident record
-   via step 4's contested route (a draft bookkeeping PR — never a push to the contested
-   head). **Draft pickup**: if a draft bookkeeping PR from an earlier overlap-deferral
+   and do nothing else. **Overlap guard (QD-5)**: before starting the drive, read the
+   PR's newest `FIRING-LEASE` comment and the head's last-push time. An unexpired,
+   unreleased lease held by another identity marks the branch contested regardless of head
+   quiet — a live predecessor may sit past an hour in CI or review without pushing; no
+   lease, or an expired or released one, falls back to head recency, where a push within
+   the last hour still means a likely-live driver (incident I-1). Contested → defer this
+   firing rather than becoming a second live driver, landing your increment and incident
+   record via step 4's contested route (the shared deferral draft — never a push to the
+   contested head). **Drive lease**: on starting a drive, post a PR comment
+   `FIRING-LEASE: <agent identity> driving from <ISO now> until <ISO landing cutoff>`, and
+   post `FIRING-LEASE-RELEASED: <agent identity>` when your drive ends — the lease is
+   observable cross-container ownership state on the shared remote, and its expiry never
+   outlives the clause 2 landing cutoff, so a crashed predecessor cannot hold the branch
+   past its own firing window. **Draft pickup**: if a draft bookkeeping PR from an earlier overlap-deferral
    exists and its contest has cleared (the contested PR merged, or its head quiet past the
    overlap window), mark that draft ready and drive it to merged under clause 3 before
    other work, so deferred counter state reaches the base and the streak stays true. A

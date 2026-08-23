@@ -130,9 +130,10 @@ incident records added per QD-5, 2026-08-23) — or, when a
 non-draft programme PR is already open (WIP = 1 forbids a second), as a bookkeeping-scope
 commit (counter, incident, and continuity state)
 pushed to that open PR's head branch, which reaches the base at that PR's merge — or, when
-that open PR is contested under the routine prompt's overlap guard, as a **draft**
-bookkeeping PR (not WIP, touching no contested ref) that the first firing to find the
-contest cleared marks ready and merges; a
+that open PR is contested under the routine prompt's overlap guard, on the **single
+shared deferral-draft** bookkeeping PR (not WIP, touching no contested ref, reused across
+stacked deferrals so each firing's increment lands exactly once) that the first firing to
+find the contest cleared marks ready and merges; a
 completion summary is never a counter's landing surface. **Incident records share this
 landing path (QD-5)**: [`incidents.md`](./incidents.md) is the programme's incident
 register — collisions, retry exhaustion, environment anomalies, and stand-down broadcasts'
