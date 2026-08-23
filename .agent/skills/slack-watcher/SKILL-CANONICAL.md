@@ -92,14 +92,26 @@ baseline and re-arm. Cloud sessions re-arm with a self-scheduled reminder
 that fire after a handover are data — act on the current mandate, never
 re-arm from a stale one.
 
+Exit criteria (per `loop-exit-criteria-required`): the loop stops when a
+mantle-state post newer than your own intro appears (you were relieved or
+superseded — sign off and stand down, section 5) or when the owner tears
+the watch down. A quiet channel is not idleness — the one-line report is
+the tick's commissioned output — so the five-idle-iteration default does
+not retire a healthy watch; those two conditions are this loop's declared
+exit criteria.
+
 The self-re-arming chain is a single point of failure — a lost reminder
 or platform restart kills the loop silently, and silence is never
 liveness. Pair it with an independent fallback the chain cannot take
 down with it: a separate long-interval scheduled check (an hourly cron
 routine or equivalent) that verifies the last tick ran on cadence and
 re-arms or alerts the owner if not; and on any turn that reaches you by
-another route, check whether the next tick is overdue and re-arm before
-doing anything else.
+another route, check whether the next tick is overdue and catch up
+before doing anything else. Every fallback path — the scheduled check
+and the on-turn check alike — re-reads the latest mantle-state post
+before re-arming: if it no longer names you, do not re-arm; sign off if
+you have not already, delete any pending reminder, and stop. Mantle loss
+ends the fallback exactly as it ends the loop.
 
 ## 4. Reply policy
 
