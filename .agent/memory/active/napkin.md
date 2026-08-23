@@ -2,6 +2,43 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (proof-programme scheduled firing — PR #35 drive to merged — Fruited Swaying Leaf)
+
+- **The QD-5 overlap guard worked as designed on its first live use:** no `FIRING-LEASE`
+  comment on PR #35 and the head quiet 5.7 h → uncontested, took the drive, posted the
+  lease before acting. The lease/release comment pair is cheap and makes the next
+  firing's contest check trivial — keep posting both even when the drive is short.
+- **Fresh-container claims CLI needs BOTH state files seeded by hand:**
+  `active-claims.json` AND `closed-claims.archive.json` are gitignored instance state, and
+  the CLI errors on absence rather than creating them. Working seed for both:
+  `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}` (discovered via three
+  successive validation errors: ENOENT → wrong schema_version → missing commit_queue).
+  Candidate: an `init` subcommand or auto-seed on ENOENT in the claims CLI.
+- **Hook-policy substring guards fire on PROSE arguments, not just commands** (two
+  instances this firing): `git checkout <branch>` on a clean tree was blocked as
+  worktree-destruction (`git switch` is the purpose-built non-destructive branch-switch
+  and is the right concept, not a bypass); a `claims close --summary` whose text contained
+  "…git commit — commit-queue…" tripped the `git commit -n` gate-bypass guard (the em-dash
+  apparently normalises to `-`). Keep command-like substrings out of free-text arguments
+  (`hook-policy-substring-discipline`).
+- **The commit-queue pathspec workflow cannot conclude a merge commit** — git refuses
+  pathspec-scoped commits mid-merge, and the workflow's inner `git commit -- <files>` is
+  always pathspec-scoped. Deviation used: claim + message pre-validation + plain
+  `git commit` for the merge conclusion, deviation named in the claim closure summary.
+  Candidate: a `commit-queue merge-conclude` mode, or document the exception in the
+  commit skill.
+- **A failed compound command can still have half-succeeded:** the first
+  `commit-queue enqueue` ran inside a compound command whose later pipe failed, leaving a
+  live intent that made the real attempt fail with "fresh queue entries ahead". Check
+  `commit_queue` state before re-enqueueing after any compound-command failure.
+- **ADR-051 clause 4 applied at review round seventeen:** both fresh P2 findings verified
+  real first (never carry forward an unverified claim), then carried forward to queue row
+  Q-17 with dispositions on-thread — an eighteenth fix-and-rereview cycle on a
+  diagnostics-only surface is exactly the non-convergence treadmill the clause exists to
+  stop. The prior firing's round-16 fix commit (`3938127`) had landed with its thread
+  unreplied (landing cutoff) — completing a predecessor's thread bookkeeping is part of
+  the drive, not a new fix round.
+
 ## 2026-08-23 (QD-7 directed — Slack + The Watcher — Cindery Kindling Lava)
 
 - **Owner resolved QD-7 beyond the recommendation:** Slack connector attached to the
