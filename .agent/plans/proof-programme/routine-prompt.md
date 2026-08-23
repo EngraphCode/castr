@@ -38,12 +38,13 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      wired and no built agent-tools until these run (measured, Q-01 evidence) — a commit
      made before this step bypasses every blocking gate, and the Practice CLIs (claims,
      comms, validators) fail for want of `agent-tools/dist`.
-   - **Verify gitleaks**: if `command -v gitleaks` finds nothing, run
-     `bash .claude/hooks/ensure-gitleaks.sh` — the idempotent SessionStart provisioner
-     (sha256-pinned install; fired sessions may not surface SessionStart hooks, so never
-     assume it ran). The blocking `pnpm secrets:scan` must be able to pass BEFORE push;
-     CI's copy of the scan runs after the push, which is too late for a leaked secret —
-     never skip, bypass, or defer it to CI.
+   - **Provision gitleaks**: run `bash .claude/hooks/ensure-gitleaks.sh` unconditionally —
+     the idempotent SessionStart provisioner (sha256-pinned install; silent fast path when
+     the pinned version already resolves; upgrades a stale below-pin binary, which a mere
+     `command -v` presence check would wrongly accept; fired sessions may not surface
+     SessionStart hooks, so never assume it ran). The blocking `pnpm secrets:scan` must be
+     able to pass BEFORE push; CI's copy of the scan runs after the push, which is too
+     late for a leaked secret — never skip, bypass, or defer it to CI.
    - Run the `engraph-start-right-quick` skill; register identity per
      `register-active-areas-at-session-open`.
    - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
