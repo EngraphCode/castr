@@ -378,8 +378,17 @@ fakes without re-litigating this PR. A tenth round flagged a genuinely separate 
 the "runs every registered case" test asserted its two proofs inside a `for` loop, which is
 literal test-authored control flow around assertions regardless of the fixed, known-size array
 it iterated — fixed by replacing the loop with two explicit assertions against the destructured
-`first`/`second` proofs (guarded by an explicit `undefined` check, since `noUncheckedIndexedAccess`
-means indexed access alone cannot narrow the type `expectSemanticOutcome` requires).
+`first`/`second` proofs, initially guarded by an `if`/`throw` for the `undefined` narrowing
+`noUncheckedIndexedAccess` requires before either proof reaches `expectSemanticOutcome`'s
+non-optional parameter. An eleventh round immediately flagged that same `if`/`throw` as its own
+item-16 "runtime branching inside the test body" violation — correct on the letter of the rule,
+even though the branch is dead code in practice (`runAllSemanticOutcomes` on a fixed two-case
+array always returns exactly two proofs). Fixed by replacing the `if`/`throw` with
+`node:assert`'s TypeScript-typed assertion-function form (`assert(x !== undefined, msg)`, which
+`@types/node` declares as `asserts x`): a single function call, not a branching construct, that
+TypeScript's control-flow analysis still narrows on — satisfying both the type system's
+non-optional requirement and item 16's prohibition on visible conditional syntax in the test
+body.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

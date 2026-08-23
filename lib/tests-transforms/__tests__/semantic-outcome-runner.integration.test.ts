@@ -10,6 +10,8 @@
  * catches it.
  */
 
+import assert from 'node:assert';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -465,9 +467,7 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(proofs).toHaveLength(2);
     expect(proofs.map((proof) => proof.outcome.case)).toEqual(['first', 'second']);
     const [first, second] = proofs;
-    if (first === undefined || second === undefined) {
-      throw new Error('expected exactly two proofs');
-    }
+    assert(first !== undefined && second !== undefined, 'expected exactly two proofs');
     expect(() => expectSemanticOutcome(first)).not.toThrow();
     expect(() => expectSemanticOutcome(second)).not.toThrow();
   });
