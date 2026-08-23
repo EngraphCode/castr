@@ -114,7 +114,11 @@ When a loop hits its exit criterion, the broadcast names:
    broadcasting instance, plus tracked repo state on a surface
    the audience grounds on whenever a future container or the
    owner is the audience — instance-tier comms state does not
-   cross containers. (Owner-ratified 2026-08-23 after a measured
+   cross containers. A bounded, owner-commanded proof invocation
+   (a dry run) whose stand-down its commander consumes through
+   the invocation's own completion channel is same-instance for
+   this item's purpose: the commander is watching the channel
+   they commanded. (Owner-ratified 2026-08-23 after a measured
    cross-container loop incident; the evidence record lives in
    the owning loop's own plan estate.)
 

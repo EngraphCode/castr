@@ -14,8 +14,10 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
   bound (QD-5)**: this firing also ends before the next scheduled firing is due (one
   cadence interval) — not finished means land your state (counters, incident record if
   contested) and stop cleanly; the successor continues any un-merged drive from the PR's
-  own state. Incident I-1 arose from a predecessor still driving seven hours in when its
-  successor spawned.
+  own state. The concrete cutoff: stop driving at three-quarters of the cadence interval
+  (6 h of the default 8 h) and spend the remainder landing and closing; the successor's
+  overlap guard is the backstop if you overrun anyway. Incident I-1 arose from a
+  predecessor still driving seven hours in when its successor spawned.
 - **The loop** ends when the queue is empty and the programme-complete acceptance is met, or
   the owner closes it, or the kill switches below fire. Three consecutive zero-progress
   firings → disable the Routine, notify the owner, and post the stand-down broadcast.
@@ -37,8 +39,10 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    active-area claim, and execute only the bounded no-op work the instruction specifies,
    never claiming, driving, or merging any slice or PR — then report criterion "dry-run
    complete" via the stand-down's comms echo and the completion summary (a dry run is
-   exempt from the tracked-record duty, QD-5: its audience is the arming session and owner
-   who commanded it, and a proof firing must leave no repo-state change behind), close
+   same-instance for `loop-exit-criteria-required` §Stand-Down Broadcast Shape item 4 — a
+   bounded, owner-commanded proof whose commander consumes the stand-down through the
+   invocation's own completion channel — so echo plus summary satisfy the rule, and a
+   proof firing must leave no repo-state change behind), close
    with the `engraph-session-handoff` skill exactly as step 9 requires (every firing
    closes with handoff, dry runs included — the proof must exercise it), and stop. Detection sits
    before grounding because normal grounding registers a claim, and a proof firing must

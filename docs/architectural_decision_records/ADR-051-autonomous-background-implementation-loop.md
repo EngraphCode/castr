@@ -46,11 +46,13 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    2026-08-22; the proposal said two). The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
    slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
-   A firing is also bounded in duration to one cadence interval: a firing still working
-   when the next firing is due lands its state and stops, the successor continuing any
-   un-merged drive from the pull request's own state (amended per QD-5, 2026-08-23 —
-   the schedule does not terminate a predecessor, so consecutive firings otherwise
-   overlap, which is how the measured push-collision incident arose).
+   A firing is also bounded in duration to one cadence interval, with a landing cutoff
+   inside it: at three-quarters of the interval a firing stops driving and spends the
+   remainder landing its state, so it ends before the next firing is due; a firing that
+   overruns anyway is caught by its successor's overlap deferral, which refuses to
+   double-drive (amended per QD-5, 2026-08-23 — the schedule does not terminate a
+   predecessor, so consecutive firings otherwise overlap, which is how the measured
+   push-collision incident arose).
 3. **Standing merge policy.** A programme PR — slice or bookkeeping (amended per QD-3,
    2026-08-22) — merges without a per-PR owner ask when all of: every
    check run green on the current head; every review conversation properly and

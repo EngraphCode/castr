@@ -22,7 +22,10 @@ evidence — SHAs, rejection text, PR numbers), how the firing responded, and an
 routing (queue row, queued decision, or none). Exhausted retries on an external operation
 land as `other`, with the exhausted budget named. Entries append at the end; ids are
 monotonic (`I-1`, `I-2`, …) — take the next id above the highest present on your
-grounding base.
+grounding base, re-check it against the freshly fetched heads (base and any open
+programme PR) immediately before your final push and renumber yours if it is taken, and
+an id collision that surfaces at reconciliation anyway renumbers the later-landed entry
+to the next free id.
 
 ## I-1 — 2026-08-23 — collision — shared-branch push collision on PR #35 (Tidal Drifting Lighthouse / optimi)
 
