@@ -255,22 +255,36 @@ extracting PR #11's outcome-record and non-vacuity concepts per the report's #11
 product profile or artifact kind. Non-vacuity is structural, not opt-in: every case declares a
 `separatingSource`, and the runner recomputes discrimination against it on all three legs
 (`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
-self-reported flag — closing a hole the post-execution `code-reviewer` gateway pass found
-empirically (a constant `targetOracle` initially passed undetected; the fix threads a second,
-independently-computed output through the precheck). Proof:
+self-reported flag. `parse`/`write` receive only `structuredClone`d arguments, never a value
+this function still needs pristine or the case's own held fields, so a mutating case cannot
+taint a comparison or corrupt the case object across repeated runs. Proof:
 `lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
-ritual — a happy-path positive control plus 6 seeded mutants (wrong-parser, wrong-writer,
-bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality) and an
-empty-registry hard-fail, all red-first (module-not-found) then green, 9/9 passing. Two
-pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before any
-code was written; three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
-`type-reviewer`) found two independently-confirmed critical issues (the target-oracle
-non-vacuity hole above, and `expectSemanticOutcome` gating on vitest's own structural equality
-instead of each case's injected comparators) plus one test-isolation issue (the original
-wrong-parser mutant's assertion passed for a coincidental reason, not the claimed one) — all
-fixed and re-verified before landing. Full `pnpm check:ci` green (gitleaks, build, format,
-type-check, lint, madge, depcruise, knip, markdownlint, portability, packaging, skills, agents,
-repo-validators, `test:all`). Scope held to Q-02's narrower slice: no profile/artifact-kind
+ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wrong-writer,
+bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
+vacuous-witness), a mutation-safety/repeatability regression case, and an empty-registry
+hard-fail, all red-first (module-not-found) then green, 11/11 passing.
+
+Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
+any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
+`type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
+non-vacuity hole a constant `targetOracle` could pass through undetected, and
+`expectSemanticOutcome` gating on vitest's own structural equality instead of each case's
+injected comparators) plus one test-isolation issue — all fixed before the PR opened. Once open,
+automated PR review (Codex, Copilot) found and this landing fixed: a mutation-safety gap on the
+`write`/`parse` legs (oracle-ordering closed the source/output leg pre-PR; `structuredClone`
+closed the IR/repeatability leg the PR round found), a missing vacuous-witness mutant (case data
+that fails to separate under otherwise-correct comparators — distinct from a vacuous comparator),
+branching/input-interpolating logic in the shared test fixture (`test-immediate-fails.md` item
+12 — fakes must be straight mappings; detection belongs in the runner), a `JSON.stringify` crash
+risk on circular/`bigint` oracle values in diagnostic messages, and missing mandatory
+`@example`/`@see` TSDoc on the public API. One Copilot finding (an async runner variant matching
+the report's fuller Tranche-01 §5.3 contract) is deliberately deferred to Q-11, which explicitly
+consumes this Q-02 extraction — building it now risks the second-runner fork this brief forbids
+before a real async consumer exists to derive the actual signature from.
+
+Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
+markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
+every landed revision. Scope held to Q-02's narrower slice throughout: no profile/artifact-kind
 binding, channel/fixture-manifest machinery, or product-code changes — those remain Tranche 01's
 job (report §7, ~L795-850).
 

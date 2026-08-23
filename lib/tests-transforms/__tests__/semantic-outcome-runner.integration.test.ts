@@ -191,27 +191,39 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => runAllSemanticOutcomes([])).toThrow(/no cases registered/i);
   });
 
-  it('computes independent oracles from pristine values even when parse/reparse mutate their argument in place', () => {
+  it('computes oracles and the round-trip baseline from pristine values, and stays repeatable, even when parse/write/reparse mutate their arguments in place', () => {
     interface MutableSource {
+      value: string;
+    }
+    interface MutableIR {
       value: string;
     }
     interface MutableOutput {
       value: string;
     }
 
-    const mutatingCase: SemanticCase<MutableSource, FakeIR, MutableOutput, string> = {
+    const mutatingCase: SemanticCase<MutableSource, MutableIR, MutableOutput, string> = {
       name: 'mutation-safety',
       source: { value: 'alpha' },
       separatingSource: { value: 'beta' },
       // Simulates a lossy parser that ALSO mutates its argument in place —
-      // the bug this proves absent: if an oracle ran after this, it would
-      // see 'MUTATED' instead of the real source value.
+      // the bug this proves absent: if an oracle ran after this, or a
+      // second run reused the case's own `source`, it would see 'MUTATED'
+      // instead of the real source value.
       parse: (s) => {
         const original = s.value;
         s.value = 'MUTATED';
         return { value: original };
       },
-      write: (ir) => ({ value: `W:${ir.value}` }),
+      // Simulates a lossy writer that mutates its IR argument after
+      // reading it — the round-trip baseline (`roundTripEqual`) must
+      // compare the pristine IR captured before this call, not this one,
+      // or two equally-damaged values would compare equal and hide the loss.
+      write: (ir) => {
+        const written = { value: `W:${ir.value}` };
+        ir.value = 'MUTATED';
+        return written;
+      },
       // Simulates a reparse that mutates its argument in place after
       // reading it — an oracle running after this would see 'MUTATED'
       // instead of the real written output.
@@ -228,11 +240,19 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
 
     const proof = runSemanticOutcome(mutatingCase);
 
-    // These only read 'ALPHA' if the oracles ran before the mutation
-    // happened; against the pre-fix ordering they would read 'MUTATED'.
+    // These only read 'ALPHA' if the oracles/baseline ran before the
+    // mutation happened; against the pre-fix code they would read 'MUTATED'.
     expect(proof.artifacts.sourceOracleValue).toBe('ALPHA');
     expect(proof.artifacts.targetOracleValue).toBe('ALPHA');
+    expect(proof.artifacts.ir).toEqual({ value: 'alpha' });
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
+
+    // The case's own held fields must be untouched — parse/write only ever
+    // receive clones — so a second run of the SAME case object reproduces
+    // the identical outcome, not a run-count-dependent one.
+    expect(mutatingCase.source).toEqual({ value: 'alpha' });
+    expect(mutatingCase.separatingSource).toEqual({ value: 'beta' });
+    expect(runSemanticOutcome(mutatingCase).outcome).toEqual(proof.outcome);
   });
 
   it('runs every registered case and returns proofs in registration order', () => {

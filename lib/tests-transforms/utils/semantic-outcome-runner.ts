@@ -36,6 +36,16 @@
  * the same value — not only a literally-constant comparator — since both
  * failure modes look identical from the outside: two different sources
  * produced indistinguishable results somewhere in the pipeline.
+ *
+ * `parse` and `write` never receive a value this module still needs
+ * pristine, nor a value the case itself holds onto (`source`/
+ * `separatingSource`): every argument handed to them is `structuredClone`d
+ * first. A case is not required to be pure, but a mutating one must not be
+ * able to (a) corrupt the case object, making a second run of the same case
+ * produce different results, or (b) taint a comparison this function still
+ * needs to make afterward — mirroring the OpenAPI-specific precedent this
+ * module was extracted from (`loadOpenApiDocument(structuredClone(...))` in
+ * PR #11).
  */
 
 import { expect } from 'vitest';
@@ -206,16 +216,26 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   const sourceOracleValue = semanticCase.sourceOracle(semanticCase.source);
   const separatingSourceOracleValue = semanticCase.sourceOracle(semanticCase.separatingSource);
 
-  const ir = semanticCase.parse(semanticCase.source);
+  // `parse` receives a clone, never the case's own `source`/`separatingSource`
+  // field: a mutating parse must not be able to permanently corrupt the case
+  // object, which would make a second run of the same case produce different
+  // results. `pristineIR`/`pristineSeparatingIR` are cloned immediately after
+  // parsing, before `write` ever sees them: a mutating write must not be able
+  // to taint the baseline `roundTripEqual`/`irDiscriminates` compare against
+  // — otherwise a lossy writer that deletes a field from its own IR argument
+  // could reparse into an equally-damaged value and still compare equal.
+  const ir = semanticCase.parse(structuredClone(semanticCase.source));
+  const pristineIR = structuredClone(ir);
   const output = semanticCase.write(ir);
   const targetOracleValue = semanticCase.targetOracle(output);
   const reparsedIR = semanticCase.reparse(output);
 
-  const separatingIR = semanticCase.parse(semanticCase.separatingSource);
+  const separatingIR = semanticCase.parse(structuredClone(semanticCase.separatingSource));
+  const pristineSeparatingIR = structuredClone(separatingIR);
   const separatingOutput = semanticCase.write(separatingIR);
   const separatingTargetOracleValue = semanticCase.targetOracle(separatingOutput);
 
-  const irDiscriminates = !semanticCase.equalIR(ir, separatingIR);
+  const irDiscriminates = !semanticCase.equalIR(pristineIR, pristineSeparatingIR);
   const sourceOracleDiscriminates = !semanticCase.equalOracle(
     sourceOracleValue,
     separatingSourceOracleValue,
@@ -228,11 +248,11 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   return {
     outcome: {
       case: semanticCase.name,
-      roundTripEqual: semanticCase.equalIR(ir, reparsedIR),
+      roundTripEqual: semanticCase.equalIR(pristineIR, reparsedIR),
       oraclesAgree: semanticCase.equalOracle(sourceOracleValue, targetOracleValue),
       nonVacuous: irDiscriminates && sourceOracleDiscriminates && targetOracleDiscriminates,
     },
-    artifacts: { ir, output, reparsedIR, sourceOracleValue, targetOracleValue },
+    artifacts: { ir: pristineIR, output, reparsedIR, sourceOracleValue, targetOracleValue },
   };
 }
 
