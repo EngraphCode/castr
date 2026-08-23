@@ -94,7 +94,9 @@ work stop quickly.
   stand-down broadcast on loop exit is a standard observable
   event; peers see when an idle loop has stood down.
 - [`use-agent-comms-log`](use-agent-comms-log.md) — the
-  stand-down broadcast uses the standard comms event surface.
+  stand-down broadcast uses the standard comms event surface for
+  same-instance peers; §Stand-Down Broadcast Shape item 4 governs
+  cross-container audiences.
 
 ## Stand-Down Broadcast Shape
 
@@ -107,6 +109,18 @@ When a loop hits its exit criterion, the broadcast names:
    stand-down"_).
 3. A one-line closeout summary — what the loop accomplished
    across its full run, if anything.
+4. The surface the broadcast lands on follows the audience: the
+   standard comms event surface when the audience shares the
+   broadcasting instance, plus tracked repo state on a surface
+   the audience grounds on whenever a future container or the
+   owner is the audience — instance-tier comms state does not
+   cross containers. A bounded, owner-commanded proof invocation
+   (a dry run) whose stand-down its commander consumes through
+   the invocation's own completion channel is same-instance for
+   this item's purpose: the commander is watching the channel
+   they commanded. (Owner-ratified 2026-08-23 after a measured
+   cross-container loop incident; the evidence record lives in
+   the owning loop's own plan estate.)
 
 The broadcast is a stand-down signal, not a request for
 permission. Peers and the owner observe; the loop does not
@@ -127,3 +141,11 @@ explicit owner override carries the five-idle-iteration default.
   cancellation incident. Graduated to this rule on the same
   consolidation pass that captured the direction (PDR-076
   consolidation pass, separate lane).
+- 2026-08-23 — §Stand-Down Broadcast Shape item 4 added (the
+  broadcast surface follows the audience), owner-ratified the
+  same day: a scheduled cross-container loop's stand-down,
+  posted only to instance-tier comms state, proved unobservable
+  to its successor firings, so a cross-container loop's durable
+  broadcast is tracked repo state on a surface its audience
+  grounds on. The measured evidence record lives in the owning
+  loop's own plan estate.

@@ -125,10 +125,21 @@ is observable drift rather than a silent zero; every firing increments or
 resets them as part of its landing, so a fresh session can evaluate the ADR-051 clause 6
 thresholds. The landing has a merge path in every case: a firing driving a slice carries the
 counter update in that slice's PR; an idle or deferring firing lands it as a dedicated
-**bookkeeping PR** (scope: counter and continuity state only, no product code) — or, when a
-non-draft programme PR is already open (WIP = 1 forbids a second), as a counter-only commit
-pushed to that open PR's head branch, which reaches the base at that PR's merge; a
-completion summary is never a counter's landing surface. The
+**bookkeeping PR** (scope: counter, incident, and continuity state only, no product code;
+incident records added per QD-5, 2026-08-23) — or, when a
+non-draft programme PR is already open (WIP = 1 forbids a second), as a bookkeeping-scope
+commit (counter, incident, and continuity state)
+pushed to that open PR's head branch, which reaches the base at that PR's merge — or, when
+that open PR is contested under the routine prompt's overlap guard, on the **single
+shared deferral-draft** bookkeeping PR (not WIP, touching no contested ref, reused across
+stacked deferrals so each firing's increment lands exactly once) that the first firing to
+find the contest cleared marks ready and merges; a
+completion summary is never a counter's landing surface. **Incident records share this
+landing path (QD-5)**: [`incidents.md`](./incidents.md) is the programme's incident
+register — collisions, retry exhaustion, environment anomalies, and stand-down broadcasts'
+durable copies land there, because a report is durable only as tracked state reachable
+from the loop's grounding path (the base, or the open programme PR's head); instance-tier
+comms state and unmerged session side branches are not reporting surfaces. The
 bookkeeping PR's authority is **ADR-051 clauses 6 and 3 together**: clause 6 mandates the
 persistence ("persisted and reset by each firing", concrete surface delegated to this
 plan), and clause 3 — as amended by the owner's QD-3 ruling (2026-08-22, resolving the
@@ -180,8 +191,10 @@ fresh container completes the full blocking hook chain unattended; the cron Rout
 created **disabled** in fresh-session mode and fired once manually; the spawned session
 executes the prompt's no-op path (STOP-check → report → handoff), posts the dry-run's
 stand-down broadcast (loop identity, criterion "dry-run complete", one-line closeout) per
-`loop-exit-criteria-required` — proving the broadcast path ADR-051 clause 6 requires on
-every firing-side loop exit — and the completion notification reaches the owner. (Platform
+`loop-exit-criteria-required` — proving the comms-echo half of the broadcast path ADR-051
+clause 6 requires on every firing-side loop exit (the tracked-record half postdates this
+proof: QD-5, 2026-08-23, under which dry runs stay comms-echo + completion-summary only) —
+and the completion notification reaches the owner. (Platform
 premise verified live 2026-08-22: create_trigger → immediate disable → manual fire_trigger
 spawned a fresh session while the Routine stayed disabled for scheduled firings.) The
 Routine then stays **disabled** until Q-00 closes — or, when Q-00 is already `complete`
@@ -235,6 +248,19 @@ brief. Routine mechanism proven end to end across four firings:
   firings/day per amended B-12) is enabled as the last act of this slice, strictly after
   its PR merges, with the B-15 configuration (push + email, no digest) re-checked at
   enable.
+- Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
+  now Fable, changed in the Routine's own settings UI (the only safe route — recreating
+  the trigger via API loses the owner-attached repo source, measured above). In the same
+  settings pass the owner turned the platform's "Auto-fix pull requests" behaviour OFF:
+  no platform-side watcher pushes fixes to PRs a firing opens, so each firing explicitly
+  monitors and reacts to PR state (CI, review threads) itself, per the
+  `engraph-pr-lifecycle` skill and ADR-051 clause 4 — and one candidate source of
+  second-writer pushes on a routine-opened PR is gone.
+- Owner direction (2026-08-23, same conversation): git/GitHub attribution for these
+  routines on the EngraphCode fork uses the **default credentials** — the separate
+  `jimbot` identity is an Oak-specific convention and is not brought here. Agents still
+  self-identify inside comment bodies and commit trailers per the standing PR rules
+  (PDR-027 identity in replies; the Claude Code attribution footer).
 
 **Q-02 — Pre-T01 harness extraction.** Surface: artifact-agnostic runner mechanics extracted
 from PR #11 (outcome records, non-vacuity checks, mutant-bite ritual) into the existing
@@ -370,7 +396,11 @@ the platform prefix or take an injected seed at spawn. Carried forward from PR #
 branches (same-core prerelease vs higher-core prerelease vs older/newer stable) have only
 live-exercise evidence — this slice adds hermetic automated coverage (fake `gitleaks` on a
 crafted PATH, stubbed installer dependencies) so a regression cannot land while CI stays
-green.
+green. Incident I-1 (2026-08-23) adds cross-container claim visibility to the gap list:
+`active-claims.json` is per-container instance state, so the session-open claims scan
+cannot see a peer or concurrent writer in another container — the QD-5 pre-push head
+re-check is the standing mitigation, and a proactive cross-container claim signal revisits
+only with ADR-051's parallel-workers alternative.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
@@ -389,7 +419,9 @@ mechanics only and cites clauses rather than restating them.
    session identity and open the area claim per
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
-   firing with a note, it does not race.
+   firing with a note, it does not race. Read [`incidents.md`](./incidents.md) in the same
+   pre-flight — from the grounding base and, when a programme PR is open, from that PR's
+   fetched head too — for incident context binding this firing (QD-5).
 3. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
    open — a slice PR or a bookkeeping PR — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
@@ -398,7 +430,10 @@ mechanics only and cites clauses rather than restating them.
    1(b)'s single-open-PR invariant (an unmerged counter update would let later firings read
    a stale streak). A firing whose only act is merging a bookkeeping PR is itself
    zero-progress and pushes its own increment onto that PR's head branch before merging —
-   the every-firing counter duty is never waived by the drive.
+   the every-firing counter duty is never waived by the drive. Pushes to a programme PR's
+   head re-verify the remote head SHA immediately beforehand and treat a second collision
+   in one firing as a contested branch (incident record + defer) — mechanics in the
+   [routine prompt](./routine-prompt.md) (QD-5).
    Otherwise claim the next eligible brief, mark it
    `in_progress` in this file's frontmatter, and re-verify its premises against live state.
 4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
@@ -480,6 +515,10 @@ landing.
 - **Queue rot**: premise re-verification is protocol step 3, not just a mitigation note.
 - **Runaway firing scope**: one-slice-then-stop and WIP = 1 bound each firing; breaches are
   napkin-recorded corrections.
+- **Firing overlap** (measured 2026-08-23, incident I-1): the schedule spawns the next
+  firing without terminating a predecessor still working, so WIP = 1 in PRs never implied
+  one live session. Bounded by ADR-051 clause 2's duration bound and the routine prompt's
+  overlap guard — two live drivers on one PR is a collision, not parallelism.
 
 ## Non-goals
 
