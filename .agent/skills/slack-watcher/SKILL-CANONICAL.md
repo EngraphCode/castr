@@ -68,9 +68,13 @@ history alone: an intro or relief is always valid, while a vacancy
 sign-off is valid only when it closes the current tenure: each vacancy
 sign-off carries the `ts` of the intro whose tenure it closes, and it
 is valid only when that intro is the latest valid mantle-state post
-before it. A vacancy naming an older tenure, another holder's tenure,
-or no tenure at all is void — a superseded or stale sign-off, skipped
-when resolving the latest state. Judge each post against the valid
+before it. A vacancy naming an older tenure or another holder's tenure
+is void — a superseded or stale sign-off, skipped when resolving the
+latest state. A vacancy carrying no tenure `ts` predates this rule:
+judge it by authorship instead — valid only when the latest valid
+mantle-state post before it names its author as the holder — so
+existing channel history keeps its meaning across the cutover. Judge
+each post against the valid
 state before it, void posts already excluded, so one stale vacancy left
 in the channel cannot void the legitimate teardown that follows it; and
 because binding is by tenure `ts`, not author, a delayed vacancy from a
