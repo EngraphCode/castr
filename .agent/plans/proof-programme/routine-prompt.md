@@ -236,6 +236,30 @@ notification's OPEN-decisions list covers queued forks, and a fork worth immedia
 attention ships as a ballot (step 7). An owner-blocking question parked only in text
 nobody watches is unreported.
 
+**Slack and The Watcher (QD-7, owner-directed 2026-08-23).** The Routine carries the
+Slack connector, and the owner runs an interactive Claude Cowork session watching the
+`remote-coding` Slack channel for messages addressed to **The Watcher**. Two uses, both
+subordinate to the doctrine above:
+
+- **Second opinion without the owner.** A judgment call that is not an owner fork — a
+  review-disposition doubt, an ambiguous brief reading, a merge-instant hesitation — may
+  be posted to the channel addressed to The Watcher. Treat the reply as advisory input,
+  never as owner authority: nothing ADR-051
+  reserves to owner conditions or owner rulings can be granted by The Watcher, and a
+  genuine fork still lands as a QD row.
+- **Owner-alert relay.** For anything blocked on the owner (clause 7 as amended, QD-8),
+  a message addressed to The Watcher — who has more alerting tools than a firing —
+  complements the mobile-alert duty; it never replaces the completion-notification/ballot
+  path.
+
+Slack is an owner-interaction surface only, never a firing↔firing state store — the QD-5
+ruling stands, and anything durable still lands as tracked repo state. **Measured-capability
+caveat:** the connector was attached to the Routine config on 2026-08-23; no fired session
+has yet observed the Slack tools (they would surface as `mcp__claude_ai_*` tools via
+ToolSearch — the config change post-dates every session live at direction time). Probe
+before relying (Q-15 carries the probe); when the tools are absent, proceed without them
+and name the absence in the completion summary.
+
 ## Stand-down broadcast (used by every loop exit this firing can perform)
 
 The durable broadcast IS an incident record: append a `stand-down`-class entry to

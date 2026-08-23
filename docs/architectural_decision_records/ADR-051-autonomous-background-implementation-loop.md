@@ -11,7 +11,11 @@ a programme-owned incident register via the plan estate's bookkeeping landing pa
 clauses 6 and 3, because instance-tier collaboration state does not exist across
 containers; amended 2026-08-23 by owner direction recorded as QD-8: anything blocked on
 the owner alerts on the owner's mobile channel the moment the block exists, as a clause 7
-interruption class alongside the clause 6 escalations)
+interruption class alongside the clause 6 escalations; amended 2026-08-23 by owner
+direction resolving queued decision QD-7: an owner-interaction Slack channel — watched by
+an owner-configured interactive session, The Watcher, for advisory second opinions and
+owner-alert relay — is permitted as an explicit carve-out from clause 7's
+no-additional-channel rule, which continues to ban any firing-to-firing channel)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -137,7 +141,12 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    be sent via the mobile claude app"). No
    additional live communication channel is introduced for the serialized loop: the shared
    remote is the channel, and its push-time compare-and-swap is the collision primitive,
-   checked before every push under the plan estate's firing protocol. Revisiting that
+   checked before every push under the plan estate's firing protocol. One owner-interaction
+   carve-out exists (amended per QD-7, 2026-08-23, owner direction): a Slack channel
+   watched by an owner-configured interactive session ("The Watcher") may carry a firing's
+   advisory second-opinion asks and owner-alert relays — owner-facing traffic only,
+   advisory replies never owner authority, and never a firing-to-firing channel or a state
+   store; durable state still lands only as tracked repo state. Revisiting that
    choice is coupled to the parallel-workers alternative below: approving parallel workers
    must bring a real-time claim mechanism with it.
 
