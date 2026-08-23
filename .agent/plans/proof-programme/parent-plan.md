@@ -9,7 +9,7 @@ todos:
     status: completed
   - id: Q-02
     content: 'Pre-T01 harness-extraction slice: artifact-agnostic rework of #11 runner mechanics'
-    status: pending
+    status: completed
     depends_on: [Q-00]
   - id: Q-03
     content: 'Pre-02A defect slice F-01: security AND->OR flattening, TDD through public seams'
@@ -62,6 +62,9 @@ todos:
   - id: Q-16
     content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
     status: pending
+  - id: Q-17
+    content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
+    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -70,8 +73,9 @@ todos:
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
-the Q-01 evidence record). Eligible now: Q-02..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-15, Q-16; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Eligible
+now: Q-03..Q-09, Q-13 (executes the B-11 RATIFY
+outcome), Q-14, Q-15, Q-16, Q-17; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -273,6 +277,281 @@ expectations, nothing that pre-empts the product boundary. Acceptance (`integrat
 wrong-parser/wrong-writer/vacuous-witness mutants are detected; suite green via `pnpm check`.
 Source: report §11.3 #11. Gate: B-11 (success verdict).
 
+**Q-02 evidence record (completed 2026-08-23).** Shipped:
+`lib/tests-transforms/utils/semantic-outcome-runner.ts` — a pure, artifact-kind-agnostic
+runner (`SemanticCase`/`runSemanticOutcome`/`runAllSemanticOutcomes`/`expectSemanticOutcome`)
+extracting PR #11's outcome-record and non-vacuity concepts per the report's #11 disposition
+(§11.3, ~L2120), without its OpenAPI/`CastrDocument`-specific runner — cases inject their own
+`parse`/`write`/`reparse` plus independent source/target oracles, so the module binds to no
+product profile or artifact kind. Non-vacuity is structural, not opt-in: every case declares a
+`separatingSource`, and the runner recomputes discrimination against it on all three legs
+(`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
+self-reported flag. Every case-supplied callback — all seven: `sourceOracle`, `parse`, `write`,
+`targetOracle`, `reparse`, `equalIR`, `equalOracle` — receives its own independent clone at
+every call (`structuredClone` by default, or a case-supplied `cloneSource`/`cloneIR`/
+`cloneOutput`/`cloneOracle` override for values `structuredClone` cannot safely clone), taken
+directly from the value the runner still trusts as ground truth, immediately before that one
+call; no clone is ever reused across two calls. A mutating case therefore cannot corrupt the
+case object across repeated runs, taint a comparison the runner still needs to make, corrupt a
+returned artifact, or leak into a different callback's (or a later call to the SAME callback's)
+supposedly independent view of "the same" value. Proof:
+`lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
+ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wrong-writer,
+bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
+vacuous-witness), a mutation-safety/repeatability regression case exercising all seven
+callbacks, a pair of branded class-instance IR cases (one proving the default `structuredClone`
+throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
+case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
+both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
+throw for the branded-IR/poisoned-diagnostics cases) then green, 19/19 passing.
+
+Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
+any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
+`type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
+non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
+of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
+opened. Once open, sixteen rounds of automated PR review (Codex, Copilot) progressively closed
+the full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
+and a diagnostic-formatting mutation gap that took five rounds to close fully (rounds ten
+through sixteen), the last two of which replaced the mutation-prone fallback chain with a single
+descriptor-based formatter and extended its discipline to array indices: each round's fix
+protected the callbacks it was shown to be
+missing, and the next round's hand-tracing found the next narrower leak — ordering
+(`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
+(`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
+single-call leaks (`reparse` mutating the returned `output` artifact; `sourceOracle` mutating
+`source` before `parse`'s own clone was taken), the cross-call leaks (`equalIR`/`equalOracle`,
+each invoked more than once on a value also returned in `artifacts`), and a retained-alias leak:
+`write` was still called with `ir`/`separatingIR` themselves rather than a clone, so a memoising
+`parse` that keeps its own reference to the IR it returned could observe `write`'s in-place
+mutation on a second run of the same case (`write` now receives a `structuredClone` of
+`ir`/`separatingIR` at each call site, and the mutation-safety test grew a closure-captured
+`retainedIRs` array — modelling a memoising parser's cache without adding branching/stateful
+logic to the fake — asserting the retained references stay pristine). The sixth round was a
+different root cause, not a narrower instance of the same one: `structuredClone` silently
+de-brands class-instance values, dropping the prototype and any brand, so it cannot safely clone
+this repo's own `CastrSchema`/`CastrSchemaProperties` IR — confirmed empirically (a probe script
+cloning a branded class instance loses its methods) before fixing. Rather than special-casing
+`CastrSchema`, `SemanticCase` grew optional `cloneSource`/`cloneIR`/`cloneOutput`/`cloneOracle`
+overrides (defaulting to `structuredClone`, mirroring the existing case-supplied-callback
+pattern) so a case can substitute a clone that preserves its own branded type. Two new tests
+prove the failure mode and the fix: one shows the default `structuredClone` throws when `write`
+calls a method on a branded IR class instance, the other shows a case-supplied `cloneIR` fixes
+it. The seventh round returned to the mutation-safety surface with a variant the sixth round's
+different focus had left unexamined: `sourceOracle`/`targetOracle` are each called twice (main
+and separating channel), and neither call's result was snapshotted immediately on return —
+unlike `pristineIR`/`pristineOutput`, which already were. A stateful oracle that returns the
+same mutable object on both calls (analogous to the fifth round's memoising `parse`) would let
+its second call silently corrupt the first call's already-returned value before anything
+downstream cloned it — confirmed empirically with a probe script before fixing. Both oracle
+results are now snapshotted with `cloneOracle` immediately on return, matching the existing
+pristine-snapshot pattern; the mutation-safety test's `sourceOracle`/`targetOracle` fakes were
+changed from returning a fresh object per call (which could never exhibit this aliasing bug) to
+mutating and returning one retained shared object across both calls — the minimal shape able to
+prove the defect — and confirmed via `git stash` isolation that the existing
+`sourceOracleValue`/`targetOracleValue` artifact assertions fail against the pre-fix code and
+pass against the fix. The eighth round found the last instance of the same pattern: `reparsedIR`
+was the one remaining value not snapshotted immediately on return — `reparse` is called once,
+but a real parser/reparser pair may share one memoising implementation (`reparse` inverts
+`parse`), so the SEPARATING channel's later `parse` call could overwrite the object `reparsedIR`
+still pointed to before `roundTripEqual`/`artifacts.reparsedIR` ever read it — confirmed
+empirically with a probe script before fixing. `reparsedIR` is now snapshotted with `cloneIR`
+immediately on return, and a new dedicated test (`parse`/`reparse` sharing one retained,
+mutated-in-place object — the minimal shape able to prove the defect, since two calls returning
+fresh objects never alias) confirmed via `git stash` isolation to fail against the pre-fix code
+and pass against the fix. The ninth round found one more genuine robustness gap, this time in
+`describeForDiagnostics` itself: its `String(value)` fallback (added to survive
+`JSON.stringify` throwing on circular/`bigint` values) can itself throw for an artifact whose
+own string coercion also throws, and since `expectSemanticOutcome`'s failure-message templates
+call it unconditionally as eagerly-evaluated template-literal arguments — even for a genuinely
+passing case — that second throw would crash `expectSemanticOutcome` outright rather than
+report a semantic mismatch. Confirmed empirically (a poisoned object with throwing
+`toJSON`/`toString`) before fixing. `describeForDiagnostics` now guards the `String(value)`
+fallback with its own try/catch, returning a constant description if both formatting attempts
+fail; a new test proves a poisoned-diagnostics case no longer crashes `expectSemanticOutcome`,
+confirmed via `git stash` isolation to fail against the pre-fix code and pass against the fix.
+Across all nine rounds, all seven callbacks were confirmed to receive an independent clone at
+every call, with every one of their return values now snapshotted immediately on return wherever
+a later call to that same callback (or a callback sharing its underlying implementation) could
+otherwise overwrite it — no narrower leak left to find on the mutation-safety surface, and the
+clone mechanism itself is now confirmed to work for branded, non-plain-data artifact types — the
+kind Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief exists to support. Also
+fixed along the way: a missing vacuous-witness mutant (case data
+that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
+a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
+own IR, producing a distinct failure signature from the wrong-writer mutant instead of
+duplicating it), branching/input-interpolating logic in error-message construction inside the
+shared test fixture (`test-immediate-fails.md` item 12 — detection belongs in the runner, not the
+fake), a `JSON.stringify` crash risk on circular/`bigint` oracle values in diagnostic messages,
+and missing mandatory `@example`/`@see` TSDoc on the public API. Three findings were verified and
+declined rather than actioned, each with reasoning posted on its thread rather than a silent
+skip: an async runner variant matching the report's fuller Tranche-01 §5.3 contract is deferred
+to Q-11, which explicitly consumes this Q-02 extraction — building it now risks the
+second-runner fork this brief forbids before a real async consumer exists to derive the actual
+signature from; a repeated claim that the fixture's core marker-prefixing `write` mapping itself
+violates the no-fake-logic rule is held to be a misapplication of a rule aimed at opaque
+dependency mocks (canonical examples: logger, HTTP client) to a fixture that IS the minimal data
+flow the runner's proof depends on — the repo's own `test-reviewer` reviewed this exact line
+across all four rounds and flagged only the (now-fixed) error-message interpolation, never the
+transformation itself; and, in the ninth round, a claim that the mutation-safety test's
+closure-retained, mutate-and-return oracle fakes (added in the seventh round specifically to
+reproduce a stateful-oracle aliasing bug that same reviewer reported) are themselves a
+"state machine" barred by `test-immediate-fails.md` item 12 — declined as the same category of
+misapplication: the retained-and-mutated state is not incidental scaffolding but the exact
+mechanic under proof (the runner's documented guarantee that it correctly isolates a stateful
+case), the fake performs no branching and takes no more than one input-dependent step per call
+(matching the item's "captured calls" allowance, not its "state machine" prohibition), and the
+closely analogous `retainedIRs` pattern from the fifth round survived four further review rounds
+unflagged. Held as a genuine rule-interpretation disagreement rather than a correctness defect —
+per ADR-051 clause 4, only correctness/security/data-loss defects are blocking in every round;
+declining a non-blocking refinement after this many rounds of otherwise-converging review is the
+carry-forward path clause 4 itself describes, and a bot revisiting the very proof mechanism it
+asked to be built is the "findings no longer converging" signal for stopping. The substance of
+both declined marker-mapping/stateful-fake findings is queued at
+[QD-4](./queued-decisions.md) per clause 4's "queue entry for the substance" requirement, so a
+stricter owner reading of `test-immediate-fails.md` item 12 can apply to future semantic-fidelity
+fakes without re-litigating this PR. A tenth round flagged a genuinely separate item-14 issue —
+the "runs every registered case" test asserted its two proofs inside a `for` loop, which is
+literal test-authored control flow around assertions regardless of the fixed, known-size array
+it iterated — fixed by replacing the loop with two explicit assertions against the destructured
+`first`/`second` proofs, initially guarded by an `if`/`throw` for the `undefined` narrowing
+`noUncheckedIndexedAccess` requires before either proof reaches `expectSemanticOutcome`'s
+non-optional parameter. An eleventh round immediately flagged that same `if`/`throw` as its own
+item-16 "runtime branching inside the test body" violation — correct on the letter of the rule,
+even though the branch is dead code in practice (`runAllSemanticOutcomes` on a fixed two-case
+array always returns exactly two proofs). Fixed by replacing the `if`/`throw` with
+`node:assert`'s TypeScript-typed assertion-function form (`assert(x !== undefined, msg)`, which
+`@types/node` declares as `asserts x`): a single function call, not a branching construct, that
+TypeScript's control-flow analysis still narrows on — satisfying both the type system's
+non-optional requirement and item 16's prohibition on visible conditional syntax in the test
+body. A twelfth round returned to `describeForDiagnostics` itself (product code, not
+test-immediate-fails-governed): its failure-message templates called it directly on the
+retained `proof.artifacts` values, so an oracle or IR artifact with a mutating `toJSON` method
+or enumerable getter would corrupt that same retained artifact merely by being formatted for
+display — defeating the documented "artifacts stay pristine for post-hoc diffing" contract.
+Two changes close this. First, root-cause: `expectSemanticOutcome`'s three checks became
+`if (!condition) throw new Error(...)` instead of `expect(condition, message).toBe(true)`, so
+each message — and the `describeForDiagnostics` calls inside it — is only built once its own
+check has actually failed, not unconditionally for every proof as the ninth round's fix left it;
+a passing proof's artifacts are now never even passed to the formatter (this also let the
+module drop its `vitest` import entirely, since nothing in it calls `expect` any more).
+Second, `describeForDiagnostics` now formats a `structuredClone` of its argument, never the
+argument itself — `JSON.stringify` invokes a `toJSON` method if the value passed to it has one,
+and `structuredClone` produces a plain-data copy with no such method to call. Because
+`structuredClone` itself throws for exactly the kind of value with this vulnerability (an own
+function-valued property, which a `toJSON` method is), the fallback on that throw is a new
+`omitFunctionProperties` helper filtering out own function-valued properties via
+`Object.entries`, which reads the property without invoking it, so a mutating `toJSON`'s body
+never runs. Confirmed empirically before fixing (a mutating-`toJSON` probe corrupted the
+retained value on the pre-fix code); the existing ninth-round test was rebuilt around a
+genuinely failing (not passing) case, since the new lazy evaluation means a passing case no
+longer reaches `describeForDiagnostics` at all, and a new test proves a mutating-`toJSON`
+oracle's `proof.artifacts` values stay pristine after a failure diagnostic is built — confirmed
+via `git stash` isolation to fail against the pre-fix code and pass against the fix. A mutating
+_getter_ (as opposed to a mutating `toJSON` method) remains a residual, inherent limitation:
+reading a property to know its current value is unavoidable for any serializer, `structuredClone`
+included, so this is documented rather than chased further. A thirteenth round found that
+round twelve's fallback snapshot was only one level deep — a nested value with its own mutating
+`toJSON` (not the top-level artifact's) still leaked through as a live, unsanitised reference,
+so `JSON.stringify` still reached and invoked it. Confirmed empirically before fixing (a probe
+with a nested mutating `toJSON` reproduced the corruption exactly as reported). `omitFunctionProperties`
+is now genuinely recursive — it strips function-valued properties at every depth, not just the
+top — and cycle-safe: a value already seen higher in the same recursion is replaced with a
+`'<circular>'` placeholder rather than returned as the original live reference, so a circular
+structure can never reintroduce an unsanitised alias back into the snapshot. A new test with a
+two-level mutating-`toJSON` structure (an outer value whose own `toJSON` forces the
+`structuredClone` fallback, wrapping a nested value with its own separate mutating `toJSON`)
+proves the nested value also stays pristine; confirmed via `git stash` isolation to fail against
+the pre-fix (one-level) code and pass against the fix. A fourteenth round found that round
+thirteen's fix had, as a side effect, made the ninth round's own regression test vacuous for the
+guard it was named for: `omitFunctionProperties` now strips a poisoned `toJSON`/`toString` pair
+before `JSON.stringify` ever runs, so that test's fixture no longer reached the `String(value)`
+fallback at all — it would still pass even with that fallback's own `catch` deleted, since
+`JSON.stringify` on the sanitised (function-free) snapshot now succeeds outright. Tracing this
+surfaced a second, more serious gap alongside it: sanitising can itself throw (reading every
+property to know what to strip means a throwing getter surfaces during sanitisation, not just
+during formatting), and that failure mode wasn't caught anywhere, so `describeForDiagnostics`
+could crash uncaught rather than degrade gracefully. `toSafeDiagnosticValue`'s sanitisation
+fallback now has its own `catch`, returning the original value if sanitising itself throws.
+Rewrote the ninth-round test's fixture to add a throwing getter alongside the existing
+poisoned `toJSON`/`toString`, so the full cascade is genuinely exercised — `structuredClone`
+fails (the getter breaks the read needed to clone), sanitisation fails the same way, then
+`JSON.stringify` fails on the raw value's `toJSON`, then `String()` fails on its `toString` —
+finally reaching the constant fallback, which the test now asserts on directly (not only the
+wrapping semantic-mismatch text, which would have passed even with the crash this round found).
+Confirmed empirically that this exact cascade occurs before fixing, and via `git stash`
+isolation that the rewritten test fails against the pre-fix code (the getter's raw error message
+leaking through uncaught) and passes against the fix. A fifteenth round found that the
+fourteenth round's own fix — the sanitisation fallback returning the _original_ value when
+sanitising itself throws — reintroduced exactly the live-reference exposure the twelfth round
+had closed, for the one combination not yet tried: a mutating `toJSON` alongside a throwing
+getter on the same artifact. Sanitising reads every property (via `Object.entries`) to know what
+to strip, so the throwing getter makes sanitisation itself throw; the fallback-of-the-fallback
+then handed `JSON.stringify` the raw, live artifact, whose (unstripped, since never reached)
+`toJSON` ran and mutated it. Confirmed empirically before fixing (a probe script showed
+`safeValue === fixture`, `JSON.stringify` succeeding, and `fixture.value` left mutated). This was
+the sixth consecutive round narrowing the same `describeForDiagnostics` concern, each round's fix
+leaving one narrower gap for the next round to find — a whack-a-mole pattern rather than a
+converging one, since every fallback layer that calls into caller-supplied code is one more
+pathological artifact away from failing the same way. Rather than patch another instance,
+`toSafeDiagnosticValue`/`omitFunctionProperties` were replaced outright with a single walker that
+reads every own property strictly via `Object.getOwnPropertyDescriptor`: a data property's
+`.value` is read directly (never a function call) and recursed into; an accessor property is
+represented as the placeholder string `'<getter>'` without ever calling its `get`; a
+function-valued property is omitted, matching how `JSON.stringify` would have dropped it anyway.
+No code path in the walker invokes anything the artifact itself defines, so no `toJSON`,
+`toString`, `Symbol.toPrimitive`, or getter — mutating or throwing — can ever run during
+diagnostic formatting; this closes the entire vulnerability class structurally rather than
+narrowing it further. The one residual case where the walker's own property-enumeration can
+still invoke caller-defined code is a `Proxy` with a throwing `ownKeys`/`getOwnPropertyDescriptor`
+trap; `describeForDiagnostics` keeps a guard for that case, but its fallback is now a fixed
+placeholder string, never the live artifact, so no path exists any more from a formatting failure
+back to a raw reference. The ninth-round poisoned-diagnostics test was rewritten: the scenario it
+guards no longer reaches any fallback at all (formatting succeeds on the first attempt, since
+nothing poisoned is ever invoked), so it now asserts the success case directly — the message
+contains the `'<getter>'` placeholder and never the poisoned members' thrown text. A new test
+reproduces the fifteenth round's exact combination (mutating `toJSON` plus a throwing getter on
+one artifact) and asserts `proof.artifacts` stays byte-for-byte pristine after the diagnostic is
+built; confirmed via `git stash` isolation that both the rewritten and the new test fail against
+the pre-fix code and pass against the fix. A sixteenth round found that the fifteenth round's new
+walker had one branch the property-descriptor discipline never reached: array elements were still
+read via `.filter()`/`.map()`, ordinary property access that invokes an accessor defined at a
+numeric index, the same class of gap the walker had just closed for object properties — a getter
+at an array index could still run (and still mutate) while a failure diagnostic was built.
+Confirmed empirically before fixing (a probe script with a throwing getter at index 1 of a
+three-element array showed the getter invoked, and the outer catch masking the resulting throw
+only after the mutation attempt had already run). Fixed by extracting the shared
+descriptor-to-value logic (accessor → `'<getter>'` placeholder without calling `get`;
+function-valued → omitted; otherwise recurse into `.value`) into one
+`resolveSafeDiagnosticMember` helper, and routing both branches through it: the array branch now
+reads each index via `Object.getOwnPropertyDescriptor(value, index)`, exactly as the object branch
+already read each key, so no property — object key or array index — is ever read through ordinary
+access that could trigger an accessor. A new test reproduces the array-index case (a throwing
+getter at index 1, reached from an oracle's `tags` array) and asserts the getter is never invoked
+and the diagnostic still formats successfully (a `'<getter>'` placeholder at that index, not a
+crash or fallback placeholder); confirmed via `git stash` isolation that it fails against the
+pre-fix code and passes against the fix.
+
+A seventeenth round, reviewing the sixteenth round's fix, produced two fresh P2 findings on
+the same walker — traversing a `Proxy`-backed artifact still runs its
+`ownKeys`/`getOwnPropertyDescriptor` traps (which can mutate silently before the existing
+guard's placeholder fallback engages), and a function-valued array slot is dropped by the
+array branch's `flatMap` rather than held in place as `JSON.stringify`'s `null` would be.
+Both were verified real against the landed code and both are diagnostics-only (proof
+verdicts are computed before any diagnostic formatting runs, so neither can change an
+outcome). Seventeen rounds is the non-convergence signal ADR-051 clause 4 exists for: both
+findings were carried forward as queue row Q-17 (its brief holds the fix shape and
+acceptance), with the disposition recorded on each thread rather than an eighteenth
+fix-and-rereview cycle on this PR. The sixteenth round's array-descriptor thread — already
+fixed on the head in the same round — had been left unreplied when the prior firing hit its
+landing cutoff; the reply and resolution were posted in this round's disposition pass.
+
+Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
+markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
+every landed revision. Scope held to Q-02's narrower slice throughout: no profile/artifact-kind
+binding, channel/fixture-manifest machinery, or product-code changes — those remain Tranche 01's
+job (report §7, ~L795-850).
+
 **Q-03 — F-01 security AND→OR.** Surface: `buildIRSecurity` and the flat
 `IRSecurityRequirement` model (IR-model change per review R3), parser+writer+persistence.
 Non-goals: no broader security-lane work (Tranche 06 owns it). Acceptance (`integration`):
@@ -409,7 +688,11 @@ re-check is the standing mitigation, and a proactive cross-container claim signa
 only with ADR-051's parallel-workers alternative. The QD-6 review adds a fired-session
 capability probe: can a Routine-spawned session publish an Artifact page and deliver a
 push notification? The owner-decision-ballot mechanism is measured only from interactive
-sessions.
+sessions. QD-7 (2026-08-23) extends the probe: do the Slack connector's tools surface in
+a fired session (`mcp__claude_ai_*` via ToolSearch), and does a message addressed to The
+Watcher on the `remote-coding` channel get a reply a later step can read? The connector
+was owner-attached to the Routine config the same day; no fired session has observed it
+yet.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
@@ -431,6 +714,25 @@ Acceptance (`non-code`): every reference in the skill file resolves, recomputed 
 `validate-markdown-links` over the touched files rather than eyeballed; gates green.
 Source: the foundation-alignment note below; the napkin's transplant-gap entries. Gate:
 none (eligible immediately).
+
+**Q-17 — Diagnostic-walker residual hardening.** Surface:
+`lib/tests-transforms/utils/semantic-outcome-runner.ts` (`toSafeDiagnosticValue` /
+`resolveSafeDiagnosticMember`). The ADR-051 clause 4 carry-forward for the tenth-round
+Codex P2 findings on PR #35 (both verified real against the landed code, both
+diagnostics-only — the proof verdicts are computed before any diagnostic formatting runs,
+so neither can change a proof outcome): (1) snapshotting a `Proxy`-backed artifact runs its
+`ownKeys`/`getOwnPropertyDescriptor` traps, which can mutate the backing artifact silently
+before the walker's guard can substitute a placeholder — detect proxies via `node:util`
+`types.isProxy` (reliable in this Node-only test-support module) and emit an inert
+placeholder without introspecting; (2) a function-valued array slot is dropped by the
+array branch's `flatMap` (the shared member resolver signals omission with an empty
+array), shifting later elements left — preserve array positions with an
+`undefined` placeholder (matching `JSON.stringify`'s `null` rendering for such slots)
+while keeping object-property omission as is. Acceptance (`unit`): a regression test per
+finding (a trap-mutating Proxy fixture whose backing store is proven untouched; a
+`[value, function, value]` fixture rendered with positions intact), TDD-first; gates
+green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
+2026-08-23). Gate: none (eligible immediately).
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
@@ -511,7 +813,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-02..Q-09, Q-13, Q-14, Q-15, Q-16.
+- **Eligible now**: Q-03..Q-09, Q-13, Q-14, Q-15, Q-16, Q-17 (Q-02 completed 2026-08-23).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
