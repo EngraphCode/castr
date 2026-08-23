@@ -155,3 +155,12 @@ Domain experts (castr schema surface):
 - `.agents/skills/` — Codex skill and workflow wrappers
 - `.codex/` — Codex project-agent registration and thin adapters
 - `scripts/` — repo-local validation and tooling support
+
+## Claude cloud environment
+
+Cloud (claude.ai) sessions for this repo run in the shared "Practice Repos"
+environment: a universal setup script plus an optional per-repo session hook
+at `.agent/setup/cloud-session-setup.sh` (this repo currently defines none).
+Read `.agent/claude-harness-integrations/cloud-environment.md` before
+changing either — the environment script's source of truth lives there, not
+in the claude.ai dialog.
