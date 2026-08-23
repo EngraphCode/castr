@@ -17,9 +17,11 @@
       "Skill(engraph-reason)",
       "Skill(engraph-semantic-merge)",
       "Skill(engraph-session-handoff)",
+      "Skill(engraph-slack-watcher)",
       "Skill(engraph-start-right-quick)",
       "Skill(engraph-start-right-team)",
       "Skill(engraph-start-right-thorough)",
+      "Skill(engraph-talk-to-slack-watcher)",
       "Skill(engraph-tsdoc)",
       "Skill(engraph-undo-change)"
     ]
