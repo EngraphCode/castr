@@ -65,12 +65,16 @@ One holder, deterministically: the latest valid mantle-state post in the
 channel IS the current state — an intro or relief names the holder, a
 vacancy sign-off means nobody holds it. Validity is judged from channel
 history alone: an intro or relief is always valid, while a vacancy
-sign-off is valid only when the latest valid mantle-state post before
-it names its author as the holder — a vacancy from anyone else is a
-superseded holder's late sign-off, void, and skipped when resolving the
-latest state. Judge each post against the valid state before it, void
-posts already excluded, so one stale vacancy left in the channel cannot
-void the legitimate teardown that follows it. Every tick re-checks; a holder that sees a valid
+sign-off is valid only when it closes the current tenure: each vacancy
+sign-off carries the `ts` of the intro whose tenure it closes, and it
+is valid only when that intro is the latest valid mantle-state post
+before it. A vacancy naming an older tenure, another holder's tenure,
+or no tenure at all is void — a superseded or stale sign-off, skipped
+when resolving the latest state. Judge each post against the valid
+state before it, void posts already excluded, so one stale vacancy left
+in the channel cannot void the legitimate teardown that follows it; and
+because binding is by tenure `ts`, not author, a delayed vacancy from a
+session's previous tenure cannot depose that same session's new one. Every tick re-checks; a holder that sees a valid
 mantle-state post newer than its own intro signs off and stands down,
 whatever it thinks of the succession — the rule needs no names and
 survives simultaneous takeovers.
@@ -144,7 +148,8 @@ on what it is: a valid intro or relief newer than your own intro means
 a successor took the mantle mid-teardown — run the handover above
 (sign-off reply, baseline `ts`, owner notified) and post no vacancy; a
 valid vacancy, or nothing newer, means the mantle is yours to vacate —
-post the vacancy sign-off. The resolve and the post are separate
+post the vacancy sign-off, naming your own intro's `ts` as the tenure
+it closes (step 2's tenure binding). The resolve and the post are separate
 Slack calls, so a successor's intro can land in between — but a vacancy
 posted over it is void by step 2's validity rule (the latest valid
 mantle-state post before it is the successor's intro, not one naming
