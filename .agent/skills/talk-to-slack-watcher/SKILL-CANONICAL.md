@@ -33,17 +33,21 @@ is unset, ask the owner — never hard-code or guess.
 ## Sending
 
 1. Identify yourself: under shared Slack credentials the message text is
-   the provenance, so lead with an explicit agent marker — your Practice
-   name, seed prefix, and the word "agent" or equivalent — never the name
-   alone, or the account holder is silently credited with your words
-   (the estate's shared-credential identification rule). Derive the name
-   via `pnpm agent-tools:agent-identity --format display`, supplying
+   the provenance, so lead with an explicit agent marker carrying the
+   shared-credential rule's three attribution facts — that the post is
+   agent-authored, your Practice name plus seed prefix, and that it was
+   posted via the shared account (e.g. `<Name> (agent <prefix>, via
+<account holder>'s Slack):`) — never the name alone, or the account
+   holder is silently credited with your words. Derive the name via
+   `pnpm agent-tools:agent-identity --format display`, supplying
    `--seed "<your session UUID>"` when no platform hook exported a
    `PRACTICE_AGENT_SESSION_ID_*` seed — without a seed the CLI exits 2
    rather than guessing.
 2. Address the Watcher explicitly — "the Watcher" always works; the
-   current holder's name (from its intro post, the most recent
-   `relieves …` or intro message in the channel) also works.
+   current holder's name (from the channel's most recent mantle-state
+   post — intro or relief) also works. A latest mantle-state post that is
+   a vacancy sign-off means no Watcher holds the mantle: report that to
+   the owner instead of posting into the void.
 3. Post in the configured channel, threaded onto an existing exchange
    where one exists. State plainly what you need and whether you expect a
    reply.

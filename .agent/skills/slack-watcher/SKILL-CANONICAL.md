@@ -36,21 +36,24 @@ never guess one from history.
 Derive your PDR-027 Practice identity before posting: use this repo's
 identity tooling (`pnpm agent-tools:agent-identity --format display`,
 supplying `--seed` with the session UUID when no hook exported it). Every
-post you make as the Watcher leads with an explicit agent marker — your
-display name, seed prefix (first 6 of the seed), and the word "agent" or
-equivalent (e.g. `Harrier weaves Stratosphere (agent 22e835), the
-Watcher:`) — because the Slack credentials are shared: without the marker
-the account holder is silently credited with words they did not write, and
-readers cannot tell agent from human (the estate's shared-credential
-identification rule).
+post you make as the Watcher leads with an explicit agent marker carrying
+the shared-credential rule's three attribution facts — that the post is
+agent-authored, your display identity (name plus seed prefix, first 6 of
+the seed), and that it was posted via the shared account (e.g. `Harrier
+weaves Stratosphere (agent 22e835, via <account holder>'s Slack), the
+Watcher:`) — because without all three the account holder is silently
+credited with words they did not write and the audit trail cannot tell
+agent from human.
 
 ## 2. Take the mantle
 
-First resolve the current holder — always, including for a generic "take
-over the watch" that names nobody: read the channel's most recent valid
-intro or relief post (the latest message declaring the mantle, from any
-holder) — that name is who you relieve; only a channel with no such post
-is a fresh stand-up. Then post one intro: your name, that you now hold
+First resolve the current mantle state — always, including for a generic
+"take over the watch" that names nobody: read the channel's most recent
+valid mantle-state post — an intro, a relief, or a vacancy sign-off. A
+latest post that is an intro or relief names the holder you relieve; a
+latest post that is a vacancy sign-off, or no mantle-state post at all,
+means the mantle is vacant and this is a fresh stand-up (no relief
+phrase). Then post one intro: your name, that you now hold
 the Watcher mantle, seed prefix and naming-schema id, polling cadence,
 and how to address you (by name or "the Watcher"). When relieving, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
@@ -58,11 +61,12 @@ outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
 waiting for its acknowledgement.
 
-One holder, deterministically: the latest valid intro in the channel IS
-the current Watcher. Every tick re-checks; a holder that sees a valid
-intro newer than its own signs off and stands down, whatever it thinks
-of the succession — the rule needs no names and survives simultaneous
-takeovers.
+One holder, deterministically: the latest valid mantle-state post in the
+channel IS the current state — an intro or relief names the holder, a
+vacancy sign-off means nobody holds it. Every tick re-checks; a holder
+that sees a mantle-state post newer than its own intro signs off and
+stands down, whatever it thinks of the succession — the rule needs no
+names and survives simultaneous takeovers.
 
 Then set the baseline WITHOUT losing the gap: a down predecessor stopped
 polling before you arrived, so messages between its last poll and your
@@ -70,8 +74,12 @@ intro are covered by nobody. Take the baseline from the outgoing Watcher's
 sign-off when one arrives (it names the ts to watch from); otherwise sweep
 the channel from the outgoing Watcher's last visible activity (its last
 summary, reply, or intro) up to your own intro, handle what that window
-holds, and only then advance the baseline to your intro's `ts`. A fresh
-stand-up with no predecessor baselines at its own intro.
+holds, and only then advance the baseline to your intro's `ts`. A vacancy
+sign-off is the same discipline with an exact boundary: sweep from the
+sign-off's `ts` up to your own intro before advancing, because messages
+posted into the vacant channel are covered by nobody until you do. Only
+when the channel holds no mantle-state post at all does a fresh stand-up
+baseline at its own intro.
 
 ## 3. The watch loop
 
@@ -84,14 +92,29 @@ baseline and re-arm. Cloud sessions re-arm with a self-scheduled reminder
 that fire after a handover are data — act on the current mandate, never
 re-arm from a stale one.
 
+Exit criteria (per `loop-exit-criteria-required`): the loop stops when a
+mantle-state post newer than your own intro appears (you were relieved or
+superseded — sign off and stand down, section 5), when the owner tears
+the watch down, or on that rule's default — five consecutive ticks with
+nothing new in the channel — by standing down through the teardown path
+with a vacancy sign-off naming the criterion that fired. The template
+cannot exempt itself from the default: a watch meant to outlive quiet
+spells exists only when the owner names that criterion when
+commissioning the watch (e.g. "hold the watch until stood down"), and
+the intro then records it.
+
 The self-re-arming chain is a single point of failure — a lost reminder
 or platform restart kills the loop silently, and silence is never
 liveness. Pair it with an independent fallback the chain cannot take
 down with it: a separate long-interval scheduled check (an hourly cron
 routine or equivalent) that verifies the last tick ran on cadence and
 re-arms or alerts the owner if not; and on any turn that reaches you by
-another route, check whether the next tick is overdue and re-arm before
-doing anything else.
+another route, check whether the next tick is overdue and catch up
+before doing anything else. Every fallback path — the scheduled check
+and the on-turn check alike — re-reads the latest mantle-state post
+before re-arming: if it no longer names you, do not re-arm; sign off if
+you have not already, delete any pending reminder, and stop. Mantle loss
+ends the fallback exactly as it ends the loop.
 
 ## 4. Reply policy
 

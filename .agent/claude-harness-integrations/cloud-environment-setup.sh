@@ -50,10 +50,18 @@ echo "node major from ${FIRST_REPO}/package.json engines: ${NODE_MAJOR}"
 
 # ---------- universal toolchain ----------
 
-# Node — latest release of the repo-declared major
+# Node — latest release of the repo-declared major, checksum-verified
+# against the release's published SHASUMS256 manifest before extraction.
+# Same-channel manifest, so this proves transfer integrity (no truncated or
+# corrupted archive extracts into /usr/local as root), not payload
+# authenticity — a pinned digest would reintroduce the hard-coded version
+# this script deliberately avoids.
 NODE_TGZ=$(curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" | grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" | head -1)
 test -n "$NODE_TGZ"
-curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/${NODE_TGZ}" | tar xz -C /usr/local --strip-components=1
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/${NODE_TGZ}" -o /tmp/node.tgz
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" \
+  | grep " ${NODE_TGZ}\$" | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
+tar xzf /tmp/node.tgz -C /usr/local --strip-components=1
 
 # pnpm via Corepack shims in /usr/local/bin (a trusted location for repo
 # spawn checks): each repo's packageManager pin selects and verifies its own
