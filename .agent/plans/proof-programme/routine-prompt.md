@@ -158,7 +158,20 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    - **Genuine owner fork**: write it to [`queued-decisions.md`](./queued-decisions.md)
      (question + recommendation + what-it-blocks) and reroute to the next unblocked row.
      Never decide release claims, `principles.md` edits, ADR acceptance, or sequencing
-     supersession yourself.
+     supersession yourself. A fork worth the owner's immediate attention additionally
+     ships as an owner-decision ballot per the
+     [`owner-decision-ballot` pattern](../../memory/active/patterns/owner-decision-ballot.md)
+     — publish the tap-to-answer artifact, push-notify, and record the ballot URL in the
+     QD row so any later firing reads the answers there — **where this session type can
+     publish artifacts and deliver a push** (measured only from interactive sessions as
+     of 2026-08-23; the fired-session capability probe is on Q-15's gap list). Where it
+     cannot, the QD row plus the completion notification's OPEN-decisions list is the
+     alert — and the QD-8 timeliness duty then turns on whether the loop is actually
+     blocked: a fork with an unblocked row to reroute to is a queued decision (batch
+     path; the owner is not blocked because the loop is not), while a fork that leaves
+     NO eligible row — the loop itself blocked on the owner — means land the QD row and
+     close promptly, skipping further work, so the completion notification carries the
+     alert the soonest this session type can deliver it.
    - **Slice fails its second consecutive firing**: mark the row `blocked` with a written
      diagnosis, convert its PR to a draft (never close it), and land the queue-state change
      via the bookkeeping path (row `blocked`, `failures:` count, pointer to the draft's
@@ -172,7 +185,28 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    no product code; the ADR-051 clause 6 persistence mechanism, merged unattended at the clause 3 bar,
    which covers bookkeeping PRs per the QD-3 amendment; not a slice PR, never substantive
    progress).
-9. **Close**: run the `engraph-session-handoff` skill. The completion notification must
+9. **Close**: run the `engraph-session-handoff` skill under the **firing-scoped profile
+   (QD-6)** — the handoff's duties instantiated for a zero-context scheduled session,
+   never narrowed: the landed-outcome record, repo-continuity refresh, napkin capture,
+   claims closure, delivery-ledger row, counters, and the programme thread record
+   (`threads/proof-programme.next-session.md` — add or update your PDR-027 identity row)
+   bind every firing — and no skill step is skipped: the entry-point drift sweep (skill
+   step 6d) runs as written (it is a short read of the root entry points); the
+   per-user-memory check follows the skill's own absence rule (a fresh container has no
+   populated platform memory surfaces — record "fresh container: surfaces absent" rather
+   than skipping); pending-reviewer dispatches (11a) apply on the skill's own stated
+   condition (the firing touched the plan body) and are otherwise out of scope by the
+   skill's text, not by this profile. The
+   consolidation gate (skill steps 9–10) is recorded as `due — <reason>` at most: a
+   firing never escalates into consolidate-docs (clause 2's duration bound). The
+   cleanliness gate follows the skill's step 12 scheduled-firing clause: cite your LAST
+   push's pre-push `check:ci` (it ran over the tree carrying your handoff edits); pushed
+   nothing → run `pnpm check`; genuinely read-only and tree-unchanged → record "no
+   repo-state change; gate not applicable". A genuinely unforeseen skip lands as an
+   `other`-class incident via the bookkeeping path — never only in the completion
+   summary, which is not repo state. Continuity edits reach the base by the established
+   routes (the slice PR's final commit; the post-merge orphan continuity commit; the
+   bookkeeping path when no PR is open). The completion notification must
    name: what merged, what advanced, queued decisions written, **every queued decision
    still OPEN and awaiting the owner (from the step 3 read — an empty register is stated
    as "no owner decisions waiting")**, blocked slices, counter
@@ -194,7 +228,13 @@ owner-escalation route `use-agent-comms-log` names.) Incidents
 — a push collision, retry exhaustion, an environment anomaly, a stand-down — land as
 entries in [`incidents.md`](./incidents.md) (id, date, firing identity, class, what
 happened with evidence, response, follow-up routing). The owner is interrupted only for
-ADR-051 clause 6 escalation events; everything else they read in batch.
+ADR-051 clause 6 escalation events and for anything **blocked on the owner** (clause 7 as
+amended per QD-8, 2026-08-23, owner direction quoted there): an owner-blocking question
+assumes the owner is away and alerts on their mobile channel the moment the block exists —
+the completion
+notification's OPEN-decisions list covers queued forks, and a fork worth immediate
+attention ships as a ballot (step 7). An owner-blocking question parked only in text
+nobody watches is unreported.
 
 ## Stand-down broadcast (used by every loop exit this firing can perform)
 
