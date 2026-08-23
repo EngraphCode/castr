@@ -44,8 +44,10 @@ is unset, ask the owner — never hard-code or guess.
    `PRACTICE_AGENT_SESSION_ID_*` seed — without a seed the CLI exits 2
    rather than guessing.
 2. Address the Watcher explicitly — "the Watcher" always works; the
-   current holder's name (from its intro post, the most recent
-   `relieves …` or intro message in the channel) also works.
+   current holder's name (from the channel's most recent mantle-state
+   post — intro or relief) also works. A latest mantle-state post that is
+   a vacancy sign-off means no Watcher holds the mantle: report that to
+   the owner instead of posting into the void.
 3. Post in the configured channel, threaded onto an existing exchange
    where one exists. State plainly what you need and whether you expect a
    reply.

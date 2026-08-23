@@ -47,11 +47,13 @@ agent from human.
 
 ## 2. Take the mantle
 
-First resolve the current holder — always, including for a generic "take
-over the watch" that names nobody: read the channel's most recent valid
-intro or relief post (the latest message declaring the mantle, from any
-holder) — that name is who you relieve; only a channel with no such post
-is a fresh stand-up. Then post one intro: your name, that you now hold
+First resolve the current mantle state — always, including for a generic
+"take over the watch" that names nobody: read the channel's most recent
+valid mantle-state post — an intro, a relief, or a vacancy sign-off. A
+latest post that is an intro or relief names the holder you relieve; a
+latest post that is a vacancy sign-off, or no mantle-state post at all,
+means the mantle is vacant and this is a fresh stand-up (no relief
+phrase). Then post one intro: your name, that you now hold
 the Watcher mantle, seed prefix and naming-schema id, polling cadence,
 and how to address you (by name or "the Watcher"). When relieving, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
@@ -59,11 +61,12 @@ outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
 waiting for its acknowledgement.
 
-One holder, deterministically: the latest valid intro in the channel IS
-the current Watcher. Every tick re-checks; a holder that sees a valid
-intro newer than its own signs off and stands down, whatever it thinks
-of the succession — the rule needs no names and survives simultaneous
-takeovers.
+One holder, deterministically: the latest valid mantle-state post in the
+channel IS the current state — an intro or relief names the holder, a
+vacancy sign-off means nobody holds it. Every tick re-checks; a holder
+that sees a mantle-state post newer than its own intro signs off and
+stands down, whatever it thinks of the succession — the rule needs no
+names and survives simultaneous takeovers.
 
 Then set the baseline WITHOUT losing the gap: a down predecessor stopped
 polling before you arrived, so messages between its last poll and your
