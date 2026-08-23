@@ -1,7 +1,10 @@
 # ADR-051: Autonomous Background Implementation Loop for the Proof Programme
 
 **Status:** Accepted (2026-08-22, W-0 ballot item B-12, walked interactively by the owner;
-amended at acceptance: clause 2's default cadence is three firings per day)
+amended at acceptance: clause 2's default cadence is three firings per day; amended
+2026-08-22 by owner ruling resolving queued decision QD-3: clauses 1(b) and 3 govern every
+non-draft programme pull request — slice or bookkeeping — because merge safety is
+condition-based, never a per-PR approval)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -23,7 +26,8 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
 1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. The protocol
    invariants each firing obeys, in order: (a) check the kill switches (clause 6) and the
    collaboration claims register before acting, deferring on any live collision; (b) enforce
-   WIP = 1 — drive the single open non-draft slice pull request to merged, otherwise claim exactly one
+   WIP = 1 — drive the single open non-draft programme pull request (slice or bookkeeping;
+   amended per QD-3, 2026-08-22) to merged, otherwise claim exactly one
    eligible queue item; (c) execute one atomic TDD slice (red proof first) through the
    repository's full blocking gates and its mandatory reviewer dispatches — the loop never
    authors, implements, self-approves, and merges without independent review; (d) record
@@ -37,11 +41,18 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    2026-08-22; the proposal said two). The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
    slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
-3. **Standing merge policy.** A slice PR merges without a per-PR owner ask when all of: every
-   check run green on the current head; every review conversation resolved (fixed, or a
-   recorded carry-forward disposition under clause 4); base not diverged from the tested
-   head's merge base; diff within the claimed slice's scope. Any other state queues for the
-   owner. This generalises the owner's PR-30 instruction (2026-08-22) into standing policy.
+3. **Standing merge policy.** A programme PR — slice or bookkeeping (amended per QD-3,
+   2026-08-22) — merges without a per-PR owner ask when all of: every
+   check run green on the current head; every review conversation properly and
+   proportionately resolved (fixed, or a recorded rejection/carry-forward disposition under
+   clause 4); base not diverged from the tested
+   head's merge base; diff within the claimed slice's scope (for a slice PR) or the
+   counter-and-continuity bookkeeping scope (for a bookkeeping PR). Any other state queues
+   for the owner. This generalises the owner's PR-30 instruction (2026-08-22) into standing
+   policy; the QD-3 ruling (in-conversation, 2026-08-22) confirmed its basis: the owner
+   does not approve merges but sets the conditions that make a merge safe — "once a PR is
+   green and clean it can be merged" — and a routine merge requiring owner intervention is
+   a defect in the loop, not a safeguard.
    **Not in force until this ADR is Accepted**: while the Status line reads Proposed, every
    slice pull request — including any pre-ballot slice — merges only on explicit per-PR
    owner approval, exactly as before this record existed.
