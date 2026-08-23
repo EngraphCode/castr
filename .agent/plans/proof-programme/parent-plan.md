@@ -248,10 +248,14 @@ brief. Routine mechanism proven end to end across four firings:
   firings/day per amended B-12) is enabled as the last act of this slice, strictly after
   its PR merges, with the B-15 configuration (push + email, no digest) re-checked at
   enable.
-- Pending owner action (directed 2026-08-23, QD-5 conversation): change the Routine's
-  session model to Fable in the Routine's own settings UI. Platform-side setting; the
-  owner's UI is the only safe route — recreating the trigger via API loses the
-  owner-attached repo source (measured above).
+- Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
+  now Fable, changed in the Routine's own settings UI (the only safe route — recreating
+  the trigger via API loses the owner-attached repo source, measured above). In the same
+  settings pass the owner turned the platform's "Auto-fix pull requests" behaviour OFF:
+  no platform-side watcher pushes fixes to PRs a firing opens, so each firing explicitly
+  monitors and reacts to PR state (CI, review threads) itself, per the
+  `engraph-pr-lifecycle` skill and ADR-051 clause 4 — and one candidate source of
+  second-writer pushes on a routine-opened PR is gone.
 
 **Q-02 — Pre-T01 harness extraction.** Surface: artifact-agnostic runner mechanics extracted
 from PR #11 (outcome records, non-vacuity checks, mutant-bite ritual) into the existing

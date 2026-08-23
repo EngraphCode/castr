@@ -56,7 +56,11 @@ firing's substantive contribution (the QD-4 carry-forward landing — `b66df7d`,
 PR #35; its QD-4 row reaches the queued-decisions register when that PR merges) survives
 as an ancestor of the branch's continuing history and reaches the base at that merge.
 
-Follow-up: the QD-5 ruling (this register; the routine prompt's pre-push head re-check and
-contested-branch rule; the ADR-051 clause 6/7 amendments). The residual proactive-signal
-gap — no cross-container claim visibility at all — is recorded in the parent plan's Q-15
-gap list and revisits only if parallel workers are ever approved.
+Follow-up: the QD-5 ruling (this register; the routine prompt's pre-push head re-check,
+overlap guard/drive lease, and contested-branch rules; the ADR-051 clause 2/6/7
+amendments). The residual proactive-signal gap — no cross-container claim visibility at
+all — is recorded in the parent plan's Q-15 gap list and revisits only if parallel
+workers are ever approved. Postscript (2026-08-23): in the settings pass that moved the
+Routine to Fable, the owner also turned the platform's "Auto-fix pull requests"
+behaviour OFF — a plausible mechanism behind the rapid review-round pushes recorded
+above; routine firings now own all PR reaction explicitly.
