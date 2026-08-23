@@ -130,5 +130,9 @@ ends the fallback exactly as it ends the loop.
 A successor posts the relief intro (step 2); on matching it, reply
 in-thread with a sign-off naming the successor and the baseline `ts` to
 watch from, notify the owner, and stop re-arming. On teardown without a
-successor, delete the pending reminder and post a sign-off saying the
-mantle is vacant.
+successor — owner teardown and the five-idle default alike — delete the
+pending reminder, then re-read the latest mantle-state post immediately
+before signing off: post the vacancy sign-off only if nothing newer than
+your own intro exists. A newer mantle-state post means a successor took
+the mantle while the teardown was in flight — a vacancy posted now would
+supersede their intro and depose them, so stand down silently instead.
