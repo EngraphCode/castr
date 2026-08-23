@@ -370,7 +370,11 @@ unflagged. Held as a genuine rule-interpretation disagreement rather than a corr
 per ADR-051 clause 4, only correctness/security/data-loss defects are blocking in every round;
 declining a non-blocking refinement after this many rounds of otherwise-converging review is the
 carry-forward path clause 4 itself describes, and a bot revisiting the very proof mechanism it
-asked to be built is the "findings no longer converging" signal for stopping.
+asked to be built is the "findings no longer converging" signal for stopping. The substance of
+both declined marker-mapping/stateful-fake findings is queued at
+[QD-4](./queued-decisions.md) per clause 4's "queue entry for the substance" requirement, so a
+stricter owner reading of `test-immediate-fails.md` item 12 can apply to future semantic-fidelity
+fakes without re-litigating this PR.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
