@@ -27,13 +27,35 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    read-only path from here on — ground by READING the directives only, register NO
    active-area claim, and execute only the bounded no-op work the instruction specifies,
    never claiming, driving, or merging any slice or PR — then report criterion "dry-run
-   complete" in the stand-down broadcast and completion summary, close with the
+   complete" in the stand-down broadcast and completion summary, **including the read-only
+   queued-decisions read (step 3's owner-decision surfacing binds every firing's
+   notification, dry runs included)**, close with the
    `engraph-session-handoff` skill exactly as step 9 requires (every firing closes with
    handoff, dry runs included — the proof must exercise it), and stop. Detection sits
    before grounding because normal grounding registers a claim, and a proof firing must
    leave no collision state behind.
-3. **Ground** (normal firings only): run the `engraph-start-right-quick` skill; register
-   identity per `register-active-areas-at-session-open`.
+3. **Ground** (normal firings only), in this order:
+   - **Provision the toolchain FIRST**: run `pnpm install`, then
+     `pnpm --filter @engraph/agent-tools build`. A pristine checkout has NO git hooks
+     wired and no built agent-tools until these run (measured, Q-01 evidence) — a commit
+     made before this step bypasses every blocking gate, and the Practice CLIs (claims,
+     comms, validators) fail for want of `agent-tools/dist`.
+   - **Provision gitleaks**: run `bash .claude/hooks/ensure-gitleaks.sh` unconditionally —
+     the idempotent SessionStart provisioner (sha256-pinned install; silent fast path when
+     the pinned version already resolves; upgrades a stale below-pin binary, which a mere
+     `command -v` presence check would wrongly accept; fired sessions may not surface
+     SessionStart hooks, so never assume it ran). Then confirm `command -v gitleaks`
+     resolves in a NEW shell command: the hook's PATH persistence needs `CLAUDE_ENV_FILE`,
+     which tool shells may lack — if unresolved, prepend the install directory the hook's
+     output names to `PATH` yourself before any commit. The blocking `pnpm secrets:scan`
+     must be able to pass BEFORE push; CI's copy of the scan runs after the push, which is
+     too late for a leaked secret — never skip, bypass, or defer it to CI.
+   - Run the `engraph-start-right-quick` skill; register identity per
+     `register-active-areas-at-session-open`.
+   - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
+     and carry every entry whose Outcome is OPEN into this firing's step 9 completion
+     notification, so the owner is reminded of waiting decisions on every firing, not
+     only when one is written.
 4. **Claims scan**:
    `pnpm agent-tools:collaboration-state -- claims list --active .agent/state/collaboration/active-claims.json`
    — any live peer or owner claim touching your target surface defers this firing. A
@@ -91,7 +113,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    which covers bookkeeping PRs per the QD-3 amendment; not a slice PR, never substantive
    progress).
 9. **Close**: run the `engraph-session-handoff` skill. The completion notification must
-   name: what merged, what advanced, queued decisions written, blocked slices, counter
+   name: what merged, what advanced, queued decisions written, **every queued decision
+   still OPEN and awaiting the owner (from the step 3 read — an empty register is stated
+   as "no owner decisions waiting")**, blocked slices, counter
    values landed. Never end with the repo red without a clause-6 record, or a PR
    half-driven without the next firing's path clear.
 
