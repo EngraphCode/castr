@@ -4,7 +4,18 @@
 amended at acceptance: clause 2's default cadence is three firings per day; amended
 2026-08-22 by owner ruling resolving queued decision QD-3: clauses 1(b) and 3 govern every
 non-draft programme pull request — slice or bookkeeping — because merge safety is
-condition-based, never a per-PR approval)
+condition-based, never a per-PR approval; amended 2026-08-23 by owner ruling resolving
+queued decision QD-5: firing-side reports — the clause 6 stand-down broadcast included —
+are durable only as tracked repo state reachable from the loop's grounding path, landed on
+a programme-owned incident register via the plan estate's bookkeeping landing path under
+clauses 6 and 3, because instance-tier collaboration state does not exist across
+containers; amended 2026-08-23 by owner direction recorded as QD-8: anything blocked on
+the owner alerts on the owner's mobile channel the moment the block exists, as a clause 7
+interruption class alongside the clause 6 escalations; amended 2026-08-23 by owner
+direction resolving queued decision QD-7: an owner-interaction Slack channel — watched by
+an owner-configured interactive session, The Watcher, for advisory second opinions and
+owner-alert relay — is permitted as an explicit carve-out from clause 7's
+no-additional-channel rule, which continues to ban any firing-to-firing channel)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -41,13 +52,21 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    2026-08-22; the proposal said two). The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
    slice; pacing lives in the schedule, not in skipped gates (`no-unbounded-host-load`).
+   A firing is also bounded in duration to one cadence interval, with a landing cutoff
+   inside it: at three-quarters of the interval a firing stops driving and spends the
+   remainder landing its state, so it ends before the next firing is due; a firing that
+   overruns anyway is caught by its successor's overlap deferral, which refuses to
+   double-drive (amended per QD-5, 2026-08-23 — the schedule does not terminate a
+   predecessor, so consecutive firings otherwise overlap, which is how the measured
+   push-collision incident arose).
 3. **Standing merge policy.** A programme PR — slice or bookkeeping (amended per QD-3,
    2026-08-22) — merges without a per-PR owner ask when all of: every
    check run green on the current head; every review conversation properly and
    proportionately resolved (fixed, or a recorded rejection/carry-forward disposition under
    clause 4); base not diverged from the tested
    head's merge base; diff within the claimed slice's scope (for a slice PR) or the
-   counter-and-continuity bookkeeping scope (for a bookkeeping PR). A state that misses
+   counter, incident, and continuity bookkeeping scope (for a bookkeeping PR; scope
+   amended per QD-5, 2026-08-23). A state that misses
    these conditions but is remediable — red checks, an un-merged base, an unresolved
    conversation — is driven to them under this ADR's protocol, never queued; only a state
    the loop cannot remedy within its authority queues for the owner, via clause 5. This
@@ -83,12 +102,19 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    estate's queue (the plan estate owns the concrete surface); the loop-readiness proof must
    demonstrate cross-session read/write before any product slice runs. Three consecutive zero-progress firings → the firing disables the
    Routine and notifies the owner. Every firing-side loop exit — this zero-progress disable,
-   a STOP-file observation, and the terminal exit below — additionally posts the stand-down
-   broadcast `.agent/rules/loop-exit-criteria-required.md` §Stand-Down Broadcast Shape
-   requires (loop identity, the exit criterion that fired, a one-line closeout summary) on
-   the standard agent-comms surface, so peers observe that scheduled execution has stopped;
-   an owner stop applied directly to the Routine needs no broadcast from the loop, as no
-   firing may remain to post it. **Red head on arrival** (gates failing for causes outside
+   a STOP-file observation, and the terminal exit below — additionally records the
+   stand-down broadcast `.agent/rules/loop-exit-criteria-required.md` §Stand-Down Broadcast
+   Shape requires (loop identity, the exit criterion that fired, a one-line closeout
+   summary) as an entry on the programme-owned incident register — a durable, tracked
+   surface in the plan estate whose concrete location the plan estate owns — landed via
+   the bookkeeping path this clause and clause 3 together authorise, so later firings and
+   the owner observe that scheduled execution has stopped (amended per QD-5, 2026-08-23,
+   instantiating `loop-exit-criteria-required.md` §Stand-Down Broadcast Shape item 4: the
+   agent-comms surface is instance-tier state that does not exist across containers, so
+   for this loop's cross-container audience the tracked record is the broadcast; a comms
+   event may accompany it as a best-effort same-instance echo, never the record); an owner
+   stop applied directly to the Routine needs no broadcast from the loop, as no firing may
+   remain to post it. **Red head on arrival** (gates failing for causes outside
    the claimed slice): the firing takes at most one bounded out-of-queue green-the-head
    repair slice through the normal TDD/gate/review path, recorded in the delivery ledger and
    the completion notification; if the head is not green by the end of that firing, it stops
@@ -99,7 +125,30 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    exit: the queue empty and the programme-complete acceptance met, or an owner close.
 7. **Observability.** Fresh-session firings run with completion notifications on; queued
    decisions, blocked slices, and merges are named in the completion summary. The delivery
-   ledger and PR history are the audit trail.
+   ledger and PR history are the audit trail. **Reporting surfaces (amended per QD-5,
+   2026-08-23):** a firing-side report intended for later firings or the owner is durable
+   only as tracked repo state reachable from the loop's grounding path — the base branch,
+   or the open programme PR's head. Instance-tier collaboration state and unmerged session
+   side branches are not reporting surfaces. Incidents — push collisions, retry
+   exhaustion, environment anomalies, stand-downs — land on the programme-owned incident
+   register via the clause 6 bookkeeping path; the report's primary consumer is the next
+   firing, with the owner reading in batch, and the owner is interrupted (notification
+   beyond the routine completion summary) only for clause 6 escalation events and for
+   anything **blocked on the owner** — an owner-blocking question alerts on the owner's
+   mobile channel the moment the block exists (amended per QD-8, 2026-08-23; owner
+   direction, verbatim: "Whenever something is blocked on me, and an open question will
+   always become blocking at some point, assume I am not around, and that an alert must
+   be sent via the mobile claude app"). No
+   additional live communication channel is introduced for the serialized loop: the shared
+   remote is the channel, and its push-time compare-and-swap is the collision primitive,
+   checked before every push under the plan estate's firing protocol. One owner-interaction
+   carve-out exists (amended per QD-7, 2026-08-23, owner direction): a Slack channel
+   watched by an owner-configured interactive session ("The Watcher") may carry a firing's
+   advisory second-opinion asks and owner-alert relays — owner-facing traffic only,
+   advisory replies never owner authority, and never a firing-to-firing channel or a state
+   store; durable state still lands only as tracked repo state. Revisiting that
+   choice is coupled to the parallel-workers alternative below: approving parallel workers
+   must bring a real-time claim mechanism with it.
 
 ## Consequences
 

@@ -2,6 +2,100 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (QD-7 directed — Slack + The Watcher — Cindery Kindling Lava)
+
+- **Owner resolved QD-7 beyond the recommendation:** Slack connector attached to the
+  Routine, AND an interactive Claude Cowork session ("The Watcher") monitors the
+  `remote-coding` channel — "it has more tools to alert/seek input from me, or it can
+  give you second opinions without involving me." The design insight worth keeping: the
+  Watcher is a **liveness bridge** — an interactive session holds capabilities scheduled
+  firings lack (richer alerting, a human-adjacent judgment loop), so routing through it
+  converts a firing's capability gap into a message. (Not `ping-before-escalate`'s ping
+  target — that rule is strictly a retirement-broadcast pre-check, a misreference Copilot
+  caught on PR #40.) Authority boundary recorded in the QD register: advisory
+  and relay only, never owner authority. Capability honesty held: this session probed
+  ToolSearch for Slack tools (absent — config post-dates the session) and the doctrine
+  carries the unmeasured caveat with Q-15 owning the probe, instead of writing "firings
+  can post to Slack" as fact.
+
+## 2026-08-23 (QD-6/QD-8 landing merged — PR #39 drive-to-green — Cindery Kindling Lava)
+
+- **The full PR-event drive-to-green cycle worked end-to-end on the first try with auto-fix
+  OFF:** Copilot's 7 round-1 findings on PR #39 were all real; fixes committed (`7c9f019`,
+  tree clean at push so the pre-push `check:ci` bound to the pushed HEAD), each thread
+  replied-to with the fix SHA and resolved, 12/12 checks green, merge-instant re-check
+  (threads/base/checks) passed, squash-merged as `68a2e2c` under ADR-051 clause 3, owner
+  push-notified per QD-8. This is the measured proof that the "routine agents explicitly
+  monitor and react to PR state" posture (owner, 2026-08-23) is workable — the event
+  subscription woke the session for every review comment and check-suite completion, and
+  echo events (my own replies arriving back as PR activity) were the only noise to filter.
+- **`collaboration-state claims close` needs explicit `--active`/`--closed` paths, and the
+  closed file is `closed-claims.archive.json`** (not `closed-claims.json` — a wrong guess
+  exits 2 with the error above the pnpm noise). Worth knowing before session-close on any
+  thread with an open claim.
+
+## 2026-08-23 (owner standing directive — blocked-on-owner means mobile alert — Cindery Kindling Lava)
+
+- **Owner standing directive (verbatim intent, 2026-08-23): "Whenever something is blocked on
+  me — and an open question will always become blocking at some point — assume I am not
+  around, and send an alert via the mobile Claude app."** The owner then closed the tab
+  expecting the pending proposals to arrive by push — the directive was applied in the same
+  minute it was given (PushNotification with both proposals, first sentence as the banner).
+  Operational meaning: an open question addressed to the owner is never parked in chat text
+  or a repo surface alone; the moment it exists, it goes out on the channel the owner
+  actually watches (mobile push — for scheduled firings this is the completion notification,
+  which already carries OPEN queued-decisions rows per the #37 landing; for interactive
+  sessions it is the PushNotification tool). This is the QD-5 audience-follows-surface
+  principle applied to the owner as audience. `candidate:` graduate into
+  `owner-attention-at-action-moments` (rule) and/or the routine prompt's owner-interruption
+  line at the playbook landing.
+
+## 2026-08-23 (proof-programme scheduled firing — WIP=1 collision on PR #35's branch — Tidal Drifting Lighthouse)
+
+- **`active-claims.json`'s per-container, untracked nature cannot prevent a real WIP=1
+  collision on a shared PR branch — measured, not hypothetical, but be precise about what was
+  actually measured.** This firing's session-open claims scan found the registry empty
+  ("no other agents present" — correct read of MY container's state) and proceeded to drive PR
+  #35 (Q-02) per WIP=1. Something else with push access to the same branch landed commits on
+  top of mine twice, each discovered only reactively via a `git push` rejection ("fetch
+  first", then "cannot lock ref ... is at X but expected Y"). **Correction to my own
+  in-the-moment framing**: I initially wrote this up as a "concurrent peer session... actively
+  driving... racing... right now" — the owner correctly challenged that. The evidence (two
+  sequential push rejections, each showing the remote had moved past me sometime after my
+  prior push) proves only _asynchronous, sequential_ collision on a shared remote ref, not
+  simultaneity — an isolated container has no way to observe another's in-flight work except
+  through what lands on the shared remote, exactly as one would expect. I also asserted "peer
+  firing" without grounds to prefer that over the alternative that fits the evidence at least
+  as well: an automated fix-response bot (every commit narrowly targeted the single latest
+  Codex/Copilot comment, landed within minutes of it, was authored as generic
+  `Claude <noreply@anthropic.com>`, and reused the PR's _original_ authoring session's URL
+  verbatim rather than minting a new one — the repo's Codex integration explicitly offers an
+  `@codex address that feedback` auto-fix trigger). Do not restate "concurrent peer session" as
+  settled fact from this incident; the honest claim is narrower.
+- **Correct response to a mid-drive collision, independent of concurrency-vs-sequential:**
+  reconcile once (adopt the equivalent fix verbatim over my redundant one, since it was already
+  CI-green and further along), then stop pushing to the contested branch rather than keep
+  re-colliding. Backed off: no further pushes, no merge attempt, no new queue-row claim (WIP=1
+  slot stays occupied). My own contribution (the QD-4 carry-forward queue entry, b66df7d) was
+  not lost — it's an ancestor of the branch's continuing history, so it lands whenever that PR
+  merges.
+- **Worth a queued finding for Q-15 or a dedicated queue row, stated at the confidence level the
+  evidence actually supports:** the loop's collision defence for a shared PR branch is entirely
+  reactive (git's ref-lock rejection on push), with no proactive signal at all — true whether
+  the other writer is a peer firing or an automated bot response. A future design could check
+  the PR's live head SHA immediately before every push (not just rely on session-open claims)
+  so a collision is detected before attempting the push, not via its rejection.
+- **Resolution (same day, owner-supplied fact):** the writer WAS the previous scheduled firing —
+  the 01:03 session that authored PR #35, still running seven-plus hours in and driving its own
+  review rounds. The epistemic correction above stands (from inside a container the evidence
+  could not distinguish peer from bot — withholding the claim was right), but the fact is now
+  known, and the durable lesson is sharper than either guess: **the loop's cadence never
+  bounded firing duration, so consecutive firings overlap — WIP=1 in PRs never implied one
+  live session.** Closed same-day via the QD-5 landing: ADR-051 clause 2 duration bound (a
+  firing ends before its successor is due; the successor continues the drive from the PR's own
+  state), routine-prompt overlap guard (PR head moved within the last hour → defer, don't
+  become a second driver), incident register I-1 as the worked record.
+
 ## 2026-08-22 (parent plan + autonomous loop — Incandescent Charring Ember / 5aef07, same session, hook-renamed)
 
 - **Designing "without me" autonomy in this estate reduces to one move: convert per-ask owner
