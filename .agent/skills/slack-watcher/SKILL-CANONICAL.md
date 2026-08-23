@@ -154,8 +154,10 @@ A successor posts the relief intro (step 2); on matching it, reply
 in-thread with a sign-off naming the successor and the baseline `ts` to
 watch from, notify the owner, and stop re-arming. On teardown without a
 successor — owner teardown and the five-idle default alike — delete the
-pending reminder and run one final tick from the current baseline, so
-every message up to your sign-off is processed and the sign-off's own
+pending reminder and run one final non-re-arming sweep from the
+current baseline — process, summarise, and alert exactly as a tick
+would, but schedule nothing after it — so every message up to your
+sign-off is processed and the sign-off's own
 `ts` is a true coverage boundary; then resolve the latest valid
 mantle-state post (step 2's resolver — void posts skipped) before
 signing off, and branch
