@@ -191,7 +191,7 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => runAllSemanticOutcomes([])).toThrow(/no cases registered/i);
   });
 
-  it('computes every result from pristine values, and stays repeatable, even when every callback mutates its argument in place', () => {
+  it('computes every result from pristine values, and stays repeatable, even when every callback mutates its arguments in place', () => {
     interface MutableSource {
       value: string;
     }
@@ -201,21 +201,27 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     interface MutableOutput {
       value: string;
     }
+    interface MutableOracle {
+      value: string;
+    }
 
-    // Every one of the six callbacks mutates its own argument in place after
-    // reading it — the bug this proves absent, for each: an oracle or a
-    // downstream callback observing the mutation instead of the real value,
-    // a comparison this function still needs to make afterward seeing
-    // damaged data, or a second run of the same case seeing corrupted
-    // case-owned fields.
-    const mutatingCase: SemanticCase<MutableSource, MutableIR, MutableOutput, string> = {
+    // Every one of the seven callbacks mutates its own arguments in place
+    // after reading them — the bug this proves absent, for each: an oracle
+    // or a downstream callback observing the mutation instead of the real
+    // value, a comparison this function still needs to make afterward
+    // seeing damaged data, a second run of the same case seeing corrupted
+    // case-owned fields, or — for equalIR/equalOracle specifically — a
+    // LATER call to the same comparator seeing a value an EARLIER call
+    // already mutated (both are invoked more than once, on values also
+    // returned in `artifacts`).
+    const mutatingCase: SemanticCase<MutableSource, MutableIR, MutableOutput, MutableOracle> = {
       name: 'mutation-safety',
       source: { value: 'alpha' },
       separatingSource: { value: 'beta' },
       sourceOracle: (s) => {
         const upper = s.value.toUpperCase();
         s.value = 'MUTATED';
-        return upper;
+        return { value: upper };
       },
       parse: (s) => {
         const original = s.value;
@@ -230,24 +236,36 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       targetOracle: (o) => {
         const upper = o.value.slice(2).toUpperCase();
         o.value = 'MUTATED';
-        return upper;
+        return { value: upper };
       },
       reparse: (o) => {
         const result = { value: o.value.slice(2) };
         o.value = 'MUTATED';
         return result;
       },
-      equalIR: (a, b) => a.value === b.value,
-      equalOracle: (a, b) => a === b,
+      equalIR: (a, b) => {
+        const result = a.value === b.value;
+        a.value = 'MUTATED';
+        b.value = 'MUTATED';
+        return result;
+      },
+      equalOracle: (a, b) => {
+        const result = a.value === b.value;
+        a.value = 'MUTATED';
+        b.value = 'MUTATED';
+        return result;
+      },
     };
 
     const proof = runSemanticOutcome(mutatingCase);
 
     // These only read the real values if every callback ran on its own
-    // independent clone; against the pre-fix code at least one of these
-    // would read 'MUTATED' instead.
-    expect(proof.artifacts.sourceOracleValue).toBe('ALPHA');
-    expect(proof.artifacts.targetOracleValue).toBe('ALPHA');
+    // independent clone, at every call — against the pre-fix code at least
+    // one of these would read 'MUTATED' instead, and expectSemanticOutcome
+    // would throw on a false roundTripEqual/oraclesAgree corrupted by an
+    // earlier equalIR/equalOracle call reusing the same reference.
+    expect(proof.artifacts.sourceOracleValue).toEqual({ value: 'ALPHA' });
+    expect(proof.artifacts.targetOracleValue).toEqual({ value: 'ALPHA' });
     expect(proof.artifacts.ir).toEqual({ value: 'alpha' });
     expect(proof.artifacts.output).toEqual({ value: 'W:alpha' });
     expect(() => expectSemanticOutcome(proof)).not.toThrow();

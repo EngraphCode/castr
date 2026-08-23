@@ -255,27 +255,35 @@ extracting PR #11's outcome-record and non-vacuity concepts per the report's #11
 product profile or artifact kind. Non-vacuity is structural, not opt-in: every case declares a
 `separatingSource`, and the runner recomputes discrimination against it on all three legs
 (`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
-self-reported flag. Every case-supplied callback receives its own independent `structuredClone`,
-taken directly from the value the runner still trusts as ground truth, immediately before that
-one call — a mutating case cannot corrupt the case object across repeated runs, taint a
-comparison the runner still needs to make, or leak into a different callback's supposedly
-independent view of "the same" value. Proof:
+self-reported flag. Every case-supplied callback — all seven: `sourceOracle`, `parse`, `write`,
+`targetOracle`, `reparse`, `equalIR`, `equalOracle` — receives its own independent
+`structuredClone` at every call, taken directly from the value the runner still trusts as
+ground truth, immediately before that one call; no clone is ever reused across two calls. A
+mutating case therefore cannot corrupt the case object across repeated runs, taint a comparison
+the runner still needs to make, corrupt a returned artifact, or leak into a different callback's
+(or a later call to the SAME callback's) supposedly independent view of "the same" value. Proof:
 `lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
 ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wrong-writer,
 bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
-vacuous-witness), a mutation-safety/repeatability regression case exercising all six callbacks,
-and an empty-registry hard-fail, all red-first (module-not-found) then green, 11/11 passing.
+vacuous-witness), a mutation-safety/repeatability regression case exercising all seven
+callbacks, and an empty-registry hard-fail, all red-first (module-not-found) then green,
+11/11 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, three rounds of automated PR review (Codex, Copilot) progressively closed the
-full mutation-safety surface — each round's fix left one narrower leak the next round found by
-tracing the code by hand, until every callback (`sourceOracle`, `parse`, `write`, `targetOracle`,
-`reparse`) was confirmed to receive its own independent clone and never touch a value another
-call or a later run still needed pristine — plus: a missing vacuous-witness mutant (case data
+opened. Once open, four rounds of automated PR review (Codex, Copilot) progressively closed the
+full mutation-safety surface: each round's fix protected the callbacks it was shown to be
+missing, and the next round's hand-tracing found the next narrower leak — ordering
+(`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
+(`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
+single-call leaks (`reparse` mutating the returned `output` artifact; `sourceOracle` mutating
+`source` before `parse`'s own clone was taken), and finally the cross-call leaks
+(`equalIR`/`equalOracle`, each invoked more than once on a value also returned in `artifacts`) —
+until all seven callbacks were confirmed to receive an independent clone at every call, with no
+narrower leak left to find. Also fixed along the way: a missing vacuous-witness mutant (case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of
@@ -287,11 +295,11 @@ declined rather than actioned, each with reasoning posted on its thread rather t
 skip: an async runner variant matching the report's fuller Tranche-01 §5.3 contract is deferred
 to Q-11, which explicitly consumes this Q-02 extraction — building it now risks the
 second-runner fork this brief forbids before a real async consumer exists to derive the actual
-signature from; and a claim that the fixture's core marker-prefixing `write` mapping itself violates the
-no-fake-logic rule is held to be a misapplication of a rule aimed at opaque dependency mocks
-(canonical examples: logger, HTTP client) to a fixture that IS the minimal data flow the
-runner's proof depends on — the repo's own `test-reviewer` reviewed this exact line across all
-three rounds and flagged only the (now-fixed) error-message interpolation, never the
+signature from; and a repeated claim that the fixture's core marker-prefixing `write` mapping
+itself violates the no-fake-logic rule is held to be a misapplication of a rule aimed at opaque
+dependency mocks (canonical examples: logger, HTTP client) to a fixture that IS the minimal data
+flow the runner's proof depends on — the repo's own `test-reviewer` reviewed this exact line
+across all four rounds and flagged only the (now-fixed) error-message interpolation, never the
 transformation itself.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,

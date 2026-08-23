@@ -239,21 +239,37 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   const separatingOutput = semanticCase.write(separatingIR);
   const separatingTargetOracleValue = semanticCase.targetOracle(structuredClone(separatingOutput));
 
-  const irDiscriminates = !semanticCase.equalIR(pristineIR, pristineSeparatingIR);
+  // `pristineIR`/`sourceOracleValue`/`targetOracleValue` are each compared
+  // more than once below, and are also returned in `artifacts` — so
+  // `equalIR`/`equalOracle` receive a fresh clone at EVERY call, not the
+  // shared reference. Without this, a comparator that mutates its
+  // arguments while comparing (e.g. sorting an array in place before
+  // structural comparison — a realistic equality implementation, not a
+  // contrived one) would leak between calls and corrupt the artifact.
+  const irDiscriminates = !semanticCase.equalIR(
+    structuredClone(pristineIR),
+    structuredClone(pristineSeparatingIR),
+  );
   const sourceOracleDiscriminates = !semanticCase.equalOracle(
-    sourceOracleValue,
-    separatingSourceOracleValue,
+    structuredClone(sourceOracleValue),
+    structuredClone(separatingSourceOracleValue),
   );
   const targetOracleDiscriminates = !semanticCase.equalOracle(
-    targetOracleValue,
-    separatingTargetOracleValue,
+    structuredClone(targetOracleValue),
+    structuredClone(separatingTargetOracleValue),
   );
 
   return {
     outcome: {
       case: semanticCase.name,
-      roundTripEqual: semanticCase.equalIR(pristineIR, reparsedIR),
-      oraclesAgree: semanticCase.equalOracle(sourceOracleValue, targetOracleValue),
+      roundTripEqual: semanticCase.equalIR(
+        structuredClone(pristineIR),
+        structuredClone(reparsedIR),
+      ),
+      oraclesAgree: semanticCase.equalOracle(
+        structuredClone(sourceOracleValue),
+        structuredClone(targetOracleValue),
+      ),
       nonVacuous: irDiscriminates && sourceOracleDiscriminates && targetOracleDiscriminates,
     },
     artifacts: {
