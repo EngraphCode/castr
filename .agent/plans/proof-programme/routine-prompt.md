@@ -27,7 +27,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    read-only path from here on — ground by READING the directives only, register NO
    active-area claim, and execute only the bounded no-op work the instruction specifies,
    never claiming, driving, or merging any slice or PR — then report criterion "dry-run
-   complete" in the stand-down broadcast and completion summary, close with the
+   complete" in the stand-down broadcast and completion summary, **including the read-only
+   queued-decisions read (step 3's owner-decision surfacing binds every firing's
+   notification, dry runs included)**, close with the
    `engraph-session-handoff` skill exactly as step 9 requires (every firing closes with
    handoff, dry runs included — the proof must exercise it), and stop. Detection sits
    before grounding because normal grounding registers a claim, and a proof firing must
@@ -42,9 +44,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      the idempotent SessionStart provisioner (sha256-pinned install; silent fast path when
      the pinned version already resolves; upgrades a stale below-pin binary, which a mere
      `command -v` presence check would wrongly accept; fired sessions may not surface
-     SessionStart hooks, so never assume it ran). The blocking `pnpm secrets:scan` must be
-     able to pass BEFORE push; CI's copy of the scan runs after the push, which is too
-     late for a leaked secret — never skip, bypass, or defer it to CI.
+     SessionStart hooks, so never assume it ran). Then confirm `command -v gitleaks`
+     resolves in a NEW shell command: the hook's PATH persistence needs `CLAUDE_ENV_FILE`,
+     which tool shells may lack — if unresolved, prepend the install directory the hook's
+     output names to `PATH` yourself before any commit. The blocking `pnpm secrets:scan`
+     must be able to pass BEFORE push; CI's copy of the scan runs after the push, which is
+     too late for a leaked secret — never skip, bypass, or defer it to CI.
    - Run the `engraph-start-right-quick` skill; register identity per
      `register-active-areas-at-session-open`.
    - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
