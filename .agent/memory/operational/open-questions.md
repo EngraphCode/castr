@@ -37,7 +37,10 @@ reverses. Home:
 §W0. **Fork/determination split (2026-07-06, assumptions-expert fold):** the NAME is the genuine
 owner fork (constitutively yours); keep-in-repo + ADR-048-style value-gated extraction criteria
 are lens-settled determinations executed under the walk's acknowledgement.
-Status: OPEN (owner walk — the naming fork).
+Status: **DECIDED (owner, interactive walk, 2026-08-23): the second product's name is
+"the Practice".** Consumed by the Q-14 doctrine wave (VISION.md/IDENTITY.md describe both
+products by name); the keep-in-repo + value-gated-extraction determinations execute under
+this walk's acknowledgement. Drain at next consolidation.
 
 ### Q-013 — Vision topology: umbrella + two product visions, or a split
 
@@ -46,13 +49,18 @@ holds two. Home: overhaul plan §W0/§W1. Recommendation: umbrella (verified-cla
 vision surface per product. Status: **DISSOLVED to a determination (2026-07-06, assumptions-expert
 fold via the Four-Lens test / PDR-057)** — the topology follows deductively from single-source +
 impact-before-activity with no divergent product outcome; executed at W1 under the W0 walk's
-acknowledgement, not owner-gated. Kept here until the walk acknowledges it (no tombstone after).
+acknowledgement, not owner-gated. **Acknowledged by the 2026-08-23 interactive walk** (the
+Q-012/Q-014/Q-015 verdicts are that walk's residue); drain at next consolidation.
 
 ### Q-014 — Adopt preservation coverage % as product A's headline public metric
 
 Captured: 2026-07-04 | source: review §6.1 (verb-model research verified). Computed support
 claims replace asserted ✅ tables; aligns remediation-02, the representability matrix, and the
-`check` verb. Home: overhaul plan §W0/§W5. Recommendation: adopt. Status: OPEN (owner walk).
+`check` verb. Home: overhaul plan §W0/§W5. Recommendation: adopt. Status: **DECIDED
+(owner, interactive walk, 2026-08-23): ADOPT** — preservation-coverage % is the compiler's
+headline public metric, computed by the proof estate, replacing asserted support tables.
+Consumers: the proof-programme harness/matrix slices and the Q-14 vision rewrite. Drain at
+next consolidation.
 
 ### Q-015 — principles.md truthing batch (protected-file approval)
 
@@ -63,7 +71,12 @@ product-code uses today), or owner amends the doctrine. The staleness edits (the
 §Tooling Integration TSDoc claim etc.) are determinations forced by strictest-of-three, executed
 under the protected-file approval the walk grants in one batch — principles.md must not be
 edited without explicit owner approval. Home: overhaul plan §W3 + remediation 06.
-Status: OPEN (owner walk — the M1/R5 fork + the batch approval).
+Status: **DECIDED (owner, interactive walk, 2026-08-23): ENFORCE VIA LINT** — the
+`Object.*`/`Reflect.*` FORBIDDEN rule becomes a lint gate and the ~147 product-code uses
+are remediated in queue slices (enters the proof-programme queue at the Q-12 split, or
+earlier on owner ask); the doctrine stands as written. The staleness-edit batch executes
+under this walk's approval combined with B-09's doctrine-wave APPROVE. Drain at next
+consolidation.
 
 _Register emptied 2026-06-26 and again 2026-07-03. Q-006 graduated to ADR-049; Q-007 decided
 (markdown-links gate end-state → scoped-blocking, transplant-completeness plan TC3b); Q-009
