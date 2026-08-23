@@ -269,9 +269,19 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   const cloneOutput: (output: TOutput) => TOutput = semanticCase.cloneOutput ?? structuredClone;
   const cloneOracle: (oracle: TOracle) => TOracle = semanticCase.cloneOracle ?? structuredClone;
 
-  const sourceOracleValue = semanticCase.sourceOracle(cloneSource(semanticCase.source));
-  const separatingSourceOracleValue = semanticCase.sourceOracle(
-    cloneSource(semanticCase.separatingSource),
+  // `sourceOracle`/`targetOracle` are each called twice below (main and
+  // separating channel). An oracle that returns a reused mutable reference
+  // — a stateful implementation that updates and returns the same object
+  // each call, analogous to a memoising `parse` — would otherwise let the
+  // second call silently corrupt the first call's already-returned value
+  // before anything downstream clones it. Snapshotting with `cloneOracle`
+  // immediately on return closes that gap, matching `pristineIR`/
+  // `pristineOutput`'s immediate-snapshot pattern below.
+  const sourceOracleValue = cloneOracle(
+    semanticCase.sourceOracle(cloneSource(semanticCase.source)),
+  );
+  const separatingSourceOracleValue = cloneOracle(
+    semanticCase.sourceOracle(cloneSource(semanticCase.separatingSource)),
   );
 
   const ir = semanticCase.parse(cloneSource(semanticCase.source));
@@ -282,13 +292,15 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   // run of the same case could then observe a memoised, already-mutated IR.
   const output = semanticCase.write(cloneIR(ir));
   const pristineOutput = cloneOutput(output);
-  const targetOracleValue = semanticCase.targetOracle(cloneOutput(output));
+  const targetOracleValue = cloneOracle(semanticCase.targetOracle(cloneOutput(output)));
   const reparsedIR = semanticCase.reparse(cloneOutput(output));
 
   const separatingIR = semanticCase.parse(cloneSource(semanticCase.separatingSource));
   const pristineSeparatingIR = cloneIR(separatingIR);
   const separatingOutput = semanticCase.write(cloneIR(separatingIR));
-  const separatingTargetOracleValue = semanticCase.targetOracle(cloneOutput(separatingOutput));
+  const separatingTargetOracleValue = cloneOracle(
+    semanticCase.targetOracle(cloneOutput(separatingOutput)),
+  );
 
   // `pristineIR`/`sourceOracleValue`/`targetOracleValue` are each compared
   // more than once below, and are also returned in `artifacts` — so

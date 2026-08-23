@@ -215,6 +215,18 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     // observe already-mutated data.
     const retainedIRs: MutableIR[] = [];
 
+    // `sourceOracle`/`targetOracle` each retain and mutate-then-return the
+    // SAME object on both their calls (main and separating channel) —
+    // modelling a stateful/memoising oracle implementation, the minimal
+    // shape that can prove this specific bug: two calls returning distinct
+    // fresh objects could never alias-corrupt each other, so the defect
+    // only shows up when a single retained object is genuinely reused.
+    // The runner must snapshot each call's result immediately, before that
+    // oracle's own next call mutates the object the first call already
+    // handed back.
+    const retainedSourceOracleValue: MutableOracle = { value: '' };
+    const retainedTargetOracleValue: MutableOracle = { value: '' };
+
     // Every one of the seven callbacks mutates its own arguments in place
     // after reading them — the bug this proves absent, for each: an oracle
     // or a downstream callback observing the mutation instead of the real
@@ -230,9 +242,9 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       source: { value: 'alpha' },
       separatingSource: { value: 'beta' },
       sourceOracle: (s) => {
-        const upper = s.value.toUpperCase();
+        retainedSourceOracleValue.value = s.value.toUpperCase();
         s.value = 'MUTATED';
-        return { value: upper };
+        return retainedSourceOracleValue;
       },
       parse: (s) => {
         const original = s.value;
@@ -247,9 +259,9 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
         return written;
       },
       targetOracle: (o) => {
-        const upper = o.value.slice(2).toUpperCase();
+        retainedTargetOracleValue.value = o.value.slice(2).toUpperCase();
         o.value = 'MUTATED';
-        return { value: upper };
+        return retainedTargetOracleValue;
       },
       reparse: (o) => {
         const result = { value: o.value.slice(2) };

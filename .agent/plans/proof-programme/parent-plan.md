@@ -278,7 +278,7 @@ any code was written. Three post-execution gateway reviews (`code-reviewer`, `te
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, six rounds of automated PR review (Codex, Copilot) progressively closed the
+opened. Once open, seven rounds of automated PR review (Codex, Copilot) progressively closed the
 full mutation-safety surface: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
@@ -301,11 +301,24 @@ overrides (defaulting to `structuredClone`, mirroring the existing case-supplied
 pattern) so a case can substitute a clone that preserves its own branded type. Two new tests
 prove the failure mode and the fix: one shows the default `structuredClone` throws when `write`
 calls a method on a branded IR class instance, the other shows a case-supplied `cloneIR` fixes
-it. Across all six rounds, all seven callbacks were confirmed to receive an independent clone at
-every call, with no narrower leak left to find on the mutation-safety surface, and the clone
-mechanism itself is now confirmed to work for branded, non-plain-data artifact types — the kind
-Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief exists to support. Also fixed
-along the way: a missing vacuous-witness mutant (case data
+it. The seventh round returned to the mutation-safety surface with a variant the sixth round's
+different focus had left unexamined: `sourceOracle`/`targetOracle` are each called twice (main
+and separating channel), and neither call's result was snapshotted immediately on return —
+unlike `pristineIR`/`pristineOutput`, which already were. A stateful oracle that returns the
+same mutable object on both calls (analogous to the fifth round's memoising `parse`) would let
+its second call silently corrupt the first call's already-returned value before anything
+downstream cloned it — confirmed empirically with a probe script before fixing. Both oracle
+results are now snapshotted with `cloneOracle` immediately on return, matching the existing
+pristine-snapshot pattern; the mutation-safety test's `sourceOracle`/`targetOracle` fakes were
+changed from returning a fresh object per call (which could never exhibit this aliasing bug) to
+mutating and returning one retained shared object across both calls — the minimal shape able to
+prove the defect — and confirmed via `git stash` isolation that the existing
+`sourceOracleValue`/`targetOracleValue` artifact assertions fail against the pre-fix code and
+pass against the fix. Across all seven rounds, all seven callbacks were confirmed to receive an
+independent clone at every call, with no narrower leak left to find on the mutation-safety
+surface, and the clone mechanism itself is now confirmed to work for branded, non-plain-data
+artifact types — the kind Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief
+exists to support. Also fixed along the way: a missing vacuous-witness mutant (case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of
