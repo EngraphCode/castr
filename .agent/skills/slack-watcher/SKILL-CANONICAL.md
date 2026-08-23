@@ -186,5 +186,8 @@ per section 5 (sign-off reply naming the successor and the baseline
 leaving the vacancy in place as history; a fresh stand-up intro with
 no relief phrase is answering the genuine vacancy — leave the vacancy
 in place (the baseline it names is the successor's sweep boundary) and
-stand down with no further post. Correctness rests on the validity
-rule, not on the deletion or on timing.
+stand down with no further post; and a relief naming someone other
+than you means succession has already moved past you — that handover
+belongs to the predecessor it names, so stand down with no further
+post. Correctness rests on the validity rule, not on the deletion or
+on timing.
