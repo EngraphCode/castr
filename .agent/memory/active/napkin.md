@@ -2,6 +2,21 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-23 (QD-7 directed — Slack + The Watcher — Cindery Kindling Lava)
+
+- **Owner resolved QD-7 beyond the recommendation:** Slack connector attached to the
+  Routine, AND an interactive Claude Cowork session ("The Watcher") monitors the
+  `remote-coding` channel — "it has more tools to alert/seek input from me, or it can
+  give you second opinions without involving me." The design insight worth keeping: the
+  Watcher is a **liveness bridge** — an interactive session holds capabilities scheduled
+  firings lack (richer alerting, a human-adjacent judgment loop), so routing through it
+  converts a firing's capability gap into a message. It is the `ping-before-escalate`
+  ping target made concrete. Authority boundary recorded in the QD register: advisory
+  and relay only, never owner authority. Capability honesty held: this session probed
+  ToolSearch for Slack tools (absent — config post-dates the session) and the doctrine
+  carries the unmeasured caveat with Q-15 owning the probe, instead of writing "firings
+  can post to Slack" as fact.
+
 ## 2026-08-23 (QD-6/QD-8 landing merged — PR #39 drive-to-green — Cindery Kindling Lava)
 
 - **The full PR-event drive-to-green cycle worked end-to-end on the first try with auto-fix

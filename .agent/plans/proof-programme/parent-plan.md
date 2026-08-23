@@ -409,7 +409,11 @@ re-check is the standing mitigation, and a proactive cross-container claim signa
 only with ADR-051's parallel-workers alternative. The QD-6 review adds a fired-session
 capability probe: can a Routine-spawned session publish an Artifact page and deliver a
 push notification? The owner-decision-ballot mechanism is measured only from interactive
-sessions.
+sessions. QD-7 (2026-08-23) extends the probe: do the Slack connector's tools surface in
+a fired session (`mcp__claude_ai_*` via ToolSearch), and does a message addressed to The
+Watcher on the `remote-coding` channel get a reply a later step can read? The connector
+was owner-attached to the Routine config the same day; no fired session has observed it
+yet.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
