@@ -9,7 +9,7 @@ todos:
     status: completed
   - id: Q-02
     content: 'Pre-T01 harness-extraction slice: artifact-agnostic rework of #11 runner mechanics'
-    status: pending
+    status: completed
     depends_on: [Q-00]
   - id: Q-03
     content: 'Pre-02A defect slice F-01: security AND->OR flattening, TDD through public seams'
@@ -67,7 +67,8 @@ todos:
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
-the Q-01 evidence record). Eligible now: Q-02..Q-09, Q-13 (executes the B-11 RATIFY
+the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Eligible
+now: Q-03..Q-09, Q-13 (executes the B-11 RATIFY
 outcome), Q-14, Q-15; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -244,6 +245,34 @@ not fork a second runner. Non-goals: no profile/artifact-kind binding, no format
 expectations, nothing that pre-empts the product boundary. Acceptance (`integration`): seeded
 wrong-parser/wrong-writer/vacuous-witness mutants are detected; suite green via `pnpm check`.
 Source: report §11.3 #11. Gate: B-11 (success verdict).
+
+**Q-02 evidence record (completed 2026-08-23).** Shipped:
+`lib/tests-transforms/utils/semantic-outcome-runner.ts` — a pure, artifact-kind-agnostic
+runner (`SemanticCase`/`runSemanticOutcome`/`runAllSemanticOutcomes`/`expectSemanticOutcome`)
+extracting PR #11's outcome-record and non-vacuity concepts per the report's #11 disposition
+(§11.3, ~L2120), without its OpenAPI/`CastrDocument`-specific runner — cases inject their own
+`parse`/`write`/`reparse` plus independent source/target oracles, so the module binds to no
+product profile or artifact kind. Non-vacuity is structural, not opt-in: every case declares a
+`separatingSource`, and the runner recomputes discrimination against it on all three legs
+(`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
+self-reported flag — closing a hole the post-execution `code-reviewer` gateway pass found
+empirically (a constant `targetOracle` initially passed undetected; the fix threads a second,
+independently-computed output through the precheck). Proof:
+`lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
+ritual — a happy-path positive control plus 6 seeded mutants (wrong-parser, wrong-writer,
+bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality) and an
+empty-registry hard-fail, all red-first (module-not-found) then green, 9/9 passing. Two
+pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before any
+code was written; three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
+`type-reviewer`) found two independently-confirmed critical issues (the target-oracle
+non-vacuity hole above, and `expectSemanticOutcome` gating on vitest's own structural equality
+instead of each case's injected comparators) plus one test-isolation issue (the original
+wrong-parser mutant's assertion passed for a coincidental reason, not the claimed one) — all
+fixed and re-verified before landing. Full `pnpm check:ci` green (gitleaks, build, format,
+type-check, lint, madge, depcruise, knip, markdownlint, portability, packaging, skills, agents,
+repo-validators, `test:all`). Scope held to Q-02's narrower slice: no profile/artifact-kind
+binding, channel/fixture-manifest machinery, or product-code changes — those remain Tranche 01's
+job (report §7, ~L795-850).
 
 **Q-03 — F-01 security AND→OR.** Surface: `buildIRSecurity` and the flat
 `IRSecurityRequirement` model (IR-model change per review R3), parser+writer+persistence.
@@ -436,7 +465,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-02..Q-09, Q-13, Q-14, Q-15.
+- **Eligible now**: Q-03..Q-09, Q-13, Q-14, Q-15 (Q-02 completed 2026-08-23).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
