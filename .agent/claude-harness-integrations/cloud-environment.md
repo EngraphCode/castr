@@ -11,10 +11,15 @@ one in advance.
 1. **Environment setup script** — universal, repo-agnostic. Lives in the
    claude.ai environment configuration; its source of truth is the
    reference copy at
-   [`cloud-environment-setup.sh`](cloud-environment-setup.sh). It installs
-   the shared toolchain (Node 24, pnpm on a trusted path, git ≥ 2.45,
-   gitleaks ≥ 8.30.0), then discovers whichever Practice repo the session
-   carries, runs `pnpm install`, and delegates to the repo's own hook.
+   [`cloud-environment-setup.sh`](cloud-environment-setup.sh). It discovers
+   whichever Practice repo the session carries and installs the toolchain
+   that repo declares — Node at the major named by its `engines` field,
+   the exact pnpm its `packageManager` pin selects (via Corepack, shimmed
+   into a trusted path), git ≥ 2.45, and a checksum-verified gitleaks
+   (version and sha value-synced with castr's supply-chain single source,
+   `.claude/hooks/_lib/gitleaks-pin.env`) — then runs `pnpm install` and
+   delegates to the repo's own hook. The script itself pins no version a
+   repo declares.
 2. **Per-repo session hook** — the common-ability contract. A Practice repo
    that needs more than `pnpm install` commits an executable
    `.agent/setup/cloud-session-setup.sh`; the environment script invokes it

@@ -9,23 +9,55 @@
 #
 # Contract (see cloud-environment.md alongside this file):
 # - Fail-fast: any failure exits non-zero and session creation fails loudly.
-# - Universal toolchain first; then every Practice repo present in the
-#   session is discovered (never assumed) and set up via `pnpm install` plus
-#   the repo's own committed hook at .agent/setup/cloud-session-setup.sh.
+# - Runtime versions are single-sourced from the carried repo: the Node major
+#   comes from its engines declaration and pnpm comes from its packageManager
+#   pin via Corepack — this script names no version either repo declares.
+# - Every Practice repo present in the session is discovered (never assumed)
+#   and set up via `pnpm install` plus the repo's own committed hook at
+#   .agent/setup/cloud-session-setup.sh.
 # - One Practice repo per session (owner ruling 2026-08-23); the discovery
 #   loop tolerates more.
 set -euo pipefail
 shopt -s nullglob
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-# ---------- universal toolchain: every Practice repo, every session ----------
+# gitleaks pin — value-synced with castr's supply-chain single source
+# (.claude/hooks/_lib/gitleaks-pin.env there); bump both together.
+GITLEAKS_VERSION=8.30.0
+GITLEAKS_SHA256_LINUX_X64=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
 
-# Node 24 (Practice repos declare engines 24.x) — resolved dynamically
-NODE_TGZ=$(curl -fsSL https://nodejs.org/dist/latest-v24.x/ | grep -o 'node-v24[0-9.]*-linux-x64.tar.gz' | head -1)
+# ---------- discovery first: the carried repo declares the toolchain ----------
+REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
+  -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
+FIRST_REPO=""
+for repo in $REPOS; do
+  # Practice repos are pnpm workspaces; anything else (plugin caches, stray
+  # clones) is not a Practice repo
+  if [ -f "$repo/pnpm-lock.yaml" ]; then
+    FIRST_REPO="$repo"
+    break
+  fi
+done
+test -n "$FIRST_REPO"
+
+# Node major from the carried repo's engines declaration (single-source per
+# the repos' runtime-version doctrine); the explicit default only covers a
+# repo that declares no engines field
+NODE_MAJOR=$(grep -o '"node"[: ]*"[^"]*"' "$FIRST_REPO/package.json" | grep -o '[0-9][0-9]*' | head -1 || true)
+NODE_MAJOR=${NODE_MAJOR:-24}
+echo "node major from ${FIRST_REPO}/package.json engines: ${NODE_MAJOR}"
+
+# ---------- universal toolchain ----------
+
+# Node — latest release of the repo-declared major
+NODE_TGZ=$(curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" | grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" | head -1)
 test -n "$NODE_TGZ"
-curl -fsSL "https://nodejs.org/dist/latest-v24.x/${NODE_TGZ}" | tar xz -C /usr/local --strip-components=1
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/${NODE_TGZ}" | tar xz -C /usr/local --strip-components=1
 
-# pnpm into /usr/local/bin — a trusted location for repo spawn checks
-/usr/local/bin/npm install -g --prefix /usr/local pnpm@11
+# pnpm via Corepack shims in /usr/local/bin (a trusted location for repo
+# spawn checks): each repo's packageManager pin selects and verifies its own
+# pnpm version — this script pins nothing
+/usr/local/bin/corepack enable --install-directory /usr/local/bin pnpm
 
 # whatever /opt/nodeXX the image ships shadows /usr/local/bin in PATH
 for d in /opt/node*/bin; do
@@ -44,20 +76,15 @@ apt-get update -qq
 apt-get install -y -qq git
 git --version
 
-# gitleaks for pre-push secret scans (repo configs want >= 8.30.0)
-curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz \
+# gitleaks for pre-push secret scans — checksum-verified before install
+curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
   -o /tmp/gitleaks.tgz
+echo "${GITLEAKS_SHA256_LINUX_X64}  /tmp/gitleaks.tgz" | sha256sum -c -
 tar xzf /tmp/gitleaks.tgz -C /usr/local/bin gitleaks
 gitleaks version
 
-# ---------- Practice repo setup: discovered, never assumed ----------
-REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
-  -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
-test -n "$REPOS"
-
+# ---------- per-repo setup ----------
 for repo in $REPOS; do
-  # Practice repos are pnpm workspaces; anything else (plugin caches, stray
-  # clones) is skipped deliberately
   if [ ! -f "$repo/pnpm-lock.yaml" ]; then
     continue
   fi
@@ -70,11 +97,18 @@ for repo in $REPOS; do
     git fetch --unshallow origin
   fi
 
+  # pre-cache the repo's pinned pnpm so no later shell hits a download
+  corepack install
   pnpm install
 
   # common-ability extension point: a Practice repo needing more than
-  # install commits its own hook; this script stays repo-agnostic
-  if [ -x .agent/setup/cloud-session-setup.sh ]; then
+  # install commits its own hook. Absence is the only benign skip — a hook
+  # that exists but is not executable is a broken contract, not a no-op.
+  if [ -e .agent/setup/cloud-session-setup.sh ]; then
+    if [ ! -x .agent/setup/cloud-session-setup.sh ]; then
+      echo "ERROR: ${name}/.agent/setup/cloud-session-setup.sh exists but is not executable" >&2
+      exit 1
+    fi
     ./.agent/setup/cloud-session-setup.sh
   fi
 done
