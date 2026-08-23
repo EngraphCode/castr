@@ -41,10 +41,45 @@
 import { expect } from 'vitest';
 
 /**
+ * Format an arbitrary value for a failure message without risking a second,
+ * unrelated crash. `JSON.stringify` throws on circular references and on
+ * `bigint` values — both legitimate for the unbounded `TIR`/`TOutput`/
+ * `TOracle` generics this module works with — which would otherwise mask
+ * the real assertion failure behind a `TypeError` from the diagnostic
+ * message itself.
+ */
+function describeForDiagnostics(value: unknown): string {
+  try {
+    return JSON.stringify(value, (_key, v) => (typeof v === 'bigint' ? `${v}n` : v));
+  } catch {
+    return String(value);
+  }
+}
+
+/**
  * One semantic-outcome case: a source value plus the parse/write/reparse
  * functions and equality/oracle functions to run it through. All I/O and
  * comparison logic is injected — this module never imports a concrete
  * parser or writer.
+ *
+ * @example Registering a trivial numeric round-trip case
+ * ```typescript
+ * const numericCase: SemanticCase<string, number, string, string> = {
+ *   name: 'numeric-round-trip',
+ *   source: '42',
+ *   separatingSource: '7',
+ *   parse: (s) => Number.parseInt(s, 10),
+ *   write: (n) => String(n),
+ *   reparse: (s) => Number.parseInt(s, 10),
+ *   equalIR: (a, b) => a === b,
+ *   sourceOracle: (s) => s,
+ *   targetOracle: (s) => s,
+ *   equalOracle: (a, b) => a === b,
+ * };
+ * ```
+ *
+ * @see {@link runSemanticOutcome} to run a single case
+ * @see {@link runAllSemanticOutcomes} to run a registry of cases
  */
 export interface SemanticCase<TSource, TIR, TOutput, TOracle> {
   /** Case name, carried into the outcome record and failure messages. */
@@ -81,6 +116,15 @@ export interface SemanticCase<TSource, TIR, TOutput, TOracle> {
 /**
  * Machine-readable, JSON-serialisable per-case outcome. Every flag is
  * recomputed from the artifacts on every run, never recorded from a claim.
+ *
+ * @example
+ * ```typescript
+ * const { outcome } = runSemanticOutcome(numericCase);
+ * // { case: 'numeric-round-trip', roundTripEqual: true, oraclesAgree: true, nonVacuous: true }
+ * ```
+ *
+ * @see {@link SemanticProof} — the containing shape this is part of
+ * @see {@link expectSemanticOutcome} — asserts these flags are all `true`
  */
 export interface SemanticOutcome {
   readonly case: string;
@@ -99,7 +143,12 @@ export interface SemanticOutcome {
   readonly nonVacuous: boolean;
 }
 
-/** The intermediate artifacts a run produced, retained for structural diffing on failure. */
+/**
+ * The intermediate artifacts a run produced, retained for structural diffing
+ * on failure.
+ *
+ * @see {@link SemanticProof} — the containing shape returned by {@link runSemanticOutcome}
+ */
 export interface SemanticArtifacts<TIR, TOutput, TOracle> {
   readonly ir: TIR;
   readonly output: TOutput;
@@ -108,7 +157,19 @@ export interface SemanticArtifacts<TIR, TOutput, TOracle> {
   readonly targetOracleValue: TOracle;
 }
 
-/** A complete semantic-outcome proof: the machine-readable outcome plus the artifacts it was recomputed from. */
+/**
+ * A complete semantic-outcome proof: the machine-readable outcome plus the
+ * artifacts it was recomputed from.
+ *
+ * @example
+ * ```typescript
+ * const proof = runSemanticOutcome(numericCase);
+ * proof.outcome; // { case: 'numeric-round-trip', roundTripEqual: true, oraclesAgree: true, nonVacuous: true }
+ * ```
+ *
+ * @see {@link runSemanticOutcome} — produces this shape
+ * @see {@link expectSemanticOutcome} — asserts on this shape
+ */
 export interface SemanticProof<TIR, TOutput, TOracle> {
   readonly outcome: SemanticOutcome;
   readonly artifacts: SemanticArtifacts<TIR, TOutput, TOracle>;
@@ -120,22 +181,38 @@ export interface SemanticProof<TIR, TOutput, TOracle> {
  * Parse, write, reparse, or oracle failures propagate as errors — fail-fast,
  * never a skipped or silently-passing case.
  *
+ * @example
+ * ```typescript
+ * const proof = runSemanticOutcome(numericCase);
+ * expectSemanticOutcome(proof);
+ * ```
+ *
  * @param semanticCase - The case to run
  * @returns The recomputed outcome plus the round-trip artifacts
+ * @see {@link SemanticCase} for the case shape and a full worked example
+ * @see {@link runAllSemanticOutcomes} to run a registry of cases
+ * @see {@link expectSemanticOutcome} to assert on the result
  */
 export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   semanticCase: SemanticCase<TSource, TIR, TOutput, TOracle>,
 ): SemanticProof<TIR, TOutput, TOracle> {
+  // Every oracle runs on its argument BEFORE that argument is passed to
+  // parse/reparse. If TSource or TOutput is a mutable object and parse or
+  // reparse mutates its argument in place, an oracle called afterwards would
+  // observe the already-mutated value instead of the pristine one it is
+  // supposed to independently witness — a lossy, in-place-mutating parse
+  // could then make both oracles agree on the damaged representation while
+  // every other check still reports green.
+  const sourceOracleValue = semanticCase.sourceOracle(semanticCase.source);
+  const separatingSourceOracleValue = semanticCase.sourceOracle(semanticCase.separatingSource);
+
   const ir = semanticCase.parse(semanticCase.source);
   const output = semanticCase.write(ir);
-  const reparsedIR = semanticCase.reparse(output);
-
-  const sourceOracleValue = semanticCase.sourceOracle(semanticCase.source);
   const targetOracleValue = semanticCase.targetOracle(output);
+  const reparsedIR = semanticCase.reparse(output);
 
   const separatingIR = semanticCase.parse(semanticCase.separatingSource);
   const separatingOutput = semanticCase.write(separatingIR);
-  const separatingSourceOracleValue = semanticCase.sourceOracle(semanticCase.separatingSource);
   const separatingTargetOracleValue = semanticCase.targetOracle(separatingOutput);
 
   const irDiscriminates = !semanticCase.equalIR(ir, separatingIR);
@@ -162,9 +239,18 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
 /**
  * Run every case in a registry.
  *
+ * @example
+ * ```typescript
+ * const proofs = runAllSemanticOutcomes([caseA, caseB]);
+ * for (const proof of proofs) expectSemanticOutcome(proof);
+ * ```
+ *
  * @param cases - Cases to run
+ * @returns One proof per case, in registration order
  * @throws If `cases` is empty — an empty registry proves nothing, so it is a
  * hard failure rather than a vacuous green run
+ * @see {@link runSemanticOutcome} — runs a single case
+ * @see {@link SemanticCase} for the case shape
  */
 export function runAllSemanticOutcomes<TSource, TIR, TOutput, TOracle>(
   cases: readonly SemanticCase<TSource, TIR, TOutput, TOracle>[],
@@ -191,7 +277,15 @@ export function runAllSemanticOutcomes<TSource, TIR, TOutput, TOracle>(
  * every other flag meaningless), then oracle agreement, then round-trip
  * equality.
  *
+ * @example
+ * ```typescript
+ * expectSemanticOutcome(runSemanticOutcome(numericCase));
+ * ```
+ *
  * @param proof - The proof returned by {@link runSemanticOutcome}
+ * @throws If any of `nonVacuous`, `oraclesAgree`, or `roundTripEqual` is `false`
+ * @see {@link runSemanticOutcome} — produces the proof this asserts on
+ * @see {@link SemanticOutcome} — the fields this checks
  */
 export function expectSemanticOutcome<TIR, TOutput, TOracle>(
   proof: SemanticProof<TIR, TOutput, TOracle>,
@@ -205,11 +299,11 @@ export function expectSemanticOutcome<TIR, TOutput, TOracle>(
 
   expect(
     outcome.oraclesAgree,
-    `${outcome.case}: the target oracle (${JSON.stringify(artifacts.targetOracleValue)}) must agree with the source oracle (${JSON.stringify(artifacts.sourceOracleValue)}) under equalOracle — parser or writer fidelity loss`,
+    `${outcome.case}: the target oracle (${describeForDiagnostics(artifacts.targetOracleValue)}) must agree with the source oracle (${describeForDiagnostics(artifacts.sourceOracleValue)}) under equalOracle — parser or writer fidelity loss`,
   ).toBe(true);
 
   expect(
     outcome.roundTripEqual,
-    `${outcome.case}: parse → write → reparse (${JSON.stringify(artifacts.reparsedIR)}) must preserve the IR (${JSON.stringify(artifacts.ir)}) under equalIR`,
+    `${outcome.case}: parse → write → reparse (${describeForDiagnostics(artifacts.reparsedIR)}) must preserve the IR (${describeForDiagnostics(artifacts.ir)}) under equalIR`,
   ).toBe(true);
 }

@@ -24,11 +24,14 @@ interface FakeIR {
 }
 
 /**
- * A correct, minimal fake pipeline: `write` stamps a `W:` marker so a
- * bypassed/echoing writer (source fed straight through as output) is
- * observably not a valid written artifact, and `reparse`/`targetOracle`
- * require that marker — modelling the real system's boundary revalidation
- * (writer output must be re-validated, not trusted).
+ * A correct, minimal fake pipeline: `write` stamps a `W:` marker, and
+ * `reparse`/`targetOracle` strip it. Every function here is a straight,
+ * branch-free mapping — no conditional logic, no string interpolation of
+ * inputs — per `test-immediate-fails.md` item 12 (integration fakes are
+ * simple fakes; detection logic belongs in the runner under test, not in
+ * test-authored scaffolding). A malformed artifact therefore surfaces as
+ * garbled data the runner's own `roundTripEqual`/`oraclesAgree` checks
+ * catch, not as a fake-thrown validation error.
  */
 function correctCase(
   name: string,
@@ -41,20 +44,10 @@ function correctCase(
     separatingSource,
     parse: (s) => ({ value: s }),
     write: (ir) => `W:${ir.value}`,
-    reparse: (output) => {
-      if (!output.startsWith('W:')) {
-        throw new Error(`reparse: not a valid written artifact: ${JSON.stringify(output)}`);
-      }
-      return { value: output.slice(2) };
-    },
+    reparse: (output) => ({ value: output.slice(2) }),
     equalIR: (a, b) => a.value === b.value,
     sourceOracle: (s) => s.toUpperCase(),
-    targetOracle: (output) => {
-      if (!output.startsWith('W:')) {
-        throw new Error(`targetOracle: not a valid written artifact: ${JSON.stringify(output)}`);
-      }
-      return output.slice(2).toUpperCase();
-    },
+    targetOracle: (output) => output.slice(2).toUpperCase(),
     equalOracle: (a, b) => a === b,
   };
 }
@@ -117,16 +110,24 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).toThrow();
   });
 
-  it('catches a bypassed-writer mutant (echoes the source straight through as output)', () => {
+  it('catches a bypassed-writer mutant (echoes the source straight through as output, unmarked)', () => {
     const base = correctCase('bypassed-writer', 'alpha', 'beta');
     // Skips the real writer transformation entirely — feeds the source
-    // straight through, unmarked, as if it were written output.
+    // straight through, unmarked, as if it were written output. The runner
+    // (not a fake validating a marker) catches this: `reparse`/`targetOracle`
+    // strip the first two characters unconditionally, so the unmarked value
+    // decodes to garbled data. Being input-independent this way, the mutant
+    // also collapses the separating pair's outputs to the same value, so
+    // nonVacuous fires alongside the other two — a legitimate catch, not a
+    // coincidence.
     const mutant: typeof base = { ...base, write: () => 'alpha' };
 
-    // The unmarked artifact fails the boundary re-validation `reparse`
-    // performs (real writer output is never trusted unvalidated) — a hard
-    // failure, not a silently-passing proof.
-    expect(() => runSemanticOutcome(mutant)).toThrow(/not a valid written artifact/);
+    const proof = runSemanticOutcome(mutant);
+
+    expect(proof.outcome.roundTripEqual).toBe(false);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+    expect(proof.outcome.nonVacuous).toBe(false);
+    expect(() => expectSemanticOutcome(proof)).toThrow();
   });
 
   it('catches an absent-artifact mutant (write declares but never produces an artifact)', () => {
@@ -169,8 +170,69 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).toThrow(/discriminate/i);
   });
 
+  it('catches a vacuous-witness mutant (separatingSource is not actually separating)', () => {
+    // Every comparator here is correct and unmutated — the flaw is in the
+    // CASE DATA, not the comparator: separatingSource equals source, so it
+    // cannot witness anything distinct. Distinct from the vacuous-comparator
+    // mutants above (equalIR/equalOracle always reporting equal): this
+    // proves the runner also catches an author picking a non-separating
+    // pair, per the report's "vacuous-witness" mutant category.
+    const vacuousWitnessCase = correctCase('vacuous-witness', 'alpha', 'alpha');
+
+    const proof = runSemanticOutcome(vacuousWitnessCase);
+
+    expect(proof.outcome.roundTripEqual).toBe(true);
+    expect(proof.outcome.oraclesAgree).toBe(true);
+    expect(proof.outcome.nonVacuous).toBe(false);
+    expect(() => expectSemanticOutcome(proof)).toThrow(/discriminate/i);
+  });
+
   it('rejects an empty case registry rather than vacuously passing', () => {
     expect(() => runAllSemanticOutcomes([])).toThrow(/no cases registered/i);
+  });
+
+  it('computes independent oracles from pristine values even when parse/reparse mutate their argument in place', () => {
+    interface MutableSource {
+      value: string;
+    }
+    interface MutableOutput {
+      value: string;
+    }
+
+    const mutatingCase: SemanticCase<MutableSource, FakeIR, MutableOutput, string> = {
+      name: 'mutation-safety',
+      source: { value: 'alpha' },
+      separatingSource: { value: 'beta' },
+      // Simulates a lossy parser that ALSO mutates its argument in place —
+      // the bug this proves absent: if an oracle ran after this, it would
+      // see 'MUTATED' instead of the real source value.
+      parse: (s) => {
+        const original = s.value;
+        s.value = 'MUTATED';
+        return { value: original };
+      },
+      write: (ir) => ({ value: `W:${ir.value}` }),
+      // Simulates a reparse that mutates its argument in place after
+      // reading it — an oracle running after this would see 'MUTATED'
+      // instead of the real written output.
+      reparse: (o) => {
+        const result = { value: o.value.slice(2) };
+        o.value = 'MUTATED';
+        return result;
+      },
+      equalIR: (a, b) => a.value === b.value,
+      sourceOracle: (s) => s.value.toUpperCase(),
+      targetOracle: (o) => o.value.slice(2).toUpperCase(),
+      equalOracle: (a, b) => a === b,
+    };
+
+    const proof = runSemanticOutcome(mutatingCase);
+
+    // These only read 'ALPHA' if the oracles ran before the mutation
+    // happened; against the pre-fix ordering they would read 'MUTATED'.
+    expect(proof.artifacts.sourceOracleValue).toBe('ALPHA');
+    expect(proof.artifacts.targetOracleValue).toBe('ALPHA');
+    expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
   it('runs every registered case and returns proofs in registration order', () => {
