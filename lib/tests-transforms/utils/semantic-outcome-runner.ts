@@ -60,21 +60,31 @@
  */
 
 /**
- * Deep snapshot of `value` with every own function-valued property (for
- * example a `toJSON` method defined directly on an object, as opposed to
- * inherited from a prototype) omitted, at every level — not just the top.
- * `structuredClone` cannot clone such a value at all — it throws on any
- * function-valued property, at any depth — so this is the fallback that
- * specifically neutralises a `toJSON` method: `JSON.stringify` only
- * invokes `toJSON` if the value passed to it has one, and this snapshot
- * never does, anywhere in the tree. Reading `Object.entries` to find the
- * function does not invoke it, so a mutating `toJSON`'s body never runs. A
- * value already seen higher in the same recursion (a circular reference)
- * is replaced with a placeholder rather than returned as the original
- * live reference, so a cycle can never reintroduce an unsanitised alias
- * back into the snapshot.
+ * Deep snapshot of `value` for diagnostic formatting that never invokes any
+ * user-defined function, method, getter, or hook — not `toJSON`, not
+ * `toString`, not `Symbol.toPrimitive`, not an accessor property's `get`.
+ * Six rounds of review on this module (each finding a narrower residual
+ * gap in the previous round's fix) converged on the same lesson: any
+ * formatter that calls into caller-supplied code, even only on a fallback
+ * path, is one more pathological artifact away from either crashing or
+ * corrupting the very artifact it was asked to describe. This walker reads
+ * every own property strictly through `Object.getOwnPropertyDescriptor`:
+ * a data property's `.value` is read directly (a plain property read,
+ * never a function call) and recursed into; an accessor property (one
+ * with a `get`/`set`) is represented as the placeholder string `'<getter>'`
+ * without ever calling `.get`; a function-valued data property is omitted
+ * entirely, matching how `JSON.stringify` would have dropped it anyway.
+ * There is no code path here that runs anything the artifact itself
+ * defines, so nothing it defines — mutating or throwing — can run during
+ * diagnostic formatting. A value already seen higher in the same recursion
+ * (a circular reference) is replaced with a placeholder rather than
+ * returned as the original live reference, so a cycle can never
+ * reintroduce an unsanitised alias back into the snapshot.
  */
-function omitFunctionProperties(value: unknown, seen = new WeakSet<object>()): unknown {
+function toSafeDiagnosticValue(value: unknown, seen = new WeakSet<object>()): unknown {
+  if (typeof value === 'function') {
+    return undefined;
+  }
   if (value === null || typeof value !== 'object') {
     return value;
   }
@@ -85,60 +95,50 @@ function omitFunctionProperties(value: unknown, seen = new WeakSet<object>()): u
   if (Array.isArray(value)) {
     return value
       .filter((item) => typeof item !== 'function')
-      .map((item) => omitFunctionProperties(item, seen));
+      .map((item) => toSafeDiagnosticValue(item, seen));
   }
   return Object.fromEntries(
-    Object.entries(value)
-      .filter(([, entry]) => typeof entry !== 'function')
-      .map(([key, entry]) => [key, omitFunctionProperties(entry, seen)]),
+    Object.keys(value).flatMap((key) => {
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (descriptor === undefined) {
+        return [];
+      }
+      if (descriptor.get !== undefined || descriptor.set !== undefined) {
+        return [[key, '<getter>']];
+      }
+      if (typeof descriptor.value === 'function') {
+        return [];
+      }
+      return [[key, toSafeDiagnosticValue(descriptor.value, seen)]];
+    }),
   );
 }
 
 /**
  * Format an arbitrary value for a failure message without risking a second,
  * unrelated crash, and without formatting the caller's own retained
- * reference. `JSON.stringify` throws on circular references and on
- * `bigint` values — both legitimate for the unbounded `TIR`/`TOutput`/
- * `TOracle` generics this module works with — which would otherwise mask
- * the real assertion failure behind a `TypeError` from the diagnostic
- * message itself. The `String(value)` fallback can itself throw for an
- * artifact whose string coercion (`toString`/`Symbol.toPrimitive`) also
- * throws, so it gets the same guard, one level down. Formatting runs on a
- * `structuredClone` of `value`, not `value` itself: `JSON.stringify` calls
- * a `toJSON` method if one is defined, and a `toJSON` with a mutating side
- * effect must not be able to corrupt the artifact this diagnostic is
- * describing — `structuredClone` never invokes `toJSON`, so the clone it
- * produces has no such method to call. `structuredClone` itself throws for
- * exactly this kind of value (an own function-valued property, which
- * `toJSON` is), so the fallback strips function properties instead of
- * formatting the original outright. Sanitising can itself throw — reading
- * every property to know what to strip means a throwing getter surfaces
- * during sanitisation too, not just during formatting — so that fallback
- * gets its own guard, falling back to the original value rather than
- * propagating an uncaught error out of this function.
+ * reference. Runs on {@link toSafeDiagnosticValue}'s snapshot, never on
+ * `value` itself, so nothing the artifact defines can run as a side effect
+ * of merely describing it. `Object.keys`/`Object.getOwnPropertyDescriptor`
+ * only invoke trap code for a `Proxy`-backed artifact (never for a plain
+ * object or class instance), so the snapshot step keeps its own guard for
+ * that residual case, falling back to a fixed placeholder — never to the
+ * live `value` — rather than propagating an uncaught error. `JSON.stringify`
+ * throws on `bigint` values, which the replacer intercepts, and would
+ * throw on a circular reference, which the snapshot has already broken;
+ * its own guard is defence in depth for whatever this reasoning missed.
  */
-function toSafeDiagnosticValue(value: unknown): unknown {
-  try {
-    return structuredClone(value);
-  } catch {
-    try {
-      return omitFunctionProperties(value);
-    } catch {
-      return value;
-    }
-  }
-}
-
 function describeForDiagnostics(value: unknown): string {
-  const safeValue = toSafeDiagnosticValue(value);
+  let safeValue: unknown;
+  try {
+    safeValue = toSafeDiagnosticValue(value);
+  } catch {
+    return '<value could not be formatted for diagnostics>';
+  }
   try {
     return JSON.stringify(safeValue, (_key, v) => (typeof v === 'bigint' ? `${v}n` : v));
   } catch {
-    try {
-      return String(safeValue);
-    } catch {
-      return '<value could not be formatted for diagnostics>';
-    }
+    return '<value could not be formatted for diagnostics>';
   }
 }
 

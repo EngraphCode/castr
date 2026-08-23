@@ -416,7 +416,7 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
-  it('reports the real semantic failure, not a formatting crash, when every formatting fallback fails', () => {
+  it('reports the real semantic failure via a getter placeholder, never invoking a poisoned toJSON/toString/getter', () => {
     interface PoisonedOracle {
       readonly value: string;
       readonly poison: never;
@@ -426,13 +426,13 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
 
     // The failure-message templates only run once their check has actually
     // failed, so this case must genuinely fail (and stay non-vacuous) to
-    // exercise describeForDiagnostics at all. A getter that always throws
-    // fails structuredClone (which must read every property to know what
-    // to clone) AND the omitFunctionProperties sanitiser's own
-    // Object.entries read, so both fall back to the raw poisoned value —
-    // at which point toJSON and toString each fail their own formatting
-    // attempt too, genuinely reaching the deepest constant fallback rather
-    // than being short-circuited by an earlier layer's sanitisation.
+    // exercise describeForDiagnostics at all. toJSON/toString are own
+    // function-valued properties, so the diagnostic formatter omits them
+    // outright rather than calling either; the throwing `poison` getter is
+    // an accessor property, so it is represented by a placeholder rather
+    // than read. None of the three poisoned members is ever invoked, so
+    // none of their thrown errors ever surfaces — the formatter succeeds
+    // on its first attempt instead of needing any fallback.
     const poisoned = (value: string): PoisonedOracle => ({
       value,
       toJSON(): never {
@@ -479,12 +479,68 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
     }
     assert(caught instanceof Error, 'expected expectSemanticOutcome to throw an Error');
     // Both assertions matter: the wrapping semantic-mismatch message proves
-    // the real failure was reported (not a raw crash), and the constant
-    // placeholder proves every formatting fallback — structuredClone,
-    // sanitisation, JSON.stringify, and String() — genuinely failed rather
-    // than one of them silently succeeding and short-circuiting the rest.
+    // the real failure was reported, and the getter placeholder (rather
+    // than a crash or the constant "could not be formatted" fallback)
+    // proves the poisoned members were represented safely, not invoked.
     expect(caught.message).toMatch(/target oracle .*must agree/);
-    expect(caught.message).toContain('<value could not be formatted for diagnostics>');
+    expect(caught.message).toContain('"poison":"<getter>"');
+    expect(caught.message).not.toContain('toJSON fails');
+    expect(caught.message).not.toContain('poison getter fails');
+  });
+
+  it('does not corrupt a retained artifact whose toJSON mutates AND has a throwing getter, when building a failure diagnostic', () => {
+    interface PoisonedMutatingOracle {
+      value: string;
+      readonly poison: never;
+      toJSON(): { value: string };
+    }
+
+    // The sixth consecutive round on this concern: earlier rounds' fallback
+    // chain (structuredClone -> sanitise -> raw value) meant that when BOTH
+    // a mutating toJSON AND a throwing getter were present on the same
+    // artifact, sanitisation itself failed (reading the getter to know
+    // what to strip), and the fallback-of-the-fallback returned the live
+    // artifact — which JSON.stringify then formatted by calling its
+    // mutating toJSON, corrupting proof.artifacts as a side effect of
+    // merely describing it. This case reproduces exactly that combination
+    // to prove it no longer corrupts anything: the getter is never read
+    // (represented as a placeholder) and toJSON is never called (omitted
+    // as a function property), so there is nothing left to trigger the
+    // mutation at all.
+    const poisonedMutating = (value: string): PoisonedMutatingOracle => ({
+      value,
+      toJSON(): { value: string } {
+        this.value = 'MUTATED-BY-TOJSON';
+        return { value: this.value };
+      },
+      get poison(): never {
+        throw new Error('poison getter fails');
+      },
+    });
+
+    const poisonedMutatingCase: SemanticCase<string, string, string, PoisonedMutatingOracle> = {
+      name: 'poisoned-mutating-diagnostic',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => source,
+      write: (ir) => ir,
+      reparse: (output) => output,
+      equalIR: (a, b) => a === b,
+      sourceOracle: (source) => poisonedMutating(source.toUpperCase()),
+      targetOracle: (output) => poisonedMutating(`${output.toUpperCase()}_WRONG`),
+      equalOracle: (a, b) => a.value === b.value,
+      cloneOracle: (oracle) => poisonedMutating(oracle.value),
+    };
+
+    const proof = runSemanticOutcome(poisonedMutatingCase);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+
+    expect(() => expectSemanticOutcome(proof)).toThrow(/target oracle .*must agree/);
+
+    // The diagnostic must not have invoked the mutating toJSON at all —
+    // the retained artifact's value is untouched, not merely restored.
+    expect(proof.artifacts.sourceOracleValue.value).toBe('ALPHA');
+    expect(proof.artifacts.targetOracleValue.value).toBe('ALPHA_WRONG');
   });
 
   it('does not corrupt a retained artifact whose toJSON has a mutating side effect when building a failure diagnostic', () => {
@@ -547,12 +603,11 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
       },
     });
 
-    // The outer value's own toJSON is what forces structuredClone to throw
-    // and fall into the shallow-then-recursive omitFunctionProperties
-    // fallback — the nested value's toJSON is the thing under test: a
-    // sanitiser that only strips function properties one level deep would
-    // leave this nested object as a live, unsanitised reference, so
-    // JSON.stringify would still reach and invoke its toJSON.
+    // The outer value's own toJSON is an own function-valued property, so
+    // the diagnostic formatter omits it without calling it — the nested
+    // value's toJSON is the thing under test: a walker that only recursed
+    // one level deep would leave this nested object as a live, unsanitised
+    // reference, so JSON.stringify would still reach and invoke its toJSON.
     const makeOuter = (outerValue: string, nestedValue: string): OuterMutating => ({
       outerValue,
       nested: makeNested(nestedValue),

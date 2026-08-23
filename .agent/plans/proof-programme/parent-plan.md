@@ -271,17 +271,18 @@ callbacks, a pair of branded class-instance IR cases (one proving the default `s
 throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
 case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
 both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
-throw for the branded-IR/poisoned-diagnostics cases) then green, 17/17 passing.
+throw for the branded-IR/poisoned-diagnostics cases) then green, 18/18 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, fourteen rounds of automated PR review (Codex, Copilot) progressively closed
+opened. Once open, fifteen rounds of automated PR review (Codex, Copilot) progressively closed
 the full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
-and a diagnostic-formatting mutation gap that itself took three rounds to close fully (rounds ten
-through fourteen): each round's fix protected the callbacks it was shown to be
+and a diagnostic-formatting mutation gap that itself took four rounds to close fully (rounds ten
+through fifteen), the last of which replaced the mutation-prone fallback chain with a single
+provably-safe formatter: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
@@ -447,7 +448,39 @@ finally reaching the constant fallback, which the test now asserts on directly (
 wrapping semantic-mismatch text, which would have passed even with the crash this round found).
 Confirmed empirically that this exact cascade occurs before fixing, and via `git stash`
 isolation that the rewritten test fails against the pre-fix code (the getter's raw error message
-leaking through uncaught) and passes against the fix.
+leaking through uncaught) and passes against the fix. A fifteenth round found that the
+fourteenth round's own fix — the sanitisation fallback returning the _original_ value when
+sanitising itself throws — reintroduced exactly the live-reference exposure the twelfth round
+had closed, for the one combination not yet tried: a mutating `toJSON` alongside a throwing
+getter on the same artifact. Sanitising reads every property (via `Object.entries`) to know what
+to strip, so the throwing getter makes sanitisation itself throw; the fallback-of-the-fallback
+then handed `JSON.stringify` the raw, live artifact, whose (unstripped, since never reached)
+`toJSON` ran and mutated it. Confirmed empirically before fixing (a probe script showed
+`safeValue === fixture`, `JSON.stringify` succeeding, and `fixture.value` left mutated). This was
+the sixth consecutive round narrowing the same `describeForDiagnostics` concern, each round's fix
+leaving one narrower gap for the next round to find — a whack-a-mole pattern rather than a
+converging one, since every fallback layer that calls into caller-supplied code is one more
+pathological artifact away from failing the same way. Rather than patch another instance,
+`toSafeDiagnosticValue`/`omitFunctionProperties` were replaced outright with a single walker that
+reads every own property strictly via `Object.getOwnPropertyDescriptor`: a data property's
+`.value` is read directly (never a function call) and recursed into; an accessor property is
+represented as the placeholder string `'<getter>'` without ever calling its `get`; a
+function-valued property is omitted, matching how `JSON.stringify` would have dropped it anyway.
+No code path in the walker invokes anything the artifact itself defines, so no `toJSON`,
+`toString`, `Symbol.toPrimitive`, or getter — mutating or throwing — can ever run during
+diagnostic formatting; this closes the entire vulnerability class structurally rather than
+narrowing it further. The one residual case where the walker's own property-enumeration can
+still invoke caller-defined code is a `Proxy` with a throwing `ownKeys`/`getOwnPropertyDescriptor`
+trap; `describeForDiagnostics` keeps a guard for that case, but its fallback is now a fixed
+placeholder string, never the live artifact, so no path exists any more from a formatting failure
+back to a raw reference. The ninth-round poisoned-diagnostics test was rewritten: the scenario it
+guards no longer reaches any fallback at all (formatting succeeds on the first attempt, since
+nothing poisoned is ever invoked), so it now asserts the success case directly — the message
+contains the `'<getter>'` placeholder and never the poisoned members' thrown text. A new test
+reproduces the fifteenth round's exact combination (mutating `toJSON` plus a throwing getter on
+one artifact) and asserts `proof.artifacts` stays byte-for-byte pristine after the diagnostic is
+built; confirmed via `git stash` isolation that both the rewritten and the new test fail against
+the pre-fix code and pass against the fix.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
