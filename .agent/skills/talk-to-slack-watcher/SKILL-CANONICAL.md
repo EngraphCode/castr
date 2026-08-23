@@ -46,13 +46,12 @@ is unset, ask the owner — never hard-code or guess.
 2. Address the Watcher explicitly — "the Watcher" always works; the
    current holder's name (from the channel's latest valid mantle-state
    post — intro or relief) also works. Resolve validity exactly as the
-   `slack-watcher` skill defines it: a vacancy sign-off counts only when
-   the latest valid mantle-state post before it names its author as the
-   holder — a superseded holder's stale vacancy is void and skipped, so
-   a correspondent never reports a vacancy that a live successor's intro
-   disproves. A latest valid post that is a vacancy sign-off means no
-   Watcher holds the mantle: report that to the owner instead of posting
-   into the void.
+   `slack-watcher` skill defines it (a vacancy sign-off counts only when
+   it closes the current tenure — a superseded or stale vacancy is void
+   and skipped), so a correspondent never reports a vacancy that a live
+   successor's intro disproves. A latest valid post that is a vacancy
+   sign-off means no Watcher holds the mantle: report that to the owner
+   instead of posting into the void.
 3. Post in the configured channel, threaded onto an existing exchange
    where one exists. State plainly what you need and whether you expect a
    reply.

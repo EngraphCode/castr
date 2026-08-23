@@ -55,7 +55,9 @@ latest post that is a vacancy sign-off, or no mantle-state post at all,
 means the mantle is vacant and this is a fresh stand-up (no relief
 phrase). Then post one intro: your name, that you now hold
 the Watcher mantle, seed prefix and naming-schema id, polling cadence,
-and how to address you (by name or "the Watcher"). When relieving, the
+how to address you (by name or "the Watcher"), and that your sign-off
+will name this intro's `ts` — the tenure declaration the validity rule
+below relies on. When relieving, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
 outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
@@ -65,12 +67,23 @@ One holder, deterministically: the latest valid mantle-state post in the
 channel IS the current state — an intro or relief names the holder, a
 vacancy sign-off means nobody holds it. Validity is judged from channel
 history alone: an intro or relief is always valid, while a vacancy
-sign-off is valid only when the latest valid mantle-state post before
-it names its author as the holder — a vacancy from anyone else is a
-superseded holder's late sign-off, void, and skipped when resolving the
-latest state. Judge each post against the valid state before it, void
-posts already excluded, so one stale vacancy left in the channel cannot
-void the legitimate teardown that follows it. Every tick re-checks; a holder that sees a valid
+sign-off is valid only when it closes the current tenure: each vacancy
+sign-off carries the `ts` of the intro whose tenure it closes, and it
+is valid only when that intro is the latest valid mantle-state post
+before it. A vacancy naming an older tenure or another holder's tenure
+is void — a superseded or stale sign-off, skipped when resolving the
+latest state. A vacancy carrying no tenure `ts` predates this rule:
+judge it by authorship instead — valid only when the latest valid
+mantle-state post before it names its author as the holder AND that
+intro does not itself declare tenure binding — so existing channel
+history keeps its meaning across the cutover, while a delayed legacy
+vacancy can never close a new-protocol tenure, even the same author's
+(intros posted under this rule declare the binding; see the intro
+content above). Judge each post against the valid
+state before it, void posts already excluded, so one stale vacancy left
+in the channel cannot void the legitimate teardown that follows it; and
+because binding is by tenure `ts`, not author, a delayed vacancy from a
+session's previous tenure cannot depose that same session's new one. Every tick re-checks; a holder that sees a valid
 mantle-state post newer than its own intro signs off and stands down,
 whatever it thinks of the succession — the rule needs no names and
 survives simultaneous takeovers.
@@ -83,8 +96,11 @@ the channel from the outgoing Watcher's last visible activity (its last
 summary, reply, or intro) up to your own intro, handle what that window
 holds, and only then advance the baseline to your intro's `ts`. A vacancy
 sign-off is the same discipline with an exact boundary: sweep from the
-sign-off's `ts` up to your own intro before advancing, because messages
-posted into the vacant channel are covered by nobody until you do. Only
+last-processed baseline `ts` the sign-off names (the retiring holder's
+final-sweep read boundary; for a legacy sign-off naming none, its own
+message `ts`), never the tenure `ts` it embeds — that names the tenure
+it closed — up to your own intro before advancing, because messages
+posted after that baseline are covered by nobody until you do. Only
 when the channel holds no mantle-state post at all does a fresh stand-up
 baseline at its own intro.
 
@@ -138,18 +154,40 @@ A successor posts the relief intro (step 2); on matching it, reply
 in-thread with a sign-off naming the successor and the baseline `ts` to
 watch from, notify the owner, and stop re-arming. On teardown without a
 successor — owner teardown and the five-idle default alike — delete the
-pending reminder, then re-read the latest mantle-state post before
-signing off, and branch on what it is: an intro or relief newer than
-your own intro means a successor took the mantle mid-teardown — run the
-handover above (sign-off reply, baseline `ts`, owner notified) and post
-no vacancy; a vacancy, or nothing newer, means the mantle is yours to
-vacate — post the vacancy sign-off. The read and the post are separate
+pending reminder and run one final non-re-arming sweep from the
+current baseline — process, summarise, and alert exactly as a tick
+would, but schedule nothing after it — noting the sweep's channel-read
+boundary as your last-processed baseline `ts`; then resolve the latest valid
+mantle-state post (step 2's resolver — void posts skipped) before
+signing off, and branch
+on what it is: a valid intro or relief newer than your own intro means
+a successor took the mantle mid-teardown — run the handover above
+(sign-off reply, baseline `ts`, owner notified) and post no vacancy; a
+valid vacancy, or nothing newer, means the mantle is yours to vacate —
+post the vacancy sign-off, naming your own intro's `ts` as the tenure
+it closes (step 2's tenure binding) and your last-processed baseline
+`ts` as the boundary successors sweep from — a read and a post are
+never atomic, so the post's own timestamp can overstate coverage; the
+named baseline is exact. The resolve and the post are separate
 Slack calls, so a successor's intro can land in between — but a vacancy
 posted over it is void by step 2's validity rule (the latest valid
 mantle-state post before it is the successor's intro, not one naming
 you), so
 no reader — the successor's own ticks included — ever acts on it. Still
-verify after writing: re-read once more, and if a successor's intro or
-relief landed in between, delete your void vacancy post — it is your
-own message — as cleanup, then run the handover. Correctness rests on
-the validity rule, not on the deletion or on timing.
+verify after writing: run the resolver once more and compare message
+timestamps — only an intro or relief whose `ts` precedes your vacancy
+post's own `ts` landed in the race window and voids it: delete that
+void vacancy — it is your own message — as cleanup, then run the
+handover. A successor post that postdates your vacancy is classified
+by what it observed, not by ordering alone: a relief intro naming you
+(`relieves <your name>`) was prepared against your tenure — answer it
+per section 5 (sign-off reply naming the successor and the baseline
+`ts`, which is your last-processed baseline, and notify the owner),
+leaving the vacancy in place as history; a fresh stand-up intro with
+no relief phrase is answering the genuine vacancy — leave the vacancy
+in place (the baseline it names is the successor's sweep boundary) and
+stand down with no further post; and a relief naming someone other
+than you means succession has already moved past you — that handover
+belongs to the predecessor it names, so stand down with no further
+post. Correctness rests on the validity rule, not on the deletion or
+on timing.
