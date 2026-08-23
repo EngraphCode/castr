@@ -62,6 +62,9 @@ todos:
   - id: Q-16
     content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
     status: pending
+  - id: Q-17
+    content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
+    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -72,7 +75,7 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
 the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Eligible
 now: Q-03..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-15, Q-16; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+outcome), Q-14, Q-15, Q-16, Q-17; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -529,6 +532,20 @@ and the diagnostic still formats successfully (a `'<getter>'` placeholder at tha
 crash or fallback placeholder); confirmed via `git stash` isolation that it fails against the
 pre-fix code and passes against the fix.
 
+A seventeenth round, reviewing the sixteenth round's fix, produced two fresh P2 findings on
+the same walker — traversing a `Proxy`-backed artifact still runs its
+`ownKeys`/`getOwnPropertyDescriptor` traps (which can mutate silently before the existing
+guard's placeholder fallback engages), and a function-valued array slot is dropped by the
+array branch's `flatMap` rather than held in place as `JSON.stringify`'s `null` would be.
+Both were verified real against the landed code and both are diagnostics-only (proof
+verdicts are computed before any diagnostic formatting runs, so neither can change an
+outcome). Seventeen rounds is the non-convergence signal ADR-051 clause 4 exists for: both
+findings were carried forward as queue row Q-17 (its brief holds the fix shape and
+acceptance), with the disposition recorded on each thread rather than an eighteenth
+fix-and-rereview cycle on this PR. The sixteenth round's array-descriptor thread — already
+fixed on the head in the same round — had been left unreplied when the prior firing hit its
+landing cutoff; the reply and resolution were posted in this round's disposition pass.
+
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on
 every landed revision. Scope held to Q-02's narrower slice throughout: no profile/artifact-kind
@@ -698,6 +715,25 @@ Acceptance (`non-code`): every reference in the skill file resolves, recomputed 
 Source: the foundation-alignment note below; the napkin's transplant-gap entries. Gate:
 none (eligible immediately).
 
+**Q-17 — Diagnostic-walker residual hardening.** Surface:
+`lib/tests-transforms/utils/semantic-outcome-runner.ts` (`toSafeDiagnosticValue` /
+`resolveSafeDiagnosticMember`). The ADR-051 clause 4 carry-forward for the tenth-round
+Codex P2 findings on PR #35 (both verified real against the landed code, both
+diagnostics-only — the proof verdicts are computed before any diagnostic formatting runs,
+so neither can change a proof outcome): (1) snapshotting a `Proxy`-backed artifact runs its
+`ownKeys`/`getOwnPropertyDescriptor` traps, which can mutate the backing artifact silently
+before the walker's guard can substitute a placeholder — detect proxies via `node:util`
+`types.isProxy` (reliable in this Node-only test-support module) and emit an inert
+placeholder without introspecting; (2) a function-valued array slot is dropped by the
+array branch's `flatMap` (the shared member resolver signals omission with an empty
+array), shifting later elements left — preserve array positions with an
+`undefined` placeholder (matching `JSON.stringify`'s `null` rendering for such slots)
+while keeping object-property omission as is. Acceptance (`unit`): a regression test per
+finding (a trap-mutating Proxy fixture whose backing store is proven untouched; a
+`[value, function, value]` fixture rendered with positions intact), TDD-first; gates
+green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
+2026-08-23). Gate: none (eligible immediately).
+
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
 own the merge policy (clause 3), review-bot convergence
@@ -777,7 +813,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-03..Q-09, Q-13, Q-14, Q-15, Q-16 (Q-02 completed 2026-08-23).
+- **Eligible now**: Q-03..Q-09, Q-13, Q-14, Q-15, Q-16, Q-17 (Q-02 completed 2026-08-23).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
