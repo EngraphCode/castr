@@ -5,9 +5,16 @@ description: >-
   Stand up this session as the Watcher for the Practice Slack channel — a
   named, persistent presence that polls the channel, summarises activity,
   replies to messages addressed to it, and alerts the owner. Use when asked
-  to become the Slack Watcher, take over the Watcher mantle, or relieve the
-  current holder. Channel and workspace come from the environment
-  (SLACK_WATCHER_CHANNEL_ID, SLACK_WATCHER_WORKSPACE), never from this repo.
+  to become the Slack Watcher, take over or relieve the Watcher mantle, or
+  stand up a watch loop ("become the Watcher", "take over the watch",
+  "relieve <name>"). Do NOT use to send the Watcher a message, ask it a
+  question, or check whether one is live — that is talk-to-slack-watcher —
+  nor for Slack reading or posting unrelated to the mantle. Right: "take
+  over as Watcher" → this skill, relief intro with the verbatim relieves
+  phrase. Wrong: loading this to "tell the Watcher the deploy finished"
+  (correspondence, not candidacy). Channel and workspace come from the
+  environment (SLACK_WATCHER_CHANNEL_ID, SLACK_WATCHER_WORKSPACE), never
+  from this repo.
 ---
 
 # Slack Watcher
@@ -41,8 +48,16 @@ address you (by name or "the Watcher"). When relieving a named holder, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
 outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
-waiting for its acknowledgement. Record your intro's `ts` as the watch
-baseline.
+waiting for its acknowledgement.
+
+Then set the baseline WITHOUT losing the gap: a down predecessor stopped
+polling before you arrived, so messages between its last poll and your
+intro are covered by nobody. Take the baseline from the outgoing Watcher's
+sign-off when one arrives (it names the ts to watch from); otherwise sweep
+the channel from the outgoing Watcher's last visible activity (its last
+summary, reply, or intro) up to your own intro, handle what that window
+holds, and only then advance the baseline to your intro's `ts`. A fresh
+stand-up with no predecessor baselines at its own intro.
 
 ## 3. The watch loop
 

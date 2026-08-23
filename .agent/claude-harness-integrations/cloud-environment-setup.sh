@@ -31,9 +31,10 @@ REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
   -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
 FIRST_REPO=""
 for repo in $REPOS; do
-  # Practice repos are pnpm workspaces; anything else (plugin caches, stray
-  # clones) is not a Practice repo
-  if [ -f "$repo/pnpm-lock.yaml" ]; then
+  # A Practice repo is identified by its committed Practice substrate plus a
+  # pnpm workspace — a lockfile alone is not identity (a plugin cache or
+  # stray clone with a pnpm-lock.yaml must not be provisioned or mutated)
+  if [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ]; then
     FIRST_REPO="$repo"
     break
   fi
@@ -85,7 +86,7 @@ gitleaks version
 
 # ---------- per-repo setup ----------
 for repo in $REPOS; do
-  if [ ! -f "$repo/pnpm-lock.yaml" ]; then
+  if [ ! -f "$repo/pnpm-lock.yaml" ] || [ ! -f "$repo/.agent/directives/AGENT.md" ]; then
     continue
   fi
   cd "$repo"
