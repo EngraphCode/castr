@@ -543,6 +543,68 @@ describe('semantic-outcome-runner: mutation-safety and diagnostic-formatting rob
     expect(proof.artifacts.targetOracleValue.value).toBe('ALPHA_WRONG');
   });
 
+  it('never invokes a getter defined at an array index when building a failure diagnostic', () => {
+    interface ArrayOracle {
+      readonly label: string;
+      readonly tags: readonly unknown[];
+    }
+
+    let getterInvoked = false;
+
+    // A genuinely new gap, not a re-instance of the object-property one
+    // above: the array branch of the diagnostic formatter read elements
+    // via `filter`/`map`, ordinary property access that invokes an
+    // accessor defined at a numeric index — bypassing the
+    // descriptor-based, getter-free handling already used for object
+    // properties. A getter at an array index therefore still ran (and
+    // could still mutate) while a failure diagnostic was built, even
+    // though the same artifact's own top-level properties were already
+    // safe.
+    const makeOracle = (label: string): ArrayOracle => {
+      const tags: unknown[] = ['first', 'second', 'third'];
+      Object.defineProperty(tags, 1, {
+        enumerable: true,
+        configurable: true,
+        get(): never {
+          getterInvoked = true;
+          throw new Error('array-index getter fails');
+        },
+      });
+      return { label, tags };
+    };
+
+    const arrayGetterCase: SemanticCase<string, string, string, ArrayOracle> = {
+      name: 'array-getter-diagnostic',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => source,
+      write: (ir) => ir,
+      reparse: (output) => output,
+      equalIR: (a, b) => a === b,
+      sourceOracle: (source) => makeOracle(source.toUpperCase()),
+      targetOracle: (output) => makeOracle(`${output.toUpperCase()}_WRONG`),
+      equalOracle: (a, b) => a.label === b.label,
+      // structuredClone would read every element to clone the array,
+      // invoking the poisoned getter itself — orthogonal to this test's
+      // actual point, so reconstruct a fresh oracle instead.
+      cloneOracle: (oracle) => makeOracle(oracle.label),
+    };
+
+    const proof = runSemanticOutcome(arrayGetterCase);
+    expect(proof.outcome.oraclesAgree).toBe(false);
+
+    let caught: unknown;
+    try {
+      expectSemanticOutcome(proof);
+    } catch (error) {
+      caught = error;
+    }
+    assert(caught instanceof Error, 'expected expectSemanticOutcome to throw an Error');
+    expect(caught.message).toMatch(/target oracle .*must agree/);
+    expect(caught.message).toContain('"tags":["first","<getter>","third"]');
+    expect(getterInvoked).toBe(false);
+  });
+
   it('does not corrupt a retained artifact whose toJSON has a mutating side effect when building a failure diagnostic', () => {
     interface MutatingOracle {
       value: string;

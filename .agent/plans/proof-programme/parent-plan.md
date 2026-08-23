@@ -271,18 +271,19 @@ callbacks, a pair of branded class-instance IR cases (one proving the default `s
 throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
 case, a poisoned-diagnostics case (an artifact whose `JSON.stringify` and `String()` coercion
 both throw), and an empty-registry hard-fail, all red-first (module-not-found, or the documented
-throw for the branded-IR/poisoned-diagnostics cases) then green, 18/18 passing.
+throw for the branded-IR/poisoned-diagnostics cases) then green, 19/19 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, fifteen rounds of automated PR review (Codex, Copilot) progressively closed
+opened. Once open, sixteen rounds of automated PR review (Codex, Copilot) progressively closed
 the full mutation-safety surface (rounds one through nine), then two test-authoring-rule findings
-and a diagnostic-formatting mutation gap that itself took four rounds to close fully (rounds ten
-through fifteen), the last of which replaced the mutation-prone fallback chain with a single
-provably-safe formatter: each round's fix protected the callbacks it was shown to be
+and a diagnostic-formatting mutation gap that took five rounds to close fully (rounds ten
+through sixteen), the last two of which replaced the mutation-prone fallback chain with a single
+descriptor-based formatter and extended its discipline to array indices: each round's fix
+protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
@@ -480,7 +481,24 @@ contains the `'<getter>'` placeholder and never the poisoned members' thrown tex
 reproduces the fifteenth round's exact combination (mutating `toJSON` plus a throwing getter on
 one artifact) and asserts `proof.artifacts` stays byte-for-byte pristine after the diagnostic is
 built; confirmed via `git stash` isolation that both the rewritten and the new test fail against
-the pre-fix code and pass against the fix.
+the pre-fix code and pass against the fix. A sixteenth round found that the fifteenth round's new
+walker had one branch the property-descriptor discipline never reached: array elements were still
+read via `.filter()`/`.map()`, ordinary property access that invokes an accessor defined at a
+numeric index, the same class of gap the walker had just closed for object properties — a getter
+at an array index could still run (and still mutate) while a failure diagnostic was built.
+Confirmed empirically before fixing (a probe script with a throwing getter at index 1 of a
+three-element array showed the getter invoked, and the outer catch masking the resulting throw
+only after the mutation attempt had already run). Fixed by extracting the shared
+descriptor-to-value logic (accessor → `'<getter>'` placeholder without calling `get`;
+function-valued → omitted; otherwise recurse into `.value`) into one
+`resolveSafeDiagnosticMember` helper, and routing both branches through it: the array branch now
+reads each index via `Object.getOwnPropertyDescriptor(value, index)`, exactly as the object branch
+already read each key, so no property — object key or array index — is ever read through ordinary
+access that could trigger an accessor. A new test reproduces the array-index case (a throwing
+getter at index 1, reached from an oracle's `tags` array) and asserts the getter is never invoked
+and the diagnostic still formats successfully (a `'<getter>'` placeholder at that index, not a
+crash or fallback placeholder); confirmed via `git stash` isolation that it fails against the
+pre-fix code and passes against the fix.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

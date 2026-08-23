@@ -60,26 +60,56 @@
  */
 
 /**
+ * Resolve one own property's descriptor to zero or one safe diagnostic
+ * values: an accessor property (`get`/`set`) becomes the placeholder
+ * string `'<getter>'` without ever calling `.get`; a function-valued data
+ * property is omitted (an empty array signals "no entry"), matching how
+ * `JSON.stringify` would have dropped it anyway; a missing descriptor (an
+ * array hole) becomes `undefined`, which `JSON.stringify` already renders
+ * as `null` for an array element and skips entirely for an object key —
+ * either way, never a call into the artifact. Otherwise the property's
+ * `.value` is read directly (a plain property read, never a function
+ * call) and recursed into. Shared by both branches of
+ * {@link toSafeDiagnosticValue} so array elements get exactly the same
+ * getter-free treatment as object properties, not a separate, narrower
+ * path.
+ */
+function resolveSafeDiagnosticMember(
+  descriptor: PropertyDescriptor | undefined,
+  seen: WeakSet<object>,
+): unknown[] {
+  if (descriptor === undefined) {
+    return [undefined];
+  }
+  if (descriptor.get !== undefined || descriptor.set !== undefined) {
+    return ['<getter>'];
+  }
+  if (typeof descriptor.value === 'function') {
+    return [];
+  }
+  return [toSafeDiagnosticValue(descriptor.value, seen)];
+}
+
+/**
  * Deep snapshot of `value` for diagnostic formatting that never invokes any
  * user-defined function, method, getter, or hook — not `toJSON`, not
  * `toString`, not `Symbol.toPrimitive`, not an accessor property's `get`.
- * Six rounds of review on this module (each finding a narrower residual
+ * Seven rounds of review on this module (each finding a narrower residual
  * gap in the previous round's fix) converged on the same lesson: any
  * formatter that calls into caller-supplied code, even only on a fallback
- * path, is one more pathological artifact away from either crashing or
- * corrupting the very artifact it was asked to describe. This walker reads
- * every own property strictly through `Object.getOwnPropertyDescriptor`:
- * a data property's `.value` is read directly (a plain property read,
- * never a function call) and recursed into; an accessor property (one
- * with a `get`/`set`) is represented as the placeholder string `'<getter>'`
- * without ever calling `.get`; a function-valued data property is omitted
- * entirely, matching how `JSON.stringify` would have dropped it anyway.
- * There is no code path here that runs anything the artifact itself
- * defines, so nothing it defines — mutating or throwing — can run during
- * diagnostic formatting. A value already seen higher in the same recursion
- * (a circular reference) is replaced with a placeholder rather than
- * returned as the original live reference, so a cycle can never
- * reintroduce an unsanitised alias back into the snapshot.
+ * path or a single branch, is one more pathological artifact away from
+ * either crashing or corrupting the very artifact it was asked to
+ * describe. This walker reads every own property — object property or
+ * array index alike — strictly through `Object.getOwnPropertyDescriptor`
+ * via {@link resolveSafeDiagnosticMember}; there is no code path here
+ * (for an object OR an array) that reads a property through ordinary
+ * property access (which would invoke an accessor's `get`), so nothing
+ * the artifact defines — mutating or throwing — can run during diagnostic
+ * formatting, for a getter at an object key or at an array index alike. A
+ * value already seen higher in the same recursion (a circular reference)
+ * is replaced with a placeholder rather than returned as the original
+ * live reference, so a cycle can never reintroduce an unsanitised alias
+ * back into the snapshot.
  */
 function toSafeDiagnosticValue(value: unknown, seen = new WeakSet<object>()): unknown {
   if (typeof value === 'function') {
@@ -93,23 +123,14 @@ function toSafeDiagnosticValue(value: unknown, seen = new WeakSet<object>()): un
   }
   seen.add(value);
   if (Array.isArray(value)) {
-    return value
-      .filter((item) => typeof item !== 'function')
-      .map((item) => toSafeDiagnosticValue(item, seen));
+    return Array.from({ length: value.length }, (_unused, index) =>
+      Object.getOwnPropertyDescriptor(value, index),
+    ).flatMap((descriptor) => resolveSafeDiagnosticMember(descriptor, seen));
   }
   return Object.fromEntries(
     Object.keys(value).flatMap((key) => {
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (descriptor === undefined) {
-        return [];
-      }
-      if (descriptor.get !== undefined || descriptor.set !== undefined) {
-        return [[key, '<getter>']];
-      }
-      if (typeof descriptor.value === 'function') {
-        return [];
-      }
-      return [[key, toSafeDiagnosticValue(descriptor.value, seen)]];
+      const member = resolveSafeDiagnosticMember(Object.getOwnPropertyDescriptor(value, key), seen);
+      return member.length === 0 ? [] : [[key, member[0]] as const];
     }),
   );
 }
