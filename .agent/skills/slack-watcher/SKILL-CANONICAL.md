@@ -171,8 +171,13 @@ verify after writing: run the resolver once more and compare message
 timestamps — only an intro or relief whose `ts` precedes your vacancy
 post's own `ts` landed in the race window and voids it: delete that
 void vacancy — it is your own message — as cleanup, then run the
-handover. An intro that postdates your vacancy is a fresh stand-up
-answering a genuine vacancy: leave the vacancy in place (its message
-`ts` is the successor's sweep boundary) and stand down with no further
-post. Correctness rests on the validity rule, not on the deletion or
-on timing.
+handover. A successor post that postdates your vacancy is classified
+by what it observed, not by ordering alone: a relief intro naming you
+(`relieves <your name>`) was prepared against your tenure — answer it
+per section 5 (sign-off reply naming the successor and the baseline
+`ts`, which is your vacancy post's own `ts`, and notify the owner),
+leaving the vacancy in place as history; a fresh stand-up intro with
+no relief phrase is answering the genuine vacancy — leave the vacancy
+in place (its message `ts` is the successor's sweep boundary) and
+stand down with no further post. Correctness rests on the validity
+rule, not on the deletion or on timing.
