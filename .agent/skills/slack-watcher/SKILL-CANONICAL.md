@@ -131,8 +131,15 @@ A successor posts the relief intro (step 2); on matching it, reply
 in-thread with a sign-off naming the successor and the baseline `ts` to
 watch from, notify the owner, and stop re-arming. On teardown without a
 successor — owner teardown and the five-idle default alike — delete the
-pending reminder, then re-read the latest mantle-state post immediately
-before signing off: post the vacancy sign-off only if nothing newer than
-your own intro exists. A newer mantle-state post means a successor took
-the mantle while the teardown was in flight — a vacancy posted now would
-supersede their intro and depose them, so stand down silently instead.
+pending reminder, then re-read the latest mantle-state post before
+signing off, and branch on what it is: an intro or relief newer than
+your own intro means a successor took the mantle mid-teardown — run the
+handover above (sign-off reply, baseline `ts`, owner notified) and post
+no vacancy; a vacancy, or nothing newer, means the mantle is yours to
+vacate — post the vacancy sign-off. The read and the post are separate
+Slack calls, so verify after writing: re-read once more, and if a
+successor's intro or relief landed in between (your vacancy now wrongly
+supersedes it), delete your vacancy post — it is your own message — so
+the successor's intro is the latest mantle-state post again, then run
+the handover. Narrowing the pre-post window is not an ordering
+guarantee; the post-write check and repair are what close the race.
