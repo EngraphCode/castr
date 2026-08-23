@@ -47,8 +47,11 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    proportionately resolved (fixed, or a recorded rejection/carry-forward disposition under
    clause 4); base not diverged from the tested
    head's merge base; diff within the claimed slice's scope (for a slice PR) or the
-   counter-and-continuity bookkeeping scope (for a bookkeeping PR). Any other state queues
-   for the owner. This generalises the owner's PR-30 instruction (2026-08-22) into standing
+   counter-and-continuity bookkeeping scope (for a bookkeeping PR). A state that misses
+   these conditions but is remediable — red checks, an un-merged base, an unresolved
+   conversation — is driven to them under this ADR's protocol, never queued; only a state
+   the loop cannot remedy within its authority queues for the owner, via clause 5. This
+   generalises the owner's PR-30 instruction (2026-08-22) into standing
    policy; the QD-3 ruling (in-conversation, 2026-08-22) confirmed its basis: the owner
    does not approve merges but sets the conditions that make a merge safe — "once a PR is
    green and clean it can be merged" — and a routine merge requiring owner intervention is

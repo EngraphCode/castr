@@ -48,9 +48,10 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
 5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
    open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
-   amendment: green and clean — every check green, every conversation properly and
-   proportionately resolved, fixed or rejected — merges unattended, always) and do nothing
-   else. A bookkeeping PR is WIP for
+   amendment and whose full four-condition bar governs: every check green on the current
+   head, every conversation properly and proportionately resolved — fixed or rejected,
+   base not diverged from the tested head's merge base, diff within the PR kind's scope)
+   and do nothing else. A bookkeeping PR is WIP for
    drive purposes even though merging it never counts as substantive progress — an unmerged
    counter update left behind would let later firings read a stale streak and keep the
    three-idle kill switch from ever firing. Driving a bookkeeping PR is itself
