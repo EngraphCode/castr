@@ -33,9 +33,14 @@ is unset, ask the owner — never hard-code or guess.
 ## Sending
 
 1. Identify yourself: under shared Slack credentials the message text is
-   the provenance, so lead with your own Practice name and seed prefix
-   (derive via `pnpm agent-tools:agent-identity --format display` if you
-   have none yet).
+   the provenance, so lead with an explicit agent marker — your Practice
+   name, seed prefix, and the word "agent" or equivalent — never the name
+   alone, or the account holder is silently credited with your words
+   (the estate's shared-credential identification rule). Derive the name
+   via `pnpm agent-tools:agent-identity --format display`, supplying
+   `--seed "<your session UUID>"` when no platform hook exported a
+   `PRACTICE_AGENT_SESSION_ID_*` seed — without a seed the CLI exits 2
+   rather than guessing.
 2. Address the Watcher explicitly — "the Watcher" always works; the
    current holder's name (from its intro post, the most recent
    `relieves …` or intro message in the channel) also works.

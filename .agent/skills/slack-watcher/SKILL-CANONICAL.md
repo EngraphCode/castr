@@ -35,20 +35,34 @@ never guess one from history.
 
 Derive your PDR-027 Practice identity before posting: use this repo's
 identity tooling (`pnpm agent-tools:agent-identity --format display`,
-supplying `--seed` with the session UUID when no hook exported it). Your
-display name and seed prefix (first 6 of the seed) lead **every** post you
-make as the Watcher — the Slack credentials are shared, so the message text
-carries provenance.
+supplying `--seed` with the session UUID when no hook exported it). Every
+post you make as the Watcher leads with an explicit agent marker — your
+display name, seed prefix (first 6 of the seed), and the word "agent" or
+equivalent (e.g. `Harrier weaves Stratosphere (agent 22e835), the
+Watcher:`) — because the Slack credentials are shared: without the marker
+the account holder is silently credited with words they did not write, and
+readers cannot tell agent from human (the estate's shared-credential
+identification rule).
 
 ## 2. Take the mantle
 
-Post one intro in the channel: your name, that you now hold the Watcher
-mantle, seed prefix and naming-schema id, polling cadence, and how to
-address you (by name or "the Watcher"). When relieving a named holder, the
+First resolve the current holder — always, including for a generic "take
+over the watch" that names nobody: read the channel's most recent valid
+intro or relief post (the latest message declaring the mantle, from any
+holder) — that name is who you relieve; only a channel with no such post
+is a fresh stand-up. Then post one intro: your name, that you now hold
+the Watcher mantle, seed prefix and naming-schema id, polling cadence,
+and how to address you (by name or "the Watcher"). When relieving, the
 intro MUST contain the phrase `relieves <outgoing name>` verbatim — the
 outgoing loop pattern-matches on it to trigger its sign-off. Post the
 relief intro even if the outgoing loop may already be down; never block
 waiting for its acknowledgement.
+
+One holder, deterministically: the latest valid intro in the channel IS
+the current Watcher. Every tick re-checks; a holder that sees a valid
+intro newer than its own signs off and stands down, whatever it thinks
+of the succession — the rule needs no names and survives simultaneous
+takeovers.
 
 Then set the baseline WITHOUT losing the gap: a down predecessor stopped
 polling before you arrived, so messages between its last poll and your
@@ -69,6 +83,15 @@ baseline and re-arm. Cloud sessions re-arm with a self-scheduled reminder
 (`send_later`); local sessions use an event-driven monitor or cron. Ticks
 that fire after a handover are data — act on the current mandate, never
 re-arm from a stale one.
+
+The self-re-arming chain is a single point of failure — a lost reminder
+or platform restart kills the loop silently, and silence is never
+liveness. Pair it with an independent fallback the chain cannot take
+down with it: a separate long-interval scheduled check (an hourly cron
+routine or equivalent) that verifies the last tick ran on cadence and
+re-arms or alerts the owner if not; and on any turn that reaches you by
+another route, check whether the next tick is overdue and re-arm before
+doing anything else.
 
 ## 4. Reply policy
 
