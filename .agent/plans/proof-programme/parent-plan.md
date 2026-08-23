@@ -336,6 +336,13 @@ product code; no new doctrine beyond the charter's entailments. Acceptance (`non
 every named surface expresses the charter with its disposition recorded; no surface still
 asserts the universal-IR framing; gates green (including `validate-reference-direction`).
 Source: ballot B-09; report §7. Gate: B-09 (success verdict — recorded 2026-08-22).
+Decided inputs (owner interactive walk, 2026-08-23, recorded in
+`.agent/memory/operational/open-questions.md` Q-012/Q-014/Q-015): the second product's
+name is **"the Practice"** (VISION/IDENTITY describe both products by name);
+**preservation-coverage %** is the compiler's headline public metric (the vision rewrite
+states it as the computed claim); the `Object.*`/`Reflect.*` doctrine stands as written
+and is lint-enforced via a remediation lane entering at the Q-12 split — the doctrine
+wave must not soften that clause to match current code.
 
 **Q-15 — Fresh-container full-chain readiness.** Surface: the entire blocking gate chain
 (SessionStart hooks, PreToolUse guards, pre-commit, pre-push) run unattended in a genuinely
