@@ -138,18 +138,19 @@ A successor posts the relief intro (step 2); on matching it, reply
 in-thread with a sign-off naming the successor and the baseline `ts` to
 watch from, notify the owner, and stop re-arming. On teardown without a
 successor — owner teardown and the five-idle default alike — delete the
-pending reminder, then re-read the latest mantle-state post before
-signing off, and branch on what it is: an intro or relief newer than
-your own intro means a successor took the mantle mid-teardown — run the
-handover above (sign-off reply, baseline `ts`, owner notified) and post
-no vacancy; a vacancy, or nothing newer, means the mantle is yours to
-vacate — post the vacancy sign-off. The read and the post are separate
+pending reminder, then resolve the latest valid mantle-state post
+(step 2's resolver — void posts skipped) before signing off, and branch
+on what it is: a valid intro or relief newer than your own intro means
+a successor took the mantle mid-teardown — run the handover above
+(sign-off reply, baseline `ts`, owner notified) and post no vacancy; a
+valid vacancy, or nothing newer, means the mantle is yours to vacate —
+post the vacancy sign-off. The resolve and the post are separate
 Slack calls, so a successor's intro can land in between — but a vacancy
 posted over it is void by step 2's validity rule (the latest valid
 mantle-state post before it is the successor's intro, not one naming
 you), so
 no reader — the successor's own ticks included — ever acts on it. Still
-verify after writing: re-read once more, and if a successor's intro or
-relief landed in between, delete your void vacancy post — it is your
-own message — as cleanup, then run the handover. Correctness rests on
-the validity rule, not on the deletion or on timing.
+verify after writing: run the resolver once more, and if a successor's
+intro or relief landed in between, delete your void vacancy post — it
+is your own message — as cleanup, then run the handover. Correctness
+rests on the validity rule, not on the deletion or on timing.
