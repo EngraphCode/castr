@@ -13,7 +13,7 @@
 #   comes from its engines declaration and pnpm comes from its packageManager
 #   pin via Corepack — this script names no version either repo declares.
 # - Every Practice repo present in the session is discovered (never assumed)
-#   and set up via `pnpm install` plus the repo's own committed hook at
+#   and set up via `pnpm install`, `pnpm build`, and the repo's committed hook at
 #   .agent/setup/cloud-session-setup.sh.
 # - One Practice repo per session (owner ruling 2026-08-23); the discovery
 #   loop tolerates more.
@@ -100,6 +100,13 @@ for repo in $REPOS; do
   # pre-cache the repo's pinned pnpm so no later shell hits a download
   corepack install
   pnpm install
+
+  # the fresh-checkout contract is install AND build: repo tooling (eslint
+  # workspace plugin, validators, hook guards) resolves from untracked
+  # dist/ outputs, so an unbuilt checkout is a half-usable session. The
+  # environment cache means this cost is paid on cache rebuilds, not on
+  # every session start.
+  pnpm build
 
   # common-ability extension point: a Practice repo needing more than
   # install commits its own hook. Absence is the only benign skip — a hook
