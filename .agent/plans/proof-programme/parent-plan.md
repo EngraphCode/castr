@@ -255,32 +255,44 @@ extracting PR #11's outcome-record and non-vacuity concepts per the report's #11
 product profile or artifact kind. Non-vacuity is structural, not opt-in: every case declares a
 `separatingSource`, and the runner recomputes discrimination against it on all three legs
 (`equalIR`, and `equalOracle` on both the source and target oracles) rather than trusting a
-self-reported flag. `parse`/`write` receive only `structuredClone`d arguments, never a value
-this function still needs pristine or the case's own held fields, so a mutating case cannot
-taint a comparison or corrupt the case object across repeated runs. Proof:
+self-reported flag. Every case-supplied callback receives its own independent `structuredClone`,
+taken directly from the value the runner still trusts as ground truth, immediately before that
+one call — a mutating case cannot corrupt the case object across repeated runs, taint a
+comparison the runner still needs to make, or leak into a different callback's supposedly
+independent view of "the same" value. Proof:
 `lib/tests-transforms/__tests__/semantic-outcome-runner.integration.test.ts` is the mutant-bite
 ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wrong-writer,
 bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
-vacuous-witness), a mutation-safety/repeatability regression case, and an empty-registry
-hard-fail, all red-first (module-not-found) then green, 11/11 passing.
+vacuous-witness), a mutation-safety/repeatability regression case exercising all six callbacks,
+and an empty-registry hard-fail, all red-first (module-not-found) then green, 11/11 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
-non-vacuity hole a constant `targetOracle` could pass through undetected, and
-`expectSemanticOutcome` gating on vitest's own structural equality instead of each case's
-injected comparators) plus one test-isolation issue — all fixed before the PR opened. Once open,
-automated PR review (Codex, Copilot) found and this landing fixed: a mutation-safety gap on the
-`write`/`parse` legs (oracle-ordering closed the source/output leg pre-PR; `structuredClone`
-closed the IR/repeatability leg the PR round found), a missing vacuous-witness mutant (case data
-that fails to separate under otherwise-correct comparators — distinct from a vacuous comparator),
-branching/input-interpolating logic in the shared test fixture (`test-immediate-fails.md` item
-12 — fakes must be straight mappings; detection belongs in the runner), a `JSON.stringify` crash
-risk on circular/`bigint` oracle values in diagnostic messages, and missing mandatory
-`@example`/`@see` TSDoc on the public API. One Copilot finding (an async runner variant matching
-the report's fuller Tranche-01 §5.3 contract) is deliberately deferred to Q-11, which explicitly
-consumes this Q-02 extraction — building it now risks the second-runner fork this brief forbids
-before a real async consumer exists to derive the actual signature from.
+non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
+of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
+opened. Once open, three rounds of automated PR review (Codex, Copilot) progressively closed the
+full mutation-safety surface — each round's fix left one narrower leak the next round found by
+tracing the code by hand, until every callback (`sourceOracle`, `parse`, `write`, `targetOracle`,
+`reparse`) was confirmed to receive its own independent clone and never touch a value another
+call or a later run still needed pristine — plus: a missing vacuous-witness mutant (case data
+that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
+a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
+own IR, producing a distinct failure signature from the wrong-writer mutant instead of
+duplicating it), branching/input-interpolating logic in error-message construction inside the
+shared test fixture (`test-immediate-fails.md` item 12 — detection belongs in the runner, not the
+fake), a `JSON.stringify` crash risk on circular/`bigint` oracle values in diagnostic messages,
+and missing mandatory `@example`/`@see` TSDoc on the public API. Two findings were verified and
+declined rather than actioned, each with reasoning posted on its thread rather than a silent
+skip: an async runner variant matching the report's fuller Tranche-01 §5.3 contract is deferred
+to Q-11, which explicitly consumes this Q-02 extraction — building it now risks the
+second-runner fork this brief forbids before a real async consumer exists to derive the actual
+signature from; and a claim that the fixture's core marker-prefixing `write` mapping itself violates the
+no-fake-logic rule is held to be a misapplication of a rule aimed at opaque dependency mocks
+(canonical examples: logger, HTTP client) to a fixture that IS the minimal data flow the
+runner's proof depends on — the repo's own `test-reviewer` reviewed this exact line across all
+three rounds and flagged only the (now-fixed) error-message interpolation, never the
+transformation itself.
 
 Full `pnpm check:ci` green (gitleaks, build, format, type-check, lint, madge, depcruise, knip,
 markdownlint, portability, packaging, skills, agents, repo-validators, `test:all`) — run on

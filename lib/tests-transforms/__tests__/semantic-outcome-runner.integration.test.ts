@@ -110,23 +110,23 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).toThrow();
   });
 
-  it('catches a bypassed-writer mutant (echoes the source straight through as output, unmarked)', () => {
+  it('catches a bypassed-writer mutant (echoes its own IR straight through as output, unmarked)', () => {
     const base = correctCase('bypassed-writer', 'alpha', 'beta');
-    // Skips the real writer transformation entirely — feeds the source
-    // straight through, unmarked, as if it were written output. The runner
-    // (not a fake validating a marker) catches this: `reparse`/`targetOracle`
-    // strip the first two characters unconditionally, so the unmarked value
-    // decodes to garbled data. Being input-independent this way, the mutant
-    // also collapses the separating pair's outputs to the same value, so
-    // nonVacuous fires alongside the other two — a legitimate catch, not a
-    // coincidence.
-    const mutant: typeof base = { ...base, write: () => 'alpha' };
+    // Skips the real writer transformation entirely — feeds the IR's own
+    // value straight through, unmarked, as if it were written output.
+    // Genuinely input-dependent (unlike a constant like the wrong-writer
+    // mutant below), so it produces a DIFFERENT failure signature: the
+    // separating pair's outputs stay distinguishable, so nonVacuous stays
+    // true — only roundTripEqual/oraclesAgree catch it, via the runner's
+    // own unconditional `reparse`/`targetOracle` slicing decoding the
+    // unmarked value into garbled data.
+    const mutant: typeof base = { ...base, write: (ir) => ir.value };
 
     const proof = runSemanticOutcome(mutant);
 
     expect(proof.outcome.roundTripEqual).toBe(false);
     expect(proof.outcome.oraclesAgree).toBe(false);
-    expect(proof.outcome.nonVacuous).toBe(false);
+    expect(proof.outcome.nonVacuous).toBe(true);
     expect(() => expectSemanticOutcome(proof)).toThrow();
   });
 
@@ -191,7 +191,7 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => runAllSemanticOutcomes([])).toThrow(/no cases registered/i);
   });
 
-  it('computes oracles and the round-trip baseline from pristine values, and stays repeatable, even when parse/write/reparse mutate their arguments in place', () => {
+  it('computes every result from pristine values, and stays repeatable, even when every callback mutates its argument in place', () => {
     interface MutableSource {
       value: string;
     }
@@ -202,54 +202,59 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       value: string;
     }
 
+    // Every one of the six callbacks mutates its own argument in place after
+    // reading it — the bug this proves absent, for each: an oracle or a
+    // downstream callback observing the mutation instead of the real value,
+    // a comparison this function still needs to make afterward seeing
+    // damaged data, or a second run of the same case seeing corrupted
+    // case-owned fields.
     const mutatingCase: SemanticCase<MutableSource, MutableIR, MutableOutput, string> = {
       name: 'mutation-safety',
       source: { value: 'alpha' },
       separatingSource: { value: 'beta' },
-      // Simulates a lossy parser that ALSO mutates its argument in place —
-      // the bug this proves absent: if an oracle ran after this, or a
-      // second run reused the case's own `source`, it would see 'MUTATED'
-      // instead of the real source value.
+      sourceOracle: (s) => {
+        const upper = s.value.toUpperCase();
+        s.value = 'MUTATED';
+        return upper;
+      },
       parse: (s) => {
         const original = s.value;
         s.value = 'MUTATED';
         return { value: original };
       },
-      // Simulates a lossy writer that mutates its IR argument after
-      // reading it — the round-trip baseline (`roundTripEqual`) must
-      // compare the pristine IR captured before this call, not this one,
-      // or two equally-damaged values would compare equal and hide the loss.
       write: (ir) => {
         const written = { value: `W:${ir.value}` };
         ir.value = 'MUTATED';
         return written;
       },
-      // Simulates a reparse that mutates its argument in place after
-      // reading it — an oracle running after this would see 'MUTATED'
-      // instead of the real written output.
+      targetOracle: (o) => {
+        const upper = o.value.slice(2).toUpperCase();
+        o.value = 'MUTATED';
+        return upper;
+      },
       reparse: (o) => {
         const result = { value: o.value.slice(2) };
         o.value = 'MUTATED';
         return result;
       },
       equalIR: (a, b) => a.value === b.value,
-      sourceOracle: (s) => s.value.toUpperCase(),
-      targetOracle: (o) => o.value.slice(2).toUpperCase(),
       equalOracle: (a, b) => a === b,
     };
 
     const proof = runSemanticOutcome(mutatingCase);
 
-    // These only read 'ALPHA' if the oracles/baseline ran before the
-    // mutation happened; against the pre-fix code they would read 'MUTATED'.
+    // These only read the real values if every callback ran on its own
+    // independent clone; against the pre-fix code at least one of these
+    // would read 'MUTATED' instead.
     expect(proof.artifacts.sourceOracleValue).toBe('ALPHA');
     expect(proof.artifacts.targetOracleValue).toBe('ALPHA');
     expect(proof.artifacts.ir).toEqual({ value: 'alpha' });
+    expect(proof.artifacts.output).toEqual({ value: 'W:alpha' });
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
 
-    // The case's own held fields must be untouched — parse/write only ever
-    // receive clones — so a second run of the SAME case object reproduces
-    // the identical outcome, not a run-count-dependent one.
+    // The case's own held fields must be untouched — every callback only
+    // ever receives a clone — so a second run of the SAME case object
+    // reproduces the identical outcome, not a run-count-dependent one.
     expect(mutatingCase.source).toEqual({ value: 'alpha' });
     expect(mutatingCase.separatingSource).toEqual({ value: 'beta' });
     expect(runSemanticOutcome(mutatingCase).outcome).toEqual(proof.outcome);
