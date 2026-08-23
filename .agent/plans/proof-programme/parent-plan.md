@@ -269,16 +269,16 @@ ritual — a happy-path positive control plus 7 seeded mutants (wrong-parser, wr
 bypassed-writer/echo, absent-artifact, vacuous-IR-equality, vacuous-oracle-equality,
 vacuous-witness), a mutation-safety/repeatability regression case exercising all seven
 callbacks, a pair of branded class-instance IR cases (one proving the default `structuredClone`
-throws, one proving a case-supplied `cloneIR` fixes it), and an empty-registry hard-fail, all
-red-first (module-not-found, or the documented throw for the branded-IR case) then green,
-13/13 passing.
+throws, one proving a case-supplied `cloneIR` fixes it), a shared-parse/reparse retained-object
+case, and an empty-registry hard-fail, all red-first (module-not-found, or the documented throw
+for the branded-IR case) then green, 14/14 passing.
 
 Two pre-execution reviews (`architecture-expert-fred`, `test-reviewer`) shaped the design before
 any code was written. Three post-execution gateway reviews (`code-reviewer`, `test-reviewer`,
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, seven rounds of automated PR review (Codex, Copilot) progressively closed the
+opened. Once open, eight rounds of automated PR review (Codex, Copilot) progressively closed the
 full mutation-safety surface: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
@@ -314,11 +314,23 @@ changed from returning a fresh object per call (which could never exhibit this a
 mutating and returning one retained shared object across both calls — the minimal shape able to
 prove the defect — and confirmed via `git stash` isolation that the existing
 `sourceOracleValue`/`targetOracleValue` artifact assertions fail against the pre-fix code and
-pass against the fix. Across all seven rounds, all seven callbacks were confirmed to receive an
-independent clone at every call, with no narrower leak left to find on the mutation-safety
-surface, and the clone mechanism itself is now confirmed to work for branded, non-plain-data
-artifact types — the kind Q-02's own "artifact-agnostic rework of PR #11's mechanics" brief
-exists to support. Also fixed along the way: a missing vacuous-witness mutant (case data
+pass against the fix. The eighth round found the last instance of the same pattern: `reparsedIR`
+was the one remaining value not snapshotted immediately on return — `reparse` is called once,
+but a real parser/reparser pair may share one memoising implementation (`reparse` inverts
+`parse`), so the SEPARATING channel's later `parse` call could overwrite the object `reparsedIR`
+still pointed to before `roundTripEqual`/`artifacts.reparsedIR` ever read it — confirmed
+empirically with a probe script before fixing. `reparsedIR` is now snapshotted with `cloneIR`
+immediately on return, and a new dedicated test (`parse`/`reparse` sharing one retained,
+mutated-in-place object — the minimal shape able to prove the defect, since two calls returning
+fresh objects never alias) confirmed via `git stash` isolation to fail against the pre-fix code
+and pass against the fix. Across all eight rounds, all seven callbacks were confirmed to receive
+an independent clone at every call, with every one of their return values now snapshotted
+immediately on return wherever a later call to that same callback (or a callback sharing its
+underlying implementation) could otherwise overwrite it — no narrower leak left to find on the
+mutation-safety surface, and the clone mechanism itself is now confirmed to work for branded,
+non-plain-data artifact types — the kind Q-02's own "artifact-agnostic rework of PR #11's
+mechanics" brief exists to support. Also fixed along the way: a missing vacuous-witness mutant
+(case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of

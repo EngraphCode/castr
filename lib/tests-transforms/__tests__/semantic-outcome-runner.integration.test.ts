@@ -369,6 +369,49 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
   });
 
+  it('prevents the separating parse call from corrupting reparsedIR when parse and reparse share one retained object', () => {
+    interface SharedIR {
+      value: string;
+    }
+
+    // Models parse/reparse funnelling through one shared, memoising
+    // internal routine that retains and mutates a single IR object rather
+    // than allocating a fresh one per call — realistic since `reparse`
+    // inverts `parse`, and a real implementation may share the same
+    // underlying parser state for both. This is the minimal shape able to
+    // prove the defect: two calls returning distinct fresh objects could
+    // never alias-corrupt each other.
+    const retained: SharedIR = { value: '' };
+    const sharedParseLike = (text: string): SharedIR => {
+      retained.value = text;
+      return retained;
+    };
+
+    const sharedCase: SemanticCase<string, SharedIR, string, string> = {
+      name: 'shared-parse-reparse',
+      source: 'alpha',
+      separatingSource: 'beta',
+      parse: (source) => sharedParseLike(source),
+      write: (ir) => `W:${ir.value}`,
+      reparse: (output) => sharedParseLike(output.slice(2)),
+      equalIR: (a, b) => a.value === b.value,
+      sourceOracle: (source) => source,
+      targetOracle: (output) => output.slice(2),
+      equalOracle: (a, b) => a === b,
+    };
+
+    const proof = runSemanticOutcome(sharedCase);
+
+    // Without an immediate snapshot, the separating channel's `parse` call
+    // (which also funnels through `sharedParseLike`) would overwrite the
+    // retained object AFTER `reparse` already returned it but BEFORE
+    // `roundTripEqual`/`artifacts.reparsedIR` read it — a false-negative
+    // round-trip failure for a genuinely correct pipeline.
+    expect(proof.artifacts.reparsedIR).toEqual({ value: 'alpha' });
+    expect(proof.outcome.roundTripEqual).toBe(true);
+    expect(() => expectSemanticOutcome(proof)).not.toThrow();
+  });
+
   it('runs every registered case and returns proofs in registration order', () => {
     const proofs = runAllSemanticOutcomes([
       correctCase('first', 'alpha', 'beta'),

@@ -293,7 +293,13 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
   const output = semanticCase.write(cloneIR(ir));
   const pristineOutput = cloneOutput(output);
   const targetOracleValue = cloneOracle(semanticCase.targetOracle(cloneOutput(output)));
-  const reparsedIR = semanticCase.reparse(cloneOutput(output));
+  // Snapshotted immediately, before the separating channel's `parse` call
+  // below: a parser/reparser sharing one memoising implementation (a
+  // realistic pattern, since `reparse` inverts `parse`) could return the
+  // same retained object for both, and that separating `parse` call would
+  // otherwise silently overwrite what `reparsedIR` still points to before
+  // `roundTripEqual` and `artifacts.reparsedIR` ever read it.
+  const reparsedIR = cloneIR(semanticCase.reparse(cloneOutput(output)));
 
   const separatingIR = semanticCase.parse(cloneSource(semanticCase.separatingSource));
   const pristineSeparatingIR = cloneIR(separatingIR);
