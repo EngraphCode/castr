@@ -256,6 +256,11 @@ brief. Routine mechanism proven end to end across four firings:
   monitors and reacts to PR state (CI, review threads) itself, per the
   `engraph-pr-lifecycle` skill and ADR-051 clause 4 — and one candidate source of
   second-writer pushes on a routine-opened PR is gone.
+- Owner direction (2026-08-23, same conversation): git/GitHub attribution for these
+  routines on the EngraphCode fork uses the **default credentials** — the separate
+  `jimbot` identity is an Oak-specific convention and is not brought here. Agents still
+  self-identify inside comment bodies and commit trailers per the standing PR rules
+  (PDR-027 identity in replies; the Claude Code attribution footer).
 
 **Q-02 — Pre-T01 harness extraction.** Surface: artifact-agnostic runner mechanics extracted
 from PR #11 (outcome records, non-vacuity checks, mutant-bite ritual) into the existing
