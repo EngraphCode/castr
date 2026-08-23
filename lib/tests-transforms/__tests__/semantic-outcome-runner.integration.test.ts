@@ -205,12 +205,23 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       value: string;
     }
 
+    // `parse` retains its own alias to every IR it returns — modelling a
+    // memoising parser's internal cache — captured via closure rather than
+    // a stateful cache structure, which would itself be non-trivial fake
+    // logic. The alias must stay pristine after the run: `write` receiving
+    // the raw `ir` reference instead of a clone would let it mutate this
+    // retained alias too, so a later run of the same case (in a real
+    // memoising parser, returning the same cached object again) would
+    // observe already-mutated data.
+    const retainedIRs: MutableIR[] = [];
+
     // Every one of the seven callbacks mutates its own arguments in place
     // after reading them — the bug this proves absent, for each: an oracle
     // or a downstream callback observing the mutation instead of the real
     // value, a comparison this function still needs to make afterward
     // seeing damaged data, a second run of the same case seeing corrupted
-    // case-owned fields, or — for equalIR/equalOracle specifically — a
+    // case-owned fields, a memoising parse's own retained alias seeing a
+    // writer's mutation, or — for equalIR/equalOracle specifically — a
     // LATER call to the same comparator seeing a value an EARLIER call
     // already mutated (both are invoked more than once, on values also
     // returned in `artifacts`).
@@ -226,7 +237,9 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
       parse: (s) => {
         const original = s.value;
         s.value = 'MUTATED';
-        return { value: original };
+        const ir = { value: original };
+        retainedIRs.push(ir);
+        return ir;
       },
       write: (ir) => {
         const written = { value: `W:${ir.value}` };
@@ -269,6 +282,11 @@ describe('semantic-outcome-runner: mutant-bite ritual', () => {
     expect(proof.artifacts.ir).toEqual({ value: 'alpha' });
     expect(proof.artifacts.output).toEqual({ value: 'W:alpha' });
     expect(() => expectSemanticOutcome(proof)).not.toThrow();
+
+    // parse's own retained aliases (modelling a memoising parser's cache)
+    // must also stay pristine — write only ever receives a clone of what
+    // parse returned, never the object parse itself is still holding onto.
+    expect(retainedIRs).toEqual([{ value: 'alpha' }, { value: 'beta' }]);
 
     // The case's own held fields must be untouched — every callback only
     // ever receives a clone — so a second run of the SAME case object

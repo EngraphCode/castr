@@ -274,16 +274,22 @@ any code was written. Three post-execution gateway reviews (`code-reviewer`, `te
 `type-reviewer`) then found two independently-confirmed critical issues (a target-oracle
 non-vacuity hole, and `expectSemanticOutcome` gating on vitest's own structural equality instead
 of each case's injected comparators) plus one test-isolation issue — all fixed before the PR
-opened. Once open, four rounds of automated PR review (Codex, Copilot) progressively closed the
+opened. Once open, five rounds of automated PR review (Codex, Copilot) progressively closed the
 full mutation-safety surface: each round's fix protected the callbacks it was shown to be
 missing, and the next round's hand-tracing found the next narrower leak — ordering
 (`sourceOracle`/`targetOracle` before `parse`/`reparse`), the round-trip baseline
 (`write` mutating `ir`) and case repeatability (`parse` mutating `source`), the two remaining
 single-call leaks (`reparse` mutating the returned `output` artifact; `sourceOracle` mutating
-`source` before `parse`'s own clone was taken), and finally the cross-call leaks
-(`equalIR`/`equalOracle`, each invoked more than once on a value also returned in `artifacts`) —
-until all seven callbacks were confirmed to receive an independent clone at every call, with no
-narrower leak left to find. Also fixed along the way: a missing vacuous-witness mutant (case data
+`source` before `parse`'s own clone was taken), the cross-call leaks (`equalIR`/`equalOracle`,
+each invoked more than once on a value also returned in `artifacts`), and finally a
+retained-alias leak: `write` was still called with `ir`/`separatingIR` themselves rather than a
+clone, so a memoising `parse` that keeps its own reference to the IR it returned could observe
+`write`'s in-place mutation on a second run of the same case. `write` now receives a
+`structuredClone` of `ir`/`separatingIR` at each call site, and the mutation-safety test grew a
+closure-captured `retainedIRs` array (modelling a memoising parser's cache without adding
+branching/stateful logic to the fake) asserting the retained references stay pristine — until,
+across all five rounds, all seven callbacks were confirmed to receive an independent clone at
+every call, with no narrower leak left to find. Also fixed along the way: a missing vacuous-witness mutant (case data
 that fails to separate under otherwise-correct comparators, distinct from a vacuous comparator),
 a bypassed-writer mutant that was accidentally input-independent (reshaped to genuinely echo its
 own IR, producing a distinct failure signature from the wrong-writer mutant instead of

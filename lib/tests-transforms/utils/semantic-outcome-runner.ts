@@ -229,14 +229,18 @@ export function runSemanticOutcome<TSource, TIR, TOutput, TOracle>(
 
   const ir = semanticCase.parse(structuredClone(semanticCase.source));
   const pristineIR = structuredClone(ir);
-  const output = semanticCase.write(ir);
+  // `write` receives a clone of `ir`, not `ir` itself: a memoising `parse`
+  // may retain its own alias to the object it returned, and a mutating
+  // `write` must not be able to corrupt that retained reference — a second
+  // run of the same case could then observe a memoised, already-mutated IR.
+  const output = semanticCase.write(structuredClone(ir));
   const pristineOutput = structuredClone(output);
   const targetOracleValue = semanticCase.targetOracle(structuredClone(output));
   const reparsedIR = semanticCase.reparse(structuredClone(output));
 
   const separatingIR = semanticCase.parse(structuredClone(semanticCase.separatingSource));
   const pristineSeparatingIR = structuredClone(separatingIR);
-  const separatingOutput = semanticCase.write(separatingIR);
+  const separatingOutput = semanticCase.write(structuredClone(separatingIR));
   const separatingTargetOracleValue = semanticCase.targetOracle(structuredClone(separatingOutput));
 
   // `pristineIR`/`sourceOracleValue`/`targetOracleValue` are each compared
