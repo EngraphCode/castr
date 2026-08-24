@@ -117,9 +117,9 @@ for repo in $REPOS; do
   if [ ! -f "$repo/pnpm-lock.yaml" ] || [ ! -f "$repo/.agent/directives/AGENT.md" ]; then
     continue
   fi
-  cd "$repo"
   name=$(basename "$repo")
   phase "repo setup: ${name}"
+  cd "$repo"
 
   # full history: validators read pinned baseline commits shallow clones lack
   if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then

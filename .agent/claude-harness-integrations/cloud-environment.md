@@ -48,7 +48,7 @@ running the script by hand inside an existing session proves nothing about
 a fresh container (different egress, different filesystem state, different
 cache). The dialog is also write-only — no API reads it back, so drift
 between this reference file and the pasted copy is undetectable from a
-session. Three consequences, each with its instrument:
+session. Four consequences, each with its instrument:
 
 1. **The script narrates itself.** Every section opens with a
    `=== PHASE: … ===` banner and an `ERR` trap prints the failing phase,
@@ -58,7 +58,7 @@ session. Three consequences, each with its instrument:
 2. **The preflight returns the complete falsification list in one paste.**
    [`cloud-environment-preflight.sh`](cloud-environment-preflight.sh) is a
    read-only probe of every external assumption the setup script makes
-   (repo discovery, hook contract, nodejs.org, registry.npmjs.org,
+   (repo discovery, hook contract, git origin remotes, nodejs.org, registry.npmjs.org,
    keyserver.ubuntu.com, ppa.launchpadcontent.net, the base image's own
    apt hosts, the gitleaks release-asset redirect chain). All probes run
    regardless of individual failures and the summary lists every failed

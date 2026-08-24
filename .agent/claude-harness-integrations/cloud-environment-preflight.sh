@@ -51,7 +51,12 @@ probe() {
 # a proxy denial surfaces as 000/403/407/502; a 200/301/404 proves the host
 # is reachable through the setup-time egress path.
 http_code() {
-  curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null || echo 000
+  # a failed curl (DNS, connect, timeout) still emits its own 000 via -w
+  # before exiting non-zero, so appending a fallback would yield "000000"
+  # and dodge the 000 case below — capture first, normalise on failure
+  local code
+  code=$(curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null) || code=000
+  echo "${code:-000}"
 }
 host_reachable() {
   local url="$1" code
@@ -131,6 +136,28 @@ probe_hook_contract() {
   return $ok
 }
 
+probe_git_origins() {
+  # the setup script runs `git fetch --unshallow origin` in shallow Practice
+  # repos — a blocked origin or unusable credentials must not hide behind a
+  # clean summary; ls-remote is the read-only equivalent contact
+  test -n "$FIRST_REPO" || {
+    echo "skipped: no Practice repo"
+    return 1
+  }
+  local repo failed=0
+  for repo in $(find /home /workspace -maxdepth 4 -type d -name .git \
+    -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||'); do
+    [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
+    if git -C "$repo" ls-remote --heads origin >/dev/null 2>&1; then
+      echo "origin reachable: ${repo} (shallow: $(git -C "$repo" rev-parse --is-shallow-repository 2>/dev/null))"
+    else
+      echo "origin UNREACHABLE (fetch --unshallow would fail): ${repo}"
+      failed=1
+    fi
+  done
+  return $failed
+}
+
 probe_node_major() {
   test -n "$FIRST_REPO" || {
     echo "skipped: no Practice repo"
@@ -203,11 +230,14 @@ probe_base_image_apt_sources() {
 }
 
 probe_gitleaks_release() {
-  # release assets redirect to objects.githubusercontent.com — the redirect
-  # target needs its own egress allowance and never appears in the script text
+  # release assets redirect to a separate assets host (measured 2026-08-24:
+  # release-assets.githubusercontent.com) — the redirect target needs its own
+  # egress allowance and never appears in the script text, so always probe
+  # the effective URL, never just the named host
   local url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
   local code final
-  code=$(curl -sSIL -o /dev/null -m 60 -w '%{http_code}' "$url" 2>/dev/null || echo 000)
+  code=$(curl -sSIL -o /dev/null -m 60 -w '%{http_code}' "$url" 2>/dev/null) || code=000
+  code=${code:-000}
   final=$(curl -sSIL -o /dev/null -m 60 -w '%{url_effective}' "$url" 2>/dev/null || echo unknown)
   echo "HTTP ${code} via redirect chain ending at: ${final}"
   [ "$code" = "200" ]
@@ -217,6 +247,7 @@ echo "=== CLOUD ENVIRONMENT PREFLIGHT (read-only) ==="
 probe "vantage point" probe_vantage
 probe "repo discovery" probe_discovery
 probe "session hook contract" probe_hook_contract
+probe "git origin remotes (unshallow contact)" probe_git_origins
 probe "node major resolution" probe_node_major
 probe "nodejs.org index + SHASUMS + tarball" probe_nodejs_org
 probe "registry.npmjs.org (corepack/pnpm)" probe_npm_registry
