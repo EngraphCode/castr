@@ -32,7 +32,7 @@ todos:
       resolves the stripped payload; CLI env resolves session_id; empty or malformed remote
       id falls back to session_id; the stripped payload round-trips into the Claude-Session
       trailer identifier so registry rows and commit trailers share one join key.
-    status: pending
+    status: done # landed 2026-08-24 (identity slice commit): resolveSeed precedence in hook/CLI/cascade, red-first, 4 cycles green
     depends_on: []
   - id: ID-2
     content: >-
@@ -44,7 +44,7 @@ todos:
       with the hook's env file sourced and a different seed exported, the resolved tuple
       (name, prefix, uuid) must be coherent — all three from the exported seed, no
       mixed-provenance tuple.
-    status: pending
+    status: done # landed 2026-08-24: Claude + Cursor hooks emit seed only; chimera regression test green; PDR-027 2026-05-05 cache doctrine superseded
     depends_on: [ID-1]
   - id: ID-3
     content: >-
@@ -54,7 +54,7 @@ todos:
       registered so historical rows remain self-describing; derived-identity results carry
       their naming-schema id wherever the OCE schema does. Localise imports and naming
       (oak → engraph) per the transplant field-report discipline.
-    status: pending
+    status: done # landed 2026-08-24: schema-registry + v2 wordlists + digest-pin tests transplanted; naming_schema_version stamped on writes; identical seed = identical name cross-estate
     depends_on: [ID-1]
   - id: ID-4
     content: >-
@@ -69,7 +69,7 @@ todos:
       remains the canonical disambiguator and the visual-disambiguator token the display
       guard (warrant: prefix collision is already doctrinally survivable; falsifier: a
       measured same-window mis-bind that the uuid checks fail to catch).
-    status: pending
+    status: done # landed 2026-08-24: PDR-027 adopted at OCE text + castr track-naming clause re-folded + dated cloud-seat amendment; agent-identity docs updated
     depends_on: [ID-1]
   - id: ID-5
     content: >-
@@ -88,7 +88,7 @@ todos:
       handles nested canonical directories (OCE's does — same generator lineage); fix every
       reference to the moved canonicals (skills, rules, directives, PDR/ADR pointers);
       regenerate the engraph-* platform adapters; adapters and canonicals stay in lockstep.
-    status: pending
+    status: done # landed 2026-08-24: cognition/ tree created; metacognition + reason moved in (OCE later versions taken); generator + checker gained recursive discovery with leaf-collision fail-loud, red-first
     depends_on: []
   - id: SK-2
     content: >-
@@ -99,7 +99,7 @@ todos:
       parallax skill's assets/evals/references/scripts payload) — localised oak → engraph,
       OCE-host-specific references adapted or dropped per the transplant relevance rules.
       Each skill lands with its adapter regenerated and its canonical links resolving.
-    status: pending
+    status: done # landed 2026-08-24: concept-exploration, cricket, free-play, proportionality, retrospective, parallax + 8 sub-skills transplanted, oak->engraph localised, 76 adapters regenerated, skills:check green
     depends_on: [SK-1]
   - id: SK-3
     content: >-
@@ -107,7 +107,7 @@ todos:
       audience-set registry) and the capability-landing-decision-procedure rule it depends
       on, localised to castr's audiences (no curriculum/teacher row; castr's audience sets
       named honestly).
-    status: pending
+    status: done # landed 2026-08-24: skills README + audience-set registry + capability-landing procedure + naming-quality + third-party-security rules transplanted with link closure (PDR-100/115/122/125/130/132/134)
     depends_on: [SK-1]
   - id: SK-4
     content: >-
@@ -116,7 +116,7 @@ todos:
       resolve — the skill points at ../../plans/templates/README.md which does not exist in
       castr (measured 2026-08-24, this plan's authoring). Localise template prose to
       castr's collections and lanes.
-    status: pending
+    status: done # landed 2026-08-24: plans/templates transplanted; README adapted to ADR-117 architecture; OCE plan-node estate noted as future instalment; all links resolve
     depends_on: []
 ---
 

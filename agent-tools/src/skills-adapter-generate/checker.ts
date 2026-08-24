@@ -55,13 +55,9 @@ export async function checkAdapters(
   const drifted: string[] = [];
   const missing: string[] = [];
   const canonicalsRoot = join(options.repoRoot, '.agent', 'skills');
-  const canonicalIds = await fs.listSubdirectoryNames(canonicalsRoot);
+  const discovered = await discoverCanonicals(canonicalsRoot, '', fs);
 
-  for (const id of canonicalIds) {
-    const parsed = await loadCanonical(canonicalsRoot, id, fs);
-    if (parsed === undefined) {
-      continue;
-    }
+  for (const parsed of discovered) {
     for (const surface of SURFACES) {
       const target = adapterTargetPath(options.repoRoot, options.prefix, parsed.id, surface);
       const expected = renderAdapter(parsed, options.prefix, surface);
@@ -77,19 +73,39 @@ export async function checkAdapters(
   return { drifted, missing };
 }
 
-async function loadCanonical(
+/**
+ * Recursive read-only canonical discovery mirroring the generator's walk: a
+ * directory holding `SKILL-CANONICAL.md` is a skill (leaf name = adapter
+ * id); any other directory is a group and is descended into.
+ */
+async function discoverCanonicals(
   canonicalsRoot: string,
-  id: string,
+  relativeDir: string,
   fs: CheckerFs,
-): Promise<ParsedCanonicalSkill | undefined> {
-  const path = join(canonicalsRoot, id, CANONICAL_FILENAME);
-  const text = await fs.readFileOrUndefined(path);
-  if (text === undefined) {
-    return undefined;
+): Promise<readonly ParsedCanonicalSkill[]> {
+  const found: ParsedCanonicalSkill[] = [];
+  const absoluteDir = relativeDir === '' ? canonicalsRoot : join(canonicalsRoot, relativeDir);
+  const childNames = await fs.listSubdirectoryNames(absoluteDir);
+
+  for (const childName of childNames) {
+    const childRelative = relativeDir === '' ? childName : `${relativeDir}/${childName}`;
+    const canonicalPath = join(canonicalsRoot, childRelative, CANONICAL_FILENAME);
+    const text = await fs.readFileOrUndefined(canonicalPath);
+    if (text !== undefined) {
+      const frontmatter = parseFrontmatter(text);
+      if (frontmatter !== undefined) {
+        found.push({
+          id: childName,
+          relativeDir: childRelative,
+          frontmatter,
+          canonicalPath,
+          canonicalFilename: CANONICAL_FILENAME,
+        });
+      }
+      continue;
+    }
+    found.push(...(await discoverCanonicals(canonicalsRoot, childRelative, fs)));
   }
-  const frontmatter = parseFrontmatter(text);
-  if (frontmatter === undefined) {
-    return undefined;
-  }
-  return { id, frontmatter, canonicalPath: path, canonicalFilename: CANONICAL_FILENAME };
+
+  return found;
 }

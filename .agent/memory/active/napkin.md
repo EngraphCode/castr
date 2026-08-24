@@ -837,3 +837,29 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
   (kind already `git`) is rejected as "not an active git:index/head claim". The kind
   carries the `git:`; the pattern carries only `index/head`.
+
+## 2026-08-24 (equality-plan execution sitting — identity + cognition landings)
+
+- **A hook-blocked compound runs NOTHING in it — re-check downstream state before
+  reusing.** A blocked Bash compound carried both the COMMIT_EDITMSG heredoc and the
+  commit; on the retry only the commit was re-issued, so it landed with the PREVIOUS
+  message still in the file ("chore(merge)…" on the identity slice, commit 35f1471).
+  Amend is policy-blocked (append-only history), so the mislabel stands; the PR body
+  carries the accurate description. Lesson: after any hook block, treat every file
+  the compound would have written as NOT written.
+- **The transplant closure rule worked**: each copied surface link-scanned before
+  commit; the cognition tree pulled in skill-composition.md, the
+  concept-exploration transfer note, agentic-judgment-conserve-by-default (+ four-form
+  landing), skill-naming/third-party-security rules, and PDR-100/115/122/125/130/132/134
+  — closure terminated in three hops. PDR-125 was already cited by the new PDR-027
+  clause, so the identity and skills slices met in the middle.
+- **Generator nesting was a five-line concept**: recursive discovery with
+  leaf-name-flattened adapters and a fail-loud leaf collision; the checker mirrors the
+  walk through its injected fs. OCE's far larger generator generation (discovery/
+  carriage/clear modules) was NOT needed for this instalment — noted as a later
+  equality piece if its features (locks, vendored payloads) are wanted.
+- **v1→v2 era switch surfaced exactly the right failures**: only derived-name pins and
+  the override-shape pins broke (7 tests); fixture agent_names hand-set in tests were
+  untouched. The address-relay distinction (recipient blocks omit
+  naming_schema_version — provenance unknowable to the sender) came straight from
+  OCE's counterpart tests and its cli-comms-recipient guard comment.
