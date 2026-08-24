@@ -75,9 +75,12 @@ host_reachable() {
     try_url "$url"
   }; then
     echo "HTTP ${TRY_CODE}: ${url}"
+    # only a final 2xx passes: every target here is a path the real setup
+    # fetches with curl -f (or that apt must be able to consume), so any
+    # HTTP error — 403 proxy or 404/500 origin alike — fails setup too
     case "$TRY_CODE" in
-    000 | 403 | 407 | 502) return 1 ;;
-    *) return 0 ;;
+    2??) return 0 ;;
+    *) return 1 ;;
     esac
   fi
   echo "TRANSPORT FAILURE (proxy CONNECT denial, DNS, or timeout; last code ${TRY_CODE}): ${url}"
@@ -93,7 +96,16 @@ probe_vantage() {
   echo "user: $(id 2>/dev/null || echo unknown)"
   echo "pwd: $(pwd)"
   echo "PATH: ${PATH}"
-  echo "proxy: HTTPS_PROXY=${HTTPS_PROXY:-unset} HTTP_PROXY=${HTTP_PROXY:-unset} NO_PROXY=${NO_PROXY:-unset}"
+  # URL userinfo is stripped — an authenticated proxy's credentials must
+  # never reach the persisted failure card this output lands on
+  redact_url() {
+    test -n "${1:-}" || {
+      echo "unset"
+      return
+    }
+    echo "$1" | sed -E 's|(https?://)[^@/]*@|\1|'
+  }
+  echo "proxy: HTTPS_PROXY=$(redact_url "${HTTPS_PROXY:-}") HTTP_PROXY=$(redact_url "${HTTP_PROXY:-}") NO_PROXY=${NO_PROXY:-unset}"
   local d
   for d in /opt/node*/bin; do echo "image node dir: ${d}"; done
   command -v node >/dev/null 2>&1 && echo "node on PATH: $(node --version 2>/dev/null)" || echo "no node on PATH"
@@ -300,13 +312,16 @@ probe_base_image_apt_sources() {
         if ($i ~ /^https?:\/\//) { print $i, $(i + 1); break }
     }' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
     awk -v RS= '{
-      uris = ""; suites = ""
+      uris = ""; suites = ""; enabled = ""
       n = split($0, lines, "\n")
       for (i = 1; i <= n; i++) {
         if (lines[i] ~ /^URIs:/) { sub(/^URIs:[[:space:]]*/, "", lines[i]); uris = lines[i] }
         if (lines[i] ~ /^Suites:/) { sub(/^Suites:[[:space:]]*/, "", lines[i]); suites = lines[i] }
+        if (lines[i] ~ /^Enabled:/) { sub(/^Enabled:[[:space:]]*/, "", lines[i]); enabled = tolower(lines[i]) }
       }
-      if (uris != "" && suites != "") {
+      # a stanza with Enabled: no is ignored by apt — probing it would
+      # falsify an assumption apt-get update never makes
+      if (uris != "" && suites != "" && enabled !~ /^(no|false)/) {
         nu = split(uris, ua, " "); ns = split(suites, sa, " ")
         for (u = 1; u <= nu; u++)
           for (s = 1; s <= ns; s++) print ua[u], sa[s]
