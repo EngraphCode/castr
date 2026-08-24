@@ -106,7 +106,9 @@ probe_vantage() {
       echo "unset"
       return
     }
-    echo "$1" | sed -E 's|(https?://)[^@/]*@|\1|'
+    # the scheme prefix is optional in proxy values (curl accepts
+    # user:token@proxy:8080), so strip userinfo with or without one
+    echo "$1" | sed -E 's|^(https?://)?[^@/]*@|\1|'
   }
   echo "proxy: HTTPS_PROXY=$(redact_url "${HTTPS_PROXY:-}") HTTP_PROXY=$(redact_url "${HTTP_PROXY:-}") NO_PROXY=${NO_PROXY:-unset}"
   local d
