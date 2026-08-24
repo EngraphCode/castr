@@ -35,6 +35,12 @@ phase() {
   echo "=== PHASE: ${PHASE} ==="
 }
 trap 'echo "SETUP FAILED in phase \"${PHASE}\" at line ${LINENO}: ${BASH_COMMAND}" >&2' ERR
+# explicit failures route through fail(), never a bare `exit 1` — the ERR
+# trap does not fire on `exit`, and every non-zero exit must be instrumented
+fail() {
+  echo "ERROR: $*" >&2
+  return 1
+}
 
 # gitleaks pin — value-synced with castr's supply-chain single source
 # (.claude/hooks/_lib/gitleaks-pin.env there); bump both together.
@@ -142,8 +148,7 @@ for repo in $REPOS; do
   # that exists but is not executable is a broken contract, not a no-op.
   if [ -e .agent/setup/cloud-session-setup.sh ]; then
     if [ ! -x .agent/setup/cloud-session-setup.sh ]; then
-      echo "ERROR: ${name}/.agent/setup/cloud-session-setup.sh exists but is not executable" >&2
-      exit 1
+      fail "${name}/.agent/setup/cloud-session-setup.sh exists but is not executable"
     fi
     ./.agent/setup/cloud-session-setup.sh
   fi

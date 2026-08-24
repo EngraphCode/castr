@@ -154,11 +154,46 @@ probe_git_origins() {
   for repo in $(find /home /workspace -maxdepth 4 -type d -name .git \
     -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||'); do
     [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
-    if git -C "$repo" ls-remote --heads origin >/dev/null 2>&1; then
+    # bounded and non-interactive: a hung remote or a credential helper
+    # waiting for input must not stall the whole falsification pass
+    if GIT_TERMINAL_PROMPT=0 timeout 30 git -C "$repo" ls-remote --heads origin >/dev/null 2>&1; then
       echo "origin reachable: ${repo} (shallow: $(git -C "$repo" rev-parse --is-shallow-repository 2>/dev/null))"
     else
       echo "origin UNREACHABLE (fetch --unshallow would fail): ${repo}"
       failed=1
+    fi
+  done
+  return $failed
+}
+
+probe_session_hook_preflights() {
+  # the universal preflight cannot know which hosts a repo's session hook
+  # contacts (e.g. Playwright's download CDNs), so it delegates that
+  # falsification the same way setup delegates the work: a repo whose hook
+  # needs extra hosts commits the read-only twin
+  # .agent/setup/cloud-session-preflight.sh beside it (the hook-preflight
+  # contract); absence is the only benign skip
+  test -n "$FIRST_REPO" || {
+    echo "skipped: no Practice repo"
+    return 1
+  }
+  local repo pf failed=0
+  for repo in $(find /home /workspace -maxdepth 4 -type d -name .git \
+    -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||'); do
+    [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
+    pf="$repo/.agent/setup/cloud-session-preflight.sh"
+    if [ -e "$pf" ]; then
+      if [ ! -x "$pf" ]; then
+        echo "hook preflight exists but is NOT executable: ${pf}"
+        failed=1
+      elif "$pf"; then
+        echo "hook preflight passed: ${repo}"
+      else
+        echo "hook preflight FAILED: ${repo}"
+        failed=1
+      fi
+    else
+      echo "no hook preflight (benign): ${repo}"
     fi
   done
   return $failed
@@ -261,6 +296,7 @@ probe "vantage point" probe_vantage
 probe "repo discovery" probe_discovery
 probe "session hook contract" probe_hook_contract
 probe "git origin remotes (unshallow contact)" probe_git_origins
+probe "session hook preflights (repo-declared hosts)" probe_session_hook_preflights
 probe "node major resolution" probe_node_major
 probe "nodejs.org index + SHASUMS + tarball" probe_nodejs_org
 probe "registry.npmjs.org (corepack/pnpm)" probe_npm_registry

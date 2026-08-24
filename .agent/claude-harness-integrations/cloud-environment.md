@@ -85,7 +85,13 @@ session. Four consequences, each with its instrument:
 4. **The probe invariant.** Every external host the setup script contacts
    has a probe in the preflight; a change adding a host lands the probe in
    the same commit. Redirect chains count — probe the effective URL, not
-   just the named host.
+   just the named host. Hook-contacted hosts count too, via the
+   **hook-preflight contract**: a repo whose session hook contacts extra
+   hosts commits the read-only twin
+   `.agent/setup/cloud-session-preflight.sh` beside the hook, and the
+   universal preflight runs it as a probe — the same
+   delegation shape as setup itself. Absence is the only benign skip;
+   exists-but-not-executable fails the probe.
 
 ## Suspected-fragile hosts register
 
