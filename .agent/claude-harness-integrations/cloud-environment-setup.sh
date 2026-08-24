@@ -18,8 +18,23 @@
 # - One Practice repo per session (owner ruling 2026-08-23); the discovery
 #   loop tolerates more.
 set -euo pipefail
+set -E
 shopt -s nullglob
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+# Instrumentation: the environment builder is the only true fresh-container
+# test bench, and its failure card is the only observable output — so the
+# script must narrate its own progress and name its own point of death.
+# Diagnosis protocol and the read-only preflight probe live alongside this
+# file (cloud-environment-preflight.sh, cloud-environment.md § Validating
+# and diagnosing).
+PHASE="init"
+phase() {
+  PHASE="$1"
+  echo ""
+  echo "=== PHASE: ${PHASE} ==="
+}
+trap 'echo "SETUP FAILED in phase \"${PHASE}\" at line ${LINENO}: ${BASH_COMMAND}" >&2' ERR
 
 # gitleaks pin — value-synced with castr's supply-chain single source
 # (.claude/hooks/_lib/gitleaks-pin.env there); bump both together.
@@ -27,6 +42,7 @@ GITLEAKS_VERSION=8.30.0
 GITLEAKS_SHA256_LINUX_X64=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
 
 # ---------- discovery first: the carried repo declares the toolchain ----------
+phase "repo discovery"
 REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
   -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
 FIRST_REPO=""
@@ -50,6 +66,7 @@ echo "node major from ${FIRST_REPO}/package.json engines: ${NODE_MAJOR}"
 
 # ---------- universal toolchain ----------
 
+phase "node install (nodejs.org)"
 # Node — latest release of the repo-declared major, checksum-verified
 # against the release's published SHASUMS256 manifest before extraction.
 # Same-channel manifest, so this proves transfer integrity (no truncated or
@@ -63,6 +80,7 @@ curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" \
   | grep " ${NODE_TGZ}\$" | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
 tar xzf /tmp/node.tgz -C /usr/local --strip-components=1
 
+phase "corepack pnpm shims"
 # pnpm via Corepack shims in /usr/local/bin (a trusted location for repo
 # spawn checks): each repo's packageManager pin selects and verifies its own
 # pnpm version — this script pins nothing
@@ -75,6 +93,7 @@ for d in /opt/node*/bin; do
   done
 done
 
+phase "git from git-core PPA (keyserver.ubuntu.com, ppa.launchpadcontent.net)"
 # git >= 2.45 from the git-core PPA (manual sources — add-apt-repository's
 # python apt_pkg binding is broken on this image)
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA1715D88E1DF1F24" \
@@ -85,6 +104,7 @@ apt-get update -qq
 apt-get install -y -qq git
 git --version
 
+phase "gitleaks (github.com release asset)"
 # gitleaks for pre-push secret scans — checksum-verified before install
 curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
   -o /tmp/gitleaks.tgz
@@ -99,7 +119,7 @@ for repo in $REPOS; do
   fi
   cd "$repo"
   name=$(basename "$repo")
-  echo "setting up Practice repo: $name"
+  phase "repo setup: ${name}"
 
   # full history: validators read pinned baseline commits shallow clones lack
   if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
@@ -128,3 +148,6 @@ for repo in $REPOS; do
     ./.agent/setup/cloud-session-setup.sh
   fi
 done
+
+phase "complete"
+echo "environment setup finished cleanly"

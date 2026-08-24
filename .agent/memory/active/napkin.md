@@ -597,3 +597,23 @@ _2026-06-04 → 2026-06-10 → [`archive/napkin-2026-06-04-to-10.md`](archive/na
 _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026-06-17-to-20.md`](archive/napkin-2026-06-17-to-20.md) (2026-06-20);_
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
+
+## 2026-08-24 environment-breakage wrap (Buzzard weaves Airstream, 01e90b)
+
+- **The cloud-environment thread's single home is OCE**:
+  `.agent/memory/operational/threads/cloud-environment-bootstrap.next-session.md`
+  there carries state, rulings, and the diagnosis loop. This repo
+  carries byte-identical twins of the three environment artefacts
+  under `.agent/claude-harness-integrations/` (setup script, preflight
+  probe, operating doc — the doc differs only in the one
+  repo-specific hook sentence); change them in lock-step.
+- **Surprise**: yesterday's "verified live" environment script broke
+  on the next fresh session — the verification ran in a persisted
+  dirty container, which proves nothing about fresh ones. Cure landed:
+  phase-banner + ERR-trap instrumentation in the setup script and a
+  read-only preflight paste-able as a temporary environment script
+  (complete falsification list in one round-trip).
+- **Grounded fact**: gitleaks release assets redirect to
+  `release-assets.githubusercontent.com` (not
+  `objects.githubusercontent.com` as previously assumed) — prime
+  suspect if setup-time egress lacks it.
