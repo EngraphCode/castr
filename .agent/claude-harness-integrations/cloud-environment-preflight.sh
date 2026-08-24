@@ -56,6 +56,12 @@ http_code() {
   # and dodge the 000 case below — capture first, normalise on failure
   local code
   code=$(curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null) || code=000
+  if [ "${code:-000}" = "000" ]; then
+    # one retry: a single transient transport failure must not falsify a
+    # host (observed in-session 2026-08-24: one-off 000 from
+    # security.ubuntu.com, 200 on every retry)
+    code=$(curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null) || code=000
+  fi
   echo "${code:-000}"
 }
 host_reachable() {
@@ -217,8 +223,15 @@ probe_base_image_apt_sources() {
   # the base image ships its own apt sources; one blocked host there breaks
   # every `apt-get update`, whatever this estate's script adds (worked
   # instance 2026-08-23: Trusted preset 403'd ppa.launchpadcontent.net)
+  # parse only ACTIVE entries — `deb`/`deb-src` lines in one-line format and
+  # `URIs:` fields in deb822 files. A bare URL grep would also probe hosts in
+  # comments (e.g. the stock sources file's help.ubuntu.com pointer), which
+  # apt never contacts, and misattribute an unrelated block to apt sources.
   local uris u failed=0
-  uris=$(grep -rhoE 'https?://[^ >]+' /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | sort -u)
+  uris=$({
+    grep -rhE '^[[:space:]]*deb(-src)?[[:space:]]' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
+    grep -rhE '^[[:space:]]*URIs:' /etc/apt/sources.list.d/*.sources 2>/dev/null
+  } | grep -oE 'https?://[^ ]+' | sort -u)
   test -n "$uris" || {
     echo "no apt source URIs found on image (unexpected but not a network failure)"
     return 0
