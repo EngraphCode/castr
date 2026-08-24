@@ -598,6 +598,28 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
 
+## 2026-08-24 (proof-programme loop review, session open — Flamebright Burning Caldera / 01FV6r)
+
+- **Correction to the 2026-08-23 fresh-container seed recipe: the two state files take DIFFERENT
+  seeds.** `active-claims.json` takes `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}`
+  but `closed-claims.archive.json` must be `{"schema_version":"1.3.0","claims":[]}` — its schema
+  rejects `commit_queue` as an additional property, and the mistake surfaces only when the
+  pre-commit collaboration-state validator fires (three commits later, not at seed time). The
+  `init`-subcommand candidate stands, now with two shapes to emit.
+- **The commit-queue pathspec workflow cannot conclude a staged RENAME — second member of the
+  cannot-conclude class beside the merge commit.** The inner `git commit -- <intent.files>` builds
+  a temp index scoped to the intent paths; a rename's old path is outside the list (it never
+  appears in `git diff --cached --name-only`, so listing it fails verify-staged as "missing"), the
+  temp index therefore keeps the old path tracked with no worktree file, and the fail-loud
+  machine-local-paths validator dies ENOENT mid-hook. Deviation used (merge-conclusion precedent):
+  message pre-validated exit 0, plain unscoped `git commit` of the exact staged bundle, intent
+  abandoned with stage-named notes. Candidate: a `commit-queue` rename-aware mode, or document
+  renames as a named exception in the commit skill.
+- **Hook token-subsequence specimen #6, claims-open shape:** `claims open --area-kind git
+--intent "…commit…" --now …` assembles the blocked "git commit -n" pattern from the area-kind
+  value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
+  prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
+
 ## 2026-08-24 environment-breakage wrap (Buzzard weaves Airstream, 01e90b)
 
 - **The cloud-environment thread's single home is OCE**:
