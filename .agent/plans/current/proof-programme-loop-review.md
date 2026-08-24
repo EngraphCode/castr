@@ -93,7 +93,10 @@ todos:
     content: >-
       Routine-definition and skills evaluation, general: routine-prompt.md
       against the live trigger's stored prompt and config (drift is a
-      finding; the file is the authority per its own mis-armed clause);
+      finding; the file is the authority — its Authority line binds it to
+      parent-plan.md and ADR-051, while the mis-armed fallback lives in
+      the TRIGGER's stored prompt, not the file, so diff both
+      directions);
       the fresh-session-per-fire model's assumptions (what the fired
       session can see; permission surface; the outcome branch configured
       on the live trigger — read it from the trigger config, not from any
@@ -120,8 +123,8 @@ todos:
       a warrant + falsifier, routed to castr's lanes (queue slices for
       mechanical fixes; owner ballot items for decision-class changes).
       DONE WHEN the report exists with all three sections populated, the
-      thread record and this plan's todo statuses are updated, and wrap
-      has run.
+      thread record and this plan's todo statuses are updated, and the
+      engraph-wrap closeout programme (.agent/skills/wrap) has run.
     status: pending
     depends_on: [R2, R3, R4, R5]
 execution_contract: >-
@@ -146,9 +149,13 @@ execution_contract: >-
   named mechanism (grep-checkable); R4: each completed-claim row names
   its git log or PR command and output; R5: the prompt-vs-trigger diff
   is included verbatim; R6: the report file exists under
-  .agent/analysis-and-reports/ and every verdict and proposal row cites
-  a named source. The deterministic command proves the evidence exists
-  and is cited; the final verdict is the owner's read of the R6 report.
+  .agent/analysis-and-reports/, every verdict and proposal row cites
+  a named source, and the thread record's closeout entry carries the
+  engraph-wrap evidence — the named metaloss fixed point and the
+  verbatim git status safety state (grep the thread record for "fixed
+  point" and the ahead/behind line). The deterministic command proves
+  the evidence exists and is cited; the final verdict is the owner's
+  read of the R6 report.
   Foundation alignment: pure review lane — no product code, no doctrine
   amendment, TDD not applicable; strict-and-complete applies to the
   report's claims.
