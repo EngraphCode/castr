@@ -146,9 +146,13 @@ execution_contract: >-
   named mechanism (grep-checkable); R4: each completed-claim row names
   its git log or PR command and output; R5: the prompt-vs-trigger diff
   is included verbatim; R6: the report file exists under
-  .agent/analysis-and-reports/ and every verdict and proposal row cites
-  a named source. The deterministic command proves the evidence exists
-  and is cited; the final verdict is the owner's read of the R6 report.
+  .agent/analysis-and-reports/, every verdict and proposal row cites
+  a named source, and the thread record's closeout entry carries the
+  engraph-wrap evidence — the named metaloss fixed point and the
+  verbatim git status safety state (grep the thread record for "fixed
+  point" and the ahead/behind line). The deterministic command proves
+  the evidence exists and is cited; the final verdict is the owner's
+  read of the R6 report.
   Foundation alignment: pure review lane — no product code, no doctrine
   amendment, TDD not applicable; strict-and-complete applies to the
   report's claims.
