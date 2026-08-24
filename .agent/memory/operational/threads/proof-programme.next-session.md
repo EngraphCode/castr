@@ -28,13 +28,15 @@ programme's delivery evidence rather than retro-filled here.)
 | --------------------- | ------------------------------------ | ----------- | -------------- | ----------------- | ---------------------------------------- | ------------- | ------------ |
 | Cindery Kindling Lava | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings)            | 2026-08-23    | 2026-08-23   |
 | Fruited Swaying Leaf  | 2c6d968f-db66-55d4-8343-a0eccd1a68a3 | claude-code | claude-fable-5 | 0690b2            | scheduled firing (PR #35 drive to merge) | 2026-08-23    | 2026-08-23   |
+| Luminous Waning Orbit | e608d93e-4bd7-5ea2-b08e-258ef7c706f1 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-03 slice)            | 2026-08-24    | 2026-08-24   |
 
 ## Next-session landing target
 
 Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
 programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-23: PR #35 — Q-02 — is the open PR to drive). Verification: the PR
+2026-08-24: the Q-03 slice PR on `claude/dazzling-cannon-hix55y` is the open PR to
+drive if not yet merged; else claim the next eligible row). Verification: the PR
 merged, or a row's state advanced on the base.
 
 ## Session shape and grounding order

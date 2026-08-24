@@ -285,7 +285,7 @@ describe('buildMcpToolsFromIR', () => {
     test('resolves operation security from IR', () => {
       const operation = createMockOperation({
         operationId: 'protectedRoute',
-        security: [{ schemeName: 'bearerAuth', scopes: [] }],
+        security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }],
       });
       const ir: CastrDocument = {
         ...createMockCastrDocument({ operations: [operation] }),

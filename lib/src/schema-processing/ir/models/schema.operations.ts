@@ -489,21 +489,65 @@ export interface IRResponseHeader {
 }
 
 /**
- * Security requirement for operations.
+ * One security requirement — a single OR alternative in a `security` array.
  *
- * Represents OAuth2 scopes or API key requirements for an operation.
+ * Mirrors one OpenAPI Security Requirement Object: every scheme listed in
+ * {@link IRSecurityRequirement.schemes} must be satisfied together (AND),
+ * while only one requirement in the containing array needs to be satisfied
+ * (OR). An empty `schemes` array is the spec's empty requirement (`{}`),
+ * meaning anonymous access is supported as one of the alternatives.
  *
+ * @example AND-group: `{ apiKey: [], appId: [] }` — both schemes required
+ * ```typescript
+ * const requirement: IRSecurityRequirement = {
+ *   schemes: [
+ *     { schemeName: 'apiKey', scopes: [] },
+ *     { schemeName: 'appId', scopes: [] },
+ *   ],
+ * };
+ * ```
+ *
+ * @see {@link IRSecuritySchemeRequirement} for the per-scheme member shape
  * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
  * @public
  */
 export interface IRSecurityRequirement {
+  /**
+   * The schemes this requirement names, in authored order. All of them must
+   * be satisfied together for this alternative to authorize the request;
+   * empty means this alternative permits anonymous access.
+   */
+  schemes: IRSecuritySchemeRequirement[];
+}
+
+/**
+ * A single scheme reference inside one {@link IRSecurityRequirement}.
+ *
+ * IR-level shape: the scheme's component name plus its scope list, verbatim.
+ * Distinct from the resolved `SecuritySchemeRequirement` in
+ * `conversion/json-schema` (which additionally carries the resolved scheme
+ * object).
+ *
+ * @example
+ * ```typescript
+ * const member: IRSecuritySchemeRequirement = {
+ *   schemeName: 'petstoreAuth',
+ *   scopes: ['read:pets', 'write:pets'],
+ * };
+ * ```
+ *
+ * @see {@link IRSecurityRequirement} for the containing AND-group
+ * @public
+ */
+export interface IRSecuritySchemeRequirement {
   /**
    * Security scheme name from components/securitySchemes.
    */
   schemeName: string;
 
   /**
-   * OAuth2 scopes required (empty for API keys).
+   * OAuth2/OpenID scopes required — or, for other scheme types, role names
+   * (3.1+); carried verbatim, empty when the document lists none.
    */
   scopes: string[];
 }

@@ -12,6 +12,7 @@ import {
   isValidResponseHeaders,
 } from './content/validators.content.js';
 import { isCastrSchema, isCastrSchemaNode } from './validators.schema.js';
+import { isValidOptionalSecurityArray } from './security/validators.security.js';
 
 const VALID_PARAMETER_LOCATIONS = new Set<string>([
   'path',
@@ -70,6 +71,16 @@ function hasValidDocumentCollections(value: UnknownRecord): boolean {
   );
 }
 
+/**
+ * Structural type guard for {@link CastrDocument} — shape only, deliberately
+ * NOT a schema-version pin: the type's `version` field is `string`, and many
+ * legitimate in-memory documents (fixtures, mocks, freshly built IR) carry
+ * whatever stamp their producer set. The current-version predicate lives
+ * separately at the persistence boundary: `deserializeIR` rejects any
+ * foreign `IR_SCHEMA_VERSION` before structural acceptance. Callers
+ * admitting EXTERNAL persisted IR must go through `deserializeIR`, never
+ * this guard alone.
+ */
 export function isCastrDocument(value: unknown): value is CastrDocument {
   if (!isRecord(value)) {
     return false;
@@ -79,7 +90,8 @@ export function isCastrDocument(value: unknown): value is CastrDocument {
     typeof value['version'] === 'string' &&
     typeof value['openApiVersion'] === 'string' &&
     isRecord(value['info']) &&
-    hasValidDocumentCollections(value)
+    hasValidDocumentCollections(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 
@@ -212,7 +224,8 @@ export function isCastrOperation(value: unknown): value is CastrOperation {
 
   return (
     (value['operationId'] === undefined || typeof value['operationId'] === 'string') &&
-    hasValidOperationShape(value)
+    hasValidOperationShape(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 
@@ -223,7 +236,8 @@ export function isCastrAdditionalOperation(value: unknown): value is CastrAdditi
 
   return (
     (value['operationId'] === undefined || typeof value['operationId'] === 'string') &&
-    hasValidOperationShape(value)
+    hasValidOperationShape(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 

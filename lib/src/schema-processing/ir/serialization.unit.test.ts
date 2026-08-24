@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { serializeIR, deserializeIR } from './serialization.js';
+import { IR_SCHEMA_VERSION } from './models/schema-document.js';
 import { CastrSchemaProperties } from './models/schema.js';
 import { assertSchemaComponent, createMockRawOpenApiComponents } from './test-helpers.js';
 import type { CastrDocument } from './models/schema-document.js';
 
 describe('IR Serialization', () => {
   const mockIR: CastrDocument = {
-    version: '1.0.0',
+    version: IR_SCHEMA_VERSION,
     openApiVersion: '3.1.0',
     info: {
       title: 'Test API',
@@ -260,5 +261,66 @@ describe('IR Serialization', () => {
     expect(() => deserializeIR(JSON.stringify(invalidIR))).toThrow(
       'Invalid CastrDocument structure',
     );
+  });
+
+  it('should reject a persisted document carrying the pre-group flat security shape', () => {
+    const staleIR = {
+      ...mockIR,
+      security: [{ schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(() => deserializeIR(JSON.stringify(staleIR))).toThrow('Invalid CastrDocument structure');
+  });
+
+  it('should name the schema-version mismatch when stale IR declares an older version', () => {
+    const staleVersionedIR = {
+      ...mockIR,
+      version: '1.0.0',
+      security: [{ schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(() => deserializeIR(JSON.stringify(staleVersionedIR))).toThrow(
+      /declares schema version "1\.0\.0" but this build reads "2\.0\.0"/,
+    );
+  });
+
+  it('should refuse to serialize a document with a foreign schema version', () => {
+    const foreignVersionIR = {
+      ...mockIR,
+      version: '1.0.0',
+    };
+
+    expect(() => serializeIR(foreignVersionIR)).toThrow(
+      /declares schema version "1\.0\.0" but this build reads "2\.0\.0"/,
+    );
+  });
+
+  it('should reject a future-versioned document even when its shape passes current guards', () => {
+    const futureIR = {
+      ...mockIR,
+      version: '3.0.0',
+    };
+
+    expect(() => deserializeIR(JSON.stringify(futureIR))).toThrow(
+      /declares schema version "3\.0\.0" but this build reads "2\.0\.0"/,
+    );
+  });
+
+  it('should round-trip document-level grouped security through serialization', () => {
+    const securedIR: CastrDocument = {
+      ...mockIR,
+      security: [
+        {
+          schemes: [
+            { schemeName: 'bearerAuth', scopes: [] },
+            { schemeName: 'apiKey', scopes: ['read:items'] },
+          ],
+        },
+      ],
+    };
+
+    const revived = deserializeIR(serializeIR(securedIR));
+
+    expect(revived.security).toStrictEqual(securedIR.security);
   });
 });

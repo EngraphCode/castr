@@ -7,6 +7,24 @@ import type {
 } from '../../../shared/openapi-types.js';
 import type { CastrSchema, IRDependencyGraph } from './schema.js';
 import type { IRComponent } from './schema.components.js';
+
+/**
+ * The IR schema version the parsers stamp onto every {@link CastrDocument}.
+ *
+ * Bumped on a breaking change to the IR's own shape. `2.0.0`: security
+ * requirements became grouped (`IRSecurityRequirement.schemes`); the `1.0.0`
+ * flat `{ schemeName, scopes }` security shape no longer validates.
+ *
+ * @example
+ * ```typescript
+ * const ir = buildIR(doc);
+ * ir.version === IR_SCHEMA_VERSION; // true
+ * ```
+ *
+ * @see {@link CastrDocument.version}
+ * @public
+ */
+export const IR_SCHEMA_VERSION = '2.0.0';
 import type {
   CastrAdditionalOperation,
   CastrOperation,
@@ -53,9 +71,11 @@ export interface IREnum {
  */
 export interface CastrDocument {
   /**
-   * IR schema version.
+   * IR schema version — the version of the IR's own shape, stamped by the
+   * parsers as {@link IR_SCHEMA_VERSION}. Persisted IR carrying an older
+   * version may no longer satisfy the current structural validators.
    *
-   * @example '1.0.0'
+   * @example '2.0.0'
    */
   version: string;
 

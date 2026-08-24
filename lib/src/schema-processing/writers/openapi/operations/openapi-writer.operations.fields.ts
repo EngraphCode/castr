@@ -1,29 +1,12 @@
-import type {
-  OperationObject,
-  PathItemObject,
-  SecurityRequirementObject,
-} from '../../../../shared/openapi-types.js';
+import type { OperationObject, PathItemObject } from '../../../../shared/openapi-types.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
 import { writeParameterObject } from '../openapi-writer.parameters.js';
-import type { CastrParameter, IRSecurityRequirement } from '../../../ir/index.js';
+import { writeSecurityRequirements } from '../openapi-writer.security.js';
+import type { CastrParameter } from '../../../ir/index.js';
 import type { CastrOperationLike } from './openapi-writer.operations.entries.js';
-
-function compareSecurityRequirements(
-  left: IRSecurityRequirement,
-  right: IRSecurityRequirement,
-): number {
-  return left.schemeName.localeCompare(right.schemeName);
-}
 
 function writeParameter(param: CastrParameter): ReturnType<typeof writeParameterObject> {
   return writeParameterObject(param);
-}
-
-function writeSecurity(security: IRSecurityRequirement[]): SecurityRequirementObject[] {
-  const sortedSecurity = [...security].sort(compareSecurityRequirements);
-  return sortedSecurity.map((req) => ({
-    [req.schemeName]: req.scopes,
-  }));
 }
 
 function writeCoreMetadata(operation: CastrOperationLike, result: OperationObject): void {
@@ -77,7 +60,7 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
   }
 
   if (operation.security !== undefined && operation.security.length > 0) {
-    result.security = writeSecurity(operation.security);
+    result.security = writeSecurityRequirements(operation.security);
   }
 
   return result;

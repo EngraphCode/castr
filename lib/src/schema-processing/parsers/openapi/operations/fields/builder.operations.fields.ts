@@ -9,6 +9,7 @@ import type {
   CastrAdditionalOperation,
   CastrOperation,
   IRSecurityRequirement,
+  IRSecuritySchemeRequirement,
 } from '../../../../ir/index.js';
 import type { IRBuildContext } from '../../builder.types.js';
 import { buildIRRequestBody } from '../builder.request-body.js';
@@ -109,13 +110,60 @@ function collectPathItemParameterRefs(pathItem: PathItemObject): string[] {
   return parameterRefs;
 }
 
+/**
+ * Build the IR security formula from an OpenAPI `security` array.
+ *
+ * Grouping is preserved exactly: each Security Requirement Object becomes one
+ * {@link IRSecurityRequirement} whose `schemes` are that object's entries in
+ * authored order (AND within the group, OR across the array). The spec's
+ * empty requirement (`{}`, anonymous access supported) survives as a
+ * requirement with no schemes; duplicate alternatives are never merged.
+ *
+ * @param security - The document- or operation-level `security` array
+ * @returns One IR requirement per OR alternative, grouping intact
+ *
+ * @throws `Error` when a scheme's scope value is not an array of strings —
+ * the declared vendor type promises `string[]`, so a violating document
+ * (for example YAML `api_key:` with no value) fails fast here rather than
+ * being silently canonicalised.
+ *
+ * @example `[{ a: [], b: [] }]` (a AND b) stays one group of two schemes
+ * ```typescript
+ * const ir = buildIRSecurity([{ a: [], b: [] }]);
+ * // [{ schemes: [{ schemeName: 'a', scopes: [] }, { schemeName: 'b', scopes: [] }] }]
+ * ```
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object | OpenAPI Security Requirement Object}
+ */
 export function buildIRSecurity(security: SecurityRequirementObject[]): IRSecurityRequirement[] {
-  return security.flatMap((securityRequirement): IRSecurityRequirement[] => {
-    return Object.entries(securityRequirement).map(([schemeName, scopes]) => ({
-      schemeName,
-      scopes: scopes ?? [],
-    }));
-  });
+  return security.map((securityRequirement): IRSecurityRequirement => ({
+    schemes: Object.entries(securityRequirement).map(([schemeName, scopes]) =>
+      buildIRSecuritySchemeRequirement(schemeName, scopes),
+    ),
+  }));
+}
+
+/**
+ * Validate one scheme entry's scope value at the vendor boundary.
+ *
+ * The vendor type declares `string[]`, but a malformed document can smuggle
+ * `null` through (YAML `api_key:` with no value); invalid data throws rather
+ * than being defaulted away.
+ */
+function buildIRSecuritySchemeRequirement(
+  schemeName: string,
+  scopes: unknown,
+): IRSecuritySchemeRequirement {
+  if (
+    !Array.isArray(scopes) ||
+    !scopes.every((scope): scope is string => typeof scope === 'string')
+  ) {
+    throw new Error(
+      `Security requirement scheme "${schemeName}" must map to an array of scope strings; ` +
+        `received ${JSON.stringify(scopes)}.`,
+    );
+  }
+  return { schemeName, scopes };
 }
 
 export type { CastrOperationLike, HttpMethod };

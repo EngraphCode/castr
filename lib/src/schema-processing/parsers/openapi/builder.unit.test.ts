@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ComponentsObject, OpenAPIDocument } from '../../../shared/openapi-types.js';
 import { buildIR, buildCastrSchemas } from './index.js';
-import { assertSchemaComponent } from '../../ir/index.js';
+import { assertSchemaComponent, IR_SCHEMA_VERSION } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 
@@ -393,7 +393,7 @@ describe('buildIR', () => {
     const result = buildIR(doc);
 
     expect(result).toMatchObject({
-      version: '1.0.0',
+      version: IR_SCHEMA_VERSION,
       openApiVersion: CANONICAL_OPENAPI_VERSION,
       info: {
         title: 'Test API',

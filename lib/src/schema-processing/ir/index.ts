@@ -35,6 +35,7 @@ export type {
   CastrResponse,
   IRResponseHeader,
   IRSecurityRequirement,
+  IRSecuritySchemeRequirement,
   CastrSchema,
   IRIntegerSemantics,
   IRUuidVersion,
@@ -46,7 +47,7 @@ export type {
   IRDependencyGraph,
   IRDependencyNode,
 } from './models/index.js';
-export { allOperations } from './models/index.js';
+export { allOperations, IR_SCHEMA_VERSION } from './models/index.js';
 export { ensureObjectTypeForObjectKeywords, isObjectSchemaType } from './unknown-key-behavior.js';
 export {
   UUID_SCHEMA_TYPE,

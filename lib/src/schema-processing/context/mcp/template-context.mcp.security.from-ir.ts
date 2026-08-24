@@ -25,7 +25,12 @@ const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
  * @remarks
  * - Operation-level `security` overrides document-level defaults.
  * - An explicit empty array (`security: []`) denotes a public endpoint.
- * - Each `IRSecurityRequirement` in the operation's security array represents an OR clause.
+ * - Each `IRSecurityRequirement` is one OR alternative; the schemes inside
+ *   it are AND members that must all be satisfied together.
+ * - A requirement with no schemes is the spec's empty requirement (`{}`):
+ *   anonymous access is supported, so the operation is public — the
+ *   requirement sets stay intact so consumers can still offer credentials
+ *   for the non-empty alternatives.
  * - The function resolves scheme details from `ir.components` (filtered by `type: 'securityScheme'`).
  *
  * @param ir - The CastrDocument containing component security schemes and optional global security
@@ -43,14 +48,14 @@ const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
  *
  * @example Operation with security
  * ```typescript
- * const operation = { security: [{ schemeName: 'bearerAuth', scopes: [] }] };
+ * const operation = { security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }] };
  * const result = resolveOperationSecurityFromIR(ir, operation);
  * // { isPublic: false, usesGlobalSecurity: false, requirementSets: [...] }
  * ```
  *
  * @example Falling back to global security
  * ```typescript
- * const ir = { security: [{ schemeName: 'bearerAuth', scopes: [] }], ... };
+ * const ir = { security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }], ... };
  * const operation = { security: undefined };
  * const result = resolveOperationSecurityFromIR(ir, operation);
  * // { isPublic: false, usesGlobalSecurity: true, requirementSets: [...] }
@@ -78,8 +83,13 @@ export function resolveOperationSecurityFromIR(
     schemes: resolveRequirement(requirement, securitySchemes),
   }));
 
+  // An empty scheme set is the spec's empty requirement ({}): the operation
+  // is satisfiable with no credentials, so it is public — the sets stay
+  // intact so consumers can still present the credentialed alternatives.
+  const anonymousAccessSupported = requirementSets.some((set) => set.schemes.length === 0);
+
   return {
-    isPublic: requirementSets.length === 0,
+    isPublic: requirementSets.length === 0 || anonymousAccessSupported,
     usesGlobalSecurity: selection.usesGlobalDefaults,
     requirementSets,
   };
@@ -116,11 +126,14 @@ function buildSecuritySchemeLookup(ir: CastrDocument): Map<string, SecuritySchem
 /**
  * Resolve a single security requirement to include full scheme details.
  *
- * @param requirement - The IR security requirement (scheme name + scopes)
- * @param schemes - Lookup map of security scheme definitions
- * @returns Array of resolved scheme requirements (usually 1 element for single requirement)
+ * One requirement is one OR alternative; every scheme it names (AND members)
+ * resolves to one entry in the returned set, preserving IR order.
  *
- * @throws `Error` When the security scheme is not found in the lookup
+ * @param requirement - The IR security requirement (one group of schemes)
+ * @param schemes - Lookup map of security scheme definitions
+ * @returns One resolved scheme requirement per AND member (empty for the spec's `{}` requirement)
+ *
+ * @throws `Error` When a named security scheme is not found in the lookup
  *
  * @internal
  */
@@ -128,19 +141,19 @@ function resolveRequirement(
   requirement: IRSecurityRequirement,
   schemes: Map<string, SecuritySchemeObject>,
 ): SecuritySchemeRequirement[] {
-  const scheme = schemes.get(requirement.schemeName);
+  return requirement.schemes.map((member) => {
+    const scheme = schemes.get(member.schemeName);
 
-  if (!scheme) {
-    throw new Error(`Missing security scheme "${requirement.schemeName}" in IR components`);
-  }
+    if (!scheme) {
+      throw new Error(`Missing security scheme "${member.schemeName}" in IR components`);
+    }
 
-  return [
-    {
-      schemeName: requirement.schemeName,
+    return {
+      schemeName: member.schemeName,
       scheme,
-      scopes: requirement.scopes,
-    },
-  ];
+      scopes: member.scopes,
+    };
+  });
 }
 
 /**
