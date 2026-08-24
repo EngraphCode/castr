@@ -337,7 +337,36 @@ check_repo_pnpm_pin() {
   echo "pinned pnpm (${repo##*/}): ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
     tarball="https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz"
-    echo "default registry: static tarball URL (corepack makes no metadata request here)"
+    case "$pm" in
+    *+*.*)
+      # a hashed pin on the default registry is the ONLY corepack path
+      # with no metadata request: installVersion takes the static spec
+      # URL and the post-download fetchTarballURLAndSignature call is
+      # gated on the pin carrying no hash (corepack 0.34: `if (!build[1])`)
+      echo "default registry: static tarball URL (hashed pin — corepack makes no metadata request)"
+      ;;
+    *)
+      if [ "${COREPACK_INTEGRITY_KEYS+set}" = set ] &&
+        { [ -z "${COREPACK_INTEGRITY_KEYS}" ] || [ "${COREPACK_INTEGRITY_KEYS}" = "0" ]; }; then
+        echo "default registry: static tarball URL (hashless pin, integrity checking disabled — no metadata request)"
+      else
+        # a hashless pin with integrity checking enabled makes corepack
+        # request the metadata AFTER the download, to verify the npm
+        # registry signature — so the metadata endpoint is a real
+        # dependency of this path too and gets the same probe; the
+        # integrity presence check covers the one field this path reads
+        meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
+          echo "registry metadata fetch failed (hashless pin: corepack requests it post-download for signature verification)"
+          return 1
+        }
+        echo "$meta" | grep -q '"integrity"' || {
+          echo "registry metadata carries no dist.integrity (hashless pin: corepack signature verification would fail)"
+          return 1
+        }
+        echo "default registry: hashless pin — metadata probed (corepack verifies the registry signature post-download)"
+      fi
+      ;;
+    esac
   else
     meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
       echo "registry metadata fetch failed (the request corepack install makes first)"
