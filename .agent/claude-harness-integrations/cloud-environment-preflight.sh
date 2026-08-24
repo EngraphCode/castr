@@ -110,7 +110,10 @@ probe_vantage() {
     # user:token@proxy:8080), so strip userinfo with or without one
     echo "$1" | sed -E 's|^(https?://)?[^@/]*@|\1|'
   }
-  echo "proxy: HTTPS_PROXY=$(redact_url "${HTTPS_PROXY:-}") HTTP_PROXY=$(redact_url "${HTTP_PROXY:-}") NO_PROXY=${NO_PROXY:-unset}"
+  # report the EFFECTIVE values under curl's precedence: lowercase wins,
+  # and http_proxy exists only in lowercase — a card showing a variable
+  # curl is not using would misidentify the network vantage
+  echo "proxy (effective): https_proxy=$(redact_url "${https_proxy:-${HTTPS_PROXY:-}}") http_proxy=$(redact_url "${http_proxy:-}") all_proxy=$(redact_url "${all_proxy:-${ALL_PROXY:-}}") no_proxy=${no_proxy:-${NO_PROXY:-unset}}"
   local d
   for d in /opt/node*/bin; do echo "image node dir: ${d}"; done
   command -v node >/dev/null 2>&1 && echo "node on PATH: $(node --version 2>/dev/null)" || echo "no node on PATH"
@@ -226,7 +229,10 @@ probe_session_hook_preflights() {
       # other probe — a hook preflight that hangs must become that repo's
       # failure, not swallow the summary (timeout exit 124 lands in the
       # FAILED branch)
-      elif (cd "$repo" && timeout --kill-after=10 120 ./.agent/setup/cloud-session-preflight.sh); then
+      # the bound exceeds a hook's complete retry budget (two endpoints x
+      # (30s attempt + 2s sleep + 30s retry) ~ 124s) plus margin, so a
+      # slow-but-succeeding hook is never killed into a false failure
+      elif (cd "$repo" && timeout --kill-after=10 180 ./.agent/setup/cloud-session-preflight.sh); then
         echo "hook preflight passed: ${repo}"
       else
         echo "hook preflight FAILED: ${repo}"
