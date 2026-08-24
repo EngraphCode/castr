@@ -772,3 +772,31 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   diverging on isPublic — aligned in-slice), and coverage gaps, all fixed before the PR
   opened. The pre-execution openapi-expert dispatch changed the design materially
   (order preservation instead of canonical sorting) — cheapest correction of the slice.
+
+## 2026-08-24 (identity directives sitting — same session as the loop review)
+
+- **The identity chimera has a measured root cause** (owner's directive 1 confirmed
+  firsthand): one cloud seat produced THREE tuples in one day. The Claude SessionStart
+  hook writes BOTH `PRACTICE_AGENT_SESSION_ID_CLAUDE` (harness session UUID, `d36e5c…`)
+  and `ENGRAPH_AGENT_IDENTITY_OVERRIDE` (the name derived from it) into CLAUDE_ENV_FILE.
+  Exporting a different seed (the platform session id `01FV6r…`) changes prefix + uuid
+  but the pinned override still forces the OLD name → a mixed-provenance tuple
+  ("Lacustrine Anchoring Stern" / `01FV6r` / uuid-from-01FV6r) that no single seed
+  produces. Pre-compaction shells without the override derived "Flamebright Burning
+  Caldera" from the same manual seed. Cure routed structurally (plan
+  `practice-equality-identity-and-cognition`, ID-1/ID-2): one seed-precedence rule
+  (`CLAUDE_CODE_REMOTE_SESSION_ID` payload, type tag stripped, on cloud seats; harness
+  session_id on CLI), name always derived from the live seed, hook never pins a name.
+- **The platform session id IS machine-readable in-container**:
+  `CLAUDE_CODE_REMOTE_SESSION_ID=cse_<id>` (env form; URLs and Claude-Session trailers
+  use `session_<id>` — same payload). No scraping needed; the owner's proposed unit is
+  deterministically available to hooks and CLIs.
+- **ULID prefix crowding**: cloud ids are ULID-shaped; first-6 of a ULID is
+  timestamp-derived, so sessions created within ~4 minutes share a session_id_prefix.
+  Not a schema break — PDR-076a's uuid stays the canonical disambiguator and OCE's
+  visual-disambiguator token the display guard — but worth stating in the PDR-027
+  cloud-seat clause (plan ID-4) instead of discovering it at the first collision.
+- **Commit-queue guard pattern lesson**: a git window claim registers for the guard only
+  when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
+  (kind already `git`) is rejected as "not an active git:index/head claim". The kind
+  carries the `git:`; the pattern carries only `index/head`.
