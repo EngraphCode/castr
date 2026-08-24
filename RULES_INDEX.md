@@ -134,6 +134,7 @@ without proportional value.
 | `.agent/rules/rules-have-no-exceptions.md`                                 | always-on      | —                                                                                                |
 | `.agent/rules/sha-prefix-in-collaboration-content.md`                      | always-on      | —                                                                                                |
 | `.agent/rules/ship-independent-coordinate-dependent.md`                    | always-on      | —                                                                                                |
+| `.agent/rules/silence-is-never-liveness.md`                                | always-on      | —                                                                                                |
 | `.agent/rules/stage-by-explicit-pathspec.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/strict-validation-at-boundary.md`                            | always-on      | —                                                                                                |
 | `.agent/rules/subagent-practice-core-protection.md`                        | always-on      | —                                                                                                |
