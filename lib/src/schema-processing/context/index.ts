@@ -50,6 +50,7 @@ export {
   type IRDependencyNode,
   serializeIR,
   deserializeIR,
+  IR_SCHEMA_VERSION,
   isCastrDocument,
   isCastrAdditionalOperation,
   isIRComponent,

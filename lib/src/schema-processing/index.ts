@@ -59,6 +59,7 @@ export {
   allOperations,
   serializeIR,
   deserializeIR,
+  IR_SCHEMA_VERSION,
   isCastrDocument,
   isCastrAdditionalOperation,
   isIRComponent,
