@@ -341,11 +341,10 @@ check_repo_pnpm_pin() {
   if [ "$has_envfile" = 0 ]; then
     case " ${PNPM_PINS_SEEN} " in
     *" ${pm} "*)
-      echo "pin already verified (${repo}): ${pm%%+*}"
+      echo "pin already verified (${repo}): $(echo "${pm%%[+#]*}" | sed -E 's|^(pnpm@[a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
       return 0
       ;;
     esac
-    PNPM_PINS_SEEN="${PNPM_PINS_SEEN} ${pm}"
   fi
   # the env-dependent probe runs in a subshell so one repo's env file
   # never leaks into another repo's probe (corepack scopes it per project)
@@ -356,6 +355,13 @@ check_repo_pnpm_pin() {
     fi
     check_repo_pin_download "$repo" "$pm"
   )
+  local rc=$?
+  # a pin joins the verified set only on SUCCESS — recording it up front
+  # would label a failed pin "already verified" in the next repo
+  if [ "$rc" = 0 ] && [ "$has_envfile" = 0 ]; then
+    PNPM_PINS_SEEN="${PNPM_PINS_SEEN} ${pm}"
+  fi
+  return $rc
 }
 
 corepack_load_repo_env() {
@@ -381,8 +387,41 @@ corepack_load_repo_env() {
   done <"$1"
 }
 
+verify_pin_digest() {
+  # argument is "<algo>.<hex>" or empty (no digest declared); corepack
+  # pins declare their algorithm (the npm dist.integrity digest
+  # re-encoded as hex, or a URL pin's fragment) and the README's
+  # canonical example is sha224 — dispatch on the declared algorithm,
+  # never assume sha512
+  local pin_hash="$1" algo expected computed
+  if [ -z "$pin_hash" ]; then
+    echo "packageManager pin carries no digest — download verified reachable, digest not pinned"
+    return 0
+  fi
+  algo=${pin_hash%%.*}
+  expected=${pin_hash#*.}
+  if command -v "${algo}sum" >/dev/null 2>&1; then
+    computed=$("${algo}sum" "${PF_TMP}/pnpm.tgz" | cut -d' ' -f1)
+  elif command -v openssl >/dev/null 2>&1; then
+    computed=$(openssl dgst "-${algo}" -r "${PF_TMP}/pnpm.tgz" 2>/dev/null | cut -d' ' -f1)
+  else
+    echo "no tool available to compute a ${algo} digest — pin cannot be verified"
+    return 1
+  fi
+  test -n "$computed" || {
+    echo "computing the ${algo} digest failed (unsupported algorithm?)"
+    return 1
+  }
+  if [ "$computed" = "$expected" ]; then
+    echo "pnpm tarball ${algo} digest matches the packageManager pin"
+  else
+    echo "pnpm tarball ${algo} digest MISMATCH against the packageManager pin"
+    return 1
+  fi
+}
+
 check_repo_pin_download() {
-  local repo="$1" pm="$2" version expected computed algo
+  local repo="$1" pm="$2" version
   version=${pm#pnpm@}
   version=${version%%+*}
   # an env file can disable corepack's network access for this repo only —
@@ -414,6 +453,46 @@ check_repo_pin_download() {
     auth=(-H "Authorization: Basic $(printf ':' | base64 | tr -d '\n')")
     auth_kind=basic-empty
   fi
+  # corepack accepts pnpm@<URL>[#<algo>.<hex>] only when the effective
+  # environment (env file included) sets COREPACK_ENABLE_UNSAFE_CUSTOM_URLS=1
+  # — otherwise `corepack install` rejects the pin with a UsageError, and
+  # this probe fails the same way. The fragment is the declared digest,
+  # the download URL is the reference minus its fragment, and no registry
+  # metadata is involved (corepack 0.34 parseURLReference); download auth
+  # follows the same httpUtils rules as the registry path
+  case "$pm" in
+  pnpm@*://*)
+    if [ "${COREPACK_ENABLE_UNSAFE_CUSTOM_URLS:-}" != "1" ]; then
+      echo "URL packageManager pin in ${repo##*/} without COREPACK_ENABLE_UNSAFE_CUSTOM_URLS=1 — corepack install rejects the pin outright"
+      return 1
+    fi
+    tarball=${pm#pnpm@}
+    local url_hash=""
+    case "$tarball" in
+    *#*)
+      url_hash=${tarball#*#}
+      tarball=${tarball%%#*}
+      ;;
+    esac
+    echo "pinned pnpm (${repo##*/}): custom URL pin"
+    echo "tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
+    tarball_auth=()
+    case "$auth_kind" in
+    basic) tarball_auth=("${auth[@]}") ;;
+    bearer)
+      if [ "$(normalise_origin "$tarball")" = "$(normalise_origin "$registry")" ]; then
+        tarball_auth=("${auth[@]}")
+      fi
+      ;;
+    esac
+    curl -fsSL -m 120 "${tarball_auth[@]}" "$tarball" -o "${PF_TMP}/pnpm.tgz" || {
+      echo "custom-URL pnpm tarball download failed"
+      return 1
+    }
+    verify_pin_digest "$url_hash"
+    return $?
+    ;;
+  esac
   echo "pinned pnpm (${repo##*/}): ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
     tarball="https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz"
@@ -499,38 +578,11 @@ check_repo_pin_download() {
     echo "pinned pnpm tarball download failed"
     return 1
   }
+  local pin_hash=""
   case "$pm" in
-  *+*.*)
-    # corepack pins declare their algorithm (+<algo>.<hex>, the npm
-    # dist.integrity digest re-encoded as hex) and its README's canonical
-    # example is sha224 — dispatch on the declared algorithm, never
-    # assume sha512
-    algo=${pm#*+}
-    algo=${algo%%.*}
-    expected=${pm#*+"${algo}".}
-    if command -v "${algo}sum" >/dev/null 2>&1; then
-      computed=$("${algo}sum" "${PF_TMP}/pnpm.tgz" | cut -d' ' -f1)
-    elif command -v openssl >/dev/null 2>&1; then
-      computed=$(openssl dgst "-${algo}" -r "${PF_TMP}/pnpm.tgz" 2>/dev/null | cut -d' ' -f1)
-    else
-      echo "no tool available to compute a ${algo} digest — pin cannot be verified"
-      return 1
-    fi
-    test -n "$computed" || {
-      echo "computing the ${algo} digest failed (unsupported algorithm?)"
-      return 1
-    }
-    if [ "$computed" = "$expected" ]; then
-      echo "pnpm tarball ${algo} digest matches the packageManager pin"
-    else
-      echo "pnpm tarball ${algo} digest MISMATCH against the packageManager pin"
-      return 1
-    fi
-    ;;
-  *)
-    echo "packageManager pin carries no digest — download verified reachable, digest not pinned"
-    ;;
+  *+*.*) pin_hash=${pm#*+} ;;
   esac
+  verify_pin_digest "$pin_hash"
 }
 
 probe_npm_registry() {
@@ -619,6 +671,10 @@ probe_git_core_ppa() {
     echo "gpg/gpgv unavailable — the key-to-metadata relationship setup relies on cannot be verified"
     return 1
   fi
+  # metadata and signature only — resolving and fetching the git .deb
+  # and its dependency archives would duplicate the install here; setup's
+  # `apt-get install -y git` is the first exercise of those downloads
+  echo "bound: the git package archives (apt-get install's .deb fetches) are not probed"
 }
 
 probe_base_image_apt_sources() {
