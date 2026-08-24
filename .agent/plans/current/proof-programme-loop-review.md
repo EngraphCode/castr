@@ -93,7 +93,10 @@ todos:
     content: >-
       Routine-definition and skills evaluation, general: routine-prompt.md
       against the live trigger's stored prompt and config (drift is a
-      finding; the file is the authority per its own mis-armed clause);
+      finding; the file is the authority — its Authority line binds it to
+      parent-plan.md and ADR-051, while the mis-armed fallback lives in
+      the TRIGGER's stored prompt, not the file, so diff both
+      directions);
       the fresh-session-per-fire model's assumptions (what the fired
       session can see; permission surface; the outcome branch configured
       on the live trigger — read it from the trigger config, not from any
