@@ -40,7 +40,8 @@ reviews it. Do not execute queue items from this seat.
   UNATTESTED, never inferred.
 - **Deliverable**: R6's dated report under `.agent/analysis-and-reports/`,
   verdicts + routed proposals (warrant + falsifier each), thread record and
-  plan statuses updated, wrap run.
+  plan statuses updated, and the `engraph-wrap` closeout programme run
+  (ported from OCE at owner word, PR #48 review thread).
 - **Sibling session**: a parallel review of the Slack Watcher estate runs
   in OCE (thread `slack-watcher-estate-review` there). Independent scopes;
   if a finding belongs to the other estate, route it as a pointer to that

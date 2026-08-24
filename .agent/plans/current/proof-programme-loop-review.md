@@ -120,8 +120,8 @@ todos:
       a warrant + falsifier, routed to castr's lanes (queue slices for
       mechanical fixes; owner ballot items for decision-class changes).
       DONE WHEN the report exists with all three sections populated, the
-      thread record and this plan's todo statuses are updated, and wrap
-      has run.
+      thread record and this plan's todo statuses are updated, and the
+      engraph-wrap closeout programme (.agent/skills/wrap) has run.
     status: pending
     depends_on: [R2, R3, R4, R5]
 execution_contract: >-
