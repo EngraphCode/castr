@@ -95,6 +95,21 @@ host_reachable() {
   return 1
 }
 
+normalise_origin() {
+  # corepack compares origins via new URL(...).origin, which lowercases
+  # the scheme and host, drops userinfo, and omits a scheme-default port
+  # — a raw string comparison would treat HTTPS://HOST:443 and
+  # https://host as different origins and mis-scope the Bearer token
+  local scheme hostport
+  scheme=$(echo "$1" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*)://.*|\1|' | tr '[:upper:]' '[:lower:]')
+  hostport=$(echo "$1" | sed -E 's|^[a-zA-Z][a-zA-Z0-9+.-]*://([^@/]*@)?([^/]+).*|\2|' | tr '[:upper:]' '[:lower:]')
+  case "${scheme}:${hostport}" in
+  https:*:443) hostport=${hostport%:443} ;;
+  http:*:80) hostport=${hostport%:80} ;;
+  esac
+  echo "${scheme}://${hostport}"
+}
+
 FIRST_REPO=""
 NODE_MAJOR=""
 
@@ -295,7 +310,7 @@ probe_nodejs_org() {
 check_repo_pnpm_pin() {
   # one repo's packageManager pin, downloaded and digest-recomputed the
   # way `corepack install` would fetch it in that repo
-  local repo="$1" pm version expected computed algo
+  local repo="$1" pm envfile="" has_envfile=0
   pm=$(grep -o '"packageManager"[: ]*"[^"]*"' "$repo/package.json" | sed -E 's/.*"packageManager"[: ]*"([^"]*)".*/\1/')
   test -n "$pm" || {
     echo "no packageManager pin in ${repo}/package.json"
@@ -308,31 +323,96 @@ check_repo_pnpm_pin() {
     return 1
     ;;
   esac
-  # identical pins across repos need verifying once, not re-downloading
-  case " ${PNPM_PINS_SEEN} " in
-  *" ${pm} "*)
-    echo "pin already verified (${repo}): ${pm%%+*}"
-    return 0
-    ;;
-  esac
-  PNPM_PINS_SEEN="${PNPM_PINS_SEEN} ${pm}"
+  # corepack resolves a per-project env file before installing (corepack
+  # 0.34 source: path.resolve(currCwd, COREPACK_ENV_FILE ?? ".corepack.env");
+  # "0" disables it): only COREPACK_* keys load, and the process
+  # environment wins over the file
+  if [ "${COREPACK_ENV_FILE:-}" != "0" ]; then
+    case "${COREPACK_ENV_FILE:-}" in
+    /*) envfile="${COREPACK_ENV_FILE}" ;;
+    *) envfile="${repo}/${COREPACK_ENV_FILE:-.corepack.env}" ;;
+    esac
+    [ -f "$envfile" ] && has_envfile=1
+  fi
+  # identical pins across repos need verifying once, not re-downloading —
+  # but only when the repo carries no corepack env file: an env file can
+  # change the registry, auth, or network posture for the same pin, so
+  # such a repo is always probed under its own effective environment
+  if [ "$has_envfile" = 0 ]; then
+    case " ${PNPM_PINS_SEEN} " in
+    *" ${pm} "*)
+      echo "pin already verified (${repo}): ${pm%%+*}"
+      return 0
+      ;;
+    esac
+    PNPM_PINS_SEEN="${PNPM_PINS_SEEN} ${pm}"
+  fi
+  # the env-dependent probe runs in a subshell so one repo's env file
+  # never leaks into another repo's probe (corepack scopes it per project)
+  (
+    if [ "$has_envfile" = 1 ]; then
+      echo "corepack env file loaded: ${envfile} (COREPACK_* keys only; process env wins)"
+      corepack_load_repo_env "$envfile"
+    fi
+    check_repo_pin_download "$repo" "$pm"
+  )
+}
+
+corepack_load_repo_env() {
+  # mirror corepack's env-file semantics: parse KEY=VALUE lines, keep only
+  # COREPACK_* keys, and let an already-set process variable win (corepack
+  # spreads {...fileEntries, ...process.env}); one layer of matching
+  # quotes is stripped the way util.parseEnv does
+  local line key val
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+    COREPACK_[A-Za-z0-9_]*=*) ;;
+    *) continue ;;
+    esac
+    key=${line%%=*}
+    if [ "${!key+set}" != set ]; then
+      val=${line#*=}
+      case "$val" in
+      \"*\") val=${val#\"} && val=${val%\"} ;;
+      \'*\') val=${val#\'} && val=${val%\'} ;;
+      esac
+      export "${key}=${val}"
+    fi
+  done <"$1"
+}
+
+check_repo_pin_download() {
+  local repo="$1" pm="$2" version expected computed algo
   version=${pm#pnpm@}
   version=${version%%+*}
-  # mirror corepack's own request flow (corepack 0.34 source): auth is
-  # COREPACK_NPM_TOKEN as Bearer, else COREPACK_NPM_USERNAME/PASSWORD as
-  # Basic; a custom registry gets a metadata lookup whose dist.tarball is
-  # followed, while the default path downloads the pinned spec URL directly
+  # an env file can disable corepack's network access for this repo only —
+  # the same refusal `corepack install` would hit in setup
+  if [ "${COREPACK_ENABLE_NETWORK:-1}" = "0" ]; then
+    echo "COREPACK_ENABLE_NETWORK=0 in effect for ${repo##*/}: corepack install cannot download the pinned pnpm on a fresh builder"
+    return 1
+  fi
+  # mirror corepack's FINAL auth precedence (httpUtils.fetch, corepack
+  # 0.34 source), which is truthiness-based and applied after the
+  # metadata request's presence-based headers: a non-empty token wins as
+  # Bearer; else a non-empty username OR password wins as Basic (an unset
+  # partner interpolates as the literal string "undefined" in corepack's
+  # template — mirrored faithfully); presence-only empty credentials
+  # survive solely on the metadata request, where the initial
+  # presence-based header is never overwritten
   local registry auth=() auth_kind=none meta tarball tarball_auth
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
-  # corepack tests each variable's PRESENCE (`in process.env`), never
-  # truthiness — an empty token still selects Bearer, and an empty
-  # password is a valid Basic credential
-  if [ "${COREPACK_NPM_TOKEN+set}" = set ]; then
+  if [ -n "${COREPACK_NPM_TOKEN:-}" ]; then
     auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
     auth_kind=bearer
-  elif [ "${COREPACK_NPM_USERNAME+set}" = set ] && [ "${COREPACK_NPM_PASSWORD+set}" = set ]; then
-    auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
+  elif [ -n "${COREPACK_NPM_USERNAME:-}" ] || [ -n "${COREPACK_NPM_PASSWORD:-}" ]; then
+    auth=(-H "Authorization: Basic $(printf '%s:%s' "${COREPACK_NPM_USERNAME-undefined}" "${COREPACK_NPM_PASSWORD-undefined}" | base64 | tr -d '\n')")
     auth_kind=basic
+  elif [ "${COREPACK_NPM_TOKEN+set}" = set ]; then
+    auth=(-H "Authorization: Bearer ")
+    auth_kind=bearer-empty
+  elif [ "${COREPACK_NPM_USERNAME+set}" = set ] && [ "${COREPACK_NPM_PASSWORD+set}" = set ]; then
+    auth=(-H "Authorization: Basic $(printf ':' | base64 | tr -d '\n')")
+    auth_kind=basic-empty
   fi
   echo "pinned pnpm (${repo##*/}): ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
@@ -400,15 +480,17 @@ check_repo_pnpm_pin() {
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
   echo "tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
-  # mirror corepack's download-auth rules exactly: Basic credentials go
-  # on EVERY request (httpUtils.fetch applies username/password to all
-  # input URLs), while the Bearer token is origin-scoped — added only
-  # when the tarball origin equals the registry origin
+  # mirror corepack's download-auth rules exactly: non-empty Basic
+  # credentials go on EVERY request (httpUtils.fetch applies
+  # username/password to all input URLs), the non-empty Bearer token is
+  # origin-scoped — added only when the tarball origin equals the
+  # registry origin — and presence-only empty credentials never reach
+  # downloads (they exist only in the metadata request's initial headers)
   tarball_auth=()
   case "$auth_kind" in
   basic) tarball_auth=("${auth[@]}") ;;
   bearer)
-    if [ "$(echo "$tarball" | sed -E 's|^(https?://[^/]+).*|\1|')" = "$(echo "$registry" | sed -E 's|^(https?://[^/]+).*|\1|')" ]; then
+    if [ "$(normalise_origin "$tarball")" = "$(normalise_origin "$registry")" ]; then
       tarball_auth=("${auth[@]}")
     fi
     ;;
@@ -473,6 +555,10 @@ probe_npm_registry() {
     [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
     check_repo_pnpm_pin "$repo" || failed=1
   done
+  # this probe proves the corepack/pnpm acquisition path only — setup's
+  # `pnpm install` is the first exercise of each lockfile resolution, and
+  # probing every dependency URL would download the full graphs here
+  echo "bound: the repos' project dependency fetches (pnpm install's lockfile resolutions) are not probed"
   return $failed
 }
 
@@ -508,18 +594,23 @@ probe_git_core_ppa() {
       echo "key dearmor failed"
       return 1
     }
-    # gpgv exits non-zero when ANY of the file's signatures cannot be
-    # checked, and Launchpad InRelease files carry a second signature from
-    # a key apt does not need — apt accepts one good known signature, so
-    # classify by that outcome, not by gpgv's exit status (measured
-    # in-session 2026-08-24: "Good signature" printed with non-zero exit)
-    local verify_out
-    verify_out=$(gpgv --keyring ${PF_TMP}/gitcore-keyring.gpg ${PF_TMP}/gitcore-inrelease 2>&1) || true
-    if echo "$verify_out" | grep -q "Good signature"; then
-      echo "InRelease carries a good signature from the fetched key"
+    # classify by gpgv's machine-readable --status-fd lines, never by
+    # exit code or localised prose: gpgv exits non-zero when ANY of the
+    # file's signatures cannot be checked, and Launchpad InRelease files
+    # carry a second signature from a key apt does not need
+    # (ERRSIG/NO_PUBKEY tolerated — measured in-session 2026-08-24,
+    # GOODSIG+VALIDSIG emitted alongside them); "Good signature" prose can
+    # also accompany an expired key, which apt classifies as invalid, so
+    # require GOODSIG and reject the expiry/revocation/bad statuses apt
+    # rejects (EXPKEYSIG, REVKEYSIG, EXPSIG, BADSIG)
+    gpgv --status-fd 3 --keyring ${PF_TMP}/gitcore-keyring.gpg \
+      ${PF_TMP}/gitcore-inrelease >/dev/null 2>&1 3>${PF_TMP}/gpgv-status || true
+    if grep -q "^\[GNUPG:\] GOODSIG" ${PF_TMP}/gpgv-status &&
+      ! grep -qE "^\[GNUPG:\] (EXPKEYSIG|REVKEYSIG|EXPSIG|BADSIG)" ${PF_TMP}/gpgv-status; then
+      echo "InRelease carries a good, unexpired signature from the fetched key"
     else
-      echo "InRelease has NO good signature from the fetched key (rotated or revoked?):"
-      echo "$verify_out" | tail -3
+      echo "InRelease has NO acceptable signature from the fetched key (rotated, expired, or revoked?):"
+      grep "^\[GNUPG:\]" ${PF_TMP}/gpgv-status | tail -5
       return 1
     fi
   else
@@ -540,7 +631,7 @@ probe_base_image_apt_sources() {
   # pointer), which apt never contacts, and misattribute an unrelated block
   # to apt sources. Each pair probes the exact InRelease path `apt-get
   # update` fetches — roots and index pages are not what apt requests.
-  local pairs pair url suite target failed=0
+  local pairs pair url suite target inrelease_code failed=0
   pairs=$({
     awk '/^[[:space:]]*deb(-src)?[[:space:]]/ {
       for (i = 2; i <= NF; i++)
@@ -589,21 +680,29 @@ probe_base_image_apt_sources() {
     esac
     # apt falls back to Release + Release.gpg when a repository publishes
     # no InRelease — and rejects an unsigned Release, so the fallback is
-    # usable only when BOTH fallback files answer
-    # an unreachable source is reported but NEVER fatal here: apt-get
-    # update exits 0 with a warning for an unreachable source, so failing
-    # this probe would block session creation where the real setup
-    # continues (the git-core PPA that setup itself adds keeps its own
-    # fatal probe above)
+    # usable only when BOTH fallback files answer.
+    # apt-get update's exit then depends on HOW the metadata failed
+    # (both cases measured in-session 2026-08-24): a transport-level
+    # failure (unreachable host, proxy CONNECT denial) is a W: warning
+    # and exit 0 — reported here but never fatal — while a definitive
+    # HTTP error response on an active source's metadata is an E: error
+    # and exit 100, which aborts provisioning, so that case fails the
+    # probe. The InRelease outcome decides the class: a completed
+    # exchange with an error code is the fatal shape, code 000 is
+    # transport
     if ! host_reachable "${target}/InRelease"; then
+      inrelease_code=$TRY_CODE
       if host_reachable "${target}/Release" && host_reachable "${target}/Release.gpg"; then
         echo "no InRelease but signed Release (+ Release.gpg) present — apt's fallback succeeds here"
+      elif [ "$inrelease_code" = "000" ]; then
+        echo "WARNING: source transport-unreachable — apt-get update warns (exit 0) and setup continues"
       else
-        echo "WARNING: source unreachable — apt-get update warns and continues; not fatal to setup"
+        echo "active source answers HTTP ${inrelease_code} for its metadata — apt-get update exits non-zero on this and setup aborts"
+        failed=1
       fi
     fi
   done <<< "$pairs"
-  return 0
+  return $failed
 }
 
 probe_gitleaks_release() {
@@ -644,4 +743,4 @@ if [ ${#FAILURES[@]} -gt 0 ]; then
   for f in "${FAILURES[@]}"; do echo "FAILED ASSUMPTION: ${f}"; done
   exit 1
 fi
-echo "every external assumption the setup script makes holds from this vantage point"
+echo "every probed assumption holds from this vantage point (each 'bound:' line above names what was deliberately not proven)"
