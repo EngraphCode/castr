@@ -449,11 +449,12 @@ probe_base_image_apt_sources() {
     */) target="${url%/}/${suite%/}" ;;
     *) target="${url%/}/dists/${suite}" ;;
     esac
-    # apt falls back to Release (+ Release.gpg) when a repository publishes
-    # no InRelease — a source is unreachable only when both forms fail
+    # apt falls back to Release + Release.gpg when a repository publishes
+    # no InRelease — and rejects an unsigned Release, so the fallback is
+    # usable only when BOTH fallback files answer
     if ! host_reachable "${target}/InRelease"; then
-      if host_reachable "${target}/Release"; then
-        echo "no InRelease but Release present — apt's fallback succeeds here"
+      if host_reachable "${target}/Release" && host_reachable "${target}/Release.gpg"; then
+        echo "no InRelease but signed Release (+ Release.gpg) present — apt's fallback succeeds here"
       else
         failed=1
       fi
