@@ -1,7 +1,7 @@
 import { v5 as uuidv5 } from 'uuid';
 
 import { deriveIdentity } from '../core/agent-identity/index.js';
-import { stripSessionIdTag } from '../core/agent-identity/session-seed.js';
+import { stripSessionIdTagIfPresent } from '../core/agent-identity/session-seed.js';
 
 import {
   type CollaborationAgentId,
@@ -149,7 +149,7 @@ function resolveCollaborationSeed(env: CollaborationStateEnvironment): SeedCandi
     // stay ahead of it — they are the operator's stated contract.
     {
       source: 'CLAUDE_CODE_REMOTE_SESSION_ID',
-      value: strippedRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID),
+      value: stripSessionIdTagIfPresent(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     },
     { source: 'PRACTICE_AGENT_SESSION_ID_CURSOR', value: env.PRACTICE_AGENT_SESSION_ID_CURSOR },
     { source: 'PRACTICE_AGENT_SESSION_ID_GEMINI', value: env.PRACTICE_AGENT_SESSION_ID_GEMINI },
@@ -193,14 +193,6 @@ function practiceSessionVarForPlatform(platform: string): string | undefined {
     default:
       return undefined;
   }
-}
-
-function strippedRemoteSessionId(value: string | undefined): string | undefined {
-  const trimmed = nonEmptyValue(value);
-  if (trimmed === undefined) {
-    return undefined;
-  }
-  return stripSessionIdTag(trimmed);
 }
 
 function antigravitySourceMetadataConversationId(value: string | undefined): string | undefined {

@@ -3,7 +3,7 @@ import {
   type DeriveIdentityOptions,
   type IdentityResult,
 } from '../core/agent-identity/index.js';
-import { stripSessionIdTag } from '../core/agent-identity/session-seed.js';
+import { stripSessionIdTagIfPresent } from '../core/agent-identity/session-seed.js';
 import {
   parseAgentIdentityArgs,
   type AgentIdentityFormat,
@@ -117,14 +117,6 @@ export function runAgentIdentityCli(input: AgentIdentityCliInput): AgentIdentity
   }
 }
 
-function strippedRemoteSessionId(value: string | undefined): string | undefined {
-  const trimmed = nonEmptyEnvironmentValue(value);
-  if (trimmed === undefined) {
-    return undefined;
-  }
-  return stripSessionIdTag(trimmed);
-}
-
 function deriveOptions(override: string | undefined): DeriveIdentityOptions {
   if (override === undefined) {
     return {};
@@ -139,7 +131,7 @@ function resolveSeed(seed: string | undefined, env: AgentIdentityCliEnvironment)
   const resolvedSeed = firstSeed([
     nonEmptyEnvironmentValue(seed),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CLAUDE),
-    strippedRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID),
+    stripSessionIdTagIfPresent(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CURSOR),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_GEMINI),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CODEX),

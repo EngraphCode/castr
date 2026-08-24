@@ -36,3 +36,16 @@ export function stripSessionIdTag(value: string): string {
   }
   return payload;
 }
+
+/**
+ * Optional-input companion to {@link stripSessionIdTag}: strips the tag when
+ * a non-blank value is present, and resolves `undefined` for absent or
+ * blank input so env-cascade callers can splice it directly.
+ */
+export function stripSessionIdTagIfPresent(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  if (trimmed === undefined || trimmed.length === 0) {
+    return undefined;
+  }
+  return stripSessionIdTag(trimmed);
+}
