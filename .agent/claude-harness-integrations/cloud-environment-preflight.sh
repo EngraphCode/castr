@@ -20,12 +20,17 @@
 # on an UNPROVISIONED container: use that only for diagnosis, then paste
 # the real setup script back.
 #
-# Contract: read-only. Probes write nothing outside /tmp and install
-# nothing. Every external host the setup script contacts has a probe here;
+# Contract: read-only. Probes write nothing outside a private mktemp -d
+# directory (removed on exit) and install nothing — fixed predictable
+# temp names would be symlink-followable and violate the
+# machine-local-path invariant. Every external host the setup script contacts has a probe here;
 # adding a host to the setup script without adding its probe in the same
 # commit is drift (cloud-environment.md § Validating and diagnosing).
 set -uo pipefail # deliberately NOT -e: every probe must run to the summary
 shopt -s nullglob
+
+PF_TMP=$(mktemp -d) || exit 1
+trap 'rm -rf "${PF_TMP}"' EXIT
 
 # value-synced with cloud-environment-setup.sh (and castr's supply-chain
 # single source, .claude/hooks/_lib/gitleaks-pin.env); bump all together
@@ -267,11 +272,11 @@ probe_nodejs_org() {
     return 1
   }
   echo "tarball resolved: ${tgz}"
-  curl -fsSL -m 60 "https://nodejs.org/dist/latest-v${major}.x/SHASUMS256.txt" -o /tmp/preflight-shasums.txt || {
+  curl -fsSL -m 60 "https://nodejs.org/dist/latest-v${major}.x/SHASUMS256.txt" -o ${PF_TMP}/shasums.txt || {
     echo "SHASUMS256.txt fetch failed"
     return 1
   }
-  grep -q " ${tgz}\$" /tmp/preflight-shasums.txt || {
+  grep -q " ${tgz}\$" ${PF_TMP}/shasums.txt || {
     echo "resolved tarball missing from SHASUMS256.txt"
     return 1
   }
@@ -279,12 +284,12 @@ probe_nodejs_org() {
   # the exact check setup performs (validators recompute, never just
   # record): a truncated or drifted archive must fail here, not only at
   # setup's sha256sum -c
-  curl -fsSL -m 300 "https://nodejs.org/dist/latest-v${major}.x/${tgz}" -o /tmp/preflight-node.tgz || {
+  curl -fsSL -m 300 "https://nodejs.org/dist/latest-v${major}.x/${tgz}" -o ${PF_TMP}/node.tgz || {
     echo "tarball download failed"
     return 1
   }
-  grep " ${tgz}\$" /tmp/preflight-shasums.txt |
-    sed "s|  ${tgz}\$|  /tmp/preflight-node.tgz|" | sha256sum -c -
+  grep " ${tgz}\$" ${PF_TMP}/shasums.txt |
+    sed "s|  ${tgz}\$|  ${PF_TMP}/node.tgz|" | sha256sum -c -
 }
 
 probe_npm_registry() {
@@ -319,7 +324,9 @@ probe_npm_registry() {
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
   if [ -n "${COREPACK_NPM_TOKEN:-}" ]; then
     auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
-  elif [ -n "${COREPACK_NPM_USERNAME:-}" ] && [ -n "${COREPACK_NPM_PASSWORD:-}" ]; then
+  # corepack checks the variables' PRESENCE, and its README permits an
+  # empty COREPACK_NPM_PASSWORD — mirror that, never a non-empty test
+  elif [ "${COREPACK_NPM_USERNAME+set}" = set ] && [ "${COREPACK_NPM_PASSWORD+set}" = set ]; then
     auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
   fi
   echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
@@ -332,8 +339,10 @@ probe_npm_registry() {
     echo "no dist.tarball URL in registry metadata"
     return 1
   }
-  echo "metadata tarball: $(echo "$tarball" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
-  curl -fsSL -m 120 "${auth[@]}" "$tarball" -o /tmp/preflight-pnpm.tgz || {
+  # display strips userinfo AND the query/fragment — a pre-signed tarball
+  # URL can carry its credential in the query string
+  echo "metadata tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')" 
+  curl -fsSL -m 120 "${auth[@]}" "$tarball" -o ${PF_TMP}/pnpm.tgz || {
     echo "pinned pnpm tarball download failed"
     return 1
   }
@@ -343,7 +352,7 @@ probe_npm_registry() {
     # (corepack.cjs: Buffer.from(integrity, base64).toString(hex)), so
     # compare sha512sum's hex output, not a base64 encoding
     expected=${pm#*+sha512.}
-    computed=$(sha512sum /tmp/preflight-pnpm.tgz | cut -d' ' -f1)
+    computed=$(sha512sum ${PF_TMP}/pnpm.tgz | cut -d' ' -f1)
     if [ "$computed" = "$expected" ]; then
       echo "pnpm tarball digest matches the packageManager pin"
     else
@@ -359,11 +368,11 @@ probe_npm_registry() {
 
 probe_keyserver() {
   curl -fsSL -m 60 "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA1715D88E1DF1F24" \
-    -o /tmp/preflight-gitcore-key.asc || {
+    -o ${PF_TMP}/gitcore-key.asc || {
     echo "key fetch failed from keyserver.ubuntu.com"
     return 1
   }
-  grep -q "BEGIN PGP PUBLIC KEY BLOCK" /tmp/preflight-gitcore-key.asc || {
+  grep -q "BEGIN PGP PUBLIC KEY BLOCK" ${PF_TMP}/gitcore-key.asc || {
     echo "response is not a PGP public key block"
     return 1
   }
@@ -376,16 +385,16 @@ probe_git_core_ppa() {
   # writes must verify the metadata apt then fetches), so two independent
   # payload checks would miss a rotated or revoked key
   curl -fsSL -m 60 "https://ppa.launchpadcontent.net/git-core/ppa/ubuntu/dists/noble/InRelease" \
-    -o /tmp/preflight-gitcore-inrelease || {
+    -o ${PF_TMP}/gitcore-inrelease || {
     echo "git-core PPA InRelease fetch failed"
     return 1
   }
-  test -s /tmp/preflight-gitcore-key.asc || {
+  test -s ${PF_TMP}/gitcore-key.asc || {
     echo "signing key missing (keyserver probe runs first and must pass)"
     return 1
   }
   if command -v gpg >/dev/null 2>&1 && command -v gpgv >/dev/null 2>&1; then
-    gpg --dearmor </tmp/preflight-gitcore-key.asc >/tmp/preflight-gitcore-keyring.gpg 2>/dev/null || {
+    gpg --dearmor <${PF_TMP}/gitcore-key.asc >${PF_TMP}/gitcore-keyring.gpg 2>/dev/null || {
       echo "key dearmor failed"
       return 1
     }
@@ -395,7 +404,7 @@ probe_git_core_ppa() {
     # classify by that outcome, not by gpgv's exit status (measured
     # in-session 2026-08-24: "Good signature" printed with non-zero exit)
     local verify_out
-    verify_out=$(gpgv --keyring /tmp/preflight-gitcore-keyring.gpg /tmp/preflight-gitcore-inrelease 2>&1) || true
+    verify_out=$(gpgv --keyring ${PF_TMP}/gitcore-keyring.gpg ${PF_TMP}/gitcore-inrelease 2>&1) || true
     if echo "$verify_out" | grep -q "Good signature"; then
       echo "InRelease carries a good signature from the fetched key"
     else
@@ -489,12 +498,12 @@ probe_gitleaks_release() {
   # or a stale pin would otherwise pass here and fail setup at sha256sum -c
   local url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
   local final
-  final=$(curl -fsSL -m 120 -w '%{url_effective}' "$url" -o /tmp/preflight-gitleaks.tgz 2>/dev/null) || {
+  final=$(curl -fsSL -m 120 -w '%{url_effective}' "$url" -o ${PF_TMP}/gitleaks.tgz 2>/dev/null) || {
     echo "download failed (redirect chain or egress): ${url}"
     return 1
   }
   echo "redirect chain ends at host: $(echo "$final" | sed -E 's|https?://([^/]+).*|\1|')"
-  echo "${GITLEAKS_SHA256_LINUX_X64}  /tmp/preflight-gitleaks.tgz" | sha256sum -c -
+  echo "${GITLEAKS_SHA256_LINUX_X64}  ${PF_TMP}/gitleaks.tgz" | sha256sum -c -
 }
 
 echo "=== CLOUD ENVIRONMENT PREFLIGHT (read-only) ==="
