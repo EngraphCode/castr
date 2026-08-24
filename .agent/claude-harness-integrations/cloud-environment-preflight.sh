@@ -387,6 +387,15 @@ check_repo_pnpm_pin() {
       echo "no dist.tarball URL in registry metadata"
       return 1
     }
+    # corepack rewrites a canonical default-registry tarball URL onto the
+    # custom registry before downloading (installVersion:
+    # url.replace(DEFAULT_NPM_REGISTRY_URL, COREPACK_NPM_REGISTRY), first
+    # occurrence) — a proxy registry that returns upstream dist.tarball
+    # URLs is downloaded from the proxy, never from registry.npmjs.org,
+    # so probing the unrewritten URL would pass on a host corepack never
+    # contacts; the rewrite runs before the auth-scoping below so the
+    # bearer origin comparison sees the URL corepack actually fetches
+    tarball=${tarball/"https://registry.npmjs.org"/${COREPACK_NPM_REGISTRY}}
   fi
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
