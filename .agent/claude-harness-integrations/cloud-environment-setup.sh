@@ -17,7 +17,11 @@
 #   .agent/setup/cloud-session-setup.sh.
 # - A session may carry one or several Practice repos (owner word
 #   2026-08-24, superseding the 2026-08-23 one-repo ruling); the
-#   discovery loop provisions every repo present.
+#   discovery loop provisions every repo present. BOUND: the Node major
+#   comes from the FIRST discovered repo's engines field — the estate's
+#   repos declare the same major, and a mixed-major set is unsupported
+#   (a fail-on-conflict check is a candidate future slice; any
+#   behavioural change here lands with its dialog re-paste step).
 set -euo pipefail
 set -E
 shopt -s nullglob
