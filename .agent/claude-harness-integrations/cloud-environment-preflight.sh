@@ -292,34 +292,36 @@ probe_nodejs_org() {
     sed "s|  ${tgz}\$|  ${PF_TMP}/node.tgz|" | sha256sum -c -
 }
 
-probe_npm_registry() {
-  # corepack downloads the pinned pnpm tarball named by the carried repo's
-  # packageManager field (version + sha512); download that exact artefact
-  # and recompute its digest (validators recompute, never just record) —
-  # a registry ping proves nothing about the path `corepack install` takes
-  test -n "$FIRST_REPO" || {
-    echo "skipped: no Practice repo"
-    return 1
-  }
-  local pm version expected computed
-  pm=$(grep -o '"packageManager"[: ]*"[^"]*"' "$FIRST_REPO/package.json" | sed -E 's/.*"packageManager"[: ]*"([^"]*)".*/\1/')
+check_repo_pnpm_pin() {
+  # one repo's packageManager pin, downloaded and digest-recomputed the
+  # way `corepack install` would fetch it in that repo
+  local repo="$1" pm version expected computed algo
+  pm=$(grep -o '"packageManager"[: ]*"[^"]*"' "$repo/package.json" | sed -E 's/.*"packageManager"[: ]*"([^"]*)".*/\1/')
   test -n "$pm" || {
-    echo "no packageManager pin in ${FIRST_REPO}/package.json"
+    echo "no packageManager pin in ${repo}/package.json"
     return 1
   }
   case "$pm" in
   pnpm@*) ;;
   *)
-    echo "unexpected packageManager (not pnpm): ${pm}"
+    echo "unexpected packageManager (not pnpm) in ${repo}: ${pm}"
     return 1
     ;;
   esac
+  # identical pins across repos need verifying once, not re-downloading
+  case " ${PNPM_PINS_SEEN} " in
+  *" ${pm} "*)
+    echo "pin already verified (${repo}): ${pm%%+*}"
+    return 0
+    ;;
+  esac
+  PNPM_PINS_SEEN="${PNPM_PINS_SEEN} ${pm}"
   version=${pm#pnpm@}
   version=${version%%+*}
   # mirror corepack's own request flow (corepack 0.34 source): auth is
   # COREPACK_NPM_TOKEN as Bearer, else COREPACK_NPM_USERNAME/PASSWORD as
-  # Basic; it fetches registry metadata at pnpm/<version> and follows the
-  # returned dist.tarball URL rather than assuming the canonical path
+  # Basic; a custom registry gets a metadata lookup whose dist.tarball is
+  # followed, while the default path downloads the pinned spec URL directly
   local registry auth=() auth_kind=none meta tarball tarball_auth
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
   # corepack tests each variable's PRESENCE (`in process.env`), never
@@ -332,12 +334,8 @@ probe_npm_registry() {
     auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
     auth_kind=basic
   fi
-  echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
+  echo "pinned pnpm (${repo##*/}): ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
-    # corepack's default path downloads the pinned spec URL directly — the
-    # metadata lookup happens only for a custom registry (corepack 0.34
-    # source: fetchTarballURLAndSignature is called only inside
-    # `if (process.env.COREPACK_NPM_REGISTRY)`)
     tarball="https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz"
     echo "default registry: static tarball URL (corepack makes no metadata request here)"
   else
@@ -363,7 +361,7 @@ probe_npm_registry() {
   fi
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
-  echo "metadata tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')" 
+  echo "tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
   # mirror corepack's download-auth rules exactly: Basic credentials go
   # on EVERY request (httpUtils.fetch applies username/password to all
   # input URLs), while the Bearer token is origin-scoped — added only
@@ -382,23 +380,62 @@ probe_npm_registry() {
     return 1
   }
   case "$pm" in
-  *+sha512.*)
-    # corepack pins are the npm dist.integrity digest re-encoded as HEX
-    # (corepack.cjs: Buffer.from(integrity, base64).toString(hex)), so
-    # compare sha512sum's hex output, not a base64 encoding
-    expected=${pm#*+sha512.}
-    computed=$(sha512sum ${PF_TMP}/pnpm.tgz | cut -d' ' -f1)
-    if [ "$computed" = "$expected" ]; then
-      echo "pnpm tarball digest matches the packageManager pin"
+  *+*.*)
+    # corepack pins declare their algorithm (+<algo>.<hex>, the npm
+    # dist.integrity digest re-encoded as hex) and its README's canonical
+    # example is sha224 — dispatch on the declared algorithm, never
+    # assume sha512
+    algo=${pm#*+}
+    algo=${algo%%.*}
+    expected=${pm#*+"${algo}".}
+    if command -v "${algo}sum" >/dev/null 2>&1; then
+      computed=$("${algo}sum" "${PF_TMP}/pnpm.tgz" | cut -d' ' -f1)
+    elif command -v openssl >/dev/null 2>&1; then
+      computed=$(openssl dgst "-${algo}" -r "${PF_TMP}/pnpm.tgz" 2>/dev/null | cut -d' ' -f1)
     else
-      echo "pnpm tarball digest MISMATCH against the packageManager pin"
+      echo "no tool available to compute a ${algo} digest — pin cannot be verified"
+      return 1
+    fi
+    test -n "$computed" || {
+      echo "computing the ${algo} digest failed (unsupported algorithm?)"
+      return 1
+    }
+    if [ "$computed" = "$expected" ]; then
+      echo "pnpm tarball ${algo} digest matches the packageManager pin"
+    else
+      echo "pnpm tarball ${algo} digest MISMATCH against the packageManager pin"
       return 1
     fi
     ;;
   *)
-    echo "packageManager pin carries no sha512 — download verified reachable, digest not pinned"
+    echo "packageManager pin carries no digest — download verified reachable, digest not pinned"
     ;;
   esac
+}
+
+probe_npm_registry() {
+  # setup runs `corepack install` in EVERY discovered Practice repo, so
+  # every repo's pin is probed (validate the full target estate), and a
+  # registry ping proves nothing about the path corepack install takes
+  test -n "$FIRST_REPO" || {
+    echo "skipped: no Practice repo"
+    return 1
+  }
+  # corepack refuses all network access under COREPACK_ENABLE_NETWORK=0 —
+  # on a fresh builder with an empty corepack cache, setup's
+  # `corepack install` then aborts however reachable the tarball is
+  if [ "${COREPACK_ENABLE_NETWORK:-1}" = "0" ]; then
+    echo "COREPACK_ENABLE_NETWORK=0 is set: corepack install cannot download the pinned pnpm on a fresh builder"
+    return 1
+  fi
+  PNPM_PINS_SEEN=""
+  local repo failed=0
+  for repo in $(find /home /workspace -maxdepth 4 -type d -name .git \
+    -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||'); do
+    [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
+    check_repo_pnpm_pin "$repo" || failed=1
+  done
+  return $failed
 }
 
 probe_keyserver() {
@@ -448,7 +485,10 @@ probe_git_core_ppa() {
       return 1
     fi
   else
-    echo "gpg/gpgv unavailable — InRelease fetched; the key-to-metadata relationship was not verified"
+    # an unavailable verifier is a failed probe, not a silent downgrade —
+    # a clean summary must never claim a relationship it could not check
+    echo "gpg/gpgv unavailable — the key-to-metadata relationship setup relies on cannot be verified"
+    return 1
   fi
 }
 
