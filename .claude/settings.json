@@ -23,7 +23,8 @@
       "Skill(engraph-start-right-thorough)",
       "Skill(engraph-talk-to-slack-watcher)",
       "Skill(engraph-tsdoc)",
-      "Skill(engraph-undo-change)"
+      "Skill(engraph-undo-change)",
+      "Skill(engraph-wrap)"
     ]
   },
   "hooks": {
