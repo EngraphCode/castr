@@ -2,9 +2,12 @@
 
 How claude.ai cloud sessions (web, mobile, routines, `claude --cloud`) are
 provisioned for Practice repos, and how to change that safely. The
-environment is shared by every Practice repo; each session carries exactly
-one repo (owner ruling 2026-08-23), and the environment never knows which
-one in advance.
+environment is shared by every Practice repo; a session may carry one or
+several repos (owner word 2026-08-24, superseding the 2026-08-23
+one-repo ruling), and the environment never knows which in advance —
+discovery provisions every Practice repo present. When a document
+references a file in another repo, use a GitHub URL, never a local
+path (owner word 2026-08-24).
 
 ## The two layers
 

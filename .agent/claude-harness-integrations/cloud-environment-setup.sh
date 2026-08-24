@@ -15,8 +15,9 @@
 # - Every Practice repo present in the session is discovered (never assumed)
 #   and set up via `pnpm install`, `pnpm build`, and the repo's committed hook at
 #   .agent/setup/cloud-session-setup.sh.
-# - One Practice repo per session (owner ruling 2026-08-23); the discovery
-#   loop tolerates more.
+# - A session may carry one or several Practice repos (owner word
+#   2026-08-24, superseding the 2026-08-23 one-repo ruling); the
+#   discovery loop provisions every repo present.
 set -euo pipefail
 set -E
 shopt -s nullglob
