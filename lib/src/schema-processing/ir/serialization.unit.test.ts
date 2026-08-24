@@ -284,6 +284,17 @@ describe('IR Serialization', () => {
     );
   });
 
+  it('should reject a future-versioned document even when its shape passes current guards', () => {
+    const futureIR = {
+      ...mockIR,
+      version: '3.0.0',
+    };
+
+    expect(() => deserializeIR(JSON.stringify(futureIR))).toThrow(
+      /declares schema version "3\.0\.0" but this build reads "2\.0\.0"/,
+    );
+  });
+
   it('should round-trip document-level grouped security through serialization', () => {
     const securedIR: CastrDocument = {
       ...mockIR,

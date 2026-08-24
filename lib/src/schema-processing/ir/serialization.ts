@@ -115,30 +115,29 @@ export function deserializeIR(json: string): CastrDocument {
     return value;
   });
 
+  assertCurrentSchemaVersion(parsed);
+
   if (!isCastrDocument(parsed)) {
-    throw new Error(describeInvalidDocument(parsed));
+    throw new Error('Invalid CastrDocument structure');
   }
   return parsed;
 }
 
 /**
- * Name the failure precisely: a persisted IR stamped with an older schema
- * version fails with the version mismatch called out (the shape it carries
- * predates the current validators — for example the pre-`2.0.0` flat
- * security shape), so the reader knows to regenerate the IR rather than
- * chase a generic structural error.
+ * Reject a persisted IR whose schema-version stamp is not this build's,
+ * BEFORE structural acceptance: an older document may predate the current
+ * validators (for example the pre-`2.0.0` flat security shape), and a
+ * future document may carry fields today's guards tolerate but this build's
+ * writers would silently ignore — either way the honest outcome is a named
+ * version mismatch telling the reader to regenerate the IR, never a partial
+ * read.
  */
-function describeInvalidDocument(parsed: unknown): string {
-  if (
-    isRecord(parsed) &&
-    typeof parsed['version'] === 'string' &&
-    parsed['version'] !== IR_SCHEMA_VERSION
-  ) {
-    return (
+function assertCurrentSchemaVersion(parsed: unknown): void {
+  if (isRecord(parsed) && parsed['version'] !== IR_SCHEMA_VERSION) {
+    throw new Error(
       'Invalid CastrDocument structure: persisted IR declares schema version ' +
-      `"${parsed['version']}" but this build reads "${IR_SCHEMA_VERSION}" — regenerate the IR ` +
-      'from its source document.'
+        `${JSON.stringify(parsed['version'])} but this build reads "${IR_SCHEMA_VERSION}" — ` +
+        'regenerate the IR from its source document.',
     );
   }
-  return 'Invalid CastrDocument structure';
 }
