@@ -1,7 +1,7 @@
 ---
 title: Proof-Programme Loop Review — general analysis, plan, queues, routine, skills, opportunities
-status: current
-lane: current
+status: active
+lane: active
 created: 2026-08-24
 last_updated: 2026-08-24
 owner_directive: >-

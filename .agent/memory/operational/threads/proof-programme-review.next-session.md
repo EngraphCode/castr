@@ -4,12 +4,19 @@ Owner-commissioned review of the proof-programme autonomous loop (ADR-051):
 the parent plan and its queue, the queued decisions and ballot, the routine
 definition (file AND live trigger), the incident and loop-test records, and
 the skills the loop routes through. Plan:
-[`.agent/plans/current/proof-programme-loop-review.md`](../../../plans/current/proof-programme-loop-review.md)
-(status current; legs R1–R6; scope guard inside). Distinct from the
+[`.agent/plans/active/proof-programme-loop-review.md`](../../../plans/active/proof-programme-loop-review.md)
+(status active — promoted current/ → active/ 2026-08-24 as the review
+session's first act; legs R1–R6; scope guard inside). Distinct from the
 `proof-programme` thread itself — that thread RUNS the loop; this one
 reviews it. Do not execute queue items from this seat.
 
-## Current Continuation — NOT STARTED (fresh session picks this up)
+## Current Continuation — IN PROGRESS (2026-08-24, Flamebright Burning Caldera / 01FV6r)
+
+Plan promoted current/ → active/ as the session's first act (thorough
+grounding done; claim registered; review-only seat honoured). Leg R1
+underway.
+
+## Original opening brief (as commissioned)
 
 - **Opening move**: run `engraph-start-right-thorough`, read the plan
   file end to end, PROMOTE it current/ → active/ per the plan lifecycle
@@ -55,6 +62,7 @@ reviews it. Do not execute queue items from this seat.
 
 ## Participating agent identities
 
-| platform            | model          | agent_name (seed)                 | role                                 | last_session |
-| ------------------- | -------------- | --------------------------------- | ------------------------------------ | ------------ |
-| claude-code (cloud) | claude-fable-5 | Buzzard weaves Airstream (01e90b) | plan author (review not yet started) | 2026-08-24   |
+| platform            | model          | agent_name (seed)                    | role                                 | last_session |
+| ------------------- | -------------- | ------------------------------------ | ------------------------------------ | ------------ |
+| claude-code (cloud) | claude-fable-5 | Buzzard weaves Airstream (01e90b)    | plan author (review not yet started) | 2026-08-24   |
+| claude-code (cloud) | claude-fable-5 | Flamebright Burning Caldera (01FV6r) | reviewer (executing legs R1–R6)      | 2026-08-24   |
