@@ -73,8 +73,10 @@ export function planCursorSessionIdentityHook(
   const tabHint = `Oak · ${displayName}`;
   const output = {
     env: {
+      // Seed only — a pinned name override lets a later seed change produce
+      // a mixed-provenance identity tuple; the name derives from the live
+      // seed at every point of use (2026-08-24 chimera cure).
       PRACTICE_AGENT_SESSION_ID_CURSOR: sessionId,
-      ENGRAPH_AGENT_IDENTITY_OVERRIDE: displayName,
     },
     additional_context: identityContext({ displayName, tabHint, prefix }),
     user_message: `${tabHint} — suggested Composer tab title; details in .cursor/${COMPOSER_MIRROR_FILE}`,

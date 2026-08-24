@@ -3,6 +3,7 @@ import {
   type DeriveIdentityOptions,
   type IdentityResult,
 } from '../core/agent-identity/index.js';
+import { stripSessionIdTag } from '../core/agent-identity/session-seed.js';
 import {
   parseAgentIdentityArgs,
   type AgentIdentityFormat,
@@ -24,6 +25,8 @@ export type { AgentIdentityFormat } from './agent-identity-cli-parser.js';
 export interface AgentIdentityCliEnvironment {
   /** Claude Code session id, written by the Practice Claude `SessionStart` hook. */
   readonly PRACTICE_AGENT_SESSION_ID_CLAUDE?: string;
+  /** Cloud-seat platform session id (`cse_`-tagged); untagged payload is the PDR-027 seed there. */
+  readonly CLAUDE_CODE_REMOTE_SESSION_ID?: string;
   /** Cursor composer session id, written by the Practice Cursor `sessionStart` hook. */
   readonly PRACTICE_AGENT_SESSION_ID_CURSOR?: string;
   /** Antigravity/Gemini conversation id surfaced through the Practice seed convention. */
@@ -69,6 +72,7 @@ export const HELP_TEXT = `Usage: agent-identity [--seed <seed>] [--format <kebab
 
   --seed <seed>       Stable seed. If omitted, uses (in order)
                       $PRACTICE_AGENT_SESSION_ID_CLAUDE,
+                      $CLAUDE_CODE_REMOTE_SESSION_ID (cloud seats; type tag stripped),
                       $PRACTICE_AGENT_SESSION_ID_CURSOR,
                       $PRACTICE_AGENT_SESSION_ID_GEMINI,
                       $PRACTICE_AGENT_SESSION_ID_CODEX,
@@ -113,6 +117,14 @@ export function runAgentIdentityCli(input: AgentIdentityCliInput): AgentIdentity
   }
 }
 
+function strippedRemoteSessionId(value: string | undefined): string | undefined {
+  const trimmed = nonEmptyEnvironmentValue(value);
+  if (trimmed === undefined) {
+    return undefined;
+  }
+  return stripSessionIdTag(trimmed);
+}
+
 function deriveOptions(override: string | undefined): DeriveIdentityOptions {
   if (override === undefined) {
     return {};
@@ -127,6 +139,7 @@ function resolveSeed(seed: string | undefined, env: AgentIdentityCliEnvironment)
   const resolvedSeed = firstSeed([
     nonEmptyEnvironmentValue(seed),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CLAUDE),
+    strippedRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CURSOR),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_GEMINI),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CODEX),

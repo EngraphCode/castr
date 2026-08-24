@@ -61,9 +61,66 @@ describe('planClaudeSessionIdentityHook', () => {
     expect(additionalContext).toContain('Do not auto-rename');
   });
 
-  it('emits env-file write lines with the session id and resolved display name', () => {
+  it('prefers the stripped platform session id over the harness session id on cloud seats', () => {
+    const harnessSessionId = 'd36e5cf3-6bcc-51db-9823-a91546b618f7';
+    const platformSeed = '01FV6rZz5BjSkApAUL6FAj72';
+    const expectedDisplayName = deriveIdentity(platformSeed).displayName;
+
+    const plan = planClaudeSessionIdentityHook({
+      stdinText: JSON.stringify({ session_id: harnessSessionId }),
+      environment: {
+        CLAUDE_ENV_FILE: 'mem://env-file',
+        CLAUDE_CODE_REMOTE_SESSION_ID: `cse_${platformSeed}`,
+      },
+    });
+
+    const additionalContext = plan.hookOutput.hookSpecificOutput?.additionalContext ?? '';
+    expect(additionalContext).toContain(`Session identity (PDR-027): ${expectedDisplayName}`);
+    expect(additionalContext).toContain(
+      'PDR-027 session_id_prefix (first 6 of session_id): 01FV6r',
+    );
+    expect(plan.envFileWrite?.appendLine).toBe(
+      `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${platformSeed}'\n`,
+    );
+  });
+
+  it('derives from the platform session id alone when stdin carries no session_id', () => {
+    const platformSeed = '01FV6rZz5BjSkApAUL6FAj72';
+    const plan = planClaudeSessionIdentityHook({
+      stdinText: JSON.stringify({ source: 'startup' }),
+      environment: {
+        CLAUDE_ENV_FILE: 'mem://env-file',
+        CLAUDE_CODE_REMOTE_SESSION_ID: `cse_${platformSeed}`,
+      },
+    });
+
+    expect(plan.envFileWrite?.appendLine).toBe(
+      `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${platformSeed}'\n`,
+    );
+  });
+
+  it('falls back to the harness session id when the platform session id is blank', () => {
+    const harnessSessionId = '22e83599-a627-4427-b23c-fe6ce046e859';
+    const plan = planClaudeSessionIdentityHook({
+      stdinText: JSON.stringify({ session_id: harnessSessionId }),
+      environment: {
+        CLAUDE_ENV_FILE: 'mem://env-file',
+        CLAUDE_CODE_REMOTE_SESSION_ID: '   ',
+      },
+    });
+
+    expect(plan.envFileWrite?.appendLine).toBe(
+      `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${harnessSessionId}'\n`,
+    );
+  });
+
+  it('never pins a display name in the env file (2026-08-24 chimera regression)', () => {
+    // One seat produced three identity tuples in one day because the hook
+    // pinned ENGRAPH_AGENT_IDENTITY_OVERRIDE alongside the seed: a later
+    // seed change re-derived prefix and uuid while the pinned name stayed,
+    // yielding a mixed-provenance tuple no single seed produces. The name
+    // must always derive from the live seed at the point of use.
     const sessionId = '22e83599-a627-4427-b23c-fe6ce046e859';
-    const displayName = deriveIdentity(sessionId).displayName;
     const plan = planClaudeSessionIdentityHook({
       stdinText: JSON.stringify({ session_id: sessionId }),
       environment: { CLAUDE_ENV_FILE: 'mem://claude-env-file-abc' },
@@ -71,10 +128,9 @@ describe('planClaudeSessionIdentityHook', () => {
 
     expect(plan.envFileWrite).toStrictEqual({
       absolutePath: 'mem://claude-env-file-abc',
-      appendLine:
-        `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${sessionId}'\n` +
-        `export ENGRAPH_AGENT_IDENTITY_OVERRIDE='${displayName}'\n`,
+      appendLine: `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${sessionId}'\n`,
     });
+    expect(plan.envFileWrite?.appendLine).not.toContain('ENGRAPH_AGENT_IDENTITY_OVERRIDE');
   });
 
   it('omits the env-file write when CLAUDE_ENV_FILE is missing', () => {

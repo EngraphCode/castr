@@ -1,6 +1,7 @@
 import { v5 as uuidv5 } from 'uuid';
 
 import { deriveIdentity } from '../core/agent-identity/index.js';
+import { stripSessionIdTag } from '../core/agent-identity/session-seed.js';
 
 import {
   type CollaborationAgentId,
@@ -66,8 +67,9 @@ export function deriveCollaborationIdentity(input: {
     agent_name: identity.displayName,
     platform: input.platform,
     model: input.model,
-    session_id_prefix: seed.value.slice(0, 6),
+    session_id_prefix: sessionIdPrefix(seed.value),
     id: deriveIdFromSeed(seed.value),
+    naming_schema_version: identity.namingSchemaVersion,
   };
 
   return {
@@ -99,7 +101,16 @@ export function deriveOverrideCollaborationIdentity(input: {
     model: input.model,
     session_id_prefix: input.session_id_prefix,
     id: deriveIdFromSeed(`${input.agent_name}|${input.session_id_prefix}`),
+    naming_schema_version: 'override',
   };
+}
+
+/**
+ * PDR-027 `session_id_prefix`: the first six characters of the stable
+ * session seed (the whole seed when shorter).
+ */
+export function sessionIdPrefix(sessionId: string): string {
+  return sessionId.length >= 6 ? sessionId.slice(0, 6) : sessionId;
 }
 
 /**
@@ -132,6 +143,14 @@ export function validateSharedStateAgentId(input: {
 function resolveCollaborationSeed(env: CollaborationStateEnvironment): SeedCandidate | undefined {
   return firstSeed([
     { source: 'PRACTICE_AGENT_SESSION_ID_CLAUDE', value: env.PRACTICE_AGENT_SESSION_ID_CLAUDE },
+    // Cloud-seat ambient platform session id (PDR-027 cloud-seat clause):
+    // the untagged payload joins registry rows with Claude-Session commit
+    // trailers and the owner-visible session URL. Explicit PRACTICE_* seeds
+    // stay ahead of it — they are the operator's stated contract.
+    {
+      source: 'CLAUDE_CODE_REMOTE_SESSION_ID',
+      value: strippedRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID),
+    },
     { source: 'PRACTICE_AGENT_SESSION_ID_CURSOR', value: env.PRACTICE_AGENT_SESSION_ID_CURSOR },
     { source: 'PRACTICE_AGENT_SESSION_ID_GEMINI', value: env.PRACTICE_AGENT_SESSION_ID_GEMINI },
     { source: 'PRACTICE_AGENT_SESSION_ID_CODEX', value: env.PRACTICE_AGENT_SESSION_ID_CODEX },
@@ -174,6 +193,14 @@ function practiceSessionVarForPlatform(platform: string): string | undefined {
     default:
       return undefined;
   }
+}
+
+function strippedRemoteSessionId(value: string | undefined): string | undefined {
+  const trimmed = nonEmptyValue(value);
+  if (trimmed === undefined) {
+    return undefined;
+  }
+  return stripSessionIdTag(trimmed);
 }
 
 function antigravitySourceMetadataConversationId(value: string | undefined): string | undefined {

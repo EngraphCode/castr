@@ -43,6 +43,16 @@ const recipientWithId = deriveCollaborationIdentity({
   },
 }).agentId;
 
+// Recipient blocks written from --to-* flags are address relays: the written
+// block omits naming_schema_version (provenance unknowable to the sender).
+const recipientAddress = {
+  agent_name: recipientWithId.agent_name,
+  platform: recipientWithId.platform,
+  model: recipientWithId.model,
+  session_id_prefix: recipientWithId.session_id_prefix,
+  id: recipientWithId.id,
+};
+
 describe('unified comms format CLI behaviour', () => {
   it('writes, reads, and renders directed messages from the single comms directory', async () => {
     const activePath = 'state/active-claims.json';
@@ -101,7 +111,7 @@ describe('unified comms format CLI behaviour', () => {
       kind: 'directed',
       message_kind: 'coordination-request',
       from: senderWithId,
-      to: recipientWithId,
+      to: recipientAddress,
       subject: 'Please check this',
       body: 'There is useful coordination here.',
     });
