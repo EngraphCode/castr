@@ -34,7 +34,11 @@ phase() {
   echo ""
   echo "=== PHASE: ${PHASE} ==="
 }
-trap 'echo "SETUP FAILED in phase \"${PHASE}\" at line ${LINENO}: ${BASH_COMMAND}" >&2' ERR
+# the pipe-status list distinguishes which stage of a pipeline failed —
+# BASH_COMMAND alone names the whole assignment or the final stage, which
+# would send diagnosis at the wrong command (a curl transport failure vs a
+# parse failure look identical without it)
+trap 'echo "SETUP FAILED in phase \"${PHASE}\" at line ${LINENO}: ${BASH_COMMAND} (pipe status: ${PIPESTATUS[*]})" >&2' ERR
 # explicit failures route through fail(), never a bare `exit 1` — the ERR
 # trap does not fire on `exit`, and every non-zero exit must be instrumented
 fail() {

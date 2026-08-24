@@ -249,7 +249,16 @@ probe_nodejs_org() {
     echo "resolved tarball missing from SHASUMS256.txt"
     return 1
   }
-  host_reachable "https://nodejs.org/dist/latest-v${major}.x/${tgz}"
+  # download the archive and recompute its digest against the manifest —
+  # the exact check setup performs (validators recompute, never just
+  # record): a truncated or drifted archive must fail here, not only at
+  # setup's sha256sum -c
+  curl -fsSL -m 300 "https://nodejs.org/dist/latest-v${major}.x/${tgz}" -o /tmp/preflight-node.tgz || {
+    echo "tarball download failed"
+    return 1
+  }
+  grep " ${tgz}\$" /tmp/preflight-shasums.txt |
+    sed "s|  ${tgz}\$|  /tmp/preflight-node.tgz|" | sha256sum -c -
 }
 
 probe_npm_registry() {
