@@ -668,3 +668,40 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   diverging on isPublic — aligned in-slice), and coverage gaps, all fixed before the PR
   opened. The pre-execution openapi-expert dispatch changed the design materially
   (order preservation instead of canonical sorting) — cheapest correction of the slice.
+
+## 2026-08-24 (proof-programme scheduled firing — Q-03 merged — Luminous Waning Orbit)
+
+- **PR #50 review convergence: seven bot rounds, every finding distinct, every fix held**
+  (contrast PR #35's seventeen-round diagnostics treadmill). The version-surface family
+  (bump → pin-at-read → guard-contract note → pin-at-write → export-the-constant) LOOKED
+  like a treadmill but was genuine convergence: each finding was a real, different gap in
+  the versioning contract this slice introduced, and the end state is coherent (one
+  constant, symmetric read/write pinning, documented structural-vs-version separation).
+  The one clause-4 carry-forward (writer component-map `__proto__` class) was the one
+  genuinely unbounded reference surface — bounded-vs-unbounded is the discriminator
+  between "keep fixing" and "route", not round count alone.
+- **A bulk literal replacement bit back**: replacing `version: '1.0.0'` across
+  zod-parser.ts hit BOTH the IR schema stamp and the generated API's `info.version` —
+  two fields with identical literals and different semantics. Codex caught it. Cure:
+  before replace-all on a value literal, enumerate each occurrence's semantic role
+  (same discipline as the search-scope entries in distilled.md, on the write side).
+- **Hook-policy false positive on long compounds**: the "git add -u" wildcard-staging
+  guard fired on two compound commands that contained no such text (plain `git add --
+<files>` inside a large ceremony compound). Cure that worked: run the commit ceremony
+  as small single-purpose commands — which also reads better in history. Candidate for
+  the hook-policy substring-discipline note.
+- **The semantic-merge conflict driver fired live and routed correctly**: base moved
+  mid-drive (owner's PR #48/#49 merged); repo-continuity.md conflicted; the driver
+  refused the line-merge and the concept-union (theirs' new review-thread row + ours'
+  Q-03 row edit) took minutes. First live proof of the tripwire since its landing.
+- **Overlap guard interplay observed**: the owner's interactive session was live on
+  PR #48 during this firing's claims scan; classifying it (owner activity, docs-only,
+  not a programme PR, no surface overlap with Q-03's lib/ product code) let the firing
+  proceed without contest — the WIP=1 definition ("slice PR or bookkeeping PR") did the
+  work of keeping an owner PR from deadlocking the loop.
+- candidate: **IR persistence schema-versioning policy ADR** — Q-03 landed hard version
+  pinning at serializeIR/deserializeIR (foreign versions rejected both directions, no
+  migration machinery, regenerate-from-source contract) via review convergence rather
+  than an upfront decision record. Trigger: the first time IR migration machinery or a
+  multi-version read window is proposed, graduate the policy into an ADR instead of
+  re-deriving it from the PR #50 threads.
