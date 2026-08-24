@@ -39,21 +39,28 @@ todos:
       never from this plan) and its contract prose; routine-prompt.md;
       queued-decisions.md; incidents.md; ballot-2026-08-owner-walk.md;
       loop-test-kingfisher-report.md; the live Routine's actual trigger
-      config AND run history (list_triggers — cron, model, prompt, session
-      mode, last_run); the proof-programme.next-session.md thread record.
+      config AND last-run state (list_triggers — cron, model, prompt,
+      session mode, last_run; the platform exposes no fuller run
+      history); the proof-programme.next-session.md thread record.
       DONE WHEN every listed surface has been read end to end and every
       drift between surfaces is recorded as a finding (an explicit
       none-found statement counts).
     status: pending
   - id: R2
     content: >-
-      General analysis of what has happened: reconstruct the loop's firing
-      history from primary sources (trigger run history, session outcomes,
-      merged/closed PRs, incidents.md, the loop-test report) — what each
-      firing did, what it cost, what stalled or ran away, and whether the
-      recorded outcomes match the queue's completed claims. DONE WHEN the
-      report carries a firing-by-firing account with each claim traced to
-      its source and discrepancies listed as findings.
+      General analysis of what has happened: no platform source exports
+      every run (list_triggers carries only the most recent run, as
+      last_run), so DERIVE the expected firings from the live cron
+      expression over the loop's armed window, then attest each expected
+      firing against durable records (session outcomes, merged/closed
+      PRs and outcome-branch activity, incidents.md, the loop-test
+      report) — what each firing did, what it cost, what stalled or ran
+      away, and whether the recorded outcomes match the queue's
+      completed claims. An expected firing with no durable evidence is
+      recorded UNATTESTED, never inferred. DONE WHEN the report carries
+      the expected-firing account with each claim traced to its source,
+      unattested gaps stated as such, and discrepancies listed as
+      findings.
     status: pending
     depends_on: [R1]
   - id: R3
@@ -130,8 +137,11 @@ execution_contract: >-
   leg's DONE WHEN is its acceptance criterion, paired with a
   deterministic check on its evidence artefact — R1: every listed
   source exists on disk (test -f per path) and the report's Grounding
-  section cites each by path; R2: the trigger run history is captured
-  verbatim from list_triggers output into the report; R3: the verdict
+  section cites each by path; R2: the report carries the
+  cron-derived expected-firing table with exactly one
+  attested-with-evidence or UNATTESTED row per expected firing
+  (grep-checkable), plus the list_triggers last_run output verbatim as
+  the only platform-side run datum; R3: the verdict
   table carries exactly one of instrument-backed|prose-only|broken per
   named mechanism (grep-checkable); R4: each completed-claim row names
   its git log or PR command and output; R5: the prompt-vs-trigger diff

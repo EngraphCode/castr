@@ -33,8 +33,11 @@ reviews it. Do not execute queue items from this seat.
   Q-15's fresh-container claims predate this and need re-verification. The
   live Routine (trig_01X4wYy2gHSb8yFhdhwbADGF, cron 3 */8 * * *) continued
   firing THROUGH the outage window; whether those firings failed to start,
-  started from cache, or ran is itself review evidence — pull the
-  Routine's run history via list_triggers/last_run before theorising.
+  started from cache, or ran is itself review evidence — list_triggers
+  exposes only the most recent run (last_run), so derive expected
+  firings from the cron and attest each against durable records (per
+  the plan's R2) before theorising; evidence-free firings are
+  UNATTESTED, never inferred.
 - **Deliverable**: R6's dated report under `.agent/analysis-and-reports/`,
   verdicts + routed proposals (warrant + falsifier each), thread record and
   plan statuses updated, wrap run.
