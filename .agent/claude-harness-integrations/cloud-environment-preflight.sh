@@ -330,15 +330,24 @@ probe_npm_registry() {
     auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
   fi
   echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
-  meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
-    echo "registry metadata fetch failed (the request corepack install makes first)"
-    return 1
-  }
-  tarball=$(echo "$meta" | grep -oE '"tarball":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"tarball":[[:space:]]*"([^"]+)".*/\1/')
-  test -n "$tarball" || {
-    echo "no dist.tarball URL in registry metadata"
-    return 1
-  }
+  if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
+    # corepack's default path downloads the pinned spec URL directly — the
+    # metadata lookup happens only for a custom registry (corepack 0.34
+    # source: fetchTarballURLAndSignature is called only inside
+    # `if (process.env.COREPACK_NPM_REGISTRY)`)
+    tarball="https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz"
+    echo "default registry: static tarball URL (corepack makes no metadata request here)"
+  else
+    meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
+      echo "registry metadata fetch failed (the request corepack install makes first)"
+      return 1
+    }
+    tarball=$(echo "$meta" | grep -oE '"tarball":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"tarball":[[:space:]]*"([^"]+)".*/\1/')
+    test -n "$tarball" || {
+      echo "no dist.tarball URL in registry metadata"
+      return 1
+    }
+  fi
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
   echo "metadata tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')" 
