@@ -717,3 +717,78 @@ skill table each cite their sources inline. The `list_triggers` last-run
 datum appears verbatim in §R2 (the platform exposes no fuller history —
 D-1). This review executed no queue item, amended no doctrine, and left the
 Routine untouched throughout.
+
+---
+
+## Addendum 2026-08-24 — owner rulings on the routed decisions (decision cards)
+
+The owner ruled on the three decision-class items the same day, via decision
+cards (and set the standing directive that decisions are always presented as
+decision cards):
+
+- **OP-3 — APPROVED as recommended.** ADR-051 clause 4 amended with all
+  three tightenings (per-finding demonstration for non-blocking
+  classification, never covering data-mutation mechanisms; bounds-not-cures
+  default for unbounded-reference findings with a durable pointer;
+  consecutive-rounds structural step-back). Landed in the ADR's Status line
+  and clause 4 in this addendum's own landing.
+- **OP-4 — RE-BALLOTED to push-only.** Rather than restoring email, the
+  owner amended B-15: the live configuration (`push: true, email: false`)
+  is now the ratified channel set. **D-2 closes as a ratified change, not a
+  defect.** Recorded as a dated amendment under the ballot's B-15 entry.
+  The two open owner-side verification checks (notification history for the
+  silent slots; enabled-state history) remain open, no longer coupled to a
+  config repair.
+- **OP-1(b) — DECLINED for now, with owner teaching recorded verbatim:**
+  "we don't need that level of assurance yet. Also, we don't do carve
+  outs, we do policy, check the principles. When the time comes, we will
+  compare the Watcher with the comms mechanisms and heartbeats etc, the
+  difference is the medium, not the needs." Two consequences carried: the
+  silent-stall blind spot is an ACCEPTED risk at current stakes, not an
+  open defect; and any future Watcher/observer design starts from POLICY
+  (comparing it with the existing comms/heartbeat mechanisms — same needs,
+  different medium), never from a carve-out framing. This review's own
+  "uses the carve-out that already exists" phrasing in the OP-1(b) card is
+  retracted under that teaching; QD-7's carve-out framing in ADR-051
+  clause 7 is flagged as a candidate for the same policy reframing at its
+  next revisit — a future owner decision, not enacted here.
+- **OP-1(a) and the remaining queue/practice routings** (OP-2, OP-5,
+  OP-7, OP-8) go to a follow-up decision card — the owner's "we don't
+  need that level of assurance yet" may extend to OP-1(a)'s in-loop check,
+  so it is asked, not assumed.
+
+### Second decision card — the remaining routings (2026-08-24, same sitting)
+
+The follow-up card the bullet above promised was asked and answered the same
+day (AskUserQuestion decision card; owner answers verbatim where quoted):
+
+- **OP-1(a) — "Land it"** (recommended option taken): the in-loop
+  predecessor-attestation check lands as a queue row. Landing: **Q-18**
+  appended to the parent plan.
+- **OP-2 + OP-5 — "Append both"** (recommended option taken: "I add two
+  rows with briefs to the parent-plan frontmatter (assumptions-expert
+  review on the plan-authoring act); the loop picks them up on its normal
+  WIP=1 cadence"). Landing: **Q-19** (tally instrument; ordered after Q-13)
+  and **Q-20** (Q-15 brief re-scope + D-9 correction; Q-15 now waits on it).
+- **OP-7 + OP-8 — "I do it now, this session"** (recommended option taken:
+  "Owner-directed practice landing in the PR #49 shape: I make the
+  skill/tooling edits on this branch with reviewer dispatches, keeping the
+  programme queue untouched"). Landings: the wrap skill's two sequencing
+  refinements (step 7 corrective broadcast; the coda's
+  letter-carries-its-own-close), the commit skill's cannot-conclude cases
+  and unattended-session trailer duty, and the `collaboration-state claims
+init` subcommand (TDD, red-first, proven live).
+- The assumptions-expert pass on the row-appending act additionally split
+  **Q-21** out of OP-2's bundle (the D-10 merge-authority policy line —
+  independently landable, so not gated behind Q-13) — a decomposition of
+  what the card approved, not a new grant; its policy-not-exception wording
+  follows the owner's teaching above.
+
+Q-18..Q-21's `Source:` lines resolve here: this section is the durable
+record of the second card.
+
+Also absorbed since the report landed: PR #50 MERGED 2026-08-24T19:04:03Z
+under clause 3 (Q-03 complete on main — the firing observed live in §R2
+finished its drive within its lease), and its firing's napkin entry landed,
+including the undo-change owner-halt handled in an unattended seat and a
+fixture-estate regeneration finding routed to the Q-03 evidence record.

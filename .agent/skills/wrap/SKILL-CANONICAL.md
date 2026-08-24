@@ -134,7 +134,17 @@ wrap supplies the depth of the record it freezes.
    with reasons, the named fixed point, and the claims/monitors/comms
    disposition — with the closeout broadcasts session-handoff and
    [`start-right-team`](../start-right-team/SKILL-CANONICAL.md)
-   §Closeout Contract require already emitted.
+   §Closeout Contract require already emitted. **Corrective broadcast on
+   scan-changed truth**: those broadcasts go out before the loss and
+   metaloss scans run, and the scans exist precisely to find unrecorded
+   commitments, in-flight hypotheses, and handoffs — so whenever a scan
+   pass changes the closeout outcome or the remaining-work disposition,
+   emit a corrective broadcast on the same comms stream before the seat
+   goes quiet; peers must never be left holding a stale synthesis
+   silently. A scan that changes nothing needs no re-broadcast — the
+   correction fires on changed truth, not on ceremony. (Sequencing
+   refinement from PR #49's routed review findings; owner-directed
+   landing 2026-08-24.)
 
 ## Success Test
 
@@ -174,3 +184,14 @@ shift worth telling as a story.
   survive. The letter is the one surface where what survives is not
   facts but character — and it keeps its value exactly because nobody is
   required to write it.
+- **The letter carries its own close**: written after step 7's re-gate
+  and final safety statement, it would otherwise sit as an uncommitted
+  continuity file behind evidence that says the seat is safe — the exact
+  stranded-work class step 2's founding instance records. A written
+  letter therefore lands via the orphan continuity-commit route
+  ([`continuity-surface-commits-as-orphans`](../../rules/continuity-surface-commits-as-orphans.md)),
+  and the seat restates the step-2 safety line once more after that
+  landing — the letter's own close, not a rerun of step 7. A seat that
+  writes nothing here changes nothing and restates nothing. (Sequencing
+  refinement from PR #49's routed review findings; owner-directed
+  landing 2026-08-24.)
