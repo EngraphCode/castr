@@ -1,12 +1,26 @@
-import { isRecord } from '../../../../shared/type-utils/types.js';
+import { type UnknownRecord, isRecord } from '../../../../shared/type-utils/types.js';
+
+/**
+ * True when the record carries no keys outside the allowed set — the
+ * exact-shape half of the boundary: a value with extra keys is not the
+ * canonical shape and must not be certified as it (a writer would silently
+ * ignore the extra data).
+ */
+function hasOnlyKeys(value: UnknownRecord, allowedKeys: ReadonlySet<string>): boolean {
+  return Object.keys(value).every((key) => allowedKeys.has(key));
+}
+
+const REQUIREMENT_KEYS: ReadonlySet<string> = new Set(['schemes']);
+const SCHEME_MEMBER_KEYS: ReadonlySet<string> = new Set(['schemeName', 'scopes']);
 
 /**
  * Validate one scheme member of a requirement group: a component name plus a
- * scope-string list, both required, nothing else accepted structurally.
+ * scope-string list, both required, and no other keys accepted.
  */
 function isValidSecuritySchemeRequirement(value: unknown): boolean {
   return (
     isRecord(value) &&
+    hasOnlyKeys(value, SCHEME_MEMBER_KEYS) &&
     typeof value['schemeName'] === 'string' &&
     Array.isArray(value['scopes']) &&
     value['scopes'].every((scope) => typeof scope === 'string')
@@ -20,11 +34,14 @@ function isValidSecuritySchemeRequirement(value: unknown): boolean {
  * IR fails fast at the deserialization boundary instead of being read as
  * groups with undefined members. Also rejects a group naming the same scheme
  * twice — a Security Requirement Object cannot carry a duplicate key, so the
- * OpenAPI writer refuses it and "valid" must coincide with "writable".
+ * OpenAPI writer refuses it and "valid" must coincide with "writable" — and
+ * any key beyond `schemes`, so a hybrid stale value (old flat fields riding
+ * beside a `schemes` array) is never certified as canonical.
  */
 function isValidSecurityRequirement(value: unknown): boolean {
   return (
     isRecord(value) &&
+    hasOnlyKeys(value, REQUIREMENT_KEYS) &&
     Array.isArray(value['schemes']) &&
     value['schemes'].every((member) => isValidSecuritySchemeRequirement(member)) &&
     hasUniqueSchemeNames(value['schemes'])

@@ -709,6 +709,32 @@ describe('isCastrOperation', () => {
     expect(isCastrOperation(operationWithEmptyRequirement)).toBe(true);
   });
 
+  it('should reject a hybrid stale value carrying flat fields beside schemes', () => {
+    const operationWithHybridSecurity = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [{ schemes: [], schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(isCastrOperation(operationWithHybridSecurity)).toBe(false);
+  });
+
+  it('should reject a scheme member carrying keys beyond schemeName and scopes', () => {
+    const operationWithExtraMemberKey = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [], extra: true }] }],
+    };
+
+    expect(isCastrOperation(operationWithExtraMemberKey)).toBe(false);
+  });
+
   it('should reject a group naming the same scheme twice (unwritable formula)', () => {
     const operationWithDuplicateScheme = {
       method: 'get',
