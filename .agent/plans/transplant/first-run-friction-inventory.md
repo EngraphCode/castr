@@ -249,9 +249,11 @@ format:check`.** The implementers' `comms watch` seen-files were named `<codenam
 
 ### Known landmines inherited from the napkin (will hit this session)
 
-- **`claims open` does NOT auto-create `active-claims.json`** (prior entry, this file): must seed
-  `{schema_version, commit_queue:[], claims:[]}` + closed-claims `{schema_version, claims:[]}` before first open. The
-  README's "created on first CLI use" is wrong. **First-run severity is high**: this is the literal first thing the
+- **`claims open` does NOT auto-create `active-claims.json`** (prior entry, this file): run
+  `pnpm agent-tools:collaboration-state -- claims init --active <path> --closed <path>` (landed
+  2026-08-24, loop-review OP-8c) — it seeds both files with their correct per-file shapes
+  (the hand-seed recipe this entry used to carry mis-shaped the archive; the command validates
+  through the blocking schema). The README's "created on first CLI use" is wrong. **First-run severity is high**: this is the literal first thing the
   first concurrent stream does, and it fails closed with a confusing ENOENT unless the operator already knows to seed.
 - **`claim_id` is schema `format: "uuid"`** — cannot pass a human-readable `--claim-id`; omit it and capture the
   generated v4 from stdout JSON.
