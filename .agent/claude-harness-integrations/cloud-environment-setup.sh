@@ -83,11 +83,16 @@ phase "node install (nodejs.org)"
 # corrupted archive extracts into /usr/local as root), not payload
 # authenticity — a pinned digest would reintroduce the hard-coded version
 # this script deliberately avoids.
-NODE_TGZ=$(curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" | grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" | head -1)
+# each network fetch is its own command, never a stage inside a command
+# substitution: PIPESTATUS in the ERR trap cannot see through an
+# assignment-substitution (x=$(a | b) traps with only the assignment
+# status), so a curl failure must fail on its own line to be attributable
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" -o /tmp/node-index.html
+NODE_TGZ=$(grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" /tmp/node-index.html | head -1)
 test -n "$NODE_TGZ"
 curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/${NODE_TGZ}" -o /tmp/node.tgz
-curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" \
-  | grep " ${NODE_TGZ}\$" | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" -o /tmp/node-shasums.txt
+grep " ${NODE_TGZ}\$" /tmp/node-shasums.txt | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
 tar xzf /tmp/node.tgz -C /usr/local --strip-components=1
 
 phase "corepack pnpm shims"

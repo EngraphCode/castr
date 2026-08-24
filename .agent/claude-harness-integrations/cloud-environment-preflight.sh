@@ -311,13 +311,29 @@ probe_npm_registry() {
   esac
   version=${pm#pnpm@}
   version=${version%%+*}
-  # corepack honours COREPACK_NPM_REGISTRY (and COREPACK_NPM_TOKEN) when
-  # retrieving package managers — probe the registry corepack will use
-  local registry auth=()
+  # mirror corepack's own request flow (corepack 0.34 source): auth is
+  # COREPACK_NPM_TOKEN as Bearer, else COREPACK_NPM_USERNAME/PASSWORD as
+  # Basic; it fetches registry metadata at pnpm/<version> and follows the
+  # returned dist.tarball URL rather than assuming the canonical path
+  local registry auth=() meta tarball
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
-  [ -z "${COREPACK_NPM_TOKEN:-}" ] || auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
+  if [ -n "${COREPACK_NPM_TOKEN:-}" ]; then
+    auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
+  elif [ -n "${COREPACK_NPM_USERNAME:-}" ] && [ -n "${COREPACK_NPM_PASSWORD:-}" ]; then
+    auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
+  fi
   echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^(https?://)?[^@/]*@|\1|'))"
-  curl -fsSL -m 120 "${auth[@]}" "${registry%/}/pnpm/-/pnpm-${version}.tgz" -o /tmp/preflight-pnpm.tgz || {
+  meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
+    echo "registry metadata fetch failed (the request corepack install makes first)"
+    return 1
+  }
+  tarball=$(echo "$meta" | grep -oE '"tarball":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"tarball":[[:space:]]*"([^"]+)".*/\1/')
+  test -n "$tarball" || {
+    echo "no dist.tarball URL in registry metadata"
+    return 1
+  }
+  echo "metadata tarball: $(echo "$tarball" | sed -E 's|^(https?://)?[^@/]*@|\1|')"
+  curl -fsSL -m 120 "${auth[@]}" "$tarball" -o /tmp/preflight-pnpm.tgz || {
     echo "pinned pnpm tarball download failed"
     return 1
   }
