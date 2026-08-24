@@ -30,6 +30,7 @@ shopt -s nullglob
 # value-synced with cloud-environment-setup.sh (and castr's supply-chain
 # single source, .claude/hooks/_lib/gitleaks-pin.env); bump all together
 GITLEAKS_VERSION=8.30.0
+GITLEAKS_SHA256_LINUX_X64=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
 
 PROBES=0
 FAILURES=()
@@ -47,31 +48,40 @@ probe() {
   fi
 }
 
-# HTTP reachability that distinguishes egress-blocked from merely-missing:
-# a proxy denial surfaces as 000/403/407/502; a 200/301/404 proves the host
-# is reachable through the setup-time egress path.
-http_code() {
-  # a failed curl (DNS, connect, timeout) still emits its own 000 via -w
-  # before exiting non-zero, so appending a fallback would yield "000000"
-  # and dodge the 000 case below — capture first, normalise on failure
-  local code
-  code=$(curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null) || code=000
-  if [ "${code:-000}" = "000" ]; then
+# HTTP reachability with the measured egress discriminator (2026-08-24):
+# a proxy denial fails the CONNECT tunnel itself, so curl EXITS NON-ZERO
+# ("CONNECT tunnel failed, response 403", exit 56) — while an origin-served
+# 403/404 completes the HTTP exchange and curl exits 0. Reachability is
+# therefore judged by curl's exit status first; a completed exchange then
+# still fails on 403/407/502 because every host_reachable target is a path
+# the real setup fetches (a 403 there fails setup identically whoever
+# served it). -L follows redirects — the probe invariant counts chains —
+# and a failed curl still emits its own 000 via -w before exiting
+# non-zero, so the status is captured first and normalised on failure,
+# never appended to.
+try_url() {
+  # sets TRY_CODE; returns curl's own success/failure
+  TRY_CODE=$(curl -sSL -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null)
+  local rc=$?
+  TRY_CODE=${TRY_CODE:-000}
+  return $rc
+}
+host_reachable() {
+  local url="$1"
+  if try_url "$url" || {
     # one retry: a single transient transport failure must not falsify a
     # host (observed in-session 2026-08-24: one-off 000 from
     # security.ubuntu.com, 200 on every retry)
-    code=$(curl -sS -o /dev/null -m 30 -w '%{http_code}' "$1" 2>/dev/null) || code=000
+    try_url "$url"
+  }; then
+    echo "HTTP ${TRY_CODE}: ${url}"
+    case "$TRY_CODE" in
+    000 | 403 | 407 | 502) return 1 ;;
+    *) return 0 ;;
+    esac
   fi
-  echo "${code:-000}"
-}
-host_reachable() {
-  local url="$1" code
-  code=$(http_code "$url")
-  echo "HTTP ${code}: ${url}"
-  case "$code" in
-  000 | 403 | 407 | 502) return 1 ;;
-  *) return 0 ;;
-  esac
+  echo "TRANSPORT FAILURE (proxy CONNECT denial, DNS, or timeout; last code ${TRY_CODE}): ${url}"
+  return 1
 }
 
 FIRST_REPO=""
@@ -154,10 +164,17 @@ probe_git_origins() {
   for repo in $(find /home /workspace -maxdepth 4 -type d -name .git \
     -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||'); do
     [ -f "$repo/pnpm-lock.yaml" ] && [ -f "$repo/.agent/directives/AGENT.md" ] || continue
+    # mirror the setup script's guard: it contacts origin only when the
+    # clone is shallow, so probing a full clone's origin would falsify an
+    # assumption setup never makes (and false-fail on an absent remote)
+    if [ "$(git -C "$repo" rev-parse --is-shallow-repository 2>/dev/null)" != "true" ]; then
+      echo "not shallow — setup contacts no origin here (skipped): ${repo}"
+      continue
+    fi
     # bounded and non-interactive: a hung remote or a credential helper
     # waiting for input must not stall the whole falsification pass
     if GIT_TERMINAL_PROMPT=0 timeout 30 git -C "$repo" ls-remote --heads origin >/dev/null 2>&1; then
-      echo "origin reachable: ${repo} (shallow: $(git -C "$repo" rev-parse --is-shallow-repository 2>/dev/null))"
+      echo "origin reachable (shallow clone): ${repo}"
     else
       echo "origin UNREACHABLE (fetch --unshallow would fail): ${repo}"
       failed=1
@@ -259,21 +276,39 @@ probe_base_image_apt_sources() {
   # every `apt-get update`, whatever this estate's script adds (worked
   # instance 2026-08-23: Trusted preset 403'd ppa.launchpadcontent.net)
   # parse only ACTIVE entries — `deb`/`deb-src` lines in one-line format and
-  # `URIs:` fields in deb822 files. A bare URL grep would also probe hosts in
-  # comments (e.g. the stock sources file's help.ubuntu.com pointer), which
-  # apt never contacts, and misattribute an unrelated block to apt sources.
-  local uris u failed=0
-  uris=$({
-    grep -rhE '^[[:space:]]*deb(-src)?[[:space:]]' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
-    grep -rhE '^[[:space:]]*URIs:' /etc/apt/sources.list.d/*.sources 2>/dev/null
-  } | grep -oE 'https?://[^ ]+' | sort -u)
-  test -n "$uris" || {
-    echo "no apt source URIs found on image (unexpected but not a network failure)"
+  # URIs×Suites pairs in deb822 stanzas. A bare URL grep would also probe
+  # hosts in comments (e.g. the stock sources file's help.ubuntu.com
+  # pointer), which apt never contacts, and misattribute an unrelated block
+  # to apt sources. Each pair probes the exact InRelease path `apt-get
+  # update` fetches — roots and index pages are not what apt requests.
+  local pairs pair url suite failed=0
+  pairs=$({
+    awk '/^[[:space:]]*deb(-src)?[[:space:]]/ {
+      for (i = 2; i <= NF; i++)
+        if ($i ~ /^https?:\/\//) { print $i, $(i + 1); break }
+    }' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
+    awk -v RS= '{
+      uris = ""; suites = ""
+      n = split($0, lines, "\n")
+      for (i = 1; i <= n; i++) {
+        if (lines[i] ~ /^URIs:/) { sub(/^URIs:[[:space:]]*/, "", lines[i]); uris = lines[i] }
+        if (lines[i] ~ /^Suites:/) { sub(/^Suites:[[:space:]]*/, "", lines[i]); suites = lines[i] }
+      }
+      if (uris != "" && suites != "") {
+        nu = split(uris, ua, " "); ns = split(suites, sa, " ")
+        for (u = 1; u <= nu; u++)
+          for (s = 1; s <= ns; s++) print ua[u], sa[s]
+      }
+    }' /etc/apt/sources.list.d/*.sources 2>/dev/null
+  } | sort -u)
+  test -n "$pairs" || {
+    echo "no active apt source entries found on image (unexpected but not a network failure)"
     return 0
   }
-  for u in $uris; do
-    host_reachable "$u" || failed=1
-  done
+  while read -r url suite; do
+    [ -n "$url" ] && [ -n "$suite" ] || continue
+    host_reachable "${url%/}/dists/${suite}/InRelease" || failed=1
+  done <<< "$pairs"
   return $failed
 }
 
@@ -281,14 +316,18 @@ probe_gitleaks_release() {
   # release assets redirect to a separate assets host (measured 2026-08-24:
   # release-assets.githubusercontent.com) — the redirect target needs its own
   # egress allowance and never appears in the script text, so always probe
-  # the effective URL, never just the named host
+  # the effective URL, never just the named host. The asset is downloaded in
+  # full and its digest recomputed against the pin (validators must
+  # recompute, not just record): a reachable URL carrying a drifted payload
+  # or a stale pin would otherwise pass here and fail setup at sha256sum -c
   local url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
-  local code final
-  code=$(curl -sSIL -o /dev/null -m 60 -w '%{http_code}' "$url" 2>/dev/null) || code=000
-  code=${code:-000}
-  final=$(curl -sSIL -o /dev/null -m 60 -w '%{url_effective}' "$url" 2>/dev/null || echo unknown)
-  echo "HTTP ${code} via redirect chain ending at: ${final}"
-  [ "$code" = "200" ]
+  local final
+  final=$(curl -fsSL -m 120 -w '%{url_effective}' "$url" -o /tmp/preflight-gitleaks.tgz 2>/dev/null) || {
+    echo "download failed (redirect chain or egress): ${url}"
+    return 1
+  }
+  echo "redirect chain ends at host: $(echo "$final" | sed -E 's|https?://([^/]+).*|\1|')"
+  echo "${GITLEAKS_SHA256_LINUX_X64}  /tmp/preflight-gitleaks.tgz" | sha256sum -c -
 }
 
 echo "=== CLOUD ENVIRONMENT PREFLIGHT (read-only) ==="
