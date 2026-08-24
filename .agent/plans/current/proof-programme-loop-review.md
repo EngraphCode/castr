@@ -126,10 +126,19 @@ execution_contract: >-
   lane; the one guarded hazard is acting on the live loop (see scope
   guard). Readiness: the plan is executable when R1's source list
   resolves — every named file exists at authoring except the live trigger
-  state, which list_triggers supplies at run time. Validation: each leg's
-  DONE WHEN is its acceptance criterion; the report's claims must be
-  re-derivable from named sources (the estate's derivation-anchored
-  standard); the final verdict is the owner's read of the R6 report.
+  state, which list_triggers supplies at run time. Validation: each
+  leg's DONE WHEN is its acceptance criterion, paired with a
+  deterministic check on its evidence artefact — R1: every listed
+  source exists on disk (test -f per path) and the report's Grounding
+  section cites each by path; R2: the trigger run history is captured
+  verbatim from list_triggers output into the report; R3: the verdict
+  table carries exactly one of instrument-backed|prose-only|broken per
+  named mechanism (grep-checkable); R4: each completed-claim row names
+  its git log or PR command and output; R5: the prompt-vs-trigger diff
+  is included verbatim; R6: the report file exists under
+  .agent/analysis-and-reports/ and every verdict and proposal row cites
+  a named source. The deterministic command proves the evidence exists
+  and is cited; the final verdict is the owner's read of the R6 report.
   Foundation alignment: pure review lane — no product code, no doctrine
   amendment, TDD not applicable; strict-and-complete applies to the
   report's claims.
