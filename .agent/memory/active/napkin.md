@@ -620,6 +620,24 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
   prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
 
+## 2026-08-24 (cross-estate comparison + equality directive — Flamebright Burning Caldera / 01FV6r)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "piece by piece, I want the Practice in
+  Castr and OCE to take the best of each other, until they are Equal in capability."** Widens
+  the one-directional parity programmes (Oak→castr transplant; castr→OCE back-flow ledger) to a
+  BIDIRECTIONAL equality goal. First instalment: the loop-comparison note
+  (`.agent/analysis-and-reports/castr-oce-loop-comparison-2026-08-24.md`) + cross-pollination
+  PRs raised in both repos at owner word. `candidate:` this deserves a durable strategic home
+  beyond the note (a castr plan-estate node or PDR-family record) at the next owner walk.
+- **OWNER CORRECTION (2026-08-24): the OCE weekly scans are NOT owner-attended** — "I do not
+  intend to be present for the weekly scans or value derivations, although they do not go as
+  far in that the OCE scans result in research rather than implementation." My comparison had
+  framed the weekly cadence as attention-embedded; the true axis is OUTPUT TIER (research vs
+  implementation), and the distance between the tiers is exactly the castr loop's authority
+  machinery (standing ballot + mechanical-acceptance queue + run-boundary state discipline).
+  Same lesson family as inherited-classification: I inferred the attendance property from the
+  cadence instead of asking.
+
 ## 2026-08-24 (owner rulings via decision cards — Flamebright Burning Caldera / 01FV6r, continued session)
 
 - **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "Always expose decisions to me as

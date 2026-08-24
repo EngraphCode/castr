@@ -792,3 +792,13 @@ under clause 3 (Q-03 complete on main — the firing observed live in §R2
 finished its drive within its lease), and its firing's napkin entry landed,
 including the undo-change owner-halt handled in an unattended seat and a
 fixture-estate regeneration finding routed to the Q-03 evidence record.
+
+## Addendum 2026-08-24 — companion comparison
+
+The owner commissioned a comparison of this loop with OCE's
+outcome-informed-practice-learning weekly Codex scans; it is conserved at
+[`castr-oce-loop-comparison-2026-08-24.md`](./castr-oce-loop-comparison-2026-08-24.md),
+carries two owner corrections to the in-chat draft (both loops unattended;
+the load-bearing difference is output tier — research vs implementation),
+and records the standing bidirectional-equality directive whose first
+instalment went out as cross-pollination PRs in both repos.
