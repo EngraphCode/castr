@@ -71,6 +71,16 @@ function hasValidDocumentCollections(value: UnknownRecord): boolean {
   );
 }
 
+/**
+ * Structural type guard for {@link CastrDocument} — shape only, deliberately
+ * NOT a schema-version pin: the type's `version` field is `string`, and many
+ * legitimate in-memory documents (fixtures, mocks, freshly built IR) carry
+ * whatever stamp their producer set. The current-version predicate lives
+ * separately at the persistence boundary: `deserializeIR` rejects any
+ * foreign `IR_SCHEMA_VERSION` before structural acceptance. Callers
+ * admitting EXTERNAL persisted IR must go through `deserializeIR`, never
+ * this guard alone.
+ */
 export function isCastrDocument(value: unknown): value is CastrDocument {
   if (!isRecord(value)) {
     return false;
