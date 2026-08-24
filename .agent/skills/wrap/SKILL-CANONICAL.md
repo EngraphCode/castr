@@ -122,10 +122,15 @@ wrap supplies the depth of the record it freezes.
      explicitly ("a third pass would only re-find X; the recursion
      closes here"). Closing without naming the fixed point is an
      unfinished wrap; looping past it is the meta-rabbit-hole.
-7. **Report.** The final owner-facing message: landed outcome against
-   the session's landing target (PDR-026), the FINAL safety evidence
-   (re-run and restate the step-2 check after every mutating step
-   above), what is conserved where, what is deliberately context-only
+7. **Re-gate, then report.** The scan and recursion passes above mutate
+   continuity artefacts AFTER session-handoff ran its quality gate — so
+   once the last mutating pass is done, re-run the aggregate gate
+   (`pnpm check`, per
+   [`local-broken-code-never-leaves`](../../rules/local-broken-code-never-leaves.md))
+   against the final artefacts. Then the final owner-facing message:
+   landed outcome against the session's landing target (PDR-026), the
+   FINAL safety evidence (re-run and restate the step-2 check after
+   every mutating step above), what is conserved where, what is deliberately context-only
    with reasons, the named fixed point, and the claims/monitors/comms
    disposition — with the closeout broadcasts session-handoff and
    [`start-right-team`](../start-right-team/SKILL-CANONICAL.md)
