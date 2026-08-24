@@ -230,12 +230,11 @@ await server.connect(new StdioServerTransport());
 
 Each manifest entry carries resolved upstream API security information:
 
-- `isPublic`
-- `usesGlobalSecurity`
-- `requirementSets`
+- `isPublic` — true when the operation is satisfiable with no credentials: either there are no requirement sets, or at least one set has zero schemes (the OpenAPI empty requirement `{}`, meaning anonymous access is supported).
+- `usesGlobalSecurity` — true when the requirements came from document-level defaults rather than the operation.
+- `requirementSets` — the OR alternatives of the operation's security formula, in authored order; the schemes inside one set must all be satisfied together (AND).
 
-The `requirementSets` array models the resolved OpenAPI security requirement sets that apply to the operation. Keep in mind that Pack 6 found this surface is directionally useful but not yet fully proven against every edge case.
-The `requirementSets` array models the resolved OpenAPI security requirement sets that apply to the operation.
+**Invariant:** `isPublic: true` does NOT imply `requirementSets` is empty. When both hold — for example `security: [{}, {OAuth2: ["users:write"]}]` — the non-empty sets are optional credential upgrades the client may still present (typically for a higher privilege or rate-limit tier). Do not skip offering credentials merely because `isPublic` is true.
 
 ## Known Limitations
 

@@ -638,3 +638,33 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
 - Harness checkpointing auto-committed deliberately-held working-tree
   edits (accurate message, bot identity) — held-work discipline in
   cloud sessions must expect this.
+
+## 2026-08-24 (proof-programme scheduled firing — Q-03 F-01 slice — Luminous Waning Orbit)
+
+- **The normalized-fixture estate is unregenerable against its own parity tests:** running
+  `lib/scripts/generate-normalized-fixtures.ts` produces zod.ts output (z.int64()/bigint,
+  z.strictObject) that fails 11 validation-parity tests feeding plain numbers — the
+  checked-in fixtures predate the generator's int64/strictObject migrations, and now also
+  carry the pre-Q-03 flat security shape in ir.json/ir2.json. Regeneration was attempted
+  and rolled forward to HEAD content (own uncommitted generator output, deterministically
+  reproducible by re-running the script; hook-sanctioned forward-going write, undo-change
+  skill diagnosis rendered in-session). Routed as a finding in the Q-03 evidence record —
+  fixture regeneration integrity needs its own slice before any fixture-consuming lane.
+- **Undo-change halt-and-ask in an unattended firing:** the skill's owner-halt was
+  satisfied by (a) taking the hook's own prescribed alternative (forward-going filesystem
+  write of HEAD content), (b) proving both sides of the diff durably recoverable, and
+  (c) carrying the decision into the completion notification for owner reversal. A
+  destructive op with a non-recoverable side would instead have parked the slice and
+  alerted per QD-8.
+- **Q-03 landed this firing** (F-01 security AND→OR): the Q-02 semantic-outcome runner's
+  first product consumption worked exactly as designed — the separating-pair non-vacuity
+  precheck WAS the red-first proof (4/5 cases red pre-fix because the pipeline collapsed
+  the pairs), no bespoke red assertions needed. Pattern worth keeping: for
+  collapse-class defects, encode the defect as the separating pair and let the runner's
+  precheck do the discrimination proof.
+- **Post-execution reviewer convergence was fast (one round)**: six dispatches total
+  (2 pre + 4 post) surfaced one gate blocker (max-files-per-dir — run lint after EVERY
+  edit, including new-file adds), one contract split (two producers of one metadata type
+  diverging on isPublic — aligned in-slice), and coverage gaps, all fixed before the PR
+  opened. The pre-execution openapi-expert dispatch changed the design materially
+  (order preservation instead of canonical sorting) — cheapest correction of the slice.

@@ -10,7 +10,7 @@ interface SerializedMap {
 }
 
 import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
-import type { CastrDocument } from './models/schema-document.js';
+import { IR_SCHEMA_VERSION, type CastrDocument } from './models/schema-document.js';
 
 const SERIALIZED_DATA_TYPE_MAP = 'Map';
 const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties';
@@ -70,8 +70,12 @@ function isSerializedCastrSchemaProperties(
  *
  * @param ir - The CastrDocument to serialize
  * @returns JSON string representation of the IR
+ * @throws `Error` when the document's schema-version stamp is not this
+ * build's `IR_SCHEMA_VERSION` — serialization must never produce data this
+ * build refuses to read back, so the round trip stays symmetric.
  */
 export function serializeIR(ir: CastrDocument): string {
+  assertCurrentSchemaVersion(ir);
   return JSON.stringify(
     ir,
     (_key: string, value: unknown): unknown => {
@@ -115,8 +119,29 @@ export function deserializeIR(json: string): CastrDocument {
     return value;
   });
 
+  assertCurrentSchemaVersion(parsed);
+
   if (!isCastrDocument(parsed)) {
     throw new Error('Invalid CastrDocument structure');
   }
   return parsed;
+}
+
+/**
+ * Reject a persisted IR whose schema-version stamp is not this build's,
+ * BEFORE structural acceptance: an older document may predate the current
+ * validators (for example the pre-`2.0.0` flat security shape), and a
+ * future document may carry fields today's guards tolerate but this build's
+ * writers would silently ignore — either way the honest outcome is a named
+ * version mismatch telling the reader to regenerate the IR, never a partial
+ * read.
+ */
+function assertCurrentSchemaVersion(parsed: unknown): void {
+  if (isRecord(parsed) && parsed['version'] !== IR_SCHEMA_VERSION) {
+    throw new Error(
+      'Invalid CastrDocument structure: the document declares schema version ' +
+        `${JSON.stringify(parsed['version'])} but this build reads "${IR_SCHEMA_VERSION}" — ` +
+        'regenerate the IR from its source document.',
+    );
+  }
 }

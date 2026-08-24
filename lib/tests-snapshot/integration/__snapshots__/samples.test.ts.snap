@@ -226,10 +226,6 @@ export const mcpTools = [
               },
               scopes: ["users:write"],
             },
-          ],
-        },
-        {
-          schemes: [
             {
               schemeName: "ApiKey",
               scheme: {
