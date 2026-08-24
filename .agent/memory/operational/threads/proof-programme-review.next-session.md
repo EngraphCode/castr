@@ -10,6 +10,51 @@ session's first act; legs R1–R6; scope guard inside). Distinct from the
 `proof-programme` thread itself — that thread RUNS the loop; this one
 reviews it. Do not execute queue items from this seat.
 
+## Closeout — engraph-wrap run (2026-08-24, Flamebright Burning Caldera / 01FV6r)
+
+- **Safety state (verbatim, at the closeout commit; the push follows
+  immediately as this session's last act, its pre-push `check:ci` binding
+  to this tree):** `## claude/funny-wright-9wfdnx...origin/claude/funny-wright-9wfdnx [ahead 2]`
+  with a clean working tree; after the closeout landing the branch is
+  pushed to origin and this line's ahead-count is zero. Work intended to
+  land is committed and pushed on the owner-designated branch
+  `claude/funny-wright-9wfdnx`; no PR was commissioned (the brief's
+  deliverable is the report + these surfaces; opening one is the owner's
+  call).
+- **Loss scan (class-by-class):** decisions + reasons → the report and the
+  five commit messages; unrecorded commitments → none (the owner alert is
+  sent at close; the reviewers' two open verification items are owned by
+  the owner and named in the report's F-R2-1/OP-4); in-flight hypotheses →
+  ONE, load-bearing for whoever merges next: PR #50 and this branch both
+  edit the napkin, repo-continuity, and thread records — whichever merges
+  second must concept-merge per `engraph-semantic-merge`, never line-merge;
+  tacit fixes → the state-file seed-shape correction and ceremony
+  deviations are napkin-captured; index of homes → report at
+  `.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md`,
+  plan at `.agent/plans/active/proof-programme-loop-review.md` (R1–R6
+  completed), lessons in `.agent/memory/active/napkin.md` (three dated
+  2026-08-24 entries), OCE retrospective read from the OCE `engraph`
+  branch (scratchpad copy is deliberately ephemeral).
+- **Metaloss recursion:** compressed reasoning is decision-sufficient (every
+  verdict row cites its source; the review-pass provenance note records the
+  fold judgement); promises swept — all discharged or forwarded with named
+  owners; attribution inferences flagged in place (I-1's writer is
+  trailer-attributed; D-7's deletion is a stated presumption); blind-spot
+  bounds stated (no platform run history; firings 4/5 undecidable from
+  durable state; OCE evidence verified only by this seat; no human eyes on
+  the report yet — the owner's read is the external check, and the error
+  signature of this session is "reviewer P1s caught what the author's pass
+  missed; one reviewer measurement was falsified by the author's own
+  concurrent gate window"). **A further pass would only re-find the two
+  named undecidables (platform history, firings 4/5); the recursion closes
+  here — that is the fixed point.**
+- **Consolidation gate:** not due — the session's capture is routed (report,
+  napkin, this record); no rotation threshold or fresh-trigger fired.
+- **Arc check:** the session closed the commissioned review arc in one
+  sitting; a retrospective beyond the report itself would duplicate it —
+  offered, not auto-run. Graduation-shaped items all travel as the report's
+  routed OPs (owner decides), per new-rule-vs-pdr-clause.
+
 ## Current Continuation — REVIEW EXECUTED (2026-08-24, Flamebright Burning Caldera / 01FV6r)
 
 All six legs completed in one session. Deliverable:

@@ -125,7 +125,7 @@ todos:
       DONE WHEN the report exists with all three sections populated, the
       thread record and this plan's todo statuses are updated, and the
       engraph-wrap closeout programme (.agent/skills/wrap) has run.
-    status: in_progress
+    status: completed
     depends_on: [R2, R3, R4, R5]
 execution_contract: >-
   Prerequisites: none beyond repo access and list_triggers (read-only);
