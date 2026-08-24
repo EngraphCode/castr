@@ -45,7 +45,7 @@ todos:
       DONE WHEN every listed surface has been read end to end and every
       drift between surfaces is recorded as a finding (an explicit
       none-found statement counts).
-    status: pending
+    status: completed
   - id: R2
     content: >-
       General analysis of what has happened: no platform source exports
@@ -61,7 +61,7 @@ todos:
       the expected-firing account with each claim traced to its source,
       unattested gaps stated as such, and discrepancies listed as
       findings.
-    status: pending
+    status: completed
     depends_on: [R1]
   - id: R3
     content: >-
@@ -74,7 +74,7 @@ todos:
       active instrument or prose). DONE WHEN each named mechanism carries a
       verdict (instrument-backed | prose-only | broken) with the evidence
       that decided it.
-    status: pending
+    status: completed
     depends_on: [R1]
   - id: R4
     content: >-
@@ -87,7 +87,7 @@ todos:
       surface (do incidents feed back into the queue or accumulate
       unread?). DONE WHEN every live queue item has a verified-status row
       and every decision surface a consistency verdict.
-    status: pending
+    status: completed
     depends_on: [R1]
   - id: R5
     content: >-
@@ -111,7 +111,7 @@ todos:
       disposition for unbounded-reference review findings? DONE WHEN the
       prompt/config diff is recorded and every routed skill has a
       fit-verdict with evidence.
-    status: pending
+    status: completed
     depends_on: [R1]
   - id: R6
     content: >-
@@ -125,7 +125,7 @@ todos:
       DONE WHEN the report exists with all three sections populated, the
       thread record and this plan's todo statuses are updated, and the
       engraph-wrap closeout programme (.agent/skills/wrap) has run.
-    status: pending
+    status: in_progress
     depends_on: [R2, R3, R4, R5]
 execution_contract: >-
   Prerequisites: none beyond repo access and list_triggers (read-only);

@@ -10,11 +10,26 @@ session's first act; legs R1–R6; scope guard inside). Distinct from the
 `proof-programme` thread itself — that thread RUNS the loop; this one
 reviews it. Do not execute queue items from this seat.
 
-## Current Continuation — IN PROGRESS (2026-08-24, Flamebright Burning Caldera / 01FV6r)
+## Current Continuation — REVIEW EXECUTED (2026-08-24, Flamebright Burning Caldera / 01FV6r)
 
-Plan promoted current/ → active/ as the session's first act (thorough
-grounding done; claim registered; review-only seat honoured). Leg R1
-underway.
+All six legs completed in one session. Deliverable:
+[`proof-programme-loop-review-2026-08-24.md`](../../../analysis-and-reports/proof-programme-loop-review-2026-08-24.md)
+— R1 grounding + 8 drift findings (D-1..D-8), R2 expected-firing account
+(6 expected: 4 attested-with-evidence, 2 UNATTESTED in the environment-outage
+window), R3 mechanism verdicts (headline: the loop cannot see its own
+absence; its only review bound is elastic and its counting instrument is
+absent from castr's pr-lifecycle), R4 queue verification (completed claims
+4/4 verified; Q-15 premises stale), R5 prompt/config diff (one drift:
+B-15 email off) + per-skill fit verdicts incl. the two seeded engraph-wrap
+sequencing refinements, R6 verdicts (KEEP/FIX per surface; nothing RETIREs)
+and opportunities OP-1..OP-8, each with warrant + falsifier, routed to
+queue slices, one ballot item (OP-3, clause 4 tightening), and one owner
+action (OP-4, email channel). Review-only seat held: no queue item
+executed, no doctrine amended, Routine untouched. Notable live evidence:
+the 16:03 firing (Luminous Waning Orbit) was driving PR #50 (Q-03) during
+the review — lease, state-landing composition, and WIP=1 discrimination
+all observed working. Owner next: read the report's §R6; decide OP-3 and
+OP-4; the remaining OPs are queue-routable.
 
 ## Original opening brief (as commissioned)
 
