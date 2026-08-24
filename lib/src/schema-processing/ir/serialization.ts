@@ -70,8 +70,12 @@ function isSerializedCastrSchemaProperties(
  *
  * @param ir - The CastrDocument to serialize
  * @returns JSON string representation of the IR
+ * @throws `Error` when the document's schema-version stamp is not this
+ * build's `IR_SCHEMA_VERSION` — serialization must never produce data this
+ * build refuses to read back, so the round trip stays symmetric.
  */
 export function serializeIR(ir: CastrDocument): string {
+  assertCurrentSchemaVersion(ir);
   return JSON.stringify(
     ir,
     (_key: string, value: unknown): unknown => {
@@ -135,7 +139,7 @@ export function deserializeIR(json: string): CastrDocument {
 function assertCurrentSchemaVersion(parsed: unknown): void {
   if (isRecord(parsed) && parsed['version'] !== IR_SCHEMA_VERSION) {
     throw new Error(
-      'Invalid CastrDocument structure: persisted IR declares schema version ' +
+      'Invalid CastrDocument structure: the document declares schema version ' +
         `${JSON.stringify(parsed['version'])} but this build reads "${IR_SCHEMA_VERSION}" — ` +
         'regenerate the IR from its source document.',
     );

@@ -284,6 +284,17 @@ describe('IR Serialization', () => {
     );
   });
 
+  it('should refuse to serialize a document with a foreign schema version', () => {
+    const foreignVersionIR = {
+      ...mockIR,
+      version: '1.0.0',
+    };
+
+    expect(() => serializeIR(foreignVersionIR)).toThrow(
+      /declares schema version "1\.0\.0" but this build reads "2\.0\.0"/,
+    );
+  });
+
   it('should reject a future-versioned document even when its shape passes current guards', () => {
     const futureIR = {
       ...mockIR,
