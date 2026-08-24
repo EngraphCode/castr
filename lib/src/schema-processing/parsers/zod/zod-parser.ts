@@ -21,6 +21,7 @@
  */
 
 import type { CastrSchemaNode, CastrDocument, CastrSchemaComponent } from '../../ir/index.js';
+import { IR_SCHEMA_VERSION } from '../../ir/index.js';
 import type {
   ZodParseResult,
   ZodParseError,
@@ -81,11 +82,11 @@ export function extractSchemaName(variableName: string): string {
  */
 function createEmptyDocument(): CastrDocument {
   return {
-    version: '1.0.0',
+    version: IR_SCHEMA_VERSION,
     openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: {
       title: 'Parsed from Zod',
-      version: '1.0.0',
+      version: IR_SCHEMA_VERSION,
     },
     servers: [],
     components: [],

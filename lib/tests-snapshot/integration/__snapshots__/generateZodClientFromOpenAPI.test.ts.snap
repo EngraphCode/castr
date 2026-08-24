@@ -21727,7 +21727,7 @@ Some useful links:
                 "name": "user",
             },
         ],
-        "version": "1.0.0",
+        "version": "2.0.0",
     },
     "endpoints": [
         {
@@ -31282,7 +31282,7 @@ Some useful links:
                 "name": "user",
             },
         ],
-        "version": "1.0.0",
+        "version": "2.0.0",
     },
     "endpoints": [
         {
@@ -37150,7 +37150,7 @@ exports[`with optional, partial, all required objects 1`] = `
             "VeryDeeplyNested",
         ],
         "servers": [],
-        "version": "1.0.0",
+        "version": "2.0.0",
     },
     "endpoints": [
         {

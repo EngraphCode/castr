@@ -29,6 +29,7 @@ import { isRecord } from '../../../shared/type-utils/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
 import { CANONICAL_OPENAPI_VERSION } from '../../../shared/openapi/version.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
+import { IR_SCHEMA_VERSION } from '../../ir/index.js';
 import { cloneAndValidateOpenApiDocumentObjectSemantics } from './openapi-document.object-semantics.js';
 import { isOpenAPIDocument } from '../../../validation/cli-type-guards.js';
 import { extractMediaTypeComponents } from './components/builder.media-type-components.js';
@@ -132,7 +133,7 @@ export function buildIR(doc: OpenAPIDocument | object): CastrDocument {
   const enums = extractEnums(components, [...operations, ...additionalOperations]);
 
   return {
-    version: '1.0.0',
+    version: IR_SCHEMA_VERSION,
     openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: document.info,
     servers: document.servers ?? [],

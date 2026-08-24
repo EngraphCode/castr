@@ -10,7 +10,7 @@ interface SerializedMap {
 }
 
 import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
-import type { CastrDocument } from './models/schema-document.js';
+import { IR_SCHEMA_VERSION, type CastrDocument } from './models/schema-document.js';
 
 const SERIALIZED_DATA_TYPE_MAP = 'Map';
 const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties';
@@ -116,7 +116,29 @@ export function deserializeIR(json: string): CastrDocument {
   });
 
   if (!isCastrDocument(parsed)) {
-    throw new Error('Invalid CastrDocument structure');
+    throw new Error(describeInvalidDocument(parsed));
   }
   return parsed;
+}
+
+/**
+ * Name the failure precisely: a persisted IR stamped with an older schema
+ * version fails with the version mismatch called out (the shape it carries
+ * predates the current validators — for example the pre-`2.0.0` flat
+ * security shape), so the reader knows to regenerate the IR rather than
+ * chase a generic structural error.
+ */
+function describeInvalidDocument(parsed: unknown): string {
+  if (
+    isRecord(parsed) &&
+    typeof parsed['version'] === 'string' &&
+    parsed['version'] !== IR_SCHEMA_VERSION
+  ) {
+    return (
+      'Invalid CastrDocument structure: persisted IR declares schema version ' +
+      `"${parsed['version']}" but this build reads "${IR_SCHEMA_VERSION}" — regenerate the IR ` +
+      'from its source document.'
+    );
+  }
+  return 'Invalid CastrDocument structure';
 }

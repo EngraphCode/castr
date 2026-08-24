@@ -6,6 +6,7 @@
  */
 
 import type { OpenAPIDocument } from '../../shared/openapi-types.js';
+import { IR_SCHEMA_VERSION } from '../ir/index.js';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext as getZodClientTemplateContextBase } from './template-context.js';
 
@@ -57,7 +58,7 @@ describe('getZodClientTemplateContext - IR integration', () => {
     expect(result._ir).not.toBeNull();
 
     // IR should have expected structure
-    expect(result._ir?.version).toBe('1.0.0');
+    expect(result._ir?.version).toBe(IR_SCHEMA_VERSION);
     expect(result._ir?.info).toBeDefined();
     expect(result._ir?.components).toBeDefined();
     expect(result._ir?.operations).toBeDefined();

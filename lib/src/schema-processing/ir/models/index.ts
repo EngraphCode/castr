@@ -11,7 +11,12 @@ export {
 } from './schema.js';
 export type { IRIntegerSemantics } from '../integer-semantics/core.js';
 
-export { type IREnum, type CastrDocument, allOperations } from './schema-document.js';
+export {
+  type IREnum,
+  type CastrDocument,
+  allOperations,
+  IR_SCHEMA_VERSION,
+} from './schema-document.js';
 export { isCastrDocument } from '../validation/index.js';
 
 export { CastrSchemaProperties } from './schema.js';
