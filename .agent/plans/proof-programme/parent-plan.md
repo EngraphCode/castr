@@ -13,7 +13,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-03
     content: 'Pre-02A defect slice F-01: security AND->OR flattening, TDD through public seams'
-    status: pending
+    status: in_progress
     depends_on: [Q-00]
   - id: Q-04
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
