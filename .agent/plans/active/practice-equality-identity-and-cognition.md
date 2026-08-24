@@ -79,7 +79,7 @@ todos:
       branched off engraph, landed per OCE's own conventions and ratification path (their
       plan estate, sketch status where governance requires it). castr-side ID-1/ID-2 code
       is the reference implementation; OCE's naming schemas need no change (v2 is theirs).
-    status: pending
+    status: done # landed 2026-08-24: OCE PR #18 (claude/cloud-seat-identity-seed -> engraph) — same seed rule, hook cure, PDR-027 clause; session-seed.ts identical cross-estate; full OCE pre-push gate green
     depends_on: [ID-1, ID-2, ID-4]
   - id: SK-1
     content: >-
