@@ -41,6 +41,71 @@ one in advance.
 Repo-specific needs never go in the environment script — put them in the
 repo's hook so other Practice repos' sessions are unaffected.
 
+## Validating and diagnosing
+
+The environment builder is the only true fresh-container test bench:
+running the script by hand inside an existing session proves nothing about
+a fresh container (different egress, different filesystem state, different
+cache). The dialog is also write-only — no API reads it back, so drift
+between this reference file and the pasted copy is undetectable from a
+session. Four consequences, each with its instrument:
+
+1. **The script narrates itself.** Every section opens with a
+   `=== PHASE: … ===` banner and an `ERR` trap prints the failing phase,
+   line, and command. A failure card therefore names its own point of
+   death; a card without a phase banner means the script died before
+   `set -euo pipefail` — i.e. the paste itself is damaged.
+2. **The preflight returns the complete falsification list in one paste.**
+   [`cloud-environment-preflight.sh`](cloud-environment-preflight.sh) is a
+   read-only probe of every external assumption the setup script makes
+   (repo discovery, hook contract, git origin remotes, nodejs.org, registry.npmjs.org,
+   keyserver.ubuntu.com, ppa.launchpadcontent.net, the base image's own
+   apt hosts, the gitleaks release-asset redirect chain). All probes run
+   regardless of individual failures and the summary lists every failed
+   assumption. Setup-time egress differs from in-session egress (worked
+   instance 2026-08-23: Trusted preset fine in-session, 403 at setup), so
+   the authoritative run mode is pasting the preflight as a **temporary**
+   environment script and reading the session-start card; the in-session
+   run (`bash .agent/claude-harness-integrations/cloud-environment-preflight.sh`)
+   is the cheap first pass.
+3. **The diagnosis loop.** When fresh sessions stop starting:
+   1. Read the failure card. A phase banner localises the failure; no
+      banner means paste damage — go straight to step 4.
+   2. Paste the preflight as the environment script, start a session, and
+      read its card: the complete list of falsified assumptions in one
+      round-trip.
+   3. Fix what the preflight names — usually the network allow-list (a
+      redirect target like `release-assets.githubusercontent.com` never
+      appears in the script text) or a vendor-side change — landing any
+      script edit here first via PR.
+   4. Re-paste the current reference `cloud-environment-setup.sh` in full.
+      The rollback lever is the same move: any previous known-good version
+      is in this file's git history, and pasting it restores that state
+      exactly.
+4. **The probe invariant.** Every external host the setup script contacts
+   has a probe in the preflight; a change adding a host lands the probe in
+   the same commit. Redirect chains count — probe the effective URL, not
+   just the named host. Hook-contacted hosts count too, via the
+   **hook-preflight contract**: a repo whose session hook contacts extra
+   hosts commits the read-only twin
+   `.agent/setup/cloud-session-preflight.sh` beside the hook, and the
+   universal preflight runs it as a probe — the same
+   delegation shape as setup itself. Absence is the only benign skip;
+   exists-but-not-executable fails the probe.
+
+## Suspected-fragile hosts register
+
+Hosts the setup script needs whose setup-time reachability has never been
+positively confirmed (the in-session preflight passes them; a setup-time
+preflight paste has not yet been run): `nodejs.org`,
+`registry.npmjs.org`, `keyserver.ubuntu.com`, and the gitleaks
+release-asset redirect target. The 2026-08-24 in-session preflight
+resolved that redirect to `release-assets.githubusercontent.com` (not
+`objects.githubusercontent.com` as previously assumed) — if the
+setup-time allow-list lacks that host, the gitleaks download is the first
+candidate point of death. Remove entries from this register as setup-time
+preflight cards positively confirm them.
+
 ## Environment settings that pair with the script
 
 - **Network access**: Custom, with "Also include default list of common

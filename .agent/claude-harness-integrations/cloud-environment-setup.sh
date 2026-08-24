@@ -18,8 +18,33 @@
 # - One Practice repo per session (owner ruling 2026-08-23); the discovery
 #   loop tolerates more.
 set -euo pipefail
+set -E
 shopt -s nullglob
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+# Instrumentation: the environment builder is the only true fresh-container
+# test bench, and its failure card is the only observable output — so the
+# script must narrate its own progress and name its own point of death.
+# Diagnosis protocol and the read-only preflight probe live alongside this
+# file (cloud-environment-preflight.sh, cloud-environment.md § Validating
+# and diagnosing).
+PHASE="init"
+phase() {
+  PHASE="$1"
+  echo ""
+  echo "=== PHASE: ${PHASE} ==="
+}
+# the pipe-status list distinguishes which stage of a pipeline failed —
+# BASH_COMMAND alone names the whole assignment or the final stage, which
+# would send diagnosis at the wrong command (a curl transport failure vs a
+# parse failure look identical without it)
+trap 'echo "SETUP FAILED in phase \"${PHASE}\" at line ${LINENO}: ${BASH_COMMAND} (pipe status: ${PIPESTATUS[*]})" >&2' ERR
+# explicit failures route through fail(), never a bare `exit 1` — the ERR
+# trap does not fire on `exit`, and every non-zero exit must be instrumented
+fail() {
+  echo "ERROR: $*" >&2
+  return 1
+}
 
 # gitleaks pin — value-synced with castr's supply-chain single source
 # (.claude/hooks/_lib/gitleaks-pin.env there); bump both together.
@@ -27,6 +52,7 @@ GITLEAKS_VERSION=8.30.0
 GITLEAKS_SHA256_LINUX_X64=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d1547a2470a66e
 
 # ---------- discovery first: the carried repo declares the toolchain ----------
+phase "repo discovery"
 REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
   -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
 FIRST_REPO=""
@@ -50,19 +76,26 @@ echo "node major from ${FIRST_REPO}/package.json engines: ${NODE_MAJOR}"
 
 # ---------- universal toolchain ----------
 
+phase "node install (nodejs.org)"
 # Node — latest release of the repo-declared major, checksum-verified
 # against the release's published SHASUMS256 manifest before extraction.
 # Same-channel manifest, so this proves transfer integrity (no truncated or
 # corrupted archive extracts into /usr/local as root), not payload
 # authenticity — a pinned digest would reintroduce the hard-coded version
 # this script deliberately avoids.
-NODE_TGZ=$(curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" | grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" | head -1)
+# each network fetch is its own command, never a stage inside a command
+# substitution: PIPESTATUS in the ERR trap cannot see through an
+# assignment-substitution (x=$(a | b) traps with only the assignment
+# status), so a curl failure must fail on its own line to be attributable
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/" -o /tmp/node-index.html
+NODE_TGZ=$(grep -o "node-v${NODE_MAJOR}[0-9.]*-linux-x64.tar.gz" /tmp/node-index.html | head -1)
 test -n "$NODE_TGZ"
 curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/${NODE_TGZ}" -o /tmp/node.tgz
-curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" \
-  | grep " ${NODE_TGZ}\$" | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
+curl -fsSL "https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/SHASUMS256.txt" -o /tmp/node-shasums.txt
+grep " ${NODE_TGZ}\$" /tmp/node-shasums.txt | sed "s|  ${NODE_TGZ}\$|  /tmp/node.tgz|" | sha256sum -c -
 tar xzf /tmp/node.tgz -C /usr/local --strip-components=1
 
+phase "corepack pnpm shims"
 # pnpm via Corepack shims in /usr/local/bin (a trusted location for repo
 # spawn checks): each repo's packageManager pin selects and verifies its own
 # pnpm version — this script pins nothing
@@ -75,6 +108,7 @@ for d in /opt/node*/bin; do
   done
 done
 
+phase "git from git-core PPA (keyserver.ubuntu.com, ppa.launchpadcontent.net)"
 # git >= 2.45 from the git-core PPA (manual sources — add-apt-repository's
 # python apt_pkg binding is broken on this image)
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA1715D88E1DF1F24" \
@@ -85,6 +119,7 @@ apt-get update -qq
 apt-get install -y -qq git
 git --version
 
+phase "gitleaks (github.com release asset)"
 # gitleaks for pre-push secret scans — checksum-verified before install
 curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
   -o /tmp/gitleaks.tgz
@@ -97,9 +132,9 @@ for repo in $REPOS; do
   if [ ! -f "$repo/pnpm-lock.yaml" ] || [ ! -f "$repo/.agent/directives/AGENT.md" ]; then
     continue
   fi
-  cd "$repo"
   name=$(basename "$repo")
-  echo "setting up Practice repo: $name"
+  phase "repo setup: ${name}"
+  cd "$repo"
 
   # full history: validators read pinned baseline commits shallow clones lack
   if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
@@ -122,9 +157,11 @@ for repo in $REPOS; do
   # that exists but is not executable is a broken contract, not a no-op.
   if [ -e .agent/setup/cloud-session-setup.sh ]; then
     if [ ! -x .agent/setup/cloud-session-setup.sh ]; then
-      echo "ERROR: ${name}/.agent/setup/cloud-session-setup.sh exists but is not executable" >&2
-      exit 1
+      fail "${name}/.agent/setup/cloud-session-setup.sh exists but is not executable"
     fi
     ./.agent/setup/cloud-session-setup.sh
   fi
 done
+
+phase "complete"
+echo "environment setup finished cleanly"
