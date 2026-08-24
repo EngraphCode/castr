@@ -70,7 +70,7 @@ host_reachable() {
   local url="$1" display
   # display copy strips URL userinfo — an apt source or proxy URL can embed
   # credentials, and probe output lands on the persisted failure card
-  display=$(echo "$url" | sed -E 's|(https?://)[^@/]*@|\1|')
+  display=$(echo "$url" | sed -E 's|([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')
   if try_url "$url" || {
     # one retry: a single transient transport failure must not falsify a
     # host (observed in-session 2026-08-24: one-off 000 from
@@ -108,7 +108,7 @@ probe_vantage() {
     }
     # the scheme prefix is optional in proxy values (curl accepts
     # user:token@proxy:8080), so strip userinfo with or without one
-    echo "$1" | sed -E 's|^(https?://)?[^@/]*@|\1|'
+    echo "$1" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'
   }
   # report the EFFECTIVE values under curl's precedence: lowercase wins,
   # and http_proxy exists only in lowercase — a card showing a variable
@@ -322,7 +322,7 @@ probe_npm_registry() {
   elif [ -n "${COREPACK_NPM_USERNAME:-}" ] && [ -n "${COREPACK_NPM_PASSWORD:-}" ]; then
     auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
   fi
-  echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^(https?://)?[^@/]*@|\1|'))"
+  echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   meta=$(curl -fsSL -m 60 "${auth[@]}" "${registry%/}/pnpm/${version}") || {
     echo "registry metadata fetch failed (the request corepack install makes first)"
     return 1
@@ -332,7 +332,7 @@ probe_npm_registry() {
     echo "no dist.tarball URL in registry metadata"
     return 1
   }
-  echo "metadata tarball: $(echo "$tarball" | sed -E 's|^(https?://)?[^@/]*@|\1|')"
+  echo "metadata tarball: $(echo "$tarball" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
   curl -fsSL -m 120 "${auth[@]}" "$tarball" -o /tmp/preflight-pnpm.tgz || {
     echo "pinned pnpm tarball download failed"
     return 1
