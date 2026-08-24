@@ -40,6 +40,18 @@ describe('writeSecurityRequirements', () => {
     expect(written).toStrictEqual([{}, { alphaAuth: [] }]);
   });
 
+  it('writes a scheme legally named __proto__ as an own key, never as a prototype', () => {
+    const written = writeSecurityRequirements([
+      { schemes: [{ schemeName: '__proto__', scopes: ['read'] }] },
+    ]);
+
+    const [requirement] = written;
+    assert(requirement !== undefined, 'expected exactly one written requirement object');
+    expect(Object.hasOwn(requirement, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(requirement)).toBe(Object.prototype);
+    expect(Object.keys(requirement)).toStrictEqual(['__proto__']);
+  });
+
   it('throws when one group names the same scheme twice', () => {
     expect(() =>
       writeSecurityRequirements([

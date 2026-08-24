@@ -38,9 +38,8 @@ export function writeSecurityRequirements(
 }
 
 function writeSecurityRequirement(requirement: IRSecurityRequirement): SecurityRequirementObject {
-  const written: SecurityRequirementObject = {};
   const seenSchemeNames = new Set<string>();
-  for (const { schemeName, scopes } of requirement.schemes) {
+  const entries: [string, string[]][] = requirement.schemes.map(({ schemeName, scopes }) => {
     if (seenSchemeNames.has(schemeName)) {
       throw new Error(
         `Security requirement names scheme "${schemeName}" more than once in one AND-group; ` +
@@ -49,7 +48,10 @@ function writeSecurityRequirement(requirement: IRSecurityRequirement): SecurityR
       );
     }
     seenSchemeNames.add(schemeName);
-    written[schemeName] = [...scopes];
-  }
-  return written;
+    return [schemeName, [...scopes]];
+  });
+  // Object.fromEntries defines OWN properties, so a scheme legally named
+  // "__proto__" becomes a real key instead of invoking the inherited
+  // prototype setter (which would silently emit {} — anonymous access).
+  return Object.fromEntries(entries);
 }

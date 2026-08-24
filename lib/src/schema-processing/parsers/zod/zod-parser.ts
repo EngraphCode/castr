@@ -86,7 +86,9 @@ function createEmptyDocument(): CastrDocument {
     openApiVersion: CANONICAL_OPENAPI_VERSION,
     info: {
       title: 'Parsed from Zod',
-      version: IR_SCHEMA_VERSION,
+      // The generated API's own metadata version — independent of the IR
+      // schema version stamped on `version` above.
+      version: '1.0.0',
     },
     servers: [],
     components: [],
