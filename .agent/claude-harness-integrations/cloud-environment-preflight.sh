@@ -773,6 +773,13 @@ probe_gitleaks_release() {
   local final
   final=$(curl -fsSL -m 120 -w '%{url_effective}' "$url" -o ${PF_TMP}/gitleaks.tgz 2>/dev/null) || {
     echo "download failed (redirect chain or egress): ${url}"
+    # curl reports the last URL it attempted even on failure — when the
+    # blocked hop is the redirect target, the failure card must name
+    # that host (it never appears in the script text), or the reader
+    # cannot know what to allow-list
+    if [ -n "$final" ] && [ "$final" != "$url" ]; then
+      echo "last attempted URL in the chain (allow-list this host): $(echo "${final%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')"
+    fi
     return 1
   }
   echo "redirect chain ends at host: $(echo "$final" | sed -E 's|https?://([^/]+).*|\1|')"
