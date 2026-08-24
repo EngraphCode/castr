@@ -13,7 +13,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-03
     content: 'Pre-02A defect slice F-01: security AND->OR flattening, TDD through public seams'
-    status: in_progress
+    status: completed
     depends_on: [Q-00]
   - id: Q-04
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
@@ -73,8 +73,9 @@ todos:
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
-the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Eligible
-now: Q-03..Q-09, Q-13 (executes the B-11 RATIFY
+the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
+completed 2026-08-24 (see the Q-03 evidence record). Eligible
+now: Q-04..Q-09, Q-13 (executes the B-11 RATIFY
 outcome), Q-14, Q-15, Q-16, Q-17; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -559,6 +560,71 @@ red-first formula-preserving proof through public parse/write seams — `{A AND 
 `A OR B` distinguishable end to end; `pnpm check` green. Source: report F-01;
 remediation-02 plan. Gate: B-11 (success verdict).
 
+**Q-03 evidence record (completed 2026-08-24).** Shipped: the F-01 fix as an IR-model change —
+`IRSecurityRequirement` is now a requirement group (`{ schemes: IRSecuritySchemeRequirement[] }`,
+AND within a group, OR across the `security` array; new member type exported through all five
+barrels), with the parser (`buildIRSecurity`: map, not flatMap; the spec's empty requirement `{}`
+now survives as a schemes-empty group; `scopes ?? []` replaced by a fail-fast boundary throw),
+one shared order-preserving writer (`writers/openapi/openapi-writer.security.ts`, replacing two
+byte-identical sorted implementations; emits `{}` for empty groups; throws on a duplicate scheme
+name within one group — unrepresentable as a JSON key), the MCP resolver (`resolveRequirement`
+maps a group to its full scheme set; `isPublic` is true when any set has zero schemes — the
+anonymous-access alternative — with all sets retained as optional credential upgrades, and the
+raw-OpenAPI resolver aligned to the same rule and the same scopes fail-fast so the shared
+`OperationSecurityMetadata` contract has one invariant), and persistence-boundary validation
+(`ir/validation/security/validators.security.ts` wired into `isCastrDocument` /
+`isCastrOperation` / `isCastrAdditionalOperation`; a stale flat-shape persisted IR now fails
+`deserializeIR` loudly, and a group naming one scheme twice is rejected so "valid" coincides
+with "writable"). Proof (red-first): `lib/tests-transforms/__tests__/security-formula.integration.test.ts`
+runs five cases through public `buildIR → writeOpenApi → buildIR` seams via the Q-02
+semantic-outcome-runner with `cloneIR = deserializeIR ∘ serializeIR` (every case also proves the
+formula survives IR persistence): operation-level AND vs OR, document-level AND vs OR, the
+spec's optional-security mixed form `[{}, {oauth: […]}]`, duplicate alternatives (positive
+control), and authored alternative order. Pre-fix, four cases failed the runner's structural
+non-vacuity precheck — the pipeline collapsed each separating pair, exactly F-01's shape — and
+the positive control passed; post-fix 5/5 green. Unit coverage: parser
+(`builder.operations.fields.unit.test.ts`), shared writer, validators (document/operation/
+additional-operation guards, stale-flat rejection at the `deserializeIR` seam), both security
+resolvers (empty-requirement `isPublic` pinned on the IR and raw paths), and the re-pinned
+writer determinism test (IR order, replacing the sort that the tictactoe fixture pair proves
+was itself order-lossy). The `samples.test.ts.snap` diff is the fix manifest in generated MCP
+metadata: `multi-auth.yaml`'s authored AND-group (`OAuth2 + ApiKey`) now emits as one
+requirement set of two schemes where it was two OR alternatives.
+
+Reviews: two pre-execution dispatches (`code-reviewer`, `openapi-expert` — the expert's
+verdicts fixed the design before code: group order preserved rather than canonically sorted,
+`{}` preservation required, `scopes` fail-fast, injective-key hazards avoided by not sorting)
+and four post-execution dispatches (`code-reviewer`, `test-reviewer`, `type-reviewer`,
+`mcp-expert`), all findings fixed in-slice or explicitly routed. Routed, not fixed here
+(recorded so "security round-trips" is not read as closed):
+
+- **Writer drops `security: []`** (operation-level explicit-public override re-inherits
+  document security on write; document-level `[]` equals absent per spec) — security lane,
+  Tranche 06.
+- **Raw-vs-IR resolver duplication**: `resolveOperationSecurity` (raw path) has no product
+  caller; when the security lane opens, prefer deleting it over maintaining two aligned
+  implementations (`replace-dont-bridge`).
+- **3.2 URI-form security-requirement keys** resolve against component names only in both
+  resolvers (throws for URI keys) — security lane.
+- **Normalized-fixture estate is unregenerable**: `lib/scripts/generate-normalized-fixtures.ts`
+  output breaks 11 validation-parity tests (checked-in `zod.ts` fixtures predate the
+  generator's int64/strictObject migrations), so the checked-in `ir.json`/`ir2.json` for
+  tictactoe/oak-api still carry the now-invalid flat security shape (nothing deserialises
+  them; tictactoe's `ir.json` vs `ir2.json` differ only by the old alphabetical sort — a
+  preserved fossil of the removed defect). Fixture-regeneration integrity needs its own slice
+  before any fixture-consuming lane.
+- **Public-API note for the owner's next release decision**: `IRSecurityRequirement` is
+  exported from `lib/src/index.ts`, so this is a breaking shape change at the next release;
+  versioning is a release-scope owner decision (none taken here; no version bump landed).
+- **Doctrine conflict carried, not widened**: the parser/writer boundary uses
+  `Object.entries`/property enumeration, which §Type System Discipline's `Object.*` clause
+  forbids; per the owner's 2026-08-23 ruling the doctrine stands and a lint-enforced
+  remediation lane enters at the Q-12 split — this slice kept the count stable (same sites,
+  consolidated writers).
+
+Full `pnpm check` green on the landed tree; scope held to the F-01 defect throughout — no
+broader security-lane work.
+
 **Q-04 — F-03 nested Boolean schemas.** Surface: the properties-path parse callback lacking
 the boolean branch (`json-schema-parser` object fields vs the `if/then/else` handler).
 Non-goals: no full Tranche 05 position matrix. Acceptance (`integration`): red-first proof
@@ -813,7 +879,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-03..Q-09, Q-13, Q-14, Q-15, Q-16, Q-17 (Q-02 completed 2026-08-23).
+- **Eligible now**: Q-04..Q-09, Q-13, Q-14, Q-15, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract
