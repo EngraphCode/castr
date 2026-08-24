@@ -203,7 +203,10 @@ probe_session_hook_preflights() {
       if [ ! -x "$pf" ]; then
         echo "hook preflight exists but is NOT executable: ${pf}"
         failed=1
-      elif "$pf"; then
+      # subshell rooted at the repo: the setup script cds into the repo
+      # before invoking the session hook, so the hook-preflight twin gets
+      # the same repo-root working-directory contract
+      elif (cd "$repo" && ./.agent/setup/cloud-session-preflight.sh); then
         echo "hook preflight passed: ${repo}"
       else
         echo "hook preflight FAILED: ${repo}"
