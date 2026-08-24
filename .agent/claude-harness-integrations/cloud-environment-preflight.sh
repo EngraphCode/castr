@@ -320,14 +320,17 @@ probe_npm_registry() {
   # COREPACK_NPM_TOKEN as Bearer, else COREPACK_NPM_USERNAME/PASSWORD as
   # Basic; it fetches registry metadata at pnpm/<version> and follows the
   # returned dist.tarball URL rather than assuming the canonical path
-  local registry auth=() meta tarball tarball_auth
+  local registry auth=() auth_kind=none meta tarball tarball_auth
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
-  if [ -n "${COREPACK_NPM_TOKEN:-}" ]; then
+  # corepack tests each variable's PRESENCE (`in process.env`), never
+  # truthiness — an empty token still selects Bearer, and an empty
+  # password is a valid Basic credential
+  if [ "${COREPACK_NPM_TOKEN+set}" = set ]; then
     auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
-  # corepack checks the variables' PRESENCE, and its README permits an
-  # empty COREPACK_NPM_PASSWORD — mirror that, never a non-empty test
+    auth_kind=bearer
   elif [ "${COREPACK_NPM_USERNAME+set}" = set ] && [ "${COREPACK_NPM_PASSWORD+set}" = set ]; then
     auth=(-u "${COREPACK_NPM_USERNAME}:${COREPACK_NPM_PASSWORD}")
+    auth_kind=basic
   fi
   echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|'))"
   if [ -z "${COREPACK_NPM_REGISTRY:-}" ]; then
@@ -342,7 +345,17 @@ probe_npm_registry() {
       echo "registry metadata fetch failed (the request corepack install makes first)"
       return 1
     }
-    tarball=$(echo "$meta" | grep -oE '"tarball":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"tarball":[[:space:]]*"([^"]+)".*/\1/')
+    # parse the response as JSON and take exactly dist.tarball — a regex
+    # returns still-escaped text (\/) curl rejects, or an unrelated
+    # tarball key. python3 and the image node both predate our toolchain
+    # install; the textual fallback is last-resort and unescapes slashes
+    if command -v python3 >/dev/null 2>&1; then
+      tarball=$(echo "$meta" | python3 -c 'import json,sys; print(json.load(sys.stdin)["dist"]["tarball"])' 2>/dev/null)
+    elif command -v node >/dev/null 2>&1; then
+      tarball=$(echo "$meta" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>console.log(JSON.parse(d).dist.tarball))' 2>/dev/null)
+    else
+      tarball=$(echo "$meta" | grep -oE '"tarball":[[:space:]]*"[^"]+"' | head -1 | sed -E 's/.*"tarball":[[:space:]]*"([^"]+)".*/\1/' | sed 's|\\/|/|g')
+    fi
     test -n "$tarball" || {
       echo "no dist.tarball URL in registry metadata"
       return 1
@@ -351,14 +364,19 @@ probe_npm_registry() {
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
   echo "metadata tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')" 
-  # corepack scopes credentials to the registry origin — an off-origin
-  # dist.tarball URL (a CDN or object store) must not receive the
-  # Authorization header (corepack 0.34: token added only when
-  # input.origin === registry.origin)
-  local tarball_auth=()
-  if [ "$(echo "$tarball" | sed -E 's|^(https?://[^/]+).*|\1|')" = "$(echo "$registry" | sed -E 's|^(https?://[^/]+).*|\1|')" ]; then
-    tarball_auth=("${auth[@]}")
-  fi
+  # mirror corepack's download-auth rules exactly: Basic credentials go
+  # on EVERY request (httpUtils.fetch applies username/password to all
+  # input URLs), while the Bearer token is origin-scoped — added only
+  # when the tarball origin equals the registry origin
+  tarball_auth=()
+  case "$auth_kind" in
+  basic) tarball_auth=("${auth[@]}") ;;
+  bearer)
+    if [ "$(echo "$tarball" | sed -E 's|^(https?://[^/]+).*|\1|')" = "$(echo "$registry" | sed -E 's|^(https?://[^/]+).*|\1|')" ]; then
+      tarball_auth=("${auth[@]}")
+    fi
+    ;;
+  esac
   curl -fsSL -m 120 "${tarball_auth[@]}" "$tarball" -o "${PF_TMP}/pnpm.tgz" || {
     echo "pinned pnpm tarball download failed"
     return 1
