@@ -305,7 +305,7 @@ probe_base_image_apt_sources() {
   # pointer), which apt never contacts, and misattribute an unrelated block
   # to apt sources. Each pair probes the exact InRelease path `apt-get
   # update` fetches — roots and index pages are not what apt requests.
-  local pairs pair url suite failed=0
+  local pairs pair url suite target failed=0
   pairs=$({
     awk '/^[[:space:]]*deb(-src)?[[:space:]]/ {
       for (i = 2; i <= NF; i++)
@@ -314,10 +314,12 @@ probe_base_image_apt_sources() {
     awk -v RS= '{
       uris = ""; suites = ""; enabled = ""
       n = split($0, lines, "\n")
+      # deb822 field names are case-insensitive (apt accepts Uris:/URIS:),
+      # so match on a lowercased copy and slice the value from the original
       for (i = 1; i <= n; i++) {
-        if (lines[i] ~ /^URIs:/) { sub(/^URIs:[[:space:]]*/, "", lines[i]); uris = lines[i] }
-        if (lines[i] ~ /^Suites:/) { sub(/^Suites:[[:space:]]*/, "", lines[i]); suites = lines[i] }
-        if (lines[i] ~ /^Enabled:/) { sub(/^Enabled:[[:space:]]*/, "", lines[i]); enabled = tolower(lines[i]) }
+        if (match(tolower(lines[i]), /^uris:[[:space:]]*/)) { uris = substr(lines[i], RLENGTH + 1) }
+        else if (match(tolower(lines[i]), /^suites:[[:space:]]*/)) { suites = substr(lines[i], RLENGTH + 1) }
+        else if (match(tolower(lines[i]), /^enabled:[[:space:]]*/)) { enabled = tolower(substr(lines[i], RLENGTH + 1)) }
       }
       # a stanza with Enabled: no is ignored by apt — probing it would
       # falsify an assumption apt-get update never makes
@@ -334,7 +336,14 @@ probe_base_image_apt_sources() {
   }
   while read -r url suite; do
     [ -n "$url" ] && [ -n "$suite" ] || continue
-    host_reachable "${url%/}/dists/${suite}/InRelease" || failed=1
+    # an exact-path suite (trailing slash) gets no dists/ segment — apt
+    # fetches <url>/<suite>InRelease for those, <url>/InRelease for "./"
+    case "$suite" in
+    ./) target="${url%/}/InRelease" ;;
+    */) target="${url%/}/${suite}InRelease" ;;
+    *) target="${url%/}/dists/${suite}/InRelease" ;;
+    esac
+    host_reachable "$target" || failed=1
   done <<< "$pairs"
   return $failed
 }
