@@ -620,6 +620,46 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
   prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
 
+## 2026-08-24 (owner rulings via decision cards — Flamebright Burning Caldera / 01FV6r, continued session)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "Always expose decisions to me as
+  decision cards."** The AskUserQuestion tool is the medium for every owner decision —
+  extends the 2026-07-03 "questions go through the AskUserQuestion tool" correction from
+  questions to all decisions. First use resolved three review decisions in one sitting
+  (OP-3 approved, B-15 re-balloted push-only, OP-1(b) declined). `candidate:` graduate
+  into `owner-attention-at-action-moments` / `user-collaboration.md` alongside the
+  blocked-on-owner mobile-alert directive.
+- **OWNER TEACHING (2026-08-24, verbatim): "we don't do carve outs, we do policy, check
+  the principles. When the time comes, we will compare the Watcher with the comms
+  mechanisms and heartbeats etc, the difference is the medium, not the needs."** Given
+  while declining the external-observer proposal whose card I framed as "uses the
+  carve-out that already exists" (QD-7's own ADR wording). The design lesson: an
+  exception-shaped grant is a smell — model the new thing against the existing
+  mechanisms serving the same NEED (comms, heartbeats, liveness) and write the general
+  policy; the medium (Slack vs comms-log vs push) is a parameter, not a new category.
+  ADR-051 clause 7's "explicit carve-out" framing is a candidate for this reframing at
+  its next revisit (flagged in the review report's addendum; not enacted — owner's call).
+- **Identity-derivation discrepancy, measured on this seat:** the SessionStart hook (now
+  firing on session resume) derives "Lacustrine Anchoring Stern" from the true session id
+  prefix (d36e5c), while this seat registered "Flamebright Burning Caldera" from the
+  commit-trailer seed (01FV6r) chosen at session open — same seat, two derivable names.
+  Continued under the REGISTERED identity for thread-history coherence (PDR-027 additive
+  rule protects against the confusion, but one seat should not mint two names). Related
+  to Q-15's identity-seed gap: the seed SOURCE needs one canonical answer (hook-injected
+  env var when present, trailer-derived only as fallback).
+- **Cite-the-card-after-recording-it (assumptions-expert P1, caught pre-land):** the Q-18..Q-20
+  rows cited "owner decision card 2026-08-24" while the report's addendum still said that card
+  was "asked, not assumed" — the ruling lived only in conversation. The `no-manufactured-permission`
+  shape from the AUTHOR side: an owner ruling is usable authority only once its verbatim record
+  exists on a durable surface; write the record FIRST, then cite it. Cure: the addendum's
+  second-card section now carries the verbatim answers and landing list, and the rows resolve.
+- **The LC2 refuse-and-route merge driver fired live and worked end-to-end:** merging
+  origin/main (PR #50's continuity edits) into the review branch, the driver refused to
+  line-merge napkin.md and repo-continuity.md, printed the exact :1/:2/:3 recipe, and the
+  semantic union (their appended napkin section + their row 67; my sections + my row 66)
+  concluded via the documented plain-commit merge deviation. First measured firing of the
+  driver in this estate since its 2026-06-27 landing.
+
 ## 2026-08-24 (loop review, review-pass fold — Flamebright Burning Caldera / 01FV6r)
 
 - **The `Claude-Session` commit trailer is a per-firing durable discriminator — it settled an

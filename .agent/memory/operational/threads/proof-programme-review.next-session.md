@@ -10,6 +10,22 @@ session's first act; legs R1–R6; scope guard inside). Distinct from the
 `proof-programme` thread itself — that thread RUNS the loop; this one
 reviews it. Do not execute queue items from this seat.
 
+## Continuation — owner rulings executed (2026-08-24, second sitting, same seat)
+
+The owner returned, set the standing decisions-as-decision-cards directive,
+and ruled on everything routed: OP-3 approved (ADR-051 clause 4 amended with
+the three tightenings, docs-adr-expert findings folded — including its P1 on
+my draft's ungranted carry-forward alternative); OP-4 re-balloted to
+push-only (ballot B-15 dated amendment; D-2 closed as ratified change);
+OP-1(b) declined with the policy-not-carve-outs teaching (napkin, verbatim);
+second card: OP-1(a)/OP-2/OP-5 → queue rows Q-18..Q-20 (+Q-21 split out by
+the assumptions-expert pass, 21 findings folded), OP-7/OP-8 → practice
+landings this session (wrap sequencing refinements, commit-skill
+cannot-conclude cases + trailer duty, `claims init` subcommand — TDD,
+red-first, proven live). The second card's durable record is the report
+addendum's "Second decision card" section. Main was merged forward
+(PR #50's Q-03 landing) through the refuse-and-route semantic-merge driver.
+
 ## Closeout — engraph-wrap run (2026-08-24, Flamebright Burning Caldera / 01FV6r)
 
 - **Safety state (verbatim, at the closeout commit; the push follows
