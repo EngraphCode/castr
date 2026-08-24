@@ -67,14 +67,17 @@ try_url() {
   return $rc
 }
 host_reachable() {
-  local url="$1"
+  local url="$1" display
+  # display copy strips URL userinfo — an apt source or proxy URL can embed
+  # credentials, and probe output lands on the persisted failure card
+  display=$(echo "$url" | sed -E 's|(https?://)[^@/]*@|\1|')
   if try_url "$url" || {
     # one retry: a single transient transport failure must not falsify a
     # host (observed in-session 2026-08-24: one-off 000 from
     # security.ubuntu.com, 200 on every retry)
     try_url "$url"
   }; then
-    echo "HTTP ${TRY_CODE}: ${url}"
+    echo "HTTP ${TRY_CODE}: ${display}"
     # only a final 2xx passes: every target here is a path the real setup
     # fetches with curl -f (or that apt must be able to consume), so any
     # HTTP error — 403 proxy or 404/500 origin alike — fails setup too
@@ -83,7 +86,7 @@ host_reachable() {
     *) return 1 ;;
     esac
   fi
-  echo "TRANSPORT FAILURE (proxy CONNECT denial, DNS, or timeout; last code ${TRY_CODE}): ${url}"
+  echo "TRANSPORT FAILURE (proxy CONNECT denial, DNS, or timeout; last code ${TRY_CODE}): ${display}"
   return 1
 }
 
@@ -217,8 +220,11 @@ probe_session_hook_preflights() {
         failed=1
       # subshell rooted at the repo: the setup script cds into the repo
       # before invoking the session hook, so the hook-preflight twin gets
-      # the same repo-root working-directory contract
-      elif (cd "$repo" && ./.agent/setup/cloud-session-preflight.sh); then
+      # the same repo-root working-directory contract. Bounded like every
+      # other probe — a hook preflight that hangs must become that repo's
+      # failure, not swallow the summary (timeout exit 124 lands in the
+      # FAILED branch)
+      elif (cd "$repo" && timeout 120 ./.agent/setup/cloud-session-preflight.sh); then
         echo "hook preflight passed: ${repo}"
       else
         echo "hook preflight FAILED: ${repo}"
@@ -274,8 +280,52 @@ probe_nodejs_org() {
 }
 
 probe_npm_registry() {
-  # corepack (pnpm resolution) and pnpm install both need the registry
-  host_reachable "https://registry.npmjs.org/-/ping"
+  # corepack downloads the pinned pnpm tarball named by the carried repo's
+  # packageManager field (version + sha512); download that exact artefact
+  # and recompute its digest (validators recompute, never just record) —
+  # a registry ping proves nothing about the path `corepack install` takes
+  test -n "$FIRST_REPO" || {
+    echo "skipped: no Practice repo"
+    return 1
+  }
+  local pm version expected computed
+  pm=$(grep -o '"packageManager"[: ]*"[^"]*"' "$FIRST_REPO/package.json" | sed -E 's/.*"packageManager"[: ]*"([^"]*)".*/\1/')
+  test -n "$pm" || {
+    echo "no packageManager pin in ${FIRST_REPO}/package.json"
+    return 1
+  }
+  case "$pm" in
+  pnpm@*) ;;
+  *)
+    echo "unexpected packageManager (not pnpm): ${pm}"
+    return 1
+    ;;
+  esac
+  version=${pm#pnpm@}
+  version=${version%%+*}
+  echo "pinned pnpm: ${version}"
+  curl -fsSL -m 120 "https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz" -o /tmp/preflight-pnpm.tgz || {
+    echo "pinned pnpm tarball download failed"
+    return 1
+  }
+  case "$pm" in
+  *+sha512.*)
+    # corepack pins are the npm dist.integrity digest re-encoded as HEX
+    # (corepack.cjs: Buffer.from(integrity, base64).toString(hex)), so
+    # compare sha512sum's hex output, not a base64 encoding
+    expected=${pm#*+sha512.}
+    computed=$(sha512sum /tmp/preflight-pnpm.tgz | cut -d' ' -f1)
+    if [ "$computed" = "$expected" ]; then
+      echo "pnpm tarball digest matches the packageManager pin"
+    else
+      echo "pnpm tarball digest MISMATCH against the packageManager pin"
+      return 1
+    fi
+    ;;
+  *)
+    echo "packageManager pin carries no sha512 — download verified reachable, digest not pinned"
+    ;;
+  esac
 }
 
 probe_keyserver() {
@@ -312,14 +362,23 @@ probe_base_image_apt_sources() {
         if ($i ~ /^https?:\/\//) { print $i, $(i + 1); break }
     }' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null
     awk -v RS= '{
-      uris = ""; suites = ""; enabled = ""
+      uris = ""; suites = ""; enabled = ""; cur = ""
       n = split($0, lines, "\n")
       # deb822 field names are case-insensitive (apt accepts Uris:/URIS:),
-      # so match on a lowercased copy and slice the value from the original
+      # so match on a lowercased copy and slice the value from the
+      # original; an indented line is a folded continuation of the field
+      # above it and its values count too
       for (i = 1; i <= n; i++) {
-        if (match(tolower(lines[i]), /^uris:[[:space:]]*/)) { uris = substr(lines[i], RLENGTH + 1) }
-        else if (match(tolower(lines[i]), /^suites:[[:space:]]*/)) { suites = substr(lines[i], RLENGTH + 1) }
-        else if (match(tolower(lines[i]), /^enabled:[[:space:]]*/)) { enabled = tolower(substr(lines[i], RLENGTH + 1)) }
+        if (lines[i] ~ /^[ \t]/ && cur != "") {
+          val = lines[i]; sub(/^[ \t]+/, "", val)
+          if (cur == "uris") uris = uris " " val
+          else if (cur == "suites") suites = suites " " val
+          continue
+        }
+        if (match(tolower(lines[i]), /^uris:[[:space:]]*/)) { uris = substr(lines[i], RLENGTH + 1); cur = "uris" }
+        else if (match(tolower(lines[i]), /^suites:[[:space:]]*/)) { suites = substr(lines[i], RLENGTH + 1); cur = "suites" }
+        else if (match(tolower(lines[i]), /^enabled:[[:space:]]*/)) { enabled = tolower(substr(lines[i], RLENGTH + 1)); cur = "" }
+        else cur = ""
       }
       # a stanza with Enabled: no is ignored by apt — probing it would
       # falsify an assumption apt-get update never makes
