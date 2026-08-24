@@ -53,8 +53,16 @@ GITLEAKS_SHA256_LINUX_X64=79a3ab579b53f71efd634f3aaf7e04a0fa0cf206b7ed434638d154
 
 # ---------- discovery first: the carried repo declares the toolchain ----------
 phase "repo discovery"
+# find exits non-zero when any search root is missing or partially
+# unreadable (measured 2026-08-24: the builder image ships no /workspace)
+# while still printing every match — under pipefail that killed setup at
+# this line on every fresh session from this script's first paste, the
+# root cause of the 2026-08-23/24 environment outage. The pipeline's
+# exit is therefore tolerated; the meaningful invariant stays the
+# test -n FIRST_REPO check below, which still fails loudly when no
+# Practice repo is actually found.
 REPOS=$(find /home /workspace -maxdepth 4 -type d -name .git \
-  -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||')
+  -not -path '*/node_modules/*' 2>/dev/null | sed 's|/\.git$||') || true
 FIRST_REPO=""
 for repo in $REPOS; do
   # A Practice repo is identified by its committed Practice substrate plus a

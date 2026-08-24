@@ -617,3 +617,24 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   `release-assets.githubusercontent.com` (not
   `objects.githubusercontent.com` as previously assumed) — prime
   suspect if setup-time egress lacks it.
+
+## 2026-08-24 (later) — environment outage resolved; review-loop lesson (twin note)
+
+- The "Practice Repos" cloud-environment outage's root cause and the
+  full record live in the OCE thread record
+  (`.agent/memory/operational/threads/cloud-environment-bootstrap.next-session.md`
+  there) and both repos' `cloud-environment.md` § Provenance: the
+  discovery `find /home /workspace` pipeline exits 1 (no /workspace on
+  the builder) and `set -euo pipefail` killed setup at that line from
+  the script's first paste. Fix landed in both twins' setup script.
+  Validate strict-mode scripts by running the whole file under strict
+  mode, never interactive chunks.
+- Review-loop lesson (owner-stopped at ~round 26): bot fidelity
+  findings against vendor internals are an unbounded generator —
+  beyond the estate's live configuration they get a printed `bound:`
+  line and a decline reply, never an in-loop cure; correct ≠ relevant ≠
+  proportionate. Cure-introduced defects appeared exactly as PDR-132
+  predicts (dedupe-before-probe, caught in round-25 testing).
+- Harness checkpointing auto-committed deliberately-held working-tree
+  edits (accurate message, bot identity) — held-work discipline in
+  cloud sessions must expect this.

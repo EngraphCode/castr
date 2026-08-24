@@ -24,8 +24,8 @@ one in advance.
    that needs more than `pnpm install` commits an executable
    `.agent/setup/cloud-session-setup.sh`; the environment script invokes it
    from the repo root after install, under the same fail-fast rules. This
-   repo currently needs nothing beyond the shared install step and commits
-   no hook; create the file at that path when it does.
+   repo's hook installs the pinned Playwright Chromium for the
+   `test:ui`/e2e suites. A repo with no extra needs commits no hook.
 
 ## Changing the environment
 
@@ -95,16 +95,14 @@ session. Four consequences, each with its instrument:
 
 ## Suspected-fragile hosts register
 
-Hosts the setup script needs whose setup-time reachability has never been
-positively confirmed (the in-session preflight passes them; a setup-time
-preflight paste has not yet been run): `nodejs.org`,
-`registry.npmjs.org`, `keyserver.ubuntu.com`, and the gitleaks
-release-asset redirect target. The 2026-08-24 in-session preflight
-resolved that redirect to `release-assets.githubusercontent.com` (not
-`objects.githubusercontent.com` as previously assumed) — if the
-setup-time allow-list lacks that host, the gitleaks download is the first
-candidate point of death. Remove entries from this register as setup-time
-preflight cards positively confirm them.
+Empty. A setup-time preflight paste on 2026-08-24 ran 12/12 from a true
+fresh builder, positively confirming every previously registered host —
+`nodejs.org`, `registry.npmjs.org`, `keyserver.ubuntu.com`, and the
+gitleaks release-asset redirect target (measured as
+`release-assets.githubusercontent.com`, not `objects.githubusercontent.com`
+as once assumed; the preflight's failure branch now prints the last
+attempted URL so a future redirect-host change names itself on the card).
+Re-add an entry only when a setup-time card implicates a host.
 
 ## Environment settings that pair with the script
 
@@ -152,7 +150,7 @@ this to a rejected signature, provisioning hard-fails loudly at `apt-get
 update` — that failure is the designed signal, and the remedy is moving
 git to a source with a modern key.
 
-## Provenance (worked instances, 2026-08-23)
+## Provenance (worked instances, 2026-08-23/24)
 
 - `add-apt-repository` crashes on this image (`apt_pkg` missing) — PPAs are
   added by writing sources and key files directly.
@@ -161,3 +159,15 @@ git to a source with a modern key.
   session's `PATH`.
 - Hard-coding a repo path broke castr sessions (the environment previously
   assumed this repo); discovery-and-delegation replaced it.
+- The 2026-08-23/24 outage (every fresh session failing for ~24h): the
+  discovery pipeline's `find /home /workspace` exits non-zero because the
+  builder ships no `/workspace` — while still printing every match — and
+  `set -euo pipefail` turned that into instant death at the discovery
+  line, from the discovery script's very first paste. Two traps hid it:
+  hand-validation ran script chunks in an interactive shell (no strict
+  mode, so the pipeline "worked" on the bench), and the preflight runs
+  without `-e`/`pipefail` by design, so it cannot catch strict-mode
+  shell-semantics deaths — that class belongs to the setup script's own
+  phase banners and ERR trap, which named the dying line on the first
+  instrumented run. When validating a strict-mode script, run the WHOLE
+  file under its own strict mode, never chunks in an interactive shell.
