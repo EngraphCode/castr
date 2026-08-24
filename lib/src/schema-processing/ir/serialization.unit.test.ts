@@ -261,4 +261,31 @@ describe('IR Serialization', () => {
       'Invalid CastrDocument structure',
     );
   });
+
+  it('should reject a persisted document carrying the pre-group flat security shape', () => {
+    const staleIR = {
+      ...mockIR,
+      security: [{ schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(() => deserializeIR(JSON.stringify(staleIR))).toThrow('Invalid CastrDocument structure');
+  });
+
+  it('should round-trip document-level grouped security through serialization', () => {
+    const securedIR: CastrDocument = {
+      ...mockIR,
+      security: [
+        {
+          schemes: [
+            { schemeName: 'bearerAuth', scopes: [] },
+            { schemeName: 'apiKey', scopes: ['read:items'] },
+          ],
+        },
+      ],
+    };
+
+    const revived = deserializeIR(serializeIR(securedIR));
+
+    expect(revived.security).toStrictEqual(securedIR.security);
+  });
 });

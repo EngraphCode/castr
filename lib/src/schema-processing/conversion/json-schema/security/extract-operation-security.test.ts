@@ -178,4 +178,54 @@ describe('resolveOperationSecurity', () => {
       }),
     ).toThrow(/missing security scheme/i);
   });
+
+  it('marks an operation with an empty requirement ({}) public while keeping all sets', () => {
+    const apiKeyScheme: SecuritySchemeObject = {
+      type: 'apiKey',
+      name: 'X-API-Key',
+      in: 'header',
+    };
+    const document = buildDocument({
+      components: { securitySchemes: { apiKey: apiKeyScheme } },
+    });
+    const operation: OperationObject = {
+      security: [{}, { apiKey: [] }],
+    };
+
+    const result = resolveOperationSecurity({
+      document,
+      operationSecurity: operation.security,
+    });
+
+    expect(result).toStrictEqual({
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        { schemes: [] },
+        { schemes: [{ schemeName: 'apiKey', scheme: apiKeyScheme, scopes: [] }] },
+      ],
+    });
+  });
+
+  it('throws when a scheme maps to a non-array scope value', () => {
+    const apiKeyScheme: SecuritySchemeObject = {
+      type: 'apiKey',
+      name: 'X-API-Key',
+      in: 'header',
+    };
+    const document = buildDocument({
+      components: { securitySchemes: { apiKey: apiKeyScheme } },
+    });
+    // The type system correctly forbids this shape, so the malformed value is
+    // produced the same way a real one would arrive: parsed from a document
+    // (YAML `apiKey:` with no value parses to null).
+    const malformedRequirement: SecurityRequirementObject[] = JSON.parse('[{ "apiKey": null }]');
+
+    expect(() =>
+      resolveOperationSecurity({
+        document,
+        operationSecurity: malformedRequirement,
+      }),
+    ).toThrow(/must map to an array of scope strings/);
+  });
 });

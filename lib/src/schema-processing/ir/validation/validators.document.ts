@@ -12,6 +12,7 @@ import {
   isValidResponseHeaders,
 } from './content/validators.content.js';
 import { isCastrSchema, isCastrSchemaNode } from './validators.schema.js';
+import { isValidOptionalSecurityArray } from './security/validators.security.js';
 
 const VALID_PARAMETER_LOCATIONS = new Set<string>([
   'path',
@@ -79,7 +80,8 @@ export function isCastrDocument(value: unknown): value is CastrDocument {
     typeof value['version'] === 'string' &&
     typeof value['openApiVersion'] === 'string' &&
     isRecord(value['info']) &&
-    hasValidDocumentCollections(value)
+    hasValidDocumentCollections(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 
@@ -212,7 +214,8 @@ export function isCastrOperation(value: unknown): value is CastrOperation {
 
   return (
     (value['operationId'] === undefined || typeof value['operationId'] === 'string') &&
-    hasValidOperationShape(value)
+    hasValidOperationShape(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 
@@ -223,7 +226,8 @@ export function isCastrAdditionalOperation(value: unknown): value is CastrAdditi
 
   return (
     (value['operationId'] === undefined || typeof value['operationId'] === 'string') &&
-    hasValidOperationShape(value)
+    hasValidOperationShape(value) &&
+    isValidOptionalSecurityArray(value['security'])
   );
 }
 

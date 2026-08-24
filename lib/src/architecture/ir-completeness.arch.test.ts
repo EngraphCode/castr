@@ -71,7 +71,7 @@ describe('IR Completeness', () => {
         },
         schemaNames: [],
         enums: new Map(),
-        security: [{ schemeName: 'apiKey', scopes: [] }],
+        security: [{ schemes: [{ schemeName: 'apiKey', scopes: [] }] }],
       };
 
       expect(docWithSecurity.security).toBeDefined();
@@ -238,7 +238,7 @@ describe('IR Completeness', () => {
         parametersByLocation: { query: [], path: [parameter], header: [], cookie: [] },
         responses: [response],
         tags: ['pets'],
-        security: [{ schemeName: 'apiKey', scopes: [] }],
+        security: [{ schemes: [{ schemeName: 'apiKey', scopes: [] }] }],
       };
 
       // MCP tool generation needs these

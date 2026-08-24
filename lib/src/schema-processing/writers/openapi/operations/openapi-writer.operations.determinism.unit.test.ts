@@ -129,15 +129,15 @@ describe('writeOpenApiPaths determinism', () => {
     expect(Object.keys(responseObject?.headers ?? {})).toEqual(['x-alpha', 'x-zeta']);
   });
 
-  it('sorts operation security requirements by scheme name', () => {
+  it('emits operation security in IR order, preserving authored alternatives', () => {
     const operations: CastrOperation[] = [
       createOperation({
         method: 'get',
         path: '/secure',
         responses: [{ statusCode: '200', description: 'ok' }],
         security: [
-          { schemeName: 'oauth2', scopes: ['read'] },
-          { schemeName: 'apiKey', scopes: [] },
+          { schemes: [{ schemeName: 'oauth2', scopes: ['read'] }] },
+          { schemes: [{ schemeName: 'apiKey', scopes: [] }] },
         ],
       }),
     ];
@@ -145,6 +145,6 @@ describe('writeOpenApiPaths determinism', () => {
     const result = writeOpenApiPaths(operations);
     const security = result['/secure']?.get?.security;
 
-    expect(security).toEqual([{ apiKey: [] }, { oauth2: ['read'] }]);
+    expect(security).toEqual([{ oauth2: ['read'] }, { apiKey: [] }]);
   });
 });

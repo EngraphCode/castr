@@ -35,6 +35,7 @@ export type {
   CastrResponse,
   IRResponseHeader,
   IRSecurityRequirement,
+  IRSecuritySchemeRequirement,
   CastrSchema,
   IRIntegerSemantics,
   IRUuidVersion,

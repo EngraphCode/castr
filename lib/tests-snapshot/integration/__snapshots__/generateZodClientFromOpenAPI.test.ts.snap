@@ -18715,10 +18715,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -18868,10 +18872,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19081,10 +19089,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19314,10 +19326,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19489,14 +19505,22 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19774,10 +19798,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -19976,10 +20004,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -20207,10 +20239,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -20263,8 +20299,12 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                 ],
                 "summary": "Returns pet inventories by status",
@@ -28230,10 +28270,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28383,10 +28427,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28596,10 +28644,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -28829,10 +28881,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29004,14 +29060,22 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29289,10 +29353,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29491,10 +29559,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29722,10 +29794,14 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "petstore_auth",
-                        "scopes": [
-                            "write:pets",
-                            "read:pets",
+                        "schemes": [
+                            {
+                                "schemeName": "petstore_auth",
+                                "scopes": [
+                                    "write:pets",
+                                    "read:pets",
+                                ],
+                            },
                         ],
                     },
                 ],
@@ -29778,8 +29854,12 @@ Some useful links:
                 ],
                 "security": [
                     {
-                        "schemeName": "api_key",
-                        "scopes": [],
+                        "schemes": [
+                            {
+                                "schemeName": "api_key",
+                                "scopes": [],
+                            },
+                        ],
                     },
                 ],
                 "summary": "Returns pet inventories by status",

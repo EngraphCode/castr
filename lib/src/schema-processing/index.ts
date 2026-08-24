@@ -47,6 +47,7 @@ export {
   type IRMediaType,
   type CastrResponse,
   type IRSecurityRequirement,
+  type IRSecuritySchemeRequirement,
   type CastrSchema,
   type CastrSchemaNode,
   type CastrSchemaDependencyInfo,

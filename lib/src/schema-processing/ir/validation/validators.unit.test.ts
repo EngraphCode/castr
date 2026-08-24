@@ -44,6 +44,42 @@ describe('isCastrDocument', () => {
     expect(isCastrDocument(validDoc)).toBe(true);
   });
 
+  it('should reject the pre-group flat security shape at document level', () => {
+    const staleDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      servers: [],
+      components: [],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
+      enums: new Map(),
+      security: [{ schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(isCastrDocument(staleDoc)).toBe(false);
+  });
+
+  it('should accept grouped security at document level', () => {
+    const securedDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      servers: [],
+      components: [],
+      operations: [],
+      additionalOperations: [],
+      dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
+      enums: new Map(),
+      security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [] }] }],
+    };
+
+    expect(isCastrDocument(securedDoc)).toBe(true);
+  });
+
   it('should return false for null', () => {
     expect(isCastrDocument(null)).toBe(false);
   });
@@ -619,8 +655,12 @@ describe('isCastrOperation', () => {
       ],
       security: [
         {
-          schemeName: 'bearerAuth',
-          scopes: [],
+          schemes: [
+            {
+              schemeName: 'bearerAuth',
+              scopes: [],
+            },
+          ],
         },
       ],
       tags: ['users'],
@@ -628,6 +668,65 @@ describe('isCastrOperation', () => {
     };
 
     expect(isCastrOperation(fullOperation)).toBe(true);
+  });
+
+  it('should reject the pre-group flat security shape (stale persisted IR)', () => {
+    const operationWithFlatSecurity = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [{ schemeName: 'bearerAuth', scopes: [] }],
+    };
+
+    expect(isCastrOperation(operationWithFlatSecurity)).toBe(false);
+  });
+
+  it('should reject security whose schemes carry non-string scopes', () => {
+    const operationWithBadScopes = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [{ schemes: [{ schemeName: 'bearerAuth', scopes: [42] }] }],
+    };
+
+    expect(isCastrOperation(operationWithBadScopes)).toBe(false);
+  });
+
+  it('should accept the empty security requirement (anonymous alternative)', () => {
+    const operationWithEmptyRequirement = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [{ schemes: [] }],
+    };
+
+    expect(isCastrOperation(operationWithEmptyRequirement)).toBe(true);
+  });
+
+  it('should reject a group naming the same scheme twice (unwritable formula)', () => {
+    const operationWithDuplicateScheme = {
+      method: 'get',
+      path: '/users',
+      parameters: [],
+      parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+      responses: [{ statusCode: '200', description: 'OK' }],
+      security: [
+        {
+          schemes: [
+            { schemeName: 'bearerAuth', scopes: ['read'] },
+            { schemeName: 'bearerAuth', scopes: ['write'] },
+          ],
+        },
+      ],
+    };
+
+    expect(isCastrOperation(operationWithDuplicateScheme)).toBe(false);
   });
 
   it('should return false for null and undefined', () => {
@@ -789,6 +888,25 @@ describe('isCastrAdditionalOperation', () => {
           cookie: [],
         },
         responses: [],
+      }),
+    ).toBe(false);
+  });
+
+  it('should reject the pre-group flat security shape on additional operations', () => {
+    expect(
+      isCastrAdditionalOperation({
+        operationId: 'purgeUsers',
+        method: 'PURGE',
+        path: '/users',
+        parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
+        },
+        responses: [],
+        security: [{ schemeName: 'bearerAuth', scopes: [] }],
       }),
     ).toBe(false);
   });
