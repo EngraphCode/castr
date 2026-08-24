@@ -135,6 +135,9 @@ export const claimsArchiveStaleHelp =
   'claims archive-stale --active <path> --closed <path> --now <iso> ' +
   '--platform <platform> --model <model>';
 
+export const claimsInitHelp =
+  'claims init --active <path> --closed <path> (seeds missing state files with their canonical per-file shapes; valid existing files are untouched; invalid content fails loud, never overwritten)';
+
 export const claimsListHelp = 'claims list --active <path> [--now <iso>]';
 
 export const claimsMineHelp =

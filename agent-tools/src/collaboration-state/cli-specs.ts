@@ -1,4 +1,5 @@
 import { archiveClaims, closeClaim, heartbeatClaim, openClaim } from './cli-claim-commands.js';
+import { initClaimsState } from './claims-init.js';
 import {
   activeAgents,
   listClaims,
@@ -36,6 +37,7 @@ import {
   claimsArchiveStaleHelp,
   claimsCloseHelp,
   claimsHeartbeatHelp,
+  claimsInitHelp,
   claimsListHelp,
   claimsMineHelp,
   claimsOpenHelp,
@@ -144,6 +146,11 @@ export const specs: Readonly<Record<string, CommandSpec>> = {
     help: commsReplyHelp,
     options: commsReplyOptions,
     handler: replyComms,
+  }),
+  'claims:init': commandSpec({
+    help: claimsInitHelp,
+    options: ['active', 'closed'],
+    handler: (options) => initClaimsState(options),
   }),
   'claims:open': commandSpec({
     help: claimsOpenHelp,

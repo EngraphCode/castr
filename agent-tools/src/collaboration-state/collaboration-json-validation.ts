@@ -55,6 +55,24 @@ export async function validateCollaborationJsonFileText(
   validator.validateText(collaborationJsonSchemaId(filePath), text);
 }
 
+/**
+ * Validate collaboration JSON text against a schema id directly, for callers
+ * that hold the schema identity rather than a canonical file path (the
+ * path-based entry point above refuses non-canonical basenames, which
+ * `claims init` must accept for its `--active`/`--closed` arguments).
+ *
+ * @param schemaId - Registered collaboration schema id.
+ * @param text - JSON text to validate.
+ * @throws Error when the text fails the schema.
+ */
+export async function validateCollaborationJsonBySchemaId(
+  schemaId: string,
+  text: string,
+): Promise<void> {
+  const validator = await cachedSchemaValidator();
+  validator.validateText(schemaId, text);
+}
+
 export async function createCollaborationJsonSchemaValidator(
   schemaDir: string = SCHEMAS_DIR,
 ): Promise<CollaborationJsonSchemaValidator> {

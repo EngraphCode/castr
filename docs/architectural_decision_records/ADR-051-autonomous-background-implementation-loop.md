@@ -15,7 +15,12 @@ interruption class alongside the clause 6 escalations; amended 2026-08-23 by own
 direction resolving queued decision QD-7: an owner-interaction Slack channel — watched by
 an owner-configured interactive session, The Watcher, for advisory second opinions and
 owner-alert relay — is permitted as an explicit carve-out from clause 7's
-no-additional-channel rule, which continues to ban any firing-to-firing channel)
+no-additional-channel rule, which continues to ban any firing-to-firing channel;
+amended 2026-08-24 by owner ruling — decision card, proof-programme loop review
+OP-3, all three tightenings approved as recommended: clause 4 gains the
+per-finding demonstration requirement for non-blocking classification, the
+bounds-not-cures default for findings measured against unbounded external
+references, and the consecutive-rounds structural step-back trigger)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -86,6 +91,26 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    round — it is verified and fixed, or the PR stops and the defect is escalated to the
    owner; it is never carried forward past a merge (`no-warning-toleration`). Human review
    comments are never capped: they are addressed or escalated, always.
+   Three tightenings (amended 2026-08-24 by owner ruling — decision card,
+   proof-programme loop review OP-3): **(a) non-blocking is a per-finding
+   demonstration, never a category grant** — classifying a finding as non-blocking (for
+   example "cannot change a proof outcome") requires a demonstration recorded with that
+   finding's disposition, and no such classification covers a finding whose mechanism
+   mutates data, including mutation during diagnostic formatting; **(b)
+   unbounded-reference findings default to bounds, not cures** — where the blocking rule
+   above does not already govern, a finding measured against an unbounded external
+   reference (vendor internals, all-possible-pathological-inputs) beyond the estate's
+   live configuration takes a recorded bound in the artefact under review plus a decline
+   reply — clause 3's recorded-rejection disposition — carrying a reopen condition and a
+   durable pointer to the entry it lands in its owning home, and an in-loop cure
+   requires the configuration to actually exist in the estate; **(c) consecutive rounds
+   narrowing one concern trigger a structural step-back** — when two successive review
+   rounds each narrow the same concern (the threshold matches this clause's own
+   two-round cap; read from the round tally where one is built, and from the PR's own
+   review record otherwise), the next response is re-deriving and closing the class
+   structurally, never another instance cure; a blocking class is never carried
+   forward, and a non-blocking class may instead take this clause's carry-forward
+   disposition.
 5. **Owner decisions are queued, never made.** A genuine fork is written to a
    programme-owned queued-decisions register — a durable, owner-readable surface in the plan
    estate whose concrete location the plan estate owns — as question + recommendation +

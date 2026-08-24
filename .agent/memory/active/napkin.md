@@ -598,6 +598,110 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
 
+## 2026-08-24 (proof-programme loop review, session open — Flamebright Burning Caldera / 01FV6r)
+
+- **Correction to the 2026-08-23 fresh-container seed recipe: the two state files take DIFFERENT
+  seeds.** `active-claims.json` takes `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}`
+  but `closed-claims.archive.json` must be `{"schema_version":"1.3.0","claims":[]}` — its schema
+  rejects `commit_queue` as an additional property, and the mistake surfaces only when the
+  pre-commit collaboration-state validator fires (three commits later, not at seed time). The
+  `init`-subcommand candidate stands, now with two shapes to emit.
+- **The commit-queue pathspec workflow cannot conclude a staged RENAME — second member of the
+  cannot-conclude class beside the merge commit.** The inner `git commit -- <intent.files>` builds
+  a temp index scoped to the intent paths; a rename's old path is outside the list (it never
+  appears in `git diff --cached --name-only`, so listing it fails verify-staged as "missing"), the
+  temp index therefore keeps the old path tracked with no worktree file, and the fail-loud
+  machine-local-paths validator dies ENOENT mid-hook. Deviation used (merge-conclusion precedent):
+  message pre-validated exit 0, plain unscoped `git commit` of the exact staged bundle, intent
+  abandoned with stage-named notes. Candidate: a `commit-queue` rename-aware mode, or document
+  renames as a named exception in the commit skill.
+- **Hook token-subsequence specimen #6, claims-open shape:** `claims open --area-kind git
+--intent "…commit…" --now …` assembles the blocked "git commit -n" pattern from the area-kind
+  value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
+  prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
+
+## 2026-08-24 (cross-estate comparison + equality directive — Flamebright Burning Caldera / 01FV6r)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "piece by piece, I want the Practice in
+  Castr and OCE to take the best of each other, until they are Equal in capability."** Widens
+  the one-directional parity programmes (Oak→castr transplant; castr→OCE back-flow ledger) to a
+  BIDIRECTIONAL equality goal. First instalment: the loop-comparison note
+  (`.agent/analysis-and-reports/castr-oce-loop-comparison-2026-08-24.md`) + cross-pollination
+  PRs raised in both repos at owner word. `candidate:` this deserves a durable strategic home
+  beyond the note (a castr plan-estate node or PDR-family record) at the next owner walk.
+- **OWNER CORRECTION (2026-08-24): the OCE weekly scans are NOT owner-attended** — "I do not
+  intend to be present for the weekly scans or value derivations, although they do not go as
+  far in that the OCE scans result in research rather than implementation." My comparison had
+  framed the weekly cadence as attention-embedded; the true axis is OUTPUT TIER (research vs
+  implementation), and the distance between the tiers is exactly the castr loop's authority
+  machinery (standing ballot + mechanical-acceptance queue + run-boundary state discipline).
+  Same lesson family as inherited-classification: I inferred the attendance property from the
+  cadence instead of asking.
+
+## 2026-08-24 (owner rulings via decision cards — Flamebright Burning Caldera / 01FV6r, continued session)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "Always expose decisions to me as
+  decision cards."** The AskUserQuestion tool is the medium for every owner decision —
+  extends the 2026-07-03 "questions go through the AskUserQuestion tool" correction from
+  questions to all decisions. First use resolved three review decisions in one sitting
+  (OP-3 approved, B-15 re-balloted push-only, OP-1(b) declined). `candidate:` graduate
+  into `owner-attention-at-action-moments` / `user-collaboration.md` alongside the
+  blocked-on-owner mobile-alert directive.
+- **OWNER TEACHING (2026-08-24, verbatim): "we don't do carve outs, we do policy, check
+  the principles. When the time comes, we will compare the Watcher with the comms
+  mechanisms and heartbeats etc, the difference is the medium, not the needs."** Given
+  while declining the external-observer proposal whose card I framed as "uses the
+  carve-out that already exists" (QD-7's own ADR wording). The design lesson: an
+  exception-shaped grant is a smell — model the new thing against the existing
+  mechanisms serving the same NEED (comms, heartbeats, liveness) and write the general
+  policy; the medium (Slack vs comms-log vs push) is a parameter, not a new category.
+  ADR-051 clause 7's "explicit carve-out" framing is a candidate for this reframing at
+  its next revisit (flagged in the review report's addendum; not enacted — owner's call).
+- **Identity-derivation discrepancy, measured on this seat:** the SessionStart hook (now
+  firing on session resume) derives "Lacustrine Anchoring Stern" from the true session id
+  prefix (d36e5c), while this seat registered "Flamebright Burning Caldera" from the
+  commit-trailer seed (01FV6r) chosen at session open — same seat, two derivable names.
+  Continued under the REGISTERED identity for thread-history coherence (PDR-027 additive
+  rule protects against the confusion, but one seat should not mint two names). Related
+  to Q-15's identity-seed gap: the seed SOURCE needs one canonical answer (hook-injected
+  env var when present, trailer-derived only as fallback).
+- **Cite-the-card-after-recording-it (assumptions-expert P1, caught pre-land):** the Q-18..Q-20
+  rows cited "owner decision card 2026-08-24" while the report's addendum still said that card
+  was "asked, not assumed" — the ruling lived only in conversation. The `no-manufactured-permission`
+  shape from the AUTHOR side: an owner ruling is usable authority only once its verbatim record
+  exists on a durable surface; write the record FIRST, then cite it. Cure: the addendum's
+  second-card section now carries the verbatim answers and landing list, and the rows resolve.
+- **The LC2 refuse-and-route merge driver fired live and worked end-to-end:** merging
+  origin/main (PR #50's continuity edits) into the review branch, the driver refused to
+  line-merge napkin.md and repo-continuity.md, printed the exact :1/:2/:3 recipe, and the
+  semantic union (their appended napkin section + their row 67; my sections + my row 66)
+  concluded via the documented plain-commit merge deviation. First measured firing of the
+  driver in this estate since its 2026-06-27 landing.
+
+## 2026-08-24 (loop review, review-pass fold — Flamebright Burning Caldera / 01FV6r)
+
+- **The `Claude-Session` commit trailer is a per-firing durable discriminator — it settled an
+  attribution question an incident register and an owner statement could only approximate.**
+  PR #35's 23 commits split cleanly by trailer: 17 carry the authoring firing's session URL
+  (last at 11:02:36Z — the firing ran ≥11 h, not I-1's mid-incident "seven-plus"), while the
+  sibling firing's and the closing firing's landings carry none. Verify attribution from
+  trailers before narrating multi-writer incidents; and firing commits SHOULD carry the
+  trailer (routed via the review's OP-8).
+- **A reviewer subagent probing built artefacts DURING a background pre-push window reads a
+  transiently half-built dist as broken** — new sub-shape of `check-singleton-per-window`:
+  my own backgrounded `git push` (pre-push `check:ci` = clean + rebuild) overlapped an
+  assumptions-expert dispatch, which measured `agent-tools/dist/src/hook-policy/` missing
+  its modules and reported the PreToolUse guards broken; re-measured after the window: all
+  present, guards fine all session. Falsify a subagent's environment measurement against
+  your own concurrent gate windows before folding it. (The surviving lesson — dist presence
+  ≠ dist validity — still routed to Q-15's re-scope as a module-resolution smoke probe.)
+- **Two-reviewer fan-out on an analysis report earned its cost decisively:** zero citation
+  errors found but three P1 reasoning corrections (an in-loop liveness cure that can't see
+  sustained absence; artefact-mutation rounds mislabelled diagnostics-only, which would have
+  poisoned a ballot item; nine unassigned commits whose trailer evidence sharpened the
+  headline duration fact). The verify-firsthand step caught one reviewer over-reach (the
+  dist finding) — fold reviewers through your own probes, never verbatim.
+
 ## 2026-08-24 environment-breakage wrap (Buzzard weaves Airstream, 01e90b)
 
 - **The cloud-environment thread's single home is OCE**:
@@ -705,3 +809,31 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   than an upfront decision record. Trigger: the first time IR migration machinery or a
   multi-version read window is proposed, graduate the policy into an ADR instead of
   re-deriving it from the PR #50 threads.
+
+## 2026-08-24 (identity directives sitting — same session as the loop review)
+
+- **The identity chimera has a measured root cause** (owner's directive 1 confirmed
+  firsthand): one cloud seat produced THREE tuples in one day. The Claude SessionStart
+  hook writes BOTH `PRACTICE_AGENT_SESSION_ID_CLAUDE` (harness session UUID, `d36e5c…`)
+  and `ENGRAPH_AGENT_IDENTITY_OVERRIDE` (the name derived from it) into CLAUDE_ENV_FILE.
+  Exporting a different seed (the platform session id `01FV6r…`) changes prefix + uuid
+  but the pinned override still forces the OLD name → a mixed-provenance tuple
+  ("Lacustrine Anchoring Stern" / `01FV6r` / uuid-from-01FV6r) that no single seed
+  produces. Pre-compaction shells without the override derived "Flamebright Burning
+  Caldera" from the same manual seed. Cure routed structurally (plan
+  `practice-equality-identity-and-cognition`, ID-1/ID-2): one seed-precedence rule
+  (`CLAUDE_CODE_REMOTE_SESSION_ID` payload, type tag stripped, on cloud seats; harness
+  session_id on CLI), name always derived from the live seed, hook never pins a name.
+- **The platform session id IS machine-readable in-container**:
+  `CLAUDE_CODE_REMOTE_SESSION_ID=cse_<id>` (env form; URLs and Claude-Session trailers
+  use `session_<id>` — same payload). No scraping needed; the owner's proposed unit is
+  deterministically available to hooks and CLIs.
+- **ULID prefix crowding**: cloud ids are ULID-shaped; first-6 of a ULID is
+  timestamp-derived, so sessions created within ~4 minutes share a session_id_prefix.
+  Not a schema break — PDR-076a's uuid stays the canonical disambiguator and OCE's
+  visual-disambiguator token the display guard — but worth stating in the PDR-027
+  cloud-seat clause (plan ID-4) instead of discovering it at the first collision.
+- **Commit-queue guard pattern lesson**: a git window claim registers for the guard only
+  when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
+  (kind already `git`) is rejected as "not an active git:index/head claim". The kind
+  carries the `git:`; the pattern carries only `index/head`.

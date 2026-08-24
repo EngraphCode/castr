@@ -1,6 +1,6 @@
 # W-0 Owner Walk Ballot — Proof Programme Charter
 
-**Status:** CLOSED — walked 2026-08-22, all verdicts recorded below.
+**Status:** CLOSED — walked 2026-08-22, all verdicts recorded below; amended 2026-08-24 (B-15 re-balloted to push-only by owner decision card).
 **Medium:** the owner walked the ballot interactively in-session (session prefix `5aef07`,
 Incandescent Charring Ember), one decision at a time, on 2026-08-22; the verdicts were
 recorded here in the same landing that executed their consequences (the follow-up landing,
@@ -140,7 +140,16 @@ running. Scope note: a future REJECT/amendment here governs routine completion
 notifications only — the escalation notifications clause 6 mandates (zero-progress disable,
 red-head stop, blocked-slice stop) keep a delivery channel regardless.
 
-**Verdict: RATIFY** (2026-08-22, interactive walk).
+**Verdict: RATIFY** (2026-08-22, interactive walk); **superseded in part by the
+2026-08-24 amendment below.**
+
+**Amendment (owner re-ballot, 2026-08-24, decision card — proof-programme loop
+review OP-4): the channel set is push-only.** The loop review's finding D-2
+measured the live Routine at `push: true, email: false` against this item's
+"push and email both on"; presented the choice, the owner re-balloted to
+push-only rather than repairing the config — the live configuration is now the
+ratified one, and D-2 closes as a ratified change, not a defect. The scope note
+stands: clause 6's escalation notifications keep a delivery channel regardless.
 
 ### B-16 Red-head policy (ADR-051 clause 6)
 
