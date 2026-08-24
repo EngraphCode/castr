@@ -72,10 +72,10 @@ export const HELP_TEXT = `Usage: agent-identity [--seed <seed>] [--format <kebab
 
   --seed <seed>       Stable seed. If omitted, uses (in order)
                       $PRACTICE_AGENT_SESSION_ID_CLAUDE,
-                      $CLAUDE_CODE_REMOTE_SESSION_ID (cloud seats; type tag stripped),
                       $PRACTICE_AGENT_SESSION_ID_CURSOR,
                       $PRACTICE_AGENT_SESSION_ID_GEMINI,
                       $PRACTICE_AGENT_SESSION_ID_CODEX,
+                      $CLAUDE_CODE_REMOTE_SESSION_ID (cloud seats; type tag stripped),
                       then platform-native stable fallbacks:
                       $CODEX_THREAD_ID (Codex) and Antigravity conversationId.
   --format <fmt>      Output format. kebab (default) | display | json.
@@ -131,10 +131,10 @@ function resolveSeed(seed: string | undefined, env: AgentIdentityCliEnvironment)
   const resolvedSeed = firstSeed([
     nonEmptyEnvironmentValue(seed),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CLAUDE),
-    stripSessionIdTagIfPresent(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CURSOR),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_GEMINI),
     nonEmptyEnvironmentValue(env.PRACTICE_AGENT_SESSION_ID_CODEX),
+    stripSessionIdTagIfPresent(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     nonEmptyEnvironmentValue(env.CODEX_THREAD_ID),
     nonEmptyEnvironmentValue(env.conversationId),
     antigravitySourceMetadataConversationId(env.ANTIGRAVITY_SOURCE_METADATA),

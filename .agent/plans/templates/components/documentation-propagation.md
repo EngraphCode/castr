@@ -8,9 +8,11 @@ guidance.
 
 Plans must include update handling for:
 
-1. `docs/architecture/architectural-decisions/119-agentic-engineering-practice.md`
-2. `docs/architecture/architectural-decisions/124-practice-propagation-model.md`
-3. `.agent/practice-core/practice.md`
+1. the impacted decision records under
+   `docs/architectural_decision_records/` and
+   `.agent/practice-core/decision-records/`
+2. `.agent/directives/AGENT.md` (where behaviour, interfaces, or
+   contributor workflows changed)
 
 Also include any additionally impacted ADRs, `/docs/` pages, and README files.
 

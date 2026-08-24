@@ -17,14 +17,14 @@ invoke specialist reviewers for an adversarial sweep.
    criterion is unmet or any command fails, stop and fix before proceeding
    to specialist reviews. This prevents reviewing code that doesn't match
    the plan's specification.
-1. **Invoke `code-expert`** (always — gateway reviewer)
+1. **Invoke `code-reviewer`** (always — gateway reviewer)
 2. **Invoke domain-specific specialists** based on change profile:
 
 | Change Category             | Specialist(s)                                                                                                      |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Structural/boundary changes | `architecture-expert-barney`, `architecture-expert-betty`, `architecture-expert-fred`, `architecture-expert-wilma` |
-| Test changes                | `test-expert`                                                                                                      |
-| Type-system complexity      | `type-expert`                                                                                                      |
+| Test changes                | `test-reviewer`                                                                                                    |
+| Type-system complexity      | `type-reviewer`                                                                                                    |
 | Auth/secrets/PII            | `security-expert`                                                                                                  |
 | Docs/ADR changes            | `docs-adr-expert`                                                                                                  |
 | Config/quality-gate changes | `config-expert`                                                                                                    |

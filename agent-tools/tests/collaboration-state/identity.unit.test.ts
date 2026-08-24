@@ -240,3 +240,32 @@ describe('naming schema provenance on identity writes', () => {
     expect(identity.agentId.naming_schema_version).toBe('override');
   });
 });
+
+describe('every explicit Practice seed outranks the ambient platform session id', () => {
+  it.each([
+    ['PRACTICE_AGENT_SESSION_ID_CURSOR', { PRACTICE_AGENT_SESSION_ID_CURSOR: 'cursor-seed' }],
+    ['PRACTICE_AGENT_SESSION_ID_GEMINI', { PRACTICE_AGENT_SESSION_ID_GEMINI: 'gemini-seed' }],
+    ['PRACTICE_AGENT_SESSION_ID_CODEX', { PRACTICE_AGENT_SESSION_ID_CODEX: 'codex-seed' }],
+  ])('%s beats CLAUDE_CODE_REMOTE_SESSION_ID', (source, env) => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: { ...env, CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72' },
+    });
+
+    expect(identity.seed_source).toBe(source);
+  });
+
+  it('the ambient platform id still outranks harness-native fallbacks', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: {
+        CODEX_THREAD_ID: '019dd34d-cb6a-74e0-a29d-6cb8a65ea14b',
+        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72',
+      },
+    });
+
+    expect(identity.seed_source).toBe('CLAUDE_CODE_REMOTE_SESSION_ID');
+  });
+});

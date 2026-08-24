@@ -451,11 +451,12 @@ portable agent-tools CLI with an explicit stable seed:
 pnpm agent-tools:agent-identity --seed "<stable-session-seed>" --format display
 ```
 
-Seed precedence is explicit `--seed`, then
-`PRACTICE_AGENT_SESSION_ID_CLAUDE`, then `CLAUDE_CODE_REMOTE_SESSION_ID`
-(cloud seats — type tag stripped, per the 2026-08-24 amendment), then
-`PRACTICE_AGENT_SESSION_ID_CURSOR`, then
-`PRACTICE_AGENT_SESSION_ID_CODEX`, then `CODEX_THREAD_ID`; missing seed is a
+Seed precedence is explicit `--seed`, then the explicit Practice seeds in
+order (`PRACTICE_AGENT_SESSION_ID_CLAUDE`, `PRACTICE_AGENT_SESSION_ID_CURSOR`,
+`PRACTICE_AGENT_SESSION_ID_GEMINI`, `PRACTICE_AGENT_SESSION_ID_CODEX`), then
+`CLAUDE_CODE_REMOTE_SESSION_ID` (cloud seats — type tag stripped; every
+explicit Practice seed outranks this ambient id, per the 2026-08-24
+amendment), then `CODEX_THREAD_ID`; missing seed is a
 bad-usage error. `ENGRAPH_AGENT_IDENTITY_OVERRIDE` supplies a resolved display name
 only when a seed is also available; it is not itself a seed, and no hook
 writes it (2026-08-24 amendment). There is no

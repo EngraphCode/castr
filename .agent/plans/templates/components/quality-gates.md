@@ -27,7 +27,7 @@ pnpm check
 
 The authoritative expansion lives in root `package.json`
 `scripts.check` and is documented in
-`docs/engineering/build-system.md`. Do not duplicate the expanded
+`.agent/directives/DEFINITION_OF_DONE.md`. Do not duplicate the expanded
 command list into plans unless diagnosing a failed stage.
 
 ## Rationale

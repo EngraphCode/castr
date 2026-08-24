@@ -7,7 +7,7 @@ the foundation documents. They are the authority.
 
 1. `.agent/directives/principles.md` — Core principles
 2. `.agent/directives/testing-strategy.md` — TDD at ALL levels
-3. `.agent/directives/schema-first-execution.md` — Generator is source of truth
+3. `.agent/directives/requirements.md` — schema-first requirements (the schema is the source of truth)
 
 ## Per-Phase Check-in
 
@@ -20,7 +20,7 @@ At the start of each phase, ask:
 
 ## Compliance Checklist (End of Plan)
 
-- [ ] **Cardinal Rule**: All types derive from OpenAPI schema via `pnpm sdk-codegen`
+- [ ] **Cardinal Rule**: All types flow from the ingested schema through the IR (parsers → IR → writers; no hand-authored parallel types)
 - [ ] **No Type Shortcuts**: No `as`, `any`, `Record<string, unknown>`, `!`
 - [ ] **No Compatibility Layers**: Replaced old approaches, not wrapped them
 - [ ] **Quality Gates**: All gates pass across all workspaces

@@ -14,6 +14,7 @@ import { join } from 'node:path';
 
 import {
   adapterTargetPath,
+  assertUniqueLeafIds,
   parseFrontmatter,
   renderAdapter,
   type AdapterSurface,
@@ -56,6 +57,10 @@ export async function checkAdapters(
   const missing: string[] = [];
   const canonicalsRoot = join(options.repoRoot, '.agent', 'skills');
   const discovered = await discoverCanonicals(canonicalsRoot, '', fs);
+  // Same fail-loud collision guard as generation: two leaves sharing a name
+  // would target one flattened adapter, and a bytewise match could read as
+  // green while dispatching the wrong skill.
+  assertUniqueLeafIds(discovered);
 
   for (const parsed of discovered) {
     for (const surface of SURFACES) {

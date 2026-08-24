@@ -260,3 +260,29 @@ describe('assertUniqueLeafIds', () => {
     );
   });
 });
+
+describe('checkAdapters collision guard', () => {
+  it('fails loud when two canonicals share a leaf id', async () => {
+    const fs: CheckerFs = {
+      async readFileOrUndefined(path) {
+        if (path.endsWith('/reason/SKILL-CANONICAL.md')) {
+          return '---\nname: reason\ndescription: A reason skill.\n---\n\nbody\n';
+        }
+        return undefined;
+      },
+      async listSubdirectoryNames(path) {
+        if (path === '/repo/.agent/skills') {
+          return ['reason', 'cognition'];
+        }
+        if (path === '/repo/.agent/skills/cognition') {
+          return ['reason'];
+        }
+        return [];
+      },
+    };
+
+    await expect(checkAdapters({ repoRoot: '/repo', prefix: 'engraph-' }, fs)).rejects.toThrow(
+      /duplicate skill leaf id "reason"/,
+    );
+  });
+});

@@ -143,17 +143,18 @@ export function validateSharedStateAgentId(input: {
 function resolveCollaborationSeed(env: CollaborationStateEnvironment): SeedCandidate | undefined {
   return firstSeed([
     { source: 'PRACTICE_AGENT_SESSION_ID_CLAUDE', value: env.PRACTICE_AGENT_SESSION_ID_CLAUDE },
+    { source: 'PRACTICE_AGENT_SESSION_ID_CURSOR', value: env.PRACTICE_AGENT_SESSION_ID_CURSOR },
+    { source: 'PRACTICE_AGENT_SESSION_ID_GEMINI', value: env.PRACTICE_AGENT_SESSION_ID_GEMINI },
+    { source: 'PRACTICE_AGENT_SESSION_ID_CODEX', value: env.PRACTICE_AGENT_SESSION_ID_CODEX },
     // Cloud-seat ambient platform session id (PDR-027 cloud-seat clause):
     // the untagged payload joins registry rows with Claude-Session commit
-    // trailers and the owner-visible session URL. Explicit PRACTICE_* seeds
-    // stay ahead of it — they are the operator's stated contract.
+    // trailers and the owner-visible session URL. EVERY explicit PRACTICE_*
+    // seed stays ahead of it — they are the operator's stated contract —
+    // while it outranks the harness-native fallbacks below.
     {
       source: 'CLAUDE_CODE_REMOTE_SESSION_ID',
       value: stripSessionIdTagIfPresent(env.CLAUDE_CODE_REMOTE_SESSION_ID),
     },
-    { source: 'PRACTICE_AGENT_SESSION_ID_CURSOR', value: env.PRACTICE_AGENT_SESSION_ID_CURSOR },
-    { source: 'PRACTICE_AGENT_SESSION_ID_GEMINI', value: env.PRACTICE_AGENT_SESSION_ID_GEMINI },
-    { source: 'PRACTICE_AGENT_SESSION_ID_CODEX', value: env.PRACTICE_AGENT_SESSION_ID_CODEX },
     { source: 'CODEX_THREAD_ID', value: env.CODEX_THREAD_ID },
     { source: 'conversationId', value: env.conversationId },
     {

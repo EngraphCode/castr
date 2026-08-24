@@ -1,39 +1,26 @@
 # Delivery-plan template
 
 One step of a lane, authored by its implementer at pickup. One page.
-Copy, fill, delete the guidance. Born `sketch`; the plan governs no
-work until its ratification stamp is complete. The frontmatter is
-metadata; the narrative (goal, mechanism, acceptance) lives in the body
-(PDR-018).
+Copy, fill, delete the guidance. Born in `current/` (queued, executable);
+moves to `active/` only when implementation starts. The frontmatter is
+metadata plus machine-readable todos; the narrative (goal, mechanism,
+acceptance) lives in the body (PDR-018).
 
 ```markdown
 ---
-id: <kebab-slug, stable forever>
-node_type: delivery
-name: <Human name>
-overview: <One line: what this step delivers.>
-status: sketch
-ratified_by: null
-ratified_date: null
-ratified_where: null
-serves: <strategic node id>
-impact_areas:
-  - <area from impact-areas.md>
-tickets:
-  - <Linear issue ID, e.g. MCP-000 — optional, always (2026-08-07
-    amendment); a thin visibility pointer when the operator's tracker
-    holds the work — execution state lives there, never here>
-depends_on: []
-# depends_on:
-#   - plan: <plan-id>
-#     kind: blocking | beneficial
-owner_gates: []
-# owner_gates:
-#   - awaiting: owner-decision | external-input
-#     clears_when: <the named condition or person that resolves it>
-#     expires: <YYYY-MM-DD — absolute, mandatory; horizon inherits from
-#       the governing strategic node's gate_expiry_default>
+title: <Human name — what this step delivers>
+status: current
+lane: current
+created: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
+owner_directive: >-
+  <The owner words or plan row that commissioned this step — verbatim
+  where quoted; omit only for self-evident queue pickups.>
+todos:
+  - id: <T1>
+    content: <One TDD cycle: the failing test, the product code, the refactor — one landing unit>
+    status: pending
+    depends_on: []
 ---
 
 # <Name>
@@ -71,4 +58,5 @@ not, each with one clause of why.>
 ```
 
 At completion — acceptance criteria proven — the plan moves to
-`archive/` with `status: archived`.
+`current/complete/` first (this repo's completion staging), and archives
+in batches from there per the roadmap's archival cadence.

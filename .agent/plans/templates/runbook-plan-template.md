@@ -2,25 +2,17 @@
 
 A repeatable operational procedure (a production promotion, a
 migration, a recurring ceremony). Long-lived; procedure changes return
-it to `sketch` for re-ratification. Copy, fill, delete the guidance.
+it back to `current/` for re-approval. Copy, fill, delete the guidance.
 
 ```markdown
 ---
-id: <kebab-slug, stable forever>
-node_type: runbook
-name: <Human name>
-overview: <One line: what this procedure does and to what.>
-status: sketch
-ratified_by: null
-ratified_date: null
-ratified_where: null
-serves: <strategic node id — omit only for standing estate procedures>
-impact_areas:
-  - <area from impact-areas.md>
-tickets: []
-depends_on: []
-owner_gates: []
+title: <Human name — the repeatable operational procedure>
+status: current
+lane: current
+created: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
+owner_directive: >-
+  <The owner words or standing doctrine that authorises this procedure.>
 ---
 
 # <Name>
