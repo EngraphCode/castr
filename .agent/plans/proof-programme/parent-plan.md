@@ -615,7 +615,21 @@ and four post-execution dispatches (`code-reviewer`, `test-reviewer`, `type-revi
   before any fixture-consuming lane.
 - **Public-API note for the owner's next release decision**: `IRSecurityRequirement` is
   exported from `lib/src/index.ts`, so this is a breaking shape change at the next release;
-  versioning is a release-scope owner decision (none taken here; no version bump landed).
+  package versioning is a release-scope owner decision (none taken here). The IR's own
+  schema stamp is handled in-slice per review: `IR_SCHEMA_VERSION` (2.0.0, single-sourced,
+  both parsers) and `deserializeIR` pins it — any foreign version (older or future) is
+  rejected before structural acceptance with both versions named, so a stale or
+  future-shaped persisted IR can never be partially read. No migration machinery exists
+  or is promised; regenerate from source.
+- **`__proto__`-named component hazard across writer maps (carry-forward)**: a security
+  scheme legally named `__proto__` now survives requirement emission (own-property
+  `Object.fromEntries`, regression-tested), but the component-declaration maps — e.g.
+  `result.securitySchemes[component.name]` in `openapi-writer.components.ts` — and every
+  sibling keyed-object insertion across the writers still hit the inherited prototype
+  setter, silently dropping such a component. Pre-existing, spans all component families
+  (an unbounded reference surface for this slice); routed to the writer-hardening lane at
+  the Q-12 split rather than chased map-by-map here (ADR-051 clause 4 disposition,
+  recorded on the PR #50 thread).
 - **Doctrine conflict carried, not widened**: the parser/writer boundary uses
   `Object.entries`/property enumeration, which §Type System Discipline's `Object.*` clause
   forbids; per the owner's 2026-08-23 ruling the doctrine stands and a lint-enforced
