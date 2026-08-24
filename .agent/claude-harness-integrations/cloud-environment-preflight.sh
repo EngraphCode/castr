@@ -226,7 +226,7 @@ probe_session_hook_preflights() {
       # other probe — a hook preflight that hangs must become that repo's
       # failure, not swallow the summary (timeout exit 124 lands in the
       # FAILED branch)
-      elif (cd "$repo" && timeout 120 ./.agent/setup/cloud-session-preflight.sh); then
+      elif (cd "$repo" && timeout --kill-after=10 120 ./.agent/setup/cloud-session-preflight.sh); then
         echo "hook preflight passed: ${repo}"
       else
         echo "hook preflight FAILED: ${repo}"
@@ -305,8 +305,13 @@ probe_npm_registry() {
   esac
   version=${pm#pnpm@}
   version=${version%%+*}
-  echo "pinned pnpm: ${version}"
-  curl -fsSL -m 120 "https://registry.npmjs.org/pnpm/-/pnpm-${version}.tgz" -o /tmp/preflight-pnpm.tgz || {
+  # corepack honours COREPACK_NPM_REGISTRY (and COREPACK_NPM_TOKEN) when
+  # retrieving package managers — probe the registry corepack will use
+  local registry auth=()
+  registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
+  [ -z "${COREPACK_NPM_TOKEN:-}" ] || auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
+  echo "pinned pnpm: ${version} (registry: $(echo "$registry" | sed -E 's|^(https?://)?[^@/]*@|\1|'))"
+  curl -fsSL -m 120 "${auth[@]}" "${registry%/}/pnpm/-/pnpm-${version}.tgz" -o /tmp/preflight-pnpm.tgz || {
     echo "pinned pnpm tarball download failed"
     return 1
   }
@@ -331,12 +336,12 @@ probe_npm_registry() {
 }
 
 probe_keyserver() {
-  local key
-  key=$(curl -fsSL -m 60 "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA1715D88E1DF1F24") || {
+  curl -fsSL -m 60 "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA1715D88E1DF1F24" \
+    -o /tmp/preflight-gitcore-key.asc || {
     echo "key fetch failed from keyserver.ubuntu.com"
     return 1
   }
-  echo "$key" | grep -q "BEGIN PGP PUBLIC KEY BLOCK" || {
+  grep -q "BEGIN PGP PUBLIC KEY BLOCK" /tmp/preflight-gitcore-key.asc || {
     echo "response is not a PGP public key block"
     return 1
   }
@@ -344,7 +349,41 @@ probe_keyserver() {
 }
 
 probe_git_core_ppa() {
-  host_reachable "https://ppa.launchpadcontent.net/git-core/ppa/ubuntu/dists/noble/InRelease"
+  # fetch InRelease and verify its signature against the key the keyserver
+  # probe fetched — setup relies on exactly that relationship (the key it
+  # writes must verify the metadata apt then fetches), so two independent
+  # payload checks would miss a rotated or revoked key
+  curl -fsSL -m 60 "https://ppa.launchpadcontent.net/git-core/ppa/ubuntu/dists/noble/InRelease" \
+    -o /tmp/preflight-gitcore-inrelease || {
+    echo "git-core PPA InRelease fetch failed"
+    return 1
+  }
+  test -s /tmp/preflight-gitcore-key.asc || {
+    echo "signing key missing (keyserver probe runs first and must pass)"
+    return 1
+  }
+  if command -v gpg >/dev/null 2>&1 && command -v gpgv >/dev/null 2>&1; then
+    gpg --dearmor </tmp/preflight-gitcore-key.asc >/tmp/preflight-gitcore-keyring.gpg 2>/dev/null || {
+      echo "key dearmor failed"
+      return 1
+    }
+    # gpgv exits non-zero when ANY of the file's signatures cannot be
+    # checked, and Launchpad InRelease files carry a second signature from
+    # a key apt does not need — apt accepts one good known signature, so
+    # classify by that outcome, not by gpgv's exit status (measured
+    # in-session 2026-08-24: "Good signature" printed with non-zero exit)
+    local verify_out
+    verify_out=$(gpgv --keyring /tmp/preflight-gitcore-keyring.gpg /tmp/preflight-gitcore-inrelease 2>&1) || true
+    if echo "$verify_out" | grep -q "Good signature"; then
+      echo "InRelease carries a good signature from the fetched key"
+    else
+      echo "InRelease has NO good signature from the fetched key (rotated or revoked?):"
+      echo "$verify_out" | tail -3
+      return 1
+    fi
+  else
+    echo "gpg/gpgv unavailable — InRelease fetched; the key-to-metadata relationship was not verified"
+  fi
 }
 
 probe_base_image_apt_sources() {
@@ -400,11 +439,19 @@ probe_base_image_apt_sources() {
     # an exact-path suite (trailing slash) gets no dists/ segment — apt
     # fetches <url>/<suite>InRelease for those, <url>/InRelease for "./"
     case "$suite" in
-    ./) target="${url%/}/InRelease" ;;
-    */) target="${url%/}/${suite}InRelease" ;;
-    *) target="${url%/}/dists/${suite}/InRelease" ;;
+    ./) target="${url%/}" ;;
+    */) target="${url%/}/${suite%/}" ;;
+    *) target="${url%/}/dists/${suite}" ;;
     esac
-    host_reachable "$target" || failed=1
+    # apt falls back to Release (+ Release.gpg) when a repository publishes
+    # no InRelease — a source is unreachable only when both forms fail
+    if ! host_reachable "${target}/InRelease"; then
+      if host_reachable "${target}/Release"; then
+        echo "no InRelease but Release present — apt's fallback succeeds here"
+      else
+        failed=1
+      fi
+    fi
   done <<< "$pairs"
   return $failed
 }
