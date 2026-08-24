@@ -620,6 +620,30 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
   prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
 
+## 2026-08-24 (loop review, review-pass fold — Flamebright Burning Caldera / 01FV6r)
+
+- **The `Claude-Session` commit trailer is a per-firing durable discriminator — it settled an
+  attribution question an incident register and an owner statement could only approximate.**
+  PR #35's 23 commits split cleanly by trailer: 17 carry the authoring firing's session URL
+  (last at 11:02:36Z — the firing ran ≥11 h, not I-1's mid-incident "seven-plus"), while the
+  sibling firing's and the closing firing's landings carry none. Verify attribution from
+  trailers before narrating multi-writer incidents; and firing commits SHOULD carry the
+  trailer (routed via the review's OP-8).
+- **A reviewer subagent probing built artefacts DURING a background pre-push window reads a
+  transiently half-built dist as broken** — new sub-shape of `check-singleton-per-window`:
+  my own backgrounded `git push` (pre-push `check:ci` = clean + rebuild) overlapped an
+  assumptions-expert dispatch, which measured `agent-tools/dist/src/hook-policy/` missing
+  its modules and reported the PreToolUse guards broken; re-measured after the window: all
+  present, guards fine all session. Falsify a subagent's environment measurement against
+  your own concurrent gate windows before folding it. (The surviving lesson — dist presence
+  ≠ dist validity — still routed to Q-15's re-scope as a module-resolution smoke probe.)
+- **Two-reviewer fan-out on an analysis report earned its cost decisively:** zero citation
+  errors found but three P1 reasoning corrections (an in-loop liveness cure that can't see
+  sustained absence; artefact-mutation rounds mislabelled diagnostics-only, which would have
+  poisoned a ballot item; nine unassigned commits whose trailer evidence sharpened the
+  headline duration fact). The verify-firsthand step caught one reviewer over-reach (the
+  dist finding) — fold reviewers through your own probes, never verbatim.
+
 ## 2026-08-24 environment-breakage wrap (Buzzard weaves Airstream, 01e90b)
 
 - **The cloud-environment thread's single home is OCE**:
