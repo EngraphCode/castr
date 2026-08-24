@@ -320,7 +320,7 @@ probe_npm_registry() {
   # COREPACK_NPM_TOKEN as Bearer, else COREPACK_NPM_USERNAME/PASSWORD as
   # Basic; it fetches registry metadata at pnpm/<version> and follows the
   # returned dist.tarball URL rather than assuming the canonical path
-  local registry auth=() meta tarball
+  local registry auth=() meta tarball tarball_auth
   registry=${COREPACK_NPM_REGISTRY:-https://registry.npmjs.org}
   if [ -n "${COREPACK_NPM_TOKEN:-}" ]; then
     auth=(-H "Authorization: Bearer ${COREPACK_NPM_TOKEN}")
@@ -342,7 +342,15 @@ probe_npm_registry() {
   # display strips userinfo AND the query/fragment — a pre-signed tarball
   # URL can carry its credential in the query string
   echo "metadata tarball: $(echo "${tarball%%[?#]*}" | sed -E 's|^([a-zA-Z][a-zA-Z0-9+.-]*://)?[^@/]*@|\1|')" 
-  curl -fsSL -m 120 "${auth[@]}" "$tarball" -o ${PF_TMP}/pnpm.tgz || {
+  # corepack scopes credentials to the registry origin — an off-origin
+  # dist.tarball URL (a CDN or object store) must not receive the
+  # Authorization header (corepack 0.34: token added only when
+  # input.origin === registry.origin)
+  local tarball_auth=()
+  if [ "$(echo "$tarball" | sed -E 's|^(https?://[^/]+).*|\1|')" = "$(echo "$registry" | sed -E 's|^(https?://[^/]+).*|\1|')" ]; then
+    tarball_auth=("${auth[@]}")
+  fi
+  curl -fsSL -m 120 "${tarball_auth[@]}" "$tarball" -o "${PF_TMP}/pnpm.tgz" || {
     echo "pinned pnpm tarball download failed"
     return 1
   }
@@ -477,15 +485,20 @@ probe_base_image_apt_sources() {
     # apt falls back to Release + Release.gpg when a repository publishes
     # no InRelease — and rejects an unsigned Release, so the fallback is
     # usable only when BOTH fallback files answer
+    # an unreachable source is reported but NEVER fatal here: apt-get
+    # update exits 0 with a warning for an unreachable source, so failing
+    # this probe would block session creation where the real setup
+    # continues (the git-core PPA that setup itself adds keeps its own
+    # fatal probe above)
     if ! host_reachable "${target}/InRelease"; then
       if host_reachable "${target}/Release" && host_reachable "${target}/Release.gpg"; then
         echo "no InRelease but signed Release (+ Release.gpg) present — apt's fallback succeeds here"
       else
-        failed=1
+        echo "WARNING: source unreachable — apt-get update warns and continues; not fatal to setup"
       fi
     fi
   done <<< "$pairs"
-  return $failed
+  return 0
 }
 
 probe_gitleaks_release() {
