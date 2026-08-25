@@ -100,3 +100,17 @@ consumes the pattern, or on owner direction. Live in `.agent/memory/active/patte
 trigger-condition: a second autonomous programme is stood up, or the owner directs
 graduation.
 status: pending.
+
+### Cloud single-agent sessions skip commit-queue/comms ceremony (owner ruling)
+
+Owner ruling 2026-08-25 (in-session; verbatim substance in the napkin's 2026-08-25
+entry): cloud environments with a single agent do not need commit queues, and until
+the Slack work completes cannot partake in comms — that ceremony can and should be
+skipped in such sessions. Candidate permanent home: a cloud-single-agent clause in
+the commit skill canonical (§Commit Queue And Window Protocol) plus the
+claims/comms session-open and session-close rules; the blocking husky gates are
+untouched by the ruling.
+`[captured: 2026-08-25 | source: napkin 2026-08-25 (Sardine turns Coral)]`
+trigger-condition: already fired (unconditional owner ruling); lands at the next
+consolidation pass or the next session touching those canonicals.
+status: due.
