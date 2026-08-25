@@ -62,7 +62,12 @@ const EXCLUDED_PATH_FRAGMENTS: readonly string[] = ['/archive/', '/node_modules/
  * quote a hollow reference verbatim in prose. Empty by default; add a path
  * only with a one-line reason, never to silence a genuine false claim.
  */
-const ALLOWLISTED_PATHS: readonly string[] = [];
+const ALLOWLISTED_PATHS: readonly string[] = [
+  // Quotes the origin estate's verbatim owner ruling ("pnpm skills add" —
+  // the installer channel), which this estate has not stood up yet; the
+  // rule text itself marks it as an origin-estate citation.
+  '.agent/rules/capability-landing-decision-procedure.md',
+];
 
 interface ScannableFile {
   readonly path: string;

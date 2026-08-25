@@ -837,3 +837,49 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
   (kind already `git`) is rejected as "not an active git:index/head claim". The kind
   carries the `git:`; the pattern carries only `index/head`.
+
+## 2026-08-24 (equality-plan execution sitting — identity + cognition landings)
+
+- **A hook-blocked compound runs NOTHING in it — re-check downstream state before
+  reusing.** A blocked Bash compound carried both the COMMIT_EDITMSG heredoc and the
+  commit; on the retry only the commit was re-issued, so it landed with the PREVIOUS
+  message still in the file ("chore(merge)…" on the identity slice, commit 35f1471).
+  Amend is policy-blocked (append-only history), so the mislabel stands; the PR body
+  carries the accurate description. Lesson: after any hook block, treat every file
+  the compound would have written as NOT written.
+- **The transplant closure rule worked**: each copied surface link-scanned before
+  commit; the cognition tree pulled in skill-composition.md, the
+  concept-exploration transfer note, agentic-judgment-conserve-by-default (+ four-form
+  landing), skill-naming/third-party-security rules, and PDR-100/115/122/125/130/132/134
+  — closure terminated in three hops. PDR-125 was already cited by the new PDR-027
+  clause, so the identity and skills slices met in the middle.
+- **Generator nesting was a five-line concept**: recursive discovery with
+  leaf-name-flattened adapters and a fail-loud leaf collision; the checker mirrors the
+  walk through its injected fs. OCE's far larger generator generation (discovery/
+  carriage/clear modules) was NOT needed for this instalment — noted as a later
+  equality piece if its features (locks, vendored payloads) are wanted.
+- **v1→v2 era switch surfaced exactly the right failures**: only derived-name pins and
+  the override-shape pins broke (7 tests); fixture agent_names hand-set in tests were
+  untouched. The address-relay distinction (recipient blocks omit
+  naming_schema_version — provenance unknowable to the sender) came straight from
+  OCE's counterpart tests and its cli-comms-recipient guard comment.
+
+## 2026-08-25 (PR-driving sitting — review rounds on the equality PRs)
+
+- **A no-assert replace lies twice.** Two silent no-ops this arc: the blocked-compound
+  stale COMMIT_EDITMSG (mislabelled commit 35f1471), and a python `s.replace` that
+  printed "caller fixed" for OCE's statusline while the real production caller lived
+  in a different file (`statusline-emit.ts`) — Codex caught the dead branch a round
+  later. Rule of thumb now followed: every scripted replace carries an `assert old in s`,
+  and "fixed" is only printed by code that would have thrown otherwise.
+- **Codex corrected my ULID arithmetic**: first-6 of a ULID covers 28 significant
+  timestamp bits (top two of 30 are zero from left-padding 48 bits into 50), so the
+  shared-prefix window is 2^20 ms ≈ 17 minutes, not ~4. Both PDR-027s now carry the
+  derivation inline. Supersedes the ~4-minute figure in the 2026-08-24 napkin entry
+  and the equality plan's risk note.
+- **Practice-core portability enforced by a reviewer**: naming an estate as incident
+  provenance inside PDR-027 travels as canonical doctrine when the core is copied;
+  de-estated in both repos — estate-specific pointers live in PR/commit records.
+- **Reviewer-cancelled CI reads as failure**: OCE's run-quality-gates rollup treats a
+  `cancelled` gate (auto-superseded by a newer push) as blocking; the cure is nothing —
+  the current head's run is the real signal. Don't chase red on superseded heads.

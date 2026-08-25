@@ -31,6 +31,125 @@ discipline binds to this PDR's tuple format).
 
 ## Amendment Log
 
+- **2026-08-24 — cloud seats seed from the platform session id; hooks never
+  pin a display name.** On a cloud seat two ids coexist: the harness-internal
+  session id and the platform session id. The platform id is the durable,
+  owner-visible unit — it is the session URL, it is what Claude-Session
+  commit trailers carry, and it survives container recycling — and it is
+  machine-readable in-container (`CLAUDE_CODE_REMOTE_SESSION_ID`,
+  `cse_`-tagged; URLs carry the same payload `session_`-tagged). The PDR-027
+  seed on a cloud seat is the UNTAGGED payload (strip exactly one leading
+  lowercase type tag), so registry rows, commit trailers, and the owner's
+  own view join on one key. CLI seats keep the harness session id — the only
+  id there is. Explicit `PRACTICE_AGENT_SESSION_ID_*` values stay ahead of
+  the ambient platform id in seed precedence: they are the operator's stated
+  contract. Prefix note: platform ids are ULID-shaped, so
+  `session_id_prefix` (first 6) is timestamp-derived and two sessions
+  started within the same ~17-minute window share it (six base32 chars
+  span 30 bit positions of the left-padded 48-bit millisecond timestamp;
+  the top two are always zero, so 28 significant bits remain and one
+  prefix bucket is 2^20 ms) — the PDR-076a uuid
+  remains the canonical disambiguator and the visual-disambiguator token the
+  display guard (falsifier: a measured same-window mis-bind the uuid checks
+  fail to catch). This amendment SUPERSEDES the 2026-05-05 session-level
+  resolved-name cache: hooks write the seed only and never a name override.
+  The measured failure (2026-08-24 — one seat, three identity tuples in
+  one day, recorded in the incident host's operational memory) is a pinned name surviving a seed change, yielding a
+  mixed-provenance tuple no single seed produces; the rename risk the cache
+  guarded against is now cured structurally by the digest-pinned
+  naming-schema registry (wordlist edits require a new schema version, and
+  rows carry `naming_schema_version`). `*_AGENT_IDENTITY_OVERRIDE` remains
+  an explicit operator override only, never hook-written.
+- **2026-08-01 — derivation-source provenance: tools derive identity values
+  from claim rows only.** Where a tool DERIVES an identity value from the
+  collaboration registry on an operator's behalf — the directed-send
+  recipient `session_id_prefix` first among them — the derivation source is
+  FRESH CLAIM rows only. Claim identities are seed-derived at claim open,
+  so they carry canonical provenance; commit-queue identity fields are
+  operator-typed relays (right type, hand-typed provenance) and are never a
+  derivation source. The claim∪queue union remains legitimate as EVIDENCE —
+  disagreement tests, plausibility nets over an operator-supplied value,
+  liveness and collision checks — never as a source. This is the tool-side
+  complement of the authored-surface obligation below: that clause governs
+  what a hand WRITES; this clause governs what a tool READS in order to
+  write. Ruled in-session 2026-08-01 (Director lens-resolution, applying
+  the query-the-value-never-the-lookalike discipline); recorded here as the
+  field-role home.
+- **2026-08-01 — the visual-disambiguator display token; authored identity
+  cells carry the bare join key.** Multi-identity RENDERED views may display
+  `session_id_prefix` through a render-time **visual-disambiguator token**:
+  the join key, a hyphen, and the last three characters of the canonical
+  `id`; a block with no `id` renders the bare join key. The token is a
+  distinct display object derived at render time — never persisted, never a
+  join, lookup, or parse key. The `session_id_prefix` field's value,
+  derivation, wire meaning, and join-key role are unchanged by this
+  amendment. Warrant, recorded here: the token appends twelve bits of the
+  canonical `id`, taking pairwise collision inside a shared-prefix window to
+  1 in 4096, and it is display-only, so even a collision cannot corrupt
+  state. WHERE renderers adopt it is governed by the inter-Practice display
+  clause (PDR-125 clause 5): renderer output adopts where one rendered view
+  holds two or more identity blocks; single-identity views render the bare
+  join key. The discriminator is confusability, not literal block count: a
+  diagnostic naming one identity in contrast to another is a
+  disambiguation context and may adopt, while a view with nothing to
+  tell apart is a single-identity view; and independently of both, the
+  view an estate sanctions as the copy source for the join key renders it
+  bare, because the mis-bind begins at the copy, not the paste. The
+  AUTHORED-surface obligation is the prior rule and is
+  general: any hand-authored cell, field, or flag value whose value is or
+  carries the join key — identity-row `session_id_prefix` cells in thread
+  records, page-edit ledger rows, review-signature lines, CLI flag
+  values, and any surface like them — writes the bare wire prefix, never
+  the token. The
+  failure this obligation prevents is a silent MIS-BIND, not a loud error:
+  an identity-table parser accepts a pasted token as a plausible prefix
+  string and writes it into `session_id_prefix`, after which downstream
+  prefix-equality consumers — the cross-estate identity-row join first
+  among them, and any prefix-keyed lookup — silently never match. No
+  parser or detector change accompanies this amendment: the
+  token is non-injective over a schema-unbounded prefix, so no decoder or
+  detector over a stored value can be correct; the stated obligation plus
+  review is the guard. §Identity schema restates the obligation at the
+  point of use.
+- **2026-07-23 — forks and duplicates: identity derives from the session,
+  never from inherited context.** Session forking (a harness's
+  fork-session mechanism) and harness-restart duplicates create processes
+  that inherit another seat's FULL context — memories, calibration, and
+  the inherited identity seed. Doctrine, from three worked instances in
+  one day (all 2026-07-23): (1) a fork's or duplicate's FIRST act is
+  identity derivation from its OWN session id, before any comms or
+  collaboration-state write — the inherited environment identity seed is
+  the collision mechanism; check it against the actual session id and
+  override on mismatch. (2) **Memory of a seat is not tenure of a seat**:
+  tenure = registry row + session continuity + owner witness. The claims
+  registry's `agent_id` rows are ground truth for singleton-seat
+  occupancy; comms silence and frozen succession records are never
+  evidence that a seat is open. (3) Fork bases are CERTIFIED fixed
+  points: the pipeline is compact → reground → fork — the reground step
+  catches compaction's lossy errors once, before inheritance amplifies
+  them N times — and any baseline cut for forking carries these fork
+  rules inside itself so they are inherited, not discovered. (4)
+  Rename-before-move: re-identify a fork before it wakes; a fork moved
+  unrenamed wakes believing it is its parent. Worked instances: a fresh
+  seat grounded on frozen succession records and adopted a live
+  Director's claim (caught in ~60s by the live watcher; row restored by
+  re-adoption); a restart-duplicate woke with the lead's memory, read
+  the authentic lead's events as impersonation, then verified the
+  registry first-hand and re-derived its own identity; the first fork
+  fleet ran a full day on certified bases with owner-observed ~10-min
+  prep savings per seat. §Decision gains "Forks, duplicates, and
+  inherited context". Related: PDR-063 (succession), PDR-117
+  (seat roles).
+- **2026-07-08 — a mid-session model switch is a CONTINUOUS seat, not an
+  identity break.** Identity derives from the session seed, so the
+  `session_id_prefix` — and therefore the display name and the canonical
+  `(agent_name, id)` key — is stable across a model switch. Per the
+  additive-identity rule's continuation-matching condition the switch
+  UPDATES the existing row (its `model` field and `last_session`), never
+  adds a row; record the switch explicitly so it is not misread as a new
+  seat. Worked instance 2026-07-07: a fable-5→Opus-4.8 switch mid-run kept
+  the seat unbroken while an owner-named successor ran as a genuinely
+  separate session.
 - **2026-05-29 — retired/completed thread records carry a retirement
   banner.** The 2026-04-21 Session 5 entry established that a retired
   _surface_ records its retirement rationale in the retired-surface README.
@@ -82,9 +201,11 @@ discipline binds to this PDR's tuple format).
   when present. The legacy-fallback path remains until the sunset
   criterion in the remediation plan is met.
 
-- **2026-05-05 — session-level resolved-name cache.**
+- **2026-05-05 — session-level resolved-name cache.** (SUPERSEDED by the
+  2026-08-24 amendment: hooks no longer store the override; the variable is
+  an explicit operator control only.)
   Platform session-start hooks may derive an agent display name once from the
-  session id and store that resolved name in `OAK_AGENT_IDENTITY_OVERRIDE`
+  session id and store that resolved name in `ENGRAPH_AGENT_IDENTITY_OVERRIDE`
   alongside the relevant Practice session-id seed
   (`PRACTICE_AGENT_SESSION_ID_CLAUDE`, `PRACTICE_AGENT_SESSION_ID_CURSOR`, or
   `PRACTICE_AGENT_SESSION_ID_CODEX`). This is a session cache: it prevents an
@@ -286,6 +407,15 @@ keys describe different identities and remain as separate rows.
 `last_session` are descriptive — they annotate the identity but do not
 participate in key matching.
 
+A hand-authored `session_id_prefix` cell — in this table's identity rows or
+in any other authored surface whose value is the join key — carries the
+bare wire prefix, never the render-time visual-disambiguator token that
+token-adopting RENDERED views may display (per the 2026-08-01 amendment).
+A pasted token does not fail loudly: identity-table parsers accept it as a
+plausible prefix string and silently mis-bind the field, after which
+exact-match consumers never match. Rendered views derive; authored cells
+transcribe the wire value.
+
 ### The additive-identity rule
 
 > When a session joins a thread, it **adds an identity row** to
@@ -324,14 +454,39 @@ portable agent-tools CLI with an explicit stable seed:
 pnpm agent-tools:agent-identity --seed "<stable-session-seed>" --format display
 ```
 
-Seed precedence is explicit `--seed`, then
-`PRACTICE_AGENT_SESSION_ID_CLAUDE`, then
-`PRACTICE_AGENT_SESSION_ID_CURSOR`, then
-`PRACTICE_AGENT_SESSION_ID_CODEX`, then `CODEX_THREAD_ID`; missing seed is a
-bad-usage error. `OAK_AGENT_IDENTITY_OVERRIDE` supplies a resolved display name
-only when a seed is also available; it is not itself a seed. There is no
+Seed precedence is explicit `--seed`, then the explicit Practice seeds in
+order (`PRACTICE_AGENT_SESSION_ID_CLAUDE`, `PRACTICE_AGENT_SESSION_ID_CURSOR`,
+`PRACTICE_AGENT_SESSION_ID_GEMINI`, `PRACTICE_AGENT_SESSION_ID_CODEX`), then
+`CLAUDE_CODE_REMOTE_SESSION_ID` (cloud seats — type tag stripped; every
+explicit Practice seed outranks this ambient id, per the 2026-08-24
+amendment), then `CODEX_THREAD_ID`; missing seed is a
+bad-usage error. `ENGRAPH_AGENT_IDENTITY_OVERRIDE` supplies a resolved display name
+only when a seed is also available; it is not itself a seed, and no hook
+writes it (2026-08-24 amendment). There is no
 personal-email fallback. The derived value helps fill `agent_name`; it does not
 change the additive-identity rule, the identity key, or the historical record.
+
+### Forks, duplicates, and inherited context
+
+(Per the 2026-07-23 amendment.) A session fork, a harness-restart
+duplicate, or any process that inherits another seat's full context is a
+NEW identity the moment it exists. Four binding rules:
+
+1. **First act: derive identity from your own session id**, before any
+   comms or collaboration-state write. The inherited environment
+   identity seed is the collision mechanism — check it against the
+   actual session id and override on mismatch.
+2. **Memory of a seat is not tenure of a seat.** Tenure = registry row +
+   session continuity + owner witness. The claims registry's `agent_id`
+   rows are ground truth for singleton-seat occupancy; comms silence and
+   frozen succession records are never evidence that a seat is open.
+3. **Fork from certified fixed points only**: compact → reground → fork.
+   The reground step verifies the distillation against live terrain once,
+   before inheritance amplifies any defect N times. Fork points are
+   deliberate ceremony moments cut at quiet points; the baseline carries
+   these fork rules inside itself so they are inherited, not discovered.
+4. **Rename before move.** Re-identify a fork before it wakes; a fork
+   moved unrenamed wakes believing it is its parent.
 
 ### Full identity block for coordination state
 

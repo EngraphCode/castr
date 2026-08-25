@@ -58,7 +58,13 @@ describe('deriveCollaborationIdentity', () => {
     });
 
     expect(result.seed_source).toBe('CODEX_THREAD_ID');
-    expect(result.agentId).toMatchObject(woodland);
+    expect(result.agentId).toMatchObject({
+      agent_name: 'Thyme guards Heath',
+      platform: 'codex',
+      model: 'GPT-5',
+      session_id_prefix: '019dd3',
+      naming_schema_version: 'v2-noun-verb-noun',
+    });
     expect(result.agentId.id).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
     );
