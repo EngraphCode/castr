@@ -951,13 +951,17 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   domain-true union, restructure so no FUNCTION returns the mixed union before ever
   considering a suppression — and a suppression is the owner's to add, never ours.
 
+<!-- fitness exceeded; needs consolidation — this continuation takes the file to ~968
+lines, past the rotation cadence (consolidation recorded as due in repo-continuity.md) -->
+
 - **A default-setup CodeQL language matrix follows the REPOSITORY's detected languages, so a
   branch that predates another branch's first `.py` files fails `Analyze (python)` with a
   17-second "no code seen" configuration error** — red that names nothing in your diff. The
   cure is the standing base-integration rule, not a re-run: merge origin/main (which carried
   PR #54's six python files) and the job goes green. Classification method that worked: check
   the SAME check on the base branch's latest run and on the sibling PR before touching anything.
-- **The semantic-merge guard + concept-union worked on its first live napkin conflict**: both
+- **The semantic-merge guard + concept-union worked on another live napkin conflict** (the
+  driver's first firing is recorded in the 2026-08-24 loop-review entry above): both
   sides had appended disjoint session sections after a shared 839-line base, so the union is
   base + theirs' section + ours' sections in chronological order; the merge-conclusion
   plain-commit deviation (commit-skill sanctioned) landed it with the full hook chain green.
