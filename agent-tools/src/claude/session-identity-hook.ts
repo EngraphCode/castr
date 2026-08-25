@@ -105,6 +105,24 @@ export function planClaudeSessionIdentityHook(
   };
 }
 
+/**
+ * Select the process-environment values the Claude `SessionStart` identity
+ * hook consumes. The executable adapter MUST build its planner environment
+ * through this function: hand-picking variables at the bin boundary is how
+ * `CLAUDE_CODE_REMOTE_SESSION_ID` was silently dropped, leaving the
+ * cloud-seat branch unreachable in production.
+ */
+export function claudeSessionIdentityHookEnvironmentFromProcessEnv(
+  env: NodeJS.ProcessEnv,
+): ClaudeSessionIdentityHookEnvironment {
+  return {
+    ...(env.CLAUDE_ENV_FILE === undefined ? {} : { CLAUDE_ENV_FILE: env.CLAUDE_ENV_FILE }),
+    ...(env.CLAUDE_CODE_REMOTE_SESSION_ID === undefined
+      ? {}
+      : { CLAUDE_CODE_REMOTE_SESSION_ID: env.CLAUDE_CODE_REMOTE_SESSION_ID }),
+  };
+}
+
 function resolveSeed(input: ClaudeSessionIdentityHookInput): string | undefined {
   const remoteSessionId = nonEmpty(input.environment.CLAUDE_CODE_REMOTE_SESSION_ID);
   if (remoteSessionId !== undefined) {

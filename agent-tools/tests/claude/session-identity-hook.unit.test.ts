@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { planClaudeSessionIdentityHook } from '../../src/claude/session-identity-hook';
+import {
+  claudeSessionIdentityHookEnvironmentFromProcessEnv,
+  planClaudeSessionIdentityHook,
+} from '../../src/claude/session-identity-hook';
 import { deriveIdentity } from '../../src/core/agent-identity';
 
 describe('planClaudeSessionIdentityHook', () => {
@@ -152,5 +155,28 @@ describe('planClaudeSessionIdentityHook', () => {
     });
 
     expect(plan.envFileWrite).toBeUndefined();
+  });
+});
+
+describe('claudeSessionIdentityHookEnvironmentFromProcessEnv', () => {
+  it('forwards CLAUDE_CODE_REMOTE_SESSION_ID independently of CLAUDE_ENV_FILE', () => {
+    // Regression: the executable adapter once hand-picked only
+    // CLAUDE_ENV_FILE, silently dropping the remote session id and leaving
+    // the cloud-seat seed branch unreachable in production.
+    expect(
+      claudeSessionIdentityHookEnvironmentFromProcessEnv({
+        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72',
+      }),
+    ).toStrictEqual({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72' });
+  });
+
+  it('forwards both variables when present and neither when absent', () => {
+    expect(
+      claudeSessionIdentityHookEnvironmentFromProcessEnv({
+        CLAUDE_ENV_FILE: '/tmp/env',
+        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_abc',
+      }),
+    ).toStrictEqual({ CLAUDE_ENV_FILE: '/tmp/env', CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_abc' });
+    expect(claudeSessionIdentityHookEnvironmentFromProcessEnv({})).toStrictEqual({});
   });
 });
