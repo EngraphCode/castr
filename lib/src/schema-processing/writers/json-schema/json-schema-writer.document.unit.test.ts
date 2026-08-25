@@ -9,9 +9,34 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode, CastrSchemaComponent } from '../../ir/index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
+import type { JsonSchemaNode } from '../shared/json-schema-fields.js';
 import { writeJsonSchemaDocument, writeJsonSchemaBundle } from './json-schema-writer.document.js';
 
 const JSON_SCHEMA_2020_12_DIALECT = 'https://json-schema.org/draft/2020-12/schema';
+
+/**
+ * Narrows `writeJsonSchemaDocument` output to the object branch of its
+ * union, for tests asserting object-document shape. Boolean-document
+ * behaviour has its own dedicated tests below.
+ */
+function writeDocumentAsObject(schema: CastrSchema): JsonSchemaNode {
+  const result = writeJsonSchemaDocument(schema);
+  if (typeof result === 'boolean') {
+    throw new Error(`Expected an object document but got boolean: ${String(result)}`);
+  }
+  return result;
+}
+
+/**
+ * Narrows a `$defs` member to its object branch, for tests asserting
+ * object-shaped definitions.
+ */
+function defAsObject(member: JsonSchemaNode | boolean | undefined): JsonSchemaNode {
+  if (member === undefined || typeof member === 'boolean') {
+    throw new Error('Expected an object $defs member');
+  }
+  return member;
+}
 
 /**
  * Creates a minimal valid CastrSchemaNode for testing.
@@ -53,7 +78,7 @@ describe('writeJsonSchemaDocument', () => {
   it('adds $schema dialect URI to output', () => {
     const schema = createSchema({ type: 'string' });
 
-    const result = writeJsonSchemaDocument(schema);
+    const result = writeDocumentAsObject(schema);
 
     expect(result.$schema).toBe(JSON_SCHEMA_2020_12_DIALECT);
   });
@@ -67,7 +92,7 @@ describe('writeJsonSchemaDocument', () => {
       required: ['name'],
     });
 
-    const result = writeJsonSchemaDocument(schema);
+    const result = writeDocumentAsObject(schema);
 
     expect(result.$schema).toBe(JSON_SCHEMA_2020_12_DIALECT);
     expect(result.type).toBe('object');
@@ -78,7 +103,7 @@ describe('writeJsonSchemaDocument', () => {
   it('handles $ref schema with $schema', () => {
     const schema = createSchema({ $ref: '#/$defs/User' });
 
-    const result = writeJsonSchemaDocument(schema);
+    const result = writeDocumentAsObject(schema);
 
     expect(result.$schema).toBe(JSON_SCHEMA_2020_12_DIALECT);
     expect(result.$ref).toBe('#/$defs/User');
@@ -179,8 +204,34 @@ describe('writeJsonSchemaBundle', () => {
 
     const result = writeJsonSchemaBundle(components);
 
-    expect(result.$defs?.['User']?.properties?.['address']).toEqual({
+    expect(defAsObject(result.$defs?.['User']).properties?.['address']).toEqual({
       $ref: '#/$defs/Address',
     });
+  });
+});
+
+describe('boolean schemas at the document seam', () => {
+  it('writes a boolean-schema document as the bare boolean', () => {
+    const schema = createSchema({ booleanSchema: false });
+
+    expect(writeJsonSchemaDocument(schema)).toBe(false);
+  });
+
+  it('writes a true boolean-schema document as bare true', () => {
+    const schema = createSchema({ booleanSchema: true });
+
+    expect(writeJsonSchemaDocument(schema)).toBe(true);
+  });
+
+  it('writes a boolean $defs member as the bare boolean', () => {
+    const components: CastrSchemaComponent[] = [
+      createSchemaComponent('Never', createSchema({ booleanSchema: false })),
+      createSchemaComponent('Anything', createSchema({ booleanSchema: true })),
+    ];
+
+    const result = writeJsonSchemaBundle(components);
+
+    expect(result.$defs?.['Never']).toBe(false);
+    expect(result.$defs?.['Anything']).toBe(true);
   });
 });

@@ -1,4 +1,9 @@
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+
+import {
+  ACTIVE_CLAIMS_SEED_TEXT,
+  CLOSED_CLAIMS_SEED_TEXT,
+} from '../../src/collaboration-state/claims-init.js';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,15 +61,12 @@ export async function makeTempCollaborationRepo(
     );
   }
 
-  await writeJson(join(collaborationRoot, 'active-claims.json'), {
-    schema_version: '1.3.0',
-    commit_queue: [],
-    claims: [],
-  });
-  await writeJson(join(collaborationRoot, 'closed-claims.archive.json'), {
-    schema_version: '1.3.0',
-    claims: [],
-  });
+  await writeFile(join(collaborationRoot, 'active-claims.json'), ACTIVE_CLAIMS_SEED_TEXT, 'utf8');
+  await writeFile(
+    join(collaborationRoot, 'closed-claims.archive.json'),
+    CLOSED_CLAIMS_SEED_TEXT,
+    'utf8',
+  );
   if (options.seedCommsEvent !== false) {
     await writeJson(join(collaborationRoot, 'comms/event-one.json'), validCommsEvent());
   }

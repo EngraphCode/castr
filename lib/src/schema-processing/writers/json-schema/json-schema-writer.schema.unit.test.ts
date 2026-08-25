@@ -9,14 +9,16 @@ import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
-import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
+import type { JsonSchemaNode } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
 /**
- * Test-local wrapper that narrows `writeJsonSchema` return to `JsonSchemaObject`.
- * Existing tests never exercise boolean schemas, so the assertion is safe.
+ * Test-local wrapper that narrows `writeJsonSchema` return to the object
+ * branch of its union, for tests asserting object-shaped output. Boolean
+ * schema coverage lives in the dedicated boolean-schema describe below and
+ * in the nested-boolean-schema integration proof.
  */
-function writeJsonSchemaAsObject(schema: CastrSchema): JsonSchemaObject {
+function writeJsonSchemaAsObject(schema: CastrSchema): JsonSchemaNode {
   const result = writeJsonSchema(schema);
   if (typeof result === 'boolean') {
     throw new Error(`Expected JsonSchemaObject but got boolean: ${String(result)}`);

@@ -58,7 +58,13 @@ describe('deriveCollaborationIdentity', () => {
     });
 
     expect(result.seed_source).toBe('CODEX_THREAD_ID');
-    expect(result.agentId).toMatchObject(woodland);
+    expect(result.agentId).toMatchObject({
+      agent_name: 'Thyme guards Heath',
+      platform: 'codex',
+      model: 'GPT-5',
+      session_id_prefix: '019dd3',
+      naming_schema_version: 'v2-noun-verb-noun',
+    });
     expect(result.agentId.id).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
     );
@@ -304,7 +310,7 @@ describe('runCollaborationStateCli', () => {
   it('returns help for top-level, topic, and action requests', async () => {
     const topLevel = await runCollaborationStateCli({ argv: ['--', 'help'], env: {} });
     expect(topLevel.exitCode).toBe(0);
-    expect(topLevel.stdout).toContain('claims         open, heartbeat, close');
+    expect(topLevel.stdout).toContain('claims         init, open, heartbeat, close');
 
     const topic = await runCollaborationStateCli({ argv: ['--', 'claims', 'help'], env: {} });
     expect(topic.exitCode).toBe(0);

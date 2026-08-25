@@ -1,7 +1,14 @@
 import type { ReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 
-export type Draft07SchemaOrRef = Draft07Input | ReferenceObject;
+export type Draft07SchemaOrRef = Draft07Input | ReferenceObject | boolean;
+
+/**
+ * A normalized 2020-12 child value: a schema object, a `$ref`, or a boolean
+ * schema (booleans are complete schemas and normalize to themselves).
+ * @internal
+ */
+export type NormalizedSchemaOrRef = JsonSchema2020 | ReferenceObject | boolean;
 export type Draft07SchemaMap = Record<string, Draft07SchemaOrRef>;
 
 export type Draft07Input = Omit<
@@ -31,6 +38,6 @@ export type Draft07Input = Omit<
   oneOf?: Draft07SchemaOrRef[];
   anyOf?: Draft07SchemaOrRef[];
   not?: Draft07SchemaOrRef;
-  additionalProperties?: Draft07SchemaOrRef | boolean;
+  additionalProperties?: Draft07SchemaOrRef;
   prefixItems?: Draft07SchemaOrRef[];
 };

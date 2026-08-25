@@ -17,7 +17,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-04
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
-    status: pending
+    status: completed
     depends_on: [Q-00]
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
@@ -59,11 +59,25 @@ todos:
   - id: Q-15
     content: 'Fresh-container full-chain readiness: run the entire blocking gate chain unattended in a genuinely fresh container, fix or slice every gap found (measured 2026-08-22: unbuilt agent-tools/dist leaves PreToolUse guards failing OPEN for hours)'
     status: pending
+    depends_on: [Q-20]
   - id: Q-16
     content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
     status: pending
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
+    status: pending
+  - id: Q-18
+    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
+    status: pending
+  - id: Q-19
+    content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
+    status: pending
+    depends_on: [Q-13]
+  - id: Q-20
+    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
+    status: pending
+  - id: Q-21
+    content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
     status: pending
 ---
 
@@ -74,9 +88,12 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
 the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
-completed 2026-08-24 (see the Q-03 evidence record). Eligible
-now: Q-04..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-15, Q-16, Q-17; Q-10..Q-12 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
+Q-04 evidence record). Q-18..Q-21 appended
+2026-08-24 at owner word (loop-review decision cards). Eligible
+now: Q-05..Q-09, Q-13 (executes the B-11 RATIFY
+outcome), Q-14, Q-16, Q-17, Q-18, Q-20, Q-21; Q-10..Q-12, Q-15 (waits on Q-20), and
+Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -212,7 +229,7 @@ this slice's proof lands second, so neither ordering strands the Routine disable
 full authorisation.
 **Enabling sequences strictly after this slice's own PR merges**: an enabled Routine with
 Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step
-(with the B-15 notification configuration re-checked: push and email on, no digest) is the
+(with the B-15 notification configuration re-checked: push and email on, no digest — B-15 amended 2026-08-24 to push-only; the ratified set is the ballot's amended B-15) is the
 last act of the Q-01 firing, performed only once the merged base carries the row's
 `complete` state. The enable step applies the recorded
 B-15 outcome to the Routine's notification configuration **before** enabling — including
@@ -645,6 +662,77 @@ Non-goals: no full Tranche 05 position matrix. Acceptance (`integration`): red-f
 that nested `false`/`true` survive at the defective positions; `pnpm check` green. Source:
 report F-03. Gate: B-11 (success verdict).
 
+**Q-04 evidence record (completed 2026-08-25).** Shipped: the F-03 fix as root-and-recursion
+unification in all three layers of the json-schema lane, per the report's named root cause
+("root and recursion used different callbacks"). (1) **Normalizer**: the redundant
+`normalizeSubSchemas` pre-pass is deleted — `stripDraft07Keys` is the single recursion site,
+which also removes an O(2^depth) double-normalisation — and boolean children short-circuit in
+`narrowSchemaOrRef` (a boolean ternary over an object-only `narrowObjectOrRef`);
+`normalizeDraft07` stays object-only, with the boolean branch at the two public parse seams.
+(2) **Parser**: `parseJsonSchemaObject` accepts `JsonSchema2020 | boolean` and is its own
+recursion callback; the three per-file `parseSingleSchemaOrRef` copies are consolidated into
+one boolean-aware helper in `json-schema-parser.helpers.ts` (boolean branch inside it, so
+`parseProperties`' `metadata.required` mirroring applies to boolean members identically);
+`parseBoolOrSchemaOrRef` and the inlined metadata literal are deleted; `parseJsonSchema` and
+`parseJsonSchemaDocument` accept boolean documents (a boolean root yields one `"Root"`
+component). (3) **JSON-Schema writer**: `writeJsonSchema` emits `booleanSchema` IR as bare
+booleans and is its own recursion callback; the shared output type is parameterised as
+`JsonSchemaObjectBase<in out TChild>` — the OpenAPI lane instantiates object-only
+`JsonSchemaObject` (still assignable to the strict `SchemaObject` seam; the boolean-capable
+`JsonSchemaNode` is provably NOT assignable, so the lanes cannot cross-contaminate, and the
+invariance annotation rejects pairing an object-only container with a boolean-emitting
+callback) — and the document writer's `true → {}` / `false → {not: {}}` fabrications are
+deleted (boolean documents and `$defs` members emit as authored; a boolean document drops the
+writer-added `$schema`, losing nothing the input supplied). Types: `JsonSchema2020`
+restructured as an `Omit<SchemaObject, …> &` alias so every recursive position admits
+boolean (its former `extends SchemaObject` claim was semantically untrue);
+`Draft07SchemaOrRef` gains `| boolean`.
+
+Proof (red-first): `lib/tests-transforms/__tests__/nested-boolean-schema.integration.test.ts`
+— 20 tests through public seams via the Q-02 semantic-outcome-runner: 16 minimal-pair boolean
+cases (properties, patternProperties, propertyNames, items, Draft-07 tuple items→prefixItems,
+contains, allOf, anyOf, oneOf, not, if, then, else, dependentSchemas, Draft-07 `dependencies`,
+root), a `$defs` document-seam case, two direct assertions (boolean document root; required
+mirroring onto a boolean member), and a boolean-free positive control. Oracles are Ajv
+validation verdicts of fixed witnesses (2020-12 engine; Draft-07 engine for the two
+Draft-07-shaped sources), asserting verdict INEQUALITY, never direction — under `not` and
+`if` the collapse is fail-closed, so a permissiveness assertion would silently pass there.
+`cloneIR` routes through a minimal `CastrDocument` wrapper and `serializeIR`/`deserializeIR`,
+so every case also proves nested boolean IR survives the persistence boundary. On the
+pre-fix tree (worktree isolation) the file fails 19/20 with only the positive control
+passing; post-fix 20/20, plus normalizer/document-writer unit coverage.
+
+Reviews: two pre-execution dispatches (`code-reviewer`, `json-schema-expert` — their verdicts
+set the design: the redundancy deletion first, the tsc-error-list-as-checklist ordering, the
+`JsonSchemaObjectBase` parameterisation, the verified witness table, the root-boolean seam
+gap) and three post-execution dispatches (`code-reviewer`, `test-reviewer`, `type-reviewer`).
+The post-execution round's blocking findings — four agent-authored lint suppressions, two of
+them attributed with the owner's initialled justification marker on a factually false
+circularity claim, plus an unbacked "structurally impossible" variance claim — were all
+dissolved by design in the same firing (aliases; seam branches; the helper split;
+`in out TChild`), leaving zero suppressions.
+
+Routed, not fixed here: **behaviour change to record at release time (rides QD-10)** — JSON
+Schema → OpenAPI conversions containing nested boolean schemas now fail fast at the OpenAPI
+writer's existing `booleanSchema` throw where they previously emitted `{}` silently
+(doctrinally correct; newly reachable), and the throw's "genuinely impossible in OpenAPI 3.2"
+wording is a castr IDENTITY-doctrine choice rather than a spec fact (OAS 3.1+ schemas are
+2020-12) — record as an assumption on that lane. **Parser/validator lockstep gap
+(pre-existing, boolean-independent)**: the IR persistence validators require
+`propertyNames`/`patternProperties` to sit on object-typed schemas while the parser accepts
+them bare (legal 2020-12), so `deserializeIR` rejects IR the pipeline itself produced.
+**F-03b (pre-existing)**: the normalizer never recurses into contains / patternProperties /
+propertyNames / if / then / else / unevaluated*, so Draft-07 constructs nested there are not
+normalised — `Draft07Input`'s `Omit` list now encodes that gap; fix both together. **Draft-07
+`additionalItems` unmodelled** in this lane. **MCP inline-JSON-Schema lane verified clear**
+of the F-03 shape (booleans pass through unchanged). Also pre-existing, noted for their
+owning lanes: `parseSingleSchemaOrRef` discards `$ref` siblings (now one seam to fix); two
+unrelated exported types named `ExtendedSchemaObject`; the parser index docblock's
+package-root import example does not resolve (the parse/write json-schema seams are not in
+the package `exports` map — which is also why the `writeJsonSchemaDocument` return-type
+widening breaks no package consumer). Full `pnpm check` green pre-push on every landed
+revision; scope held to the F-03 defect throughout — no Tranche 05 position matrix.
+
 **Q-05 — F-04 placebo refinements + nested Zod loss.** Surface: the two `return true` sites
 in `writers/zod/refinements/object.ts` (`:130`, `:183–187` per the 2026-07-06 scout — leave
 the real refinements alone) become fail-fast; nested unsupported Zod members fail the
@@ -814,6 +902,95 @@ finding (a trap-mutating Proxy fixture whose backing store is proven untouched; 
 green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
 2026-08-23). Gate: none (eligible immediately).
 
+**Q-18 — Predecessor-slot attestation (OP-1a).** Surface: `routine-prompt.md` — three
+touch points, the check and BOTH consumer halves: (1) step 3 (grounding) gains the
+check — derive each expected predecessor slot from your own spawn time minus whole
+cadence intervals (ADR-051 clause 2; 8 h — never from a platform trigger read, an
+unproven fired-seat capability on Q-15's probe list), look back to the last durably
+attested firing, and for every expected slot in the gap with no durable trace (no
+`FIRING-LEASE`, no PR or branch activity, no counter or identity-row delta, and no open
+or draft bookkeeping/deferral PR carrying its increment) unexplained by a STOP file,
+append one `other`-class entry to `incidents.md` naming the unattested slots, landed
+via the normal counter-landing route; (2) step 4's incident-read semantics gain the
+entry's meaning for a reading firing (re-verify toolchain and gitleaks provisioning
+before trusting the chain — a predecessor that died silently may mean a broken
+environment); (3) step 9's completion-notification list gains "unattested predecessor
+slots" so the owner sees the signal. Non-goals: no external observer or watchdog
+(owner-declined 2026-08-24 — "we don't need that level of assurance yet"); no
+platform-side work; no new mechanism beyond the existing register and landing paths.
+Acceptance (`non-code`): the prompt carries all three touch points with the trace
+classes enumerated, AND states the check's bound — it catches the intermittent case
+one slot late and does not observe sustained absence, an accepted risk at current
+stakes per the owner's decline; gates green. Source: loop-review report OP-1(a) and
+its 2026-08-24 addendum (`.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md`);
+second owner decision card 2026-08-24 (recorded in that addendum). Gate: none
+(eligible immediately).
+
+**Q-19 — Review-round tally instrument (OP-2).** Surface:
+`.agent/skills/pr-lifecycle/SKILL-CANONICAL.md` plus the counter surfaces named
+below. Three elements: (1) the tally-at-PR-open entry contract — opening or adopting
+a bot-reviewed PR creates the tally artefact before first triage, and a tally-less PR
+is out of contract; the artefact is a **REVIEW-TALLY PR comment** maintained by the
+driving seat (round ordinal, the concern each round narrowed, each round's
+disposition), mirroring the proven `FIRING-LEASE` comment convention — durable on the
+shared remote, readable by a successor firing, and outside the bookkeeping-scope
+definition (shape derived from OCE's tally contract; not required reading — the
+contract is stated here in full); (2) the step-back trigger reading ADR-051 clause
+4(c) at its ratified threshold — two successive rounds narrowing one concern → the
+structural step-back, never another instance cure; (3) an **observational**
+drive-attempt count per open programme PR (firings spent on one PR without reaching
+merge — the WIP=1 starvation signal), recorded with the counters: its surfaces are
+the parent plan's §Failure counters contract and frontmatter (a per-PR field,
+absent = 0 declared like `failures:`) and routine-prompt step 8's counter duty; the
+response at any threshold is decision-class and goes to `queued-decisions.md` as a
+named position, never invented by a firing. Non-goals: no wholesale OCE re-sync
+beyond these contracts; never a second skill copy (Q-13's PR #23 re-sync is the
+vehicle — this row is ordered after it by `depends_on`); the D-10 merge-posture cure
+is NOT here (it is Q-21, independently landable). Acceptance (`non-code`): the skill
+and counter surfaces carry all three elements grep-checkably, and this row's own PR
+demonstrates the REVIEW-TALLY comment from its first triage onward; gates green.
+Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a
+tally artefact means the entry contract is not working. Source: loop-review report
+OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second
+owner decision card 2026-08-24. Gate: none beyond `depends_on: [Q-13]`.
+
+**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5).** Surface: this file's Q-15
+row and brief text, plus the D-9 one-word correction in the Q-17 brief
+("tenth-round" → "seventeenth-round" — three surfaces attest seventeen). Rewrite the
+Q-15 brief to post-outage reality: each cured environment gap becomes a VALIDITY
+probe naming what it executes (module-resolution smoke-check for `agent-tools/dist`
+— a transiently half-built dist was measured 2026-08-24 during a concurrent pre-push
+clean window; a pinned-version resolve for gitleaks; a hook-fires check for
+provisioning), never a presence assertion; promote the still-live items — the
+identity-seed requirement (one canonical seed source yielding a non-degenerate
+prefix — the mechanism is Q-15's to derive at execution), the fired-seat capability
+probes (artifact publish + push notification, Slack tool surface, and the
+trigger-self-disable capability the ADR-051 clause 6 kill switch's final act
+assumes), and document the outcome-branch convention (the Routine's configured
+branch prefix plus per-session suffix). Non-goals: no probe execution in this row
+(Q-15 executes when claimed); no gate weakening; **not a bookkeeping landing** — a
+brief rewrite is neither counter, incident, nor continuity state (QD-5 scope), so
+this row lands as a slice PR. Acceptance (`non-code`): the Q-15 brief carries the
+re-scoped list with each validity probe naming what it executes and the stale
+2026-08-22 measurements retired from premise to history; the Q-17 brief reads
+"seventeenth-round"; gates green. Source: loop-review report OP-5 + D-4 + D-6 +
+D-9 + F-R2-3 and the 2026-08-24 addendum; second owner decision card 2026-08-24.
+Gate: none (eligible immediately). Q-15 is ordered after this row by `depends_on`.
+
+**Q-21 — Merge-authority policy line in pr-lifecycle (D-10).** Surface: the merge
+step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose current text tells
+every seat "The merge itself is owner-invoked" — contradicting ADR-051 clause 3 for
+programme PRs today (the review's sharpest doctrine drift, D-10). Replace it with
+the general policy, per the owner's 2026-08-24 policy-not-carve-outs teaching:
+merge authority follows the PR's governing authority — where an accepted ADR sets
+condition-based unattended merge (ADR-051 clause 3, programme PRs), the conditions
+are the authority; elsewhere castr's standing posture applies and the owner invokes
+the merge. Non-goals: no other pr-lifecycle content (Q-13 and Q-19 own their
+elements); no change to ADR-051. Acceptance (`non-code`): the skill states the
+policy with both branches and cites the ADR; no unconditional owner-invoked claim
+remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
+owner decision card 2026-08-24. Gate: none (eligible immediately).
+
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
 own the merge policy (clause 3), review-bot convergence
@@ -880,7 +1057,8 @@ proven by Q-01).
 ## Reviewers
 
 Plan-readiness for this parent plan: `assumptions-expert` review completed 2026-08-22
-(findings applied in the authoring landing). Per-slice reviewer moments are protocol step 4
+(findings applied in the authoring landing); Q-18..Q-21 appending took its own
+`assumptions-expert` review 2026-08-24 (21 findings applied in the same landing). Per-slice reviewer moments are protocol step 4
 above — the loop never authors, implements, self-approves, and merges without independent
 review dispatches. Ballot and ADR surfaces additionally take `docs-adr-expert` at their
 landing.
@@ -893,7 +1071,9 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-04..Q-09, Q-13, Q-14, Q-15, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24).
+- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20, Q-21 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
+- **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
+- **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract

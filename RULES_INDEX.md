@@ -61,9 +61,11 @@ without proportional value.
 | Rule                                                                       | Classification | Trigger / Loading Signal                                                                         |
 | -------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
 | `.agent/rules/agent-state-observable.md`                                   | always-on      | —                                                                                                |
+| `.agent/rules/agentic-judgment-conserve-by-default.md`                     | always-on      | —                                                                                                |
 | `.agent/rules/agents-default-no-gender.md`                                 | always-on      | —                                                                                                |
 | `.agent/rules/apply-architectural-principles.md`                           | always-on      | —                                                                                                |
 | `.agent/rules/capture-practice-tool-feedback.md`                           | always-on      | —                                                                                                |
+| `.agent/rules/capability-landing-decision-procedure.md`                    | trigger-loaded | Landing, converting, or re-homing a capability (skill, rule, subagent, hook, validator)          |
 | `.agent/rules/check-singleton-per-window.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/closed-shape-design-optionality.md`                          | always-on      | —                                                                                                |
 | `.agent/rules/collaboration-is-value-contingent.md`                        | always-on      | —                                                                                                |
@@ -135,12 +137,14 @@ without proportional value.
 | `.agent/rules/sha-prefix-in-collaboration-content.md`                      | always-on      | —                                                                                                |
 | `.agent/rules/ship-independent-coordinate-dependent.md`                    | always-on      | —                                                                                                |
 | `.agent/rules/silence-is-never-liveness.md`                                | always-on      | —                                                                                                |
+| `.agent/rules/skill-naming-and-description-quality.md`                     | trigger-loaded | Creating, renaming, or editing any skill or its description; vendoring gate                      |
 | `.agent/rules/stage-by-explicit-pathspec.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/strict-validation-at-boundary.md`                            | always-on      | —                                                                                                |
 | `.agent/rules/subagent-practice-core-protection.md`                        | always-on      | —                                                                                                |
 | `.agent/rules/tdd-for-refactoring.md`                                      | always-on      | —                                                                                                |
 | `.agent/rules/tdd.md`                                                      | always-on      | —                                                                                                |
 | `.agent/rules/test-immediate-fails.md`                                     | always-on      | —                                                                                                |
+| `.agent/rules/third-party-skills-require-security-review.md`               | trigger-loaded | Adopting or updating any third-party skill payload                                               |
 | `.agent/rules/unknown-is-type-destruction.md`                              | always-on      | —                                                                                                |
 | `.agent/rules/use-agent-comms-log.md`                                      | always-on      | —                                                                                                |
 | `.agent/rules/use-built-agent-tools-cli.md`                                | always-on      | —                                                                                                |

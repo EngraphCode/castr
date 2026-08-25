@@ -161,3 +161,111 @@ describe('deriveOverrideCollaborationIdentity', () => {
     expect(b.id).not.toBe(c.id);
   });
 });
+
+describe('cloud platform session id seed (PDR-027 cloud-seat clause)', () => {
+  const platformPayload = '01FV6rZz5BjSkApAUL6FAj72';
+
+  it('resolves the stripped platform session id when no explicit Practice seed is set', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: { CLAUDE_CODE_REMOTE_SESSION_ID: `cse_${platformPayload}` },
+    });
+
+    expect(identity.seed_source).toBe('CLAUDE_CODE_REMOTE_SESSION_ID');
+    expect(identity.agentId.session_id_prefix).toBe('01FV6r');
+  });
+
+  it('lets an explicit Practice seed outrank the ambient platform session id', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: {
+        PRACTICE_AGENT_SESSION_ID_CLAUDE: 'explicit-operator-seed',
+        CLAUDE_CODE_REMOTE_SESSION_ID: `cse_${platformPayload}`,
+      },
+    });
+
+    expect(identity.seed_source).toBe('PRACTICE_AGENT_SESSION_ID_CLAUDE');
+    expect(identity.agentId.session_id_prefix).toBe('explic');
+  });
+
+  it('derives the same tuple from the tagged and untagged forms of one platform id', () => {
+    const fromTagged = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: { CLAUDE_CODE_REMOTE_SESSION_ID: `cse_${platformPayload}` },
+    });
+    const fromUntagged = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: { PRACTICE_AGENT_SESSION_ID_CLAUDE: platformPayload },
+    });
+
+    expect(fromTagged.agentId.agent_name).toBe(fromUntagged.agentId.agent_name);
+    expect(fromTagged.agentId.id).toBe(fromUntagged.agentId.id);
+    expect(fromTagged.agentId.session_id_prefix).toBe(fromUntagged.agentId.session_id_prefix);
+  });
+});
+
+describe('naming schema provenance on identity writes', () => {
+  it('stamps the deriving schema era on derived identities', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'codex',
+      model: 'GPT-5',
+      env: { CODEX_THREAD_ID: codexThreadId },
+    });
+
+    expect(identity.agentId.naming_schema_version).toBe('v2-noun-verb-noun');
+  });
+
+  it('stamps override provenance on override identities', () => {
+    const identity: CollaborationAgentIdWrite = deriveOverrideCollaborationIdentity({
+      agent_name: 'Manual Name',
+      platform: 'codex',
+      model: 'GPT-5',
+      session_id_prefix: 'abc123',
+    });
+
+    expect(identity.naming_schema_version).toBe('override');
+  });
+
+  it('stamps override provenance when the env override bypasses derivation', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'codex',
+      model: 'GPT-5',
+      env: { CODEX_THREAD_ID: codexThreadId, ENGRAPH_AGENT_IDENTITY_OVERRIDE: 'Env Name' },
+    });
+
+    expect(identity.agentId.naming_schema_version).toBe('override');
+  });
+});
+
+describe('every explicit Practice seed outranks the ambient platform session id', () => {
+  it.each([
+    ['PRACTICE_AGENT_SESSION_ID_CURSOR', { PRACTICE_AGENT_SESSION_ID_CURSOR: 'cursor-seed' }],
+    ['PRACTICE_AGENT_SESSION_ID_GEMINI', { PRACTICE_AGENT_SESSION_ID_GEMINI: 'gemini-seed' }],
+    ['PRACTICE_AGENT_SESSION_ID_CODEX', { PRACTICE_AGENT_SESSION_ID_CODEX: 'codex-seed' }],
+  ])('%s beats CLAUDE_CODE_REMOTE_SESSION_ID', (source, env) => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: { ...env, CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72' },
+    });
+
+    expect(identity.seed_source).toBe(source);
+  });
+
+  it('the ambient platform id still outranks harness-native fallbacks', () => {
+    const identity = deriveCollaborationIdentity({
+      platform: 'claude-code',
+      model: 'claude',
+      env: {
+        CODEX_THREAD_ID: '019dd34d-cb6a-74e0-a29d-6cb8a65ea14b',
+        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01FV6rZz5BjSkApAUL6FAj72',
+      },
+    });
+
+    expect(identity.seed_source).toBe('CLAUDE_CODE_REMOTE_SESSION_ID');
+  });
+});

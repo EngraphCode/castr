@@ -44,6 +44,8 @@ interface ParsedCanonical {
   readonly frontmatter: CanonicalFrontmatter;
   readonly canonicalPath: string;
   readonly canonicalFilename: string;
+  /** POSIX-joined path of the skill directory relative to `.agent/skills/` (equals `id` for top-level skills). */
+  readonly relativeDir: string;
 }
 
 /**
@@ -55,17 +57,10 @@ export async function generateAdapters(options: GeneratorOptions): Promise<Gener
   const written: string[] = [];
   const skipped: string[] = [];
   const canonicalsRoot = join(options.repoRoot, '.agent', 'skills');
-  const canonicalDirs = await readdir(canonicalsRoot, { withFileTypes: true });
+  const discovered = await discoverCanonicals(canonicalsRoot, '', skipped);
+  assertUniqueLeafIds(discovered);
 
-  for (const dirent of canonicalDirs) {
-    if (!dirent.isDirectory()) {
-      continue;
-    }
-    const parsed = await readCanonical(canonicalsRoot, dirent.name);
-    if (parsed === undefined) {
-      skipped.push(dirent.name);
-      continue;
-    }
+  for (const parsed of discovered) {
     const claudeWritten = await emitAdapter(options, parsed, 'claude');
     const agentsWritten = await emitAdapter(options, parsed, 'agents');
     written.push(claudeWritten, agentsWritten);
@@ -74,36 +69,71 @@ export async function generateAdapters(options: GeneratorOptions): Promise<Gener
   return { written, skipped };
 }
 
-async function readCanonical(
+/**
+ * Recursive canonical discovery. A directory holding `SKILL-CANONICAL.md`
+ * is a skill (its leaf name is the adapter id); a directory without one is
+ * a group and is descended into. A branch containing no skill at all, or a
+ * canonical whose frontmatter fails to parse, lands in `skipped`.
+ */
+async function discoverCanonicals(
   canonicalsRoot: string,
-  id: string,
-): Promise<ParsedCanonical | undefined> {
-  const resolved = await resolveCanonicalPath(canonicalsRoot, id);
-  if (resolved === undefined) {
-    return undefined;
+  relativeDir: string,
+  skipped: string[],
+): Promise<readonly ParsedCanonical[]> {
+  const found: ParsedCanonical[] = [];
+  const absoluteDir = relativeDir === '' ? canonicalsRoot : join(canonicalsRoot, relativeDir);
+  const dirents = await readdir(absoluteDir, { withFileTypes: true });
+
+  for (const dirent of dirents) {
+    if (!dirent.isDirectory()) {
+      continue;
+    }
+    const childRelative = relativeDir === '' ? dirent.name : `${relativeDir}/${dirent.name}`;
+    const canonicalPath = join(canonicalsRoot, childRelative, CANONICAL_FILENAME);
+    if (await fileExists(canonicalPath)) {
+      const text = await readFile(canonicalPath, 'utf8');
+      const frontmatter = parseFrontmatter(text);
+      if (frontmatter === undefined) {
+        skipped.push(childRelative);
+        continue;
+      }
+      found.push({
+        id: dirent.name,
+        relativeDir: childRelative,
+        frontmatter,
+        canonicalPath,
+        canonicalFilename: CANONICAL_FILENAME,
+      });
+      continue;
+    }
+    const nested = await discoverCanonicals(canonicalsRoot, childRelative, skipped);
+    if (nested.length === 0) {
+      skipped.push(childRelative);
+    } else {
+      found.push(...nested);
+    }
   }
-  const text = await readFile(resolved.path, 'utf8');
-  const frontmatter = parseFrontmatter(text);
-  if (frontmatter === undefined) {
-    return undefined;
-  }
-  return {
-    id,
-    frontmatter,
-    canonicalPath: resolved.path,
-    canonicalFilename: resolved.filename,
-  };
+
+  return found;
 }
 
-async function resolveCanonicalPath(
-  canonicalsRoot: string,
-  id: string,
-): Promise<{ readonly path: string; readonly filename: string } | undefined> {
-  const path = join(canonicalsRoot, id, CANONICAL_FILENAME);
-  if (await fileExists(path)) {
-    return { path, filename: CANONICAL_FILENAME };
+/**
+ * Adapter names flatten to `<prefix><leaf-id>`, so leaf ids must be unique
+ * across the whole tree; a collision silently overwriting an adapter would
+ * be a wrong-skill dispatch, so fail loud instead.
+ */
+export function assertUniqueLeafIds(skills: readonly ParsedCanonical[]): void {
+  const seen = new Map<string, string>();
+  for (const skill of skills) {
+    const existing = seen.get(skill.id);
+    if (existing !== undefined) {
+      throw new Error(
+        `duplicate skill leaf id "${skill.id}" at "${existing}" and "${skill.relativeDir}" — ` +
+          'adapter names flatten to the leaf id, so leaves must be unique across the tree',
+      );
+    }
+    seen.set(skill.id, skill.relativeDir);
   }
-  return undefined;
 }
 
 async function fileExists(path: string): Promise<boolean> {
@@ -169,7 +199,7 @@ export function renderAdapter(
 ): string {
   const frontmatter = buildAdapterFrontmatter(parsed.frontmatter, prefix, parsed.id);
   const surfaceLabel = surface === 'claude' ? 'Claude Code' : 'Cross-tool';
-  const body = renderAdapterBody(parsed.id, surfaceLabel, parsed.canonicalFilename);
+  const body = renderAdapterBody(parsed, surfaceLabel);
   const yamlBlock = stringifyYaml(frontmatter, { lineWidth: 0 }).trimEnd();
   return `---\n${yamlBlock}\n---\n\n${body.trimStart()}`;
 }
@@ -199,16 +229,12 @@ export function buildAdapterFrontmatter(
   };
 }
 
-function renderAdapterBody(
-  canonicalId: string,
-  surfaceLabel: string,
-  canonicalFilename: string,
-): string {
-  const title = toTitleCase(canonicalId);
+function renderAdapterBody(parsed: ParsedCanonicalSkill, surfaceLabel: string): string {
+  const title = toTitleCase(parsed.id);
   return [
     `# ${title} (${surfaceLabel})`,
     '',
-    `Read and follow \`.agent/skills/${canonicalId}/${canonicalFilename}\`.`,
+    `Read and follow \`.agent/skills/${parsed.relativeDir}/${parsed.canonicalFilename}\`.`,
     '',
   ].join('\n');
 }

@@ -346,6 +346,42 @@ single durable commit that includes its own lifecycle closure. Do not use it
 to dodge coordination on ordinary source commits, and do not use it while a
 fresh peer commit-window claim or staged foreign bundle exists.
 
+### Pathspec cannot-conclude cases (merge commits, staged renames)
+
+The queue workflow's inner `git commit -- <intent.files>` is always
+pathspec-scoped, and two commit shapes cannot conclude through it — both
+measured (napkin, 2026-08-23 and 2026-08-24):
+
+- **Merge conclusion**: git refuses pathspec-scoped commits mid-merge.
+- **Staged rename**: the old path never appears in
+  `git diff --cached --name-only`, so listing it fails verify-staged as
+  "missing", while omitting it leaves the temp index tracking a path with
+  no worktree file — fail-loud tracked-file validators (for example
+  machine-local-paths) then die ENOENT inside the pre-commit hook.
+
+**Sanctioned deviation for both**: open the `git:index/head` window claim
+as usual, pre-validate the drafted message
+(`pnpm agent-tools:check-commit-message`), stage exactly the intended set,
+land it with a plain unscoped `git commit` (the full hook chain still
+runs), transition the queue intent to `abandoned` with stage-named notes
+naming this deviation, and record the deviation in the claim's closure
+summary. Never widen the deviation past the one merge or rename commit
+that needs it. Structural cures (a `merge-conclude` mode; rename-aware
+verify-staged) are welcome upgrades; until one lands, this documented
+path is the contract. (Owner-directed landing 2026-08-24, loop-review
+OP-8.)
+
+### Session trailer on unattended commits
+
+Commits authored by a scheduled or otherwise zero-context session carry
+the session's `Claude-Session:` trailer (as the harness provides it) in
+the message footer — it is the per-firing durable discriminator that
+attribution questions on shared branches are settled from (measured: the
+PR #35 multi-writer incident was resolved by trailer evidence). Merge
+conclusions using the deviation above are exempt (default merge
+messages). Interactive sessions follow their harness conventions
+unchanged. (Owner-directed landing 2026-08-24, loop-review OP-8.)
+
 If a whole-repo hook fails on a minor issue such as formatting, markdown style,
 lint autofix, or generated shared-state read-model drift, fix the issue
 immediately and retry the commit protocol. This includes minor breakage in

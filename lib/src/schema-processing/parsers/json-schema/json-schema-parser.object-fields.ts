@@ -9,11 +9,6 @@
  */
 
 import {
-  type ReferenceObject,
-  type SchemaObject,
-  isReferenceObject,
-} from '../../../shared/openapi-types.js';
-import {
   CastrSchemaProperties,
   ensureObjectTypeForObjectKeywords,
   isObjectSchemaType,
@@ -24,8 +19,7 @@ import {
   describePortableNonStrictObjectInput,
 } from '../../object-semantics.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
-
-type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
+import { type ParseSchemaFn, parseSingleSchemaOrRef } from './json-schema-parser.helpers.js';
 
 /** @internal */
 export function parseObjectFields(
@@ -129,17 +123,6 @@ function isObjectKeywordCandidate(input: JsonSchema2020, result: CastrSchema): b
     (Array.isArray(input.required) && input.required.length > 0) ||
     input.additionalProperties !== undefined
   );
-}
-
-function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
-  parseSchema: ParseSchemaFn,
-): CastrSchema {
-  if (isReferenceObject(value)) {
-    return parseSchema({ $ref: value.$ref });
-  }
-
-  return parseSchema(value);
 }
 
 function arrayContains(values: readonly string[], expectedValue: string): boolean {

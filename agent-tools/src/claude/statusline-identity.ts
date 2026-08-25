@@ -72,7 +72,11 @@ process.stdin.on('end', () => {
 });
 
 function emitStatusline(rawJson: string): void {
-  const plan: StatuslinePlan = planStatuslineExecution(rawJson);
+  const plan: StatuslinePlan = planStatuslineExecution(rawJson, {
+    ...(process.env.CLAUDE_CODE_REMOTE_SESSION_ID === undefined
+      ? {}
+      : { CLAUDE_CODE_REMOTE_SESSION_ID: process.env.CLAUDE_CODE_REMOTE_SESSION_ID }),
+  });
   if (plan.kind === 'noop') {
     return;
   }

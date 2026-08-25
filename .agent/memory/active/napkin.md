@@ -598,6 +598,110 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03)._
 
+## 2026-08-24 (proof-programme loop review, session open — Flamebright Burning Caldera / 01FV6r)
+
+- **Correction to the 2026-08-23 fresh-container seed recipe: the two state files take DIFFERENT
+  seeds.** `active-claims.json` takes `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}`
+  but `closed-claims.archive.json` must be `{"schema_version":"1.3.0","claims":[]}` — its schema
+  rejects `commit_queue` as an additional property, and the mistake surfaces only when the
+  pre-commit collaboration-state validator fires (three commits later, not at seed time). The
+  `init`-subcommand candidate stands, now with two shapes to emit.
+- **The commit-queue pathspec workflow cannot conclude a staged RENAME — second member of the
+  cannot-conclude class beside the merge commit.** The inner `git commit -- <intent.files>` builds
+  a temp index scoped to the intent paths; a rename's old path is outside the list (it never
+  appears in `git diff --cached --name-only`, so listing it fails verify-staged as "missing"), the
+  temp index therefore keeps the old path tracked with no worktree file, and the fail-loud
+  machine-local-paths validator dies ENOENT mid-hook. Deviation used (merge-conclusion precedent):
+  message pre-validated exit 0, plain unscoped `git commit` of the exact staged bundle, intent
+  abandoned with stage-named notes. Candidate: a `commit-queue` rename-aware mode, or document
+  renames as a named exception in the commit skill.
+- **Hook token-subsequence specimen #6, claims-open shape:** `claims open --area-kind git
+--intent "…commit…" --now …` assembles the blocked "git commit -n" pattern from the area-kind
+  value, a prose verb, and the `--now` flag. Any `claims open` for a git-window claim whose intent
+  prose contains "commit" trips it; keep the verb out of the intent text (`hook-policy-substring-discipline`).
+
+## 2026-08-24 (cross-estate comparison + equality directive — Flamebright Burning Caldera / 01FV6r)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "piece by piece, I want the Practice in
+  Castr and OCE to take the best of each other, until they are Equal in capability."** Widens
+  the one-directional parity programmes (Oak→castr transplant; castr→OCE back-flow ledger) to a
+  BIDIRECTIONAL equality goal. First instalment: the loop-comparison note
+  (`.agent/analysis-and-reports/castr-oce-loop-comparison-2026-08-24.md`) + cross-pollination
+  PRs raised in both repos at owner word. `candidate:` this deserves a durable strategic home
+  beyond the note (a castr plan-estate node or PDR-family record) at the next owner walk.
+- **OWNER CORRECTION (2026-08-24): the OCE weekly scans are NOT owner-attended** — "I do not
+  intend to be present for the weekly scans or value derivations, although they do not go as
+  far in that the OCE scans result in research rather than implementation." My comparison had
+  framed the weekly cadence as attention-embedded; the true axis is OUTPUT TIER (research vs
+  implementation), and the distance between the tiers is exactly the castr loop's authority
+  machinery (standing ballot + mechanical-acceptance queue + run-boundary state discipline).
+  Same lesson family as inherited-classification: I inferred the attendance property from the
+  cadence instead of asking.
+
+## 2026-08-24 (owner rulings via decision cards — Flamebright Burning Caldera / 01FV6r, continued session)
+
+- **OWNER STANDING DIRECTIVE (2026-08-24, verbatim): "Always expose decisions to me as
+  decision cards."** The AskUserQuestion tool is the medium for every owner decision —
+  extends the 2026-07-03 "questions go through the AskUserQuestion tool" correction from
+  questions to all decisions. First use resolved three review decisions in one sitting
+  (OP-3 approved, B-15 re-balloted push-only, OP-1(b) declined). `candidate:` graduate
+  into `owner-attention-at-action-moments` / `user-collaboration.md` alongside the
+  blocked-on-owner mobile-alert directive.
+- **OWNER TEACHING (2026-08-24, verbatim): "we don't do carve outs, we do policy, check
+  the principles. When the time comes, we will compare the Watcher with the comms
+  mechanisms and heartbeats etc, the difference is the medium, not the needs."** Given
+  while declining the external-observer proposal whose card I framed as "uses the
+  carve-out that already exists" (QD-7's own ADR wording). The design lesson: an
+  exception-shaped grant is a smell — model the new thing against the existing
+  mechanisms serving the same NEED (comms, heartbeats, liveness) and write the general
+  policy; the medium (Slack vs comms-log vs push) is a parameter, not a new category.
+  ADR-051 clause 7's "explicit carve-out" framing is a candidate for this reframing at
+  its next revisit (flagged in the review report's addendum; not enacted — owner's call).
+- **Identity-derivation discrepancy, measured on this seat:** the SessionStart hook (now
+  firing on session resume) derives "Lacustrine Anchoring Stern" from the true session id
+  prefix (d36e5c), while this seat registered "Flamebright Burning Caldera" from the
+  commit-trailer seed (01FV6r) chosen at session open — same seat, two derivable names.
+  Continued under the REGISTERED identity for thread-history coherence (PDR-027 additive
+  rule protects against the confusion, but one seat should not mint two names). Related
+  to Q-15's identity-seed gap: the seed SOURCE needs one canonical answer (hook-injected
+  env var when present, trailer-derived only as fallback).
+- **Cite-the-card-after-recording-it (assumptions-expert P1, caught pre-land):** the Q-18..Q-20
+  rows cited "owner decision card 2026-08-24" while the report's addendum still said that card
+  was "asked, not assumed" — the ruling lived only in conversation. The `no-manufactured-permission`
+  shape from the AUTHOR side: an owner ruling is usable authority only once its verbatim record
+  exists on a durable surface; write the record FIRST, then cite it. Cure: the addendum's
+  second-card section now carries the verbatim answers and landing list, and the rows resolve.
+- **The LC2 refuse-and-route merge driver fired live and worked end-to-end:** merging
+  origin/main (PR #50's continuity edits) into the review branch, the driver refused to
+  line-merge napkin.md and repo-continuity.md, printed the exact :1/:2/:3 recipe, and the
+  semantic union (their appended napkin section + their row 67; my sections + my row 66)
+  concluded via the documented plain-commit merge deviation. First measured firing of the
+  driver in this estate since its 2026-06-27 landing.
+
+## 2026-08-24 (loop review, review-pass fold — Flamebright Burning Caldera / 01FV6r)
+
+- **The `Claude-Session` commit trailer is a per-firing durable discriminator — it settled an
+  attribution question an incident register and an owner statement could only approximate.**
+  PR #35's 23 commits split cleanly by trailer: 17 carry the authoring firing's session URL
+  (last at 11:02:36Z — the firing ran ≥11 h, not I-1's mid-incident "seven-plus"), while the
+  sibling firing's and the closing firing's landings carry none. Verify attribution from
+  trailers before narrating multi-writer incidents; and firing commits SHOULD carry the
+  trailer (routed via the review's OP-8).
+- **A reviewer subagent probing built artefacts DURING a background pre-push window reads a
+  transiently half-built dist as broken** — new sub-shape of `check-singleton-per-window`:
+  my own backgrounded `git push` (pre-push `check:ci` = clean + rebuild) overlapped an
+  assumptions-expert dispatch, which measured `agent-tools/dist/src/hook-policy/` missing
+  its modules and reported the PreToolUse guards broken; re-measured after the window: all
+  present, guards fine all session. Falsify a subagent's environment measurement against
+  your own concurrent gate windows before folding it. (The surviving lesson — dist presence
+  ≠ dist validity — still routed to Q-15's re-scope as a module-resolution smoke probe.)
+- **Two-reviewer fan-out on an analysis report earned its cost decisively:** zero citation
+  errors found but three P1 reasoning corrections (an in-loop liveness cure that can't see
+  sustained absence; artefact-mutation rounds mislabelled diagnostics-only, which would have
+  poisoned a ballot item; nine unassigned commits whose trailer evidence sharpened the
+  headline duration fact). The verify-firsthand step caught one reviewer over-reach (the
+  dist finding) — fold reviewers through your own probes, never verbatim.
+
 ## 2026-08-24 environment-breakage wrap (Buzzard weaves Airstream, 01e90b)
 
 - **The cloud-environment thread's single home is OCE**:
@@ -705,3 +809,144 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   than an upfront decision record. Trigger: the first time IR migration machinery or a
   multi-version read window is proposed, graduate the policy into an ADR instead of
   re-deriving it from the PR #50 threads.
+
+## 2026-08-24 (identity directives sitting — same session as the loop review)
+
+- **The identity chimera has a measured root cause** (owner's directive 1 confirmed
+  firsthand): one cloud seat produced THREE tuples in one day. The Claude SessionStart
+  hook writes BOTH `PRACTICE_AGENT_SESSION_ID_CLAUDE` (harness session UUID, `d36e5c…`)
+  and `ENGRAPH_AGENT_IDENTITY_OVERRIDE` (the name derived from it) into CLAUDE_ENV_FILE.
+  Exporting a different seed (the platform session id `01FV6r…`) changes prefix + uuid
+  but the pinned override still forces the OLD name → a mixed-provenance tuple
+  ("Lacustrine Anchoring Stern" / `01FV6r` / uuid-from-01FV6r) that no single seed
+  produces. Pre-compaction shells without the override derived "Flamebright Burning
+  Caldera" from the same manual seed. Cure routed structurally (plan
+  `practice-equality-identity-and-cognition`, ID-1/ID-2): one seed-precedence rule
+  (`CLAUDE_CODE_REMOTE_SESSION_ID` payload, type tag stripped, on cloud seats; harness
+  session_id on CLI), name always derived from the live seed, hook never pins a name.
+- **The platform session id IS machine-readable in-container**:
+  `CLAUDE_CODE_REMOTE_SESSION_ID=cse_<id>` (env form; URLs and Claude-Session trailers
+  use `session_<id>` — same payload). No scraping needed; the owner's proposed unit is
+  deterministically available to hooks and CLIs.
+- **ULID prefix crowding**: cloud ids are ULID-shaped; first-6 of a ULID is
+  timestamp-derived, so sessions created within ~4 minutes share a session_id_prefix.
+  Not a schema break — PDR-076a's uuid stays the canonical disambiguator and OCE's
+  visual-disambiguator token the display guard — but worth stating in the PDR-027
+  cloud-seat clause (plan ID-4) instead of discovering it at the first collision.
+- **Commit-queue guard pattern lesson**: a git window claim registers for the guard only
+  when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
+  (kind already `git`) is rejected as "not an active git:index/head claim". The kind
+  carries the `git:`; the pattern carries only `index/head`.
+
+## 2026-08-24 (equality-plan execution sitting — identity + cognition landings)
+
+- **A hook-blocked compound runs NOTHING in it — re-check downstream state before
+  reusing.** A blocked Bash compound carried both the COMMIT_EDITMSG heredoc and the
+  commit; on the retry only the commit was re-issued, so it landed with the PREVIOUS
+  message still in the file ("chore(merge)…" on the identity slice, commit 35f1471).
+  Amend is policy-blocked (append-only history), so the mislabel stands; the PR body
+  carries the accurate description. Lesson: after any hook block, treat every file
+  the compound would have written as NOT written.
+- **The transplant closure rule worked**: each copied surface link-scanned before
+  commit; the cognition tree pulled in skill-composition.md, the
+  concept-exploration transfer note, agentic-judgment-conserve-by-default (+ four-form
+  landing), skill-naming/third-party-security rules, and PDR-100/115/122/125/130/132/134
+  — closure terminated in three hops. PDR-125 was already cited by the new PDR-027
+  clause, so the identity and skills slices met in the middle.
+- **Generator nesting was a five-line concept**: recursive discovery with
+  leaf-name-flattened adapters and a fail-loud leaf collision; the checker mirrors the
+  walk through its injected fs. OCE's far larger generator generation (discovery/
+  carriage/clear modules) was NOT needed for this instalment — noted as a later
+  equality piece if its features (locks, vendored payloads) are wanted.
+- **v1→v2 era switch surfaced exactly the right failures**: only derived-name pins and
+  the override-shape pins broke (7 tests); fixture agent_names hand-set in tests were
+  untouched. The address-relay distinction (recipient blocks omit
+  naming_schema_version — provenance unknowable to the sender) came straight from
+  OCE's counterpart tests and its cli-comms-recipient guard comment.
+
+## 2026-08-25 (PR-driving sitting — review rounds on the equality PRs)
+
+- **A no-assert replace lies twice.** Two silent no-ops this arc: the blocked-compound
+  stale COMMIT_EDITMSG (mislabelled commit 35f1471), and a python `s.replace` that
+  printed "caller fixed" for OCE's statusline while the real production caller lived
+  in a different file (`statusline-emit.ts`) — Codex caught the dead branch a round
+  later. Rule of thumb now followed: every scripted replace carries an `assert old in s`,
+  and "fixed" is only printed by code that would have thrown otherwise.
+- **Codex corrected my ULID arithmetic**: first-6 of a ULID covers 28 significant
+  timestamp bits (top two of 30 are zero from left-padding 48 bits into 50), so the
+  shared-prefix window is 2^20 ms ≈ 17 minutes, not ~4. Both PDR-027s now carry the
+  derivation inline. Supersedes the ~4-minute figure in the 2026-08-24 napkin entry
+  and the equality plan's risk note.
+- **Practice-core portability enforced by a reviewer**: naming an estate as incident
+  provenance inside PDR-027 travels as canonical doctrine when the core is copied;
+  de-estated in both repos — estate-specific pointers live in PR/commit records.
+- **Reviewer-cancelled CI reads as failure**: OCE's run-quality-gates rollup treats a
+  `cancelled` gate (auto-superseded by a newer push) as blocking; the cure is nothing —
+  the current head's run is the real signal. Don't chase red on superseded heads.
+
+## 2026-08-25 (proof-programme scheduled firing — Q-04 F-03 nested Boolean schemas — Stratospheric Hovering Thermal)
+
+- **The claims CLI now has `claims init`** — seeds both gitignored state files with canonical
+  shapes on a fresh container (the 2026-08-23 firing's hand-seed candidate landed). Sequence
+  that works: `claims init --active … --closed …`, then `identity preflight`, then
+  `claims open`. The fired-seat identity seed still needs an explicit `--seed` (the
+  `PRACTICE_AGENT_SESSION_ID_CLAUDE` env is absent in tool shells; prefix still degenerates
+  to `sessio` — Q-15/PR #54 territory, not re-fixed here).
+- **F-03 premise re-verified firsthand, and it is THREE layers, not one** (probe script,
+  pre-implementation): (1) `normalizeDraft07` recursion spreads nested booleans into `{}`
+  (`{...false}` → `{}`) — the collapse happens BEFORE the parser at
+  items/prefixItems/allOf/oneOf/anyOf/$defs/properties/dependentSchemas; (2) the parser
+  recursion callback lacks the boolean branch everywhere except `if`/`then`/`else`;
+  (3) the json-schema WRITER's recursion callback (`writeJsonSchemaObject`) lacks the
+  `booleanSchema` branch, so even the correctly-parsed `then: false` IR writes back as
+  `then: {}` — measured live. The report's named root cause ("root and recursion used
+  different callbacks") holds at every layer; the OpenAPI writer is the counter-example
+  that already unifies root and recursion (throws on booleanSchema, fail-fast doctrine).
+- **PR #54 (live interactive Practice-equality session) lands `.agent/plans/templates/`** —
+  Q-16's premise (the templates directory does not exist) moves when it merges; Q-16 must be
+  re-adjudicated against the merged base before any firing claims it.
+
+- **`tsc`'s colourised output defeats `grep "error TS"` — count errors from the EXIT CODE or
+  strip ANSI first** (`sed 's/\x1b\[[0-9;]*m//g'`). Two successive "0 errors" readings this
+  firing were pure instrument failure: the word `error` carries colour escapes mid-token, so
+  the grep never matched and a red type-check read as green. Same family as
+  verify-own-observer-instruments and the pipe-eats-exit-code entry. Also: `lib`'s
+  `tsconfig.json` is NOT the canonical check surface — `pnpm type-check` runs
+  `tsconfig.lint.json`, and only that project surfaced the 19 widened-type errors.
+- **Q-04 F-03 landed as root-and-recursion unification in all three layers** (normalizer
+  single-recursion via `stripDraft07Keys` + boolean pass-through in `narrowSchemaOrRef`;
+  parser recursion callback = `parseJsonSchemaObject` itself with one shared
+  `parseSingleSchemaOrRef`; json-schema writer recursion callback = `writeJsonSchema` itself
+  over a parameterised `JsonSchemaObjectBase<TChild>` so the OAS lane stays object-only).
+  Red-first: final integration file 19/20 red on pre-fix HEAD (worktree isolation, the one
+  pass being the positive control), 20/20 green post-fix.
+- **New routed finding (pre-existing, boolean-independent): IR persistence validators and
+  the json-schema parser disagree on bare `propertyNames`/`patternProperties`** — the parser
+  accepts `{propertyNames: …}` without `type: 'object'` (legal 2020-12), the writer emits it,
+  but `hasValidSchemaPropertyNames`/`hasValidSchemaPatternProperties` require
+  `isObjectSchemaRecord`, so `deserializeIR` rejects IR the pipeline itself produced.
+  Surfaced by the Q-04 proof's propertyNames case; routed rather than widened in-slice.
+
+- **`claims init --closed` must point at the CANONICAL `closed-claims.archive.json`** — the
+  collaboration-state `.gitignore` ignores that exact name; a `closed-claims.json` seeded by
+  mistake shows up as untracked repo noise. Renamed forward; use the archive name in every
+  claims close.
+
+- **A compiler-behaviour claim in a code comment is a claim to COMPILE before writing** — I
+  asserted "`type X = Base<X>` circularly references itself" to justify two lint disables;
+  the gateway and type reviewers both compiled the alias form against the real types and it
+  is legal (interface type-argument positions are deferred). The false justification would
+  have taught the next reader to reproduce the suppression. Cure applied: aliases, disables
+  deleted. Sibling lesson: an inferred generic parameter is NOT a shared-variable guarantee —
+  the "container and callback share TChild" claim only became true after `in out TChild`
+  (invariance) pinned inference. Same family as verify-agent-claims-firsthand, pointed at my
+  own prose.
+- **Agent-authored `eslint-disable` lines are forbidden in product code, and the owner's
+  initialled justification marker is the OWNER'S authorisation idiom** (`never-disable-checks`,
+  `no-manufactured-permission`; the initial-review audit counts initial-marked disables as
+  "governed/user-added" — a live content guard also blocks agents from writing the marker). All four disables this
+  slice briefly carried were dissolved by design instead: type aliases (two), object-only
+  `normalizeDraft07` with seam branches (one), and a split `narrowSchemaOrRef` →
+  boolean-ternary + object-only `narrowObjectOrRef` (one). When a lint rule fights a
+  domain-true union, restructure so no FUNCTION returns the mixed union before ever
+  considering a suppression — and a suppression is the owner's to add, never ours.

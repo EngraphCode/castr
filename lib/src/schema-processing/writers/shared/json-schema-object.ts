@@ -2,9 +2,23 @@
  * Shared JSON Schema output type.
  *
  * Defines the canonical mutable output container for JSON Schema field
- * writers.  This type is structurally assignable to the project's `SchemaObject`
- * interface (defined in `shared/openapi-types.ts`) because both use
- * explicit named properties without index signatures.
+ * writers, parameterised over the child-schema type so each writer lane
+ * instantiates the recursive positions it can actually emit:
+ *
+ * - {@link JsonSchemaObject} — object-only children. The OpenAPI lane's
+ *   instantiation, structurally assignable to the project's `SchemaObject`
+ *   interface (defined in `shared/openapi-types.ts`) because both use
+ *   explicit named properties without index signatures and neither admits
+ *   boolean children.
+ * - {@link JsonSchemaNode} — children may be boolean schemas (`true`/`false`),
+ *   as JSON Schema 2020-12 admits at every schema position. The pure JSON
+ *   Schema lane's instantiation.
+ *
+ * Sharing one parameterised base makes root/recursion divergence structurally
+ * impossible: the recursion callback ({@link WriteSchemaFn}) and the container
+ * share the same child type variable, and the `in out` (invariant) annotation
+ * on that variable stops inference from widening an object-only container to
+ * accept a boolean-emitting callback.
  *
  * **Egress normal form:** The JSON Schema writer normalises `example` to
  * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
@@ -24,27 +38,29 @@ import type {
 import type { CastrSchema } from '../../ir/index.js';
 
 /**
- * Recursive write callback supplied by each concrete writer.
+ * Recursive write callback supplied by each concrete writer. The child type
+ * is the same variable the container uses, and that variable is invariant
+ * (`in out`), so a callback that can return values outside its container's
+ * declared child type — e.g. a boolean-emitting callback paired with the
+ * object-only container — cannot compile. (A callback returning a narrower
+ * child type remains legal, as ordinary return-type covariance.)
  * @internal
  */
-export type WriteSchemaFn = (schema: CastrSchema) => JsonSchemaObject;
+export type WriteSchemaFn<TChild> = (schema: CastrSchema) => TChild;
 
 /**
- * Mutable JSON Schema output object.
+ * Mutable JSON Schema output object, parameterised over the child-schema
+ * type used at every recursive position.
  *
  * A minimal, self-contained interface covering every field the shared
- * writers may set.  Structurally assignable to the project's `SchemaObject`
- * interface (defined in `shared/openapi-types.ts`) because both use
- * explicit named properties without index signatures.
- *
- * Format-specific extras (e.g. `xml`, `externalDocs`, `discriminator`)
- * are listed as explicit named properties rather than relying on an
- * index signature, so that the type remains assignable to `SchemaObject`
- * which has no index signature.
+ * writers may set. Format-specific extras (e.g. `xml`, `externalDocs`,
+ * `discriminator`) are listed as explicit named properties rather than
+ * relying on an index signature, so that the object-only instantiation
+ * remains assignable to `SchemaObject` which has no index signature.
  *
  * @internal
  */
-export interface JsonSchemaObject {
+export interface JsonSchemaObjectBase<in out TChild> {
   // Core type
   type?: SchemaObjectType | SchemaObjectType[];
   format?: string;
@@ -66,22 +82,22 @@ export interface JsonSchemaObject {
   const?: unknown;
 
   // Object
-  properties?: Record<string, JsonSchemaObject>;
+  properties?: Record<string, TChild>;
   required?: string[];
-  additionalProperties?: boolean | JsonSchemaObject;
+  additionalProperties?: boolean | TChild;
 
   // Array
-  items?: JsonSchemaObject;
-  prefixItems?: JsonSchemaObject[];
+  items?: TChild;
+  prefixItems?: TChild[];
   minItems?: number;
   maxItems?: number;
   uniqueItems?: boolean;
 
   // Composition
-  allOf?: JsonSchemaObject[];
-  oneOf?: JsonSchemaObject[];
-  anyOf?: JsonSchemaObject[];
-  not?: JsonSchemaObject;
+  allOf?: TChild[];
+  oneOf?: TChild[];
+  anyOf?: TChild[];
+  not?: TChild;
 
   // Metadata
   title?: string;
@@ -97,15 +113,15 @@ export interface JsonSchemaObject {
   $ref?: string;
 
   // JSON Schema 2020-12
-  unevaluatedProperties?: boolean | JsonSchemaObject;
-  unevaluatedItems?: boolean | JsonSchemaObject;
-  dependentSchemas?: Record<string, JsonSchemaObject>;
+  unevaluatedProperties?: boolean | TChild;
+  unevaluatedItems?: boolean | TChild;
+  dependentSchemas?: Record<string, TChild>;
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
   maxContains?: number;
-  contains?: JsonSchemaObject;
-  patternProperties?: Record<string, JsonSchemaObject>;
-  propertyNames?: JsonSchemaObject;
+  contains?: TChild;
+  patternProperties?: Record<string, TChild>;
+  propertyNames?: TChild;
   $anchor?: string;
   $dynamicRef?: string;
   $dynamicAnchor?: string;
@@ -113,12 +129,12 @@ export interface JsonSchemaObject {
   contentMediaType?: string;
 
   // Conditional applicators (JSON Schema 2020-12)
-  if?: JsonSchemaObject;
-  then?: JsonSchemaObject;
-  else?: JsonSchemaObject;
+  if?: TChild;
+  then?: TChild;
+  else?: TChild;
 
   // JSON Schema document-level
-  $defs?: Record<string, JsonSchemaObject>;
+  $defs?: Record<string, TChild>;
   $schema?: string;
 
   // OAS-only extensions (set by OpenAPI writer via bracket notation)
@@ -126,6 +142,20 @@ export interface JsonSchemaObject {
   externalDocs?: ExternalDocumentationObject;
   discriminator?: DiscriminatorObject;
 }
+
+/**
+ * Object-only JSON Schema output — the OpenAPI lane's instantiation.
+ * Structurally assignable to the project's `SchemaObject` seam.
+ * @internal
+ */
+export type JsonSchemaObject = JsonSchemaObjectBase<JsonSchemaObject>;
+
+/**
+ * JSON Schema output whose recursive positions admit boolean schemas —
+ * the pure JSON Schema 2020-12 lane's instantiation.
+ * @internal
+ */
+export type JsonSchemaNode = JsonSchemaObjectBase<JsonSchemaNode | boolean>;
 
 /**
  * Valid JSON Schema / OAS 3.1 primitive types.
