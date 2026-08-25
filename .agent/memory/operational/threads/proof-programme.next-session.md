@@ -42,10 +42,12 @@ drive if not yet merged; else claim the next eligible row). Verification: the PR
 merged, or a row's state advanced on the base.
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
-(owner-directed, outside the queue) sits pushed on `claude/dazzling-cannon-78571f`
-with no PR opened — opening one was not requested; the owner decides the merge
-route. Until it reaches `main`, the arming runbook and portability register exist
-only on that branch.
+(owner-directed, outside the queue) is up as
+[PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the
+Claude Code UI; head `claude/dazzling-cannon-78571f`). It is not a programme
+queue PR — ADR-051 clause 3 does not govern it; the owner invokes the merge.
+Until it merges, the arming runbook and portability register exist only on that
+branch.
 
 ## Session shape and grounding order
 
