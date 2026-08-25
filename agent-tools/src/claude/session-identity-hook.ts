@@ -1,4 +1,6 @@
+import { sessionIdPrefix } from '../collaboration-state/identity.js';
 import { deriveIdentity } from '../core/agent-identity/index.js';
+import { stripSessionIdTag } from '../core/agent-identity/session-seed.js';
 
 const SHELL_SINGLE_QUOTE_ESCAPE = String.raw`'\''`;
 
@@ -10,9 +12,19 @@ const SHELL_SINGLE_QUOTE_ESCAPE = String.raw`'\''`;
  * `FileChanged` hooks as a path that may be appended with `export FOO=bar`
  * lines. Variables written there persist for the rest of the session's Bash
  * tool calls. See https://code.claude.com/docs/en/hooks.
+ *
+ * `CLAUDE_CODE_REMOTE_SESSION_ID` is present on cloud seats only: the
+ * platform session id with a `cse_` type tag. Its untagged payload is the
+ * PDR-027 seed there — it is the identifier the owner sees in the session
+ * URL, the one Claude-Session commit trailers carry, and the one that
+ * survives container recycling; the harness-internal `session_id` from
+ * hook stdin remains the seed on CLI seats.
  */
 export interface ClaudeSessionIdentityHookEnvironment {
   readonly CLAUDE_ENV_FILE?: string;
+  /** Explicit operator display-name override — honoured for rendering only, never written back. */
+  readonly ENGRAPH_AGENT_IDENTITY_OVERRIDE?: string;
+  readonly CLAUDE_CODE_REMOTE_SESSION_ID?: string;
 }
 
 /**
@@ -60,12 +72,16 @@ export interface ClaudeSessionIdentityHookPlan {
 export function planClaudeSessionIdentityHook(
   input: ClaudeSessionIdentityHookInput,
 ): ClaudeSessionIdentityHookPlan {
-  const sessionId = readSessionId(input.stdinText);
+  const sessionId = resolveSeed(input);
   if (sessionId === undefined) {
     return { hookOutput: {} };
   }
 
-  const displayName = deriveIdentity(sessionId).displayName;
+  const override = nonEmpty(input.environment.ENGRAPH_AGENT_IDENTITY_OVERRIDE);
+  const displayName = deriveIdentity(
+    sessionId,
+    override === undefined ? {} : { override },
+  ).displayName;
   const prefix = sessionIdPrefix(sessionId);
   const additionalContext = identityContext({ displayName, prefix });
 
@@ -85,11 +101,43 @@ export function planClaudeSessionIdentityHook(
     hookOutput,
     envFileWrite: {
       absolutePath: envFile,
-      appendLine:
-        `export PRACTICE_AGENT_SESSION_ID_CLAUDE=${shellSingleQuote(sessionId)}\n` +
-        `export ENGRAPH_AGENT_IDENTITY_OVERRIDE=${shellSingleQuote(displayName)}\n`,
+      // Seed only — never a pinned display name. Pinning
+      // ENGRAPH_AGENT_IDENTITY_OVERRIDE here let a later seed change
+      // produce a mixed-provenance tuple (name from the old seed, prefix
+      // and uuid from the new one); the name derives from the live seed at
+      // every point of use instead.
+      appendLine: `export PRACTICE_AGENT_SESSION_ID_CLAUDE=${shellSingleQuote(sessionId)}\n`,
     },
   };
+}
+
+/**
+ * Select the process-environment values the Claude `SessionStart` identity
+ * hook consumes. The executable adapter MUST build its planner environment
+ * through this function: hand-picking variables at the bin boundary is how
+ * `CLAUDE_CODE_REMOTE_SESSION_ID` was silently dropped, leaving the
+ * cloud-seat branch unreachable in production.
+ */
+export function claudeSessionIdentityHookEnvironmentFromProcessEnv(
+  env: NodeJS.ProcessEnv,
+): ClaudeSessionIdentityHookEnvironment {
+  return {
+    ...(env.CLAUDE_ENV_FILE === undefined ? {} : { CLAUDE_ENV_FILE: env.CLAUDE_ENV_FILE }),
+    ...(env.CLAUDE_CODE_REMOTE_SESSION_ID === undefined
+      ? {}
+      : { CLAUDE_CODE_REMOTE_SESSION_ID: env.CLAUDE_CODE_REMOTE_SESSION_ID }),
+    ...(env.ENGRAPH_AGENT_IDENTITY_OVERRIDE === undefined
+      ? {}
+      : { ENGRAPH_AGENT_IDENTITY_OVERRIDE: env.ENGRAPH_AGENT_IDENTITY_OVERRIDE }),
+  };
+}
+
+function resolveSeed(input: ClaudeSessionIdentityHookInput): string | undefined {
+  const remoteSessionId = nonEmpty(input.environment.CLAUDE_CODE_REMOTE_SESSION_ID);
+  if (remoteSessionId !== undefined) {
+    return stripSessionIdTag(remoteSessionId);
+  }
+  return readSessionId(input.stdinText);
 }
 
 interface SessionIdPayload {
@@ -123,10 +171,6 @@ function readSessionId(stdinText: string): string | undefined {
   }
   const trimmed = candidate.trim();
   return trimmed.length === 0 ? undefined : trimmed;
-}
-
-function sessionIdPrefix(sessionId: string): string {
-  return sessionId.length >= 6 ? sessionId.slice(0, 6) : sessionId;
 }
 
 function identityContext(input: { readonly displayName: string; readonly prefix: string }): string {

@@ -12,6 +12,8 @@ export interface CursorSessionIdentityHookEnvironment {
   readonly CURSOR_PROJECT_DIR?: string;
   readonly CLAUDE_PROJECT_DIR?: string;
   readonly ENGRAPH_SKIP_COMPOSER_SESSION_MIRROR?: string;
+  /** Explicit operator display-name override — honoured for rendering only, never written back. */
+  readonly ENGRAPH_AGENT_IDENTITY_OVERRIDE?: string;
 }
 
 /**
@@ -69,12 +71,18 @@ export function planCursorSessionIdentityHook(
 
   const projectDir = resolveProjectDir(input.environment, input.fallbackProjectDir);
   const prefix = sessionIdPrefix(sessionId);
-  const displayName = deriveIdentity(sessionId).displayName;
+  const override = input.environment.ENGRAPH_AGENT_IDENTITY_OVERRIDE?.trim();
+  const displayName = deriveIdentity(
+    sessionId,
+    override === undefined || override.length === 0 ? {} : { override },
+  ).displayName;
   const tabHint = `Oak · ${displayName}`;
   const output = {
     env: {
+      // Seed only — a pinned name override lets a later seed change produce
+      // a mixed-provenance identity tuple; the name derives from the live
+      // seed at every point of use (2026-08-24 chimera cure).
       PRACTICE_AGENT_SESSION_ID_CURSOR: sessionId,
-      ENGRAPH_AGENT_IDENTITY_OVERRIDE: displayName,
     },
     additional_context: identityContext({ displayName, tabHint, prefix }),
     user_message: `${tabHint} — suggested Composer tab title; details in .cursor/${COMPOSER_MIRROR_FILE}`,

@@ -60,20 +60,25 @@ ENGRAPH_AGENT_IDENTITY_OVERRIDE="Frolicking Toast" \
 
 Override JSON results use `kind: "override"` and include only
 `displayName`, `slug`, `seedDigest`, and `override`. They intentionally do
-not invent derived word slots. The same environment variable is used by
-operator-provided names and by platform session hooks after they derive a name
-for the current session.
+not invent derived word slots. The variable is an explicit operator control
+only — no hook writes it (PDR-027, 2026-08-24 amendment).
 
-## Session-Level Name Cache
+## Seed Sources and the Cloud-Seat Rule
 
-Platform session-start hooks derive the display name once for the session and
-store that resolved name in `ENGRAPH_AGENT_IDENTITY_OVERRIDE` alongside the stable
-Practice session-id seed (`PRACTICE_AGENT_SESSION_ID_CLAUDE`,
-`PRACTICE_AGENT_SESSION_ID_CURSOR`, `PRACTICE_AGENT_SESSION_ID_GEMINI`, or
-`PRACTICE_AGENT_SESSION_ID_CODEX`). This is a session cache, not a wordlist
-compatibility layer: the wordlists remain the single derivation source for new
-sessions, while an already-started session keeps the name it was given even if
-the wordlists change during active work.
+The name always derives from the live seed at the point of use. On cloud
+seats the seed is the untagged payload of `CLAUDE_CODE_REMOTE_SESSION_ID`
+(`cse_`-tagged in env; session URLs and Claude-Session commit trailers carry
+the same payload `session_`-tagged), so registry rows, trailers, and the
+owner-visible session URL join on one key. CLI seats keep the harness
+`session_id`. Explicit `PRACTICE_AGENT_SESSION_ID_*` values outrank the
+ambient platform id — they are the operator's stated contract.
+
+The earlier session-level name cache (hooks storing the derived name in
+`ENGRAPH_AGENT_IDENTITY_OVERRIDE`) is retired: a pinned name surviving a seed
+change produced a mixed-provenance identity tuple (measured 2026-08-24). The
+rename risk it guarded against is cured structurally by the digest-pinned
+naming-schema registry — wordlist edits require a new schema version, and
+identity rows carry `naming_schema_version`.
 
 When both a session seed and `ENGRAPH_AGENT_IDENTITY_OVERRIDE` are present, the CLI
 uses the seed for `seedDigest` and the override for `displayName` and `slug`.
@@ -82,12 +87,12 @@ word slots. The override alone does not satisfy the seed requirement.
 
 ## Platform Wrapper Status
 
-| Platform                 | Status                                                   | Wiring / next action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Claude Code              | Wired (statusline + SessionStart)                        | Two hooks. (1) **Statusline**: `.claude/settings.json` runs `node .claude/scripts/statusline-identity.mjs` → `agent-tools/dist/src/claude/statusline-identity.js`; the adapter parses stdin JSON `session_id` and prints the display name. (2) **`SessionStart` hook**: `.claude/hooks/practice-session-identity.mjs` → `agent-tools/dist/src/bin/claude-session-identity-hook.js`; the adapter appends `PRACTICE_AGENT_SESSION_ID_CLAUDE` and the session-level `ENGRAPH_AGENT_IDENTITY_OVERRIDE` cache to `$CLAUDE_ENV_FILE` (per the [Claude Code hooks docs](https://code.claude.com/docs/en/hooks)) and emits `additionalContext` carrying the identity row plus a non-binding `/rename <name> - <intent>` suggestion. Title-setting is **not** automated — `SessionStart` cannot set the title, and we deliberately do not run a `UserPromptSubmit` hook for a one-shot effect. |
-| Cursor                   | Wired (sessionStart + statusline; global CLI activation) | Project `sessionStart` hook `.cursor/hooks/oak-session-identity.mjs` sets `env.PRACTICE_AGENT_SESSION_ID_CURSOR` and the session-level `ENGRAPH_AGENT_IDENTITY_OVERRIDE` cache from the composer `session_id`, then injects derived display name + PDR-027 `session_id_prefix` via `additional_context` (requires `agent-tools` build for the name line). The repo-owned status-line shim `.cursor/scripts/statusline-identity.mjs` delegates to `agent-tools/dist/src/claude/statusline-identity.js` (same pipeline as Claude Code: identity, git branch, dirty/worktree, context %, model). Activate with `pnpm agent-tools:install-cursor-statusline` (writes `statusLine` into `~/.cursor/cli-config.json`) or merge `.cursor/statusline.cli.fragment.json` manually. Terminal may not inherit hook `env`; use injected context for registration when needed.                     |
-| Gemini / Antigravity CLI | Seed supported; hook injection not wired                 | `agent-identity` and `collaboration-state identity preflight` now accept `PRACTICE_AGENT_SESSION_ID_GEMINI`, or Antigravity's stable `conversationId` fallback when no Practice variable is present. The current repo does not wire a project-local Antigravity hook to set `PRACTICE_AGENT_SESSION_ID_GEMINI`; that belongs to hooks portability work after fresh verification. Do not use `ANTIGRAVITY_TRAJECTORY_ID` as a seed because it is run-volatile.                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Codex                    | Wired (SessionStart context + thread id fallback)        | Project `SessionStart` hook `.codex/hooks/practice-session-identity.mjs` delegates to `agent-tools/dist/src/bin/codex-session-identity-hook.js`. The adapter parses Codex stdin `session_id` and emits `hookSpecificOutput.additionalContext` with the PDR-027 identity block plus the canonical preflight command. Codex shell commands also receive `CODEX_THREAD_ID`; `agent-identity` consumes it as a fallback when no `PRACTICE_AGENT_SESSION_ID_*` is set. Title/statusline text remains optional display convenience, not identity correctness.                                                                                                                                                                                                                                                                                                                               |
+| Platform                 | Status                                                   | Wiring / next action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Claude Code              | Wired (statusline + SessionStart)                        | Two hooks. (1) **Statusline**: `.claude/settings.json` runs `node .claude/scripts/statusline-identity.mjs` → `agent-tools/dist/src/claude/statusline-identity.js`; the adapter resolves the seed (untagged `CLAUDE_CODE_REMOTE_SESSION_ID` payload on cloud seats; stdin JSON `session_id` otherwise) and prints the display name. (2) **`SessionStart` hook**: `.claude/hooks/practice-session-identity.mjs` → `agent-tools/dist/src/bin/claude-session-identity-hook.js`; the adapter appends `PRACTICE_AGENT_SESSION_ID_CLAUDE` (the untagged `CLAUDE_CODE_REMOTE_SESSION_ID` payload on cloud seats; stdin `session_id` otherwise) to `$CLAUDE_ENV_FILE` (per the [Claude Code hooks docs](https://code.claude.com/docs/en/hooks)) and emits `additionalContext` carrying the identity row plus a non-binding `/rename <name> - <intent>` suggestion. Title-setting is **not** automated — `SessionStart` cannot set the title, and we deliberately do not run a `UserPromptSubmit` hook for a one-shot effect. |
+| Cursor                   | Wired (sessionStart + statusline; global CLI activation) | Project `sessionStart` hook `.cursor/hooks/oak-session-identity.mjs` sets `env.PRACTICE_AGENT_SESSION_ID_CURSOR` from the composer `session_id` (seed only — no name cache), then injects derived display name + PDR-027 `session_id_prefix` via `additional_context` (requires `agent-tools` build for the name line). The repo-owned status-line shim `.cursor/scripts/statusline-identity.mjs` delegates to `agent-tools/dist/src/claude/statusline-identity.js` (same pipeline as Claude Code: identity, git branch, dirty/worktree, context %, model). Activate with `pnpm agent-tools:install-cursor-statusline` (writes `statusLine` into `~/.cursor/cli-config.json`) or merge `.cursor/statusline.cli.fragment.json` manually. Terminal may not inherit hook `env`; use injected context for registration when needed.                                                                                                                                                                                     |
+| Gemini / Antigravity CLI | Seed supported; hook injection not wired                 | `agent-identity` and `collaboration-state identity preflight` now accept `PRACTICE_AGENT_SESSION_ID_GEMINI`, or Antigravity's stable `conversationId` fallback when no Practice variable is present. The current repo does not wire a project-local Antigravity hook to set `PRACTICE_AGENT_SESSION_ID_GEMINI`; that belongs to hooks portability work after fresh verification. Do not use `ANTIGRAVITY_TRAJECTORY_ID` as a seed because it is run-volatile.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Codex                    | Wired (SessionStart context + thread id fallback)        | Project `SessionStart` hook `.codex/hooks/practice-session-identity.mjs` delegates to `agent-tools/dist/src/bin/codex-session-identity-hook.js`. The adapter parses Codex stdin `session_id` and emits `hookSpecificOutput.additionalContext` with the PDR-027 identity block plus the canonical preflight command. Codex shell commands also receive `CODEX_THREAD_ID`; `agent-identity` consumes it as a fallback when no `PRACTICE_AGENT_SESSION_ID_*` is set. Title/statusline text remains optional display convenience, not identity correctness.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 
 ### Cursor `sessionStart` wiring
 
@@ -97,8 +102,8 @@ Authoritative behaviour and JSON shapes are defined in Cursor’s **[Hooks](http
 
 - **Stable session id:** the composer `session_id` on `sessionStart` stdin (same as conversation id per the [sessionStart reference](https://cursor.com/docs/hooks)). This is the seed for derivation and `PRACTICE_AGENT_SESSION_ID_CURSOR`.
 - **Derived name:** `agent-identity` display format from that seed (same word list as other platforms).
-- **Identity surfaces:** hook `env` (`PRACTICE_AGENT_SESSION_ID_CURSOR` plus
-  the session-level `ENGRAPH_AGENT_IDENTITY_OVERRIDE` cache),
+- **Identity surfaces:** hook `env` (`PRACTICE_AGENT_SESSION_ID_CURSOR`,
+  seed only),
   `additional_context` (agent/system context), PDR-027 registration via
   [register-identity-on-thread-join](../../.agent/rules/register-identity-on-thread-join.md),
   and the optional **`user_message`** field (schema allows it; Cursor may
@@ -183,17 +188,19 @@ session or resumes one. The harness pipes a JSON object on stdin containing
    `agent-tools/dist/src/bin/claude-session-identity-hook.js`. If the build
    artefact is missing it prints `{}` and exits 0 — the harness sees no
    `additionalContext` and the session continues normally.
-3. The adapter parses stdin, derives the deterministic display name, appends
-   `PRACTICE_AGENT_SESSION_ID_CLAUDE` and `ENGRAPH_AGENT_IDENTITY_OVERRIDE` export
-   lines to the file path given in `$CLAUDE_ENV_FILE` (per the
+3. The adapter resolves the seed (the untagged `CLAUDE_CODE_REMOTE_SESSION_ID`
+   payload on cloud seats; stdin `session_id` otherwise), derives the
+   deterministic display name, appends a
+   `PRACTICE_AGENT_SESSION_ID_CLAUDE` export
+   line to the file path given in `$CLAUDE_ENV_FILE` (per the
    [Claude Code hooks docs](https://code.claude.com/docs/en/hooks)), and
    prints a `hookSpecificOutput` JSON object whose `additionalContext`
    carries the agent identity row and a non-binding `/rename` suggestion.
 4. Subsequent Bash tool calls in the session see
-   `$PRACTICE_AGENT_SESSION_ID_CLAUDE` and
-   `$ENGRAPH_AGENT_IDENTITY_OVERRIDE`, so any tool using CLI identity resolution
-   (e.g. `pnpm agent-tools:agent-identity --format display`) resolves the
-   same cached session identity without `--seed`.
+   `$PRACTICE_AGENT_SESSION_ID_CLAUDE`, so any tool using CLI identity
+   resolution (e.g. `pnpm agent-tools:agent-identity --format display`)
+   re-derives the same session identity from the seed without `--seed` —
+   no cached name is involved.
 
 The hook is a soft surface: missing input, missing build artefact,
 unparseable JSON, or any spawn failure exits 0 with `{}` on stdout. The

@@ -26,8 +26,8 @@ todos:
       Bring the reason capability as one atomic doc-slice (reference-closure
       requires all three present together): (a) .agent/reference/grammar-of-thinking.md
       (1432 lines, standalone — zero outbound PDR/ADR/link cites, measured); (b)
-      .agent/skills/reason/SKILL-CANONICAL.md; (c) the 2-line reason back-link added
-      to .agent/skills/metacognition/SKILL-CANONICAL.md (completes the pair). Localise
+      .agent/skills/cognition/reason/SKILL-CANONICAL.md; (c) the 2-line reason back-link added
+      to .agent/skills/cognition/metacognition/SKILL-CANONICAL.md (completes the pair). Localise
       the measured Oak-adapter tokens only: oak-reason->reason, oak-metacognition->
       metacognition, oak-plan->plan. Eyeball-review the full 1432-line reference for
       any stray Oak-product example the token scan missed.
@@ -103,8 +103,8 @@ Firsthand-measured 2026-06-26 against Oak live `main`:
 | Surface                                                           | Size                                                               | Localisation                                | Disposition       |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------- | ----------------- |
 | `.agent/reference/grammar-of-thinking.md`                         | 1432 lines, **zero** outbound cites                                | `oak-reason`/`oak-metacognition` (2 tokens) | **BRING** (R1)    |
-| `.agent/skills/reason/SKILL-CANONICAL.md`                         | ~80 lines                                                          | `oak-metacognition`/`oak-plan` (2 tokens)   | **BRING** (R1)    |
-| castr `.agent/skills/metacognition/SKILL-CANONICAL.md`            | identical to Oak **except 2 missing lines** (the reason back-link) | add the 2-line back-link                    | **EDIT** (R1)     |
+| `.agent/skills/cognition/reason/SKILL-CANONICAL.md`               | ~80 lines                                                          | `oak-metacognition`/`oak-plan` (2 tokens)   | **BRING** (R1)    |
+| castr `.agent/skills/cognition/metacognition/SKILL-CANONICAL.md`  | identical to Oak **except 2 missing lines** (the reason back-link) | add the 2-line back-link                    | **EDIT** (R1)     |
 | `.claude/skills/engraph-reason` + `.agents/skills/engraph-reason` | generated                                                          | n/a — generator emits                       | **GENERATE** (R2) |
 
 Cite-resolution proof (measured): `PDR-029` and `PDR-035` both exist in

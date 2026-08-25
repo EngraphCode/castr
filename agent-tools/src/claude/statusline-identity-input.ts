@@ -13,6 +13,7 @@
  * @packageDocumentation
  */
 
+import { stripSessionIdTagIfPresent } from '../core/agent-identity/session-seed.js';
 import { isPlainObject, nonBlankString } from '../core/json-narrowing.js';
 
 /**
@@ -84,7 +85,23 @@ interface RateLimitsField {
  * }
  * ```
  */
-export function planStatuslineExecution(rawJson: string): StatuslinePlan {
+/**
+ * Environment values the statusline consumes for seed resolution.
+ *
+ * @remarks
+ * On cloud seats the canonical PDR-027 seed is the untagged platform
+ * session id, not the harness `session_id` in the statusline payload; the
+ * statusline must render the same identity the SessionStart hook and
+ * collaboration tooling derive.
+ */
+export interface StatuslineEnvironment {
+  readonly CLAUDE_CODE_REMOTE_SESSION_ID?: string;
+}
+
+export function planStatuslineExecution(
+  rawJson: string,
+  environment: StatuslineEnvironment = {},
+): StatuslinePlan {
   if (rawJson.length === 0) {
     return { kind: 'noop' };
   }
@@ -97,7 +114,9 @@ export function planStatuslineExecution(rawJson: string): StatuslinePlan {
   return {
     kind: 'render',
     inputs: {
-      seed: nonBlankString(payload.session_id),
+      seed:
+        stripSessionIdTagIfPresent(environment.CLAUDE_CODE_REMOTE_SESSION_ID) ??
+        nonBlankString(payload.session_id),
       cwd: workspaceDir(payload.workspace) ?? nonBlankString(payload.cwd),
       model: modelName(payload.model),
       usedPercentage: contextUsage(payload.context_window),
