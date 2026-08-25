@@ -180,3 +180,22 @@ describe('claudeSessionIdentityHookEnvironmentFromProcessEnv', () => {
     expect(claudeSessionIdentityHookEnvironmentFromProcessEnv({})).toStrictEqual({});
   });
 });
+
+describe('operator override rendering', () => {
+  it('renders the explicit operator override while writing only the seed', () => {
+    const sessionId = '22e83599-a627-4427-b23c-fe6ce046e859';
+    const plan = planClaudeSessionIdentityHook({
+      stdinText: JSON.stringify({ session_id: sessionId }),
+      environment: {
+        CLAUDE_ENV_FILE: 'mem://env-file',
+        ENGRAPH_AGENT_IDENTITY_OVERRIDE: 'Named By Owner',
+      },
+    });
+
+    const additionalContext = plan.hookOutput.hookSpecificOutput?.additionalContext ?? '';
+    expect(additionalContext).toContain('Session identity (PDR-027): Named By Owner');
+    expect(plan.envFileWrite?.appendLine).toBe(
+      `export PRACTICE_AGENT_SESSION_ID_CLAUDE='${sessionId}'\n`,
+    );
+  });
+});

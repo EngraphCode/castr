@@ -22,6 +22,8 @@ const SHELL_SINGLE_QUOTE_ESCAPE = String.raw`'\''`;
  */
 export interface ClaudeSessionIdentityHookEnvironment {
   readonly CLAUDE_ENV_FILE?: string;
+  /** Explicit operator display-name override — honoured for rendering only, never written back. */
+  readonly ENGRAPH_AGENT_IDENTITY_OVERRIDE?: string;
   readonly CLAUDE_CODE_REMOTE_SESSION_ID?: string;
 }
 
@@ -75,7 +77,11 @@ export function planClaudeSessionIdentityHook(
     return { hookOutput: {} };
   }
 
-  const displayName = deriveIdentity(sessionId).displayName;
+  const override = nonEmpty(input.environment.ENGRAPH_AGENT_IDENTITY_OVERRIDE);
+  const displayName = deriveIdentity(
+    sessionId,
+    override === undefined ? {} : { override },
+  ).displayName;
   const prefix = sessionIdPrefix(sessionId);
   const additionalContext = identityContext({ displayName, prefix });
 
@@ -120,6 +126,9 @@ export function claudeSessionIdentityHookEnvironmentFromProcessEnv(
     ...(env.CLAUDE_CODE_REMOTE_SESSION_ID === undefined
       ? {}
       : { CLAUDE_CODE_REMOTE_SESSION_ID: env.CLAUDE_CODE_REMOTE_SESSION_ID }),
+    ...(env.ENGRAPH_AGENT_IDENTITY_OVERRIDE === undefined
+      ? {}
+      : { ENGRAPH_AGENT_IDENTITY_OVERRIDE: env.ENGRAPH_AGENT_IDENTITY_OVERRIDE }),
   };
 }
 

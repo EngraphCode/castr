@@ -12,6 +12,8 @@ export interface CursorSessionIdentityHookEnvironment {
   readonly CURSOR_PROJECT_DIR?: string;
   readonly CLAUDE_PROJECT_DIR?: string;
   readonly ENGRAPH_SKIP_COMPOSER_SESSION_MIRROR?: string;
+  /** Explicit operator display-name override — honoured for rendering only, never written back. */
+  readonly ENGRAPH_AGENT_IDENTITY_OVERRIDE?: string;
 }
 
 /**
@@ -69,7 +71,11 @@ export function planCursorSessionIdentityHook(
 
   const projectDir = resolveProjectDir(input.environment, input.fallbackProjectDir);
   const prefix = sessionIdPrefix(sessionId);
-  const displayName = deriveIdentity(sessionId).displayName;
+  const override = input.environment.ENGRAPH_AGENT_IDENTITY_OVERRIDE?.trim();
+  const displayName = deriveIdentity(
+    sessionId,
+    override === undefined || override.length === 0 ? {} : { override },
+  ).displayName;
   const tabHint = `Oak · ${displayName}`;
   const output = {
     env: {

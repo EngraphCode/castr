@@ -45,13 +45,16 @@ discipline binds to this PDR's tuple format).
   the ambient platform id in seed precedence: they are the operator's stated
   contract. Prefix note: platform ids are ULID-shaped, so
   `session_id_prefix` (first 6) is timestamp-derived and two sessions
-  started within the same ~4-minute window share it — the PDR-076a uuid
+  started within the same ~17-minute window share it (six base32 chars
+  span 30 bit positions of the left-padded 48-bit millisecond timestamp;
+  the top two are always zero, so 28 significant bits remain and one
+  prefix bucket is 2^20 ms) — the PDR-076a uuid
   remains the canonical disambiguator and the visual-disambiguator token the
   display guard (falsifier: a measured same-window mis-bind the uuid checks
   fail to catch). This amendment SUPERSEDES the 2026-05-05 session-level
   resolved-name cache: hooks write the seed only and never a name override.
-  The measured failure (2026-08-24, castr — one seat, three identity tuples
-  in one day) is a pinned name surviving a seed change, yielding a
+  The measured failure (2026-08-24 — one seat, three identity tuples in
+  one day, recorded in the incident host's operational memory) is a pinned name surviving a seed change, yielding a
   mixed-provenance tuple no single seed produces; the rename risk the cache
   guarded against is now cured structurally by the digest-pinned
   naming-schema registry (wordlist edits require a new schema version, and
