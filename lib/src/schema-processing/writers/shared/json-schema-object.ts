@@ -39,8 +39,11 @@ import type { CastrSchema } from '../../ir/index.js';
 
 /**
  * Recursive write callback supplied by each concrete writer. The child type
- * is the same variable the container uses, so a writer whose recursion
- * returns a narrower type than its container declares cannot compile.
+ * is the same variable the container uses, and that variable is invariant
+ * (`in out`), so a callback that can return values outside its container's
+ * declared child type — e.g. a boolean-emitting callback paired with the
+ * object-only container — cannot compile. (A callback returning a narrower
+ * child type remains legal, as ordinary return-type covariance.)
  * @internal
  */
 export type WriteSchemaFn<TChild> = (schema: CastrSchema) => TChild;

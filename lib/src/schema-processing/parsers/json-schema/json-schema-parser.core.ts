@@ -5,7 +5,8 @@
  * normalizer) and produces CastrSchema IR nodes.
  *
  * **Library Types:**
- * Works from JsonSchema2020, which extends the shared OpenAPI seam for JSON Schema 2020-12.
+ * Works from JsonSchema2020, built on the shared OpenAPI seam (Omit + re-declaration; its
+ * boolean-capable recursive positions make it deliberately NOT a `SchemaObject` subtype).
  */
 
 import type { CastrSchema } from '../../ir/index.js';

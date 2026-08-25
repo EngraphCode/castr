@@ -1,8 +1,10 @@
 /**
  * JSON Schema 2020-12 type definition.
  *
- * Extends the shared OpenAPI seam with 2020-12 applicator and
- * validation keywords that OAS 3.1 does not explicitly surface.
+ * Built on the shared OpenAPI seam, adding the 2020-12 applicator and
+ * validation keywords that OAS 3.1 does not explicitly surface. Because
+ * every recursive position admits boolean schemas, this type is
+ * deliberately NOT a `SchemaObject` subtype.
  *
  * Extracted to its own module to avoid circular dependencies: core.ts imports
  * helper functions from helpers.ts and 2020-keywords.ts, which in turn need
@@ -45,10 +47,11 @@ type ReDeclaredSchemaKeys =
 /**
  * JSON Schema 2020-12 with keywords not modelled directly by the shared seam.
  *
- * Extends the domain expert library type with 2020-12 applicator and
+ * Builds on the domain expert library type with 2020-12 applicator and
  * validation keywords that OAS 3.1 does not explicitly surface. Every
  * recursive schema position admits a boolean schema (`true`/`false`),
- * per the 2020-12 specification.
+ * per the 2020-12 specification — which is why this is an Omit-based
+ * alias rather than a `SchemaObject` subtype.
  *
  * @public
  */

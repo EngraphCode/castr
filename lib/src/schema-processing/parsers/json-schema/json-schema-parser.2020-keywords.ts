@@ -7,7 +7,7 @@
  * dependentRequired, minContains, maxContains, if/then/else).
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends the shared OpenAPI seam).
+ * Uses JsonSchema2020 (built on the shared OpenAPI seam; boolean-capable, not a `SchemaObject` subtype).
  *
  * @internal
  */

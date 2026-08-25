@@ -7,7 +7,7 @@
  * Does NOT mutate the input — always returns a new object.
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends the shared OpenAPI seam).
+ * Uses JsonSchema2020 (built on the shared OpenAPI seam; boolean-capable, not a `SchemaObject` subtype).
  * Uses lodash-es split/join for $ref rewriting (ADR-026 compliant).
  */
 

@@ -8,7 +8,7 @@
  * Pure functions used by the core parser. Split to comply with ADR-036.
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends the shared OpenAPI seam).
+ * Uses JsonSchema2020 (built on the shared OpenAPI seam; boolean-capable, not a `SchemaObject` subtype).
  *
  * @internal
  */
