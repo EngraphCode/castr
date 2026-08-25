@@ -28,7 +28,10 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
   full rationale). Trigger tools are an unproven fired-seat capability: if they are
   absent or the update fails, record that failure in the stand-down incident entry and
   the completion summary — the substitution response is the owner's decision (OP-6),
-  never improvised.
+  never improvised. A SUCCESSFUL disable is recorded too: the stand-down incident
+  entry states that the cron was removed and that the trigger now reads poke-only yet
+  `enabled` (the platform has no disabled flag, so a later reader must not mistake
+  `enabled: true` for a live schedule).
 
 ## Protocol, in order
 

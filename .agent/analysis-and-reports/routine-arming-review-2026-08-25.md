@@ -177,13 +177,18 @@ the walk carries it as a real step plus an owner glance at the live ruleset.
   entire observability contract is void and nothing else detects it. Now an
   explicit pass/fail gate between dry run and enable.
 - **W-6 — "programme PR" is undefined anywhere a zero-context firing reads**
-  (audit F-9, verified: the term appears ~24 times across the programme estate
-  with no definition; the estate has hand-disambiguated once, for PR #58).
+  (audit F-9; the second review pass re-measured the term at 32 occurrences
+  across the programme estate with no definition; the estate has
+  hand-disambiguated once, for PR #58).
   WIP=1's entire operation turns on the classification, and this review's own
-  landing PR is a second ambiguous instance. Cures: a definition + firing
-  self-declaration duty landed in the parent plan (this landing), and the walk
-  merges the review PR **before** enable so no ambiguous PR is open when the
-  first firing scans.
+  landing PR is a second ambiguous instance. Cures — narrowed by the second
+  review pass, which caught the draft definition deciding owner-reserved
+  questions (the QD-3 precedent: the analogous bookkeeping question landed as an
+  owner-ruled ADR amendment): the parent plan now records the **nature-based
+  classification + the PR #58 owner precedent + a declaration duty** on firings,
+  while the self-declaration-as-operative-test and the ambiguity default are
+  routed to the owner as **QD-13**; and the walk merges the review PR **before**
+  enable so no ambiguous PR is open when the first firing scans.
 - **W-7 — the "§Operating protocol" anchor dangles** (audit F-15b, verified):
   `routine-prompt.md` (twice) and the parent plan's own §Mechanism cite a
   heading that has never existed — the numbered protocol sits unheaded inside
@@ -206,7 +211,7 @@ firing; notification gate) or covered by a proven owner-side switch while the
 queued probes land. The two decisions the walk carries (queue reorder; attended
 first firing) are both safe in either direction.
 
-## 6. The arming walk (runbook steps 3–6, instantiated and hardened)
+## 6. The arming walk (runbook steps 3–7, instantiated and hardened)
 
 0. **Land and merge this review's refinements PR** (owner-invoked merge — not a
    programme PR) so no ambiguous PR is open at enable (W-6) and the canonical
@@ -248,15 +253,31 @@ first firing) are both safe in either direction.
 
 ## 7. Review pass
 
-Draft verdicts took an `assumptions-expert` adversarial dispatch (4 P1, 7 P2,
-5 P3 findings). Every load-bearing audit claim was re-verified firsthand before
-folding — the templates README's declined-ADR-117 line, the absent
-§Operating-protocol heading, the second decision card's loop-cadence routing,
-the account-access pre-enable obligation, and the frontmatter claim-order count.
-Two draft cures were withdrawn as disproportionate or authority-violating (W-1's
-STOP-fallback decision card; W-2's interactive pre-enable execution) and
-replaced with the audit's proportionate forms. The refinements landed with this
-report: the runbook's disable method + canonical DRY-RUN instruction + attended
-first-firing step, the routine prompt's disable-method line, the parent plan's
-Operating-protocol heading + programme-PR definition + Q-16 brief correction,
-and the QD-11 id correction.
+Two independent dispatches, both folded through firsthand re-verification.
+**First (assumptions-expert, on the draft verdicts):** 4 P1 / 7 P2 / 5 P3 —
+re-verified before folding (the templates README's declined-ADR-117 line, the
+absent §Operating-protocol heading, the second decision card's loop-cadence
+routing, the account-access pre-enable obligation, the frontmatter claim-order
+count). Two draft cures were withdrawn as disproportionate or
+authority-violating (W-1's STOP-fallback decision card; W-2's interactive
+pre-enable execution) and replaced with the audit's proportionate forms.
+**Second (docs-adr-expert, on the landing diff):** caught, and this landing
+cures, a same-file contradiction (the parent plan's foundation-alignment note
+still asserting the templates gap the Q-16 brief declared cured), an
+unexecutable runbook ordering (the DRY-RUN prepend written after the attach it
+must precede — the arming sequence's step 3 now runs create → prepend →
+attach), a stale "create disabled … with the cron" step (now create poke-only;
+cron only at step 7), the restore-before-attended-firing precondition, the
+notification pass/fail gate landing in the runbook itself rather than only
+here, the three-site (not one-site) ADR-117 residual with the validator's real
+non-blocking contract in Q-16's acceptance, the census citation, and — the
+sharpest — my own programme-PR definition deciding two owner-reserved
+questions, now narrowed to recorded precedent + declaration duty with the
+test/default routed as QD-13. The same overreach class the first audit caught
+(W-1/W-2) recurred in my cure for W-6 and was caught by the second reviewer:
+the fan-out earned its cost twice in one session. The refinements landed with
+this report: the runbook's disable method + canonical DRY-RUN instruction +
+create-prepend-attach ordering + notification gate + attended first-firing
+step, the routine prompt's disable-method and disable-record lines, the parent
+plan's Operating-protocol heading + programme-PR classification + Q-16 brief
+correction + foundation-note repair, and the QD-11 id correction + QD-13 row.
