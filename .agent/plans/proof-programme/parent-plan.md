@@ -17,7 +17,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-04
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
-    status: in_progress
+    status: completed
     depends_on: [Q-00]
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
@@ -88,9 +88,10 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
 the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
-completed 2026-08-24 (see the Q-03 evidence record). Q-18..Q-21 appended
+completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
+Q-04 evidence record). Q-18..Q-21 appended
 2026-08-24 at owner word (loop-review decision cards). Eligible
-now: Q-04..Q-09, Q-13 (executes the B-11 RATIFY
+now: Q-05..Q-09, Q-13 (executes the B-11 RATIFY
 outcome), Q-14, Q-16, Q-17, Q-18, Q-20, Q-21; Q-10..Q-12, Q-15 (waits on Q-20), and
 Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
@@ -661,6 +662,77 @@ Non-goals: no full Tranche 05 position matrix. Acceptance (`integration`): red-f
 that nested `false`/`true` survive at the defective positions; `pnpm check` green. Source:
 report F-03. Gate: B-11 (success verdict).
 
+**Q-04 evidence record (completed 2026-08-25).** Shipped: the F-03 fix as root-and-recursion
+unification in all three layers of the json-schema lane, per the report's named root cause
+("root and recursion used different callbacks"). (1) **Normalizer**: the redundant
+`normalizeSubSchemas` pre-pass is deleted — `stripDraft07Keys` is the single recursion site,
+which also removes an O(2^depth) double-normalisation — and boolean children short-circuit in
+`narrowSchemaOrRef` (a boolean ternary over an object-only `narrowObjectOrRef`);
+`normalizeDraft07` stays object-only, with the boolean branch at the two public parse seams.
+(2) **Parser**: `parseJsonSchemaObject` accepts `JsonSchema2020 | boolean` and is its own
+recursion callback; the three per-file `parseSingleSchemaOrRef` copies are consolidated into
+one boolean-aware helper in `json-schema-parser.helpers.ts` (boolean branch inside it, so
+`parseProperties`' `metadata.required` mirroring applies to boolean members identically);
+`parseBoolOrSchemaOrRef` and the inlined metadata literal are deleted; `parseJsonSchema` and
+`parseJsonSchemaDocument` accept boolean documents (a boolean root yields one `"Root"`
+component). (3) **JSON-Schema writer**: `writeJsonSchema` emits `booleanSchema` IR as bare
+booleans and is its own recursion callback; the shared output type is parameterised as
+`JsonSchemaObjectBase<in out TChild>` — the OpenAPI lane instantiates object-only
+`JsonSchemaObject` (still assignable to the strict `SchemaObject` seam; the boolean-capable
+`JsonSchemaNode` is provably NOT assignable, so the lanes cannot cross-contaminate, and the
+invariance annotation rejects pairing an object-only container with a boolean-emitting
+callback) — and the document writer's `true → {}` / `false → {not: {}}` fabrications are
+deleted (boolean documents and `$defs` members emit as authored; a boolean document drops the
+writer-added `$schema`, losing nothing the input supplied). Types: `JsonSchema2020`
+restructured as an `Omit<SchemaObject, …> &` alias so every recursive position admits
+boolean (its former `extends SchemaObject` claim was semantically untrue);
+`Draft07SchemaOrRef` gains `| boolean`.
+
+Proof (red-first): `lib/tests-transforms/__tests__/nested-boolean-schema.integration.test.ts`
+— 20 tests through public seams via the Q-02 semantic-outcome-runner: 16 minimal-pair boolean
+cases (properties, patternProperties, propertyNames, items, Draft-07 tuple items→prefixItems,
+contains, allOf, anyOf, oneOf, not, if, then, else, dependentSchemas, Draft-07 `dependencies`,
+root), a `$defs` document-seam case, two direct assertions (boolean document root; required
+mirroring onto a boolean member), and a boolean-free positive control. Oracles are Ajv
+validation verdicts of fixed witnesses (2020-12 engine; Draft-07 engine for the two
+Draft-07-shaped sources), asserting verdict INEQUALITY, never direction — under `not` and
+`if` the collapse is fail-closed, so a permissiveness assertion would silently pass there.
+`cloneIR` routes through a minimal `CastrDocument` wrapper and `serializeIR`/`deserializeIR`,
+so every case also proves nested boolean IR survives the persistence boundary. On the
+pre-fix tree (worktree isolation) the file fails 19/20 with only the positive control
+passing; post-fix 20/20, plus normalizer/document-writer unit coverage.
+
+Reviews: two pre-execution dispatches (`code-reviewer`, `json-schema-expert` — their verdicts
+set the design: the redundancy deletion first, the tsc-error-list-as-checklist ordering, the
+`JsonSchemaObjectBase` parameterisation, the verified witness table, the root-boolean seam
+gap) and three post-execution dispatches (`code-reviewer`, `test-reviewer`, `type-reviewer`).
+The post-execution round's blocking findings — four agent-authored lint suppressions, two of
+them attributed with the owner's initialled justification marker on a factually false
+circularity claim, plus an unbacked "structurally impossible" variance claim — were all
+dissolved by design in the same firing (aliases; seam branches; the helper split;
+`in out TChild`), leaving zero suppressions.
+
+Routed, not fixed here: **behaviour change to record at release time (rides QD-10)** — JSON
+Schema → OpenAPI conversions containing nested boolean schemas now fail fast at the OpenAPI
+writer's existing `booleanSchema` throw where they previously emitted `{}` silently
+(doctrinally correct; newly reachable), and the throw's "genuinely impossible in OpenAPI 3.2"
+wording is a castr IDENTITY-doctrine choice rather than a spec fact (OAS 3.1+ schemas are
+2020-12) — record as an assumption on that lane. **Parser/validator lockstep gap
+(pre-existing, boolean-independent)**: the IR persistence validators require
+`propertyNames`/`patternProperties` to sit on object-typed schemas while the parser accepts
+them bare (legal 2020-12), so `deserializeIR` rejects IR the pipeline itself produced.
+**F-03b (pre-existing)**: the normalizer never recurses into contains / patternProperties /
+propertyNames / if / then / else / unevaluated*, so Draft-07 constructs nested there are not
+normalised — `Draft07Input`'s `Omit` list now encodes that gap; fix both together. **Draft-07
+`additionalItems` unmodelled** in this lane. **MCP inline-JSON-Schema lane verified clear**
+of the F-03 shape (booleans pass through unchanged). Also pre-existing, noted for their
+owning lanes: `parseSingleSchemaOrRef` discards `$ref` siblings (now one seam to fix); two
+unrelated exported types named `ExtendedSchemaObject`; the parser index docblock's
+package-root import example does not resolve (the parse/write json-schema seams are not in
+the package `exports` map — which is also why the `writeJsonSchemaDocument` return-type
+widening breaks no package consumer). Full `pnpm check` green pre-push on every landed
+revision; scope held to the F-03 defect throughout — no Tranche 05 position matrix.
+
 **Q-05 — F-04 placebo refinements + nested Zod loss.** Surface: the two `return true` sites
 in `writers/zod/refinements/object.ts` (`:130`, `:183–187` per the 2026-07-06 scout — leave
 the real refinements alone) become fail-fast; nested unsupported Zod members fail the
@@ -999,7 +1071,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-04..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20, Q-21 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
+- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20, Q-21 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
 - **Beneficial**: none deferred beyond the gates above.

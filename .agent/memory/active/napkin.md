@@ -895,9 +895,10 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   the "container and callback share TChild" claim only became true after `in out TChild`
   (invariance) pinned inference. Same family as verify-agent-claims-firsthand, pointed at my
   own prose.
-- **Agent-authored `eslint-disable` lines are forbidden in product code, and the `-- JC:`
-  marker is the OWNER'S authorisation idiom** (`never-disable-checks`, `no-manufactured-permission`;
-  the initial-review audit counts `-- JC:` as "governed/user-added"). All four disables this
+- **Agent-authored `eslint-disable` lines are forbidden in product code, and the owner's
+  initialled justification marker is the OWNER'S authorisation idiom** (`never-disable-checks`,
+  `no-manufactured-permission`; the initial-review audit counts initial-marked disables as
+  "governed/user-added" — a live content guard also blocks agents from writing the marker). All four disables this
   slice briefly carried were dissolved by design instead: type aliases (two), object-only
   `normalizeDraft07` with seam branches (one), and a split `narrowSchemaOrRef` →
   boolean-ternary + object-only `narrowObjectOrRef` (one). When a lint rule fights a
