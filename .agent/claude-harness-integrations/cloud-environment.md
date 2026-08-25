@@ -144,12 +144,14 @@ definition of record: change it here first, then apply it in the dialog
   content domains" control adds them): they let sessions in this
   environment read claude.ai Artifacts, per-Artifact token-authorized.
 
-- **Environment variables**: the Slack Watcher configuration lives here —
-  in the environment, never read from a repo file — so every Practice
-  repo's sessions share it and changing channel or workspace is an
-  environment edit, not a commit. The live values (2026-08-25; the dialog
-  marks these visible to anyone using the environment — channel ids and
-  workspace names are not secrets, and no secret may be added here):
+- **Environment variables**: the Slack Watcher configuration is consumed
+  by sessions from the environment at runtime — no session reads these
+  values from a repo file, and every Practice repo's sessions share them —
+  but like everything in this section their definition of record is here:
+  change a value in this file first, then apply it in the dialog. The live
+  values (2026-08-25; the dialog marks these visible to anyone using the
+  environment — channel ids and workspace names are not secrets, and no
+  secret may be added here):
 
   ```text
   SLACK_WATCHER_WORKSPACE=engraph-workspace

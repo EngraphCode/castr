@@ -121,8 +121,12 @@ beyond them is needed for the Routine.
    and the cron above; owner attaches the repo and the Slack connector (where the
    workspace exists) in the UI; set the model; notifications push-only; auto-fix OFF.
 4. **Dry-run proof before any live firing** (mirrors the Q-01 acceptance): fire the
-   disabled Routine once manually with an explicit DRY-RUN instruction in the firing
-   message. Routine-prompt step 2 then takes the read-only no-op path — grounding by
+   disabled Routine once with an explicit DRY-RUN instruction reaching the fired
+   session's message. A manual fire may carry no per-run payload — it executes the
+   stored prompt — so where the platform offers no per-fire message, temporarily
+   prepend the DRY-RUN instruction to the disabled Routine's stored prompt, fire, then
+   restore and verify the canonical prompt (the section above) before enabling.
+   Routine-prompt step 2 then takes the read-only no-op path — grounding by
    reading only, no claim, the queued-decisions read, the stand-down echo with criterion
    "dry-run complete", session handoff — and leaves no repo-state change. Confirm the
    completion notification reaches the owner.
@@ -132,8 +136,12 @@ beyond them is needed for the Routine.
    (routine-prompt step 5 claims only `pending` rows, so an `in_progress` row inherited
    from another host with no open PR here is drivable by nothing — return it to
    `pending`, or `blocked` with a written diagnosis); `zero_progress_streak` and any
-   `failures:` counts reconciled to the new account's history (a carried streak of 2
-   would let the first idle firing self-disable the Routine); every OPEN row in
+   `failures:` counts transfer **unchanged** — they are durable programme state
+   (ADR-051 clause 6) and their kill switches must still fire on the new account (a
+   carried streak of 2 correctly means one more idle firing disables the Routine);
+   repair a counter only on demonstrated corruption (the value provably contradicts
+   the attested firing history), landing the repair with an incident-register entry
+   as its audit trail; every OPEN row in
    `queued-decisions.md` re-read by the new owner seat.
 6. Enable the Routine. The loop resumes from the queue on main; no other state transfer
    exists or is needed.

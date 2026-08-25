@@ -271,9 +271,10 @@ brief. Routine mechanism proven end to end across four firings:
   (degenerate `sessio` prefix) — seed derivation fix queued to Q-15's gap list.
 - Arming: the loop Routine `trig_01X4wYy2gHSb8yFhdhwbADGF` (cron `3 */8 * * *`, three
   firings/day per amended B-12) is enabled as the last act of this slice, strictly after
-  its PR merges, with the B-15 configuration (push + email, no digest; B-15 amended
-  2026-08-24 to push-only) re-checked at
-  enable. The repeatable, account-portable form of this procedure — everything an
+  its PR merges, with the B-15 configuration as then ratified (push + email, no
+  digest) re-checked at enable — superseded 2026-08-24 by the push-only re-ballot, so
+  a re-arm applies the current ratified set per the runbook, never this historical
+  one. The repeatable, account-portable form of this procedure — everything an
   unrelated account needs to re-arm the Routine from the repo alone — is
   [`arming-runbook.md`](./arming-runbook.md) (owner-directed 2026-08-25).
 - Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
