@@ -46,6 +46,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   don't-create-PRs-unasked default). Wrong resolution of the conflict: a safety draft PR
   is loss-protection mechanics, not a merge decision — it needs no permission and the
   standing invariant wins over the platform default. The owner opened PR #58 themselves.
+- **A `cancelled` gate reads as a quality-gates FAILURE on the superseded head:** the
+  fail-closed fan-in blocks on `cancelled` results, so pushing a new commit mid-run
+  makes the old head's `quality-gates` land red. Before diagnosing a red fan-in, check
+  whether its head is still the PR head and whether the RESULTS line says `cancelled`
+  rather than `failure`. (PR #58, run 32834143505.)
+- **PR #58 review round (Codex P1×2 + Copilot×6) verified-then-fixed in `45ccfbf7`:**
+  the big one — GitHub repository settings (branch ruleset with required
+  `quality-gates` check + scanning/quality/coverage rules, CodeQL default setup) ARE
+  account-side machinery; the register and account-access now carry the row, the
+  recorded thresholds, and a draft-PR validation instrument. Counters transfer
+  unchanged across migration (kill switches must still fire). All 8 threads replied
+  and resolved.
 - **Live environment dialog captured via owner screenshots:** the write-only
   "Practice Repos" dialog was fully specified into `cloud-environment.md` §The full
   environment definition (complete domains list incl. the two Artifact frame wildcards,
