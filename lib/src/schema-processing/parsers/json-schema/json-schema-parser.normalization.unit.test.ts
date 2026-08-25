@@ -410,7 +410,7 @@ describe('normalizeDraft07', () => {
 
       const result = normalizeDraft07(input);
 
-      expect(result.not?.$ref).toBe('#/$defs/Forbidden');
+      expect(getSchemaRef(result.not, 'not')).toBe('#/$defs/Forbidden');
     });
 
     it('preserves non-definitions $ref paths unchanged', () => {
@@ -505,5 +505,78 @@ describe('normalizeDraft07', () => {
 
       expect(result.exclusiveMaximum).toBe(100);
     });
+  });
+});
+
+// Root-level booleans never reach the normalizer: the public parse seams
+// short-circuit them (proven in the F-03 integration suite). These tests
+// cover NESTED booleans at every position the normalizer recurses into.
+describe('boolean schema pass-through (F-03)', () => {
+  it('passes boolean property members through unchanged', () => {
+    const input = draft07({
+      type: 'object',
+      properties: { x: false, y: true },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.properties?.['x']).toBe(false);
+    expect(result.properties?.['y']).toBe(true);
+  });
+
+  it('passes a boolean items schema through unchanged', () => {
+    const input = draft07({ type: 'array', items: false });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.items).toBe(false);
+  });
+
+  it('converts a Draft-07 boolean tuple member to a boolean prefixItems member', () => {
+    const input = draft07({ type: 'array', items: [false] });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.prefixItems?.[0]).toBe(false);
+    expect(result.items).toBeUndefined();
+  });
+
+  it('passes a boolean not schema through unchanged (strip-phase recursion site)', () => {
+    const input = draft07({ not: false });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.not).toBe(false);
+  });
+
+  it('passes boolean composition members through unchanged', () => {
+    const input = draft07({ allOf: [false], anyOf: [true], oneOf: [false] });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.allOf?.[0]).toBe(false);
+    expect(result.anyOf?.[0]).toBe(true);
+    expect(result.oneOf?.[0]).toBe(false);
+  });
+
+  it('passes boolean $defs and definitions members through unchanged', () => {
+    const input = draft07({ definitions: { Never: false }, $defs: { Anything: true } });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.$defs?.['Never']).toBe(false);
+    expect(result.$defs?.['Anything']).toBe(true);
+  });
+
+  it('routes a Draft-07 boolean schema dependency to dependentSchemas unchanged', () => {
+    const input = draft07({
+      type: 'object',
+      dependencies: { a: false },
+    });
+
+    const result = normalizeDraft07(input);
+
+    expect(result.dependentSchemas?.['a']).toBe(false);
+    expect(result.dependentRequired).toBeUndefined();
   });
 });

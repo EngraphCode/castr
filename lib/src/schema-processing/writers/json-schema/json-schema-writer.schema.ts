@@ -8,21 +8,25 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
-import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
+import type { JsonSchemaNode } from '../shared/json-schema-fields.js';
 import { writeAllJsonSchemaFields } from '../shared/json-schema-fields.js';
 
 /**
- * Converts an IR schema to a pure JSON Schema 2020-12 object.
+ * Converts an IR schema to a pure JSON Schema 2020-12 value.
  *
  * Handles all schema types (primitives, objects, arrays, composition) and
  * preserves constraints, formats, and metadata. Nullable schemas are converted
- * to JSON Schema type arrays (e.g., `['string', 'null']`).
+ * to JSON Schema type arrays (e.g., `['string', 'null']`). Boolean schemas
+ * (`booleanSchema` IR nodes) are emitted as bare `true`/`false` — at the root
+ * and at every recursive position, since 2020-12 admits boolean schemas
+ * everywhere a schema may appear. The function is its own recursion callback,
+ * so root and nested schemas take one code path.
  *
  * Unlike the OpenAPI writer, this does NOT write OAS-only extension fields
  * (xml, externalDocs, discriminator).
  *
  * @param schema - The IR schema to convert
- * @returns A valid JSON Schema 2020-12 object
+ * @returns A valid JSON Schema 2020-12 value (object or boolean schema)
  *
  * @example
  * ```typescript
@@ -38,33 +42,21 @@ import { writeAllJsonSchemaFields } from '../shared/json-schema-fields.js';
  *
  * @public
  */
-export function writeJsonSchema(schema: CastrSchema): JsonSchemaObject | boolean {
+export function writeJsonSchema(schema: CastrSchema): JsonSchemaNode | boolean {
   if (schema.booleanSchema !== undefined) {
     return schema.booleanSchema;
   }
-  return writeJsonSchemaObject(schema);
-}
 
-/**
- * Internal writer that satisfies the `WriteSchemaFn` signature.
- *
- * Used as the recursive callback for `writeAllJsonSchemaFields`. Boolean
- * schemas are handled at the public `writeJsonSchema` boundary, so this
- * function only needs to handle object schemas.
- *
- * @internal
- */
-function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
   assertSchemaSupportsIntegerTargetCapabilities(schema, 'JSON Schema 2020-12');
 
-  const result: JsonSchemaObject = {};
+  const result: JsonSchemaNode = {};
 
   if (schema.$ref !== undefined) {
     result.$ref = schema.$ref;
     return result;
   }
 
-  writeAllJsonSchemaFields(schema, result, writeJsonSchemaObject);
+  writeAllJsonSchemaFields(schema, result, writeJsonSchema);
   normaliseExampleForJsonSchema(result);
 
   return result;
@@ -81,7 +73,7 @@ function writeJsonSchemaObject(schema: CastrSchema): JsonSchemaObject {
  *
  * @internal
  */
-function normaliseExampleForJsonSchema(result: JsonSchemaObject): void {
+function normaliseExampleForJsonSchema(result: JsonSchemaNode): void {
   if (result.example === undefined) {
     return;
   }

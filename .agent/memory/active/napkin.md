@@ -883,3 +883,70 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
 - **Reviewer-cancelled CI reads as failure**: OCE's run-quality-gates rollup treats a
   `cancelled` gate (auto-superseded by a newer push) as blocking; the cure is nothing —
   the current head's run is the real signal. Don't chase red on superseded heads.
+
+## 2026-08-25 (proof-programme scheduled firing — Q-04 F-03 nested Boolean schemas — Stratospheric Hovering Thermal)
+
+- **The claims CLI now has `claims init`** — seeds both gitignored state files with canonical
+  shapes on a fresh container (the 2026-08-23 firing's hand-seed candidate landed). Sequence
+  that works: `claims init --active … --closed …`, then `identity preflight`, then
+  `claims open`. The fired-seat identity seed still needs an explicit `--seed` (the
+  `PRACTICE_AGENT_SESSION_ID_CLAUDE` env is absent in tool shells; prefix still degenerates
+  to `sessio` — Q-15/PR #54 territory, not re-fixed here).
+- **F-03 premise re-verified firsthand, and it is THREE layers, not one** (probe script,
+  pre-implementation): (1) `normalizeDraft07` recursion spreads nested booleans into `{}`
+  (`{...false}` → `{}`) — the collapse happens BEFORE the parser at
+  items/prefixItems/allOf/oneOf/anyOf/$defs/properties/dependentSchemas; (2) the parser
+  recursion callback lacks the boolean branch everywhere except `if`/`then`/`else`;
+  (3) the json-schema WRITER's recursion callback (`writeJsonSchemaObject`) lacks the
+  `booleanSchema` branch, so even the correctly-parsed `then: false` IR writes back as
+  `then: {}` — measured live. The report's named root cause ("root and recursion used
+  different callbacks") holds at every layer; the OpenAPI writer is the counter-example
+  that already unifies root and recursion (throws on booleanSchema, fail-fast doctrine).
+- **PR #54 (live interactive Practice-equality session) lands `.agent/plans/templates/`** —
+  Q-16's premise (the templates directory does not exist) moves when it merges; Q-16 must be
+  re-adjudicated against the merged base before any firing claims it.
+
+- **`tsc`'s colourised output defeats `grep "error TS"` — count errors from the EXIT CODE or
+  strip ANSI first** (`sed 's/\x1b\[[0-9;]*m//g'`). Two successive "0 errors" readings this
+  firing were pure instrument failure: the word `error` carries colour escapes mid-token, so
+  the grep never matched and a red type-check read as green. Same family as
+  verify-own-observer-instruments and the pipe-eats-exit-code entry. Also: `lib`'s
+  `tsconfig.json` is NOT the canonical check surface — `pnpm type-check` runs
+  `tsconfig.lint.json`, and only that project surfaced the 19 widened-type errors.
+- **Q-04 F-03 landed as root-and-recursion unification in all three layers** (normalizer
+  single-recursion via `stripDraft07Keys` + boolean pass-through in `narrowSchemaOrRef`;
+  parser recursion callback = `parseJsonSchemaObject` itself with one shared
+  `parseSingleSchemaOrRef`; json-schema writer recursion callback = `writeJsonSchema` itself
+  over a parameterised `JsonSchemaObjectBase<TChild>` so the OAS lane stays object-only).
+  Red-first: final integration file 19/20 red on pre-fix HEAD (worktree isolation, the one
+  pass being the positive control), 20/20 green post-fix.
+- **New routed finding (pre-existing, boolean-independent): IR persistence validators and
+  the json-schema parser disagree on bare `propertyNames`/`patternProperties`** — the parser
+  accepts `{propertyNames: …}` without `type: 'object'` (legal 2020-12), the writer emits it,
+  but `hasValidSchemaPropertyNames`/`hasValidSchemaPatternProperties` require
+  `isObjectSchemaRecord`, so `deserializeIR` rejects IR the pipeline itself produced.
+  Surfaced by the Q-04 proof's propertyNames case; routed rather than widened in-slice.
+
+- **`claims init --closed` must point at the CANONICAL `closed-claims.archive.json`** — the
+  collaboration-state `.gitignore` ignores that exact name; a `closed-claims.json` seeded by
+  mistake shows up as untracked repo noise. Renamed forward; use the archive name in every
+  claims close.
+
+- **A compiler-behaviour claim in a code comment is a claim to COMPILE before writing** — I
+  asserted "`type X = Base<X>` circularly references itself" to justify two lint disables;
+  the gateway and type reviewers both compiled the alias form against the real types and it
+  is legal (interface type-argument positions are deferred). The false justification would
+  have taught the next reader to reproduce the suppression. Cure applied: aliases, disables
+  deleted. Sibling lesson: an inferred generic parameter is NOT a shared-variable guarantee —
+  the "container and callback share TChild" claim only became true after `in out TChild`
+  (invariance) pinned inference. Same family as verify-agent-claims-firsthand, pointed at my
+  own prose.
+- **Agent-authored `eslint-disable` lines are forbidden in product code, and the owner's
+  initialled justification marker is the OWNER'S authorisation idiom** (`never-disable-checks`,
+  `no-manufactured-permission`; the initial-review audit counts initial-marked disables as
+  "governed/user-added" — a live content guard also blocks agents from writing the marker). All four disables this
+  slice briefly carried were dissolved by design instead: type aliases (two), object-only
+  `normalizeDraft07` with seam branches (one), and a split `narrowSchemaOrRef` →
+  boolean-ternary + object-only `narrowObjectOrRef` (one). When a lint rule fights a
+  domain-true union, restructure so no FUNCTION returns the mixed union before ever
+  considering a suppression — and a suppression is the owner's to add, never ours.

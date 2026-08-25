@@ -4,6 +4,7 @@ import type {
   Draft07Input,
   Draft07SchemaMap,
   Draft07SchemaOrRef,
+  NormalizedSchemaOrRef,
 } from './json-schema-parser.normalization.types.js';
 import { rewriteRefObject } from './json-schema-parser.normalization.refs.js';
 
@@ -118,16 +119,28 @@ function applyNormalizedSingles(
   if (not !== undefined) {
     result.not = narrowSchemaOrRef(not, normalizeDraft07);
   }
-  if (typeof additionalProperties === 'boolean') {
-    result.additionalProperties = additionalProperties;
-  } else if (additionalProperties !== undefined) {
+  if (additionalProperties !== undefined) {
     result.additionalProperties = narrowSchemaOrRef(additionalProperties, normalizeDraft07);
   }
   return result;
 }
 
+/**
+ * Normalize one child value. Boolean schemas are complete schemas in both
+ * drafts and pass through unchanged — routing one into the object pipeline
+ * would spread it into `{}` (defect F-03). The boolean short-circuit is a
+ * single conditional expression, so the value keeps its exact domain type
+ * ({@link NormalizedSchemaOrRef}) without a mixed-return function.
+ */
 function narrowSchemaOrRef(
   value: Draft07SchemaOrRef,
+  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
+): NormalizedSchemaOrRef {
+  return typeof value === 'boolean' ? value : narrowObjectOrRef(value, normalizeDraft07);
+}
+
+function narrowObjectOrRef(
+  value: Draft07Input | ReferenceObject,
   normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
 ): JsonSchema2020 | ReferenceObject {
   return isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
@@ -136,15 +149,15 @@ function narrowSchemaOrRef(
 function narrowSchemaArray(
   value: Draft07SchemaOrRef[],
   normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): (JsonSchema2020 | ReferenceObject)[] {
+): NormalizedSchemaOrRef[] {
   return value.map((item) => narrowSchemaOrRef(item, normalizeDraft07));
 }
 
 function narrowSchemaMap(
   value: Draft07SchemaMap,
   normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
-): Record<string, JsonSchema2020 | ReferenceObject> {
-  const out: Record<string, JsonSchema2020 | ReferenceObject> = {};
+): Record<string, NormalizedSchemaOrRef> {
+  const out: Record<string, NormalizedSchemaOrRef> = {};
   for (const [key, item] of Object.entries(value)) {
     out[key] = narrowSchemaOrRef(item, normalizeDraft07);
   }
@@ -163,7 +176,7 @@ export function splitDependencies(input: Draft07Input): Draft07Input {
     return input;
   }
   const dependentRequired: Record<string, string[]> = {};
-  const dependentSchemas: Record<string, Draft07Input | ReferenceObject> = {};
+  const dependentSchemas: Draft07SchemaMap = {};
 
   for (const [key, value] of Object.entries(input.dependencies)) {
     if (Array.isArray(value)) {

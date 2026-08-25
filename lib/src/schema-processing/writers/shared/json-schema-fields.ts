@@ -12,7 +12,7 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { isObjectSchemaType } from '../../ir/index.js';
-import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+import type { JsonSchemaObjectBase, WriteSchemaFn } from './json-schema-object.js';
 import { isSchemaObjectType } from './json-schema-object.js';
 import {
   writeJsonSchema2020SimpleFields,
@@ -20,7 +20,7 @@ import {
 } from './json-schema-2020-12-fields.js';
 
 // Re-export for convenience
-export type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+export type { JsonSchemaObject, JsonSchemaNode } from './json-schema-object.js';
 export { isSchemaObjectType } from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------
@@ -44,7 +44,10 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
  * Write the `type` field, folding nullable into a type array.
  * @internal
  */
-export function writeTypeField(schema: CastrSchema, result: JsonSchemaObject): void {
+export function writeTypeField<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.type === undefined) {
     return;
   }
@@ -59,7 +62,10 @@ export function writeTypeField(schema: CastrSchema, result: JsonSchemaObject): v
  * Write string-constraint fields.
  * @internal
  */
-export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject): void {
+export function writeStringFields<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.format !== undefined) {
     result.format = schema.format;
   }
@@ -78,7 +84,10 @@ export function writeStringFields(schema: CastrSchema, result: JsonSchemaObject)
  * Write number-constraint fields.
  * @internal
  */
-export function writeNumberFields(schema: CastrSchema, result: JsonSchemaObject): void {
+export function writeNumberFields<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.minimum !== undefined) {
     result.minimum = schema.minimum;
   }
@@ -104,7 +113,10 @@ export function writeNumberFields(schema: CastrSchema, result: JsonSchemaObject)
  *
  * @internal
  */
-function writeAdditionalProperties(schema: CastrSchema, result: JsonSchemaObject): void {
+function writeAdditionalProperties<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.additionalProperties === false) {
     result.additionalProperties = false;
     return;
@@ -120,13 +132,13 @@ function writeAdditionalProperties(schema: CastrSchema, result: JsonSchemaObject
  * Write object fields (properties, required, additionalProperties).
  * @internal
  */
-export function writeObjectFields(
+export function writeObjectFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.properties !== undefined) {
-    const props: Record<string, JsonSchemaObject> = {};
+    const props: Record<string, TChild> = {};
     for (const [key, propSchema] of getSortedPropertyEntries(schema)) {
       props[key] = writeSchema(propSchema);
     }
@@ -142,10 +154,10 @@ export function writeObjectFields(
  * Write array fields (items, prefixItems, minItems, maxItems, uniqueItems).
  * @internal
  */
-export function writeArrayFields(
+export function writeArrayFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.items !== undefined) {
     if (Array.isArray(schema.items)) {
@@ -170,10 +182,10 @@ export function writeArrayFields(
  * NOTE: `discriminator` is OAS-only and not written here.
  * @internal
  */
-export function writeCompositionFields(
+export function writeCompositionFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.allOf !== undefined) {
     result.allOf = schema.allOf.map((s) => writeSchema(s));
@@ -193,7 +205,10 @@ export function writeCompositionFields(
  * Write core metadata (title, description, default, example, examples).
  * @internal
  */
-function writeCoreMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
+function writeCoreMetadata<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.title !== undefined) {
     result.title = schema.title;
   }
@@ -215,7 +230,10 @@ function writeCoreMetadata(schema: CastrSchema, result: JsonSchemaObject): void 
  * Write access metadata (deprecated, readOnly, writeOnly).
  * @internal
  */
-function writeAccessMetadata(schema: CastrSchema, result: JsonSchemaObject): void {
+function writeAccessMetadata<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.deprecated !== undefined) {
     result.deprecated = schema.deprecated;
   }
@@ -231,7 +249,10 @@ function writeAccessMetadata(schema: CastrSchema, result: JsonSchemaObject): voi
  * Write enum / const fields.
  * @internal
  */
-export function writeEnumFields(schema: CastrSchema, result: JsonSchemaObject): void {
+export function writeEnumFields<TChild>(
+  schema: CastrSchema,
+  result: JsonSchemaObjectBase<TChild>,
+): void {
   if (schema.enum !== undefined) {
     result.enum = schema.enum;
   }
@@ -251,10 +272,10 @@ export function writeEnumFields(schema: CastrSchema, result: JsonSchemaObject): 
  * Does NOT write OAS-only fields (xml, externalDocs, discriminator).
  * @internal
  */
-export function writeAllJsonSchemaFields(
+export function writeAllJsonSchemaFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   writeTypeField(schema, result);
   writeStringFields(schema, result);

@@ -1,28 +1,29 @@
 /**
- * JSON Schema parsing helpers — field extraction and recursive structures.
+ * JSON Schema parsing helpers — field extraction, recursive structures, and
+ * the shared recursion contract ({@link ParseSchemaFn},
+ * {@link parseSingleSchemaOrRef}, {@link createDefaultMetadata}) every
+ * keyword parser routes through, so root and nested schemas take one code
+ * path (defect F-03 arose from the two diverging).
  *
  * Pure functions used by the core parser. Split to comply with ADR-036.
  *
  * **Library Types:**
- * Uses JsonSchema2020 (extends the shared OpenAPI seam).
+ * Uses JsonSchema2020 (built on the shared OpenAPI seam; boolean-capable, not a `SchemaObject` subtype).
  *
  * @internal
  */
 
 import {
-  type SchemaObject,
   type ReferenceObject,
   type SchemaObjectType,
   isReferenceObject,
 } from '../../../shared/openapi-types.js';
-import type { CastrSchema } from '../../ir/index.js';
+import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE: SchemaObjectType = 'null';
-
-type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
 
 /** @internal */
 export function parseFormat(input: JsonSchema2020, result: CastrSchema): void {
@@ -159,10 +160,8 @@ export function parseArrayFields(
   result: CastrSchema,
   parseSchema: ParseSchemaFn,
 ): void {
-  if (input.items !== undefined && !isReferenceObject(input.items)) {
-    result.items = parseSchema(input.items);
-  } else if (input.items !== undefined) {
-    result.items = parseSchema({ $ref: input.items.$ref });
+  if (input.items !== undefined) {
+    result.items = parseSingleSchemaOrRef(input.items, parseSchema);
   }
   if (input.prefixItems !== undefined) {
     result.prefixItems = input.prefixItems.map((i) => parseSingleSchemaOrRef(i, parseSchema));
@@ -199,12 +198,45 @@ export function parseComposition(
   }
 }
 
-// ── Shared utility ────────────────────────────────────────────────────────
+// ── Shared recursion contract ─────────────────────────────────────────────
 
-function parseSingleSchemaOrRef(
-  value: SchemaObject | ReferenceObject,
+/**
+ * Recursive parse callback supplied by the core parser. Accepts boolean
+ * schemas so nested `true`/`false` survive at every recursive position.
+ * @internal
+ */
+export type ParseSchemaFn = (input: JsonSchema2020 | boolean) => CastrSchema;
+
+/**
+ * Create a default CastrSchemaNode.
+ * @internal
+ */
+export function createDefaultMetadata(overrides?: { nullable?: boolean }): CastrSchemaNode {
+  return {
+    required: false,
+    nullable: overrides?.nullable ?? false,
+    zodChain: { presence: '', validations: [], defaults: [] },
+    dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+    circularReferences: [],
+  };
+}
+
+/**
+ * Parse a value that may be a boolean schema, a schema object, or a `$ref`.
+ *
+ * The boolean branch routes through the same callback as objects, so the
+ * caller's post-processing (e.g. `metadata.required` mirroring on property
+ * members) applies to boolean children identically.
+ *
+ * @internal
+ */
+export function parseSingleSchemaOrRef(
+  value: JsonSchema2020 | ReferenceObject | boolean,
   parseSchema: ParseSchemaFn,
 ): CastrSchema {
+  if (typeof value === 'boolean') {
+    return parseSchema(value);
+  }
   if (isReferenceObject(value)) {
     return parseSchema({ $ref: value.$ref });
   }

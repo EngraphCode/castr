@@ -9,7 +9,7 @@
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
 import { assertSchemaComponentsSupportIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
-import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
+import type { JsonSchemaNode } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
 /**
@@ -24,8 +24,15 @@ const JSON_SCHEMA_2020_12_DIALECT = 'https://json-schema.org/draft/2020-12/schem
  * Adds the `$schema` dialect URI to the output. Use this when emitting
  * a single, self-contained JSON Schema document.
  *
+ * A boolean schema (`booleanSchema` IR node) is emitted as the bare boolean:
+ * `true`/`false` are complete JSON Schema 2020-12 documents in themselves,
+ * and wrapping one in an object would fabricate structure the input never
+ * had. The `$schema` dialect URI is writer-added metadata, so dropping it
+ * for a boolean root loses nothing the input supplied.
+ *
  * @param schema - The IR schema to convert
- * @returns A valid JSON Schema 2020-12 document with `$schema` set
+ * @returns A valid JSON Schema 2020-12 document (with `$schema` set on
+ *   object documents; bare `true`/`false` for boolean schemas)
  *
  * @example
  * ```typescript
@@ -43,17 +50,10 @@ const JSON_SCHEMA_2020_12_DIALECT = 'https://json-schema.org/draft/2020-12/schem
  *
  * @public
  */
-export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaObject {
+export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaNode | boolean {
   const result = writeJsonSchema(schema);
   if (typeof result === 'boolean') {
-    // Boolean schemas at the document level: wrap in an object with $schema.
-    // JSON Schema documents are always objects, so we use the canonical
-    // equivalent: true → {} and false → { not: {} }.
-    const doc: JsonSchemaObject = { $schema: JSON_SCHEMA_2020_12_DIALECT };
-    if (!result) {
-      doc.not = {};
-    }
-    return doc;
+    return result;
   }
   result.$schema = JSON_SCHEMA_2020_12_DIALECT;
   return result;
@@ -85,10 +85,10 @@ export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaObject {
  *
  * @public
  */
-export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonSchemaObject {
+export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonSchemaNode {
   assertSchemaComponentsSupportIntegerTargetCapabilities(components, 'JSON Schema 2020-12');
 
-  const result: JsonSchemaObject = {
+  const result: JsonSchemaNode = {
     $schema: JSON_SCHEMA_2020_12_DIALECT,
   };
 
@@ -97,19 +97,12 @@ export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonS
   }
 
   const sorted = [...components].sort((left, right) => left.name.localeCompare(right.name));
-  const defs: Record<string, JsonSchemaObject> = {};
+  const defs: Record<string, JsonSchemaNode | boolean> = {};
 
   for (const component of sorted) {
-    const written = writeJsonSchema(component.schema);
-    // Boolean schemas at the $defs level are valid JSON Schema 2020-12 but
-    // the shared JsonSchemaObject type uses Record<string, JsonSchemaObject>.
-    // Components with boolean schemas should be rare; if encountered, represent
-    // as the canonical JSON Schema equivalent: true → {}, false → { not: {} }.
-    if (typeof written === 'boolean') {
-      defs[component.name] = written ? {} : { not: {} };
-    } else {
-      defs[component.name] = written;
-    }
+    // Boolean schemas are valid `$defs` members in JSON Schema 2020-12 and
+    // are emitted as bare `true`/`false`, exactly as authored.
+    defs[component.name] = writeJsonSchema(component.schema);
   }
 
   result.$defs = defs;
