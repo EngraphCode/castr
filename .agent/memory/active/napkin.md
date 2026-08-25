@@ -1073,3 +1073,14 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   (post-#58) is the definition of record for BOTH estates. Recorded as a due
   graduation (see pending-graduations); the doc's own scope wording still
   says "castr" in places where it now speaks for every Practice repo.
+
+- **Arming addendum (same seat, ~16:1xZ)**: the Routine was re-created
+  poke-only (`trig_01CbRJjyivM34E7fq2jfLqLJ`) and the arming is FROZEN at
+  runbook step 3 pending the owner-commissioned fresh-session review — the
+  authoritative hold record is the proof-programme thread record's
+  "Arming hold" note. First Practice-Repos session start hit a transient
+  `keyserver.ubuntu.com` 503 (now in the cloud-environment fragile-hosts
+  register; retry succeeded). Platform measurements: no disabled flag at
+  trigger create (poke-only is the equivalent); `connectors` param refused
+  for this org (UI-attach only, Q-01 re-confirmed); `fire_trigger` carries
+  a per-fire text payload.
