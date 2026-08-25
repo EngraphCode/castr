@@ -149,6 +149,7 @@ Domain experts (castr schema surface):
 - `.agent/rules/` — operationalized doctrine
 - `.agent/sub-agents/` — canonical reviewer and domain-expert templates
 - `.agent/practice-core/` — portable Core package
+- `.agent/claude-harness-integrations/` — account-side environment and Routine integration docs, plus the account-portability register
 - `.agent/plans/active/` — primary active plan plus any explicit parked-in-place exception
 - `.agent/plans/current/paused/` — incomplete but non-primary resumable workstreams
 - `.agent/plans/current/complete/` — completed atomic plans staged before archive
@@ -164,4 +165,7 @@ at `.agent/setup/cloud-session-setup.sh` (this repo currently defines none).
 The script `.agent/claude-harness-integrations/cloud-environment-setup.sh`
 is the environment script's source of truth — edit it, never the claude.ai
 dialog directly — and `.agent/claude-harness-integrations/cloud-environment.md`
-is the operating doc to read before changing anything.
+is the operating doc to read before changing anything. Every account-side
+dependency of these sessions (environment, Routine, GitHub grant, Slack, and
+their recreate procedures for restarting on another account) is indexed in
+`.agent/claude-harness-integrations/account-portability-register.md`.

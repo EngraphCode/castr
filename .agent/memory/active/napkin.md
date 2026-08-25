@@ -2,6 +2,49 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-25 (owner-redirected scheduled firing — account-portability landing — Sardine turns Coral / 01QpYc)
+
+- **Owner redirected a scheduled firing live, mid-protocol:** the goal became "the repo
+  alone must carry everything required to restart the routine and project on an
+  unrelated account", then widened to ALL session machinery, portable/discoverable/
+  repeatable via the repo. Landed: `arming-runbook.md` (proof-programme collection),
+  `account-portability-register.md` + `account-access.md` (claude-harness-integrations),
+  entry pointers from AGENT.md, parent-plan, cloud-environment.md.
+- **`~/.claude` in cloud containers is vendor infrastructure, not owner config**
+  (measured this session, one account): `remote-settings.json` is `{}`; the SessionStart
+  git-identity and Stop-time git-check hooks are wired by the launcher's own
+  `launcher-settings.json`; `~/.claude/skills/synced` holds only the standard Anthropic
+  bundle. Register records it as a verified non-dependency — do not conserve copies.
+- **Docs-reviewer round 1 caught me presenting the unproven trigger self-disable as a
+  working kill switch** in the first runbook draft (loop review R3/R5 says no fired
+  session has proven platform trigger tools) — a fresh instance of writing capability
+  as fact; the review-before-land discipline caught it.
+- **Round 2 caught the drift-fix-that-drifts:** my cloud-environment.md correction
+  replaced "this repo's hook installs Playwright Chromium" (false — no `.agent/setup/`)
+  with "Playwright ships with the base image" (also unevidenced; castr's e2e is plain
+  vitest and needs no browser at all). When curing doc drift, verify the REPLACEMENT
+  claim from repo evidence with the same rigour as the falsified one.
+- **Consolidate-at-second-consumer fired mechanically:** the register indexing the
+  runbook's §GitHub side made the register the second consumer of general
+  account-access content parked in a plan collection — lifted it to
+  `account-access.md` beside the register rather than pointing standing doctrine at an
+  archivable plan.
+- **Owner ruling (2026-08-25, this session, verbatim substance):** cloud environments
+  with a single agent do not need commit queues, and until the Slack work completes they
+  cannot partake in comms — that ceremony can and should be skipped in such sessions.
+  Candidate consolidation target: a cloud-single-agent clause in the commit skill
+  canonical (and the comms rules), pending a consolidation pass.
+- **Fresh-container claims-CLI seed correction (supersedes the 2026-08-23 note):** the
+  archive file's schema now REJECTS `commit_queue` — seed `active-claims.json` with
+  `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}` but
+  `closed-claims.archive.json` with `{"schema_version":"1.3.0","claims":[]}`; the
+  earlier both-files seed fails `validate-collaboration-state` inside pre-commit.
+- **Live environment dialog captured via owner screenshots:** the write-only
+  "Practice Repos" dialog was fully specified into `cloud-environment.md` §The full
+  environment definition (complete domains list incl. the two Artifact frame wildcards,
+  live Slack Watcher values). Screenshots from the owner are a legitimate read path for
+  write-only account surfaces.
+
 ## 2026-08-23 (proof-programme scheduled firing — PR #35 drive to merged — Fruited Swaying Leaf)
 
 - **The QD-5 overlap guard worked as designed on its first live use:** no `FIRING-LEASE`
