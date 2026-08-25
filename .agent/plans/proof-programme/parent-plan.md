@@ -17,7 +17,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-04
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
-    status: pending
+    status: in_progress
     depends_on: [Q-00]
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'

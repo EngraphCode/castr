@@ -837,3 +837,25 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   when its area pattern normalises to `index/head` — `git:index/head` as the PATTERN
   (kind already `git`) is rejected as "not an active git:index/head claim". The kind
   carries the `git:`; the pattern carries only `index/head`.
+
+## 2026-08-25 (proof-programme scheduled firing — Q-04 F-03 nested Boolean schemas — Stratospheric Hovering Thermal)
+
+- **The claims CLI now has `claims init`** — seeds both gitignored state files with canonical
+  shapes on a fresh container (the 2026-08-23 firing's hand-seed candidate landed). Sequence
+  that works: `claims init --active … --closed …`, then `identity preflight`, then
+  `claims open`. The fired-seat identity seed still needs an explicit `--seed` (the
+  `PRACTICE_AGENT_SESSION_ID_CLAUDE` env is absent in tool shells; prefix still degenerates
+  to `sessio` — Q-15/PR #54 territory, not re-fixed here).
+- **F-03 premise re-verified firsthand, and it is THREE layers, not one** (probe script,
+  pre-implementation): (1) `normalizeDraft07` recursion spreads nested booleans into `{}`
+  (`{...false}` → `{}`) — the collapse happens BEFORE the parser at
+  items/prefixItems/allOf/oneOf/anyOf/$defs/properties/dependentSchemas; (2) the parser
+  recursion callback lacks the boolean branch everywhere except `if`/`then`/`else`;
+  (3) the json-schema WRITER's recursion callback (`writeJsonSchemaObject`) lacks the
+  `booleanSchema` branch, so even the correctly-parsed `then: false` IR writes back as
+  `then: {}` — measured live. The report's named root cause ("root and recursion used
+  different callbacks") holds at every layer; the OpenAPI writer is the counter-example
+  that already unifies root and recursion (throws on booleanSchema, fail-fast doctrine).
+- **PR #54 (live interactive Practice-equality session) lands `.agent/plans/templates/`** —
+  Q-16's premise (the templates directory does not exist) moves when it merges; Q-16 must be
+  re-adjudicated against the merged base before any firing claims it.
