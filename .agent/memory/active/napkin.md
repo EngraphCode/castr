@@ -863,3 +863,23 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   untouched. The address-relay distinction (recipient blocks omit
   naming_schema_version — provenance unknowable to the sender) came straight from
   OCE's counterpart tests and its cli-comms-recipient guard comment.
+
+## 2026-08-25 (PR-driving sitting — review rounds on the equality PRs)
+
+- **A no-assert replace lies twice.** Two silent no-ops this arc: the blocked-compound
+  stale COMMIT_EDITMSG (mislabelled commit 35f1471), and a python `s.replace` that
+  printed "caller fixed" for OCE's statusline while the real production caller lived
+  in a different file (`statusline-emit.ts`) — Codex caught the dead branch a round
+  later. Rule of thumb now followed: every scripted replace carries an `assert old in s`,
+  and "fixed" is only printed by code that would have thrown otherwise.
+- **Codex corrected my ULID arithmetic**: first-6 of a ULID covers 28 significant
+  timestamp bits (top two of 30 are zero from left-padding 48 bits into 50), so the
+  shared-prefix window is 2^20 ms ≈ 17 minutes, not ~4. Both PDR-027s now carry the
+  derivation inline. Supersedes the ~4-minute figure in the 2026-08-24 napkin entry
+  and the equality plan's risk note.
+- **Practice-core portability enforced by a reviewer**: naming an estate as incident
+  provenance inside PDR-027 travels as canonical doctrine when the core is copied;
+  de-estated in both repos — estate-specific pointers live in PR/commit records.
+- **Reviewer-cancelled CI reads as failure**: OCE's run-quality-gates rollup treats a
+  `cancelled` gate (auto-superseded by a newer push) as blocking; the cure is nothing —
+  the current head's run is the real signal. Don't chase red on superseded heads.
