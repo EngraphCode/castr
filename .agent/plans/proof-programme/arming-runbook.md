@@ -128,7 +128,11 @@ beyond them is needed for the Routine.
    restore and verify the canonical prompt (the section above) before enabling.
    Routine-prompt step 2 then takes the read-only no-op path — grounding by
    reading only, no claim, the queued-decisions read, the stand-down echo with criterion
-   "dry-run complete", session handoff — and leaves no repo-state change. Confirm the
+   "dry-run complete", session handoff — and leaves no repo-state change. Those last two
+   compose per routine-prompt step 2's own bound: the handoff's sequence is exercised
+   with every repo-tracked write withheld — nothing committed or pushed, outputs held
+   instance-tier only — so the proof exercises the closeout, never its landing; the new
+   identity's row lands with the first live firing instead. Confirm the
    completion notification reaches the owner.
 5. **Pre-enable state reconciliation on main** — the carried-over repo state was written
    on another host, so verify it is drivable here: no

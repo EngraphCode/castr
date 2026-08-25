@@ -27,7 +27,10 @@ consumer.
   the ruleset blocks a red merge for everyone; the firing's clause 3 check decides an
   unattended green one.
 - Validation (access): a fresh session reads the repo and pushes a branch — the Q-01
-  Kingfisher proof shape (parent plan, Q-01 evidence record).
+  Kingfisher proof shape (parent plan, Q-01 evidence record). A branch push verifies
+  contents access only: it triggers no CI and exercises no pull-request permission, so
+  the draft-PR settings validation below is also the proof of PR-creation and CI
+  access — run it before enabling the Routine, not merely after recreating settings.
 
 ## Repository settings
 
