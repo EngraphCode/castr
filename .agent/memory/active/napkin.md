@@ -1034,3 +1034,53 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   environment definition (complete domains list incl. the two Artifact frame wildcards,
   live Slack Watcher values). Screenshots from the owner are a legitimate read path for
   write-only account surfaces.
+
+## 2026-08-25 (PR-drive closeout — Kraken calls Abyss / 0178h2)
+
+- **Drive outcome, castr side**: #53 (`e62891ee`), #56 (`b6a66e46`), #57
+  (`9d026d04`), #58 (`da7b290c`) all merged under the owner-commissioned
+  cross-estate drive (OCE #18/#17 merged the same day). Every review thread
+  was dispositioned with evidence and resolved before each merge; all merges
+  are non-admin merge commits at the clause-3 bar.
+- **#58's convergence arc worked ADR-051 clause 4 as designed**: round tally
+  2→4→1. Round 3's four findings split two-fixed (STOP-file check pulled
+  ahead of the dry run; open-work conservation before requeueing) and
+  two-carried (write-binding probe = first live firing; Slack binding =
+  owner-manual account act) — the carried pair recorded with bounds and
+  reopen conditions in the runbook's new §Accepted residuals. Round 4's one
+  fresh finding (restore the setup script after a preflight paste) was
+  carried per the third-round stop rule: the owning contract's diagnosis
+  loop step 4 already records the re-paste as the closing move, and a missed
+  restore fails loudly at the dry-run firing's first CLI use (WIP=1 bounds
+  it). Reopen condition on the thread.
+- **Semantic base-merge, second live use**: #58's pre-merge base update was
+  done locally (GitHub's merge button bypasses the `engraph-semantic-merge`
+  driver) with three hand-unioned memory files (`repo-continuity.md` cell
+  union, `napkin.md` chronological block union, thread-record note rewrite),
+  each proven lossless mechanically. In OCE the same discipline caught a
+  subtler case: a conflict-side row (`cloud-environment-bootstrap`) whose
+  deletion was a deliberate retirement on the other parent — the union
+  honours the newer deletion, and the set-diff check is what makes that
+  visible instead of silently resurrecting the row.
+- **Follow-up routed (not done): guarded unshallow in
+  `cloud-environment-setup.sh`** — this drive's OCE session ran in a DEFAULT
+  container whose shallow clone broke a validator's `BASELINE_COMMIT` read
+  (`git fetch --unshallow` cured it in-session). The shared setup script
+  should unshallow guardedly (only when `.git/shallow` exists), with the
+  probe-invariant respected (no new hosts).
+- **Owner ruling needing its castr home**: a SINGLE environment definition
+  serves both OCE and castr instances — this repo's `cloud-environment.md`
+  (post-#58) is the definition of record for BOTH estates. Recorded as a due
+  graduation (see pending-graduations); the doc's own scope wording still
+  says "castr" in places where it now speaks for every Practice repo.
+
+- **Arming addendum (same seat, ~16:1xZ)**: the Routine was re-created
+  poke-only (`trig_01CbRJjyivM34E7fq2jfLqLJ`) and the arming is FROZEN at
+  runbook step 3 pending the owner-commissioned fresh-session review — the
+  authoritative hold record is the proof-programme thread record's
+  "Arming hold" note. First Practice-Repos session start hit a transient
+  `keyserver.ubuntu.com` 503 (now in the cloud-environment fragile-hosts
+  register; retry succeeded). Platform measurements: no disabled flag at
+  trigger create (poke-only is the equivalent); `connectors` param refused
+  for this org (UI-attach only, Q-01 re-confirmed); `fire_trigger` carries
+  a per-fire text payload.

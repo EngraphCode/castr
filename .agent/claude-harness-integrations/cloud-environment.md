@@ -105,7 +105,19 @@ session. Four consequences, each with its instrument:
 
 ## Suspected-fragile hosts register
 
-Empty. A setup-time preflight paste on 2026-08-24 ran 12/12 from a true
+- **`keyserver.ubuntu.com`** — registered 2026-08-25 on a setup-time card:
+  the git-core PPA key fetch
+  (`/pks/lookup?op=get&search=0xA1715D88E1DF1F24`) returned HTTP 503 and
+  fail-fasted session creation in the git phase. Three in-session probes of
+  the exact URL minutes later returned 200/200/200, and a plain retry of
+  session creation succeeded — a transient origin-side episode, the known
+  flakiness class of the Ubuntu HKP pool, not an allow-list or proxy
+  failure (those read as 403/CONNECT). Standing disposition: retry first.
+  Routed cure candidate for the setup script (lands via PR per §Changing
+  the environment): a bounded retry-with-backoff on this fetch.
+
+Before this entry the register was empty: a setup-time preflight paste on
+2026-08-24 ran 12/12 from a true
 fresh builder, positively confirming every previously registered host —
 `nodejs.org`, `registry.npmjs.org`, `keyserver.ubuntu.com`, and the
 gitleaks release-asset redirect target (measured as

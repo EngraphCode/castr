@@ -57,6 +57,31 @@ programme's queued-decisions register carry every standing decision; this
 record points and never duplicates. The queue frontmatter and incident
 register are the live lane state.
 
+Arming hold (2026-08-25 ~16:0xZ, Kraken calls Abyss 0178h2 — READ BEFORE ANY
+FIRING OR ENABLE ACT): the Routine was re-created on this account per the
+arming runbook, and the arming is DELIBERATELY FROZEN at runbook step 3.
+Live state: trigger `trig_01CbRJjyivM34E7fq2jfLqLJ` ("Castr proof-programme
+(ADR-051)"), fresh-session mode, bound to the "Practice Repos" environment
+(`env_01T3vjKqpMKCbv5EzaLGczLL`, validated by a successful session start
+2026-08-25 after one transient keyserver 503 — see the cloud-environment
+fragile-hosts register), stored prompt verbatim per the runbook,
+notifications push-only/no-email, **poke-only: no cron, so it can never
+self-fire**. NOT yet done: owner UI acts (attach the castr repo source,
+attach the Slack connector, set model Fable, confirm auto-fix OFF), the
+step-4 dry run, the step-5 owner re-read of the seven OPEN queued
+decisions (QD-1/2/4/9/10/11/12; the repo-state half of step 5 verified
+2026-08-25: no STOP, streak 0, no in_progress rows, no open programme PR),
+and the enable (cron `3 */8 * * *` goes on only then). **Owner commission
+(2026-08-25, in-session word): the Routine set-up is to be REVIEWED IN A
+FRESH SESSION before any dry-run or enable** — no session fires or enables
+this trigger until that review passes and the owner says so. Platform
+facts for the reviewer: this API surface creates triggers live with no
+disabled flag (poke-only is the honest "disabled" equivalent); the
+`connectors` create-parameter is refused for this organization (connector
+attach is owner-UI only, re-confirming the Q-01 measurement); and
+`fire_trigger` accepts a per-fire text payload, so the step-4 DRY-RUN
+instruction needs no stored-prompt prepend on this surface.
+
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
 [PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the

@@ -114,3 +114,18 @@ untouched by the ruling.
 trigger-condition: already fired (unconditional owner ruling); lands at the next
 consolidation pass or the next session touching those canonicals.
 status: due.
+
+### Single environment definition serves every Practice repo (owner ruling)
+
+Owner ruling 2026-08-25 (in-session to the PR-drive seat, Kraken calls Abyss
+0178h2): "We are going to use a single environment definition for both OCE and
+Castr instances." This repo's
+`.agent/claude-harness-integrations/cloud-environment.md` (post PR #58) is the
+definition of record for BOTH estates. Candidate permanent home: a scope
+statement in that document's preamble naming every Practice repo as its
+consumer, plus the OCE environment doc becoming a GitHub-URL pointer at it
+(the OCE half is routed in OCE's 2026-08-25 closeout napkin entry).
+`[captured: 2026-08-25 | source: owner word, PR-drive session (napkin 2026-08-25 closeout entry)]`
+trigger-condition: already fired (unconditional owner ruling); lands at the next
+consolidation pass or the next session touching the environment doc.
+status: due.
