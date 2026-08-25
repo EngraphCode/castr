@@ -108,15 +108,27 @@ only true test bench.
 ## GitHub side
 
 The GitHub prerequisites — hosting with Actions running CI, the access grant and its
-scope, attribution credentials, and the no-platform-merge-gate posture — are general to
-every session type, not Routine-specific, and live in
+scope, attribution credentials, the repository settings (the branch ruleset requiring
+the `quality-gates` check plus the scanning/quality/coverage rules, and CodeQL default
+setup), and the merge-safety split (ADR-051 clause 3 is the merge AUTHORITY for
+programme PRs; the ruleset is the PLATFORM enforcement — both halves must exist) — are
+general to every session type, not Routine-specific, and live in
 [`account-access.md`](../../claude-harness-integrations/account-access.md). Nothing
 beyond them is needed for the Routine.
 
 ## Arming sequence on a new account
 
 1. Provision and validate the cloud environment (section above).
-2. Grant GitHub access to the repository.
+2. Grant GitHub access to the repository, **recreate the repository settings** —
+   the branch ruleset (required `quality-gates` status check; code-scanning,
+   code-quality, and coverage rules with the recorded floors) and CodeQL default
+   setup, per
+   [`account-access.md`](../../claude-harness-integrations/account-access.md)
+   §Repository settings — and **validate them with the draft-PR observation**
+   (open a disposable draft PR from a scratch branch, observe the full required
+   check set report against the ruleset, close it). Do not proceed to step 3
+   until the platform gate is proven live: without it the Routine would run with
+   merge and coverage controls silently absent.
 3. Create the Routine **disabled**, fresh-session mode, with the verbatim stored prompt
    and the cron above; owner attaches the repo and the Slack connector (where the
    workspace exists) in the UI; set the model; notifications push-only; auto-fix OFF.
@@ -128,12 +140,12 @@ beyond them is needed for the Routine.
    restore and verify the canonical prompt (the section above) before enabling.
    Routine-prompt step 2 then takes the read-only no-op path — grounding by
    reading only, no claim, the queued-decisions read, the stand-down echo with criterion
-   "dry-run complete", session handoff — and leaves no repo-state change. Those last two
-   compose per routine-prompt step 2's own bound: the handoff's sequence is exercised
-   with every repo-tracked write withheld — nothing committed or pushed, outputs held
-   instance-tier only — so the proof exercises the closeout, never its landing; the new
-   identity's row lands with the first live firing instead. Confirm the
-   completion notification reaches the owner.
+   "dry-run complete", and the closeout under routine-prompt step 2's **DRY-RUN
+   READ-ONLY closeout profile** (defined there as the authoritative narrowing: the
+   step-9 sequence exercised with every repo-tracked write withheld, outputs held
+   instance-tier, the identity row deferred to the first live firing) — so the proof
+   exercises the closeout, never its landing, and leaves no repo-state change. Confirm
+   the completion notification reaches the owner.
 5. **Pre-enable state reconciliation on main** — the carried-over repo state was written
    on another host, so verify it is drivable here: no
    `.agent/plans/proof-programme/STOP` file present; no queue row left `in_progress`
