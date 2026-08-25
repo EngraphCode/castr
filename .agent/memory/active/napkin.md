@@ -39,6 +39,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}` but
   `closed-claims.archive.json` with `{"schema_version":"1.3.0","claims":[]}`; the
   earlier both-files seed fails `validate-collaboration-state` inside pre-commit.
+- **Owner correction at the wrap boundary: work is not safe until pushed AND in a PR —
+  a draft PR suffices, and branches without PRs are trivially lost and orphaned.** I read
+  the wrap skill's own "committed AND pushed AND on a PR" invariant and still left the
+  branch PR-less, reasoning that opening a PR needed an owner ask (the harness's
+  don't-create-PRs-unasked default). Wrong resolution of the conflict: a safety draft PR
+  is loss-protection mechanics, not a merge decision — it needs no permission and the
+  standing invariant wins over the platform default. The owner opened PR #58 themselves.
 - **Live environment dialog captured via owner screenshots:** the write-only
   "Practice Repos" dialog was fully specified into `cloud-environment.md` §The full
   environment definition (complete domains list incl. the two Artifact frame wildcards,
