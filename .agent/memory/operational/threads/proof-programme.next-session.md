@@ -37,17 +37,11 @@ programme's delivery evidence rather than retro-filled here.)
 Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
 programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-25: the Q-04 slice PR on `claude/dazzling-cannon-1do9ve` is the open PR to
-drive if not yet merged; else claim the next eligible row). Verification: the PR
-merged, or a row's state advanced on the base.
-
-Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
-(owner-directed, outside the queue) is up as
-[PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the
-Claude Code UI; head `claude/dazzling-cannon-78571f`). It is not a programme
-queue PR — ADR-051 clause 3 does not govern it; the owner invokes the merge.
-Until it merges, the arming runbook and portability register exist only on that
-branch.
+2026-08-25: Q-04's PR #55 MERGED at `2066a142`; no programme PR is open, so the
+next firing claims the next eligible row — Q-05..Q-09, Q-13, Q-14, Q-16 (premises
+moved: PR #54 landed the plan templates — re-adjudicate against the merged base
+before claiming), Q-17, Q-18, Q-20, Q-21). Verification: the PR merged, or a
+row's state advanced on the base.
 
 ## Session shape and grounding order
 
@@ -62,3 +56,12 @@ The governing ADR (autonomous-background-implementation-loop) and the
 programme's queued-decisions register carry every standing decision; this
 record points and never duplicates. The queue frontmatter and incident
 register are the live lane state.
+
+Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
+(owner-directed, outside the queue) landed via
+[PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the
+Claude Code UI; head `claude/dazzling-cannon-78571f`). It is not a programme
+queue PR — ADR-051 clause 3 does not govern it; the owner invoked this drive to
+merge it. The arming runbook and portability register live at
+`.agent/plans/proof-programme/arming-runbook.md` and
+`.agent/claude-harness-integrations/account-portability-register.md`.

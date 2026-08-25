@@ -2,68 +2,6 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
-## 2026-08-25 (owner-redirected scheduled firing — account-portability landing — Sardine turns Coral / 01QpYc)
-
-- **Owner redirected a scheduled firing live, mid-protocol:** the goal became "the repo
-  alone must carry everything required to restart the routine and project on an
-  unrelated account", then widened to ALL session machinery, portable/discoverable/
-  repeatable via the repo. Landed: `arming-runbook.md` (proof-programme collection),
-  `account-portability-register.md` + `account-access.md` (claude-harness-integrations),
-  entry pointers from AGENT.md, parent-plan, cloud-environment.md.
-- **`~/.claude` in cloud containers is vendor infrastructure, not owner config**
-  (measured this session, one account): `remote-settings.json` is `{}`; the SessionStart
-  git-identity and Stop-time git-check hooks are wired by the launcher's own
-  `launcher-settings.json`; `~/.claude/skills/synced` holds only the standard Anthropic
-  bundle. Register records it as a verified non-dependency — do not conserve copies.
-- **Docs-reviewer round 1 caught me presenting the unproven trigger self-disable as a
-  working kill switch** in the first runbook draft (loop review R3/R5 says no fired
-  session has proven platform trigger tools) — a fresh instance of writing capability
-  as fact; the review-before-land discipline caught it.
-- **Round 2 caught the drift-fix-that-drifts:** my cloud-environment.md correction
-  replaced "this repo's hook installs Playwright Chromium" (false — no `.agent/setup/`)
-  with "Playwright ships with the base image" (also unevidenced; castr's e2e is plain
-  vitest and needs no browser at all). When curing doc drift, verify the REPLACEMENT
-  claim from repo evidence with the same rigour as the falsified one.
-- **Consolidate-at-second-consumer fired mechanically:** the register indexing the
-  runbook's §GitHub side made the register the second consumer of general
-  account-access content parked in a plan collection — lifted it to
-  `account-access.md` beside the register rather than pointing standing doctrine at an
-  archivable plan.
-- **Owner ruling (2026-08-25, this session, verbatim substance):** cloud environments
-  with a single agent do not need commit queues, and until the Slack work completes they
-  cannot partake in comms — that ceremony can and should be skipped in such sessions.
-  Candidate consolidation target: a cloud-single-agent clause in the commit skill
-  canonical (and the comms rules), pending a consolidation pass.
-- **Fresh-container claims-CLI seed correction (supersedes the 2026-08-23 note):** the
-  archive file's schema now REJECTS `commit_queue` — seed `active-claims.json` with
-  `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}` but
-  `closed-claims.archive.json` with `{"schema_version":"1.3.0","claims":[]}`; the
-  earlier both-files seed fails `validate-collaboration-state` inside pre-commit.
-- **Owner correction at the wrap boundary: work is not safe until pushed AND in a PR —
-  a draft PR suffices, and branches without PRs are trivially lost and orphaned.** I read
-  the wrap skill's own "committed AND pushed AND on a PR" invariant and still left the
-  branch PR-less, reasoning that opening a PR needed an owner ask (the harness's
-  don't-create-PRs-unasked default). Wrong resolution of the conflict: a safety draft PR
-  is loss-protection mechanics, not a merge decision — it needs no permission and the
-  standing invariant wins over the platform default. The owner opened PR #58 themselves.
-- **A `cancelled` gate reads as a quality-gates FAILURE on the superseded head:** the
-  fail-closed fan-in blocks on `cancelled` results, so pushing a new commit mid-run
-  makes the old head's `quality-gates` land red. Before diagnosing a red fan-in, check
-  whether its head is still the PR head and whether the RESULTS line says `cancelled`
-  rather than `failure`. (PR #58, run 32834143505.)
-- **PR #58 review round (Codex P1×2 + Copilot×6) verified-then-fixed in `45ccfbf7`:**
-  the big one — GitHub repository settings (branch ruleset with required
-  `quality-gates` check + scanning/quality/coverage rules, CodeQL default setup) ARE
-  account-side machinery; the register and account-access now carry the row, the
-  recorded thresholds, and a draft-PR validation instrument. Counters transfer
-  unchanged across migration (kill switches must still fire). All 8 threads replied
-  and resolved.
-- **Live environment dialog captured via owner screenshots:** the write-only
-  "Practice Repos" dialog was fully specified into `cloud-environment.md` §The full
-  environment definition (complete domains list incl. the two Artifact frame wildcards,
-  live Slack Watcher values). Screenshots from the owner are a legitimate read path for
-  write-only account surfaces.
-
 ## 2026-08-23 (proof-programme scheduled firing — PR #35 drive to merged — Fruited Swaying Leaf)
 
 - **The QD-5 overlap guard worked as designed on its first live use:** no `FIRING-LEASE`
@@ -1012,3 +950,87 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   boolean-ternary + object-only `narrowObjectOrRef` (one). When a lint rule fights a
   domain-true union, restructure so no FUNCTION returns the mixed union before ever
   considering a suppression — and a suppression is the owner's to add, never ours.
+
+<!-- fitness exceeded; needs consolidation — this continuation takes the file to ~968
+lines, past the rotation cadence (consolidation recorded as due in repo-continuity.md) -->
+
+- **A default-setup CodeQL language matrix follows the REPOSITORY's detected languages, so a
+  branch that predates another branch's first `.py` files fails `Analyze (python)` with a
+  17-second "no code seen" configuration error** — red that names nothing in your diff. The
+  cure is the standing base-integration rule, not a re-run: merge origin/main (which carried
+  PR #54's six python files) and the job goes green. Classification method that worked: check
+  the SAME check on the base branch's latest run and on the sibling PR before touching anything.
+- **The semantic-merge guard + concept-union worked on another live napkin conflict** (the
+  driver's first firing is recorded in the 2026-08-24 loop-review entry above): both
+  sides had appended disjoint session sections after a shared 839-line base, so the union is
+  base + theirs' section + ours' sections in chronological order; the merge-conclusion
+  plain-commit deviation (commit-skill sanctioned) landed it with the full hook chain green.
+- **Copilot's review corrected my variance prose a second time** — with `in out TChild`, a
+  narrower-returning callback stays assignable (return-type covariance); invariance rejects
+  callbacks returning values OUTSIDE the declared child type. Two reviewers in one firing
+  caught claims I wrote about the type system without compiling them first: compile the claim
+  before writing it, every time.
+
+## 2026-08-25 (owner-redirected scheduled firing — account-portability landing — Sardine turns Coral / 01QpYc)
+
+<!-- fitness exceeded; rotation due (recorded in repo-continuity §Deep Consolidation) — knowledge preserved per knowledge-preservation-over-fitness-warnings -->
+
+- **Owner redirected a scheduled firing live, mid-protocol:** the goal became "the repo
+  alone must carry everything required to restart the routine and project on an
+  unrelated account", then widened to ALL session machinery, portable/discoverable/
+  repeatable via the repo. Landed: `arming-runbook.md` (proof-programme collection),
+  `account-portability-register.md` + `account-access.md` (claude-harness-integrations),
+  entry pointers from AGENT.md, parent-plan, cloud-environment.md.
+- **`~/.claude` in cloud containers is vendor infrastructure, not owner config**
+  (measured this session, one account): `remote-settings.json` is `{}`; the SessionStart
+  git-identity and Stop-time git-check hooks are wired by the launcher's own
+  `launcher-settings.json`; `~/.claude/skills/synced` holds only the standard Anthropic
+  bundle. Register records it as a verified non-dependency — do not conserve copies.
+- **Docs-reviewer round 1 caught me presenting the unproven trigger self-disable as a
+  working kill switch** in the first runbook draft (loop review R3/R5 says no fired
+  session has proven platform trigger tools) — a fresh instance of writing capability
+  as fact; the review-before-land discipline caught it.
+- **Round 2 caught the drift-fix-that-drifts:** my cloud-environment.md correction
+  replaced "this repo's hook installs Playwright Chromium" (false — no `.agent/setup/`)
+  with "Playwright ships with the base image" (also unevidenced; castr's e2e is plain
+  vitest and needs no browser at all). When curing doc drift, verify the REPLACEMENT
+  claim from repo evidence with the same rigour as the falsified one.
+- **Consolidate-at-second-consumer fired mechanically:** the register indexing the
+  runbook's §GitHub side made the register the second consumer of general
+  account-access content parked in a plan collection — lifted it to
+  `account-access.md` beside the register rather than pointing standing doctrine at an
+  archivable plan.
+- **Owner ruling (2026-08-25, this session, verbatim substance):** cloud environments
+  with a single agent do not need commit queues, and until the Slack work completes they
+  cannot partake in comms — that ceremony can and should be skipped in such sessions.
+  Candidate consolidation target: a cloud-single-agent clause in the commit skill
+  canonical (and the comms rules), pending a consolidation pass.
+- **Fresh-container claims-CLI seed correction (supersedes the 2026-08-23 note):** the
+  archive file's schema now REJECTS `commit_queue` — seed `active-claims.json` with
+  `{"schema_version":"1.3.0","claims":[],"commit_queue":[]}` but
+  `closed-claims.archive.json` with `{"schema_version":"1.3.0","claims":[]}`; the
+  earlier both-files seed fails `validate-collaboration-state` inside pre-commit.
+- **Owner correction at the wrap boundary: work is not safe until pushed AND in a PR —
+  a draft PR suffices, and branches without PRs are trivially lost and orphaned.** I read
+  the wrap skill's own "committed AND pushed AND on a PR" invariant and still left the
+  branch PR-less, reasoning that opening a PR needed an owner ask (the harness's
+  don't-create-PRs-unasked default). Wrong resolution of the conflict: a safety draft PR
+  is loss-protection mechanics, not a merge decision — it needs no permission and the
+  standing invariant wins over the platform default. The owner opened PR #58 themselves.
+- **A `cancelled` gate reads as a quality-gates FAILURE on the superseded head:** the
+  fail-closed fan-in blocks on `cancelled` results, so pushing a new commit mid-run
+  makes the old head's `quality-gates` land red. Before diagnosing a red fan-in, check
+  whether its head is still the PR head and whether the RESULTS line says `cancelled`
+  rather than `failure`. (PR #58, run 32834143505.)
+- **PR #58 review round (Codex P1×2 + Copilot×6) verified-then-fixed in `45ccfbf7`:**
+  the big one — GitHub repository settings (branch ruleset with required
+  `quality-gates` check + scanning/quality/coverage rules, CodeQL default setup) ARE
+  account-side machinery; the register and account-access now carry the row, the
+  recorded thresholds, and a draft-PR validation instrument. Counters transfer
+  unchanged across migration (kill switches must still fire). All 8 threads replied
+  and resolved.
+- **Live environment dialog captured via owner screenshots:** the write-only
+  "Practice Repos" dialog was fully specified into `cloud-environment.md` §The full
+  environment definition (complete domains list incl. the two Artifact frame wildcards,
+  live Slack Watcher values). Screenshots from the owner are a legitimate read path for
+  write-only account surfaces.
