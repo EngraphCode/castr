@@ -27,11 +27,14 @@ heartbeat cron, before team-start broadcast, before any source claim.
 Run one event-driven watcher over the full
 `.agent/state/collaboration/comms/` directory, emitting one notification
 per new event, with **self-exclusion only** — filter out events authored
-by the agent's own PDR-076a routing identity, the `(agent_name, id)`
-pair the canonical comparator implements
-([`agent-tools/src/collaboration-state/active-agent-routing.ts`](../../agent-tools/src/collaboration-state/active-agent-routing.ts);
-`platform`, `model`, and `session_id_prefix` are NOT routing weights) —
-and emit everything else. Apply relevance triage
+by the agent's own PDR-076a routing identity. The canonical comparator
+([`agent-tools/src/collaboration-state/active-agent-routing.ts`](../../agent-tools/src/collaboration-state/active-agent-routing.ts))
+compares the uuid `id` alone: per PDR-076a's sunset execution, routing
+is single-path on `id` (an id-less historical identity is never the
+same live agent), while `agent_name` rides the `(agent_name, id)`
+identity key for display and audit; `agent_name`, `platform`, `model`,
+and `session_id_prefix` are NOT comparison weights. Emit everything
+else. Apply relevance triage
 in agent reasoning, not at the watcher boundary.
 
 ### Canonical invocation — the `agent-tools` CLI
