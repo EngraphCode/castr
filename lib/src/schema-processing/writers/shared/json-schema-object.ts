@@ -16,7 +16,9 @@
  *
  * Sharing one parameterised base makes root/recursion divergence structurally
  * impossible: the recursion callback ({@link WriteSchemaFn}) and the container
- * share the same child type variable.
+ * share the same child type variable, and the `in out` (invariant) annotation
+ * on that variable stops inference from widening an object-only container to
+ * accept a boolean-emitting callback.
  *
  * **Egress normal form:** The JSON Schema writer normalises `example` to
  * `examples` (ADR-042). Nullability is represented via `type: [T, 'null']`
@@ -55,7 +57,7 @@ export type WriteSchemaFn<TChild> = (schema: CastrSchema) => TChild;
  *
  * @internal
  */
-export interface JsonSchemaObjectBase<TChild> {
+export interface JsonSchemaObjectBase<in out TChild> {
   // Core type
   type?: SchemaObjectType | SchemaObjectType[];
   format?: string;
@@ -143,16 +145,14 @@ export interface JsonSchemaObjectBase<TChild> {
  * Structurally assignable to the project's `SchemaObject` seam.
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- JC: the interface-extends form is the only way to instantiate the recursive child parameter (`type X = Base<X>` circularly references itself).
-export interface JsonSchemaObject extends JsonSchemaObjectBase<JsonSchemaObject> {}
+export type JsonSchemaObject = JsonSchemaObjectBase<JsonSchemaObject>;
 
 /**
  * JSON Schema output whose recursive positions admit boolean schemas —
  * the pure JSON Schema 2020-12 lane's instantiation.
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- JC: the interface-extends form is the only way to instantiate the recursive child parameter (`type X = Base<X | boolean>` circularly references itself).
-export interface JsonSchemaNode extends JsonSchemaObjectBase<JsonSchemaNode | boolean> {}
+export type JsonSchemaNode = JsonSchemaObjectBase<JsonSchemaNode | boolean>;
 
 /**
  * Valid JSON Schema / OAS 3.1 primitive types.

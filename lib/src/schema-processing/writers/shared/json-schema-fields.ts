@@ -20,12 +20,7 @@ import {
 } from './json-schema-2020-12-fields.js';
 
 // Re-export for convenience
-export type {
-  JsonSchemaObject,
-  JsonSchemaNode,
-  JsonSchemaObjectBase,
-  WriteSchemaFn,
-} from './json-schema-object.js';
+export type { JsonSchemaObject, JsonSchemaNode } from './json-schema-object.js';
 export { isSchemaObjectType } from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------

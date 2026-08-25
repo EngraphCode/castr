@@ -6,6 +6,7 @@ export type Draft07SchemaOrRef = Draft07Input | ReferenceObject | boolean;
 /**
  * A normalized 2020-12 child value: a schema object, a `$ref`, or a boolean
  * schema (booleans are complete schemas and normalize to themselves).
+ * @internal
  */
 export type NormalizedSchemaOrRef = JsonSchema2020 | ReferenceObject | boolean;
 export type Draft07SchemaMap = Record<string, Draft07SchemaOrRef>;

@@ -29,7 +29,6 @@ import { assertPortableIntegerInputSemanticsSupported } from '../../compatibilit
 
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
-export { createDefaultMetadata } from './json-schema-parser.helpers.js';
 
 const NULL_TYPE = 'null';
 

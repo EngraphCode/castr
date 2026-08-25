@@ -7,7 +7,12 @@
  * propertyNames, items, tuple items (prefixItems), contains, allOf, anyOf,
  * oneOf, not, if/then/else, dependentSchemas (2020-12 and Draft-07
  * `dependencies`), `$defs` through the document seam, and the document root
- * itself. Defect F-03's shape: `false` at a nested position silently became
+ * itself (parse leg here; the bare-boolean write leg is pinned in the
+ * document writer's unit tests). The three `boolean |` keyword positions —
+ * additionalProperties, unevaluatedProperties, unevaluatedItems — store
+ * their boolean form as keyword booleans that never enter the recursion
+ * callback, were never F-03-vulnerable, and keep their existing writer unit
+ * coverage. Defect F-03's shape: `false` at a nested position silently became
  * `{}` (≡ `true`), inverting "reject everything" into "accept everything".
  *
  * Each case runs through the artifact-agnostic semantic-outcome runner
@@ -136,9 +141,13 @@ function persistenceCloneSchema(schema: CastrSchema): CastrSchema {
 
 function persistenceCloneComponents(components: CastrSchemaComponent[]): CastrSchemaComponent[] {
   const restored = deserializeIR(serializeIR(wrapComponents(components)));
-  return restored.components.filter(
+  const schemas = restored.components.filter(
     (component): component is CastrSchemaComponent => component.type === 'schema',
   );
+  if (schemas.length !== components.length) {
+    throw new Error('persistence clone lost a schema component');
+  }
+  return schemas;
 }
 
 // ---------------------------------------------------------------------------

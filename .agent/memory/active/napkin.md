@@ -885,3 +885,21 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
   collaboration-state `.gitignore` ignores that exact name; a `closed-claims.json` seeded by
   mistake shows up as untracked repo noise. Renamed forward; use the archive name in every
   claims close.
+
+- **A compiler-behaviour claim in a code comment is a claim to COMPILE before writing** — I
+  asserted "`type X = Base<X>` circularly references itself" to justify two lint disables;
+  the gateway and type reviewers both compiled the alias form against the real types and it
+  is legal (interface type-argument positions are deferred). The false justification would
+  have taught the next reader to reproduce the suppression. Cure applied: aliases, disables
+  deleted. Sibling lesson: an inferred generic parameter is NOT a shared-variable guarantee —
+  the "container and callback share TChild" claim only became true after `in out TChild`
+  (invariance) pinned inference. Same family as verify-agent-claims-firsthand, pointed at my
+  own prose.
+- **Agent-authored `eslint-disable` lines are forbidden in product code, and the `-- JC:`
+  marker is the OWNER'S authorisation idiom** (`never-disable-checks`, `no-manufactured-permission`;
+  the initial-review audit counts `-- JC:` as "governed/user-added"). All four disables this
+  slice briefly carried were dissolved by design instead: type aliases (two), object-only
+  `normalizeDraft07` with seam branches (one), and a split `narrowSchemaOrRef` →
+  boolean-ternary + object-only `narrowObjectOrRef` (one). When a lint rule fights a
+  domain-true union, restructure so no FUNCTION returns the mixed union before ever
+  considering a suppression — and a suppression is the owner's to add, never ours.

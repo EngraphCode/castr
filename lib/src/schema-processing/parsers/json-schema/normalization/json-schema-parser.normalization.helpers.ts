@@ -1,4 +1,4 @@
-import { isReferenceObject } from '../../../../shared/openapi-types.js';
+import { type ReferenceObject, isReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 import type {
   Draft07Input,
@@ -128,16 +128,21 @@ function applyNormalizedSingles(
 /**
  * Normalize one child value. Boolean schemas are complete schemas in both
  * drafts and pass through unchanged — routing one into the object pipeline
- * would spread it into `{}` (defect F-03).
+ * would spread it into `{}` (defect F-03). The boolean short-circuit is a
+ * single conditional expression, so the value keeps its exact domain type
+ * ({@link NormalizedSchemaOrRef}) without a mixed-return function.
  */
-// eslint-disable-next-line sonarjs/function-return-type -- JC: a JSON Schema child value is an object, a $ref, or a boolean schema by specification; the union IS the domain type (aliased as NormalizedSchemaOrRef).
 function narrowSchemaOrRef(
   value: Draft07SchemaOrRef,
   normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
 ): NormalizedSchemaOrRef {
-  if (typeof value === 'boolean') {
-    return value;
-  }
+  return typeof value === 'boolean' ? value : narrowObjectOrRef(value, normalizeDraft07);
+}
+
+function narrowObjectOrRef(
+  value: Draft07Input | ReferenceObject,
+  normalizeDraft07: (input: Draft07Input) => JsonSchema2020,
+): JsonSchema2020 | ReferenceObject {
   return isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
 }
 

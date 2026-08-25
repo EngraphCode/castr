@@ -25,34 +25,18 @@ import { rewriteRef } from './json-schema-parser.normalization.refs.js';
 // ---------------------------------------------------------------------------
 
 /**
- * Normalize a JSON Schema from Draft 07 to 2020-12 conventions.
+ * Normalize a JSON Schema object from Draft 07 to 2020-12 conventions.
  *
  * Accepts Draft 07 input (with `definitions`, `dependencies`, boolean
  * exclusive bounds, tuple `items`) and returns a clean 2020-12 schema.
- * Boolean schemas (`true`/`false`) are complete schemas in both drafts and
- * pass through unchanged — spreading one into an object would silently
- * turn `false` into `{}` (defect F-03).
+ * Object schemas only: a boolean schema is already a complete 2020-12
+ * schema, so the public parse seams pass booleans straight to the parser
+ * and nested booleans short-circuit in the recursion helpers — spreading
+ * one into an object would silently turn `false` into `{}` (defect F-03).
  *
  * @public
  */
-export function normalizeDraft07(input: Draft07Input): JsonSchema2020;
-export function normalizeDraft07(input: boolean): boolean;
-export function normalizeDraft07(input: Draft07Input | boolean): JsonSchema2020 | boolean;
-// eslint-disable-next-line sonarjs/function-return-type -- JC: a JSON Schema document is an object or a boolean schema by specification; the overloads above give each caller the exact type.
-export function normalizeDraft07(input: Draft07Input | boolean): JsonSchema2020 | boolean {
-  if (typeof input === 'boolean') {
-    return input;
-  }
-  return normalizeDraft07Object(input);
-}
-
-/**
- * Object-schema normalization pipeline. The recursion in
- * `stripDraft07Keys` routes booleans past this function (they need no
- * normalization), so the pipeline itself only ever sees objects.
- * @internal
- */
-function normalizeDraft07Object(input: Draft07Input): JsonSchema2020 {
+export function normalizeDraft07(input: Draft07Input): JsonSchema2020 {
   let result: Draft07Input = { ...input };
 
   result = liftDefinitions(result);
@@ -61,7 +45,7 @@ function normalizeDraft07Object(input: Draft07Input): JsonSchema2020 {
   result = normalizeExclusiveBounds(result);
   result = rewriteRef(result);
 
-  return stripDraft07Keys(result, normalizeDraft07Object);
+  return stripDraft07Keys(result, normalizeDraft07);
 }
 
 export type { Draft07Input } from './json-schema-parser.normalization.types.js';

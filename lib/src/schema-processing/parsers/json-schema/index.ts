@@ -30,7 +30,8 @@ export type { Draft07Input } from './normalization/index.js';
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
 import { isReferenceObject } from '../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
-import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
+import { parseJsonSchemaObject } from './json-schema-parser.core.js';
+import { createDefaultMetadata } from './json-schema-parser.helpers.js';
 import { normalizeDraft07 } from './normalization/index.js';
 import type { Draft07Input } from './normalization/index.js';
 
@@ -46,8 +47,7 @@ import type { Draft07Input } from './normalization/index.js';
  * @public
  */
 export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
-  const normalized = normalizeDraft07(input);
-  return parseJsonSchemaObject(normalized);
+  return parseJsonSchemaObject(typeof input === 'boolean' ? input : normalizeDraft07(input));
 }
 
 /**
@@ -66,10 +66,10 @@ export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
  * @public
  */
 export function parseJsonSchemaDocument(input: Draft07Input | boolean): CastrSchemaComponent[] {
-  const normalized = normalizeDraft07(input);
-  if (typeof normalized === 'boolean') {
-    return [buildComponent('Root', parseJsonSchemaObject(normalized))];
+  if (typeof input === 'boolean') {
+    return [buildComponent('Root', parseJsonSchemaObject(input))];
   }
+  const normalized = normalizeDraft07(input);
   rejectUnsupportedDocumentKeywords(normalized);
 
   const components: CastrSchemaComponent[] = [];

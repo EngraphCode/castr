@@ -508,12 +508,10 @@ describe('normalizeDraft07', () => {
   });
 });
 
+// Root-level booleans never reach the normalizer: the public parse seams
+// short-circuit them (proven in the F-03 integration suite). These tests
+// cover NESTED booleans at every position the normalizer recurses into.
 describe('boolean schema pass-through (F-03)', () => {
-  it('returns a boolean root unchanged', () => {
-    expect(normalizeDraft07(false)).toBe(false);
-    expect(normalizeDraft07(true)).toBe(true);
-  });
-
   it('passes boolean property members through unchanged', () => {
     const input = draft07({
       type: 'object',
