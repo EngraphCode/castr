@@ -271,8 +271,12 @@ brief. Routine mechanism proven end to end across four firings:
   (degenerate `sessio` prefix) — seed derivation fix queued to Q-15's gap list.
 - Arming: the loop Routine `trig_01X4wYy2gHSb8yFhdhwbADGF` (cron `3 */8 * * *`, three
   firings/day per amended B-12) is enabled as the last act of this slice, strictly after
-  its PR merges, with the B-15 configuration (push + email, no digest) re-checked at
-  enable.
+  its PR merges, with the B-15 configuration as then ratified (push + email, no
+  digest) re-checked at enable — superseded 2026-08-24 by the push-only re-ballot, so
+  a re-arm applies the current ratified set per the runbook, never this historical
+  one. The repeatable, account-portable form of this procedure — everything an
+  unrelated account needs to re-arm the Routine from the repo alone — is
+  [`arming-runbook.md`](./arming-runbook.md) (owner-directed 2026-08-25).
 - Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
   now Fable, changed in the Routine's own settings UI (the only safe route — recreating
   the trigger via API loses the owner-attached repo source, measured above). In the same
@@ -999,7 +1003,9 @@ mechanics only and cites clauses rather than restating them.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
-   thread records, napkin) is the memory between firings.
+   thread records, napkin) is the memory between firings. Recreating the Routine itself —
+   on this account or an unrelated one — follows
+   [`arming-runbook.md`](./arming-runbook.md).
 2. **Pre-flight**: check the `STOP` file and Routine state (ADR-051 clause 6); register
    session identity and open the area claim per
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)

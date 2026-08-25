@@ -1,7 +1,11 @@
 # Claude cloud environment — the "Practice Repos" environment
 
 How claude.ai cloud sessions (web, mobile, routines, `claude --cloud`) are
-provisioned for Practice repos, and how to change that safely. The
+provisioned for Practice repos, and how to change that safely. This
+environment is one row of the session estate's account-side inventory —
+the full inventory, with recreate procedures for restarting on another
+account, is the
+[account-portability register](./account-portability-register.md). The
 environment is shared by every Practice repo; a session may carry one or
 several repos (owner word 2026-08-24, superseding the 2026-08-23
 one-repo ruling), and the environment never knows which in advance —
@@ -26,9 +30,12 @@ path (owner word 2026-08-24).
 2. **Per-repo session hook** — the common-ability contract. A Practice repo
    that needs more than `pnpm install` commits an executable
    `.agent/setup/cloud-session-setup.sh`; the environment script invokes it
-   from the repo root after install, under the same fail-fast rules. This
-   repo's hook installs the pinned Playwright Chromium for the
-   `test:ui`/e2e suites. A repo with no extra needs commits no hook.
+   from the repo root after install, under the same fail-fast rules. A repo
+   with no extra needs commits no hook — castr commits none (verified
+   2026-08-25: no `.agent/setup/` directory exists, and castr's e2e suites
+   are vitest, needing no browser). The Playwright hosts in the allow-list
+   below belong to Practice repos whose own hooks install browsers, per the
+   hook-preflight contract.
 
 ## Changing the environment
 
@@ -107,36 +114,64 @@ as once assumed; the preflight's failure branch now prints the last
 attempted URL so a future redirect-host change names itself on the card).
 Re-add an entry only when a setup-time card implicates a host.
 
-## Environment settings that pair with the script
+## The full environment definition
+
+The complete "Practice Repos" environment as configured in the claude.ai
+dialog, recorded verbatim from the live configuration (owner-provided
+screenshots, 2026-08-25) so the environment is fully re-creatable from
+this repo alone. The dialog is write-only, so this section is the
+definition of record: change it here first, then apply it in the dialog
+(changes apply to new sessions only).
+
+- **Name**: `Practice Repos`.
 
 - **Network access**: Custom, with "Also include default list of common
-  package managers" ticked, plus:
+  package managers" ticked, and this exact allowed-domains list:
 
   ```text
   ppa.launchpadcontent.net
   cdn.playwright.dev
   playwright.download.prss.microsoft.com
+  *.frame.claudeusercontent.com
+  *.frame.staging.claudeusercontent.com
   ```
 
   The Trusted preset is not sufficient: it 403s `ppa.launchpadcontent.net`,
   which breaks any `apt-get update` because the base image itself ships PPA
   sources on that host (worked instance 2026-08-23: castr routine sessions
-  failed to start).
+  failed to start). The two `*.frame…claudeusercontent.com` wildcards are
+  the platform's Artifact content domains (the dialog's "Add Artifact
+  content domains" control adds them): they let sessions in this
+  environment read claude.ai Artifacts, per-Artifact token-authorized.
 
-- **Environment variables**: the Slack Watcher configuration lives here —
-  in the environment, never in a repo — so every Practice repo's sessions
-  share it and changing channel or workspace is an environment edit, not a
-  commit:
+- **Environment variables**: the Slack Watcher configuration is consumed
+  by sessions from the environment at runtime — no session reads these
+  values from a repo file, and every Practice repo's sessions share them —
+  but like everything in this section their definition of record is here:
+  change a value in this file first, then apply it in the dialog. The live
+  values (2026-08-25; the dialog marks these visible to anyone using the
+  environment — channel ids and workspace names are not secrets, and no
+  secret may be added here):
 
   ```text
-  SLACK_WATCHER_CHANNEL_ID=<channel id, e.g. C0XXXXXXXXX>
-  SLACK_WATCHER_WORKSPACE=<workspace name>
+  SLACK_WATCHER_WORKSPACE=engraph-workspace
+  SLACK_WATCHER_CHANNEL_ID=C0B9AQ2BK5E
   ```
 
   Consumed by the `slack-watcher` and `talk-to-slack-watcher` skills
-  (canonical under `.agent/skills/`). These values are visible to anyone
-  using the environment; channel ids are not secrets, and no secret may be
-  added here.
+  (canonical under `.agent/skills/`). On a new account with a different
+  Slack workspace, substitute that workspace's values.
+
+- **Setup script**: the whole of
+  [`cloud-environment-setup.sh`](cloud-environment-setup.sh), pasted
+  verbatim (the file is the source of truth; the dialog holds the live
+  copy). It runs when a new session starts, before Claude Code launches.
+
+- **Lifecycle controls**: the dialog's Save applies to new sessions only;
+  Archive retires the environment. Recreating on a new account is exactly
+  this section top to bottom: create an environment with this name, set
+  network access and the domains list, paste the variables, paste the
+  script.
 
 ## Fail-fast contract
 

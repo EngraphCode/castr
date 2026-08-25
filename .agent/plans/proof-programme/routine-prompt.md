@@ -48,8 +48,16 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    proof firing must leave no repo-state change behind), **including the read-only
    queued-decisions read (step 3's owner-decision surfacing binds every firing's
    notification, dry runs included)**, close with the
-   `engraph-session-handoff` skill exactly as step 9 requires (every firing closes with
-   handoff, dry runs included — the proof must exercise it), and stop. Detection sits
+   `engraph-session-handoff` skill under the **DRY-RUN READ-ONLY closeout profile,
+   defined here as the authoritative narrowing**: the step-9 firing-scoped sequence is
+   exercised in full ORDER but with every repo-tracked write withheld — nothing
+   committed or pushed; the landed-outcome record, napkin capture, and counters held
+   instance-tier in the completion summary only; the identity row deferred to the first
+   live firing; the cleanliness gate recorded per the skill's own step-12 clause as "no
+   repo-state change; gate not applicable" — so the proof exercises the closeout
+   sequence, never its landing. This profile exists ONLY for owner-commanded DRY-RUN
+   proof firings; step 9's never-narrowed clause governs every live firing and names
+   this as its single defined exception. Then stop. Detection sits
    before grounding because normal grounding registers a claim, and a proof firing must
    leave no collision state behind.
 3. **Ground** (normal firings only), in this order:
@@ -187,7 +195,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    progress).
 9. **Close**: run the `engraph-session-handoff` skill under the **firing-scoped profile
    (QD-6)** — the handoff's duties instantiated for a zero-context scheduled session,
-   never narrowed: the landed-outcome record, repo-continuity refresh, napkin capture,
+   never narrowed (the DRY-RUN READ-ONLY closeout profile defined in step 2 is the
+   single exception, and it applies only to owner-commanded proof firings): the
+   landed-outcome record, repo-continuity refresh, napkin capture,
    claims closure, delivery-ledger row, counters, and the programme thread record
    (`threads/proof-programme.next-session.md` — add or update your PDR-027 identity row)
    bind every firing — and no skill step is skipped: the entry-point drift sweep (skill

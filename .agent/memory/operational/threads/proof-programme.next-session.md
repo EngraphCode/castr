@@ -24,12 +24,13 @@ updates `last_session` rather than adding a row. (Sessions predating this record
 the W-0/Q-00/Q-01 authoring sessions and the first firings — are recorded in the
 programme's delivery evidence rather than retro-filled here.)
 
-| agent_name                     | id                                   | platform    | model          | session_id_prefix | role                                     | first_session | last_session |
-| ------------------------------ | ------------------------------------ | ----------- | -------------- | ----------------- | ---------------------------------------- | ------------- | ------------ |
-| Cindery Kindling Lava          | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings)            | 2026-08-23    | 2026-08-23   |
-| Fruited Swaying Leaf           | 2c6d968f-db66-55d4-8343-a0eccd1a68a3 | claude-code | claude-fable-5 | 0690b2            | scheduled firing (PR #35 drive to merge) | 2026-08-23    | 2026-08-23   |
-| Luminous Waning Orbit          | e608d93e-4bd7-5ea2-b08e-258ef7c706f1 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-03 slice)            | 2026-08-24    | 2026-08-24   |
-| Stratospheric Hovering Thermal | f34dddf9-ff0e-56e9-a525-a00493bc8813 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-04 slice)            | 2026-08-25    | 2026-08-25   |
+| agent_name                     | id                                   | platform    | model          | session_id_prefix | role                                                  | first_session | last_session |
+| ------------------------------ | ------------------------------------ | ----------- | -------------- | ----------------- | ----------------------------------------------------- | ------------- | ------------ |
+| Cindery Kindling Lava          | e27f20d2-fa50-50c8-9989-829307b8735c | claude-code | claude-fable-5 | 8fc8a6            | executor (QD-5/QD-6 landings)                         | 2026-08-23    | 2026-08-23   |
+| Fruited Swaying Leaf           | 2c6d968f-db66-55d4-8343-a0eccd1a68a3 | claude-code | claude-fable-5 | 0690b2            | scheduled firing (PR #35 drive to merge)              | 2026-08-23    | 2026-08-23   |
+| Luminous Waning Orbit          | e608d93e-4bd7-5ea2-b08e-258ef7c706f1 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-03 slice)                         | 2026-08-24    | 2026-08-24   |
+| Stratospheric Hovering Thermal | f34dddf9-ff0e-56e9-a525-a00493bc8813 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-04 slice)                         | 2026-08-25    | 2026-08-25   |
+| Sardine turns Coral            | e079be76-3221-5c13-aa9c-42c33dfa14fa | claude-code | claude-fable-5 | 01QpYc            | owner-redirected firing (account-portability landing) | 2026-08-25    | 2026-08-25   |
 
 ## Next-session landing target
 
@@ -55,3 +56,12 @@ The governing ADR (autonomous-background-implementation-loop) and the
 programme's queued-decisions register carry every standing decision; this
 record points and never duplicates. The queue frontmatter and incident
 register are the live lane state.
+
+Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
+(owner-directed, outside the queue) landed via
+[PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the
+Claude Code UI; head `claude/dazzling-cannon-78571f`). It is not a programme
+queue PR — ADR-051 clause 3 does not govern it; the owner invoked this drive to
+merge it. The arming runbook and portability register live at
+`.agent/plans/proof-programme/arming-runbook.md` and
+`.agent/claude-harness-integrations/account-portability-register.md`.
