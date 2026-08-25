@@ -9,7 +9,7 @@
  */
 
 import type { CastrSchema } from '../../ir/index.js';
-import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
+import type { JsonSchemaObjectBase, WriteSchemaFn } from './json-schema-object.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -28,9 +28,9 @@ function getSortedRecordEntries<T>(record: Record<string, T>): [string, T][] {
  * (dependentRequired, minContains, maxContains).
  * @internal
  */
-export function writeJsonSchema2020SimpleFields(
+export function writeJsonSchema2020SimpleFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
+  result: JsonSchemaObjectBase<TChild>,
 ): void {
   if (schema.dependentRequired !== undefined) {
     const sorted: Record<string, string[]> = {};
@@ -64,10 +64,10 @@ export function writeJsonSchema2020SimpleFields(
  * Write unevaluatedProperties and unevaluatedItems.
  * @internal
  */
-export function writeUnevaluatedFields(
+export function writeUnevaluatedFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.unevaluatedProperties !== undefined) {
     result.unevaluatedProperties =
@@ -88,10 +88,10 @@ export function writeUnevaluatedFields(
  * (prefixItems, unevaluated*, dependentSchemas).
  * @internal
  */
-export function writeJsonSchema2020RecursiveFields(
+export function writeJsonSchema2020RecursiveFields<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.prefixItems !== undefined) {
     result.prefixItems = schema.prefixItems.map((item) => writeSchema(item));
@@ -101,7 +101,7 @@ export function writeJsonSchema2020RecursiveFields(
   }
   writeUnevaluatedFields(schema, result, writeSchema);
   if (schema.dependentSchemas !== undefined) {
-    const deps: Record<string, JsonSchemaObject> = {};
+    const deps: Record<string, TChild> = {};
     for (const [key, depSchema] of getSortedRecordEntries(schema.dependentSchemas)) {
       deps[key] = writeSchema(depSchema);
     }
@@ -120,16 +120,16 @@ export function writeJsonSchema2020RecursiveFields(
  * Write `patternProperties` from IR to JSON Schema output.
  * @internal
  */
-function writePatternProperties(
+function writePatternProperties<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.patternProperties === undefined) {
     return;
   }
 
-  const output: Record<string, JsonSchemaObject> = {};
+  const output: Record<string, TChild> = {};
   for (const [pattern, patternSchema] of getSortedRecordEntries(schema.patternProperties)) {
     output[pattern] = writeSchema(patternSchema);
   }
@@ -140,10 +140,10 @@ function writePatternProperties(
  * Write `propertyNames` from IR to JSON Schema output.
  * @internal
  */
-function writePropertyNames(
+function writePropertyNames<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.propertyNames === undefined) {
     return;
@@ -160,10 +160,10 @@ function writePropertyNames(
  * Write `if`/`then`/`else` conditional applicators from IR to JSON Schema output.
  * @internal
  */
-function writeConditionalApplicators(
+function writeConditionalApplicators<TChild>(
   schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
+  result: JsonSchemaObjectBase<TChild>,
+  writeSchema: WriteSchemaFn<TChild>,
 ): void {
   if (schema.if !== undefined) {
     result.if = writeSchema(schema.if);

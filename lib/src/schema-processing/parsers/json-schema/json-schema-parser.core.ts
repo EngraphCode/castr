@@ -8,10 +8,12 @@
  * Works from JsonSchema2020, which extends the shared OpenAPI seam for JSON Schema 2020-12.
  */
 
-import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
+import type { CastrSchema } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
+
 import { parseObjectFields } from './json-schema-parser.object-fields.js';
 import {
+  createDefaultMetadata,
   parseType,
   parseFormat,
   parseStringConstraints,
@@ -27,6 +29,7 @@ import { assertPortableIntegerInputSemanticsSupported } from '../../compatibilit
 
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
+export { createDefaultMetadata } from './json-schema-parser.helpers.js';
 
 const NULL_TYPE = 'null';
 
@@ -35,10 +38,12 @@ const NULL_TYPE = 'null';
 // ---------------------------------------------------------------------------
 
 /**
- * Parse a normalized JSON Schema 2020-12 object into CastrSchema IR.
+ * Parse a normalized JSON Schema 2020-12 value into CastrSchema IR.
  *
  * Boolean schemas (`true`/`false`) are accepted and converted to
- * `CastrSchema` nodes with the `booleanSchema` discriminator set.
+ * `CastrSchema` nodes with the `booleanSchema` discriminator set — at the
+ * root and at every recursive position, since the function is its own
+ * recursion callback (one code path for root and nested schemas).
  *
  * @public
  */
@@ -46,10 +51,7 @@ export function parseJsonSchemaObject(input: JsonSchema2020 | boolean): CastrSch
   if (typeof input === 'boolean') {
     return { booleanSchema: input, metadata: createDefaultMetadata() };
   }
-  return parseJsonSchemaObjectInternal(input);
-}
 
-function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
   if (input.$ref !== undefined) {
     assertPortableIntegerInputSemanticsSupported('JSON Schema 2020-12', input.type, input.format);
     return { $ref: input.$ref, metadata: createDefaultMetadata() };
@@ -63,31 +65,15 @@ function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
   parseStringConstraints(input, result);
   parseNumberConstraints(input, result);
   parseEnumConst(input, result);
-  const parseSchema = (schemaInput: JsonSchema2020): CastrSchema =>
-    parseJsonSchemaObjectInternal(schemaInput);
 
-  parseObjectFields(input, result, parseSchema);
-  parseArrayFields(input, result, parseSchema);
-  parseComposition(input, result, parseSchema);
+  parseObjectFields(input, result, parseJsonSchemaObject);
+  parseArrayFields(input, result, parseJsonSchemaObject);
+  parseComposition(input, result, parseJsonSchemaObject);
   parseCoreMetadata(input, result);
   parseAccessMetadata(input, result);
-  parse2020Keywords(input, result, parseSchema);
+  parse2020Keywords(input, result, parseJsonSchemaObject);
 
   return result;
-}
-
-/**
- * Create a default CastrSchemaNode.
- * @internal
- */
-export function createDefaultMetadata(overrides?: { nullable?: boolean }): CastrSchemaNode {
-  return {
-    required: false,
-    nullable: overrides?.nullable ?? false,
-    zodChain: { presence: '', validations: [], defaults: [] },
-    dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-    circularReferences: [],
-  };
 }
 
 // ---------------------------------------------------------------------------

@@ -11,7 +11,6 @@
  * Uses lodash-es split/join for $ref rewriting (ADR-026 compliant).
  */
 
-import { type ReferenceObject, isReferenceObject } from '../../../../shared/openapi-types.js';
 import type { JsonSchema2020 } from '../json-schema-parser.types.js';
 import type { Draft07Input } from './json-schema-parser.normalization.types.js';
 import {
@@ -19,7 +18,7 @@ import {
   splitDependencies,
   stripDraft07Keys,
 } from './json-schema-parser.normalization.helpers.js';
-import { rewriteRef, rewriteRefObject } from './json-schema-parser.normalization.refs.js';
+import { rewriteRef } from './json-schema-parser.normalization.refs.js';
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -30,20 +29,39 @@ import { rewriteRef, rewriteRefObject } from './json-schema-parser.normalization
  *
  * Accepts Draft 07 input (with `definitions`, `dependencies`, boolean
  * exclusive bounds, tuple `items`) and returns a clean 2020-12 schema.
+ * Boolean schemas (`true`/`false`) are complete schemas in both drafts and
+ * pass through unchanged — spreading one into an object would silently
+ * turn `false` into `{}` (defect F-03).
  *
  * @public
  */
-export function normalizeDraft07(input: Draft07Input): JsonSchema2020 {
+export function normalizeDraft07(input: Draft07Input): JsonSchema2020;
+export function normalizeDraft07(input: boolean): boolean;
+export function normalizeDraft07(input: Draft07Input | boolean): JsonSchema2020 | boolean;
+// eslint-disable-next-line sonarjs/function-return-type -- JC: a JSON Schema document is an object or a boolean schema by specification; the overloads above give each caller the exact type.
+export function normalizeDraft07(input: Draft07Input | boolean): JsonSchema2020 | boolean {
+  if (typeof input === 'boolean') {
+    return input;
+  }
+  return normalizeDraft07Object(input);
+}
+
+/**
+ * Object-schema normalization pipeline. The recursion in
+ * `stripDraft07Keys` routes booleans past this function (they need no
+ * normalization), so the pipeline itself only ever sees objects.
+ * @internal
+ */
+function normalizeDraft07Object(input: Draft07Input): JsonSchema2020 {
   let result: Draft07Input = { ...input };
 
   result = liftDefinitions(result);
   result = splitDependencies(result);
   result = normalizeTupleItems(result);
   result = normalizeExclusiveBounds(result);
-  result = normalizeSubSchemas(result);
   result = rewriteRef(result);
 
-  return stripDraft07Keys(result, normalizeDraft07);
+  return stripDraft07Keys(result, normalizeDraft07Object);
 }
 
 export type { Draft07Input } from './json-schema-parser.normalization.types.js';
@@ -92,83 +110,7 @@ function normalizeOneBound(
   return input;
 }
 
-// ---------------------------------------------------------------------------
-// Step 5: Recurse into sub-schemas
-// ---------------------------------------------------------------------------
-
-function normalizeSubSchemas(input: Draft07Input): Draft07Input {
-  let result = normalizeItems(input);
-  result = normalizeSingleSchema(result, 'additionalProperties');
-  result = normalizeSingleSchema(result, 'not');
-  result = normalizeSchemaArray(result, 'allOf');
-  result = normalizeSchemaArray(result, 'oneOf');
-  result = normalizeSchemaArray(result, 'anyOf');
-  result = normalizeSchemaArray(result, 'prefixItems');
-  result = normalizeSchemaMap(result, '$defs');
-  result = normalizeSchemaMap(result, 'properties');
-  result = normalizeSchemaMap(result, 'dependentSchemas');
-  return result;
-}
-
-/**
- * Normalize single-schema items (not array — array items were already
- * converted to prefixItems by normalizeTupleItems).
- */
-function normalizeItems(input: Draft07Input): Draft07Input {
-  const val = input.items;
-  if (val === undefined || Array.isArray(val)) {
-    return input;
-  }
-  if (isReferenceObject(val)) {
-    return { ...input, items: rewriteRefObject(val) };
-  }
-  return { ...input, items: normalizeDraft07(val) };
-}
-
-function normalizeSingleSchema(
-  input: Draft07Input,
-  key: 'additionalProperties' | 'not',
-): Draft07Input {
-  const val = input[key];
-  if (val === undefined || typeof val === 'boolean') {
-    return input;
-  }
-  if (isReferenceObject(val)) {
-    return { ...input, [key]: rewriteRefObject(val) };
-  }
-  return { ...input, [key]: normalizeDraft07(val) };
-}
-
-function normalizeSchemaArray(
-  input: Draft07Input,
-  key: 'allOf' | 'oneOf' | 'anyOf' | 'prefixItems',
-): Draft07Input {
-  const arr = input[key];
-  if (arr === undefined) {
-    return input;
-  }
-  return {
-    ...input,
-    [key]: arr.map((item) =>
-      isReferenceObject(item) ? rewriteRefObject(item) : normalizeDraft07(item),
-    ),
-  };
-}
-
-function normalizeSchemaMap(
-  input: Draft07Input,
-  key: '$defs' | 'properties' | 'dependentSchemas',
-): Draft07Input {
-  const map = input[key];
-  if (map === undefined) {
-    return input;
-  }
-  const normalized: Record<string, Draft07Input | ReferenceObject> = {};
-  for (const k of Object.keys(map)) {
-    const value = map[k];
-    if (value !== undefined) {
-      normalized[k] = isReferenceObject(value) ? rewriteRefObject(value) : normalizeDraft07(value);
-    }
-  }
-  return { ...input, [key]: normalized };
-}
+// Sub-schema recursion lives in a single place: `stripDraft07Keys` re-normalises
+// every recursive position through `normalizeDraft07` itself. A second pre-pass
+// here would duplicate that work per nesting level (O(2^depth)) and split the
+// boolean-schema handling across two sites.

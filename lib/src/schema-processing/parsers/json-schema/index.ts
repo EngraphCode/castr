@@ -38,12 +38,14 @@ import type { Draft07Input } from './normalization/index.js';
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.
  *
  * Automatically normalizes Draft 07 constructs to 2020-12 before parsing.
+ * Boolean schemas (`true`/`false`) are complete schemas in both drafts and
+ * parse to `booleanSchema` IR nodes.
  *
- * @param input - A JSON Schema 2020-12 object (possibly with Draft 07 constructs)
+ * @param input - A JSON Schema 2020-12 value (possibly with Draft 07 constructs)
  * @returns CastrSchema IR node
  * @public
  */
-export function parseJsonSchema(input: Draft07Input): CastrSchema {
+export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
   const normalized = normalizeDraft07(input);
   return parseJsonSchemaObject(normalized);
 }
@@ -55,13 +57,19 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
  * Root schema naming: `title` \> `$id` \> `"Root"`.
  * Unsupported keywords are rejected with an actionable error.
  *
+ * A boolean document (`true`/`false` is a complete JSON Schema document in
+ * itself) yields a single `"Root"` component carrying the boolean schema.
+ *
  * @param input - A JSON Schema document (Draft 07 or 2020-12)
  * @returns Array of IR schema components (root first if present, then `$defs`)
  * @throws `UnsupportedJsonSchemaKeywordError` if unsupported top-level keywords are present
  * @public
  */
-export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
+export function parseJsonSchemaDocument(input: Draft07Input | boolean): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
+  if (typeof normalized === 'boolean') {
+    return [buildComponent('Root', parseJsonSchemaObject(normalized))];
+  }
   rejectUnsupportedDocumentKeywords(normalized);
 
   const components: CastrSchemaComponent[] = [];

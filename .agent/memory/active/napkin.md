@@ -859,3 +859,29 @@ _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + 
 - **PR #54 (live interactive Practice-equality session) lands `.agent/plans/templates/`** —
   Q-16's premise (the templates directory does not exist) moves when it merges; Q-16 must be
   re-adjudicated against the merged base before any firing claims it.
+
+- **`tsc`'s colourised output defeats `grep "error TS"` — count errors from the EXIT CODE or
+  strip ANSI first** (`sed 's/\x1b\[[0-9;]*m//g'`). Two successive "0 errors" readings this
+  firing were pure instrument failure: the word `error` carries colour escapes mid-token, so
+  the grep never matched and a red type-check read as green. Same family as
+  verify-own-observer-instruments and the pipe-eats-exit-code entry. Also: `lib`'s
+  `tsconfig.json` is NOT the canonical check surface — `pnpm type-check` runs
+  `tsconfig.lint.json`, and only that project surfaced the 19 widened-type errors.
+- **Q-04 F-03 landed as root-and-recursion unification in all three layers** (normalizer
+  single-recursion via `stripDraft07Keys` + boolean pass-through in `narrowSchemaOrRef`;
+  parser recursion callback = `parseJsonSchemaObject` itself with one shared
+  `parseSingleSchemaOrRef`; json-schema writer recursion callback = `writeJsonSchema` itself
+  over a parameterised `JsonSchemaObjectBase<TChild>` so the OAS lane stays object-only).
+  Red-first: final integration file 19/20 red on pre-fix HEAD (worktree isolation, the one
+  pass being the positive control), 20/20 green post-fix.
+- **New routed finding (pre-existing, boolean-independent): IR persistence validators and
+  the json-schema parser disagree on bare `propertyNames`/`patternProperties`** — the parser
+  accepts `{propertyNames: …}` without `type: 'object'` (legal 2020-12), the writer emits it,
+  but `hasValidSchemaPropertyNames`/`hasValidSchemaPatternProperties` require
+  `isObjectSchemaRecord`, so `deserializeIR` rejects IR the pipeline itself produced.
+  Surfaced by the Q-04 proof's propertyNames case; routed rather than widened in-slice.
+
+- **`claims init --closed` must point at the CANONICAL `closed-claims.archive.json`** — the
+  collaboration-state `.gitignore` ignores that exact name; a `closed-claims.json` seeded by
+  mistake shows up as untracked repo noise. Renamed forward; use the archive name in every
+  claims close.
