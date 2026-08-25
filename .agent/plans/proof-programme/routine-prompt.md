@@ -21,6 +21,14 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
 - **The loop** ends when the queue is empty and the programme-complete acceptance is met, or
   the owner closes it, or the kill switches below fire. Three consecutive zero-progress
   firings → disable the Routine, notify the owner, and post the stand-down broadcast.
+  The disable METHOD is removing the Routine's cron expression via the platform's
+  trigger-update surface, leaving it poke-only — **never delete or recreate the
+  trigger** (recreation silently loses the owner-attached repo source and connectors,
+  measured in the Q-01 arc; the arming runbook §Stopping and kill switches carries the
+  full rationale). Trigger tools are an unproven fired-seat capability: if they are
+  absent or the update fails, record that failure in the stand-down incident entry and
+  the completion summary — the substitution response is the owner's decision (OP-6),
+  never improvised.
 
 ## Protocol, in order
 

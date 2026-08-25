@@ -61,7 +61,7 @@ todos:
     status: pending
     depends_on: [Q-20]
   - id: Q-16
-    content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
+    content: "Plan-architecture repair (narrowed 2026-08-25, premises moved — PR #54 landed the templates estate): replace the plan skill's declined-lineage ADR-117 citation with castr's real authority (PDR-018 + the templates README) and verify every remaining skill reference resolves"
     status: pending
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
@@ -870,15 +870,18 @@ proposal. Acceptance (`e2e`, observed): a fresh container completes ground → e
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
 pre-execution reviews (2026-08-22). Gate: none (eligible immediately).
 
-**Q-16 — Plan-architecture repair.** Surface: `.agent/skills/plan/SKILL-CANONICAL.md`'s
-unresolvable references — `.agent/plans/templates/README.md` (step 3 and §Choose a
-Template), `templates/components/quality-gates.md` (requirement 4),
-`templates/components/lifecycle-triggers.md` (requirement 13), and the ADR-117 path (this
-repo's ADRs live under `docs/architectural_decision_records/`) — restored from the Oak
-transplant source (the napkin records the Oak inventory: README + 7 templates + 10
-components) or retargeted to what exists; sweep sibling references to the absent templates
-directory in the same landing (`.agent/memory/active/patterns/templates-encode-failure-modes.md`
-cites it at two sites). Non-goals: no wholesale re-transplant of the Oak template estate
+**Q-16 — Plan-architecture repair.** Premises re-adjudicated 2026-08-25 (arming
+review): the templates half is CURED — `.agent/plans/templates/` landed via PR #54
+(README + templates + components including `quality-gates.md` and
+`lifecycle-triggers.md`), so the plan skill's templates references now resolve.
+Remaining surface: the plan skill's **ADR-117 citation**, which must be **replaced,
+not retargeted** — castr has no ADR-117 (ADRs run 001–051) and the templates
+estate's own README declares the origin estate's ADR-117/ADR-216 plan doctrine
+"cited lineage, not adopted here"; the citation's replacement authority is PDR-018
+plus `.agent/plans/templates/README.md`. Sweep any sibling references to the
+formerly-absent templates directory in the same landing
+(`.agent/memory/active/patterns/templates-encode-failure-modes.md`
+cites it at two sites — verify against the now-landed estate). Non-goals: no wholesale re-transplant of the Oak template estate
 beyond what the skill's steps need; no silent deletion of the skill's document-hierarchy
 section; no change to the general lifecycle model — the QD-6 briefs-are-plans ratification
 is programme-scoped, and a general doctrine change would be its own owner decision.
@@ -995,11 +998,24 @@ policy with both branches and cites the ADR; no unconditional owner-invoked clai
 remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
 owner decision card 2026-08-24. Gate: none (eligible immediately).
 
+## Operating protocol
+
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
 own the merge policy (clause 3), review-bot convergence
 (clause 4), cadence (clause 2), and escalation/kill switches (clause 6); this section states
 mechanics only and cites clauses rather than restating them.
+
+**Programme-PR definition (arming review 2026-08-25).** A **programme PR** is a pull
+request opened under this protocol: a **slice PR** landing a claimed queue row, or a
+**bookkeeping / deferral PR** landing counter, incident, and continuity state. Firings
+self-declare: a programme PR's description names its queue row (`Q-NN`) or its
+bookkeeping scope. A PR without that declaration — owner-directed work, review
+landings, or anything else touching programme surfaces — is NOT a programme PR:
+ADR-051 clause 3 does not govern its merge and WIP=1 does not require driving it
+(the PR #58 precedent, recorded in the programme thread record). When
+classification is genuinely ambiguous, treat the PR as non-programme and record the
+ambiguity as an incident rather than spending the firing driving it.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
