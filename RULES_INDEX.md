@@ -136,6 +136,7 @@ without proportional value.
 | `.agent/rules/rules-have-no-exceptions.md`                                 | always-on      | —                                                                                                |
 | `.agent/rules/sha-prefix-in-collaboration-content.md`                      | always-on      | —                                                                                                |
 | `.agent/rules/ship-independent-coordinate-dependent.md`                    | always-on      | —                                                                                                |
+| `.agent/rules/silence-is-never-liveness.md`                                | always-on      | —                                                                                                |
 | `.agent/rules/skill-naming-and-description-quality.md`                     | trigger-loaded | Creating, renaming, or editing any skill or its description; vendoring gate                      |
 | `.agent/rules/stage-by-explicit-pathspec.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/strict-validation-at-boundary.md`                            | always-on      | —                                                                                                |
