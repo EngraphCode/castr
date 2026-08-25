@@ -132,7 +132,13 @@ beyond them is needed for the Routine.
 3. Create the Routine **disabled**, fresh-session mode, with the verbatim stored prompt
    and the cron above; owner attaches the repo and the Slack connector (where the
    workspace exists) in the UI; set the model; notifications push-only; auto-fix OFF.
-4. **Dry-run proof before any live firing** (mirrors the Q-01 acceptance): fire the
+4. **Dry-run proof before any live firing** (mirrors the Q-01 acceptance). First
+   verify no `.agent/plans/proof-programme/STOP` file exists on the new host's
+   `main` — this is step 5's STOP check pulled forward for this one item, because
+   routine-prompt step 1 checks STOP before anything else: a carried STOP file
+   would put the stand-down path ahead of the DRY-RUN branch and the advertised
+   read-only proof would land a stand-down bookkeeping mutation instead of
+   reporting "dry-run complete". Then fire the
    disabled Routine once with an explicit DRY-RUN instruction reaching the fired
    session's message. A manual fire may carry no per-run payload — it executes the
    stored prompt — so where the platform offers no per-fire message, temporarily
@@ -150,8 +156,14 @@ beyond them is needed for the Routine.
    on another host, so verify it is drivable here: no
    `.agent/plans/proof-programme/STOP` file present; no queue row left `in_progress`
    (routine-prompt step 5 claims only `pending` rows, so an `in_progress` row inherited
-   from another host with no open PR here is drivable by nothing — return it to
-   `pending`, or `blocked` with a written diagnosis); `zero_progress_streak` and any
+   from another host with no open PR here is drivable by nothing — but FIRST check the
+   old host for an open slice PR or blocked draft on that row: `main` plus the open PR
+   head is the loop's only durable grounding, and ADR-051 keeps failed-slice drafts
+   open precisely to preserve their work, so migrate any surviving branch and PR (push
+   the branch to the new host, reopen the draft) or explicitly conserve its diff and
+   diagnosis into the row's blocked-note before requeueing; only a row with no
+   surviving open work anywhere returns to `pending` clean, else `blocked` with the
+   written diagnosis); `zero_progress_streak` and any
    `failures:` counts transfer **unchanged** — they are durable programme state
    (ADR-051 clause 6) and their kill switches must still fire on the new account (a
    carried streak of 2 correctly means one more idle firing disables the Routine);
@@ -159,8 +171,9 @@ beyond them is needed for the Routine.
    the attested firing history), landing the repair with an incident-register entry
    as its audit trail; every OPEN row in
    `queued-decisions.md` re-read by the new owner seat.
-6. Enable the Routine. The loop resumes from the queue on main; no other state transfer
-   exists or is needed.
+6. Enable the Routine. The loop resumes from the queue on main; beyond step 5's
+   conservation of any surviving open-PR work, no other state transfer exists or is
+   needed.
 
 ## Stopping and kill switches
 
@@ -174,6 +187,27 @@ R3/R5): no fired session has yet proven it can call the platform's trigger tools
 self-disable act is unproven — the probe is queued (Q-20 re-scope → Q-15), and if it
 fails, the clause 6 three-idle response substitution is an owner decision. The owner-side
 pause/delete and the STOP file are the proven switches.
+
+## Accepted residuals (recorded dispositions)
+
+Two arming-time gaps are accepted with named bounds rather than cured in this runbook,
+in the same family as the unproven self-disable probe above:
+
+- **The Routine's write binding is not probed before enabling.** The dry run is
+  read-only by design, so nothing exercises this Routine's push/PR credential binding
+  until the first live firing — which IS the credentialed write probe, with a loud,
+  bounded failure mode: a push or PR failure lands in the completion notification,
+  advances the ADR-051 failure counters, and WIP=1 caps exposure at one slice (the
+  Q-01 arc measured exactly this discovery path). Reopen condition: a measured SILENT
+  write failure — one producing no failing notification — makes this a blocking gap;
+  the platform-capability probe family (Q-20 re-scope → Q-15) is its queue home.
+- **The Slack workspace/channel/connector binding is an owner-manual account act**
+  (workspace OAuth plus connector attach in the claude.ai UI — step 3 names the
+  attach) that no repo procedure can perform; the portability register's Slack row
+  names the repo-side skills and environment variables, and validation is the
+  `talk-to-slack-watcher` probe against a live Watcher. The relay tier is advisory
+  (ADR-051 clause 7, QD-7) and gated on the Q-15 capability probe; a restart that
+  needs the relay before Q-15 lands reopens this row.
 
 ## Account-bound identifiers are history, not configuration
 
