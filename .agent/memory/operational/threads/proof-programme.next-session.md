@@ -31,6 +31,7 @@ programme's delivery evidence rather than retro-filled here.)
 | Luminous Waning Orbit          | e608d93e-4bd7-5ea2-b08e-258ef7c706f1 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-03 slice)                         | 2026-08-24    | 2026-08-24   |
 | Stratospheric Hovering Thermal | f34dddf9-ff0e-56e9-a525-a00493bc8813 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-04 slice)                         | 2026-08-25    | 2026-08-25   |
 | Sardine turns Coral            | e079be76-3221-5c13-aa9c-42c33dfa14fa | claude-code | claude-fable-5 | 01QpYc            | owner-redirected firing (account-portability landing) | 2026-08-25    | 2026-08-25   |
+| Nettle wakes Topsoil           | de57ab0b-1960-5d55-910a-fa887b4993bc | claude-code | claude-fable-5 | 01KKh2            | commissioned arming reviewer (fresh-session review)   | 2026-08-25    | 2026-08-25   |
 
 ## Next-session landing target
 
@@ -81,6 +82,32 @@ disabled flag (poke-only is the honest "disabled" equivalent); the
 attach is owner-UI only, re-confirming the Q-01 measurement); and
 `fire_trigger` accepts a per-fire text payload, so the step-4 DRY-RUN
 instruction needs no stored-prompt prepend on this surface.
+
+**Review COMPLETE (2026-08-25, Nettle wakes Topsoil / 01KKh2): verdict
+sound-to-arm; the walk is scripted and pending.** The commissioned
+fresh-session review ran end to end — every hold-note claim re-verified
+against the live API (trigger present, stored prompt byte-canonical,
+push-only notifications, no cron; repo-side: no STOP, streak 0, no
+in_progress rows, no open programme PR) — with an adversarial
+assumptions-expert pass folded. Authoritative record and the hardened
+step-by-step arming walk: `.agent/analysis-and-reports/routine-arming-review-2026-08-25.md`
+(§6 is the walk script for the session that executes it with the owner).
+Refinements landed with the review (same PR): canonical DRY-RUN
+instruction + belt-and-braces delivery rule + disable METHOD
+(cron-removal, never delete/recreate) + attended-first-firing step in the
+arming runbook; disable-method line in the routine prompt; Operating
+protocol heading + programme-PR definition + Q-16 brief re-adjudication
+in the parent plan; QD-11 row-id correction. **Two owner decisions
+pending, carried in the report's §4 (W-1/W-2 dispositions) and §6:**
+(a) reorder the queue frontmatter so Q-18/Q-20/Q-21 precede Q-05 (nine
+eligible rows currently sit ahead of the safety instruments), and (b)
+adopt the attended first live firing before the cron goes on. One
+supersession within this note: the "needs no stored-prompt prepend" line
+above is DEMOTED by the review — payload delivery is documented but
+unmeasured, and the failure mode is an unintended first live firing, so
+the walk uses belt and braces (prepend before sources attach + payload +
+UI-paste restore). The hold itself stands unchanged: nothing fires or
+enables until the owner walks the report's §6 and says so.
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

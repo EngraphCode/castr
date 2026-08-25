@@ -1084,3 +1084,59 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   trigger create (poke-only is the equivalent); `connectors` param refused
   for this org (UI-attach only, Q-01 re-confirmed); `fire_trigger` carries
   a per-fire text payload.
+
+## 2026-08-25 (owner-commissioned arming review + handover — Nettle wakes Topsoil)
+
+- **Both of this review's draft headline cures were fluent-but-wrong, and the
+  adversarial dispatch was what caught them** — the estate's mandatory reviewer
+  fan-out proven load-bearing on a review artefact, not just code. (a) The draft
+  W-1 proposed deciding a STOP-file fallback for a failed self-disable NOW; the
+  audit showed the fallback is structurally unavailable in exactly the regimes
+  that produce three idle firings (a red head blocks the bookkeeping merge under
+  clause 3's every-check-green; a broken toolchain blocks everything), and the
+  QD-8 alert half is itself unproven from fired seats — an assumption swap
+  dressed as risk reduction. (b) The draft W-2 proposed executing Q-18/Q-20/Q-21
+  interactively pre-enable; the second decision card had already routed exactly
+  those rows to "the loop's normal WIP=1 cadence" in the same sitting where
+  "I do it now" was chosen for OP-7/OP-8 — a deliberate contrast, so the
+  proposal manufactured a blocker against a recorded owner routing. Both cures
+  arrived smoothly because they pattern-matched "close the gap now"; the
+  fluency-is-a-warning tripwire fired only via the dispatched reviewer. Cure
+  shape kept: adversarial-review your own verdicts before presenting them, at
+  the same bar as code.
+- **The sharpest hazard found was in the dry-run design, not the kill switches:
+  an undelivered DRY-RUN instruction silently converts the proof firing into an
+  unintended FIRST LIVE FIRING** (step 2's detection never trips; the seat takes
+  the live path on an unprobed write binding). The per-fire payload's delivery
+  is documented but unmeasured — no fire has ever occurred on this surface.
+  Cure landed: canonical DRY-RUN text in the runbook + belt-and-braces delivery
+  (prepend to stored prompt BEFORE owner attaches sources — a zero-loss window —
+  AND pass as payload; restore via owner UI paste, byte-verify).
+- **"Disable the Routine" had no defined method, and the obvious improvisation
+  is destructive**: delete/recreate loses owner-attached sources (measured,
+  Q-01) → a Routine that looks alive and lands nothing forever. The safe method
+  is cron-removal (poke-only — the state this very arming froze at). Landed in
+  runbook + routine prompt as mechanics; the OP-6 substitution decision stays
+  owner-gated. General shape: when doctrine commands a VERB against a platform
+  surface ("disable", "pause"), name the method — an unattended seat improvises
+  otherwise, and platform surfaces punish the wrong improvisation silently.
+- **Load-bearing undefined term, second instance: "programme PR"** — used ~24
+  times across the programme estate, defined nowhere a zero-context firing
+  reads; WIP=1 turns on it; the estate had hand-disambiguated once (PR #58) and
+  this review's own PR was about to be a second ambiguous instance. Definition +
+  self-declaration duty landed in the parent plan. `candidate:` a cheap
+  validator class — load-bearing terms used N+ times in doctrine with no
+  definition anchor ("§Operating protocol" was the same session's third
+  instance: three surfaces cited a heading that never existed).
+- **Absence-encoded states seed (free-play):** the estate encodes several safe
+  states as ABSENCE (no cron = disabled; absent `failures:` = 0; absent claims
+  registry = solo) but has learned to explicitly declare only one of them (the
+  streak is "explicitly initialised so absence is drift"). The no-cron disabled
+  state is attested only in a prose hold note. Seed, not finding — routed here
+  for a future consolidation pass to weigh.
+- **Concept-exploration invoked by the owner at close; no-run verdict recorded
+  per the skill's own guard**: the session's open questions (queue reorder;
+  attended first firing) are well-formed owner decisions, and the two seeds
+  above are nameable and routed — no unshaped concept warranting the
+  four-movement treatment. Free-play ran bounded; metacognition yielded the
+  fluent-cures lesson above.
