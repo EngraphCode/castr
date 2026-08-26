@@ -1286,8 +1286,9 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 
 - **The queued-decisions register failed its first real owner read: five of eight rows
   defective in premise, frame, or owner-legibility — and I relayed them into decision
-  cards unverified.** QD-10's premise was flatly false (`@engraph/castr` has never been
-  published — npm returns Not found; verified only after the owner challenged "what
+  cards unverified.** QD-10's premise was unsupported (measured: npm returns Not found
+  for `@engraph/castr`, so no npm release is currently available — that measurement alone,
+  not a publication history; verified only after the owner challenged "what
   published npm package?"); QD-9 was loop-jargon the owner could not parse; QD-4's
   recommendation contradicted the estate's own strict doctrine; QD-13 was formalism
   built on a guideline ("There is no limit, just a useful guideline"); QD-11 framed a
@@ -1324,7 +1325,7 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **Owner rulings this walk (verbatim homes: queued-decisions register)**: QD-1 deferred
   standing; QD-2 old transplant effort stopped, parity remains a goal; QD-4 strict
   doctrine reading, no narrow-interpretation ratification; QD-9 open by design; QD-10
-  struck moot (never published); QD-11 fix the generator + the
+  struck as not currently actionable (measured: no npm release currently available); QD-11 fix the generator + the
   `never-edit-generated-files` rule (landed); QD-12 keep fail-fast, widen in-lane;
   QD-13 WIP=1 is a guideline, reasonable best efforts. Plus: cloud sessions ground
   `start-right-thorough` with the plan/metacognition/proportionality stack (landed in
