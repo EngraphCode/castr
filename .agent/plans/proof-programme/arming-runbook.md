@@ -241,7 +241,13 @@ beyond them is needed for the Routine.
    attendance covers the probe window, never the full drive.
 7. Enable the Routine (set the cron; re-run step 5's state re-verification against
    the live base immediately beforehand — never carried from earlier in the
-   sitting). The loop resumes from the queue on main; beyond step 5's
+   sitting). **Overlap guard on the enable act itself**: if step 6's manual
+   firing ran, enable only after that firing has closed (its completion
+   notification received), or set a cron whose first occurrence falls beyond
+   the live firing's landing deadline — the scheduler never terminates a
+   predecessor (ADR-051 clause 2; incident I-1 is the measured two-live-workers
+   collision), so an enable mid-drive can schedule a successor on top of the
+   still-running attended firing. The loop resumes from the queue on main; beyond step 5's
    conservation of any surviving open-PR work, no other state transfer exists or is
    needed.
 

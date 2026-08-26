@@ -253,7 +253,11 @@ first firing) are both safe in either direction.
    the outcome-branch behaviour (W-4). The owner holds the pause switch
    throughout; attendance covers the loud-failure window, not the 6-hour drive.
 9. **Enable**: add cron `3 */8 * * *` at owner word, after re-running step 4's
-   re-verification.
+   re-verification — and, when step 8's attended firing ran, only after that
+   firing has closed (completion notification received) or with a first cron
+   occurrence beyond its landing deadline: the scheduler never terminates a
+   predecessor, so an enable mid-drive can recreate the I-1 two-live-workers
+   overlap.
 
 ## 7. Review pass
 
