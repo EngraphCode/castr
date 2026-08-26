@@ -117,7 +117,9 @@ AND zero unresolved review threads AND no blocking ruleset finding. Then:
 - **Merge authority follows the governing authority for the PR** (loop-review
   D-10, owner-approved 2026-08-24; the unconditional owner-invoked line this
   bullet replaces was never policy — owner, 2026-08-26). Where a programme
-  document (e.g. an ADR) defines merge conditions for the PR, follow it.
+  document defines merge conditions for the PR (e.g. ADR-051 clause 3 sets
+  condition-based unattended merge for programme PRs), those conditions are
+  the authority — follow them.
   castr standing policy (owner ruling 2026-08-22, reaffirmed 2026-08-26):
   **green and clean → the driving agent merges** — all CI passing on the
   current head AND every review thread properly resolved (fixed, or rejected

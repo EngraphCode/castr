@@ -78,7 +78,7 @@ todos:
     status: pending
   - id: Q-21
     content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
-    status: pending
+    status: completed
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -1000,18 +1000,24 @@ D-9 + F-R2-3 and the 2026-08-24 addendum; second owner decision card 2026-08-24.
 Gate: none (eligible immediately). Q-15 is ordered after this row by `depends_on`.
 
 **Q-21 — Merge-authority policy line in pr-lifecycle (D-10).** Surface: the merge
-step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose current text tells
+step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose text at review time
+(2026-08-24) told
 every seat "The merge itself is owner-invoked" — contradicting ADR-051 clause 3 for
 programme PRs today (the review's sharpest doctrine drift, D-10). Replace it with
 the general policy, per the owner's 2026-08-24 policy-not-carve-outs teaching:
 merge authority follows the PR's governing authority — where an accepted ADR sets
 condition-based unattended merge (ADR-051 clause 3, programme PRs), the conditions
-are the authority; elsewhere castr's standing posture applies and the owner invokes
-the merge. Non-goals: no other pr-lifecycle content (Q-13 and Q-19 own their
-elements); no change to ADR-051. Acceptance (`non-code`): the skill states the
-policy with both branches and cites the ADR; no unconditional owner-invoked claim
-remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
-owner decision card 2026-08-24. Gate: none (eligible immediately).
+are the authority; elsewhere castr's standing policy applies — condition-based,
+green and clean → the driving agent merges (owner ruling 2026-08-22, reaffirmed
+2026-08-26; this brief's original "the owner invokes the merge" branch was never
+policy — owner correction 2026-08-26). Non-goals: no other pr-lifecycle content
+(Q-13 and Q-19 own their elements); no change to ADR-051. Acceptance (`non-code`):
+the skill states the policy with both branches and cites the ADR; no unconditional
+owner-invoked claim remains; gates green. Source: loop-review D-10 and the
+2026-08-24 addendum; second owner decision card 2026-08-24. Gate: none (eligible
+immediately). **COMPLETED 2026-08-26 (PR #64, `0896039`): pr-lifecycle Phase 7 now
+states the general policy with both branches and cites ADR-051; both adapter
+descriptions corrected; no unconditional owner-invoked claim remains.**
 
 ## Operating protocol
 

@@ -215,8 +215,9 @@ first firing) are both safe in either direction.
 
 ## 6. The arming walk (runbook steps 3–7, instantiated and hardened)
 
-0. **Land and merge this review's refinements PR** (owner-invoked merge — not a
-   programme PR) so no ambiguous PR is open at enable (W-6) and the canonical
+0. **Land and merge this review's refinements PR** (condition-based merge, as
+   everywhere: green and clean → the driving agent merges — owner ruling
+   2026-08-22, reaffirmed 2026-08-26; not a programme PR) so no ambiguous PR is open at enable (W-6) and the canonical
    DRY-RUN text + disable method are on `main` before the seat that needs them
    can exist.
 1. **Prompt prepend (belt and braces, before any attach)**: update the stored
