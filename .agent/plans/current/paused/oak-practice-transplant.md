@@ -49,7 +49,9 @@ intact, gates stay green, and provenance stays honest.
    **RE-ORDERED (owner, 2026-06-19): finish the FULL Practice transplant FIRST, then remediation.** New sequence:
    (1) this transplant Phases 7–9 + arc D2/D4 (Phase 7 in progress); (2) remediation backlog 02–07 — a **named
    position after the transplant** (still not parked; `no-manufactured-permission` holds); (3) the feature slice.
-   "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) deprioritised. A fresh reproduced product
+   ~~"Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) deprioritised.~~ (Superseded
+   2026-08-26: merges are condition-based — green and clean → the driving agent merges; owner ruling 2026-08-22,
+   reaffirmed 2026-08-26 — delivery is never held for an owner call.) A fresh reproduced product
    regression still pre-empts the sequence.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
 5. Tightenings: drop the **ground-truth search-eval triplet** + Oak **SonarQube/secrets infra** + ~2 UI-only patterns;

@@ -45,8 +45,13 @@ const repoRoot = resolveRepoRoot(import.meta.url);
  * load-bearing JSON surface where a silently-shadowed duplicate would change
  * behaviour: the turbo task graph (JSONC-capable upstream, either filename),
  * the Claude hook/permission settings (a duplicated `hooks` key silently
- * drops a guard), the hook policy, and the skills lockfile. The scanner
- * ignores JSONC comments, so JSONC members are safe to include.
+ * drops a guard), the hook policy, the skills lockfile, and the root configs
+ * of the BLOCKING format/lint tools — markdownlint (both config forms) and
+ * prettier gate every commit, and tsdoc.json feeds the TSDoc lint — where a
+ * duplicated `globs`/`ignores`/option member is accepted last-wins and can
+ * silently narrow or disable the gate. The scanner ignores JSONC comments,
+ * so JSONC members are safe to include. (`api.json` is a sample OpenAPI
+ * document — data, not a gate config — and is deliberately not listed.)
  */
 const EXTRA_SCANNED_FILES: readonly string[] = [
   'turbo.json',
@@ -54,6 +59,10 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
   '.claude/settings.json',
   '.agent/hooks/policy.json',
   'skills-lock.json',
+  '.markdownlint-cli2.jsonc',
+  '.markdownlint.json',
+  '.prettierrc.json',
+  'tsdoc.json',
 ];
 
 interface FileViolations {

@@ -256,7 +256,9 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 >
 > **🟢 PR #3 IS MERGE-READY (2026-07-03, Penumbral Slipping Moth closeout): mergeStateStatus CLEAN / MERGEABLE /
 > 0 unresolved review threads / required `quality-gates` check GREEN at origin tip `2e616bd`.** Merge posture
-> (owner, explicit): the owner INTENDS to merge and will invoke the merge explicitly; the agents' STANDING duty is
+> ~~(owner, explicit): the owner INTENDS to merge and will invoke the merge explicitly~~ (superseded 2026-08-26:
+> merges are condition-based — green and clean → the driving agent merges; owner ruling 2026-08-22, reaffirmed
+> 2026-08-26 — the owner-invoked posture was never policy); the agents' STANDING duty is
 > keeping the branch continuously merge-correct and merge-safe (supersedes "delivery deprioritised"). The
 > merge-readiness loop shape: **Codex reviews every push and may open a new finding wave** — disposition each wave
 > fix-or-reject in the same work item (user-memory `pr-threads-fix-or-reject`) until a push's wave is empty; this
