@@ -1,5 +1,10 @@
 # Next-Session Record — Practice transplant + deep enhancement
 
+> **🛑 STOPPED (owner ruling QD-2, 2026-08-26, verbatim): "The old effort is
+> stopped, parity remains a goal, we will address it in time."** This thread record
+> is historical — its lanes are NOT pickup-able; parity's living frame is the
+> owner's 2026-08-24 bidirectional-equality directive. Do not resume work from here.
+
 The continuity record for the single deep-enhancement thread (owner: bring the
 full Practice / agentic framework / agent-tools over **and** fix castr's known
 issues — one goal, not competing priorities). Indexed by
@@ -67,7 +72,7 @@ records below are that era's truthful history.
 > the merge itself is owner-invoked (was "deprioritised"). The single live next-step pointer is `repo-continuity.md`
 > Next Safe Steps.
 
-### Lane: Oak Parity-or-Better Program — ACTIVE, DOMINANT (started 2026-06-20)
+### Lane: Oak Parity-or-Better Program — STOPPED 2026-08-26 (was ACTIVE, DOMINANT; started 2026-06-20)
 
 - Controlling plan: [`../../../plans/transplant/oak-parity-program.md`](../../../plans/transplant/oak-parity-program.md)
   (executable parity-tranche record). **AUTHORITATIVE BRING BACKLOG (2026-06-28):**

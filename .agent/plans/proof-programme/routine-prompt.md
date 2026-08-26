@@ -95,9 +95,11 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      order ARE the owner's standing answer to the first-step discussion, so grounding
      never pauses to wait for a person — a genuine fork found during grounding routes
      through step 7's queued-decision branch, exactly like one found during execution. The session's
-     cognitive stack is not optional: structure the slice with the `plan` skill, size it
-     with `proportionality`, and fire `metacognition` at boundaries and whenever a
-     rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
+     cognitive stack is not optional: the claimed queue brief IS the slice's plan (the
+     parent plan's §Lifecycle ratification — apply the brief's structure, never author a
+     duplicate plan artefact or open the plan skill's owner design gate for ratified
+     queue work); size the work with `proportionality`, and fire `metacognition` at
+     boundaries and whenever a rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
      skills-discipline paragraph (owner-authored, 2026-08-26) is the standing gesture at
      this same stack; where its wording differs from this brief — it names
      `start-right-quick` and ends with `wrap` — THIS BRIEF GOVERNS, by the stored

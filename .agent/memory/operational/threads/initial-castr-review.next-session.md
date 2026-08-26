@@ -64,10 +64,16 @@ mandated. Branch: `feat/initial-castr-review`.
   slice (gitleaks provisioning hook + pinned single-source + drift validator +
   `routine-prompt.md`) and the Routine mechanism is proven end to end (fresh-session
   spawn, credentialed landing `689eb9e`, owner notification receipts — evidence record in
-  the parent plan's Q-01 brief). The loop Routine is **enabled**: three firings/day, one
-  slice per firing, ADR-051 clause 3 merges.
-- **Next safe step (2026-08-22, current):** the queue per the parent plan's operating
-  protocol (WIP = 1) — normally driven by the Routine's firings; a human-attended session
+  the parent plan's Q-01 brief). The loop Routine was **enabled**: three firings/day, one
+  slice per firing, ADR-051 clause 3 merges. (SUPERSEDED 2026-08-26: that original
+  arming was retired; the re-created trigger is POKE-ONLY with the attended first
+  live firing and the enable HELD for the owner — the proof-programme thread
+  record's walk addendum is the authoritative hold.)
+- **Next safe step (2026-08-22; Routine state superseded 2026-08-26 — no background
+  firings are advancing until the owner completes the attended firing and enable):** the
+  queue per the parent plan's operating
+  protocol (WIP = 1, graded a best-efforts guideline 2026-08-26) — once enabled, normally
+  driven by the Routine's firings; a human-attended session
   picking up a slice must first check for open programme PRs and live claims. Consult the
   parent plan, not the historical blocks below.
   The 2026-07-06 block is retained as history:
