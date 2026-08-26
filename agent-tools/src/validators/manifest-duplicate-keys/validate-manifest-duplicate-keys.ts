@@ -47,7 +47,8 @@ const repoRoot = resolveRepoRoot(import.meta.url);
  * the Claude hook/permission settings (a duplicated `hooks` key silently
  * drops a guard), the hook policy, the skills lockfile, and the root configs
  * of the BLOCKING format/lint tools — markdownlint (both config forms) and
- * prettier gate every commit, and tsdoc.json feeds the TSDoc lint — where a
+ * prettier gate every commit (`tsdoc.json` files, root and per-workspace,
+ * come in through the workspace discovery instead) — where a
  * duplicated `globs`/`ignores`/option member is accepted last-wins and can
  * silently narrow or disable the gate. The scanner ignores JSONC comments,
  * so JSONC members are safe to include. (`api.json` is a sample OpenAPI
@@ -62,7 +63,6 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
   '.markdownlint-cli2.jsonc',
   '.markdownlint.json',
   '.prettierrc.json',
-  'tsdoc.json',
 ];
 
 interface FileViolations {

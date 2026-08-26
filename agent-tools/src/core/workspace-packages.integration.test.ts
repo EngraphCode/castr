@@ -74,14 +74,22 @@ describe('discoverWorkspaceTsconfigPaths', () => {
     return { name, isDirectory: () => isDir };
   }
 
-  it('lists tsconfig*.json in the root and each workspace directory', async () => {
+  it('lists tsconfig*.json and tsdoc.json in the root and each workspace directory', async () => {
     const listings = new Map<string, readonly { name: string; isDirectory: () => boolean }[]>([
-      ['/repo', [dirEntry('tsconfig.json', false), dirEntry('tsconfig.lint.json', false)]],
+      [
+        '/repo',
+        [
+          dirEntry('tsconfig.json', false),
+          dirEntry('tsconfig.lint.json', false),
+          dirEntry('tsdoc.json', false),
+        ],
+      ],
       [
         '/repo/lib',
         [
           dirEntry('tsconfig.json', false),
           dirEntry('tsconfig.build.json', false),
+          dirEntry('tsdoc.json', false),
           dirEntry('src', true),
         ],
       ],
@@ -101,8 +109,10 @@ describe('discoverWorkspaceTsconfigPaths', () => {
     ).resolves.toStrictEqual([
       'tsconfig.json',
       'tsconfig.lint.json',
+      'tsdoc.json',
       'lib/tsconfig.json',
       'lib/tsconfig.build.json',
+      'lib/tsdoc.json',
     ]);
   });
 

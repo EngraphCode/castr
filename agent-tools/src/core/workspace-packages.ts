@@ -88,14 +88,16 @@ const REAL_IO: WorkspaceDiscoveryIo = {
 };
 
 /**
- * Resolve the repo-relative `tsconfig*.json` paths across the workspace
- * estate: every file whose basename starts with `tsconfig` and ends with
- * `.json`, in the root and in each workspace package directory (derived from
- * the manifest paths). TypeScript resolves duplicated compiler options
- * last-wins just like `JSON.parse` — a duplicated `"strict"` can silently
- * disable strict checking while every gate stays green — so these configs
- * are part of the duplicate-key gate's estate. A directory that cannot be
- * listed (ENOENT) contributes nothing; other listing failures rethrow.
+ * Resolve the repo-relative TypeScript-family config paths across the
+ * workspace estate: every `tsconfig*.json` plus `tsdoc.json`, in the root
+ * and in each workspace package directory (derived from the manifest paths).
+ * TypeScript resolves duplicated compiler options last-wins just like
+ * `JSON.parse` — a duplicated `"strict"` can silently disable strict
+ * checking while every gate stays green — and the per-package `tsdoc.json`
+ * feeds the blocking `tsdoc/syntax` lint rule the same way, so these
+ * configs are part of the duplicate-key gate's estate. A directory that
+ * cannot be listed (ENOENT) contributes nothing; other listing failures
+ * rethrow.
  *
  * @param repoRoot - Absolute path of the repository root.
  * @param manifestPaths - Repo-relative `package.json` paths (root first), as
@@ -121,11 +123,8 @@ export async function discoverWorkspaceTsconfigPaths(
       throw error;
     }
     for (const dirEntry of dirEntries) {
-      if (
-        !dirEntry.isDirectory() &&
-        dirEntry.name.startsWith('tsconfig') &&
-        dirEntry.name.endsWith('.json')
-      ) {
+      const isTsconfig = dirEntry.name.startsWith('tsconfig') && dirEntry.name.endsWith('.json');
+      if (!dirEntry.isDirectory() && (isTsconfig || dirEntry.name === 'tsdoc.json')) {
         tsconfigPaths.push(dir === '.' ? dirEntry.name : `${dir}/${dirEntry.name}`);
       }
     }
