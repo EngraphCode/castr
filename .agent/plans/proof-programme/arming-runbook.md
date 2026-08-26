@@ -273,11 +273,16 @@ beyond them is needed for the Routine.
    the live base immediately beforehand — never carried from earlier in the
    sitting). **Overlap guard on the enable act itself**: if step 6's manual
    firing ran, enable only after that firing has closed (its completion
-   notification received), or set a cron whose first occurrence falls beyond
+   notification received), or — only when step 4's dry-run receipt gate already
+   passed — set a cron whose first occurrence falls beyond
    the live firing's landing deadline — the scheduler never terminates a
    predecessor (ADR-051 clause 2; incident I-1 is the measured two-live-workers
    collision), so an enable mid-drive can schedule a successor on top of the
-   still-running attended firing. The loop resumes from the queue on main; beyond step 5's
+   still-running attended firing. When step 4's owner-directed replacement gate
+   is in force, the attended firing's completion notification IS the receipt
+   gate, so only the first path exists: no enable — deferred cron or not —
+   before that notification arrives (a silent attended firing stops the
+   arming, per step 4). The loop resumes from the queue on main; beyond step 5's
    conservation of any surviving open-PR work, no other state transfer exists or is
    needed.
 
