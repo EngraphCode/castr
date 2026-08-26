@@ -1336,3 +1336,25 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **Hook-policy content guard fired on prose again** ("carve-out" in a plan body citing
   the owner's own anti-exception teaching) — restated positively; the guard's
   reappraise-don't-rephrase framing held.
+
+## 2026-08-26 — Smith stirs Pewter (01YHWJ) — LANE CLOSEOUT (supersedes prior LIVE STATE blocks)
+
+- **Dependency-currency lane COMPLETE.** PR #64 MERGED to main at `57ef2192` (15:03Z),
+  condition-based merge executed by the driving agent (all 14 checks green on `4105ba35`,
+  mergeStateStatus clean, 24/24 review threads verified-real → fixed → resolved with
+  evidence). Subscription removed on merge.
+- **Final review-drive facts:** the duplicate-key gate ended at 37 scanned files —
+  workspace manifests, tsconfig*/tsdoc.json per workspace, blocking tool configs
+  (markdownlint ×2, prettier), collaboration-state schemas, executive substrate
+  contract manifest+schema, and the nine runtime-loaded OpenAPI compliance schemas —
+  every estate widening proven firing on a planted duplicate and restored byte-exact.
+  Codex's serial estate findings all shared one shape: "a JSON surface some gate
+  JSON.parse-loads is not scanned"; the cure each time was DISCOVERY (list a directory)
+  over hardcoding.
+- **OCE landing CONFIRMED:** child session 016cbK… merged PR #21 & #22 in
+  EngraphCode/oak-open-curriculum-ecosystem (16:11Z status: "PR #21 & #22 merged;
+  follow-bug plan node added; all Codex findings verified") — the reusable
+  dependency-currency skill now lives in both estates. Lane task list fully complete.
+- **Nothing in flight.** No armed triggers remain for this lane after this closeout
+  lands; PR #64 and OCE PRs are merged; Q-016 decision card remains the one open
+  owner item (evidence in lib/eslint.config.ts + open-questions.md).
