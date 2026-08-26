@@ -10,7 +10,9 @@
 > **This is a proposal, not a commitment.** It derives from a research comparison
 > (treat as input, verify before acting). It treats current code design as
 > changeable where change earns value (prerelease). Nothing here is activated:
-> the one primary active plan remains the Practice transplant. Activate via the
+> the plan-of-record is the proof-programme parent plan (the Practice-transplant
+> primacy was superseded 2026-08-22 by ballot B-11, and the transplant effort
+> stopped 2026-08-26 by owner ruling QD-2). Activate via the
 > normal lifecycle when the owner sequences it.
 
 ---
@@ -171,4 +173,5 @@ the user-facing reshape.
 This plan and [`castr-check-verb.md`](./castr-check-verb.md) are forward proposals;
 when the owner sequences them, surface them in
 [`roadmap.md`](../roadmap.md) and activate via the normal lifecycle (one primary
-active plan at a time — currently the Practice transplant).
+active plan at a time — the plan-of-record is the proof-programme parent plan;
+the Practice transplant is stopped, owner ruling QD-2, 2026-08-26).

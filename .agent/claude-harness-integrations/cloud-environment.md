@@ -40,8 +40,9 @@ path (owner word 2026-08-24).
 ## Cloud-session grounding contract
 
 Every session in this environment — scheduled Routine firings and
-interactive cloud seats alike — grounds with the `start-right-thorough`
-skill and carries the plan / metacognition / proportionality skill stack
+interactive cloud seats alike — grounds with the `engraph-start-right-thorough`
+skill and carries the `engraph-plan` / `engraph-metacognition` /
+`engraph-proportionality` skill stack (the installed, invocable names)
 as mandatory working discipline (owner ruling, 2026-08-26 arming walk).
 A fresh container has no accumulated session context to lean on and no
 owner watching by default, so the full one-gate-at-a-time grounding and
