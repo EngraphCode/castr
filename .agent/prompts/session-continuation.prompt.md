@@ -116,7 +116,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > D3/D2/D4 on dedicated branches (pushed): `feat/d3-ci-oak-standard`@`c7f819e` (CI to Oak standard: check:ci gate + 6
 > SHA-pinned actions + dead publish.yml removed), `feat/d2-node-version-single-source`@`41b24f8` (.nvmrc single-source;
 > off D3 — coordinate-dependent on ci.yml), `feat/d4-archive-provenance-backbring`@`0a75231` (archive+provenance
-> subsystems, `@oaknational/result`→fail-fast).** Not merged (split-PR merge to main = owner's next move).
+> subsystems, `@oaknational/result`→fail-fast).** Not merged ~~(split-PR merge to main = owner's next move)~~ (superseded 2026-08-26: merges are condition-based — green and clean → the driving agent merges; owner ruling 2026-08-22, reaffirmed 2026-08-26).
 > **First-run collaboration-setup friction harvest** (owner-directed "record all"): F1–F12 + N1–N12 in
 > `.agent/memory/active/napkin.md`; headline **F6/N10** (an armed Monitor watcher silently coalesces events during idle
 > windows → an agent goes dark despite a correct watcher; cure = catch-up-sweep on every wake, now team doctrine +
@@ -124,7 +124,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > sync); the **first-run friction-fix tranche** (the agent-tools/doctrine fixes the friction harvest names — high-leverage
 > before the next team session); the split-PR **delivery** (D3-gated). **No open owner decisions** — the ledger is clean
 > (Q-001…Q-005 resolved; see line above). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
-> remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6/7" language
+> remediation 02–07 = a named position AFTER (not parked); ~~not in a rush to merge~~ (superseded 2026-08-26: green and clean merges, never held for an owner call).** All "currently Phase 6/7" language
 > below is stale → Phases 6/7/8 complete + tagged.
 
 This block is current truth only. Branch/delivery state lives in
