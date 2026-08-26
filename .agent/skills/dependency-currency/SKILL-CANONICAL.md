@@ -99,8 +99,15 @@ proof; never regenerate-and-accept a fixture without reading the diff.
 
 A new lint rule enabled by a plugin bump is adopted by fixing the sites
 (precedent: adopt-now) **unless it contradicts a standing decision record**
-— then the repo's own doctrine governs: configure the rule off with the
-decision record cited in the config comment, and keep source churn at zero.
+— then resolve the conflict with the gate kept active, in this order:
+(1) **compatible scoping** — confine the new rule's off to exactly the
+surface the decision record's own enforcement governs (same files/ignores
+globs as the enforcing block), so the rule stays live everywhere the
+doctrine does not reach, with the decision record cited in the config
+comment and the measured conflict stated; (2) where no scoping separates
+them (the conflict is total across the rule's whole surface), **route a
+doctrine-amendment decision to the owner** with the evidence — never
+decide the amendment inside the lane, and never land a blanket off.
 Never silence a rule merely to get green, and never author
 `eslint-disable` lines in product code.
 
