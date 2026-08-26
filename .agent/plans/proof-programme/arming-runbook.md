@@ -106,9 +106,12 @@ READ-ONLY closeout profile. Leave no repo-state change behind.
 
 The capability report settles, read-only, the measured-capability caveats the estate
 carries (trigger self-disable reach for the OP-6 contingency; the QD-7 Slack tool
-surface; the QD-8 ballot/push path) without executing any of them; the repo + HEAD
-half is the only available proof that the owner's UI repo-attach took effect, since
-the API cannot read a trigger's sources.
+surface; the QD-8 ballot/push path) without executing any of them. The API cannot
+read a trigger's sources BEFORE they are attached; once the owner attaches them,
+sources, outcome branch, model, and connector become visible in trigger reads
+(measured 2026-08-26, arming walk) — so a trigger read verifies the attach itself,
+and the fired repo + HEAD half of the report remains the end-to-end proof that a
+firing actually receives the attached source.
 
 ## Trigger configuration
 
