@@ -150,11 +150,20 @@ strategic node `.agent/plans/future/cloud-autonomy-trust.md`). **Remaining
 before any cron: owner-fired attended live firing (watch ~20 min; its
 completion notification closes the receipt gate; compare its self-report
 against measured reality), then enable per runbook step 7's overlap guard
-— only after that firing closes.** Note for the enable sitting: the live
+— only after that firing closes.** ~~Note for the enable sitting: the live
 trigger's stored-prompt paragraph still names `start-right-quick`; the
 thorough ruling lives in routine-prompt step 3, which the firing follows —
 the owner may align the trigger word at leisure (agent trigger edits were
-owner-denied this walk; the trigger is owner-territory).
+owner-denied this walk; the trigger is owner-territory).~~ SUPERSEDED
+2026-08-26 (routine-configuration session, Vesta turns Singularity): the
+owner authorised targeted minimal trigger edits for this act ("You can
+edit the trigger as long as you keep the changes targeted and minimal and
+report them"), and the stored-prompt skills paragraph now names
+`start-right-thorough` and the firing-scoped `session-handoff` profile —
+API prompt update verified in the same trigger read (prompt byte-exact;
+sources, outcome branch, model `claude-fable-5`, auto-fix OFF, Slack
+connector, push+slack/no-email notifications all preserved; still no
+cron). The runbook canonical block is aligned in the same landing.
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
