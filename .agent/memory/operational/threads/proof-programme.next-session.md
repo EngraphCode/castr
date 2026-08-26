@@ -1,8 +1,10 @@
 # Next-Session Record — Proof programme (autonomous loop)
 
 The continuity record for the proof-programme thread: the ADR-051 autonomous
-background loop executing the parent plan's queue, three scheduled firings per
-day plus owner-attended interactive sessions. Indexed by
+background loop executing the parent plan's queue (three scheduled firings per
+day once enabled — **currently POKE-ONLY, no cron: nothing self-fires until the
+owner completes the attended firing and enable; see the 2026-08-26 walk
+addendum below**) plus owner-attended interactive sessions. Indexed by
 [`../repo-continuity.md § Active Threads`](../repo-continuity.md#active-threads);
 this record carries identity history per [`README.md`](README.md) +
 [PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).

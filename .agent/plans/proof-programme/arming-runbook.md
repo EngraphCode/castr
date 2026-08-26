@@ -219,7 +219,15 @@ beyond them is needed for the Routine.
    the B-15 channel set amended to push-only this is a single-channel system, and
    an unproven channel voids the loop's entire observability contract (clause 6
    escalations and QD-8 owner-blocking alerts ride the same path). No receipt →
-   stop the arming and diagnose before any further step. **After the proof
+   stop the arming and diagnose before any further step. **Owner-directed
+   replacement gate (2026-08-26 walk, worked instance):** when the dry-run
+   receipt FAILS, the arming stops exactly as above; if the owner then repairs
+   the notification channel (proven by a direct test push arriving) and declines
+   a repeat dry run, the owner may direct that the attended first live firing
+   (step 6) serves as the receipt gate instead — its completion notification
+   must arrive before the enable, and a silent attended firing stops the arming
+   exactly as the dry-run gate would. The dry-run gate remains the default; this
+   substitution is an owner call made at the walk, never an agent default. **After the proof
    passes:** restore the canonical stored prompt via the owner's settings UI paste
    (the preferred route) or an API prompt update (measured once, 2026-08-26:
    sources, model, connector, and notifications survived an API prompt update on a
