@@ -1066,7 +1066,11 @@ the verbatim. **This grading is blanket**: every WIP = 1, "do nothing else",
 "forbids", or single-open-PR phrasing in this plan and the routine prompt reads
 under it — the mechanics are the best-efforts default, and where reasonable best
 efforts cannot preserve them the firing deviates by judgment and lands the reason
-in its record; no individual phrasing re-hardens the guideline.
+in its record; no individual phrasing re-hardens the guideline. **The grading
+governs loop operation only — what to drive and how to count — never the REACH of
+clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the
+firing cannot reasonably classify as programme work is not merged unattended,
+whatever best efforts concluded about counting it.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-thorough` with the plan /

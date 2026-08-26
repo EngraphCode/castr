@@ -7,7 +7,10 @@ non-draft programme pull request — slice or bookkeeping — because merge safe
 condition-based, never a per-PR approval; amended 2026-08-26 by owner ruling resolving queued decision QD-13: WIP = 1 and
 programme-PR classification are guidelines served by reasonable best efforts — "There is
 no limit, just a useful guideline, reasonable best efforts are fine" — the drive-or-claim
-mechanics stand as written, graded as best-efforts rather than a hard limit; amended 2026-08-23 by owner ruling resolving
+mechanics stand as written, graded as best-efforts rather than a hard limit, and the
+grading governs loop operation only — it never widens the reach of clause 3's
+unattended-merge grant, which reads narrowly: a PR not reasonably classifiable as
+programme work is not merged unattended; amended 2026-08-23 by owner ruling resolving
 queued decision QD-5: firing-side reports — the clause 6 stand-down broadcast included —
 are durable only as tracked repo state reachable from the loop's grounding path, landed on
 a programme-owned incident register via the plan estate's bookkeeping landing path under
