@@ -91,7 +91,8 @@ in_progress rows, no open programme PR) — with an adversarial
 assumptions-expert pass folded. Authoritative record and the hardened
 step-by-step arming walk: `.agent/analysis-and-reports/routine-arming-review-2026-08-25.md`
 (§6 is the walk script for the session that executes it with the owner).
-Refinements landed with the review (same PR): canonical DRY-RUN
+Refinements landed with the review on **PR #60** — the walk's step-0 merge
+gate (merge it before any enable; it is not a programme PR): canonical DRY-RUN
 instruction + belt-and-braces delivery rule + disable METHOD
 (cron-removal, never delete/recreate) + attended-first-firing step in the
 arming runbook; disable-method line in the routine prompt; Operating

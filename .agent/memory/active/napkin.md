@@ -1140,3 +1140,16 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   above are nameable and routed — no unshaped concept warranting the
   four-movement treatment. Free-play ran bounded; metacognition yielded the
   fluent-cures lesson above.
+
+- **Routed finding (2026-08-25, at the review PR's final push): GitHub reports 19
+  Dependabot vulnerabilities on main (9 high, 8 moderate, 2 low)** — drift since the
+  2026-07-03 audit-zero state. Routed to the next dependency-currency sweep (method
+  precedent: the completed `dependency-currency` plan; Node/@types/node HELD at 24 per
+  ADR-049), deliberately fenced OUT of the arming walk's scope.
+- **The opening-statement anti-pattern refired and was owner-caught**: my two handover
+  opening statements restated hold state, walk steps, method, and standing rules that
+  the grounding path already delivers — `passive-guidance-loses-to-artefact-gravity`
+  Instance 3's exact shape, from a session that had READ that pattern at grounding.
+  Cure applied: chat openers carry intent + ONE entry-point anchor only; the two facts
+  chat was papering over (PR #60 as the walk's merge gate; the Dependabot drift) are
+  now IN the surfaces instead of in chat.
