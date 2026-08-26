@@ -1056,7 +1056,11 @@ limit, just a useful guideline, reasonable best efforts are fine."** WIP=1 and
 programme-PR classification are guidelines served by reasonable best efforts; the
 nature-based reading and the declaration duty stand as guidance. Recorded as an
 ADR-051 amendment (Status line + clause 1(b), 2026-08-26); the register row carries
-the verbatim.
+the verbatim. **This grading is blanket**: every WIP = 1, "do nothing else",
+"forbids", or single-open-PR phrasing in this plan and the routine prompt reads
+under it — the mechanics are the best-efforts default, and where reasonable best
+efforts cannot preserve them the firing deviates by judgment and lands the reason
+in its record; no individual phrasing re-hardens the guideline.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-thorough` with the plan /
