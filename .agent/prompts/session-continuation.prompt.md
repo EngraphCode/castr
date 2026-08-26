@@ -95,7 +95,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > **NEXT = DC3 prettier 3.8.3→3.8.4** (emission-formatter; baseline-capture + emitted diff), then DC4 ink (agent-tools
 > runtime), DC5 commander (lib CLI), then **lane-close → graduate dependency-currency-discipline to a practice-core
 > pattern-PDR.** Then **Tranche 3 (A4 statusline → A1 ArcAngel, full unit).** Controlling plan
-> [`plans/current/dependency-currency.md`](../plans/current/dependency-currency.md) §Progress (live) is authoritative.
+> [`plans/current/complete/dependency-currency.md`](../plans/current/complete/dependency-currency.md) §Progress (live) is authoritative.
 > Finding routed (own slice): repo-local `type-assertion-policy` ESLint rule unregistered in `lib/eslint.config.ts`.
 > All "finish Phase 9" framing below is superseded by the parity-program framing.
 

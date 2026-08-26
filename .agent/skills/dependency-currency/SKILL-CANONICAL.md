@@ -8,7 +8,12 @@ description: >-
   annotated override floors, and refresh SHA-pinned GitHub Actions against
   verified stable tags. Use when the owner asks to bring dependencies to
   latest, clear audit or Dependabot findings, or reopen a
-  dependency-currency lane.
+  dependency-currency lane. Do NOT use for a single dependency bump riding
+  other work, a lockfile-only refresh, or one urgent advisory patch — those
+  take the ordinary commit path, borrowing this skill's tier proofs only as
+  reference. Right — a whole-estate pass of one proof-gated commit per
+  type-affecting cycle ending at audit zero. Wrong — sweeping every major in
+  one commit, or regenerating snapshots to green without reading the diff.
 ---
 
 # Dependency Currency
@@ -143,8 +148,15 @@ it.
 
 ## Failure handling
 
-A bump that regresses its proof and cannot be fixed forward within the
-cycle is reverted with a forward commit (`git revert`) — never patched
-around to keep the version. A cooldown-refused version is recorded, not
-forced. A finding that needs an architecture or owner decision is routed
-with its evidence, not decided inside the lane.
+A bump that regresses its proof and cannot be fixed forward is abandoned,
+never patched around to keep the version — and the recovery shape depends
+on where the cycle died. An **in-flight cycle** (proof failed before its
+commit landed) exists only as working-tree edits, so there is nothing for
+`git revert` to target: restore the manifests to their pre-bump ranges by
+explicit forward edits and re-run the install so the lockfile follows.
+Never reach for history-editing or worktree-discarding git commands to do
+this. An **already-committed bump** later found regressive is undone with
+`git revert <commit>` — a new forward commit, roll-forward-compatible. A
+cooldown-refused version is recorded, not forced. A finding that needs an
+architecture or owner decision is routed with its evidence, not decided
+inside the lane.

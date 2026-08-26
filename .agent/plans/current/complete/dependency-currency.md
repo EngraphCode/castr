@@ -1,9 +1,9 @@
 ---
 title: Dependency Currency — type-safe, careful, one-major-at-a-time bumps
-status: current
-lane: current
+status: complete
+lane: complete
 created: 2026-06-21
-last_updated: 2026-06-21
+last_updated: 2026-08-26
 owner_directive: >-
   "Let's make the next session about dependency currency. That might affect types
   use in the code, and because this repo is entirely about managing types that

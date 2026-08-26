@@ -572,8 +572,13 @@ export default defineConfig(
   // validated data-string parsing. Adopting the rule would re-open the banned
   // syntax, so the repo's own decision record governs and the vendor preset
   // addition yields (measured on the 4.1.0 -> 4.2.0 bump, 2026-08-26: all 28
-  // findings sat in ADR-026-governed modules).
+  // findings sat in ADR-026-governed modules). The off is scoped to EXACTLY
+  // the ADR-026 enforcement surface (src product code, tests excluded — the
+  // same files/ignores as the ban block above); everywhere else the rule
+  // stays live at the preset's severity.
   {
+    files: ['src/**/*.ts'],
+    ignores: [...testGlobs],
     rules: {
       'sonarjs/prefer-native-lodash-alternative': 'off',
     },

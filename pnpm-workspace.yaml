@@ -41,7 +41,8 @@ overrides:
   #   GHSA-v422-hmwv-36x6, GHSA-mwp4-54f8-5fhr families)
   # - esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low; tsup still declares
   #   ^0.27.0 as of 2026-08-26)
-  # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7)
+  # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7);
+  #   pinned to ^3 so ajv (declares ^3.0.1) stays on its supported major
   # - brace-expansion via minimatch in the eslint chain (GHSA-rgw5-rvv9-x895)
   # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
   #   GHSA-fxqj-rqcc-2cmp); nanoid is pinned to ^3 so those consumers stay on
@@ -51,7 +52,7 @@ overrides:
   body-parser: '>=2.3.0'
   ip-address: '>=10.3.1'
   esbuild: '>=0.28.1'
-  fast-uri: '>=3.1.5'
+  fast-uri: '^3.1.5'
   brace-expansion: '>=5.0.9'
   nanoid: '^3.3.18'
   postcss: '>=8.5.23'
