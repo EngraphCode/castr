@@ -1251,3 +1251,33 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   `session_016cbKgzjuD5MmLEnYMGjH5N` (tag `cross-pollination:castr-to-oce`) is landing the OCE
   copy; check-in trigger `trig_01Sr3xP1q9h7w6Ss7QYwyjyH` (hourly re-arm) drives PR #64 and
   relays the child's state; this session is subscribed to PR #64 events.
+
+## 2026-08-26 — Smith stirs Pewter (01YHWJ) — post-compaction review-drive wakes
+
+- **Mistake: ran an unfamiliar CLI with `--help` blind and it executed its WRITE default.**
+  `node …/skills-adapter-generate.js --help` — the tool has no help flag and wrote 78
+  unprefixed adapter directories (missing `--prefix=engraph-`). Cure applied within minutes:
+  removed all 78 accidental untracked dirs explicitly (`.agents/skills/*`, `.claude/skills/*`
+  unprefixed only), verified tree clean, then reran correctly with `--prefix=engraph-`.
+  Lesson: read the invocation site (package.json script) for the canonical flags BEFORE
+  running a repo tool; never probe an unknown CLI with `--help` when its default may mutate.
+- **Review-drive tally (PR #64, post-compaction): 14 threads, 14 verified-real, 14 fixed +
+  resolved.** Codex kept finding real instances of two escaped classes: (1) the duplicate-key
+  gate's own blind spots (JSONC key-colon trivia `b254234f`; self-bootstrap via manifest script
+  keys → direct hook/CI invocation `08960399`; tsconfig estate — TS resolves duplicate compiler
+  options last-wins, `deabaf51`), and (2) residual operative "owner-invoked merge" text beyond
+  the corrected banners (next-session/repo-continuity/skill `08960399`; proof-programme Q-21
+  brief + arming walk `9cc59c71`; delivery-ledger row `700f80de`). Pattern: a policy correction
+  is not done at the banner — grep the whole estate for the retired phrase and supersede every
+  OPERATIVE occurrence (dated history quotes stay verbatim).
+- **Test-category rule internalised:** injected-io seams are integration tests by
+  testing-strategy.md definition (unit = pure, NO mocks) — `workspace-packages` discovery tests
+  moved to `.integration.test.ts` (`b40eb614`).
+- **LIVE STATE (supersedes the block above):** PR #64 head `700f80de`, all 14 threads resolved,
+  CI running — merge when green and clean (condition-based policy). Q-21 COMPLETED in
+  proof-programme queue (this PR landed its deliverable). OCE child
+  `session_016cbKgzjuD5MmLEnYMGjH5N` BLOCKED on an owner-only AskUserQuestion: one `--no-verify`
+  push authorization (its evidence: showcase `identity-picker.spec.ts` failure proven base-red
+  at OCE origin/main and red on the fork's own CI; skill-bring commit ready locally, pre-commit
+  green). NOT grantable by this session — owner decision, standing in the web UI. Check-in
+  re-armed: `trig_012w1JK8mTqKobic2e2shHs3` fires 14:43Z.
