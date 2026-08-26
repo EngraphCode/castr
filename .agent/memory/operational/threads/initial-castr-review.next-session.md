@@ -60,7 +60,7 @@ mandated. Branch: `feat/initial-castr-review`.
   **Accepted** (amended: three firings per day); the active-lane dispositions are executed
   (both plans in `current/paused/`, banners carry the disposition table and the QD-2
   pointer); the queue is live with Q-14 (B-09 doctrine wave) added.
-- **2026-08-22 (close): Q-01 COMPLETE, LOOP LIVE** — PR #33 landed the loop-readiness
+- **2026-08-22 (close): Q-01 COMPLETE, LOOP LIVE (era record — Routine state superseded 2026-08-26, see below)** — PR #33 landed the loop-readiness
   slice (gitleaks provisioning hook + pinned single-source + drift validator +
   `routine-prompt.md`) and the Routine mechanism is proven end to end (fresh-session
   spawn, credentialed landing `689eb9e`, owner notification receipts — evidence record in

@@ -52,7 +52,13 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 > home: the gap-rescan doc + `repo-continuity.md`). The live next-step pointer remains
 > `repo-continuity.md §Next Safe Steps`.
 
-> **🧭 CURRENT FRONTIER (2026-06-28) — supersedes the "Phase 7 in progress" bullets below.** Transplant Phases 0–8 are
+> **🛑 SUPERSEDED 2026-08-26 (owner ruling QD-2): "The old effort is stopped, parity
+> remains a goal, we will address it in time."** The frontier block below is era
+> history — axis A is STOPPED, its gap-rescan backlog is not a live next step, and the
+> Q-011 sequencing question is moot; the plan-of-record is the proof-programme queue
+> (B-11), and parity's living frame is the 2026-08-24 bidirectional-equality directive.
+>
+> **🧭 CURRENT FRONTIER (2026-06-28, era history — see the supersession above) — supersedes the "Phase 7 in progress" bullets below.** Transplant Phases 0–8 are
 > ✅ done + tagged. The work is now the **Oak Parity-or-Better Program** under the governing **bring-everything**
 > disposition (PDR-005 §Default disposition: bring unless utterly irrelevant). The **single authoritative Axis-A bring
 > backlog** is [`transplant/oak-castr-gap-rescan-2026-06-28.md`](./transplant/oak-castr-gap-rescan-2026-06-28.md)
