@@ -1018,6 +1018,21 @@ policy with both branches and cites the ADR; no unconditional owner-invoked clai
 remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
 owner decision card 2026-08-24. Gate: none (eligible immediately).
 
+**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26).** Surface:
+`lib/scripts/generate-normalized-fixtures.ts` and the checked-in normalized fixture
+estate it owns (the paired `zod.ts` fixtures and `ir.json`/`ir2.json`). Goal,
+generator-first per the ruling ("obviously fix the generator") and
+`never-edit-generated-files`: fix the GENERATOR so regeneration reproduces a valid
+estate on the current toolchain (int64/strictObject-era `zod.ts`; IR 2.0.0 security
+shape), then regenerate the outputs through the generator only, landing generator fix
+and regenerated outputs together. Non-goals: no hand edits to any generated output; no
+widening into fixture-consuming lanes (Q-11/Q-12 own those); no new fixture cases.
+Acceptance (`integration`): a clean-tree regeneration run reproduces the checked-in
+estate exactly, the 11 previously-breaking validation-parity tests pass against the
+regenerated outputs, and `pnpm check` is green. Source: QD-11 ruling (register,
+2026-08-26) + the Q-03 evidence record's routed fixture finding. Gate: none (eligible
+immediately; sequenced with the safety instruments at owner word).
+
 ## Operating protocol
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)

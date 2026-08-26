@@ -87,8 +87,10 @@ makes each arming's dry run a fresh authoring act (arming review 2026-08-25). De
 this text to the fired session — belt and braces: prepend it to the stored prompt
 **before** the owner attaches sources (a zero-loss window), AND pass it as the
 per-fire payload where the platform accepts one; restore the canonical stored prompt
-afterwards via the owner's settings UI (the known-safe route — an API prompt update
-on a source-attached trigger is unmeasured) and byte-verify:
+afterwards via the owner's settings UI (the preferred route) or an API prompt
+update — measured once, 2026-08-26: an API prompt update on a source-attached
+trigger preserved sources, model, connector, and notifications, all verifiable in
+the same trigger read — and byte-verify:
 
 ```text
 DRY-RUN (owner-commanded proof firing, arming runbook step 4): take
@@ -219,8 +221,10 @@ beyond them is needed for the Routine.
    escalations and QD-8 owner-blocking alerts ride the same path). No receipt →
    stop the arming and diagnose before any further step. **After the proof
    passes:** restore the canonical stored prompt via the owner's settings UI paste
-   (the known-safe route; an API prompt update on a source-attached trigger is
-   unmeasured) and byte-verify against §The stored trigger prompt — this restore
+   (the preferred route) or an API prompt update (measured once, 2026-08-26:
+   sources, model, connector, and notifications survived an API prompt update on a
+   source-attached trigger — verify them in the same trigger read) and byte-verify
+   against §The stored trigger prompt — this restore
    completes BEFORE step 6's attended live firing, whose probe value depends on
    the stored prompt being canonical (a leftover prepend would silently send that
    firing down the read-only path and void the write probe).
