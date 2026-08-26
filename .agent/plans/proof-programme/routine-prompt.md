@@ -92,8 +92,14 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      register identity per `register-active-areas-at-session-open`. The session's
      cognitive stack is not optional: structure the slice with the `plan` skill, size it
      with `proportionality`, and fire `metacognition` at boundaries and whenever a
-     rabbit hole or fluent shortcut appears (the owner's stored-prompt paragraph is the
-     standing statement of this stack).
+     rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
+     skills-discipline paragraph (owner-authored, 2026-08-26) is the standing gesture at
+     this same stack; where its wording differs from this brief — it names
+     `start-right-quick` and ends with `wrap` — THIS BRIEF GOVERNS, by the stored
+     prompt's own opening instruction ("follow it exactly — it is your complete standing
+     brief"): firings ground thorough here, and close under step 9's firing-scoped
+     `session-handoff` profile, recording any deeper consolidation as due rather than
+     running the `wrap` deep-close inside a duration-bounded firing.
    - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
      and carry every entry whose Outcome is OPEN into this firing's step 9 completion
      notification, so the owner is reminded of waiting decisions on every firing, not

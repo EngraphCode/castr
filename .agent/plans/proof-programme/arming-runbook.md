@@ -69,7 +69,15 @@ skills-discipline line is the owner's own amendment to the canonical prompt
 (added live at the 2026-08-26 arming walk; conserved as the live trigger
 carries it, mid-line spacing included — the repo formatter strips one
 line-end space the live text carries, so byte-verification against this
-canonical compares with line-trailing whitespace ignored).
+canonical compares with line-trailing whitespace ignored). Where that
+paragraph's wording differs from the firing protocol — it names
+`start-right-quick` where the 2026-08-26 owner ruling grounds cloud
+sessions with `start-right-thorough` (routine-prompt step 2), and ends
+with `wrap` where firings close under the duration-bounded firing-scoped
+`session-handoff` profile (routine-prompt step 9, QD-6) — the protocol
+governs, by the stored prompt's own opening instruction; aligning the
+paragraph's words is an owner act on the live trigger, flagged in the
+programme thread record.
 
 ## The DRY-RUN instruction (canonical verbatim)
 

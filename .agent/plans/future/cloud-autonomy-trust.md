@@ -65,8 +65,12 @@ category, per the owner's 2026-08-24 teaching).
 
 - Cloud sessions ground with `start-right-thorough` plus the mandatory
   plan / metacognition / proportionality stack (owner ruling): AGENT.md
-  §Grounding, routine-prompt step 2, parent-plan §Operating protocol, and the
-  owner's own stored-prompt paragraph on the live Routine.
+  §Grounding, routine-prompt step 2, parent-plan §Operating protocol, and
+  cloud-environment.md §Cloud-session grounding contract. The owner's
+  stored-prompt paragraph on the live Routine gestures at the same stack but
+  still says `start-right-quick` and `wrap`; the protocol governs where they
+  differ (routine-prompt steps 2 and 9 carry the precedence), and aligning
+  the paragraph's words is a pending owner act on the live trigger.
 - The queued-decisions row contract: rows are written for the owner in plain
   outcome language with firsthand-verified premises (register header +
   routine-prompt owner-fork branch).
