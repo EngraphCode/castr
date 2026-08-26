@@ -53,7 +53,11 @@ pnpm audit                       # security findings incl. transitives
 ```
 
 Also enumerate the workspace `overrides` block (existing security floors and
-their removal conditions) and the CI workflow's `uses:` pins.
+their removal conditions) and the CI workflow's `uses:` pins. Verify the
+survey actually covered the workspace ROOT: confirm a root-only dependency
+appears in the outdated table (pnpm major/config differences can exclude the
+root from recursive commands — where it is missing, add
+`--include-workspace-root` or run a second survey from the root manifest).
 
 ### 2. Holds — resolve before triage
 

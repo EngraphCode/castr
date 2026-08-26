@@ -13,6 +13,7 @@
     "depcruise": "depcruise src --config .dependency-cruiser.cjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "smoke:collaboration-tui": "tsx smoke-tests/collaboration-tui-start.smoke.ts",
     "type-check": "tsc -p tsconfig.json",

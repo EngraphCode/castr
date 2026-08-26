@@ -176,10 +176,14 @@ by a firsthand diff of the emitted output against a baseline captured before the
   against its declared allow-matrix). Resolution is an ADR-036 architecture decision
   (restructure the conversion layer vs widen its matrix) — own follow-up slice; the cure and
   finding are documented in `lib/eslint.config.ts` beside the settings block.
-- **Finding routed (2026-08-26): turbo warns "no output files found for @engraph/castr#test"**
-  on cache-miss runs — pre-existing at 2.10.2 (measured via forced re-run), config-inherent
-  (`test` declares `coverage/**` outputs but plain `pnpm test` runs without coverage); the
-  outputs key belongs on the coverage-producing invocation. Own follow-up.
+- **Finding FIXED in-lane (2026-08-26, review round 7): turbo's "no output files found for
+  @engraph/castr#test" warning** — pre-existing at 2.10.2 (measured via forced re-run),
+  config-inherent (`test` declared `coverage/**` outputs but plain `pnpm test` runs without
+  coverage). Cured by splitting a dedicated `test:coverage` turbo task that owns the
+  `coverage/**` outputs (root `test:coverage` script now invokes it; lib + agent-tools gained
+  `vitest run --coverage` scripts; agent-tools stays cache-false in both variants). Proven
+  both directions: cache-miss `pnpm test` warning-free, `pnpm test:coverage` produces and
+  declares coverage. CI's coverage job path (`pnpm test:coverage`) is unchanged.
 
 ## End goal / mechanism / means / non-goals
 
