@@ -59,10 +59,17 @@ stand-down broadcast, session handoff). If that file does not exist on
 main, treat this firing as mis-armed: post the stand-down broadcast naming
 the missing prompt, notify the owner in your completion summary, and stop
 without touching the queue.
+
+Sessions start with start-right-quick , plans are structured with the plan skill, thinking is structured with the cognitive skills, rabbit holes are defeated with the metacognition skill, sessions end with the wrap skill
 ```
 
 On an account where "jimCresswell" is not the owner identity, replace the owner name in
-the parenthesis; nothing else in the prompt is account-specific.
+the parenthesis; nothing else in the prompt is account-specific. The closing
+skills-discipline line is the owner's own amendment to the canonical prompt
+(added live at the 2026-08-26 arming walk; conserved as the live trigger
+carries it, mid-line spacing included — the repo formatter strips one
+line-end space the live text carries, so byte-verification against this
+canonical compares with line-trailing whitespace ignored).
 
 ## The DRY-RUN instruction (canonical verbatim)
 

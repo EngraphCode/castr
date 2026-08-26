@@ -98,6 +98,7 @@ without proportional value.
 | `.agent/rules/monitor-branch-touched-files.md`                             | always-on      | —                                                                                                |
 | `.agent/rules/napkin.md`                                                   | always-on      | —                                                                                                |
 | `.agent/rules/never-disable-checks.md`                                     | always-on      | —                                                                                                |
+| `.agent/rules/never-edit-generated-files.md`                               | always-on      | —                                                                                                |
 | `.agent/rules/never-use-git-to-remove-work.md`                             | always-on      | —                                                                                                |
 | `.agent/rules/new-rule-vs-pdr-clause.md`                                   | always-on      | —                                                                                                |
 | `.agent/rules/no-conditional-tests.md`                                     | always-on      | —                                                                                                |

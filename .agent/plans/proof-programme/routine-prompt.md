@@ -176,6 +176,11 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      quarantine a test.
    - **Genuine owner fork**: write it to [`queued-decisions.md`](./queued-decisions.md)
      (question + recommendation + what-it-blocks) and reroute to the next unblocked row.
+     A row is written for the OWNER, not the loop: state its premise in plain outcome
+     language, and verify that premise firsthand before writing it — a row's factual
+     claims are your claims (the 2026-08-26 arming-walk re-read measured five of eight
+     rows defective in premise, frame, or owner-legibility; the register is not a
+     surface that launders unverified claims into authority).
      Never decide release claims, `principles.md` edits, ADR acceptance, or sequencing
      supersession yourself. A fork worth the owner's immediate attention additionally
      ships as an owner-decision ballot per the

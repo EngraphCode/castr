@@ -19,6 +19,18 @@ todos:
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
     status: completed
     depends_on: [Q-00]
+  - id: Q-18
+    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
+    status: pending
+  - id: Q-20
+    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
+    status: pending
+  - id: Q-21
+    content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
+    status: pending
+  - id: Q-22
+    content: 'Fixture-generator repair (QD-11 owner ruling 2026-08-26): fix lib/scripts/generate-normalized-fixtures.ts so regeneration reproduces a valid checked-in normalized fixture estate (int64/strictObject-era zod.ts, IR 2.0.0 security shape), regenerate the outputs through the generator only, validation-parity tests green; never-edit-generated-files rule applies'
+    status: pending
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
     status: pending
@@ -66,19 +78,10 @@ todos:
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
     status: pending
-  - id: Q-18
-    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
-    status: pending
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
     status: pending
     depends_on: [Q-13]
-  - id: Q-20
-    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
-    status: pending
-  - id: Q-21
-    content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
-    status: pending
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -1031,9 +1034,11 @@ it touches programme surfaces. **Declaration duty**: a firing opening a programm
 names its queue row (`Q-NN`) or its bookkeeping scope in the description, so
 successors classify from the PR itself — a duty aiding classification, never the
 operative test (a slice PR whose author omits the declaration is still a programme PR
-by nature). Whether self-declaration should become the operative test, and what the
-default is when classification is genuinely ambiguous, are clause-3-adjacent questions
-routed to the owner as QD-13 per clause 5 — never decided here.
+by nature). **QD-13 RULED (owner, 2026-08-26 arming walk, verbatim): "There is no
+limit, just a useful guideline, reasonable best efforts are fine."** WIP=1 and
+programme-PR classification are guidelines served by reasonable best efforts; the
+nature-based reading and the declaration duty stand as guidance. The register row
+carries the ruling.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
