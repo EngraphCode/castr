@@ -59,10 +59,25 @@ stand-down broadcast, session handoff). If that file does not exist on
 main, treat this firing as mis-armed: post the stand-down broadcast naming
 the missing prompt, notify the owner in your completion summary, and stop
 without touching the queue.
+
+Sessions start with start-right-quick , plans are structured with the plan skill, thinking is structured with the cognitive skills, rabbit holes are defeated with the metacognition skill, sessions end with the wrap skill
 ```
 
 On an account where "jimCresswell" is not the owner identity, replace the owner name in
-the parenthesis; nothing else in the prompt is account-specific.
+the parenthesis; nothing else in the prompt is account-specific. The closing
+skills-discipline line is the owner's own amendment to the canonical prompt
+(added live at the 2026-08-26 arming walk; conserved as the live trigger
+carries it, mid-line spacing included — the repo formatter strips one
+line-end space the live text carries, so byte-verification against this
+canonical compares with line-trailing whitespace ignored). Where that
+paragraph's wording differs from the firing protocol — it names
+`start-right-quick` where the 2026-08-26 owner ruling grounds cloud
+sessions with `start-right-thorough` (routine-prompt step 3), and ends
+with `wrap` where firings close under the duration-bounded firing-scoped
+`session-handoff` profile (routine-prompt step 9, QD-6) — the protocol
+governs, by the stored prompt's own opening instruction; aligning the
+paragraph's words is an owner act on the live trigger, flagged in the
+programme thread record.
 
 ## The DRY-RUN instruction (canonical verbatim)
 
@@ -72,8 +87,10 @@ makes each arming's dry run a fresh authoring act (arming review 2026-08-25). De
 this text to the fired session — belt and braces: prepend it to the stored prompt
 **before** the owner attaches sources (a zero-loss window), AND pass it as the
 per-fire payload where the platform accepts one; restore the canonical stored prompt
-afterwards via the owner's settings UI (the known-safe route — an API prompt update
-on a source-attached trigger is unmeasured) and byte-verify:
+afterwards via the owner's settings UI (the preferred route) or an API prompt
+update — measured once, 2026-08-26: an API prompt update on a source-attached
+trigger preserved sources, model, connector, and notifications, all verifiable in
+the same trigger read — and byte-verify:
 
 ```text
 DRY-RUN (owner-commanded proof firing, arming runbook step 4): take
@@ -91,9 +108,12 @@ READ-ONLY closeout profile. Leave no repo-state change behind.
 
 The capability report settles, read-only, the measured-capability caveats the estate
 carries (trigger self-disable reach for the OP-6 contingency; the QD-7 Slack tool
-surface; the QD-8 ballot/push path) without executing any of them; the repo + HEAD
-half is the only available proof that the owner's UI repo-attach took effect, since
-the API cannot read a trigger's sources.
+surface; the QD-8 ballot/push path) without executing any of them. The API cannot
+read a trigger's sources BEFORE they are attached; once the owner attaches them,
+sources, outcome branch, model, and connector become visible in trigger reads
+(measured 2026-08-26, arming walk) — so a trigger read verifies the attach itself,
+and the fired repo + HEAD half of the report remains the end-to-end proof that a
+firing actually receives the attached source.
 
 ## Trigger configuration
 
@@ -199,10 +219,23 @@ beyond them is needed for the Routine.
    the B-15 channel set amended to push-only this is a single-channel system, and
    an unproven channel voids the loop's entire observability contract (clause 6
    escalations and QD-8 owner-blocking alerts ride the same path). No receipt →
-   stop the arming and diagnose before any further step. **After the proof
-   passes:** restore the canonical stored prompt via the owner's settings UI paste
-   (the known-safe route; an API prompt update on a source-attached trigger is
-   unmeasured) and byte-verify against §The stored trigger prompt — this restore
+   stop the arming and diagnose before any further step. **Owner-directed
+   replacement gate (2026-08-26 walk, worked instance):** when the dry-run
+   receipt FAILS, the arming stops exactly as above; if the owner then repairs
+   the notification channel (proven by a direct test push arriving) and declines
+   a repeat dry run, the owner may direct that the attended first live firing
+   (step 6) serves as the receipt gate instead — its completion notification
+   must arrive before the enable, and a silent attended firing stops the arming
+   exactly as the dry-run gate would. The dry-run gate remains the default; this
+   substitution is an owner call made at the walk, never an agent default. **After the
+   dry-run proof passes** (on the replacement path, immediately — selecting that path
+   permits and requires the restore BEFORE step 6, since the restore is never gated on
+   the replacement receipt, which gates only the enable): restore the canonical stored
+   prompt via the owner's settings UI paste
+   (the preferred route) or an API prompt update (measured once, 2026-08-26:
+   sources, model, connector, and notifications survived an API prompt update on a
+   source-attached trigger — verify them in the same trigger read) and byte-verify
+   against §The stored trigger prompt — this restore
    completes BEFORE step 6's attended live firing, whose probe value depends on
    the stored prompt being canonical (a leftover prepend would silently send that
    firing down the read-only path and void the write probe).
@@ -243,11 +276,16 @@ beyond them is needed for the Routine.
    the live base immediately beforehand — never carried from earlier in the
    sitting). **Overlap guard on the enable act itself**: if step 6's manual
    firing ran, enable only after that firing has closed (its completion
-   notification received), or set a cron whose first occurrence falls beyond
+   notification received), or — only when step 4's dry-run receipt gate already
+   passed — set a cron whose first occurrence falls beyond
    the live firing's landing deadline — the scheduler never terminates a
    predecessor (ADR-051 clause 2; incident I-1 is the measured two-live-workers
    collision), so an enable mid-drive can schedule a successor on top of the
-   still-running attended firing. The loop resumes from the queue on main; beyond step 5's
+   still-running attended firing. When step 4's owner-directed replacement gate
+   is in force, the attended firing's completion notification IS the receipt
+   gate, so only the first path exists: no enable — deferred cron or not —
+   before that notification arrives (a silent attended firing stops the
+   arming, per step 4). The loop resumes from the queue on main; beyond step 5's
    conservation of any surviving open-PR work, no other state transfer exists or is
    needed.
 
@@ -283,8 +321,16 @@ in the same family as the unproven self-disable probe above:
 - **The Routine's write binding is not probed before enabling.** The dry run is
   read-only by design, so nothing exercises this Routine's push/PR credential binding
   until the first live firing — which IS the credentialed write probe, with a loud,
-  bounded failure mode: a push or PR failure lands in the completion notification,
-  advances the ADR-051 failure counters, and WIP=1 caps exposure at one slice (the
+  bounded failure mode: a push or PR failure lands in the completion notification and
+  advances the ADR-051 failure counters. When step 6 runs (its recommended shape), the
+  walk's ordering bounds exposure: the firing is owner-attended, and the enable either
+  waits for its closure or uses step 7's deferred cron whose first occurrence falls
+  beyond that firing's landing deadline — either way no unattended firing precedes the
+  attended write probe. If the owner exercises step 6's explicit skip, that recorded
+  owner call voids this ordering bound and is itself the risk disposition for enabling
+  with the write binding unprobed. Past enable, three zero-progress firings self-disable
+  the loop (ADR-051 clause 6), and WIP=1 remains the strong best-efforts default
+  (QD-13) rather than a guaranteed cap (the
   Q-01 arc measured exactly this discovery path). Reopen condition: a measured SILENT
   write failure — one producing no failing notification — makes this a blocking gap;
   the platform-capability probe family (Q-20 re-scope → Q-15) is its queue home.

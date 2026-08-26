@@ -1,5 +1,10 @@
 # Oak → castr Practice Transplant
 
+> **🛑 STOPPED (owner ruling QD-2, 2026-08-26, verbatim): "The old effort is stopped,
+> parity remains a goal, we will address it in time."** This plan is historical record,
+> not a resumable position; parity's living frame is the owner's 2026-08-24
+> bidirectional-equality directive. The earlier pause note stands as history:
+>
 > **⏸️ PAUSED AS A NAMED POSITION (2026-08-22, B-11 RATIFY):** the owner ratified
 > [W-0 ballot item B-11](../../proof-programme/ballot-2026-08-owner-walk.md), superseding
 > this plan's standing 2026-06-19 primacy with the
@@ -10,7 +15,11 @@
 > ask). The pause cannot strand the work: this pointer and QD-2 are the pair that keeps it
 > named. Selective canonical-delta sync against PR #23 is queue slice Q-13.
 
-**Status:** PAUSED — named position (was primary until 2026-08-22)
+**Status:** STOPPED (owner ruling QD-2, 2026-08-26) — historical record, not a
+resumable position; parity remains a goal under the 2026-08-24 bidirectional-equality
+directive. QD-2 is RULED, no re-entry trigger stands. The file remains at this path
+only because the estate's class-tiered archive-move mechanism (PDR-094) is not yet
+built; discovery must treat the status line, not the directory, as authoritative.
 **Created/Promoted:** 2026-06-05
 **Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (see the [`../delivery-ledger.md`](../../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
 **Authoritative spec:** [`practice-alignment-brief.md`](../../practice-alignment-brief.md)

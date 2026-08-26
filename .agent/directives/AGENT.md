@@ -13,6 +13,7 @@
 - Read [`practice-core/index.md`](../practice-core/index.md) for the portable Practice Core.
 - Read [`practice-index.md`](../practice-index.md) for the bridge into this repo's local Practice.
 - Use the `start-right-quick` skill at session start, or `start-right-thorough` after a context switch or long gap.
+- **Cloud sessions (fresh containers: routine firings and interactive cloud seats) ground with `engraph-start-right-thorough`**, and carry the `engraph-plan` / `engraph-metacognition` / `engraph-proportionality` skill stack (the installed, invocable names) as mandatory working discipline (owner ruling, 2026-08-26 arming walk; durable home: [cloud-environment.md §Cloud-session grounding contract](../claude-harness-integrations/cloud-environment.md)).
 
 ## First Question
 

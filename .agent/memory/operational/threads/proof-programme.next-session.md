@@ -1,8 +1,10 @@
 # Next-Session Record — Proof programme (autonomous loop)
 
 The continuity record for the proof-programme thread: the ADR-051 autonomous
-background loop executing the parent plan's queue, three scheduled firings per
-day plus owner-attended interactive sessions. Indexed by
+background loop executing the parent plan's queue (three scheduled firings per
+day once enabled — **currently POKE-ONLY, no cron: nothing self-fires until the
+owner completes the attended firing and enable; see the 2026-08-26 walk
+addendum below**) plus owner-attended interactive sessions. Indexed by
 [`../repo-continuity.md § Active Threads`](../repo-continuity.md#active-threads);
 this record carries identity history per [`README.md`](README.md) +
 [PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
@@ -32,21 +34,28 @@ programme's delivery evidence rather than retro-filled here.)
 | Stratospheric Hovering Thermal | f34dddf9-ff0e-56e9-a525-a00493bc8813 | claude-code | claude-fable-5 | sessio            | scheduled firing (Q-04 slice)                         | 2026-08-25    | 2026-08-25   |
 | Sardine turns Coral            | e079be76-3221-5c13-aa9c-42c33dfa14fa | claude-code | claude-fable-5 | 01QpYc            | owner-redirected firing (account-portability landing) | 2026-08-25    | 2026-08-25   |
 | Nettle wakes Topsoil           | de57ab0b-1960-5d55-910a-fa887b4993bc | claude-code | claude-fable-5 | 01KKh2            | commissioned arming reviewer (fresh-session review)   | 2026-08-25    | 2026-08-25   |
+| Breeze weaves Contrail         | ea6fba19-fcf8-5841-b6a1-56c7d42ddd4d | claude-code | claude-fable-5 | 0132gL            | arming-walk executor (owner-attended)                 | 2026-08-26    | 2026-08-26   |
 
 ## Next-session landing target
 
 Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
 programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-25: Q-04's PR #55 MERGED at `2066a142`; no programme PR is open, so the
-next firing claims the next eligible row — Q-05..Q-09, Q-13, Q-14, Q-16 (re-adjudicated 2026-08-25, arming review — the narrowed brief in the
-parent plan is current: ADR-117 citation replacement only), Q-17, Q-18, Q-20, Q-21). Verification: the PR merged, or a
-row's state advanced on the base.
+2026-08-26: no programme PR is open, so the next firing claims the next
+eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22 (Q-21 completed 2026-08-26,
+PR #64), then Q-05..Q-09, Q-13,
+Q-14, Q-16 (re-adjudicated 2026-08-25, arming review — the narrowed brief in
+the parent plan is current: ADR-117 citation replacement only), Q-17 (safety
+instruments sequenced first at owner word, 2026-08-26 arming walk).
+Verification: the PR merged, or a row's state advanced on the base.
 
 ## Session shape and grounding order
 
 Scheduled firings follow the routine prompt end to end (it is the grounding
-order); owner-attended interactive sessions ground via `start-right-quick`
+order; its step 3 now grounds `engraph-start-right-thorough`); owner-attended
+interactive cloud sessions likewise ground via `engraph-start-right-thorough`
+with the `engraph-plan` / `engraph-metacognition` / `engraph-proportionality`
+stack (the installed, invocable names; owner ruling, 2026-08-26)
 and then follow the parent plan's §Operating protocol. Either shape updates
 this record's identity table at close.
 
@@ -112,6 +121,40 @@ unmeasured, and the failure mode is an unintended first live firing, so
 the walk uses belt and braces (prepend before sources attach + payload +
 UI-paste restore). The hold itself stands unchanged: nothing fires or
 enables until the owner walks the report's §6 and says so.
+
+**Arming walk EXECUTED through the QD re-read; HOLDS before the attended
+firing (2026-08-26, Breeze weaves Contrail / 0132gL — supersedes the hold
+note and review addendum above on walk state).** Steps 0–7 done with the
+owner live: PR #60 merged (`64af0c44`, seven bot threads fixed and
+resolved); DRY-RUN prepend byte-verified in the zero-loss window; owner UI
+acts confirmed API-visible after source-attach (repo + Slack connector +
+auto-fix OFF; model `claude-fable-5` after an owner re-set — the dry-run
+firing had served `claude-sonnet-5`); ruleset probe PR #61 observed the
+full required check set and closed (scratch branch resists remote delete —
+cosmetic residual); dry run fired clean (read-only held, zero repo-state
+change, ~2.5 min, run SUCCEEDED). **Notification incident**: the
+completion notification reached NEITHER push nor Slack, and a direct test
+push also failed — the account notification path had never actually
+delivered; the owner repaired the config mid-walk and a re-test push
+arrived. Run-SUCCEEDED ≠ notification-delivered. The owner then amended
+the stored prompt live (skills-discipline paragraph — now in the runbook
+canonical) and declined a second dry run: **the attended first live firing
+is the notification-receipt gate AND the honesty probe** (self-report vs
+measured reality). QD re-read complete — all eight rows, rulings verbatim
+in the register; five of eight rows measured defective in premise, frame,
+or owner-legibility → the row contract landed (register header +
+routine-prompt owner-fork branch). Queue reordered: Q-18/Q-20/Q-21/Q-22
+precede Q-05 (owner-approved). Cloud grounding ruling landed
+(`start-right-thorough` + plan/metacognition/proportionality stack;
+strategic node `.agent/plans/future/cloud-autonomy-trust.md`). **Remaining
+before any cron: owner-fired attended live firing (watch ~20 min; its
+completion notification closes the receipt gate; compare its self-report
+against measured reality), then enable per runbook step 7's overlap guard
+— only after that firing closes.** Note for the enable sitting: the live
+trigger's stored-prompt paragraph still names `start-right-quick`; the
+thorough ruling lives in routine-prompt step 3, which the firing follows —
+the owner may align the trigger word at leisure (agent trigger edits were
+owner-denied this walk; the trigger is owner-territory).
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

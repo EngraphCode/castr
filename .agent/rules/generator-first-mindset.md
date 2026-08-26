@@ -12,8 +12,10 @@ through the generator. In castr that means: emitted artefacts (OpenAPI
 documents, Zod/TypeScript code, MCP tools, generated test suites) are
 produced from the IR by writers and codegen — when output needs to
 change, fix the parser/IR/writer seam and regenerate; never hand-edit a
-generated artefact. The generator is the single source of truth. Missing
-data is a generator bug — fail fast.
+generated artefact (the explicit prohibition is
+[`never-edit-generated-files.md`](never-edit-generated-files.md)). The
+generator is the single source of truth. Missing data is a generator
+bug — fail fast.
 
 When a validator drifts, tighten the reference model and rerun the
 authoritative generation path before designing exception logic. The

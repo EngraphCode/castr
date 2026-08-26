@@ -87,8 +87,27 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      output names to `PATH` yourself before any commit. The blocking `pnpm secrets:scan`
      must be able to pass BEFORE push; CI's copy of the scan runs after the push, which is
      too late for a leaked secret — never skip, bypass, or defer it to CI.
-   - Run the `engraph-start-right-quick` skill; register identity per
-     `register-active-areas-at-session-open`.
+   - Ground with the `engraph-start-right-thorough` skill (owner ruling, 2026-08-26
+     arming walk: cloud sessions ground thorough — full one-gate-at-a-time discipline);
+     register identity per `register-active-areas-at-session-open`. The thorough
+     workflow's owner-interaction gates ("discuss with the user first") resolve against
+     THIS BRIEF in an unattended firing: the routine prompt and the owner-ratified queue
+     order ARE the owner's standing answer to the first-step discussion, so grounding
+     never pauses to wait for a person — a genuine fork found during grounding routes
+     through step 7's queued-decision branch, exactly like one found during execution. The session's
+     cognitive stack is not optional: the claimed queue brief IS the slice's plan (the
+     parent plan's §Lifecycle ratification — apply the brief's structure, never author a
+     duplicate plan artefact or open the plan skill's owner design gate for ratified
+     queue work); size the work with the `engraph-proportionality` skill, and fire the
+     `engraph-metacognition` skill at
+     boundaries and whenever a rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
+     skills-discipline paragraph (owner-authored, 2026-08-26) is the standing gesture at
+     this same stack; where its wording differs from this brief — it names
+     `start-right-quick` and ends with `wrap` — THIS BRIEF GOVERNS, by the stored
+     prompt's own opening instruction ("follow it exactly — it is your complete standing
+     brief"): firings ground thorough here, and close under step 9's firing-scoped
+     `session-handoff` profile, recording any deeper consolidation as due rather than
+     running the `wrap` deep-close inside a duration-bounded firing.
    - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
      and carry every entry whose Outcome is OPEN into this firing's step 9 completion
      notification, so the owner is reminded of waiting decisions on every firing, not
@@ -97,8 +116,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    `pnpm agent-tools:collaboration-state -- claims list --active .agent/state/collaboration/active-claims.json`
    — any live peer or owner claim touching your target surface defers this firing. A
    deferral lands its counter update via the bookkeeping path **only when no non-draft
-   programme PR is already open** (step 5's WIP = 1 invariant binds here too — never open a
-   second programme PR); when one is open **and not contested**, land the increment as a
+   programme PR is already open** (step 5's WIP = 1 guideline binds here too — do not open a
+   second programme PR where reasonable best efforts can avoid it; a deviation is a
+   judgment call landed with its reason recorded, per ADR-051 as amended 2026-08-26); when one is open **and not contested**, land the increment as a
    bookkeeping-scope commit pushed to that open PR's head branch (bookkeeping scope:
    counter, incident, and continuity state only, nothing else — QD-5) — it reaches the
    base when the PR merges, so later firings read a true streak. When the open PR is
@@ -122,7 +142,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    — and if THIS firing also ends contested on the same branch, write the repeat up as a
    queued decision (cross-firing contention is a genuine fork: something else owns that
    branch), not a third identical incident. Then stop.
-5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
+5. **WIP = 1 — every open non-draft programme PR counts** (a guideline served with
+   reasonable best efforts — ADR-051 as amended 2026-08-26, QD-13; the mechanics below
+   stand as written): if any non-draft programme PR is
    open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
    amendment and whose full four-condition bar governs: every check green on the current
@@ -176,6 +198,11 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      quarantine a test.
    - **Genuine owner fork**: write it to [`queued-decisions.md`](./queued-decisions.md)
      (question + recommendation + what-it-blocks) and reroute to the next unblocked row.
+     A row is written for the OWNER, not the loop: state its premise in plain outcome
+     language, and verify that premise firsthand before writing it — a row's factual
+     claims are your claims (the 2026-08-26 arming-walk re-read measured five of eight
+     rows defective in premise, frame, or owner-legibility; the register is not a
+     surface that launders unverified claims into authority).
      Never decide release claims, `principles.md` edits, ADR acceptance, or sequencing
      supersession yourself. A fork worth the owner's immediate attention additionally
      ships as an owner-decision ballot per the

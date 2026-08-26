@@ -19,6 +19,18 @@ todos:
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
     status: completed
     depends_on: [Q-00]
+  - id: Q-18
+    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
+    status: pending
+  - id: Q-20
+    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
+    status: pending
+  - id: Q-21
+    content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
+    status: completed
+  - id: Q-22
+    content: 'Fixture-generator repair (QD-11 owner ruling 2026-08-26): fix lib/scripts/generate-normalized-fixtures.ts so regeneration reproduces a valid checked-in normalized fixture estate (int64/strictObject-era zod.ts, IR 2.0.0 security shape), regenerate the outputs through the generator only, validation-parity tests green; never-edit-generated-files rule applies'
+    status: pending
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
     status: pending
@@ -66,19 +78,10 @@ todos:
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
     status: pending
-  - id: Q-18
-    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
-    status: pending
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
     status: pending
     depends_on: [Q-13]
-  - id: Q-20
-    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
-    status: pending
-  - id: Q-21
-    content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
-    status: completed
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -86,14 +89,18 @@ todos:
 **Status:** LIVE — the plan-of-record. The W-0 walk completed 2026-08-22 (interactive,
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
-CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
-the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
+CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (see the Q-01 evidence
+record; its "Routine is armed" state is **superseded 2026-08-26** — the replacement
+trigger is poke-only, and the attended first live firing plus the enable are owner-held,
+per the arming-walk record and the trigger paragraph below). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
 completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
 Q-04 evidence record). Q-21 completed 2026-08-26 (PR #64 landed its
 deliverable; see the Q-21 row). Q-18..Q-21 appended
-2026-08-24 at owner word (loop-review decision cards). Eligible
-now: Q-05..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-16, Q-17, Q-18, Q-20; Q-10..Q-12, Q-15 (waits on Q-20), and
+2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the
+queue reordered 2026-08-26 at owner word (QD-11 ruling + arming-walk card:
+safety instruments first). Eligible
+now, in queue order: Q-18, Q-20, Q-22, then Q-05..Q-09, Q-13 (executes
+the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on Q-20), and
 Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -925,7 +932,9 @@ finding (a trap-mutating Proxy fixture whose backing store is proven untouched; 
 green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
 2026-08-23). Gate: none (eligible immediately).
 
-**Q-18 — Predecessor-slot attestation (OP-1a).** Surface: `routine-prompt.md` — three
+**Q-18 — Predecessor-slot attestation (OP-1a; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface: `routine-prompt.md` — three
 touch points, the check and BOTH consumer halves: (1) step 3 (grounding) gains the
 check — derive each expected predecessor slot from your own spawn time minus whole
 cadence intervals (ADR-051 clause 2; 8 h — never from a platform trigger read, an
@@ -977,7 +986,9 @@ tally artefact means the entry contract is not working. Source: loop-review repo
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second
 owner decision card 2026-08-24. Gate: none beyond `depends_on: [Q-13]`.
 
-**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5).** Surface: this file's Q-15
+**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface: this file's Q-15
 row and brief text, plus the D-9 one-word correction in the Q-17 brief
 ("tenth-round" → "seventeenth-round" — three surfaces attest seventeen). Rewrite the
 Q-15 brief to post-outage reality: each cured environment gap becomes a VALIDITY
@@ -1019,6 +1030,23 @@ owner-invoked claim remains; gates green. Source: loop-review D-10 and the
 states the general policy with both branches and cites ADR-051; both adapter
 descriptions corrected; no unconditional owner-invoked claim remains.**
 
+**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface:
+`lib/scripts/generate-normalized-fixtures.ts` and the checked-in normalized fixture
+estate it owns (the paired `zod.ts` fixtures and `ir.json`/`ir2.json`). Goal,
+generator-first per the ruling ("obviously fix the generator") and
+`never-edit-generated-files`: fix the GENERATOR so regeneration reproduces a valid
+estate on the current toolchain (int64/strictObject-era `zod.ts`; IR 2.0.0 security
+shape), then regenerate the outputs through the generator only, landing generator fix
+and regenerated outputs together. Non-goals: no hand edits to any generated output; no
+widening into fixture-consuming lanes (Q-11/Q-12 own those); no new fixture cases.
+Acceptance (`integration`): a clean-tree regeneration run reproduces the checked-in
+estate exactly, the 11 previously-breaking validation-parity tests pass against the
+regenerated outputs, and `pnpm check` is green. Source: QD-11 ruling (register,
+2026-08-26) + the Q-03 evidence record's routed fixture finding. Gate: none (eligible
+immediately; sequenced with the safety instruments at owner word).
+
 ## Operating protocol
 
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
@@ -1037,12 +1065,25 @@ it touches programme surfaces. **Declaration duty**: a firing opening a programm
 names its queue row (`Q-NN`) or its bookkeeping scope in the description, so
 successors classify from the PR itself — a duty aiding classification, never the
 operative test (a slice PR whose author omits the declaration is still a programme PR
-by nature). Whether self-declaration should become the operative test, and what the
-default is when classification is genuinely ambiguous, are clause-3-adjacent questions
-routed to the owner as QD-13 per clause 5 — never decided here.
+by nature). **QD-13 RULED (owner, 2026-08-26 arming walk, verbatim): "There is no
+limit, just a useful guideline, reasonable best efforts are fine."** WIP=1 and
+programme-PR classification are guidelines served by reasonable best efforts; the
+nature-based reading and the declaration duty stand as guidance. Recorded as an
+ADR-051 amendment (Status line + clause 1(b), 2026-08-26); the register row carries
+the verbatim. **This grading is blanket**: every WIP = 1, "do nothing else",
+"forbids", or single-open-PR phrasing in this plan and the routine prompt reads
+under it — the mechanics are the best-efforts default, and where reasonable best
+efforts cannot preserve them the firing deviates by judgment and lands the reason
+in its record; no individual phrasing re-hardens the guideline. **The grading
+governs loop operation only — what to drive and how to count — never the REACH of
+clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the
+firing cannot reasonably classify as programme work is not merged unattended,
+whatever best efforts concluded about counting it.
 
-1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
-   clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
+1. **Trigger**: once enabled, the Routine spawns a fresh cloud session per firing at the
+   ADR-051 clause 2 cadence — as of 2026-08-26 the replacement trigger is **poke-only**,
+   with the attended first live firing and the enable owner-held (arming-walk record). Fresh sessions re-ground via `start-right-thorough` with the plan /
+   metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
    thread records, napkin) is the memory between firings. Recreating the Routine itself —
    on this account or an unrelated one — follows
    [`arming-runbook.md`](./arming-runbook.md).
@@ -1058,7 +1099,8 @@ routed to the owner as QD-13 per clause 5 — never decided here.
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
    amendment) and do nothing else; driving the
    bookkeeping PR first is clause 6's own persistence mechanism completing under clause
-   1(b)'s single-open-PR invariant (an unmerged counter update would let later firings read
+   1(b)'s single-open-PR guideline, graded best-efforts by the 2026-08-26 QD-13
+   amendment (an unmerged counter update would let later firings read
    a stale streak). A firing whose only act is merging a bookkeeping PR is itself
    zero-progress and pushes its own increment onto that PR's head branch before merging —
    the every-firing counter duty is never waived by the drive. Pushes to a programme PR's
@@ -1111,13 +1153,15 @@ landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; the Routine
-  is armed per the Q-01 evidence record).
+- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; see the
+  Q-01 evidence record). Its "armed" state is superseded 2026-08-26: the replacement
+  trigger is poke-only, and the attended first live firing plus the enable are owner-held
+  (arming-walk record).
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
+- **Eligible now, in queue order**: Q-18, Q-20, Q-22, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card).
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
 - **Beneficial**: none deferred beyond the gates above.
@@ -1174,9 +1218,11 @@ landing.
   C3, C4, H1–H4, M10 → owning tranches at the Q-12 split). It may reach `complete` only
   when every finding has a landed slice.
 - [`oak-practice-transplant.md`](../current/paused/oak-practice-transplant.md) moved to
-  `current/paused/` as a **named position**; its banner points at re-entry record QD-2 in
-  [`queued-decisions.md`](./queued-decisions.md) (trigger: programme completion, or earlier
-  on the owner's ask). PR #23's selective-delta disposition is Q-13.
+  `current/paused/` as a **named position** — a transition record **superseded 2026-08-26
+  (owner ruling QD-2: "The old effort is stopped, parity remains a goal, we will address
+  it in time")**: QD-2 is now a stop ruling, not a re-entry record, the plan has no
+  standing re-entry trigger, and parity's living frame is the 2026-08-24
+  bidirectional-equality directive. PR #23's selective-delta disposition is Q-13.
 
 `.agent/plans/active/` is now clear and stays clear for this programme's rows: the queue
 briefs are the per-slice plans (QD-6, programme-scoped) and plan-authoring acts land as

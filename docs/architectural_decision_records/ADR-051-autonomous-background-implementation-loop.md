@@ -4,7 +4,13 @@
 amended at acceptance: clause 2's default cadence is three firings per day; amended
 2026-08-22 by owner ruling resolving queued decision QD-3: clauses 1(b) and 3 govern every
 non-draft programme pull request — slice or bookkeeping — because merge safety is
-condition-based, never a per-PR approval; amended 2026-08-23 by owner ruling resolving
+condition-based, never a per-PR approval; amended 2026-08-26 by owner ruling resolving queued decision QD-13: WIP = 1 and
+programme-PR classification are guidelines served by reasonable best efforts — "There is
+no limit, just a useful guideline, reasonable best efforts are fine" — the drive-or-claim
+mechanics stand as written, graded as best-efforts rather than a hard limit, and the
+grading governs loop operation only — it never widens the reach of clause 3's
+unattended-merge grant, which reads narrowly: a PR not reasonably classifiable as
+programme work is not merged unattended; amended 2026-08-23 by owner ruling resolving
 queued decision QD-5: firing-side reports — the clause 6 stand-down broadcast included —
 are durable only as tracked repo state reachable from the loop's grounding path, landed on
 a programme-owned incident register via the plan estate's bookkeeping landing path under
@@ -42,7 +48,8 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
 1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. The protocol
    invariants each firing obeys, in order: (a) check the kill switches (clause 6) and the
    collaboration claims register before acting, deferring on any live collision; (b) enforce
-   WIP = 1 — drive the single open non-draft programme pull request (slice or bookkeeping;
+   WIP = 1 (a guideline served by reasonable best efforts, per the QD-13 owner ruling
+   2026-08-26 — never a hard limit) — drive the single open non-draft programme pull request (slice or bookkeeping;
    amended per QD-3, 2026-08-22) to merged, otherwise claim exactly one
    eligible queue item; (c) execute one atomic TDD slice (red proof first) through the
    repository's full blocking gates and its mandatory reviewer dispatches — the loop never
