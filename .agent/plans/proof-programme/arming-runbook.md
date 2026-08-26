@@ -227,8 +227,11 @@ beyond them is needed for the Routine.
    (step 6) serves as the receipt gate instead — its completion notification
    must arrive before the enable, and a silent attended firing stops the arming
    exactly as the dry-run gate would. The dry-run gate remains the default; this
-   substitution is an owner call made at the walk, never an agent default. **After the proof
-   passes:** restore the canonical stored prompt via the owner's settings UI paste
+   substitution is an owner call made at the walk, never an agent default. **After the
+   dry-run proof passes** (on the replacement path, immediately — selecting that path
+   permits and requires the restore BEFORE step 6, since the restore is never gated on
+   the replacement receipt, which gates only the enable): restore the canonical stored
+   prompt via the owner's settings UI paste
    (the preferred route) or an API prompt update (measured once, 2026-08-26:
    sources, model, connector, and notifications survived an API prompt update on a
    source-attached trigger — verify them in the same trigger read) and byte-verify

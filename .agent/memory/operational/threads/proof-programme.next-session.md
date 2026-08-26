@@ -42,7 +42,8 @@ Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
 programme PR to merged, else claim the next eligible queue row** (as recorded
 2026-08-26: no programme PR is open, so the next firing claims the next
-eligible row IN QUEUE ORDER — Q-18, Q-20, Q-21, Q-22, then Q-05..Q-09, Q-13,
+eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22 (Q-21 completed 2026-08-26,
+PR #64), then Q-05..Q-09, Q-13,
 Q-14, Q-16 (re-adjudicated 2026-08-25, arming review — the narrowed brief in
 the parent plan is current: ADR-117 citation replacement only), Q-17 (safety
 instruments sequenced first at owner word, 2026-08-26 arming walk).
