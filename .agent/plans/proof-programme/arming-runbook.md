@@ -42,7 +42,10 @@ only the mis-armed fallback lives trigger-side (finding D-5,
 [loop review 2026-08-24](../../analysis-and-reports/proof-programme-loop-review-2026-08-24.md)).
 Store this text verbatim as the Routine's prompt. If the live trigger's stored prompt
 ever differs from this text, the trigger is what fires — re-paste this text rather than
-editing around it:
+editing around it. One sanctioned temporary deviation exists: the arming sequence's
+step-3 DRY-RUN prepend (§The DRY-RUN instruction), restored at step 4 — a mid-walk
+reader finding the prepend in place follows the walk's restore step, never a bare
+re-paste that would strip the pending proof's instruction:
 
 ```text
 You are a scheduled firing of the castr proof-programme autonomous loop
@@ -60,6 +63,37 @@ without touching the queue.
 
 On an account where "jimCresswell" is not the owner identity, replace the owner name in
 the parenthesis; nothing else in the prompt is account-specific.
+
+## The DRY-RUN instruction (canonical verbatim)
+
+The dry-run proof (arming step 4) is only reproducible if the instruction that trips
+routine-prompt step 2's detection is itself repo-carried — an improvised instruction
+makes each arming's dry run a fresh authoring act (arming review 2026-08-25). Deliver
+this text to the fired session — belt and braces: prepend it to the stored prompt
+**before** the owner attaches sources (a zero-loss window), AND pass it as the
+per-fire payload where the platform accepts one; restore the canonical stored prompt
+afterwards via the owner's settings UI (the known-safe route — an API prompt update
+on a source-attached trigger is unmeasured) and byte-verify:
+
+```text
+DRY-RUN (owner-commanded proof firing, arming runbook step 4): take
+routine-prompt step 2's read-only path. Ground by reading only; register no
+claim; run no install or build beyond what the environment itself provisioned;
+write nothing repo-tracked. Your bounded no-op work is one capability report,
+delivered in the stand-down echo and the completion summary: name (1) the
+repository you checked out and its HEAD SHA; (2) your model id; (3) which tool
+surfaces you can SEE, without calling any of them — platform trigger-management
+tools, artifact publishing, push notification, and Slack (mcp__claude_ai_* /
+Slack-named tools); (4) the OPEN rows from queued-decisions.md. Then post the
+stand-down echo with criterion "dry-run complete" and close under the DRY-RUN
+READ-ONLY closeout profile. Leave no repo-state change behind.
+```
+
+The capability report settles, read-only, the measured-capability caveats the estate
+carries (trigger self-disable reach for the OP-6 contingency; the QD-7 Slack tool
+surface; the QD-8 ballot/push path) without executing any of them; the repo + HEAD
+half is the only available proof that the owner's UI repo-attach took effect, since
+the API cannot read a trigger's sources.
 
 ## Trigger configuration
 
@@ -129,29 +163,49 @@ beyond them is needed for the Routine.
    check set report against the ruleset, close it). Do not proceed to step 3
    until the platform gate is proven live: without it the Routine would run with
    merge and coverage controls silently absent.
-3. Create the Routine **disabled**, fresh-session mode, with the verbatim stored prompt
-   and the cron above; owner attaches the repo and the Slack connector (where the
-   workspace exists) in the UI; set the model; notifications push-only; auto-fix OFF.
+3. **Create, prepend, then attach — in that order.** Create the Routine
+   **poke-only (no cron expression)**, fresh-session mode, with the verbatim stored
+   prompt — the platform has no disabled flag on this API surface (measured, arming
+   review 2026-08-25), so a cron-less trigger IS the honest disabled state, and the
+   cron goes on only at step 7. Then, while the trigger still has no attached
+   sources (the zero-loss window: an API prompt update cannot yet lose anything),
+   prepend the canonical DRY-RUN instruction (§The DRY-RUN instruction above) to the
+   stored prompt and byte-verify via a trigger read. Only then the owner attaches
+   the repo and the Slack connector (where the workspace exists) in the UI, sets the
+   model, confirms notifications push-only, and sets auto-fix OFF (per-trigger — a
+   fresh set, never a carry-over from a retired trigger).
 4. **Dry-run proof before any live firing** (mirrors the Q-01 acceptance). First
    verify no `.agent/plans/proof-programme/STOP` file exists on the new host's
    `main` — this is step 5's STOP check pulled forward for this one item, because
    routine-prompt step 1 checks STOP before anything else: a carried STOP file
    would put the stand-down path ahead of the DRY-RUN branch and the advertised
    read-only proof would land a stand-down bookkeeping mutation instead of
-   reporting "dry-run complete". Then fire the
-   disabled Routine once with an explicit DRY-RUN instruction reaching the fired
-   session's message. A manual fire may carry no per-run payload — it executes the
-   stored prompt — so where the platform offers no per-fire message, temporarily
-   prepend the DRY-RUN instruction to the disabled Routine's stored prompt, fire, then
-   restore and verify the canonical prompt (the section above) before enabling.
+   reporting "dry-run complete". Then fire the Routine once, with the canonical
+   DRY-RUN instruction reaching the fired session's message **belt and braces,
+   never payload-only** (the step-3 prepend is already in place; also pass the
+   instruction as the per-fire payload where the platform accepts one): even where
+   the platform documents a per-fire payload, no fire proves delivery until one
+   lands, and an undelivered DRY-RUN instruction means the seat takes the LIVE
+   path on an unprobed write binding.
    Routine-prompt step 2 then takes the read-only no-op path — grounding by
    reading only, no claim, the queued-decisions read, the stand-down echo with criterion
    "dry-run complete", and the closeout under routine-prompt step 2's **DRY-RUN
    READ-ONLY closeout profile** (defined there as the authoritative narrowing: the
    step-9 sequence exercised with every repo-tracked write withheld, outputs held
    instance-tier, the identity row deferred to the first live firing) — so the proof
-   exercises the closeout, never its landing, and leaves no repo-state change. Confirm
-   the completion notification reaches the owner.
+   exercises the closeout, never its landing, and leaves no repo-state change.
+   **Notification gate (pass/fail):** the completion notification received on the
+   owner's device is a hard gate between this step and everything after it — with
+   the B-15 channel set amended to push-only this is a single-channel system, and
+   an unproven channel voids the loop's entire observability contract (clause 6
+   escalations and QD-8 owner-blocking alerts ride the same path). No receipt →
+   stop the arming and diagnose before any further step. **After the proof
+   passes:** restore the canonical stored prompt via the owner's settings UI paste
+   (the known-safe route; an API prompt update on a source-attached trigger is
+   unmeasured) and byte-verify against §The stored trigger prompt — this restore
+   completes BEFORE step 6's attended live firing, whose probe value depends on
+   the stored prompt being canonical (a leftover prepend would silently send that
+   firing down the read-only path and void the write probe).
 5. **Pre-enable state reconciliation on main** — the carried-over repo state was written
    on another host, so verify it is drivable here: no
    `.agent/plans/proof-programme/STOP` file present; no queue row left `in_progress`
@@ -171,7 +225,29 @@ beyond them is needed for the Routine.
    the attested firing history), landing the repair with an incident-register entry
    as its audit trail; every OPEN row in
    `queued-decisions.md` re-read by the new owner seat.
-6. Enable the Routine. The loop resumes from the queue on main; beyond step 5's
+6. **Attended first live firing (arming review 2026-08-25; owner decides per
+   walk — the review recommends it, and skipping it is an explicit owner call
+   recorded at the walk, never a silent omission).** The
+   §Accepted residuals write-binding disposition makes the first live firing the
+   credentialed-write probe — nothing requires that firing to be unattended, and an
+   afternoon enable hands it to an overnight slot. Precondition: step 4's restore
+   completed and byte-verified (a leftover DRY-RUN prepend sends this firing down
+   the read-only path and the write binding stays unprobed while appearing
+   observed). Fire once manually with no DRY-RUN payload while the owner is
+   present, and watch the
+   loud-failure window (~the first 20 minutes: checkout, toolchain provisioning,
+   claim, PR-open, first push) plus the outcome-branch behaviour a read-only dry
+   run structurally cannot show. The owner holds the pause switch throughout;
+   attendance covers the probe window, never the full drive.
+7. Enable the Routine (set the cron; re-run step 5's state re-verification against
+   the live base immediately beforehand — never carried from earlier in the
+   sitting). **Overlap guard on the enable act itself**: if step 6's manual
+   firing ran, enable only after that firing has closed (its completion
+   notification received), or set a cron whose first occurrence falls beyond
+   the live firing's landing deadline — the scheduler never terminates a
+   predecessor (ADR-051 clause 2; incident I-1 is the measured two-live-workers
+   collision), so an enable mid-drive can schedule a successor on top of the
+   still-running attended firing. The loop resumes from the queue on main; beyond step 5's
    conservation of any surviving open-PR work, no other state transfer exists or is
    needed.
 
@@ -187,6 +263,17 @@ R3/R5): no fired session has yet proven it can call the platform's trigger tools
 self-disable act is unproven — the probe is queued (Q-20 re-scope → Q-15), and if it
 fails, the clause 6 three-idle response substitution is an owner decision. The owner-side
 pause/delete and the STOP file are the proven switches.
+
+**The disable method (arming review 2026-08-25):** where a seat performs the
+self-disable, the one safe act is **removing the Routine's cron expression** via the
+platform's trigger-update surface, leaving the trigger poke-only — the platform's
+honest disabled state, the same shape this arming itself froze at, and the only method
+that preserves the owner-attached sources. **Never delete or recreate the trigger**:
+recreation loses the owner-attached repo source and connectors (measured, Q-01), and
+the result is a Routine that looks alive, re-enables cleanly, and lands nothing —
+a silent failure strictly worse than a failed disable. This names the method only; the
+substitution decision when the capability itself is absent remains the owner's (the
+OP-6 contingency, gated on the Q-15 probe).
 
 ## Accepted residuals (recorded dispositions)
 
