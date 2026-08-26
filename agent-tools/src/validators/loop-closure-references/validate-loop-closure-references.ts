@@ -6,9 +6,9 @@ import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
 
 import {
   findHollowScriptReferences,
-  parseWorkspacePackages,
   type HollowScriptReferenceFinding,
 } from './loop-closure-references-helpers.js';
+import { parseWorkspacePackages } from '../../core/workspace-packages.js';
 
 /**
  * Loop-closure meta-validator (LC0) — first reference class: hollow
