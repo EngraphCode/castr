@@ -1,5 +1,10 @@
 # Oak → castr Practice Transplant
 
+> **🛑 STOPPED (owner ruling QD-2, 2026-08-26, verbatim): "The old effort is stopped,
+> parity remains a goal, we will address it in time."** This plan is historical record,
+> not a resumable position; parity's living frame is the owner's 2026-08-24
+> bidirectional-equality directive. The earlier pause note stands as history:
+>
 > **⏸️ PAUSED AS A NAMED POSITION (2026-08-22, B-11 RATIFY):** the owner ratified
 > [W-0 ballot item B-11](../../proof-programme/ballot-2026-08-owner-walk.md), superseding
 > this plan's standing 2026-06-19 primacy with the

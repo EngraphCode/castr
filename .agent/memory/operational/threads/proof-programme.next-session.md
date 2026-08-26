@@ -47,7 +47,7 @@ row's state advanced on the base.
 ## Session shape and grounding order
 
 Scheduled firings follow the routine prompt end to end (it is the grounding
-order; its step 2 now grounds `start-right-thorough`); owner-attended
+order; its step 3 now grounds `start-right-thorough`); owner-attended
 interactive cloud sessions likewise ground via `start-right-thorough` with
 the plan / metacognition / proportionality stack (owner ruling, 2026-08-26)
 and then follow the parent plan's §Operating protocol. Either shape updates
@@ -146,7 +146,7 @@ completion notification closes the receipt gate; compare its self-report
 against measured reality), then enable per runbook step 7's overlap guard
 — only after that firing closes.** Note for the enable sitting: the live
 trigger's stored-prompt paragraph still names `start-right-quick`; the
-thorough ruling lives in routine-prompt step 2, which the firing follows —
+thorough ruling lives in routine-prompt step 3, which the firing follows —
 the owner may align the trigger word at leisure (agent trigger edits were
 owner-denied this walk; the trigger is owner-territory).
 

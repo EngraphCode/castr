@@ -72,7 +72,7 @@ line-end space the live text carries, so byte-verification against this
 canonical compares with line-trailing whitespace ignored). Where that
 paragraph's wording differs from the firing protocol — it names
 `start-right-quick` where the 2026-08-26 owner ruling grounds cloud
-sessions with `start-right-thorough` (routine-prompt step 2), and ends
+sessions with `start-right-thorough` (routine-prompt step 3), and ends
 with `wrap` where firings close under the duration-bounded firing-scoped
 `session-handoff` profile (routine-prompt step 9, QD-6) — the protocol
 governs, by the stored prompt's own opening instruction; aligning the

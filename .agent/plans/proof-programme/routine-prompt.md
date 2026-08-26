@@ -133,7 +133,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    — and if THIS firing also ends contested on the same branch, write the repeat up as a
    queued decision (cross-firing contention is a genuine fork: something else owns that
    branch), not a third identical incident. Then stop.
-5. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
+5. **WIP = 1 — every open non-draft programme PR counts** (a guideline served with
+   reasonable best efforts — ADR-051 as amended 2026-08-26, QD-13; the mechanics below
+   stand as written): if any non-draft programme PR is
    open — a slice PR **or a bookkeeping PR** — drive it to merged (CI, review threads under
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
    amendment and whose full four-condition bar governs: every check green on the current

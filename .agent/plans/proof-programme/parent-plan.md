@@ -93,9 +93,11 @@ CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is arm
 the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
 completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
 Q-04 evidence record). Q-18..Q-21 appended
-2026-08-24 at owner word (loop-review decision cards). Eligible
-now: Q-05..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-16, Q-17, Q-18, Q-20, Q-21; Q-10..Q-12, Q-15 (waits on Q-20), and
+2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the
+queue reordered 2026-08-26 at owner word (QD-11 ruling + arming-walk card:
+safety instruments first). Eligible
+now, in queue order: Q-18, Q-20, Q-21, Q-22, then Q-05..Q-09, Q-13 (executes
+the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on Q-20), and
 Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -1037,8 +1039,9 @@ operative test (a slice PR whose author omits the declaration is still a program
 by nature). **QD-13 RULED (owner, 2026-08-26 arming walk, verbatim): "There is no
 limit, just a useful guideline, reasonable best efforts are fine."** WIP=1 and
 programme-PR classification are guidelines served by reasonable best efforts; the
-nature-based reading and the declaration duty stand as guidance. The register row
-carries the ruling.
+nature-based reading and the declaration duty stand as guidance. Recorded as an
+ADR-051 amendment (Status line + clause 1(b), 2026-08-26); the register row carries
+the verbatim.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-thorough` with the plan /
@@ -1117,7 +1120,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20, Q-21 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
+- **Eligible now, in queue order**: Q-18, Q-20, Q-21, Q-22, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card).
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
 - **Beneficial**: none deferred beyond the gates above.
