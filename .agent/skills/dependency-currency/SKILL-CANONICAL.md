@@ -92,10 +92,18 @@ their removal conditions) and the CI workflow's `uses:` pins.
 
 ### 4. Execute cycles
 
-For each cycle: bump → run that tier's proof → one commit with the proof
-stated in the body. For emission/output cycles the committed fixtures are
-the baseline — the suites failing loud on drift IS the byte-identical
-proof; never regenerate-and-accept a fixture without reading the diff.
+For each cycle: **capture the baseline → bump → prove against it → one
+commit** with the proof stated in the body. The capture step comes BEFORE
+`package.json` is touched or the install runs — a comparison whose baseline
+is recorded after the mutation proves nothing (PDR-097's capture-before-
+mutate ordering). What the baseline is depends on the surface: for
+emission/output cycles with committed fixtures, the fixtures already ARE
+the pre-bump baseline (the suites failing loud on drift is the
+byte-identical proof — never regenerate-and-accept a fixture without
+reading the diff); for surfaces with NO committed fixture (CLI `--help`
+and parse output, generated artefacts outside the fixture tree), run the
+pre-bump command and save its output to scratch first, then diff the
+post-bump run against that capture firsthand.
 
 A new lint rule enabled by a plugin bump is adopted by fixing the sites
 (precedent: adopt-now) **unless it contradicts a standing decision record**
