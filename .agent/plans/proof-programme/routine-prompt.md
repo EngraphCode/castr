@@ -87,8 +87,13 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      output names to `PATH` yourself before any commit. The blocking `pnpm secrets:scan`
      must be able to pass BEFORE push; CI's copy of the scan runs after the push, which is
      too late for a leaked secret — never skip, bypass, or defer it to CI.
-   - Run the `engraph-start-right-quick` skill; register identity per
-     `register-active-areas-at-session-open`.
+   - Ground with the `engraph-start-right-thorough` skill (owner ruling, 2026-08-26
+     arming walk: cloud sessions ground thorough — full one-gate-at-a-time discipline);
+     register identity per `register-active-areas-at-session-open`. The session's
+     cognitive stack is not optional: structure the slice with the `plan` skill, size it
+     with `proportionality`, and fire `metacognition` at boundaries and whenever a
+     rabbit hole or fluent shortcut appears (the owner's stored-prompt paragraph is the
+     standing statement of this stack).
    - **Owner-decision surfacing**: read [`queued-decisions.md`](./queued-decisions.md)
      and carry every entry whose Outcome is OPEN into this firing's step 9 completion
      notification, so the owner is reminded of waiting decisions on every firing, not

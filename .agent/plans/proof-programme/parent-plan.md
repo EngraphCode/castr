@@ -1041,7 +1041,8 @@ nature-based reading and the declaration duty stand as guidance. The register ro
 carries the ruling.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
-   clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
+   clause 2 cadence. Fresh sessions re-ground via `start-right-thorough` with the plan /
+   metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
    thread records, napkin) is the memory between firings. Recreating the Routine itself —
    on this account or an unrelated one — follows
    [`arming-runbook.md`](./arming-runbook.md).

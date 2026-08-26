@@ -1153,3 +1153,57 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   Cure applied: chat openers carry intent + ONE entry-point anchor only; the two facts
   chat was papering over (PR #60 as the walk's merge gate; the Dependabot drift) are
   now IN the surfaces instead of in chat.
+
+## 2026-08-26 (owner-attended arming walk — Breeze weaves Contrail / 0132gL)
+
+- **The queued-decisions register failed its first real owner read: five of eight rows
+  defective in premise, frame, or owner-legibility — and I relayed them into decision
+  cards unverified.** QD-10's premise was flatly false (`@engraph/castr` has never been
+  published — npm returns Not found; verified only after the owner challenged "what
+  published npm package?"); QD-9 was loop-jargon the owner could not parse; QD-4's
+  recommendation contradicted the estate's own strict doctrine; QD-13 was formalism
+  built on a guideline ("There is no limit, just a useful guideline"); QD-11 framed a
+  generator-first doctrine violation as a scheduling question. Register rows are AGENT
+  CLAIMS laundered into apparent authority by sitting in a governance table — the
+  inherited-classification family at the governance layer. Cure landed structurally:
+  the row contract (owner-plain language + firsthand-verified premises) in the register
+  header and the routine prompt's owner-fork branch.
+- **Configuration is not behaviour — three account-side mechanisms failed their first
+  live traversal in one walk.** Notifications: "configured" since 2026-08-23, never
+  delivered (both channels silent on a SUCCEEDED run; direct test push also failed;
+  owner's account-config repair + arrived re-test was the cure). Model: recorded set to
+  Fable, first measured firing served `claude-sonnet-5` (owner re-set; now API-visible).
+  Register interface: above. The generalisation: only a live traversal proves an
+  account-side mechanism, and the first traversal is its real test. Companion measured
+  facts: an API prompt update on a source-attached trigger preserved sources, model,
+  connector, and notifications (the runbook's "unmeasured" caveat now has one safe
+  instance) — and once sources are attached they become API-READABLE (sources/outcomes
+  appear in trigger reads, previously write-only); the outcome-branch prefix RE-MINTS on
+  settings edits (adoring-pasteur → adoring-ptolemy → modest-bohr).
+- **Six owner interventions, one shape: relaying fluently past an ungrounded premise.**
+  "Stop thinking in circles" (my noteworthy-filter theory dodging "the channel is
+  broken" — falsified by the failed direct test push); two fire/update denials honoured
+  (adjust, never retry); "what are you talking about" ×2 (jargon cards); "reflect, not
+  jump to file edits" (I converted a reflection ask into a task list within two
+  messages); "you don't seem to have noticed" (I byte-compared the owner's new
+  stored-prompt paragraph and missed that it was a cognitive-architecture amendment —
+  conserved the bytes, missed the meaning). The walk-script momentum was the fluency
+  trap: cards flowed straight from the register, smooth = unverified.
+- **Byte-verify earned its place twice**: caught the owner's partial UI paste (only the
+  literal "DRY-RUN " prefix removed — every future firing would have silently taken the
+  read-only path forever), and prettier strips a trailing space inside ```text fences,
+  so the runbook canonical compares with line-trailing whitespace ignored (noted inline).
+- **Owner rulings this walk (verbatim homes: queued-decisions register)**: QD-1 deferred
+  standing; QD-2 old transplant effort stopped, parity remains a goal; QD-4 strict
+  doctrine reading, no narrow-interpretation ratification; QD-9 open by design; QD-10
+  struck moot (never published); QD-11 fix the generator + the
+  `never-edit-generated-files` rule (landed); QD-12 keep fail-fast, widen in-lane;
+  QD-13 WIP=1 is a guideline, reasonable best efforts. Plus: cloud sessions ground
+  `start-right-thorough` with the plan/metacognition/proportionality stack (landed in
+  AGENT.md, routine-prompt, parent plan, cloud-environment.md); the value thesis
+  confirmed and homed at `.agent/plans/future/cloud-autonomy-trust.md` — trust per unit
+  of owner attention; the Practice is crossing local-interactive → cloud-autonomous and
+  must be enhanced to be trustworthy there.
+- **Hook-policy content guard fired on prose again** ("carve-out" in a plan body citing
+  the owner's own anti-exception teaching) — restated positively; the guard's
+  reappraise-don't-rephrase framing held.

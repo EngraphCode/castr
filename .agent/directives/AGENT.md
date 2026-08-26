@@ -13,6 +13,7 @@
 - Read [`practice-core/index.md`](../practice-core/index.md) for the portable Practice Core.
 - Read [`practice-index.md`](../practice-index.md) for the bridge into this repo's local Practice.
 - Use the `start-right-quick` skill at session start, or `start-right-thorough` after a context switch or long gap.
+- **Cloud sessions (fresh containers: routine firings and interactive cloud seats) ground with `start-right-thorough`**, and carry the plan / metacognition / proportionality skill stack as mandatory working discipline (owner ruling, 2026-08-26 arming walk; see `.agent/plans/future/cloud-autonomy-trust.md`).
 
 ## First Question
 

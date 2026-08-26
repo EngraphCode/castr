@@ -37,6 +37,18 @@ path (owner word 2026-08-24).
    below belong to Practice repos whose own hooks install browsers, per the
    hook-preflight contract.
 
+## Cloud-session grounding contract
+
+Every session in this environment — scheduled Routine firings and
+interactive cloud seats alike — grounds with the `start-right-thorough`
+skill and carries the plan / metacognition / proportionality skill stack
+as mandatory working discipline (owner ruling, 2026-08-26 arming walk).
+A fresh container has no accumulated session context to lean on and no
+owner watching by default, so the full one-gate-at-a-time grounding and
+the cognitive stack are the substitute for the supervision an interactive
+local session gets for free. The strategic frame is
+`.agent/plans/future/cloud-autonomy-trust.md`.
+
 ## Changing the environment
 
 1. Edit [`cloud-environment-setup.sh`](cloud-environment-setup.sh) here,
