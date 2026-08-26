@@ -113,8 +113,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    `pnpm agent-tools:collaboration-state -- claims list --active .agent/state/collaboration/active-claims.json`
    — any live peer or owner claim touching your target surface defers this firing. A
    deferral lands its counter update via the bookkeeping path **only when no non-draft
-   programme PR is already open** (step 5's WIP = 1 invariant binds here too — never open a
-   second programme PR); when one is open **and not contested**, land the increment as a
+   programme PR is already open** (step 5's WIP = 1 guideline binds here too — do not open a
+   second programme PR where reasonable best efforts can avoid it; a deviation is a
+   judgment call landed with its reason recorded, per ADR-051 as amended 2026-08-26); when one is open **and not contested**, land the increment as a
    bookkeeping-scope commit pushed to that open PR's head branch (bookkeeping scope:
    counter, incident, and continuity state only, nothing else — QD-5) — it reaches the
    base when the PR merges, so later firings read a true streak. When the open PR is

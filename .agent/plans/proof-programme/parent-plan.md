@@ -1076,7 +1076,8 @@ the verbatim.
    ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
    amendment) and do nothing else; driving the
    bookkeeping PR first is clause 6's own persistence mechanism completing under clause
-   1(b)'s single-open-PR invariant (an unmerged counter update would let later firings read
+   1(b)'s single-open-PR guideline, graded best-efforts by the 2026-08-26 QD-13
+   amendment (an unmerged counter update would let later firings read
    a stale streak). A firing whose only act is merging a bookkeeping PR is itself
    zero-progress and pushes its own increment onto that PR's head branch before merging —
    the every-firing counter duty is never waived by the drive. Pushes to a programme PR's
