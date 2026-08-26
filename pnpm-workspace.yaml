@@ -33,9 +33,25 @@ minimumReleaseAgeExclude:
 
 overrides:
   typescript: '>=6.0.3'
-  # Security floors for vulnerable transitives (pnpm audit, 2026-07-03).
-  # Remove each once the direct dependency's own range clears the floor:
-  # hono arrives via @modelcontextprotocol/sdk (GHSA-88fw-hqm2-52qc high CORS
-  # + 4 moderate); esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low).
-  hono: '>=4.12.25'
+  # Security floors for vulnerable transitives (pnpm audit; first batch
+  # 2026-07-03, refreshed to audit-zero 2026-08-26). Remove each once the
+  # direct dependency's own declared range clears the floor:
+  # - hono, @hono/node-server, body-parser, ip-address arrive via
+  #   @modelcontextprotocol/sdk (GHSA-8j4g-w8fx-2239, GHSA-frvp-7c67-39w9,
+  #   GHSA-v422-hmwv-36x6, GHSA-mwp4-54f8-5fhr families)
+  # - esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low; tsup still declares
+  #   ^0.27.0 as of 2026-08-26)
+  # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7)
+  # - brace-expansion via minimatch in the eslint chain (GHSA-rgw5-rvv9-x895)
+  # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
+  #   GHSA-fxqj-rqcc-2cmp); nanoid is pinned to ^3 so those consumers stay on
+  #   their supported major rather than being forced to nanoid 5
+  hono: '>=4.12.34'
+  '@hono/node-server': '>=1.19.15'
+  body-parser: '>=2.3.0'
+  ip-address: '>=10.3.1'
   esbuild: '>=0.28.1'
+  fast-uri: '>=3.1.5'
+  brace-expansion: '>=5.0.9'
+  nanoid: '^3.3.18'
+  postcss: '>=8.5.23'
