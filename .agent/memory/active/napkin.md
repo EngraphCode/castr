@@ -1402,3 +1402,8 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **Nothing in flight.** No armed triggers remain for this lane after this closeout
   lands; PR #64 and OCE PRs are merged; Q-016 decision card remains the one open
   owner item (evidence in lib/eslint.config.ts + open-questions.md).
+- **Owner correction (2026-08-26, this closeout PR): check `mergeable_state` on every
+  event wake — I missed PR #66 going `dirty` when main moved (PR #65's napkin append)
+  and kept reporting "waiting on CI". Mergeable is a necessary prerequisite, not a
+  merge decision; read it with the event-driven state fetch, never by polling. Cured
+  with a semantic napkin union (both tail appends kept, two-parent merge `SHA: de2c77c`).
