@@ -549,4 +549,20 @@ export default defineConfig(
       'sonarjs/in-operator-type-error': 'error',
     },
   },
+
+  // ---------------------------------------------------------------------------
+  // sonarjs 4.2.0 — prefer-native-lodash-alternative conflicts with ADR-026.
+  // ---------------------------------------------------------------------------
+  // The natives this rule prefers (String#includes, Array#slice, ...) are the
+  // exact method syntax ADR-026's no-restricted-syntax enforcement bans; the
+  // lodash function-call form IS this repo's sanctioned idiom for centralized,
+  // validated data-string parsing. Adopting the rule would re-open the banned
+  // syntax, so the repo's own decision record governs and the vendor preset
+  // addition yields (measured on the 4.1.0 -> 4.2.0 bump, 2026-08-26: all 28
+  // findings sat in ADR-026-governed modules).
+  {
+    rules: {
+      'sonarjs/prefer-native-lodash-alternative': 'off',
+    },
+  },
 );

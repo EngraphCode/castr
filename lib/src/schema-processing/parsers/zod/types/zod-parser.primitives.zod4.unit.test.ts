@@ -53,28 +53,15 @@ describe('Zod 4 Primitive Parsing', () => {
   });
 
   describe('ISO String Formats', () => {
-    it('should parse z.iso.date() as string date', () => {
-      const result = parsePrimitiveZod('z.iso.date()');
+    it.each([
+      { call: 'z.iso.date()', format: 'date' },
+      { call: 'z.iso.datetime()', format: 'date-time' },
+      { call: 'z.iso.time()', format: 'time' },
+      { call: 'z.iso.duration()', format: 'duration' },
+    ])('should parse $call as string $format', ({ call, format }) => {
+      const result = parsePrimitiveZod(call);
       expect(result?.type).toBe('string');
-      expect(result?.format).toBe('date');
-    });
-
-    it('should parse z.iso.datetime() as string date-time', () => {
-      const result = parsePrimitiveZod('z.iso.datetime()');
-      expect(result?.type).toBe('string');
-      expect(result?.format).toBe('date-time');
-    });
-
-    it('should parse z.iso.time() as string time', () => {
-      const result = parsePrimitiveZod('z.iso.time()');
-      expect(result?.type).toBe('string');
-      expect(result?.format).toBe('time');
-    });
-
-    it('should parse z.iso.duration() as string duration', () => {
-      const result = parsePrimitiveZod('z.iso.duration()');
-      expect(result?.type).toBe('string');
-      expect(result?.format).toBe('duration');
+      expect(result?.format).toBe(format);
     });
   });
 

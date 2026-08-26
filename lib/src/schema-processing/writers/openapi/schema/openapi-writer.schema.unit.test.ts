@@ -28,48 +28,20 @@ function createMetadata(overrides: Partial<CastrSchemaNode> = {}): CastrSchemaNo
 }
 
 describe('primitive types', () => {
-  it('converts string type correctly', () => {
+  it.each([
+    { type: 'string' },
+    { type: 'number' },
+    { type: 'integer' },
+    { type: 'boolean' },
+  ] as const)('converts $type type correctly', ({ type }) => {
     const schema: CastrSchema = {
-      type: 'string',
+      type,
       metadata: createMetadata(),
     };
 
     const result = writeOpenApiSchema(schema);
 
-    expect(result.type).toBe('string');
-  });
-
-  it('converts number type correctly', () => {
-    const schema: CastrSchema = {
-      type: 'number',
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.type).toBe('number');
-  });
-
-  it('converts integer type correctly', () => {
-    const schema: CastrSchema = {
-      type: 'integer',
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.type).toBe('integer');
-  });
-
-  it('converts boolean type correctly', () => {
-    const schema: CastrSchema = {
-      type: 'boolean',
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.type).toBe('boolean');
+    expect(result.type).toBe(type);
   });
 
   it('rejects arbitrary-precision bigint semantics because OpenAPI has no native bigint type', () => {
