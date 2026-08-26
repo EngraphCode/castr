@@ -89,8 +89,10 @@ todos:
 **Status:** LIVE — the plan-of-record. The W-0 walk completed 2026-08-22 (interactive,
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
-CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
-the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
+CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (see the Q-01 evidence
+record; its "Routine is armed" state is **superseded 2026-08-26** — the replacement
+trigger is poke-only, and the attended first live firing plus the enable are owner-held,
+per the arming-walk record and the trigger paragraph below). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
 completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
 Q-04 evidence record). Q-18..Q-21 appended
 2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the

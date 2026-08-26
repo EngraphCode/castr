@@ -269,9 +269,11 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > comms event; a push re-verifies via pre-push `check:ci` and triggers CI + possibly a fresh Codex wave to
 > disposition). GitHub Code Quality: KEPT (owner-decided; evaluate in operation; GA billing 2026-07-20).
 >
-> **🧭 SINGLE FRONTIER (2026-06-28) — this block + the one below are the ONLY current "what's next"; every dated block
-> further down is history (superseded on next-step).** The "one deep enhancement" has **three axes**: **(A)
-> transplant/parity** — ACTIVE; its single ordered backlog is
+> **🧭 SINGLE FRONTIER (2026-06-28) — SUPERSEDED 2026-08-26: this block is history too, not a resumable frontier.
+> The plan-of-record is [`proof-programme/parent-plan.md`](../../plans/proof-programme/parent-plan.md), and the
+> transplant thread is STOPPED (owner ruling QD-2: "The old effort is stopped, parity remains a goal, we will
+> address it in time") — nothing below is a current next step.** The "one deep enhancement" has **three axes**: **(A)
+> transplant/parity** — ~~ACTIVE~~ **STOPPED per QD-2 above**; its single ordered backlog was
 > [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (the LC / TC /
 > parity-tranche plans are FOLDED into it — see its "single ordered backlog" section). **(B) product-remediation**
 > — **5 reproduced Criticals remain (C2–C6); C1 done.** DORMANT but now a DEFINED "after Tier-1" (Q-011 decided), not
