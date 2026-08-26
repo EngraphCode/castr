@@ -32,7 +32,12 @@ minimumReleaseAgeExclude:
   - '@turbo/*'
 
 overrides:
-  typescript: '>=6.0.3'
+  # Single workspace TypeScript (ADR-050), CAPPED to the major ts-morph's
+  # vendored emission engine ships (TS 6 via @ts-morph/common 0.29.0) — an
+  # open-ended floor would admit TS 7 on a future lockfile re-resolution and
+  # recreate the dual-compiler emission skew the DC1/2026-08-26 holds exist
+  # to prevent. Raise the cap together with the deliberate TS-major bump.
+  typescript: '^6.0.3'
   # Security floors for vulnerable transitives (pnpm audit; first batch
   # 2026-07-03, refreshed to audit-zero 2026-08-26). Every floor is CAPPED to
   # the consumer's declared supported major (caret / explicit union, never an

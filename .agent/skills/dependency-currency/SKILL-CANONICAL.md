@@ -77,7 +77,12 @@ their removal conditions) and the CI workflow's `uses:` pins.
   the workspace counterpart. A workspace TypeScript major ahead of the
   vendored emission engine reintroduces dual-compiler skew on the emission
   path — hold the workspace tool at the vendored engine's major and record
-  the hold with its reopen condition (a vendor release that aligns).
+  the hold with its reopen condition (a vendor release that aligns). A hold
+  is only real if every surface that could admit the newer major is capped
+  with it: audit the workspace `overrides` block (an open-ended floor there
+  replaces the manifests' capped ranges and admits the held major on the
+  next lockfile re-resolution) and cap it to the held major in the same
+  step, raising the cap only with the deliberate major bump.
 
 ### 3. Triage into tiers
 
