@@ -120,6 +120,21 @@ describe('findDuplicateJsonKeys', () => {
     expect(findDuplicateJsonKeys(source)).toStrictEqual([]);
   });
 
+  it('registers a key with a block comment between the key and its colon (JSONC)', () => {
+    // Codex P2 on PR #64: the colon look-ahead skipped whitespace but not
+    // comments, so the first occurrence was never recorded and its duplicate
+    // escaped on every JSONC surface.
+    const source = '{ "a" /* note */: 1, "a": 2 }';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'a', line: 1, firstLine: 1 }]);
+  });
+
+  it('registers a key with a line comment between the key and its colon (JSONC)', () => {
+    const source = '{\n  "a" // note\n  : 1,\n  "a": 2\n}';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'a', line: 4, firstLine: 2 }]);
+  });
+
   it('returns empty for an empty document and for non-object roots', () => {
     expect(findDuplicateJsonKeys('')).toStrictEqual([]);
     expect(findDuplicateJsonKeys('[1, 2, 3]')).toStrictEqual([]);

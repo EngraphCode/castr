@@ -114,6 +114,38 @@ function lexString(source: string, openQuoteIndex: number): LexedString {
 }
 
 /**
+ * Index of the first character at or after `start` that is neither whitespace
+ * nor part of a JSONC comment. Look-ahead only: the main scan loop re-walks
+ * the same trivia afterwards, so line accounting stays in one place and this
+ * helper needs none.
+ *
+ * @param source - The whole document text.
+ * @param start - Index to start skipping from.
+ * @returns Index of the next non-trivia character (or `source.length`).
+ */
+function skipTrivia(source: string, start: number): number {
+  let i = start;
+  while (i < source.length) {
+    if (/\s/.test(source[i])) {
+      i += 1;
+      continue;
+    }
+    if (source[i] === '/' && source[i + 1] === '/') {
+      const newline = source.indexOf('\n', i);
+      i = newline === -1 ? source.length : newline;
+      continue;
+    }
+    if (source[i] === '/' && source[i + 1] === '*') {
+      const close = source.indexOf('*/', i + 2);
+      i = close === -1 ? source.length : close + 2;
+      continue;
+    }
+    break;
+  }
+  return i;
+}
+
+/**
  * Scan raw JSON text for keys repeated within the same object scope.
  *
  * Strings are lexed with full escape handling, so braces, colons, and quotes
@@ -180,11 +212,9 @@ export function findDuplicateJsonKeys(source: string): readonly DuplicateKeyViol
       i = lexed.end;
 
       // A string is a KEY iff the enclosing frame is an object and the next
-      // non-whitespace character is a colon.
-      let j = i;
-      while (j < source.length && /\s/.test(source[j])) {
-        j += 1;
-      }
+      // non-trivia character is a colon — JSONC allows comments between a
+      // property name and its colon, so trivia includes comments here too.
+      const j = skipTrivia(source, i);
       const frame = frames.at(-1);
       if (source[j] === ':' && frame !== undefined && frame.kind === 'object') {
         const firstLine = frame.keys.get(lexed.value);
