@@ -42,8 +42,8 @@ node's work:
   kill-switch posture is honest.
 - **Epistemic trust failed on first owner contact, everywhere tested.** The
   queued-decisions register: five of eight rows defective in premise, frame,
-  or owner-legibility (one premise flatly false — a "published package" that
-  has never been published). The notification channel: configured since
+  or owner-legibility (one premise unsupported — a "published package" claim
+  no measurement backed: the npm registry shows no current release). The notification channel: configured since
   2026-08-23, never actually delivered until the owner repaired the account
   config mid-walk. The model setting: recorded as set, first measured firing
   served a different model. The walking session itself reproduced the same

@@ -12,9 +12,10 @@ an explicit prohibition.
 
 **A generated file is never edited by hand. When generated output must
 change, change the generator (or its inputs) and regenerate. When a
-generated file and its generator disagree, the generator is fixed first
-— the checked-in output is only ever brought back into agreement by
-running the generator.**
+generated file and its generator disagree, the generator is verified
+first — and fixed where it is wrong — then the checked-in output is
+brought back into agreement only by running the generator (a stale
+output under a correct generator needs regeneration alone).**
 
 This applies to every generated artefact in the repository: emitted
 code and documents (writer/codegen output), generated fixtures and
