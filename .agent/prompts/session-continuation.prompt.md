@@ -68,10 +68,10 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > [`../memory/operational/repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
 > read that for the current frontier. Governing disposition: bring everything unless utterly irrelevant. Three axes —
 > (A) transplant/parity (active, the gap-rescan backlog), (B) product-remediation `remediation/02–07` (dormant),
-> (C) delivery (deprioritised) — with the A/B/C sequencing an open owner decision (`open-questions.md` Q-011). The
+> (C) delivery (~~deprioritised~~ superseded 2026-08-26: green and clean merges, never held for an owner call) — with the A/B/C sequencing an open owner decision (`open-questions.md` Q-011). The
 > dependency-currency DC3–5 lane is a separate castr-internal lane, not Axis A. **`origin/feat` = `c86d4e1` as of
 > 2026-06-28 (the owner pushes between turns — re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice`;
-> only the newest local commit(s) are unpushed); push = owner's call.** Everything below is retained as dated history; trust this banner + repo-continuity for "what's next."
+> only the newest local commit(s) are unpushed); ~~push = owner's call~~ (superseded 2026-08-26: work is pushed and PRs merged when green and clean).** Everything below is retained as dated history; trust this banner + repo-continuity for "what's next."
 
 > **2026-06-20 SCOPE-EXPANSION UPDATE (supersedes everything below it on scope — read this first).** The owner expanded
 > the work from "finish the transplant (Phases 0–9)" to the **[Oak Parity-or-Better Program](../plans/transplant/oak-parity-program.md)**:
