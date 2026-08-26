@@ -89,7 +89,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      too late for a leaked secret — never skip, bypass, or defer it to CI.
    - Ground with the `engraph-start-right-thorough` skill (owner ruling, 2026-08-26
      arming walk: cloud sessions ground thorough — full one-gate-at-a-time discipline);
-     register identity per `register-active-areas-at-session-open`. The session's
+     register identity per `register-active-areas-at-session-open`. The thorough
+     workflow's owner-interaction gates ("discuss with the user first") resolve against
+     THIS BRIEF in an unattended firing: the routine prompt and the owner-ratified queue
+     order ARE the owner's standing answer to the first-step discussion, so grounding
+     never pauses to wait for a person — a genuine fork found during grounding routes
+     through step 7's queued-decision branch, exactly like one found during execution. The session's
      cognitive stack is not optional: structure the slice with the `plan` skill, size it
      with `proportionality`, and fire `metacognition` at boundaries and whenever a
      rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
