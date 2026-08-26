@@ -98,7 +98,8 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      cognitive stack is not optional: the claimed queue brief IS the slice's plan (the
      parent plan's §Lifecycle ratification — apply the brief's structure, never author a
      duplicate plan artefact or open the plan skill's owner design gate for ratified
-     queue work); size the work with `proportionality`, and fire `metacognition` at
+     queue work); size the work with the `engraph-proportionality` skill, and fire the
+     `engraph-metacognition` skill at
      boundaries and whenever a rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
      skills-discipline paragraph (owner-authored, 2026-08-26) is the standing gesture at
      this same stack; where its wording differs from this brief — it names
