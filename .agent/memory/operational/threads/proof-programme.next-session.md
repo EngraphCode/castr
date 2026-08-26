@@ -52,9 +52,10 @@ Verification: the PR merged, or a row's state advanced on the base.
 ## Session shape and grounding order
 
 Scheduled firings follow the routine prompt end to end (it is the grounding
-order; its step 3 now grounds `start-right-thorough`); owner-attended
-interactive cloud sessions likewise ground via `start-right-thorough` with
-the plan / metacognition / proportionality stack (owner ruling, 2026-08-26)
+order; its step 3 now grounds `engraph-start-right-thorough`); owner-attended
+interactive cloud sessions likewise ground via `engraph-start-right-thorough`
+with the `engraph-plan` / `engraph-metacognition` / `engraph-proportionality`
+stack (the installed, invocable names; owner ruling, 2026-08-26)
 and then follow the parent plan's §Operating protocol. Either shape updates
 this record's identity table at close.
 

@@ -317,6 +317,12 @@ The OAS 3.2 parent arc is now complete. Phase A2 closed on Friday, 10 April 2026
 
 ## What Next
 
+> **SUPERSEDED (2026-08-22 B-11; transplant STOPPED 2026-08-26, owner ruling QD-2).**
+> The steps below are the 2026-06 era's handoff, kept as history: do NOT execute them.
+> The plan-of-record is [`proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md);
+> sessions ground per [AGENT.md](../directives/AGENT.md) and pick up from
+> [`repo-continuity.md`](../memory/operational/repo-continuity.md).
+
 1. Re-read [metacognition.md](../directives/metacognition.md), then the §Current state block above and the transplant tracker.
 2. **Next slice (owner-directed): transplant Phase 6 — Sub-agents / memory / state** on `feat/transplant-engraph-practice` from the tracker; it opens with the memory-layout consolidation pass; each phase ends green (`pnpm check`) + reference-closure-clean + tagged.
 3. **Also required — one deep enhancement, single branch, nothing parked, not gated behind one another:** the [remediation backlog](../plans/remediation/) 02–07 (proof-first TDD, atomic + gated), the rest of the transplant Phases 7–9 + arc D1–D4, and the [feature slice](../plans/current/paused/explicit-additional-properties-support.md). The owner names which is next.
@@ -334,6 +340,11 @@ Repo-root `pnpm check` is green on **Saturday, 11 April 2026** after the final P
 ---
 
 ## Next Session Start Statement
+
+> **SUPERSEDED (2026-08-22 B-11; transplant STOPPED 2026-08-26, owner ruling QD-2).**
+> This start statement is the 2026-06 era's, kept as history: do NOT start from it.
+> Start from the plan-of-record ([`proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md))
+> via [`repo-continuity.md`](../memory/operational/repo-continuity.md).
 
 **@engraph/castr — next session start.** This is **one deep enhancement** (owner): bring over the ENTIRE Practice /
 agentic-engineering framework / agent-tools / skill+rule+subagent+hook definitions **and** fix castr's known issues —
