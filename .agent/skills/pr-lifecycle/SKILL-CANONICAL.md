@@ -5,9 +5,9 @@ description: >-
   Open a pull request and shepherd it to merge-ready — reviewer-facing
   description, full-surface harvesting (GraphQL review threads, all comments,
   all checks, server-side scanning findings), root-cause-first triage, budgeted
-  watching via the pr-watch CLI, re-fetch after every push, and an honest
-  merge-ready declaration at the owner gate. Use whenever a branch reaches PR
-  closeout or an open PR needs driving to live.
+  watching via the pr-watch CLI, re-fetch after every push, and a
+  condition-based merge (green and clean → merge). Use whenever a branch
+  reaches PR closeout or an open PR needs driving to live.
 ---
 
 # Pull Request Lifecycle
@@ -109,16 +109,19 @@ hold; the watcher wakes you.
   clicked to clear `mergeStateStatus`. Identify as the agent in reply bodies
   (shared gh credentials attribute replies to the owner).
 
-## Phase 7 — Merge-ready is a declaration with a gate, then the owner
+## Phase 7 — Merge-ready is a declaration with a gate, then the merge
 
 Merge-ready means, re-verified at the declaration instant: all checks green
 AND zero unresolved review threads AND no blocking ruleset finding. Then:
 
-- **The merge itself is owner-invoked** (standing castr posture, 2026-07-03:
-  agents keep the branch continuously merge-correct; the owner performs the
-  merge). Notify the owner at this action moment
-  (`owner-attention-at-action-moments`); use the question tool, not
-  prose-only.
+- **Merge authority follows the governing authority for the PR** (loop-review
+  D-10, owner-approved 2026-08-24; the unconditional owner-invoked line this
+  bullet replaces was never policy — owner, 2026-08-26). Where a programme
+  document (e.g. an ADR) defines merge conditions for the PR, follow it.
+  castr standing policy (owner ruling 2026-08-22, reaffirmed 2026-08-26):
+  **green and clean → the driving agent merges** — all CI passing on the
+  current head AND every review thread properly resolved (fixed, or rejected
+  with evidence). Never wait for a per-PR owner invocation.
 - Owner preference observed (PR #3, 2026-07-03): merge commit, not squash.
 
 ## Phase 8 — After merge

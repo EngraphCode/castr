@@ -275,8 +275,10 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 > [`oak-castr-gap-rescan-2026-06-28.md`](../../plans/transplant/oak-castr-gap-rescan-2026-06-28.md) (the LC / TC /
 > parity-tranche plans are FOLDED into it — see its "single ordered backlog" section). **(B) product-remediation**
 > — **5 reproduced Criticals remain (C2–C6); C1 done.** DORMANT but now a DEFINED "after Tier-1" (Q-011 decided), not
-> an undefined later. **(C) delivery** — ~~DEPRIORITISED~~ **superseded 2026-07-03: continuous MERGE-READINESS is a
-> standing agent duty; the merge itself is owner-invoked, explicitly (see the 🟢 merge-ready block above).**
+> an undefined later. **(C) delivery** — ~~DEPRIORITISED~~ **superseded 2026-07-03 and corrected 2026-08-26: continuous MERGE-READINESS is a
+> standing agent duty; merges are condition-based — green and clean merges (all CI passing on the current head, every
+> review thread properly resolved; owner ruling 2026-08-22, reaffirmed 2026-08-26 — the earlier "owner-invoked"
+> phrasing was never policy).**
 > **Q-011 DECIDED 2026-06-28 (owner) → Axis A first.**
 > **Tier-1 LANDED + PUSHED 2026-06-28 (Open Lofting Feather), origin = `16cedbf`:** enforcement-integrity cluster —
 > ✅ trusted-git (`2ca01be`), ✅ gitleaks secret-scan wired into qg (`ec53da7`), ✅ CI-runs-gates server-side in-repo

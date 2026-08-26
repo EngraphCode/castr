@@ -23,8 +23,11 @@ import {
  * declared in `pnpm-workspace.yaml`, and `turbo.json`. A missing file is
  * skipped (the estate list is discovery, not existence assertion).
  *
- * Wired into root `repo-validators:check`, so it runs on every pre-commit and
- * pre-push alongside the sibling validators.
+ * Wired into root `repo-validators:check` AND invoked directly by source path
+ * from `.husky/pre-commit`, `.husky/pre-push`, and the CI static-checks job —
+ * the direct invocations exist because this gate scans the very manifests
+ * that define the script keys: a duplicated script key (last-wins) could
+ * otherwise disable the only gate that would have caught it.
  *
  * @packageDocumentation
  */

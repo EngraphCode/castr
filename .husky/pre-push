@@ -7,5 +7,14 @@
 # workspace dist output, so peer sessions' built-CLI invocations can fail
 # during this window — announce before pushing in a team window
 # (see .agent/rules/check-singleton-per-window.md).
+# Direct source-path invocation of the duplicate-key gate BEFORE the
+# manifest-defined aggregate: a duplicated script key (last-wins) in the
+# manifests could otherwise disable the very gate that catches it.
+echo "🗝️ pre-push: checking manifests for duplicate keys (direct invocation)"
+if ! pnpm exec tsx agent-tools/src/validators/manifest-duplicate-keys/validate-manifest-duplicate-keys.ts; then
+  echo "❌ Duplicate manifest keys found!"
+  exit 1
+fi
+
 echo "🚀 pre-push: running full check:ci (clean + frozen install + qg; ~10 min)"
 pnpm check:ci
