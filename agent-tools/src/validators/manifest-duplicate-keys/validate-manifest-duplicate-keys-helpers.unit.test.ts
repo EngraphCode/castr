@@ -45,6 +45,30 @@ describe('findDuplicateJsonKeys', () => {
     expect(findDuplicateJsonKeys(source)).toStrictEqual([]);
   });
 
+  it('still monitors the enclosing object scope after an array value', () => {
+    // Mutation discriminator: an implementation whose `]` pops the enclosing
+    // OBJECT frame (or that never pushes an array frame) silently stops
+    // monitoring every key after an array value — turbo.json and the
+    // manifests are full of arrays, so this is the gate's live estate.
+    const source = '{ "items": [1, 2], "a": 1, "a": 2 }';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'a', line: 1, firstLine: 1 }]);
+  });
+
+  it('reports duplicates inside an array-element object', () => {
+    const source = '{ "items": [ { "a": 1, "a": 2 } ] }';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'a', line: 1, firstLine: 1 }]);
+  });
+
+  it('does not record a string VALUE as a key even when it matches a key text', () => {
+    // Pins the colon look-ahead: "b" appears as a value and as a key, which
+    // is legal — only strings followed by a colon in object scope are keys.
+    const source = '{ "a": "b", "b": 1 }';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([]);
+  });
+
   it('is not confused by braces, colons, or quotes inside string values', () => {
     const source = '{ "a": "x{y}:\\"z\\",{", "b": "{\\"a\\": 1, \\"a\\": 2}" }';
 
@@ -74,6 +98,26 @@ describe('findDuplicateJsonKeys', () => {
       { key: 'z', line: 4, firstLine: 4 },
       { key: 'x', line: 5, firstLine: 3 },
     ]);
+  });
+
+  it('ignores line comments, including quoted key-like text inside them (JSONC)', () => {
+    // turbo config is parsed with a JSONC parser upstream; a comment quoting a
+    // key must produce neither a false duplicate nor scope corruption.
+    const source = '{\n  // { "a": 1, "a": 2 }\n  "b": 1,\n  "b": 2\n}';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'b', line: 4, firstLine: 3 }]);
+  });
+
+  it('ignores block comments and counts the lines they span (JSONC)', () => {
+    const source = '{\n  /* "x": 1,\n     "x": 2 { [ */\n  "y": 1,\n  "y": 2\n}';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([{ key: 'y', line: 5, firstLine: 4 }]);
+  });
+
+  it('does not treat slashes inside string values as comment openers', () => {
+    const source = '{ "$schema": "https://turborepo.dev/schema.json", "a": "b /* c */ d" }';
+
+    expect(findDuplicateJsonKeys(source)).toStrictEqual([]);
   });
 
   it('returns empty for an empty document and for non-object roots', () => {

@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { isErrnoCode } from './errno.js';
+
 /**
  * Workspace-package discovery shared by validators that must cover the whole
  * manifest estate (root plus every workspace package). Lifted from the
@@ -62,15 +64,6 @@ export function stripQuotes(value: string): string {
   return value.replace(/^(['"])(.*)\1$/, '$2');
 }
 
-function isEnoent(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code: unknown }).code === 'ENOENT'
-  );
-}
-
 /**
  * Resolve the repo-relative `package.json` paths to read: the root, plus each
  * workspace package declared in `pnpm-workspace.yaml`. Glob entries ending in
@@ -80,14 +73,31 @@ function isEnoent(error: unknown): boolean {
  * @param repoRoot - Absolute path of the repository root.
  * @returns Repo-relative manifest paths, root first, in discovery order.
  */
-export async function discoverWorkspaceManifestPaths(repoRoot: string): Promise<readonly string[]> {
+export interface WorkspaceDiscoveryIo {
+  /** Read a UTF-8 file; same contract as `fs.readFile(path, 'utf8')`. */
+  readonly readFile: (filePath: string) => Promise<string>;
+  /** List a directory with file types; same contract as `fs.readdir`. */
+  readonly readdir: (
+    dirPath: string,
+  ) => Promise<readonly { name: string; isDirectory: () => boolean }[]>;
+}
+
+const REAL_IO: WorkspaceDiscoveryIo = {
+  readFile: (filePath) => fs.readFile(filePath, 'utf8'),
+  readdir: (dirPath) => fs.readdir(dirPath, { withFileTypes: true }),
+};
+
+export async function discoverWorkspaceManifestPaths(
+  repoRoot: string,
+  io: WorkspaceDiscoveryIo = REAL_IO,
+): Promise<readonly string[]> {
   const paths = new Set<string>(['package.json']);
 
   let workspaceYaml: string;
   try {
-    workspaceYaml = await fs.readFile(path.join(repoRoot, 'pnpm-workspace.yaml'), 'utf8');
+    workspaceYaml = await io.readFile(path.join(repoRoot, 'pnpm-workspace.yaml'));
   } catch (error) {
-    if (isEnoent(error)) {
+    if (isErrnoCode(error, 'ENOENT')) {
       return [...paths];
     }
     throw error;
@@ -98,9 +108,9 @@ export async function discoverWorkspaceManifestPaths(repoRoot: string): Promise<
       const parent = entry.slice(0, -2);
       let dirEntries: readonly { name: string; isDirectory: () => boolean }[];
       try {
-        dirEntries = await fs.readdir(path.join(repoRoot, parent), { withFileTypes: true });
+        dirEntries = await io.readdir(path.join(repoRoot, parent));
       } catch (error) {
-        if (isEnoent(error)) {
+        if (isErrnoCode(error, 'ENOENT')) {
           continue;
         }
         throw error;

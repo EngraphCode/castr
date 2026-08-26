@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { isErrnoCode } from '../../core/errno.js';
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { discoverWorkspaceManifestPaths } from '../../core/workspace-packages.js';
 import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
@@ -30,21 +31,25 @@ import {
 
 const repoRoot = resolveRepoRoot(import.meta.url);
 
-/** Repo-relative JSON files scanned beyond the manifest estate. */
-const EXTRA_SCANNED_FILES: readonly string[] = ['turbo.json'];
+/**
+ * Repo-relative JSON/JSONC files scanned beyond the manifest estate — every
+ * load-bearing JSON surface where a silently-shadowed duplicate would change
+ * behaviour: the turbo task graph (JSONC-capable upstream, either filename),
+ * the Claude hook/permission settings (a duplicated `hooks` key silently
+ * drops a guard), the hook policy, and the skills lockfile. The scanner
+ * ignores JSONC comments, so JSONC members are safe to include.
+ */
+const EXTRA_SCANNED_FILES: readonly string[] = [
+  'turbo.json',
+  'turbo.jsonc',
+  '.claude/settings.json',
+  '.agent/hooks/policy.json',
+  'skills-lock.json',
+];
 
 interface FileViolations {
   readonly relativePath: string;
   readonly violations: readonly DuplicateKeyViolation[];
-}
-
-function isEnoent(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code: unknown }).code === 'ENOENT'
-  );
 }
 
 function formatViolations(files: readonly FileViolations[]): string {
@@ -65,21 +70,33 @@ async function main(): Promise<void> {
 
   const failures: FileViolations[] = [];
   let scanned = 0;
+  let scannedRoot = false;
   for (const relativePath of scanPaths) {
     let source: string;
     try {
       source = await fs.readFile(path.join(repoRoot, relativePath), 'utf8');
     } catch (error) {
-      if (isEnoent(error)) {
+      if (isErrnoCode(error, 'ENOENT')) {
         continue;
       }
       throw error;
     }
     scanned += 1;
+    if (relativePath === 'package.json') {
+      scannedRoot = true;
+    }
     const violations = findDuplicateJsonKeys(source);
     if (violations.length > 0) {
       failures.push({ relativePath, violations });
     }
+  }
+
+  if (scanned === 0 || !scannedRoot) {
+    writeErrorLine(
+      'validate-manifest-duplicate-keys: the root package.json was not scanned — ' +
+        'the estate discovery is broken, refusing to report green over nothing.',
+    );
+    process.exit(1);
   }
 
   if (failures.length === 0) {

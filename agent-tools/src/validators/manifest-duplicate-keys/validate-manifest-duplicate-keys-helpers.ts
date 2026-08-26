@@ -59,6 +59,21 @@ interface LexedString {
   readonly linesConsumed: number;
 }
 
+/**
+ * Lex one JSON string literal starting at its opening quote, decoding escapes
+ * so that differently-escaped spellings of one key compare equal (JSON's own
+ * key-identity semantics). Simple escapes and `\uXXXX` are decoded; an invalid
+ * escape keeps its character literally and a truncated `\u` sequence decodes
+ * its parseable hex prefix — this is a scanner for gate purposes, not a
+ * validating parser, and JSON validity is owned by the tools that parse these
+ * files. Raw newlines inside a string (invalid JSON) are tolerated and
+ * counted so later line numbers stay right.
+ *
+ * @param source - The whole document text.
+ * @param openQuoteIndex - Index of the opening `"`.
+ * @returns The decoded value, the index after the closing quote, and how many
+ *   lines the literal spanned.
+ */
 function lexString(source: string, openQuoteIndex: number): LexedString {
   let value = '';
   let linesConsumed = 0;
@@ -136,6 +151,26 @@ export function findDuplicateJsonKeys(source: string): readonly DuplicateKeyViol
     if (ch === '}' || ch === ']') {
       frames.pop();
       i += 1;
+      continue;
+    }
+    if (ch === '/' && source[i + 1] === '/') {
+      // JSONC line comment: skip to (not past) the newline so line accounting
+      // stays with the main loop. turbo config is JSONC upstream, so quoted
+      // key-like text inside a comment must not register as a key.
+      const newline = source.indexOf('\n', i);
+      i = newline === -1 ? source.length : newline;
+      continue;
+    }
+    if (ch === '/' && source[i + 1] === '*') {
+      // JSONC block comment: skip to the terminator, counting spanned lines.
+      const close = source.indexOf('*/', i + 2);
+      const end = close === -1 ? source.length : close + 2;
+      for (let k = i; k < end; k += 1) {
+        if (source[k] === '\n') {
+          line += 1;
+        }
+      }
+      i = end;
       continue;
     }
     if (ch === '"') {
