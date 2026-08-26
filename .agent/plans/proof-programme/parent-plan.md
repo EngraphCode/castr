@@ -61,7 +61,7 @@ todos:
     status: pending
     depends_on: [Q-20]
   - id: Q-16
-    content: 'Plan-architecture repair: make the plan skill executable in this repo — restore or retarget its unresolvable references (plans/templates/ inventory, ADR-117 path) so plan authoring resolves end to end'
+    content: "Plan-architecture repair (narrowed 2026-08-25, premises moved — PR #54 landed the templates estate): replace the plan skill's declined-lineage ADR-117 citation with castr's real authority (PDR-018 + the templates README) and verify every remaining skill reference resolves"
     status: pending
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
@@ -870,21 +870,39 @@ proposal. Acceptance (`e2e`, observed): a fresh container completes ground → e
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
 pre-execution reviews (2026-08-22). Gate: none (eligible immediately).
 
-**Q-16 — Plan-architecture repair.** Surface: `.agent/skills/plan/SKILL-CANONICAL.md`'s
-unresolvable references — `.agent/plans/templates/README.md` (step 3 and §Choose a
-Template), `templates/components/quality-gates.md` (requirement 4),
-`templates/components/lifecycle-triggers.md` (requirement 13), and the ADR-117 path (this
-repo's ADRs live under `docs/architectural_decision_records/`) — restored from the Oak
-transplant source (the napkin records the Oak inventory: README + 7 templates + 10
-components) or retargeted to what exists; sweep sibling references to the absent templates
-directory in the same landing (`.agent/memory/active/patterns/templates-encode-failure-modes.md`
-cites it at two sites). Non-goals: no wholesale re-transplant of the Oak template estate
+**Q-16 — Plan-architecture repair.** Premises re-adjudicated 2026-08-25 (arming
+review): the templates half is CURED — `.agent/plans/templates/` landed via PR #54
+(README + templates + components including `quality-gates.md` and
+`lifecycle-triggers.md`), so the plan skill's templates references now resolve.
+Remaining surface: the plan skill's **ADR-117 citations — three sites, not one**
+(the line-13 markdown link, the line-260 "archive per ADR-117" prose, and the
+line-262 "Document Hierarchy (ADR-117)" heading; only the first is
+link-validator-visible), which must be **replaced, not retargeted** — castr has no
+ADR-117 (ADRs run 001–051) and the templates estate's own README declares the
+origin estate's ADR-117/ADR-216 plan doctrine "cited lineage, not adopted here";
+the replacement authority is PDR-018 plus `.agent/plans/templates/README.md`.
+Sweep any sibling references to the formerly-absent templates directory in the
+same landing (`.agent/memory/active/patterns/templates-encode-failure-modes.md`
+cites it at two sites; its second cite references
+`feature-workstream-template.md`, which the landed set does not carry — verify
+each against the now-landed estate). Scope note: the wider class of
+`docs/architecture/architectural-decisions/` prefixes across `.agent/**`
+(~28 files, e.g. the documentation-hygiene rule's ADR-127 pointer) is already
+routed to the transplant backlog and is NOT this row's scope. Non-goals: no wholesale re-transplant of the Oak template estate
 beyond what the skill's steps need; no silent deletion of the skill's document-hierarchy
 section; no change to the general lifecycle model — the QD-6 briefs-are-plans ratification
 is programme-scoped, and a general doctrine change would be its own owner decision.
-Acceptance (`non-code`): every reference in the skill file resolves, recomputed via
-`validate-markdown-links` over the touched files rather than eyeballed; gates green.
-Source: the foundation-alignment note below; the napkin's transplant-gap entries. Gate:
+Acceptance (`non-code`): every reference in the skill file resolves, recomputed rather
+than eyeballed — note the tool's real contract: `validate-markdown-links` takes no
+file arguments (it scans the whole repo) and currently exits 0 regardless
+(`BLOCKING = false` pending the census remediation), so **the signal is the plan
+skill's path being absent from the validator's by-file report, never the exit code**;
+the two prose-only ADR-117 sites (lines 260/262) are grep-checked since no link
+validator sees them; gates green.
+Source: the [dangling-reference census](../transplant/dangling-reference-census.md)
+(the pre-existing authority naming both skill sites and routing the wider class);
+the foundation-alignment note below; the napkin's transplant-gap entries; the
+2026-08-25 arming-review re-adjudication. Gate:
 none (eligible immediately).
 
 **Q-17 — Diagnostic-walker residual hardening.** Surface:
@@ -995,11 +1013,27 @@ policy with both branches and cites the ADR; no unconditional owner-invoked clai
 remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
 owner decision card 2026-08-24. Gate: none (eligible immediately).
 
+## Operating protocol
+
 Standing authority: [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
 (**Accepted 2026-08-22**, W-0 ballot B-12 as amended: three firings per day) — its clauses
 own the merge policy (clause 3), review-bot convergence
 (clause 4), cadence (clause 2), and escalation/kill switches (clause 6); this section states
-mechanics only and cites clauses rather than restating them.
+mechanics and recorded classification precedent only, and cites clauses rather than
+restating them.
+
+**Programme-PR classification (arming review 2026-08-25).** ADR-051 clauses 1(b)/3
+classify by nature: a **programme PR** is a pull request opened under this protocol —
+a **slice PR** landing a claimed queue row, or a **bookkeeping / deferral PR** landing
+counter, incident, and continuity state. Recorded owner precedent (PR #58, programme
+thread record): owner-directed work outside the queue is not a programme PR even when
+it touches programme surfaces. **Declaration duty**: a firing opening a programme PR
+names its queue row (`Q-NN`) or its bookkeeping scope in the description, so
+successors classify from the PR itself — a duty aiding classification, never the
+operative test (a slice PR whose author omits the declaration is still a programme PR
+by nature). Whether self-declaration should become the operative test, and what the
+default is when classification is genuinely ambiguous, are clause-3-adjacent questions
+routed to the owner as QD-13 per clause 5 — never decided here.
 
 1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
    clause 2 cadence. Fresh sessions re-ground via `start-right-quick`; repo state (this plan,
@@ -1156,9 +1190,10 @@ re-derives the slice's shape from the live code and the report's evidence, not f
 plan's summary. Vendor call shapes named in briefs (AJV, Scalar, ts-morph, MCP SDK) are
 re-verified at slice-author time per
 [`verify-vendor-call-shapes-at-plan-author-time`](../../rules/verify-vendor-call-shapes-at-plan-author-time.md).
-Note: the plan skill's template/component references (`plans/templates/`, ADR-117 path) do
-not resolve in this repo — a known transplant gap recorded in the napkin; this plan names its
-gates and lifecycle duties directly instead, and the repair is queued as Q-16.
+Note: the plan skill's templates references resolve as of PR #54 (the templates estate
+landed); the one remaining transplant gap is its declined-lineage ADR-117 citations — the
+repair is queued as Q-16 (brief above) — and this plan continues to name its gates and
+lifecycle duties directly.
 
 ## Lifecycle
 
