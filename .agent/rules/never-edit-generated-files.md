@@ -1,7 +1,8 @@
 # Never Edit Generated Files
 
-Owner directive (2026-08-26, verbatim substance, arming-walk QD-11
-ruling): **"never to edit generated files, always edit the generator."**
+Owner directive (2026-08-26, verbatim substance, ruled at the arming
+walk's decision re-read): **"never to edit generated files, always edit
+the generator."**
 Operationalises the generator-first doctrine
 ([`generator-first-mindset.md`](generator-first-mindset.md),
 [`principles.md`](../directives/principles.md) §Deterministic Output) as
@@ -26,9 +27,10 @@ diverges from its generator — both are corruption, not maintenance.
 
 - A drifted generated artefact is a **generator bug or a stale
   regeneration** — file the fix against the generator, never against
-  the output. Worked instance: the normalized-fixture estate became
-  unregenerable because outputs and generator were maintained
-  independently (queued-decisions QD-11; repair row Q-22).
+  the output. Worked instance (2026-08-26): a checked-in fixture estate
+  became unregenerable because outputs and generator were maintained
+  independently — the repair was routed against the generator; the
+  decision register of that day carries the detailed provenance.
 - Regeneration is the only sanctioned write path. If regeneration
   breaks consumers, the generator (or the consumer contract) is wrong
   — fix that, with the gates on, per
