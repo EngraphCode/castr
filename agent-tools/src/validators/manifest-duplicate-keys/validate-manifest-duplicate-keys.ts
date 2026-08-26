@@ -66,11 +66,12 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
 ];
 
 /**
- * Directories whose `*.schema.json` / `*.manifest.json` members are
- * runtime-loaded with `JSON.parse` and act as validation gates or contract
- * inventories themselves (the collaboration-state schemas; the executive
- * substrate contract manifest + schema read by `practice-substrate`
- * `live-json.ts`) — a duplicated `required`/`properties`/`discovery` member
+ * Directories whose `.json` members are runtime-loaded with `JSON.parse`
+ * and act as validation gates or contract inventories themselves: the
+ * collaboration-state schemas, the executive substrate contract manifest +
+ * schema read by `practice-substrate` `live-json.ts`, and the official
+ * OpenAPI schemas that lib's blocking spec-compliance tests compile into
+ * AJV validators. A duplicated `required`/`properties`/`discovery` member
  * would silently weaken the gate or drop roots. Discovered by listing so a
  * newly added file is scanned without touching this validator; a missing
  * directory contributes nothing (estate discovery, not existence assertion).
@@ -78,6 +79,7 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
 const RUNTIME_JSON_DIRS: readonly string[] = [
   'agent-tools/src/collaboration-state/schemas',
   '.agent/memory/executive',
+  '.agent/reference/openapi_schema',
 ];
 
 async function discoverRuntimeJsonFiles(): Promise<readonly string[]> {
@@ -93,7 +95,7 @@ async function discoverRuntimeJsonFiles(): Promise<readonly string[]> {
       throw error;
     }
     for (const name of entries) {
-      if (name.endsWith('.schema.json') || name.endsWith('.manifest.json')) {
+      if (name.endsWith('.json')) {
         runtimePaths.push(`${dir}/${name}`);
       }
     }
