@@ -93,7 +93,7 @@
     "degit": "^3.8.0",
     "dependency-cruiser": "^18.2.0",
     "eslint": "^10.9.1",
-    "eslint-plugin-boundaries": "^6.0.2",
+    "eslint-plugin-boundaries": "^7.2.0",
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-sonarjs": "^4.2.0",
