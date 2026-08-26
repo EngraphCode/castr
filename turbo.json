@@ -26,11 +26,18 @@
       "outputs": []
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "outputs": []
     },
     "@engraph/agent-tools#test": {
       "cache": false,
+      "outputs": []
+    },
+    "test:coverage": {
       "outputs": ["coverage/**"]
+    },
+    "@engraph/agent-tools#test:coverage": {
+      "cache": false,
+      "outputs": []
     },
     "test:snapshot": {
       "dependsOn": ["build"],

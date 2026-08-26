@@ -211,22 +211,14 @@ describe('writers/typescript template boundary', () => {
   });
 
   describe('schemas-with-metadata template', () => {
-    it('emits endpoint exports', () => {
+    it.each([
+      { kind: 'endpoint', expected: 'export const endpoints' },
+      { kind: 'MCP tool', expected: 'export const mcpTools' },
+      { kind: 'schema', expected: 'export const User = z.strictObject(' },
+    ])('emits $kind exports', ({ expected }) => {
       const context = createFullContext('schemas-with-metadata');
       const output = writeTypeScript(context);
-      expect(output).toContain('export const endpoints');
-    });
-
-    it('emits MCP tool exports', () => {
-      const context = createFullContext('schemas-with-metadata');
-      const output = writeTypeScript(context);
-      expect(output).toContain('export const mcpTools');
-    });
-
-    it('emits schema exports', () => {
-      const context = createFullContext('schemas-with-metadata');
-      const output = writeTypeScript(context);
-      expect(output).toContain('export const User = z.strictObject(');
+      expect(output).toContain(expected);
     });
   });
 

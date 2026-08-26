@@ -212,52 +212,49 @@ describe('AstBuilder', () => {
   });
 
   describe('complex type expressions', () => {
-    it('should handle nested object types', () => {
+    it.each([
+      {
+        kind: 'nested object types',
+        aliasName: 'User',
+        aliasType: '{ id: number; profile: { name: string; age: number } }',
+        expected: 'profile: { name: string; age: number }',
+      },
+      {
+        kind: 'array types',
+        aliasName: 'Users',
+        aliasType: 'User[]',
+        expected: 'export type Users = User[]',
+      },
+      {
+        kind: 'tuple types',
+        aliasName: 'Point',
+        aliasType: '[number, number]',
+        expected: 'export type Point = [number, number]',
+      },
+      {
+        kind: 'generic types',
+        aliasName: 'Result',
+        aliasType: 'Promise<User>',
+        expected: 'export type Result = Promise<User>',
+      },
+      {
+        kind: 'readonly array types',
+        aliasName: 'ReadonlyUsers',
+        aliasType: 'readonly User[]',
+        expected: 'readonly User[]',
+      },
+      {
+        kind: 'Partial utility type',
+        aliasName: 'PartialUser',
+        aliasType: 'Partial<User>',
+        expected: 'Partial<User>',
+      },
+    ])('should handle $kind', ({ aliasName, aliasType, expected }) => {
       const builder = new AstBuilder();
-      builder.addTypeAlias('User', '{ id: number; profile: { name: string; age: number } }');
+      builder.addTypeAlias(aliasName, aliasType);
 
       const output = builder.toString();
-      expect(output).toContain('profile: { name: string; age: number }');
-    });
-
-    it('should handle array types', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('Users', 'User[]');
-
-      const output = builder.toString();
-      expect(output).toContain('export type Users = User[]');
-    });
-
-    it('should handle tuple types', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('Point', '[number, number]');
-
-      const output = builder.toString();
-      expect(output).toContain('export type Point = [number, number]');
-    });
-
-    it('should handle generic types', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('Result', 'Promise<User>');
-
-      const output = builder.toString();
-      expect(output).toContain('export type Result = Promise<User>');
-    });
-
-    it('should handle readonly array types', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('ReadonlyUsers', 'readonly User[]');
-
-      const output = builder.toString();
-      expect(output).toContain('readonly User[]');
-    });
-
-    it('should handle Partial utility type', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('PartialUser', 'Partial<User>');
-
-      const output = builder.toString();
-      expect(output).toContain('Partial<User>');
+      expect(output).toContain(expected);
     });
   });
 
@@ -400,28 +397,28 @@ describe('AstBuilder', () => {
       expect(output).toContain('data: Pet');
     });
 
-    it('should support nullable types (union with null)', () => {
+    it.each([
+      {
+        kind: 'nullable types (union with null)',
+        aliasName: 'NullableString',
+        aliasType: 'string | null',
+      },
+      {
+        kind: 'allOf intersection pattern',
+        aliasName: 'ExtendedPet',
+        aliasType: 'Pet & { category: string }',
+      },
+      {
+        kind: 'oneOf union pattern',
+        aliasName: 'Response',
+        aliasType: 'SuccessResponse | ErrorResponse',
+      },
+    ])('should support $kind', ({ aliasName, aliasType }) => {
       const builder = new AstBuilder();
-      builder.addTypeAlias('NullableString', 'string | null');
+      builder.addTypeAlias(aliasName, aliasType);
 
       const output = builder.toString();
-      expect(output).toContain('string | null');
-    });
-
-    it('should support allOf intersection pattern', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('ExtendedPet', 'Pet & { category: string }');
-
-      const output = builder.toString();
-      expect(output).toContain('Pet & { category: string }');
-    });
-
-    it('should support oneOf union pattern', () => {
-      const builder = new AstBuilder();
-      builder.addTypeAlias('Response', 'SuccessResponse | ErrorResponse');
-
-      const output = builder.toString();
-      expect(output).toContain('SuccessResponse | ErrorResponse');
+      expect(output).toContain(aliasType);
     });
   });
 });
