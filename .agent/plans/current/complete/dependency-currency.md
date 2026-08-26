@@ -62,7 +62,7 @@ todos:
 # Dependency Currency — type-safe, careful, one-major-at-a-time
 
 Controlling plan for the **dependency-currency lane** in the
-[practice-transplant thread record](../../memory/operational/threads/practice-transplant.next-session.md).
+[practice-transplant thread record](../../../memory/operational/threads/practice-transplant.next-session.md).
 Authored 2026-06-21 from the `pnpm -r outdated` assessment; **type-risk classification corrected the
 same day after a firsthand-verified type-reviewer + assumptions-expert pass** (see `review_note`). The
 owner's constraint governs every cycle: castr exists to **losslessly manage and transform types**, so a
@@ -337,7 +337,7 @@ reviewer claim firsthand (`verify-agent-claims-firsthand`).
 ## Learning loop + lifecycle triggers
 
 Each cycle close routes any surprise through `session-handoff`; lane/plan completion runs
-`consolidate-docs`. Lifecycle triggers per `../templates/components/lifecycle-triggers.md` — **note:**
+`consolidate-docs`. Lifecycle triggers per `../../templates/components/lifecycle-triggers.md` — **note:**
 castr's `.agent/plans/templates/` is empty (a recorded meta-gap in `pending-graduations.md`), so that
 component reference is aspirational; the applicable touch points (per-cycle gate-green + baseline diff,
 per-major reviewer pass, lane-close consolidation) are inlined above.
