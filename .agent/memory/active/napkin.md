@@ -1206,3 +1206,48 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   surfaces carrying "merges owner-invoked" (delivery-ledger, transplant plan banner,
   session-continuation prompt, thread record, repo-continuity ×2) now state the
   condition-based policy with the ruling dates inline.
+
+## 2026-08-26 (owner stop + reflection + closeout corrections — Smith stirs Pewter / 01YHWJ, part 2)
+
+- **OWNER STOP (verbatim substance): "Stop. Step back. Step back further… I do want the skill
+  landed in OCE, I want all tools used properly, I want all issues fixed properly, strict
+  everywhere, all the time."** The metacognition/free-play/concept-exploration pass that followed
+  found one root under three corrections: fluent moves acted on before grounding the situational
+  fact. (a) Declare-merge-ready-and-wait was over-deference re-creating the owner touchpoint the
+  2026-08-22 ruling abolished — deference is one of the three smooth evasions, not a safe default.
+  (b) OCE-in-a-castr-container: the 3 base-red gate failures were a VERDICT (wrong seat), not a
+  fork needing --no-verify authority — the proper tool was a fresh session against the OCE repo in
+  the shared environment; the escalation manufactured a question. (c) The duplicate-key defect
+  passed three green surfaces at once (unread insert region, proof greps filtering the build step,
+  no gate on build warnings). Error rate clustered in the final review-round hour — pace collapsed
+  the small-single-purpose-command discipline and refired the blocked-compound-runs-nothing lesson
+  TWICE (msg file never written; the napkin lesson was in context and did not fire — active gates
+  beat vigilance, again).
+- **Closeout corrections landed on PR #64** (`claude/dependency-currency-lane-o4yzns` restarted
+  from merged main): `e552a6a6` merge-policy record corrected on five surfaces; `0ac41d6f`
+  manifest dedup; `248460a5` + `20c1be6b` the `validate-manifest-duplicate-keys` gate — raw-text
+  JSON scanner (escape-aware lexer, object-scope stack, JSONC line/block comments skipped outside
+  strings), estate = root + workspace manifests + turbo.json/jsonc + .claude/settings.json +
+  .agent/hooks/policy.json + skills-lock.json (7 scanned), root-manifest fail-fast, proven firing
+  on the exact escaped defect and restored byte-exact. Both reviewers dispatched; every finding
+  verified and folded: two forbidden `as` casts dissolved by lifting `isErrnoCode` to
+  `core/errno.ts` (4 private copies retired), the half-done consolidation completed
+  (loop-closure's byte-identical discover deleted → `core/workspace-packages.ts`, io seam
+  injected per testing-strategy + 4 unit tests), test-reviewer's mutation-probe gaps closed
+  (array-frame discriminators — a `]` popping the object frame escaped ALL ten original tests;
+  the reviewer proved it by mutation, worth keeping as method).
+- **Reviewer-fold lesson worth distilling: mutation probes on negative tests.** test-reviewer ran
+  wrong-implementation mutants against my suite and found the array-framing hole no green run
+  could show; "negative tests green by construction" prove nothing until a mutant fails them.
+- **LIVE STATE at compaction (self-contained):** PR #64 OPEN (three concerns: policy record,
+  dedup, gate) — drive to green-and-clean then MERGE (condition-based policy, owner-reaffirmed
+  2026-08-26, no owner invocation). Q-016 (blind boundaries gate fork: restructure conversion
+  layer vs widen ADR-036 matrix; evidence in lib/eslint.config.ts comment + open-questions) —
+  decision card being put to the owner. OCE skill landing: route = fresh cloud session against
+  EngraphCode/oak-open-curriculum-ecosystem in the shared environment (owner directed "tools used
+  properly"); the 8 local sync commits on this container's `chore/dependency-currency-skill`
+  branch are SUPERSEDED — content byte-conserved in castr main's canonical skill — and die with
+  the container by design. The `--no-verify` ask is WITHDRAWN (wrong-seat friction, dissolved). Child session
+  `session_016cbKgzjuD5MmLEnYMGjH5N` (tag `cross-pollination:castr-to-oce`) is landing the OCE
+  copy; check-in trigger `trig_01Sr3xP1q9h7w6Ss7QYwyjyH` (hourly re-arm) drives PR #64 and
+  relays the child's state; this session is subscribed to PR #64 events.
