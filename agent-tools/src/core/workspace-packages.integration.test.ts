@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { discoverWorkspaceManifestPaths, type WorkspaceDiscoveryIo } from './workspace-packages.js';
+import {
+  discoverWorkspaceManifestPaths,
+  discoverWorkspaceTsconfigPaths,
+  type WorkspaceDiscoveryIo,
+} from './workspace-packages.js';
 
 function enoent(): never {
   const error: NodeJS.ErrnoException = new Error('ENOENT');
@@ -62,5 +66,74 @@ describe('discoverWorkspaceManifestPaths', () => {
     });
 
     await expect(discoverWorkspaceManifestPaths('/repo', io)).rejects.toThrow('EACCES');
+  });
+});
+
+describe('discoverWorkspaceTsconfigPaths', () => {
+  function dirEntry(name: string, isDir: boolean): { name: string; isDirectory: () => boolean } {
+    return { name, isDirectory: () => isDir };
+  }
+
+  it('lists tsconfig*.json in the root and each workspace directory', async () => {
+    const listings = new Map<string, readonly { name: string; isDirectory: () => boolean }[]>([
+      ['/repo', [dirEntry('tsconfig.json', false), dirEntry('tsconfig.lint.json', false)]],
+      [
+        '/repo/lib',
+        [
+          dirEntry('tsconfig.json', false),
+          dirEntry('tsconfig.build.json', false),
+          dirEntry('src', true),
+        ],
+      ],
+    ]);
+    const io = fakeIo({
+      readdir: async (dirPath) => {
+        const listing = listings.get(dirPath);
+        if (listing === undefined) {
+          return enoent();
+        }
+        return listing;
+      },
+    });
+
+    await expect(
+      discoverWorkspaceTsconfigPaths('/repo', ['package.json', 'lib/package.json'], io),
+    ).resolves.toStrictEqual([
+      'tsconfig.json',
+      'tsconfig.lint.json',
+      'lib/tsconfig.json',
+      'lib/tsconfig.build.json',
+    ]);
+  });
+
+  it('excludes files that merely contain but do not start with tsconfig, and directories', async () => {
+    const io = fakeIo({
+      readdir: async () => [
+        dirEntry('tsconfig.json', false),
+        dirEntry('not-tsconfig.json', false),
+        dirEntry('tsconfig.json.bak', false),
+        dirEntry('tsconfig.json', true),
+      ],
+    });
+
+    await expect(
+      discoverWorkspaceTsconfigPaths('/repo', ['package.json'], io),
+    ).resolves.toStrictEqual(['tsconfig.json']);
+  });
+
+  it('skips a workspace directory that cannot be listed (ENOENT) but rethrows other errors', async () => {
+    const io = fakeIo({});
+    await expect(
+      discoverWorkspaceTsconfigPaths('/repo', ['package.json'], io),
+    ).resolves.toStrictEqual([]);
+
+    const failing = fakeIo({
+      readdir: async () => {
+        throw new Error('EACCES');
+      },
+    });
+    await expect(
+      discoverWorkspaceTsconfigPaths('/repo', ['package.json'], failing),
+    ).rejects.toThrow('EACCES');
   });
 });

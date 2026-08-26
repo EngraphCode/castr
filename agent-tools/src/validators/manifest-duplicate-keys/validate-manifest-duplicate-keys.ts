@@ -3,7 +3,10 @@ import path from 'node:path';
 
 import { isErrnoCode } from '../../core/errno.js';
 import { resolveRepoRoot } from '../../core/repo-root.js';
-import { discoverWorkspaceManifestPaths } from '../../core/workspace-packages.js';
+import {
+  discoverWorkspaceManifestPaths,
+  discoverWorkspaceTsconfigPaths,
+} from '../../core/workspace-packages.js';
 import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
 
 import {
@@ -20,8 +23,11 @@ import {
  * workspace manifests).
  *
  * Scanned estate: the root `package.json`, every workspace `package.json`
- * declared in `pnpm-workspace.yaml`, and `turbo.json`. A missing file is
- * skipped (the estate list is discovery, not existence assertion).
+ * declared in `pnpm-workspace.yaml`, every `tsconfig*.json` in those same
+ * directories (TypeScript also resolves duplicated compiler options
+ * last-wins — a duplicated `"strict"` silently disables strict checking),
+ * and the extra load-bearing files below. A missing file is skipped (the
+ * estate list is discovery, not existence assertion).
  *
  * Wired into root `repo-validators:check` AND invoked directly by source path
  * from `.husky/pre-commit`, `.husky/pre-push`, and the CI static-checks job —
@@ -69,7 +75,8 @@ function formatViolations(files: readonly FileViolations[]): string {
 
 async function main(): Promise<void> {
   const manifestPaths = await discoverWorkspaceManifestPaths(repoRoot);
-  const scanPaths = [...manifestPaths, ...EXTRA_SCANNED_FILES];
+  const tsconfigPaths = await discoverWorkspaceTsconfigPaths(repoRoot, manifestPaths);
+  const scanPaths = [...manifestPaths, ...tsconfigPaths, ...EXTRA_SCANNED_FILES];
 
   const failures: FileViolations[] = [];
   let scanned = 0;

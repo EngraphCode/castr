@@ -87,6 +87,52 @@ const REAL_IO: WorkspaceDiscoveryIo = {
   readdir: (dirPath) => fs.readdir(dirPath, { withFileTypes: true }),
 };
 
+/**
+ * Resolve the repo-relative `tsconfig*.json` paths across the workspace
+ * estate: every file whose basename starts with `tsconfig` and ends with
+ * `.json`, in the root and in each workspace package directory (derived from
+ * the manifest paths). TypeScript resolves duplicated compiler options
+ * last-wins just like `JSON.parse` — a duplicated `"strict"` can silently
+ * disable strict checking while every gate stays green — so these configs
+ * are part of the duplicate-key gate's estate. A directory that cannot be
+ * listed (ENOENT) contributes nothing; other listing failures rethrow.
+ *
+ * @param repoRoot - Absolute path of the repository root.
+ * @param manifestPaths - Repo-relative `package.json` paths (root first), as
+ *   returned by {@link discoverWorkspaceManifestPaths}.
+ * @param io - IO seam; defaults to real filesystem access.
+ * @returns Repo-relative tsconfig paths in workspace order, then file order.
+ */
+export async function discoverWorkspaceTsconfigPaths(
+  repoRoot: string,
+  manifestPaths: readonly string[],
+  io: WorkspaceDiscoveryIo = REAL_IO,
+): Promise<readonly string[]> {
+  const tsconfigPaths: string[] = [];
+  for (const manifestPath of manifestPaths) {
+    const dir = path.dirname(manifestPath);
+    let dirEntries: readonly { name: string; isDirectory: () => boolean }[];
+    try {
+      dirEntries = await io.readdir(path.join(repoRoot, dir));
+    } catch (error) {
+      if (isErrnoCode(error, 'ENOENT')) {
+        continue;
+      }
+      throw error;
+    }
+    for (const dirEntry of dirEntries) {
+      if (
+        !dirEntry.isDirectory() &&
+        dirEntry.name.startsWith('tsconfig') &&
+        dirEntry.name.endsWith('.json')
+      ) {
+        tsconfigPaths.push(dir === '.' ? dirEntry.name : `${dir}/${dirEntry.name}`);
+      }
+    }
+  }
+  return tsconfigPaths;
+}
+
 export async function discoverWorkspaceManifestPaths(
   repoRoot: string,
   io: WorkspaceDiscoveryIo = REAL_IO,
