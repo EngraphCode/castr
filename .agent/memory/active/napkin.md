@@ -1371,3 +1371,39 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   (reword — the guard reads the whole command line, message text included).
 - **Walk state unchanged by all of this:** replacement trigger poke-only; attended
   first live firing (receipt gate + honesty probe) and the enable remain owner-held.
+
+## 2026-08-26 — Smith stirs Pewter (01YHWJ) — LANE CLOSEOUT (supersedes prior LIVE STATE blocks)
+
+<!-- fitness exceeded by ~870 lines; needs consolidation -->
+
+- **Dependency-currency lane COMPLETE.** PR #64 MERGED to main at `SHA: 57ef2192` (15:03Z),
+  condition-based merge executed by the driving agent (all 14 checks green on `SHA: 4105ba35`,
+  mergeStateStatus clean, 24/24 review threads verified-real → fixed → resolved with
+  evidence). Subscription removed on merge.
+- **Final review-drive facts:** the duplicate-key gate ended at 37 scanned files —
+  workspace manifests, tsconfig*/tsdoc.json per workspace, blocking tool configs
+  (markdownlint ×2, prettier), collaboration-state schemas, executive substrate
+  contract manifest+schema, and the nine runtime-loaded OpenAPI compliance schemas —
+  every estate widening proven firing on a planted duplicate and restored byte-exact.
+  Codex's serial estate findings all shared one shape: "a JSON surface some gate
+  JSON.parse-loads is not scanned"; the cure each time was DISCOVERY (list a directory)
+  over hardcoding.
+- **OCE landing CONFIRMED (verified firsthand against the PRs, not just the child's
+  report):** EngraphCode/oak-open-curriculum-ecosystem PR #21 (skill bring; canonical
+  byte-verbatim from castr main `SHA: 3066b3f`; head `SHA: 97e1cd03`) shows
+  merged=true, merged_at 2026-08-26T16:03:43Z; PR #22 (browser-tests budget cure it
+  depended on; head `SHA: 0850976e`) shows merged=true, merged_at 15:43:46Z — both
+  read directly via the GitHub API from this session. The reusable
+  dependency-currency skill now lives in both estates. Disposition detail: PR #21's
+  five Codex findings were VERIFIED but not fixed in that landing — the child routed
+  them to a follow-bug plan node in OCE for the next cross-pollination window, so
+  they remain live OCE follow-ups. "Complete" here scopes to THIS lane's landing
+  task (skill authored + landed in both estates), not to those routed OCE items.
+- **Nothing in flight.** No armed triggers remain for this lane after this closeout
+  lands; PR #64 and OCE PRs are merged; Q-016 decision card remains the one open
+  owner item (evidence in lib/eslint.config.ts + open-questions.md).
+- **Owner correction (2026-08-26, this closeout PR): check `mergeable_state` on every
+  event wake — I missed PR #66 going `dirty` when main moved (PR #65's napkin append)
+  and kept reporting "waiting on CI". Mergeable is a necessary prerequisite, not a
+  merge decision; read it with the event-driven state fetch, never by polling. Cured
+  with a semantic napkin union (both tail appends kept, two-parent merge `SHA: de2c77c`).
