@@ -1339,6 +1339,8 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 
 ## 2026-08-26 — Smith stirs Pewter (01YHWJ) — LANE CLOSEOUT (supersedes prior LIVE STATE blocks)
 
+<!-- fitness exceeded by ~870 lines; needs consolidation -->
+
 - **Dependency-currency lane COMPLETE.** PR #64 MERGED to main at `SHA: 57ef2192` (15:03Z),
   condition-based merge executed by the driving agent (all 14 checks green on `SHA: 4105ba35`,
   mergeStateStatus clean, 24/24 review threads verified-real → fixed → resolved with
