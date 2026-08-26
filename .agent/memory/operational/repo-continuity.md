@@ -26,7 +26,7 @@ Practice / agentic-engineering framework / agent-tools / skill+rule+subagent+hoo
 definitions **and** fix castr's known issues — the same goal, not competing
 priorities. **The transplant branch merged to `main` in PR #3 (`5529436`,
 2026-07-03); work now proceeds on FEATURE BRANCHES off `main`, one PR per slice,
-merges owner-invoked** (see §Repo-Wide Invariants). Nothing is parked; the owner
+merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (see §Repo-Wide Invariants). Nothing is parked; the owner
 names the next slice.
 
 This block is a pointer, not a second narrative. The authoritative homes:
@@ -520,7 +520,7 @@ D1/single-TS-override decision is now
 Continuity invariants (the non-negotiables a resuming agent must hold):
 
 - **Branching model (owner, 2026-07-03): feature branches off `main`, one PR per
-  slice, merges owner-invoked.** The 2026-06→07 single-branch working mode was a
+  slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation).** The 2026-06→07 single-branch working mode was a
   CIRCUMSTANCE of the transplant era, never an invariant (owner: _"one branch was
   never an invariant, we just happened to be working off main to start with, now
   we use feature branches"_). It ended when PR #3 merged (`5529436`, 2026-07-03).

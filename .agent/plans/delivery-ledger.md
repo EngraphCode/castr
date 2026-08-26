@@ -7,7 +7,7 @@ delivered). This ledger is the **single home (DRY)** for delivery state. Other s
 session-continuation, trackers) point here and never duplicate the table.
 
 > **🔀 BRANCHING MODEL — CURRENT (owner, 2026-07-03): feature branches off `main`, one PR per
-> slice, merges owner-invoked.** PR #3 merged the transplant branch to `main` (`5529436`,
+> slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation).** PR #3 merged the transplant branch to `main` (`5529436`,
 > 2026-07-03) and `feat/transplant-engraph-practice` is deleted on origin. The single-branch
 > working mode below was a circumstance of the transplant era, never an invariant (owner
 > wording recorded in `repo-continuity.md §Repo-Wide Invariants`, the authoritative home).

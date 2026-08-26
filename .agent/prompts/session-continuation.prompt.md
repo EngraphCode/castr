@@ -42,7 +42,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 >
 > **🔀 CURRENT TRUTH (2026-07-03) — supersedes every branch-model statement in this file.**
 > **The transplant branch MERGED to `main` in PR #3 (`5529436`, 2026-07-03) and is deleted on origin.** The
-> branching model is now **feature branches off `main`, one PR per slice, merges owner-invoked** — the
+> branching model is now **feature branches off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** — the
 > single-branch mode referenced throughout the dated banners below was a circumstance of the transplant era,
 > never an invariant (authoritative statement: `repo-continuity.md §Repo-Wide Invariants`). Any instruction
 > below to re-verify `origin/feat/transplant-engraph-practice` is dead — that ref no longer exists. The live

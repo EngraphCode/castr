@@ -46,7 +46,7 @@ updates `last_session` rather than adding a row.
 
 A lane is an independently pickup-able arc — its own state, branch, and pickup
 trigger, active OR deferred. **Branching model since 2026-07-03: each lane takes
-its own FEATURE BRANCH off `main`, one PR per slice, merges owner-invoked** (PR
+its own FEATURE BRANCH off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (PR
 #3 `5529436` merged the transplant branch and closed the single-branch era; that
 mode was circumstance, never invariant — authoritative statement in
 `repo-continuity.md §Repo-Wide Invariants`). Branch references in the dated lane
