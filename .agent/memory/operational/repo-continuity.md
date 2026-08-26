@@ -446,7 +446,7 @@ artefacts it homed (memory layout, substrate contract, patterns import, sub-agen
 
 > **CURRENT TRUTH (2026-06-21): the active workstream is the [Oak Parity-or-Better Program](../../plans/transplant/oak-parity-program.md), and transplant Phase 9 is its CLOSURE GATE, not the active slice.** Tranche 1 ✅ (C1/C2/C6/C4/C5/C7/C8) and Tranche 2 ✅ (A2+A3 hook-policy concept/reappraisal unit — `511326f`/`abe580f`/`31caf78`, `pnpm check:ci` green) are COMPLETE. **Next safe step (2026-06-21) = the dependency-currency lane, IN PROGRESS — emission tier underway.** Dev-tooling + low-risk + the two highest-risk emission/IR cycles DONE: DC0 (`f761e12`), DC0b sonarjs (`dcad36b`), DC6 @types/node (`a731765`), DC7 commitlint (`0fd4a4c`), DC8 degit (`bb653c9`), **DC1 ts-morph 27→28 crown jewel (`c8c0a9a`, emission proven byte-identical), DC2 @scalar IR-input trio (`43419d0`, IR-fidelity preserved + dangling-ref fail-fast locked in).** Also landed: @types/node pinned to ^24 (Q-006 → ADR-049, `00750da`) + stale tsconfig include fixed (`43d7f8a`). **Next = DC3 prettier 3.8.3→3.8.4 (emission-formatter; baseline-capture + emitted diff), then DC4 ink (agent-tools runtime), DC5 commander (lib CLI), then lane-close → graduate dependency-currency-discipline to a practice-core pattern-PDR.** Controlling plan [`plans/current/complete/dependency-currency.md`](../../plans/current/complete/dependency-currency.md) §Progress (live) is authoritative. **Tranche 3 (A4 statusline → A1 ArcAngel, full unit) follows the dependency-currency lane.** The decision ledger is clean (Q-001…Q-006 all resolved). Finding routed (own slice): the repo-local `type-assertion-policy` ESLint rule is unregistered in `lib/eslint.config.ts` though `no-type-shortcuts.md` claims structural enforcement. The plan `todos`/§Sequencing and the [thread record](threads/practice-transplant.next-session.md) lanes are authoritative; the Phase-6/7/8/9 prose below is transplant-phase history, superseded on "what is the active slice" by this line.
 
-**Owner steer (2026-06-19): finish the FULL Practice transplant first; not in a rush to merge.** _"Bring over the full
+**Owner steer (2026-06-19): finish the FULL Practice transplant first; ~~not in a rush to merge~~ (superseded 2026-08-26: green and clean merges, never held for an owner call).** _"Bring over the full
 Practice — the Practice, agent tools, agentic frameworks, processes and protocols. Leave the remediation and focus on
 finishing the transplant."_ → **Phase 7 ✅ COMPLETE + tagged `transplant/phase-7` (2026-06-20).**
 
@@ -468,7 +468,8 @@ branches (2026-06-20, pushed to origin)** — D3 `c7f819e`, D2 `41b24f8`, D4 `0a
 (owner strategy: semantic-release vs changesets) remains. The
 deep-review **remediation backlog 02–07 takes a named position AFTER the transplant** (not parked —
 `no-manufactured-permission` holds; an undefined "later" is never). Delivery (the merge act + push of the lane branches)
-is **deprioritised** ("not in a rush to merge"). This **supersedes the roadmap's
+~~is **deprioritised** ("not in a rush to merge")~~ (superseded 2026-08-26: green and clean merges, never held
+for an owner call). This **supersedes the roadmap's
 "(1) remediation; (2) transplant" plan-of-record order** for the current run; the roadmap + primary-plan sequence notes
 are to be reconciled to this within the Phase-7 commit.
 

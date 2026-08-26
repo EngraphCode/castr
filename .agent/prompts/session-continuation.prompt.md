@@ -415,7 +415,7 @@ maintains → a Phase-9 back-flow improvement; then flip portability/subagents g
   (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
   channels✅). This is **one deep enhancement**. **Owner re-order (2026-06-19): finish the FULL Practice transplant
   first** (Phases 7–9 + arc D2/D4 parity), **then** remediation backlog 02–07 (named position after, not parked —
-  `no-manufactured-permission` holds), then the feature slice; "not in a rush to merge" (delivery deprioritised). All
+  `no-manufactured-permission` holds), then the feature slice; ~~"not in a rush to merge" (delivery deprioritised)~~ (superseded 2026-08-26: green and clean merges, never held for an owner call). All
   still required; a fresh reproduced product regression still pre-empts the sequence. **Oak is read live from `main`, no pin** (owner, 2026-06-26; superseded the 2026-06-17 `ad359a4f` pin).
   **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
   sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the
