@@ -1339,8 +1339,8 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 
 ## 2026-08-26 — Smith stirs Pewter (01YHWJ) — LANE CLOSEOUT (supersedes prior LIVE STATE blocks)
 
-- **Dependency-currency lane COMPLETE.** PR #64 MERGED to main at `57ef2192` (15:03Z),
-  condition-based merge executed by the driving agent (all 14 checks green on `4105ba35`,
+- **Dependency-currency lane COMPLETE.** PR #64 MERGED to main at `SHA: 57ef2192` (15:03Z),
+  condition-based merge executed by the driving agent (all 14 checks green on `SHA: 4105ba35`,
   mergeStateStatus clean, 24/24 review threads verified-real → fixed → resolved with
   evidence). Subscription removed on merge.
 - **Final review-drive facts:** the duplicate-key gate ended at 37 scanned files —
@@ -1351,9 +1351,12 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   Codex's serial estate findings all shared one shape: "a JSON surface some gate
   JSON.parse-loads is not scanned"; the cure each time was DISCOVERY (list a directory)
   over hardcoding.
-- **OCE landing CONFIRMED:** child session 016cbK… merged PR #21 & #22 in
-  EngraphCode/oak-open-curriculum-ecosystem (16:11Z status: "PR #21 & #22 merged;
-  follow-bug plan node added; all Codex findings verified") — the reusable
+- **OCE landing CONFIRMED (verified firsthand against the PRs, not just the child's
+  report):** EngraphCode/oak-open-curriculum-ecosystem PR #21 (skill bring; canonical
+  byte-verbatim from castr main `SHA: 3066b3f`; head `SHA: 97e1cd03`) shows
+  merged=true, merged_at 2026-08-26T16:03:43Z; PR #22 (browser-tests budget cure it
+  depended on; head `SHA: 0850976e`) shows merged=true, merged_at 15:43:46Z — both
+  read directly via the GitHub API from this session. The reusable
   dependency-currency skill now lives in both estates. Disposition detail: PR #21's
   five Codex findings were VERIFIED but not fixed in that landing — the child routed
   them to a follow-bug plan node in OCE for the next cross-pollination window, so
