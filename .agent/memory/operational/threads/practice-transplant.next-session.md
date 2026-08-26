@@ -51,7 +51,7 @@ updates `last_session` rather than adding a row.
 
 A lane is an independently pickup-able arc — its own state, branch, and pickup
 trigger, active OR deferred. **Branching model since 2026-07-03: each lane takes
-its own FEATURE BRANCH off `main`, one PR per slice, merges owner-invoked** (PR
+its own FEATURE BRANCH off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (PR
 #3 `5529436` merged the transplant branch and closed the single-branch era; that
 mode was circumstance, never invariant — authoritative statement in
 `repo-continuity.md §Repo-Wide Invariants`). Branch references in the dated lane
@@ -68,8 +68,10 @@ records below are that era's truthful history.
 > Still-separate parallel lanes (NOT Axis A): first-run friction-fix, hook-matcher precision, the LC1 fail-opens
 > hardening (dependency-currency CLOSED 2026-07-03 — see its lane below). Axis B = remediation 02–07 — a DEFINED
 > position after the Tier-1 spine per **Q-011, DECIDED 2026-06-28 (owner): Axis A first**; re-surface B for promotion
-> at Tier-1 close. Axis C = delivery — superseded 2026-07-03: continuous MERGE-READINESS is a standing agent duty and
-> the merge itself is owner-invoked (was "deprioritised"). The single live next-step pointer is `repo-continuity.md`
+> at Tier-1 close. Axis C = delivery — superseded 2026-07-03 and corrected 2026-08-26: continuous MERGE-READINESS is a
+> standing agent duty and merges are condition-based — green and clean merges (all CI passing on the current head, every
+> review thread properly resolved; owner ruling 2026-08-22, reaffirmed 2026-08-26 — the earlier "owner-invoked" phrasing
+> was never policy). The single live next-step pointer is `repo-continuity.md`
 > Next Safe Steps.
 
 ### Lane: Oak Parity-or-Better Program — STOPPED 2026-08-26 (was ACTIVE, DOMINANT; started 2026-06-20)
@@ -460,13 +462,15 @@ records below are that era's truthful history.
   fold into the friction-fix tranche; new dependency-currency lane (castr is current). castr is a **bidirectional**
   Practice node — improvements flow back to Oak (user-memory `castr-parity-or-better-with-oak`).
 - ~~Single branch `feat/transplant-engraph-practice`~~ **superseded 2026-07-03: feature
-  branches off `main`, one PR per slice, owner-invoked merges** (see the lanes header above);
+  branches off `main`, one PR per slice, condition-based merges — green and clean merges
+  (owner ruling 2026-08-22, reaffirmed 2026-08-26)** (see the lanes header above);
   roll-forward only stands; the transplant-phase atomic-commit + `transplant/phase-N` tag
   discipline is complete history (phases 0–8 tagged; the branch merged in PR #3). (Full
   invariant set: [`../repo-continuity.md §Repo-Wide Invariants`](../repo-continuity.md#repo-wide-invariants--non-goals).)
-- Delivery: D3 before merge + split reviewable PRs (owner, Q-001). Delivery
+- Delivery: D3 before merge + split reviewable PRs (owner, Q-001). ~~Delivery
   deprioritised ("not in a rush to merge") — commits land locally, push at the
-  owner's call.
+  owner's call.~~ Superseded 2026-08-26: work is pushed and PRs merged when
+  green and clean; delivery is never held for an owner call.
 - Oak is read **live from `main`, no pin** — owner, 2026-06-26 (supersedes the
   2026-06-20 `practice/castr-pin` rebased-branch model; the branch is **deleted** —
   controlled-sync points caused more issues than they solved). Read via

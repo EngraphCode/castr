@@ -118,6 +118,11 @@ jobs:
         run: pnpm markdownlint-check:root
       - name: Validate portability
         run: pnpm portability:check
+      # Direct source-path invocation BEFORE the manifest-defined aggregate:
+      # the duplicate-key gate scans the manifests, so a duplicated script key
+      # (last-wins) there could otherwise disable the gate that catches it.
+      - name: Check manifests for duplicate keys (direct invocation)
+        run: pnpm exec tsx agent-tools/src/validators/manifest-duplicate-keys/validate-manifest-duplicate-keys.ts
       - name: Run workspace-owned repo validators
         run: pnpm repo-validators:check
 
