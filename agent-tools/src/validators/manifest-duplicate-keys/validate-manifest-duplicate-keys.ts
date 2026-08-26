@@ -66,18 +66,23 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
 ];
 
 /**
- * Directories whose `*.schema.json` members are runtime-loaded with
- * `JSON.parse` and act as validation gates themselves (the collaboration
- * state schemas) — a duplicated `required`/`additionalProperties` member
- * would silently weaken the gate they define. Discovered by listing so a
- * newly added schema is scanned without touching this validator; a missing
+ * Directories whose `*.schema.json` / `*.manifest.json` members are
+ * runtime-loaded with `JSON.parse` and act as validation gates or contract
+ * inventories themselves (the collaboration-state schemas; the executive
+ * substrate contract manifest + schema read by `practice-substrate`
+ * `live-json.ts`) — a duplicated `required`/`properties`/`discovery` member
+ * would silently weaken the gate or drop roots. Discovered by listing so a
+ * newly added file is scanned without touching this validator; a missing
  * directory contributes nothing (estate discovery, not existence assertion).
  */
-const SCHEMA_DIRS: readonly string[] = ['agent-tools/src/collaboration-state/schemas'];
+const RUNTIME_JSON_DIRS: readonly string[] = [
+  'agent-tools/src/collaboration-state/schemas',
+  '.agent/memory/executive',
+];
 
-async function discoverSchemaFiles(): Promise<readonly string[]> {
-  const schemaPaths: string[] = [];
-  for (const dir of SCHEMA_DIRS) {
+async function discoverRuntimeJsonFiles(): Promise<readonly string[]> {
+  const runtimePaths: string[] = [];
+  for (const dir of RUNTIME_JSON_DIRS) {
     let entries: readonly string[];
     try {
       entries = await fs.readdir(path.join(repoRoot, dir));
@@ -88,12 +93,12 @@ async function discoverSchemaFiles(): Promise<readonly string[]> {
       throw error;
     }
     for (const name of entries) {
-      if (name.endsWith('.schema.json')) {
-        schemaPaths.push(`${dir}/${name}`);
+      if (name.endsWith('.schema.json') || name.endsWith('.manifest.json')) {
+        runtimePaths.push(`${dir}/${name}`);
       }
     }
   }
-  return schemaPaths;
+  return runtimePaths;
 }
 
 interface FileViolations {
@@ -116,8 +121,13 @@ function formatViolations(files: readonly FileViolations[]): string {
 async function main(): Promise<void> {
   const manifestPaths = await discoverWorkspaceManifestPaths(repoRoot);
   const tsconfigPaths = await discoverWorkspaceTsconfigPaths(repoRoot, manifestPaths);
-  const schemaPaths = await discoverSchemaFiles();
-  const scanPaths = [...manifestPaths, ...tsconfigPaths, ...schemaPaths, ...EXTRA_SCANNED_FILES];
+  const runtimeJsonPaths = await discoverRuntimeJsonFiles();
+  const scanPaths = [
+    ...manifestPaths,
+    ...tsconfigPaths,
+    ...runtimeJsonPaths,
+    ...EXTRA_SCANNED_FILES,
+  ];
 
   const failures: FileViolations[] = [];
   let scanned = 0;
