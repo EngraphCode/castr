@@ -78,7 +78,7 @@ todos:
     status: pending
   - id: Q-21
     content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
-    status: pending
+    status: completed
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -89,10 +89,11 @@ in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accep
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (the Routine is armed — see
 the Q-01 evidence record). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
 completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
-Q-04 evidence record). Q-18..Q-21 appended
+Q-04 evidence record). Q-21 completed 2026-08-26 (PR #64 landed its
+deliverable; see the Q-21 row). Q-18..Q-21 appended
 2026-08-24 at owner word (loop-review decision cards). Eligible
 now: Q-05..Q-09, Q-13 (executes the B-11 RATIFY
-outcome), Q-14, Q-16, Q-17, Q-18, Q-20, Q-21; Q-10..Q-12, Q-15 (waits on Q-20), and
+outcome), Q-14, Q-16, Q-17, Q-18, Q-20; Q-10..Q-12, Q-15 (waits on Q-20), and
 Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
@@ -1000,18 +1001,23 @@ D-9 + F-R2-3 and the 2026-08-24 addendum; second owner decision card 2026-08-24.
 Gate: none (eligible immediately). Q-15 is ordered after this row by `depends_on`.
 
 **Q-21 — Merge-authority policy line in pr-lifecycle (D-10).** Surface: the merge
-step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose current text tells
+step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose text at review time
+(2026-08-24) told
 every seat "The merge itself is owner-invoked" — contradicting ADR-051 clause 3 for
 programme PRs today (the review's sharpest doctrine drift, D-10). Replace it with
 the general policy, per the owner's 2026-08-24 policy-not-carve-outs teaching:
 merge authority follows the PR's governing authority — where an accepted ADR sets
 condition-based unattended merge (ADR-051 clause 3, programme PRs), the conditions
-are the authority; elsewhere castr's standing posture applies and the owner invokes
-the merge. Non-goals: no other pr-lifecycle content (Q-13 and Q-19 own their
-elements); no change to ADR-051. Acceptance (`non-code`): the skill states the
-policy with both branches and cites the ADR; no unconditional owner-invoked claim
-remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
-owner decision card 2026-08-24. Gate: none (eligible immediately).
+are the authority; elsewhere castr's standing policy applies — condition-based,
+green and clean → the driving agent merges (owner ruling 2026-08-22, reaffirmed
+2026-08-26; this brief's original "the owner invokes the merge" branch was never
+policy — owner correction 2026-08-26). Non-goals: no other pr-lifecycle content
+(Q-13 and Q-19 own their elements); no change to ADR-051. Acceptance (`non-code`):
+the skill states the policy with both branches and cites the ADR; no unconditional
+owner-invoked claim remains; gates green. Source: loop-review D-10 and the
+2026-08-24 addendum; second owner decision card 2026-08-24. Gate: none. **COMPLETED 2026-08-26 (PR #64, `0896039`): pr-lifecycle Phase 7 now
+states the general policy with both branches and cites ADR-051; both adapter
+descriptions corrected; no unconditional owner-invoked claim remains.**
 
 ## Operating protocol
 
@@ -1111,7 +1117,7 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20, Q-21 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
+- **Eligible now**: Q-05..Q-09, Q-13, Q-14, Q-16, Q-17, Q-18, Q-20 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards).
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
 - **Beneficial**: none deferred beyond the gates above.

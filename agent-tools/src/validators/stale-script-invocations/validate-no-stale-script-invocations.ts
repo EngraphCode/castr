@@ -8,6 +8,7 @@ import {
   findStaleScriptInvocations,
   type StaleScriptInvocationFinding,
 } from './validate-no-stale-script-invocations-helpers.js';
+import { isErrnoCode } from '../../core/errno.js';
 
 /**
  * Standalone validator that walks authored repo surfaces (CI workflow YAML,
@@ -83,10 +84,6 @@ interface ScannableFile {
   readonly content: string;
 }
 
-function isEnoent(error: unknown): boolean {
-  return typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT';
-}
-
 async function discoverScannableFiles(): Promise<readonly ScannableFile[]> {
   const files: ScannableFile[] = [];
 
@@ -105,7 +102,7 @@ async function collectFiles(absoluteDir: string, accumulator: ScannableFile[]): 
   } catch (error) {
     // Surfaces may be optional (e.g. `.agent/research` exists in some
     // checkouts and not others). A missing directory is not a failure.
-    if (isEnoent(error)) {
+    if (isErrnoCode(error, 'ENOENT')) {
       return;
     }
     throw error;

@@ -2,11 +2,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { isErrnoCode } from '../../core/errno.js';
+import { discoverWorkspaceManifestPaths } from '../../core/workspace-packages.js';
 import { writeLine, writeErrorLine } from '../../core/terminal-output.js';
 
 import {
   findHollowScriptReferences,
-  parseWorkspacePackages,
   type HollowScriptReferenceFinding,
 } from './loop-closure-references-helpers.js';
 
@@ -74,10 +75,6 @@ interface ScannableFile {
   readonly content: string;
 }
 
-function isEnoent(error: unknown): boolean {
-  return typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT';
-}
-
 /**
  * Recompute the defined universe a `pnpm <name>` reference can resolve to: the
  * union of every `scripts` key across the root and workspace `package.json`
@@ -88,14 +85,14 @@ function isEnoent(error: unknown): boolean {
 async function collectDefinedNames(): Promise<ReadonlySet<string>> {
   const names = new Set<string>();
 
-  const packageJsonPaths = await discoverPackageJsonPaths();
+  const packageJsonPaths = await discoverWorkspaceManifestPaths(repoRoot);
   for (const relativePath of packageJsonPaths) {
     const absolutePath = path.join(repoRoot, relativePath);
     let raw: string;
     try {
       raw = await fs.readFile(absolutePath, 'utf8');
     } catch (error) {
-      if (isEnoent(error)) {
+      if (isErrnoCode(error, 'ENOENT')) {
         continue;
       }
       throw error;
@@ -138,7 +135,7 @@ async function addBinaries(binDir: string, names: Set<string>): Promise<void> {
   try {
     entries = await fs.readdir(binDir);
   } catch (error) {
-    if (isEnoent(error)) {
+    if (isErrnoCode(error, 'ENOENT')) {
       return;
     }
     throw error;
@@ -146,49 +143,6 @@ async function addBinaries(binDir: string, names: Set<string>): Promise<void> {
   for (const entry of entries) {
     names.add(entry);
   }
-}
-
-/**
- * Resolve the package.json paths to read: the root, plus each workspace
- * package declared in `pnpm-workspace.yaml`. Glob entries ending in `/*` are
- * expanded one directory deep; literal entries are read directly.
- */
-async function discoverPackageJsonPaths(): Promise<readonly string[]> {
-  const paths = new Set<string>(['package.json']);
-
-  let workspaceYaml: string;
-  try {
-    workspaceYaml = await fs.readFile(path.join(repoRoot, 'pnpm-workspace.yaml'), 'utf8');
-  } catch (error) {
-    if (isEnoent(error)) {
-      return [...paths];
-    }
-    throw error;
-  }
-
-  for (const entry of parseWorkspacePackages(workspaceYaml)) {
-    if (entry.endsWith('/*')) {
-      const parent = entry.slice(0, -2);
-      let dirEntries: readonly { name: string; isDirectory: () => boolean }[];
-      try {
-        dirEntries = await fs.readdir(path.join(repoRoot, parent), { withFileTypes: true });
-      } catch (error) {
-        if (isEnoent(error)) {
-          continue;
-        }
-        throw error;
-      }
-      for (const dirEntry of dirEntries) {
-        if (dirEntry.isDirectory()) {
-          paths.add(`${parent}/${dirEntry.name}/package.json`);
-        }
-      }
-    } else {
-      paths.add(`${entry}/package.json`);
-    }
-  }
-
-  return [...paths];
 }
 
 async function discoverScannableFiles(): Promise<readonly ScannableFile[]> {
@@ -204,7 +158,7 @@ async function collectFiles(absoluteDir: string, accumulator: ScannableFile[]): 
   try {
     entries = await fs.readdir(absoluteDir, { withFileTypes: true });
   } catch (error) {
-    if (isEnoent(error)) {
+    if (isErrnoCode(error, 'ENOENT')) {
       return;
     }
     throw error;

@@ -12,7 +12,7 @@
 
 **Status:** PAUSED — named position (was primary until 2026-08-22)
 **Created/Promoted:** 2026-06-05
-**Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges owner-invoked** (see the [`../delivery-ledger.md`](../../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
+**Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (see the [`../delivery-ledger.md`](../../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
 **Authoritative spec:** [`practice-alignment-brief.md`](../../practice-alignment-brief.md)
 **Operating manual (read in full):** PEEN field report `project-explorer-especially-names/.agent/reports/practice-integration-feedback.md`
 **Phase tracker:** [`../../transplant/README.md`](../../transplant/README.md)
@@ -49,7 +49,9 @@ intact, gates stay green, and provenance stays honest.
    **RE-ORDERED (owner, 2026-06-19): finish the FULL Practice transplant FIRST, then remediation.** New sequence:
    (1) this transplant Phases 7–9 + arc D2/D4 (Phase 7 in progress); (2) remediation backlog 02–07 — a **named
    position after the transplant** (still not parked; `no-manufactured-permission` holds); (3) the feature slice.
-   "Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) deprioritised. A fresh reproduced product
+   ~~"Not in a rush to merge" → delivery (D3-as-merge-gate + the merge act) deprioritised.~~ (Superseded
+   2026-08-26: merges are condition-based — green and clean → the driving agent merges; owner ruling 2026-08-22,
+   reaffirmed 2026-08-26 — delivery is never held for an owner call.) A fresh reproduced product
    regression still pre-empts the sequence.
 4. Sub-agent roster: **all ~13 generic experts** (incl. `mcp-expert` — castr emits MCP tools); drop the 6 UI/product experts.
 5. Tightenings: drop the **ground-truth search-eval triplet** + Oak **SonarQube/secrets infra** + ~2 UI-only patterns;

@@ -42,7 +42,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 >
 > **🔀 CURRENT TRUTH (2026-07-03) — supersedes every branch-model statement in this file.**
 > **The transplant branch MERGED to `main` in PR #3 (`5529436`, 2026-07-03) and is deleted on origin.** The
-> branching model is now **feature branches off `main`, one PR per slice, merges owner-invoked** — the
+> branching model is now **feature branches off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** — the
 > single-branch mode referenced throughout the dated banners below was a circumstance of the transplant era,
 > never an invariant (authoritative statement: `repo-continuity.md §Repo-Wide Invariants`). Any instruction
 > below to re-verify `origin/feat/transplant-engraph-practice` is dead — that ref no longer exists. The live
@@ -68,10 +68,10 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > [`../memory/operational/repo-continuity.md` Next Safe Steps](../memory/operational/repo-continuity.md#next-safe-steps)**;
 > read that for the current frontier. Governing disposition: bring everything unless utterly irrelevant. Three axes —
 > (A) transplant/parity (active, the gap-rescan backlog), (B) product-remediation `remediation/02–07` (dormant),
-> (C) delivery (deprioritised) — with the A/B/C sequencing an open owner decision (`open-questions.md` Q-011). The
+> (C) delivery (~~deprioritised~~ superseded 2026-08-26: green and clean merges, never held for an owner call) — with the A/B/C sequencing an open owner decision (`open-questions.md` Q-011). The
 > dependency-currency DC3–5 lane is a separate castr-internal lane, not Axis A. **`origin/feat` = `c86d4e1` as of
 > 2026-06-28 (the owner pushes between turns — re-verify live with `git rev-parse --short origin/feat/transplant-engraph-practice`;
-> only the newest local commit(s) are unpushed); push = owner's call.** Everything below is retained as dated history; trust this banner + repo-continuity for "what's next."
+> only the newest local commit(s) are unpushed); ~~push = owner's call~~ (superseded 2026-08-26: work is pushed and PRs merged when green and clean).** Everything below is retained as dated history; trust this banner + repo-continuity for "what's next."
 
 > **2026-06-20 SCOPE-EXPANSION UPDATE (supersedes everything below it on scope — read this first).** The owner expanded
 > the work from "finish the transplant (Phases 0–9)" to the **[Oak Parity-or-Better Program](../plans/transplant/oak-parity-program.md)**:
@@ -116,7 +116,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > D3/D2/D4 on dedicated branches (pushed): `feat/d3-ci-oak-standard`@`c7f819e` (CI to Oak standard: check:ci gate + 6
 > SHA-pinned actions + dead publish.yml removed), `feat/d2-node-version-single-source`@`41b24f8` (.nvmrc single-source;
 > off D3 — coordinate-dependent on ci.yml), `feat/d4-archive-provenance-backbring`@`0a75231` (archive+provenance
-> subsystems, `@oaknational/result`→fail-fast).** Not merged (split-PR merge to main = owner's next move).
+> subsystems, `@oaknational/result`→fail-fast).** Not merged ~~(split-PR merge to main = owner's next move)~~ (superseded 2026-08-26: merges are condition-based — green and clean → the driving agent merges; owner ruling 2026-08-22, reaffirmed 2026-08-26).
 > **First-run collaboration-setup friction harvest** (owner-directed "record all"): F1–F12 + N1–N12 in
 > `.agent/memory/active/napkin.md`; headline **F6/N10** (an armed Monitor watcher silently coalesces events during idle
 > windows → an agent goes dark despite a correct watcher; cure = catch-up-sweep on every wake, now team doctrine +
@@ -124,7 +124,7 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > sync); the **first-run friction-fix tranche** (the agent-tools/doctrine fixes the friction harvest names — high-leverage
 > before the next team session); the split-PR **delivery** (D3-gated). **No open owner decisions** — the ledger is clean
 > (Q-001…Q-005 resolved; see line above). **Owner re-order (2026-06-19): finish the FULL Practice transplant first;
-> remediation 02–07 = a named position AFTER (not parked); not in a rush to merge.** All "currently Phase 6/7" language
+> remediation 02–07 = a named position AFTER (not parked); ~~not in a rush to merge~~ (superseded 2026-08-26: green and clean merges, never held for an owner call).** All "currently Phase 6/7" language
 > below is stale → Phases 6/7/8 complete + tagged.
 
 This block is current truth only. Branch/delivery state lives in
@@ -415,7 +415,7 @@ maintains → a Phase-9 back-flow improvement; then flip portability/subagents g
   (reorder a✅…g✅ incl. substrate✅ + `active/patterns/`✅ + sub-agent roster✅ + state-schemas✅ + reviewer-routes✅ +
   channels✅). This is **one deep enhancement**. **Owner re-order (2026-06-19): finish the FULL Practice transplant
   first** (Phases 7–9 + arc D2/D4 parity), **then** remediation backlog 02–07 (named position after, not parked —
-  `no-manufactured-permission` holds), then the feature slice; "not in a rush to merge" (delivery deprioritised). All
+  `no-manufactured-permission` holds), then the feature slice; ~~"not in a rush to merge" (delivery deprioritised)~~ (superseded 2026-08-26: green and clean merges, never held for an owner call). All
   still required; a fresh reproduced product regression still pre-empts the sequence. **Oak is read live from `main`, no pin** (owner, 2026-06-26; superseded the 2026-06-17 `ad359a4f` pin).
   **Use the reviewer roster to assess the transplant work so far** (owner, 2026-06-17). **The roster is now 15 (was 6) —
   sub-agent roster ✅ landed 2026-06-19, commit `d5cd4eb`.** Firsthand grounding showed the driver was **completing the

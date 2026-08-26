@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  findHollowScriptReferences,
-  parseWorkspacePackages,
-  stripQuotes,
-} from './loop-closure-references-helpers.js';
+import { findHollowScriptReferences } from './loop-closure-references-helpers.js';
 
 /**
  * The resolve universe used across the cases below — a small explicit stand-in
@@ -356,45 +352,5 @@ describe('findHollowScriptReferences', () => {
       { path: 'a.md', line: 1, script: 'bogus-a', match: 'pnpm bogus-a' },
       { path: 'b.md', line: 1, script: 'bogus-b', match: 'pnpm bogus-b' },
     ]);
-  });
-});
-
-describe('parseWorkspacePackages', () => {
-  it('extracts block-sequence entries under `packages:`', () => {
-    const yaml = ['packages:', '  - lib', '  - agent-tools', '', 'overrides:', '  esbuild: 1'].join(
-      '\n',
-    );
-
-    expect(parseWorkspacePackages(yaml)).toStrictEqual(['lib', 'agent-tools']);
-  });
-
-  it('strips quotes and trailing inline comments from entries', () => {
-    const yaml = ['packages:', "  - 'packages/*'", '  - lib  # the core lib'].join('\n');
-
-    expect(parseWorkspacePackages(yaml)).toStrictEqual(['packages/*', 'lib']);
-  });
-
-  it('returns empty when there is no `packages:` block', () => {
-    expect(parseWorkspacePackages('overrides:\n  esbuild: 1\n')).toStrictEqual([]);
-  });
-
-  it('ends the block at the next non-indented line', () => {
-    const yaml = ['packages:', '  - lib', 'minimumReleaseAge: 1440', '  - not-a-package'].join(
-      '\n',
-    );
-
-    expect(parseWorkspacePackages(yaml)).toStrictEqual(['lib']);
-  });
-});
-
-describe('stripQuotes', () => {
-  it.each([
-    { input: "'lib'", expected: 'lib' },
-    { input: '"lib"', expected: 'lib' },
-    { input: 'lib', expected: 'lib' },
-    { input: "'packages/*'", expected: 'packages/*' },
-    { input: "mismatched'", expected: "mismatched'" },
-  ])('strips a matching surrounding quote pair: $input', ({ input, expected }) => {
-    expect(stripQuotes(input)).toBe(expected);
   });
 });

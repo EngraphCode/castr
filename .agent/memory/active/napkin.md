@@ -1194,3 +1194,90 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   `node agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-`, and a new
   Claude adapter also needs its `Skill(engraph-<name>)` row in `.claude/settings.json`
   (portability validator catches the miss).
+- **OWNER CORRECTION (2026-08-26, verbatim substance): "the merge is not mine, that is not
+  policy, it has never been policy. Policy is, if it is green and clean then merge it."**
+  I had declared PR #62 merge-ready and left the merge to the owner, citing the continuity
+  surfaces' "merges owner-invoked" branching-model line — but that phrasing was never the
+  policy; the 2026-08-22 condition-based ruling governs (all CI passing, every thread
+  properly resolved → merge, "any required user intervention is a problem"). Same
+  inherited-classification family as ever: a standing-doctrine line on five surfaces
+  outweighed the newer ruling in my read because repetition launders authority. Cure landed
+  same-turn: PR #62 merged (`3066b3f3`) the moment the correction arrived, and all five
+  surfaces carrying "merges owner-invoked" (delivery-ledger, transplant plan banner,
+  session-continuation prompt, thread record, repo-continuity ×2) now state the
+  condition-based policy with the ruling dates inline.
+
+## 2026-08-26 (owner stop + reflection + closeout corrections — Smith stirs Pewter / 01YHWJ, part 2)
+
+- **OWNER STOP (verbatim substance): "Stop. Step back. Step back further… I do want the skill
+  landed in OCE, I want all tools used properly, I want all issues fixed properly, strict
+  everywhere, all the time."** The metacognition/free-play/concept-exploration pass that followed
+  found one root under three corrections: fluent moves acted on before grounding the situational
+  fact. (a) Declare-merge-ready-and-wait was over-deference re-creating the owner touchpoint the
+  2026-08-22 ruling abolished — deference is one of the three smooth evasions, not a safe default.
+  (b) OCE-in-a-castr-container: the 3 base-red gate failures were a VERDICT (wrong seat), not a
+  fork needing --no-verify authority — the proper tool was a fresh session against the OCE repo in
+  the shared environment; the escalation manufactured a question. (c) The duplicate-key defect
+  passed three green surfaces at once (unread insert region, proof greps filtering the build step,
+  no gate on build warnings). Error rate clustered in the final review-round hour — pace collapsed
+  the small-single-purpose-command discipline and refired the blocked-compound-runs-nothing lesson
+  TWICE (msg file never written; the napkin lesson was in context and did not fire — active gates
+  beat vigilance, again).
+- **Closeout corrections landed on PR #64** (`claude/dependency-currency-lane-o4yzns` restarted
+  from merged main): `e552a6a6` merge-policy record corrected on five surfaces; `0ac41d6f`
+  manifest dedup; `248460a5` + `20c1be6b` the `validate-manifest-duplicate-keys` gate — raw-text
+  JSON scanner (escape-aware lexer, object-scope stack, JSONC line/block comments skipped outside
+  strings), estate = root + workspace manifests + turbo.json/jsonc + .claude/settings.json +
+  .agent/hooks/policy.json + skills-lock.json (7 scanned), root-manifest fail-fast, proven firing
+  on the exact escaped defect and restored byte-exact. Both reviewers dispatched; every finding
+  verified and folded: two forbidden `as` casts dissolved by lifting `isErrnoCode` to
+  `core/errno.ts` (4 private copies retired), the half-done consolidation completed
+  (loop-closure's byte-identical discover deleted → `core/workspace-packages.ts`, io seam
+  injected per testing-strategy + 4 unit tests), test-reviewer's mutation-probe gaps closed
+  (array-frame discriminators — a `]` popping the object frame escaped ALL ten original tests;
+  the reviewer proved it by mutation, worth keeping as method).
+- **Reviewer-fold lesson worth distilling: mutation probes on negative tests.** test-reviewer ran
+  wrong-implementation mutants against my suite and found the array-framing hole no green run
+  could show; "negative tests green by construction" prove nothing until a mutant fails them.
+- **LIVE STATE at compaction (self-contained):** PR #64 OPEN (three concerns: policy record,
+  dedup, gate) — drive to green-and-clean then MERGE (condition-based policy, owner-reaffirmed
+  2026-08-26, no owner invocation). Q-016 (blind boundaries gate fork: restructure conversion
+  layer vs widen ADR-036 matrix; evidence in lib/eslint.config.ts comment + open-questions) —
+  decision card being put to the owner. OCE skill landing: route = fresh cloud session against
+  EngraphCode/oak-open-curriculum-ecosystem in the shared environment (owner directed "tools used
+  properly"); the 8 local sync commits on this container's `chore/dependency-currency-skill`
+  branch are SUPERSEDED — content byte-conserved in castr main's canonical skill — and die with
+  the container by design. The `--no-verify` ask is WITHDRAWN (wrong-seat friction, dissolved). Child session
+  `session_016cbKgzjuD5MmLEnYMGjH5N` (tag `cross-pollination:castr-to-oce`) is landing the OCE
+  copy; check-in trigger `trig_01Sr3xP1q9h7w6Ss7QYwyjyH` (hourly re-arm) drives PR #64 and
+  relays the child's state; this session is subscribed to PR #64 events.
+
+## 2026-08-26 — Smith stirs Pewter (01YHWJ) — post-compaction review-drive wakes
+
+- **Mistake: ran an unfamiliar CLI with `--help` blind and it executed its WRITE default.**
+  `node …/skills-adapter-generate.js --help` — the tool has no help flag and wrote 78
+  unprefixed adapter directories (missing `--prefix=engraph-`). Cure applied within minutes:
+  removed all 78 accidental untracked dirs explicitly (`.agents/skills/*`, `.claude/skills/*`
+  unprefixed only), verified tree clean, then reran correctly with `--prefix=engraph-`.
+  Lesson: read the invocation site (package.json script) for the canonical flags BEFORE
+  running a repo tool; never probe an unknown CLI with `--help` when its default may mutate.
+- **Review-drive tally (PR #64, post-compaction): 14 threads, 14 verified-real, 14 fixed +
+  resolved.** Codex kept finding real instances of two escaped classes: (1) the duplicate-key
+  gate's own blind spots (JSONC key-colon trivia `b254234f`; self-bootstrap via manifest script
+  keys → direct hook/CI invocation `08960399`; tsconfig estate — TS resolves duplicate compiler
+  options last-wins, `deabaf51`), and (2) residual operative "owner-invoked merge" text beyond
+  the corrected banners (next-session/repo-continuity/skill `08960399`; proof-programme Q-21
+  brief + arming walk `9cc59c71`; delivery-ledger row `700f80de`). Pattern: a policy correction
+  is not done at the banner — grep the whole estate for the retired phrase and supersede every
+  OPERATIVE occurrence (dated history quotes stay verbatim).
+- **Test-category rule internalised:** injected-io seams are integration tests by
+  testing-strategy.md definition (unit = pure, NO mocks) — `workspace-packages` discovery tests
+  moved to `.integration.test.ts` (`b40eb614`).
+- **LIVE STATE (supersedes the block above):** PR #64 head `700f80de`, all 14 threads resolved,
+  CI running — merge when green and clean (condition-based policy). Q-21 COMPLETED in
+  proof-programme queue (this PR landed its deliverable). OCE child
+  `session_016cbKgzjuD5MmLEnYMGjH5N` BLOCKED on an owner-only AskUserQuestion: one `--no-verify`
+  push authorization (its evidence: showcase `identity-picker.spec.ts` failure proven base-red
+  at OCE origin/main and red on the fork's own CI; skill-bring commit ready locally, pre-commit
+  green). NOT grantable by this session — owner decision, standing in the web UI. Check-in
+  re-armed: `trig_012w1JK8mTqKobic2e2shHs3` fires 14:43Z.

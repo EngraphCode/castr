@@ -30,6 +30,17 @@ if ! pnpm secrets:scan; then
   exit 1
 fi
 
+# Direct source-path invocation, deliberately NOT via a package.json script:
+# this gate scans the manifests, so if it were reachable only through script
+# keys in those same manifests, a duplicate key (last-wins) could silently
+# disable the gate that would have caught it. This hook file is outside the
+# scanned estate, closing the bootstrap loop.
+echo "🗝️ Checking manifests for duplicate keys (direct invocation)..."
+if ! pnpm exec tsx agent-tools/src/validators/manifest-duplicate-keys/validate-manifest-duplicate-keys.ts; then
+  echo "❌ Duplicate manifest keys found!"
+  exit 1
+fi
+
 echo "🧭 Running workspace-owned repo validators..."
 if ! pnpm repo-validators:check; then
   echo "❌ Repo validator checks failed!"
