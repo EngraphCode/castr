@@ -1337,6 +1337,41 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   the owner's own anti-exception teaching) — restated positively; the guard's
   reappraise-don't-rephrase framing held.
 
+## 2026-08-26 (PR #63 review arc + merge under Actions outage — Breeze weaves Contrail / 0132gL, part 2)
+
+- **25 review rounds, ~50 findings, and the step-back predicate never fired — our own
+  proportionality worked-instance.** Post-landing, each Codex round found 1–3 genuinely
+  real defects; I absorbed every one because each was individually valid. The owner's
+  mid-arc instruction (metacognition + proportionality + pr-lifecycle) surfaced it:
+  individual validity is not sufficiency, the tally instrument (Q-19) was never built,
+  and rounds 16–25 were mostly one generator — this PR's supersessions making older
+  status prose elsewhere stale, an unbounded frontier. Boundary declared: settled-class
+  findings on untouched surfaces get replied-and-homed (CLASS P), only defects in the
+  PR's own text get fixed. First standing reject under it: the fold-the-rule ask that
+  contradicted the owner's verbatim QD-11 direction.
+- **Q-21 landed on main mid-drive (PR #64): merges are condition-based** — green and
+  clean → the driving agent merges; the "owner-invoked" phrasing was never policy.
+  Second semantic base merge of the day: five files concept-unioned (parent plan
+  frontmatter kept the walk's reorder minus completed Q-21; napkin disjoint-append;
+  repo-continuity carried BOTH sides' supersessions — walk/QD-2 ours, merge-policy
+  theirs).
+- **GitHub Actions outage measured (from ~15:03Z): run creation intermittent.** main's
+  merge push run #440 startup_failure; three branch pushes produced NO ci.yml runs (not
+  failed — never created) bracketing one successful creation at 15:23; CodeQL stuck
+  queued 30+ min. Diagnosis method that held: same file green post-merge + one added
+  benign step = not a workflow-file problem; selective non-creation is server-side.
+- **Owner ruling (2026-08-26, this arc): prove the full suite locally green, then merge
+  despite the outage, with a follow-on monitor on main's remote checks.** Executed:
+  `pnpm check:ci` exit 0 on the exact head `1f5ab129`, 55/55 threads resolved, base
+  current → PR #63 MERGED at `a537b1aa`; one-shot trigger armed to verify main's CI
+  and cure/report per the drive rules.
+- **Hook substring discipline, two new instances:** `git push -u` inside a compound
+  command that also contains `git add` trips the wildcard-staging block (split the
+  steps); the word "restore" in a COMMIT MESSAGE trips the worktree-destruction block
+  (reword — the guard reads the whole command line, message text included).
+- **Walk state unchanged by all of this:** replacement trigger poke-only; attended
+  first live firing (receipt gate + honesty probe) and the enable remain owner-held.
+
 ## 2026-08-26 — Smith stirs Pewter (01YHWJ) — LANE CLOSEOUT (supersedes prior LIVE STATE blocks)
 
 <!-- fitness exceeded by ~870 lines; needs consolidation -->
