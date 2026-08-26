@@ -1074,8 +1074,9 @@ clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the
 firing cannot reasonably classify as programme work is not merged unattended,
 whatever best efforts concluded about counting it.
 
-1. **Trigger**: the Q-01 Routine spawns a fresh cloud session per firing at the ADR-051
-   clause 2 cadence. Fresh sessions re-ground via `start-right-thorough` with the plan /
+1. **Trigger**: once enabled, the Routine spawns a fresh cloud session per firing at the
+   ADR-051 clause 2 cadence — as of 2026-08-26 the replacement trigger is **poke-only**,
+   with the attended first live firing and the enable owner-held (arming-walk record). Fresh sessions re-ground via `start-right-thorough` with the plan /
    metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
    thread records, napkin) is the memory between firings. Recreating the Routine itself —
    on this account or an unrelated one — follows
@@ -1146,8 +1147,10 @@ landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; the Routine
-  is armed per the Q-01 evidence record).
+- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; see the
+  Q-01 evidence record). Its "armed" state is superseded 2026-08-26: the replacement
+  trigger is poke-only, and the attended first live firing plus the enable are owner-held
+  (arming-walk record).
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
@@ -1209,9 +1212,11 @@ landing.
   C3, C4, H1–H4, M10 → owning tranches at the Q-12 split). It may reach `complete` only
   when every finding has a landed slice.
 - [`oak-practice-transplant.md`](../current/paused/oak-practice-transplant.md) moved to
-  `current/paused/` as a **named position**; its banner points at re-entry record QD-2 in
-  [`queued-decisions.md`](./queued-decisions.md) (trigger: programme completion, or earlier
-  on the owner's ask). PR #23's selective-delta disposition is Q-13.
+  `current/paused/` as a **named position** — a transition record **superseded 2026-08-26
+  (owner ruling QD-2: "The old effort is stopped, parity remains a goal, we will address
+  it in time")**: QD-2 is now a stop ruling, not a re-entry record, the plan has no
+  standing re-entry trigger, and parity's living frame is the 2026-08-24
+  bidirectional-equality directive. PR #23's selective-delta disposition is Q-13.
 
 `.agent/plans/active/` is now clear and stays clear for this programme's rows: the queue
 briefs are the per-slice plans (QD-6, programme-scoped) and plan-authoring acts land as
