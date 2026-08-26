@@ -65,6 +65,37 @@ const EXTRA_SCANNED_FILES: readonly string[] = [
   '.prettierrc.json',
 ];
 
+/**
+ * Directories whose `*.schema.json` members are runtime-loaded with
+ * `JSON.parse` and act as validation gates themselves (the collaboration
+ * state schemas) — a duplicated `required`/`additionalProperties` member
+ * would silently weaken the gate they define. Discovered by listing so a
+ * newly added schema is scanned without touching this validator; a missing
+ * directory contributes nothing (estate discovery, not existence assertion).
+ */
+const SCHEMA_DIRS: readonly string[] = ['agent-tools/src/collaboration-state/schemas'];
+
+async function discoverSchemaFiles(): Promise<readonly string[]> {
+  const schemaPaths: string[] = [];
+  for (const dir of SCHEMA_DIRS) {
+    let entries: readonly string[];
+    try {
+      entries = await fs.readdir(path.join(repoRoot, dir));
+    } catch (error) {
+      if (isErrnoCode(error, 'ENOENT')) {
+        continue;
+      }
+      throw error;
+    }
+    for (const name of entries) {
+      if (name.endsWith('.schema.json')) {
+        schemaPaths.push(`${dir}/${name}`);
+      }
+    }
+  }
+  return schemaPaths;
+}
+
 interface FileViolations {
   readonly relativePath: string;
   readonly violations: readonly DuplicateKeyViolation[];
@@ -85,7 +116,8 @@ function formatViolations(files: readonly FileViolations[]): string {
 async function main(): Promise<void> {
   const manifestPaths = await discoverWorkspaceManifestPaths(repoRoot);
   const tsconfigPaths = await discoverWorkspaceTsconfigPaths(repoRoot, manifestPaths);
-  const scanPaths = [...manifestPaths, ...tsconfigPaths, ...EXTRA_SCANNED_FILES];
+  const schemaPaths = await discoverSchemaFiles();
+  const scanPaths = [...manifestPaths, ...tsconfigPaths, ...schemaPaths, ...EXTRA_SCANNED_FILES];
 
   const failures: FileViolations[] = [];
   let scanned = 0;
