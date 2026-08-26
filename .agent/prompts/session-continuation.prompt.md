@@ -16,13 +16,17 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > is **Accepted** (amended: three firings per day), and **B-11 RATIFY supersedes the
 > roadmap's 2026-06-19 sequence with
 > [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md)'s
-> queue** (the transplant is paused as a named position — re-entry record QD-2). Q-01
-> (loop readiness) completed 2026-08-22: the autonomous loop Routine is **enabled** (three
-> firings/day, fresh cloud session per firing, `routine-prompt.md` as its brief) — the
-> queue now advances without a human in session, per ADR-051. Resuming sessions: read the
+> queue** (the transplant is STOPPED — owner ruling QD-2, 2026-08-26: "The old effort is
+> stopped, parity remains a goal, we will address it in time"; parity's living frame is
+> the 2026-08-24 bidirectional-equality directive). **Routine state (2026-08-26 arming
+> walk): the Routine is POKE-ONLY — no cron, it cannot self-fire, and NO background work
+> is advancing.** The original arming was retired, the trigger re-created 2026-08-25, and
+> the owner-attended walk (PR #60 + #63) completed everything up to the attended first
+> live firing, which HOLDS for the owner along with the enable (see the proof-programme
+> thread record's walk addendum — the authoritative hold). Resuming sessions: read the
 > parent plan's queue and operating protocol before acting, check for open programme PRs
-> and live claims (a firing may be mid-slice), and respect WIP = 1; every banner below
-> predates this contract.
+> and live claims, and treat WIP = 1 as the guideline ADR-051 (as amended 2026-08-26)
+> grades it; every banner below predates this contract.
 
 > **🔬 CURRENT TRUTH (2026-07-04, wide+deep review) — READ THIS FIRST.** The
 > [wide+deep review](../report/wide-deep-review-2026-07-04.md) re-proved **all five open
@@ -199,7 +203,12 @@ This block is current truth only. Branch/delivery state lives in
 > not demote remediation. Everything below remains true context (where it routes work to `fix/*` branches off
 > `docs/initial-deep-review`, the single-branch consolidation in §Current state supersedes it).
 
-### Practice Transplant — resume from the tracker (sequence position 2)
+### Practice Transplant — STOPPED (owner ruling QD-2, 2026-08-26; history below)
+
+> **Do not resume this effort.** "The old effort is stopped, parity remains a goal, we
+> will address it in time" (owner, 2026-08-26). The section below is historical record
+> of the transplant era; parity's living frame is the 2026-08-24 bidirectional-equality
+> directive.
 
 **Goal:** wholesale-transplant Oak's Practice estate into castr (localise `@oaknational`→`@engraph`), preserving castr's
 product doctrine/ADRs/report/remediation. **Branch:** `feat/transplant-engraph-practice` off `docs/initial-deep-review`
