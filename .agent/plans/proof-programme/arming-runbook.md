@@ -313,8 +313,13 @@ in the same family as the unproven self-disable probe above:
 - **The Routine's write binding is not probed before enabling.** The dry run is
   read-only by design, so nothing exercises this Routine's push/PR credential binding
   until the first live firing — which IS the credentialed write probe, with a loud,
-  bounded failure mode: a push or PR failure lands in the completion notification,
-  advances the ADR-051 failure counters, and WIP=1 caps exposure at one slice (the
+  bounded failure mode: a push or PR failure lands in the completion notification and
+  advances the ADR-051 failure counters, and the walk's own ordering supplies the hard
+  bound — the first live firing is owner-attended and the enable waits until it closes
+  (step 7's overlap guard), so the binding is probed under owner attention before any
+  unattended cadence exists; past that gate, three zero-progress firings self-disable
+  the loop (ADR-051 clause 6), and WIP=1 remains the strong best-efforts default
+  (QD-13) rather than a guaranteed cap (the
   Q-01 arc measured exactly this discovery path). Reopen condition: a measured SILENT
   write failure — one producing no failing notification — makes this a blocking gap;
   the platform-capability probe family (Q-20 re-scope → Q-15) is its queue home.
