@@ -1354,7 +1354,11 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **OCE landing CONFIRMED:** child session 016cbK… merged PR #21 & #22 in
   EngraphCode/oak-open-curriculum-ecosystem (16:11Z status: "PR #21 & #22 merged;
   follow-bug plan node added; all Codex findings verified") — the reusable
-  dependency-currency skill now lives in both estates. Lane task list fully complete.
+  dependency-currency skill now lives in both estates. Disposition detail: PR #21's
+  five Codex findings were VERIFIED but not fixed in that landing — the child routed
+  them to a follow-bug plan node in OCE for the next cross-pollination window, so
+  they remain live OCE follow-ups. "Complete" here scopes to THIS lane's landing
+  task (skill authored + landed in both estates), not to those routed OCE items.
 - **Nothing in flight.** No armed triggers remain for this lane after this closeout
   lands; PR #64 and OCE PRs are merged; Q-016 decision card remains the one open
   owner item (evidence in lib/eslint.config.ts + open-questions.md).
