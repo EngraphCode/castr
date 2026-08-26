@@ -114,8 +114,16 @@ Never silence a rule merely to get green, and never author
 When a bump forces a config migration (renamed options), migrate to the new
 vocabulary until the run is warning-free, then **prove the gate still
 fires**: plant a violation the gate must catch, watch it go red, restore
-byte-exact. A gate that never fired before the bump is a finding to route,
-not to fix silently inside the lane.
+byte-exact. If the probe reveals the gate was ALREADY dead before the bump,
+the pass may not close on a quiet note — a dead gate behind a green
+aggregate is the exact hole the never-disable-checks doctrine names. Either
+fix the blindness in-lane when the cure is mechanical and introduces no new
+decisions (wire it, re-probe red, keep it blocking), or escalate it as a
+dedicated, owner-visible remediation item (a decision-register entry or
+plan slice that OWNS restoring the signal, with the measured evidence, the
+one-line cure, and the decision that gates it) plus the same record at the
+gate's own config. Routing means that escalation shape — never just a
+mention in the lane's notes.
 
 ### 5. Audit to zero
 

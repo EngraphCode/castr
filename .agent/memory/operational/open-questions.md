@@ -89,6 +89,26 @@ items in the gap-rescan backlog §Owner-ruling additions. The permanent homes ar
 not a tombstone here. New questions are appended below by future drains and consolidation
 passes._
 
+### Q-016 — Un-blind the eslint-plugin-boundaries gate: restructure the conversion layer or widen its ADR-036 matrix?
+
+Captured: 2026-08-26 (dependency-currency reopening, PR #62; measured firsthand at
+boundaries v6 AND v7). The ADR-036 "strict architectural domain boundaries" gate has
+been blind since installation: the plugin reads the classic `import/resolver` settings
+key, castr sets only `import-x/resolver`, so ESM `.js`-suffixed imports never resolve
+and every intra-src dependency classifies as unknown. The one-line cure
+(`'import/resolver': { typescript: { alwaysTryTypes: true } }` in the boundaries
+settings block, documented in `lib/eslint.config.ts` beside the gap) un-blinds the
+gate — and the live gate then reports 3 real violations: `conversion/typescript`
+imports parsers + writers, `conversion/zod` imports parsers (value imports; the
+conversion layer composes parser+writer against its declared allow-matrix). The fork:
+restructure the conversion layer to honour the declared matrix, or amend ADR-036's
+matrix to name conversion as a legitimate composition layer. Owner-shaped because
+either answer amends the architecture doctrine; not cheaply answerable in a
+dependency lane. Owning artefact: `lib/eslint.config.ts` settings-block comment +
+the completed dependency-currency plan's routed-findings section. Status: OPEN —
+the resolver wiring lands with whichever answer is chosen, and the gate is not
+"enforced" until then.
+
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling,
 hook-matcher precision) are carried by
 [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md)

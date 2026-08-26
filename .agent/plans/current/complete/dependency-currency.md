@@ -35,15 +35,15 @@ todos:
     depends_on: [DC0]
   - id: DC3
     content: prettier 3.8.3->3.8.4 (RUNTIME emission formatter — lib dep, used by maybe-pretty.ts -> rendering/templating.ts; same package as the dev formatter). Patch, but touches emitted formatting → capture baseline + firsthand emitted-output diff.
-    status: pending
+    status: done # ac0363e (2026-07-03, landed at 3.9.4 — the interval moved): snapshot 154 + gen 27 oracle green = emitted output byte-identical; source-only reformat rode the commit. Refreshed to 3.9.6 in the 2026-08-26 reopening (4bb37ae1), same oracle.
     depends_on: [DC0]
   - id: DC4
     content: ink 7.0.5->7.1.0 (agent-tools RUNTIME TUI dep, not tooling). Proof = agent-tools test surface green (collaboration-tui e2e), NOT the lib snapshot oracle.
-    status: pending
+    status: done # ac0363e (2026-07-03): agent-tools suite (1167) + collaboration-TUI smoke exit 0. Refreshed to 7.1.1 in the 2026-08-26 reopening (7dbe2379, 1604 tests).
     depends_on: [DC0]
   - id: DC5
     content: commander 14->15 (lib runtime CLI option-parsing). Read breaking changes; check the main CLI + the collaboration-state CLI; capture --help baseline; help + parsing behaviour unchanged.
-    status: pending
+    status: done # ac0363e (2026-07-03): ESM-only fits the ESM-only lib; Node >=22.12 satisfied by engines 24.x; the --no-with-alias default-semantics change probed firsthand — identical behaviour.
     depends_on: [DC0]
   - id: DC6
     content: '@types/node 25->26 (types-only, no emission — confirmed firsthand 0/8 emitted .snap files reference any Node type name). type-check green across lib + agent-tools. Note: dev-only dep now 2 majors ahead of engines.node 24.x (pre-existing posture; cannot make castr USE a Node-26 API).'
