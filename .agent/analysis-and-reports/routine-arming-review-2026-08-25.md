@@ -73,7 +73,9 @@ the walk carries it as a real step plus an owner glance at the live ruleset.
   proposes adding the fixture repair as "Q-18", but Q-18 is now the landed
   predecessor-attestation row. Corrected in the register **before** the owner's
   step-5 re-read, so an approval cannot land on the wrong row.
-- Seven QD rows OPEN, confirmed: QD-1, QD-2, QD-4, QD-9, QD-10, QD-11, QD-12.
+- Seven QD rows OPEN at measurement: QD-1, QD-2, QD-4, QD-9, QD-10, QD-11,
+  QD-12. This review's refinements landing adds QD-13, so the walk's step-5
+  re-read (§6 step 7) covers eight rows.
 
 ## 3. Reflex challenges (the review scope's named mechanisms)
 
@@ -240,8 +242,10 @@ first firing) are both safe in either direction.
 6. **Restore the canonical prompt** via the owner's settings UI paste (the
    known-safe route; an API prompt-update on a source-attached trigger is
    unmeasured); byte-verify via `list_triggers`.
-7. **Step-5 re-read**: owner re-reads the seven OPEN QDs — QD-1/2/4/9/10/11/12 —
-   with QD-11 now carrying the corrected row-id note.
+7. **Step-5 re-read**: owner re-reads all eight OPEN QDs —
+   QD-1/2/4/9/10/11/12/13 — with QD-11 now carrying the corrected row-id note
+   and QD-13 (programme-PR operative test + ambiguity default) added by this
+   review's own refinements landing.
 8. **Attended first live firing (recommended)**: before any cron goes on, poke
    one live firing manually while the owner is present (no DRY-RUN payload);
    watch the first ~20 minutes — checkout, provisioning, claim, PR-open, first

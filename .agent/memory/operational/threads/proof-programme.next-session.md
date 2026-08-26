@@ -97,11 +97,15 @@ instruction + belt-and-braces delivery rule + disable METHOD
 (cron-removal, never delete/recreate) + attended-first-firing step in the
 arming runbook; disable-method line in the routine prompt; Operating
 protocol heading + programme-PR definition + Q-16 brief re-adjudication
-in the parent plan; QD-11 row-id correction. **Two owner decisions
+in the parent plan; QD-11 row-id correction. **Three owner decisions
 pending, carried in the report's §4 (W-1/W-2 dispositions) and §6:**
 (a) reorder the queue frontmatter so Q-18/Q-20/Q-21 precede Q-05 (nine
-eligible rows currently sit ahead of the safety instruments), and (b)
-adopt the attended first live firing before the cron goes on. One
+eligible rows currently sit ahead of the safety instruments), (b)
+adopt the attended first live firing before the cron goes on, and (c)
+QD-13 (programme-PR operative test + ambiguity default), added by the
+review's refinements — so the step-5 re-read covers EIGHT open rows
+(QD-1/2/4/9/10/11/12/13), superseding the seven-row list in the hold
+note above. One
 supersession within this note: the "needs no stored-prompt prepend" line
 above is DEMOTED by the review — payload delivery is documented but
 unmeasured, and the failure mode is an unintended first live firing, so
