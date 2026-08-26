@@ -929,7 +929,9 @@ finding (a trap-mutating Proxy fixture whose backing store is proven untouched; 
 green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
 2026-08-23). Gate: none (eligible immediately).
 
-**Q-18 — Predecessor-slot attestation (OP-1a).** Surface: `routine-prompt.md` — three
+**Q-18 — Predecessor-slot attestation (OP-1a; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface: `routine-prompt.md` — three
 touch points, the check and BOTH consumer halves: (1) step 3 (grounding) gains the
 check — derive each expected predecessor slot from your own spawn time minus whole
 cadence intervals (ADR-051 clause 2; 8 h — never from a platform trigger read, an
@@ -981,7 +983,9 @@ tally artefact means the entry contract is not working. Source: loop-review repo
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second
 owner decision card 2026-08-24. Gate: none beyond `depends_on: [Q-13]`.
 
-**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5).** Surface: this file's Q-15
+**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface: this file's Q-15
 row and brief text, plus the D-9 one-word correction in the Q-17 brief
 ("tenth-round" → "seventeenth-round" — three surfaces attest seventeen). Rewrite the
 Q-15 brief to post-outage reality: each cured environment gap becomes a VALIDITY
@@ -1018,7 +1022,9 @@ policy with both branches and cites the ADR; no unconditional owner-invoked clai
 remains; gates green. Source: loop-review D-10 and the 2026-08-24 addendum; second
 owner decision card 2026-08-24. Gate: none (eligible immediately).
 
-**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26).** Surface:
+**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26; serves the
+[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
+fires that node's promotion trigger).** Surface:
 `lib/scripts/generate-normalized-fixtures.ts` and the checked-in normalized fixture
 estate it owns (the paired `zod.ts` fixtures and `ir.json`/`ir2.json`). Goal,
 generator-first per the ruling ("obviously fix the generator") and
