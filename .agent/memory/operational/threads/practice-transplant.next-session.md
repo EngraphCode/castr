@@ -405,7 +405,7 @@ records below are that era's truthful history.
   OWN session, crown jewel), DC2 @scalar trio, DC3 prettier, DC4 ink, DC5 commander — none started; each needs
   baseline-capture + emitted/CLI diff + reviewers.** Two findings routed in the plan: stale tsconfig include
   (examples-fetcher.mts untype-checked) + @types/node dev-only 2-majors-ahead posture.
-- **Controlling plan: [`../../../plans/current/dependency-currency.md`](../../../plans/current/dependency-currency.md)** (§Progress (live) carries the cycle-by-cycle record)
+- **Controlling plan: [`../../../plans/current/complete/dependency-currency.md`](../../../plans/current/complete/dependency-currency.md)** (§Progress (live) carries the cycle-by-cycle record)
   — executable, 9 cycles (DC0 dev-tooling sweep → DC1 ts-morph → DC2 @scalar IR trio → DC3 prettier → DC4 ink →
   DC5 commander → DC6 @types/node → DC7 commitlint → DC8 degit). Authored + reviewed (type-reviewer + assumptions-expert,
   both verified firsthand) 2026-06-21; the type-risk table was CORRECTED by the review — `prettier` (runtime emission

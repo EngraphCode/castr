@@ -1,9 +1,9 @@
 ---
 title: Dependency Currency — type-safe, careful, one-major-at-a-time bumps
-status: current
-lane: current
+status: complete
+lane: complete
 created: 2026-06-21
-last_updated: 2026-06-21
+last_updated: 2026-08-26
 owner_directive: >-
   "Let's make the next session about dependency currency. That might affect types
   use in the code, and because this repo is entirely about managing types that
@@ -35,15 +35,15 @@ todos:
     depends_on: [DC0]
   - id: DC3
     content: prettier 3.8.3->3.8.4 (RUNTIME emission formatter — lib dep, used by maybe-pretty.ts -> rendering/templating.ts; same package as the dev formatter). Patch, but touches emitted formatting → capture baseline + firsthand emitted-output diff.
-    status: pending
+    status: done # ac0363e (2026-07-03, landed at 3.9.4 — the interval moved): snapshot 154 + gen 27 oracle green = emitted output byte-identical; source-only reformat rode the commit. Refreshed to 3.9.6 in the 2026-08-26 reopening (4bb37ae1), same oracle.
     depends_on: [DC0]
   - id: DC4
     content: ink 7.0.5->7.1.0 (agent-tools RUNTIME TUI dep, not tooling). Proof = agent-tools test surface green (collaboration-tui e2e), NOT the lib snapshot oracle.
-    status: pending
+    status: done # ac0363e (2026-07-03): agent-tools suite (1167) + collaboration-TUI smoke exit 0. Refreshed to 7.1.1 in the 2026-08-26 reopening (7dbe2379, 1604 tests).
     depends_on: [DC0]
   - id: DC5
     content: commander 14->15 (lib runtime CLI option-parsing). Read breaking changes; check the main CLI + the collaboration-state CLI; capture --help baseline; help + parsing behaviour unchanged.
-    status: pending
+    status: done # ac0363e (2026-07-03): ESM-only fits the ESM-only lib; Node >=22.12 satisfied by engines 24.x; the --no-with-alias default-semantics change probed firsthand — identical behaviour.
     depends_on: [DC0]
   - id: DC6
     content: '@types/node 25->26 (types-only, no emission — confirmed firsthand 0/8 emitted .snap files reference any Node type name). type-check green across lib + agent-tools. Note: dev-only dep now 2 majors ahead of engines.node 24.x (pre-existing posture; cannot make castr USE a Node-26 API).'
@@ -62,7 +62,7 @@ todos:
 # Dependency Currency — type-safe, careful, one-major-at-a-time
 
 Controlling plan for the **dependency-currency lane** in the
-[practice-transplant thread record](../../memory/operational/threads/practice-transplant.next-session.md).
+[practice-transplant thread record](../../../memory/operational/threads/practice-transplant.next-session.md).
 Authored 2026-06-21 from the `pnpm -r outdated` assessment; **type-risk classification corrected the
 same day after a firsthand-verified type-reviewer + assumptions-expert pass** (see `review_note`). The
 owner's constraint governs every cycle: castr exists to **losslessly manage and transform types**, so a
@@ -138,6 +138,52 @@ by a firsthand diff of the emitted output against a baseline captured before the
   but the file is at `scripts/examples-fetcher.mts` → the degit-using script is NOT type-checked (stale
   include; its own follow-up slice). (2) @types/node dev-only posture sits 2 majors ahead of `engines.node`
   — note, not a defect.
+
+- **2026-08-26 — LANE REOPENED (owner-directed): full currency sweep + audit-zero + action-pin
+  refresh + reusable skill.** Nine cycles, one commit each, method per this plan's tiers:
+  (1) `ffa50463` in-range dev-tooling sweep (eslint 10.9.1, typescript-eslint 8.68.0, vitest
+  4.1.11, turbo 2.10.12, knip 6.32.2, tsx, globals, type-fest, depcruise 18.2.0, commitlint
+  21.2.2, markdownlint-cli2, publint, attw, degit 3.8.0; @types/node refreshed within ^24 per
+  ADR-049); (2) `ad98e4aa` sonarjs 4.2.0 micro-cycle — `parameterized-tests` ADOPTED (11
+  groups → it.each), `prefer-native-lodash-alternative` configured off citing ADR-026 (the
+  natives it prefers are the banned syntax; measured — adopting flips the sites to
+  no-restricted-syntax errors); (3) `d1d7715f` boundaries 6→7 major with policies-vocabulary
+  migration — prove-it-fires measurement found the gate BLIND at both majors (plugin reads
+  'import/resolver', castr sets only 'import-x/resolver'; ESM .js imports never resolve), and
+  un-blinding surfaces 3 real conversion-layer ADR-036 violations → ROUTED (see below);
+  (4) `4bb37ae1` prettier 3.9.6 (snapshot 160 + gen 27 oracle byte-identical); (5) `d8ef9c44`
+  @scalar trio parser 0.28.16/types 0.9.5/json-magic 0.13.2 (type-check + snapshot +
+  transforms 620 + character 152 + e2e + drift test green, single lockfile version);
+  (6) `eeb93d6f` MCP SDK 1.30.0 (186 consumer-surface tests); (7) `7dbe2379` agent-tools
+  runtime patches ink 7.1.1/react 19.2.8/uuid 14.0.2 (1604 tests); (8) `9261e04a` audit-zero
+  override-floor refresh (hono, @hono/node-server, body-parser, ip-address, fast-uri,
+  brace-expansion, nanoid ^3, postcss — all annotated with removal conditions; esbuild floor
+  kept, tsup still ^0.27.0); (9) `1a72aad3` CI action pins refreshed at verified stable tags
+  (checkout v7.0.1, setup-node v7.0.0, upload-code-coverage v1.4.2; cache + pnpm/action-setup
+  already latest). **HELD with documented reasons:** typescript 6.0.3 (ts-morph 28 /
+  @ts-morph/common 0.29.0 still vendors TS 6.0.2 — a workspace TS 7 bump would reintroduce
+  the DC1 dual-TS emission skew across a major; reopen when ts-morph vendors TS 7) and
+  @types/node ^24 (ADR-049). **Method graduated into the reusable
+  `dependency-currency` skill** (`.agent/skills/dependency-currency/SKILL-CANONICAL.md`),
+  Node major read from root package.json `engines.node`, never hardcoded.
+- **Finding routed (2026-08-26, not fixed in-lane): the eslint-plugin-boundaries gate is
+  BLIND and always has been** — it reads the classic `import/resolver` settings key, castr
+  sets only `import-x/resolver`, so every intra-src `.js`-suffixed ESM import classifies as
+  unknown and the ADR-036 matrix polices nothing (measured with the plugin's debug output at
+  v6 and v7). Wiring `'import/resolver': { typescript: { alwaysTryTypes: true } }` un-blinds
+  it and surfaces 3 real violations: `conversion/typescript` → parsers + writers,
+  `conversion/zod` → parsers (value imports — the conversion layer composes parser+writer
+  against its declared allow-matrix). Resolution is an ADR-036 architecture decision
+  (restructure the conversion layer vs widen its matrix) — own follow-up slice; the cure and
+  finding are documented in `lib/eslint.config.ts` beside the settings block.
+- **Finding FIXED in-lane (2026-08-26, review round 7): turbo's "no output files found for
+  @engraph/castr#test" warning** — pre-existing at 2.10.2 (measured via forced re-run),
+  config-inherent (`test` declared `coverage/**` outputs but plain `pnpm test` runs without
+  coverage). Cured by splitting a dedicated `test:coverage` turbo task that owns the
+  `coverage/**` outputs (root `test:coverage` script now invokes it; lib + agent-tools gained
+  `vitest run --coverage` scripts; agent-tools stays cache-false in both variants). Proven
+  both directions: cache-miss `pnpm test` warning-free, `pnpm test:coverage` produces and
+  declares coverage. CI's coverage job path (`pnpm test:coverage`) is unchanged.
 
 ## End goal / mechanism / means / non-goals
 
@@ -295,7 +341,7 @@ reviewer claim firsthand (`verify-agent-claims-firsthand`).
 ## Learning loop + lifecycle triggers
 
 Each cycle close routes any surprise through `session-handoff`; lane/plan completion runs
-`consolidate-docs`. Lifecycle triggers per `../templates/components/lifecycle-triggers.md` — **note:**
+`consolidate-docs`. Lifecycle triggers per `../../templates/components/lifecycle-triggers.md` — **note:**
 castr's `.agent/plans/templates/` is empty (a recorded meta-gap in `pending-graduations.md`), so that
 component reference is aspirational; the applicable touch points (per-cycle gate-green + baseline diff,
 per-major reviewer pass, lane-close consolidation) are inlined above.

@@ -66,56 +66,29 @@ describe('type assertion policy', () => {
     expect(messages).toEqual([]);
   });
 
-  it('rejects non-const as assertions in product code', async () => {
-    const messages = await lintAssertionMessages(
-      'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as Bar;\n',
-      path.relative(repoRoot, path.join(tempProductDir, 'example.ts')),
-    );
-
-    expect(messages.length).toBeGreaterThan(0);
-    expect(
-      messages.every(
-        (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
-      ),
-    ).toBe(true);
-    expect(messages.every((message) => message.severity === 2)).toBe(true);
-  });
-
-  it('rejects non-const as assertions in tests', async () => {
-    const messages = await lintAssertionMessages(
-      'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as Bar;\n',
-      path.relative(repoRoot, path.join(tempSnapshotDir, 'example.test.ts')),
-    );
-
-    expect(messages.length).toBeGreaterThan(0);
-    expect(
-      messages.every(
-        (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
-      ),
-    ).toBe(true);
-    expect(messages.every((message) => message.severity === 2)).toBe(true);
-  });
-
-  it('rejects chained casts in product code', async () => {
-    const messages = await lintAssertionMessages(
-      'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as unknown as Bar;\n',
-      path.relative(repoRoot, path.join(tempProductDir, 'example.ts')),
-    );
-
-    expect(messages.length).toBeGreaterThan(0);
-    expect(
-      messages.every(
-        (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
-      ),
-    ).toBe(true);
-    expect(messages.every((message) => message.severity === 2)).toBe(true);
-  });
-
-  it('rejects angle-bracket assertions in product code', async () => {
-    const messages = await lintAssertionMessages(
-      'const foo = {};\ntype Bar = { value?: string };\nconst x = <Bar>foo;\n',
-      path.relative(repoRoot, path.join(tempProductDir, 'example.ts')),
-    );
+  it.each([
+    {
+      name: 'rejects non-const as assertions in product code',
+      code: 'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as Bar;\n',
+      file: path.join(tempProductDir, 'example.ts'),
+    },
+    {
+      name: 'rejects non-const as assertions in tests',
+      code: 'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as Bar;\n',
+      file: path.join(tempSnapshotDir, 'example.test.ts'),
+    },
+    {
+      name: 'rejects chained casts in product code',
+      code: 'const foo = {};\ntype Bar = { value?: string };\nconst x = foo as unknown as Bar;\n',
+      file: path.join(tempProductDir, 'example.ts'),
+    },
+    {
+      name: 'rejects angle-bracket assertions in product code',
+      code: 'const foo = {};\ntype Bar = { value?: string };\nconst x = <Bar>foo;\n',
+      file: path.join(tempProductDir, 'example.ts'),
+    },
+  ])('$name', async ({ code, file }) => {
+    const messages = await lintAssertionMessages(code, path.relative(repoRoot, file));
 
     expect(messages.length).toBeGreaterThan(0);
     expect(

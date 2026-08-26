@@ -52,44 +52,18 @@ function createSchema(overrides: Partial<CastrSchema> = {}): CastrSchema {
 
 describe('writeJsonSchema', () => {
   describe('primitive types', () => {
-    it('converts string type', () => {
-      const schema = createSchema({ type: 'string' });
+    it.each([
+      { type: 'string' },
+      { type: 'number' },
+      { type: 'integer' },
+      { type: 'boolean' },
+      { type: 'null' },
+    ] as const)('converts $type type', ({ type }) => {
+      const schema = createSchema({ type });
 
       const result = writeJsonSchemaAsObject(schema);
 
-      expect(result).toEqual({ type: 'string' });
-    });
-
-    it('converts number type', () => {
-      const schema = createSchema({ type: 'number' });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ type: 'number' });
-    });
-
-    it('converts integer type', () => {
-      const schema = createSchema({ type: 'integer' });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ type: 'integer' });
-    });
-
-    it('converts boolean type', () => {
-      const schema = createSchema({ type: 'boolean' });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ type: 'boolean' });
-    });
-
-    it('converts null type', () => {
-      const schema = createSchema({ type: 'null' });
-
-      const result = writeJsonSchemaAsObject(schema);
-
-      expect(result).toEqual({ type: 'null' });
+      expect(result).toEqual({ type });
     });
   });
 

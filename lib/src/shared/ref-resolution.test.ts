@@ -9,52 +9,37 @@ import type { ParsedRef } from './ref-resolution.js';
 
 describe('parseComponentRef', () => {
   describe('standard refs', () => {
-    it('parses standard schema ref', () => {
-      const ref = '#/components/schemas/Pet';
-      const result = parseComponentRef(ref);
-
-      const expected: ParsedRef = {
+    it.each([
+      {
+        kind: 'standard schema ref',
+        ref: '#/components/schemas/Pet',
         componentType: 'schemas',
         componentName: 'Pet',
-        isExternal: false,
-        originalRef: ref,
-      };
-      expect(result).toEqual(expected);
-    });
-
-    it('parses standard parameter ref', () => {
-      const ref = '#/components/parameters/UserId';
-      const result = parseComponentRef(ref);
-
-      const expected: ParsedRef = {
+      },
+      {
+        kind: 'standard parameter ref',
+        ref: '#/components/parameters/UserId',
         componentType: 'parameters',
         componentName: 'UserId',
-        isExternal: false,
-        originalRef: ref,
-      };
-      expect(result).toEqual(expected);
-    });
-
-    it('parses standard response ref', () => {
-      const ref = '#/components/responses/NotFound';
-      const result = parseComponentRef(ref);
-
-      const expected: ParsedRef = {
+      },
+      {
+        kind: 'standard response ref',
+        ref: '#/components/responses/NotFound',
         componentType: 'responses',
         componentName: 'NotFound',
-        isExternal: false,
-        originalRef: ref,
-      };
-      expect(result).toEqual(expected);
-    });
-
-    it('parses standard requestBody ref', () => {
-      const ref = '#/components/requestBodies/UserBody';
+      },
+      {
+        kind: 'standard requestBody ref',
+        ref: '#/components/requestBodies/UserBody',
+        componentType: 'requestBodies',
+        componentName: 'UserBody',
+      },
+    ])('parses $kind', ({ ref, componentType, componentName }) => {
       const result = parseComponentRef(ref);
 
       const expected: ParsedRef = {
-        componentType: 'requestBodies',
-        componentName: 'UserBody',
+        componentType,
+        componentName,
         isExternal: false,
         originalRef: ref,
       };

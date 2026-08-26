@@ -70,28 +70,15 @@ describe('ZodWriter', () => {
     };
   }
 
-  it('generates string schema', () => {
-    const schema = createMockSchema('string');
+  it.each([
+    { kind: 'string schema', type: 'string', expected: 'z.string()' },
+    { kind: 'number schema', type: 'number', expected: 'z.number()' },
+    { kind: 'boolean schema', type: 'boolean', expected: 'z.boolean()' },
+    { kind: 'null schema (OAS 3.1)', type: 'null', expected: 'z.null()' },
+  ] as const)('generates $kind', ({ type, expected }) => {
+    const schema = createMockSchema(type);
     const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.string()');
-  });
-
-  it('generates number schema', () => {
-    const schema = createMockSchema('number');
-    const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.number()');
-  });
-
-  it('generates boolean schema', () => {
-    const schema = createMockSchema('boolean');
-    const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.boolean()');
-  });
-
-  it('generates null schema (OAS 3.1)', () => {
-    const schema = createMockSchema('null');
-    const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.null()');
+    expect(generate(context)).toBe(expected);
   });
 
   it('generates z.literal() for const string value', () => {

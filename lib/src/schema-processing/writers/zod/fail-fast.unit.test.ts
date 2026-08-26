@@ -104,52 +104,19 @@ describe('Zod Writer Fail-Fast Behavior', () => {
   // ============================================================================
 
   describe('supported patterns do not throw', () => {
-    it('does not throw for string type', () => {
-      const schema = createMockSchema('string');
+    it.each([
+      { type: 'string', expected: 'z.string()' },
+      { type: 'number', expected: 'z.number()' },
+      { type: 'integer', expected: 'z.int()' },
+      { type: 'boolean', expected: 'z.boolean()' },
+      { type: 'null', expected: 'z.null()' },
+      { type: 'array', expected: 'z.array(z.unknown())' },
+    ] as const)('does not throw for $type type', ({ type, expected }) => {
+      const schema = createMockSchema(type);
       const context = createComponentContext(schema);
 
       expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.string()');
-    });
-
-    it('does not throw for number type', () => {
-      const schema = createMockSchema('number');
-      const context = createComponentContext(schema);
-
-      expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.number()');
-    });
-
-    it('does not throw for integer type', () => {
-      const schema = createMockSchema('integer');
-      const context = createComponentContext(schema);
-
-      expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.int()');
-    });
-
-    it('does not throw for boolean type', () => {
-      const schema = createMockSchema('boolean');
-      const context = createComponentContext(schema);
-
-      expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.boolean()');
-    });
-
-    it('does not throw for null type', () => {
-      const schema = createMockSchema('null');
-      const context = createComponentContext(schema);
-
-      expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.null()');
-    });
-
-    it('does not throw for array type', () => {
-      const schema = createMockSchema('array');
-      const context = createComponentContext(schema);
-
-      expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toBe('z.array(z.unknown())');
+      expect(generate(context)).toBe(expected);
     });
 
     it('does not throw for object type', () => {

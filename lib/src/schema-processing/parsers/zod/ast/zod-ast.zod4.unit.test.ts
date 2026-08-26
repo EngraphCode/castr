@@ -52,22 +52,14 @@ describe('Zod 4 AST Utilities', () => {
   });
 
   describe('Zod 4 Namespaces (z.iso.*)', () => {
-    it('should identify z.iso.date()', () => {
-      const { init, resolver } = getCallExpression('const x = z.iso.date();');
+    it.each([
+      { call: 'z.iso.date()', method: 'iso.date' },
+      { call: 'z.iso.datetime()', method: 'iso.datetime' },
+      { call: 'z.iso.duration()', method: 'iso.duration' },
+    ])('should identify $call', ({ call, method }) => {
+      const { init, resolver } = getCallExpression(`const x = ${call};`);
       expect(isZodCall(init, resolver)).toBe(true);
-      expect(getZodBaseMethod(init, resolver)).toBe('iso.date');
-    });
-
-    it('should identify z.iso.datetime()', () => {
-      const { init, resolver } = getCallExpression('const x = z.iso.datetime();');
-      expect(isZodCall(init, resolver)).toBe(true);
-      expect(getZodBaseMethod(init, resolver)).toBe('iso.datetime');
-    });
-
-    it('should identify z.iso.duration()', () => {
-      const { init, resolver } = getCallExpression('const x = z.iso.duration();');
-      expect(isZodCall(init, resolver)).toBe(true);
-      expect(getZodBaseMethod(init, resolver)).toBe('iso.duration');
+      expect(getZodBaseMethod(init, resolver)).toBe(method);
     });
   });
 

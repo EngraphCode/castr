@@ -450,6 +450,19 @@ export default defineConfig(
       boundaries: asPlugin(eslintPluginBoundariesNs),
     },
     settings: {
+      // MEASURED FINDING (2026-08-26, boundaries 6->7 bump): this gate is
+      // currently BLIND — the plugin reads the classic 'import/resolver'
+      // settings key (not 'import-x/resolver'), so castr's ESM '.js'-suffixed
+      // relative imports never resolve to their on-disk '.ts' targets and every
+      // intra-src dependency classifies as unknown (relationship.to = null,
+      // proven with ESLINT_PLUGIN_BOUNDARIES_DEBUG=1 at BOTH v6 and v7). Wiring
+      //   'import/resolver': { typescript: { alwaysTryTypes: true } }
+      // here un-blinds it, and the live gate then reports 3 real pre-existing
+      // violations: conversion/typescript -> parsers + writers,
+      // conversion/zod -> parsers. Resolving those is an ADR-036 architecture
+      // decision (restructure the conversion layer vs widen its allow matrix),
+      // routed as its own follow-up slice rather than decided inside the
+      // dependency-currency lane. Wire the resolver when that slice lands.
       'boundaries/elements': [
         { type: 'shared', pattern: 'src/shared/**/*' },
         { type: 'cli', pattern: 'src/cli/**/*' },
@@ -462,55 +475,55 @@ export default defineConfig(
       'boundaries/include': ['src/**/*.ts'],
     },
     rules: {
+      // v7 vocabulary (migrated 2026-08-26 with the 6->7 bump): the 'rules'
+      // option became 'policies' and element selectors nest under
+      // { element: { ... } }; the allow lists are unchanged in substance.
       'boundaries/dependencies': [
         'error',
         {
           default: 'disallow',
-          rules: [
-            { from: { type: 'shared' }, allow: [{ to: { type: 'shared' } }] },
+          policies: [
             {
-              from: { type: 'cli' },
-              allow: [
-                { to: { type: 'cli' } },
-                { to: { type: 'shared' } },
-                { to: { type: 'context' } },
-                { to: { type: 'parsers' } },
-                { to: { type: 'writers' } },
-                { to: { type: 'ir' } },
-                { to: { type: 'conversion' } },
-              ],
-            },
-            { from: { type: 'ir' }, allow: [{ to: { type: 'ir' } }, { to: { type: 'shared' } }] },
-            {
-              from: { type: 'context' },
-              allow: [
-                { to: { type: 'context' } },
-                { to: { type: 'shared' } },
-                { to: { type: 'ir' } },
-                { to: { type: 'conversion' } },
-              ],
+              from: { element: { type: 'shared' } },
+              allow: { to: { element: { type: 'shared' } } },
             },
             {
-              from: { type: 'conversion' },
-              allow: [{ to: { type: 'conversion' } }, { to: { type: 'shared' } }],
+              from: { element: { type: 'cli' } },
+              allow: {
+                to: {
+                  element: {
+                    types: {
+                      anyOf: ['cli', 'shared', 'context', 'parsers', 'writers', 'ir', 'conversion'],
+                    },
+                  },
+                },
+              },
             },
             {
-              from: { type: 'parsers' },
-              allow: [
-                { to: { type: 'parsers' } },
-                { to: { type: 'shared' } },
-                { to: { type: 'ir' } },
-                { to: { type: 'conversion' } },
-              ],
+              from: { element: { type: 'ir' } },
+              allow: { to: { element: { types: { anyOf: ['ir', 'shared'] } } } },
             },
             {
-              from: { type: 'writers' },
-              allow: [
-                { to: { type: 'writers' } },
-                { to: { type: 'shared' } },
-                { to: { type: 'ir' } },
-                { to: { type: 'conversion' } },
-              ],
+              from: { element: { type: 'context' } },
+              allow: {
+                to: { element: { types: { anyOf: ['context', 'shared', 'ir', 'conversion'] } } },
+              },
+            },
+            {
+              from: { element: { type: 'conversion' } },
+              allow: { to: { element: { types: { anyOf: ['conversion', 'shared'] } } } },
+            },
+            {
+              from: { element: { type: 'parsers' } },
+              allow: {
+                to: { element: { types: { anyOf: ['parsers', 'shared', 'ir', 'conversion'] } } },
+              },
+            },
+            {
+              from: { element: { type: 'writers' } },
+              allow: {
+                to: { element: { types: { anyOf: ['writers', 'shared', 'ir', 'conversion'] } } },
+              },
             },
           ],
         },
@@ -547,6 +560,27 @@ export default defineConfig(
     rules: {
       'sonarjs/function-return-type': 'error',
       'sonarjs/in-operator-type-error': 'error',
+    },
+  },
+
+  // ---------------------------------------------------------------------------
+  // sonarjs 4.2.0 — prefer-native-lodash-alternative conflicts with ADR-026.
+  // ---------------------------------------------------------------------------
+  // The natives this rule prefers (String#includes, Array#slice, ...) are the
+  // exact method syntax ADR-026's no-restricted-syntax enforcement bans; the
+  // lodash function-call form IS this repo's sanctioned idiom for centralized,
+  // validated data-string parsing. Adopting the rule would re-open the banned
+  // syntax, so the repo's own decision record governs and the vendor preset
+  // addition yields (measured on the 4.1.0 -> 4.2.0 bump, 2026-08-26: all 28
+  // findings sat in ADR-026-governed modules). The off is scoped to EXACTLY
+  // the ADR-026 enforcement surface (src product code, tests excluded — the
+  // same files/ignores as the ban block above); everywhere else the rule
+  // stays live at the preset's severity.
+  {
+    files: ['src/**/*.ts'],
+    ignores: [...testGlobs],
+    rules: {
+      'sonarjs/prefer-native-lodash-alternative': 'off',
     },
   },
 );

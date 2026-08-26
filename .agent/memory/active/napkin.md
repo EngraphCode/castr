@@ -1153,3 +1153,44 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   Cure applied: chat openers carry intent + ONE entry-point anchor only; the two facts
   chat was papering over (PR #60 as the walk's merge gate; the Dependabot drift) are
   now IN the surfaces instead of in chat.
+
+## 2026-08-26 (dependency-currency lane reopened — Smith stirs Pewter / 01YHWJ)
+
+- **A vendor lint preset's new rule can contradict the repo's own enforcement idiom — check
+  the DECISION RECORD before adopting.** sonarjs 4.2.0's `prefer-native-lodash-alternative`
+  prefers exactly the native method syntax ADR-026's `no-restricted-syntax` ban exists to
+  forbid; the lodash call form IS the sanctioned idiom. Measured, not assumed: adopting the
+  natives flipped the same 28 sites to `no-restricted-syntax` errors (`slice() banned`,
+  `includes() banned on strings`). Resolution: rule off in lib's config with the ADR cited,
+  all source edits reverted byte-identical. The general shape: adopt-now governs a new rule
+  UNLESS a standing decision record owns that surface — then the repo's doctrine outranks the
+  vendor preset, and the config comment carries the warrant.
+- **The prove-it-fires bar caught a gate that was NEVER firing: eslint-plugin-boundaries has
+  been blind since installation.** Migrating its config for the 6→7 major, the planted
+  shared→parsers violation passed at BOTH majors; the plugin's debug output showed every
+  dependency target `isUnknown: true` — it reads the classic `import/resolver` settings key,
+  castr sets only `import-x/resolver`, so ESM `.js`-suffixed imports never resolve to their
+  `.ts` targets. Un-blinding it (one settings line) surfaces 3 real conversion-layer ADR-036
+  violations (conversion composes parsers+writers against its declared matrix) — an
+  architecture fork, ROUTED to the plan rather than decided in-lane. Same family as
+  green-gates-mask-gaps: a "strict architectural boundaries" gate green for its whole life
+  because it inspected nothing.
+- **Warning attribution by forced re-run on the old version:** turbo 2.10.12's "no output
+  files found for @engraph/castr#test" reproduced identically via
+  `npx turbo@2.10.2 run test --force` — pre-existing and config-inherent (test declares
+  `coverage/**` outputs; plain `pnpm test` produces none), so not the bump's defect; routed.
+  Cheap recipe worth keeping: attribute a new-looking warning by re-running the exact surface
+  on the prior version before touching anything.
+- **`git ls-remote --tags` is the sufficient instrument for action-pin verification** when
+  the GitHub API is repo-scoped: tag→SHA firsthand, annotated tags dereferenced via the
+  `^{}` rows (pin the commit SHA — pnpm/action-setup's pin is the deref, upload-code-coverage's
+  v1.4.2 needed it), stable semver tags only. All five existing pins verified matching their
+  claimed tags before updating three of them.
+- **The generator↔prettier quoting fixpoint fired again on the new skill's description**
+  (colon-space → generator double-quotes → prettier re-quotes → skills:check drift): the
+  colon-free-description cure from the 2026-07-03 entry applied verbatim. Also:
+  `pnpm --filter @engraph/agent-tools skills-adapter-generate` runs in the WRONG cwd (looks
+  for agent-tools/.agent/skills); the working invocation is the root-anchored
+  `node agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-`, and a new
+  Claude adapter also needs its `Skill(engraph-<name>)` row in `.claude/settings.json`
+  (portability validator catches the miss).
