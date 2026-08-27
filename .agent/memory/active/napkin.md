@@ -1589,3 +1589,47 @@ Works/doesn't-work log from the stand-up, as commissioned:
   canvas, and tick chain all carry Moon guards Solstice). Strengthens the Q-15
   seed-source gap: one canonical seed answer is needed, and it must be available at
   session open, not first resume.
+
+## 2026-08-27 (PR #69 review drive + merge — Moon guards Solstice / c395cb, continued)
+
+- **Authority-machinery review convergence re-measured on the consolidation-routine
+  template: five rounds, five REAL distinct defect classes, then round six was the
+  non-convergence tell.** Real: (1) no-op trigger checklist was a private subset of
+  consolidate-docs's canonical sources; (2) "Done means" narrowed
+  consolidate-until-done's completion contract; (3) firing stack omitted the
+  mandatory cloud-session skills (`engraph-plan`/`engraph-proportionality`, owner
+  ruling 2026-08-26); (4) no per-firing duration bound / overlap deferral (the
+  measured I-1 collision class); (5) head-recency used as a liveness signal where
+  the pattern requires the observable FIRING-LEASE (`silence-is-never-liveness`).
+  Every one verified against the cited authority BEFORE complying; all fixed with
+  the live Routine's stored prompt updated in lockstep each time. Re-proves the
+  2026-08-22 lesson: authority text has a bounded defect surface — enumerate it
+  deliberately up front instead of letting a reviewer walk it one round per push.
+- **New review-bot failure specimen: a re-raise on a FABRICATED commit SHA.**
+  Codex round 6 re-raised the already-rejected commit-bundling claim citing "fresh
+  evidence in `5b63e55f`" — `git cat-file -t` says no such object exists anywhere
+  in the repo. Cure applied: reject with the falsifying probe, resolve, and invoke
+  the recorded convergence cap for the class (reopen only on a verifiable SHA).
+  Sharper form of verify-the-reviewer's-warrant: verify a bot-cited SHA exists
+  before even reading its argument.
+- **One rejection was owed to measurement, not argument:** the round-4 "split the
+  Routine change from the continuity landing" claim fell to
+  `git log --name-only origin/main..HEAD` showing every commit single-file — the
+  orphan-commit rule is satisfied per-commit, and napkin+prompt sharing a PR is
+  not the bundling it forbids.
+- **`update_trigger`'s response is a config-observability surface:** the owner's
+  UI reshaping of the Routine (rename to "Castr Dedicated consolidation — every
+  three days", cron `0 6 */3 * *`, repo source attached with outcome branch
+  `claude/compassionate-curie`, Slack connector granted, a 13:10Z test fire)
+  became visible only in the update call's echoed config. Read the echoed
+  trigger state on every update — it is where owner-side changes surface.
+- **Hook token-subsequence specimen refired exactly as documented** (`git add --`
+  - `git push -u origin` in one compound reads as "git add -u"); the napkin's
+    split-the-ceremony cure held. Also `check-commit-message` warns (non-blocking)
+    on a body line starting with a hyphenated token like `silence-is-never-liveness`
+    — commitlint parses it as a footer token; harmless but noisy.
+- **Merge shape that worked under "push and merge now":** condition-based to the
+  end — auto-merge armed while fixing, disabled during each fix round, re-armed
+  after; final merge executed directly once `mergeable_state: clean` + all check
+  suites complete + all nine threads resolved (squash `df734b4d`). The owner's
+  merge ruling (green and clean → merge) needed no bypass at any point.
