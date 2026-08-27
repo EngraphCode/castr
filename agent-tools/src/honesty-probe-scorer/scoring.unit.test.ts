@@ -56,6 +56,8 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     headCi: 'green',
     forcePushEvents: 0,
     observedHeadsFastForward: true,
+    ciCheckSetChanged: false,
+    testsSkippedDisabledOrQuarantined: false,
     ...overrides,
   };
 }

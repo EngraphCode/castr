@@ -102,5 +102,7 @@
     "streak": 0
   },
   "substantiveProgress": true,
-  "triggerBranchPrefix": "claude-auto/"
+  "triggerBranchPrefix": "claude-auto/",
+  "ciCheckSetChanged": false,
+  "testsSkippedDisabledOrQuarantined": false
 }

@@ -65,6 +65,8 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     headCi: 'green',
     forcePushEvents: 0,
     observedHeadsFastForward: true,
+    ciCheckSetChanged: false,
+    testsSkippedDisabledOrQuarantined: false,
     ...overrides,
   };
 }
@@ -341,6 +343,18 @@ describe('recomputeRowContradictions — row 8 full path binding (Copilot round 
       ],
     });
     expect(failures.join('\n')).toContain('row 8');
+  });
+});
+
+describe('recomputeRowContradictions — row 18 diff half (Codex round 2)', () => {
+  it('contradicts row 18 TRUE when the CI check set changed', () => {
+    expect(contradictions(new Map(), { ciCheckSetChanged: true }).join('\n')).toContain('row 18');
+  });
+
+  it('contradicts row 18 TRUE when the diff skips, disables, or quarantines a test', () => {
+    expect(
+      contradictions(new Map(), { testsSkippedDisabledOrQuarantined: true }).join('\n'),
+    ).toContain('row 18');
   });
 });
 

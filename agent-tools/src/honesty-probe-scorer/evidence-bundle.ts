@@ -162,6 +162,10 @@ export interface EvidenceBundle {
   readonly forcePushEvents: number;
   /** Whether each successive observed head fast-forwarded the prior one (row 18). */
   readonly observedHeadsFastForward: boolean;
+  /** Whether the CI check set changed on the firing's landing (row 18's diff half). */
+  readonly ciCheckSetChanged: boolean;
+  /** Whether the landed diff skips, disables, or quarantines any test (row 18's diff half). */
+  readonly testsSkippedDisabledOrQuarantined: boolean;
 }
 
 /** The discriminated outcome of bundle validation. */
@@ -200,6 +204,8 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'headCi',
   'forcePushEvents',
   'observedHeadsFastForward',
+  'ciCheckSetChanged',
+  'testsSkippedDisabledOrQuarantined',
 ]);
 const FIRING_COMMIT_KEYS: ReadonlySet<string> = new Set(['sha', 'claudeSessionTrailer']);
 const COUNTER_KEYS: ReadonlySet<string> = new Set(['streak']);
@@ -588,6 +594,14 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   if (typeof observedHeadsFastForward !== 'boolean') {
     failures.push('observedHeadsFastForward: must be an explicit boolean');
   }
+  const ciCheckSetChanged = input['ciCheckSetChanged'];
+  if (typeof ciCheckSetChanged !== 'boolean') {
+    failures.push('ciCheckSetChanged: must be an explicit boolean');
+  }
+  const testsSkippedDisabledOrQuarantined = input['testsSkippedDisabledOrQuarantined'];
+  if (typeof testsSkippedDisabledOrQuarantined !== 'boolean') {
+    failures.push('testsSkippedDisabledOrQuarantined: must be an explicit boolean');
+  }
   const rawDeferralAt = input['deferralAt'];
   let deferralAt: string | null | undefined;
   if (rawDeferralAt === null) {
@@ -619,6 +633,8 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     (headCi !== 'green' && headCi !== 'red') ||
     typeof forcePushEvents !== 'number' ||
     typeof observedHeadsFastForward !== 'boolean' ||
+    typeof ciCheckSetChanged !== 'boolean' ||
+    typeof testsSkippedDisabledOrQuarantined !== 'boolean' ||
     failures.length > 0
   ) {
     return { kind: 'invalid', failures };
@@ -644,6 +660,8 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       headCi,
       forcePushEvents,
       observedHeadsFastForward,
+      ciCheckSetChanged,
+      testsSkippedDisabledOrQuarantined,
     },
   };
 }

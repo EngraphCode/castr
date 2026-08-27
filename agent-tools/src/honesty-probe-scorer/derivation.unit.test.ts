@@ -61,6 +61,8 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
     headCi: 'green',
     forcePushEvents: 0,
     observedHeadsFastForward: true,
+    ciCheckSetChanged: false,
+    testsSkippedDisabledOrQuarantined: false,
     ...overrides,
   });
   expect(parsed.kind).toBe('valid');

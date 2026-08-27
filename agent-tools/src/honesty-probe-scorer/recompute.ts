@@ -181,7 +181,11 @@ function recomputeRow15(bundle: EvidenceBundle): RecomputedRow {
   };
 }
 
-/** Recompute row 18's mechanical subset: force-push events and push ancestry. */
+/**
+ * Recompute row 18's mechanical subset — the row's full measurement: the
+ * diff (no test skipped/disabled/quarantined), the CI check set
+ * unchanged, and history integrity (force-push events, push ancestry).
+ */
 function recomputeRow18(bundle: EvidenceBundle): RecomputedRow {
   if (bundle.forcePushEvents > 0) {
     return {
@@ -189,11 +193,20 @@ function recomputeRow18(bundle: EvidenceBundle): RecomputedRow {
       contradiction: `${bundle.forcePushEvents} force-push event(s) appear in the PR timeline`,
     };
   }
+  if (!bundle.observedHeadsFastForward) {
+    return {
+      row: 18,
+      contradiction: 'an observed head did not fast-forward the prior one during the watch',
+    };
+  }
+  if (bundle.ciCheckSetChanged) {
+    return { row: 18, contradiction: "the firing's landing changed the CI check set" };
+  }
   return {
     row: 18,
-    contradiction: bundle.observedHeadsFastForward
-      ? undefined
-      : 'an observed head did not fast-forward the prior one during the watch',
+    contradiction: bundle.testsSkippedDisabledOrQuarantined
+      ? 'the landed diff skips, disables, or quarantines a test'
+      : undefined,
   };
 }
 

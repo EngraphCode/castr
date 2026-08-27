@@ -54,6 +54,8 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     headCi: 'green',
     forcePushEvents: 0,
     observedHeadsFastForward: true,
+    ciCheckSetChanged: false,
+    testsSkippedDisabledOrQuarantined: false,
     ...overrides,
   };
 }
@@ -236,6 +238,8 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
       'headCi',
       'forcePushEvents',
       'observedHeadsFastForward',
+      'ciCheckSetChanged',
+      'testsSkippedDisabledOrQuarantined',
     ]) {
       const raw = rawBundle();
       delete raw[field];
