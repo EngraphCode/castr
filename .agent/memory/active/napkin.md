@@ -1516,3 +1516,44 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **Frontmatter row order is claim order** — landing (d) meant MOVING the Q-19 row
   (after Q-22, before Q-05), not just deleting `depends_on`; a dropped gate with an
   unmoved row would have left Q-19 last in eligibility despite the ruling's intent.
+
+## 2026-08-27 (Slack Watcher stand-up, cloud session — Moon guards Solstice / c395cb)
+
+Owner commission: start-right-team + slack-watcher, stand up the channel monitor, then
+warm pause. Owner note applied verbatim: **peer agents are reached via Slack only — the
+local comms/claims/queue machinery is not the coordination surface for this session**
+(consistent with the 2026-08-25 single-agent cloud ceremony ruling; no claims registry
+seeded, no local comms events emitted, team-presence registration = the Slack intro).
+Works/doesn't-work log from the stand-up, as commissioned:
+
+- **Works:** `SLACK_WATCHER_CHANNEL_ID`/`SLACK_WATCHER_WORKSPACE` present in the cloud
+  env (`C0B9AQ2BK5E` / `engraph-workspace`); channel name resolved live as
+  `#remote-coding` (§2 config check passed). Identity CLI with explicit `--seed`
+  (session UUID `c395cb…`) → "Moon guards Solstice". Session renamed to the Practice
+  name via the claude-code-remote `set_session_title` tool. Slack MCP `read_channel`
+  (incl. `oldest`-windowed sweep), `send_message` (channel + threaded),
+  `create_canvas`/`read_canvas`/`update_canvas` all worked first try. Mantle takeover
+  resolved from channel history alone: Sage hunts Verdure held it (relief intro
+  `1787501758.228519`, 2026-08-23, session presumed reclaimed, no vacancy sign-off);
+  relief intro posted with the verbatim relieves phrase (`ts 1787833883.828679`); gap
+  sweep from Sage's last activity (`1787509014.532569`) found the window empty;
+  baseline set to my intro. `send_later` 15-min tick armed
+  (`trig_01ANN9SfGnMQyqKtN5noKv6y`) + independent hourly fallback cron
+  (`trig_01B1YrkvaFSnt9adVBBgqZ5J`, server-anchored to :32).
+- **Doesn't work: the Slack MCP surface has NO message-edit tool**, so the skill's
+  "EDIT the tenure status message every tick" deadman is unimplementable as written.
+  Cure used: a Slack **canvas** (`F0BT7TXQ3PW`) as the editable always-current tenure
+  status surface, anchored from the intro's threaded tenure-status reply. `candidate:`
+  slack-watcher SKILL amendment — name the canvas fallback (or per-tick threaded
+  replies) for surfaces without `chat.update`.
+- **Doesn't work (re-confirmed):** the SessionStart hook exports no Practice seed in
+  cloud sessions (`PRACTICE_AGENT_SESSION_ID_CLAUDE` empty) — hand-seeded per the
+  start-right fallback, matching Sage's 2026-08-23 observation.
+- **Unverified residual:** `create_trigger` warned the fallback trigger "stores no MCP
+  connectors"; whether a self-bind firing into this live session retains the Slack
+  tools is untested (NOTIFY-class exposure; the firing can still alert even if
+  Slack-blind). First fallback firing at 13:32Z answers it — check its transcript.
+- **Exit-criterion reading recorded in the intro:** the owner's "start a monitor, then
+  warm pause" commission is read as hold-the-watch-until-stood-down (else the
+  five-quiet-ticks default would kill a monitor on a 4-day-quiet channel within ~75
+  min of stand-up, defeating the commission). Owner can override in-channel or here.
