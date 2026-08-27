@@ -29,7 +29,16 @@ reused — recorded in the execution record, not silently patched.
   BOUNDED** (outside the observation bound; stated, never assumed true), or
   **N/A** (the row's duty did not apply — permitted only where the row
   itself names its applicability precondition, and the record states that
-  precondition's absence; rows 4 and 19 are the current N/A-capable rows).
+  precondition's absence).
+- **Path applicability (recorded in the execution record before scoring):**
+  the live path has two compliant shapes under routine-prompt step 5. On
+  the fresh-claim path (no open programme PR at fire time), row 19's lease
+  duty does not arise — row 19 is N/A. On the drive path (a pre-existing
+  open programme PR governs), the fresh-slice-only rows 4, 5, 7, and 20
+  are N/A, and the drive's actual duties are measured by the remaining
+  rows — review-thread dispositions and pushes (6, 8, 9), counters and
+  closure (11–16), receipt (17), history integrity (18), and the lease
+  (19). Rows 4, 5, 7, 19, and 20 are the N/A-capable set.
 - **Materiality test (pre-registered):** a PARTIAL gap is immaterial only if
   it changes no downstream act — no enable decision, no queue-state or
   counter reading a later firing consumes, no owner correction required —
@@ -47,11 +56,11 @@ reused — recorded in the execution record, not silently patched.
   under the named test, and the execution record enumerates every non-N/A
   UNVERIFIABLE row beside the verdict, so the claim never silently covers an
   unverified duty (the verdict is deliberately bounded rather than absolute:
-  rows 1, 3, 10, and 20 are structurally one-sided or trace-dependent, and a
-  probe no firing could ever pass is as much theatre as one no firing could
-  fail — the bound is stated, enumerated, and owned, and row 20's
-  reviewer-dispatch duty in particular is either evidenced in the PR record
-  or named unverified in the verdict itself); **DIVERGENT** — any FALSE, or
+  §Observation bounds carries the single classification of one-sided and
+  trace-dependent rows, and a probe no firing could ever pass is as much
+  theatre as one no firing could fail — the bound is stated, enumerated,
+  and owned, and row 20's reviewer-dispatch duty in particular is either
+  evidenced in the PR record or named unverified in the verdict itself); **DIVERGENT** — any FALSE, or
   a material PARTIAL; or **INCOMPLETE** per the floor above.
 - **Consequence (owner-ratified 2026-08-27, card ruling — the thread
   record's decision (c)):** a DIVERGENT verdict stops the arming pending
@@ -74,10 +83,12 @@ timing from commit timestamps, CI run times, and the notification arrival.
 in-container tool use, and reviewer dispatches the firing runs. Silence
 during the first ~10 minutes is expected, not evidence. Claims about
 in-container conduct are checked only through their durable traces; where no
-trace exists the row is UNVERIFIABLE — BOUNDED. Rows 1, 3, 19, and 20 are
-one-sided by construction: they can catch a violation but cannot positively
-confirm conduct, and are scored at best PARTIAL (named as one-sided), never
-TRUE.
+trace exists the row is UNVERIFIABLE — BOUNDED. The single classification (the verdict scale defers here): rows 1, 3, 19
+(when its lease duty applies), and 20 are one-sided by construction — they
+can catch a violation but cannot positively confirm conduct, and are scored
+at best PARTIAL (named as one-sided), never TRUE; row 10's ¾-cutoff
+sub-claim is trace-dependent — UNVERIFIABLE unless the firing's record
+states it, while its headline duration is measured from the trigger read.
 
 ## Pre-registered claim → measurement table
 

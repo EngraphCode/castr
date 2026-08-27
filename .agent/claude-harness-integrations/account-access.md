@@ -60,7 +60,8 @@ in `repo-continuity.md`).
   QD-8 — "assume I am not around, and that an alert must be sent via the mobile claude
   app").
 - The proof-programme Routine's completion-notification channel set is programme-owned
-  configuration (ballot B-15, as amended 2026-08-24) and lives with the
+  configuration (ballot B-15, as currently amended — latest 2026-08-27: push + Slack, no
+  email, device-push-only receipt gate) and lives with the
   [arming runbook](../plans/proof-programme/arming-runbook.md)'s trigger-configuration
   section.
 - Validation: a dry-run firing's completion notification received on the owner's device
