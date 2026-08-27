@@ -103,7 +103,12 @@ for the firing's data and the falsifier above.
   reviewed through the normal TDD/review path before the attended firing —
   Phase C waits on it — which also recomputes the mechanically derivable
   rows (8, 9, 11, 15, 18) directly from git/GitHub state rather than
-  accepting typed values (`validators-must-recompute-not-just-record`). The code validates the table
+  accepting typed values (`validators-must-recompute-not-just-record`),
+  and recomputes the condition behind every evidence-conditioned N/A the
+  same way: rows 7/20's "no code changed in this drive" is established
+  from the diff of the drive's own pushes, never from the record's
+  assertion — an N/A whose recomputed condition fails is a validation
+  failure (INCOMPLETE). The code validates the table
   before any mapping: exactly rows 1–20, each present once; every verdict
   token drawn from this scale's vocabulary; every PARTIAL carrying an
   explicit boolean materiality flag and a non-empty named act (the
