@@ -51,11 +51,12 @@ up again, but sometimes that is the right choice.
 
 Other agents are working in the repo
 
-## Routine (unattended, every other day)
+## Routine (unattended, scheduled)
 
-The firing prompt for the "Dedicated consolidation — alternate days" Routine
-(fresh session per firing; the repo attachment is owner-set in the Routine UI
-and is load-bearing — without it the firing lands nothing):
+The firing prompt for the owner's standing dedicated-consolidation Routine
+(fresh session per firing; the cadence, name, and repo attachment are owner-set
+in the Routine UI — the repo attachment is load-bearing, without it the firing
+lands nothing):
 
 /goal ultrathink /engraph-metacognition /engraph-reason /engraph-start-right-thorough /engraph-consolidate-until-done
 
