@@ -154,9 +154,12 @@ for the firing's data and the falsifier above.
   7/20's "no code changed in this drive" is established from the diff of
   the drive's own pushes; and the defer path's attachment conditions are
   derived the same way — a claim visible in the landed frontmatter diff
-  contradicts a pre-claim N/A on rows 4/5, and a posted lease or pushes
-  to the programme PR before the deferral contradict a pre-drive N/A on
-  rows 7/19/20. A recorded path or N/A contradicted by its derived
+  contradicts a pre-claim N/A on rows 4/5; a posted lease, or pushes
+  before the deferral to a programme PR that pre-existed the firing,
+  contradict a pre-drive N/A on rows 7/19/20 — while pushes to a PR the
+  firing itself created are fresh-slice work, not drive evidence, and
+  leave row 19's N/A valid (the lease duty attaches only on starting a
+  drive of a pre-existing open PR). A recorded path or N/A contradicted by its derived
   condition is a validation failure (INCOMPLETE). The code validates the table
   before any mapping: exactly rows 1–20, each present once; every verdict
   token drawn from this scale's vocabulary; every PARTIAL carrying a
