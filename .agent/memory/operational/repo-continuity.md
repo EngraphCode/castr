@@ -88,12 +88,20 @@ with a named position, not a paused continuity thread (owner, 2026-06-09; see
 
 ## Deep Consolidation Status
 
-**Status (2026-08-25, Sardine turns Coral / 01QpYc): due — fresh capture batch.** The napkin
-carries unconsolidated owner rulings from 2026-08-23..25 (ceremony-skip for single-agent cloud
-sessions — its graduation register entry is marked `due`; the QD-7/QD-8 doctrine landings; the
-account-portability arc's lessons), and the pending-graduations register now holds a
-fired-trigger item. Not escalated at this close: the session was an owner-redirected scheduled
-firing operating under the wrap's duration bound; the next dedicated pass picks this up. (The napkin rotation-cadence trigger recorded by the Q-04 firing further down this section stands alongside this capture-batch trigger — one consolidation pass serves both.)
+**Status (2026-08-27, Limpet guards Moorings / 01T962): dedicated pass COMPLETE — buffers at
+rest.** The scheduled consolidation session rotated the 2026-07-03 → 2026-08-27 napkin
+(archived to `napkin-2026-07-to-08-27.md`; behaviour-changing lessons merged into
+`distilled.md`), graduated the due owner rulings (cloud ceremony-skip → commit skill +
+claims/comms rules, refined live by the owner mid-pass: one agent per cloud instance, Slack
+via a live Watcher is the only cloud comms channel; single environment definition →
+`cloud-environment.md` preamble; decision cards + blocked-on-owner mobile alert →
+`owner-attention-at-action-moments`; generator formatter-fixpoint contract →
+`generator-first-mindset` on its fired second-instance trigger), and drained Q-012..Q-015
+from open-questions (the 2026-08-23 walk's verdicts live in the overhaul plan). At rest:
+napkin fresh; open-questions holds Q-016 (owner-gated architecture fork) only;
+pending-graduations holds three unfired-trigger items plus **verified-claims engineering,
+now owner-gated on its fired trigger** — the PDR-promotion decision is queued to the owner
+via the closeout notification. Next dedicated pass: not due until a fresh trigger.
 
 **Session-completion consolidation completed this handoff — 2026-07-06 (Fragrant Twining Glade /
 5367e2, n=2 closeout owner).** Scope: the review-session capture batch routed to permanent homes

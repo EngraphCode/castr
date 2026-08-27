@@ -70,22 +70,14 @@ inherited-classifications are all instances of the same principle). Candidate pe
 **pattern-PDR** ("verified-claims engineering" — likely subsuming or federating the
 loop-closure/PDR-096 family) + the umbrella statement in the rebuilt VISION (overhaul plan §W1).
 `[captured: 2026-07-04 | source: wide-deep-review-2026-07-04.md §6.4]`
-trigger-condition: overhaul plan W0 walk ratifies the frame (Q-012..Q-015), or the
-doctrine-claims validator (W3) lands — whichever first gives the thesis an enforced instance.
-status: pending.
-
-### Generator-output must be formatter-stable (fixpoint contract)
-
-Any generator whose output lands in a prettier-formatted tree must emit formatter-stable bytes,
-or pre-commit auto-format re-drifts the artefacts and the drift gate refuses every subsequent
-push (worked castr instance: skills-adapter YAML quoting, two refused pushes, 2026-07-03;
-cure recipe: prettier-check the generator OUTPUT inside the generator's own tests). Candidate
-permanent
-home: a **generator-fixpoint clause** in the relevant validator/generator doctrine (PDR-096
-family or a testing-strategy corollary) + the generator-side quoting fix.
-`[captured: 2026-07-03 | source: napkin part-3 + PR #4 push refusals]`
-trigger-condition: a 2nd generator-formatter fixpoint instance, or the generator-side fix lands.
-status: pending.
+trigger-condition: FIRED — the 2026-08-23 interactive walk ratified Q-012..Q-015 (recorded in
+the overhaul plan preamble). status: **owner-gated** — PDR authorship is a Practice-Core
+change requiring owner approval (consolidate-docs §7a/§11.3), and the companion umbrella
+statement belongs to the not-yet-run W1 vision rebuild. Owner decision needed: approve
+authoring the verified-claims pattern-PDR now, or hold it to ride the W1 rewrite. Queued to
+the owner by the 2026-08-27 consolidation session's closeout notification; evidence a future
+agent can check — the PDR does not exist in `.agent/practice-core/decision-records/`, and
+`.agent/directives/VISION.md` does not yet describe both products.
 
 ### Autonomous-programme operating pattern → PDR
 
@@ -101,31 +93,15 @@ trigger-condition: a second autonomous programme is stood up, or the owner direc
 graduation.
 status: pending.
 
-### Cloud single-agent sessions skip commit-queue/comms ceremony (owner ruling)
+### IR persistence schema-versioning policy → ADR
 
-Owner ruling 2026-08-25 (in-session; verbatim substance in the napkin's 2026-08-25
-entry): cloud environments with a single agent do not need commit queues, and until
-the Slack work completes cannot partake in comms — that ceremony can and should be
-skipped in such sessions. Candidate permanent home: a cloud-single-agent clause in
-the commit skill canonical (§Commit Queue And Window Protocol) plus the
-claims/comms session-open and session-close rules; the blocking husky gates are
-untouched by the ruling.
-`[captured: 2026-08-25 | source: napkin 2026-08-25 (Sardine turns Coral)]`
-trigger-condition: already fired (unconditional owner ruling); lands at the next
-consolidation pass or the next session touching those canonicals.
-status: due.
-
-### Single environment definition serves every Practice repo (owner ruling)
-
-Owner ruling 2026-08-25 (in-session to the PR-drive seat, Kraken calls Abyss
-0178h2): "We are going to use a single environment definition for both OCE and
-Castr instances." This repo's
-`.agent/claude-harness-integrations/cloud-environment.md` (post PR #58) is the
-definition of record for BOTH estates. Candidate permanent home: a scope
-statement in that document's preamble naming every Practice repo as its
-consumer, plus the OCE environment doc becoming a GitHub-URL pointer at it
-(the OCE half is routed in OCE's 2026-08-25 closeout napkin entry).
-`[captured: 2026-08-25 | source: owner word, PR-drive session (napkin 2026-08-25 closeout entry)]`
-trigger-condition: already fired (unconditional owner ruling); lands at the next
-consolidation pass or the next session touching the environment doc.
-status: due.
+Q-03 (2026-08-24 firing) landed hard version pinning at `serializeIR`/`deserializeIR`
+(foreign versions rejected both directions, no migration machinery,
+regenerate-from-source contract) via review convergence on PR #50 rather than an
+upfront decision record. Candidate permanent home: an **ADR** stating the IR
+persistence versioning policy, authored from the PR #50 thread record rather than
+re-derived.
+`[captured: 2026-08-24 | source: napkin (Luminous Waning Orbit)]` — registered here at the
+2026-08-27 napkin rotation.
+trigger-condition: the first time IR migration machinery or a multi-version read
+window is proposed. status: pending.

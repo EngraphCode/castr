@@ -27,56 +27,12 @@ owning artefact / discussion home (if any), and a status line.
 
 <!-- Q-entries appended below by drains and consolidation passes. -->
 
-### Q-012 — Name and boundary of the second product (agent-tools + Practice kernel)
-
-Captured: 2026-07-04 | source: `wide-deep-review-2026-07-04.md` §6.2 + owner overhaul directive.
-The agentic-engineering estate (~2× the compiler's size, Oak back-flow proven) has no product
-identity. Shapes future work: investment, extraction criteria, what "Oak parity" means once flow
-reverses. Home:
-[`strategy-vision-estate-overhaul.md`](../../plans/future/strategy-vision-estate-overhaul.md)
-§W0. **Fork/determination split (2026-07-06, assumptions-expert fold):** the NAME is the genuine
-owner fork (constitutively yours); keep-in-repo + ADR-048-style value-gated extraction criteria
-are lens-settled determinations executed under the walk's acknowledgement.
-Status: **DECIDED (owner, interactive walk, 2026-08-23): the second product's name is
-"the Practice".** Consumed by the Q-14 doctrine wave (VISION.md/IDENTITY.md describe both
-products by name); the keep-in-repo + value-gated-extraction determinations execute under
-this walk's acknowledgement. Drain at next consolidation.
-
-### Q-013 — Vision topology: umbrella + two product visions, or a split
-
-Captured: 2026-07-04 | source: same. One VISION.md currently describes one product; the repo
-holds two. Home: overhaul plan §W0/§W1. Recommendation: umbrella (verified-claims thesis) + one
-vision surface per product. Status: **DISSOLVED to a determination (2026-07-06, assumptions-expert
-fold via the Four-Lens test / PDR-057)** — the topology follows deductively from single-source +
-impact-before-activity with no divergent product outcome; executed at W1 under the W0 walk's
-acknowledgement, not owner-gated. **Acknowledged by the 2026-08-23 interactive walk** (the
-Q-012/Q-014/Q-015 verdicts are that walk's residue); drain at next consolidation.
-
-### Q-014 — Adopt preservation coverage % as product A's headline public metric
-
-Captured: 2026-07-04 | source: review §6.1 (verb-model research verified). Computed support
-claims replace asserted ✅ tables; aligns remediation-02, the representability matrix, and the
-`check` verb. Home: overhaul plan §W0/§W5. Recommendation: adopt. Status: **DECIDED
-(owner, interactive walk, 2026-08-23): ADOPT** — preservation-coverage % is the compiler's
-headline public metric, computed by the proof estate, replacing asserted support tables.
-Consumers: the proof-programme harness/matrix slices and the Q-14 vision rewrite. Drain at
-next consolidation.
-
-### Q-015 — principles.md truthing batch (protected-file approval)
-
-Captured: 2026-07-04 | source: review R4/R5. **Fork/determination split (2026-07-06,
-assumptions-expert fold):** the genuine fork is the **M1/R5 choice** — enforce the
-`Object.*`/`Reflect.*` FORBIDDEN rule via lint (recommended, per strictest-of-three; 147
-product-code uses today), or owner amends the doctrine. The staleness edits (the falsified
-§Tooling Integration TSDoc claim etc.) are determinations forced by strictest-of-three, executed
-under the protected-file approval the walk grants in one batch — principles.md must not be
-edited without explicit owner approval. Home: overhaul plan §W3 + remediation 06.
-Status: **DECIDED (owner, interactive walk, 2026-08-23): ENFORCE VIA LINT** — the
-`Object.*`/`Reflect.*` FORBIDDEN rule becomes a lint gate and the ~147 product-code uses
-are remediated in queue slices (enters the proof-programme queue at the Q-12 split, or
-earlier on owner ask); the doctrine stands as written. The staleness-edit batch executes
-under this walk's approval combined with B-09's doctrine-wave APPROVE. Drain at next
-consolidation.
+_Q-012..Q-015 drained 2026-08-27: all four were decided or acknowledged by the owner's
+2026-08-23 interactive walk, and the
+[overhaul plan](../../plans/future/strategy-vision-estate-overhaul.md) preamble + decision
+table carry the verdicts (second product named "the Practice"; umbrella vision topology;
+preservation-coverage % adopted; `Object.*`/`Reflect.*` ban lint-enforced). The permanent
+homes are the record._
 
 _Register emptied 2026-06-26 and again 2026-07-03. Q-006 graduated to ADR-049; Q-007 decided
 (markdown-links gate end-state → scoped-blocking, transplant-completeness plan TC3b); Q-009
@@ -89,7 +45,7 @@ items in the gap-rescan backlog §Owner-ruling additions. The permanent homes ar
 not a tombstone here. New questions are appended below by future drains and consolidation
 passes._
 
-### Q-016 — Un-blind the eslint-plugin-boundaries gate: restructure the conversion layer or widen its ADR-036 matrix?
+### Q-016 — Un-blind the boundaries gate: restructure conversion, or widen ADR-036?
 
 Captured: 2026-08-26 (dependency-currency reopening, PR #62; measured firsthand at
 boundaries v6 AND v7). The ADR-036 "strict architectural domain boundaries" gate has
