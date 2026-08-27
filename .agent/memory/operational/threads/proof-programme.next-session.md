@@ -42,8 +42,9 @@ programme's delivery evidence rather than retro-filled here.)
 Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
 programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-26: no programme PR is open, so the next firing claims the next
-eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22 (Q-21 completed 2026-08-26,
+2026-08-26, refreshed 2026-08-27: no programme PR is open, so the next firing claims the next
+eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency
+dropped by owner card ruling 2026-08-27; Q-21 completed 2026-08-26,
 PR #64), then Q-05..Q-09, Q-13,
 Q-14, Q-16 (re-adjudicated 2026-08-25, arming review — the narrowed brief in
 the parent plan is current: ADR-117 citation replacement only), Q-17 (safety
@@ -221,6 +222,80 @@ reconciliation duty), trust node. Next seat acts, in order: PR #67 made
 durable (arc-carrying body) and driven to merged; then the attended firing
 (owner pokes, seat probes); then the enable (owner act); then the Act 3
 consolidation-Routine estate (the learning-loop drain).
+
+**Compaction close (2026-08-27, Vesta turns Singularity / 01PjGS — the
+routine-configuration session's final block; a successor holding only durable
+surfaces resumes from here).** [PR #67](https://github.com/EngraphCode/castr/pull/67)
+MERGED at `05060a95` (post-merge main CI green). A Codex review round landed
+in the race window as that merge completed; the merged-PR rule applied — the
+designated branch restarted from `main` (a pure fast-forward; the repo's
+append-only hook rightly blocked `--force-with-lease`, and none was needed
+since the old tip was an ancestor) — and the round's fixes landed as
+[PR #68](https://github.com/EngraphCode/castr/pull/68), which also carries
+this compaction continuity commit and merges under the ADR-051 clause 3
+standing conditions (at authoring time: all eight review threads
+verified-real → fixed → resolved, CI green on head `40a5287e`, base current).
+Drive statistics for the arc, both PRs: ~20 automated-reviewer findings
+across six rounds (5→5→1→2→2→1), every finding verified firsthand and fixed
+with evidence in the resolving reply, zero rejected, one clause-4(c)
+structural close (the probe's four-shape path-applicability map replacing a
+third instance patch). Owner correction at close, verbatim: **"Use of the
+cognitive skills is never optional"** — the seat's "justified no-run"
+concept-exploration verdict was the fluency class at the meta level
+(claiming a pass's outcome without running it); the corrected run and the
+generalised class statement are in the napkin's closing capture, and the
+encoding question (where "invoked ⇒ runs" lives durably) is routed to the
+consolidation drain / owner word. Late in the close the owner's new
+"Castr Adversarial PR Evaluation" Routine (`trig_014KU9iZvuww1fjqHdzgSqhE`,
+created 2026-08-27, fires on PR pushes) posted its first live evaluation on
+PR #68; two verdict-flipping scoring-contract defects were verified and
+fixed (one-sided-token double reading; row 8's fresh-claim-shaped floor
+measurement), and four further owner card rulings landed in the probe
+(2026-08-27): the verdict scorer is a pre-firing deliverable Phase C waits
+on; rows 7/20 N/A on the drive path is earned by evidence, never by path
+label; the probe is instrument-frozen from merge until first use (amendment
+only for a named defect a run could not surface); the verdict stop is
+owner-overridable only by an explicit recorded ruling. **Successor next
+acts, in order:** **Phase C-pre — the verdict scorer (seat deliverable,
+owner-ruled):** a checked-in scorer implementing the probe's deterministic
+aggregation and recomputing rows 8/9/11/15/18 from git/GitHub state, landed
+through the normal TDD/review path; Phase C waits on it.
+**Phase C — attended first live firing (owner-held):** the owner pokes
+Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
+the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
+observing seat executes the pre-registered
+[`attended-firing-honesty-probe.md`](../../../plans/proof-programme/attended-firing-honesty-probe.md);
+the receipt gate closes only on the device push (Slack is corroboration);
+the arming proceeds only on **HONEST WITHIN BOUNDS** — DIVERGENT or
+INCOMPLETE auto-stops it (owner-ratified card (c)). **Phase D — enable
+(owner act):** runbook step 7, cadence 3/day from enable (card (e)), only
+after Phase C's passing verdict. **Phase E — Act 3 consolidation-Routine
+estate (seat-authored):** prompt file, proposed ADR-051 amendment clause
+delivered as an owner card, runbook + register rows; the owner creates the
+trigger. The trust node's Delivery list mirrors this order; the parent-plan
+frontmatter stays the queue authority.
+
+Merge-tail addendum (2026-08-27 post-compaction, same seat): before PR #68
+merged, ten further review rounds (Codex plus two more adversarial-Routine
+evaluations, the third identifying as Bluebell spins Spore) folded ~14
+verified-real findings into the probe — the deterministic aggregation is
+now total over a fully validated table (per-row token subsets; PARTIAL
+gap/materiality/act metadata; bidirectional applicability for categorical
+AND derived-conditional rows; every bounded sub-claim required and emitted
+beside the verdict), the scorer derives the governing path and every N/A
+condition from observable state (fire-time head status included; the defer
+path validates only on independently observable contest evidence), and a
+precedence clause makes the probe measurements-only — the governing texts
+set standards, and a standard gap is a queued decision (see **QD-14**, new
+OPEN register row: non-code slices vs the red-first non-negotiable; the
+owner's ruling should land as a parent-plan proof-contract clarification).
+The probe text on the merged head is the single authority for all of this;
+the freeze binds from that merge. The convergence lesson, concurred with
+the Bluebell evaluation's verdict: the prose loop was not shrinking, and
+further refinement belongs to the Phase C-pre scorer's TDD suite, where
+these validation rules become executable and testable — the scorer author
+should treat the probe's aggregation/validation clauses as its test-case
+enumeration, not re-open them as prose.
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
