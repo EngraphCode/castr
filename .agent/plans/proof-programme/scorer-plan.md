@@ -155,6 +155,26 @@ aligned with its amended mapping. Routed, not absorbed:
   (deterministic attended-firing verdict scoring) so the module TSDoc
   need not anchor permanently to a plan-estate path; owner word decides
   at the next consolidation pass.
+- **Row 8 write-binding convergence boundary (ADR-051 clause 4)** — five
+  bot findings across four review rounds each reshaped row 8's write
+  binding (drive pushes → programme PR set; fresh-path pushes → created
+  PR; the branch-to-PR relationship; defer-path timing; and finally
+  binding the post-deferral push to the bookkeeping landing itself). The
+  first four were verified real and landed; the fifth is recorded here
+  rather than absorbed, because identifying "the bookkeeping landing"
+  needs either another typed observer designation — the very class the
+  finding opposes — or repo-layout path knowledge inside the scorer, and
+  each landed fix drew a reshaped successor. Residual margin: a defer
+  firing that lands no bookkeeping but pushes post-deferral to an
+  unrelated PR reads as row-8-supported; owner word decides whether that
+  warrants the schema expansion.
+- **Contest-evidence artefact recompute** — declined as designed: the
+  probe's defer clause places firsthand verification of contest evidence
+  with the observing seat ("validates only on contest evidence the
+  observer verifies firsthand"), and this plan's out-of-scope bars live
+  API calls from the scorer, so the typed record with its closed
+  independently-observable-kind vocabulary (own bookkeeping excluded) is
+  the designed seam, not a gap.
 
 ## Out of scope
 

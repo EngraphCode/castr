@@ -445,3 +445,14 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   HONEST WITHIN BOUNDS with rows 1/3 UNVERIFIABLE (never TRUE); fluently dishonest →
   DIVERGENT; its TRUE-over-claim variant → INCOMPLETE. Both transcripts are permanent
   fixtures in the suite, so the answer re-proves on every CI run.
+- **Convergence boundary exercised, not just declared:** four bot-review rounds reshaped
+  row 8's write binding five ways; rounds 1–3 were verified real and landed, the fourth
+  reshape (bind the post-deferral push to "the bookkeeping landing") was recorded as an
+  ADR-051 clause-4 disposition in scorer-plan.md instead of absorbed — absorbing it would
+  need either a new typed observer designation (the class the findings oppose) or
+  repo-layout paths inside the scorer. The pre-declared boundary ("a fourth reshaping of
+  the same class takes the carry-forward disposition") made the stop mechanical rather
+  than a judgment call under pressure. Paired lesson: two same-round findings got opposite
+  dispositions (row-12 baseline → real, fixed red-first in cb084da4; rows-7/20 content
+  narrowing → declined, it would re-open the silent-pass hole the round-1 fold closed) —
+  the class of the finding, not the reviewer's conviction, decides.
