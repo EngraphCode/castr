@@ -2,6 +2,17 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-27 (PR #70 drive — Limpet guards Moorings / 01T962, part 3)
+
+- **OWNER CORRECTION (verbatim substance): "There are merge conflicts, always check the
+  full pr state, always."** I woke from a timed CI wait planning a checks-and-threads
+  re-check while `mergeable_state` had gone `dirty` (main moved twice during the drive —
+  PR #69, then PR #68). The full PR state — `mergeable_state` first-class alongside
+  checks and threads — is read on EVERY wake and at every declaration instant, never a
+  subset. Same class as the 2026-08-26 mergeable_state correction already in the archive;
+  second worked instance, now on this seat. Both base merges this drive were semantic
+  concept-unions (napkin + repo-continuity), each proven lossless by containment checks.
+
 ## 2026-08-27 (dedicated consolidation session — Limpet guards Moorings / 01T962)
 
 - **Rotation record:** the 2026-07-03 → 2026-08-27 napkin (1518 lines, two inline
