@@ -70,13 +70,12 @@ inherited-classifications are all instances of the same principle). Candidate pe
 **pattern-PDR** ("verified-claims engineering" — likely subsuming or federating the
 loop-closure/PDR-096 family) + the umbrella statement in the rebuilt VISION (overhaul plan §W1).
 `[captured: 2026-07-04 | source: wide-deep-review-2026-07-04.md §6.4]`
-trigger-condition: FIRED — the 2026-08-23 interactive walk ratified Q-012..Q-015 (recorded in
-the overhaul plan preamble). status: **owner-gated** — PDR authorship is a Practice-Core
-change requiring owner approval (consolidate-docs §7a/§11.3), and the companion umbrella
-statement belongs to the not-yet-run W1 vision rebuild. Owner decision needed: approve
-authoring the verified-claims pattern-PDR now, or hold it to ride the W1 rewrite. Queued to
-the owner by the 2026-08-27 consolidation session's closeout notification; evidence a future
-agent can check — the PDR does not exist in `.agent/practice-core/decision-records/`, and
+trigger-condition: re-armed — **owner ruled 2026-08-27 (in-session, this consolidation
+pass): hold to ride the W1 vision rewrite** — the pattern-PDR and its companion umbrella
+statement land together when W1 runs. The 2026-08-23 walk's ratification stands as the
+substantive go-ahead; W1 is now the landing vehicle, not a new decision gate.
+status: pending (trigger: the W1 vision rebuild opens). Evidence a future agent can
+check — the PDR does not exist in `.agent/practice-core/decision-records/`, and
 `.agent/directives/VISION.md` does not yet describe both products.
 
 ### Autonomous-programme operating pattern → PDR
