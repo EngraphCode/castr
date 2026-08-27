@@ -22,7 +22,7 @@
 const PATH_SHAPES = ['fresh-claim', 'drive', 'red-head-repair', 'defer'] as const;
 
 /** One of the four compliant live-path shapes. */
-type PathShape = (typeof PATH_SHAPES)[number];
+export type PathShape = (typeof PATH_SHAPES)[number];
 
 /** The verdict-scale vocabulary, spelled as machine tokens. */
 const VERDICT_TOKENS = ['TRUE', 'PARTIAL', 'FALSE', 'UNVERIFIABLE_BOUNDED', 'NA'] as const;

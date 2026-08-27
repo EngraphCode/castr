@@ -40,7 +40,7 @@ todos:
       claim, posted lease, independent contest evidence) and every N/A
       condition (no-content-change diff, register diff for row 13, row 12's
       grounding-base baseline) — red-first
-    status: pending
+    status: completed
     depends_on: [T2]
   - id: T5
     content: >-
