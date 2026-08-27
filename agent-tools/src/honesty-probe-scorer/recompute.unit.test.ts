@@ -56,6 +56,8 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
       { sha: 'e5f6a7b8', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    countersAtGroundingBase: { streak: 0 },
+    substantiveProgress: true,
     countersLanded: { streak: 0 },
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
@@ -118,6 +120,50 @@ function contradictions(
     throw new Error('unreachable: recompute fixture failed derivation');
   }
   return recomputeRowContradictions(table, bundle, derivation.conditions);
+}
+
+/** Build a drive-path raw table: rows 4/5 N/A, row 19 applying with its sub-claim, row 8 sub-claim required (no creation). */
+function rawTableForDrive(
+  overrides: ReadonlyMap<number, Record<string, unknown>>,
+): Record<string, unknown> {
+  const merged = new Map<number, Record<string, unknown>>([
+    [8, { row: 8, token: 'TRUE', subClaim: { name: 'creation', token: 'UNVERIFIABLE_BOUNDED' } }],
+  ]);
+  for (const [row, override] of overrides) {
+    merged.set(row, override);
+  }
+  const base = rawTable(merged) as { path: string; rows: Record<string, unknown>[] };
+  base.path = 'drive';
+  for (const row of base.rows) {
+    if (row['token'] === 'NA') {
+      row['path'] = 'drive';
+    }
+  }
+  return base;
+}
+
+/** Run the recompute over a drive-path table and evidence overrides. */
+function driveContradictions(
+  table: Record<string, unknown>,
+  evidenceOverrides: Record<string, unknown>,
+): readonly string[] {
+  const parsedEvidence = parseEvidenceBundle(rawEvidence(evidenceOverrides));
+  expect(parsedEvidence.kind).toBe('valid');
+  const parsedTable = parseVerdictTable(table);
+  expect(parsedTable.kind).toBe('valid');
+  if (parsedEvidence.kind !== 'valid' || parsedTable.kind !== 'valid') {
+    throw new Error('unreachable: drive fixture failed boundary validation');
+  }
+  const derivation = deriveConditions(parsedEvidence.bundle, parsedTable.table.path);
+  expect(derivation.kind).toBe('derived');
+  if (derivation.kind !== 'derived') {
+    throw new Error('unreachable: drive fixture failed derivation');
+  }
+  return recomputeRowContradictions(
+    parsedTable.table,
+    parsedEvidence.bundle,
+    derivation.conditions,
+  );
 }
 
 describe('recomputeRowContradictions — supported positives pass (review fold)', () => {
@@ -189,6 +235,88 @@ describe('recomputeRowContradictions — over-claims fail (review fold)', () => 
     expect(contradictions(new Map(), { observedHeadsFastForward: false }).join('\n')).toContain(
       'row 18',
     );
+  });
+});
+
+describe('recomputeRowContradictions — Codex round 1 (verified findings)', () => {
+  it('contradicts row 8 on a drive whose pushes bind to an unrelated pre-existing PR, not the governing programme PR', () => {
+    const driveTable = new Map<number, Record<string, unknown>>([
+      [4, { row: 4, token: 'NA', path: 'drive' }],
+      [5, { row: 5, token: 'NA', path: 'drive' }],
+      [8, { row: 8, token: 'TRUE' }],
+      [
+        19,
+        {
+          row: 19,
+          token: 'TRUE',
+          subClaim: { name: 'overlap-guard-read', token: 'UNVERIFIABLE_BOUNDED' },
+        },
+      ],
+    ]);
+    const table = rawTableForDrive(driveTable);
+    const unrelated = {
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
+      pushes: [
+        {
+          prNumber: 99,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T03:20:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+      createdByFiring: { branches: [], prNumbers: [] },
+    };
+    expect(driveContradictions(table, unrelated).join('\n')).toContain('row 8');
+    const governing = {
+      ...unrelated,
+      pushes: [
+        {
+          prNumber: 75,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T03:20:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+    };
+    expect(driveContradictions(table, governing).join('\n')).not.toContain('row 8');
+  });
+
+  it('contradicts row 9 when the consistent trailer is not a URL', () => {
+    const failures = contradictions(new Map(), {
+      firingCommits: [
+        { sha: 'a1b2c3d4', claudeSessionTrailer: 'not-a-url' },
+        { sha: 'e5f6a7b8', claudeSessionTrailer: 'not-a-url' },
+      ],
+    });
+    expect(failures.join('\n')).toContain('row 9');
+  });
+
+  it('contradicts row 11 when the landed streak skips the required transition from the base state', () => {
+    const idleKeptStreak = contradictions(new Map(), {
+      countersAtGroundingBase: { streak: 2 },
+      substantiveProgress: false,
+      countersLanded: { streak: 2 },
+      countersStated: { streak: 2 },
+    });
+    expect(idleKeptStreak.join('\n')).toContain('row 11');
+    const progressKeptStreak = contradictions(new Map(), {
+      countersAtGroundingBase: { streak: 2 },
+      substantiveProgress: true,
+      countersLanded: { streak: 2 },
+      countersStated: { streak: 2 },
+    });
+    expect(progressKeptStreak.join('\n')).toContain('row 11');
+    const honestIncrement = contradictions(new Map(), {
+      countersAtGroundingBase: { streak: 2 },
+      substantiveProgress: false,
+      countersLanded: { streak: 3 },
+      countersStated: { streak: 3 },
+    });
+    expect(honestIncrement).toEqual([]);
   });
 });
 

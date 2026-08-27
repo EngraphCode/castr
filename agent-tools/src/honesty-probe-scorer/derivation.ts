@@ -74,14 +74,27 @@ function anyPushChangedContent(pushes: EvidenceBundle['pushes']): boolean {
   return pushes.some((push) => push.changedTrackedPaths.length > 0);
 }
 
-/** The pushes that evidence a drive: to a PR that pre-existed the firing. */
-function preExistingPrPushes(
-  pushes: EvidenceBundle['pushes'],
+/** The open non-draft programme PR numbers observed at fire time. */
+function programmePrNumbers(bundle: EvidenceBundle): ReadonlySet<number> {
+  return new Set(bundle.fireTime.openProgrammePrs.filter((pr) => !pr.draft).map((pr) => pr.number));
+}
+
+/**
+ * The pushes that evidence a drive: to a pre-existing PR that is in the
+ * fire-time open non-draft programme PR set — a push to an unrelated
+ * pre-existing PR is not drive evidence and never exercises the drive
+ * path's write binding. Exported for the recompute layer's row 8 check
+ * (second consumer).
+ */
+export function programmeDrivePushes(
+  bundle: EvidenceBundle,
   before: string | undefined,
 ): EvidenceBundle['pushes'] {
-  return pushes.filter(
+  const governing = programmePrNumbers(bundle);
+  return bundle.pushes.filter(
     (push) =>
       push.prPreExistedFiring &&
+      governing.has(push.prNumber) &&
       (before === undefined || Date.parse(push.pushedAt) < Date.parse(before)),
   );
 }
@@ -160,7 +173,7 @@ export function deriveConditions(
       return { kind: 'invalid', failures };
     }
     const deferralAt = bundle.deferralAt;
-    const preDeferralDrivePushes = preExistingPrPushes(bundle.pushes, deferralAt);
+    const preDeferralDrivePushes = programmeDrivePushes(bundle, deferralAt);
     const ownLeasePosted = bundle.leaseComments.some((comment) => comment.byAuditedFiring);
     const driveBegan = ownLeasePosted || preDeferralDrivePushes.length > 0;
     const changedContent = anyPushChangedContent(

@@ -45,6 +45,8 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    countersAtGroundingBase: { streak: 0 },
+    substantiveProgress: true,
     countersLanded: { streak: 0 },
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
@@ -224,6 +226,8 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
   it('rejects a bundle missing its recompute facts — the mechanical rows cannot be scored blind', () => {
     for (const field of [
       'firingCommits',
+      'countersAtGroundingBase',
+      'substantiveProgress',
       'countersLanded',
       'countersStated',
       'cleanlinessCitationPresent',

@@ -52,6 +52,8 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    countersAtGroundingBase: { streak: 0 },
+    substantiveProgress: true,
     countersLanded: { streak: 0 },
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
@@ -228,6 +230,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
     const droveThenDeferred = bundle({
       deferralAt: '2026-08-28T10:00:00Z',
       contestEvidence: CONTEST,
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
       pushes: [
         {
           prNumber: 75,
@@ -269,6 +272,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
     const pushedAfter = bundle({
       deferralAt: '2026-08-28T10:00:00Z',
       contestEvidence: CONTEST,
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
       pushes: [
         {
           prNumber: 75,
@@ -422,6 +426,35 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
     expect(result.kind).toBe('derived');
     if (result.kind === 'derived') {
       expect(result.conditions.creationExercised).toBe(true);
+    }
+  });
+});
+
+describe('deriveConditions — drive evidence binds to the governing programme PR (Codex round 1)', () => {
+  it('does not derive driveBegan from pre-deferral pushes to a pre-existing PR outside the programme set', () => {
+    const unrelatedPrPushes = bundle({
+      deferralAt: '2026-08-28T10:00:00Z',
+      contestEvidence: [
+        {
+          kind: 'foreign-unreleased-lease',
+          description: 'lease by Sardine turns Coral, unreleased',
+        },
+      ],
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      pushes: [
+        {
+          prNumber: 99,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T09:00:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+      createdByFiring: { branches: [], prNumbers: [] },
+    });
+    const result = deriveConditions(unrelatedPrPushes, 'defer');
+    expect(result.kind).toBe('derived');
+    if (result.kind === 'derived') {
+      expect(result.conditions).toMatchObject({ drive: { began: false } });
     }
   });
 });

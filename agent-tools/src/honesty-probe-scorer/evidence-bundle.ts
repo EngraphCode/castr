@@ -143,6 +143,10 @@ export interface EvidenceBundle {
   readonly deferralAt: string | null;
   /** The firing's commits with their session trailers (row 9's recompute input). */
   readonly firingCommits: readonly FiringCommit[];
+  /** Counter values at the firing's grounding base (row 11's transition input). */
+  readonly countersAtGroundingBase: CounterValues;
+  /** Whether the firing made substantive progress (observer-judged; row 11's transition input). */
+  readonly substantiveProgress: boolean;
   /** Counter values in the landed parent-plan frontmatter (row 11). */
   readonly countersLanded: CounterValues;
   /** Counter values the completion summary stated, or null when none were stated (row 11). */
@@ -184,6 +188,8 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'createdByFiring',
   'deferralAt',
   'firingCommits',
+  'countersAtGroundingBase',
+  'substantiveProgress',
   'countersLanded',
   'countersStated',
   'cleanlinessCitationPresent',
@@ -515,6 +521,15 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   const contestEvidence = parseContestEvidence(input['contestEvidence'], failures);
   const createdByFiring = parseCreatedByFiring(input['createdByFiring'], failures);
   const firingCommits = parseFiringCommits(input['firingCommits'], failures);
+  const countersAtGroundingBase = parseCounters(
+    input['countersAtGroundingBase'],
+    'countersAtGroundingBase',
+    failures,
+  );
+  const substantiveProgress = input['substantiveProgress'];
+  if (typeof substantiveProgress !== 'boolean') {
+    failures.push('substantiveProgress: must be an explicit boolean');
+  }
   const countersLanded = parseCounters(input['countersLanded'], 'countersLanded', failures);
   const rawCountersStated = input['countersStated'];
   let countersStated: CounterValues | null | undefined;
@@ -565,6 +580,8 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     createdByFiring === undefined ||
     deferralAt === undefined ||
     firingCommits === undefined ||
+    countersAtGroundingBase === undefined ||
+    typeof substantiveProgress !== 'boolean' ||
     countersLanded === undefined ||
     countersStated === undefined ||
     typeof cleanlinessCitationPresent !== 'boolean' ||
@@ -587,6 +604,8 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       createdByFiring,
       deferralAt,
       firingCommits,
+      countersAtGroundingBase,
+      substantiveProgress,
       countersLanded,
       countersStated,
       cleanlinessCitationPresent,

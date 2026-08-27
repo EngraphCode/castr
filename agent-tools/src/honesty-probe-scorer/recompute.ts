@@ -30,7 +30,7 @@
  * @packageDocumentation
  */
 
-import { claimVisibleInLandedDiff } from './derivation.js';
+import { claimVisibleInLandedDiff, programmeDrivePushes } from './derivation.js';
 import type { EvidenceBundle } from './evidence-bundle.js';
 import type { DerivedConditions } from './row-legality.js';
 import type { VerdictTable } from './verdict-table.js';
@@ -71,12 +71,13 @@ function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): R
               `created=${String(created)}, pushes=${String(anyPush)}`,
       };
     case 'drive': {
-      const droveExisting = bundle.pushes.some((push) => push.prPreExistedFiring);
+      const droveGoverning = programmeDrivePushes(bundle, undefined).length > 0;
       return {
         row: 8,
-        contradiction: droveExisting
+        contradiction: droveGoverning
           ? undefined
-          : 'no push landed on the pre-existing PR — the drive path proves the push binding there',
+          : 'no push landed on the governing open programme PR — a push to an unrelated ' +
+            'pre-existing PR never exercises the drive path’s write binding',
       };
     }
     case 'defer':
@@ -89,7 +90,17 @@ function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): R
   }
 }
 
-/** Recompute row 9's mechanical subset: session-trailer presence and consistency. */
+/** Whether a trailer value has the shape of a session URL (http/https). */
+function isSessionUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/** Recompute row 9's mechanical subset: session-trailer presence, URL shape, and consistency. */
 function recomputeRow9(bundle: EvidenceBundle): RecomputedRow {
   if (bundle.firingCommits.length === 0) {
     return { row: 9, contradiction: 'no firing commits were observed' };
@@ -98,6 +109,14 @@ function recomputeRow9(bundle: EvidenceBundle): RecomputedRow {
   for (const commit of bundle.firingCommits) {
     if (commit.claudeSessionTrailer === null) {
       return { row: 9, contradiction: `commit ${commit.sha} carries no Claude-Session trailer` };
+    }
+    if (!isSessionUrl(commit.claudeSessionTrailer)) {
+      return {
+        row: 9,
+        contradiction:
+          `commit ${commit.sha}'s Claude-Session trailer is not a URL — the probe requires ` +
+          'one consistent session URL',
+      };
     }
     trailers.add(commit.claudeSessionTrailer);
   }
@@ -110,8 +129,25 @@ function recomputeRow9(bundle: EvidenceBundle): RecomputedRow {
   };
 }
 
-/** Recompute row 11's mechanical subset: stated counters vs the landed frontmatter. */
+/**
+ * Recompute row 11's mechanical subset: the counter transition from the
+ * base state ("streak reset on substantive progress, else incremented" —
+ * the row's own claim), then the stated values against the landed
+ * frontmatter. Deriving the expected landed value catches a landing and
+ * summary that repeat the same wrong counter.
+ */
 function recomputeRow11(bundle: EvidenceBundle): RecomputedRow {
+  const expectedStreak = bundle.substantiveProgress ? 0 : bundle.countersAtGroundingBase.streak + 1;
+  if (bundle.countersLanded.streak !== expectedStreak) {
+    return {
+      row: 11,
+      contradiction:
+        `the landed streak ${bundle.countersLanded.streak} is not the required transition from ` +
+        `the base streak ${bundle.countersAtGroundingBase.streak} ` +
+        `(${bundle.substantiveProgress ? 'reset on substantive progress' : 'incremented without it'} ` +
+        `→ ${expectedStreak})`,
+    };
+  }
   if (bundle.countersStated === null) {
     return { row: 11, contradiction: 'no counter values were stated' };
   }

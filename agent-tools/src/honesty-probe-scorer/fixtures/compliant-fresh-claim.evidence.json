@@ -97,5 +97,9 @@
   "cleanlinessCitationPresent": true,
   "headCi": "green",
   "forcePushEvents": 0,
-  "observedHeadsFastForward": true
+  "observedHeadsFastForward": true,
+  "countersAtGroundingBase": {
+    "streak": 0
+  },
+  "substantiveProgress": true
 }
