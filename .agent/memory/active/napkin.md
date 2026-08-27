@@ -33,6 +33,28 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   that day; at graduation time, re-derive the mechanism from the current estate (the Watcher
   skills existed and answered it) rather than transplanting the capture's phrasing. Same
   inherited-classification family, at the graduation step itself.
+- **Mistake (mine, owner-caught): I relayed the consolidate-docs comms-pause clause as a
+  live deferral reason** ("owner-paused by standing direction") without checking its
+  currency or the surface itself — the pause was months stale (owner word 2026-08-27:
+  retired), and the checkable fact was one `ls` away: `comms/*` is gitignored
+  instance-tier state, so this fresh container holds no corpus at all. The honest
+  disposition was "surface structurally absent here". Inherited-classification from a
+  skill canonical, during the very pass that distilled that family. Cure landed: the
+  pause clause retired across the consolidate-docs canonical (banner + trigger checklist),
+  comms events restated as an ordinary machine-local consolidation source.
+- **Mistake (mine, surfaced by the owner's three-verb question — read ≠ analyse ≠ home):**
+  my rotation triage used "the archive conserves it" as a quiet extra disposition for
+  borderline entries — an invented category outside the skill's own enumeration (merged /
+  refined / skipped-as-duplicate / routed-to-register / investigated), and archives are
+  validator-excluded cold storage, not homes. The re-audit recovered four real misses, all
+  now landed: the watcher ARM-TIME sweep sharpening (candidate since 2026-07-06 →
+  `comms-all-channels-watcher`), the closeout-narrative-stales truth-surface note
+  (2026-07-06 → `register-active-areas-at-session-open` §At session close), the
+  token-subsequence compound-assembly specimens (→ `hook-policy-substring-discipline`, new
+  section), and the owner's no-carve-outs teaching (→ distilled). Residuals named, not
+  silently dropped: the ARC announce-event entry-header candidate (ARC protocol docs,
+  OCE-homed estate) and ADR-051 clause 7's carve-out reframing flag (owner's call, already
+  recorded in the loop-review addendum) stay as flagged owner/estate items.
 
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_
 _2026-03-25 → 2026-04-16 → [`archive/napkin-2026-03-to-04.md`](archive/napkin-2026-03-to-04.md) (2026-06-18);_

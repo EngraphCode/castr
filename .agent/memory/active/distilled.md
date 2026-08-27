@@ -160,6 +160,13 @@ High-signal learnings from the napkin belong here once they have proved worth ke
   solo) but explicitly initialises only one; for load-bearing states prefer explicit
   declaration, or at minimum attest the absence in a durable record a future agent can check
   (free-play seed 2026-08-25, weighed at the 2026-08-27 consolidation).
+- **An exception-shaped grant is a smell — "we don't do carve outs, we do policy"** (owner
+  teaching, 2026-08-24, verbatim; given while declining a proposal whose card leaned on an
+  ADR's own "explicit carve-out" wording). Model the new thing against the existing
+  mechanisms serving the same NEED (comms, heartbeats, liveness) and write the general
+  policy; the medium (Slack vs comms-log vs push) is a parameter, not a new category.
+  ADR-051 clause 7's carve-out framing remains flagged for this reframing at its next
+  revisit — owner's call, recorded in the loop-review report addendum.
 - **A load-bearing term used across doctrine with no definition anchor makes every consumer
   hand-disambiguate — define it at one anchor and have instances self-declare.** "Programme
   PR" appeared ~24 times with WIP=1 turning on it, defined nowhere a zero-context firing

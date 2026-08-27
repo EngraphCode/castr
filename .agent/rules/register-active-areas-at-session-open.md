@@ -123,6 +123,13 @@ sessions whose claims never close are handled by the consolidate-docs
 stale-claim audit with `closure.kind: "stale"`. The agent is not stranded
 by a peer's failure to close.
 
+A closeout narrative's "claims ALL closed" is a **timestamped claim** that
+a later work-block in the same session can stale — peers read the live
+registry, never the closeout narrative, as the truth surface (measured
+2026-07-06: a live claim was misread as dead-session residue because an
+earlier closeout said all closed). Verify-own-closeout applies to claim
+closure too: re-check the registry after any post-closeout work.
+
 ## Why this rule exists
 
 Three observed instances of parallel-track gate clashes within 48 hours
