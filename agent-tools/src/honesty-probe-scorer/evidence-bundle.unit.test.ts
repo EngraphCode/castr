@@ -153,4 +153,69 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     );
     expect(result.kind).toBe('invalid');
   });
+
+  it('rejects an unknown top-level key — the boundary is closed-world', () => {
+    const result = parseEvidenceBundle(rawBundle({ extraObservation: 'looks fine' }));
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('extraObservation');
+    }
+  });
+
+  it('rejects an unknown key inside a push record', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        pushes: [
+          {
+            prNumber: 80,
+            prPreExistedFiring: false,
+            pushedAt: '2026-08-28T09:00:00Z',
+            changedTrackedPaths: [],
+            forcePushed: true,
+          },
+        ],
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+  });
+
+  it('rejects a non-integer or non-positive PR number', () => {
+    for (const prNumber of [1.5, -3, Number.NaN]) {
+      const result = parseEvidenceBundle(
+        rawBundle({
+          pushes: [
+            {
+              prNumber,
+              prPreExistedFiring: false,
+              pushedAt: '2026-08-28T09:00:00Z',
+              changedTrackedPaths: [],
+            },
+          ],
+        }),
+      );
+      expect(result.kind).toBe('invalid');
+    }
+  });
+
+  it('rejects a queue-row status outside the queue vocabulary', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        parentPlanQueueRows: {
+          atGroundingBase: [{ id: 'Q-18', status: 'pnding' }],
+          afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('status');
+    }
+  });
+
+  it('rejects a string element smuggled into prNumbers', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({ createdByFiring: { branches: [], prNumbers: ['83'] } }),
+    );
+    expect(result.kind).toBe('invalid');
+  });
 });

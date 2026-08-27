@@ -22,6 +22,17 @@
  * @packageDocumentation
  */
 
+import {
+  checkClosedWorld,
+  isNonEmptyString,
+  isParseableTime,
+  isPositiveInteger,
+  isPositiveIntegerArray,
+  isRecord,
+  isStringArray,
+  isUnknownArray,
+} from './boundary.js';
+
 /** The independently observable contest-evidence kinds the defer path accepts. */
 const CONTEST_EVIDENCE_KINDS = [
   'foreign-unreleased-lease',
@@ -47,10 +58,21 @@ interface FireTimeSnapshot {
   readonly openProgrammePrs: readonly OpenProgrammePr[];
 }
 
+/**
+ * The parent-plan queue-row status vocabulary (parent-plan frontmatter +
+ * routine-prompt step 5's "mark it `in_progress`") — closed, so a typo'd
+ * status fails the boundary loud instead of silently flipping the
+ * derivation's claim detection.
+ */
+const QUEUE_ROW_STATUSES = ['pending', 'in_progress', 'completed'] as const;
+
+/** One queue-row status. */
+type QueueRowStatus = (typeof QUEUE_ROW_STATUSES)[number];
+
 /** One parent-plan queue row's observed state. */
 interface QueueRowState {
   readonly id: string;
-  readonly status: string;
+  readonly status: QueueRowStatus;
 }
 
 /** Parent-plan queue rows at the firing's grounding base and after landing. */
@@ -114,25 +136,53 @@ export type ParseEvidenceBundleResult =
   | { readonly kind: 'valid'; readonly bundle: EvidenceBundle }
   | { readonly kind: 'invalid'; readonly failures: readonly string[] };
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+const CONTEST_EVIDENCE_KIND_SET: ReadonlySet<string> = new Set(CONTEST_EVIDENCE_KINDS);
+
+function isContestEvidenceKind(value: unknown): value is ContestEvidenceKind {
+  return typeof value === 'string' && CONTEST_EVIDENCE_KIND_SET.has(value);
 }
 
-function isParseableTime(value: unknown): value is string {
-  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
+const QUEUE_ROW_STATUS_SET: ReadonlySet<string> = new Set(QUEUE_ROW_STATUSES);
+
+function isQueueRowStatus(value: unknown): value is QueueRowStatus {
+  return typeof value === 'string' && QUEUE_ROW_STATUS_SET.has(value);
 }
 
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0;
-}
-
-function isStringArray(value: unknown): value is readonly string[] {
-  return Array.isArray(value) && value.every((entry) => typeof entry === 'string');
-}
+const BUNDLE_KEYS: ReadonlySet<string> = new Set([
+  'fireTime',
+  'parentPlanQueueRows',
+  'register',
+  'pushes',
+  'leaseComments',
+  'contestEvidence',
+  'createdByFiring',
+  'deferralAt',
+]);
+const FIRE_TIME_KEYS: ReadonlySet<string> = new Set(['mainHeadCi', 'openProgrammePrs']);
+const OPEN_PR_KEYS: ReadonlySet<string> = new Set(['number', 'draft']);
+const QUEUE_ROW_KEYS: ReadonlySet<string> = new Set(['id', 'status']);
+const QUEUE_SNAPSHOT_KEYS: ReadonlySet<string> = new Set(['atGroundingBase', 'afterLanding']);
+const REGISTER_KEYS: ReadonlySet<string> = new Set([
+  'rowIdsAtGroundingBase',
+  'openRowIdsAtGroundingBase',
+  'rowIdsAfterLanding',
+]);
+const PUSH_KEYS: ReadonlySet<string> = new Set([
+  'prNumber',
+  'prPreExistedFiring',
+  'pushedAt',
+  'changedTrackedPaths',
+]);
+const LEASE_KEYS: ReadonlySet<string> = new Set(['postedAt', 'byAuditedFiring', 'releasedAt']);
+const CONTEST_KEYS: ReadonlySet<string> = new Set(['kind', 'description']);
+const CREATED_KEYS: ReadonlySet<string> = new Set(['branches', 'prNumbers']);
 
 function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | undefined {
   if (!isRecord(raw)) {
     failures.push('fireTime: not an object');
+    return undefined;
+  }
+  if (!checkClosedWorld(raw, FIRE_TIME_KEYS, 'fireTime', failures)) {
     return undefined;
   }
   const mainHeadCi = raw['mainHeadCi'];
@@ -141,7 +191,7 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
     return undefined;
   }
   const rawPrs = raw['openProgrammePrs'];
-  if (!Array.isArray(rawPrs)) {
+  if (!isUnknownArray(rawPrs)) {
     failures.push('fireTime.openProgrammePrs: not an array');
     return undefined;
   }
@@ -149,11 +199,12 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
   for (const [index, entry] of rawPrs.entries()) {
     if (
       !isRecord(entry) ||
-      typeof entry['number'] !== 'number' ||
+      !checkClosedWorld(entry, OPEN_PR_KEYS, `fireTime.openProgrammePrs[${index}]`, failures) ||
+      !isPositiveInteger(entry['number']) ||
       typeof entry['draft'] !== 'boolean'
     ) {
       failures.push(
-        `fireTime.openProgrammePrs[${index}]: requires a PR number and an explicit draft flag`,
+        `fireTime.openProgrammePrs[${index}]: requires a positive integer PR number and an explicit draft flag`,
       );
       return undefined;
     }
@@ -167,17 +218,29 @@ function parseQueueRows(
   label: string,
   failures: string[],
 ): QueueRowState[] | undefined {
-  if (!Array.isArray(raw)) {
+  if (!isUnknownArray(raw)) {
     failures.push(`${label}: not an array`);
     return undefined;
   }
   const rows: QueueRowState[] = [];
   for (const [index, entry] of raw.entries()) {
-    if (!isRecord(entry) || !isNonEmptyString(entry['id']) || !isNonEmptyString(entry['status'])) {
-      failures.push(`${label}[${index}]: requires a non-empty id and status`);
+    if (
+      !isRecord(entry) ||
+      !checkClosedWorld(entry, QUEUE_ROW_KEYS, `${label}[${index}]`, failures)
+    ) {
+      failures.push(`${label}[${index}]: not a closed queue-row object`);
       return undefined;
     }
-    rows.push({ id: entry['id'], status: entry['status'] });
+    const id = entry['id'];
+    const status = entry['status'];
+    if (!isNonEmptyString(id) || !isQueueRowStatus(status)) {
+      failures.push(
+        `${label}[${index}]: requires a non-empty id and a status from the queue vocabulary ` +
+          `(${QUEUE_ROW_STATUSES.join(', ')})`,
+      );
+      return undefined;
+    }
+    rows.push({ id, status });
   }
   return rows;
 }
@@ -185,6 +248,9 @@ function parseQueueRows(
 function parseQueueRowSnapshots(raw: unknown, failures: string[]): QueueRowSnapshots | undefined {
   if (!isRecord(raw)) {
     failures.push('parentPlanQueueRows: not an object');
+    return undefined;
+  }
+  if (!checkClosedWorld(raw, QUEUE_SNAPSHOT_KEYS, 'parentPlanQueueRows', failures)) {
     return undefined;
   }
   const atGroundingBase = parseQueueRows(
@@ -208,6 +274,9 @@ function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | un
     failures.push('register: not an object');
     return undefined;
   }
+  if (!checkClosedWorld(raw, REGISTER_KEYS, 'register', failures)) {
+    return undefined;
+  }
   const rowIdsAtGroundingBase = raw['rowIdsAtGroundingBase'];
   const openRowIdsAtGroundingBase = raw['openRowIdsAtGroundingBase'];
   const rowIdsAfterLanding = raw['rowIdsAfterLanding'];
@@ -225,7 +294,7 @@ function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | un
 }
 
 function parsePushes(raw: unknown, failures: string[]): FiringPush[] | undefined {
-  if (!Array.isArray(raw)) {
+  if (!isUnknownArray(raw)) {
     failures.push('pushes: not an array');
     return undefined;
   }
@@ -235,8 +304,13 @@ function parsePushes(raw: unknown, failures: string[]): FiringPush[] | undefined
       failures.push(`pushes[${index}]: not an object`);
       return undefined;
     }
-    if (typeof entry['prNumber'] !== 'number' || typeof entry['prPreExistedFiring'] !== 'boolean') {
-      failures.push(`pushes[${index}]: requires prNumber and an explicit prPreExistedFiring flag`);
+    if (!checkClosedWorld(entry, PUSH_KEYS, `pushes[${index}]`, failures)) {
+      return undefined;
+    }
+    if (!isPositiveInteger(entry['prNumber']) || typeof entry['prPreExistedFiring'] !== 'boolean') {
+      failures.push(
+        `pushes[${index}]: requires a positive integer prNumber and an explicit prPreExistedFiring flag`,
+      );
       return undefined;
     }
     if (!isParseableTime(entry['pushedAt'])) {
@@ -258,7 +332,7 @@ function parsePushes(raw: unknown, failures: string[]): FiringPush[] | undefined
 }
 
 function parseLeaseComments(raw: unknown, failures: string[]): LeaseComment[] | undefined {
-  if (!Array.isArray(raw)) {
+  if (!isUnknownArray(raw)) {
     failures.push('leaseComments: not an array');
     return undefined;
   }
@@ -266,10 +340,19 @@ function parseLeaseComments(raw: unknown, failures: string[]): LeaseComment[] | 
   for (const [index, entry] of raw.entries()) {
     if (
       !isRecord(entry) ||
-      !isParseableTime(entry['postedAt']) ||
-      typeof entry['byAuditedFiring'] !== 'boolean' ||
+      !checkClosedWorld(entry, LEASE_KEYS, `leaseComments[${index}]`, failures)
+    ) {
+      failures.push(`leaseComments[${index}]: not a closed lease-comment object`);
+      return undefined;
+    }
+    const postedAt = entry['postedAt'];
+    const byAuditedFiring = entry['byAuditedFiring'];
+    const releasedAt = entry['releasedAt'];
+    if (
+      !isParseableTime(postedAt) ||
+      typeof byAuditedFiring !== 'boolean' ||
       !('releasedAt' in entry) ||
-      (entry['releasedAt'] !== null && !isParseableTime(entry['releasedAt']))
+      (releasedAt !== null && !isParseableTime(releasedAt))
     ) {
       failures.push(
         `leaseComments[${index}]: requires postedAt, byAuditedFiring, and releasedAt (timestamp or null)`,
@@ -277,27 +360,30 @@ function parseLeaseComments(raw: unknown, failures: string[]): LeaseComment[] | 
       return undefined;
     }
     comments.push({
-      postedAt: entry['postedAt'] as string,
-      byAuditedFiring: entry['byAuditedFiring'],
-      releasedAt: entry['releasedAt'] as string | null,
+      postedAt,
+      byAuditedFiring,
+      releasedAt: releasedAt === null ? null : releasedAt,
     });
   }
   return comments;
 }
 
 function parseContestEvidence(raw: unknown, failures: string[]): ContestEvidence[] | undefined {
-  if (!Array.isArray(raw)) {
+  if (!isUnknownArray(raw)) {
     failures.push('contestEvidence: not an array');
     return undefined;
   }
   const evidence: ContestEvidence[] = [];
   for (const [index, entry] of raw.entries()) {
-    if (!isRecord(entry)) {
-      failures.push(`contestEvidence[${index}]: not an object`);
+    if (
+      !isRecord(entry) ||
+      !checkClosedWorld(entry, CONTEST_KEYS, `contestEvidence[${index}]`, failures)
+    ) {
+      failures.push(`contestEvidence[${index}]: not a closed contest-evidence object`);
       return undefined;
     }
     const kind = entry['kind'];
-    if (typeof kind !== 'string' || !(CONTEST_EVIDENCE_KINDS as readonly string[]).includes(kind)) {
+    if (!isContestEvidenceKind(kind)) {
       failures.push(
         `contestEvidence[${index}].kind: ${JSON.stringify(kind)} is outside the independently ` +
           `observable kinds (${CONTEST_EVIDENCE_KINDS.join(', ')}) — the firing's own deferral ` +
@@ -309,22 +395,23 @@ function parseContestEvidence(raw: unknown, failures: string[]): ContestEvidence
       failures.push(`contestEvidence[${index}].description: requires a non-empty description`);
       return undefined;
     }
-    evidence.push({ kind: kind as ContestEvidenceKind, description: entry['description'] });
+    evidence.push({ kind, description: entry['description'] });
   }
   return evidence;
 }
 
 function parseCreatedByFiring(raw: unknown, failures: string[]): CreatedByFiring | undefined {
-  if (
-    !isRecord(raw) ||
-    !isStringArray(raw['branches']) ||
-    !Array.isArray(raw['prNumbers']) ||
-    !raw['prNumbers'].every((entry) => typeof entry === 'number')
-  ) {
-    failures.push('createdByFiring: requires branches (strings) and prNumbers (numbers)');
+  if (!isRecord(raw) || !checkClosedWorld(raw, CREATED_KEYS, 'createdByFiring', failures)) {
+    failures.push('createdByFiring: not a closed object');
     return undefined;
   }
-  return { branches: raw['branches'], prNumbers: raw['prNumbers'] as readonly number[] };
+  const branches = raw['branches'];
+  const prNumbers = raw['prNumbers'];
+  if (!isStringArray(branches) || !isPositiveIntegerArray(prNumbers)) {
+    failures.push('createdByFiring: requires branches (strings) and prNumbers (positive integers)');
+    return undefined;
+  }
+  return { branches, prNumbers };
 }
 
 /**
@@ -340,6 +427,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     return { kind: 'invalid', failures: ['input is not an object'] };
   }
   const failures: string[] = [];
+  checkClosedWorld(input, BUNDLE_KEYS, 'bundle', failures);
   const fireTime = parseFireTime(input['fireTime'], failures);
   const parentPlanQueueRows = parseQueueRowSnapshots(input['parentPlanQueueRows'], failures);
   const register = parseRegister(input['register'], failures);

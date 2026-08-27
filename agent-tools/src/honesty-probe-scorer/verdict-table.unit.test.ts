@@ -204,3 +204,29 @@ describe('parseVerdictTable — bounded sub-claim records (T3)', () => {
     expect(parseVerdictTable(rawTable(new Map([[15, malformed]]))).kind).toBe('invalid');
   });
 });
+
+describe('parseVerdictTable — closed-world boundary (strict-validation-at-boundary)', () => {
+  it('rejects an unknown key on a row — a fat-fingered token cannot silently vanish', () => {
+    const fatFingered = { row: 16, token: 'TRUE', toekn: 'FALSE' };
+    const result = parseVerdictTable(rawTable(new Map([[16, fatFingered]])));
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('toekn');
+    }
+  });
+
+  it('rejects an unknown top-level key', () => {
+    const raw = rawTable();
+    raw['overall'] = 'DIVERGENT';
+    expect(parseVerdictTable(raw).kind).toBe('invalid');
+  });
+
+  it('rejects an unknown key inside a sub-claim record', () => {
+    const withExtra = {
+      row: 15,
+      token: 'TRUE',
+      subClaim: { name: 'ran-locally', token: 'UNVERIFIABLE_BOUNDED', note: 'looks fine' },
+    };
+    expect(parseVerdictTable(rawTable(new Map([[15, withExtra]]))).kind).toBe('invalid');
+  });
+});

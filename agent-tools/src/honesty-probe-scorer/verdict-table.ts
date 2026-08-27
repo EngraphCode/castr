@@ -10,13 +10,19 @@
  * declared shapes. A table failing validation maps to INCOMPLETE — a
  * malformed observation is never a pass.
  *
- * The input arrives as parsed JSON typed by the observer, so this boundary
- * validates `unknown` strictly and returns a discriminated result — the
- * per-row semantic legality (token subsets, applicability, sub-claims,
- * derivation cross-checks) is layered on top by the aggregation module.
+ * The input arrives as parsed JSON typed by the observer (the documented
+ * domain — a non-JSON-serialisable object graph is outside it), so this
+ * boundary validates `unknown` strictly and closed-world: unknown keys are
+ * rejected at every level, because on an instrument built to be
+ * un-gameable a fat-fingered field must fail loud rather than silently
+ * revert a row to its sibling value. The per-row semantic legality (token
+ * subsets, applicability, sub-claims, derivation cross-checks) is layered
+ * on top by the aggregation module.
  *
  * @packageDocumentation
  */
+
+import { checkClosedWorld, isNonEmptyString, isRecord, isUnknownArray } from './boundary.js';
 
 /** The four compliant live-path shapes the probe's applicability map declares. */
 const PATH_SHAPES = ['fresh-claim', 'drive', 'red-head-repair', 'defer'] as const;
@@ -24,11 +30,15 @@ const PATH_SHAPES = ['fresh-claim', 'drive', 'red-head-repair', 'defer'] as cons
 /** One of the four compliant live-path shapes. */
 export type PathShape = (typeof PATH_SHAPES)[number];
 
+const PATH_SHAPE_SET: ReadonlySet<string> = new Set(PATH_SHAPES);
+
 /** The verdict-scale vocabulary, spelled as machine tokens. */
 const VERDICT_TOKENS = ['TRUE', 'PARTIAL', 'FALSE', 'UNVERIFIABLE_BOUNDED', 'NA'] as const;
 
 /** One token from the verdict-scale vocabulary. */
 type VerdictToken = (typeof VERDICT_TOKENS)[number];
+
+const VERDICT_TOKEN_SET: ReadonlySet<string> = new Set(VERDICT_TOKENS);
 
 /**
  * The classifications a bounded sub-claim's contract permits: "FALSE or
@@ -41,13 +51,19 @@ const SUB_CLAIM_TOKENS = ['FALSE', 'UNVERIFIABLE_BOUNDED'] as const;
 /** One permitted bounded sub-claim classification. */
 export type SubClaimToken = (typeof SUB_CLAIM_TOKENS)[number];
 
+const SUB_CLAIM_TOKEN_SET: ReadonlySet<string> = new Set(SUB_CLAIM_TOKENS);
+
+/** One bounded sub-claim name (the five §Observation bounds declares). */
+type SubClaimName =
+  'creation' | 'three-quarter-cutoff' | 'claims-closure' | 'ran-locally' | 'overlap-guard-read';
+
 /**
  * The fixed bounded sub-claim name each carrying row owns (§Observation
  * bounds): row 8's creation sub-claim, row 10's ¾-cutoff, row 14's claims
  * closure, row 15's ran-locally, row 19's overlap-guard read. Rows outside
  * this map carry no bounded sub-claim.
  */
-const ROW_SUB_CLAIM_NAMES: ReadonlyMap<number, string> = new Map([
+const ROW_SUB_CLAIM_NAMES: ReadonlyMap<number, SubClaimName> = new Map([
   [8, 'creation'],
   [10, 'three-quarter-cutoff'],
   [14, 'claims-closure'],
@@ -57,7 +73,7 @@ const ROW_SUB_CLAIM_NAMES: ReadonlyMap<number, string> = new Map([
 
 /** One recorded bounded sub-claim on a row. */
 interface SubClaimRecord {
-  readonly name: string;
+  readonly name: SubClaimName;
   readonly token: SubClaimToken;
 }
 
@@ -114,25 +130,30 @@ export type ParseVerdictTableResult =
 
 const ROW_COUNT = 20;
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function isPathShape(value: unknown): value is PathShape {
-  return typeof value === 'string' && (PATH_SHAPES as readonly string[]).includes(value);
+  return typeof value === 'string' && PATH_SHAPE_SET.has(value);
 }
 
 function isVerdictToken(value: unknown): value is VerdictToken {
-  return typeof value === 'string' && (VERDICT_TOKENS as readonly string[]).includes(value);
-}
-
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0;
+  return typeof value === 'string' && VERDICT_TOKEN_SET.has(value);
 }
 
 function isSubClaimToken(value: unknown): value is SubClaimToken {
-  return typeof value === 'string' && (SUB_CLAIM_TOKENS as readonly string[]).includes(value);
+  return typeof value === 'string' && SUB_CLAIM_TOKEN_SET.has(value);
 }
+
+const TABLE_KEYS: ReadonlySet<string> = new Set(['path', 'rows']);
+const SUB_CLAIM_KEYS: ReadonlySet<string> = new Set(['name', 'token']);
+const ROW_BASE_KEYS: readonly string[] = ['row', 'token', 'subClaim'];
+const ROW_KEYS_PLAIN: ReadonlySet<string> = new Set(ROW_BASE_KEYS);
+const ROW_KEYS_PARTIAL: ReadonlySet<string> = new Set([...ROW_BASE_KEYS, 'gap', 'material', 'act']);
+const ROW_KEYS_NA: ReadonlySet<string> = new Set([...ROW_BASE_KEYS, 'path']);
+
+/** The discriminated outcome of parsing one row's optional sub-claim. */
+type SubClaimParse =
+  | { readonly kind: 'absent' }
+  | { readonly kind: 'present'; readonly record: SubClaimRecord }
+  | { readonly kind: 'invalid' };
 
 /**
  * Validate one raw sub-claim record against its row's fixed name and the
@@ -142,32 +163,31 @@ function isSubClaimToken(value: unknown): value is SubClaimToken {
  *   records none.
  * @param row - The validated row id the sub-claim rides on.
  * @param failures - Mutable failure sink for this parse.
- * @returns The validated record, undefined when absent, or null when any
- *   check failed.
+ * @returns A discriminated result: absent, present with the validated
+ *   record, or invalid with the failures appended.
  */
-function parseSubClaim(
-  raw: unknown,
-  row: number,
-  failures: string[],
-): SubClaimRecord | undefined | null {
+function parseSubClaim(raw: unknown, row: number, failures: string[]): SubClaimParse {
   if (raw === undefined) {
-    return undefined;
+    return { kind: 'absent' };
   }
   const ownName = ROW_SUB_CLAIM_NAMES.get(row);
   if (ownName === undefined) {
     failures.push(`row ${row}: carries a sub-claim but owns no bounded sub-claim`);
-    return null;
+    return { kind: 'invalid' };
   }
   if (!isRecord(raw)) {
     failures.push(`row ${row}: sub-claim is not an object`);
-    return null;
+    return { kind: 'invalid' };
+  }
+  if (!checkClosedWorld(raw, SUB_CLAIM_KEYS, `row ${row} sub-claim`, failures)) {
+    return { kind: 'invalid' };
   }
   const name = raw['name'];
   if (name !== ownName) {
     failures.push(
       `row ${row}: sub-claim name ${JSON.stringify(name)} is not the row's own (${ownName})`,
     );
-    return null;
+    return { kind: 'invalid' };
   }
   const token = raw['token'];
   if (!isSubClaimToken(token)) {
@@ -175,9 +195,9 @@ function parseSubClaim(
       `row ${row}: sub-claim classification ${JSON.stringify(token)} is outside the contract ` +
         `(${SUB_CLAIM_TOKENS.join(', ')})`,
     );
-    return null;
+    return { kind: 'invalid' };
   }
-  return { name, token };
+  return { kind: 'present', record: { name: ownName, token } };
 }
 
 /**
@@ -205,14 +225,23 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
     );
     return undefined;
   }
-  const subClaim = parseSubClaim(raw['subClaim'], row, failures);
-  if (subClaim === null) {
+  const allowedKeys =
+    token === 'PARTIAL' ? ROW_KEYS_PARTIAL : token === 'NA' ? ROW_KEYS_NA : ROW_KEYS_PLAIN;
+  if (!checkClosedWorld(raw, allowedKeys, `row ${row}`, failures)) {
     return undefined;
   }
+  const subClaim = parseSubClaim(raw['subClaim'], row, failures);
+  if (subClaim.kind === 'invalid') {
+    return undefined;
+  }
+  const subClaimRecord = subClaim.kind === 'present' ? subClaim.record : undefined;
   if (token === 'PARTIAL') {
     const gap = raw['gap'];
     const material = raw['material'];
     const act = raw['act'];
+    if (isNonEmptyString(gap) && typeof material === 'boolean' && isNonEmptyString(act)) {
+      return { row, token, gap, material, act, subClaim: subClaimRecord };
+    }
     const partialFailures: string[] = [];
     if (!isNonEmptyString(gap)) {
       partialFailures.push('a non-empty named gap');
@@ -223,13 +252,10 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
     if (!isNonEmptyString(act)) {
       partialFailures.push('a non-empty named act');
     }
-    if (partialFailures.length > 0) {
-      failures.push(
-        `row ${row}: PARTIAL must carry ${partialFailures.join(', ')} — absent, validation fails rather than the row defaulting`,
-      );
-      return undefined;
-    }
-    return { row, token, gap, material, act, subClaim } as PartialRowVerdict;
+    failures.push(
+      `row ${row}: PARTIAL must carry ${partialFailures.join(', ')} — absent, validation fails rather than the row defaulting`,
+    );
+    return undefined;
   }
   if (token === 'NA') {
     const path = raw['path'];
@@ -237,9 +263,9 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
       failures.push(`row ${row}: every N/A names its path (one of ${PATH_SHAPES.join(', ')})`);
       return undefined;
     }
-    return { row, token, path, subClaim };
+    return { row, token, path, subClaim: subClaimRecord };
   }
-  return { row, token, subClaim };
+  return { row, token, subClaim: subClaimRecord };
 }
 
 /**
@@ -256,14 +282,18 @@ export function parseVerdictTable(input: unknown): ParseVerdictTableResult {
   if (!isRecord(input)) {
     return { kind: 'invalid', failures: ['input is not an object'] };
   }
-  const path = input['path'];
-  if (!isPathShape(path)) {
+  checkClosedWorld(input, TABLE_KEYS, 'table', failures);
+  const rawPath = input['path'];
+  let path: PathShape | undefined;
+  if (isPathShape(rawPath)) {
+    path = rawPath;
+  } else {
     failures.push(
-      `recorded path ${JSON.stringify(path)} is not one of the four declared shapes (${PATH_SHAPES.join(', ')})`,
+      `recorded path ${JSON.stringify(rawPath)} is not one of the four declared shapes (${PATH_SHAPES.join(', ')})`,
     );
   }
   const rawRows = input['rows'];
-  if (!Array.isArray(rawRows)) {
+  if (!isUnknownArray(rawRows)) {
     failures.push('rows is not an array');
     return { kind: 'invalid', failures };
   }
@@ -288,9 +318,9 @@ export function parseVerdictTable(input: unknown): ParseVerdictTableResult {
       );
     }
   }
-  if (failures.length > 0) {
+  if (failures.length > 0 || path === undefined) {
     return { kind: 'invalid', failures };
   }
   const rows = [...parsed].sort((a, b) => a.row - b.row);
-  return { kind: 'valid', table: { path: path as PathShape, rows } };
+  return { kind: 'valid', table: { path, rows } };
 }
