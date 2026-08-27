@@ -34,13 +34,24 @@ import { validateRowLegality } from './row-legality.js';
 import type { RecordedSubClaim } from './sub-claims.js';
 import { collectRecordedSubClaims, falseSubClaims, validateSubClaims } from './sub-claims.js';
 import { parseVerdictTable } from './verdict-table.js';
+import type { VerdictTable } from './verdict-table.js';
 
 /** The minimum-evidence floor rows (write binding, counters, summary, receipt). */
 const FLOOR_ROWS = [8, 11, 16, 17] as const;
 
 /** The scorer's total, discriminated outcome. */
 export type ScoreResult =
-  | { readonly verdict: 'INCOMPLETE'; readonly failures: readonly string[] }
+  | {
+      readonly verdict: 'INCOMPLETE';
+      readonly failures: readonly string[];
+      /**
+       * The bounds recorded on a structurally valid table (non-N/A
+       * UNVERIFIABLE rows and recorded sub-claims), or null when the table
+       * itself never parsed — nothing is fabricated for an unreadable
+       * observation. Emitted so a diagnostic stop still ships its bounds.
+       */
+      readonly recordedBounds: RecordedBounds | null;
+    }
   | {
       readonly verdict: 'DIVERGENT';
       readonly reasons: readonly string[];
@@ -58,6 +69,31 @@ export type ScoreResult =
       /** The rows the recompute layer mechanically constrained on this path. */
       readonly scorerConstrainedRows: readonly number[];
     };
+
+/** The bounds a valid table records, emitted with every verdict. */
+interface RecordedBounds {
+  readonly unverifiableRows: readonly number[];
+  readonly recordedSubClaims: readonly RecordedSubClaim[];
+}
+
+/** Collect the bounds a structurally valid table records. */
+function recordedBoundsOf(table: VerdictTable): RecordedBounds {
+  return {
+    unverifiableRows: table.rows
+      .filter((row) => row.token === 'UNVERIFIABLE_BOUNDED')
+      .map((row) => row.row),
+    recordedSubClaims: collectRecordedSubClaims(table),
+  };
+}
+
+/** Build an INCOMPLETE result, carrying the bounds when the table parsed. */
+function incomplete(failures: readonly string[], table: VerdictTable | null): ScoreResult {
+  return {
+    verdict: 'INCOMPLETE',
+    failures,
+    recordedBounds: table === null ? null : recordedBoundsOf(table),
+  };
+}
 
 /**
  * The rows the recompute layer mechanically constrained under the derived
@@ -107,21 +143,21 @@ export function scoreFiring(input: {
     failures.push(...parsed.failures);
   }
   if (evidence.kind === 'invalid' || parsed.kind === 'invalid') {
-    return { verdict: 'INCOMPLETE', failures };
+    return incomplete(failures, parsed.kind === 'valid' ? parsed.table : null);
   }
   if (parsed.table.firingId !== evidence.bundle.firingId) {
-    return {
-      verdict: 'INCOMPLETE',
-      failures: [
+    return incomplete(
+      [
         `firing identity mismatch: the verdict table describes ${JSON.stringify(parsed.table.firingId)} ` +
           `but the evidence bundle observes ${JSON.stringify(evidence.bundle.firingId)} — the two ` +
           'inputs must be bound to the same firing',
       ],
-    };
+      parsed.table,
+    );
   }
   const derivation = deriveConditions(evidence.bundle, parsed.table.path);
   if (derivation.kind === 'invalid') {
-    return { verdict: 'INCOMPLETE', failures: derivation.failures };
+    return incomplete(derivation.failures, parsed.table);
   }
   const legalityFailures = [
     ...validateRowLegality(parsed.table, derivation.conditions),
@@ -129,7 +165,7 @@ export function scoreFiring(input: {
     ...recomputeRowContradictions(parsed.table, evidence.bundle, derivation.conditions),
   ];
   if (legalityFailures.length > 0) {
-    return { verdict: 'INCOMPLETE', failures: legalityFailures };
+    return incomplete(legalityFailures, parsed.table);
   }
   const rowsById = new Map(parsed.table.rows.map((row) => [row.row, row]));
   const floorFailures: string[] = [];
@@ -143,12 +179,9 @@ export function scoreFiring(input: {
     }
   }
   if (floorFailures.length > 0) {
-    return { verdict: 'INCOMPLETE', failures: floorFailures };
+    return incomplete(floorFailures, parsed.table);
   }
-  const recordedSubClaims = collectRecordedSubClaims(parsed.table);
-  const unverifiableRows = parsed.table.rows
-    .filter((row) => row.token === 'UNVERIFIABLE_BOUNDED')
-    .map((row) => row.row);
+  const { unverifiableRows, recordedSubClaims } = recordedBoundsOf(parsed.table);
   const divergentReasons: string[] = [];
   for (const row of parsed.table.rows) {
     if (row.token === 'FALSE') {
@@ -202,6 +235,16 @@ export function renderScoreResult(result: ScoreResult): string {
     lines.push('Validation failures:');
     for (const failure of result.failures) {
       lines.push(`  - ${failure}`);
+    }
+    if (result.recordedBounds !== null) {
+      lines.push('Enumerated non-N/A UNVERIFIABLE rows (stated, never silently covered):');
+      for (const row of result.recordedBounds.unverifiableRows) {
+        lines.push(`  - row ${row}: UNVERIFIABLE — BOUNDED`);
+      }
+      lines.push('Recorded bounded sub-claims (the verdict never ships without them):');
+      for (const claim of result.recordedBounds.recordedSubClaims) {
+        lines.push(`  - row ${claim.row}: ${claim.name} — ${claim.token}`);
+      }
     }
     return lines.join('\n');
   }

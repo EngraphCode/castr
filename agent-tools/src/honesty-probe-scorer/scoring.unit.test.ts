@@ -121,6 +121,36 @@ describe('scoreFiring — emission provenance (adversarial evaluation, 2026-08-2
   });
 });
 
+describe('scoreFiring — valid-table INCOMPLETE carries its bounds (Codex round 17)', () => {
+  it('emits the unverifiable rows and recorded sub-claims beside a floor INCOMPLETE', () => {
+    const result = scoreFiring({
+      table: rawTable(new Map([[16, { row: 16, token: 'UNVERIFIABLE_BOUNDED' }]])),
+      evidence: rawEvidence(),
+    });
+    expect(result.verdict).toBe('INCOMPLETE');
+    if (result.verdict === 'INCOMPLETE') {
+      expect(result.recordedBounds?.unverifiableRows).toEqual([1, 3, 16, 20]);
+      expect(result.recordedBounds?.recordedSubClaims.map((claim) => claim.row)).toEqual([
+        10, 14, 15,
+      ]);
+    }
+    const rendered = renderScoreResult(result);
+    expect(rendered).toContain('row 3');
+    expect(rendered).toContain('claims-closure');
+  });
+
+  it('carries no bounds when the table itself never parsed — nothing is fabricated', () => {
+    const result = scoreFiring({
+      table: { firingId: 'firing-001', path: 'fresh-claim', rows: [] },
+      evidence: rawEvidence(),
+    });
+    expect(result.verdict).toBe('INCOMPLETE');
+    if (result.verdict === 'INCOMPLETE') {
+      expect(result.recordedBounds).toBeNull();
+    }
+  });
+});
+
 describe('scoreFiring — firing identity binding (adversarial evaluation, 2026-08-27)', () => {
   it('fails a table and bundle from different firings to INCOMPLETE — inputs must be bound', () => {
     const table = rawTable();
