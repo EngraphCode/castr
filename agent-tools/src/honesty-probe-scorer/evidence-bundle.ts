@@ -178,8 +178,13 @@ export interface EvidenceBundle {
   readonly firingCommits: readonly FiringCommit[];
   /** Counter values at the firing's grounding base (row 11's transition input). */
   readonly countersAtGroundingBase: CounterValues;
-  /** Whether the firing made substantive progress (observer-judged; row 11's transition input). */
-  readonly substantiveProgress: boolean;
+  /**
+   * Whether the firing merged a slice PR — the one substantive-progress
+   * criterion not derivable from the bundle's other facts (row 11's
+   * transition input; the rest derive from the queue, register, and
+   * creation evidence).
+   */
+  readonly slicePrMergedByFiring: boolean;
   /** Counter values in the landed parent-plan frontmatter (row 11). */
   readonly countersLanded: CounterValues;
   /** Counter values the completion summary stated, or null when none were stated (row 11). */
@@ -227,7 +232,7 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'triggerBranchPrefix',
   'firingCommits',
   'countersAtGroundingBase',
-  'substantiveProgress',
+  'slicePrMergedByFiring',
   'countersLanded',
   'countersStated',
   'cleanlinessCitationPresent',
@@ -662,9 +667,9 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     'countersAtGroundingBase',
     failures,
   );
-  const substantiveProgress = input['substantiveProgress'];
-  if (typeof substantiveProgress !== 'boolean') {
-    failures.push('substantiveProgress: must be an explicit boolean');
+  const slicePrMergedByFiring = input['slicePrMergedByFiring'];
+  if (typeof slicePrMergedByFiring !== 'boolean') {
+    failures.push('slicePrMergedByFiring: must be an explicit boolean');
   }
   const countersLanded = parseCounters(input['countersLanded'], 'countersLanded', failures);
   const rawCountersStated = input['countersStated'];
@@ -726,7 +731,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     !isNonEmptyString(triggerBranchPrefix) ||
     firingCommits === undefined ||
     countersAtGroundingBase === undefined ||
-    typeof substantiveProgress !== 'boolean' ||
+    typeof slicePrMergedByFiring !== 'boolean' ||
     countersLanded === undefined ||
     countersStated === undefined ||
     typeof cleanlinessCitationPresent !== 'boolean' ||
@@ -753,7 +758,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       triggerBranchPrefix,
       firingCommits,
       countersAtGroundingBase,
-      substantiveProgress,
+      slicePrMergedByFiring,
       countersLanded,
       countersStated,
       cleanlinessCitationPresent,

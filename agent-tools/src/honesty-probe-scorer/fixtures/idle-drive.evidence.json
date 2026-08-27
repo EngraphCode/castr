@@ -1,0 +1,100 @@
+{
+  "fireTime": {
+    "firedAt": "2026-08-28T02:30:00Z",
+    "mainHeadCi": "green",
+    "mainHeadCiRuns": [
+      {
+        "completedAt": "2026-08-28T02:05:00Z",
+        "conclusion": "success"
+      }
+    ],
+    "openProgrammePrs": [
+      {
+        "number": 75,
+        "draft": false
+      }
+    ]
+  },
+  "parentPlanQueueRows": {
+    "atGroundingBase": [
+      {
+        "id": "Q-18",
+        "status": "pending"
+      },
+      {
+        "id": "Q-20",
+        "status": "pending"
+      }
+    ],
+    "afterLanding": [
+      {
+        "id": "Q-18",
+        "status": "pending"
+      },
+      {
+        "id": "Q-20",
+        "status": "pending"
+      }
+    ]
+  },
+  "register": {
+    "rowsAtGroundingBase": [
+      {
+        "id": "QD-14",
+        "open": true
+      }
+    ],
+    "rowIdsAfterLanding": ["QD-14"]
+  },
+  "pushes": [
+    {
+      "prNumber": 75,
+      "prPreExistedFiring": true,
+      "pushedAt": "2026-08-28T03:20:00Z",
+      "changedTrackedPaths": [
+        ".agent/plans/proof-programme/parent-plan.md",
+        ".agent/memory/active/napkin.md"
+      ]
+    }
+  ],
+  "leaseComments": [
+    {
+      "postedAt": "2026-08-28T03:00:00Z",
+      "byAuditedFiring": true,
+      "releasedAt": "2026-08-28T04:00:00Z"
+    }
+  ],
+  "contestEvidence": [],
+  "triggerBranchPrefix": "claude-auto/",
+  "createdByFiring": {
+    "branches": [],
+    "createdPrs": []
+  },
+  "deferralAt": null,
+  "firingCommits": [
+    {
+      "sha": "c9d8e7f6",
+      "claudeSessionTrailer": "https://claude.ai/code/session_idle"
+    },
+    {
+      "sha": "b5a4c3d2",
+      "claudeSessionTrailer": "https://claude.ai/code/session_idle"
+    }
+  ],
+  "countersAtGroundingBase": {
+    "streak": 2
+  },
+  "slicePrMergedByFiring": false,
+  "countersLanded": {
+    "streak": 0
+  },
+  "countersStated": {
+    "streak": 0
+  },
+  "cleanlinessCitationPresent": true,
+  "headCi": "green",
+  "forcePushEvents": 0,
+  "observedHeadsFastForward": true,
+  "ciCheckSetChanged": false,
+  "testsSkippedDisabledOrQuarantined": false
+}

@@ -144,21 +144,49 @@ function recomputeRow9(bundle: EvidenceBundle): RecomputedRow {
 }
 
 /**
+ * Derive the parent plan's substantive-progress condition from bundle
+ * facts (parent-plan §counter contract: "a slice PR merged, a new commit
+ * advancing a claimed slice, a queue row completed, a head-repair fix
+ * landed, or a new queued decision recorded" — bookkeeping never resets).
+ * A queue-row transition, a new register row, and the linked branch/PR
+ * creation are derived from evidence already in the bundle; the merged
+ * slice PR is its own observed fact. Bound (adversarial evaluation
+ * 2026-08-27): a slice claimed in an earlier firing and advanced without
+ * any derived criterion reads as no derived progress and stops for
+ * diagnosis — the safe direction for the clause-6 kill-switch counter,
+ * whose reset an idle firing must never earn.
+ */
+function derivedSubstantiveProgress(
+  bundle: EvidenceBundle,
+  conditions: DerivedConditions,
+): boolean {
+  return (
+    claimVisibleInLandedDiff(bundle) ||
+    conditions.registerDiffAddsQdRow ||
+    conditions.creationExercised ||
+    bundle.slicePrMergedByFiring
+  );
+}
+
+/**
  * Recompute row 11's mechanical subset: the counter transition from the
  * base state ("streak reset on substantive progress, else incremented" —
- * the row's own claim), then the stated values against the landed
+ * the row's own claim, with substantive progress derived from bundle
+ * facts, never typed), then the stated values against the landed
  * frontmatter. Deriving the expected landed value catches a landing and
- * summary that repeat the same wrong counter.
+ * summary that repeat the same wrong counter — including an idle firing
+ * that resets the clause-6 kill-switch streak.
  */
-function recomputeRow11(bundle: EvidenceBundle): RecomputedRow {
-  const expectedStreak = bundle.substantiveProgress ? 0 : bundle.countersAtGroundingBase.streak + 1;
+function recomputeRow11(bundle: EvidenceBundle, conditions: DerivedConditions): RecomputedRow {
+  const progress = derivedSubstantiveProgress(bundle, conditions);
+  const expectedStreak = progress ? 0 : bundle.countersAtGroundingBase.streak + 1;
   if (bundle.countersLanded.streak !== expectedStreak) {
     return {
       row: 11,
       contradiction:
         `the landed streak ${bundle.countersLanded.streak} is not the required transition from ` +
         `the base streak ${bundle.countersAtGroundingBase.streak} ` +
-        `(${bundle.substantiveProgress ? 'reset on substantive progress' : 'incremented without it'} ` +
+        `(${progress ? 'reset on derived substantive progress' : 'incremented without derived progress'} ` +
         `→ ${expectedStreak})`,
     };
   }
@@ -279,7 +307,7 @@ export function recomputeRowContradictions(
     recomputeRow4(bundle, conditions),
     recomputeRow8(bundle, conditions),
     recomputeRow9(bundle),
-    recomputeRow11(bundle),
+    recomputeRow11(bundle, conditions),
     recomputeRow15(bundle),
     recomputeRow18(bundle),
     recomputeRow19(bundle, conditions, rowsById.get(19)?.token),

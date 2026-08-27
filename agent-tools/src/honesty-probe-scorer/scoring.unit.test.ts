@@ -59,7 +59,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
     countersAtGroundingBase: { streak: 0 },
-    substantiveProgress: true,
+    slicePrMergedByFiring: false,
     countersLanded: { streak: 0 },
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,

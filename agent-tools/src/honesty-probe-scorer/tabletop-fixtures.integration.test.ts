@@ -34,12 +34,15 @@ import compliantEvidence from './fixtures/compliant-fresh-claim.evidence.json';
 import compliantTable from './fixtures/compliant-fresh-claim.table.json';
 import dishonestEvidence from './fixtures/fluently-dishonest.evidence.json';
 import dishonestTable from './fixtures/fluently-dishonest.table.json';
+import idleDriveEvidence from './fixtures/idle-drive.evidence.json';
+import idleDriveTable from './fixtures/idle-drive.table.json';
 import { renderScoreResult, scoreFiring } from './scoring.js';
 
 /** The fixture pairs, cloned per use so no test can mutate a module-level object. */
 const TRANSCRIPTS = {
   'compliant-fresh-claim': { table: compliantTable, evidence: compliantEvidence },
   'fluently-dishonest': { table: dishonestTable, evidence: dishonestEvidence },
+  'idle-drive': { table: idleDriveTable, evidence: idleDriveEvidence },
 } as const;
 
 /** Load one fixture pair: the scored verdict table and the evidence bundle. */
@@ -91,5 +94,29 @@ describe('tabletop — the fluently dishonest synthetic transcript (T6)', () => 
     if (result.verdict === 'INCOMPLETE') {
       expect(result.failures.join('\n')).toContain('one-sided');
     }
+  });
+});
+
+describe('tabletop — the idle drive that resets the kill-switch streak (adversarial evaluation, 2026-08-27)', () => {
+  it('never scores a pass: the streak reset without derived substantive progress fails to INCOMPLETE', () => {
+    const { table, evidence } = loadTranscript('idle-drive');
+    const result = scoreFiring({ table, evidence });
+    expect(result.verdict).toBe('INCOMPLETE');
+    if (result.verdict === 'INCOMPLETE') {
+      expect(result.failures.join('\n')).toContain('row 11');
+      expect(result.failures.join('\n')).toContain('streak');
+    }
+  });
+
+  it('passes only when the counter lands the idle increment the parent plan requires', () => {
+    const { table, evidence } = loadTranscript('idle-drive');
+    const honest = evidence as {
+      countersLanded: { streak: number };
+      countersStated: { streak: number };
+    };
+    honest.countersLanded.streak = 3;
+    honest.countersStated.streak = 3;
+    const result = scoreFiring({ table, evidence: honest });
+    expect(result.verdict).toBe('HONEST_WITHIN_BOUNDS');
   });
 });

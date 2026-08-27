@@ -65,7 +65,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
       { sha: 'e5f6a7b8', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
     countersAtGroundingBase: { streak: 0 },
-    substantiveProgress: true,
+    slicePrMergedByFiring: false,
     countersLanded: { streak: 0 },
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
@@ -430,27 +430,121 @@ describe('recomputeRowContradictions — Codex round 1 (verified findings)', () 
   });
 
   it('contradicts row 11 when the landed streak skips the required transition from the base state', () => {
-    const idleKeptStreak = contradictions(new Map(), {
-      countersAtGroundingBase: { streak: 2 },
-      substantiveProgress: false,
-      countersLanded: { streak: 2 },
-      countersStated: { streak: 2 },
+    const idleDriveTable = rawTableForDrive(
+      new Map([
+        [4, { row: 4, token: 'NA', path: 'drive' }],
+        [5, { row: 5, token: 'NA', path: 'drive' }],
+        [
+          19,
+          {
+            row: 19,
+            token: 'TRUE',
+            subClaim: { name: 'overlap-guard-read', token: 'UNVERIFIABLE_BOUNDED' },
+          },
+        ],
+      ]),
+    );
+    const idleDrive = (counters: {
+      base: number;
+      landed: number;
+      stated: number;
+    }): Record<string, unknown> => ({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
+      pushes: [
+        {
+          prNumber: 75,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T03:20:00Z',
+          changedTrackedPaths: ['.agent/plans/proof-programme/parent-plan.md'],
+        },
+      ],
+      leaseComments: [
+        {
+          postedAt: '2026-08-28T03:00:00Z',
+          byAuditedFiring: true,
+          releasedAt: '2026-08-28T04:00:00Z',
+        },
+      ],
+      createdByFiring: { branches: [], createdPrs: [] },
+      countersAtGroundingBase: { streak: counters.base },
+      countersLanded: { streak: counters.landed },
+      countersStated: { streak: counters.stated },
     });
-    expect(idleKeptStreak.join('\n')).toContain('row 11');
-    const progressKeptStreak = contradictions(new Map(), {
+    const idleReset = driveContradictions(
+      idleDriveTable,
+      idleDrive({ base: 2, landed: 0, stated: 0 }),
+    );
+    expect(idleReset.join('\n')).toContain('row 11');
+    const idleKept = driveContradictions(
+      idleDriveTable,
+      idleDrive({ base: 2, landed: 2, stated: 2 }),
+    );
+    expect(idleKept.join('\n')).toContain('row 11');
+    const idleIncrement = driveContradictions(
+      idleDriveTable,
+      idleDrive({ base: 2, landed: 3, stated: 3 }),
+    );
+    expect(idleIncrement.join('\n')).not.toContain('row 11');
+  });
+
+  it("derives the reset's legality from bundle facts — a merged slice PR resets, and progress kept unreset contradicts", () => {
+    const idleDriveTable = rawTableForDrive(
+      new Map([
+        [4, { row: 4, token: 'NA', path: 'drive' }],
+        [5, { row: 5, token: 'NA', path: 'drive' }],
+        [
+          19,
+          {
+            row: 19,
+            token: 'TRUE',
+            subClaim: { name: 'overlap-guard-read', token: 'UNVERIFIABLE_BOUNDED' },
+          },
+        ],
+      ]),
+    );
+    const mergedSlice = (landed: number): Record<string, unknown> => ({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
+      pushes: [
+        {
+          prNumber: 75,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T03:20:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+      leaseComments: [
+        {
+          postedAt: '2026-08-28T03:00:00Z',
+          byAuditedFiring: true,
+          releasedAt: '2026-08-28T04:00:00Z',
+        },
+      ],
+      createdByFiring: { branches: [], createdPrs: [] },
+      slicePrMergedByFiring: true,
       countersAtGroundingBase: { streak: 2 },
-      substantiveProgress: true,
-      countersLanded: { streak: 2 },
-      countersStated: { streak: 2 },
+      countersLanded: { streak: landed },
+      countersStated: { streak: landed },
     });
-    expect(progressKeptStreak.join('\n')).toContain('row 11');
-    const honestIncrement = contradictions(new Map(), {
-      countersAtGroundingBase: { streak: 2 },
-      substantiveProgress: false,
-      countersLanded: { streak: 3 },
-      countersStated: { streak: 3 },
-    });
-    expect(honestIncrement).toEqual([]);
+    expect(driveContradictions(idleDriveTable, mergedSlice(0)).join('\n')).not.toContain('row 11');
+    expect(driveContradictions(idleDriveTable, mergedSlice(3)).join('\n')).toContain('row 11');
   });
 });
 

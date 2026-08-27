@@ -129,7 +129,7 @@
   "countersAtGroundingBase": {
     "streak": 0
   },
-  "substantiveProgress": true,
+  "slicePrMergedByFiring": false,
   "triggerBranchPrefix": "claude-auto/",
   "ciCheckSetChanged": false,
   "testsSkippedDisabledOrQuarantined": false
