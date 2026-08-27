@@ -143,10 +143,14 @@ for the firing's data and the falsifier above.
   every N/A carried only by a
   row the recorded path's applicability map permits (and the recorded path
   one of the four declared shapes, matching the path derived above); and,
-  conversely, every row the
-  recorded path declares categorically inapplicable (an N/A not
-  conditioned on evidence) carrying exactly N/A — a verdict token on a
-  duty the path says never occurred fails validation, in both directions.
+  conversely, every row whose duty did not apply carrying exactly N/A —
+  whether the recorded path declares it categorically inapplicable or
+  the scorer's derived condition shows the duty never attached (rows
+  7/20 on a derived code-free drive; rows 4/5/19 on a derived
+  pre-claim/pre-drive deferral) — so a substantive token on a duty that
+  never occurred fails validation just as an illegitimate N/A does: the
+  applicability check is bidirectional for categorical and conditional
+  rows alike.
   A table failing validation →
   **INCOMPLETE** — a malformed observation is never a pass. Over a valid
   table, the computed mapping in precedence order: any floor row (8, 11,
