@@ -1407,3 +1407,112 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   and kept reporting "waiting on CI". Mergeable is a necessary prerequisite, not a
   merge decision; read it with the event-driven state fetch, never by polling. Cured
   with a semantic napkin union (both tail appends kept, two-parent merge `SHA: de2c77c`).
+
+## 2026-08-27 (routine-configuration session — Act 0 + trust reframing — Vesta turns Singularity / 01PjGS)
+
+- **OWNER GRANT (verbatim, decision card): "You can edit the trigger as long as you keep
+  the changes targeted and minimal and report them."** Read narrowly on reflection: a
+  per-context grant for the Act 0 alignment, never a standing licence — the enable and
+  cadence stay owner acts. The edit itself worked exactly as the walk measured: an API
+  prompt update on the source-attached trigger preserved sources, outcome branch, model,
+  auto-fix, connector, and notification channels, all verified in the same read.
+- **OWNER RATIFICATION (2026-08-27, verbatim substance): "verify don't trust is moved
+  from attention to reliable, trusted, automated machinery — that has been a core of the
+  Practice development"; "this is about autonomy, and therefore about trust. And this
+  absolutely is investment. And we should structure our records of this work
+  appropriately."** The deep-questioning pass (metacognition → free-play →
+  concept-exploration) reframed the proof programme: channel calibration, not capability
+  proof — of the four readiness questions only the write binding is capability, and it is
+  the least informative; self-report honesty is load-bearing because a single verifier
+  has no quorum, only calibration. Landed: trust node promoted to `plans/active/`,
+  honesty probe pre-registered, runbook §The Routine is an autonomous Practice agent.
+- **Mistake (mine): dated the Act 0 records 2026-08-26 — the session runs 2026-08-27.**
+  The walk was yesterday; I wrote its date into the runbook note, the thread-record
+  supersession, and commit `7d3a12ee`'s message. Files corrected this landing; the
+  pushed commit message stands as history with this entry as the correction record.
+  Same instrument-check family as verify-own-observer-instruments: read the clock, not
+  the context's most recent date.
+- **Mistake (mine, owner-caught by the metacognition invocation): I assumed the hold's
+  reason and closed my report by re-inviting the poke** — pacing an owner-paced session.
+  The fluency family again, from a seat that had just read the walk's six-intervention
+  entry. Also assumed-not-asked: the notification config (live push+slack vs B-15
+  push-only) and the receipt gate's satisfying channel; the stored-prompt wording
+  ratification (minimal idiom vs invocable engraph- names). All three now sit as named
+  owner decisions in the thread-record addendum instead of as my interpretations.
+- **Canonical-lockstep hazard measured live**: the aligned trigger prompt was live while
+  its canonical update sat on the unmerged PR #67 — and the runbook's own re-paste
+  instruction, followed in that window, would have reverted the owner's alignment.
+  Cure landed structurally: the runbook's lockstep clause (live edit + canonical +
+  trigger-read verification land as one act; land the canonical promptly).
+- **Pre-registration as the auditor's cure**: the honesty probe's claim→measurement
+  table is written before the firing so the verdict is a checklist outcome, not a
+  post-hoc impression — the observing seat's own fluency is the failure class it cures
+  (two sessions running have now reproduced relaying-unverified live). The instrument
+  carries its own falsifier: ad-hoc divergences landing outside the table mean the
+  probe shape was wrong.
+- **Wrap-as-safety worked as designed mid-session**: the owner invoked wrap for "safety
+  of understanding", and the skill's own contract routes that to the manual loss-scan
+  passes WITHOUT session-handoff (which would close claims mid-session). Conservation
+  now, closure later.
+
+## 2026-08-27 (reviewer fold — the correction of the correction — Vesta turns Singularity / 01PjGS)
+
+- **CORRECTION of the entry above: the "date-stamp mistake" lesson is INVERTED — the
+  original 2026-08-26 stamps were correct and my "fix" introduced the drift.** The
+  docs-adr reviewer measured it from git: commit `7d3a12ee` is authored
+  2026-08-26T20:11Z and the trigger's `updated_at` is 2026-08-26T20:07Z — Act 0
+  happened on the 26th, in the evening; the session spans two UTC dates and only the
+  reframing/probe/promotion work is the 27th. I read "today is 2026-08-27" and
+  restamped yesterday-evening acts with it, then wrote the inverted lesson into the
+  napkin — a false lesson one curation drain away from graduating into doctrine. The
+  real lesson: **date an act from the act's own timestamps (commit author date,
+  trigger `updated_at`), never from the current date — especially in sessions that
+  span midnight UTC.** All restamped surfaces restored to 2026-08-26 with the
+  timestamp of record cited.
+- **A reviewer finding can be right in method and stale in premise — supersede with
+  the fresher measurement, not the older record.** The docs-adr BLOCKING finding said
+  the probe's `last_run` observation bound contradicts loop-review D-1 ("no last_run
+  object", measured 2026-08-24). But this session's own `list_triggers` reads (twice,
+  2026-08-27) returned the full `last_run` object on the CURRENT trigger — D-1 was
+  measured on the since-retired trigger. Disposition: bound kept, now citing the
+  fresher measurement explicitly, with a timing fallback if `last_run` regresses.
+  Both directions of verify-firsthand in one finding: the reviewer caught my
+  unsourced claim; my fresher source survived the reviewer.
+- **The assumptions reviewer caught me manufacturing a gate**: the probe's
+  "DIVERGENT stops the arming" was my analogy-extension of the owner-grounded
+  notification gate, stated as settled prose on three surfaces. Now flagged
+  seat-proposed on all three and queued as pending owner decision (c). Same review
+  also caught: the active-lane contract mismatch (node re-homed to the programme
+  collection — the lane taxonomy has no home for a live strategic frame, worth a
+  future plan-architecture thought); the probe's undefined "material" (test now
+  pre-registered); three probe rows measuring something other than their claim
+  (reshaped as one-sided/observer-measured); the per-context grant reading presented
+  as the grant's shape (now flagged as my reading, scope not owner-confirmed).
+- **Worked instance: two reviewers on a records landing earned their cost
+  decisively** — 4 BLOCKING + 9 IMPORTANT verified-real findings between them on a
+  diff every line of which I had written carefully hours before, including two
+  corrections OF my corrections. The trust node's own thesis performed itself: the
+  seat's fluent self-model needed external instruments, and got them.
+
+## 2026-08-27 (five owner rulings landed — Vesta turns Singularity / 01PjGS, part 3)
+
+- **Owner card rulings (2026-08-27), all landed this pass:** (a) channels push+Slack,
+  receipt gate = device push only (Slack corroboration; B-15 push-only superseded);
+  (b) stored prompt aligned to invocable `engraph-` names (second targeted trigger
+  edit, `updated_at` 2026-08-27T10:07Z, all other settings verified unchanged in the
+  same read); (c) DIVERGENT-auto-stops-the-arming RATIFIED (and INCOMPLETE likewise);
+  (d) Q-19's Q-13 dependency DROPPED after a premise correction and re-ask; (e)
+  enable at the 3/day ADR default — the 1/day recommendation declined.
+- **Mistake (mine, caught at plan time): I carded decision (d) on the assumptions
+  reviewer's reading without reading the Q-19 brief myself** — the brief records a
+  real rationale ("never a second skill copy; Q-13's PR #23 re-sync is Q-19's
+  vehicle") that my card premise ("no technical dependency found") contradicted.
+  Cure: re-asked the owner with the corrected premise before executing (drop
+  re-confirmed; Q-13 gains the value-extract-against-current-canonical
+  reconciliation duty). Third instance this session of the relaying-unverified
+  class — and the first one caught BEFORE the act, by the plan-time read of the
+  surface I was about to edit. Reading the primary surface at card-authoring time,
+  not plan time, is the cheaper firing point.
+- **Frontmatter row order is claim order** — landing (d) meant MOVING the Q-19 row
+  (after Q-22, before Q-05), not just deleting `depends_on`; a dropped gate with an
+  unmoved row would have left Q-19 last in eligibility despite the ruling's intent.

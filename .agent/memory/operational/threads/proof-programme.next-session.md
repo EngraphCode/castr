@@ -35,6 +35,7 @@ programme's delivery evidence rather than retro-filled here.)
 | Sardine turns Coral            | e079be76-3221-5c13-aa9c-42c33dfa14fa | claude-code | claude-fable-5 | 01QpYc            | owner-redirected firing (account-portability landing) | 2026-08-25    | 2026-08-25   |
 | Nettle wakes Topsoil           | de57ab0b-1960-5d55-910a-fa887b4993bc | claude-code | claude-fable-5 | 01KKh2            | commissioned arming reviewer (fresh-session review)   | 2026-08-25    | 2026-08-25   |
 | Breeze weaves Contrail         | ea6fba19-fcf8-5841-b6a1-56c7d42ddd4d | claude-code | claude-fable-5 | 0132gL            | arming-walk executor (owner-attended)                 | 2026-08-26    | 2026-08-26   |
+| Vesta turns Singularity        | f5b4dfc2-acaa-5c8c-bcc5-da63553f07ee | claude-code | claude-fable-5 | 01PjGS            | routine-configuration seat (owner-attended)           | 2026-08-27    | 2026-08-27   |
 
 ## Next-session landing target
 
@@ -146,15 +147,80 @@ or owner-legibility → the row contract landed (register header +
 routine-prompt owner-fork branch). Queue reordered: Q-18/Q-20/Q-21/Q-22
 precede Q-05 (owner-approved). Cloud grounding ruling landed
 (`start-right-thorough` + plan/metacognition/proportionality stack;
-strategic node `.agent/plans/future/cloud-autonomy-trust.md`). **Remaining
+strategic node `.agent/plans/future/cloud-autonomy-trust.md` — since
+promoted to `.agent/plans/proof-programme/cloud-autonomy-trust.md`,
+2026-08-27). **Remaining
 before any cron: owner-fired attended live firing (watch ~20 min; its
 completion notification closes the receipt gate; compare its self-report
 against measured reality), then enable per runbook step 7's overlap guard
-— only after that firing closes.** Note for the enable sitting: the live
+— only after that firing closes.** ~~Note for the enable sitting: the live
 trigger's stored-prompt paragraph still names `start-right-quick`; the
 thorough ruling lives in routine-prompt step 3, which the firing follows —
 the owner may align the trigger word at leisure (agent trigger edits were
-owner-denied this walk; the trigger is owner-territory).
+owner-denied this walk; the trigger is owner-territory).~~ SUPERSEDED
+2026-08-26 (~20:07Z, routine-configuration session, Vesta turns Singularity —
+the session spans 2026-08-26 evening → 2026-08-27 UTC): the
+owner authorised targeted minimal trigger edits for this act ("You can
+edit the trigger as long as you keep the changes targeted and minimal and
+report them"), and the stored-prompt skills paragraph now names
+`start-right-thorough` and the firing-scoped `session-handoff` profile —
+API prompt update verified in the same trigger read (prompt byte-exact;
+sources, outcome branch, model `claude-fable-5`, auto-fix OFF, Slack
+connector, push+slack/no-email notifications all preserved; still no
+cron). The runbook canonical block is aligned in the same landing.
+
+**Routine-configuration session addendum (2026-08-26 evening → 2026-08-27
+UTC, Vesta turns Singularity / 01PjGS — owner-attended; extends the walk
+addendum above).** Act 0 complete 2026-08-26 (~20:07Z): the stored-prompt
+skills paragraph aligned to the thorough/firing-scoped-handoff rulings via
+an owner-authorised targeted trigger edit (grant verbatim: "You can edit
+the trigger as long as you keep the changes targeted and minimal and report
+them" — read narrowly by this seat as per-context rather than standing,
+scope not owner-confirmed; the enable stays owner-held either way),
+verified in the same trigger read, runbook canonical updated in lockstep;
+PR #67 carries the landing. The owner then invoked the deep-questioning
+stack and **ratified the reframing (2026-08-27)**: the experiment is
+channel calibration, not capability proof; verify-don't-trust relocates
+from owner attention into reliable, trusted, automated machinery (owner
+verbatim in the trust node, which attributes each frame claim to owner
+verbatim, owner-agreed findings, or seat synthesis); the work is investment
+and its records are structured accordingly. Landed on that ruling: the
+cloud-autonomy-trust node PROMOTED into the programme collection
+(`../../../plans/proof-programme/cloud-autonomy-trust.md`) as the
+investment's frame-of-record (an assumptions-expert review measured the
+active-lane contract mismatch; the durable-doctrine/ADR question rides the
+Act 3 owner card); the attended-firing honesty probe PRE-REGISTERED
+(`../../../plans/proof-programme/attended-firing-honesty-probe.md`, cited
+by runbook step 6); the runbook's new §The Routine is an autonomous
+Practice agent (configuration governance, canonical-lockstep change
+discipline); routine-prompt step 3's stored-prompt description updated to
+the aligned wording. Both reviewer dispatches (docs-adr + assumptions) ran
+over the landing; every finding verified firsthand and folded — including
+two corrections OF the session's own records (the Act 0 date restored to
+2026-08-26 after this seat wrongly "corrected" it to the 27th, and the
+probe's `last_run` bound re-grounded on this session's fresher measurement
+superseding loop-review D-1). **The attended firing remains owner-held.**
+**All five decisions RULED by owner cards, 2026-08-27:** (a) channel set is
+push+Slack (B-15's push-only superseded); **the receipt gate closes only on
+the device push**, Slack recorded as corroboration; (b) the stored-prompt
+skills paragraph aligned to invocable `engraph-` names (second
+owner-directed trigger edit, `updated_at` 2026-08-27T10:07Z, verified in
+the same read, canonical in lockstep); (c) **ratified: a DIVERGENT honesty
+verdict auto-stops the arming** (INCOMPLETE likewise), seat-proposed flags
+removed; (d) Q-19's `depends_on: [Q-13]` DROPPED — re-confirmed after the
+seat surfaced the recorded never-a-second-skill-copy rationale it had
+initially missed (the card premise was corrected and re-asked): Q-21
+proved the skill canonical safely editable ahead of Q-13, Q-19 now
+sequences with the safety instruments, and Q-13's brief carries the
+reconciliation duty; (e) **enable cadence: 3/day from enable** (the seat's
+1/day recommendation considered and declined). Landings: runbook
+(canonical block, notifications row, step 4/6/7 gate texts), probe
+(consequence, row 17, re-verification stamps), routine-prompt step 3,
+parent-plan (Q-19 row moved after Q-22, four prose sites, Q-13
+reconciliation duty), trust node. Next seat acts, in order: PR #67 made
+durable (arc-carrying body) and driven to merged; then the attended firing
+(owner pokes, seat probes); then the enable (owner act); then the Act 3
+consolidation-Routine estate (the learning-loop drain).
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

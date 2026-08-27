@@ -151,6 +151,16 @@ push-only rather than repairing the config — the live configuration is now the
 ratified one, and D-2 closes as a ratified change, not a defect. The scope note
 stands: clause 6's escalation notifications keep a delivery channel regardless.
 
+**Second amendment (owner card ruling, 2026-08-27, routine-configuration
+session): the channel set is push + Slack, no email; the receipt gate closes
+only on the device push.** The 2026-08-26 arming walk's notification repair
+left the live trigger at push+Slack; presented the divergence against the
+push-only amendment above, the owner ratified the live set rather than
+restoring push-only — both channels stay, and the device push is the sole
+gate-closing channel (a Slack arrival is recorded as corroboration, never the
+gate). Supersedes the 2026-08-24 push-only amendment; the clause 6 scope note
+stands unchanged.
+
 ### B-16 Red-head policy (ADR-051 clause 6)
 
 One bounded out-of-queue green-the-head repair slice per firing through the normal

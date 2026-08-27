@@ -48,7 +48,8 @@ A fresh container has no accumulated session context to lean on and no
 owner watching by default, so the full one-gate-at-a-time grounding and
 the cognitive stack are the substitute for the supervision an interactive
 local session gets for free. The strategic frame is
-`.agent/plans/future/cloud-autonomy-trust.md`.
+`.agent/plans/proof-programme/cloud-autonomy-trust.md` (promoted from the
+future lane 2026-08-27).
 
 ## Changing the environment
 
