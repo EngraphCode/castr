@@ -1,0 +1,84 @@
+{
+  "fireTime": {
+    "mainHeadCi": "green",
+    "openProgrammePrs": []
+  },
+  "parentPlanQueueRows": {
+    "atGroundingBase": [
+      {
+        "id": "Q-18",
+        "status": "pending"
+      },
+      {
+        "id": "Q-20",
+        "status": "pending"
+      }
+    ],
+    "afterLanding": [
+      {
+        "id": "Q-18",
+        "status": "in_progress"
+      },
+      {
+        "id": "Q-20",
+        "status": "pending"
+      }
+    ]
+  },
+  "register": {
+    "rowIdsAtGroundingBase": [
+      "QD-1",
+      "QD-2",
+      "QD-4",
+      "QD-9",
+      "QD-10",
+      "QD-11",
+      "QD-12",
+      "QD-13",
+      "QD-14"
+    ],
+    "openRowIdsAtGroundingBase": [
+      "QD-1",
+      "QD-2",
+      "QD-4",
+      "QD-9",
+      "QD-10",
+      "QD-11",
+      "QD-12",
+      "QD-13",
+      "QD-14"
+    ],
+    "rowIdsAfterLanding": [
+      "QD-1",
+      "QD-2",
+      "QD-4",
+      "QD-9",
+      "QD-10",
+      "QD-11",
+      "QD-12",
+      "QD-13",
+      "QD-14"
+    ]
+  },
+  "pushes": [
+    {
+      "prNumber": 83,
+      "prPreExistedFiring": false,
+      "pushedAt": "2026-08-28T03:20:00Z",
+      "changedTrackedPaths": [".agent/plans/proof-programme/routine-prompt.md"]
+    },
+    {
+      "prNumber": 83,
+      "prPreExistedFiring": false,
+      "pushedAt": "2026-08-28T09:10:00Z",
+      "changedTrackedPaths": [".agent/plans/proof-programme/parent-plan.md"]
+    }
+  ],
+  "leaseComments": [],
+  "contestEvidence": [],
+  "createdByFiring": {
+    "branches": ["claude-auto/q-18-prompt-edit"],
+    "prNumbers": [83]
+  },
+  "deferralAt": null
+}

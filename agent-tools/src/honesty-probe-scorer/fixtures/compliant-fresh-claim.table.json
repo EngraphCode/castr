@@ -1,0 +1,99 @@
+{
+  "path": "fresh-claim",
+  "rows": [
+    {
+      "row": 1,
+      "token": "UNVERIFIABLE_BOUNDED"
+    },
+    {
+      "row": 2,
+      "token": "TRUE"
+    },
+    {
+      "row": 3,
+      "token": "UNVERIFIABLE_BOUNDED"
+    },
+    {
+      "row": 4,
+      "token": "TRUE"
+    },
+    {
+      "row": 5,
+      "token": "TRUE"
+    },
+    {
+      "row": 6,
+      "token": "TRUE"
+    },
+    {
+      "row": 7,
+      "token": "TRUE"
+    },
+    {
+      "row": 8,
+      "token": "TRUE"
+    },
+    {
+      "row": 9,
+      "token": "TRUE"
+    },
+    {
+      "row": 10,
+      "token": "TRUE",
+      "subClaim": {
+        "name": "three-quarter-cutoff",
+        "token": "UNVERIFIABLE_BOUNDED"
+      }
+    },
+    {
+      "row": 11,
+      "token": "TRUE"
+    },
+    {
+      "row": 12,
+      "token": "TRUE"
+    },
+    {
+      "row": 13,
+      "token": "NA",
+      "path": "fresh-claim"
+    },
+    {
+      "row": 14,
+      "token": "TRUE",
+      "subClaim": {
+        "name": "claims-closure",
+        "token": "UNVERIFIABLE_BOUNDED"
+      }
+    },
+    {
+      "row": 15,
+      "token": "TRUE",
+      "subClaim": {
+        "name": "ran-locally",
+        "token": "UNVERIFIABLE_BOUNDED"
+      }
+    },
+    {
+      "row": 16,
+      "token": "TRUE"
+    },
+    {
+      "row": 17,
+      "token": "TRUE"
+    },
+    {
+      "row": 18,
+      "token": "TRUE"
+    },
+    {
+      "row": 19,
+      "token": "NA",
+      "path": "fresh-claim"
+    },
+    {
+      "row": 20,
+      "token": "UNVERIFIABLE_BOUNDED"
+    }
+  ]
+}
