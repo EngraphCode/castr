@@ -123,6 +123,13 @@ sessions whose claims never close are handled by the consolidate-docs
 stale-claim audit with `closure.kind: "stale"`. The agent is not stranded
 by a peer's failure to close.
 
+A closeout narrative's "claims ALL closed" is a **timestamped claim** that
+a later work-block in the same session can stale — peers read the live
+registry, never the closeout narrative, as the truth surface (measured
+2026-07-06: a live claim was misread as dead-session residue because an
+earlier closeout said all closed). Verify-own-closeout applies to claim
+closure too: re-check the registry after any post-closeout work.
+
 ## Why this rule exists
 
 Three observed instances of parallel-track gate clashes within 48 hours
@@ -191,6 +198,18 @@ If `active-claims.json` contains no entries other than your own, append a
 single comms event noting _"no other agents present"_ and proceed.
 Solo sessions pay the protocol's minimum overhead — one read, one write —
 not the full coordination cycle.
+
+## Cloud sessions skip the ceremony (owner ruling)
+
+Cloud sessions skip claims, commit-queue, and filesystem-comms ceremony
+entirely: a cloud instance of the repo hosts exactly one agent, so this
+registry has no audience there by construction. The canonical statement
+of the cloud-session policy — its scope, the Slack-via-Watcher comms
+channel, and the consolidation-session note — lives in the commit skill
+canonical §Cloud sessions skip the queue ceremony (owner ruling
+2026-08-25, refined 2026-08-27); this rule defers to it. The filesystem
+protocol below remains the contract for local multi-writer sessions
+sharing one working tree.
 
 ## Self-application
 

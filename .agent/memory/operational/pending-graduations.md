@@ -70,22 +70,13 @@ inherited-classifications are all instances of the same principle). Candidate pe
 **pattern-PDR** ("verified-claims engineering" — likely subsuming or federating the
 loop-closure/PDR-096 family) + the umbrella statement in the rebuilt VISION (overhaul plan §W1).
 `[captured: 2026-07-04 | source: wide-deep-review-2026-07-04.md §6.4]`
-trigger-condition: overhaul plan W0 walk ratifies the frame (Q-012..Q-015), or the
-doctrine-claims validator (W3) lands — whichever first gives the thesis an enforced instance.
-status: pending.
-
-### Generator-output must be formatter-stable (fixpoint contract)
-
-Any generator whose output lands in a prettier-formatted tree must emit formatter-stable bytes,
-or pre-commit auto-format re-drifts the artefacts and the drift gate refuses every subsequent
-push (worked castr instance: skills-adapter YAML quoting, two refused pushes, 2026-07-03;
-cure recipe: prettier-check the generator OUTPUT inside the generator's own tests). Candidate
-permanent
-home: a **generator-fixpoint clause** in the relevant validator/generator doctrine (PDR-096
-family or a testing-strategy corollary) + the generator-side quoting fix.
-`[captured: 2026-07-03 | source: napkin part-3 + PR #4 push refusals]`
-trigger-condition: a 2nd generator-formatter fixpoint instance, or the generator-side fix lands.
-status: pending.
+trigger-condition: re-armed — **owner ruled 2026-08-27 (in-session, this consolidation
+pass): hold to ride the W1 vision rewrite** — the pattern-PDR and its companion umbrella
+statement land together when W1 runs. The 2026-08-23 walk's ratification stands as the
+substantive go-ahead; W1 is now the landing vehicle, not a new decision gate.
+status: pending (trigger: the W1 vision rebuild opens). Evidence a future agent can
+check — the PDR does not exist in `.agent/practice-core/decision-records/`, and
+`.agent/directives/VISION.md` does not yet describe both products.
 
 ### Autonomous-programme operating pattern → PDR
 
@@ -101,31 +92,56 @@ trigger-condition: a second autonomous programme is stood up, or the owner direc
 graduation.
 status: pending.
 
-### Cloud single-agent sessions skip commit-queue/comms ceremony (owner ruling)
+### PDR-056 cloud-seat channel-availability extension
 
-Owner ruling 2026-08-25 (in-session; verbatim substance in the napkin's 2026-08-25
-entry): cloud environments with a single agent do not need commit queues, and until
-the Slack work completes cannot partake in comms — that ceremony can and should be
-skipped in such sessions. Candidate permanent home: a cloud-single-agent clause in
-the commit skill canonical (§Commit Queue And Window Protocol) plus the
-claims/comms session-open and session-close rules; the blocking husky gates are
-untouched by the ruling.
-`[captured: 2026-08-25 | source: napkin 2026-08-25 (Sardine turns Coral)]`
-trigger-condition: already fired (unconditional owner ruling); lands at the next
-consolidation pass or the next session touching those canonicals.
-status: due.
+The 2026-08-27 ruling refinement (one agent per cloud instance; filesystem comms substrate
+absent by construction; Slack via a live Watcher is the working cloud channel) is landed as
+phenotype (commit skill + claims/comms rules) but not in the portable Core. Candidate
+permanent home: a small extension to **PDR-056** (inter-agent collaboration protocol) so the
+channel-availability fact travels with the Core. Core edits are owner-approved; the drafting
+offer was made in-session 2026-08-27 and not yet answered.
+`[captured: 2026-08-27 | source: consolidation session (Limpet guards Moorings), Core review step]`
+trigger-condition: owner approves (or declines) the extension. status: owner-gated.
 
-### Single environment definition serves every Practice repo (owner ruling)
+### IR persistence schema-versioning policy → ADR
 
-Owner ruling 2026-08-25 (in-session to the PR-drive seat, Kraken calls Abyss
-0178h2): "We are going to use a single environment definition for both OCE and
-Castr instances." This repo's
-`.agent/claude-harness-integrations/cloud-environment.md` (post PR #58) is the
-definition of record for BOTH estates. Candidate permanent home: a scope
-statement in that document's preamble naming every Practice repo as its
-consumer, plus the OCE environment doc becoming a GitHub-URL pointer at it
-(the OCE half is routed in OCE's 2026-08-25 closeout napkin entry).
-`[captured: 2026-08-25 | source: owner word, PR-drive session (napkin 2026-08-25 closeout entry)]`
-trigger-condition: already fired (unconditional owner ruling); lands at the next
-consolidation pass or the next session touching the environment doc.
-status: due.
+Q-03 (2026-08-24 firing) landed hard version pinning at `serializeIR`/`deserializeIR`
+(foreign versions rejected both directions, no migration machinery,
+regenerate-from-source contract) via review convergence on PR #50 rather than an
+upfront decision record. Candidate permanent home: an **ADR** stating the IR
+persistence versioning policy, authored from the PR #50 thread record rather than
+re-derived.
+`[captured: 2026-08-24 | source: napkin (Luminous Waning Orbit)]` — registered here at the
+2026-08-27 napkin rotation.
+trigger-condition: the first time IR migration machinery or a multi-version read
+window is proposed. status: pending.
+
+### Slack-watcher skill: editable-deadman fallback for surfaces without message edit
+
+The 2026-08-27 Watcher stand-up measured that the Slack MCP surface available to cloud
+sessions has NO message-edit tool, making the skill's "EDIT the tenure status message every
+tick" deadman unimplementable as written. The worked cure: a Slack **canvas** as the
+always-current tenure status surface (created at stand-up, anchored from the intro's threaded
+reply, edited every tick, final-edited at teardown — full tenure `F0BT7TXQ3PW` ran on it
+end-to-end). Candidate permanent home: an amendment to
+`.agent/skills/slack-watcher/SKILL-CANONICAL.md` §2/§3 naming the canvas fallback (or
+per-tick threaded replies where canvases are unavailable) for surfaces lacking `chat.update`.
+`[captured: 2026-08-27 | source: napkin (Slack Watcher stand-up entry) + tenure F0BT7TXQ3PW]`
+trigger-condition: next slack-watcher skill edit, or the next Watcher stand-up on an
+edit-capable surface (either confirms or retires the fallback shape). status: pending.
+
+### Verify a bot-cited SHA exists before reading its argument
+
+PR #69 round 6: a review bot re-raised an already-rejected finding citing "fresh evidence in
+`5b63e55f`" — a commit absent from the local clone (`git cat-file -t` fails) AND from the
+repository remote (independent GitHub lookup, PR #71 round 1). Sharpens
+verify-the-reviewer's-warrant: for any bot finding whose evidence is a commit SHA, check
+`git cat-file -t <sha>` first, then confirm at the repository level (`git fetch origin
+<sha>` or a GitHub commit lookup) before voiding — cat-file alone proves only local absence,
+and a shallow or partially-fetched clone can lack valid remote commits. Only the combined
+absence voids the finding and invokes the review cap. Candidate permanent home: a sharpening of
+the review-bot convergence-cap doctrine (ADR-051 clause 4 family / the
+autonomous-background-programme pattern item 8) or `verify-dont-trust`.
+`[captured: 2026-08-27 | source: napkin (PR #69 review-drive entry) + PR #69 thread r3872515171]`
+trigger-condition: second fabricated-citation instance, or the next convergence-cap doctrine
+edit. status: pending.

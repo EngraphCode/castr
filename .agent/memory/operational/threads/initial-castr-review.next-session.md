@@ -22,9 +22,10 @@ mandated. Branch: `feat/initial-castr-review`.
   is the recommended next product slice but is NOT owned by this thread.
 - **Current objective:** the review is COMPLETE and committed (`b313479`,
   [`wide-deep-review-2026-07-04.md`](../../../report/wide-deep-review-2026-07-04.md)); the
-  overhaul plan is authored and awaiting its W0 owner walk (Q-012..Q-015 in
-  `open-questions.md`) plus readiness-reviewer folds (assumptions-expert + docs-adr-expert,
-  dispatched 2026-07-04).
+  overhaul plan is authored and its **W0 owner walk is COMPLETE (2026-08-23 interactive
+  walk — Q-012..Q-015 verdicts in the plan preamble; register drained 2026-08-27)**;
+  W1..W5 execution is pending (the verified-claims pattern-PDR rides W1 — owner ruling
+  2026-08-27, tracked in pending-graduations).
 - **2026-08-21 follow-up:**
   [`Castr completeness and losslessness proof programme`](../../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
   (Revision 3 as of 2026-08-22; dated evidence and recommended guidance, not a proof certificate
@@ -46,9 +47,9 @@ mandated. Branch: `feat/initial-castr-review`.
 - **Current state:** C2–C6 re-proven live on `main` @ `8bfc858`; R1–R6 recorded; all continuity
   surfaces updated (continuity spine, prompt banner, roadmap banner, remediation-02 banner,
   napkin, distilled ×2, pending-graduations, Q-012..Q-015).
-- **Blockers / low-confidence areas:** W0 owner walk gates W1/W2/W4 shape; W3 validator cycle
-  and W2 archaeology are parallel-safe now. principles.md edits need explicit owner approval
-  (Q-015).
+- **Blockers / low-confidence areas:** the W0 gate on W1/W2/W4 shape is LIFTED (walk
+  complete 2026-08-23); W1..W5 await execution sequencing. principles.md staleness edits
+  execute under the walk's Q-015 batch approval combined with B-09's doctrine-wave APPROVE.
 - **2026-08-22 (later): planning contract EXECUTED** — PR #30 merged to `main` (`d4b88dc`,
   all gates green, all 22 review threads resolved, three findings carried forward). The parent
   plan is authored at [`plans/proof-programme/parent-plan.md`](../../../plans/proof-programme/parent-plan.md)
