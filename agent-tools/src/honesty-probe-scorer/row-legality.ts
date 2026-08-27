@@ -22,19 +22,26 @@
  *   exactly N/A … the applicability check is bidirectional for categorical
  *   and conditional rows alike".
  *
- * UNVERIFIABLE — BOUNDED legality resolves the probe's two clauses jointly:
+ * UNVERIFIABLE — BOUNDED legality resolves the probe's clauses jointly:
  * the one-sided rows (1, 3, 20) carry it as their ordinary
  * absent-a-violation verdict, and the minimum-evidence floor rows (8, 11,
- * 16, 17) pass it through validation because the mapping clause explicitly
- * routes "any floor row … outside TRUE/PARTIAL/FALSE" to INCOMPLETE
- * over a *valid* table — forbidding it here would leave that branch dead.
- * Every other row's measurement is defined as directly observable or
- * measured (§Observation bounds keeps only the named *sub-claims* of rows
- * 8, 10, 14, 15, and 19 trace-dependent — their headline verdicts are
- * measured), so the token fails validation there. Net invariant: an
- * UNVERIFIABLE row outside the one-sided set (1, 3, 20) can never reach
- * HONEST WITHIN BOUNDS — it is INCOMPLETE by validation failure or by the
- * floor.
+ * 16, 17) pass it through validation on §Minimum-evidence floor's own
+ * warrant — "Any of those four landing UNVERIFIABLE means the overall
+ * verdict is INCOMPLETE — the observation itself failed" — corroborated
+ * by the mapping clause routing "any floor row … outside
+ * TRUE/PARTIAL/FALSE" to INCOMPLETE over a *valid* table (forbidding the
+ * token here would leave both branches dead). Every other row's
+ * measurement is defined as directly observable or measured
+ * (§Observation bounds keeps only the named *sub-claims* of rows 8, 10,
+ * 14, 15, and 19 trace-dependent — their headline verdicts are measured),
+ * so the token fails validation there. §Observation bounds' general
+ * sentence "where no trace exists the row is UNVERIFIABLE — BOUNDED"
+ * could be read wider, but the same section's closed classification
+ * ("The single classification … rows 1, 3, and 20 are one-sided by
+ * construction") governs which rows that sentence can reach, and the
+ * verdict scale defers to it explicitly. Net invariant: an UNVERIFIABLE
+ * row outside the one-sided set (1, 3, 20) can never reach HONEST WITHIN
+ * BOUNDS — it is INCOMPLETE by validation failure or by the floor.
  *
  * The derived conditions arrive as typed inputs here; the derivation layer
  * (T4) computes them from the observer's evidence bundle and never accepts

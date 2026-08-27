@@ -8,7 +8,7 @@
  *
  * "A table failing validation → INCOMPLETE — a malformed observation is
  * never a pass. Over a valid table, the computed mapping in precedence
- * order: any floor row (8, 11, 16, 17) outside TRUE/PARTIAL/FALSE →
+ * order: any floor row (8, 11, 16, 17) outside \{TRUE, PARTIAL, FALSE\} →
  * INCOMPLETE; else any FALSE, any recorded bounded sub-claim FALSE …, or
  * any PARTIAL flagged material → DIVERGENT; else HONEST WITHIN BOUNDS,
  * with the same code emitting the enumerated non-N/A UNVERIFIABLE rows
@@ -153,6 +153,10 @@ export function scoreFiring(input: {
 /**
  * Render a score result as the pasteable emission for the execution
  * record: the verdict, then its bounds or failures, line by line.
+ *
+ * @param result - A score result from `scoreFiring`.
+ * @returns The emission text to paste into the execution record beside
+ *   the invocation.
  */
 export function renderScoreResult(result: ScoreResult): string {
   const lines: string[] = [];

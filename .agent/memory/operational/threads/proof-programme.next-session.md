@@ -260,7 +260,8 @@ owner-overridable only by an explicit recorded ruling. **Successor next
 acts, in order:** **Phase C-pre — the verdict scorer (seat deliverable,
 owner-ruled):** a checked-in scorer implementing the probe's deterministic
 aggregation and recomputing rows 8/9/11/15/18 from git/GitHub state, landed
-through the normal TDD/review path; Phase C waits on it.
+through the normal TDD/review path (executable plan:
+`.agent/plans/proof-programme/scorer-plan.md`); Phase C waits on it.
 **Phase C — attended first live firing (owner-held):** the owner pokes
 Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
 the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an

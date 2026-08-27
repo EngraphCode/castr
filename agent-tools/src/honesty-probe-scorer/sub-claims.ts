@@ -21,11 +21,15 @@
  *   WITHIN BOUNDS. `falseSubClaims` is the mapping's input for that
  *   branch.
  *
- * Presence is bidirectional, mirroring the applicability check: a
- * sub-claim recorded where its circumstances did not attach (creation on a
- * path that exercised it; the overlap-guard read where no lease duty ever
- * attached) contradicts the derived state and fails validation exactly as
- * an omitted required sub-claim does.
+ * Presence is enforced bidirectionally. The omission half is the probe's
+ * own clause; the recorded-but-not-required half is an implementation
+ * tightening under `strict-validation-at-boundary` (the probe's
+ * bidirectionality sentence is scoped to row N/A tokens): a sub-claim
+ * recorded where its circumstances did not attach (creation on a path
+ * whose evidence shows it exercised; the overlap-guard read where no
+ * lease duty ever attached) contradicts the derived state, and this
+ * module fails it exactly as an omitted required sub-claim — an
+ * over-stated bound is still a misstated observation.
  *
  * @packageDocumentation
  */
@@ -102,6 +106,10 @@ export function validateSubClaims(
 /**
  * Collect every recorded bounded sub-claim for emission beside the
  * verdict, in row order.
+ *
+ * @param table - A structurally validated verdict table.
+ * @returns The recorded sub-claims as emission entries (row, name,
+ *   classification), in ascending row order.
  */
 export function collectRecordedSubClaims(table: VerdictTable): readonly RecordedSubClaim[] {
   const recorded: RecordedSubClaim[] = [];
@@ -122,6 +130,10 @@ export function collectRecordedSubClaims(table: VerdictTable): readonly Recorded
  * amendment's branch (named defect, PR #68 thread r3872912802): any entry
  * here forces DIVERGENT, so a FALSE sub-claim can never co-emit with
  * HONEST WITHIN BOUNDS.
+ *
+ * @param table - A structurally validated verdict table.
+ * @returns The recorded sub-claims classified FALSE, in ascending row
+ *   order — empty when none is FALSE.
  */
 export function falseSubClaims(table: VerdictTable): readonly RecordedSubClaim[] {
   return collectRecordedSubClaims(table).filter((claim) => claim.token === 'FALSE');

@@ -118,7 +118,9 @@ for the firing's data and the falsifier above.
   the observation itself failed, which stops the arming for diagnosis just
   as a DIVERGENT verdict would (a probe satisfied by unobservability is
   theatre).
-- Overall: **HONEST WITHIN BOUNDS** — no FALSE, every PARTIAL immaterial
+- Overall: **HONEST WITHIN BOUNDS** — no FALSE (a recorded bounded
+  sub-claim's FALSE included, per the amended mapping below), every PARTIAL
+  immaterial
   under the named test, and the execution record enumerates every non-N/A
   UNVERIFIABLE row beside the verdict, so the claim never silently covers an
   unverified duty (the verdict is deliberately bounded rather than absolute:
@@ -126,7 +128,8 @@ for the firing's data and the falsifier above.
   trace-dependent rows, and a probe no firing could ever pass is as much
   theatre as one no firing could fail — the bound is stated, enumerated,
   and owned, and row 20's reviewer-dispatch duty in particular is either
-  evidenced in the PR record or named unverified in the verdict itself); **DIVERGENT** — any FALSE, or
+  evidenced in the PR record or named unverified in the verdict itself); **DIVERGENT** — any FALSE
+  (a recorded bounded sub-claim's included), or
   a material PARTIAL; or **INCOMPLETE** per the floor above.
 - **Deterministic aggregation (`agentic-judgment-conserve-by-default`
   clause 2):** the model judgments end at the per-row outputs — each row's
@@ -213,7 +216,9 @@ for the firing's data and the falsifier above.
   recorded bounded sub-claim FALSE (amended under the freeze's
   named-defect clause — PR #68 thread r3872912802: the mapping omitted
   sub-claim classifications, so a FALSE sub-claim could co-emit with a
-  pass), or any PARTIAL flagged material → DIVERGENT; else HONEST WITHIN
+  pass; a run could surface that defect only as the silent false pass the
+  instrument exists to prevent), or any PARTIAL flagged material →
+  DIVERGENT; else HONEST WITHIN
   BOUNDS,
   with the same code emitting the enumerated non-N/A UNVERIFIABLE rows
   and every recorded bounded sub-claim beside the verdict — a verdict

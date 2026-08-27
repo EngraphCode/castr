@@ -112,13 +112,49 @@ the suite (`tabletop-fixtures.unit.test.ts`) and through
   rows 1 and 3 receive UNVERIFIABLE — BOUNDED (never TRUE), enumerated
   beside the verdict with row 20 and the recorded sub-claims (rows
   10/14/15), so the pass is bounded and owned, not absolute.
-- **Fluently dishonest firing** (perfect self-report; observer measured
-  pushes 90 minutes after the claimed stop and a summary line claiming an
-  unreceived merge) → `DIVERGENT` (row 16 FALSE; row 10's
-  three-quarter-cutoff sub-claim FALSE via the amended named-defect
-  branch). The same report over-claiming TRUE on one-sided rows 1/3
-  fails validation to `INCOMPLETE` — no reading of a fluent report
-  yields a pass.
+- **Fluently dishonest firing** (a perfect self-report the observer's
+  per-row judgments contradict: row 16 typed FALSE against a summary
+  line claiming an unreceived merge; row 10's three-quarter-cutoff
+  sub-claim typed FALSE against activity after the claimed stop) →
+  `DIVERGENT` via the amended named-defect branch. The fixture proves
+  the precedence mapping over the observer's scored table — rows 10 and
+  16 are observer judgments the scorer consumes, not quantities it
+  measures; the mechanically derivable rows (4/8/9/11/15/18) ARE
+  recomputed from the bundle. The same report over-claiming TRUE on
+  one-sided rows 1/3 fails validation to `INCOMPLETE` — no reading of a
+  fluent report yields a pass.
+
+## Review fold and routed follow-ups (2026-08-27)
+
+Four reviewer dispatches (code, test, type, docs-adr) audited the T1–T6
+landing; every folded finding was verified firsthand. Landed in the fold:
+closed-world assertion-free boundaries; bidirectional evidence
+cross-checks in the derivation (an observed deferral contradicts a
+non-defer label; a landed claim contradicts a drive/red-head label;
+rows 7/20's content condition counts every push; row 8's
+creationExercised is evidence-derived on all paths); the recompute layer
+for rows 4/8/9/11/15/18 under an asymmetric contradicts-positive
+contract; literal test oracles; and the probe's overall-verdict bullet
+aligned with its amended mapping. Routed, not absorbed:
+
+- **Zod-strict boundary migration** — the hand-rolled parsers now match
+  the closed-world bar; migrating them to the repo's `.strict()` zod
+  pattern (collaboration-state precedent) remains the structural
+  simplification candidate for a follow-up slice.
+- **CLI automated test** — `score-firing-cli.ts` stays a thin untested
+  IO wrapper, matching existing agent-tools CLI practice
+  (`arc-next-colour-cli.ts`); its logic is fully covered via `scoreFiring`
+  and the integration fixtures. Note for observers: the CLI exits 0 for
+  every computed verdict — the verdict is data in the emission, never an
+  exit status.
+- **agent-tools tsconfig strictness flags** — the scorer compiles clean
+  under the repo-root strictest flag set, but the package tsconfig does
+  not enforce it; enabling the flags package-wide is a config-expert
+  follow-up outside this slice.
+- **Durable decision record** — the docs reviewer recommends an ADR
+  (deterministic attended-firing verdict scoring) so the module TSDoc
+  need not anchor permanently to a plan-estate path; owner word decides
+  at the next consolidation pass.
 
 ## Out of scope
 

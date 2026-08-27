@@ -8,7 +8,7 @@
  * observer collects that state into a bundle of structured observations —
  * fire-time snapshots, landed diffs, PR/lease/CI facts — and the scorer
  * stays deterministic over those files (`scorer-plan.md` §Mechanism; live
- * GitHub calls are out of scope). This module validates the parsed JSON
+ * GitHub calls are excluded by its §Out of scope). This module validates the parsed JSON
  * strictly at the boundary: the bundle carries raw observations (row
  * states, push facts, comment facts), never derived conclusions — the
  * derivation layer computes those.
