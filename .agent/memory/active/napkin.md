@@ -465,3 +465,13 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   Firing rule: before replying "declined per the frozen spec", re-read the cited clause
   from its sentence start — a warrant assembled from a remembered fragment is the same
   typed-not-recomputed failure mode the scorer exists to catch.
+- **The owner's adversarial dispatch found what nine bot rounds missed:** Codex reshaped
+  binding checks nine ways; the dispatched evaluation instead built a synthetic firing that
+  DEFEATED the instrument (idle drive resetting the clause-6 kill-switch streak, scoring
+  HONEST) — a demonstration, not an inference. The cure was the same validators-must-
+  recompute move already landed elsewhere: the row-11 progress condition was the one typed
+  boolean left in the transition rule, and the reproduction is now the third tabletop
+  fixture so the cure re-proves on every run. Lesson: a reviewer who scores the instrument
+  against its purpose beats reviewers who score the code against its rules; the fold order
+  (fix the demonstrated defeat first, route the wording divergence to the owner) came from
+  the evaluation's own verdict-not-menu sequence and was mechanical to follow.

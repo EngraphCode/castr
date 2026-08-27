@@ -202,6 +202,32 @@ aligned with its amended mapping. Routed, not absorbed:
   contradicting it — the class of error the verify-dont-trust rule
   exists to catch, in the scorer's own review.
 
+## Adversarial-evaluation fold (2026-08-27, pre-merge)
+
+The owner-dispatched adversarial evaluation (Flounder spins Spray, on
+the PR) was folded before merge per its own fix-then-fire sequence.
+Landed red-first: row 11 derives substantive progress from bundle facts
+(the demonstrated idle-drive kill-switch reset now fails to INCOMPLETE
+and is pinned as the third tabletop fixture); both inputs carry a
+firingId cross-checked at scoring; the emission names the
+scorer-constrained rows against the observer's typed judgments. Routed,
+not absorbed:
+
+- **QD-15 (owner-held)** — the frozen clause "directly from git/GitHub
+  state" vs the file-deterministic bundle design; recommendation
+  recorded in the register (amend the prose + require collection
+  evidence beside the bundle).
+- **Remaining recompute extensions, before first reuse** — row 10's
+  cadence arithmetic (bundle timestamp fields), row 12's
+  baseline-vs-notification comparison (the notification's OPEN list as
+  evidence), row 6's WIP check from `fireTime.openProgrammePrs`. These
+  are observer-duty rows today; the extensions are improvements within
+  the probe's measurement column, not spec breaches.
+- **Zod-strict migration priority raised** — the probe's falsifier
+  anticipates post-firing row-set revision, which rewrites the
+  hand-rolled boundary layer; land the migration before the instrument
+  is reused.
+
 ## Out of scope
 
 - Probe prose changes beyond T3's single named-defect amendment (the
