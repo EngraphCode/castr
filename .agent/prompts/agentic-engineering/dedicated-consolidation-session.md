@@ -71,9 +71,13 @@ cheap assessment — the canonical trigger sources and required inventory in
 pending graduations, active and recent plans, the platform memory surfaces,
 tombstones, the practice-core incoming box, and the drift and open-question
 signals), not a private subset of them. Only if that checklist finds nothing to
-consolidate: record a one-line no-op observation, make the firing's completion
-notification read as a no-op, and end the session immediately. Do not
-manufacture work to justify the firing.
+consolidate: record a one-line no-op observation, then run
+`engraph-session-handoff` for the session's own capture and closeout — its
+scheduled/zero-context firing path applies, and a firing that changed no
+tracked file records "no repo-state change; gate not applicable" as its
+no-landing closeout artefact — make the firing's completion notification read
+as a no-op, and end the session. Do not manufacture work to justify the
+firing.
 
 Otherwise, consolidate. As always, the goal is knowledge curation, not chasing
 fitness numbers. The fitness function results are never the goal, only
