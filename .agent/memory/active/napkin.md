@@ -345,3 +345,74 @@ _2026-06-17 → 2026-06-20 (Phase 7 + Phase 8-partial) → [`archive/napkin-2026
 _2026-06-20 → 2026-06-21 (Tranche 1/2 + FIRST-RUN dogfood + dependency-currency + pin-reframe) → [`archive/napkin-2026-06-20-to-21.md`](archive/napkin-2026-06-20-to-21.md) (2026-06-26);_
 _2026-06-26 → 2026-07-03-morning (consolidations + LC/TC lanes + gap rescan + S1/delta/coverage) → [`archive/napkin-2026-06-26-to-07-03-morning.md`](archive/napkin-2026-06-26-to-07-03-morning.md) (2026-07-03);_
 _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes + arming walk + trust reframing) → [`archive/napkin-2026-07-to-08-27.md`](archive/napkin-2026-07-to-08-27.md) (2026-08-27)._
+
+## 2026-08-27 (PR #69 review drive + merge — Moon guards Solstice / c395cb, continued)
+
+- **Authority-machinery review convergence re-measured on the consolidation-routine
+  template: five rounds, SEVEN real distinct fixes, then round six was the
+  non-convergence tell** (count corrected from five at PR #71 round 1 — the first
+  list omitted two of round 1/3's fixes). Real: (1) no cross-firing exit criterion
+  — cured by recording the owner-authority override per
+  `loop-exit-criteria-required` §Owner Authority; (2) no-op trigger checklist was a
+  private subset of consolidate-docs's canonical sources; (3) "Done means" narrowed
+  consolidate-until-done's completion contract; (4) firing stack omitted the
+  mandatory cloud-session skills (`engraph-plan`/`engraph-proportionality`, owner
+  ruling 2026-08-26); (5) the no-op exit bypassed `session-handoff`'s
+  scheduled-firing closeout; (6) no per-firing duration bound / overlap deferral
+  (the measured I-1 collision class); (7) head-recency used as a liveness signal
+  where the pattern requires the observable FIRING-LEASE
+  (`silence-is-never-liveness`).
+  Every one verified against the cited authority BEFORE complying; all fixed with
+  the live Routine's stored prompt updated in lockstep each time. Re-proves the
+  2026-08-22 lesson: authority text has a bounded defect surface — enumerate it
+  deliberately up front instead of letting a reviewer walk it one round per push.
+- **New review-bot failure specimen: a re-raise on a FABRICATED commit SHA.**
+  Codex round 6 re-raised the already-rejected commit-bundling claim citing "fresh
+  evidence in `5b63e55f`" — `git cat-file -t` found no such object in the local
+  clone, and a repository-level check corroborated it (Copilot's independent
+  GitHub lookup also found the SHA absent; scope correction from PR #71 round 1:
+  cat-file alone proves only LOCAL absence — a shallow or partial clone can lack
+  valid remote commits, so the void verdict needs the remote-level check too).
+  Cure applied: reject with the falsifying probes, resolve, and invoke the
+  recorded convergence cap for the class (reopen only on a verifiable SHA).
+  Sharper form of verify-the-reviewer's-warrant: verify a bot-cited SHA exists —
+  locally AND at the remote — before even reading its argument.
+- **One rejection was owed to measurement, not argument:** the round-4 "split the
+  Routine change from the continuity landing" claim fell to
+  `git log --name-only origin/main..HEAD` showing every commit single-file — the
+  orphan-commit rule is satisfied per-commit, and napkin+prompt sharing a PR is
+  not the bundling it forbids.
+- **`update_trigger`'s response is a config-observability surface:** the owner's
+  UI reshaping of the Routine (rename to "Castr Dedicated consolidation — every
+  three days", cron `0 6 */3 * *`, repo source attached with outcome branch
+  `claude/compassionate-curie`, Slack connector granted, a 13:10Z test fire)
+  became visible only in the update call's echoed config. Read the echoed
+  trigger state on every update — it is where owner-side changes surface.
+- **Hook token-subsequence specimen refired exactly as documented** (`git add --`
+  - `git push -u origin` in one compound reads as "git add -u"); the napkin's
+    split-the-ceremony cure held. Also `check-commit-message` warns (non-blocking)
+    on a body line starting with a hyphenated token like `silence-is-never-liveness`
+    — commitlint parses it as a footer token; harmless but noisy.
+- **Merge shape that worked under "push and merge now":** condition-based to the
+  end — auto-merge armed while fixing, disabled during each fix round, re-armed
+  after; final merge executed directly once `mergeable_state: clean` + all check
+  suites complete + all nine threads resolved (squash `df734b4d`). The owner's
+  merge ruling (green and clean → merge) needed no bypass at any point.
+
+## 2026-08-27 (session close — watch teardown + closeout — Moon guards Solstice / c395cb)
+
+- **Landed (PDR-026): the full commissioned arc.** Watcher mantle stood up, held ~2.6 h
+  (11 ticks + 2 catch-ups, quiet channel), and torn down cleanly at owner word — vacancy
+  sign-off `1787843381.527589` closing intro tenure `1787833883.828679`, successor sweep
+  boundary `1787834305.944669`, canvas `F0BT7TXQ3PW` final-edited, both wake triggers
+  deleted, post-write resolver check confirmed no successor race. Standing consolidation
+  Routine armed and hardened (PR #69 squash-merged `df734b4d`); notes branch + safety PR
+  #71; standing permissions landed (`ff6cb4f3`, `bd0ec56c`).
+- **Teardown protocol observation (works):** the §5 owner-teardown path executed exactly as
+  written on the canvas-substitute surface — delete reminders → final non-re-arming sweep →
+  vacancy naming tenure ts + sweep-boundary ts → canvas final-edit → post-write resolver
+  verify. No step needed adaptation beyond the already-noted canvas substitution.
+- **Session-shape note:** sole-contributor handoff; no local claims/comms ever opened (owner
+  instruction: peer comms via Slack only, consistent with the 2026-08-25 single-agent cloud
+  ruling) — "no claim to close" is the explicit step-8 outcome. Entry points
+  (CLAUDE/AGENTS/GEMINI) untouched this session — no drift added.
