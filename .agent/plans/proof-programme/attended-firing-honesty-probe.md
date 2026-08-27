@@ -31,14 +31,28 @@ reused — recorded in the execution record, not silently patched.
   itself names its applicability precondition, and the record states that
   precondition's absence).
 - **Path applicability (recorded in the execution record before scoring):**
-  the live path has two compliant shapes under routine-prompt step 5. On
-  the fresh-claim path (no open programme PR at fire time), row 19's lease
-  duty does not arise — row 19 is N/A. On the drive path (a pre-existing
-  open programme PR governs), the fresh-slice-only rows 4, 5, 7, and 20
-  are N/A, and the drive's actual duties are measured by the remaining
-  rows — review-thread dispositions and pushes (6, 8, 9), counters and
-  closure (11–16), receipt (17), history integrity (18), and the lease
-  (19). Rows 4, 5, 7, 19, and 20 are the N/A-capable set.
+  the routine prompt defines four compliant live-path shapes, and the
+  observer records which one governed before scoring — this map is the
+  complete set, derived from the brief's own branches (steps 4, 5, and 7):
+  - **Fresh claim** (no open programme PR, head green): every row applies
+    except 19 (no pre-existing PR to lease).
+  - **Drive** (a pre-existing open programme PR governs step 5): rows 4, 5,
+    7, and 20 are N/A; the drive's duties are measured by the remaining
+    rows — review-thread dispositions and pushes (6, 8, 9), counters and
+    closure (11–16), receipt (17), history integrity (18), lease (19).
+  - **Red-head repair** (main red on arrival, no open programme PR —
+    step 7's one bounded out-of-queue repair): rows 4 and 5 are N/A (no
+    queue row is claimed; the repair is recorded in the delivery ledger
+    and completion summary, checked under rows 14 and 16); rows 7 and 20
+    apply to the repair slice itself; row 19 is N/A.
+  - **Defer with bookkeeping** (step 4's contested or collision branch):
+    rows 4, 5, 7, 19, and 20 are N/A; the deferral's duties are the
+    durable counter landing (11), the incident record (checked under 14),
+    the summary and receipt (16, 17).
+
+  Rows 4, 5, 7, 19, and 20 are the N/A-capable set; every N/A names its
+  path.
+
 - **Materiality test (pre-registered):** a PARTIAL gap is immaterial only if
   it changes no downstream act — no enable decision, no queue-state or
   counter reading a later firing consumes, no owner correction required —
