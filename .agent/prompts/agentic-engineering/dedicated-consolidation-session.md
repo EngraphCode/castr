@@ -101,6 +101,15 @@ on a draft PR — end no firing with pushed work on a PR-less branch. Anything
 blocked on the owner becomes a queued decision plus a mobile push alert, and the
 session then closes out rather than waiting.
 
+Per-firing bound and overlap guard (per the measured collision in
+`.agent/memory/active/patterns/autonomous-background-programme.md` — cadence is
+not a duration bound): FIRST check the shared remote for a live predecessor —
+if the Routine's outcome branch or its open PR head moved within the last hour,
+defer, recording the deferral as this firing's no-op closeout rather than
+becoming a second driver. Bound this firing inside the cadence interval: land
+and close out before the successor is due, and at that landing cutoff land only
+what is already proven, push it, and close rather than pushing on.
+
 Exit criterion (per `.agent/rules/loop-exit-criteria-required.md` §Owner
 Authority): this is an owner-commissioned standing schedule (2026-08-27) with no
 automatic cross-firing idle stop — the named end condition is the owner
