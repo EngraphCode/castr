@@ -48,7 +48,7 @@ todos:
       PARTIAL → DIVERGENT; else HONEST WITHIN BOUNDS with enumerated non-N/A
       UNVERIFIABLEs and recorded sub-claims) — total over valid ∪ invalid —
       red-first
-    status: pending
+    status: completed
     depends_on: [T3, T4]
   - id: T6
     content: >-

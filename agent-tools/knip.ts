@@ -15,6 +15,7 @@ const config: KnipConfig = {
     'src/hook-policy/check-*.ts',
     'src/bootstrap/bootstrap.ts',
     'src/repo-check/repo-check.ts',
+    'src/honesty-probe-scorer/score-firing-cli.ts',
     'src/practice-substrate/**/*.ts',
     'src/practice-fitness/validate-*.ts',
     'src/version-guard/prevent-accidental-major-version.ts',
