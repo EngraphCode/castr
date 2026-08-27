@@ -1662,3 +1662,27 @@ Works/doesn't-work log from the stand-up, as commissioned:
   canvas, and tick chain all carry Moon guards Solstice). Strengthens the Q-15
   seed-source gap: one canonical seed answer is needed, and it must be available at
   session open, not first resume.
+
+## 2026-08-27 (merge-tail addendum — Vesta turns Singularity / 01PjGS, post-compaction)
+
+- **Ten further probe-hardening rounds between compaction and merge, ~14 findings, every
+  one verified-real and folded** — full substance in the thread record's merge-tail
+  addendum and the probe text itself (the authority). Two of the findings were defects my
+  own earlier fixes introduced, both the same class: **a schema addition without its
+  matching validation clause** (row 19's two-sided reclassification landed everywhere but
+  the validator's subset; the bounded sub-claim fields joined the schema and emission
+  without a presence requirement). The class cure the estate already names — validators
+  recompute AND validate every field the schema defines — applies to my own amendments,
+  not just the audited firing's records.
+- **The full-surface harvest earned its keep live**: the owner's "fetch all comments and
+  double check" directive surfaced a third adversarial-Routine evaluation (13:28Z,
+  Bluebell spins Spore) that had arrived with NO subscription wake — issue comments by
+  the owner's own credentials do not reliably generate events for the subscribing
+  session. pr-lifecycle Phase 3's "REST-only reads produce false no-comment verdicts"
+  generalises: event-wake-only monitoring produces false all-clear verdicts; harvest
+  every surface at the merge instant.
+- **Semantic-merge union executed live**: PR #69 (Watcher stand-up) and this branch both
+  appended ~73-line session blocks at the napkin tail; the hook refused the line-merge,
+  and the union (base + ours + theirs, chronological) was authored by hand and verified
+  by header count. The hook's refusal message naming the exact `git show :N:` incantations
+  made the recovery mechanical.

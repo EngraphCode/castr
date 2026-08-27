@@ -275,6 +275,28 @@ delivered as an owner card, runbook + register rows; the owner creates the
 trigger. The trust node's Delivery list mirrors this order; the parent-plan
 frontmatter stays the queue authority.
 
+Merge-tail addendum (2026-08-27 post-compaction, same seat): before PR #68
+merged, ten further review rounds (Codex plus two more adversarial-Routine
+evaluations, the third identifying as Bluebell spins Spore) folded ~14
+verified-real findings into the probe — the deterministic aggregation is
+now total over a fully validated table (per-row token subsets; PARTIAL
+gap/materiality/act metadata; bidirectional applicability for categorical
+AND derived-conditional rows; every bounded sub-claim required and emitted
+beside the verdict), the scorer derives the governing path and every N/A
+condition from observable state (fire-time head status included; the defer
+path validates only on independently observable contest evidence), and a
+precedence clause makes the probe measurements-only — the governing texts
+set standards, and a standard gap is a queued decision (see **QD-14**, new
+OPEN register row: non-code slices vs the red-first non-negotiable; the
+owner's ruling should land as a parent-plan proof-contract clarification).
+The probe text on the merged head is the single authority for all of this;
+the freeze binds from that merge. The convergence lesson, concurred with
+the Bluebell evaluation's verdict: the prose loop was not shrinking, and
+further refinement belongs to the Phase C-pre scorer's TDD suite, where
+these validation rules become executable and testable — the scorer author
+should treat the probe's aggregation/validation clauses as its test-case
+enumeration, not re-open them as prose.
+
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
 [PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the
