@@ -328,18 +328,24 @@ beyond them is needed for the Routine.
    stops it likewise, for diagnosis of the observation itself).
 7. Enable the Routine (set the cron; re-run step 5's state re-verification against
    the live base immediately beforehand — never carried from earlier in the
-   sitting). **Overlap guard on the enable act itself**: if step 6's manual
-   firing ran, enable only after that firing has closed (its completion
-   notification received), or — only when step 4's dry-run receipt gate already
-   passed — set a cron whose first occurrence falls beyond
-   the live firing's landing deadline — the scheduler never terminates a
-   predecessor (ADR-051 clause 2; incident I-1 is the measured two-live-workers
-   collision), so an enable mid-drive can schedule a successor on top of the
-   still-running attended firing. When step 4's owner-directed replacement gate
-   is in force, the attended firing's completion notification IS the receipt
-   gate, so only the first path exists: no enable — deferred cron or not —
-   before that notification arrives (a silent attended firing stops the
-   arming, per step 4). The loop resumes from the queue on main; beyond step 5's
+   sitting). **Verdict gate on the enable act itself (owner-ratified stop rule,
+   2026-08-27)**: when step 6's attended firing ran, no cron — deferred or
+   otherwise — is set until that firing has CLOSED with the honesty probe's
+   passing verdict (its completion notification received per the receipt-gate
+   channel rule, and the probe returning HONEST WITHIN BOUNDS): a DIVERGENT or
+   INCOMPLETE verdict stops the arming, and a cron set before the verdict
+   exists arms autonomous scheduling the stop rule would then have to claw
+   back. An earlier deferred-cron alternative (first occurrence beyond the
+   live firing's landing deadline, available when step 4's dry-run receipt
+   gate had passed) is SUPERSEDED 2026-08-27 — it predated the ratified
+   verdict gate and could leave the Routine enabled ahead of a failing
+   verdict. The overlap rationale stands regardless: the scheduler never
+   terminates a predecessor (ADR-051 clause 2; incident I-1 is the measured
+   two-live-workers collision), so an enable mid-drive can schedule a
+   successor on top of the still-running attended firing. When step 4's
+   owner-directed replacement gate is in force, the attended firing's
+   completion notification IS the receipt gate (a silent attended firing
+   stops the arming, per step 4). The loop resumes from the queue on main; beyond step 5's
    conservation of any surviving open-PR work, no other state transfer exists or is
    needed.
 
@@ -377,10 +383,10 @@ in the same family as the unproven self-disable probe above:
   until the first live firing — which IS the credentialed write probe, with a loud,
   bounded failure mode: a push or PR failure lands in the completion notification and
   advances the ADR-051 failure counters. When step 6 runs (its recommended shape), the
-  walk's ordering bounds exposure: the firing is owner-attended, and the enable either
-  waits for its closure or uses step 7's deferred cron whose first occurrence falls
-  beyond that firing's landing deadline — either way no unattended firing precedes the
-  attended write probe. If the owner exercises step 6's explicit skip, that recorded
+  walk's ordering bounds exposure: the firing is owner-attended, and the enable
+  waits for its closure with a passing honesty verdict (step 7's verdict gate;
+  the earlier deferred-cron alternative is superseded, 2026-08-27) — so no
+  unattended firing precedes the attended write probe. If the owner exercises step 6's explicit skip, that recorded
   owner call voids this ordering bound and is itself the risk disposition for enabling
   with the write binding unprobed. Past enable, three zero-progress firings self-disable
   the loop (ADR-051 clause 6), and WIP=1 remains the strong best-efforts default
