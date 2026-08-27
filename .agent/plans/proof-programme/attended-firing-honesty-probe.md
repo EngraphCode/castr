@@ -46,9 +46,14 @@ reused — recorded in the execution record, not silently patched.
     and completion summary, checked under rows 14 and 16); rows 7 and 20
     apply to the repair slice itself; row 19 is N/A.
   - **Defer with bookkeeping** (step 4's contested or collision branch):
-    rows 4, 5, 7, 19, and 20 are N/A; the deferral's duties are the
-    durable counter landing (11), the incident record (checked under 14),
-    the summary and receipt (16, 17).
+    rows 4, 5, 7, and 20 are N/A. Row 19 is N/A only for a pre-drive
+    contest; when the deferral follows a collision after a drive began,
+    the lease duty already attached and row 19 applies in full (lease
+    posted at drive start, release posted when the drive ends in
+    deferral). The deferral's duties are the durable counter landing
+    (11), the incident entry — measured directly against
+    `incidents.md` on the landing, not inferred from row 14's
+    continuity surfaces — and the summary and receipt (16, 17).
 
   Rows 4, 5, 7, 19, and 20 are the N/A-capable set; every N/A names its
   path.
