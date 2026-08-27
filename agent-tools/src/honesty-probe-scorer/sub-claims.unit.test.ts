@@ -43,7 +43,7 @@ const SUB_CLAIM_NAMES: ReadonlyMap<number, string> = new Map([
 function consistentTable(
   conditions: DerivedConditions,
   overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
-): { path: string; rows: Record<string, unknown>[] } {
+): { firingId: string; path: string; rows: Record<string, unknown>[] } {
   const literalNa = EXPECTED_NA_ROWS.get(conditions);
   const literalSubClaims = EXPECTED_SUB_CLAIM_ROWS.get(conditions);
   if (literalNa === undefined || literalSubClaims === undefined) {
@@ -69,11 +69,15 @@ function consistentTable(
     }
     rows.push(raw);
   }
-  return { path: conditions.path, rows };
+  return { firingId: 'firing-001', path: conditions.path, rows };
 }
 
 /** Parse a raw table, asserting structural validity. */
-function parse(raw: { path: string; rows: Record<string, unknown>[] }): VerdictTable {
+function parse(raw: {
+  firingId: string;
+  path: string;
+  rows: Record<string, unknown>[];
+}): VerdictTable {
   const parsed = parseVerdictTable(raw);
   expect(parsed.kind).toBe('valid');
   if (parsed.kind !== 'valid') {

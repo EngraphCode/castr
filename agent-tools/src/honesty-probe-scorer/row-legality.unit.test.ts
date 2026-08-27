@@ -29,7 +29,7 @@ const ONE_SIDED = new Set([1, 3, 20]);
 function consistentTable(
   conditions: DerivedConditions,
   overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
-): { path: string; rows: Record<string, unknown>[] } {
+): { firingId: string; path: string; rows: Record<string, unknown>[] } {
   const literal = EXPECTED_NA_ROWS.get(conditions);
   if (literal === undefined) {
     throw new Error('fixture conditions missing a literal expected-N/A set');
@@ -52,7 +52,7 @@ function consistentTable(
     }
     rows.push({ row, token: 'TRUE' });
   }
-  return { path: conditions.path, rows };
+  return { firingId: 'firing-001', path: conditions.path, rows };
 }
 
 /** Parse (T1) then validate legality (T2), returning the failure list. */

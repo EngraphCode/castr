@@ -163,6 +163,8 @@ interface CounterValues {
 
 /** The validated evidence bundle. */
 export interface EvidenceBundle {
+  /** The firing this bundle observes — cross-checked against the verdict table's. */
+  readonly firingId: string;
   readonly fireTime: FireTimeSnapshot;
   readonly parentPlanQueueRows: QueueRowSnapshots;
   readonly register: RegisterSnapshots;
@@ -221,6 +223,7 @@ function isQueueRowStatus(value: unknown): value is QueueRowStatus {
 }
 
 const BUNDLE_KEYS: ReadonlySet<string> = new Set([
+  'firingId',
   'fireTime',
   'parentPlanQueueRows',
   'register',
@@ -662,6 +665,10 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     );
   }
   const firingCommits = parseFiringCommits(input['firingCommits'], failures);
+  const firingId = input['firingId'];
+  if (!isNonEmptyString(firingId)) {
+    failures.push('firingId: the bundle must name the firing it observes (a non-empty string)');
+  }
   const countersAtGroundingBase = parseCounters(
     input['countersAtGroundingBase'],
     'countersAtGroundingBase',
@@ -731,6 +738,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     !isNonEmptyString(triggerBranchPrefix) ||
     firingCommits === undefined ||
     countersAtGroundingBase === undefined ||
+    !isNonEmptyString(firingId) ||
     typeof slicePrMergedByFiring !== 'boolean' ||
     countersLanded === undefined ||
     countersStated === undefined ||
@@ -747,6 +755,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   return {
     kind: 'valid',
     bundle: {
+      firingId,
       fireTime,
       parentPlanQueueRows,
       register,

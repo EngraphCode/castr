@@ -58,6 +58,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    firingId: 'firing-001',
     countersAtGroundingBase: { streak: 0 },
     slicePrMergedByFiring: false,
     countersLanded: { streak: 0 },
@@ -101,13 +102,27 @@ function rawTable(
     }
     rows.push(raw);
   }
-  return { path: 'fresh-claim', rows };
+  return { firingId: 'firing-001', path: 'fresh-claim', rows };
 }
+
+describe('scoreFiring — firing identity binding (adversarial evaluation, 2026-08-27)', () => {
+  it('fails a table and bundle from different firings to INCOMPLETE — inputs must be bound', () => {
+    const table = rawTable();
+    table['firingId'] = 'firing-001';
+    const evidence = rawEvidence();
+    evidence['firingId'] = 'firing-002';
+    const result = scoreFiring({ table, evidence });
+    expect(result.verdict).toBe('INCOMPLETE');
+    if (result.verdict === 'INCOMPLETE') {
+      expect(result.failures.join('\n')).toContain('firing');
+    }
+  });
+});
 
 describe('scoreFiring — INCOMPLETE branches (T5)', () => {
   it('maps a malformed table to INCOMPLETE — a malformed observation is never a pass', () => {
     const result = scoreFiring({
-      table: { path: 'fresh-claim', rows: [] },
+      table: { firingId: 'firing-001', path: 'fresh-claim', rows: [] },
       evidence: rawEvidence(),
     });
     expect(result.verdict).toBe('INCOMPLETE');
@@ -260,7 +275,10 @@ describe('renderScoreResult — pasteable emission (T5)', () => {
 
   it('renders every named failure for an INCOMPLETE verdict', () => {
     const rendered = renderScoreResult(
-      scoreFiring({ table: { path: 'fresh-claim', rows: [] }, evidence: rawEvidence() }),
+      scoreFiring({
+        table: { firingId: 'firing-001', path: 'fresh-claim', rows: [] },
+        evidence: rawEvidence(),
+      }),
     );
     expect(rendered).toContain('INCOMPLETE');
     expect(rendered).toContain('row 1');

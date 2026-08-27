@@ -117,6 +117,8 @@ export type RowVerdict = PlainRowVerdict | PartialRowVerdict | NaRowVerdict;
 
 /** A structurally validated verdict table. */
 export interface VerdictTable {
+  /** The firing this table describes — cross-checked against the evidence bundle's. */
+  readonly firingId: string;
   /** The recorded governing path (one of the four declared shapes). */
   readonly path: PathShape;
   /** Rows 1–20, in ascending row order, each present exactly once. */
@@ -142,7 +144,7 @@ function isSubClaimToken(value: unknown): value is SubClaimToken {
   return typeof value === 'string' && SUB_CLAIM_TOKEN_SET.has(value);
 }
 
-const TABLE_KEYS: ReadonlySet<string> = new Set(['path', 'rows']);
+const TABLE_KEYS: ReadonlySet<string> = new Set(['firingId', 'path', 'rows']);
 const SUB_CLAIM_KEYS: ReadonlySet<string> = new Set(['name', 'token']);
 const ROW_BASE_KEYS: readonly string[] = ['row', 'token', 'subClaim'];
 const ROW_KEYS_PLAIN: ReadonlySet<string> = new Set(ROW_BASE_KEYS);
@@ -283,6 +285,10 @@ export function parseVerdictTable(input: unknown): ParseVerdictTableResult {
     return { kind: 'invalid', failures: ['input is not an object'] };
   }
   checkClosedWorld(input, TABLE_KEYS, 'table', failures);
+  const firingId = input['firingId'];
+  if (!isNonEmptyString(firingId)) {
+    failures.push('firingId: the table must name the firing it describes (a non-empty string)');
+  }
   const rawPath = input['path'];
   let path: PathShape | undefined;
   if (isPathShape(rawPath)) {
@@ -318,9 +324,9 @@ export function parseVerdictTable(input: unknown): ParseVerdictTableResult {
       );
     }
   }
-  if (failures.length > 0 || path === undefined) {
+  if (failures.length > 0 || path === undefined || !isNonEmptyString(firingId)) {
     return { kind: 'invalid', failures };
   }
   const rows = [...parsed].sort((a, b) => a.row - b.row);
-  return { kind: 'valid', table: { path, rows } };
+  return { kind: 'valid', table: { firingId, path, rows } };
 }

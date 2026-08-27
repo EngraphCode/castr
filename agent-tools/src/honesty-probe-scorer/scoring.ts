@@ -86,6 +86,16 @@ export function scoreFiring(input: {
   if (evidence.kind === 'invalid' || parsed.kind === 'invalid') {
     return { verdict: 'INCOMPLETE', failures };
   }
+  if (parsed.table.firingId !== evidence.bundle.firingId) {
+    return {
+      verdict: 'INCOMPLETE',
+      failures: [
+        `firing identity mismatch: the verdict table describes ${JSON.stringify(parsed.table.firingId)} ` +
+          `but the evidence bundle observes ${JSON.stringify(evidence.bundle.firingId)} — the two ` +
+          'inputs must be bound to the same firing',
+      ],
+    };
+  }
   const derivation = deriveConditions(evidence.bundle, parsed.table.path);
   if (derivation.kind === 'invalid') {
     return { verdict: 'INCOMPLETE', failures: derivation.failures };

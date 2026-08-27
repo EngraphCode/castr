@@ -27,7 +27,7 @@ function rawTable(
   for (let row = 1; row <= 20; row += 1) {
     rows.push(overrides.get(row) ?? rawRow(row));
   }
-  return { path, rows };
+  return { firingId: 'firing-001', path, rows };
 }
 
 describe('parseVerdictTable — structural validation (T1)', () => {

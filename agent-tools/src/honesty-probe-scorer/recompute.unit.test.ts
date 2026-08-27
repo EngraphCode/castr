@@ -64,6 +64,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
       { sha: 'e5f6a7b8', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    firingId: 'firing-001',
     countersAtGroundingBase: { streak: 0 },
     slicePrMergedByFiring: false,
     countersLanded: { streak: 0 },
@@ -107,7 +108,7 @@ function rawTable(
     }
     rows.push(raw);
   }
-  return { path: 'fresh-claim', rows };
+  return { firingId: 'firing-001', path: 'fresh-claim', rows };
 }
 
 /** Parse fixtures and run the recompute, returning its failure list. */

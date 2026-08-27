@@ -53,6 +53,7 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
     ],
+    firingId: 'firing-001',
     countersAtGroundingBase: { streak: 0 },
     slicePrMergedByFiring: false,
     countersLanded: { streak: 0 },
