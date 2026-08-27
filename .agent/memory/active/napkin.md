@@ -1493,3 +1493,26 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   diff every line of which I had written carefully hours before, including two
   corrections OF my corrections. The trust node's own thesis performed itself: the
   seat's fluent self-model needed external instruments, and got them.
+
+## 2026-08-27 (five owner rulings landed — Vesta turns Singularity / 01PjGS, part 3)
+
+- **Owner card rulings (2026-08-27), all landed this pass:** (a) channels push+Slack,
+  receipt gate = device push only (Slack corroboration; B-15 push-only superseded);
+  (b) stored prompt aligned to invocable `engraph-` names (second targeted trigger
+  edit, `updated_at` 2026-08-27T10:07Z, all other settings verified unchanged in the
+  same read); (c) DIVERGENT-auto-stops-the-arming RATIFIED (and INCOMPLETE likewise);
+  (d) Q-19's Q-13 dependency DROPPED after a premise correction and re-ask; (e)
+  enable at the 3/day ADR default — the 1/day recommendation declined.
+- **Mistake (mine, caught at plan time): I carded decision (d) on the assumptions
+  reviewer's reading without reading the Q-19 brief myself** — the brief records a
+  real rationale ("never a second skill copy; Q-13's PR #23 re-sync is Q-19's
+  vehicle") that my card premise ("no technical dependency found") contradicted.
+  Cure: re-asked the owner with the corrected premise before executing (drop
+  re-confirmed; Q-13 gains the value-extract-against-current-canonical
+  reconciliation duty). Third instance this session of the relaying-unverified
+  class — and the first one caught BEFORE the act, by the plan-time read of the
+  surface I was about to edit. Reading the primary surface at card-authoring time,
+  not plan time, is the cheaper firing point.
+- **Frontmatter row order is claim order** — landing (d) meant MOVING the Q-19 row
+  (after Q-22, before Q-05), not just deleting `depends_on`; a dropped gate with an
+  unmoved row would have left Q-19 last in eligibility despite the ruling's intent.

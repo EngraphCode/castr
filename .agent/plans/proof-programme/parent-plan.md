@@ -31,6 +31,9 @@ todos:
   - id: Q-22
     content: 'Fixture-generator repair (QD-11 owner ruling 2026-08-26): fix lib/scripts/generate-normalized-fixtures.ts so regeneration reproduces a valid checked-in normalized fixture estate (int64/strictObject-era zod.ts, IR 2.0.0 security shape), regenerate the outputs through the generator only, validation-parity tests green; never-edit-generated-files rule applies'
     status: pending
+  - id: Q-19
+    content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card; Q-13 dependency dropped by owner card ruling 2026-08-27): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
+    status: pending
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
     status: pending
@@ -78,10 +81,6 @@ todos:
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
     status: pending
-  - id: Q-19
-    content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
-    status: pending
-    depends_on: [Q-13]
 ---
 
 # Parent Plan: Castr Proof Programme
@@ -99,9 +98,11 @@ deliverable; see the Q-21 row). Q-18..Q-21 appended
 2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the
 queue reordered 2026-08-26 at owner word (QD-11 ruling + arming-walk card:
 safety instruments first). Eligible
-now, in queue order: Q-18, Q-20, Q-22, then Q-05..Q-09, Q-13 (executes
-the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on Q-20), and
-Q-19 (waits on Q-13) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+now, in queue order: Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency dropped by
+owner card ruling 2026-08-27 — sequenced with the safety instruments), then
+Q-05..Q-09, Q-13 (executes
+the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12 and Q-15 (waits on
+Q-20) follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -787,7 +788,11 @@ Source: report §11.3.
 **Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
 practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —
 with commit/file-level verification of unique deltas in the closing commit and closure note.
-Non-goals: no wholesale merge of the stale snapshot. Acceptance (`non-code`): #23 closed with
+Non-goals: no wholesale merge of the stale snapshot. Reconciliation duty (owner card
+ruling 2026-08-27, on dropping Q-19's dependency): any pr-lifecycle skill content
+extracted from PR #23 is value-extracted against the THEN-CURRENT skill canonical —
+which may already carry Q-21's merge-authority line and Q-19's tally contract — never
+blind-resynced over later landings. Acceptance (`non-code`): #23 closed with
 the verification recorded and the transplant plan's disposition banner resolved. Source:
 report §11.3 #23. Gate: B-11 **(outcome gate)** — eligible on any recorded verdict except DEFER, exempt from the success-verdict rule; it executes whichever outcome was recorded.
 
@@ -976,15 +981,18 @@ the parent plan's §Failure counters contract and frontmatter (a per-PR field,
 absent = 0 declared like `failures:`) and routine-prompt step 8's counter duty; the
 response at any threshold is decision-class and goes to `queued-decisions.md` as a
 named position, never invented by a firing. Non-goals: no wholesale OCE re-sync
-beyond these contracts; never a second skill copy (Q-13's PR #23 re-sync is the
-vehicle — this row is ordered after it by `depends_on`); the D-10 merge-posture cure
+beyond these contracts; never a second skill copy (this row edits the
+current skill canonical directly, as Q-21 did; the earlier Q-13-as-vehicle
+ordering was dropped by owner card ruling 2026-08-27, with Q-13 carrying the
+reconciliation duty); the D-10 merge-posture cure
 is NOT here (it is Q-21, independently landable). Acceptance (`non-code`): the skill
 and counter surfaces carry all three elements grep-checkably, and this row's own PR
 demonstrates the REVIEW-TALLY comment from its first triage onward; gates green.
 Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a
 tally artefact means the entry contract is not working. Source: loop-review report
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second
-owner decision card 2026-08-24. Gate: none beyond `depends_on: [Q-13]`.
+owner decision card 2026-08-24. Gate: none (the `depends_on: [Q-13]` gate was
+dropped by owner card ruling 2026-08-27).
 
 **Q-20 — Q-15 brief re-scope + D-9 correction (OP-5; serves the
 [`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
@@ -1161,9 +1169,9 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now, in queue order**: Q-18, Q-20, Q-22, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card).
+- **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card).
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
-- **Blocking for Q-19**: Q-13 (the PR #23 pr-lifecycle re-sync is Q-19's vehicle; never a second skill copy).
+- **Blocking for Q-19**: none — the Q-13 dependency was dropped by owner card ruling 2026-08-27, re-confirmed against the recorded never-a-second-skill-copy rationale: Q-21 proved the pr-lifecycle canonical safely editable ahead of Q-13, and Q-13's brief now carries the reconciliation duty (value-extract PR #23's skill content against the then-current canonical, never blind-resync).
 - **Beneficial**: none deferred beyond the gates above.
 
 ## Acceptance criteria and proof contract

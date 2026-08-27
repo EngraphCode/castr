@@ -102,8 +102,9 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      `engraph-metacognition` skill at
      boundaries and whenever a rabbit hole or fluent shortcut appears. The stored trigger prompt's closing
      skills-discipline paragraph (owner-authored 2026-08-26; aligned to this brief
-     the same day, trigger `updated_at` 2026-08-26T20:07Z — it now names
-     `start-right-thorough` and the firing-scoped `session-handoff` profile) is the standing gesture at this same stack; wherever
+     the same day, then to invocable `engraph-` skill names on 2026-08-27 at
+     owner card ruling — it now names `engraph-start-right-thorough` and the
+     firing-scoped `engraph-session-handoff` profile) is the standing gesture at this same stack; wherever
      its wording and this brief ever differ, THIS BRIEF GOVERNS, by the stored
      prompt's own opening instruction ("follow it exactly — it is your complete standing
      brief"): firings ground thorough here, and close under step 9's firing-scoped

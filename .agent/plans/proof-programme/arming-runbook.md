@@ -60,7 +60,7 @@ main, treat this firing as mis-armed: post the stand-down broadcast naming
 the missing prompt, notify the owner in your completion summary, and stop
 without touching the queue.
 
-Sessions start with start-right-thorough , plans are structured with the plan skill, thinking is structured with the cognitive skills, rabbit holes are defeated with the metacognition skill, sessions end with the session-handoff skill (firing-scoped profile)
+Sessions start with the engraph-start-right-thorough skill , plans are structured with the engraph-plan skill, thinking is structured with the engraph-proportionality and other cognitive skills, rabbit holes are defeated with the engraph-metacognition skill, sessions end with the engraph-session-handoff skill (firing-scoped profile)
 ```
 
 On an account where "jimCresswell" is not the owner identity, replace the owner name in
@@ -69,7 +69,9 @@ skills-discipline paragraph is the owner's own amendment to the canonical
 prompt (added live at the 2026-08-26 arming walk; mid-line spacing conserved
 as the owner wrote it). Its wording was aligned to the firing protocol on
 2026-08-26 (owner-authorised targeted trigger edit, routine-configuration
-session; trigger `updated_at` 2026-08-26T20:07Z is the timestamp of record): `start-right-thorough` per the cloud-grounding ruling
+session; trigger `updated_at` 2026-08-26T20:07Z), then aligned to invocable
+`engraph-` skill names on 2026-08-27 (owner card ruling, same session;
+trigger `updated_at` 2026-08-27T10:07Z is the timestamp of record): `start-right-thorough` per the cloud-grounding ruling
 (routine-prompt step 3) and the firing-scoped `session-handoff` closeout
 profile (routine-prompt step 9, QD-6). The live text carries no trailing
 whitespace, so byte-verification against this canonical is exact; the
@@ -120,7 +122,9 @@ firing actually receives the attached source.
   amended at acceptance. The owner may change cadence at will; agents may lower it —
   never raise it — when firings repeatedly idle. **Live-state note (2026-08-27):**
   the live trigger currently carries NO cron — poke-only, the arming hold's honest
-  disabled state; the cron above is the armed target that goes on only at step 7.
+  disabled state; the cron above is the armed target that goes on only at step 7,
+  at the full 3/day default per the owner's 2026-08-27 card ruling (a lower first
+  cadence was considered and declined).
 - **Sources ("Runs with"):** the castr repository, attached by the owner in the Routine's
   settings UI. Measured constraint (Q-01 probe firings, 2026-08-22): a trigger created via
   the API carries no repo sources and its firings land nothing — the division of labour is
@@ -128,14 +132,13 @@ firing actually receives the attached source.
 - **Model:** owner-set in the Routine's settings UI (Fable as of 2026-08-23, QD-5 owner
   action). Change the model in settings only — recreating the trigger via API loses the
   owner-attached sources (measured, same record).
-- **Notifications:** completion notifications ON, **push-only, no digest** (ballot B-15
-  as amended by owner re-ballot 2026-08-24). Clause 6 escalation notifications keep a
-  delivery channel regardless of any future B-15 change. **Live-state divergence
-  (recorded 2026-08-27, unresolved):** the live trigger reads push+slack/no-email —
-  plausibly part of the owner's 2026-08-26 mid-walk notification repair, but not
-  ratified anywhere; whether slack stays (superseding this B-15 line) and which
-  channel satisfies the receipt gate are the programme thread record's pending owner
-  decision (a). Reconcile this line and the live state when the owner rules.
+- **Notifications:** completion notifications ON, **push + Slack, no email** (owner
+  card ruling 2026-08-27, superseding ballot B-15's push-only as re-balloted
+  2026-08-24): both channels stay live, and **the receipt gate closes only on the
+  device push** — the channel QD-8 owner-alerts and clause 6 escalations ride —
+  with a Slack arrival recorded as corroboration, never as the gate. Clause 6
+  escalation notifications keep a delivery channel regardless of any future
+  channel-set change.
 - **Platform "Auto-fix pull requests": OFF** (owner action 2026-08-23) — firings monitor
   and drive their own PRs; no platform-side second writer.
 - **Connectors:** Slack, attached per the QD-7 owner direction (advisory second opinions
@@ -256,9 +259,10 @@ beyond them is needed for the Routine.
    instance-tier, the identity row deferred to the first live firing) — so the proof
    exercises the closeout, never its landing, and leaves no repo-state change.
    **Notification gate (pass/fail):** the completion notification received on the
-   owner's device is a hard gate between this step and everything after it — with
-   the B-15 channel set amended to push-only this is a single-channel system, and
-   an unproven channel voids the loop's entire observability contract (clause 6
+   owner's device is a hard gate between this step and everything after it — the
+   gate-closing channel is the device push (owner card ruling 2026-08-27; the
+   channel set is push + Slack, with Slack as corroboration only), and
+   an unproven push channel voids the loop's entire observability contract (clause 6
    escalations and QD-8 owner-blocking alerts ride the same path). No receipt →
    stop the arming and diagnose before any further step. **Owner-directed
    replacement gate (2026-08-26 walk, worked instance):** when the dry-run
@@ -316,11 +320,10 @@ beyond them is needed for the Routine.
    the programme's honesty probe: the observing seat runs it against the
    pre-registered claim→measurement table in
    [`attended-firing-honesty-probe.md`](./attended-firing-honesty-probe.md) —
-   written before the firing so the verdict is a checklist outcome. The probe's
-   stop-the-arming consequence for a DIVERGENT verdict is seat-proposed by
-   analogy with the notification gate and awaits owner ratification (the thread
-   record's pending decision (c)); until ratified, a DIVERGENT verdict goes to
-   the owner with its evidence rather than acting as an automatic gate.
+   written before the firing so the verdict is a checklist outcome — and a
+   DIVERGENT verdict stops the arming exactly as the notification gate does
+   (owner-ratified 2026-08-27, card ruling; the probe's INCOMPLETE verdict
+   stops it likewise, for diagnosis of the observation itself).
 7. Enable the Routine (set the cron; re-run step 5's state re-verification against
    the live base immediately beforehand — never carried from earlier in the
    sitting). **Overlap guard on the enable act itself**: if step 6's manual

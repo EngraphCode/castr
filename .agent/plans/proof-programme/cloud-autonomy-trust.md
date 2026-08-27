@@ -190,10 +190,9 @@ promotion into the programme collection.
   of relayed error trend to zero because each one gets encoded structurally
   (rule, contract, runbook refinement) rather than re-taught. No instrument
   counts interventions today: the named instrument is Q-19's review-round
-  tally (queue position: behind Q-13 via `depends_on` — a dependency that
-  reads as sequencing preference rather than technical necessity; flagged
-  for the owner in the thread record's pending list rather than resequenced
-  by this seat).
+  tally, sequenced with the safety instruments since the owner's 2026-08-27
+  card ruling dropped its Q-13 dependency (re-confirmed against the recorded
+  rationale; Q-13 carries the reconciliation duty).
 - Every account-side mechanism (notifications, model binding, write binding,
   connector tools, trigger self-management) has a recorded first live
   traversal; no capability is written as fact ahead of one.
@@ -218,18 +217,18 @@ work items, in order:
 1. Attended first live firing observed against the pre-registered honesty
    probe; verdict recorded in the thread record (this closes readiness
    questions 1–3).
-2. Enable per runbook step 7. Cadence is an evidence-rate parameter, not an
-   inherited default: a lower first cadence gathers the same per-firing
-   evidence with less unattended exposure while review-loop convergence
-   (readiness question 4) is unmeasured — an owner-weighable option at the
-   enable, named here so the enable sitting weighs it deliberately.
+2. Enable per runbook step 7, at the 3/day default (owner card ruling
+   2026-08-27: cadence was weighed deliberately — the seat's lower-first
+   recommendation considered and declined; the kill switches bound the
+   exposure).
 3. The consolidation-Routine estate (Act 3): prompt file, proposed ADR-051
    amendment clause (owner acceptance act), runbook/register rows —
    seat-authored, owner creates the trigger. This is the learning-loop
    drain; it completes layer 3 of the agent above.
 4. The queue's safety instruments (Q-18 predecessor-slot attestation, Q-20
    capability-probe re-scope, Q-22 fixture-generator repair), then Q-19's
-   convergence tally at its queue position.
+   convergence tally (sequenced directly after them per the 2026-08-27
+   dependency-drop ruling).
 5. Candidate instrument (seat-proposed, unrouted until owner word): an
    automated canonical-vs-live check for the trigger's stored prompt, giving
    the runbook's lockstep clause machinery instead of discipline.

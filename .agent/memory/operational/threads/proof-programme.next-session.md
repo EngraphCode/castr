@@ -200,18 +200,27 @@ two corrections OF the session's own records (the Act 0 date restored to
 2026-08-26 after this seat wrongly "corrected" it to the 27th, and the
 probe's `last_run` bound re-grounded on this session's fresher measurement
 superseding loop-review D-1). **The attended firing remains owner-held.**
-Owner decisions pending before it: (a) notification channels — the live
-trigger reads push+slack while the B-15 record says push-only, and the
-receipt gate's satisfying channel (device push vs any channel) is
-undefined; (b) stored-prompt paragraph wording — current minimal
-owner-idiom vs invocable `engraph-` names (the PR #63 round-17 precedent);
-(c) the honesty probe's DIVERGENT-stops-the-arming consequence —
-seat-proposed by analogy with the notification gate, awaiting ratification;
-(d) Q-19's `depends_on: [Q-13]` — reads as sequencing preference rather
-than a technical blocker, and it gates the convergence instrument that
-readiness question 4 and the enable-cadence weighing turn on. Next seat
-act: author the Act 3 consolidation-Routine estate (the learning-loop
-drain).
+**All five decisions RULED by owner cards, 2026-08-27:** (a) channel set is
+push+Slack (B-15's push-only superseded); **the receipt gate closes only on
+the device push**, Slack recorded as corroboration; (b) the stored-prompt
+skills paragraph aligned to invocable `engraph-` names (second
+owner-directed trigger edit, `updated_at` 2026-08-27T10:07Z, verified in
+the same read, canonical in lockstep); (c) **ratified: a DIVERGENT honesty
+verdict auto-stops the arming** (INCOMPLETE likewise), seat-proposed flags
+removed; (d) Q-19's `depends_on: [Q-13]` DROPPED — re-confirmed after the
+seat surfaced the recorded never-a-second-skill-copy rationale it had
+initially missed (the card premise was corrected and re-asked): Q-21
+proved the skill canonical safely editable ahead of Q-13, Q-19 now
+sequences with the safety instruments, and Q-13's brief carries the
+reconciliation duty; (e) **enable cadence: 3/day from enable** (the seat's
+1/day recommendation considered and declined). Landings: runbook
+(canonical block, notifications row, step 4/6/7 gate texts), probe
+(consequence, row 17, re-verification stamps), routine-prompt step 3,
+parent-plan (Q-19 row moved after Q-22, four prose sites, Q-13
+reconciliation duty), trust node. Next seat acts, in order: PR #67 made
+durable (arc-carrying body) and driven to merged; then the attended firing
+(owner pokes, seat probes); then the enable (owner act); then the Act 3
+consolidation-Routine estate (the learning-loop drain).
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
