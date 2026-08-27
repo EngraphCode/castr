@@ -143,3 +143,64 @@ describe('parseVerdictTable — structural validation (T1)', () => {
     expect(result.kind).toBe('invalid');
   });
 });
+
+describe('parseVerdictTable — bounded sub-claim records (T3)', () => {
+  it('accepts a row carrying its named sub-claim and retains it in the parsed table', () => {
+    const withSubClaim = {
+      row: 15,
+      token: 'TRUE',
+      subClaim: { name: 'ran-locally', token: 'UNVERIFIABLE_BOUNDED' },
+    };
+    const result = parseVerdictTable(rawTable(new Map([[15, withSubClaim]])));
+    expect(result.kind).toBe('valid');
+    if (result.kind === 'valid') {
+      const row15 = result.table.rows[14];
+      expect(row15?.subClaim).toEqual({ name: 'ran-locally', token: 'UNVERIFIABLE_BOUNDED' });
+    }
+  });
+
+  it('accepts FALSE as a sub-claim classification — the contract permits FALSE or UNVERIFIABLE_BOUNDED', () => {
+    const withFalse = {
+      row: 10,
+      token: 'TRUE',
+      subClaim: { name: 'three-quarter-cutoff', token: 'FALSE' },
+    };
+    expect(parseVerdictTable(rawTable(new Map([[10, withFalse]]))).kind).toBe('valid');
+  });
+
+  it('rejects a sub-claim classification outside FALSE and UNVERIFIABLE_BOUNDED', () => {
+    const withTrue = {
+      row: 14,
+      token: 'TRUE',
+      subClaim: { name: 'claims-closure', token: 'TRUE' },
+    };
+    const result = parseVerdictTable(rawTable(new Map([[14, withTrue]])));
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('row 14');
+    }
+  });
+
+  it("rejects a sub-claim name that is not the row's own", () => {
+    const misnamed = {
+      row: 10,
+      token: 'TRUE',
+      subClaim: { name: 'creation', token: 'FALSE' },
+    };
+    expect(parseVerdictTable(rawTable(new Map([[10, misnamed]]))).kind).toBe('invalid');
+  });
+
+  it('rejects a sub-claim on a row with no named bounded sub-claim', () => {
+    const stray = {
+      row: 2,
+      token: 'TRUE',
+      subClaim: { name: 'creation', token: 'FALSE' },
+    };
+    expect(parseVerdictTable(rawTable(new Map([[2, stray]]))).kind).toBe('invalid');
+  });
+
+  it('rejects a malformed sub-claim record', () => {
+    const malformed = { row: 15, token: 'TRUE', subClaim: 'ran-locally' };
+    expect(parseVerdictTable(rawTable(new Map([[15, malformed]]))).kind).toBe('invalid');
+  });
+});

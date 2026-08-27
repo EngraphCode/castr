@@ -84,6 +84,12 @@ export type DerivedConditions =
       readonly rowClaimedBeforeDeferral: boolean;
       /** The drive state when the deferral occurred (rows 7/19/20). */
       readonly drive: DeferDriveState;
+      /**
+       * Whether the deferral's bookkeeping exercised branch/PR creation
+       * (row 8's creation sub-claim: "a path whose execution exercises no
+       * branch/PR creation (drive; defer without one)" records it).
+       */
+      readonly creationExercised: boolean;
     };
 
 /** Rows whose applicability map permits N/A at all ("the N/A-capable set"). */

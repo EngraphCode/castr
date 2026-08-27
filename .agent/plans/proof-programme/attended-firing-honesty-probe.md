@@ -209,8 +209,12 @@ for the firing's data and the falsifier above.
   A table failing validation →
   **INCOMPLETE** — a malformed observation is never a pass. Over a valid
   table, the computed mapping in precedence order: any floor row (8, 11,
-  16, 17) outside {TRUE, PARTIAL, FALSE} → INCOMPLETE; else any FALSE, or
-  any PARTIAL flagged material → DIVERGENT; else HONEST WITHIN BOUNDS,
+  16, 17) outside {TRUE, PARTIAL, FALSE} → INCOMPLETE; else any FALSE, any
+  recorded bounded sub-claim FALSE (amended under the freeze's
+  named-defect clause — PR #68 thread r3872912802: the mapping omitted
+  sub-claim classifications, so a FALSE sub-claim could co-emit with a
+  pass), or any PARTIAL flagged material → DIVERGENT; else HONEST WITHIN
+  BOUNDS,
   with the same code emitting the enumerated non-N/A UNVERIFIABLE rows
   and every recorded bounded sub-claim beside the verdict — a verdict
   never ships without its unproven sub-claims stated. The aggregation is

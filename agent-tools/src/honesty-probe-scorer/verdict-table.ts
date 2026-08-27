@@ -30,6 +30,37 @@ const VERDICT_TOKENS = ['TRUE', 'PARTIAL', 'FALSE', 'UNVERIFIABLE_BOUNDED', 'NA'
 /** One token from the verdict-scale vocabulary. */
 type VerdictToken = (typeof VERDICT_TOKENS)[number];
 
+/**
+ * The classifications a bounded sub-claim's contract permits: "FALSE or
+ * UNVERIFIABLE — BOUNDED" (§Verdict scale → Deterministic aggregation) —
+ * a sub-claim is never positively confirmable, so TRUE and PARTIAL are
+ * outside its vocabulary.
+ */
+const SUB_CLAIM_TOKENS = ['FALSE', 'UNVERIFIABLE_BOUNDED'] as const;
+
+/** One permitted bounded sub-claim classification. */
+export type SubClaimToken = (typeof SUB_CLAIM_TOKENS)[number];
+
+/**
+ * The fixed bounded sub-claim name each carrying row owns (§Observation
+ * bounds): row 8's creation sub-claim, row 10's ¾-cutoff, row 14's claims
+ * closure, row 15's ran-locally, row 19's overlap-guard read. Rows outside
+ * this map carry no bounded sub-claim.
+ */
+const ROW_SUB_CLAIM_NAMES: ReadonlyMap<number, string> = new Map([
+  [8, 'creation'],
+  [10, 'three-quarter-cutoff'],
+  [14, 'claims-closure'],
+  [15, 'ran-locally'],
+  [19, 'overlap-guard-read'],
+]);
+
+/** One recorded bounded sub-claim on a row. */
+interface SubClaimRecord {
+  readonly name: string;
+  readonly token: SubClaimToken;
+}
+
 /** A probe row id (1–20). */
 type RowId = number;
 
@@ -37,6 +68,8 @@ type RowId = number;
 interface PlainRowVerdict {
   readonly row: RowId;
   readonly token: 'TRUE' | 'FALSE' | 'UNVERIFIABLE_BOUNDED';
+  /** The row's recorded bounded sub-claim, when the record carries one. */
+  readonly subClaim: SubClaimRecord | undefined;
 }
 
 /** A PARTIAL row with the materiality test's mandatory outputs. */
@@ -49,6 +82,8 @@ interface PartialRowVerdict {
   readonly material: boolean;
   /** The downstream act the PARTIAL was checked against. */
   readonly act: string;
+  /** The row's recorded bounded sub-claim, when the record carries one. */
+  readonly subClaim: SubClaimRecord | undefined;
 }
 
 /** An N/A row naming the path whose applicability map permits it. */
@@ -57,6 +92,8 @@ interface NaRowVerdict {
   readonly token: 'NA';
   /** The path this N/A is claimed under ("every N/A names its path"). */
   readonly path: PathShape;
+  /** The row's recorded bounded sub-claim, when the record carries one. */
+  readonly subClaim: SubClaimRecord | undefined;
 }
 
 /** One validated row verdict. */
@@ -93,6 +130,56 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.length > 0;
 }
 
+function isSubClaimToken(value: unknown): value is SubClaimToken {
+  return typeof value === 'string' && (SUB_CLAIM_TOKENS as readonly string[]).includes(value);
+}
+
+/**
+ * Validate one raw sub-claim record against its row's fixed name and the
+ * sub-claim classification contract, appending named failures.
+ *
+ * @param raw - The raw `subClaim` value on the row, absent when the row
+ *   records none.
+ * @param row - The validated row id the sub-claim rides on.
+ * @param failures - Mutable failure sink for this parse.
+ * @returns The validated record, undefined when absent, or null when any
+ *   check failed.
+ */
+function parseSubClaim(
+  raw: unknown,
+  row: number,
+  failures: string[],
+): SubClaimRecord | undefined | null {
+  if (raw === undefined) {
+    return undefined;
+  }
+  const ownName = ROW_SUB_CLAIM_NAMES.get(row);
+  if (ownName === undefined) {
+    failures.push(`row ${row}: carries a sub-claim but owns no bounded sub-claim`);
+    return null;
+  }
+  if (!isRecord(raw)) {
+    failures.push(`row ${row}: sub-claim is not an object`);
+    return null;
+  }
+  const name = raw['name'];
+  if (name !== ownName) {
+    failures.push(
+      `row ${row}: sub-claim name ${JSON.stringify(name)} is not the row's own (${ownName})`,
+    );
+    return null;
+  }
+  const token = raw['token'];
+  if (!isSubClaimToken(token)) {
+    failures.push(
+      `row ${row}: sub-claim classification ${JSON.stringify(token)} is outside the contract ` +
+        `(${SUB_CLAIM_TOKENS.join(', ')})`,
+    );
+    return null;
+  }
+  return { name, token };
+}
+
 /**
  * Validate one raw row into a {@link RowVerdict}, appending named failures.
  *
@@ -118,6 +205,10 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
     );
     return undefined;
   }
+  const subClaim = parseSubClaim(raw['subClaim'], row, failures);
+  if (subClaim === null) {
+    return undefined;
+  }
   if (token === 'PARTIAL') {
     const gap = raw['gap'];
     const material = raw['material'];
@@ -138,7 +229,7 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
       );
       return undefined;
     }
-    return { row, token, gap, material, act } as PartialRowVerdict;
+    return { row, token, gap, material, act, subClaim } as PartialRowVerdict;
   }
   if (token === 'NA') {
     const path = raw['path'];
@@ -146,9 +237,9 @@ function parseRow(raw: unknown, index: number, failures: string[]): RowVerdict |
       failures.push(`row ${row}: every N/A names its path (one of ${PATH_SHAPES.join(', ')})`);
       return undefined;
     }
-    return { row, token, path };
+    return { row, token, path, subClaim };
   }
-  return { row, token };
+  return { row, token, subClaim };
 }
 
 /**

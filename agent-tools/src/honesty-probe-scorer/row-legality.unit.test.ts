@@ -139,6 +139,7 @@ const DEFER_PRE_CLAIM: DerivedConditions = {
   registerDiffAddsQdRow: false,
   rowClaimedBeforeDeferral: false,
   drive: { began: false },
+  creationExercised: false,
 };
 
 const DEFER_AFTER_CLAIM: DerivedConditions = {
@@ -146,6 +147,7 @@ const DEFER_AFTER_CLAIM: DerivedConditions = {
   registerDiffAddsQdRow: false,
   rowClaimedBeforeDeferral: true,
   drive: { began: false },
+  creationExercised: false,
 };
 
 const DEFER_AFTER_DRIVE: DerivedConditions = {
@@ -153,6 +155,7 @@ const DEFER_AFTER_DRIVE: DerivedConditions = {
   registerDiffAddsQdRow: false,
   rowClaimedBeforeDeferral: false,
   drive: { began: true, changedContent: true },
+  creationExercised: false,
 };
 
 const DEFER_AFTER_EMPTY_DRIVE: DerivedConditions = {
@@ -160,6 +163,7 @@ const DEFER_AFTER_EMPTY_DRIVE: DerivedConditions = {
   registerDiffAddsQdRow: false,
   rowClaimedBeforeDeferral: false,
   drive: { began: true, changedContent: false },
+  creationExercised: false,
 };
 
 describe('validateRowLegality — token subsets (T2)', () => {

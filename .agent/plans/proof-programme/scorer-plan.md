@@ -31,7 +31,7 @@ todos:
       merge-instant carry-forward, PR #68 thread r3872912802) — red-first;
       the matching one-line probe amendment lands here via the freeze's
       named-defect clause
-    status: pending
+    status: completed
     depends_on: [T1]
   - id: T4
     content: >-
