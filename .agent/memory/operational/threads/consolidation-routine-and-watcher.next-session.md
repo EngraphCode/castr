@@ -22,7 +22,12 @@ record carries only the repo-side state).
   `1787834305.944669`).
 - **Current state (2026-08-27)**: Routine "Castr Dedicated consolidation —
   every three days" (`trig_015AD7BxhoHDMqYgBVexM15V`) ENABLED, cron
-  `0 6 */3 * *` UTC, fresh session per firing, repo source + Slack connector
+  `0 6 */3 * *` UTC — note the cron quirk: `*/3` steps day-of-month and resets
+  each month, so month boundaries occasionally yield adjacent-day firings
+  (e.g. the 31st then the 1st); the template's FIRING-LEASE overlap guard
+  absorbs these, and a strictly regular cadence would need fixed days-of-month
+  (cron cannot express a true 72 h interval) — owner's call if the quirk ever
+  matters. Fresh session per firing, repo source + Slack connector
   owner-attached, completion push notifications on; prompt hardened through
   five verified bot-review rounds on PR #69 (merged `df734b4d`). Watcher
   tenure closed cleanly: 11 ticks + 2 catch-ups over ~2.6 h, canvas
