@@ -134,6 +134,28 @@ auditability** — not a mechanical lock. Default discipline is still one
 commit owner at a time; the queue and claim make that ownership observable
 to peers.
 
+### Cloud sessions skip the queue ceremony (owner ruling)
+
+This section is the **canonical statement of the cloud-session
+ceremony policy**; `register-active-areas-at-session-open` and
+`use-agent-comms-log` defer here (consolidate-at-second-consumer).
+Cloud sessions do not use commit queues or claims (owner ruling,
+2026-08-25; refined 2026-08-27): a cloud instance of the repo hosts
+exactly one agent, so no peer shares the container's filesystem and the
+queue/claims machinery has no audience by construction — its
+instance-tier state dies with the container. In such a session: open no
+queue entry and no `git:index/head` claim, land with plain hook-gated
+commits and explicit pathspecs, and keep every other part of this skill
+(message drafting, pre-validation, staging discipline, the blocking hook
+chain) in full force. Cross-session comms from a cloud seat goes over
+Slack via the `talk-to-slack-watcher` skill, and only works while a
+Watcher holds the mantle — it is for coordination needs, not commit
+ceremony. Dedicated consolidation sessions generally need no comms at
+all — they analyse knowledge already laid down and make it safe;
+subagent dispatch remains fully available (owner word, 2026-08-27). The
+filesystem protocol below remains the contract for local multi-writer
+sessions sharing one working tree.
+
 ### Intent-Scoped End-to-End (2026-05-22 cure)
 
 As of the commit-queue-intent-scope-discipline arc, every dep boundary that

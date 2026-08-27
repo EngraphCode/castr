@@ -204,7 +204,7 @@ promotion into the programme collection.
   that lands it) and changes a later firing's behaviour without owner
   re-teaching — the attribution method for that second half is undefined
   until the drain exists and at least two firings have run under the new
-  profile; the criterion is pending Delivery item 3, not yet measurable.
+  profile; the criterion is pending Delivery item 4, not yet measurable.
 - This node does not claim: that the loop is yet trustworthy unattended (the
   first attended firing and its honesty probe are still ahead), or that the
   row contract has been exercised by a firing.
@@ -217,23 +217,27 @@ parent-plan frontmatter is the authority on row state — enumerate there,
 never from this list) and in owner-named slices citing this node. Near-term
 work items, in order:
 
-1. Attended first live firing observed against the pre-registered honesty
+1. The verdict scorer (owner-ruled 2026-08-27, pre-firing deliverable): a
+   checked-in implementation of the probe's deterministic aggregation and
+   state derivation, landed through the normal TDD/review path. The
+   attended firing waits on it.
+2. Attended first live firing observed against the pre-registered honesty
    probe; verdict recorded in the thread record. This TESTS readiness
    questions 1–3, closing each check that passes; a DIVERGENT or INCOMPLETE
    verdict stops the arming instead of closing anything.
-2. Enable per runbook step 7, at the 3/day default (owner card ruling
+3. Enable per runbook step 7, at the 3/day default (owner card ruling
    2026-08-27: cadence was weighed deliberately — the seat's lower-first
    recommendation considered and declined; the kill switches bound the
    exposure).
-3. The consolidation-Routine estate (Act 3): prompt file, proposed ADR-051
+4. The consolidation-Routine estate (Act 3): prompt file, proposed ADR-051
    amendment clause (owner acceptance act), runbook/register rows —
    seat-authored, owner creates the trigger. This is the learning-loop
    drain; it completes layer 3 of the agent above.
-4. The queue's safety instruments (Q-18 predecessor-slot attestation, Q-20
+5. The queue's safety instruments (Q-18 predecessor-slot attestation, Q-20
    capability-probe re-scope, Q-22 fixture-generator repair), then Q-19's
    convergence tally (sequenced directly after them per the 2026-08-27
    dependency-drop ruling).
-5. Candidate instrument (seat-proposed, unrouted until owner word): an
+6. Candidate instrument (seat-proposed, unrouted until owner word): an
    automated canonical-vs-live check for the trigger's stored prompt, giving
    the runbook's lockstep clause machinery instead of discipline.
 

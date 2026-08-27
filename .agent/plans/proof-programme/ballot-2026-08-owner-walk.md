@@ -1,6 +1,6 @@
 # W-0 Owner Walk Ballot — Proof Programme Charter
 
-**Status:** CLOSED — walked 2026-08-22, all verdicts recorded below; amended 2026-08-24 (B-15 re-balloted to push-only by owner decision card).
+**Status:** CLOSED — walked 2026-08-22, all verdicts recorded below; amended 2026-08-24 (B-15 re-balloted to push-only by owner decision card); amended 2026-08-27 (B-15 second amendment, owner card ruling: push + Slack, no email, device-push-only receipt gate — the latest B-15 authority).
 **Medium:** the owner walked the ballot interactively in-session (session prefix `5aef07`,
 Incandescent Charring Ember), one decision at a time, on 2026-08-22; the verdicts were
 recorded here in the same landing that executed their consequences (the follow-up landing,

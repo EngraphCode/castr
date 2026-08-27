@@ -57,6 +57,25 @@ a coordinator-brief retry cycle or an agent re-edit cycle. The
 discipline cure removes the friction at the surface where the
 content originates.
 
+## Token-Subsequence Assembly in Compound Commands
+
+The matcher's substring view also spans a whole compound command line, so
+tokens from **different arguments can assemble a blocked pattern that no
+single argument contains** (six-plus measured specimens, 2026-07-03 →
+2026-08-24): a later standalone `-u` token — from a date-formatting flag
+or an upstream-tracking push flag — completing a blocked staging pattern
+begun by an earlier staging command; a claim's area-kind value, a prose
+verb in its intent text, and a `--now` flag assembling a blocked
+commit-flag shape; an em-dash in prose normalising to `-` and completing
+a flag. The same discipline applies on the command side:
+
+- **run ceremonies as small single-purpose commands**, not large
+  compounds — which also reads better in history;
+- **keep command-like verbs out of free-text arguments** (intent prose,
+  `--summary` text, commit-message text passed inline);
+- after any block, remember a blocked compound ran NONE of its parts —
+  re-verify every intended side effect before building on it.
+
 ## In-Scope Surfaces
 
 - comms-event bodies (broadcast, group, directed)

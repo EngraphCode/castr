@@ -121,6 +121,13 @@ is happening." This is the comms-stream instance of the general caveat in
 § Idle-Window Coalescing; graduated to user-memory
 `monitor-watcher-coalesces-idle-notifications`.
 
+**Arm-time variant (measured 2026-07-06):** the watcher's initial drain
+marks every pre-arm event SEEN without emitting it — events that landed
+before the watcher armed are consumed silently, and only a catch-up sweep
+surfaces them. So run a full sweep **at arm time as well**, not just on
+wakes: arming is itself a "something may have changed" moment for every
+event that predates it.
+
 ### Seen-file convention
 
 The `<agent-codename>.json` seen-file lives in
