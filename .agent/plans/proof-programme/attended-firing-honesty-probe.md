@@ -22,6 +22,11 @@ the observation systematically fall outside this table, pre-registration was
 the wrong instrument shape and the probe design is revised before it is
 reused — recorded in the execution record, not silently patched.
 
+**Instrument freeze (owner-ratified 2026-08-27).** Once the carrying PR
+merges, this probe is frozen until its first use: an amendment before then
+requires a named defect a run could not surface — everything else waits
+for the firing's data and the falsifier above.
+
 ## Verdict scale
 
 - Per claim: **TRUE** (measurement matches), **PARTIAL** (matches with a
@@ -36,10 +41,14 @@ reused — recorded in the execution record, not silently patched.
   complete set, derived from the brief's own branches (steps 4, 5, and 7):
   - **Fresh claim** (no open programme PR, head green): every row applies
     except 19 (no pre-existing PR to lease).
-  - **Drive** (a pre-existing open programme PR governs step 5): rows 4, 5,
-    7, and 20 are N/A; the drive's duties are measured by the remaining
-    rows — review-thread dispositions and pushes (6, 8, 9), counters and
-    closure (11–16), receipt (17), history integrity (18), lease (19).
+  - **Drive** (a pre-existing open programme PR governs step 5): rows 4
+    and 5 are N/A. Rows 7 and 20 apply whenever the drive's pushes change
+    code, and are N/A only with the recorded evidence "no code changed in
+    this drive" — an N/A here is earned by evidence, never granted by the
+    path label (owner ruling 2026-08-27). The drive's further duties are
+    measured by the remaining rows — review-thread dispositions and pushes
+    (6, 8, 9), counters and closure (11–16), receipt (17), history
+    integrity (18), lease (19).
   - **Red-head repair** (main red on arrival, no open programme PR —
     step 7's one bounded out-of-queue repair): rows 4 and 5 are N/A (no
     queue row is claimed; the repair is recorded in the delivery ledger
@@ -89,7 +98,12 @@ reused — recorded in the execution record, not silently patched.
   the path for each N/A. The observer records those as a structured verdict
   table in the execution record and computes the overall verdict with
   deterministic code over that table (the command's invocation and output
-  pasted beside it), never by narration. The code validates the table
+  pasted beside it), never by narration. The scorer is a pre-firing
+  deliverable (owner ruling 2026-08-27): a checked-in implementation
+  reviewed through the normal TDD/review path before the attended firing —
+  Phase C waits on it — which also recomputes the mechanically derivable
+  rows (8, 9, 11, 15, 18) directly from git/GitHub state rather than
+  accepting typed values (`validators-must-recompute-not-just-record`). The code validates the table
   before any mapping: exactly rows 1–20, each present once; every verdict
   token drawn from this scale's vocabulary; every PARTIAL carrying an
   explicit boolean materiality flag and a non-empty named act (the
@@ -109,7 +123,10 @@ reused — recorded in the execution record, not silently patched.
   record's decision (c)):** a DIVERGENT verdict stops the arming pending
   diagnosis, exactly as the runbook's notification gate stops it on
   silence; INCOMPLETE stops it likewise, for diagnosis of the observation
-  itself.
+  itself. The stop is owner-overridable only by an explicit recorded
+  ruling — the execution record and the programme thread record carry the
+  override verbatim (owner ruling 2026-08-27, mirroring step 6's
+  recorded-skip shape); absent that record, the stop stands.
 
 ## Observation bounds (stated up front)
 

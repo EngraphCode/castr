@@ -1577,3 +1577,15 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   clause 4 cap, so a further round that reshapes the scoring class again takes the
   recorded carry-forward disposition, not another fix cycle; otherwise the track
   terminates at merge-on-green under the standing conditions.
+- **New estate machinery observed live: the owner's "Castr Adversarial PR
+  Evaluation" Routine (created 2026-08-27T11:06Z, fires on PR pushes) posted its
+  first evaluation on PR #68** — six sections, two of them verdict-flipping
+  scoring-contract defects this seat had missed through seven review rounds (the
+  one-sided-token double reading and row 8's fresh-claim-shaped floor
+  measurement), fixed in abef4c2d; four owner rulings carded and landed (scorer =
+  pre-firing deliverable; evidence-earned N/A for rows 7/20 on drive; instrument
+  freeze on merge; verdict stop overridable only by recorded ruling).
+  Verify-don't-trust relocated into machinery, in action: the reviewer layer now
+  reaches the estate unprompted, under the owner's credentials with the agent
+  footer. Compliance note for the drain: the comment omitted the Practice name
+  its own prompt mandates in the opening line.

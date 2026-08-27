@@ -245,7 +245,21 @@ concept-exploration verdict was the fluency class at the meta level
 (claiming a pass's outcome without running it); the corrected run and the
 generalised class statement are in the napkin's closing capture, and the
 encoding question (where "invoked ⇒ runs" lives durably) is routed to the
-consolidation drain / owner word. **Successor next acts, in order:**
+consolidation drain / owner word. Late in the close the owner's new
+"Castr Adversarial PR Evaluation" Routine (`trig_014KU9iZvuww1fjqHdzgSqhE`,
+created 2026-08-27, fires on PR pushes) posted its first live evaluation on
+PR #68; two verdict-flipping scoring-contract defects were verified and
+fixed (one-sided-token double reading; row 8's fresh-claim-shaped floor
+measurement), and four further owner card rulings landed in the probe
+(2026-08-27): the verdict scorer is a pre-firing deliverable Phase C waits
+on; rows 7/20 N/A on the drive path is earned by evidence, never by path
+label; the probe is instrument-frozen from merge until first use (amendment
+only for a named defect a run could not surface); the verdict stop is
+owner-overridable only by an explicit recorded ruling. **Successor next
+acts, in order:** **Phase C-pre — the verdict scorer (seat deliverable,
+owner-ruled):** a checked-in scorer implementing the probe's deterministic
+aggregation and recomputing rows 8/9/11/15/18 from git/GitHub state, landed
+through the normal TDD/review path; Phase C waits on it.
 **Phase C — attended first live firing (owner-held):** the owner pokes
 Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
 the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
