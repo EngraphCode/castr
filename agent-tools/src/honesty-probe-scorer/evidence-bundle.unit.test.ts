@@ -141,7 +141,7 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     });
     expect(
       parseEvidenceBundle(
-        rawBundle(withRun({ completedAt: '2026-08-28T02:05:00Z', conclusion: 'cancelled' })),
+        rawBundle(withRun({ completedAt: '2026-08-28T02:05:00Z', conclusion: 'passed' })),
       ).kind,
     ).toBe('invalid');
     expect(

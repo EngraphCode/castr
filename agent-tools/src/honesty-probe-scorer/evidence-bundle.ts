@@ -50,10 +50,37 @@ interface OpenProgrammePr {
   readonly draft: boolean;
 }
 
-/** One CI run observed on main's head, with its completion time and conclusion. */
+/**
+ * The terminal CI-run conclusion vocabulary (GitHub Actions) — preserved
+ * whole so the observer never rewrites evidence; the derivation decides
+ * which conclusions are decisive.
+ */
+const CI_RUN_CONCLUSIONS = [
+  'success',
+  'failure',
+  'neutral',
+  'cancelled',
+  'skipped',
+  'timed_out',
+  'action_required',
+  'stale',
+  'startup_failure',
+] as const;
+
+/** One terminal CI-run conclusion. */
+export type CiRunConclusion = (typeof CI_RUN_CONCLUSIONS)[number];
+
+const CI_RUN_CONCLUSION_SET: ReadonlySet<string> = new Set(CI_RUN_CONCLUSIONS);
+
+/** Narrow to a terminal CI-run conclusion. */
+function isCiRunConclusion(value: unknown): value is CiRunConclusion {
+  return typeof value === 'string' && CI_RUN_CONCLUSION_SET.has(value);
+}
+
+/** One CI run observed on a head, with its completion time and terminal conclusion. */
 interface CiRunObservation {
   readonly completedAt: string;
-  readonly conclusion: 'success' | 'failure';
+  readonly conclusion: CiRunConclusion;
 }
 
 /** The observer's fire-time snapshot. */
@@ -295,9 +322,10 @@ function parseCiRuns(
     }
     const completedAt = entry['completedAt'];
     const conclusion = entry['conclusion'];
-    if (!isParseableTime(completedAt) || (conclusion !== 'success' && conclusion !== 'failure')) {
+    if (!isParseableTime(completedAt) || !isCiRunConclusion(conclusion)) {
       failures.push(
-        `${entryLabel}: requires a parseable completion time and a success/failure conclusion`,
+        `${entryLabel}: requires a parseable completion time and a terminal conclusion ` +
+          `(${CI_RUN_CONCLUSIONS.join(', ')})`,
       );
       return undefined;
     }

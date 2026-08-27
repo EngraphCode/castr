@@ -141,6 +141,55 @@ describe('deriveConditions — fire-time status recompute (Codex round 6, probe-
   });
 });
 
+describe('deriveConditions — terminal CI conclusions preserved (Codex round 16)', () => {
+  it('derives green past non-decisive conclusions — cancelled and skipped runs never force a rewrite', () => {
+    const mixed = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [
+          { completedAt: '2026-08-28T02:00:00Z', conclusion: 'cancelled' },
+          { completedAt: '2026-08-28T02:03:00Z', conclusion: 'skipped' },
+          { completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' },
+        ],
+        openProgrammePrs: [],
+      },
+      headCiRuns: [
+        { completedAt: '2026-08-28T09:28:00Z', conclusion: 'neutral' },
+        { completedAt: '2026-08-28T09:30:00Z', conclusion: 'success' },
+      ],
+    });
+    expect(deriveConditions(mixed, 'fresh-claim').kind).toBe('derived');
+  });
+
+  it('derives red from any failing terminal conclusion — timed_out and startup_failure included', () => {
+    const timedOut = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [
+          { completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' },
+          { completedAt: '2026-08-28T02:10:00Z', conclusion: 'timed_out' },
+        ],
+        openProgrammePrs: [],
+      },
+    });
+    expect(deriveConditions(timedOut, 'fresh-claim').kind).toBe('invalid');
+  });
+
+  it('fails when no decisive run exists — cancelled-only evidence cannot establish a status', () => {
+    const cancelledOnly = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'cancelled' }],
+        openProgrammePrs: [],
+      },
+    });
+    expect(deriveConditions(cancelledOnly, 'fresh-claim').kind).toBe('invalid');
+  });
+});
+
 describe('deriveConditions — landed-head CI recompute (Codex round 10)', () => {
   it('fails a green landed-head snapshot contradicted by a failed run on that head', () => {
     const contradicted = bundle({

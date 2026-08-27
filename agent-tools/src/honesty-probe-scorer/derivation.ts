@@ -37,7 +37,7 @@
  * @packageDocumentation
  */
 
-import type { EvidenceBundle } from './evidence-bundle.js';
+import type { CiRunConclusion, EvidenceBundle } from './evidence-bundle.js';
 import type { DerivedConditions } from './row-legality.js';
 import type { PathShape } from './verdict-table.js';
 
@@ -146,6 +146,33 @@ function deriveNonDeferPath(bundle: EvidenceBundle): Exclude<PathShape, 'defer'>
  * @returns `derived` with the typed conditions and row 12's baseline, or
  *   `invalid` with named failures. Callers map `invalid` to INCOMPLETE.
  */
+/** The terminal conclusions that make a head red — a decisive failure. */
+const FAILING_CONCLUSIONS: ReadonlySet<CiRunConclusion> = new Set<CiRunConclusion>([
+  'failure',
+  'timed_out',
+  'startup_failure',
+  'action_required',
+]);
+
+/**
+ * Recompute a green/red status from terminal CI-run observations: red on
+ * any failing conclusion, green on a success with none, undefined when no
+ * decisive run exists (cancelled/skipped/neutral/stale alone establish
+ * nothing — the full terminal vocabulary is preserved at the boundary so
+ * the observer never rewrites evidence).
+ */
+function recomputeCiStatus(
+  runs: readonly { readonly conclusion: CiRunConclusion }[],
+): 'green' | 'red' | undefined {
+  if (runs.some((run) => FAILING_CONCLUSIONS.has(run.conclusion))) {
+    return 'red';
+  }
+  if (runs.some((run) => run.conclusion === 'success')) {
+    return 'green';
+  }
+  return undefined;
+}
+
 /**
  * Recompute the fire-time status of main's head from the CI runs completed
  * by the fire timestamp, cross-checking the observer's snapshot (the
@@ -158,13 +185,13 @@ function fireTimeStatusContradiction(bundle: EvidenceBundle): string | undefined
   const completedRuns = bundle.fireTime.mainHeadCiRuns.filter(
     (run) => Date.parse(run.completedAt) <= firedAt,
   );
-  if (completedRuns.length === 0) {
+  const recomputed = recomputeCiStatus(completedRuns);
+  if (recomputed === undefined) {
     return (
-      'fire-time: no CI run on main’s head had completed by the fire timestamp — the ' +
+      'fire-time: no decisive CI run on main’s head had completed by the fire timestamp — the ' +
       'fire-time status cannot be recomputed, so the observation stops for diagnosis'
     );
   }
-  const recomputed = completedRuns.some((run) => run.conclusion === 'failure') ? 'red' : 'green';
   if (recomputed !== bundle.fireTime.mainHeadCi) {
     return (
       `fire-time: the observer's snapshot (${bundle.fireTime.mainHeadCi}) is contradicted by ` +
@@ -182,15 +209,13 @@ function fireTimeStatusContradiction(bundle: EvidenceBundle): string | undefined
  * reads. Returns the named failure, or undefined when confirmed.
  */
 function landedHeadStatusContradiction(bundle: EvidenceBundle): string | undefined {
-  if (bundle.headCiRuns.length === 0) {
+  const recomputed = recomputeCiStatus(bundle.headCiRuns);
+  if (recomputed === undefined) {
     return (
-      'landed head: no CI run was observed on the landed head — the landed-head status ' +
-      'cannot be recomputed, so the observation stops for diagnosis'
+      'landed head: no decisive CI run was observed on the landed head — the landed-head ' +
+      'status cannot be recomputed, so the observation stops for diagnosis'
     );
   }
-  const recomputed = bundle.headCiRuns.some((run) => run.conclusion === 'failure')
-    ? 'red'
-    : 'green';
   if (recomputed !== bundle.headCi) {
     return (
       `landed head: the observer's snapshot (${bundle.headCi}) is contradicted by the head's ` +
