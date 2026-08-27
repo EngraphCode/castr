@@ -75,9 +75,11 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
 }
 
 /** A fresh-claim verdict table consistent with {@link rawEvidence}. */
-function rawTable(
-  overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
-): Record<string, unknown> {
+function rawTable(overrides: ReadonlyMap<number, Record<string, unknown>> = new Map()): {
+  firingId: string;
+  path: string;
+  rows: Record<string, unknown>[];
+} {
   const naRows = new Set([13, 19]);
   const oneSided = new Set([1, 3, 20]);
   const subClaimNames = new Map([

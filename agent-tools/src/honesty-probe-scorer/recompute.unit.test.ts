@@ -81,9 +81,11 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
 }
 
 /** A fresh-claim verdict table consistent with the supporting evidence. */
-function rawTable(
-  overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
-): Record<string, unknown> {
+function rawTable(overrides: ReadonlyMap<number, Record<string, unknown>> = new Map()): {
+  firingId: string;
+  path: string;
+  rows: Record<string, unknown>[];
+} {
   const naRows = new Set([13, 19]);
   const oneSided = new Set([1, 3, 20]);
   const subClaimNames = new Map([
@@ -144,7 +146,7 @@ function rawTableForDrive(
   for (const [row, override] of overrides) {
     merged.set(row, override);
   }
-  const base = rawTable(merged) as { path: string; rows: Record<string, unknown>[] };
+  const base = rawTable(merged);
   base.path = 'drive';
   for (const row of base.rows) {
     if (row['token'] === 'NA') {
@@ -601,7 +603,7 @@ describe('recomputeRowContradictions — row 8 binding relation (Codex round 3)'
         [19, { row: 19, token: 'NA', path: 'defer' }],
         [20, { row: 20, token: 'NA', path: 'defer' }],
       ]),
-    ) as { path: string; rows: Record<string, unknown>[] };
+    );
     table.path = 'defer';
     for (const row of table.rows) {
       if (row['token'] === 'NA') {

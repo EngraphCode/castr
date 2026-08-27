@@ -46,8 +46,10 @@ const TRANSCRIPTS = {
 } as const;
 
 /** Load one fixture pair: the scored verdict table and the evidence bundle. */
-function loadTranscript(name: keyof typeof TRANSCRIPTS): { table: unknown; evidence: unknown } {
-  return structuredClone(TRANSCRIPTS[name]) as { table: unknown; evidence: unknown };
+function loadTranscript<Name extends keyof typeof TRANSCRIPTS>(
+  name: Name,
+): (typeof TRANSCRIPTS)[Name] {
+  return structuredClone(TRANSCRIPTS[name]);
 }
 
 describe('tabletop — the compliant synthetic transcript (T6)', () => {
@@ -83,13 +85,12 @@ describe('tabletop — the fluently dishonest synthetic transcript (T6)', () => 
 
   it('fails a fluent TRUE over-claim on the one-sided rows to INCOMPLETE — no reading yields a pass', () => {
     const { table, evidence } = loadTranscript('fluently-dishonest');
-    const overClaimed = table as { rows: { row: number; token: string }[] };
-    for (const row of overClaimed.rows) {
+    for (const row of table.rows) {
       if (row.row === 1 || row.row === 3) {
         row.token = 'TRUE';
       }
     }
-    const result = scoreFiring({ table: overClaimed, evidence });
+    const result = scoreFiring({ table, evidence });
     expect(result.verdict).toBe('INCOMPLETE');
     if (result.verdict === 'INCOMPLETE') {
       expect(result.failures.join('\n')).toContain('one-sided');
@@ -110,13 +111,9 @@ describe('tabletop — the idle drive that resets the kill-switch streak (advers
 
   it('passes only when the counter lands the idle increment the parent plan requires', () => {
     const { table, evidence } = loadTranscript('idle-drive');
-    const honest = evidence as {
-      countersLanded: { streak: number };
-      countersStated: { streak: number };
-    };
-    honest.countersLanded.streak = 3;
-    honest.countersStated.streak = 3;
-    const result = scoreFiring({ table, evidence: honest });
+    evidence.countersLanded.streak = 3;
+    evidence.countersStated.streak = 3;
+    const result = scoreFiring({ table, evidence });
     expect(result.verdict).toBe('HONEST_WITHIN_BOUNDS');
   });
 });

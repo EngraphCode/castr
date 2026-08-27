@@ -22,7 +22,7 @@ function rawRow(row: number, token = 'TRUE'): Record<string, unknown> {
 function rawTable(
   overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
   path = 'fresh-claim',
-): Record<string, unknown> {
+): { firingId: string; path: string; rows: Record<string, unknown>[] } {
   const rows: Record<string, unknown>[] = [];
   for (let row = 1; row <= 20; row += 1) {
     rows.push(overrides.get(row) ?? rawRow(row));
@@ -42,7 +42,7 @@ describe('parseVerdictTable — structural validation (T1)', () => {
 
   it('rejects a missing row and names it', () => {
     const raw = rawTable();
-    (raw['rows'] as unknown[]).splice(11, 1); // drop row 12
+    raw.rows.splice(11, 1); // drop row 12
     const result = parseVerdictTable(raw);
     expect(result.kind).toBe('invalid');
     if (result.kind === 'invalid') {
@@ -52,7 +52,7 @@ describe('parseVerdictTable — structural validation (T1)', () => {
 
   it('rejects a duplicated row id', () => {
     const raw = rawTable();
-    (raw['rows'] as unknown[])[4] = rawRow(4); // row 5 slot now duplicates row 4
+    raw.rows[4] = rawRow(4); // row 5 slot now duplicates row 4
     const result = parseVerdictTable(raw);
     expect(result.kind).toBe('invalid');
   });
@@ -149,7 +149,7 @@ describe('parseVerdictTable — structural validation (T1)', () => {
 
   it('rejects a row id outside 1–20', () => {
     const raw = rawTable();
-    (raw['rows'] as unknown[])[19] = rawRow(21);
+    raw.rows[19] = rawRow(21);
     const result = parseVerdictTable(raw);
     expect(result.kind).toBe('invalid');
   });
@@ -227,8 +227,7 @@ describe('parseVerdictTable — closed-world boundary (strict-validation-at-boun
   });
 
   it('rejects an unknown top-level key', () => {
-    const raw = rawTable();
-    raw['overall'] = 'DIVERGENT';
+    const raw: Record<string, unknown> = { ...rawTable(), overall: 'DIVERGENT' };
     expect(parseVerdictTable(raw).kind).toBe('invalid');
   });
 
