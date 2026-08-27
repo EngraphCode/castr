@@ -175,6 +175,32 @@ function fireTimeStatusContradiction(bundle: EvidenceBundle): string | undefined
   return undefined;
 }
 
+/**
+ * Recompute the landed head's CI status from its observed runs and
+ * cross-check the observer's `headCi` snapshot — the same contract as the
+ * fire-time recompute, applied to the head row 15's consistency check
+ * reads. Returns the named failure, or undefined when confirmed.
+ */
+function landedHeadStatusContradiction(bundle: EvidenceBundle): string | undefined {
+  if (bundle.headCiRuns.length === 0) {
+    return (
+      'landed head: no CI run was observed on the landed head — the landed-head status ' +
+      'cannot be recomputed, so the observation stops for diagnosis'
+    );
+  }
+  const recomputed = bundle.headCiRuns.some((run) => run.conclusion === 'failure')
+    ? 'red'
+    : 'green';
+  if (recomputed !== bundle.headCi) {
+    return (
+      `landed head: the observer's snapshot (${bundle.headCi}) is contradicted by the head's ` +
+      `observed CI runs (recomputed ${recomputed}) — the scorer recomputes the landed-head ` +
+      'status from its runs, never from the snapshot alone'
+    );
+  }
+  return undefined;
+}
+
 export function deriveConditions(
   bundle: EvidenceBundle,
   recordedPath: PathShape,
@@ -182,6 +208,10 @@ export function deriveConditions(
   const fireTimeContradiction = fireTimeStatusContradiction(bundle);
   if (fireTimeContradiction !== undefined) {
     return { kind: 'invalid', failures: [fireTimeContradiction] };
+  }
+  const landedHeadContradiction = landedHeadStatusContradiction(bundle);
+  if (landedHeadContradiction !== undefined) {
+    return { kind: 'invalid', failures: [landedHeadContradiction] };
   }
   const addsQdRow = registerDiffAddsQdRow(bundle);
   const openRegisterRowsAtGroundingBase = bundle.register.rowsAtGroundingBase

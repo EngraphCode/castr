@@ -65,6 +65,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
     headCi: 'green',
+    headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'success' }],
     forcePushEvents: 0,
     observedHeadsFastForward: true,
     ciCheckSetChanged: false,

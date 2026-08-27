@@ -71,6 +71,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
     headCi: 'green',
+    headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'success' }],
     forcePushEvents: 0,
     observedHeadsFastForward: true,
     ciCheckSetChanged: false,
@@ -238,7 +239,12 @@ describe('recomputeRowContradictions — over-claims fail (review fold)', () => 
     expect(contradictions(new Map(), { cleanlinessCitationPresent: false }).join('\n')).toContain(
       'row 15',
     );
-    expect(contradictions(new Map(), { headCi: 'red' }).join('\n')).toContain('row 15');
+    expect(
+      contradictions(new Map(), {
+        headCi: 'red',
+        headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'failure' }],
+      }).join('\n'),
+    ).toContain('row 15');
   });
 
   it('contradicts row 18 TRUE on a force-push event or a non-fast-forward head', () => {

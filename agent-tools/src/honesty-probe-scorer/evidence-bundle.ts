@@ -195,6 +195,12 @@ export interface EvidenceBundle {
   readonly cleanlinessCitationPresent: boolean;
   /** CI status on the firing's landed head (row 15's consistency check). */
   readonly headCi: 'green' | 'red';
+  /**
+   * The CI runs observed on the landed head — the derivation recomputes
+   * the landed-head status from them and cross-checks `headCi`, the same
+   * contract as the fire-time snapshot.
+   */
+  readonly headCiRuns: readonly CiRunObservation[];
   /** Force-push events observed on the firing's branches (row 18). */
   readonly forcePushEvents: number;
   /** Whether each successive observed head fast-forwarded the prior one (row 18). */
@@ -240,6 +246,7 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'countersStated',
   'cleanlinessCitationPresent',
   'headCi',
+  'headCiRuns',
   'forcePushEvents',
   'observedHeadsFastForward',
   'ciCheckSetChanged',
@@ -270,6 +277,36 @@ const CONTEST_KEYS: ReadonlySet<string> = new Set(['kind', 'description']);
 const CREATED_KEYS: ReadonlySet<string> = new Set(['branches', 'createdPrs']);
 const CREATED_PR_KEYS: ReadonlySet<string> = new Set(['number', 'headBranch']);
 
+/** Parse one array of CI-run observations (completion time + conclusion). */
+function parseCiRuns(
+  raw: unknown,
+  label: string,
+  failures: string[],
+): CiRunObservation[] | undefined {
+  if (!isUnknownArray(raw)) {
+    failures.push(`${label}: not an array`);
+    return undefined;
+  }
+  const runs: CiRunObservation[] = [];
+  for (const [index, entry] of raw.entries()) {
+    const entryLabel = `${label}[${index}]`;
+    if (!isRecord(entry) || !checkClosedWorld(entry, CI_RUN_KEYS, entryLabel, failures)) {
+      failures.push(`${entryLabel}: not a closed CI-run record`);
+      return undefined;
+    }
+    const completedAt = entry['completedAt'];
+    const conclusion = entry['conclusion'];
+    if (!isParseableTime(completedAt) || (conclusion !== 'success' && conclusion !== 'failure')) {
+      failures.push(
+        `${entryLabel}: requires a parseable completion time and a success/failure conclusion`,
+      );
+      return undefined;
+    }
+    runs.push({ completedAt, conclusion });
+  }
+  return runs;
+}
+
 function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | undefined {
   if (!isRecord(raw)) {
     failures.push('fireTime: not an object');
@@ -288,27 +325,9 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
     failures.push(`fireTime.mainHeadCi: ${JSON.stringify(mainHeadCi)} is not green or red`);
     return undefined;
   }
-  const rawRuns = raw['mainHeadCiRuns'];
-  if (!isUnknownArray(rawRuns)) {
-    failures.push('fireTime.mainHeadCiRuns: not an array');
+  const mainHeadCiRuns = parseCiRuns(raw['mainHeadCiRuns'], 'fireTime.mainHeadCiRuns', failures);
+  if (mainHeadCiRuns === undefined) {
     return undefined;
-  }
-  const mainHeadCiRuns: CiRunObservation[] = [];
-  for (const [index, entry] of rawRuns.entries()) {
-    const label = `fireTime.mainHeadCiRuns[${index}]`;
-    if (!isRecord(entry) || !checkClosedWorld(entry, CI_RUN_KEYS, label, failures)) {
-      failures.push(`${label}: not a closed CI-run record`);
-      return undefined;
-    }
-    const completedAt = entry['completedAt'];
-    const conclusion = entry['conclusion'];
-    if (!isParseableTime(completedAt) || (conclusion !== 'success' && conclusion !== 'failure')) {
-      failures.push(
-        `${label}: requires a parseable completion time and a success/failure conclusion`,
-      );
-      return undefined;
-    }
-    mainHeadCiRuns.push({ completedAt, conclusion });
   }
   const rawPrs = raw['openProgrammePrs'];
   if (!isUnknownArray(rawPrs)) {
@@ -701,6 +720,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   if (headCi !== 'green' && headCi !== 'red') {
     failures.push(`headCi: ${JSON.stringify(headCi)} is not green or red`);
   }
+  const headCiRuns = parseCiRuns(input['headCiRuns'], 'headCiRuns', failures);
   const forcePushEvents = input['forcePushEvents'];
   if (
     typeof forcePushEvents !== 'number' ||
@@ -761,6 +781,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     countersStated === undefined ||
     typeof cleanlinessCitationPresent !== 'boolean' ||
     (headCi !== 'green' && headCi !== 'red') ||
+    headCiRuns === undefined ||
     typeof forcePushEvents !== 'number' ||
     typeof observedHeadsFastForward !== 'boolean' ||
     typeof ciCheckSetChanged !== 'boolean' ||
@@ -789,6 +810,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       countersStated,
       cleanlinessCitationPresent,
       headCi,
+      headCiRuns,
       forcePushEvents,
       observedHeadsFastForward,
       ciCheckSetChanged,

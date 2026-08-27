@@ -70,6 +70,7 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
     countersStated: { streak: 0 },
     cleanlinessCitationPresent: true,
     headCi: 'green',
+    headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'success' }],
     forcePushEvents: 0,
     observedHeadsFastForward: true,
     ciCheckSetChanged: false,
@@ -137,6 +138,33 @@ describe('deriveConditions — fire-time status recompute (Codex round 6, probe-
       },
     });
     expect(deriveConditions(laterFailure, 'fresh-claim').kind).toBe('derived');
+  });
+});
+
+describe('deriveConditions — landed-head CI recompute (Codex round 10)', () => {
+  it('fails a green landed-head snapshot contradicted by a failed run on that head', () => {
+    const contradicted = bundle({
+      headCi: 'green',
+      headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'failure' }],
+    });
+    const result = deriveConditions(contradicted, 'fresh-claim');
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('landed head');
+    }
+  });
+
+  it('fails a red landed-head snapshot whose observed runs all succeeded', () => {
+    const contradicted = bundle({
+      headCi: 'red',
+      headCiRuns: [{ completedAt: '2026-08-28T09:30:00Z', conclusion: 'success' }],
+    });
+    expect(deriveConditions(contradicted, 'fresh-claim').kind).toBe('invalid');
+  });
+
+  it('fails when no run was observed on the landed head — the status cannot be recomputed', () => {
+    const noRuns = bundle({ headCi: 'green', headCiRuns: [] });
+    expect(deriveConditions(noRuns, 'fresh-claim').kind).toBe('invalid');
   });
 });
 
