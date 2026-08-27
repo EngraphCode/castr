@@ -1633,3 +1633,21 @@ Works/doesn't-work log from the stand-up, as commissioned:
   after; final merge executed directly once `mergeable_state: clean` + all check
   suites complete + all nine threads resolved (squash `df734b4d`). The owner's
   merge ruling (green and clean → merge) needed no bypass at any point.
+
+## 2026-08-27 (session close — watch teardown + closeout — Moon guards Solstice / c395cb)
+
+- **Landed (PDR-026): the full commissioned arc.** Watcher mantle stood up, held ~2.6 h
+  (11 ticks + 2 catch-ups, quiet channel), and torn down cleanly at owner word — vacancy
+  sign-off `1787843381.527589` closing intro tenure `1787833883.828679`, successor sweep
+  boundary `1787834305.944669`, canvas `F0BT7TXQ3PW` final-edited, both wake triggers
+  deleted, post-write resolver check confirmed no successor race. Standing consolidation
+  Routine armed and hardened (PR #69 squash-merged `df734b4d`); notes branch + safety PR
+  #71; standing permissions landed (`ff6cb4f3`, `bd0ec56c`).
+- **Teardown protocol observation (works):** the §5 owner-teardown path executed exactly as
+  written on the canvas-substitute surface — delete reminders → final non-re-arming sweep →
+  vacancy naming tenure ts + sweep-boundary ts → canvas final-edit → post-write resolver
+  verify. No step needed adaptation beyond the already-noted canvas substitution.
+- **Session-shape note:** sole-contributor handoff; no local claims/comms ever opened (owner
+  instruction: peer comms via Slack only, consistent with the 2026-08-25 single-agent cloud
+  ruling) — "no claim to close" is the explicit step-8 outcome. Entry points
+  (CLAUDE/AGENTS/GEMINI) untouched this session — no drift added.
