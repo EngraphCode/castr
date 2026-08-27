@@ -236,7 +236,9 @@ beyond them is needed for the Routine.
    prepend the canonical DRY-RUN instruction (§The DRY-RUN instruction above) to the
    stored prompt and byte-verify via a trigger read. Only then the owner attaches
    the repo and the Slack connector (where the workspace exists) in the UI, sets the
-   model, confirms notifications push-only, and sets auto-fix OFF (per-trigger — a
+   model, confirms notifications push + Slack with no email (the device push is the
+   sole receipt-gate channel — owner ruling 2026-08-27; §Trigger configuration
+   above), and sets auto-fix OFF (per-trigger — a
    fresh set, never a carry-over from a retired trigger).
 4. **Dry-run proof before any live firing** (mirrors the Q-01 acceptance). First
    verify no `.agent/plans/proof-programme/STOP` file exists on the new host's

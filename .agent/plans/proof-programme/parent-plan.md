@@ -238,7 +238,7 @@ this slice's proof lands second, so neither ordering strands the Routine disable
 full authorisation.
 **Enabling sequences strictly after this slice's own PR merges**: an enabled Routine with
 Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step
-(with the B-15 notification configuration re-checked: push and email on, no digest — B-15 amended 2026-08-24 to push-only; the ratified set is the ballot's amended B-15) is the
+(with the B-15 notification configuration re-checked against the ballot's B-15 as currently amended — 2026-08-27 second amendment: push + Slack, no email, device-push-only receipt gate; the ratified set is always the ballot's latest amendment) is the
 last act of the Q-01 firing, performed only once the merged base carries the row's
 `complete` state. The enable step applies the recorded
 B-15 outcome to the Routine's notification configuration **before** enabling — including
