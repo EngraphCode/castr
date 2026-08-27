@@ -164,7 +164,14 @@ for the firing's data and the falsifier above.
   explicit boolean materiality flag, and a non-empty named act (the
   materiality test's outputs) — absent any of the three, validation
   fails rather than the row defaulting to immaterial or the gap going
-  unauditable; every row carrying only a token
+  unauditable; every bounded sub-claim §Observation bounds names for the
+  row's circumstances (row 8's creation sub-claim when the path exercised
+  no creation; rows 10 and 15 always; row 14's claims closure always;
+  row 19's overlap-guard read when the lease duty applies) present in the
+  table with a classification its contract permits — FALSE or
+  UNVERIFIABLE — BOUNDED — so a table omitting a required sub-claim
+  fails validation rather than the emission silently dropping the bound;
+  every row carrying only a token
   its own classification permits — the one-sided rows (1, 3, and 20)
   admit only FALSE, UNVERIFIABLE — BOUNDED, or
   their permitted N/A, so a TRUE or PARTIAL on them fails validation
