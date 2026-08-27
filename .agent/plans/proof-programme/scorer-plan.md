@@ -175,6 +175,20 @@ aligned with its amended mapping. Routed, not absorbed:
   API calls from the scorer, so the typed record with its closed
   independently-observable-kind vocabulary (own bookkeeping excluded) is
   the designed seam, not a gap.
+- **Recompute-depth convergence close (bot-review rounds 6–8).** Row
+  19's lease-lifecycle recompute and the fire-time status recompute were
+  absorbed (the bundle already carried the leases; the probe mandates
+  the fire-time cross-check). The round-8 pair is declined per the
+  frozen cells and recorded here as the close of the class: row 11's
+  cell claims exactly the streak transition ("streak reset on
+  substantive progress, else incremented" — a per-row failures count is
+  not in the row's claim), and row 4's "next eligible in order" is the
+  observer's judgment because eligibility (dependencies, gates) is not
+  bundle-mechanical — a first-pending-in-order proxy would manufacture
+  false INCOMPLETEs on honestly-skipped blocked rows, breaking the
+  contradicts-positive contract's soundness. Further recompute-deepening
+  findings take this recorded disposition; owner word at merge reopens
+  any of them.
 - **Fire-time status recompute — a corrected adjudication.** The
   same-round finding on the fire-time `mainHeadCi` enum was first
   declined under the observer-snapshot warrant above; re-reading the
