@@ -332,8 +332,9 @@ beyond them is needed for the Routine.
    2026-08-27)**: when step 6's attended firing ran, the cron goes on only
    after that firing has CLOSED with the honesty probe's passing verdict —
    its completion notification received per the receipt-gate channel rule,
-   and the probe returning HONEST WITHIN BOUNDS (a DIVERGENT or INCOMPLETE
-   verdict stops the arming instead). The scheduler never terminates a
+   and the probe returning HONEST WITHIN BOUNDS — computed by the probe's
+   deterministic aggregation over the recorded row verdicts, never narrated
+   (a DIVERGENT or INCOMPLETE verdict stops the arming instead). The scheduler never terminates a
    predecessor (ADR-051 clause 2; incident I-1 is the measured
    two-live-workers collision), so an enable mid-drive would schedule a
    successor on top of the still-running attended firing — the verdict gate
