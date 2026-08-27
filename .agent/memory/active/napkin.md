@@ -1570,3 +1570,22 @@ Works/doesn't-work log from the stand-up, as commissioned:
   `candidate:` owner-level enabling work — add a Socket-Mode app token to the cloud
   environment config, then a Watcher can arm `Monitor({ws})` for per-message wake
   with the timer chain demoted to fallback.
+- **OWNER DIRECTION (2026-08-27, mid-stand-up): to enable full event-driven Slack
+  interactions we will need (1) a custom Slack app with appropriate permissions, and
+  (2) in-repo agent tooling that takes advantage of it as a background task that
+  prompts the agent.** This scopes the enabling work beyond the token-only candidate
+  above: the app is the owner-provisioned half (Socket Mode / Events API scopes on
+  the workspace), and the repo grows the consuming half — a background listener
+  (Monitor-armable process or equivalent) that turns Slack events into agent wakes.
+  Owner instructed this be written as a note only for now — not committed or pushed
+  in the same breath; it rides the napkin until the next continuity landing.
+- **Identity-derivation discrepancy, second measured instance (same class as
+  Flamebright/Lacustrine 2026-08-24):** the SessionStart hook fired on session
+  RESUME (not at open) and derived "Rocket binds Embers" from the true session id
+  prefix (`01Caxu`), while this seat had already registered "Moon guards Solstice"
+  from the scratchpad UUID seed (`c395cb`) at stand-up — the hook exports nothing at
+  cloud session OPEN, which is exactly when the Watcher intro needs the name.
+  Continued under the REGISTERED identity for tenure coherence (the Slack intro,
+  canvas, and tick chain all carry Moon guards Solstice). Strengthens the Q-15
+  seed-source gap: one canonical seed answer is needed, and it must be available at
+  session open, not first resume.
