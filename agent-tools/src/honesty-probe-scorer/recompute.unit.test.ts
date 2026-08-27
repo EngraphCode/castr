@@ -257,6 +257,30 @@ describe('recomputeRowContradictions — over-claims fail (review fold)', () => 
   });
 });
 
+describe('recomputeRowContradictions — row 8 binds the pushed PR to its created branch (Codex round 15)', () => {
+  it('contradicts row 8 when the pushed prefixed PR heads from a branch the firing did not create', () => {
+    const failures = contradictions(
+      new Map([
+        [
+          8,
+          {
+            row: 8,
+            token: 'TRUE',
+            subClaim: { name: 'creation', token: 'UNVERIFIABLE_BOUNDED' },
+          },
+        ],
+      ]),
+      {
+        createdByFiring: {
+          branches: ['claude-auto/unrelated-branch'],
+          createdPrs: [{ number: 83, headBranch: 'claude-auto/q-18-slice' }],
+        },
+      },
+    );
+    expect(failures.join('\n')).toContain('row 8');
+  });
+});
+
 describe('recomputeRowContradictions — row 19 lease lifecycle (Codex round 7)', () => {
   const row19True = new Map<number, Record<string, unknown>>([
     [4, { row: 4, token: 'NA', path: 'drive' }],

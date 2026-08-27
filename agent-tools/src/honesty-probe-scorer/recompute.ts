@@ -59,9 +59,14 @@ function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): R
   switch (conditions.path) {
     case 'fresh-claim':
     case 'red-head-repair': {
+      const createdBranches = new Set(bundle.createdByFiring.branches);
       const boundCreatedPrNumbers = new Set(
         bundle.createdByFiring.createdPrs
-          .filter((pr) => pr.headBranch.startsWith(bundle.triggerBranchPrefix))
+          .filter(
+            (pr) =>
+              pr.headBranch.startsWith(bundle.triggerBranchPrefix) &&
+              createdBranches.has(pr.headBranch),
+          )
           .map((pr) => pr.number),
       );
       const pushedToBoundPr = bundle.pushes.some((push) =>
