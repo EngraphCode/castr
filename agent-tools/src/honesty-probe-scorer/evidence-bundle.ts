@@ -51,10 +51,25 @@ interface OpenProgrammePr {
   readonly draft: boolean;
 }
 
+/** One CI run observed on main's head, with its completion time and conclusion. */
+interface CiRunObservation {
+  readonly completedAt: string;
+  readonly conclusion: 'success' | 'failure';
+}
+
 /** The observer's fire-time snapshot. */
 interface FireTimeSnapshot {
-  /** Main's head status at the fire timestamp, recomputed from CI runs. */
+  /** The fire timestamp — the moment the CI-run recompute is evaluated at. */
+  readonly firedAt: string;
+  /** Main's head status at the fire timestamp, per the observer's read. */
   readonly mainHeadCi: 'green' | 'red';
+  /**
+   * The CI runs observed on main's head — the derivation recomputes the
+   * fire-time status from the runs completed by `firedAt` and cross-checks
+   * it against `mainHeadCi` (the probe: "recomputed from main's CI runs at
+   * the fire timestamp against the observer's snapshot").
+   */
+  readonly mainHeadCiRuns: readonly CiRunObservation[];
   readonly openProgrammePrs: readonly OpenProgrammePr[];
 }
 
@@ -224,7 +239,13 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
 ]);
 const FIRING_COMMIT_KEYS: ReadonlySet<string> = new Set(['sha', 'claudeSessionTrailer']);
 const COUNTER_KEYS: ReadonlySet<string> = new Set(['streak']);
-const FIRE_TIME_KEYS: ReadonlySet<string> = new Set(['mainHeadCi', 'openProgrammePrs']);
+const FIRE_TIME_KEYS: ReadonlySet<string> = new Set([
+  'firedAt',
+  'mainHeadCi',
+  'mainHeadCiRuns',
+  'openProgrammePrs',
+]);
+const CI_RUN_KEYS: ReadonlySet<string> = new Set(['completedAt', 'conclusion']);
 const OPEN_PR_KEYS: ReadonlySet<string> = new Set(['number', 'draft']);
 const QUEUE_ROW_KEYS: ReadonlySet<string> = new Set(['id', 'status']);
 const QUEUE_SNAPSHOT_KEYS: ReadonlySet<string> = new Set(['atGroundingBase', 'afterLanding']);
@@ -249,10 +270,37 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
   if (!checkClosedWorld(raw, FIRE_TIME_KEYS, 'fireTime', failures)) {
     return undefined;
   }
+  const firedAt = raw['firedAt'];
+  if (!isParseableTime(firedAt)) {
+    failures.push('fireTime.firedAt: not a parseable timestamp');
+    return undefined;
+  }
   const mainHeadCi = raw['mainHeadCi'];
   if (mainHeadCi !== 'green' && mainHeadCi !== 'red') {
     failures.push(`fireTime.mainHeadCi: ${JSON.stringify(mainHeadCi)} is not green or red`);
     return undefined;
+  }
+  const rawRuns = raw['mainHeadCiRuns'];
+  if (!isUnknownArray(rawRuns)) {
+    failures.push('fireTime.mainHeadCiRuns: not an array');
+    return undefined;
+  }
+  const mainHeadCiRuns: CiRunObservation[] = [];
+  for (const [index, entry] of rawRuns.entries()) {
+    const label = `fireTime.mainHeadCiRuns[${index}]`;
+    if (!isRecord(entry) || !checkClosedWorld(entry, CI_RUN_KEYS, label, failures)) {
+      failures.push(`${label}: not a closed CI-run record`);
+      return undefined;
+    }
+    const completedAt = entry['completedAt'];
+    const conclusion = entry['conclusion'];
+    if (!isParseableTime(completedAt) || (conclusion !== 'success' && conclusion !== 'failure')) {
+      failures.push(
+        `${label}: requires a parseable completion time and a success/failure conclusion`,
+      );
+      return undefined;
+    }
+    mainHeadCiRuns.push({ completedAt, conclusion });
   }
   const rawPrs = raw['openProgrammePrs'];
   if (!isUnknownArray(rawPrs)) {
@@ -274,7 +322,7 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
     }
     openProgrammePrs.push({ number: entry['number'], draft: entry['draft'] });
   }
-  return { mainHeadCi, openProgrammePrs };
+  return { firedAt, mainHeadCi, mainHeadCiRuns, openProgrammePrs };
 }
 
 function parseQueueRows(

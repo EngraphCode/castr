@@ -30,7 +30,12 @@ import type { VerdictTable } from './verdict-table.js';
 /** A fresh-claim evidence bundle whose mechanical facts all support the positive reading. */
 function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    fireTime: { mainHeadCi: 'green', openProgrammePrs: [] },
+    fireTime: {
+      firedAt: '2026-08-28T02:30:00Z',
+      mainHeadCi: 'green',
+      mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+      openProgrammePrs: [],
+    },
     parentPlanQueueRows: {
       atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
@@ -257,7 +262,12 @@ describe('recomputeRowContradictions — row 19 lease lifecycle (Codex round 7)'
     ],
   ]);
   const driveEvidence = {
-    fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+    fireTime: {
+      firedAt: '2026-08-28T02:30:00Z',
+      mainHeadCi: 'green',
+      mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+      openProgrammePrs: [{ number: 75, draft: false }],
+    },
     parentPlanQueueRows: {
       atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
       afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -374,7 +384,12 @@ describe('recomputeRowContradictions — Codex round 1 (verified findings)', () 
     ]);
     const table = rawTableForDrive(driveTable);
     const unrelated = {
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],

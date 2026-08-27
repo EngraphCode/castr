@@ -27,7 +27,12 @@ import { parseEvidenceBundle } from './evidence-bundle.js';
 /** Build a typed bundle through the boundary parser. */
 function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
   const parsed = parseEvidenceBundle({
-    fireTime: { mainHeadCi: 'green', openProgrammePrs: [] },
+    fireTime: {
+      firedAt: '2026-08-28T02:30:00Z',
+      mainHeadCi: 'green',
+      mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+      openProgrammePrs: [],
+    },
     parentPlanQueueRows: {
       atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
@@ -77,6 +82,63 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
   return parsed.bundle;
 }
 
+describe('deriveConditions — fire-time status recompute (Codex round 6, probe-mandated)', () => {
+  it("fails a green snapshot contradicted by a failed CI run completed by the fire timestamp — the probe recomputes the fire-time status from main's CI runs", () => {
+    const contradicted = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'failure' }],
+        openProgrammePrs: [],
+      },
+    });
+    const result = deriveConditions(contradicted, 'fresh-claim');
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('fire-time');
+    }
+  });
+
+  it('fails a red snapshot whose runs all succeeded by the fire timestamp', () => {
+    const contradicted = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'red',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [],
+      },
+    });
+    expect(deriveConditions(contradicted, 'red-head-repair').kind).toBe('invalid');
+  });
+
+  it('fails when no CI run had completed by the fire timestamp — the status cannot be recomputed', () => {
+    const noRunsYet = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T03:00:00Z', conclusion: 'success' }],
+        openProgrammePrs: [],
+      },
+    });
+    expect(deriveConditions(noRunsYet, 'fresh-claim').kind).toBe('invalid');
+  });
+
+  it('ignores runs completed after the fire timestamp — a later failure does not rewrite the fire-time status', () => {
+    const laterFailure = bundle({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [
+          { completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' },
+          { completedAt: '2026-08-28T03:00:00Z', conclusion: 'failure' },
+        ],
+        openProgrammePrs: [],
+      },
+    });
+    expect(deriveConditions(laterFailure, 'fresh-claim').kind).toBe('derived');
+  });
+});
+
 describe('deriveConditions — governing path (T4)', () => {
   it('derives fresh-claim from a green head with no open non-draft programme PR', () => {
     const result = deriveConditions(bundle(), 'fresh-claim');
@@ -88,7 +150,12 @@ describe('deriveConditions — governing path (T4)', () => {
 
   it('leaves a preserved draft PR out of the drive derivation — draft status is fire-time evidence', () => {
     const withDraft = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 71, draft: true }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 71, draft: true }],
+      },
     });
     const result = deriveConditions(withDraft, 'fresh-claim');
     expect(result.kind).toBe('derived');
@@ -96,7 +163,12 @@ describe('deriveConditions — governing path (T4)', () => {
 
   it('derives drive from an open non-draft programme PR at fire time and fails a recorded fresh claim', () => {
     const withOpenPr = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -125,7 +197,12 @@ describe('deriveConditions — governing path (T4)', () => {
 
   it('derives red-head-repair only from a red head at fire time — a mislabel cannot shed the claim rows', () => {
     const redHead = bundle({
-      fireTime: { mainHeadCi: 'red', openProgrammePrs: [] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'red',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'failure' }],
+        openProgrammePrs: [],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -138,7 +215,12 @@ describe('deriveConditions — governing path (T4)', () => {
 
   it("derives a content-free drive's rows 7/20 condition from the drive pushes' own diffs", () => {
     const contentFree = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -238,7 +320,12 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
     const droveThenDeferred = bundle({
       deferralAt: '2026-08-28T10:00:00Z',
       contestEvidence: CONTEST,
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       pushes: [
         {
           prNumber: 75,
@@ -280,7 +367,12 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
     const pushedAfter = bundle({
       deferralAt: '2026-08-28T10:00:00Z',
       contestEvidence: CONTEST,
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       pushes: [
         {
           prNumber: 75,
@@ -361,7 +453,12 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
 
   it('fails a derived drive whose landed frontmatter shows a claim — rows 4/5 cannot be shed', () => {
     const droveAndClaimed = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       pushes: [
         {
           prNumber: 75,
@@ -381,14 +478,24 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
 
   it('fails a derived red-head repair whose landed frontmatter shows a claim', () => {
     const repairedAndClaimed = bundle({
-      fireTime: { mainHeadCi: 'red', openProgrammePrs: [] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'red',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'failure' }],
+        openProgrammePrs: [],
+      },
     });
     expect(deriveConditions(repairedAndClaimed, 'red-head-repair').kind).toBe('invalid');
   });
 
   it("counts the firing's own-PR pushes in the drive content condition — the atomic-slice and reviewer duties are unconditional", () => {
     const ownPrContent = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -434,7 +541,12 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
       expect(freshClaim.conditions.creationExercised).toBe(true);
     }
     const driveWithCreation = bundle({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       parentPlanQueueRows: {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
@@ -466,7 +578,12 @@ describe('deriveConditions — drive evidence binds to the governing programme P
           description: 'lease by Sardine turns Coral, unreleased',
         },
       ],
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
       pushes: [
         {
           prNumber: 99,

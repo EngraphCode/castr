@@ -18,7 +18,9 @@ import { parseEvidenceBundle } from './evidence-bundle.js';
 function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     fireTime: {
+      firedAt: '2026-08-28T02:30:00Z',
       mainHeadCi: 'green',
+      mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
       openProgrammePrs: [],
     },
     parentPlanQueueRows: {
@@ -84,7 +86,14 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
 
   it('rejects a fire-time head status outside green/red', () => {
     const result = parseEvidenceBundle(
-      rawBundle({ fireTime: { mainHeadCi: 'amber', openProgrammePrs: [] } }),
+      rawBundle({
+        fireTime: {
+          firedAt: '2026-08-28T02:30:00Z',
+          mainHeadCi: 'amber',
+          mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+          openProgrammePrs: [],
+        },
+      }),
     );
     expect(result.kind).toBe('invalid');
     if (result.kind === 'invalid') {
@@ -94,9 +103,56 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
 
   it('rejects an open programme PR without an explicit draft flag', () => {
     const result = parseEvidenceBundle(
-      rawBundle({ fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75 }] } }),
+      rawBundle({
+        fireTime: {
+          firedAt: '2026-08-28T02:30:00Z',
+          mainHeadCi: 'green',
+          mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+          openProgrammePrs: [{ number: 75 }],
+        },
+      }),
     );
     expect(result.kind).toBe('invalid');
+  });
+
+  it('rejects a fire-time snapshot missing its fire timestamp or CI run observations', () => {
+    for (const missing of ['firedAt', 'mainHeadCiRuns']) {
+      const fireTime: Record<string, unknown> = {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [],
+      };
+      delete fireTime[missing];
+      expect(parseEvidenceBundle(rawBundle({ fireTime })).kind).toBe('invalid');
+    }
+  });
+
+  it('rejects a CI run observation outside the closed shape', () => {
+    const withRun = (run: Record<string, unknown>): Record<string, unknown> => ({
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [run],
+        openProgrammePrs: [],
+      },
+    });
+    expect(
+      parseEvidenceBundle(
+        rawBundle(withRun({ completedAt: '2026-08-28T02:05:00Z', conclusion: 'cancelled' })),
+      ).kind,
+    ).toBe('invalid');
+    expect(
+      parseEvidenceBundle(rawBundle(withRun({ completedAt: 'not-a-time', conclusion: 'success' })))
+        .kind,
+    ).toBe('invalid');
+    expect(
+      parseEvidenceBundle(
+        rawBundle(
+          withRun({ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success', runId: 42 }),
+        ),
+      ).kind,
+    ).toBe('invalid');
   });
 
   it('rejects a push whose timestamp does not parse', () => {

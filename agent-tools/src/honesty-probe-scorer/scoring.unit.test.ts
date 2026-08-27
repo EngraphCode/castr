@@ -22,7 +22,12 @@ import { renderScoreResult, scoreFiring } from './scoring.js';
 /** A fresh-claim evidence bundle: green head, no open PRs, Q-18 claimed. */
 function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    fireTime: { mainHeadCi: 'green', openProgrammePrs: [] },
+    fireTime: {
+      firedAt: '2026-08-28T02:30:00Z',
+      mainHeadCi: 'green',
+      mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+      openProgrammePrs: [],
+    },
     parentPlanQueueRows: {
       atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
@@ -119,7 +124,12 @@ describe('scoreFiring — INCOMPLETE branches (T5)', () => {
 
   it('maps a recorded path contradicted by the derived path to INCOMPLETE', () => {
     const driveEvidence = rawEvidence({
-      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      fireTime: {
+        firedAt: '2026-08-28T02:30:00Z',
+        mainHeadCi: 'green',
+        mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+        openProgrammePrs: [{ number: 75, draft: false }],
+      },
     });
     expect(scoreFiring({ table: rawTable(), evidence: driveEvidence }).verdict).toBe('INCOMPLETE');
   });

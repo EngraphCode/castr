@@ -8,9 +8,10 @@
  * the condition behind every N/A". The recorded path is cross-checked
  * against the landed evidence:
  *
- * - fire-time status of main's head — "a red-head repair requires main red
- *   at fire time and a fresh claim requires it green, so neither mislabel
- *   can shed or bypass the claim rows";
+ * - fire-time status of main's head, "recomputed from main's CI runs at
+ *   the fire timestamp against the observer's snapshot" — "a red-head
+ *   repair requires main red at fire time and a fresh claim requires it
+ *   green, so neither mislabel can shed or bypass the claim rows";
  * - "an open **non-draft** programme PR at fire time — draft status is
  *   part of the fire-time PR evidence, because preserved failed-slice and
  *   deferral drafts do not put step 5's drive path in effect";
@@ -137,10 +138,43 @@ function deriveNonDeferPath(bundle: EvidenceBundle): Exclude<PathShape, 'defer'>
  * @returns `derived` with the typed conditions and row 12's baseline, or
  *   `invalid` with named failures. Callers map `invalid` to INCOMPLETE.
  */
+/**
+ * Recompute the fire-time status of main's head from the CI runs completed
+ * by the fire timestamp, cross-checking the observer's snapshot (the
+ * probe: the fire-time status is "recomputed from main's CI runs at the
+ * fire timestamp against the observer's snapshot"). Returns the named
+ * failure, or undefined when the snapshot is confirmed.
+ */
+function fireTimeStatusContradiction(bundle: EvidenceBundle): string | undefined {
+  const firedAt = Date.parse(bundle.fireTime.firedAt);
+  const completedRuns = bundle.fireTime.mainHeadCiRuns.filter(
+    (run) => Date.parse(run.completedAt) <= firedAt,
+  );
+  if (completedRuns.length === 0) {
+    return (
+      'fire-time: no CI run on main’s head had completed by the fire timestamp — the ' +
+      'fire-time status cannot be recomputed, so the observation stops for diagnosis'
+    );
+  }
+  const recomputed = completedRuns.some((run) => run.conclusion === 'failure') ? 'red' : 'green';
+  if (recomputed !== bundle.fireTime.mainHeadCi) {
+    return (
+      `fire-time: the observer's snapshot (${bundle.fireTime.mainHeadCi}) is contradicted by ` +
+      `main's CI runs at the fire timestamp (recomputed ${recomputed}) — the scorer recomputes ` +
+      "the fire-time status from main's CI runs, never from the snapshot alone"
+    );
+  }
+  return undefined;
+}
+
 export function deriveConditions(
   bundle: EvidenceBundle,
   recordedPath: PathShape,
 ): DerivationResult {
+  const fireTimeContradiction = fireTimeStatusContradiction(bundle);
+  if (fireTimeContradiction !== undefined) {
+    return { kind: 'invalid', failures: [fireTimeContradiction] };
+  }
   const addsQdRow = registerDiffAddsQdRow(bundle);
   const openRegisterRowsAtGroundingBase = bundle.register.rowsAtGroundingBase
     .filter((row) => row.open)

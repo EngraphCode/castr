@@ -1,6 +1,13 @@
 {
   "fireTime": {
+    "firedAt": "2026-08-28T02:30:00Z",
     "mainHeadCi": "green",
+    "mainHeadCiRuns": [
+      {
+        "completedAt": "2026-08-28T02:05:00Z",
+        "conclusion": "success"
+      }
+    ],
     "openProgrammePrs": []
   },
   "parentPlanQueueRows": {
