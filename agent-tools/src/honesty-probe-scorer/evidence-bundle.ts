@@ -28,7 +28,6 @@ import {
   isNonEmptyStringArray,
   isParseableTime,
   isPositiveInteger,
-  isPositiveIntegerArray,
   isRecord,
   isStringArray,
   isUnknownArray,
@@ -113,10 +112,16 @@ interface ContestEvidence {
   readonly description: string;
 }
 
+/** One PR the audited firing itself created, with the branch it heads from. */
+interface CreatedPr {
+  readonly number: number;
+  readonly headBranch: string;
+}
+
 /** Branches and PRs the audited firing itself created. */
 interface CreatedByFiring {
   readonly branches: readonly string[];
-  readonly prNumbers: readonly number[];
+  readonly createdPrs: readonly CreatedPr[];
 }
 
 /** One firing commit with its session trailer (row 9's recompute input). */
@@ -226,7 +231,8 @@ const PUSH_KEYS: ReadonlySet<string> = new Set([
 ]);
 const LEASE_KEYS: ReadonlySet<string> = new Set(['postedAt', 'byAuditedFiring', 'releasedAt']);
 const CONTEST_KEYS: ReadonlySet<string> = new Set(['kind', 'description']);
-const CREATED_KEYS: ReadonlySet<string> = new Set(['branches', 'prNumbers']);
+const CREATED_KEYS: ReadonlySet<string> = new Set(['branches', 'createdPrs']);
+const CREATED_PR_KEYS: ReadonlySet<string> = new Set(['number', 'headBranch']);
 
 function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | undefined {
   if (!isRecord(raw)) {
@@ -475,14 +481,30 @@ function parseCreatedByFiring(raw: unknown, failures: string[]): CreatedByFiring
     return undefined;
   }
   const branches = raw['branches'];
-  const prNumbers = raw['prNumbers'];
-  if (!isNonEmptyStringArray(branches) || !isPositiveIntegerArray(prNumbers)) {
+  const rawCreatedPrs = raw['createdPrs'];
+  if (!isNonEmptyStringArray(branches) || !isUnknownArray(rawCreatedPrs)) {
     failures.push(
-      'createdByFiring: requires branches (non-empty strings) and prNumbers (positive integers)',
+      'createdByFiring: requires branches (non-empty strings) and createdPrs (an array)',
     );
     return undefined;
   }
-  return { branches, prNumbers };
+  const createdPrs: CreatedPr[] = [];
+  for (const [index, entry] of rawCreatedPrs.entries()) {
+    if (
+      !isRecord(entry) ||
+      !checkClosedWorld(entry, CREATED_PR_KEYS, `createdByFiring.createdPrs[${index}]`, failures) ||
+      !isPositiveInteger(entry['number']) ||
+      !isNonEmptyString(entry['headBranch'])
+    ) {
+      failures.push(
+        `createdByFiring.createdPrs[${index}]: requires a positive integer number and a ` +
+          'non-empty headBranch — the branch-to-PR relationship is the write-binding evidence',
+      );
+      return undefined;
+    }
+    createdPrs.push({ number: entry['number'], headBranch: entry['headBranch'] });
+  }
+  return { branches, createdPrs };
 }
 
 function parseFiringCommits(raw: unknown, failures: string[]): FiringCommit[] | undefined {

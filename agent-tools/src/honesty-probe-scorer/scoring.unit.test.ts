@@ -43,7 +43,10 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     leaseComments: [],
     contestEvidence: [],
     triggerBranchPrefix: 'claude/',
-    createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
+    createdByFiring: {
+      branches: ['claude/q-18-slice'],
+      createdPrs: [{ number: 80, headBranch: 'claude/q-18-slice' }],
+    },
     deferralAt: null,
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },

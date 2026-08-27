@@ -41,7 +41,10 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     leaseComments: [],
     contestEvidence: [],
     triggerBranchPrefix: 'claude/',
-    createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
+    createdByFiring: {
+      branches: ['claude/q-18-slice'],
+      createdPrs: [{ number: 80, headBranch: 'claude/q-18-slice' }],
+    },
     deferralAt: null,
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
@@ -66,7 +69,9 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     expect(result.kind).toBe('valid');
     if (result.kind === 'valid') {
       expect(result.bundle.fireTime.mainHeadCi).toBe('green');
-      expect(result.bundle.createdByFiring.prNumbers).toEqual([80]);
+      expect(result.bundle.createdByFiring.createdPrs).toEqual([
+        { number: 80, headBranch: 'claude/q-18-slice' },
+      ]);
       expect(result.bundle.deferralAt).toBeNull();
     }
   });
@@ -250,7 +255,7 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
 
   it('rejects a blank branch name — an empty string cannot evidence creation', () => {
     const result = parseEvidenceBundle(
-      rawBundle({ createdByFiring: { branches: [''], prNumbers: [] } }),
+      rawBundle({ createdByFiring: { branches: [''], createdPrs: [] } }),
     );
     expect(result.kind).toBe('invalid');
   });
@@ -293,7 +298,9 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
 
   it('rejects a string element smuggled into prNumbers', () => {
     const result = parseEvidenceBundle(
-      rawBundle({ createdByFiring: { branches: [], prNumbers: ['83'] } }),
+      rawBundle({
+        createdByFiring: { branches: [], createdPrs: [{ number: '83', headBranch: 'x' }] },
+      }),
     );
     expect(result.kind).toBe('invalid');
   });

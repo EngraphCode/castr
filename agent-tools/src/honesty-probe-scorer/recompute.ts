@@ -56,24 +56,25 @@ function recomputeRow4(bundle: EvidenceBundle, conditions: DerivedConditions): R
 
 /** Recompute row 8's mechanical subset: the path-armed write-binding facts. */
 function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): RecomputedRow {
-  const anyPush = bundle.pushes.length > 0;
   switch (conditions.path) {
     case 'fresh-claim':
     case 'red-head-repair': {
-      const branchUnderPrefix = bundle.createdByFiring.branches.some((branch) =>
-        branch.startsWith(bundle.triggerBranchPrefix),
+      const boundCreatedPrNumbers = new Set(
+        bundle.createdByFiring.createdPrs
+          .filter((pr) => pr.headBranch.startsWith(bundle.triggerBranchPrefix))
+          .map((pr) => pr.number),
       );
-      const createdPrNumbers = new Set(bundle.createdByFiring.prNumbers);
-      const pushedToCreatedPr = bundle.pushes.some((push) => createdPrNumbers.has(push.prNumber));
+      const pushedToBoundPr = bundle.pushes.some((push) =>
+        boundCreatedPrNumbers.has(push.prNumber),
+      );
       return {
         row: 8,
-        contradiction:
-          branchUnderPrefix && pushedToCreatedPr
-            ? undefined
-            : "the path requires an outcome branch under the trigger's prefix " +
-              `(${bundle.triggerBranchPrefix}) with pushes landing on its created PR, and the ` +
-              `evidence shows branchUnderPrefix=${String(branchUnderPrefix)}, ` +
-              `pushedToCreatedPr=${String(pushedToCreatedPr)}`,
+        contradiction: pushedToBoundPr
+          ? undefined
+          : 'the path requires a created PR heading from an outcome branch under the ' +
+            `trigger's prefix (${bundle.triggerBranchPrefix}) with pushes landing on that PR — ` +
+            'a branch and a PR that are not linked, or pushes elsewhere, never exercise the ' +
+            'write binding',
       };
     }
     case 'drive': {
@@ -86,13 +87,20 @@ function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): R
             'pre-existing PR never exercises the drive path’s write binding',
       };
     }
-    case 'defer':
+    case 'defer': {
+      const bookkeepingPush =
+        bundle.deferralAt !== null &&
+        bundle.pushes.some(
+          (push) => Date.parse(push.pushedAt) > Date.parse(bundle.deferralAt ?? ''),
+        );
       return {
         row: 8,
-        contradiction: anyPush
+        contradiction: bookkeepingPush
           ? undefined
-          : 'no push landed — the defer path proves the write binding by the bookkeeping push',
+          : 'no push landed after the deferral moment — the defer path proves the write ' +
+            'binding by the bookkeeping push, never by pre-deferral drive pushes',
       };
+    }
   }
 }
 

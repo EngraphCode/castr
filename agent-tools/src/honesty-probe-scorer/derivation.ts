@@ -101,7 +101,7 @@ export function programmeDrivePushes(
 
 /** Whether the firing exercised branch/PR creation — evidence-derived on every path. */
 function creationExercised(bundle: EvidenceBundle): boolean {
-  return bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.prNumbers.length > 0;
+  return bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.createdPrs.length > 0;
 }
 
 /**

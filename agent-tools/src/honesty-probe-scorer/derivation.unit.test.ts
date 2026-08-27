@@ -48,7 +48,10 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
     leaseComments: [],
     contestEvidence: [],
     triggerBranchPrefix: 'claude/',
-    createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
+    createdByFiring: {
+      branches: ['claude/q-18-slice'],
+      createdPrs: [{ number: 80, headBranch: 'claude/q-18-slice' }],
+    },
     deferralAt: null,
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
@@ -104,7 +107,7 @@ describe('deriveConditions — governing path (T4)', () => {
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const asDrive = deriveConditions(withOpenPr, 'drive');
     expect(asDrive.kind).toBe('derived');
@@ -146,7 +149,7 @@ describe('deriveConditions — governing path (T4)', () => {
           changedTrackedPaths: [],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(contentFree, 'drive');
     expect(result.kind).toBe('derived');
@@ -179,7 +182,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
     const claimed = bundle({
       deferralAt: '2026-08-28T10:00:00Z',
       contestEvidence: CONTEST,
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
       pushes: [],
     });
     const result = deriveConditions(claimed, 'defer');
@@ -202,7 +205,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'pending' }],
       },
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
       pushes: [],
     });
     const result = deriveConditions(unclaimed, 'defer');
@@ -220,7 +223,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
         { postedAt: '2026-08-28T09:30:00Z', byAuditedFiring: true, releasedAt: null },
       ],
       pushes: [],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(leased, 'defer');
     expect(result.kind).toBe('derived');
@@ -242,7 +245,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(droveThenDeferred, 'defer');
     expect(result.kind).toBe('derived');
@@ -284,7 +287,7 @@ describe('deriveConditions — defer attachment conditions (T4)', () => {
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(pushedAfter, 'defer');
     expect(result.kind).toBe('derived');
@@ -347,7 +350,7 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(droveAndClaimed, 'drive');
     expect(result.kind).toBe('invalid');
@@ -394,7 +397,7 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
         atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
         afterLanding: [{ id: 'Q-18', status: 'completed' }],
       },
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
       pushes: [],
     });
     const result = deriveConditions(completedRow, 'defer');
@@ -452,7 +455,7 @@ describe('deriveConditions — drive evidence binds to the governing programme P
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(unrelatedPrPushes, 'defer');
     expect(result.kind).toBe('derived');
@@ -476,7 +479,7 @@ describe('deriveConditions — lease timing (Copilot round 1)', () => {
         { postedAt: '2026-08-28T11:00:00Z', byAuditedFiring: true, releasedAt: null },
       ],
       pushes: [],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     const result = deriveConditions(lateLease, 'defer');
     expect(result.kind).toBe('derived');

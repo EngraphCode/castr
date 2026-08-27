@@ -78,7 +78,12 @@
   "contestEvidence": [],
   "createdByFiring": {
     "branches": ["claude-auto/q-18-prompt-edit"],
-    "prNumbers": [83]
+    "createdPrs": [
+      {
+        "number": 83,
+        "headBranch": "claude-auto/q-18-prompt-edit"
+      }
+    ]
   },
   "deferralAt": null,
   "firingCommits": [

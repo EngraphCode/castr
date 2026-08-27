@@ -51,7 +51,10 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     leaseComments: [],
     contestEvidence: [],
     triggerBranchPrefix: 'claude-auto/',
-    createdByFiring: { branches: ['claude-auto/q-18-slice'], prNumbers: [83] },
+    createdByFiring: {
+      branches: ['claude-auto/q-18-slice'],
+      createdPrs: [{ number: 83, headBranch: 'claude-auto/q-18-slice' }],
+    },
     deferralAt: null,
     firingCommits: [
       { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
@@ -188,7 +191,7 @@ describe('recomputeRowContradictions — over-claims fail (review fold)', () => 
 
   it('contradicts row 8 TRUE when the firing created no branch or PR on a fresh claim', () => {
     const failures = contradictions(new Map(), {
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     });
     expect(failures.join('\n')).toContain('row 8');
   });
@@ -271,7 +274,7 @@ describe('recomputeRowContradictions — Codex round 1 (verified findings)', () 
           changedTrackedPaths: ['lib/src/example.ts'],
         },
       ],
-      createdByFiring: { branches: [], prNumbers: [] },
+      createdByFiring: { branches: [], createdPrs: [] },
     };
     expect(driveContradictions(table, unrelated).join('\n')).toContain('row 8');
     const governing = {
@@ -326,7 +329,10 @@ describe('recomputeRowContradictions — Codex round 1 (verified findings)', () 
 describe('recomputeRowContradictions — row 8 full path binding (Copilot round 1)', () => {
   it('contradicts row 8 on a fresh claim whose created branch is outside the trigger prefix', () => {
     const failures = contradictions(new Map(), {
-      createdByFiring: { branches: ['feature/wrong-prefix'], prNumbers: [83] },
+      createdByFiring: {
+        branches: ['feature/wrong-prefix'],
+        createdPrs: [{ number: 83, headBranch: 'feature/wrong-prefix' }],
+      },
     });
     expect(failures.join('\n')).toContain('row 8');
   });
@@ -342,6 +348,72 @@ describe('recomputeRowContradictions — row 8 full path binding (Copilot round 
         },
       ],
     });
+    expect(failures.join('\n')).toContain('row 8');
+  });
+});
+
+describe('recomputeRowContradictions — row 8 binding relation (Codex round 3)', () => {
+  it('contradicts row 8 when the prefixed branch and the created PR are not linked', () => {
+    const failures = contradictions(new Map(), {
+      createdByFiring: {
+        branches: ['claude-auto/empty-outcome'],
+        createdPrs: [{ number: 83, headBranch: 'feature/other-branch' }],
+      },
+    });
+    expect(failures.join('\n')).toContain('row 8');
+  });
+
+  it('contradicts row 8 on a defer whose only pushes predate the deferral — the bookkeeping push must follow it', () => {
+    const table = rawTable(
+      new Map<number, Record<string, unknown>>([
+        [4, { row: 4, token: 'NA', path: 'defer' }],
+        [5, { row: 5, token: 'NA', path: 'defer' }],
+        [7, { row: 7, token: 'NA', path: 'defer' }],
+        [19, { row: 19, token: 'NA', path: 'defer' }],
+        [20, { row: 20, token: 'NA', path: 'defer' }],
+      ]),
+    ) as { path: string; rows: Record<string, unknown>[] };
+    table.path = 'defer';
+    for (const row of table.rows) {
+      if (row['token'] === 'NA') {
+        row['path'] = 'defer';
+      }
+    }
+    const parsedEvidence = parseEvidenceBundle(
+      rawEvidence({
+        deferralAt: '2026-08-28T10:00:00Z',
+        contestEvidence: [{ kind: 'competing-open-pr', description: 'PR #85 by another identity' }],
+        parentPlanQueueRows: {
+          atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+          afterLanding: [{ id: 'Q-18', status: 'pending' }],
+        },
+        pushes: [
+          {
+            prNumber: 83,
+            prPreExistedFiring: false,
+            pushedAt: '2026-08-28T03:20:00Z',
+            changedTrackedPaths: ['lib/src/example.ts'],
+          },
+        ],
+        createdByFiring: { branches: [], createdPrs: [] },
+      }),
+    );
+    expect(parsedEvidence.kind).toBe('valid');
+    const parsedTable = parseVerdictTable(table);
+    expect(parsedTable.kind).toBe('valid');
+    if (parsedEvidence.kind !== 'valid' || parsedTable.kind !== 'valid') {
+      throw new Error('unreachable: defer fixture failed boundary validation');
+    }
+    const derivation = deriveConditions(parsedEvidence.bundle, parsedTable.table.path);
+    expect(derivation.kind).toBe('derived');
+    if (derivation.kind !== 'derived') {
+      throw new Error('unreachable: defer fixture failed derivation');
+    }
+    const failures = recomputeRowContradictions(
+      parsedTable.table,
+      parsedEvidence.bundle,
+      derivation.conditions,
+    );
     expect(failures.join('\n')).toContain('row 8');
   });
 });

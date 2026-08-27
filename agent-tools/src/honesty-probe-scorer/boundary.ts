@@ -26,14 +26,6 @@ export function isStringArray(value: unknown): value is readonly string[] {
   return isUnknownArray(value) && value.every((entry) => typeof entry === 'string');
 }
 
-/** Narrow to a readonly array of positive integers. */
-export function isPositiveIntegerArray(value: unknown): value is readonly number[] {
-  return (
-    isUnknownArray(value) &&
-    value.every((entry) => typeof entry === 'number' && Number.isInteger(entry) && entry > 0)
-  );
-}
-
 /** Narrow to a non-empty string — whitespace-only is empty (trimmed check). */
 export function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
