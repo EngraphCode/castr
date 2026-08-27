@@ -445,6 +445,40 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     }
   });
 
+  it('rejects a blank tracked-path entry — an empty path cannot evidence a content change', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        pushes: [
+          {
+            prNumber: 80,
+            prPreExistedFiring: false,
+            pushedAt: '2026-08-28T09:00:00Z',
+            changedTrackedPaths: ['  '],
+          },
+        ],
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+  });
+
+  it('rejects duplicate created-PR numbers — one PR cannot head from two branches', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        createdByFiring: {
+          branches: ['claude/q-18-slice', 'claude/other'],
+          createdPrs: [
+            { number: 80, headBranch: 'claude/q-18-slice' },
+            { number: 80, headBranch: 'claude/other' },
+          ],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('unique');
+    }
+  });
+
   it('rejects a string element smuggled into prNumbers', () => {
     const result = parseEvidenceBundle(
       rawBundle({

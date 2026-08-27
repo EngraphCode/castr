@@ -21,11 +21,6 @@ export function isUnknownArray(value: unknown): value is readonly unknown[] {
   return Array.isArray(value);
 }
 
-/** Narrow to a readonly string array. */
-export function isStringArray(value: unknown): value is readonly string[] {
-  return isUnknownArray(value) && value.every((entry) => typeof entry === 'string');
-}
-
 /** Narrow to a non-empty string — whitespace-only is empty (trimmed check). */
 export function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;

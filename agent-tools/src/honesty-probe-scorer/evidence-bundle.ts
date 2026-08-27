@@ -29,7 +29,6 @@ import {
   isParseableTime,
   isPositiveInteger,
   isRecord,
-  isStringArray,
   isUnknownArray,
 } from './boundary.js';
 
@@ -504,8 +503,11 @@ function parsePushes(raw: unknown, failures: string[]): FiringPush[] | undefined
       failures.push(`pushes[${index}].pushedAt: not a parseable timestamp`);
       return undefined;
     }
-    if (!isStringArray(entry['changedTrackedPaths'])) {
-      failures.push(`pushes[${index}].changedTrackedPaths: not a string array`);
+    if (!isNonEmptyStringArray(entry['changedTrackedPaths'])) {
+      failures.push(
+        `pushes[${index}].changedTrackedPaths: not an array of non-empty paths — a blank ` +
+          'entry cannot evidence a content change',
+      );
       return undefined;
     }
     pushes.push({
@@ -615,6 +617,12 @@ function parseCreatedByFiring(raw: unknown, failures: string[]): CreatedByFiring
       return undefined;
     }
     createdPrs.push({ number: entry['number'], headBranch: entry['headBranch'] });
+  }
+  if (new Set(createdPrs.map((pr) => pr.number)).size !== createdPrs.length) {
+    failures.push(
+      'createdByFiring.createdPrs: PR numbers must be unique — one PR cannot head from two branches',
+    );
+    return undefined;
   }
   return { branches, createdPrs };
 }
