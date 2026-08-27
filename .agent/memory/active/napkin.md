@@ -1589,3 +1589,76 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   reaches the estate unprompted, under the owner's credentials with the agent
   footer. Compliance note for the drain: the comment omitted the Practice name
   its own prompt mandates in the opening line.
+
+## 2026-08-27 (Slack Watcher stand-up, cloud session — Moon guards Solstice / c395cb)
+
+Owner commission: start-right-team + slack-watcher, stand up the channel monitor, then
+warm pause. Owner note applied verbatim: **peer agents are reached via Slack only — the
+local comms/claims/queue machinery is not the coordination surface for this session**
+(consistent with the 2026-08-25 single-agent cloud ceremony ruling; no claims registry
+seeded, no local comms events emitted, team-presence registration = the Slack intro).
+Works/doesn't-work log from the stand-up, as commissioned:
+
+- **Works:** `SLACK_WATCHER_CHANNEL_ID`/`SLACK_WATCHER_WORKSPACE` present in the cloud
+  env (`C0B9AQ2BK5E` / `engraph-workspace`); channel name resolved live as
+  `#remote-coding` (§2 config check passed). Identity CLI with explicit `--seed`
+  (session UUID `c395cb…`) → "Moon guards Solstice". Session renamed to the Practice
+  name via the claude-code-remote `set_session_title` tool. Slack MCP `read_channel`
+  (incl. `oldest`-windowed sweep), `send_message` (channel + threaded),
+  `create_canvas`/`read_canvas`/`update_canvas` all worked first try. Mantle takeover
+  resolved from channel history alone: Sage hunts Verdure held it (relief intro
+  `1787501758.228519`, 2026-08-23, session presumed reclaimed, no vacancy sign-off);
+  relief intro posted with the verbatim relieves phrase (`ts 1787833883.828679`); gap
+  sweep from Sage's last activity (`1787509014.532569`) found the window empty;
+  baseline set to my intro. `send_later` 15-min tick armed
+  (`trig_01ANN9SfGnMQyqKtN5noKv6y`) + independent hourly fallback cron
+  (`trig_01B1YrkvaFSnt9adVBBgqZ5J`, server-anchored to :32).
+- **Doesn't work: the Slack MCP surface has NO message-edit tool**, so the skill's
+  "EDIT the tenure status message every tick" deadman is unimplementable as written.
+  Cure used: a Slack **canvas** (`F0BT7TXQ3PW`) as the editable always-current tenure
+  status surface, anchored from the intro's threaded tenure-status reply. `candidate:`
+  slack-watcher SKILL amendment — name the canvas fallback (or per-tick threaded
+  replies) for surfaces without `chat.update`.
+- **Doesn't work (re-confirmed):** the SessionStart hook exports no Practice seed in
+  cloud sessions (`PRACTICE_AGENT_SESSION_ID_CLAUDE` empty) — hand-seeded per the
+  start-right fallback, matching Sage's 2026-08-23 observation.
+- **Unverified residual:** `create_trigger` warned the fallback trigger "stores no MCP
+  connectors"; whether a self-bind firing into this live session retains the Slack
+  tools is untested (NOTIFY-class exposure; the firing can still alert even if
+  Slack-blind). First fallback firing at 13:32Z answers it — check its transcript.
+- **Exit-criterion reading recorded in the intro:** the owner's "start a monitor, then
+  warm pause" commission is read as hold-the-watch-until-stood-down (else the
+  five-quiet-ticks default would kill a monitor on a 4-day-quiet channel within ~75
+  min of stand-up, defeating the commission). Owner can override in-channel or here.
+- **Doesn't work: event-driven Slack wake (owner asked mid-stand-up), measured not
+  assumed.** Three paths checked: (a) the Slack MCP surface has no
+  subscription/streaming/events tool — read/send/canvas only; (b) the shell holds NO
+  Slack credential (env sweep: only the two `SLACK_WATCHER_*` ids), so a persistent
+  Monitor script cannot even poll `conversations.history`, let alone stream — Slack
+  access exists solely at the MCP layer, which shell/Monitor processes cannot call;
+  (c) the Monitor tool's `ws` source could take Slack Socket Mode's `wss` stream for
+  genuine push wake, but Socket Mode needs an app-level `xapp-…` token, absent.
+  Timer-based `send_later`/cron is also the DURABLE choice: platform triggers live
+  server-side and survive container restarts; a Monitor dies with the container.
+  `candidate:` owner-level enabling work — add a Socket-Mode app token to the cloud
+  environment config, then a Watcher can arm `Monitor({ws})` for per-message wake
+  with the timer chain demoted to fallback.
+- **OWNER DIRECTION (2026-08-27, mid-stand-up): to enable full event-driven Slack
+  interactions we will need (1) a custom Slack app with appropriate permissions, and
+  (2) in-repo agent tooling that takes advantage of it as a background task that
+  prompts the agent.** This scopes the enabling work beyond the token-only candidate
+  above: the app is the owner-provisioned half (Socket Mode / Events API scopes on
+  the workspace), and the repo grows the consuming half — a background listener
+  (Monitor-armable process or equivalent) that turns Slack events into agent wakes.
+  Owner instructed this be written as a note only for now — not committed or pushed
+  in the same breath; it rides the napkin until the next continuity landing.
+- **Identity-derivation discrepancy, second measured instance (same class as
+  Flamebright/Lacustrine 2026-08-24):** the SessionStart hook fired on session
+  RESUME (not at open) and derived "Rocket binds Embers" from the true session id
+  prefix (`01Caxu`), while this seat had already registered "Moon guards Solstice"
+  from the scratchpad UUID seed (`c395cb`) at stand-up — the hook exports nothing at
+  cloud session OPEN, which is exactly when the Watcher intro needs the name.
+  Continued under the REGISTERED identity for tenure coherence (the Slack intro,
+  canvas, and tick chain all carry Moon guards Solstice). Strengthens the Q-15
+  seed-source gap: one canonical seed answer is needed, and it must be available at
+  session open, not first resume.
