@@ -99,9 +99,13 @@ via a live Watcher is the only cloud comms channel; single environment definitio
 `generator-first-mindset` on its fired second-instance trigger), and drained Q-012..Q-015
 from open-questions (the 2026-08-23 walk's verdicts live in the overhaul plan). At rest:
 napkin fresh; open-questions holds Q-016 (owner-gated architecture fork) only;
-pending-graduations holds three unfired-trigger items plus **verified-claims engineering,
-now owner-gated on its fired trigger** — the PDR-promotion decision is queued to the owner
-via the closeout notification. Next dedicated pass: not due until a fresh trigger.
+pending-graduations holds four trigger-gated items (verified-claims — **owner ruled
+2026-08-27: rides the W1 vision rewrite**; loop-closure; autonomous-programme;
+IR-versioning) plus the owner-gated PDR-056 cloud-channel extension offer. The owner's
+in-session probes then drove a correction cycle (comms-pause clause retired across the
+consolidate-docs canonical; four homing misses recovered — see the napkin's 2026-08-27
+entries). Session closed with a full wrap; landing PR: #70. Next dedicated pass: not due
+until a fresh trigger.
 
 **Session-completion consolidation completed this handoff — 2026-07-06 (Fragrant Twining Glade /
 5367e2, n=2 closeout owner).** Scope: the review-session capture batch routed to permanent homes

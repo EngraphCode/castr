@@ -92,6 +92,17 @@ trigger-condition: a second autonomous programme is stood up, or the owner direc
 graduation.
 status: pending.
 
+### PDR-056 cloud-seat channel-availability extension
+
+The 2026-08-27 ruling refinement (one agent per cloud instance; filesystem comms substrate
+absent by construction; Slack via a live Watcher is the working cloud channel) is landed as
+phenotype (commit skill + claims/comms rules) but not in the portable Core. Candidate
+permanent home: a small extension to **PDR-056** (inter-agent collaboration protocol) so the
+channel-availability fact travels with the Core. Core edits are owner-approved; the drafting
+offer was made in-session 2026-08-27 and not yet answered.
+`[captured: 2026-08-27 | source: consolidation session (Limpet guards Moorings), Core review step]`
+trigger-condition: owner approves (or declines) the extension. status: owner-gated.
+
 ### IR persistence schema-versioning policy → ADR
 
 Q-03 (2026-08-24 firing) landed hard version pinning at `serializeIR`/`deserializeIR`

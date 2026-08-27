@@ -56,6 +56,34 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   OCE-homed estate) and ADR-051 clause 7's carve-out reframing flag (owner's call, already
   recorded in the loop-review addendum) stay as flagged owner/estate items.
 
+## 2026-08-27 (closeout stack — Limpet guards Moorings / 01T962, part 2)
+
+- **Identity chimera, live worked instance on this very seat:** the SessionStart hook
+  (firing at the closeout resume) derives "Eagle herds Rainbow" from
+  `PRACTICE_AGENT_SESSION_ID_CLAUDE` while this seat registered "Limpet guards Moorings"
+  from the manually-seeded URL form `session_01T962…` — same session, same `01T962` prefix,
+  two names, because the derivation is **seed-form-sensitive** (env payload vs URL form).
+  Continued under the REGISTERED name per the PDR-027 precedent (one seat must not mint two
+  names mid-history). Confirms the equality plan's ID-1 cure shape exactly: one
+  seed-precedence rule with the type tag stripped, name always derived from the live seed.
+- **Free-play harvest (bounded, at closeout):** one seed kept — the estate's documented
+  failure classes keep firing live during the very passes that document them (semantic-merge
+  conflicts during merge-doctrine work; fluency during fluency documentation; the identity
+  chimera during the session that consolidated the chimera lesson) — "this estate is a
+  reflexive laboratory: its instruments trigger on themselves" (association, not finding).
+  One discard, visible: a moving-house/"misc box" analogy for the archive-conserves bias —
+  forced, added nothing beyond the recorded lesson. Concept-exploration: **no-run verdict**
+  per its own guard — every open item is a well-formed owner decision or a routed
+  candidate; nothing unshaped warrants the four-movement treatment. Reason: the only live
+  closeout decision (merge path for PR #70) is settled by standing condition-based policy —
+  direct execution, no analysis warranted.
+- **Wrap loss-scan bounds (for the successor):** the rotation's "already homed" claims were
+  verified by load-bearing SAMPLE, not exhaustively — treat archived-napkin landing claims
+  as claims. External-scrutiny error signature from this session: inherited text relayed as
+  current (comms pause), and invented dispositions ("archive conserves it") — point outside
+  eyes at deferral reasons and skip-justifications first. The PDR-056 extension offer is
+  conserved in pending-graduations (owner-gated), so no chat-only commitment remains.
+
 _Earlier entries rotated to keep the active napkin healthy as cross-session lessons graduate to [`distilled.md`](distilled.md) (conserved in archive, never trimmed):_
 _2026-03-25 → 2026-04-16 → [`archive/napkin-2026-03-to-04.md`](archive/napkin-2026-03-to-04.md) (2026-06-18);_
 _2026-06-04 → 2026-06-10 → [`archive/napkin-2026-06-04-to-10.md`](archive/napkin-2026-06-04-to-10.md) (2026-06-19);_
