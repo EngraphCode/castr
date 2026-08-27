@@ -243,6 +243,120 @@ describe('recomputeRowContradictions — over-claims fail (review fold)', () => 
   });
 });
 
+describe('recomputeRowContradictions — row 19 lease lifecycle (Codex round 7)', () => {
+  const row19True = new Map<number, Record<string, unknown>>([
+    [4, { row: 4, token: 'NA', path: 'drive' }],
+    [5, { row: 5, token: 'NA', path: 'drive' }],
+    [
+      19,
+      {
+        row: 19,
+        token: 'TRUE',
+        subClaim: { name: 'overlap-guard-read', token: 'UNVERIFIABLE_BOUNDED' },
+      },
+    ],
+  ]);
+  const driveEvidence = {
+    fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+    parentPlanQueueRows: {
+      atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+      afterLanding: [{ id: 'Q-18', status: 'pending' }],
+    },
+    pushes: [
+      {
+        prNumber: 75,
+        prPreExistedFiring: true,
+        pushedAt: '2026-08-28T03:20:00Z',
+        changedTrackedPaths: ['lib/src/example.ts'],
+      },
+    ],
+    createdByFiring: { branches: [], createdPrs: [] },
+  };
+
+  it('contradicts an applicable row 19 typed TRUE with no audited-firing lease observed', () => {
+    const failures = driveContradictions(rawTableForDrive(row19True), driveEvidence);
+    expect(failures.join('\n')).toContain('row 19');
+  });
+
+  it('supports TRUE when the audited firing posted and released its lease', () => {
+    const leased = {
+      ...driveEvidence,
+      leaseComments: [
+        {
+          postedAt: '2026-08-28T03:00:00Z',
+          byAuditedFiring: true,
+          releasedAt: '2026-08-28T04:00:00Z',
+        },
+      ],
+    };
+    expect(driveContradictions(rawTableForDrive(row19True), leased).join('\n')).not.toContain(
+      'row 19',
+    );
+  });
+
+  it('contradicts TRUE on a posted-but-unreleased lease — the row claims the two-sided lifecycle', () => {
+    const unreleased = {
+      ...driveEvidence,
+      leaseComments: [
+        { postedAt: '2026-08-28T03:00:00Z', byAuditedFiring: true, releasedAt: null },
+      ],
+    };
+    expect(driveContradictions(rawTableForDrive(row19True), unreleased).join('\n')).toContain(
+      'row 19',
+    );
+  });
+
+  it('permits PARTIAL on a posted-but-unreleased lease, and contradicts PARTIAL with no lease at all', () => {
+    const row19Partial = new Map<number, Record<string, unknown>>([
+      [4, { row: 4, token: 'NA', path: 'drive' }],
+      [5, { row: 5, token: 'NA', path: 'drive' }],
+      [
+        19,
+        {
+          row: 19,
+          token: 'PARTIAL',
+          gap: 'lease released only after the summary landed',
+          material: false,
+          act: 'enable decision',
+          subClaim: { name: 'overlap-guard-read', token: 'UNVERIFIABLE_BOUNDED' },
+        },
+      ],
+    ]);
+    const unreleased = {
+      ...driveEvidence,
+      leaseComments: [
+        { postedAt: '2026-08-28T03:00:00Z', byAuditedFiring: true, releasedAt: null },
+      ],
+    };
+    expect(
+      driveContradictions(rawTableForDrive(row19Partial), unreleased).join('\n'),
+    ).not.toContain('row 19');
+    expect(driveContradictions(rawTableForDrive(row19Partial), driveEvidence).join('\n')).toContain(
+      'row 19',
+    );
+  });
+
+  it('ignores a foreign lease — only the audited firing’s own comments evidence its duty', () => {
+    const foreignOnly = {
+      ...driveEvidence,
+      leaseComments: [
+        {
+          postedAt: '2026-08-28T03:00:00Z',
+          byAuditedFiring: false,
+          releasedAt: '2026-08-28T04:00:00Z',
+        },
+      ],
+    };
+    expect(driveContradictions(rawTableForDrive(row19True), foreignOnly).join('\n')).toContain(
+      'row 19',
+    );
+  });
+
+  it('leaves an N/A row 19 untouched on the fresh-claim path — the duty never attached', () => {
+    expect(contradictions(new Map(), {}).join('\n')).not.toContain('row 19');
+  });
+});
+
 describe('recomputeRowContradictions — Codex round 1 (verified findings)', () => {
   it('contradicts row 8 on a drive whose pushes bind to an unrelated pre-existing PR, not the governing programme PR', () => {
     const driveTable = new Map<number, Record<string, unknown>>([

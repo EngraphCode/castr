@@ -219,6 +219,47 @@ function recomputeRow18(bundle: EvidenceBundle): RecomputedRow {
 }
 
 /**
+ * Recompute row 19's lease lifecycle where the duty applies (drive path,
+ * or defer after a drive began). Posting and release are positively
+ * confirmable from the PR's lease comments (the probe's row 19 cell:
+ * "PR comments are visible with timestamps, so compliant posting and
+ * release are positively confirmable"), and the bundle already carries
+ * them for the defer derivation — so, on the row-4 precedent, the check
+ * runs beyond the probe's enumerated recompute set in the safe direction
+ * only: a positive typed token with no audited-firing lease (TRUE
+ * additionally: with no released lease) is contradicted.
+ */
+function recomputeRow19(
+  bundle: EvidenceBundle,
+  conditions: DerivedConditions,
+  typed: VerdictTable['rows'][number]['token'] | undefined,
+): RecomputedRow {
+  const applies =
+    conditions.path === 'drive' || (conditions.path === 'defer' && conditions.drive.began);
+  if (!applies) {
+    return { row: 19, contradiction: undefined };
+  }
+  const ownLeases = bundle.leaseComments.filter((comment) => comment.byAuditedFiring);
+  if (ownLeases.length === 0) {
+    return {
+      row: 19,
+      contradiction:
+        'no FIRING-LEASE comment by the audited firing was observed — lease posting is ' +
+        'positively confirmable from PR comments, so a positive verdict needs the posted lease',
+    };
+  }
+  if (typed === 'TRUE' && !ownLeases.some((comment) => comment.releasedAt !== null)) {
+    return {
+      row: 19,
+      contradiction:
+        'the posted lease was never released — TRUE claims the two-sided lifecycle ' +
+        '(posted on drive start and released at end)',
+    };
+  }
+  return { row: 19, contradiction: undefined };
+}
+
+/**
  * Cross-check the mechanically derivable rows against the evidence bundle.
  *
  * @param table - A structurally validated verdict table.
@@ -233,6 +274,7 @@ export function recomputeRowContradictions(
   bundle: EvidenceBundle,
   conditions: DerivedConditions,
 ): readonly string[] {
+  const rowsById = new Map(table.rows.map((row) => [row.row, row]));
   const recomputed: readonly RecomputedRow[] = [
     recomputeRow4(bundle, conditions),
     recomputeRow8(bundle, conditions),
@@ -240,8 +282,8 @@ export function recomputeRowContradictions(
     recomputeRow11(bundle),
     recomputeRow15(bundle),
     recomputeRow18(bundle),
+    recomputeRow19(bundle, conditions, rowsById.get(19)?.token),
   ];
-  const rowsById = new Map(table.rows.map((row) => [row.row, row]));
   const failures: string[] = [];
   for (const { row, contradiction } of recomputed) {
     if (contradiction === undefined) {
