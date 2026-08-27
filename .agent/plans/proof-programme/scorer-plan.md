@@ -101,7 +101,7 @@ execution record beside the invocation.
 - The landing PR carries red-first evidence and passes the full gate chain —
   `repo-safe`: pre-push `check:ci`; PR CI green.
 
-## Completion record — the Bluebell Q1 tabletop (T6, 2026-08-28)
+## Completion record — the Bluebell Q1 tabletop (T6, 2026-08-27)
 
 Both synthetic transcripts live as fixtures at
 `agent-tools/src/honesty-probe-scorer/fixtures/` and score end-to-end in

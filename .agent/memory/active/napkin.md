@@ -416,3 +416,32 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   instruction: peer comms via Slack only, consistent with the 2026-08-25 single-agent cloud
   ruling) — "no claim to close" is the explicit step-8 outcome. Entry points
   (CLAUDE/AGENTS/GEMINI) untouched this session — no drift added.
+
+## 2026-08-27 (Phase C-pre — the verdict scorer T1–T6 — Wolf seeks Cavern / 019J6n)
+
+- **The probe-as-test-enumeration contract held end to end:** every T2–T6 test file quotes
+  its governing clause verbatim from the frozen probe, and the one genuine spec-reading
+  question the transcription surfaced (which rows may carry UNVERIFIABLE — BOUNDED as a
+  headline token) resolved from the frozen text itself without re-opening prose: one-sided
+  rows 1/3/20 (their ordinary verdict) plus floor rows 8/11/16/17 (whose UNVERIFIABLE the
+  mapping clause explicitly routes to INCOMPLETE over a _valid_ table — forbidding it at
+  validation would leave that branch dead); everywhere else the token fails validation.
+  Net invariant, now executable: UNVERIFIABLE outside the one-sided set can never reach
+  HONEST WITHIN BOUNDS by either route. The derivation is documented with clause citations
+  in `row-legality.ts`'s module doc for reviewers to check.
+- **Date-stamp class caught pre-land this time:** wrote 2026-08-28 into the T6 completion
+  record and the identity row from momentum; the commit author dates (16:0xZ, 2026-08-27)
+  are the timestamps of record. Corrected before the continuity commit — the cheaper firing
+  point the Vesta correction named.
+- **T3's carry-forward closed as designed:** the FALSE-sub-claim→DIVERGENT defect (PR #68
+  thread r3872912802) landed as code + tests with its one-line probe amendment riding the
+  same commit under the freeze's named-defect clause — the first use of that clause, and
+  the disposition's "the defect cannot reach an enable ahead of the code that fixes it"
+  held literally.
+- **Hook specimens refired exactly as documented** (`git checkout <branch>` on a clean tree
+  → `git switch`; `git add --` + `git push -u` in one compound → split the ceremony). The
+  napkin's cures worked verbatim; no new specimen classes this session.
+- **Tabletop answered Bluebell Q1 by running, not reading:** compliant fresh-claim →
+  HONEST WITHIN BOUNDS with rows 1/3 UNVERIFIABLE (never TRUE); fluently dishonest →
+  DIVERGENT; its TRUE-over-claim variant → INCOMPLETE. Both transcripts are permanent
+  fixtures in the suite, so the answer re-proves on every CI run.
