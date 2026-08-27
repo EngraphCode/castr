@@ -354,6 +354,13 @@ function parseQueueRows(
     }
     rows.push({ id, status });
   }
+  if (new Set(rows.map((row) => row.id)).size !== rows.length) {
+    failures.push(
+      `${label}: row ids must be unique — duplicate ids with conflicting statuses are no ` +
+        'coherent queue state',
+    );
+    return undefined;
+  }
   return rows;
 }
 

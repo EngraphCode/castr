@@ -210,6 +210,24 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     );
   });
 
+  it('rejects duplicate queue-row ids within a snapshot — conflicting statuses are no coherent queue state', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        parentPlanQueueRows: {
+          atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+          afterLanding: [
+            { id: 'Q-18', status: 'pending' },
+            { id: 'Q-18', status: 'completed' },
+          ],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('unique');
+    }
+  });
+
   it('rejects a queue-row state missing its id or status', () => {
     const result = parseEvidenceBundle(
       rawBundle({
