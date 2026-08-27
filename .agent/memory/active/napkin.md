@@ -1593,25 +1593,34 @@ Works/doesn't-work log from the stand-up, as commissioned:
 ## 2026-08-27 (PR #69 review drive + merge — Moon guards Solstice / c395cb, continued)
 
 - **Authority-machinery review convergence re-measured on the consolidation-routine
-  template: five rounds, five REAL distinct defect classes, then round six was the
-  non-convergence tell.** Real: (1) no-op trigger checklist was a private subset of
-  consolidate-docs's canonical sources; (2) "Done means" narrowed
-  consolidate-until-done's completion contract; (3) firing stack omitted the
+  template: five rounds, SEVEN real distinct fixes, then round six was the
+  non-convergence tell** (count corrected from five at PR #71 round 1 — the first
+  list omitted two of round 1/3's fixes). Real: (1) no cross-firing exit criterion
+  — cured by recording the owner-authority override per
+  `loop-exit-criteria-required` §Owner Authority; (2) no-op trigger checklist was a
+  private subset of consolidate-docs's canonical sources; (3) "Done means" narrowed
+  consolidate-until-done's completion contract; (4) firing stack omitted the
   mandatory cloud-session skills (`engraph-plan`/`engraph-proportionality`, owner
-  ruling 2026-08-26); (4) no per-firing duration bound / overlap deferral (the
-  measured I-1 collision class); (5) head-recency used as a liveness signal where
-  the pattern requires the observable FIRING-LEASE (`silence-is-never-liveness`).
+  ruling 2026-08-26); (5) the no-op exit bypassed `session-handoff`'s
+  scheduled-firing closeout; (6) no per-firing duration bound / overlap deferral
+  (the measured I-1 collision class); (7) head-recency used as a liveness signal
+  where the pattern requires the observable FIRING-LEASE
+  (`silence-is-never-liveness`).
   Every one verified against the cited authority BEFORE complying; all fixed with
   the live Routine's stored prompt updated in lockstep each time. Re-proves the
   2026-08-22 lesson: authority text has a bounded defect surface — enumerate it
   deliberately up front instead of letting a reviewer walk it one round per push.
 - **New review-bot failure specimen: a re-raise on a FABRICATED commit SHA.**
   Codex round 6 re-raised the already-rejected commit-bundling claim citing "fresh
-  evidence in `5b63e55f`" — `git cat-file -t` says no such object exists anywhere
-  in the repo. Cure applied: reject with the falsifying probe, resolve, and invoke
-  the recorded convergence cap for the class (reopen only on a verifiable SHA).
-  Sharper form of verify-the-reviewer's-warrant: verify a bot-cited SHA exists
-  before even reading its argument.
+  evidence in `5b63e55f`" — `git cat-file -t` found no such object in the local
+  clone, and a repository-level check corroborated it (Copilot's independent
+  GitHub lookup also found the SHA absent; scope correction from PR #71 round 1:
+  cat-file alone proves only LOCAL absence — a shallow or partial clone can lack
+  valid remote commits, so the void verdict needs the remote-level check too).
+  Cure applied: reject with the falsifying probes, resolve, and invoke the
+  recorded convergence cap for the class (reopen only on a verifiable SHA).
+  Sharper form of verify-the-reviewer's-warrant: verify a bot-cited SHA exists —
+  locally AND at the remote — before even reading its argument.
 - **One rejection was owed to measurement, not argument:** the round-4 "split the
   Routine change from the continuity landing" claim fell to
   `git log --name-only origin/main..HEAD` showing every commit single-file — the

@@ -147,10 +147,13 @@ edit-capable surface (either confirms or retires the fallback shape). status: pe
 ### Verify a bot-cited SHA exists before reading its argument
 
 PR #69 round 6: a review bot re-raised an already-rejected finding citing "fresh evidence in
-`5b63e55f`" — a commit that does not exist anywhere in the repository (`git cat-file -t`
-fails). Sharpens verify-the-reviewer's-warrant: for any bot finding whose evidence is a
-commit SHA, `git cat-file -t <sha>` FIRST; a nonexistent object voids the finding and is the
-non-convergence signal that invokes the review cap. Candidate permanent home: a sharpening of
+`5b63e55f`" — a commit absent from the local clone (`git cat-file -t` fails) AND from the
+repository remote (independent GitHub lookup, PR #71 round 1). Sharpens
+verify-the-reviewer's-warrant: for any bot finding whose evidence is a commit SHA, check
+`git cat-file -t <sha>` first, then confirm at the repository level (`git fetch origin
+<sha>` or a GitHub commit lookup) before voiding — cat-file alone proves only local absence,
+and a shallow or partially-fetched clone can lack valid remote commits. Only the combined
+absence voids the finding and invokes the review cap. Candidate permanent home: a sharpening of
 the review-bot convergence-cap doctrine (ADR-051 clause 4 family / the
 autonomous-background-programme pattern item 8) or `verify-dont-trust`.
 `[captured: 2026-08-27 | source: napkin (PR #69 review-drive entry) + PR #69 thread r3872515171]`

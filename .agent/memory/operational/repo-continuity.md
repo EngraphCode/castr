@@ -95,14 +95,9 @@ Routine (first firing 2026-08-28 ~06:08 UTC; fresh session per firing; prompt ru
 consolidate-docs trigger checklist and consolidate-until-done in full). The 2026-08-25 due
 triggers below (capture batch + napkin rotation cadence) plus this session's fresh capture
 (Watcher stand-up works/doesn't-work log, PR #69 review-drive lessons) are that Routine's
-first workload; no separate dedicated pass needs scheduling by hand.
-
-**Prior status (2026-08-25, Sardine turns Coral / 01QpYc): due — fresh capture batch.** The napkin
-carries unconsolidated owner rulings from 2026-08-23..25 (ceremony-skip for single-agent cloud
-sessions — its graduation register entry is marked `due`; the QD-7/QD-8 doctrine landings; the
-account-portability arc's lessons), and the pending-graduations register now holds a
-fired-trigger item. Not escalated at this close: the session was an owner-redirected scheduled
-firing operating under the wrap's duration bound; the next dedicated pass picks this up. (The napkin rotation-cadence trigger recorded by the Q-04 firing further down this section stands alongside this capture-batch trigger — one consolidation pass serves both.)
+first workload (the 2026-08-25 due triggers: the unconsolidated 2026-08-23..25 owner-ruling
+capture batch, the fired-trigger register item, and the napkin rotation-cadence signal); no
+separate dedicated pass needs scheduling by hand.
 
 **Session-completion consolidation completed this handoff — 2026-07-06 (Fragrant Twining Glade /
 5367e2, n=2 closeout owner).** Scope: the review-session capture batch routed to permanent homes

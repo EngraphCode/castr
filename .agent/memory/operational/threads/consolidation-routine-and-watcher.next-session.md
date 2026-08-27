@@ -6,9 +6,9 @@ record carries only the repo-side state).
 
 ## Participating agent identities (PDR-027, additive)
 
-| platform    | model          | agent_name           | session_id_prefix | role                     | last_session |
-| ----------- | -------------- | -------------------- | ----------------- | ------------------------ | ------------ |
-| claude-code | claude-fable-5 | Moon guards Solstice | c395cb            | watcher + routine author | 2026-08-27   |
+| platform    | model          | agent_name           | id                                     | session_id_prefix | role                     | first_session | last_session |
+| ----------- | -------------- | -------------------- | -------------------------------------- | ----------------- | ------------------------ | ------------- | ------------ |
+| claude-code | claude-fable-5 | Moon guards Solstice | `6f147296-2a3b-5a5f-bb69-648f27bcbb8b` | c395cb            | watcher + routine author | 2026-08-27    | 2026-08-27   |
 
 ## Lane state
 
