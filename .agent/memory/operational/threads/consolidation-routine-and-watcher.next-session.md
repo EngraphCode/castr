@@ -31,7 +31,7 @@ record carries only the repo-side state).
   retains connector tools end-to-end until the first real firing lands
   something (first firing due 2026-08-28 ~06:08 UTC; its completion push is
   the check). Event-driven Slack wake needs the owner-scoped custom Slack app
-  - in-repo listener tooling (napkin 2026-08-27 owner direction).
+  plus in-repo listener tooling (napkin 2026-08-27 owner direction).
 - **Next safe step**: none required — the Routine self-manages; the owner
   reads its completion pushes. A future Watcher stand-up follows the
   `slack-watcher` skill from the vacancy sign-off's sweep boundary.
