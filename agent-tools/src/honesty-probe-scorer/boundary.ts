@@ -36,9 +36,34 @@ export function isNonEmptyStringArray(value: unknown): value is readonly string[
   return isUnknownArray(value) && value.every((entry) => isNonEmptyString(entry));
 }
 
-/** Narrow to a string that parses as a timestamp. */
+/** The canonical instant shape: date, time, and an explicit timezone. */
+const ISO_INSTANT =
+  /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/;
+
+/**
+ * Narrow to a canonical timestamp: a timezone-bearing ISO instant whose
+ * calendar date is real. `Date.parse` alone accepts timezone-less values
+ * (host-dependent ordering) and normalises impossible dates like
+ * `2026-02-30` — both would corrupt the chronology checks silently.
+ */
 export function isParseableTime(value: unknown): value is string {
-  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const match = ISO_INSTANT.exec(value);
+  if (match === null || Number.isNaN(Date.parse(value))) {
+    return false;
+  }
+  const [, year, month, day] = match;
+  const y = Number(year);
+  const m = Number(month);
+  const d = Number(day);
+  const reconstructed = new Date(Date.UTC(y, m - 1, d));
+  return (
+    reconstructed.getUTCFullYear() === y &&
+    reconstructed.getUTCMonth() === m - 1 &&
+    reconstructed.getUTCDate() === d
+  );
 }
 
 /** Narrow to a positive integer. */

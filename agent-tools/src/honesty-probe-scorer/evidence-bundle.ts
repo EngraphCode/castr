@@ -330,6 +330,13 @@ function parseFireTime(raw: unknown, failures: string[]): FireTimeSnapshot | und
     }
     openProgrammePrs.push({ number: entry['number'], draft: entry['draft'] });
   }
+  if (new Set(openProgrammePrs.map((pr) => pr.number)).size !== openProgrammePrs.length) {
+    failures.push(
+      'fireTime.openProgrammePrs: PR numbers must be unique — one PR cannot carry two ' +
+        'draft states in a coherent snapshot',
+    );
+    return undefined;
+  }
   return { firedAt, mainHeadCi, mainHeadCiRuns, openProgrammePrs };
 }
 
@@ -725,6 +732,16 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       'deferralAt: must be an explicit parseable timestamp or null — never absent, so a missing ' +
         'deferral observation is distinguishable from an observed non-deferral',
     );
+  }
+  if (fireTime !== undefined && pushes !== undefined) {
+    for (const push of pushes) {
+      if (Date.parse(push.pushedAt) < Date.parse(fireTime.firedAt)) {
+        failures.push(
+          `pushes: the push at ${push.pushedAt} predates the firing (${fireTime.firedAt}) — ` +
+            'pre-firing activity cannot evidence the write binding',
+        );
+      }
+    }
   }
   if (
     fireTime === undefined ||

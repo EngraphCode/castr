@@ -156,6 +156,58 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     ).toBe('invalid');
   });
 
+  it('rejects duplicate PR numbers in the fire-time snapshot — one PR cannot be both draft and non-draft', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        fireTime: {
+          firedAt: '2026-08-28T02:30:00Z',
+          mainHeadCi: 'green',
+          mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+          openProgrammePrs: [
+            { number: 75, draft: true },
+            { number: 75, draft: false },
+          ],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('unique');
+    }
+  });
+
+  it('rejects non-canonical timestamps — impossible dates and timezone-less instants never enter the chronology', () => {
+    expect(parseEvidenceBundle(rawBundle({ deferralAt: '2026-02-30T10:00:00Z' })).kind).toBe(
+      'invalid',
+    );
+    expect(parseEvidenceBundle(rawBundle({ deferralAt: '2026-08-28T10:00:00' })).kind).toBe(
+      'invalid',
+    );
+    expect(parseEvidenceBundle(rawBundle({ deferralAt: 'August 28, 2026' })).kind).toBe('invalid');
+    expect(parseEvidenceBundle(rawBundle({ deferralAt: '2026-08-28T10:00:00+01:00' })).kind).toBe(
+      'valid',
+    );
+  });
+
+  it('rejects a push timestamped before the firing — pre-firing activity cannot evidence the write binding', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        pushes: [
+          {
+            prNumber: 80,
+            prPreExistedFiring: false,
+            pushedAt: '2026-08-28T01:00:00Z',
+            changedTrackedPaths: ['lib/src/example.ts'],
+          },
+        ],
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('predates');
+    }
+  });
+
   it('rejects a push whose timestamp does not parse', () => {
     const result = parseEvidenceBundle(
       rawBundle({
