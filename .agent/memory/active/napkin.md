@@ -1563,3 +1563,17 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   an output is owed, verify the generating procedure actually ran. Unresolved
   evidence: whether earlier sessions' no-run verdicts hid the same shape is
   unmeasured — a drain-time audit question, not settled here.
+- **Owner corrections at close (second pair): "Work is only safe when pushed and
+  part of a PR" and "stop using timers, monitor events."** Both checked firsthand:
+  every push this session went to PR #68's head branch (PR read confirms head ref =
+  the designated branch, head SHA = local tip, tree clean and in sync — nothing
+  landed outside a PR); the timer habit, though, violated the estate's own
+  `use-monitor-for-event-driven-wake` rule — the PR-activity subscription and the
+  armed check-in trigger were already the wake path, and polling beside them is the
+  same substitution class as narrated aggregation: the seat holding open what the
+  machinery already carries. For a firing this is duration-bound poison; ending the
+  turn and waking on events is the designed shape. Merge-tail exit criterion
+  re-affirmed while folding this: rounds on this PR have long exceeded the ADR-051
+  clause 4 cap, so a further round that reshapes the scoring class again takes the
+  recorded carry-forward disposition, not another fix cycle; otherwise the track
+  terminates at merge-on-green under the standing conditions.
