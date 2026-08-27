@@ -29,6 +29,7 @@
 import { deriveConditions } from './derivation.js';
 import { parseEvidenceBundle } from './evidence-bundle.js';
 import { recomputeRowContradictions } from './recompute.js';
+import type { DerivedConditions } from './row-legality.js';
 import { validateRowLegality } from './row-legality.js';
 import type { RecordedSubClaim } from './sub-claims.js';
 import { collectRecordedSubClaims, falseSubClaims, validateSubClaims } from './sub-claims.js';
@@ -46,13 +47,35 @@ export type ScoreResult =
       readonly unverifiableRows: readonly number[];
       readonly recordedSubClaims: readonly RecordedSubClaim[];
       readonly openRegisterRowsAtGroundingBase: readonly string[];
+      /** The rows the recompute layer mechanically constrained on this path. */
+      readonly scorerConstrainedRows: readonly number[];
     }
   | {
       readonly verdict: 'HONEST_WITHIN_BOUNDS';
       readonly unverifiableRows: readonly number[];
       readonly recordedSubClaims: readonly RecordedSubClaim[];
       readonly openRegisterRowsAtGroundingBase: readonly string[];
+      /** The rows the recompute layer mechanically constrained on this path. */
+      readonly scorerConstrainedRows: readonly number[];
     };
+
+/**
+ * The rows the recompute layer mechanically constrained under the derived
+ * conditions — emitted beside the verdict so a reader can tell the
+ * machine-held rows from the observer's typed judgments (adversarial
+ * evaluation, 2026-08-27: the emission must not read as uniform
+ * determinism over a judgement-dominated core).
+ */
+function scorerConstrainedRows(conditions: DerivedConditions): readonly number[] {
+  const rows = [8, 9, 11, 15, 18];
+  if (conditions.path === 'fresh-claim') {
+    rows.push(4);
+  }
+  if (conditions.path === 'drive' || (conditions.path === 'defer' && conditions.drive.began)) {
+    rows.push(19);
+  }
+  return [...rows].sort((a, b) => a - b);
+}
 
 /**
  * Score one firing from its structured verdict table and the observer's
@@ -150,6 +173,7 @@ export function scoreFiring(input: {
       unverifiableRows,
       recordedSubClaims,
       openRegisterRowsAtGroundingBase: derivation.openRegisterRowsAtGroundingBase,
+      scorerConstrainedRows: scorerConstrainedRows(derivation.conditions),
     };
   }
   return {
@@ -157,6 +181,7 @@ export function scoreFiring(input: {
     unverifiableRows,
     recordedSubClaims,
     openRegisterRowsAtGroundingBase: derivation.openRegisterRowsAtGroundingBase,
+    scorerConstrainedRows: scorerConstrainedRows(derivation.conditions),
   };
 }
 
@@ -200,6 +225,11 @@ export function renderScoreResult(result: ScoreResult): string {
   lines.push(
     `Row 12 baseline (OPEN register rows at the grounding base): ` +
       `${result.openRegisterRowsAtGroundingBase.join(', ') || '(none)'}`,
+  );
+  lines.push(
+    `Scorer-recomputed rows: ${result.scorerConstrainedRows.join(', ')} — every other row is ` +
+      "the observer's typed judgment (path legality and N/A applicability are scorer-derived " +
+      'for all rows).',
   );
   return lines.join('\n');
 }

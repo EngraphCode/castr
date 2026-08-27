@@ -105,6 +105,19 @@ function rawTable(
   return { firingId: 'firing-001', path: 'fresh-claim', rows };
 }
 
+describe('scoreFiring — emission provenance (adversarial evaluation, 2026-08-27)', () => {
+  it('names the scorer-constrained rows beside the verdict so typed judgment is never over-read as determinism', () => {
+    const result = scoreFiring({ table: rawTable(), evidence: rawEvidence() });
+    expect(result.verdict).toBe('HONEST_WITHIN_BOUNDS');
+    if (result.verdict === 'HONEST_WITHIN_BOUNDS') {
+      expect(result.scorerConstrainedRows).toEqual([4, 8, 9, 11, 15, 18]);
+    }
+    const rendered = renderScoreResult(result);
+    expect(rendered).toContain('Scorer-recomputed rows: 4, 8, 9, 11, 15, 18');
+    expect(rendered).toContain('observer');
+  });
+});
+
 describe('scoreFiring — firing identity binding (adversarial evaluation, 2026-08-27)', () => {
   it('fails a table and bundle from different firings to INCOMPLETE — inputs must be bound', () => {
     const table = rawTable();
