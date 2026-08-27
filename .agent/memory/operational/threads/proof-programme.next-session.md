@@ -35,6 +35,7 @@ programme's delivery evidence rather than retro-filled here.)
 | Sardine turns Coral            | e079be76-3221-5c13-aa9c-42c33dfa14fa | claude-code | claude-fable-5 | 01QpYc            | owner-redirected firing (account-portability landing) | 2026-08-25    | 2026-08-25   |
 | Nettle wakes Topsoil           | de57ab0b-1960-5d55-910a-fa887b4993bc | claude-code | claude-fable-5 | 01KKh2            | commissioned arming reviewer (fresh-session review)   | 2026-08-25    | 2026-08-25   |
 | Breeze weaves Contrail         | ea6fba19-fcf8-5841-b6a1-56c7d42ddd4d | claude-code | claude-fable-5 | 0132gL            | arming-walk executor (owner-attended)                 | 2026-08-26    | 2026-08-26   |
+| Vesta turns Singularity        | f5b4dfc2-acaa-5c8c-bcc5-da63553f07ee | claude-code | claude-fable-5 | 01PjGS            | routine-configuration seat (owner-attended)           | 2026-08-27    | 2026-08-27   |
 
 ## Next-session landing target
 
@@ -155,7 +156,7 @@ trigger's stored-prompt paragraph still names `start-right-quick`; the
 thorough ruling lives in routine-prompt step 3, which the firing follows —
 the owner may align the trigger word at leisure (agent trigger edits were
 owner-denied this walk; the trigger is owner-territory).~~ SUPERSEDED
-2026-08-26 (routine-configuration session, Vesta turns Singularity): the
+2026-08-27 (routine-configuration session, Vesta turns Singularity): the
 owner authorised targeted minimal trigger edits for this act ("You can
 edit the trigger as long as you keep the changes targeted and minimal and
 report them"), and the stored-prompt skills paragraph now names
@@ -164,6 +165,34 @@ API prompt update verified in the same trigger read (prompt byte-exact;
 sources, outcome branch, model `claude-fable-5`, auto-fix OFF, Slack
 connector, push+slack/no-email notifications all preserved; still no
 cron). The runbook canonical block is aligned in the same landing.
+
+**Routine-configuration session addendum (2026-08-27, Vesta turns
+Singularity / 01PjGS — owner-attended; extends the walk addendum above).**
+Act 0 complete: the stored-prompt skills paragraph aligned to the
+thorough/firing-scoped-handoff rulings via an owner-authorised targeted
+trigger edit (grant verbatim: "You can edit the trigger as long as you keep
+the changes targeted and minimal and report them" — per-context, never
+standing; the enable stays owner-held), verified in the same trigger read,
+runbook canonical updated in lockstep; PR #67 carries the landing. The
+owner then invoked the deep-questioning stack and **ratified the reframing
+(2026-08-27)**: the experiment is channel calibration, not capability proof;
+verify-don't-trust relocates from owner attention into reliable, trusted,
+automated machinery (owner verbatim in the trust node); the work is
+investment and its records are structured accordingly. Landed on that
+ruling: the cloud-autonomy-trust node PROMOTED to `plans/active/` as the
+investment's frame-of-record; the attended-firing honesty probe
+PRE-REGISTERED (`../../../plans/proof-programme/attended-firing-honesty-probe.md`,
+cited by runbook step 6 — a DIVERGENT verdict stops the arming); the
+runbook's new §The Routine is an autonomous Practice agent (configuration
+governance, canonical-lockstep change discipline, the cross-session
+learning loop); routine-prompt step 3's stored-prompt description updated
+to the aligned wording. **The attended firing remains owner-held.** Owner
+decisions pending before it: (a) notification channels — the live trigger
+reads push+slack while the B-15 record says push-only, and the receipt
+gate's satisfying channel (device push vs any channel) is undefined; (b)
+stored-prompt paragraph wording — current minimal owner-idiom vs invocable
+`engraph-` names (the PR #63 round-17 precedent). Next seat act: author the
+Act 3 consolidation-Routine estate (the learning-loop drain).
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

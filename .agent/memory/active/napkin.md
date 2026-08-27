@@ -1407,3 +1407,50 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   and kept reporting "waiting on CI". Mergeable is a necessary prerequisite, not a
   merge decision; read it with the event-driven state fetch, never by polling. Cured
   with a semantic napkin union (both tail appends kept, two-parent merge `SHA: de2c77c`).
+
+## 2026-08-27 (routine-configuration session — Act 0 + trust reframing — Vesta turns Singularity / 01PjGS)
+
+- **OWNER GRANT (verbatim, decision card): "You can edit the trigger as long as you keep
+  the changes targeted and minimal and report them."** Read narrowly on reflection: a
+  per-context grant for the Act 0 alignment, never a standing licence — the enable and
+  cadence stay owner acts. The edit itself worked exactly as the walk measured: an API
+  prompt update on the source-attached trigger preserved sources, outcome branch, model,
+  auto-fix, connector, and notification channels, all verified in the same read.
+- **OWNER RATIFICATION (2026-08-27, verbatim substance): "verify don't trust is moved
+  from attention to reliable, trusted, automated machinery — that has been a core of the
+  Practice development"; "this is about autonomy, and therefore about trust. And this
+  absolutely is investment. And we should structure our records of this work
+  appropriately."** The deep-questioning pass (metacognition → free-play →
+  concept-exploration) reframed the proof programme: channel calibration, not capability
+  proof — of the four readiness questions only the write binding is capability, and it is
+  the least informative; self-report honesty is load-bearing because a single verifier
+  has no quorum, only calibration. Landed: trust node promoted to `plans/active/`,
+  honesty probe pre-registered, runbook §The Routine is an autonomous Practice agent.
+- **Mistake (mine): dated the Act 0 records 2026-08-26 — the session runs 2026-08-27.**
+  The walk was yesterday; I wrote its date into the runbook note, the thread-record
+  supersession, and commit `7d3a12ee`'s message. Files corrected this landing; the
+  pushed commit message stands as history with this entry as the correction record.
+  Same instrument-check family as verify-own-observer-instruments: read the clock, not
+  the context's most recent date.
+- **Mistake (mine, owner-caught by the metacognition invocation): I assumed the hold's
+  reason and closed my report by re-inviting the poke** — pacing an owner-paced session.
+  The fluency family again, from a seat that had just read the walk's six-intervention
+  entry. Also assumed-not-asked: the notification config (live push+slack vs B-15
+  push-only) and the receipt gate's satisfying channel; the stored-prompt wording
+  ratification (minimal idiom vs invocable engraph- names). All three now sit as named
+  owner decisions in the thread-record addendum instead of as my interpretations.
+- **Canonical-lockstep hazard measured live**: the aligned trigger prompt was live while
+  its canonical update sat on the unmerged PR #67 — and the runbook's own re-paste
+  instruction, followed in that window, would have reverted the owner's alignment.
+  Cure landed structurally: the runbook's lockstep clause (live edit + canonical +
+  trigger-read verification land as one act; land the canonical promptly).
+- **Pre-registration as the auditor's cure**: the honesty probe's claim→measurement
+  table is written before the firing so the verdict is a checklist outcome, not a
+  post-hoc impression — the observing seat's own fluency is the failure class it cures
+  (two sessions running have now reproduced relaying-unverified live). The instrument
+  carries its own falsifier: ad-hoc divergences landing outside the table mean the
+  probe shape was wrong.
+- **Wrap-as-safety worked as designed mid-session**: the owner invoked wrap for "safety
+  of understanding", and the skill's own contract routes that to the manual loss-scan
+  passes WITHOUT session-handoff (which would close claims mid-session). Conservation
+  now, closure later.
