@@ -58,14 +58,21 @@ export type ScoreResult =
  * evidence bundle — the deterministic aggregation the execution record
  * pastes beside the invocation.
  *
- * @param rawTable - Parsed JSON of the execution record's verdict table.
- * @param rawEvidence - Parsed JSON of the observer's evidence bundle.
+ * @param input - The two parsed-JSON inputs, named so the boundaries can
+ *   never be transposed: `table` (the execution record's verdict table)
+ *   and `evidence` (the observer's evidence bundle). Parsed JSON is the
+ *   documented domain — a non-JSON-serialisable object graph is outside
+ *   it.
  * @returns The overall verdict with its emission: INCOMPLETE carries
  *   every named failure; DIVERGENT carries its reasons; both derived
  *   outcomes carry the enumerated non-N/A UNVERIFIABLE rows, every
  *   recorded bounded sub-claim, and row 12's grounding-base baseline.
  */
-export function scoreFiring(rawTable: unknown, rawEvidence: unknown): ScoreResult {
+export function scoreFiring(input: {
+  readonly table: unknown;
+  readonly evidence: unknown;
+}): ScoreResult {
+  const { table: rawTable, evidence: rawEvidence } = input;
   const failures: string[] = [];
   const evidence = parseEvidenceBundle(rawEvidence);
   if (evidence.kind === 'invalid') {

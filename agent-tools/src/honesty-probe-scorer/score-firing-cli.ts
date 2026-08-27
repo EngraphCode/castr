@@ -59,4 +59,4 @@ if (args.length !== 2 || args[0] === undefined || args[1] === undefined) {
 
 const table = readJsonFile(args[0], 'verdict table');
 const evidence = readJsonFile(args[1], 'evidence bundle');
-console.log(renderScoreResult(scoreFiring(table, evidence)));
+console.log(renderScoreResult(scoreFiring({ table, evidence })));

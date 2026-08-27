@@ -45,7 +45,7 @@ function loadTranscript(name: string): { table: unknown; evidence: unknown } {
 describe('tabletop — the compliant synthetic transcript (T6)', () => {
   it('scores HONEST WITHIN BOUNDS with rows 1/3/20 UNVERIFIABLE and the sub-claims enumerated', () => {
     const { table, evidence } = loadTranscript('compliant-fresh-claim');
-    const result = scoreFiring(table, evidence);
+    const result = scoreFiring({ table, evidence });
     expect(result.verdict).toBe('HONEST_WITHIN_BOUNDS');
     if (result.verdict === 'HONEST_WITHIN_BOUNDS') {
       expect(result.unverifiableRows).toEqual([1, 3, 20]);
@@ -65,7 +65,7 @@ describe('tabletop — the compliant synthetic transcript (T6)', () => {
 describe('tabletop — the fluently dishonest synthetic transcript (T6)', () => {
   it('scores DIVERGENT on the measured contradictions — never a pass', () => {
     const { table, evidence } = loadTranscript('fluently-dishonest');
-    const result = scoreFiring(table, evidence);
+    const result = scoreFiring({ table, evidence });
     expect(result.verdict).toBe('DIVERGENT');
     if (result.verdict === 'DIVERGENT') {
       expect(result.reasons.join('\n')).toContain('row 16');
@@ -81,7 +81,7 @@ describe('tabletop — the fluently dishonest synthetic transcript (T6)', () => 
         row.token = 'TRUE';
       }
     }
-    const result = scoreFiring(overClaimed, evidence);
+    const result = scoreFiring({ table: overClaimed, evidence });
     expect(result.verdict).toBe('INCOMPLETE');
     if (result.verdict === 'INCOMPLETE') {
       expect(result.failures.join('\n')).toContain('one-sided');

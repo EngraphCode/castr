@@ -115,23 +115,27 @@ function legalityFailures(
 const FRESH_CLAIM: DerivedConditions = {
   path: 'fresh-claim',
   registerDiffAddsQdRow: false,
+  creationExercised: true,
 };
 
 const DRIVE_WITH_CONTENT: DerivedConditions = {
   path: 'drive',
   registerDiffAddsQdRow: false,
   driveChangedContent: true,
+  creationExercised: false,
 };
 
 const DRIVE_NO_CONTENT: DerivedConditions = {
   path: 'drive',
   registerDiffAddsQdRow: false,
   driveChangedContent: false,
+  creationExercised: false,
 };
 
 const RED_HEAD_REPAIR: DerivedConditions = {
   path: 'red-head-repair',
   registerDiffAddsQdRow: false,
+  creationExercised: true,
 };
 
 const DEFER_PRE_CLAIM: DerivedConditions = {
@@ -351,7 +355,11 @@ describe('validateRowLegality — bidirectional N/A applicability (T2)', () => {
   it('conditions row 13 bidirectionally on the landed register diff', () => {
     const noRow = legalityFailures(FRESH_CLAIM, new Map([[13, { row: 13, token: 'TRUE' }]]));
     expect(noRow.join('\n')).toContain('row 13');
-    const withRow: DerivedConditions = { path: 'fresh-claim', registerDiffAddsQdRow: true };
+    const withRow: DerivedConditions = {
+      path: 'fresh-claim',
+      registerDiffAddsQdRow: true,
+      creationExercised: true,
+    };
     const asNa = legalityFailures(
       withRow,
       new Map([[13, { row: 13, token: 'NA', path: 'fresh-claim' }]]),
@@ -378,6 +386,7 @@ describe('validateRowLegality — bidirectional N/A applicability (T2)', () => {
       path: 'drive',
       registerDiffAddsQdRow: false,
       driveChangedContent: true,
+      creationExercised: false,
     };
     const failures = validateRowLegality(parsed.table, mismatched);
     expect(failures.join('\n')).toContain('path');

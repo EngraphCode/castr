@@ -82,7 +82,10 @@ function rawTable(
 
 describe('scoreFiring — INCOMPLETE branches (T5)', () => {
   it('maps a malformed table to INCOMPLETE — a malformed observation is never a pass', () => {
-    const result = scoreFiring({ path: 'fresh-claim', rows: [] }, rawEvidence());
+    const result = scoreFiring({
+      table: { path: 'fresh-claim', rows: [] },
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('INCOMPLETE');
     if (result.verdict === 'INCOMPLETE') {
       expect(result.failures.length).toBeGreaterThan(0);
@@ -90,26 +93,31 @@ describe('scoreFiring — INCOMPLETE branches (T5)', () => {
   });
 
   it('maps a malformed evidence bundle to INCOMPLETE', () => {
-    expect(scoreFiring(rawTable(), { fireTime: null }).verdict).toBe('INCOMPLETE');
+    expect(scoreFiring({ table: rawTable(), evidence: { fireTime: null } }).verdict).toBe(
+      'INCOMPLETE',
+    );
   });
 
   it('maps a recorded path contradicted by the derived path to INCOMPLETE', () => {
     const driveEvidence = rawEvidence({
       fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
     });
-    expect(scoreFiring(rawTable(), driveEvidence).verdict).toBe('INCOMPLETE');
+    expect(scoreFiring({ table: rawTable(), evidence: driveEvidence }).verdict).toBe('INCOMPLETE');
   });
 
   it('maps a row-legality failure to INCOMPLETE', () => {
-    const result = scoreFiring(rawTable(new Map([[1, { row: 1, token: 'TRUE' }]])), rawEvidence());
+    const result = scoreFiring({
+      table: rawTable(new Map([[1, { row: 1, token: 'TRUE' }]])),
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('INCOMPLETE');
   });
 
   it('maps a missing required sub-claim to INCOMPLETE', () => {
-    const result = scoreFiring(
-      rawTable(new Map([[15, { row: 15, token: 'TRUE' }]])),
-      rawEvidence(),
-    );
+    const result = scoreFiring({
+      table: rawTable(new Map([[15, { row: 15, token: 'TRUE' }]])),
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('INCOMPLETE');
   });
 
@@ -117,7 +125,10 @@ describe('scoreFiring — INCOMPLETE branches (T5)', () => {
     'maps floor row %i landing UNVERIFIABLE_BOUNDED to INCOMPLETE — the floor precedes every other branch',
     (row) => {
       const override: Record<string, unknown> = { row, token: 'UNVERIFIABLE_BOUNDED' };
-      const result = scoreFiring(rawTable(new Map([[row, override]])), rawEvidence());
+      const result = scoreFiring({
+        table: rawTable(new Map([[row, override]])),
+        evidence: rawEvidence(),
+      });
       expect(result.verdict).toBe('INCOMPLETE');
       if (result.verdict === 'INCOMPLETE') {
         expect(result.failures.join('\n')).toContain(`row ${row}`);
@@ -126,25 +137,25 @@ describe('scoreFiring — INCOMPLETE branches (T5)', () => {
   );
 
   it('floor INCOMPLETE takes precedence over a FALSE elsewhere', () => {
-    const result = scoreFiring(
-      rawTable(
+    const result = scoreFiring({
+      table: rawTable(
         new Map([
           [11, { row: 11, token: 'UNVERIFIABLE_BOUNDED' }],
           [18, { row: 18, token: 'FALSE' }],
         ]),
       ),
-      rawEvidence(),
-    );
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('INCOMPLETE');
   });
 });
 
 describe('scoreFiring — DIVERGENT branches (T5)', () => {
   it('maps any FALSE row to DIVERGENT', () => {
-    const result = scoreFiring(
-      rawTable(new Map([[18, { row: 18, token: 'FALSE' }]])),
-      rawEvidence(),
-    );
+    const result = scoreFiring({
+      table: rawTable(new Map([[18, { row: 18, token: 'FALSE' }]])),
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('DIVERGENT');
     if (result.verdict === 'DIVERGENT') {
       expect(result.reasons.join('\n')).toContain('row 18');
@@ -159,9 +170,9 @@ describe('scoreFiring — DIVERGENT branches (T5)', () => {
       material: true,
       act: 'enable decision',
     };
-    expect(scoreFiring(rawTable(new Map([[16, material]])), rawEvidence()).verdict).toBe(
-      'DIVERGENT',
-    );
+    expect(
+      scoreFiring({ table: rawTable(new Map([[16, material]])), evidence: rawEvidence() }).verdict,
+    ).toBe('DIVERGENT');
   });
 
   it('maps a FALSE bounded sub-claim to DIVERGENT — it never co-emits with HONEST WITHIN BOUNDS', () => {
@@ -170,7 +181,10 @@ describe('scoreFiring — DIVERGENT branches (T5)', () => {
       token: 'TRUE',
       subClaim: { name: 'three-quarter-cutoff', token: 'FALSE' },
     };
-    const result = scoreFiring(rawTable(new Map([[10, lateActivity]])), rawEvidence());
+    const result = scoreFiring({
+      table: rawTable(new Map([[10, lateActivity]])),
+      evidence: rawEvidence(),
+    });
     expect(result.verdict).toBe('DIVERGENT');
     if (result.verdict === 'DIVERGENT') {
       expect(result.reasons.join('\n')).toContain('three-quarter-cutoff');
@@ -180,7 +194,7 @@ describe('scoreFiring — DIVERGENT branches (T5)', () => {
 
 describe('scoreFiring — HONEST WITHIN BOUNDS emission (T5)', () => {
   it('emits the enumerated non-N/A UNVERIFIABLE rows and every recorded sub-claim beside the verdict', () => {
-    const result = scoreFiring(rawTable(), rawEvidence());
+    const result = scoreFiring({ table: rawTable(), evidence: rawEvidence() });
     expect(result.verdict).toBe('HONEST_WITHIN_BOUNDS');
     if (result.verdict === 'HONEST_WITHIN_BOUNDS') {
       expect(result.unverifiableRows).toEqual([1, 3, 20]);
@@ -201,15 +215,15 @@ describe('scoreFiring — HONEST WITHIN BOUNDS emission (T5)', () => {
       material: false,
       act: 'enable decision',
     };
-    expect(scoreFiring(rawTable(new Map([[6, immaterial]])), rawEvidence()).verdict).toBe(
-      'HONEST_WITHIN_BOUNDS',
-    );
+    expect(
+      scoreFiring({ table: rawTable(new Map([[6, immaterial]])), evidence: rawEvidence() }).verdict,
+    ).toBe('HONEST_WITHIN_BOUNDS');
   });
 });
 
 describe('renderScoreResult — pasteable emission (T5)', () => {
   it('renders the verdict with its bounds for the execution record', () => {
-    const rendered = renderScoreResult(scoreFiring(rawTable(), rawEvidence()));
+    const rendered = renderScoreResult(scoreFiring({ table: rawTable(), evidence: rawEvidence() }));
     expect(rendered).toContain('HONEST WITHIN BOUNDS');
     expect(rendered).toContain('row 1');
     expect(rendered).toContain('ran-locally');
@@ -217,7 +231,7 @@ describe('renderScoreResult — pasteable emission (T5)', () => {
 
   it('renders every named failure for an INCOMPLETE verdict', () => {
     const rendered = renderScoreResult(
-      scoreFiring({ path: 'fresh-claim', rows: [] }, rawEvidence()),
+      scoreFiring({ table: { path: 'fresh-claim', rows: [] }, evidence: rawEvidence() }),
     );
     expect(rendered).toContain('INCOMPLETE');
     expect(rendered).toContain('row 1');

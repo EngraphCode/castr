@@ -83,11 +83,7 @@ function naRequiredRows(conditions: DerivedConditions): Set<number> {
  */
 function requiredSubClaims(conditions: DerivedConditions): Set<number> {
   const required = new Set<number>([10, 14, 15]);
-  const creationExercised =
-    conditions.path === 'fresh-claim' ||
-    conditions.path === 'red-head-repair' ||
-    (conditions.path === 'defer' && conditions.creationExercised);
-  if (!creationExercised) {
+  if (!conditions.creationExercised) {
     required.add(8);
   }
   const leaseDutyApplies =
@@ -142,12 +138,14 @@ function parse(raw: { path: string; rows: Record<string, unknown>[] }): VerdictT
 const FRESH_CLAIM: DerivedConditions = {
   path: 'fresh-claim',
   registerDiffAddsQdRow: false,
+  creationExercised: true,
 };
 
 const DRIVE: DerivedConditions = {
   path: 'drive',
   registerDiffAddsQdRow: false,
   driveChangedContent: true,
+  creationExercised: false,
 };
 
 const DEFER_NO_CREATION: DerivedConditions = {

@@ -78,6 +78,10 @@ describe('deriveConditions — governing path (T4)', () => {
   it('derives drive from an open non-draft programme PR at fire time and fails a recorded fresh claim', () => {
     const withOpenPr = bundle({
       fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
       pushes: [
         {
           prNumber: 75,
@@ -103,6 +107,10 @@ describe('deriveConditions — governing path (T4)', () => {
   it('derives red-head-repair only from a red head at fire time — a mislabel cannot shed the claim rows', () => {
     const redHead = bundle({
       fireTime: { mainHeadCi: 'red', openProgrammePrs: [] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
     });
     expect(deriveConditions(redHead, 'red-head-repair').kind).toBe('derived');
     expect(deriveConditions(redHead, 'fresh-claim').kind).toBe('invalid');
@@ -112,6 +120,10 @@ describe('deriveConditions — governing path (T4)', () => {
   it("derives a content-free drive's rows 7/20 condition from the drive pushes' own diffs", () => {
     const contentFree = bundle({
       fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
       pushes: [
         {
           prNumber: 75,
@@ -294,6 +306,113 @@ describe('deriveConditions — register conditions and row 12 baseline (T4)', ()
     expect(result.kind).toBe('derived');
     if (result.kind === 'derived') {
       expect(result.openRegisterRowsAtGroundingBase).toEqual(['QD-14']);
+    }
+  });
+});
+
+describe('deriveConditions — evidence cross-checks (review fold)', () => {
+  it('fails a non-defer recorded path when a deferral was observed — the label cannot bypass the defer gate', () => {
+    const observedDeferral = bundle({ deferralAt: '2026-08-28T05:00:00Z' });
+    const result = deriveConditions(observedDeferral, 'fresh-claim');
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('deferral');
+    }
+  });
+
+  it('fails a derived drive whose landed frontmatter shows a claim — rows 4/5 cannot be shed', () => {
+    const droveAndClaimed = bundle({
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      pushes: [
+        {
+          prNumber: 75,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T09:00:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+      createdByFiring: { branches: [], prNumbers: [] },
+    });
+    const result = deriveConditions(droveAndClaimed, 'drive');
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('claim');
+    }
+  });
+
+  it('fails a derived red-head repair whose landed frontmatter shows a claim', () => {
+    const repairedAndClaimed = bundle({
+      fireTime: { mainHeadCi: 'red', openProgrammePrs: [] },
+    });
+    expect(deriveConditions(repairedAndClaimed, 'red-head-repair').kind).toBe('invalid');
+  });
+
+  it("counts the firing's own-PR pushes in the drive content condition — the atomic-slice and reviewer duties are unconditional", () => {
+    const ownPrContent = bundle({
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
+      pushes: [
+        {
+          prNumber: 84,
+          prPreExistedFiring: false,
+          pushedAt: '2026-08-28T09:00:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+    });
+    const result = deriveConditions(ownPrContent, 'drive');
+    expect(result.kind).toBe('derived');
+    if (result.kind === 'derived') {
+      expect(result.conditions).toMatchObject({ path: 'drive', driveChangedContent: true });
+    }
+  });
+
+  it('derives a claim from any transition out of pending — a row claimed and completed within the firing', () => {
+    const completedRow = bundle({
+      deferralAt: '2026-08-28T10:00:00Z',
+      contestEvidence: [{ kind: 'competing-open-pr', description: 'PR #85 by another identity' }],
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'completed' }],
+      },
+      createdByFiring: { branches: [], prNumbers: [] },
+      pushes: [],
+    });
+    const result = deriveConditions(completedRow, 'defer');
+    expect(result.kind).toBe('derived');
+    if (result.kind === 'derived') {
+      expect(result.conditions).toMatchObject({ rowClaimedBeforeDeferral: true });
+    }
+  });
+
+  it('derives creationExercised from the created branches and PRs on every path', () => {
+    const freshClaim = deriveConditions(bundle(), 'fresh-claim');
+    expect(freshClaim.kind).toBe('derived');
+    if (freshClaim.kind === 'derived') {
+      expect(freshClaim.conditions.creationExercised).toBe(true);
+    }
+    const driveWithCreation = bundle({
+      fireTime: { mainHeadCi: 'green', openProgrammePrs: [{ number: 75, draft: false }] },
+      parentPlanQueueRows: {
+        atGroundingBase: [{ id: 'Q-18', status: 'pending' }],
+        afterLanding: [{ id: 'Q-18', status: 'pending' }],
+      },
+      pushes: [
+        {
+          prNumber: 75,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T09:00:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+    });
+    const result = deriveConditions(driveWithCreation, 'drive');
+    expect(result.kind).toBe('derived');
+    if (result.kind === 'derived') {
+      expect(result.conditions.creationExercised).toBe(true);
     }
   });
 });

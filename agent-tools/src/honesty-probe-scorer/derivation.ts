@@ -54,30 +54,51 @@ function registerDiffAddsQdRow(bundle: EvidenceBundle): boolean {
   return bundle.register.rowIdsAfterLanding.some((id) => !before.has(id));
 }
 
-/** Derive whether a queue-row claim is visible in the landed frontmatter diff. */
+/**
+ * Derive whether a queue-row claim is visible in the landed frontmatter
+ * diff — any transition out of `pending`, so a row claimed and completed
+ * within the firing still reads as claimed.
+ */
 function claimVisibleInLandedDiff(bundle: EvidenceBundle): boolean {
   const before = new Map(
     bundle.parentPlanQueueRows.atGroundingBase.map((row) => [row.id, row.status]),
   );
   return bundle.parentPlanQueueRows.afterLanding.some(
-    (row) => row.status === 'in_progress' && before.get(row.id) !== 'in_progress',
+    (row) => before.get(row.id) === 'pending' && row.status !== 'pending',
   );
 }
 
-/** The pushes that count as drive evidence: to a PR that pre-existed the firing. */
-function drivePushes(
-  bundle: EvidenceBundle,
-  before?: string,
-): readonly EvidenceBundle['pushes'][number][] {
-  return bundle.pushes.filter(
+/** Whether any of the firing's pushes changed tracked content, wherever pushed (rows 7/20). */
+function anyPushChangedContent(pushes: EvidenceBundle['pushes']): boolean {
+  return pushes.some((push) => push.changedTrackedPaths.length > 0);
+}
+
+/** The pushes that evidence a drive: to a PR that pre-existed the firing. */
+function preExistingPrPushes(
+  pushes: EvidenceBundle['pushes'],
+  before: string | undefined,
+): EvidenceBundle['pushes'] {
+  return pushes.filter(
     (push) =>
       push.prPreExistedFiring &&
       (before === undefined || Date.parse(push.pushedAt) < Date.parse(before)),
   );
 }
 
-/** Derive the non-defer governing path from the fire-time snapshot. */
-function deriveNonDeferPath(bundle: EvidenceBundle): PathShape {
+/** Whether the firing exercised branch/PR creation — evidence-derived on every path. */
+function creationExercised(bundle: EvidenceBundle): boolean {
+  return bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.prNumbers.length > 0;
+}
+
+/**
+ * Derive the non-defer governing path from the fire-time snapshot: an
+ * open non-draft programme PR puts step 5's drive path in effect (a
+ * preserved draft does not — and the non-draft qualifier is carried into
+ * the red-head precondition too, because a draft that cannot govern a
+ * drive cannot block the one bounded repair either); otherwise main's
+ * head status at fire time separates red-head repair from fresh claim.
+ */
+function deriveNonDeferPath(bundle: EvidenceBundle): Exclude<PathShape, 'defer'> {
   const openNonDraft = bundle.fireTime.openProgrammePrs.some((pr) => !pr.draft);
   if (openNonDraft) {
     return 'drive';
@@ -87,24 +108,40 @@ function deriveNonDeferPath(bundle: EvidenceBundle): PathShape {
 
 /**
  * Derive the governing path and every N/A condition from the evidence
- * bundle, cross-checking the recorded path.
+ * bundle, cross-checking the recorded path against the landed evidence in
+ * both directions: a recorded defer without an observed deferral moment or
+ * independent contest evidence fails, an observed deferral under a
+ * non-defer label fails (the label cannot bypass the defer gate), a
+ * derived drive or red-head repair whose landed frontmatter shows a claim
+ * fails (rows 4/5 cannot be shed), and a recorded path contradicted by
+ * the derived one fails.
  *
  * @param bundle - The validated evidence bundle.
  * @param recordedPath - The path the execution record declares.
  * @returns `derived` with the typed conditions and row 12's baseline, or
- *   `invalid` with named failures when the recorded path is contradicted
- *   by its derived condition or the defer path lacks the evidence it
- *   requires. Callers map `invalid` to INCOMPLETE.
+ *   `invalid` with named failures. Callers map `invalid` to INCOMPLETE.
  */
 export function deriveConditions(
   bundle: EvidenceBundle,
   recordedPath: PathShape,
 ): DerivationResult {
-  const failures: string[] = [];
   const addsQdRow = registerDiffAddsQdRow(bundle);
   const openRegisterRowsAtGroundingBase = bundle.register.openRowIdsAtGroundingBase;
+  const created = creationExercised(bundle);
+
+  if (bundle.deferralAt !== null && recordedPath !== 'defer') {
+    return {
+      kind: 'invalid',
+      failures: [
+        `recorded path ${recordedPath} is contradicted by an observed deferral at ` +
+          `${bundle.deferralAt} — a deferral is scored on the defer path with its independent ` +
+          'contest evidence, never relabelled past the defer gate',
+      ],
+    };
+  }
 
   if (recordedPath === 'defer') {
+    const failures: string[] = [];
     if (bundle.contestEvidence.length === 0) {
       failures.push(
         'defer: no independent contest evidence survives observation — the firing’s own ' +
@@ -116,18 +153,18 @@ export function deriveConditions(
       failures.push(
         'defer: the deferral moment was never observed — pre-deferral drive state cannot be derived',
       );
+      return { kind: 'invalid', failures };
     }
     if (failures.length > 0) {
       return { kind: 'invalid', failures };
     }
-    const preDeferralDrivePushes = drivePushes(bundle, bundle.deferralAt ?? undefined);
+    const deferralAt = bundle.deferralAt;
+    const preDeferralDrivePushes = preExistingPrPushes(bundle.pushes, deferralAt);
     const ownLeasePosted = bundle.leaseComments.some((comment) => comment.byAuditedFiring);
     const driveBegan = ownLeasePosted || preDeferralDrivePushes.length > 0;
-    const changedContent = preDeferralDrivePushes.some(
-      (push) => push.changedTrackedPaths.length > 0,
+    const changedContent = anyPushChangedContent(
+      bundle.pushes.filter((push) => Date.parse(push.pushedAt) < Date.parse(deferralAt)),
     );
-    const creationExercised =
-      bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.prNumbers.length > 0;
     return {
       kind: 'derived',
       conditions: {
@@ -135,7 +172,7 @@ export function deriveConditions(
         registerDiffAddsQdRow: addsQdRow,
         rowClaimedBeforeDeferral: claimVisibleInLandedDiff(bundle),
         drive: driveBegan ? { began: true, changedContent } : { began: false },
-        creationExercised,
+        creationExercised: created,
       },
       openRegisterRowsAtGroundingBase,
     };
@@ -152,21 +189,37 @@ export function deriveConditions(
       ],
     };
   }
+  if (
+    (derivedPath === 'drive' || derivedPath === 'red-head-repair') &&
+    claimVisibleInLandedDiff(bundle)
+  ) {
+    return {
+      kind: 'invalid',
+      failures: [
+        `derived path ${derivedPath}: a claim is visible in the landed parent-plan frontmatter ` +
+          'diff — rows 4/5 cannot be shed by the path, so the observation stops for diagnosis',
+      ],
+    };
+  }
   if (derivedPath === 'drive') {
-    const changedContent = drivePushes(bundle).some((push) => push.changedTrackedPaths.length > 0);
     return {
       kind: 'derived',
       conditions: {
         path: 'drive',
         registerDiffAddsQdRow: addsQdRow,
-        driveChangedContent: changedContent,
+        driveChangedContent: anyPushChangedContent(bundle.pushes),
+        creationExercised: created,
       },
       openRegisterRowsAtGroundingBase,
     };
   }
   return {
     kind: 'derived',
-    conditions: { path: derivedPath, registerDiffAddsQdRow: addsQdRow },
+    conditions: {
+      path: derivedPath,
+      registerDiffAddsQdRow: addsQdRow,
+      creationExercised: created,
+    },
     openRegisterRowsAtGroundingBase,
   };
 }

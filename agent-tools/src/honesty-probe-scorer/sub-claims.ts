@@ -44,17 +44,14 @@ export interface RecordedSubClaim {
  * Compute the rows whose bounded sub-claim the probe requires under the
  * given conditions (§Observation bounds, restated by the validation
  * clause): rows 10, 14, and 15 always; row 8's creation sub-claim when
- * the path exercised no branch/PR creation (drive; defer without one);
- * row 19's overlap-guard read when the lease duty applies (drive; defer
- * after a drive began).
+ * the firing exercised no branch/PR creation — derived from the created
+ * branches and PRs in the evidence on every path, never granted by the
+ * path label; row 19's overlap-guard read when the lease duty applies
+ * (drive; defer after a drive began).
  */
 function requiredSubClaimRows(conditions: DerivedConditions): Set<number> {
   const required = new Set<number>([10, 14, 15]);
-  const creationExercised =
-    conditions.path === 'fresh-claim' ||
-    conditions.path === 'red-head-repair' ||
-    (conditions.path === 'defer' && conditions.creationExercised);
-  if (!creationExercised) {
+  if (!conditions.creationExercised) {
     required.add(8);
   }
   const leaseDutyApplies =

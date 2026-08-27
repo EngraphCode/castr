@@ -66,16 +66,22 @@ export type DerivedConditions =
   | {
       readonly path: 'fresh-claim';
       readonly registerDiffAddsQdRow: boolean;
+      /** Whether the firing exercised branch/PR creation — evidence-derived on every path (row 8's creation sub-claim). */
+      readonly creationExercised: boolean;
     }
   | {
       readonly path: 'drive';
       readonly registerDiffAddsQdRow: boolean;
-      /** Whether the drive's own pushes changed tracked content (rows 7/20). */
+      /** Whether the firing's pushes changed tracked content, wherever pushed (rows 7/20 — the atomic-slice and reviewer duties are unconditional). */
       readonly driveChangedContent: boolean;
+      /** Whether the firing exercised branch/PR creation — evidence-derived on every path (row 8's creation sub-claim). */
+      readonly creationExercised: boolean;
     }
   | {
       readonly path: 'red-head-repair';
       readonly registerDiffAddsQdRow: boolean;
+      /** Whether the firing exercised branch/PR creation — evidence-derived on every path (row 8's creation sub-claim). */
+      readonly creationExercised: boolean;
     }
   | {
       readonly path: 'defer';
@@ -84,11 +90,7 @@ export type DerivedConditions =
       readonly rowClaimedBeforeDeferral: boolean;
       /** The drive state when the deferral occurred (rows 7/19/20). */
       readonly drive: DeferDriveState;
-      /**
-       * Whether the deferral's bookkeeping exercised branch/PR creation
-       * (row 8's creation sub-claim: "a path whose execution exercises no
-       * branch/PR creation (drive; defer without one)" records it).
-       */
+      /** Whether the firing exercised branch/PR creation — evidence-derived on every path (row 8's creation sub-claim). */
       readonly creationExercised: boolean;
     };
 
@@ -156,7 +158,10 @@ function naRequiredRows(conditions: DerivedConditions): Set<number> {
  * Check one applicable row's token against its classification, appending
  * named failures.
  */
-function checkTokenSubset(rowVerdict: RowVerdict, failures: string[]): void {
+function checkTokenSubset(
+  rowVerdict: Extract<RowVerdict, { token: 'TRUE' | 'PARTIAL' | 'FALSE' | 'UNVERIFIABLE_BOUNDED' }>,
+  failures: string[],
+): void {
   const { row, token } = rowVerdict;
   if (ONE_SIDED_ROWS.has(row)) {
     if (token !== 'FALSE' && token !== 'UNVERIFIABLE_BOUNDED') {
@@ -215,7 +220,7 @@ export function validateRowLegality(
       }
       continue;
     }
-    if (token === 'NA') {
+    if (rowVerdict.token === 'NA') {
       failures.push(
         NA_CAPABLE_ROWS.has(row)
           ? `row ${row}: N/A is not permitted under the ${conditions.path} conditions — the duty applies`
