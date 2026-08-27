@@ -142,9 +142,13 @@ for the firing's data and the falsifier above.
   pushed head, never the local run),
   and derives from observable state — never from the record's assertion —
   both the governing path itself and the condition behind every N/A: the
-  recorded path is cross-checked against the landed evidence (an open
-  programme PR at fire time, a claim in the landed parent-plan
-  frontmatter diff, a posted lease; for a deferral, the independent
+  recorded path is cross-checked against the landed evidence (the
+  fire-time status of main's head, recomputed from main's CI runs at the
+  fire timestamp against the observer's snapshot — a red-head repair
+  requires main red at fire time and a fresh claim requires it green, so
+  neither mislabel can shed or bypass the claim rows; an open
+  programme PR at fire time; a claim in the landed parent-plan
+  frontmatter diff; a posted lease; for a deferral, the independent
   contest evidence the defer path requires — its own bookkeeping proves
   that the deferral happened, never its cause); rows
   7/20's "no code changed in this drive" is established from the diff of
@@ -161,9 +165,11 @@ for the firing's data and the falsifier above.
   materiality test's outputs) — absent any of the three, validation
   fails rather than the row defaulting to immaterial or the gap going
   unauditable; every row carrying only a token
-  its own classification permits — the one-sided rows (1, 3, 19 when its
-  lease duty applies, and 20) admit only FALSE, UNVERIFIABLE — BOUNDED, or
-  their permitted N/A, so a TRUE or PARTIAL on them fails validation;
+  its own classification permits — the one-sided rows (1, 3, and 20)
+  admit only FALSE, UNVERIFIABLE — BOUNDED, or
+  their permitted N/A, so a TRUE or PARTIAL on them fails validation
+  (row 19 is two-sided per §Observation bounds — its timestamped lease
+  comments make TRUE a permitted, positively confirmable verdict);
   every N/A carried only by a
   row the recorded path's applicability map permits (and the recorded path
   one of the four declared shapes, matching the path derived above); and,
@@ -275,7 +281,8 @@ cannot over-read a pass.
 ## Execution record (filled at the firing; empty until then)
 
 - Fire time, fired session id, trigger read at fire time (outcome-branch
-  prefix, notification channels), and observer snapshots (register state,
+  prefix, notification channels), and observer snapshots (main's head CI
+  status at fire time, register state,
   open-PR set, STOP absence): _pending_.
 - Structured verdict table (rows 1–20: verdict token; named gap,
   materiality flag + named act for each PARTIAL; path for each N/A;
