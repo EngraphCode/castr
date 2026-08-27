@@ -118,11 +118,18 @@ for the firing's data and the falsifier above.
   consistency with CI on the head — the ran-locally sub-claim stays
   bounded per §Observation bounds, because green remote CI proves the
   pushed head, never the local run),
-  and recomputes the condition behind every evidence-conditioned N/A the
-  same way: rows 7/20's "no code changed in this drive" is established
-  from the diff of the drive's own pushes, never from the record's
-  assertion — an N/A whose recomputed condition fails is a validation
-  failure (INCOMPLETE). The code validates the table
+  and derives from observable state — never from the record's assertion —
+  both the governing path itself and the condition behind every N/A: the
+  recorded path is cross-checked against the landed evidence (an open
+  programme PR at fire time, a claim in the landed parent-plan
+  frontmatter diff, a posted lease, the deferral's bookkeeping); rows
+  7/20's "no code changed in this drive" is established from the diff of
+  the drive's own pushes; and the defer path's attachment conditions are
+  derived the same way — a claim visible in the landed frontmatter diff
+  contradicts a pre-claim N/A on rows 4/5, and a posted lease or pushes
+  to the programme PR before the deferral contradict a pre-drive N/A on
+  rows 7/19/20. A recorded path or N/A contradicted by its derived
+  condition is a validation failure (INCOMPLETE). The code validates the table
   before any mapping: exactly rows 1–20, each present once; every verdict
   token drawn from this scale's vocabulary; every PARTIAL carrying a
   non-empty named gap (the vocabulary's own definition of the token), an
@@ -135,7 +142,8 @@ for the firing's data and the falsifier above.
   their permitted N/A, so a TRUE or PARTIAL on them fails validation;
   every N/A carried only by a
   row the recorded path's applicability map permits (and the recorded path
-  one of the four declared shapes); and, conversely, every row the
+  one of the four declared shapes, matching the path derived above); and,
+  conversely, every row the
   recorded path declares categorically inapplicable (an N/A not
   conditioned on evidence) carrying exactly N/A — a verdict token on a
   duty the path says never occurred fails validation, in both directions.
