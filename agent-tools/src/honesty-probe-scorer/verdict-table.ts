@@ -60,10 +60,10 @@ interface NaRowVerdict {
 }
 
 /** One validated row verdict. */
-type RowVerdict = PlainRowVerdict | PartialRowVerdict | NaRowVerdict;
+export type RowVerdict = PlainRowVerdict | PartialRowVerdict | NaRowVerdict;
 
 /** A structurally validated verdict table. */
-interface VerdictTable {
+export interface VerdictTable {
   /** The recorded governing path (one of the four declared shapes). */
   readonly path: PathShape;
   /** Rows 1–20, in ascending row order, each present exactly once. */

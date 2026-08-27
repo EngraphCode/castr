@@ -15,14 +15,14 @@ todos:
     content: >-
       Verdict-table schema + structural validation (rows 1–20 once each,
       vocabulary, PARTIAL gap/materiality/act) — red-first
-    status: pending
+    status: completed
     depends_on: []
   - id: T2
     content: >-
       Per-row token subsets (one-sided rows 1/3/20; row 19 two-sided) and
       bidirectional N/A applicability, categorical and derived-conditional —
       red-first
-    status: pending
+    status: completed
     depends_on: [T1]
   - id: T3
     content: >-
