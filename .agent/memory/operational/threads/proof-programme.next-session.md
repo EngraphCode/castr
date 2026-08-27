@@ -147,7 +147,9 @@ or owner-legibility → the row contract landed (register header +
 routine-prompt owner-fork branch). Queue reordered: Q-18/Q-20/Q-21/Q-22
 precede Q-05 (owner-approved). Cloud grounding ruling landed
 (`start-right-thorough` + plan/metacognition/proportionality stack;
-strategic node `.agent/plans/future/cloud-autonomy-trust.md`). **Remaining
+strategic node `.agent/plans/future/cloud-autonomy-trust.md` — since
+promoted to `.agent/plans/proof-programme/cloud-autonomy-trust.md`,
+2026-08-27). **Remaining
 before any cron: owner-fired attended live firing (watch ~20 min; its
 completion notification closes the receipt gate; compare its self-report
 against measured reality), then enable per runbook step 7's overlap guard
@@ -156,7 +158,8 @@ trigger's stored-prompt paragraph still names `start-right-quick`; the
 thorough ruling lives in routine-prompt step 3, which the firing follows —
 the owner may align the trigger word at leisure (agent trigger edits were
 owner-denied this walk; the trigger is owner-territory).~~ SUPERSEDED
-2026-08-27 (routine-configuration session, Vesta turns Singularity): the
+2026-08-26 (~20:07Z, routine-configuration session, Vesta turns Singularity —
+the session spans 2026-08-26 evening → 2026-08-27 UTC): the
 owner authorised targeted minimal trigger edits for this act ("You can
 edit the trigger as long as you keep the changes targeted and minimal and
 report them"), and the stored-prompt skills paragraph now names
@@ -166,33 +169,49 @@ sources, outcome branch, model `claude-fable-5`, auto-fix OFF, Slack
 connector, push+slack/no-email notifications all preserved; still no
 cron). The runbook canonical block is aligned in the same landing.
 
-**Routine-configuration session addendum (2026-08-27, Vesta turns
-Singularity / 01PjGS — owner-attended; extends the walk addendum above).**
-Act 0 complete: the stored-prompt skills paragraph aligned to the
-thorough/firing-scoped-handoff rulings via an owner-authorised targeted
-trigger edit (grant verbatim: "You can edit the trigger as long as you keep
-the changes targeted and minimal and report them" — per-context, never
-standing; the enable stays owner-held), verified in the same trigger read,
-runbook canonical updated in lockstep; PR #67 carries the landing. The
-owner then invoked the deep-questioning stack and **ratified the reframing
-(2026-08-27)**: the experiment is channel calibration, not capability proof;
-verify-don't-trust relocates from owner attention into reliable, trusted,
-automated machinery (owner verbatim in the trust node); the work is
-investment and its records are structured accordingly. Landed on that
-ruling: the cloud-autonomy-trust node PROMOTED to `plans/active/` as the
-investment's frame-of-record; the attended-firing honesty probe
-PRE-REGISTERED (`../../../plans/proof-programme/attended-firing-honesty-probe.md`,
-cited by runbook step 6 — a DIVERGENT verdict stops the arming); the
-runbook's new §The Routine is an autonomous Practice agent (configuration
-governance, canonical-lockstep change discipline, the cross-session
-learning loop); routine-prompt step 3's stored-prompt description updated
-to the aligned wording. **The attended firing remains owner-held.** Owner
-decisions pending before it: (a) notification channels — the live trigger
-reads push+slack while the B-15 record says push-only, and the receipt
-gate's satisfying channel (device push vs any channel) is undefined; (b)
-stored-prompt paragraph wording — current minimal owner-idiom vs invocable
-`engraph-` names (the PR #63 round-17 precedent). Next seat act: author the
-Act 3 consolidation-Routine estate (the learning-loop drain).
+**Routine-configuration session addendum (2026-08-26 evening → 2026-08-27
+UTC, Vesta turns Singularity / 01PjGS — owner-attended; extends the walk
+addendum above).** Act 0 complete 2026-08-26 (~20:07Z): the stored-prompt
+skills paragraph aligned to the thorough/firing-scoped-handoff rulings via
+an owner-authorised targeted trigger edit (grant verbatim: "You can edit
+the trigger as long as you keep the changes targeted and minimal and report
+them" — read narrowly by this seat as per-context rather than standing,
+scope not owner-confirmed; the enable stays owner-held either way),
+verified in the same trigger read, runbook canonical updated in lockstep;
+PR #67 carries the landing. The owner then invoked the deep-questioning
+stack and **ratified the reframing (2026-08-27)**: the experiment is
+channel calibration, not capability proof; verify-don't-trust relocates
+from owner attention into reliable, trusted, automated machinery (owner
+verbatim in the trust node, which attributes each frame claim to owner
+verbatim, owner-agreed findings, or seat synthesis); the work is investment
+and its records are structured accordingly. Landed on that ruling: the
+cloud-autonomy-trust node PROMOTED into the programme collection
+(`../../../plans/proof-programme/cloud-autonomy-trust.md`) as the
+investment's frame-of-record (an assumptions-expert review measured the
+active-lane contract mismatch; the durable-doctrine/ADR question rides the
+Act 3 owner card); the attended-firing honesty probe PRE-REGISTERED
+(`../../../plans/proof-programme/attended-firing-honesty-probe.md`, cited
+by runbook step 6); the runbook's new §The Routine is an autonomous
+Practice agent (configuration governance, canonical-lockstep change
+discipline); routine-prompt step 3's stored-prompt description updated to
+the aligned wording. Both reviewer dispatches (docs-adr + assumptions) ran
+over the landing; every finding verified firsthand and folded — including
+two corrections OF the session's own records (the Act 0 date restored to
+2026-08-26 after this seat wrongly "corrected" it to the 27th, and the
+probe's `last_run` bound re-grounded on this session's fresher measurement
+superseding loop-review D-1). **The attended firing remains owner-held.**
+Owner decisions pending before it: (a) notification channels — the live
+trigger reads push+slack while the B-15 record says push-only, and the
+receipt gate's satisfying channel (device push vs any channel) is
+undefined; (b) stored-prompt paragraph wording — current minimal
+owner-idiom vs invocable `engraph-` names (the PR #63 round-17 precedent);
+(c) the honesty probe's DIVERGENT-stops-the-arming consequence —
+seat-proposed by analogy with the notification gate, awaiting ratification;
+(d) Q-19's `depends_on: [Q-13]` — reads as sequencing preference rather
+than a technical blocker, and it gates the convergence instrument that
+readiness question 4 and the enable-cadence weighing turn on. Next seat
+act: author the Act 3 consolidation-Routine estate (the learning-loop
+drain).
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

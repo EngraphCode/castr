@@ -1454,3 +1454,42 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   of understanding", and the skill's own contract routes that to the manual loss-scan
   passes WITHOUT session-handoff (which would close claims mid-session). Conservation
   now, closure later.
+
+## 2026-08-27 (reviewer fold — the correction of the correction — Vesta turns Singularity / 01PjGS)
+
+- **CORRECTION of the entry above: the "date-stamp mistake" lesson is INVERTED — the
+  original 2026-08-26 stamps were correct and my "fix" introduced the drift.** The
+  docs-adr reviewer measured it from git: commit `7d3a12ee` is authored
+  2026-08-26T20:11Z and the trigger's `updated_at` is 2026-08-26T20:07Z — Act 0
+  happened on the 26th, in the evening; the session spans two UTC dates and only the
+  reframing/probe/promotion work is the 27th. I read "today is 2026-08-27" and
+  restamped yesterday-evening acts with it, then wrote the inverted lesson into the
+  napkin — a false lesson one curation drain away from graduating into doctrine. The
+  real lesson: **date an act from the act's own timestamps (commit author date,
+  trigger `updated_at`), never from the current date — especially in sessions that
+  span midnight UTC.** All restamped surfaces restored to 2026-08-26 with the
+  timestamp of record cited.
+- **A reviewer finding can be right in method and stale in premise — supersede with
+  the fresher measurement, not the older record.** The docs-adr BLOCKING finding said
+  the probe's `last_run` observation bound contradicts loop-review D-1 ("no last_run
+  object", measured 2026-08-24). But this session's own `list_triggers` reads (twice,
+  2026-08-27) returned the full `last_run` object on the CURRENT trigger — D-1 was
+  measured on the since-retired trigger. Disposition: bound kept, now citing the
+  fresher measurement explicitly, with a timing fallback if `last_run` regresses.
+  Both directions of verify-firsthand in one finding: the reviewer caught my
+  unsourced claim; my fresher source survived the reviewer.
+- **The assumptions reviewer caught me manufacturing a gate**: the probe's
+  "DIVERGENT stops the arming" was my analogy-extension of the owner-grounded
+  notification gate, stated as settled prose on three surfaces. Now flagged
+  seat-proposed on all three and queued as pending owner decision (c). Same review
+  also caught: the active-lane contract mismatch (node re-homed to the programme
+  collection — the lane taxonomy has no home for a live strategic frame, worth a
+  future plan-architecture thought); the probe's undefined "material" (test now
+  pre-registered); three probe rows measuring something other than their claim
+  (reshaped as one-sided/observer-measured); the per-context grant reading presented
+  as the grant's shape (now flagged as my reading, scope not owner-confirmed).
+- **Worked instance: two reviewers on a records landing earned their cost
+  decisively** — 4 BLOCKING + 9 IMPORTANT verified-real findings between them on a
+  diff every line of which I had written carefully hours before, including two
+  corrections OF my corrections. The trust node's own thesis performed itself: the
+  seat's fluent self-model needed external instruments, and got them.

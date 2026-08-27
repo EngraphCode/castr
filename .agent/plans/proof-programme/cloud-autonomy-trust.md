@@ -1,10 +1,8 @@
 ---
 title: Cloud-autonomy trust — make the Practice trustworthy in cloud sessions and Routines
 status: active
-lane: active
 created: 2026-08-26
 last_updated: 2026-08-27
-promoted: 2026-08-27
 owner_directive: >-
   "You are right, this is about building a trusted system that will repay this
   investment for many, many years, and which will continue to evolve. To date
@@ -13,16 +11,22 @@ owner_directive: >-
   need to enhance and improve the Practice to make autonomous work in that
   environment properly trustworthy." (Owner, 2026-08-26, arming walk.)
 promotion_record: >-
-  Promoted future → active 2026-08-27 (routine-configuration session, Vesta
-  turns Singularity): the node's own promotion trigger fired — the owner named
-  the work ("review and deeply update all appropriate plans … bring the
-  configuration of the routine, including the prompt, explicitly into the fold
-  as part of creating an autonomous Practice agent, with the structure and
-  support and learning across sessions that implies … this absolutely is
-  investment. And we should structure our records of this work appropriately").
-  Companion-strategic node: the proof-programme parent plan remains the
-  execution queue; this node carries the frame, the measurements, and the
-  record structure.
+  Promoted out of the future lane 2026-08-27 (routine-configuration session,
+  Vesta turns Singularity). The node's recorded promotion trigger was "The
+  owner names the first enhancement slice, or a queued proof-programme row
+  (Q-15/Q-18/Q-20 family) is claimed whose brief cites this node — whichever
+  comes first"; the first arm fired: the owner directed "review and deeply
+  update all appropriate plans … bring the configuration of the routine,
+  including the prompt, explicitly into the fold as part of creating an
+  autonomous Practice agent, with the structure and support and learning
+  across sessions that implies … this absolutely is investment. And we should
+  structure our records of this work appropriately." Home: the
+  proof-programme collection, beside the parent plan and runbook this frame
+  governs — deliberately not `plans/active/` (that lane's contract is
+  ephemeral executable slices; an assumptions-expert review 2026-08-27
+  measured the mismatch) and not yet doctrine (an ADR amendment is an owner
+  acceptance act; the question rides the Act 3 owner card). Execution stays
+  in the parent-plan queue.
 ---
 
 # Cloud-Autonomy Trust
@@ -38,48 +42,55 @@ must re-check is worth little; a landed slice the owner never has to think
 about is the product. The system repays the investment over many years and
 keeps evolving.
 
-## The ratified frame (owner, 2026-08-27)
+## The four readiness questions
+
+The numbered set the probe and delivery items cite (owner-authored in the
+routine-configuration session brief): **(1) write binding** — proven only by
+the attended firing (claim, branch, PR, push) through its loud-failure
+window; **(2) notification receipt** — the firing's completion notification
+arriving with the owner, the hard gate before any enable; **(3) self-report
+honesty** — the firing's completion summary compared line-by-line against
+measured reality; **(4) review-loop convergence** — unmeasured until the
+safety instruments land (Q-18/Q-20/Q-22, then Q-19).
+
+## The frame (ratified and synthesised, attributed per claim)
 
 The 2026-08-27 routine-configuration session ran the deep questioning pass
 (metacognition / free-play / concept-exploration) over the programme's nature
-and intent, and the owner ratified its synthesis. The frame, now of record:
+and intent and reported its findings; the owner replied "Thank you, I agree
+with your findings" and directed the record restructuring this node carries.
+Attribution below distinguishes the owner's own words, the owner's blanket
+agreement to the reported findings, and the session's synthesis:
 
-- **The experiment is channel calibration, not capability proof.** The loop
-  has already landed real product value through real review (Q-02..Q-04). Of
-  the four readiness questions, only the write binding is about capability —
-  and it is the least informative, because its failure mode is loud and
-  bounded. Notification receipt, self-report honesty, and review-loop
-  convergence are all properties of the **reporting channel** between an
-  autonomous system and one bounded-attention human. The attended first live
-  firing is not a driving test for a driver who has already driven; it tests
-  whether the examiner can get out of the car.
-- **Verification relocates; it never disappears.** The apparent tension
-  between "the owner never has to think about a landed slice" and
-  verify-don't-trust resolves by relocation: verification moves from the
-  owner's attention into reliable, trusted, automated machinery — gates,
-  probes, contracts, byte-verification, the row contract. Owner verbatim
-  (2026-08-27): _"verify don't trust is moved from attention to reliable,
-  trusted, automated machinery — that has been a core of the Practice
-  development."_ Owner attention converts from a per-slice operating cost
-  into **capital invested in instruments**, and the instruments compound
-  across every future Routine, repo, and account (the account-portability arc
-  made that transfer explicit).
-- **This is investment, recorded as such.** Owner verbatim (2026-08-27):
-  _"this is about autonomy, and therefore about trust. And this absolutely is
-  investment."_ The records of this work are structured accordingly — this
-  node is the investment's frame-of-record; the proof-programme queue is its
-  delivery vehicle; the honesty probe is its measurement instrument.
-- **The experiment is allowed to fail.** A failure at the attended firing is
-  the cheap, high-information outcome — the ceremony exists to move failure
-  earlier, where it is loud, instead of later, where it is silent and
-  compounding. A probe that can only pass is theatre; a material divergence
-  found by the probe outranks the arming agenda (correctness is never traded
-  for the agenda).
-- **With one verifier there is no quorum, only calibration.** The owner is a
-  single low-bandwidth verifier; the byte-verify / row-contract /
-  honesty-probe family are error-correcting codes that reduce the
-  verification bits needed per landed slice. This is why self-report honesty
-  is the load-bearing readiness question.
+- **Owner verbatim (2026-08-27):** "verify don't trust is moved from
+  attention to reliable, trusted, automated machinery — that has been a core
+  of the Practice development." And: "this is about autonomy, and therefore
+  about trust. And this absolutely is investment. And we should structure our
+  records of this work appropriately." Owner attention converts from a
+  per-slice operating cost into **capital invested in instruments**, and the
+  instruments compound across every future Routine, repo, and account (the
+  account-portability arc made that transfer explicit).
+- **Owner-agreed findings (the reported synthesis the "I agree with your
+  findings" reply covered):** the experiment is **channel calibration, not
+  capability proof** — the loop has already landed real product value through
+  real review (Q-02..Q-04); of the four readiness questions only the write
+  binding is capability, and it is the least informative because its failure
+  mode is loud and bounded, while notification receipt, self-report honesty,
+  and review-loop convergence are all properties of the reporting channel
+  between an autonomous system and one bounded-attention human. The attended
+  first live firing is not a driving test for a driver who has already
+  driven; it tests whether the examiner can get out of the car. And: **the
+  experiment is allowed to fail** — a failure at the attended firing is the
+  cheap, high-information outcome; a probe that can only pass is theatre.
+- **Owner words from the session brief (the commissioning text):**
+  "correctness is never traded for the agenda" — a defect surfaced by the
+  firing takes precedence over the arming agenda.
+- **Session synthesis (seat-authored, unratified individually, offered as
+  reasoning not authority):** with one verifier there is no quorum, only
+  calibration — the owner is a single low-bandwidth verifier, and the
+  byte-verify / row-contract / honesty-probe family are error-correcting
+  codes reducing the verification bits needed per landed slice; this is why
+  self-report honesty is the load-bearing readiness question.
 
 ## The bet
 
@@ -124,8 +135,11 @@ definition spans three layers, each repo-governed:
 1. **Configuration** — the trigger (stored prompt, sources, model,
    notifications, connector, cadence) is a governed Practice surface with a
    repo canonical and a change discipline; the arming runbook §The Routine is
-   an autonomous Practice agent carries the contract (canonical lockstep,
-   change authority, live-read verification).
+   an autonomous Practice agent carries the operational contract (canonical
+   lockstep, change authority, live-read verification). Today that lockstep
+   is review-time seat discipline, not machinery: an automated
+   canonical-vs-live byte-compare is a named candidate instrument (routed
+   below), not a built one.
 2. **Structure and support** — the fired agent's cognition is repo-carried:
    thorough grounding plus the plan / metacognition / proportionality stack
    (routine-prompt step 3), the row contract, the reporting surfaces, and the
@@ -155,20 +169,14 @@ definition spans three layers, each repo-governed:
 - The enable-act overlap guard and the notification-receipt gate in the
   arming runbook (PR #60 + walk refinements).
 
-2026-08-27 routine-configuration session instalments:
-
-- The stored trigger prompt's skills paragraph aligned to the thorough /
-  firing-scoped-handoff rulings (owner-authorised targeted trigger edit,
-  verified in the same trigger read; runbook canonical in lockstep).
-- The pre-registered attended-firing honesty probe
-  (`../proof-programme/attended-firing-honesty-probe.md`) — the probe's
-  claim→measurement table written before the firing, so the verdict is a
-  checklist outcome rather than an impression.
-- The Routine-as-Practice-agent governance section in the arming runbook,
-  including the canonical-lockstep change discipline (its hazard measured
-  live: an unmerged canonical alignment plus the runbook's own re-paste
-  instruction would have reverted the live fix).
-- This node promoted to the active lane as the investment's frame-of-record.
+Routine-configuration session instalments (the session spans 2026-08-26
+evening → 2026-08-27 UTC; detail in the programme thread record's addendum —
+this list stays an index): the stored-prompt alignment (2026-08-26,
+owner-authorised targeted edit, canonical in lockstep); the pre-registered
+honesty probe
+([`attended-firing-honesty-probe.md`](./attended-firing-honesty-probe.md));
+the runbook's Routine-as-Practice-agent governance section; this node's
+promotion into the programme collection.
 
 ## Success looks like
 
@@ -176,27 +184,36 @@ definition spans three layers, each repo-governed:
   evidence records) matches externally measured reality — the delta is the
   trust metric, observed at every attended or audited firing, starting with
   the first attended live firing. The measurement instrument is the
-  pre-registered honesty probe; its per-claim verdicts and the overall
-  HONEST / DIVERGENT verdict land in the programme thread record.
+  pre-registered honesty probe; its per-claim verdicts and overall verdict
+  land in the programme thread record.
 - Owner interventions per session trend toward genuine forks only; corrections
   of relayed error trend to zero because each one gets encoded structurally
-  (rule, contract, runbook refinement) rather than re-taught.
+  (rule, contract, runbook refinement) rather than re-taught. No instrument
+  counts interventions today: the named instrument is Q-19's review-round
+  tally (queue position: behind Q-13 via `depends_on` — a dependency that
+  reads as sequencing preference rather than technical necessity; flagged
+  for the owner in the thread record's pending list rather than resequenced
+  by this seat).
 - Every account-side mechanism (notifications, model binding, write binding,
   connector tools, trigger self-management) has a recorded first live
   traversal; no capability is written as fact ahead of one.
 - The learning loop demonstrably closes: a lesson captured by one firing
-  reaches a permanent home via the curation drain and changes a later
-  firing's behaviour without owner re-teaching.
+  reaches a permanent home via the curation drain (measurable as the diff
+  that lands it) and changes a later firing's behaviour without owner
+  re-teaching — the attribution method for that second half is undefined
+  until the drain exists and at least two firings have run under the new
+  profile; the criterion is pending Delivery item 3, not yet measurable.
 - This node does not claim: that the loop is yet trustworthy unattended (the
   first attended firing and its honesty probe are still ahead), or that the
   row contract has been exercised by a firing.
 
 ## Delivery
 
-Executable work serving this node lives in the proof-programme queue (the
-safety-instrument rows Q-18/Q-20/Q-22 sequenced first, owner-approved
-2026-08-26 — Q-21 completed 2026-08-26) and in owner-named slices citing this
-node. Near-term work items, in order:
+Executable work serving this node lives in the parent-plan queue (the
+safety-instrument rows sequenced first, owner-approved 2026-08-26; the
+parent-plan frontmatter is the authority on row state — enumerate there,
+never from this list) and in owner-named slices citing this node. Near-term
+work items, in order:
 
 1. Attended first live firing observed against the pre-registered honesty
    probe; verdict recorded in the thread record (this closes readiness
@@ -206,12 +223,16 @@ node. Near-term work items, in order:
    evidence with less unattended exposure while review-loop convergence
    (readiness question 4) is unmeasured — an owner-weighable option at the
    enable, named here so the enable sitting weighs it deliberately.
-3. The consolidation-Routine estate (Act 3): prompt file, ADR-051 amendment
-   clause, runbook/register rows — seat-authored, owner creates the trigger.
-   This is the learning-loop drain; it completes layer 3 of the agent above.
+3. The consolidation-Routine estate (Act 3): prompt file, proposed ADR-051
+   amendment clause (owner acceptance act), runbook/register rows —
+   seat-authored, owner creates the trigger. This is the learning-loop
+   drain; it completes layer 3 of the agent above.
 4. The queue's safety instruments (Q-18 predecessor-slot attestation, Q-20
    capability-probe re-scope, Q-22 fixture-generator repair), then Q-19's
-   convergence tally when sequenced.
+   convergence tally at its queue position.
+5. Candidate instrument (seat-proposed, unrouted until owner word): an
+   automated canonical-vs-live check for the trigger's stored prompt, giving
+   the runbook's lockstep clause machinery instead of discipline.
 
 The 2026-08-26 walk record and the 2026-08-27 session addendum in the
 proof-programme thread record, plus the queued-decisions register, carry the

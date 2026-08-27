@@ -933,8 +933,8 @@ green. Source: PR #35 review threads (carry-forward dispositions recorded on-thr
 2026-08-23). Gate: none (eligible immediately).
 
 **Q-18 — Predecessor-slot attestation (OP-1a; serves the
-[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
-fires that node's promotion trigger).** Surface: `routine-prompt.md` — three
+[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
+2026-08-27, its frame governs this row).** Surface: `routine-prompt.md` — three
 touch points, the check and BOTH consumer halves: (1) step 3 (grounding) gains the
 check — derive each expected predecessor slot from your own spawn time minus whole
 cadence intervals (ADR-051 clause 2; 8 h — never from a platform trigger read, an
@@ -987,8 +987,8 @@ OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); sec
 owner decision card 2026-08-24. Gate: none beyond `depends_on: [Q-13]`.
 
 **Q-20 — Q-15 brief re-scope + D-9 correction (OP-5; serves the
-[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
-fires that node's promotion trigger).** Surface: this file's Q-15
+[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
+2026-08-27, its frame governs this row).** Surface: this file's Q-15
 row and brief text, plus the D-9 one-word correction in the Q-17 brief
 ("tenth-round" → "seventeenth-round" — three surfaces attest seventeen). Rewrite the
 Q-15 brief to post-outage reality: each cured environment gap becomes a VALIDITY
@@ -1031,8 +1031,8 @@ states the general policy with both branches and cites ADR-051; both adapter
 descriptions corrected; no unconditional owner-invoked claim remains.**
 
 **Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26; serves the
-[`cloud-autonomy-trust`](../future/cloud-autonomy-trust.md) node — claiming this row
-fires that node's promotion trigger).** Surface:
+[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
+2026-08-27, its frame governs this row).** Surface:
 `lib/scripts/generate-normalized-fixtures.ts` and the checked-in normalized fixture
 estate it owns (the paired `zod.ts` fixtures and `ir.json`/`ir2.json`). Goal,
 generator-first per the ruling ("obviously fix the generator") and

@@ -68,8 +68,8 @@ the parenthesis; nothing else in the prompt is account-specific. The closing
 skills-discipline paragraph is the owner's own amendment to the canonical
 prompt (added live at the 2026-08-26 arming walk; mid-line spacing conserved
 as the owner wrote it). Its wording was aligned to the firing protocol on
-2026-08-27 (owner-authorised targeted trigger edit, routine-configuration
-session): `start-right-thorough` per the cloud-grounding ruling
+2026-08-26 (owner-authorised targeted trigger edit, routine-configuration
+session; trigger `updated_at` 2026-08-26T20:07Z is the timestamp of record): `start-right-thorough` per the cloud-grounding ruling
 (routine-prompt step 3) and the firing-scoped `session-handoff` closeout
 profile (routine-prompt step 9, QD-6). The live text carries no trailing
 whitespace, so byte-verification against this canonical is exact; the
@@ -118,7 +118,9 @@ firing actually receives the attached source.
   (ADR-051 clause 1).
 - **Schedule:** cron `3 */8 * * *` — three firings per day, the clause 2 default as
   amended at acceptance. The owner may change cadence at will; agents may lower it —
-  never raise it — when firings repeatedly idle.
+  never raise it — when firings repeatedly idle. **Live-state note (2026-08-27):**
+  the live trigger currently carries NO cron — poke-only, the arming hold's honest
+  disabled state; the cron above is the armed target that goes on only at step 7.
 - **Sources ("Runs with"):** the castr repository, attached by the owner in the Routine's
   settings UI. Measured constraint (Q-01 probe firings, 2026-08-22): a trigger created via
   the API carries no repo sources and its firings land nothing — the division of labour is
@@ -128,7 +130,12 @@ firing actually receives the attached source.
   owner-attached sources (measured, same record).
 - **Notifications:** completion notifications ON, **push-only, no digest** (ballot B-15
   as amended by owner re-ballot 2026-08-24). Clause 6 escalation notifications keep a
-  delivery channel regardless of any future B-15 change.
+  delivery channel regardless of any future B-15 change. **Live-state divergence
+  (recorded 2026-08-27, unresolved):** the live trigger reads push+slack/no-email —
+  plausibly part of the owner's 2026-08-26 mid-walk notification repair, but not
+  ratified anywhere; whether slack stays (superseding this B-15 line) and which
+  channel satisfies the receipt gate are the programme thread record's pending owner
+  decision (a). Reconcile this line and the live state when the owner rules.
 - **Platform "Auto-fix pull requests": OFF** (owner action 2026-08-23) — firings monitor
   and drive their own PRs; no platform-side second writer.
 - **Connectors:** Slack, attached per the QD-7 owner direction (advisory second opinions
@@ -148,38 +155,36 @@ Owner direction (2026-08-27, routine-configuration session): the Routine's
 configuration — the stored trigger prompt and every setting the section above
 lists — is explicitly part of **creating an autonomous Practice agent**, a
 governed Practice surface rather than incidental platform state. The frame of
-record is [`../active/cloud-autonomy-trust.md`](../active/cloud-autonomy-trust.md)
-§The autonomous Practice agent; this section carries the operational contract:
+record is [`cloud-autonomy-trust.md`](./cloud-autonomy-trust.md)
+§The autonomous Practice agent, which also carries the structure/support and
+learning-across-sessions layers — this section carries only the operational
+contract:
 
 - **Canonical lockstep.** Every change to the live trigger lands with its
   repo canonical in the same act: the live edit, the canonical-block edit in
   this runbook, and a trigger-read verification of the result (prompt
   byte-exact; sources, outcome branch, model, auto-fix, connector, and
-  notification channels unchanged unless the change targeted them; cron state
-  as intended). A divergence window between live and canonical is a defect
-  with a measured hazard: this runbook's own re-paste instruction, followed
-  during such a window, reverts the unlanded live change (observed
-  2026-08-27 — the skills-paragraph alignment was live while its canonical
-  update sat on an unmerged branch; the cure is landing the canonical
-  promptly, and this clause).
+  notification channels unchanged unless the change targeted them; cron
+  present or absent exactly as the change intended). A divergence window
+  between live and canonical is a defect with a measured hazard: this
+  runbook's own re-paste instruction, followed during such a window, reverts
+  the unlanded live change (observed across 2026-08-26→27 — the
+  skills-paragraph alignment was live from 2026-08-26 20:07Z while its
+  canonical update sat on an unmerged branch; the cure is landing the
+  canonical promptly, and this clause). Today this lockstep is review-time
+  seat discipline, not machinery — an automated canonical-vs-live compare is
+  a named candidate instrument in the trust node's delivery list, not a
+  built gate.
 - **Change authority.** The owner edits the trigger at will. A seat edits it
   only under explicit owner authorisation, and then keeps the change
-  targeted and minimal and reports it (owner grant shape, 2026-08-27:
+  targeted and minimal and reports it (owner grant, 2026-08-26, verbatim:
   "You can edit the trigger as long as you keep the changes targeted and
-  minimal and report them" — a per-context grant, never a standing one; the
-  enable act in step 7 and cadence changes remain owner acts regardless).
-- **Structure and support.** The fired agent's cognition is repo-carried:
-  routine-prompt step 3's grounding stack, the row contract, the reporting
-  surfaces, and the kill switches. The stored prompt stays a thin pointer by
-  design (finding D-5); capability never grows trigger-side.
-- **Learning across sessions.** The agent's memory is the repo. Each firing
-  writes its captures through the firing-scoped `session-handoff` profile
-  (napkin entries, thread-record identity row, evidence records, incidents);
-  each firing reads them back through thorough grounding. The loop closes
-  through the curation drain — the consolidation Routine (seat-authored
-  estate pending; the trust node's §Delivery item 3) that graduates firing
-  captures into permanent homes, so a lesson one firing pays for changes
-  later firings' behaviour as doctrine rather than sitting as unread backlog.
+  minimal and report them" — read narrowly by the authoring seat as
+  per-context rather than standing; the owner has not been asked to confirm
+  that scope, and the enable act in step 7 and cadence changes remain owner
+  acts regardless of the reading).
+- The stored prompt stays a thin pointer by design (finding D-5); capability
+  never grows trigger-side.
 
 ## Cloud environment
 
@@ -311,8 +316,11 @@ beyond them is needed for the Routine.
    the programme's honesty probe: the observing seat runs it against the
    pre-registered claim→measurement table in
    [`attended-firing-honesty-probe.md`](./attended-firing-honesty-probe.md) —
-   written before the firing so the verdict is a checklist outcome — and a
-   DIVERGENT verdict stops the arming exactly as the notification gate does.
+   written before the firing so the verdict is a checklist outcome. The probe's
+   stop-the-arming consequence for a DIVERGENT verdict is seat-proposed by
+   analogy with the notification gate and awaits owner ratification (the thread
+   record's pending decision (c)); until ratified, a DIVERGENT verdict goes to
+   the owner with its evidence rather than acting as an automatic gate.
 7. Enable the Routine (set the cron; re-run step 5's state re-verification against
    the live base immediately beforehand — never carried from earlier in the
    sitting). **Overlap guard on the enable act itself**: if step 6's manual
