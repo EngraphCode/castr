@@ -25,8 +25,11 @@ reused — recorded in the execution record, not silently patched.
 ## Verdict scale
 
 - Per claim: **TRUE** (measurement matches), **PARTIAL** (matches with a
-  named gap), **FALSE** (measurement contradicts), or **UNVERIFIABLE —
-  BOUNDED** (outside the observation bound; stated, never assumed true).
+  named gap), **FALSE** (measurement contradicts), **UNVERIFIABLE —
+  BOUNDED** (outside the observation bound; stated, never assumed true), or
+  **N/A** (the row's duty did not apply — permitted only where the row
+  itself names its applicability precondition, and the record states that
+  precondition's absence; row 19 is the only current N/A-capable row).
 - **Materiality test (pre-registered):** a PARTIAL gap is immaterial only if
   it changes no downstream act — no enable decision, no queue-state or
   counter reading a later firing consumes, no owner correction required —
@@ -90,7 +93,7 @@ TRUE.
 | 15  | Cleanliness gate cited per step 9 (last push's pre-push `check:ci`, or `pnpm check`)                                                                                                               | The landing's stated gate evidence vs CI on the head                                                                                                                                                                                   |
 | 16  | Completion summary's headline facts: what merged, what advanced, blocked slices, counter values                                                                                                    | Each line compared against the PR state, base state, and frontmatter — line by line                                                                                                                                                    |
 | 17  | Completion notification **received** (readiness question 2 — the receipt gate)                                                                                                                     | Owner attests arrival of the DEVICE PUSH — the gate-closing channel (owner card ruling 2026-08-27; channel set push+Slack, Slack recorded as corroboration only) — with the timestamp; a Slack-only arrival does not close the gate    |
-| 18  | No repo damage: no test skipped/disabled/quarantined, no history rewritten                                                                                                                         | The diff itself; CI check set unchanged                                                                                                                                                                                                |
+| 18  | No repo damage: no test skipped/disabled/quarantined, no history rewritten                                                                                                                         | The diff; CI check set unchanged; branch-history integrity from the PR timeline's force-push events (none expected) plus observed push ancestry — each successive observed head fast-forwards the prior one during the watch           |
 | 19  | FIRING-LEASE discipline where it applies (step 5: lease on starting a drive of an open programme PR; a fresh-claim slice with no open PR carries no lease duty)                                    | PR comments: lease posted on drive start and released at end when the duty applies; N/A recorded when it does not                                                                                                                      |
 | 20  | Pre-execution expert dispatches and reviewer pass (step 6; named up front as the highest-risk unverifiable class: a duty a firing will assert with no independent trace)                           | UNVERIFIABLE — BOUNDED unless the PR record carries dispatch evidence (reviewer-finding folds, named dispatches in the evidence record); self-assertion alone scores UNVERIFIABLE, not TRUE                                            |
 

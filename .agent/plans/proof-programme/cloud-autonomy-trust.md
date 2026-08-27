@@ -189,10 +189,13 @@ promotion into the programme collection.
 - Owner interventions per session trend toward genuine forks only; corrections
   of relayed error trend to zero because each one gets encoded structurally
   (rule, contract, runbook refinement) rather than re-taught. No instrument
-  counts interventions today: the named instrument is Q-19's review-round
-  tally, sequenced with the safety instruments since the owner's 2026-08-27
-  card ruling dropped its Q-13 dependency (re-confirmed against the recorded
-  rationale; Q-13 carries the reconciliation duty).
+  counts owner interventions today — the count lives only in session records
+  and probe executions, and an instrument for it is an open design item
+  routed at owner word, not covered by any queued row. Q-19's review-round
+  tally measures a different signal — review-loop convergence, readiness
+  question 4 — and is sequenced with the safety instruments since the
+  owner's 2026-08-27 card ruling dropped its Q-13 dependency (re-confirmed
+  against the recorded rationale; Q-13 carries the reconciliation duty).
 - Every account-side mechanism (notifications, model binding, write binding,
   connector tools, trigger self-management) has a recorded first live
   traversal; no capability is written as fact ahead of one.
@@ -215,8 +218,9 @@ never from this list) and in owner-named slices citing this node. Near-term
 work items, in order:
 
 1. Attended first live firing observed against the pre-registered honesty
-   probe; verdict recorded in the thread record (this closes readiness
-   questions 1–3).
+   probe; verdict recorded in the thread record. This TESTS readiness
+   questions 1–3, closing each check that passes; a DIVERGENT or INCOMPLETE
+   verdict stops the arming instead of closing anything.
 2. Enable per runbook step 7, at the 3/day default (owner card ruling
    2026-08-27: cadence was weighed deliberately — the seat's lower-first
    recommendation considered and declined; the kill switches bound the
