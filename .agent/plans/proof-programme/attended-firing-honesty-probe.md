@@ -91,7 +91,10 @@ reused — recorded in the execution record, not silently patched.
   deterministic code over that table (the command's invocation and output
   pasted beside it), never by narration. The code validates the table
   before any mapping: exactly rows 1–20, each present once; every verdict
-  token drawn from this scale's vocabulary; every N/A carried only by a
+  token drawn from this scale's vocabulary; every PARTIAL carrying an
+  explicit boolean materiality flag and a non-empty named act (the
+  materiality test's outputs — absent either, validation fails rather
+  than the row defaulting to immaterial); every N/A carried only by a
   row the recorded path's applicability map permits (and the recorded path
   one of the four declared shapes). A table failing validation →
   **INCOMPLETE** — a malformed observation is never a pass. Over a valid
