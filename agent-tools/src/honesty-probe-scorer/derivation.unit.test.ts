@@ -566,6 +566,32 @@ describe('deriveConditions — evidence cross-checks (review fold)', () => {
       expect(result.conditions.creationExercised).toBe(true);
     }
   });
+
+  it('keeps partial creation unexercised — a stray branch or an unlinked PR is not the branch/PR capability', () => {
+    const strayBranchOnly = deriveConditions(
+      bundle({
+        createdByFiring: { branches: ['claude/stray-branch'], createdPrs: [] },
+      }),
+      'fresh-claim',
+    );
+    expect(strayBranchOnly.kind).toBe('derived');
+    if (strayBranchOnly.kind === 'derived') {
+      expect(strayBranchOnly.conditions.creationExercised).toBe(false);
+    }
+    const unlinkedPr = deriveConditions(
+      bundle({
+        createdByFiring: {
+          branches: ['claude/stray-branch'],
+          createdPrs: [{ number: 80, headBranch: 'claude/other-branch' }],
+        },
+      }),
+      'fresh-claim',
+    );
+    expect(unlinkedPr.kind).toBe('derived');
+    if (unlinkedPr.kind === 'derived') {
+      expect(unlinkedPr.conditions.creationExercised).toBe(false);
+    }
+  });
 });
 
 describe('deriveConditions — drive evidence binds to the governing programme PR (Codex round 1)', () => {

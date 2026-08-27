@@ -102,9 +102,17 @@ export function programmeDrivePushes(
   );
 }
 
-/** Whether the firing exercised branch/PR creation — evidence-derived on every path. */
+/**
+ * Whether the firing exercised branch/PR creation — evidence-derived on
+ * every path, and only from the complete linked pair: a created PR heading
+ * from a created branch (readiness question 1's capability is "branch,
+ * PR-open, push"). A stray branch or an unlinked PR is partial creation,
+ * which keeps row 8's creation sub-claim required — recorded as
+ * unexercised, never silently passed.
+ */
 function creationExercised(bundle: EvidenceBundle): boolean {
-  return bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.createdPrs.length > 0;
+  const createdBranches = new Set(bundle.createdByFiring.branches);
+  return bundle.createdByFiring.createdPrs.some((pr) => createdBranches.has(pr.headBranch));
 }
 
 /**
