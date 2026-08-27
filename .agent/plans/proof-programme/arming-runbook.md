@@ -334,7 +334,11 @@ beyond them is needed for the Routine.
    its completion notification received per the receipt-gate channel rule,
    and the probe returning HONEST WITHIN BOUNDS — computed by the probe's
    deterministic aggregation over the recorded row verdicts, never narrated
-   (a DIVERGENT or INCOMPLETE verdict stops the arming instead). The scheduler never terminates a
+   (a DIVERGENT or INCOMPLETE verdict stops the arming instead) — and the
+   write binding's creation proof in hand: when the attended firing's path
+   exercised no branch/PR creation (a drive, or a defer without one), the
+   probe records that sub-claim unexercised and readiness question 1 stays
+   open — no cron until a firing has proven creation. The scheduler never terminates a
    predecessor (ADR-051 clause 2; incident I-1 is the measured
    two-live-workers collision), so an enable mid-drive would schedule a
    successor on top of the still-running attended firing — the verdict gate
