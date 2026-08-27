@@ -55,7 +55,12 @@ for the firing's data and the falsifier above.
     and completion summary, checked under rows 14 and 16); rows 7 and 20
     apply to the repair slice itself; row 19 is N/A.
   - **Defer with bookkeeping** (step 4's contested or collision branch):
-    rows 4, 5, 7, and 20 are N/A. Row 19 is N/A only for a pre-drive
+    rows 4 and 5 are N/A. Rows 7 and 20 are N/A only for a pre-drive
+    contest; when the deferral follows a drive whose pushes changed code,
+    they retain the drive path's conditional treatment (they apply, with
+    N/A only on the scorer-recomputed no-code-change condition), so a
+    code-changing drive never sheds its TDD and reviewer duties by ending
+    in deferral. Row 19 is likewise N/A only for a pre-drive
     contest; when the deferral follows a collision after a drive began,
     the lease duty already attached and row 19 applies in full (lease
     posted at drive start, release posted when the drive ends in
