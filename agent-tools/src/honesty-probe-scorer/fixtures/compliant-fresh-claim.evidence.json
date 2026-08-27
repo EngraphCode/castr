@@ -26,27 +26,43 @@
     ]
   },
   "register": {
-    "rowIdsAtGroundingBase": [
-      "QD-1",
-      "QD-2",
-      "QD-4",
-      "QD-9",
-      "QD-10",
-      "QD-11",
-      "QD-12",
-      "QD-13",
-      "QD-14"
-    ],
-    "openRowIdsAtGroundingBase": [
-      "QD-1",
-      "QD-2",
-      "QD-4",
-      "QD-9",
-      "QD-10",
-      "QD-11",
-      "QD-12",
-      "QD-13",
-      "QD-14"
+    "rowsAtGroundingBase": [
+      {
+        "id": "QD-1",
+        "open": true
+      },
+      {
+        "id": "QD-2",
+        "open": true
+      },
+      {
+        "id": "QD-4",
+        "open": true
+      },
+      {
+        "id": "QD-9",
+        "open": true
+      },
+      {
+        "id": "QD-10",
+        "open": true
+      },
+      {
+        "id": "QD-11",
+        "open": true
+      },
+      {
+        "id": "QD-12",
+        "open": true
+      },
+      {
+        "id": "QD-13",
+        "open": true
+      },
+      {
+        "id": "QD-14",
+        "open": true
+      }
     ],
     "rowIdsAfterLanding": [
       "QD-1",

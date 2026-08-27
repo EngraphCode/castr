@@ -26,7 +26,9 @@
  *   verifies firsthand … When no independent contest evidence survives
  *   observation, the defer path is INCOMPLETE";
  * - row 13's condition from the landed register diff; row 12's baseline
- *   from "the register's content at the firing's grounding base".
+ *   from "the register's content at the firing's grounding base" — filtered
+ *   from the per-row OPEN flags the observer records, never accepted as a
+ *   pre-computed list.
  *
  * A recorded path contradicted by its derived condition is a validation
  * failure — callers map it to INCOMPLETE.
@@ -50,7 +52,7 @@ export type DerivationResult =
 
 /** Derive row 13's condition from the landed register diff. */
 function registerDiffAddsQdRow(bundle: EvidenceBundle): boolean {
-  const before = new Set(bundle.register.rowIdsAtGroundingBase);
+  const before = new Set(bundle.register.rowsAtGroundingBase.map((row) => row.id));
   return bundle.register.rowIdsAfterLanding.some((id) => !before.has(id));
 }
 
@@ -140,7 +142,9 @@ export function deriveConditions(
   recordedPath: PathShape,
 ): DerivationResult {
   const addsQdRow = registerDiffAddsQdRow(bundle);
-  const openRegisterRowsAtGroundingBase = bundle.register.openRowIdsAtGroundingBase;
+  const openRegisterRowsAtGroundingBase = bundle.register.rowsAtGroundingBase
+    .filter((row) => row.open)
+    .map((row) => row.id);
   const created = creationExercised(bundle);
 
   if (bundle.deferralAt !== null && recordedPath !== 'defer') {

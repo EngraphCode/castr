@@ -81,11 +81,21 @@ interface QueueRowSnapshots {
   readonly afterLanding: readonly QueueRowState[];
 }
 
-/** Queued-decisions register row ids at the derivation's two revisions. */
+/** One register row observed at the grounding base, with its OPEN disposition. */
+interface RegisterRowState {
+  readonly id: string;
+  /** Whether the row's status column reads OPEN (a ruled row is closed). */
+  readonly open: boolean;
+}
+
+/** Queued-decisions register content at the derivation's two revisions. */
 interface RegisterSnapshots {
-  readonly rowIdsAtGroundingBase: readonly string[];
-  /** Row 12's baseline: the OPEN rows at the firing's grounding base. */
-  readonly openRowIdsAtGroundingBase: readonly string[];
+  /**
+   * Every row at the firing's grounding base with its per-row OPEN flag —
+   * the derivation filters this for row 12's baseline, so the OPEN set is
+   * derived from row-level observations, never accepted as a typed list.
+   */
+  readonly rowsAtGroundingBase: readonly RegisterRowState[];
   readonly rowIdsAfterLanding: readonly string[];
 }
 
@@ -218,11 +228,8 @@ const FIRE_TIME_KEYS: ReadonlySet<string> = new Set(['mainHeadCi', 'openProgramm
 const OPEN_PR_KEYS: ReadonlySet<string> = new Set(['number', 'draft']);
 const QUEUE_ROW_KEYS: ReadonlySet<string> = new Set(['id', 'status']);
 const QUEUE_SNAPSHOT_KEYS: ReadonlySet<string> = new Set(['atGroundingBase', 'afterLanding']);
-const REGISTER_KEYS: ReadonlySet<string> = new Set([
-  'rowIdsAtGroundingBase',
-  'openRowIdsAtGroundingBase',
-  'rowIdsAfterLanding',
-]);
+const REGISTER_KEYS: ReadonlySet<string> = new Set(['rowsAtGroundingBase', 'rowIdsAfterLanding']);
+const REGISTER_ROW_KEYS: ReadonlySet<string> = new Set(['id', 'open']);
 const PUSH_KEYS: ReadonlySet<string> = new Set([
   'prNumber',
   'prPreExistedFiring',
@@ -326,6 +333,28 @@ function parseQueueRowSnapshots(raw: unknown, failures: string[]): QueueRowSnaps
   return { atGroundingBase, afterLanding };
 }
 
+function parseRegisterRow(
+  raw: unknown,
+  index: number,
+  failures: string[],
+): RegisterRowState | undefined {
+  const label = `register.rowsAtGroundingBase[${index}]`;
+  if (!isRecord(raw)) {
+    failures.push(`${label}: not an object`);
+    return undefined;
+  }
+  if (!checkClosedWorld(raw, REGISTER_ROW_KEYS, label, failures)) {
+    return undefined;
+  }
+  const id = raw['id'];
+  const open = raw['open'];
+  if (!isNonEmptyString(id) || typeof open !== 'boolean') {
+    failures.push(`${label}: a row carries a non-empty id and a boolean open flag`);
+    return undefined;
+  }
+  return { id, open };
+}
+
 function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | undefined {
   if (!isRecord(raw)) {
     failures.push('register: not an object');
@@ -334,22 +363,24 @@ function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | un
   if (!checkClosedWorld(raw, REGISTER_KEYS, 'register', failures)) {
     return undefined;
   }
-  const rowIdsAtGroundingBase = raw['rowIdsAtGroundingBase'];
-  const openRowIdsAtGroundingBase = raw['openRowIdsAtGroundingBase'];
+  const rawRows = raw['rowsAtGroundingBase'];
   const rowIdsAfterLanding = raw['rowIdsAfterLanding'];
-  if (
-    !isNonEmptyStringArray(rowIdsAtGroundingBase) ||
-    !isNonEmptyStringArray(openRowIdsAtGroundingBase) ||
-    !isNonEmptyStringArray(rowIdsAfterLanding)
-  ) {
+  if (!isUnknownArray(rawRows) || !isNonEmptyStringArray(rowIdsAfterLanding)) {
     failures.push(
-      'register: rowIdsAtGroundingBase, openRowIdsAtGroundingBase, and rowIdsAfterLanding must be string arrays',
+      'register: rowsAtGroundingBase must be an array of row records and rowIdsAfterLanding a string array',
     );
     return undefined;
   }
+  const rowsAtGroundingBase: RegisterRowState[] = [];
+  for (const [index, entry] of rawRows.entries()) {
+    const row = parseRegisterRow(entry, index, failures);
+    if (row === undefined) {
+      return undefined;
+    }
+    rowsAtGroundingBase.push(row);
+  }
   for (const [label, ids] of [
-    ['rowIdsAtGroundingBase', rowIdsAtGroundingBase],
-    ['openRowIdsAtGroundingBase', openRowIdsAtGroundingBase],
+    ['rowsAtGroundingBase', rowsAtGroundingBase.map((row) => row.id)],
     ['rowIdsAfterLanding', rowIdsAfterLanding],
   ] as const) {
     if (new Set(ids).size !== ids.length) {
@@ -357,15 +388,7 @@ function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | un
       return undefined;
     }
   }
-  const baseIds = new Set(rowIdsAtGroundingBase);
-  if (!openRowIdsAtGroundingBase.every((id) => baseIds.has(id))) {
-    failures.push(
-      'register.openRowIdsAtGroundingBase: every OPEN row must be in the grounding-base id set — ' +
-        "row 12's baseline cannot name a row the base revision does not carry",
-    );
-    return undefined;
-  }
-  return { rowIdsAtGroundingBase, openRowIdsAtGroundingBase, rowIdsAfterLanding };
+  return { rowsAtGroundingBase, rowIdsAfterLanding };
 }
 
 function parsePushes(raw: unknown, failures: string[]): FiringPush[] | undefined {

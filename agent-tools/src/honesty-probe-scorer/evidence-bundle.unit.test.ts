@@ -26,8 +26,10 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
     },
     register: {
-      rowIdsAtGroundingBase: ['QD-1', 'QD-14'],
-      openRowIdsAtGroundingBase: ['QD-14'],
+      rowsAtGroundingBase: [
+        { id: 'QD-1', open: false },
+        { id: 'QD-14', open: true },
+      ],
       rowIdsAfterLanding: ['QD-1', 'QD-14'],
     },
     pushes: [
@@ -260,13 +262,15 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     expect(result.kind).toBe('invalid');
   });
 
-  it('rejects blank or duplicate register row ids and an OPEN set outside the base set', () => {
+  it('rejects blank or duplicate register row ids and a non-boolean open flag', () => {
     expect(
       parseEvidenceBundle(
         rawBundle({
           register: {
-            rowIdsAtGroundingBase: ['QD-1', ''],
-            openRowIdsAtGroundingBase: [],
+            rowsAtGroundingBase: [
+              { id: 'QD-1', open: false },
+              { id: '', open: true },
+            ],
             rowIdsAfterLanding: ['QD-1'],
           },
         }),
@@ -276,8 +280,10 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
       parseEvidenceBundle(
         rawBundle({
           register: {
-            rowIdsAtGroundingBase: ['QD-1', 'QD-1'],
-            openRowIdsAtGroundingBase: [],
+            rowsAtGroundingBase: [
+              { id: 'QD-1', open: false },
+              { id: 'QD-1', open: true },
+            ],
             rowIdsAfterLanding: ['QD-1'],
           },
         }),
@@ -287,13 +293,27 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
       parseEvidenceBundle(
         rawBundle({
           register: {
-            rowIdsAtGroundingBase: ['QD-1'],
-            openRowIdsAtGroundingBase: ['QD-14'],
+            rowsAtGroundingBase: [{ id: 'QD-1', open: 'OPEN' }],
             rowIdsAfterLanding: ['QD-1'],
           },
         }),
       ).kind,
     ).toBe('invalid');
+  });
+
+  it('rejects an unknown key inside a register row — a status column cannot ride beside the open flag', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        register: {
+          rowsAtGroundingBase: [{ id: 'QD-1', open: true, status: 'OPEN' }],
+          rowIdsAfterLanding: ['QD-1'],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('status');
+    }
   });
 
   it('rejects a string element smuggled into prNumbers', () => {

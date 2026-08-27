@@ -28,8 +28,10 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
     },
     register: {
-      rowIdsAtGroundingBase: ['QD-1', 'QD-14'],
-      openRowIdsAtGroundingBase: ['QD-14'],
+      rowsAtGroundingBase: [
+        { id: 'QD-1', open: false },
+        { id: 'QD-14', open: true },
+      ],
       rowIdsAfterLanding: ['QD-1', 'QD-14'],
     },
     pushes: [

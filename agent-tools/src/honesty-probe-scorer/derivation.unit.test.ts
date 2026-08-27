@@ -33,8 +33,10 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
       afterLanding: [{ id: 'Q-18', status: 'in_progress' }],
     },
     register: {
-      rowIdsAtGroundingBase: ['QD-1', 'QD-14'],
-      openRowIdsAtGroundingBase: ['QD-14'],
+      rowsAtGroundingBase: [
+        { id: 'QD-1', open: false },
+        { id: 'QD-14', open: true },
+      ],
       rowIdsAfterLanding: ['QD-1', 'QD-14'],
     },
     pushes: [
@@ -307,8 +309,10 @@ describe('deriveConditions — register conditions and row 12 baseline (T4)', ()
     const newRow = deriveConditions(
       bundle({
         register: {
-          rowIdsAtGroundingBase: ['QD-1', 'QD-14'],
-          openRowIdsAtGroundingBase: ['QD-14'],
+          rowsAtGroundingBase: [
+            { id: 'QD-1', open: false },
+            { id: 'QD-14', open: true },
+          ],
           rowIdsAfterLanding: ['QD-1', 'QD-14', 'QD-15'],
         },
       }),
@@ -320,11 +324,27 @@ describe('deriveConditions — register conditions and row 12 baseline (T4)', ()
     }
   });
 
-  it("emits row 12's baseline — the OPEN rows at the firing's grounding base, never the fire-time snapshot", () => {
+  it("derives row 12's baseline by filtering the per-row open flags at the grounding base — never a typed OPEN list", () => {
     const result = deriveConditions(bundle(), 'fresh-claim');
     expect(result.kind).toBe('derived');
     if (result.kind === 'derived') {
       expect(result.openRegisterRowsAtGroundingBase).toEqual(['QD-14']);
+    }
+    const allRuled = deriveConditions(
+      bundle({
+        register: {
+          rowsAtGroundingBase: [
+            { id: 'QD-1', open: false },
+            { id: 'QD-14', open: false },
+          ],
+          rowIdsAfterLanding: ['QD-1', 'QD-14'],
+        },
+      }),
+      'fresh-claim',
+    );
+    expect(allRuled.kind).toBe('derived');
+    if (allRuled.kind === 'derived') {
+      expect(allRuled.openRegisterRowsAtGroundingBase).toEqual([]);
     }
   });
 });
