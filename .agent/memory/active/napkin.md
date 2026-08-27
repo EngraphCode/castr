@@ -475,3 +475,19 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   against its purpose beats reviewers who score the code against its rules; the fold order
   (fix the demonstrated defeat first, route the wording divergence to the owner) came from
   the evaluation's own verdict-not-menu sequence and was mechanical to follow.
+- **Wrap capture (Wolf seeks Cavern, Phase C-pre closeout, 2026-08-27):** seventeen bot-review
+  rounds + one owner-dispatched adversarial evaluation were dispositioned on PR #72; the tally —
+  fifteen findings absorbed red-first (boundary coherence, chronology, recompute symmetry, the
+  row-11 derivation, identity binding, emission provenance and bounds, terminal CI vocabulary,
+  typed fixtures), eight declined with recorded warrants (the recompute-deepening regress class,
+  closed in scorer-plan.md's review fold), one self-correction (fire-time recompute — decline
+  reversed against the probe's own clause). Play seeds, marked as associations only:
+  review-as-fuzzing (a stateless per-push reviewer functioned as a free adversarial fuzzer over
+  the instrument, and the PR enacted the contradicts-positive contract it was building);
+  stateless-reviewer routing (Codex re-derives per push with no memory, so declined classes recur
+  reshaped — and Codex demonstrably reads AGENTS.md, round 15 cited it, so the durable home for
+  declined-class dispositions may be a reviewer-facing surface rather than PR replies; falsifier:
+  a future PR drawing re-shaped declined-class findings despite such a note). One forced
+  association discarded visibly (demonstration-beats-inspection — duplicate of the earlier
+  capture). Blind-spot bound: CI events and Codex rounds arriving after the process stop are
+  unobserved by this seat; the PR page is the authority.

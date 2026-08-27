@@ -42,8 +42,18 @@ programme's delivery evidence rather than retro-filled here.)
 
 Per PDR-026, externally verifiable, re-derived each session from the queue
 rather than trusted from this record: **drive the single open non-draft
-programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-26, refreshed 2026-08-27: no programme PR is open, so the next firing claims the next
+programme PR to merged, else claim the next eligible queue row** (refreshed
+2026-08-27 late, Phase C-pre closeout: **PR #72 — the honesty-probe verdict
+scorer — is open, non-draft, all 42 review threads resolved, and merge-ready
+under the standing condition-based policy the moment CI is green on its head;
+the seat's watch processes were stopped at owner word ("prepare for
+compaction … then stop all processes"), so the merge is now an owner act or
+the first act of the next seat. The adversarial evaluation's fix-then-fire
+condition is satisfied — its findings are folded and recorded in
+`scorer-plan.md` §Adversarial-evaluation fold. After that merge, Phase C (the
+attended firing) is unblocked and owner-held; QD-15 joins QD-14 awaiting
+ruling.** Prior state for context, 2026-08-27 morning: no programme PR was
+open, so the next firing claims the next
 eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency
 dropped by owner card ruling 2026-08-27; Q-21 completed 2026-08-26,
 PR #64), then Q-05..Q-09, Q-13,
@@ -307,3 +317,35 @@ queue PR — ADR-051 clause 3 does not govern it; the owner invoked this drive t
 merge it. The arming runbook and portability register live at
 `.agent/plans/proof-programme/arming-runbook.md` and
 `.agent/claude-harness-integrations/account-portability-register.md`.
+
+## Handoff — 2026-08-27, Phase C-pre closeout (Wolf seeks Cavern)
+
+Written for a successor on any account: everything needed is in this repo
+and on the PR itself. Simple sequence:
+
+1. **Merge [PR #72](https://github.com/EngraphCode/castr/pull/72)** (branch
+   `claude/routine-config-proof-programme-csfok2`, the honesty-probe verdict
+   scorer). Condition-based policy: merge when every check is green on the
+   current head and every review thread is resolved. At this writing all 42
+   threads are resolved and the head is `013bddb3`; only CI completion was
+   outstanding. If a new bot-review round has arrived since: real, small,
+   certain findings get a red-first fix; recompute-deepening reshapes are
+   declined per the recorded convergence close in
+   `.agent/plans/proof-programme/scorer-plan.md` §Review fold — cite it in
+   the reply.
+2. **The scorer is the Phase C instrument.** Run it with
+   `pnpm agent-tools:score-firing <table.json> <evidence.json>`; the three
+   fixture pairs in `agent-tools/src/honesty-probe-scorer/fixtures/` are
+   worked examples of the two input files. 196 tests document every clause.
+3. **After the merge, everything next is owner-held**: Phase C (attended
+   firing), the enable, and two register rulings (QD-14, QD-15 in
+   `.agent/plans/proof-programme/queued-decisions.md`). Do not start these.
+4. **Before the instrument is reused**, the routed follow-ups in
+   `scorer-plan.md` §Adversarial-evaluation fold apply (zod-strict boundary
+   migration first). Owner word at merge may reopen any declined review
+   finding — the declined set is recorded in the same file.
+
+Authority surfaces: this record for continuity; `scorer-plan.md` for the
+scorer's history and dispositions; the PR threads for every review
+adjudication with SHAs; `napkin.md` for session lessons. No information
+needed to continue lives outside the repo.
