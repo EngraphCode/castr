@@ -74,7 +74,16 @@ for the firing's data and the falsifier above.
     joins row 14's measured surface set, so its omission scores row 14
     FALSE and reaches the verdict through the normal row formula — and
     the summary and receipt (16, 17); row 14 itself applies on this
-    path.
+    path. The contest itself must be independently observable: this
+    path validates only on contest evidence the observer verifies
+    firsthand — another identity's unreleased lease or competing pushes
+    on the branch, a competing open PR, or another agent's landed
+    collaboration artefact — never the firing's own deferral bookkeeping
+    (which evidences that the deferral happened, not its cause), and
+    never a per-container `active-claims.json` entry the observing seat
+    cannot read. When no independent contest evidence survives
+    observation, the defer path is INCOMPLETE — the stop-for-diagnosis
+    outcome, never a pass.
 
   Rows 4, 5, 7, 19, and 20 are the N/A-capable set; every N/A names its
   path.
@@ -122,7 +131,9 @@ for the firing's data and the falsifier above.
   both the governing path itself and the condition behind every N/A: the
   recorded path is cross-checked against the landed evidence (an open
   programme PR at fire time, a claim in the landed parent-plan
-  frontmatter diff, a posted lease, the deferral's bookkeeping); rows
+  frontmatter diff, a posted lease; for a deferral, the independent
+  contest evidence the defer path requires — its own bookkeeping proves
+  that the deferral happened, never its cause); rows
   7/20's "no code changed in this drive" is established from the diff of
   the drive's own pushes; and the defer path's attachment conditions are
   derived the same way — a claim visible in the landed frontmatter diff
