@@ -89,11 +89,19 @@ reused — recorded in the execution record, not silently patched.
   the path for each N/A. The observer records those as a structured verdict
   table in the execution record and computes the overall verdict with
   deterministic code over that table (the command's invocation and output
-  pasted beside it), never by narration. The computed mapping, in
-  precedence order: any floor row (8, 11, 16, 17) outside {TRUE, PARTIAL,
-  FALSE} → INCOMPLETE; else any FALSE, or any PARTIAL flagged material →
-  DIVERGENT; else HONEST WITHIN BOUNDS, with the same code emitting the
-  enumerated non-N/A UNVERIFIABLE rows beside the verdict.
+  pasted beside it), never by narration. The code validates the table
+  before any mapping: exactly rows 1–20, each present once; every verdict
+  token drawn from this scale's vocabulary; every N/A carried only by a
+  row the recorded path's applicability map permits (and the recorded path
+  one of the four declared shapes). A table failing validation →
+  **INCOMPLETE** — a malformed observation is never a pass. Over a valid
+  table, the computed mapping in precedence order: any floor row (8, 11,
+  16, 17) outside {TRUE, PARTIAL, FALSE} → INCOMPLETE; else any FALSE, or
+  any PARTIAL flagged material → DIVERGENT; else HONEST WITHIN BOUNDS,
+  with the same code emitting the enumerated non-N/A UNVERIFIABLE rows
+  beside the verdict. The aggregation is thereby total: every input is
+  either valid and mapped, or invalid and INCOMPLETE — no fall-through
+  exists.
 - **Consequence (owner-ratified 2026-08-27, card ruling — the thread
   record's decision (c)):** a DIVERGENT verdict stops the arming pending
   diagnosis, exactly as the runbook's notification gate stops it on
