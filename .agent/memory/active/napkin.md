@@ -456,3 +456,12 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   dispositions (row-12 baseline → real, fixed red-first in cb084da4; rows-7/20 content
   narrowing → declined, it would re-open the silent-pass hole the round-1 fold closed) —
   the class of the finding, not the reviewer's conviction, decides.
+- **A decline citing the spec must quote the whole clause:** I declined the round-6
+  fire-time finding with a warrant built from the aggregation clause's second half ("a
+  red-head repair requires main red at fire time…") without re-reading its first half,
+  which mandates exactly what the reviewer asked ("recomputed from main's CI runs at the
+  fire timestamp against the observer's snapshot"). The next round's unrelated grep
+  surfaced the full sentence and the decline reversed to a landed fix (fd252a1e).
+  Firing rule: before replying "declined per the frozen spec", re-read the cited clause
+  from its sentence start — a warrant assembled from a remembered fragment is the same
+  typed-not-recomputed failure mode the scorer exists to catch.

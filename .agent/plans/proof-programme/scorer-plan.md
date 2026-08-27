@@ -168,19 +168,25 @@ aligned with its amended mapping. Routed, not absorbed:
   firing that lands no bookkeeping but pushes post-deferral to an
   unrelated PR reads as row-8-supported; owner word decides whether that
   warrants the schema expansion.
-- **Observer-snapshot recompute (contest evidence; fire-time CI status)**
-  — declined as designed: the probe's defer clause places firsthand
-  verification of contest evidence with the observing seat ("validates
-  only on contest evidence the observer verifies firsthand"), the
-  fire-time head status is likewise the observer's firsthand read that
-  the aggregation clause consumes as evidence ("a red-head repair
-  requires main red at fire time and a fresh claim requires it green" —
-  the derivation the probe requires is path-from-status, which the
-  scorer recomputes), and this plan's out-of-scope bars live API calls
-  from the scorer. Pushing the typing one level down (raw run
-  conclusions, foreign artefact identifiers) relocates the same trust
-  without removing it — the typed observer snapshot with closed
-  vocabularies is the designed seam, not a gap.
+- **Contest-evidence artefact recompute** — declined as designed: the
+  probe's defer clause places firsthand verification of contest evidence
+  with the observing seat ("validates only on contest evidence the
+  observer verifies firsthand"), and this plan's out-of-scope bars live
+  API calls from the scorer, so the typed record with its closed
+  independently-observable-kind vocabulary (own bookkeeping excluded) is
+  the designed seam, not a gap.
+- **Fire-time status recompute — a corrected adjudication.** The
+  same-round finding on the fire-time `mainHeadCi` enum was first
+  declined under the observer-snapshot warrant above; re-reading the
+  probe's aggregation clause showed that decline wrong — the clause
+  itself mandates the recompute ("the fire-time status of main's head,
+  recomputed from main's CI runs at the fire timestamp against the
+  observer's snapshot"). Landed: the bundle carries the fire timestamp
+  and main's CI-run observations, and the derivation recomputes the
+  status and cross-checks the snapshot before any path derives. The
+  correction is recorded because the first reply cited the probe while
+  contradicting it — the class of error the verify-dont-trust rule
+  exists to catch, in the scorer's own review.
 
 ## Out of scope
 
