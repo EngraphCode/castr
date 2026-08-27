@@ -772,6 +772,44 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     }
   }
   if (
+    typeof deferralAt === 'string' &&
+    fireTime !== undefined &&
+    Date.parse(deferralAt) < Date.parse(fireTime.firedAt)
+  ) {
+    failures.push(
+      `deferralAt: the deferral at ${deferralAt} predates the firing (${fireTime.firedAt}) — ` +
+        'an impossible chronology cannot shape the defer derivation',
+    );
+  }
+  if (fireTime !== undefined && createdByFiring !== undefined) {
+    const fireTimeNumbers = new Set(fireTime.openProgrammePrs.map((pr) => pr.number));
+    for (const pr of createdByFiring.createdPrs) {
+      if (fireTimeNumbers.has(pr.number)) {
+        failures.push(
+          `createdByFiring.createdPrs: PR #${pr.number} is also in the fire-time open PR set — ` +
+            'a PR cannot be both pre-existing and created by the firing',
+        );
+      }
+    }
+    if (pushes !== undefined) {
+      const createdNumbers = new Set(createdByFiring.createdPrs.map((pr) => pr.number));
+      for (const [index, push] of pushes.entries()) {
+        if (createdNumbers.has(push.prNumber) && push.prPreExistedFiring) {
+          failures.push(
+            `pushes[${index}]: PR #${push.prNumber} is recorded as created by the firing, but ` +
+              'the push marks it pre-existing — the flag contradicts the creation record',
+          );
+        }
+        if (fireTimeNumbers.has(push.prNumber) && !push.prPreExistedFiring) {
+          failures.push(
+            `pushes[${index}]: PR #${push.prNumber} was open at fire time, but the push marks ` +
+              'it not pre-existing — the flag contradicts the fire-time snapshot',
+          );
+        }
+      }
+    }
+  }
+  if (
     fireTime === undefined ||
     parentPlanQueueRows === undefined ||
     register === undefined ||

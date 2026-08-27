@@ -445,6 +445,68 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     }
   });
 
+  it('rejects a deferral timestamped before the firing — an impossible chronology', () => {
+    const result = parseEvidenceBundle(rawBundle({ deferralAt: '2026-08-28T01:00:00Z' }));
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('predates');
+    }
+  });
+
+  it('rejects a PR recorded as both open at fire time and created by the firing', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({
+        fireTime: {
+          firedAt: '2026-08-28T02:30:00Z',
+          mainHeadCi: 'green',
+          mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+          openProgrammePrs: [{ number: 80, draft: true }],
+        },
+      }),
+    );
+    expect(result.kind).toBe('invalid');
+    if (result.kind === 'invalid') {
+      expect(result.failures.join('\n')).toContain('created');
+    }
+  });
+
+  it('rejects a push whose pre-existence flag contradicts the creation and fire-time records', () => {
+    expect(
+      parseEvidenceBundle(
+        rawBundle({
+          pushes: [
+            {
+              prNumber: 80,
+              prPreExistedFiring: true,
+              pushedAt: '2026-08-28T09:00:00Z',
+              changedTrackedPaths: ['lib/src/example.ts'],
+            },
+          ],
+        }),
+      ).kind,
+    ).toBe('invalid');
+    expect(
+      parseEvidenceBundle(
+        rawBundle({
+          fireTime: {
+            firedAt: '2026-08-28T02:30:00Z',
+            mainHeadCi: 'green',
+            mainHeadCiRuns: [{ completedAt: '2026-08-28T02:05:00Z', conclusion: 'success' }],
+            openProgrammePrs: [{ number: 75, draft: false }],
+          },
+          pushes: [
+            {
+              prNumber: 75,
+              prPreExistedFiring: false,
+              pushedAt: '2026-08-28T09:00:00Z',
+              changedTrackedPaths: ['lib/src/example.ts'],
+            },
+          ],
+        }),
+      ).kind,
+    ).toBe('invalid');
+  });
+
   it('rejects a blank tracked-path entry — an empty path cannot evidence a content change', () => {
     const result = parseEvidenceBundle(
       rawBundle({
