@@ -491,3 +491,8 @@ _2026-07-03 → 2026-08-27 (proof-programme Q-01..Q-04 firings + equality lanes 
   association discarded visibly (demonstration-beats-inspection — duplicate of the earlier
   capture). Blind-spot bound: CI events and Codex rounds arriving after the process stop are
   unobserved by this seat; the PR page is the authority.
+- **Commitlint specimen: an acronym-initial subject reads as upper-case.** "fix(...): CI-run
+  observations…" fails subject-case (start-case/upper-case detection); the cure is lowercasing
+  the first word ("ci-run observations…") — same class as the earlier sentence-case catch,
+  new trigger shape. Validate with `pnpm agent-tools:check-commit-message -F <file>` (the -F
+  flag; a bare path is usage-error exit 2).
