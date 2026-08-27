@@ -192,6 +192,23 @@ single comms event noting _"no other agents present"_ and proceed.
 Solo sessions pay the protocol's minimum overhead — one read, one write —
 not the full coordination cycle.
 
+## Cloud sessions skip the ceremony (owner ruling)
+
+Cloud sessions skip claims, commit-queue, and filesystem-comms ceremony
+entirely (owner ruling, 2026-08-25; refined 2026-08-27): a cloud instance
+of the repo hosts exactly one agent, so no peer shares the container's
+filesystem and the registry has no audience by construction — its
+instance-tier state dies with the container. Land with plain hook-gated
+commits and explicit pathspecs; the blocking husky gates bind in full.
+Cross-session comms from a cloud seat goes over Slack via the
+`talk-to-slack-watcher` skill and only works while a Watcher holds the
+mantle. Dedicated consolidation sessions generally need no comms at all —
+they analyse knowledge already laid down and make it safe; subagent
+dispatch remains fully available. This filesystem protocol remains the
+contract for local multi-writer sessions sharing one working tree. The
+commit skill canonical carries the same clause under §Commit Queue And
+Window Protocol.
+
 ## Self-application
 
 The session that installs this rule MUST itself register a claim covering

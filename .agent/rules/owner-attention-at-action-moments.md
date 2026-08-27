@@ -69,6 +69,30 @@ When the agent IS at an action-moment, make it observable:
   are action choices with stated trade-offs; the default option is named
   if the agent has a verdict.
 
+### Owner decisions travel as decision cards (owner standing directive)
+
+**"Always expose decisions to me as decision cards"** (owner, 2026-08-24,
+verbatim). Every owner decision goes through the `AskUserQuestion` tool —
+one decision per card, recommendation first — never prose-only text the
+owner has to spot on the way past. This extends the 2026-07-03 correction
+("questions go through the AskUserQuestion tool") from questions to all
+decisions. A card's premises must be firsthand-verified against the
+primary surface at card-authoring time, and written in owner-plain
+language — register rows and reviewer findings are agent claims, not
+card-ready authority.
+
+### Blocked-on-owner means a mobile alert (owner standing directive)
+
+**"Whenever something is blocked on me — and an open question will always
+become blocking at some point — assume I am not around, and send an alert
+via the mobile Claude app"** (owner, 2026-08-23, verbatim intent). An open
+question addressed to the owner is never parked in chat text or a repo
+surface alone: the moment it exists, it goes out on the channel the owner
+actually watches — the push notification for interactive sessions, the
+completion notification (carrying open queued-decision rows) for scheduled
+firings. This is the audience-follows-surface principle applied to the
+owner as audience.
+
 ### Evidence that refutes an owner-approved premise is an action-moment
 
 When reviewer findings, a data fingerprint, or your own analysis refute a premise

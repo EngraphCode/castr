@@ -9,7 +9,11 @@ account, is the
 environment is shared by every Practice repo; a session may carry one or
 several repos (owner word 2026-08-24, superseding the 2026-08-23
 one-repo ruling), and the environment never knows which in advance —
-discovery provisions every Practice repo present. When a document
+discovery provisions every Practice repo present. **This document is the
+environment definition of record for every Practice repo — castr and OCE
+alike** (owner ruling 2026-08-25: a single environment definition serves
+both estates); other repos' environment docs point here by GitHub URL
+rather than carrying their own definitions. When a document
 references a file in another repo, use a GitHub URL, never a local
 path (owner word 2026-08-24).
 
