@@ -25,6 +25,7 @@
 import {
   checkClosedWorld,
   isNonEmptyString,
+  isNonEmptyStringArray,
   isParseableTime,
   isPositiveInteger,
   isPositiveIntegerArray,
@@ -141,6 +142,8 @@ export interface EvidenceBundle {
   readonly createdByFiring: CreatedByFiring;
   /** The deferral moment (from the landed incident entry), or null when none occurred. */
   readonly deferralAt: string | null;
+  /** The trigger's outcome-branch prefix, read from a trigger read at fire time (row 8). */
+  readonly triggerBranchPrefix: string;
   /** The firing's commits with their session trailers (row 9's recompute input). */
   readonly firingCommits: readonly FiringCommit[];
   /** Counter values at the firing's grounding base (row 11's transition input). */
@@ -187,6 +190,7 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'contestEvidence',
   'createdByFiring',
   'deferralAt',
+  'triggerBranchPrefix',
   'firingCommits',
   'countersAtGroundingBase',
   'substantiveProgress',
@@ -322,12 +326,30 @@ function parseRegister(raw: unknown, failures: string[]): RegisterSnapshots | un
   const openRowIdsAtGroundingBase = raw['openRowIdsAtGroundingBase'];
   const rowIdsAfterLanding = raw['rowIdsAfterLanding'];
   if (
-    !isStringArray(rowIdsAtGroundingBase) ||
-    !isStringArray(openRowIdsAtGroundingBase) ||
-    !isStringArray(rowIdsAfterLanding)
+    !isNonEmptyStringArray(rowIdsAtGroundingBase) ||
+    !isNonEmptyStringArray(openRowIdsAtGroundingBase) ||
+    !isNonEmptyStringArray(rowIdsAfterLanding)
   ) {
     failures.push(
       'register: rowIdsAtGroundingBase, openRowIdsAtGroundingBase, and rowIdsAfterLanding must be string arrays',
+    );
+    return undefined;
+  }
+  for (const [label, ids] of [
+    ['rowIdsAtGroundingBase', rowIdsAtGroundingBase],
+    ['openRowIdsAtGroundingBase', openRowIdsAtGroundingBase],
+    ['rowIdsAfterLanding', rowIdsAfterLanding],
+  ] as const) {
+    if (new Set(ids).size !== ids.length) {
+      failures.push(`register.${label}: row ids must be unique`);
+      return undefined;
+    }
+  }
+  const baseIds = new Set(rowIdsAtGroundingBase);
+  if (!openRowIdsAtGroundingBase.every((id) => baseIds.has(id))) {
+    failures.push(
+      'register.openRowIdsAtGroundingBase: every OPEN row must be in the grounding-base id set — ' +
+        "row 12's baseline cannot name a row the base revision does not carry",
     );
     return undefined;
   }
@@ -448,8 +470,10 @@ function parseCreatedByFiring(raw: unknown, failures: string[]): CreatedByFiring
   }
   const branches = raw['branches'];
   const prNumbers = raw['prNumbers'];
-  if (!isStringArray(branches) || !isPositiveIntegerArray(prNumbers)) {
-    failures.push('createdByFiring: requires branches (strings) and prNumbers (positive integers)');
+  if (!isNonEmptyStringArray(branches) || !isPositiveIntegerArray(prNumbers)) {
+    failures.push(
+      'createdByFiring: requires branches (non-empty strings) and prNumbers (positive integers)',
+    );
     return undefined;
   }
   return { branches, prNumbers };
@@ -520,6 +544,12 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   const leaseComments = parseLeaseComments(input['leaseComments'], failures);
   const contestEvidence = parseContestEvidence(input['contestEvidence'], failures);
   const createdByFiring = parseCreatedByFiring(input['createdByFiring'], failures);
+  const triggerBranchPrefix = input['triggerBranchPrefix'];
+  if (!isNonEmptyString(triggerBranchPrefix)) {
+    failures.push(
+      'triggerBranchPrefix: must be a non-empty string from the fire-time trigger read',
+    );
+  }
   const firingCommits = parseFiringCommits(input['firingCommits'], failures);
   const countersAtGroundingBase = parseCounters(
     input['countersAtGroundingBase'],
@@ -579,6 +609,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     contestEvidence === undefined ||
     createdByFiring === undefined ||
     deferralAt === undefined ||
+    !isNonEmptyString(triggerBranchPrefix) ||
     firingCommits === undefined ||
     countersAtGroundingBase === undefined ||
     typeof substantiveProgress !== 'boolean' ||
@@ -603,6 +634,7 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       contestEvidence,
       createdByFiring,
       deferralAt,
+      triggerBranchPrefix,
       firingCommits,
       countersAtGroundingBase,
       substantiveProgress,

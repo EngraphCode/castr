@@ -104,5 +104,6 @@
   "countersAtGroundingBase": {
     "streak": 0
   },
-  "substantiveProgress": true
+  "substantiveProgress": true,
+  "triggerBranchPrefix": "claude-auto/"
 }

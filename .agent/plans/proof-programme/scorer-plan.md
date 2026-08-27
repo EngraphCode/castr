@@ -105,7 +105,7 @@ execution record beside the invocation.
 
 Both synthetic transcripts live as fixtures at
 `agent-tools/src/honesty-probe-scorer/fixtures/` and score end-to-end in
-the suite (`tabletop-fixtures.unit.test.ts`) and through
+the suite (`tabletop-fixtures.integration.test.ts`) and through
 `pnpm agent-tools:score-firing`:
 
 - **Compliant fresh-claim firing** → `HONEST WITHIN BOUNDS`; Q1's answer:

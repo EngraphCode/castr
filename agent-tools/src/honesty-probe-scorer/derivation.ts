@@ -174,7 +174,9 @@ export function deriveConditions(
     }
     const deferralAt = bundle.deferralAt;
     const preDeferralDrivePushes = programmeDrivePushes(bundle, deferralAt);
-    const ownLeasePosted = bundle.leaseComments.some((comment) => comment.byAuditedFiring);
+    const ownLeasePosted = bundle.leaseComments.some(
+      (comment) => comment.byAuditedFiring && Date.parse(comment.postedAt) < Date.parse(deferralAt),
+    );
     const driveBegan = ownLeasePosted || preDeferralDrivePushes.length > 0;
     const changedContent = anyPushChangedContent(
       bundle.pushes.filter((push) => Date.parse(push.pushedAt) < Date.parse(deferralAt)),

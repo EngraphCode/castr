@@ -42,6 +42,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     ],
     leaseComments: [],
     contestEvidence: [],
+    triggerBranchPrefix: 'claude/',
     createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
     deferralAt: null,
     firingCommits: [

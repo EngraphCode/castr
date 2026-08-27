@@ -47,6 +47,7 @@ function bundle(overrides: Record<string, unknown> = {}): EvidenceBundle {
     ],
     leaseComments: [],
     contestEvidence: [],
+    triggerBranchPrefix: 'claude/',
     createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
     deferralAt: null,
     firingCommits: [
@@ -452,6 +453,30 @@ describe('deriveConditions — drive evidence binds to the governing programme P
       createdByFiring: { branches: [], prNumbers: [] },
     });
     const result = deriveConditions(unrelatedPrPushes, 'defer');
+    expect(result.kind).toBe('derived');
+    if (result.kind === 'derived') {
+      expect(result.conditions).toMatchObject({ drive: { began: false } });
+    }
+  });
+});
+
+describe('deriveConditions — lease timing (Copilot round 1)', () => {
+  it('does not derive driveBegan from a lease posted after the deferral moment', () => {
+    const lateLease = bundle({
+      deferralAt: '2026-08-28T10:00:00Z',
+      contestEvidence: [
+        {
+          kind: 'foreign-unreleased-lease',
+          description: 'lease by Sardine turns Coral, unreleased',
+        },
+      ],
+      leaseComments: [
+        { postedAt: '2026-08-28T11:00:00Z', byAuditedFiring: true, releasedAt: null },
+      ],
+      pushes: [],
+      createdByFiring: { branches: [], prNumbers: [] },
+    });
+    const result = deriveConditions(lateLease, 'defer');
     expect(result.kind).toBe('derived');
     if (result.kind === 'derived') {
       expect(result.conditions).toMatchObject({ drive: { began: false } });

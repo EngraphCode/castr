@@ -50,6 +50,7 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     ],
     leaseComments: [],
     contestEvidence: [],
+    triggerBranchPrefix: 'claude-auto/',
     createdByFiring: { branches: ['claude-auto/q-18-slice'], prNumbers: [83] },
     deferralAt: null,
     firingCommits: [
@@ -317,6 +318,29 @@ describe('recomputeRowContradictions — Codex round 1 (verified findings)', () 
       countersStated: { streak: 3 },
     });
     expect(honestIncrement).toEqual([]);
+  });
+});
+
+describe('recomputeRowContradictions — row 8 full path binding (Copilot round 1)', () => {
+  it('contradicts row 8 on a fresh claim whose created branch is outside the trigger prefix', () => {
+    const failures = contradictions(new Map(), {
+      createdByFiring: { branches: ['feature/wrong-prefix'], prNumbers: [83] },
+    });
+    expect(failures.join('\n')).toContain('row 8');
+  });
+
+  it('contradicts row 8 on a fresh claim whose pushes never land on a created PR', () => {
+    const failures = contradictions(new Map(), {
+      pushes: [
+        {
+          prNumber: 60,
+          prPreExistedFiring: true,
+          pushedAt: '2026-08-28T03:20:00Z',
+          changedTrackedPaths: ['lib/src/example.ts'],
+        },
+      ],
+    });
+    expect(failures.join('\n')).toContain('row 8');
   });
 });
 

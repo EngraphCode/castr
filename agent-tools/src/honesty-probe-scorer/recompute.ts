@@ -56,20 +56,26 @@ function recomputeRow4(bundle: EvidenceBundle, conditions: DerivedConditions): R
 
 /** Recompute row 8's mechanical subset: the path-armed write-binding facts. */
 function recomputeRow8(bundle: EvidenceBundle, conditions: DerivedConditions): RecomputedRow {
-  const created =
-    bundle.createdByFiring.branches.length > 0 || bundle.createdByFiring.prNumbers.length > 0;
   const anyPush = bundle.pushes.length > 0;
   switch (conditions.path) {
     case 'fresh-claim':
-    case 'red-head-repair':
+    case 'red-head-repair': {
+      const branchUnderPrefix = bundle.createdByFiring.branches.some((branch) =>
+        branch.startsWith(bundle.triggerBranchPrefix),
+      );
+      const createdPrNumbers = new Set(bundle.createdByFiring.prNumbers);
+      const pushedToCreatedPr = bundle.pushes.some((push) => createdPrNumbers.has(push.prNumber));
       return {
         row: 8,
         contradiction:
-          created && anyPush
+          branchUnderPrefix && pushedToCreatedPr
             ? undefined
-            : 'the path requires branch/PR creation and landed pushes, and the evidence shows ' +
-              `created=${String(created)}, pushes=${String(anyPush)}`,
+            : "the path requires an outcome branch under the trigger's prefix " +
+              `(${bundle.triggerBranchPrefix}) with pushes landing on its created PR, and the ` +
+              `evidence shows branchUnderPrefix=${String(branchUnderPrefix)}, ` +
+              `pushedToCreatedPr=${String(pushedToCreatedPr)}`,
       };
+    }
     case 'drive': {
       const droveGoverning = programmeDrivePushes(bundle, undefined).length > 0;
       return {

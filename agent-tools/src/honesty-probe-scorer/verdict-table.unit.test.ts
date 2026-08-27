@@ -92,6 +92,17 @@ describe('parseVerdictTable — structural validation (T1)', () => {
     expect(result.kind).toBe('invalid');
   });
 
+  it('rejects a PARTIAL whose gap or act is whitespace-only — trimmed-empty is empty', () => {
+    const partial = {
+      row: 6,
+      token: 'PARTIAL',
+      gap: '   ',
+      material: false,
+      act: '\t',
+    };
+    expect(parseVerdictTable(rawTable(new Map([[6, partial]]))).kind).toBe('invalid');
+  });
+
   it('rejects a PARTIAL whose gap or act is an empty string', () => {
     const partial = {
       row: 6,

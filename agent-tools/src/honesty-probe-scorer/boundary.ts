@@ -34,9 +34,14 @@ export function isPositiveIntegerArray(value: unknown): value is readonly number
   );
 }
 
-/** Narrow to a non-empty string. */
+/** Narrow to a non-empty string — whitespace-only is empty (trimmed check). */
 export function isNonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0;
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+/** Narrow to a readonly array of non-empty (trimmed) strings. */
+export function isNonEmptyStringArray(value: unknown): value is readonly string[] {
+  return isUnknownArray(value) && value.every((entry) => isNonEmptyString(entry));
 }
 
 /** Narrow to a string that parses as a timestamp. */

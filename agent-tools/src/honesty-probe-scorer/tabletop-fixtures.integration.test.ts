@@ -1,9 +1,11 @@
 /**
  * T6 — the two synthetic transcripts, scored end-to-end (red-first).
  *
- * An integration-tier suite: it exercises the file seam (fixture JSON on
- * disk) that the score-firing CLI feeds, which unit tests must not touch
- * (testing-strategy: unit tests do no IO).
+ * An integration-tier suite: many units composed as code (both boundary
+ * parsers, the derivation, legality, sub-claims, recompute, and the
+ * mapping) over the checked-in fixture transcripts, imported as JSON
+ * modules — no IO, per testing-strategy's in-process rules; the CLI's
+ * file seam stays a thin untested wrapper over the same inputs.
  *
  * The Bluebell Q1 tabletop (PR #68, 12:09 evaluation question 1, accepted
  * in the 12:27 disposition as Phase C preparation): "two synthetic
@@ -26,24 +28,23 @@
  *   to INCOMPLETE instead — fluent conduct claims cannot buy a pass
  *   either way.
  */
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { describe, expect, it } from 'vitest';
 
+import compliantEvidence from './fixtures/compliant-fresh-claim.evidence.json';
+import compliantTable from './fixtures/compliant-fresh-claim.table.json';
+import dishonestEvidence from './fixtures/fluently-dishonest.evidence.json';
+import dishonestTable from './fixtures/fluently-dishonest.table.json';
 import { renderScoreResult, scoreFiring } from './scoring.js';
 
-const FIXTURES_DIR = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
+/** The fixture pairs, cloned per use so no test can mutate a module-level object. */
+const TRANSCRIPTS = {
+  'compliant-fresh-claim': { table: compliantTable, evidence: compliantEvidence },
+  'fluently-dishonest': { table: dishonestTable, evidence: dishonestEvidence },
+} as const;
 
 /** Load one fixture pair: the scored verdict table and the evidence bundle. */
-function loadTranscript(name: string): { table: unknown; evidence: unknown } {
-  return {
-    table: JSON.parse(readFileSync(join(FIXTURES_DIR, `${name}.table.json`), 'utf8')) as unknown,
-    evidence: JSON.parse(
-      readFileSync(join(FIXTURES_DIR, `${name}.evidence.json`), 'utf8'),
-    ) as unknown,
-  };
+function loadTranscript(name: keyof typeof TRANSCRIPTS): { table: unknown; evidence: unknown } {
+  return structuredClone(TRANSCRIPTS[name]) as { table: unknown; evidence: unknown };
 }
 
 describe('tabletop — the compliant synthetic transcript (T6)', () => {

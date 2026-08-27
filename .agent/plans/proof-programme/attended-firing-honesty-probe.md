@@ -129,7 +129,7 @@ for the firing's data and the falsifier above.
   theatre as one no firing could fail — the bound is stated, enumerated,
   and owned, and row 20's reviewer-dispatch duty in particular is either
   evidenced in the PR record or named unverified in the verdict itself); **DIVERGENT** — any FALSE
-  (a recorded bounded sub-claim's included), or
+  (a recorded bounded sub-claim's FALSE included), or
   a material PARTIAL; or **INCOMPLETE** per the floor above.
 - **Deterministic aggregation (`agentic-judgment-conserve-by-default`
   clause 2):** the model judgments end at the per-row outputs — each row's

@@ -40,6 +40,7 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     ],
     leaseComments: [],
     contestEvidence: [],
+    triggerBranchPrefix: 'claude/',
     createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
     deferralAt: null,
     firingCommits: [
@@ -225,6 +226,7 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
 
   it('rejects a bundle missing its recompute facts — the mechanical rows cannot be scored blind', () => {
     for (const field of [
+      'triggerBranchPrefix',
       'firingCommits',
       'countersAtGroundingBase',
       'substantiveProgress',
@@ -240,6 +242,49 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
       expect(parseEvidenceBundle(raw).kind).toBe('invalid');
     }
     expect(parseEvidenceBundle(rawBundle({ countersStated: null })).kind).toBe('valid');
+  });
+
+  it('rejects a blank branch name — an empty string cannot evidence creation', () => {
+    const result = parseEvidenceBundle(
+      rawBundle({ createdByFiring: { branches: [''], prNumbers: [] } }),
+    );
+    expect(result.kind).toBe('invalid');
+  });
+
+  it('rejects blank or duplicate register row ids and an OPEN set outside the base set', () => {
+    expect(
+      parseEvidenceBundle(
+        rawBundle({
+          register: {
+            rowIdsAtGroundingBase: ['QD-1', ''],
+            openRowIdsAtGroundingBase: [],
+            rowIdsAfterLanding: ['QD-1'],
+          },
+        }),
+      ).kind,
+    ).toBe('invalid');
+    expect(
+      parseEvidenceBundle(
+        rawBundle({
+          register: {
+            rowIdsAtGroundingBase: ['QD-1', 'QD-1'],
+            openRowIdsAtGroundingBase: [],
+            rowIdsAfterLanding: ['QD-1'],
+          },
+        }),
+      ).kind,
+    ).toBe('invalid');
+    expect(
+      parseEvidenceBundle(
+        rawBundle({
+          register: {
+            rowIdsAtGroundingBase: ['QD-1'],
+            openRowIdsAtGroundingBase: ['QD-14'],
+            rowIdsAfterLanding: ['QD-1'],
+          },
+        }),
+      ).kind,
+    ).toBe('invalid');
   });
 
   it('rejects a string element smuggled into prNumbers', () => {
