@@ -62,12 +62,15 @@ and is load-bearing — without it the firing lands nothing):
 This is an unattended dedicated consolidation session, fired on a schedule with
 no owner present.
 
-FIRST, before any deep work: cheaply assess whether there is anything to
-consolidate — pending graduations, live curation buffers, napkin or distilled
-entries newer than the last consolidation closeout, discovered tombstones, and
-the practice-core incoming box. If all of those are empty or unchanged, record a
-one-line no-op observation (no artefact edits) and end the session immediately.
-Do not manufacture work to justify the firing.
+FIRST, before any deep work: run the consolidate-docs trigger checklist as a
+cheap assessment — the canonical trigger sources and required inventory in
+`.agent/skills/consolidate-docs/SKILL-CANONICAL.md` (raw sources, buffers,
+pending graduations, active and recent plans, the platform memory surfaces,
+tombstones, the practice-core incoming box, and the drift and open-question
+signals), not a private subset of them. Only if that checklist finds nothing to
+consolidate: record a one-line no-op observation, make the firing's completion
+notification read as a no-op, and end the session immediately. Do not
+manufacture work to justify the firing.
 
 Otherwise, consolidate. As always, the goal is knowledge curation, not chasing
 fitness numbers. The fitness function results are never the goal, only
@@ -75,8 +78,9 @@ conservation of understanding. Take care of the learning and the numbers will
 take care of themselves. When you need to make a decision, run it through the
 decision lenses and the reflection and reasoning processes
 @.agent/directives/principles.md . Deal with discovered and created tombstones
-as you go. Done means empty pending graduations and empty buffers, or every
-remaining item explicitly owner-decision-gated.
+as you go. Done is consolidate-until-done's own completion contract — apply it
+in full from `.agent/skills/consolidate-until-done/SKILL-CANONICAL.md`, never a
+narrowed restatement of it.
 
 Subagent results and sources MUST be critically assessed before being accepted or synthesised
 
@@ -89,3 +93,12 @@ Unattended-session ground rules: work is not safe until committed, pushed, and
 on a draft PR — end no firing with pushed work on a PR-less branch. Anything
 blocked on the owner becomes a queued decision plus a mobile push alert, and the
 session then closes out rather than waiting.
+
+Exit criterion (per `.agent/rules/loop-exit-criteria-required.md` §Owner
+Authority): this is an owner-commissioned standing schedule (2026-08-27) with no
+automatic cross-firing idle stop — the named end condition is the owner
+disabling the Routine. Each firing's no-change exit above governs that firing
+only; fresh sessions carry no idle counter. The completion push notification on
+every firing (no-op firings identified as such) is the owner-visible idle
+streak, and a sustained no-op streak is the owner's signal to pause or delete
+the Routine.
