@@ -13,17 +13,14 @@ owner-local time in prose when it helps human coordination, but UTC is the
 canonical timestamp for claims, queues, conversations, escalations, archives,
 and stale/fresh calculations.
 
-**Cloud sessions do not use this log (owner ruling, 2026-08-25; refined
-2026-08-27):** a cloud instance of the repo hosts exactly one agent, so no
-peer shares the container's filesystem — appended events have no audience
-and die with the container. Cross-session comms from a cloud seat goes
-over Slack via the `talk-to-slack-watcher` skill, and only works while a
-Watcher holds the mantle. Dedicated consolidation sessions generally need
-no comms at all — they analyse knowledge already laid down and make it
-safe. This log remains the contract for local multi-writer sessions
-sharing one working tree. See the same clause in
-[`register-active-areas-at-session-open`](register-active-areas-at-session-open.md)
-and the commit skill canonical.
+**Cloud sessions do not use this log:** a cloud instance of the repo
+hosts exactly one agent, so appended events have no audience there by
+construction. The canonical statement of the cloud-session policy — its
+scope, the Slack-via-Watcher comms channel, and the
+consolidation-session note — lives in the commit skill canonical §Cloud
+sessions skip the queue ceremony (owner ruling 2026-08-25, refined
+2026-08-27); this rule defers to it. The log remains the contract for
+local multi-writer sessions sharing one working tree.
 
 ## Related surfaces, distinct purposes
 

@@ -136,6 +136,9 @@ to peers.
 
 ### Cloud sessions skip the queue ceremony (owner ruling)
 
+This section is the **canonical statement of the cloud-session
+ceremony policy**; `register-active-areas-at-session-open` and
+`use-agent-comms-log` defer here (consolidate-at-second-consumer).
 Cloud sessions do not use commit queues or claims (owner ruling,
 2026-08-25; refined 2026-08-27): a cloud instance of the repo hosts
 exactly one agent, so no peer shares the container's filesystem and the

@@ -72,9 +72,10 @@ When the agent IS at an action-moment, make it observable:
 ### Owner decisions travel as decision cards (owner standing directive)
 
 **"Always expose decisions to me as decision cards"** (owner, 2026-08-24,
-verbatim). Every owner decision goes through the `AskUserQuestion` tool —
-one decision per card, recommendation first — never prose-only text the
-owner has to spot on the way past. This extends the 2026-07-03 correction
+verbatim). Every owner decision goes through the `AskUserQuestion` tool
+(or the host's equivalent owner-interrupt surface, per line one of
+§Minimise non-action interrupts) — one decision per card, recommendation
+first — never prose-only text the owner has to spot on the way past. This extends the 2026-07-03 correction
 ("questions go through the AskUserQuestion tool") from questions to all
 decisions. A card's premises must be firsthand-verified against the
 primary surface at card-authoring time, and written in owner-plain

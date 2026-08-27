@@ -202,19 +202,14 @@ not the full coordination cycle.
 ## Cloud sessions skip the ceremony (owner ruling)
 
 Cloud sessions skip claims, commit-queue, and filesystem-comms ceremony
-entirely (owner ruling, 2026-08-25; refined 2026-08-27): a cloud instance
-of the repo hosts exactly one agent, so no peer shares the container's
-filesystem and the registry has no audience by construction — its
-instance-tier state dies with the container. Land with plain hook-gated
-commits and explicit pathspecs; the blocking husky gates bind in full.
-Cross-session comms from a cloud seat goes over Slack via the
-`talk-to-slack-watcher` skill and only works while a Watcher holds the
-mantle. Dedicated consolidation sessions generally need no comms at all —
-they analyse knowledge already laid down and make it safe; subagent
-dispatch remains fully available. This filesystem protocol remains the
-contract for local multi-writer sessions sharing one working tree. The
-commit skill canonical carries the same clause under §Commit Queue And
-Window Protocol.
+entirely: a cloud instance of the repo hosts exactly one agent, so this
+registry has no audience there by construction. The canonical statement
+of the cloud-session policy — its scope, the Slack-via-Watcher comms
+channel, and the consolidation-session note — lives in the commit skill
+canonical §Cloud sessions skip the queue ceremony (owner ruling
+2026-08-25, refined 2026-08-27); this rule defers to it. The filesystem
+protocol below remains the contract for local multi-writer sessions
+sharing one working tree.
 
 ## Self-application
 

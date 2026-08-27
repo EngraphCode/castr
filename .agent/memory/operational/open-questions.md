@@ -28,11 +28,13 @@ owning artefact / discussion home (if any), and a status line.
 <!-- Q-entries appended below by drains and consolidation passes. -->
 
 _Q-012..Q-015 drained 2026-08-27: all four were decided or acknowledged by the owner's
-2026-08-23 interactive walk, and the
-[overhaul plan](../../plans/future/strategy-vision-estate-overhaul.md) preamble + decision
-table carry the verdicts (second product named "the Practice"; umbrella vision topology;
-preservation-coverage % adopted; `Object.*`/`Reflect.*` ban lint-enforced). The permanent
-homes are the record._
+2026-08-23 interactive walk. Verdicts (second product named "the Practice"; umbrella vision
+topology; preservation-coverage % adopted; `Object.*`/`Reflect.*` ban lint-enforced) ride
+the [overhaul plan](../../plans/future/strategy-vision-estate-overhaul.md) preamble +
+decision table as the interim record until W1 lands their durable doctrine homes —
+VISION.md/IDENTITY.md and the verified-claims pattern-PDR, which the owner held to ride W1
+(2026-08-27; that dependency is tracked owner-visibly in pending-graduations). The plan
+must not archive before W1 conserves the verdicts._
 
 _Register emptied 2026-06-26 and again 2026-07-03. Q-006 graduated to ADR-049; Q-007 decided
 (markdown-links gate end-state → scoped-blocking, transplant-completeness plan TC3b); Q-009
