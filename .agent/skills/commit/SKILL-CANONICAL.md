@@ -150,8 +150,11 @@ commits and explicit pathspecs, and keep every other part of this skill
 chain) in full force. Cross-session comms from a cloud seat goes over
 Slack via the `talk-to-slack-watcher` skill, and only works while a
 Watcher holds the mantle — it is for coordination needs, not commit
-ceremony. The filesystem protocol below remains the contract for local
-multi-writer sessions sharing one working tree.
+ceremony. Dedicated consolidation sessions generally need no comms at
+all — they analyse knowledge already laid down and make it safe;
+subagent dispatch remains fully available (owner word, 2026-08-27). The
+filesystem protocol below remains the contract for local multi-writer
+sessions sharing one working tree.
 
 ### Intent-Scoped End-to-End (2026-05-22 cure)
 
