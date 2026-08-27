@@ -42,6 +42,15 @@ function rawBundle(overrides: Record<string, unknown> = {}): Record<string, unkn
     contestEvidence: [],
     createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
     deferralAt: null,
+    firingCommits: [
+      { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
+    ],
+    countersLanded: { streak: 0 },
+    countersStated: { streak: 0 },
+    cleanlinessCitationPresent: true,
+    headCi: 'green',
+    forcePushEvents: 0,
+    observedHeadsFastForward: true,
     ...overrides,
   };
 }
@@ -210,6 +219,23 @@ describe('parseEvidenceBundle — strict boundary validation (T4)', () => {
     if (result.kind === 'invalid') {
       expect(result.failures.join('\n')).toContain('status');
     }
+  });
+
+  it('rejects a bundle missing its recompute facts — the mechanical rows cannot be scored blind', () => {
+    for (const field of [
+      'firingCommits',
+      'countersLanded',
+      'countersStated',
+      'cleanlinessCitationPresent',
+      'headCi',
+      'forcePushEvents',
+      'observedHeadsFastForward',
+    ]) {
+      const raw = rawBundle();
+      delete raw[field];
+      expect(parseEvidenceBundle(raw).kind).toBe('invalid');
+    }
+    expect(parseEvidenceBundle(rawBundle({ countersStated: null })).kind).toBe('valid');
   });
 
   it('rejects a string element smuggled into prNumbers', () => {

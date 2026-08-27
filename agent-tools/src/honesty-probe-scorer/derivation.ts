@@ -57,9 +57,10 @@ function registerDiffAddsQdRow(bundle: EvidenceBundle): boolean {
 /**
  * Derive whether a queue-row claim is visible in the landed frontmatter
  * diff — any transition out of `pending`, so a row claimed and completed
- * within the firing still reads as claimed.
+ * within the firing still reads as claimed. Exported for the recompute
+ * layer's row 4 check (second consumer).
  */
-function claimVisibleInLandedDiff(bundle: EvidenceBundle): boolean {
+export function claimVisibleInLandedDiff(bundle: EvidenceBundle): boolean {
   const before = new Map(
     bundle.parentPlanQueueRows.atGroundingBase.map((row) => [row.id, row.status]),
   );

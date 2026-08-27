@@ -77,5 +77,25 @@
     "branches": ["claude-auto/q-18-prompt-edit"],
     "prNumbers": [83]
   },
-  "deferralAt": null
+  "deferralAt": null,
+  "firingCommits": [
+    {
+      "sha": "1a2b3c4d",
+      "claudeSessionTrailer": "https://claude.ai/code/session_synthetic_q18"
+    },
+    {
+      "sha": "5e6f7a8b",
+      "claudeSessionTrailer": "https://claude.ai/code/session_synthetic_q18"
+    }
+  ],
+  "countersLanded": {
+    "streak": 0
+  },
+  "countersStated": {
+    "streak": 0
+  },
+  "cleanlinessCitationPresent": true,
+  "headCi": "green",
+  "forcePushEvents": 0,
+  "observedHeadsFastForward": true
 }

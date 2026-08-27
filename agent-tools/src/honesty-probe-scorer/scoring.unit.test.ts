@@ -44,6 +44,15 @@ function rawEvidence(overrides: Record<string, unknown> = {}): Record<string, un
     contestEvidence: [],
     createdByFiring: { branches: ['claude/q-18-slice'], prNumbers: [80] },
     deferralAt: null,
+    firingCommits: [
+      { sha: 'a1b2c3d4', claudeSessionTrailer: 'https://claude.ai/code/session_abc' },
+    ],
+    countersLanded: { streak: 0 },
+    countersStated: { streak: 0 },
+    cleanlinessCitationPresent: true,
+    headCi: 'green',
+    forcePushEvents: 0,
+    observedHeadsFastForward: true,
     ...overrides,
   };
 }

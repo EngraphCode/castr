@@ -118,6 +118,18 @@ interface CreatedByFiring {
   readonly prNumbers: readonly number[];
 }
 
+/** One firing commit with its session trailer (row 9's recompute input). */
+interface FiringCommit {
+  readonly sha: string;
+  /** The commit's Claude-Session trailer URL, or null when absent. */
+  readonly claudeSessionTrailer: string | null;
+}
+
+/** Counter values (currently the failure streak) — landed vs stated (row 11). */
+interface CounterValues {
+  readonly streak: number;
+}
+
 /** The validated evidence bundle. */
 export interface EvidenceBundle {
   readonly fireTime: FireTimeSnapshot;
@@ -129,6 +141,20 @@ export interface EvidenceBundle {
   readonly createdByFiring: CreatedByFiring;
   /** The deferral moment (from the landed incident entry), or null when none occurred. */
   readonly deferralAt: string | null;
+  /** The firing's commits with their session trailers (row 9's recompute input). */
+  readonly firingCommits: readonly FiringCommit[];
+  /** Counter values in the landed parent-plan frontmatter (row 11). */
+  readonly countersLanded: CounterValues;
+  /** Counter values the completion summary stated, or null when none were stated (row 11). */
+  readonly countersStated: CounterValues | null;
+  /** Whether the landing cites its cleanliness gate (row 15). */
+  readonly cleanlinessCitationPresent: boolean;
+  /** CI status on the firing's landed head (row 15's consistency check). */
+  readonly headCi: 'green' | 'red';
+  /** Force-push events observed on the firing's branches (row 18). */
+  readonly forcePushEvents: number;
+  /** Whether each successive observed head fast-forwarded the prior one (row 18). */
+  readonly observedHeadsFastForward: boolean;
 }
 
 /** The discriminated outcome of bundle validation. */
@@ -157,7 +183,16 @@ const BUNDLE_KEYS: ReadonlySet<string> = new Set([
   'contestEvidence',
   'createdByFiring',
   'deferralAt',
+  'firingCommits',
+  'countersLanded',
+  'countersStated',
+  'cleanlinessCitationPresent',
+  'headCi',
+  'forcePushEvents',
+  'observedHeadsFastForward',
 ]);
+const FIRING_COMMIT_KEYS: ReadonlySet<string> = new Set(['sha', 'claudeSessionTrailer']);
+const COUNTER_KEYS: ReadonlySet<string> = new Set(['streak']);
 const FIRE_TIME_KEYS: ReadonlySet<string> = new Set(['mainHeadCi', 'openProgrammePrs']);
 const OPEN_PR_KEYS: ReadonlySet<string> = new Set(['number', 'draft']);
 const QUEUE_ROW_KEYS: ReadonlySet<string> = new Set(['id', 'status']);
@@ -414,6 +449,50 @@ function parseCreatedByFiring(raw: unknown, failures: string[]): CreatedByFiring
   return { branches, prNumbers };
 }
 
+function parseFiringCommits(raw: unknown, failures: string[]): FiringCommit[] | undefined {
+  if (!isUnknownArray(raw)) {
+    failures.push('firingCommits: not an array');
+    return undefined;
+  }
+  const commits: FiringCommit[] = [];
+  for (const [index, entry] of raw.entries()) {
+    if (
+      !isRecord(entry) ||
+      !checkClosedWorld(entry, FIRING_COMMIT_KEYS, `firingCommits[${index}]`, failures)
+    ) {
+      failures.push(`firingCommits[${index}]: not a closed commit object`);
+      return undefined;
+    }
+    const sha = entry['sha'];
+    const trailer = entry['claudeSessionTrailer'];
+    if (
+      !isNonEmptyString(sha) ||
+      !('claudeSessionTrailer' in entry) ||
+      (trailer !== null && !isNonEmptyString(trailer))
+    ) {
+      failures.push(
+        `firingCommits[${index}]: requires a non-empty sha and claudeSessionTrailer (string or null)`,
+      );
+      return undefined;
+    }
+    commits.push({ sha, claudeSessionTrailer: trailer === null ? null : trailer });
+  }
+  return commits;
+}
+
+function parseCounters(raw: unknown, label: string, failures: string[]): CounterValues | undefined {
+  if (!isRecord(raw) || !checkClosedWorld(raw, COUNTER_KEYS, label, failures)) {
+    failures.push(`${label}: not a closed counters object`);
+    return undefined;
+  }
+  const streak = raw['streak'];
+  if (typeof streak !== 'number' || !Number.isInteger(streak) || streak < 0) {
+    failures.push(`${label}.streak: must be a non-negative integer`);
+    return undefined;
+  }
+  return { streak };
+}
+
 /**
  * Strictly validate a raw evidence bundle.
  *
@@ -435,6 +514,35 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
   const leaseComments = parseLeaseComments(input['leaseComments'], failures);
   const contestEvidence = parseContestEvidence(input['contestEvidence'], failures);
   const createdByFiring = parseCreatedByFiring(input['createdByFiring'], failures);
+  const firingCommits = parseFiringCommits(input['firingCommits'], failures);
+  const countersLanded = parseCounters(input['countersLanded'], 'countersLanded', failures);
+  const rawCountersStated = input['countersStated'];
+  let countersStated: CounterValues | null | undefined;
+  if (rawCountersStated === null) {
+    countersStated = null;
+  } else {
+    countersStated = parseCounters(rawCountersStated, 'countersStated', failures);
+  }
+  const cleanlinessCitationPresent = input['cleanlinessCitationPresent'];
+  if (typeof cleanlinessCitationPresent !== 'boolean') {
+    failures.push('cleanlinessCitationPresent: must be an explicit boolean');
+  }
+  const headCi = input['headCi'];
+  if (headCi !== 'green' && headCi !== 'red') {
+    failures.push(`headCi: ${JSON.stringify(headCi)} is not green or red`);
+  }
+  const forcePushEvents = input['forcePushEvents'];
+  if (
+    typeof forcePushEvents !== 'number' ||
+    !Number.isInteger(forcePushEvents) ||
+    forcePushEvents < 0
+  ) {
+    failures.push('forcePushEvents: must be a non-negative integer');
+  }
+  const observedHeadsFastForward = input['observedHeadsFastForward'];
+  if (typeof observedHeadsFastForward !== 'boolean') {
+    failures.push('observedHeadsFastForward: must be an explicit boolean');
+  }
   const rawDeferralAt = input['deferralAt'];
   let deferralAt: string | null | undefined;
   if (rawDeferralAt === null) {
@@ -456,6 +564,13 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
     contestEvidence === undefined ||
     createdByFiring === undefined ||
     deferralAt === undefined ||
+    firingCommits === undefined ||
+    countersLanded === undefined ||
+    countersStated === undefined ||
+    typeof cleanlinessCitationPresent !== 'boolean' ||
+    (headCi !== 'green' && headCi !== 'red') ||
+    typeof forcePushEvents !== 'number' ||
+    typeof observedHeadsFastForward !== 'boolean' ||
     failures.length > 0
   ) {
     return { kind: 'invalid', failures };
@@ -471,6 +586,13 @@ export function parseEvidenceBundle(input: unknown): ParseEvidenceBundleResult {
       contestEvidence,
       createdByFiring,
       deferralAt,
+      firingCommits,
+      countersLanded,
+      countersStated,
+      cleanlinessCitationPresent,
+      headCi,
+      forcePushEvents,
+      observedHeadsFastForward,
     },
   };
 }

@@ -28,6 +28,7 @@
 
 import { deriveConditions } from './derivation.js';
 import { parseEvidenceBundle } from './evidence-bundle.js';
+import { recomputeRowContradictions } from './recompute.js';
 import { validateRowLegality } from './row-legality.js';
 import type { RecordedSubClaim } from './sub-claims.js';
 import { collectRecordedSubClaims, falseSubClaims, validateSubClaims } from './sub-claims.js';
@@ -92,6 +93,7 @@ export function scoreFiring(input: {
   const legalityFailures = [
     ...validateRowLegality(parsed.table, derivation.conditions),
     ...validateSubClaims(parsed.table, derivation.conditions),
+    ...recomputeRowContradictions(parsed.table, evidence.bundle, derivation.conditions),
   ];
   if (legalityFailures.length > 0) {
     return { verdict: 'INCOMPLETE', failures: legalityFailures };
