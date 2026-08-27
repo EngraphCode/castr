@@ -58,10 +58,12 @@ The firing prompt for the owner's standing dedicated-consolidation Routine
 in the Routine UI — the repo attachment is load-bearing, without it the firing
 lands nothing):
 
-/goal ultrathink /engraph-metacognition /engraph-reason /engraph-start-right-thorough /engraph-consolidate-until-done
+/goal ultrathink /engraph-metacognition /engraph-reason /engraph-proportionality /engraph-plan /engraph-start-right-thorough /engraph-consolidate-until-done
 
 This is an unattended dedicated consolidation session, fired on a schedule with
-no owner present.
+no owner present. As a cloud-session firing it carries the full mandatory
+cloud-session skill stack per the cloud-session grounding contract
+(`.agent/claude-harness-integrations/cloud-environment.md`).
 
 FIRST, before any deep work: run the consolidate-docs trigger checklist as a
 cheap assessment — the canonical trigger sources and required inventory in
