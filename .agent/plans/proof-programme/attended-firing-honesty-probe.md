@@ -46,13 +46,19 @@ for the firing's data and the falsifier above.
   the routine prompt defines four compliant live-path shapes, and the
   observer records which one governed before scoring — this map is the
   complete set, derived from the brief's own branches (steps 4, 5, and 7):
-  - **Fresh claim** (no open programme PR, head green): every row applies
-    except 19 (no pre-existing PR to lease).
-  - **Drive** (a pre-existing open programme PR governs step 5): rows 4
-    and 5 are N/A. Rows 7 and 20 apply whenever the drive's pushes change
-    code, and are N/A only with the recorded evidence "no code changed in
-    this drive" — an N/A here is earned by evidence, never granted by the
-    path label (owner ruling 2026-08-27). The drive's further duties are
+  - **Fresh claim** (no open non-draft programme PR, head green): every
+    row applies except 19 (no pre-existing PR to lease).
+  - **Drive** (a pre-existing open non-draft programme PR governs
+    step 5): rows 4 and 5 are N/A. Rows 7 and 20 apply whenever the
+    drive's pushes change tracked content — documentation and
+    configuration included, because the brief's atomic-slice scope and
+    reviewer duties are unconditional; only row 7's failing-proof
+    sub-claim is code-conditioned per its cell — and are N/A only with
+    the scorer-derived evidence "no content changed in this drive": an
+    N/A here is earned by evidence, never granted by the
+    path label (owner ruling 2026-08-27, its "no code changed" condition
+    tightened to no-content-changed in the fold of the 14:26 review —
+    the safer reading of the same intent). The drive's further duties are
     measured by the remaining rows — review-thread dispositions and pushes
     (6, 8, 9), counters and closure (11–16), receipt (17), history
     integrity (18), lease (19).
@@ -69,9 +75,9 @@ for the firing's data and the falsifier above.
     only for a pre-claim contest — a deferral after a row was claimed
     keeps both scored (claim ordering, premise verification). Rows 7 and
     20 are N/A only for a pre-drive contest; when the deferral follows a
-    drive whose pushes changed code, they retain the drive path's
-    conditional treatment (they apply, with N/A only on the
-    scorer-recomputed no-code-change condition). Row 19 is likewise N/A
+    drive whose pushes changed tracked content, they retain the drive
+    path's conditional treatment (they apply, with N/A only on the
+    scorer-recomputed no-content-change condition). Row 19 is likewise N/A
     only for a pre-drive contest; when the deferral follows a collision
     after a drive began,
     the lease duty already attached and row 19 applies in full (lease
@@ -147,11 +153,14 @@ for the firing's data and the falsifier above.
   fire timestamp against the observer's snapshot — a red-head repair
   requires main red at fire time and a fresh claim requires it green, so
   neither mislabel can shed or bypass the claim rows; an open
-  programme PR at fire time; a claim in the landed parent-plan
+  **non-draft** programme PR at fire time — draft status is part of the
+  fire-time PR evidence, because preserved failed-slice and deferral
+  drafts do not put step 5's drive path in effect, so deriving a drive
+  from a draft would misclassify a compliant fresh claim; a claim in the landed parent-plan
   frontmatter diff; a posted lease; for a deferral, the independent
   contest evidence the defer path requires — its own bookkeeping proves
   that the deferral happened, never its cause); rows
-  7/20's "no code changed in this drive" is established from the diff of
+  7/20's "no content changed in this drive" is established from the diff of
   the drive's own pushes; and the defer path's attachment conditions are
   derived the same way — a claim visible in the landed frontmatter diff
   contradicts a pre-claim N/A on rows 4/5; a posted lease, or pushes
@@ -174,6 +183,12 @@ for the firing's data and the falsifier above.
   table with a classification its contract permits — FALSE or
   UNVERIFIABLE — BOUNDED — so a table omitting a required sub-claim
   fails validation rather than the emission silently dropping the bound;
+  UNVERIFIABLE — BOUNDED carried only by a row (or recorded for a
+  sub-claim) that §Observation bounds classifies one-sided or
+  trace-dependent — on a directly observable row (row 4's parent-plan
+  diff, row 9's visible commits, and their kind) the token fails
+  validation, because unexpected unobservability is an observation
+  failure (INCOMPLETE), never a pass-through;
   every row carrying only a token
   its own classification permits — the one-sided rows (1, 3, and 20)
   admit only FALSE, UNVERIFIABLE — BOUNDED, or
@@ -186,7 +201,7 @@ for the firing's data and the falsifier above.
   conversely, every row whose duty did not apply carrying exactly N/A —
   whether the recorded path declares it categorically inapplicable or
   the scorer's derived condition shows the duty never attached (rows
-  7/20 on a derived code-free drive; rows 4/5/19 on a derived
+  7/20 on a derived content-free drive; rows 4/5/19 on a derived
   pre-claim/pre-drive deferral) — so a substantive token on a duty that
   never occurred fails validation just as an illegitimate N/A does: the
   applicability check is bidirectional for categorical and conditional
