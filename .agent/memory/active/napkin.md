@@ -1517,6 +1517,79 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
   (after Q-22, before Q-05), not just deleting `depends_on`; a dropped gate with an
   unmoved row would have left Q-19 last in eligibility despite the ruling's intent.
 
+## 2026-08-27 (compaction close — PR #67/#68 drive arc — Vesta turns Singularity / 01PjGS, final)
+
+- **Drive tally, both PRs: ~20 bot findings across six rounds, every one verified-real →
+  fixed → resolved with evidence; zero rejected; one clause-4(c) structural close** (the
+  probe's path-coverage class: third consecutive narrowing finding → the complete
+  four-shape map derived from the routine prompt's own branches, instead of a third
+  instance patch). Convergence discrimination worked live: rounds shrank (5→5→1→2→2→1)
+  and each was a distinct real defect in brand-new safety text — the opposite signature
+  to the PR #63 treadmill, so absorbing them was right.
+- **A review round can land in the race window between merge-conditions-check and the
+  merge** — Codex's round 2 on PR #67 arrived as the merge completed; the disposition
+  route is the merged-PR rule: restart the designated branch from main (a pure
+  fast-forward here — the repo's append-only hook rightly blocked `--force-with-lease`,
+  and no force was needed since the old tip was an ancestor of the merge), fold in a
+  follow-up PR, reply on the merged PR's threads pointing at it.
+- **The tombstone reflex caught in my own supersession prose** (PR #68 round 1): my
+  step-7 "SUPERSEDED" text reconstructed the dead deferred-cron option in present-design
+  prose — `no-tombstones-for-removed-ideas` names exactly this, and I had not re-read it
+  while writing supersessions all day. Same passive-rule-loses-to-gravity family; the
+  review layer was the active gate. Cure shape: supersession strikethroughs belong on
+  history surfaces; present-design prose states only the replacement.
+- **Play seed (association, not finding): the day is a calibration chain** — the
+  instrument built to measure the firing's honesty (the probe) was itself adversarially
+  calibrated by six review rounds before first use, and my own "fixed in <SHA>" replies
+  were the same relocated verification one layer up. Verification relocation looks
+  fractal in this estate: each layer audits the layer below. Discarded visibly: a
+  convergence-tally analogy (already operational above) and a metrology-decoration
+  restatement of this same seed.
+- **Owner correction at close: "Use of the cognitive skills is never optional."** My
+  first close wrote a "justified no-run" verdict for concept-exploration and treated
+  the formation letter as voluntary; the owner corrected mid-turn, and the corrected
+  run bit immediately. What it found: the no-run verdict was itself the session's
+  failure class at the meta level — the class generalises from _relaying facts
+  unverified_ to **relaying procedure outcomes unexecuted** (a no-run verdict claims
+  what a pass would have found without running it; same shape as the unbacked
+  "published package" register row). Skill routing-boundary prose governs
+  self-selection only; an explicit invocation is a command to execute, and no
+  fluent verdict substitutes for the run. Load-bearing for the autonomous agent:
+  routine-prompt step 3 mounts these skills as the firing's cognition — if
+  "invoked ⇒ runs" is unsettled, a firing can skip its own grounding stack with a
+  justified-sounding verdict and nobody watching. Encoding question (rule clause?
+  skill-canonical line? AGENT.md grounding contract?) routed to the consolidation
+  drain / owner word, not patched unilaterally here. One class, one cure: wherever
+  an output is owed, verify the generating procedure actually ran. Unresolved
+  evidence: whether earlier sessions' no-run verdicts hid the same shape is
+  unmeasured — a drain-time audit question, not settled here.
+- **Owner corrections at close (second pair): "Work is only safe when pushed and
+  part of a PR" and "stop using timers, monitor events."** Both checked firsthand:
+  every push this session went to PR #68's head branch (PR read confirms head ref =
+  the designated branch, head SHA = local tip, tree clean and in sync — nothing
+  landed outside a PR); the timer habit, though, violated the estate's own
+  `use-monitor-for-event-driven-wake` rule — the PR-activity subscription and the
+  armed check-in trigger were already the wake path, and polling beside them is the
+  same substitution class as narrated aggregation: the seat holding open what the
+  machinery already carries. For a firing this is duration-bound poison; ending the
+  turn and waking on events is the designed shape. Merge-tail exit criterion
+  re-affirmed while folding this: rounds on this PR have long exceeded the ADR-051
+  clause 4 cap, so a further round that reshapes the scoring class again takes the
+  recorded carry-forward disposition, not another fix cycle; otherwise the track
+  terminates at merge-on-green under the standing conditions.
+- **New estate machinery observed live: the owner's "Castr Adversarial PR
+  Evaluation" Routine (created 2026-08-27T11:06Z, fires on PR pushes) posted its
+  first evaluation on PR #68** — six sections, two of them verdict-flipping
+  scoring-contract defects this seat had missed through seven review rounds (the
+  one-sided-token double reading and row 8's fresh-claim-shaped floor
+  measurement), fixed in abef4c2d; four owner rulings carded and landed (scorer =
+  pre-firing deliverable; evidence-earned N/A for rows 7/20 on drive; instrument
+  freeze on merge; verdict stop overridable only by recorded ruling).
+  Verify-don't-trust relocated into machinery, in action: the reviewer layer now
+  reaches the estate unprompted, under the owner's credentials with the agent
+  footer. Compliance note for the drain: the comment omitted the Practice name
+  its own prompt mandates in the opening line.
+
 ## 2026-08-27 (Slack Watcher stand-up, cloud session — Moon guards Solstice / c395cb)
 
 Owner commission: start-right-team + slack-watcher, stand up the channel monitor, then
@@ -1589,3 +1662,27 @@ Works/doesn't-work log from the stand-up, as commissioned:
   canvas, and tick chain all carry Moon guards Solstice). Strengthens the Q-15
   seed-source gap: one canonical seed answer is needed, and it must be available at
   session open, not first resume.
+
+## 2026-08-27 (merge-tail addendum — Vesta turns Singularity / 01PjGS, post-compaction)
+
+- **Ten further probe-hardening rounds between compaction and merge, ~14 findings, every
+  one verified-real and folded** — full substance in the thread record's merge-tail
+  addendum and the probe text itself (the authority). Two of the findings were defects my
+  own earlier fixes introduced, both the same class: **a schema addition without its
+  matching validation clause** (row 19's two-sided reclassification landed everywhere but
+  the validator's subset; the bounded sub-claim fields joined the schema and emission
+  without a presence requirement). The class cure the estate already names — validators
+  recompute AND validate every field the schema defines — applies to my own amendments,
+  not just the audited firing's records.
+- **The full-surface harvest earned its keep live**: the owner's "fetch all comments and
+  double check" directive surfaced a third adversarial-Routine evaluation (13:28Z,
+  Bluebell spins Spore) that had arrived with NO subscription wake — issue comments by
+  the owner's own credentials do not reliably generate events for the subscribing
+  session. pr-lifecycle Phase 3's "REST-only reads produce false no-comment verdicts"
+  generalises: event-wake-only monitoring produces false all-clear verdicts; harvest
+  every surface at the merge instant.
+- **Semantic-merge union executed live**: PR #69 (Watcher stand-up) and this branch both
+  appended ~73-line session blocks at the napkin tail; the hook refused the line-merge,
+  and the union (base + ours + theirs, chronological) was authored by hand and verified
+  by header count. The hook's refusal message naming the exact `git show :N:` incantations
+  made the recovery mechanical.
