@@ -40,6 +40,9 @@
       "Skill(engraph-tsdoc)",
       "Skill(engraph-undo-change)",
       "Skill(engraph-wrap)",
+      "mcp__Claude_Code_Remote__create_trigger",
+      "mcp__Claude_Code_Remote__delete_trigger",
+      "mcp__Claude_Code_Remote__list_triggers",
       "mcp__Slack__slack_read_canvas",
       "mcp__Slack__slack_update_canvas"
     ]
