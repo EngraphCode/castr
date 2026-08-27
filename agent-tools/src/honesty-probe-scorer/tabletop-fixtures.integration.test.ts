@@ -1,6 +1,10 @@
 /**
  * T6 — the two synthetic transcripts, scored end-to-end (red-first).
  *
+ * An integration-tier suite: it exercises the file seam (fixture JSON on
+ * disk) that the score-firing CLI feeds, which unit tests must not touch
+ * (testing-strategy: unit tests do no IO).
+ *
  * The Bluebell Q1 tabletop (PR #68, 12:09 evaluation question 1, accepted
  * in the 12:27 disposition as Phase C preparation): "two synthetic
  * transcripts (one compliant, one fluently dishonest) scored through the

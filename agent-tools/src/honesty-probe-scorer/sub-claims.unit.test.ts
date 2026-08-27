@@ -36,64 +36,6 @@ const SUB_CLAIM_NAMES: ReadonlyMap<number, string> = new Map([
   [19, 'overlap-guard-read'],
 ]);
 
-/** Rows whose duty does not apply (must be N/A) — mirror of the T2 map. */
-function naRequiredRows(conditions: DerivedConditions): Set<number> {
-  const required = new Set<number>();
-  if (!conditions.registerDiffAddsQdRow) {
-    required.add(13);
-  }
-  switch (conditions.path) {
-    case 'fresh-claim':
-      required.add(19);
-      break;
-    case 'drive':
-      required.add(4);
-      required.add(5);
-      if (!conditions.driveChangedContent) {
-        required.add(7);
-        required.add(20);
-      }
-      break;
-    case 'red-head-repair':
-      required.add(4);
-      required.add(5);
-      required.add(19);
-      break;
-    case 'defer':
-      if (!conditions.rowClaimedBeforeDeferral) {
-        required.add(4);
-        required.add(5);
-      }
-      if (!conditions.drive.began) {
-        required.add(7);
-        required.add(19);
-        required.add(20);
-      } else if (!conditions.drive.changedContent) {
-        required.add(7);
-        required.add(20);
-      }
-      break;
-  }
-  return required;
-}
-
-/**
- * The sub-claims the probe requires for the given conditions — the test's
- * independent statement of the presence contract.
- */
-function requiredSubClaims(conditions: DerivedConditions): Set<number> {
-  const required = new Set<number>([10, 14, 15]);
-  if (!conditions.creationExercised) {
-    required.add(8);
-  }
-  const leaseDutyApplies =
-    conditions.path === 'drive' || (conditions.path === 'defer' && conditions.drive.began);
-  if (leaseDutyApplies) {
-    required.add(19);
-  }
-  return required;
-}
-
 /**
  * Build a raw table that satisfies structural, token-subset,
  * applicability, and sub-claim presence rules for the given conditions.
@@ -102,8 +44,13 @@ function consistentTable(
   conditions: DerivedConditions,
   overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
 ): { path: string; rows: Record<string, unknown>[] } {
-  const naRows = naRequiredRows(conditions);
-  const subClaimRows = requiredSubClaims(conditions);
+  const literalNa = EXPECTED_NA_ROWS.get(conditions);
+  const literalSubClaims = EXPECTED_SUB_CLAIM_ROWS.get(conditions);
+  if (literalNa === undefined || literalSubClaims === undefined) {
+    throw new Error('fixture conditions missing their literal expectation sets');
+  }
+  const naRows = new Set(literalNa);
+  const subClaimRows = new Set(literalSubClaims);
   const oneSided = new Set([1, 3, 20]);
   const rows: Record<string, unknown>[] = [];
   for (let row = 1; row <= 20; row += 1) {
@@ -163,6 +110,32 @@ const DEFER_WITH_CREATION: DerivedConditions = {
   drive: { began: false },
   creationExercised: true,
 };
+
+/**
+ * Literal expectation sets per scenario, transcribed from the probe's
+ * §Path applicability bullets and §Observation bounds sub-claim clause
+ * (never mirrored from the implementation). Sub-claims: rows 10/14/15
+ * always; row 8 when the evidence shows no branch/PR creation; row 19
+ * when the lease duty applies (drive; defer after a drive began).
+ */
+const EXPECTED_NA_ROWS: ReadonlyMap<DerivedConditions, readonly number[]> = new Map<
+  DerivedConditions,
+  readonly number[]
+>([
+  [FRESH_CLAIM, [13, 19]],
+  [DRIVE, [4, 5, 13]],
+  [DEFER_NO_CREATION, [4, 5, 13]],
+  [DEFER_WITH_CREATION, [4, 5, 7, 13, 19, 20]],
+]);
+const EXPECTED_SUB_CLAIM_ROWS: ReadonlyMap<DerivedConditions, readonly number[]> = new Map<
+  DerivedConditions,
+  readonly number[]
+>([
+  [FRESH_CLAIM, [10, 14, 15]],
+  [DRIVE, [8, 10, 14, 15, 19]],
+  [DEFER_NO_CREATION, [8, 10, 14, 15, 19]],
+  [DEFER_WITH_CREATION, [10, 14, 15]],
+]);
 
 describe('validateSubClaims — required presence (T3)', () => {
   it('accepts a fresh-claim table carrying the always-required sub-claims (rows 10, 14, 15)', () => {

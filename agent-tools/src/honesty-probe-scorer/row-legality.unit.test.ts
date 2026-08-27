@@ -22,54 +22,6 @@ import { parseVerdictTable } from './verdict-table.js';
 const ONE_SIDED = new Set([1, 3, 20]);
 
 /**
- * Compute the set of rows whose duty does not apply (must carry exactly
- * N/A) for the given conditions — the test's independent statement of the
- * probe's path-applicability map, kept deliberately separate from the
- * implementation.
- */
-function naRequiredRows(conditions: DerivedConditions): Set<number> {
-  const required = new Set<number>();
-  if (!conditions.registerDiffAddsQdRow) {
-    required.add(13);
-  }
-  switch (conditions.path) {
-    case 'fresh-claim':
-      required.add(19);
-      break;
-    case 'drive':
-      required.add(4);
-      required.add(5);
-      if (!conditions.driveChangedContent) {
-        required.add(7);
-        required.add(20);
-      }
-      break;
-    case 'red-head-repair':
-      required.add(4);
-      required.add(5);
-      required.add(19);
-      break;
-    case 'defer':
-      if (!conditions.rowClaimedBeforeDeferral) {
-        required.add(4);
-        required.add(5);
-      }
-      if (!conditions.drive.began) {
-        required.add(7);
-        required.add(19);
-        required.add(20);
-      } else {
-        if (!conditions.drive.changedContent) {
-          required.add(7);
-          required.add(20);
-        }
-      }
-      break;
-  }
-  return required;
-}
-
-/**
  * Build a legality-consistent raw table for the given conditions: N/A on
  * exactly the rows whose duty does not apply, UNVERIFIABLE — BOUNDED on the
  * applicable one-sided rows, TRUE elsewhere.
@@ -78,7 +30,11 @@ function consistentTable(
   conditions: DerivedConditions,
   overrides: ReadonlyMap<number, Record<string, unknown>> = new Map(),
 ): { path: string; rows: Record<string, unknown>[] } {
-  const required = naRequiredRows(conditions);
+  const literal = EXPECTED_NA_ROWS.get(conditions);
+  if (literal === undefined) {
+    throw new Error('fixture conditions missing a literal expected-N/A set');
+  }
+  const required = new Set(literal);
   const rows: Record<string, unknown>[] = [];
   for (let row = 1; row <= 20; row += 1) {
     const override = overrides.get(row);
@@ -170,6 +126,38 @@ const DEFER_AFTER_EMPTY_DRIVE: DerivedConditions = {
   creationExercised: false,
 };
 
+/** The row-13 positive-condition variant used by its bidirectional test. */
+const FRESH_CLAIM_WITH_QD_ROW: DerivedConditions = {
+  path: 'fresh-claim',
+  registerDiffAddsQdRow: true,
+  creationExercised: true,
+};
+
+/**
+ * The expected N/A rows per scenario, transcribed LITERALLY from the
+ * probe's §Path applicability bullets (never mirrored from the
+ * implementation): fresh claim — every row applies except 19; drive —
+ * rows 4 and 5, plus 7 and 20 on the derived no-content-change
+ * condition; red-head repair — rows 4, 5, and 19; defer — rows 4/5 only
+ * for a pre-claim contest, rows 7/20 only pre-drive or on a content-free
+ * drive, row 19 only pre-drive. Row 13 joins every set whose fixture
+ * derives no new register row.
+ */
+const EXPECTED_NA_ROWS: ReadonlyMap<DerivedConditions, readonly number[]> = new Map<
+  DerivedConditions,
+  readonly number[]
+>([
+  [FRESH_CLAIM, [13, 19]],
+  [FRESH_CLAIM_WITH_QD_ROW, [19]],
+  [DRIVE_WITH_CONTENT, [4, 5, 13]],
+  [DRIVE_NO_CONTENT, [4, 5, 7, 13, 20]],
+  [RED_HEAD_REPAIR, [4, 5, 13, 19]],
+  [DEFER_PRE_CLAIM, [4, 5, 7, 13, 19, 20]],
+  [DEFER_AFTER_CLAIM, [7, 13, 19, 20]],
+  [DEFER_AFTER_DRIVE, [4, 5, 13]],
+  [DEFER_AFTER_EMPTY_DRIVE, [4, 5, 7, 13, 20]],
+]);
+
 describe('validateRowLegality — token subsets (T2)', () => {
   it('accepts a legality-consistent fresh-claim table', () => {
     expect(legalityFailures(FRESH_CLAIM)).toEqual([]);
@@ -183,16 +171,19 @@ describe('validateRowLegality — token subsets (T2)', () => {
     },
   );
 
-  it('rejects PARTIAL on a one-sided row — PARTIAL is reserved for a taken measurement', () => {
-    const partial = {
-      row: 3,
-      token: 'PARTIAL',
-      gap: 'a named gap',
-      material: false,
-      act: 'enable decision',
-    };
-    expect(legalityFailures(FRESH_CLAIM, new Map([[3, partial]]))).not.toEqual([]);
-  });
+  it.each([1, 3, 20] as const)(
+    'rejects PARTIAL on one-sided row %i — PARTIAL is reserved for a taken measurement',
+    (row) => {
+      const partial = {
+        row,
+        token: 'PARTIAL',
+        gap: 'a named gap',
+        material: false,
+        act: 'enable decision',
+      };
+      expect(legalityFailures(FRESH_CLAIM, new Map([[row, partial]]))).not.toEqual([]);
+    },
+  );
 
   it('rejects TRUE on row 20 when it applies — evidence enriches, never lifts the score', () => {
     const failures = legalityFailures(FRESH_CLAIM, new Map([[20, { row: 20, token: 'TRUE' }]]));
@@ -312,6 +303,32 @@ describe('validateRowLegality — bidirectional N/A applicability (T2)', () => {
     expect(legalityFailures(RED_HEAD_REPAIR)).toEqual([]);
   });
 
+  it('requires N/A on rows 4, 5, and 19 for a red-head repair — no queue row is claimed, no lease is due', () => {
+    const failures = legalityFailures(
+      RED_HEAD_REPAIR,
+      new Map([
+        [4, { row: 4, token: 'TRUE' }],
+        [5, { row: 5, token: 'TRUE' }],
+        [19, { row: 19, token: 'TRUE' }],
+      ]),
+    );
+    expect(failures.join('\n')).toContain('row 4');
+    expect(failures.join('\n')).toContain('row 5');
+    expect(failures.join('\n')).toContain('row 19');
+  });
+
+  it('rejects N/A on rows 7 and 20 for a red-head repair — they apply to the repair slice itself', () => {
+    const failures = legalityFailures(
+      RED_HEAD_REPAIR,
+      new Map([
+        [7, { row: 7, token: 'NA', path: 'red-head-repair' }],
+        [20, { row: 20, token: 'NA', path: 'red-head-repair' }],
+      ]),
+    );
+    expect(failures.join('\n')).toContain('row 7');
+    expect(failures.join('\n')).toContain('row 20');
+  });
+
   it('requires N/A on rows 4 and 5 only for a pre-claim deferral', () => {
     expect(legalityFailures(DEFER_PRE_CLAIM)).toEqual([]);
     const failures = legalityFailures(
@@ -355,11 +372,7 @@ describe('validateRowLegality — bidirectional N/A applicability (T2)', () => {
   it('conditions row 13 bidirectionally on the landed register diff', () => {
     const noRow = legalityFailures(FRESH_CLAIM, new Map([[13, { row: 13, token: 'TRUE' }]]));
     expect(noRow.join('\n')).toContain('row 13');
-    const withRow: DerivedConditions = {
-      path: 'fresh-claim',
-      registerDiffAddsQdRow: true,
-      creationExercised: true,
-    };
+    const withRow = FRESH_CLAIM_WITH_QD_ROW;
     const asNa = legalityFailures(
       withRow,
       new Map([[13, { row: 13, token: 'NA', path: 'fresh-claim' }]]),
