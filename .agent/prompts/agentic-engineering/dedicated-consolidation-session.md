@@ -103,12 +103,19 @@ session then closes out rather than waiting.
 
 Per-firing bound and overlap guard (per the measured collision in
 `.agent/memory/active/patterns/autonomous-background-programme.md` — cadence is
-not a duration bound): FIRST check the shared remote for a live predecessor —
-if the Routine's outcome branch or its open PR head moved within the last hour,
-defer, recording the deferral as this firing's no-op closeout rather than
-becoming a second driver. Bound this firing inside the cadence interval: land
-and close out before the successor is due, and at that landing cutoff land only
-what is already proven, push it, and close rather than pushing on.
+not a duration bound): FIRST check for a live predecessor via the durable drive
+lease — an unreleased `FIRING-LEASE` comment on the Routine's open PR is the
+observable cross-container ownership signal the pattern requires, and an
+unreleased lease means a predecessor holds the drive: defer, recording the
+deferral as this firing's no-op closeout rather than becoming a second driver.
+Recent head movement is corroborating evidence only, never the signal — silence
+is never liveness, and recency is not a lease. A lease older than one full
+cadence interval with no release may be treated as stale (name that judgement
+in the closeout). When taking the drive: post the lease comment before the
+first landing and release it at closeout. Bound this firing inside the cadence
+interval: land and close out before the successor is due, and at that landing
+cutoff land only what is already proven, push it, release the lease, and close
+rather than pushing on.
 
 Exit criterion (per `.agent/rules/loop-exit-criteria-required.md` §Owner
 Authority): this is an owner-commissioned standing schedule (2026-08-27) with no
