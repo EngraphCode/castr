@@ -1557,3 +1557,16 @@ Works/doesn't-work log from the stand-up, as commissioned:
   warm pause" commission is read as hold-the-watch-until-stood-down (else the
   five-quiet-ticks default would kill a monitor on a 4-day-quiet channel within ~75
   min of stand-up, defeating the commission). Owner can override in-channel or here.
+- **Doesn't work: event-driven Slack wake (owner asked mid-stand-up), measured not
+  assumed.** Three paths checked: (a) the Slack MCP surface has no
+  subscription/streaming/events tool — read/send/canvas only; (b) the shell holds NO
+  Slack credential (env sweep: only the two `SLACK_WATCHER_*` ids), so a persistent
+  Monitor script cannot even poll `conversations.history`, let alone stream — Slack
+  access exists solely at the MCP layer, which shell/Monitor processes cannot call;
+  (c) the Monitor tool's `ws` source could take Slack Socket Mode's `wss` stream for
+  genuine push wake, but Socket Mode needs an app-level `xapp-…` token, absent.
+  Timer-based `send_later`/cron is also the DURABLE choice: platform triggers live
+  server-side and survive container restarts; a Monitor dies with the container.
+  `candidate:` owner-level enabling work — add a Socket-Mode app token to the cloud
+  environment config, then a Watcher can arm `Monitor({ws})` for per-message wake
+  with the timer chain demoted to fallback.
