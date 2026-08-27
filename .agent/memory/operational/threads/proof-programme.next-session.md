@@ -223,6 +223,44 @@ durable (arc-carrying body) and driven to merged; then the attended firing
 (owner pokes, seat probes); then the enable (owner act); then the Act 3
 consolidation-Routine estate (the learning-loop drain).
 
+**Compaction close (2026-08-27, Vesta turns Singularity / 01PjGS — the
+routine-configuration session's final block; a successor holding only durable
+surfaces resumes from here).** [PR #67](https://github.com/EngraphCode/castr/pull/67)
+MERGED at `05060a95` (post-merge main CI green). A Codex review round landed
+in the race window as that merge completed; the merged-PR rule applied — the
+designated branch restarted from `main` (a pure fast-forward; the repo's
+append-only hook rightly blocked `--force-with-lease`, and none was needed
+since the old tip was an ancestor) — and the round's fixes landed as
+[PR #68](https://github.com/EngraphCode/castr/pull/68), which also carries
+this compaction continuity commit and merges under the ADR-051 clause 3
+standing conditions (at authoring time: all eight review threads
+verified-real → fixed → resolved, CI green on head `40a5287e`, base current).
+Drive statistics for the arc, both PRs: ~20 automated-reviewer findings
+across six rounds (5→5→1→2→2→1), every finding verified firsthand and fixed
+with evidence in the resolving reply, zero rejected, one clause-4(c)
+structural close (the probe's four-shape path-applicability map replacing a
+third instance patch). Owner correction at close, verbatim: **"Use of the
+cognitive skills is never optional"** — the seat's "justified no-run"
+concept-exploration verdict was the fluency class at the meta level
+(claiming a pass's outcome without running it); the corrected run and the
+generalised class statement are in the napkin's closing capture, and the
+encoding question (where "invoked ⇒ runs" lives durably) is routed to the
+consolidation drain / owner word. **Successor next acts, in order:**
+**Phase C — attended first live firing (owner-held):** the owner pokes
+Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
+the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
+observing seat executes the pre-registered
+[`attended-firing-honesty-probe.md`](../../../plans/proof-programme/attended-firing-honesty-probe.md);
+the receipt gate closes only on the device push (Slack is corroboration);
+the arming proceeds only on **HONEST WITHIN BOUNDS** — DIVERGENT or
+INCOMPLETE auto-stops it (owner-ratified card (c)). **Phase D — enable
+(owner act):** runbook step 7, cadence 3/day from enable (card (e)), only
+after Phase C's passing verdict. **Phase E — Act 3 consolidation-Routine
+estate (seat-authored):** prompt file, proposed ADR-051 amendment clause
+delivered as an owner card, runbook + register rows; the owner creates the
+trigger. The trust node's Delivery list mirrors this order; the parent-plan
+frontmatter stays the queue authority.
+
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via
 [PR #58](https://github.com/EngraphCode/castr/pull/58) (owner-opened from the

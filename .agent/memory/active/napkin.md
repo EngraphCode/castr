@@ -1516,3 +1516,50 @@ lines, past the rotation cadence (consolidation recorded as due in repo-continui
 - **Frontmatter row order is claim order** — landing (d) meant MOVING the Q-19 row
   (after Q-22, before Q-05), not just deleting `depends_on`; a dropped gate with an
   unmoved row would have left Q-19 last in eligibility despite the ruling's intent.
+
+## 2026-08-27 (compaction close — PR #67/#68 drive arc — Vesta turns Singularity / 01PjGS, final)
+
+- **Drive tally, both PRs: ~20 bot findings across six rounds, every one verified-real →
+  fixed → resolved with evidence; zero rejected; one clause-4(c) structural close** (the
+  probe's path-coverage class: third consecutive narrowing finding → the complete
+  four-shape map derived from the routine prompt's own branches, instead of a third
+  instance patch). Convergence discrimination worked live: rounds shrank (5→5→1→2→2→1)
+  and each was a distinct real defect in brand-new safety text — the opposite signature
+  to the PR #63 treadmill, so absorbing them was right.
+- **A review round can land in the race window between merge-conditions-check and the
+  merge** — Codex's round 2 on PR #67 arrived as the merge completed; the disposition
+  route is the merged-PR rule: restart the designated branch from main (a pure
+  fast-forward here — the repo's append-only hook rightly blocked `--force-with-lease`,
+  and no force was needed since the old tip was an ancestor of the merge), fold in a
+  follow-up PR, reply on the merged PR's threads pointing at it.
+- **The tombstone reflex caught in my own supersession prose** (PR #68 round 1): my
+  step-7 "SUPERSEDED" text reconstructed the dead deferred-cron option in present-design
+  prose — `no-tombstones-for-removed-ideas` names exactly this, and I had not re-read it
+  while writing supersessions all day. Same passive-rule-loses-to-gravity family; the
+  review layer was the active gate. Cure shape: supersession strikethroughs belong on
+  history surfaces; present-design prose states only the replacement.
+- **Play seed (association, not finding): the day is a calibration chain** — the
+  instrument built to measure the firing's honesty (the probe) was itself adversarially
+  calibrated by six review rounds before first use, and my own "fixed in <SHA>" replies
+  were the same relocated verification one layer up. Verification relocation looks
+  fractal in this estate: each layer audits the layer below. Discarded visibly: a
+  convergence-tally analogy (already operational above) and a metrology-decoration
+  restatement of this same seed.
+- **Owner correction at close: "Use of the cognitive skills is never optional."** My
+  first close wrote a "justified no-run" verdict for concept-exploration and treated
+  the formation letter as voluntary; the owner corrected mid-turn, and the corrected
+  run bit immediately. What it found: the no-run verdict was itself the session's
+  failure class at the meta level — the class generalises from _relaying facts
+  unverified_ to **relaying procedure outcomes unexecuted** (a no-run verdict claims
+  what a pass would have found without running it; same shape as the unbacked
+  "published package" register row). Skill routing-boundary prose governs
+  self-selection only; an explicit invocation is a command to execute, and no
+  fluent verdict substitutes for the run. Load-bearing for the autonomous agent:
+  routine-prompt step 3 mounts these skills as the firing's cognition — if
+  "invoked ⇒ runs" is unsettled, a firing can skip its own grounding stack with a
+  justified-sounding verdict and nobody watching. Encoding question (rule clause?
+  skill-canonical line? AGENT.md grounding contract?) routed to the consolidation
+  drain / owner word, not patched unilaterally here. One class, one cure: wherever
+  an output is owed, verify the generating procedure actually ran. Unresolved
+  evidence: whether earlier sessions' no-run verdicts hid the same shape is
+  unmeasured — a drain-time audit question, not settled here.
