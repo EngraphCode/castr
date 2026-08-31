@@ -2,6 +2,49 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner rulings: arming ceremony retired + residue purge — same session, part 10; Dolphin binds Trench / 013aPY)
+
+- **OWNER RULINGS (in-session, correcting the ceremony's founding premises).** On the
+  2026-08-22 "firings land nothing" measurement: **"The original routine didn't have a
+  repo specified, that's why it was read only, we solved that in minutes."** On the
+  notification incident: **"Claude code notifications work"** — proving it again is not
+  required. And the direction: **"identify the residue of the useless experiments and
+  assumptions that caused all this wasted time, we need to make sure these ideas cause
+  no more trouble."** Executed as an owner-directed curator pass (log:
+  `curator-passes/2026-08-31-dolphin-binds-trench.md`): arming runbook, attended-firing
+  honesty probe, and cloud-autonomy-trust node removed; routine-prompt and parent-plan
+  process surfaces rewritten to the present design (a scheduled task the owner creates
+  with the repo attached, thin-pointer prompt, cron 3/day; STOP file + owner pause +
+  clause 6 self-disable as brakes; verification riding CI/ruleset/review/clause-3 merge
+  and Q-18 in-flight attestation); every live poke-only/owner-held/receipt-gate claim
+  retargeted; dated history preserved.
+- **The root assumptions, named so they cause no more trouble** (an instance of the
+  existing pattern `workaround-debt-compounds-through-rationalisation` — second
+  instance, graduation candidate):
+  1. **A platform measurement is a snapshot, not a law.** A missing create-parameter
+     (no repo on the trigger) fossilised into "API triggers cannot carry sources" →
+     division-of-labour doctrine → a never-recreate rule → preservation ceremony.
+     The cure at write time: record the measured FIX ("specify the repo") beside the
+     measured failure, and date-stamp platform claims as re-testable.
+  2. **A one-time misconfiguration is not a standing gate.** One broken notification
+     config (repaired and re-proven the same day) became receipt gates on every
+     path and a hard stop between every phase.
+  3. **Verification belongs in the flow, not in front of it.** The pre-gate
+     instruments (dry-run proof, honesty probe, verdict scorer) decayed unused while
+     the in-flight instruments (CI, branch ruleset, review bots, condition-based
+     merge, counters) did all the real catching. Pre-gates rot; flow instruments
+     amortise.
+  4. **A non-converging instrument loop is a stop signal.** The probe's review loop
+     "was not shrinking", and the response was to compile it into a scorer instead of
+     stopping — apparatus begat apparatus until the ladder cost more than the loop it
+     guarded.
+- **Session-shape note:** three successive owner pushes ("don't assume the stated
+  process is right" → "why isn't a scheduled task enough" → "notifications work, are
+  you suggesting we prove that?") were needed before this seat stopped defending
+  trimmed versions of the inherited ladder. The metacognition cue that finally bit:
+  a runbook is a WORKAROUND DOCUMENT — re-measure its motivating constraint before
+  reusing any of it.
+
 ## 2026-08-31 (owner question: loop-resumption readiness — same session, part 9; Dolphin binds Trench / 013aPY)
 
 - **Owner asked whether Castr is ready to resume the ADR-051 autonomous loop.**

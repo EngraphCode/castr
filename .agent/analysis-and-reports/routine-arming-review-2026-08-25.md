@@ -15,8 +15,8 @@ firsthand before folding (dispositions inline, marked "audit"); refinements land
 normal PRs to `main`; the dry run and enable happen only in the owner walk after this
 review.
 **Authority:** [ADR-051](../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
-(the loop's contract); the [arming runbook](../plans/proof-programme/arming-runbook.md)
-(the procedure under review); the [parent plan](../plans/proof-programme/parent-plan.md)
+(the loop's contract); the arming runbook
+(the procedure under review; removed 2026-08-31 with the arming ceremony — git history preserves it); the [parent plan](../plans/proof-programme/parent-plan.md)
 (queue and operating protocol).
 
 ---

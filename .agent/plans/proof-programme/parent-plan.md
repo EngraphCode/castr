@@ -116,9 +116,8 @@ todos:
 in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
 (amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
 CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (see the Q-01 evidence
-record; its "Routine is armed" state is **superseded 2026-08-26** — the replacement
-trigger is poke-only, and the attended first live firing plus the enable are owner-held,
-per the arming-walk record and the trigger paragraph below). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
+record; the Routine itself is owner-created platform state per §Operating protocol
+step 1 — this plan never mirrors its live schedule). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
 completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
 Q-04 evidence record). Q-21 completed 2026-08-26 (PR #64 landed its
 deliverable; see the Q-21 row). Q-18..Q-21 appended
@@ -319,9 +318,9 @@ brief. Routine mechanism proven end to end across four firings:
   its PR merges, with the B-15 configuration as then ratified (push + email, no
   digest) re-checked at enable — superseded 2026-08-24 by the push-only re-ballot, so
   a re-arm applies the current ratified set per the runbook, never this historical
-  one. The repeatable, account-portable form of this procedure — everything an
-  unrelated account needs to re-arm the Routine from the repo alone — is
-  [`arming-runbook.md`](./arming-runbook.md) (owner-directed 2026-08-25).
+  one. The repeatable, account-portable form of this procedure was the arming
+  runbook (owner-directed 2026-08-25; removed 2026-08-31 with the arming ceremony —
+  recreation is now §Operating protocol step 1's one-line procedure).
 - Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
   now Fable, changed in the Routine's own settings UI (the only safe route — recreating
   the trigger via API loses the owner-attached repo source, measured above). In the same
@@ -906,14 +905,10 @@ green. Incident I-1 (2026-08-23) adds cross-container claim visibility to the ga
 `active-claims.json` is per-container instance state, so the session-open claims scan
 cannot see a peer or concurrent writer in another container — the QD-5 pre-push head
 re-check is the standing mitigation, and a proactive cross-container claim signal revisits
-only with ADR-051's parallel-workers alternative. The QD-6 review adds a fired-session
-capability probe: can a Routine-spawned session publish an Artifact page and deliver a
-push notification? The owner-decision-ballot mechanism is measured only from interactive
-sessions. QD-7 (2026-08-23) extends the probe: do the Slack connector's tools surface in
-a fired session (`mcp__claude_ai_*` via ToolSearch), and does a message addressed to The
-Watcher on the `remote-coding` channel get a reply a later step can read? The connector
-was owner-attached to the Routine config the same day; no fired session has observed it
-yet.
+only with ADR-051's parallel-workers alternative. Session capabilities (artifact
+publish, push notification, Slack tools, trigger updates) are observed in live firings
+and any absence is named in the completion summary — routine-prompt §Slack and step 6
+already carry the degrade-gracefully behaviour, so no capability item sits in this row.
 Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
 proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
 → push unattended with every guard active, recorded in the slice PR. Source: Q-01
@@ -973,21 +968,19 @@ finding (a trap-mutating Proxy fixture whose backing store is proven untouched; 
 green. Source: PR #35 review threads (carry-forward dispositions recorded on-thread,
 2026-08-23). Gate: none (eligible immediately).
 
-**Q-18 — Predecessor-slot attestation (OP-1a; serves the
-[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
-2026-08-27, its frame governs this row).** Surface: `routine-prompt.md` — three
-touch points, the check and BOTH consumer halves: (1) step 3 (grounding) gains the
+**Q-18 — Predecessor-slot attestation (OP-1a).** Surface: `routine-prompt.md` — three
+touch points, the check and BOTH consumer halves: (1) step 2 (grounding) gains the
 check — derive each expected predecessor slot from your own spawn time minus whole
-cadence intervals (ADR-051 clause 2; 8 h — never from a platform trigger read, an
-unproven fired-seat capability on Q-15's probe list), look back to the last durably
+cadence intervals (ADR-051 clause 2; 8 h — spawn-time arithmetic needs no platform
+read and works in every fired session), look back to the last durably
 attested firing, and for every expected slot in the gap with no durable trace (no
 `FIRING-LEASE`, no PR or branch activity, no counter or identity-row delta, and no open
 or draft bookkeeping/deferral PR carrying its increment) unexplained by a STOP file,
 append one `other`-class entry to `incidents.md` naming the unattested slots, landed
-via the normal counter-landing route; (2) step 4's incident-read semantics gain the
+via the normal counter-landing route; (2) step 3's incident-read semantics gain the
 entry's meaning for a reading firing (re-verify toolchain and gitleaks provisioning
 before trusting the chain — a predecessor that died silently may mean a broken
-environment); (3) step 9's completion-notification list gains "unattested predecessor
+environment); (3) step 8's completion-notification list gains "unattested predecessor
 slots" so the owner sees the signal. Non-goals: no external observer or watchdog
 (owner-declined 2026-08-24 — "we don't need that level of assurance yet"); no
 platform-side work; no new mechanism beyond the existing register and landing paths.
@@ -1014,7 +1007,7 @@ structural step-back, never another instance cure; (3) an **observational**
 drive-attempt count per open programme PR (firings spent on one PR without reaching
 merge — the WIP=1 starvation signal), recorded with the counters: its surfaces are
 the parent plan's §Failure counters contract and frontmatter (a per-PR field,
-absent = 0 declared like `failures:`) and routine-prompt step 8's counter duty; the
+absent = 0 declared like `failures:`) and routine-prompt step 7's counter duty; the
 response at any threshold is decision-class and goes to `queued-decisions.md` as a
 named position, never invented by a firing. Non-goals: no wholesale OCE re-sync
 beyond these contracts; never a second skill copy (this row edits the
@@ -1030,9 +1023,7 @@ OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); sec
 owner decision card 2026-08-24. Gate: none (the `depends_on: [Q-13]` gate was
 dropped by owner card ruling 2026-08-27).
 
-**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5; serves the
-[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
-2026-08-27, its frame governs this row).** Surface: this file's Q-15
+**Q-20 — Q-15 brief re-scope + D-9 correction (OP-5).** Surface: this file's Q-15
 row and brief text, plus the D-9 one-word correction in the Q-17 brief
 ("tenth-round" → "seventeenth-round" — three surfaces attest seventeen). Rewrite the
 Q-15 brief to post-outage reality: each cured environment gap becomes a VALIDITY
@@ -1041,11 +1032,11 @@ probe naming what it executes (module-resolution smoke-check for `agent-tools/di
 clean window; a pinned-version resolve for gitleaks; a hook-fires check for
 provisioning), never a presence assertion; promote the still-live items — the
 identity-seed requirement (one canonical seed source yielding a non-degenerate
-prefix — the mechanism is Q-15's to derive at execution), the fired-seat capability
-probes (artifact publish + push notification, Slack tool surface, and the
-trigger-self-disable capability the ADR-051 clause 6 kill switch's final act
-assumes), and document the outcome-branch convention (the Routine's configured
-branch prefix plus per-session suffix). Non-goals: no probe execution in this row
+prefix — the mechanism is Q-15's to derive at execution) and the outcome-branch
+convention documentation (the Routine's configured branch prefix plus per-session
+suffix). Session capabilities (artifact publish, push notification, Slack tools,
+trigger updates) are observed in live firings and named in completion summaries
+when absent — no dedicated probe rows. Non-goals: no probe execution in this row
 (Q-15 executes when claimed); no gate weakening; **not a bookkeeping landing** — a
 brief rewrite is neither counter, incident, nor continuity state (QD-5 scope), so
 this row lands as a slice PR. Acceptance (`non-code`): the Q-15 brief carries the
@@ -1074,9 +1065,7 @@ owner-invoked claim remains; gates green. Source: loop-review D-10 and the
 states the general policy with both branches and cites ADR-051; both adapter
 descriptions corrected; no unconditional owner-invoked claim remains.**
 
-**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26; serves the
-[`cloud-autonomy-trust`](./cloud-autonomy-trust.md) node — promoted
-2026-08-27, its frame governs this row).** Surface:
+**Q-22 — Fixture-generator repair (QD-11 owner ruling, 2026-08-26).** Surface:
 `lib/scripts/generate-normalized-fixtures.ts` and the checked-in normalized fixture
 estate it owns (the paired `zod.ts` fixtures and `ir.json`/`ir2.json`). Goal,
 generator-first per the ruling ("obviously fix the generator") and
@@ -1332,13 +1321,14 @@ clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the
 firing cannot reasonably classify as programme work is not merged unattended,
 whatever best efforts concluded about counting it.
 
-1. **Trigger**: once enabled, the Routine spawns a fresh cloud session per firing at the
-   ADR-051 clause 2 cadence — as of 2026-08-26 the replacement trigger is **poke-only**,
-   with the attended first live firing and the enable owner-held (arming-walk record). Fresh sessions re-ground via `start-right-thorough` with the plan /
+1. **Trigger**: the Routine is a scheduled task that spawns a fresh cloud session per
+   firing at the ADR-051 clause 2 cadence (default cron `3 */8 * * *`, three per day),
+   with this repository attached and its stored prompt a thin pointer telling the
+   firing to read `routine-prompt.md` on main and follow it exactly. The owner
+   creates, schedules, pauses, and deletes it; a seat changes it only at owner word.
+   Fresh sessions re-ground via `start-right-thorough` with the plan /
    metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
-   thread records, napkin) is the memory between firings. Recreating the Routine itself —
-   on this account or an unrelated one — follows
-   [`arming-runbook.md`](./arming-runbook.md).
+   thread records, napkin) is the memory between firings.
 2. **Pre-flight**: check the `STOP` file and Routine state (ADR-051 clause 6); register
    session identity and open the area claim per
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
@@ -1407,10 +1397,9 @@ landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's arming**: Q-01 — satisfied (completed 2026-08-22; see the
-  Q-01 evidence record). Its "armed" state is superseded 2026-08-26: the replacement
-  trigger is poke-only, and the attended first live firing plus the enable are owner-held
-  (arming-walk record).
+- **Blocking for the loop's operation**: none — Q-01 (completed 2026-08-22) proved the
+  firing mechanism end to end; the Routine is owner-created platform state per
+  §Operating protocol step 1.
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied

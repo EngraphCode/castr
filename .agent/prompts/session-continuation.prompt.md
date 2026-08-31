@@ -18,12 +18,10 @@ Context bridge between sessions. Start here after reading [AGENT.md](../directiv
 > [`plans/proof-programme/parent-plan.md`](../plans/proof-programme/parent-plan.md)'s
 > queue** (the transplant is STOPPED — owner ruling QD-2, 2026-08-26: "The old effort is
 > stopped, parity remains a goal, we will address it in time"; parity's living frame is
-> the 2026-08-24 bidirectional-equality directive). **Routine state (2026-08-26 arming
-> walk): the Routine is POKE-ONLY — no cron, it cannot self-fire, and NO background work
-> is advancing.** The original arming was retired, the trigger re-created 2026-08-25, and
-> the owner-attended walk (PR #60 + #63) completed everything up to the attended first
-> live firing, which HOLDS for the owner along with the enable (see the proof-programme
-> thread record's walk addendum — the authoritative hold). Resuming sessions: read the
+> the 2026-08-24 bidirectional-equality directive). **Routine state: the Routine is a
+> scheduled task the owner creates and schedules at will (parent plan §Operating
+> protocol step 1); when none is scheduled, no background work is advancing — the
+> proof-programme thread record carries the live state.** Resuming sessions: read the
 > parent plan's queue and operating protocol before acting, check for open programme PRs
 > and live claims, and treat WIP = 1 as the guideline ADR-051 (as amended 2026-08-26)
 > grades it; every banner below predates this contract.

@@ -3,8 +3,8 @@
 Account-side prerequisites shared by every session type this repo runs — interactive
 cloud sessions, scheduled Routine firings, and The Watcher alike. Indexed by the
 [account-portability register](./account-portability-register.md); the proof-programme
-[arming runbook](../plans/proof-programme/arming-runbook.md) cites this document from its
-Routine-specific arming sequence. First recorded in the parent plan's Q-01 evidence
+parent plan's §Operating protocol step 1 cites this document for the Routine's GitHub
+and notification prerequisites. First recorded in the parent plan's Q-01 evidence
 record (2026-08-22/23); consolidated here 2026-08-25 when the register became its second
 consumer.
 
@@ -60,9 +60,7 @@ in `repo-continuity.md`).
   QD-8 — "assume I am not around, and that an alert must be sent via the mobile claude
   app").
 - The proof-programme Routine's completion-notification channel set is programme-owned
-  configuration (ballot B-15, as currently amended — latest 2026-08-27: push + Slack, no
-  email, device-push-only receipt gate) and lives with the
-  [arming runbook](../plans/proof-programme/arming-runbook.md)'s trigger-configuration
-  section.
-- Validation: a dry-run firing's completion notification received on the owner's device
-  (arming runbook, arming sequence).
+  configuration the owner sets on the Routine (ballot B-15, as currently amended —
+  latest 2026-08-27: push + Slack, no email).
+- Validation: any scheduled firing's completion notification received on the owner's
+  device.

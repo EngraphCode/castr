@@ -33,7 +33,7 @@ fresh cloud sessions per day against a queue, ratified in one owner ballot,
 which then ran — and whose first collision, overlap, and reporting failures
 were each measured, cured, and folded back into the standing machinery within
 a day, the evidence trail living in the programme's own incident register,
-queued-decisions register, arming-evidence record, and the governing ADR's
+queued-decisions register, Q-01 evidence record, and the governing ADR's
 amendment history. Evidence base as of capture: one programme, two rows
 completed interactively, one brief claimed and driven by a firing to an open
 PR; the collision machinery below is designed from the measured incident and
@@ -57,7 +57,7 @@ not yet exercised by a subsequent firing.
    never read through an absence default.
 4. **One standing firing prompt, read from the base branch.** A zero-context
    firing's whole brief is one file: exit criteria first, protocol in order
-   (STOP check → dry-run detection → ground/provision → claims + incident
+   (STOP check → ground/provision → claims + incident
    read → WIP=1 drive-or-claim → slice → counters → handoff), every landing
    rule stated with its route for every case.
 5. **Queue briefs are the per-slice plans.** Each row's brief is a
@@ -87,12 +87,11 @@ not yet exercised by a subsequent firing.
    block in every round. Measured: early rounds are real, later rounds
    sample an unbounded refinement space; on authority machinery nearly every
    round is real, so enumerate the defect surface deliberately up front.
-9. **The platform division of labour, measured before arming**: the agent
-   creates and updates the Routine via API; only the owner's UI can attach
-   the repo source, connectors, the session model, and behaviour toggles —
-   API recreation silently loses the attachments. Prove the end-to-end
-   firing (spawn → credentialed landing → notification receipts) before the
-   first product slice.
+9. **A Routine without the repo attached lands nothing**: whenever creating
+   or recreating the Routine, specify the repo source and re-apply the
+   owner-side settings (model, connectors, behaviour toggles), then verify
+   them in a config re-read. The first firing observed end to end (spawn →
+   credentialed landing → notification receipt) is the mechanism proof.
 10. **Structured owner decisions while away**: the owner-decision-ballot
     pattern (sibling entry) — publish a tap-to-answer artifact, push-notify,
     and let any later session read the attributed answers. Composes with the
@@ -118,7 +117,7 @@ not yet exercised by a subsequent firing.
 - **Doctrine references that do not resolve** (transplanted skill pointing
   at absent templates) — an unexecutable instruction is drift waiting to
   fire in a zero-context session. Cure: verify every referenced surface
-  exists before arming; queue repairs as rows.
+  exists before scheduling; queue repairs as rows.
 - **Assuming a special bot identity** — the default credentials were fine;
   the identity convention was another host's. Verify, don't inherit.
 
@@ -141,8 +140,8 @@ not yet exercised by a subsequent firing.
 6. End-to-end firing proof: spawn → credentialed landing → notification
    receipts, observed firsthand. Verify: a pushed commit and a received
    notification, never the platform's "run succeeded".
-7. Owner attaches repo, model, connectors, and behaviour toggles in the
-   Routine UI (API-created Routines carry none of them). Verify: re-read
-   the Routine's config after the owner's pass.
+7. The Routine carries the repo, model, connectors, and behaviour toggles
+   (a Routine missing the repo fires read-only sessions). Verify: re-read
+   the Routine's config after they are set.
 8. Arm — and fold every reviewer- or incident-found gap back into the
    standing machinery in the same landing that fixes it.
