@@ -54,6 +54,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   reports" posture is for unattended drives; an attended session triages with the
   owner.) Worked instance: of four verified-true PR #78 findings, the owner selected
   three; the account-access citation nit was rejected as true-but-unimportant.
+- **OWNER CORRECTION: every "superseded head" is a cancelled GitHub runner — repeated
+  supersession is wasted money.** Four suites cancelled today by push-per-round reflex
+  (PR #77: f972629→53c5e5e→59c0fd8; PR #78: 97b821d→65f1594→746e953); the 65f1594 push
+  went out while Codex's summary already showed a review RUNNING, so both rounds were
+  batchable with information in hand. Operating rule adopted: (1) one push per review
+  WAVE — before pushing, check for reviewers mid-review or own CI mid-run on the
+  current head, and hold fixes locally until the wave completes; (2) never supersede
+  your own green-path CI run — only a push fixing a failure already reported on that
+  head may interrupt it; (3) bookkeeping/continuity edits are committed locally and
+  ride the next necessary push, never their own CI-triggering push. Commits are free;
+  pushes cancel runners.
 - **Session-shape note:** three successive owner pushes ("don't assume the stated
   process is right" → "why isn't a scheduled task enough" → "notifications work, are
   you suggesting we prove that?") were needed before this seat stopped defending
