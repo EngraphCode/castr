@@ -1,43 +1,41 @@
 {
- "api": {
-  "exactOptional": "function",
-  "exactPartial": "function"
- },
- "behaviour": {
-  "omitted": {
-   "optional": true,
-   "exactOptional": true
+  "api": {
+    "exactOptional": "function",
+    "exactPartial": "function"
   },
-  "present": {
-   "optional": true,
-   "exactOptional": true
+  "behaviour": {
+    "omitted": {
+      "optional": true,
+      "exactOptional": true
+    },
+    "present": {
+      "optional": true,
+      "exactOptional": true
+    },
+    "explicitUndefined": {
+      "optional": true,
+      "exactOptional": false
+    }
   },
-  "explicitUndefined": {
-   "optional": true,
-   "exactOptional": false
+  "wire": {
+    "hasOwnA": false,
+    "optional": true,
+    "exactOptional": true,
+    "note": "JSON.parse can never produce an own undefined-valued key"
+  },
+  "projectionIdentical": true,
+  "projClassic": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "a": {
+        "type": "string"
+      },
+      "b": {
+        "type": "string"
+      }
+    },
+    "required": ["b"],
+    "additionalProperties": false
   }
- },
- "wire": {
-  "hasOwnA": false,
-  "optional": true,
-  "exactOptional": true,
-  "note": "JSON.parse can never produce an own undefined-valued key"
- },
- "projectionIdentical": true,
- "projClassic": {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "properties": {
-   "a": {
-    "type": "string"
-   },
-   "b": {
-    "type": "string"
-   }
-  },
-  "required": [
-   "b"
-  ],
-  "additionalProperties": false
- }
 }

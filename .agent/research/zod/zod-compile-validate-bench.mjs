@@ -59,24 +59,40 @@ const r = {};
 r.pet_valid_plain = bench('pet valid safeParse plain', () => Pet.safeParse(validPet), N);
 r.pet_valid_compiled = bench('pet valid safeParse compiled', () => PetC.safeParse(validPet), N);
 r.pet_invalidType_plain = bench('pet invalid-type plain', () => Pet.safeParse(invalidType), N);
-r.pet_invalidType_compiled = bench('pet invalid-type compiled', () => PetC.safeParse(invalidType), N);
+r.pet_invalidType_compiled = bench(
+  'pet invalid-type compiled',
+  () => PetC.safeParse(invalidType),
+  N,
+);
 r.pet_invalidKey_plain = bench('pet unknown-key plain', () => Pet.safeParse(invalidKey), N);
 r.pet_invalidKey_compiled = bench('pet unknown-key compiled', () => PetC.safeParse(invalidKey), N);
-r.pet_invalid_validate = bench('pet invalid-type z.validate', () => z.validate(Pet, invalidType), N);
+r.pet_invalid_validate = bench(
+  'pet invalid-type z.validate',
+  () => z.validate(Pet, invalidType),
+  N,
+);
 r.pet_valid_validate = bench('pet valid z.validate', () => z.validate(Pet, validPet), N);
 r.shape_valid_plain = bench('shape valid plain', () => Shape.safeParse(validShape), N);
 r.shape_valid_compiled = bench('shape valid compiled', () => ShapeC.safeParse(validShape), N);
-r.shape_invalid_validate = bench('shape invalid z.validate', () => z.validate(Shape, invalidShape), N);
+r.shape_invalid_validate = bench(
+  'shape invalid z.validate',
+  () => z.validate(Shape, invalidShape),
+  N,
+);
 r.shape_invalid_plain = bench('shape invalid plain', () => Shape.safeParse(invalidShape), N);
 
 console.log(
   JSON.stringify({
     label: 'ratios',
     compiled_over_plain_valid: +(r.pet_valid_compiled / r.pet_valid_plain).toFixed(2),
-    compiled_over_plain_invalidType: +(r.pet_invalidType_compiled / r.pet_invalidType_plain).toFixed(2),
+    compiled_over_plain_invalidType: +(
+      r.pet_invalidType_compiled / r.pet_invalidType_plain
+    ).toFixed(2),
     validate_over_safeParse_invalid: +(r.pet_invalid_validate / r.pet_invalidType_plain).toFixed(2),
     validate_over_safeParse_valid: +(r.pet_valid_validate / r.pet_valid_plain).toFixed(2),
     shape_compiled_over_plain: +(r.shape_valid_compiled / r.shape_valid_plain).toFixed(2),
-    shape_validate_over_safeParse_invalid: +(r.shape_invalid_validate / r.shape_invalid_plain).toFixed(2),
+    shape_validate_over_safeParse_invalid: +(
+      r.shape_invalid_validate / r.shape_invalid_plain
+    ).toFixed(2),
   }),
 );

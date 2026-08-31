@@ -1,4 +1,5 @@
 // Probe B: exactOptional/.exactPartial() fidelity study (zod 4.5.4).
+// Regenerate: node <this file> > <dated>.out.json && pnpm exec prettier --write <dated>.out.json
 import { z } from 'zod45';
 
 const out = {};
@@ -40,4 +41,4 @@ out.projectionIdentical = JSON.stringify(projClassic) === JSON.stringify(projExa
 out.projClassic = projClassic;
 if (!out.projectionIdentical) out.projExact = projExact;
 
-console.log(JSON.stringify(out, null, 1));
+console.log(JSON.stringify(out, null, 2));
