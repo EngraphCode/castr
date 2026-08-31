@@ -2,6 +2,29 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner rulings: delivery cadence + session hook bypass — same session, part 4; Dolphin binds Trench / 013aPY)
+
+- **OWNER CORRECTION of my over-correction (verbatim substance): "at no point did I say
+  no further landings, I said you were committing and pushing too much. we need to
+  optimise for delivery, running a twenty minutes process after each change is not
+  optimising for delivery."** My previous turn's stand-down ("no further commits or
+  pushes this session") was an inversion of the actual instruction — the same
+  doctrine-by-analogy shape in the opposite direction: a cost/cadence correction read
+  as a prohibition. The operative frame is DELIVERY: land meaningful units, don't pay
+  the full gate chain per micro-change, and don't stop landing either.
+- **OWNER AUTHORISATION (this session ONLY, verbatim): "for this session only, use
+  HUSKY=0 for commit and push and allow the GitHub CI to detect issues."** This is the
+  fresh, explicit, scoped authorisation `no-verify-requires-fresh-authorisation`
+  requires — recorded here as its evidence. Scope: this session, commit and push,
+  detection delegated to GitHub CI. It does NOT graduate to a standing default; the
+  next session returns to hooked landings unless the owner says otherwise.
+- **OWNER DIRECTIVE: monitor PR #73; once green and clean, merge it, then start the
+  dependency update (Q-23).** Executing via subscribe_pr_activity event wake +
+  send_later fallback (no gh CLI in this seat; the pr-watch CLI's shell path is
+  unavailable without shell GitHub credentials — MCP surfaces are the read path).
+  Post-merge shape: restart the designated branch from origin/main (merged-PR rule),
+  run the Part 1 pass per the plan, land as a new PR.
+
 ## 2026-08-31 (OWNER CORRECTION: gate-run waste — same cloud session, part 3)
 
 - **OWNER CORRECTION (verbatim substance): "Running the incredibly expensive, exhaustive
