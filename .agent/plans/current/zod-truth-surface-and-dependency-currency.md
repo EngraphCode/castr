@@ -20,6 +20,10 @@ todos:
     content: 'Part 2a: Scenario 8 vendor-conformance oracle + corpus extension — parent-plan row Q-24'
     status: pending
     depends_on: [DC-1]
+  - id: TS-1b
+    content: 'Part 2a-ii: z.toJSONSchema differential cross-check (split from TS-1 at review) — parent-plan row Q-27'
+    status: pending
+    depends_on: [TS-1]
   - id: TS-2
     content: 'Part 2b: Zod dialect manifest + unsupported-surface diagnostics — parent-plan row Q-25'
     status: pending
@@ -34,7 +38,7 @@ todos:
 
 The execution queue for this plan lives in the
 [proof-programme parent plan](../proof-programme/parent-plan.md) as rows
-Q-23..Q-26 (QD-6: queue briefs ARE the per-slice plans). This document is the
+Q-23..Q-27 (QD-6: queue briefs ARE the per-slice plans). This document is the
 evidence base and design detail those briefs cite; where a brief and this
 document disagree, the brief governs and this document is corrected.
 
@@ -50,16 +54,29 @@ that makes the model necessary is ratified in an ADR instead of inherited.
 
 ## Evidence base (all measured firsthand, 2026-08-31)
 
-Probe: side-by-side zod 4.3.6 / 4.4.3 / 4.5.4 (scratchpad, 20-construct
-representative set; script preserved in the napkin entry's session):
+Probe: side-by-side zod 4.3.6 / 4.4.3 / 4.5.4, 20-construct representative
+set — script and raw outputs committed at
+`.agent/research/zod/zod-version-probe.mjs` /
+`zod-version-probe-2026-08-31.out.jsonl` (re-runnable by any future firing;
+the TS-3 revisit trigger depends on it):
 
 | Measurement                                                             | 4.3.6  | 4.4.3              | 4.5.4              |
 | ----------------------------------------------------------------------- | ------ | ------------------ | ------------------ |
 | `z.iso.datetime()` accepts `2026-08-31T12:00Z` (no secs)                | yes    | yes                | **no**             |
 | `z.string().length(1)` accepts `"\u{1F4A9}"` (1 cp, 2 UTF-16)           | no     | no                 | **yes**            |
+| `z.string().min(2)` accepts `"\u{1F4A9}"` (rejecting direction)         | yes    | yes                | **no**             |
 | `z.creditCard/properties/deepPartial/validate/compile`, `.exactPartial` | absent | absent             | present            |
-| `_zod.def` shape (type/format/keys/checks), 20 constructs               | —      | identical to 4.3.6 | identical to 4.4.3 |
+| Shallow `_zod.def` shape (type/format/keys/checks), 20 constructs       | —      | identical to 4.3.6 | identical to 4.4.3 |
 | `z.toJSONSchema(z.string().min(2)).minLength`                           | 2      | 2                  | 2                  |
+
+The length change is two-sided: code-point counting newly ACCEPTS input
+4.4 rejected (`length(1)`) and newly REJECTS input 4.4 accepted (`min(2)`)
+— both directions belong in any behaviour-delta record. The def-stability
+row measures SHALLOW shape only (type, format, sorted def keys, one level
+of check descriptors); the 4.5 behaviour changes moved none of it, which
+means shallow def shape is measurably blind to exactly this class of
+semantic drift — a limit TS-3's ADR must carry alongside the stability
+claim.
 
 Corpus audit (`lib/tests-fixtures/zod-parser/happy-path/payloads.ts`): all
 five datetime payloads carry seconds; zero astral/code-point length-boundary
@@ -81,13 +98,22 @@ a workspace TS 7 reintroduces dual-compiler skew on the emission path;
 reopen when a ts-morph release vendors 7.x). Audit: zero findings already.
 
 Table-layer read: the parser's Zod-name knowledge is already table-shaped
-(`ZOD_PRIMITIVES`, `ZOD_PRIMITIVE_TYPES`, `FORMAT_MAP`/`ENCODING_MAP`,
-`zod-constants.ts`) and the writer's is its inverse
-(`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric switches) — hand-
-maintained in separate modules, with a third prose copy in ADR-031 §2. The
-chain/AST machinery is structural and generic over the name constants; it
-does not need manifest-driving. The parser already generates a synthetic
-zod declaration from `ZOD_PRIMITIVES` (generation precedent in-tree).
+(`ZOD_PRIMITIVES` + `ZOD_COMPOSITIONS`, `ZOD_PRIMITIVE_TYPES`, and TWO
+format maps — `types/zod-parser.zod4-formats.ts` for Zod-4 primitive names
+and `modifiers/zod-parser.constraints.ts` for chained-method names) and
+the writer's tables (`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric
+switches) are their near-inverse — hand-maintained in separate modules,
+with a third prose copy in ADR-031 §2. NOT a true inverse (measured): the
+chained-method map yields `cuid`, `cuid2`, `ulid`, `emoji`, and `ip`
+formats the writer cannot emit (`writeStringSchema` throws on all five),
+so the table layer carries a real parse-only/emit-only asymmetry any
+manifest must express rather than erase. The chain/AST machinery is
+structural and generic over the name constants; it does not need
+manifest-driving. The parser already derives a synthetic zod declaration
+at runtime from `ZOD_PRIMITIVES` + `ZOD_COMPOSITIONS`
+(`registry/zod-decl-builder.ts`, consumed at `ast/zod-ast.ts` — the
+in-tree precedent for table-driven runtime derivation, and a third
+consumer any manifest must feed).
 
 Doctrine finding (napkin 2026-08-31, feeds TS-3): ADR-032 §Context says
 "ADR-026 requires ts-morph; no regex or runtime execution", but ADR-026's
@@ -102,8 +128,24 @@ are currently folklore, not doctrine.
 
 Executes the `dependency-currency` skill in full (survey → holds → tiers →
 one proof-gated cycle per type-affecting bump → audit-to-zero → Actions
-pins → close). The survey above is plan-authoring evidence; the executing
-firing re-runs it (premise re-verification). Expected shape:
+pins → close). Prior art:
+[`current/complete/dependency-currency.md`](./complete/dependency-currency.md)
+closed at audit-zero on 2026-08-26 (DC0–DC8, per-cycle SHAs), so this pass
+starts five days off a clean baseline — its substance is the zod cycle
+plus a small dev sweep, and the 2026-08-26 landings are verified, not
+re-authored (the `pnpm-workspace.yaml` `typescript: '^6.0.3'` override cap
+already exists with the vendored-compiler rationale). The skill's §7
+close-the-lane record lands in THIS document's Part 1 plus the Q-23 row;
+the completed DC plan stays closed. Premises to re-verify at claim time:
+the survey above, and the measured environment skew — this authoring
+container runs Node 22 against `engines.node: 24.x` (cloud-image
+artifact); a firing inheriting that skew names its disposition (proceed
+with the engine warning, or defer to a Node-24 environment) before the
+install-heavy steps. Per-slice proof shape: a currency pass has no failing
+test to author first — its proof is the skill's capture-before-mutate
+baseline plus suites staying green; QD-14 (open) is the governing ruling
+on non-code/gate-shaped acceptance vs the red-first non-negotiable, and
+this row operates under its recommended reading. Expected shape:
 
 - **Type-neutral dev sweep**: tsx, knip — one commit, gates firsthand.
 - **Data-pipeline cycle**: @scalar/json-magic + @scalar/openapi-parser
@@ -113,11 +155,17 @@ firing re-runs it (premise re-verification). Expected shape:
 - **Zod cycle (the headline, its own commit)**: bump `zod` to `^4.5.4` in
   `lib` and `agent-tools`. Baseline is the committed fixture estate plus a
   pre-bump full-suite run captured to scratch BEFORE `package.json` is
-  touched (PDR-097 capture-before-mutate). Measured prediction to verify,
-  not assume: the suite stays green because the corpus never exercises the
-  changed acceptance regions (probe + corpus audit above). The cycle's PR
-  body records both behaviour deltas (datetime seconds now required —
-  RFC 3339/OpenAPI-faithful strictening; length now counts code points —
+  touched (PDR-097 capture-before-mutate). The bump re-resolves
+  `@modelcontextprotocol/sdk`'s zod peer (lockfile today:
+  `1.30.0(zod@4.4.3)` with `zod-to-json-schema` beneath it) — a
+  peer-range refusal is an install-time failure the green prediction does
+  not cover, so verify the resolution before running suites. Measured
+  prediction to verify, not assume: the suite stays green because the
+  corpus never exercises the changed acceptance regions (probe + corpus
+  audit above). The cycle's PR body records both behaviour deltas
+  TWO-SIDED (datetime seconds now required — RFC 3339/OpenAPI-faithful
+  strictening; length now counts code points — newly accepting astral
+  strings under `length`/`max` AND newly rejecting them under `min`,
   Zod moving TOWARD JSON Schema's minLength/maxLength semantics) as the
   release-notes fact that rides the QD-10 residue (any future publish
   prices in accumulated behaviour changes). A red result is
@@ -127,10 +175,12 @@ firing re-runs it (premise re-verification). Expected shape:
   coupling; in-range 24.x refresh only). Cap any override per the skill.
 - **Actions pins**: refresh SHA pins against verified stable tags.
 
-Acceptance (`integration` + `non-code`): `pnpm audit` zero;
+Acceptance (`integration` + `non-code`, QD-14 reading): `pnpm audit` zero;
 `pnpm -r outdated` empty modulo recorded holds and cooldown; one commit per
-type-affecting cycle with its proof stated in the body; full `pnpm check:ci`
-green; the zod cycle's behaviour-delta record present in its PR body.
+type-affecting cycle with its proof stated in the body; GitHub Actions SHA
+pins verified against dereferenced stable tags; the workspace `overrides`
+TS cap re-verified against the vendored major; full `pnpm check:ci` green;
+the zod cycle's two-sided behaviour-delta record present in its PR body.
 
 ## Part 2 — Zod truth-surface programme
 
@@ -146,15 +196,15 @@ with the drift DIRECTION named (toward or away from IR/JSON-Schema
 semantics — the 4.5 length change is drift toward; the datetime change is a
 strictening castr can adopt as the new expectation). Includes:
 
-- **Corpus extension first (red-first)**: seconds-less datetimes, astral
-  length boundaries, and a parity-payload entry for every string-formats
-  fixture schema (the `IsoDatetimeSchema` gap), so the changed regions are
-  inside the corpus before the oracle reads it.
-- **`z.toJSONSchema` differential**: castr's IR→JSON-Schema output diffed
-  against Zod's own `z.toJSONSchema()` for the shared subset — two
-  independent implementations of the same mapping as a cheap second
-  oracle; documented divergences (uuidVersion, int64/bigint) are the
-  allowlist, each with its reason.
+- **Corpus extension lands first, as the oracle's input**: seconds-less
+  datetimes, astral length boundaries, and a parity-payload entry for
+  every string-formats fixture schema (the `IsoDatetimeSchema` gap — a
+  fixture with no payload entry is silently skipped by
+  `assertValidationParity` today). This step alone cannot go red — the
+  parity harness moves both sides together, which is the finding — so the
+  RED-FIRST proof for this slice is the oracle failing on the seeded
+  vendor-drift and projection mutants below, with the corpus extension in
+  place before it.
 - **ADR-035 amendment** adding Scenario 8 with its blind-spot rationale.
 
 Acceptance (`integration`): oracle red on a seeded vendor-drift mutant
@@ -163,26 +213,51 @@ projection mutant; green on the real estate; wired into `pnpm check`; ADR
 amendment landed. Runs on the pinned lockfile version — the oracle is what
 makes every FUTURE zod bump a measured event instead of a silent shift.
 
+### TS-1b / row Q-27 — `z.toJSONSchema` differential cross-check
+
+Split from TS-1 at review (separate oracle, separate allowlist, separate
+failure semantics; nothing in the three-way differential depends on it):
+castr's IR→JSON-Schema output diffed against Zod's own `z.toJSONSchema()`
+for the shared subset — two independent implementations of the same
+mapping as a cheap second oracle. Documented divergences (uuidVersion,
+int64/bigint carriers) form a reasoned allowlist; an unlisted divergence
+fails.
+
+Acceptance (`integration`): differential red on a seeded writer mutant and
+on an unlisted divergence, green on the real estate with the allowlist
+populated and each entry reasoned; wired into `pnpm check`; gates green.
+
 ### TS-2 / row Q-25 — dialect manifest + unsupported-surface diagnostics
 
 One typed data module (the "Castr Zod-4 dialect") holding, per construct:
-Zod name, IR type, format/encoding, canonical emission, redundant-
-validation marker, and conformance-vector references. Generator-first
-(`generator-first-mindset`): the parser tables (`ZOD_PRIMITIVES`,
-`ZOD_PRIMITIVE_TYPES`, `FORMAT_MAP`, `ENCODING_MAP`) and writer tables
-(`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric dispatch) are
-derived from it — parser/writer lockstep for the name/format layer becomes
-true by construction; ADR-031 §2's prose table gains a generated-from
-pointer instead of a third hand copy. Scope discipline: the manifest
-drives the TABLE layer only — chain/AST machinery, objects, composition,
-and recursion stay code (measured feasibility read above; forcing them
-into data would create the fourth copy the falsifier names). Adds the
-known-unsupported enumeration: 4.5 surface (`z.creditCard`,
-`z.properties`, `z.deepPartial`, `.exactPartial`, `z.validate`,
-`z.compile`) and other recognised-but-out-of-dialect constructs get
-actionable "not in the Castr Zod dialect" diagnostics with the reason
-(e.g. creditCard: no faithful JSON-Schema/OpenAPI carrier) instead of the
-generic unsupported-expression error.
+Zod name, IR type, format/encoding, canonical emission, a
+parse-only/emit-only capability field (the measured cuid/cuid2/ulid/
+emoji/ip asymmetry must be EXPRESSED, not erased — closing it is a
+behaviour change and out of scope), redundant-validation marker, and
+conformance-vector references. **Mechanism: runtime derivation** — the
+consuming modules import the manifest and build their tables at module
+initialisation, the same shape as the in-tree precedent
+(`zod-decl-builder.ts` deriving the synthetic zod declaration). No
+generated source files are produced, so `never-edit-generated-files` and
+regeneration gates are not in play; this is a pure refactor of where the
+tables come from. Consumers, all named: parser
+`ZOD_PRIMITIVES`/`ZOD_COMPOSITIONS` (including the synthetic-declaration
+builder), `ZOD_PRIMITIVE_TYPES`, both parser format maps
+(`types/zod-parser.zod4-formats.ts` and
+`modifiers/zod-parser.constraints.ts`); writer `STRING_FORMAT_TO_ZOD`,
+`formatToValidation`, numeric dispatch. Parser/writer lockstep for the
+name/format layer becomes true by construction; ADR-031 §2's prose table
+gains a derived-from pointer instead of a third hand copy. Scope
+discipline: the manifest drives the TABLE layer only — chain/AST
+machinery, objects, composition semantics, and recursion stay code
+(measured feasibility read above; forcing them into data would create the
+fourth copy the falsifier names). Adds the known-unsupported enumeration:
+4.5 surface (`z.creditCard`, `z.properties`, `z.deepPartial`,
+`.exactPartial`, `z.validate`, `z.compile`) and other
+recognised-but-out-of-dialect constructs get actionable "not in the Castr
+Zod dialect" diagnostics with the reason (e.g. creditCard: no faithful
+JSON-Schema/OpenAPI carrier) instead of the generic
+unsupported-expression error.
 
 Acceptance (`unit` + `integration`): tables byte-identical to today's
 behaviour on the existing suite (pure refactor proof); a manifest entry
@@ -207,18 +282,22 @@ indexes reconciled, `docs-adr-expert` review recorded; gates green.
 
 ## Recommendation (post uncertainty exploration)
 
-The probes strengthened the pre-probe synthesis on every axis: the def
-contract is empirically stable across 4.3→4.5 (the runtime oracle is cheap
-and durable), the corpus blind spot is real and total for the 4.5-changed
-regions (the oracle is necessary, not hypothetical), and the table layer is
-already half-manifest on both sides (TS-2 is a consolidation, not an
-invention). Recommended order: **Q-23 → Q-24 → Q-25 → Q-26** — currency
-first so the oracle pins the vendor castr actually ships against; oracle
-before manifest so manifest refactoring lands under cross-truth proof;
-ADR last-but-referencing-both so doctrine records what exists. Sequencing
-relative to the existing queue: after the safety instruments
-(Q-18/Q-20/Q-22/Q-19), ahead of Q-05..Q-09 — owner-adjustable; the rows
-carry no gates beyond `depends_on` within this plan.
+The probes strengthened the pre-probe synthesis on every axis: the shallow
+def contract is empirically stable across 4.3→4.5 (the runtime oracle is
+cheap and durable — with the measured limit that shallow def shape did not
+move for the 4.5 behaviour changes, so it detects representation drift,
+never semantic drift; the oracle covers the latter), the corpus blind spot
+is real and total for the 4.5-changed regions (the oracle is necessary,
+not hypothetical), and the table layer is already half-manifest on both
+sides (TS-2 is a consolidation, not an invention). Recommended order:
+**Q-23 → Q-24 → Q-25 → Q-26**, with Q-27 (the split `toJSONSchema`
+differential) after Q-24 — currency first so the oracle pins the vendor
+castr actually ships against; oracle before manifest so manifest
+refactoring lands under cross-truth proof; ADR last-but-referencing-both
+so doctrine records what exists. Sequencing relative to the existing
+queue: after the safety instruments (Q-18/Q-20/Q-22/Q-19), ahead of
+Q-05..Q-09 — owner-adjustable; the rows carry no gates beyond `depends_on`
+within this plan.
 
 Runtime introspection (`_zod.def` walking) is deliberately NOT adopted as
 the parser: its costs (executing user code, expression-level diagnostics
@@ -262,8 +341,10 @@ each slice's shape from live code and this plan's evidence, not its
 summaries; vendor call shapes (zod probe results, AJV options, ts-morph)
 re-verified at slice execution per
 `verify-vendor-call-shapes-at-plan-author-time`. Reviewers: this plan took
-`assumptions-expert` at authoring (2026-08-31); per-slice reviewer moments
-follow the parent plan's protocol step 4. Lifecycle: rows complete →
+`assumptions-expert` at authoring (2026-08-31, 17 findings — one blocking,
+ten material, six minor — all applied in the authoring landing, including
+the Q-27 split and the Q-25 mechanism decision); per-slice reviewer
+moments follow the parent plan's protocol step 4. Lifecycle: rows complete →
 parent-plan frontmatter + this doc's todos updated in the same landings;
 plan completion runs `engraph-consolidate-docs` and stages this doc to
 `current/complete/` per the active-plans contract.

@@ -34,6 +34,9 @@ todos:
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card; Q-13 dependency dropped by owner card ruling 2026-08-27): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
     status: pending
+  - id: Q-23
+    content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
+    status: pending
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
     status: pending
@@ -81,9 +84,6 @@ todos:
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
     status: pending
-  - id: Q-23
-    content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
-    status: pending
   - id: Q-24
     content: 'Scenario 8 vendor-conformance oracle: parity-corpus extension (seconds-less datetimes, astral lengths, string-format coverage) + three-way Zod/AJV/expectation differential + z.toJSONSchema cross-check + ADR-035 amendment'
     status: pending
@@ -94,6 +94,10 @@ todos:
     depends_on: [Q-23]
   - id: Q-26
     content: 'ADR: ratify static Zod parsing from first principles, with the vendor-oracle complement and dialect versioning'
+    status: pending
+    depends_on: [Q-24]
+  - id: Q-27
+    content: 'z.toJSONSchema differential cross-check (split from Q-24 at appending review): castr IR→JSON-Schema output vs Zod own conversion for the shared subset, reasoned divergence allowlist'
     status: pending
     depends_on: [Q-24]
 ---
@@ -112,7 +116,7 @@ Q-04 evidence record). Q-21 completed 2026-08-26 (PR #64 landed its
 deliverable; see the Q-21 row). Q-18..Q-21 appended
 2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the
 queue reordered 2026-08-26 at owner word (QD-11 ruling + arming-walk card:
-safety instruments first). Q-23..Q-26 appended
+safety instruments first). Q-23..Q-27 appended
 2026-08-31 at owner word (the
 [zod truth-surface & dependency-currency plan](../current/zod-truth-surface-and-dependency-currency.md)
 is their evidence base and design detail; recommended sequencing recorded
@@ -121,7 +125,7 @@ now, in queue order: Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency dropped by
 owner card ruling 2026-08-27 — sequenced with the safety instruments), Q-23,
 then Q-05..Q-09, Q-13 (executes
 the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on
-Q-20), and Q-24..Q-26 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+Q-20), and Q-24..Q-27 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -1077,56 +1081,86 @@ immediately; sequenced with the safety instruments at owner word).
 **Q-23 — Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31).**
 Surface: the whole dependency estate per the `dependency-currency` skill
 (survey → holds → tiers → one proof-gated cycle per type-affecting bump →
-audit-to-zero → Actions pins). Authoring-time survey and the zod-cycle
-design (measured 4.5 behaviour deltas, capture-before-mutate baseline,
-STOP-on-red) live in the
+audit-to-zero → Actions pins). Prior art:
+[`current/complete/dependency-currency.md`](../current/complete/dependency-currency.md)
+closed at audit-zero 2026-08-26, so this pass's substance is the zod
+4.4.3→4.5.4 cycle plus a small dev sweep — the existing
+`pnpm-workspace.yaml` `typescript: '^6.0.3'` override cap and the
+2026-08-26 landings are VERIFIED, not re-authored; the skill's §7
+close-the-lane record lands in the plan's Part 1 plus this row.
+Authoring-time survey and the zod-cycle design (measured 4.5 behaviour
+deltas, capture-before-mutate baseline, MCP-SDK zod-peer re-resolution
+check, STOP-on-red) live in the
 [zod truth-surface & dependency-currency plan](../current/zod-truth-surface-and-dependency-currency.md)
-§Part 1; the firing re-runs the survey (premise re-verification). Recorded
-holds: typescript 7 (ts-morph 28 vendors TS 6.0.2 — dual-compiler skew;
-reopen when a ts-morph release vendors 7.x) and @types/node 26 (ADR-049
-Node-major coupling). Non-goals: no parser/writer surface work (Q-24/Q-25
-own it); no Node-major or TS-major raise; no release/version decision
-(QD-10). Acceptance (`integration` + `non-code`): `pnpm audit` zero;
-`pnpm -r outdated` empty modulo recorded holds and cooldown; one commit per
-type-affecting cycle with its proof in the body; the zod cycle's PR body
-records both behaviour deltas as the QD-10 release residue; `pnpm check:ci`
-green. Source: the plan §Part 1 + its measured evidence base. Gate: none
-(eligible immediately; recommended after Q-19, owner-adjustable).
+§Part 1; the firing re-runs the survey (premise re-verification), and
+re-verifies the measured environment skew (authoring container: Node 22
+vs `engines.node: 24.x`), naming its disposition before install-heavy
+steps. Recorded holds: typescript 7 (ts-morph 28 vendors TS 6.0.2 —
+dual-compiler skew; reopen when a ts-morph release vendors 7.x) and
+@types/node 26 (ADR-049 Node-major coupling). Proof shape: a currency
+pass has no failing test to author first — its proof is the skill's
+capture-before-mutate baselines plus suites staying green; QD-14 (open)
+governs this reading. Non-goals: no parser/writer surface work
+(Q-24/Q-25 own it); no Node-major or TS-major raise; no release/version
+decision (QD-10). Acceptance (`integration` + `non-code`, QD-14
+reading): `pnpm audit` zero; `pnpm -r outdated` empty modulo recorded
+holds and cooldown; one commit per type-affecting cycle with its proof
+in the body; GitHub Actions SHA pins verified against dereferenced
+stable tags; the `overrides` TS cap re-verified against the vendored
+major; the zod cycle's PR body records both behaviour deltas TWO-SIDED
+(datetime seconds; length code-points accepting AND rejecting
+directions) as the QD-10 release residue; `pnpm check:ci` green. Source:
+the plan §Part 1 + its measured evidence base. Gate: none (eligible
+immediately; recommended after Q-19, owner-adjustable).
 
 **Q-24 — Scenario 8 vendor-conformance oracle.** Surface:
 `lib/tests-transforms` + the parity payload corpus + an ADR-035 amendment.
 The parity harness runs both schema sides under the SAME installed Zod, so
 vendor drift passes it silently (measured: the 4.5 datetime/length changes
 touch zero corpus payloads and `IsoDatetimeSchema` has no parity entry).
-Build the cross-truth check: corpus extension first (red-first —
-seconds-less datetimes, astral length boundaries, a parity entry per
-string-formats fixture), then the three-way differential (installed-Zod
-verdict on emitted schema vs AJV verdict on the IR's JSON-Schema
-projection vs corpus expectation, drift DIRECTION named), plus the
-`z.toJSONSchema` cross-check with a reasoned known-divergence allowlist.
-Design detail: the plan §TS-1. Non-goals: no new Zod API adoption; no
-parser/writer changes. Acceptance (`integration`): oracle red on seeded
-vendor-drift and projection mutants, green on the real estate, wired into
-`pnpm check`; ADR-035 amendment landed. Source: the plan §TS-1 + the
-napkin's 2026-08-31 blind-spot finding. Gate: `depends_on: [Q-23]` (the
-oracle pins the post-bump vendor).
+Build the cross-truth check: corpus extension lands first as the oracle's
+INPUT (seconds-less datetimes, astral length boundaries, a parity entry
+per string-formats fixture — this step cannot itself go red, which is the
+finding), then the three-way differential (installed-Zod verdict on
+emitted schema vs AJV verdict on the IR's JSON-Schema projection vs
+corpus expectation, drift DIRECTION named); the red-first proof is the
+oracle failing on the seeded vendor-drift and projection mutants. Design
+detail: the plan §TS-1. Non-goals: no new Zod API adoption; no
+parser/writer changes; the `z.toJSONSchema` differential is Q-27, not
+here. Acceptance (`integration`): oracle red on seeded vendor-drift and
+projection mutants, green on the real estate, wired into `pnpm check`;
+ADR-035 amendment landed. Source: the plan §TS-1 + the napkin's
+2026-08-31 blind-spot finding. Gate: `depends_on: [Q-23]` (the oracle
+pins the post-bump vendor; corpus entries authored pre-bump would encode
+the old vendor's verdicts and need rewriting).
 
 **Q-25 — Zod dialect manifest + out-of-dialect diagnostics.** Surface: a
-typed data module (the Castr Zod-4 dialect) from which the parser tables
-(`ZOD_PRIMITIVES`, `ZOD_PRIMITIVE_TYPES`, `FORMAT_MAP`, `ENCODING_MAP`)
-and writer tables (`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric
-dispatch) are derived — name/format-layer lockstep by construction; plus
-actionable "not in the Castr Zod dialect" diagnostics (construct + reason)
-for the 4.5 surface (`z.creditCard`, `z.properties`, `z.deepPartial`,
-`.exactPartial`, `z.validate`, `z.compile`). The manifest drives the TABLE
-layer only — chain/AST machinery stays code (feasibility measured; forcing
-it into data creates the fourth copy). Non-goals: no behaviour change to
-accepted input; no new construct support. Acceptance (`unit` +
-`integration`): pure-refactor proof (existing suite green, unchanged
-behaviour) lands before any manifest-driven change; a test-added manifest
-entry drives both sides without further edits; diagnostics name construct
-and reason; gates green. Source: the plan §TS-2 + the table-layer
-feasibility read. Gate: `depends_on: [Q-23]`.
+typed data module (the Castr Zod-4 dialect); **mechanism: runtime
+derivation** — consumers import the manifest and build their tables at
+module initialisation, the `zod-decl-builder.ts` precedent shape; no
+generated source files, so `never-edit-generated-files` and regeneration
+gates are not in play. Consumers, all named: parser `ZOD_PRIMITIVES` +
+`ZOD_COMPOSITIONS` (including the synthetic-declaration builder
+`registry/zod-decl-builder.ts`), `ZOD_PRIMITIVE_TYPES`, and BOTH parser
+format maps (`types/zod-parser.zod4-formats.ts` — Zod-4 primitive names —
+and `modifiers/zod-parser.constraints.ts` — chained-method names); writer
+`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric dispatch.
+Name/format-layer lockstep by construction, EXPRESSING the measured
+parse-only asymmetry (the chained map yields `cuid`/`cuid2`/`ulid`/
+`emoji`/`ip`, which the writer throws on) via a parse-only/emit-only
+capability field — closing that asymmetry is a behaviour change and out
+of scope. Plus actionable "not in the Castr Zod dialect" diagnostics
+(construct + reason) for the 4.5 surface (`z.creditCard`,
+`z.properties`, `z.deepPartial`, `.exactPartial`, `z.validate`,
+`z.compile`). The manifest drives the TABLE layer only — chain/AST
+machinery stays code (feasibility measured; forcing it into data creates
+the fourth copy). Non-goals: no behaviour change to accepted input; no
+new construct support. Acceptance (`unit` + `integration`): pure-refactor
+proof (existing suite green, unchanged behaviour) lands before any
+manifest-driven change; a test-added manifest entry drives both sides
+without further edits; diagnostics name construct and reason; gates
+green. Source: the plan §TS-2 + the table-layer feasibility read. Gate:
+`depends_on: [Q-23]`.
 
 **Q-26 — ADR: static Zod parsing ratified with its complement.** Surface:
 a new ADR ratifying static ts-morph parsing from first principles (the
@@ -1136,10 +1170,25 @@ to ADR-026, which ratified AST-over-string-heuristics only), mandating the
 Scenario 8 oracle as the standing complement, and defining the dialect as
 the versioned supported-surface declaration; supersession notes on
 ADR-026/ADR-032 where wording conflates the decisions. Non-goals: no
-product code. Acceptance (`non-code`): ADR accepted, indexes reconciled,
+product code. Acceptance (`non-code`, QD-14 reading — no test exists for
+a doctrine surface): ADR accepted, indexes reconciled,
 `docs-adr-expert` review recorded; gates green. Source: the plan §TS-3 +
 the napkin's 2026-08-31 unratified-choice finding. Gate:
 `depends_on: [Q-24]` (the complement exists before the doctrine claims it).
+
+**Q-27 — `z.toJSONSchema` differential cross-check (split from Q-24 at the
+2026-08-31 appending review).** Surface: castr's IR→JSON-Schema output
+diffed against Zod's own `z.toJSONSchema()` for the shared subset — two
+independent implementations of the same mapping as a cheap second oracle,
+with a reasoned known-divergence allowlist (uuidVersion, int64/bigint
+carriers); an unlisted divergence fails. Separate oracle, allowlist, and
+failure semantics from Q-24's three-way differential, which does not
+depend on it. Design detail: the plan §TS-1b. Non-goals: no writer
+changes; no allowlist entry without its reason. Acceptance
+(`integration`): differential red on a seeded writer mutant and on an
+unlisted divergence, green on the real estate with the allowlist
+populated and reasoned; wired into `pnpm check`; gates green. Source: the
+plan §TS-1b. Gate: `depends_on: [Q-24]`.
 
 ## Operating protocol
 
@@ -1240,7 +1289,9 @@ proven by Q-01).
 
 Plan-readiness for this parent plan: `assumptions-expert` review completed 2026-08-22
 (findings applied in the authoring landing); Q-18..Q-21 appending took its own
-`assumptions-expert` review 2026-08-24 (21 findings applied in the same landing). Per-slice reviewer moments are protocol step 4
+`assumptions-expert` review 2026-08-24 (21 findings applied in the same landing);
+Q-23..Q-27 appending took its own `assumptions-expert` review 2026-08-31 (17
+findings applied in the same landing, the Q-27 split among them). Per-slice reviewer moments are protocol step 4
 above — the loop never authors, implements, self-approves, and merges without independent
 review dispatches. Ballot and ADR surfaces additionally take `docs-adr-expert` at their
 landing.
@@ -1255,8 +1306,8 @@ landing.
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), Q-23, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card; Q-23..Q-26 appended 2026-08-31 at owner word — zod truth-surface & dependency-currency plan).
-- **Blocking for Q-24..Q-26**: their `depends_on` chain (Q-23, then Q-24 for Q-26) — the oracle pins the post-bump vendor, and the ADR claims a complement that exists.
+- **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), Q-23, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card; Q-23..Q-27 appended 2026-08-31 at owner word — zod truth-surface & dependency-currency plan).
+- **Blocking for Q-24..Q-27**: their `depends_on` chain (Q-23, then Q-24 for Q-26 and Q-27) — the oracle pins the post-bump vendor, the ADR claims a complement that exists, and the differential extends the oracle.
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: none — the Q-13 dependency was dropped by owner card ruling 2026-08-27, re-confirmed against the recorded never-a-second-skill-copy rationale: Q-21 proved the pr-lifecycle canonical safely editable ahead of Q-13, and Q-13's brief now carries the reconciliation duty (value-extract PR #23's skill content against the then-current canonical, never blind-resync).
 - **Beneficial**: none deferred beyond the gates above.
