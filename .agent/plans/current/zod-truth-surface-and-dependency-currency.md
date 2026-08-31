@@ -347,11 +347,19 @@ major (Zod 5) is a separate ratification (zero external consumers;
 napkin part-6 verbatim; the <5 bound is the PR #75 review refinement,
 confirmed by the owner's follow-up ruling: "latest here means latest 4,
 with a tripwire to examine Zod 5 if and when it is released") — the ADR
-also encodes that tripwire: the dependency-currency survey is the
-sensor, and zod appearing as `4.x → 5.x` in `pnpm -r outdated` routes
-to a named "examine Zod 5" owner item (probe re-run with 5.x via
-`zod-version-probe.mjs`, dialect impact analysis, owner decision),
-never a bump — amending
+also encodes that tripwire's DURABLE mechanism (PR #76 review measured
+the survey-as-sensor draft non-executable: the currency skill is
+owner-invoked and the scheduled loop claims only pending rows, so no
+survey is guaranteed to run): the standing platform Routine
+`trig_01V8gCESLRQGYJ9gWX4LM1yY` ("Castr Zod 5 tripwire (monthly)")
+checks the npm registry monthly in a fresh session, is silent while
+latest is 4.x, and on a stable zod major >= 5 pushes an owner
+notification and — when the owner has attached the repo source in the
+Routine UI — lands the "examine Zod 5" row in the proof-programme's
+`queued-decisions.md`, the named owner-decision routing surface
+(examination: probe re-run with 5.x via `zod-version-probe.mjs`,
+dialect impact analysis, owner decision; any dependency-currency survey
+is a secondary sensor), never a bump — amending
 ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
 adjudicates the dependency shape that follows (direct `zod` dependency
 vs `peerDependencies: ">=4.5 <5"`). Supersession notes on ADR-026/ADR-032

@@ -1203,9 +1203,15 @@ tracks the latest release within the ratified major, a new major being
 its own ratification (zero external consumers; napkin part-6 verbatim;
 the <5 bound is confirmed by the owner's follow-up ruling — "latest
 here means latest 4, with a tripwire to examine Zod 5 if and when it
-is released" — whose tripwire the ADR encodes: the dependency-currency
-survey is the sensor, and a zod `4.x → 5.x` outdated row routes to a
-named "examine Zod 5" owner item, never a bump) — with the narrowing
+is released" — whose tripwire the ADR encodes with its durable
+mechanism: the standing platform Routine
+`trig_01V8gCESLRQGYJ9gWX4LM1yY`, a monthly fresh-session npm-registry
+check that is silent on 4.x and on a stable zod major >= 5 pushes an
+owner notification and, with the repo source owner-attached in the
+Routine UI, lands the "examine Zod 5" row in
+[`queued-decisions.md`](./queued-decisions.md) — the named routing
+surface; a dependency-currency survey is a secondary sensor; never a
+bump) — with the narrowing
 amendments to ADR-031/ADR-032/requirements.md §9's generic "Zod 4"
 wording and the dependency-shape adjudication (direct `zod` dep vs
 `peerDependencies: ">=4.5 <5"`); supersession notes on
