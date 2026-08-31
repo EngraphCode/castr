@@ -19,6 +19,22 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   for Q-26 to adjudicate, not decided here: whether `zod` should become a
   `peerDependencies: ">=4.5 <5"` entry instead of a direct dependency now that the input
   floor is declared (zero-external-consumers makes this cheap to change today).
+- **OWNER RULING (follow-up, verbatim): "latest here means latest 4, with a tripwire to
+  examine Zod 5 if and when it is released."** Settles the PR #75 round-2 interpretation
+  question in favour of the recorded latest-within-major form, and adds the TRIPWIRE
+  element: Zod 5's release fires an examination, never a bump. Mechanism (made durable
+  after PR #76 review measured the first draft non-executable — the currency skill is
+  owner-invoked and the loop claims only pending rows, so no survey was guaranteed to
+  run): a standing platform Routine, **`trig_01V8gCESLRQGYJ9gWX4LM1yY` ("Castr Zod 5
+  tripwire (monthly)")**, fires monthly in a fresh session, checks the npm registry for
+  a stable zod major >= 5, ends silently while latest is 4.x, and on detection pushes an
+  owner notification and (when the repo source is attached in the Routine UI — an
+  owner-side attach, per the arming-runbook's API limitation) lands the "examine Zod 5"
+  row in the proof-programme's `queued-decisions.md` — the named owner-decision routing
+  surface. Examination procedure: probe re-run with 5.x added via
+  `.agent/research/zod/zod-version-probe.mjs`, dialect impact analysis, owner decision.
+  Any future dependency-currency survey remains a secondary sensor. Q-26's ADR encodes
+  the trigger clause and the Routine's identity.
 
 ## 2026-08-31 (PR #73 merged + Q-23 executed — same session, part 5; Dolphin binds Trench / 013aPY)
 
