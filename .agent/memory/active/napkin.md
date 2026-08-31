@@ -2,6 +2,24 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner ruling: Zod version contract — same session, part 6; Dolphin binds Trench / 013aPY)
+
+- **OWNER RULING (verbatim substance): "those are good changes, we should have tests for
+  them, it seems like that is planned. Castr has zero external consumers, I am happy to
+  state the Zod input must be >= 4.5 and that Zod output will be latest."** Three
+  consequences landed in the same pass: (1) the behaviour-delta tests are confirmed as
+  Q-24's corpus extension (seconds-less datetimes, astral lengths — already planned,
+  now with unambiguous expectations); (2) Q-24's expectation framing simplifies — the
+  current vendor's verdicts ARE the declared contract, not "drift toward/away"
+  bookkeeping against an older baseline; (3) the version contract (input >=4.5 <5 — `^4.5`, the PR #75 review
+  bound keeping the Zod-4 dialect honest and a new major its own ratification; output
+  tracks latest Zod) is doctrine and goes into Q-26's ratification ADR alongside the
+  static-parsing and dialect clauses, where ADR-031/ADR-032/requirements.md §9's generic
+  "Zod 4" wording gets the narrowing amendment with docs-adr-expert review. Follow-up
+  for Q-26 to adjudicate, not decided here: whether `zod` should become a
+  `peerDependencies: ">=4.5 <5"` entry instead of a direct dependency now that the input
+  floor is declared (zero-external-consumers makes this cheap to change today).
+
 ## 2026-08-31 (PR #73 merged + Q-23 executed — same session, part 5; Dolphin binds Trench / 013aPY)
 
 - **PR #73 drive tally**: 6 review threads across two bots (Copilot round 1: 4 findings,
