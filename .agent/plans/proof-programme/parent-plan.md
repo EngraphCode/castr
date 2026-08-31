@@ -1201,7 +1201,11 @@ the versioned supported-surface declaration, and encoding the owner's
 2026-08-31 version contract — Zod input >=4.5 <5 (`^4.5`), output
 tracks the latest release within the ratified major, a new major being
 its own ratification (zero external consumers; napkin part-6 verbatim;
-the <5 bound is the PR #75 review refinement) — with the narrowing
+the <5 bound is confirmed by the owner's follow-up ruling — "latest
+here means latest 4, with a tripwire to examine Zod 5 if and when it
+is released" — whose tripwire the ADR encodes: the dependency-currency
+survey is the sensor, and a zod `4.x → 5.x` outdated row routes to a
+named "examine Zod 5" owner item, never a bump) — with the narrowing
 amendments to ADR-031/ADR-032/requirements.md §9's generic "Zod 4"
 wording and the dependency-shape adjudication (direct `zod` dep vs
 `peerDependencies: ">=4.5 <5"`); supersession notes on

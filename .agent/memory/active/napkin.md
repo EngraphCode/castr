@@ -19,6 +19,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   for Q-26 to adjudicate, not decided here: whether `zod` should become a
   `peerDependencies: ">=4.5 <5"` entry instead of a direct dependency now that the input
   floor is declared (zero-external-consumers makes this cheap to change today).
+- **OWNER RULING (follow-up, verbatim): "latest here means latest 4, with a tripwire to
+  examine Zod 5 if and when it is released."** Settles the PR #75 round-2 interpretation
+  question in favour of the recorded latest-within-major form, and adds the TRIPWIRE
+  element: Zod 5's release fires an examination, never a bump. Mechanism (no new
+  machinery): the recurring dependency-currency survey is the sensor — zod appearing as
+  `4.x → 5.x` in `pnpm -r outdated` routes to a named "examine Zod 5" owner item
+  (probe re-run with 5.x added via `.agent/research/zod/zod-version-probe.mjs`, dialect
+  impact analysis, owner decision) instead of ordinary major triage. Q-26's ADR encodes
+  the trigger clause.
 
 ## 2026-08-31 (PR #73 merged + Q-23 executed — same session, part 5; Dolphin binds Trench / 013aPY)
 

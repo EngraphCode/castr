@@ -344,7 +344,14 @@ contract for out-of-dialect input; (4) encodes the owner's 2026-08-31
 version contract — Zod input **>=4.5 <5** (`^4.5`), output tracks the
 **latest** release within the ratified major, and widening to a new
 major (Zod 5) is a separate ratification (zero external consumers;
-napkin part-6 verbatim; the <5 bound is the PR #75 review refinement) — amending
+napkin part-6 verbatim; the <5 bound is the PR #75 review refinement,
+confirmed by the owner's follow-up ruling: "latest here means latest 4,
+with a tripwire to examine Zod 5 if and when it is released") — the ADR
+also encodes that tripwire: the dependency-currency survey is the
+sensor, and zod appearing as `4.x → 5.x` in `pnpm -r outdated` routes
+to a named "examine Zod 5" owner item (probe re-run with 5.x via
+`zod-version-probe.mjs`, dialect impact analysis, owner decision),
+never a bump — amending
 ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
 adjudicates the dependency shape that follows (direct `zod` dependency
 vs `peerDependencies: ">=4.5 <5"`). Supersession notes on ADR-026/ADR-032
