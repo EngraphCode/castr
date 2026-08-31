@@ -80,7 +80,7 @@ async function getOpenApiSchema(version: OpenApiPreflightSchemaVersion): Promise
   const moduleObj: unknown = hasDefaultExport(schemaModule) ? schemaModule.default : schemaModule;
 
   if (!isAnySchemaObject(moduleObj)) {
-    throw new Error(`Failed to load OpenAPI ${version} schema from @scalar/openapi-parser`);
+    throw new Error(`Failed to load OpenAPI ${version} schema from @scalar/openapi-validator`);
   }
   return moduleObj;
 }
