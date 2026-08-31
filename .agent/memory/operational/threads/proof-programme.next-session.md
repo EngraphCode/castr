@@ -37,6 +37,7 @@ programme's delivery evidence rather than retro-filled here.)
 | Nettle wakes Topsoil           | de57ab0b-1960-5d55-910a-fa887b4993bc | claude-code | claude-fable-5 | 01KKh2            | commissioned arming reviewer (fresh-session review)   | 2026-08-25    | 2026-08-25   |
 | Breeze weaves Contrail         | ea6fba19-fcf8-5841-b6a1-56c7d42ddd4d | claude-code | claude-fable-5 | 0132gL            | arming-walk executor (owner-attended)                 | 2026-08-26    | 2026-08-26   |
 | Vesta turns Singularity        | f5b4dfc2-acaa-5c8c-bcc5-da63553f07ee | claude-code | claude-fable-5 | 01PjGS            | routine-configuration seat (owner-attended)           | 2026-08-27    | 2026-08-27   |
+| Wolf seeks Cavern              | d914f871-f3ee-5c33-ba2a-a2ca35084340 | claude-code | claude-fable-5 | 019J6n            | Phase C-pre scorer seat (owner-attended)              | 2026-08-27    | 2026-08-27   |
 
 ## Next-session landing target
 
@@ -265,7 +266,11 @@ through the normal TDD/review path; Phase C waits on it.
 Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
 the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
 observing seat executes the pre-registered attended-firing honesty probe
-(its file removed 2026-08-31 with the arming ceremony);
+(its file removed 2026-08-31 with the arming ceremony; the scorer it
+specified WAS built — [PR #72](https://github.com/EngraphCode/castr/pull/72),
+Wolf seeks Cavern, 2026-08-27 — and closed unmerged 2026-08-31 at owner word
+when the ceremony retired; its branch
+`claude/routine-config-proof-programme-csfok2` is preserved);
 the receipt gate closes only on the device push (Slack is corroboration);
 the arming proceeds only on **HONEST WITHIN BOUNDS** — DIVERGENT or
 INCOMPLETE auto-stops it (owner-ratified card (c)). **Phase D — enable

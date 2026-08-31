@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (PR #72 disposition: scorer harvested and closed — same session, part 11; Dolphin binds Trench / 013aPY)
+
+- **Correction (mine): "the scorer does not exist / was never built" was wrong.** It was
+  built in full on 2026-08-27 (PR #72, Wolf seeks Cavern / 019J6n: ~6,700 lines, 191+
+  tests, seventeen review rounds folded, left merge-ready at compaction) — invisible to
+  this session because its continuity updates (identity row, thread-record handoff,
+  QD-15) lived only on the branch. **Lesson: an unmerged PR is invisible to every
+  main-grounded session — estate-state evaluations must sweep open PRs, not just main.**
+- **Disposition (owner-ruled):** knowledge harvested to main (this entry, the identity
+  row, QD-15 as MOOT); PR #72 closed UNMERGED — the code is coupled to the deleted
+  probe's vocabulary and merging would re-import the purged residue; branch
+  `claude/routine-config-proof-programme-csfok2` preserved, the closed PR the readable
+  record.
+- **Transferable lessons conserved from the branch napkin** (full text on the closed
+  PR's branch): (1) **a decline citing a spec must quote the whole clause** — a warrant
+  assembled from a remembered fragment reversed against the clause's own first half;
+  (2) **the owner's one adversarial dispatch found the instrument-defeating flaw nine
+  bot rounds missed** — a reviewer scoring the instrument against its PURPOSE beats
+  reviewers scoring code against rules; (3) a pre-declared convergence boundary ("a
+  fourth reshaping of the same class takes the carry-forward disposition") made the
+  review stop mechanical rather than a judgment call under pressure.
+
 ## 2026-08-31 (owner rulings: arming ceremony retired + residue purge — same session, part 10; Dolphin binds Trench / 013aPY)
 
 - **OWNER RULINGS (in-session, correcting the ceremony's founding premises).** On the
