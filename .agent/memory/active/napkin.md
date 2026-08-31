@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (PR #72 disposition: scorer harvested and closed — same session, part 11; Dolphin binds Trench / 013aPY)
+
+- **Correction (mine): "the scorer does not exist / was never built" was wrong.** It was
+  built in full on 2026-08-27 (PR #72, Wolf seeks Cavern / 019J6n: ~6,700 lines, 191+
+  tests, seventeen review rounds folded, left merge-ready at compaction) — invisible to
+  this session because its continuity updates (identity row, thread-record handoff,
+  QD-15) lived only on the branch. **Lesson: an unmerged PR is invisible to every
+  main-grounded session — estate-state evaluations must sweep open PRs, not just main.**
+- **Disposition (owner-ruled):** knowledge harvested to main (this entry, the identity
+  row, QD-15 as MOOT); PR #72 closed UNMERGED — the code is coupled to the deleted
+  probe's vocabulary and merging would re-import the purged residue; branch
+  `claude/routine-config-proof-programme-csfok2` preserved, the closed PR the readable
+  record.
+- **Transferable lessons conserved from the branch napkin** (full text on the closed
+  PR's branch): (1) **a decline citing a spec must quote the whole clause** — a warrant
+  assembled from a remembered fragment reversed against the clause's own first half;
+  (2) **the owner's one adversarial dispatch found the instrument-defeating flaw nine
+  bot rounds missed** — a reviewer scoring the instrument against its PURPOSE beats
+  reviewers scoring code against rules; (3) a pre-declared convergence boundary ("a
+  fourth reshaping of the same class takes the carry-forward disposition") made the
+  review stop mechanical rather than a judgment call under pressure.
+
 ## 2026-08-31 (owner rulings: arming ceremony retired + residue purge — same session, part 10; Dolphin binds Trench / 013aPY)
 
 - **OWNER RULINGS (in-session, correcting the ceremony's founding premises).** On the
@@ -54,6 +76,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   reports" posture is for unattended drives; an attended session triages with the
   owner.) Worked instance: of four verified-true PR #78 findings, the owner selected
   three; the account-access citation nit was rejected as true-but-unimportant.
+- **OWNER CORRECTION: every "superseded head" is a cancelled GitHub runner — repeated
+  supersession is wasted money.** Four suites cancelled today by push-per-round reflex
+  (PR #77: f972629→53c5e5e→59c0fd8; PR #78: 97b821d→65f1594→746e953); the 65f1594 push
+  went out while Codex's summary already showed a review RUNNING, so both rounds were
+  batchable with information in hand. Operating rule adopted: (1) one push per review
+  WAVE — before pushing, check for reviewers mid-review or own CI mid-run on the
+  current head, and hold fixes locally until the wave completes; (2) never supersede
+  your own green-path CI run — only a push fixing a failure already reported on that
+  head may interrupt it; (3) while a wave is active, bookkeeping/continuity edits are
+  committed locally and ride the next necessary push; at session end with no wave in
+  flight, the terminal continuity push is normal operation and cancels nothing.
+  Commits are free; a push into a live wave cancels its runners. Promoted to the
+  always-applied rule `one-push-per-review-wave` at owner word (2026-08-31, PR #79
+  review wave).
 - **Session-shape note:** three successive owner pushes ("don't assume the stated
   process is right" → "why isn't a scheduled task enough" → "notifications work, are
   you suggesting we prove that?") were needed before this seat stopped defending

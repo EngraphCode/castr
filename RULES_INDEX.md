@@ -114,6 +114,7 @@ without proportional value.
 | `.agent/rules/no-unbounded-host-load.md`                                   | always-on      | —                                                                                                |
 | `.agent/rules/no-verify-requires-fresh-authorisation.md`                   | always-on      | —                                                                                                |
 | `.agent/rules/no-warning-toleration.md`                                    | always-on      | —                                                                                                |
+| `.agent/rules/one-push-per-review-wave.md`                                 | always-on      | —                                                                                                |
 | `.agent/rules/owner-attention-at-action-moments.md`                        | always-on      | —                                                                                                |
 | `.agent/rules/per-user-memory-is-a-buffer.md`                              | always-on      | —                                                                                                |
 | `.agent/rules/permanent-doc-is-the-consolidation-record.md`                | always-on      | —                                                                                                |
