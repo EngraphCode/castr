@@ -10,8 +10,9 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   notification incident: **"Claude code notifications work"** — proving it again is not
   required. And the direction: **"identify the residue of the useless experiments and
   assumptions that caused all this wasted time, we need to make sure these ideas cause
-  no more trouble."** Executed as an owner-directed curator pass (log:
-  `curator-passes/2026-08-31-dolphin-binds-trench.md`): arming runbook, attended-firing
+  no more trouble."** Executed as an owner-directed curator pass (the record is the
+  landing commit plus the homed substance, per
+  `permanent-doc-is-the-consolidation-record`): arming runbook, attended-firing
   honesty probe, and cloud-autonomy-trust node removed; routine-prompt and parent-plan
   process surfaces rewritten to the present design (a scheduled task the owner creates
   with the repo attached, thin-pointer prompt, cron 3/day; STOP file + owner pause +
@@ -38,6 +39,21 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
      "was not shrinking", and the response was to compile it into a scorer instead of
      stopping — apparatus begat apparatus until the ladder cost more than the loop it
      guarded.
+- **Mistake (mine, caught by PR #78 review): wrote a per-pass curation ledger because
+  the curator-pass SKILL mandates one** — but PDR-081's amendment log superseded that
+  surface on 2026-06-14 (record = commit + homed substance), and
+  `permanent-doc-is-the-consolidation-record` says a skill instruction mandating a
+  ledger "is itself the anti-pattern; the instruction is not license". Deleted in the
+  same PR. Lesson: when a skill mandates an artifact-shaped output, check its governing
+  PDR's amendment log before authoring — inside a residue purge, of all places.
+- **OWNER RULING (review triage, verbatim): "always ask first if they should be fixed,
+  true is not the same as important."** Verified-true is the entry test only; whether a
+  finding earns an in-loop cure is a separate importance judgment, and when the owner
+  is present that judgment is theirs — present each verified finding with an importance
+  verdict and ask, never auto-fix the set. (The drive-to-green "bot findings are bug
+  reports" posture is for unattended drives; an attended session triages with the
+  owner.) Worked instance: of four verified-true PR #78 findings, the owner selected
+  three; the account-access citation nit was rejected as true-but-unimportant.
 - **Session-shape note:** three successive owner pushes ("don't assume the stated
   process is right" → "why isn't a scheduled task enough" → "notifications work, are
   you suggesting we prove that?") were needed before this seat stopped defending

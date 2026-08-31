@@ -20,10 +20,10 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-18
-    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of every expected slot back to the last attested trace; a trace-less slot with no STOP file lands an incident, read and notified per the brief'
+    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of recent expected slots (bounded lookback); a trace-less slot with no STOP file lands a neutral observation entry — a firing cannot distinguish an owner pause from a silent death, so the owner disambiguates from the notification — read and notified per the brief'
     status: pending
   - id: Q-20
-    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, fired-seat capability probes incl. trigger-self-disable, outcome-branch documentation'
+    content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, outcome-branch documentation; session capabilities are observed in live firings and named when absent, never pre-probed'
     status: pending
   - id: Q-21
     content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
@@ -972,11 +972,16 @@ green. Source: PR #35 review threads (carry-forward dispositions recorded on-thr
 touch points, the check and BOTH consumer halves: (1) step 2 (grounding) gains the
 check — derive each expected predecessor slot from your own spawn time minus whole
 cadence intervals (ADR-051 clause 2; 8 h — spawn-time arithmetic needs no platform
-read and works in every fired session), look back to the last durably
-attested firing, and for every expected slot in the gap with no durable trace (no
+read and works in every fired session), look back at most three expected slots (one
+cadence day — the owner schedules, pauses, and resumes the Routine at will, so an
+unbounded lookback across an intentional pause would manufacture a backlog), and for
+every expected slot in that window with no durable trace (no
 `FIRING-LEASE`, no PR or branch activity, no counter or identity-row delta, and no open
 or draft bookkeeping/deferral PR carrying its increment) unexplained by a STOP file,
-append one `other`-class entry to `incidents.md` naming the unattested slots, landed
+append one `other`-class entry to `incidents.md` naming the unattested slots as a
+NEUTRAL observation — a firing cannot see the schedule, so an owner pause and a silent
+death read identically; the entry and the completion notification hand the
+disambiguation to the owner and never allege failure — landed
 via the normal counter-landing route; (2) step 3's incident-read semantics gain the
 entry's meaning for a reading firing (re-verify toolchain and gitleaks provisioning
 before trusting the chain — a predecessor that died silently may mean a broken
@@ -985,7 +990,8 @@ slots" so the owner sees the signal. Non-goals: no external observer or watchdog
 (owner-declined 2026-08-24 — "we don't need that level of assurance yet"); no
 platform-side work; no new mechanism beyond the existing register and landing paths.
 Acceptance (`non-code`): the prompt carries all three touch points with the trace
-classes enumerated, AND states the check's bound — it catches the intermittent case
+classes enumerated, AND states the check's bounds — the bounded lookback, the
+neutral owner-pause/silent-death framing, and that it catches the intermittent case
 one slot late and does not observe sustained absence, an accepted risk at current
 stakes per the owner's decline; gates green. Source: loop-review report OP-1(a) and
 its 2026-08-24 addendum (`.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md`);
