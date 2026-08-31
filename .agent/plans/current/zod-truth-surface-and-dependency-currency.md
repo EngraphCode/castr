@@ -224,8 +224,13 @@ existing transpile-and-run harness), **(b)** AJV's verdict on the same IR
 node's JSON-Schema projection (ajv + ajv-formats are already runtime
 deps), and **(c)** the corpus's declared expectation. Disagreement fails
 with the drift DIRECTION named (toward or away from IR/JSON-Schema
-semantics — the 4.5 length change is drift toward; the datetime change is a
-strictening castr can adopt as the new expectation). Includes:
+semantics). Owner ruling 2026-08-31 (napkin part-6 entry, verbatim there)
+simplifies the expectation frame: castr has zero external consumers, the
+Zod INPUT contract is **>= 4.5**, and OUTPUT tracks the **latest** Zod —
+so corpus expectations are authored to the current vendor's semantics
+outright (seconds-required datetimes, code-point lengths ARE the
+contract), with no compatibility bookkeeping against older 4.x
+behaviour. Includes:
 
 - **Corpus extension lands first, as the oracle's input**: seconds-less
   datetimes, astral length boundaries, and a parity-payload entry for
@@ -332,7 +337,12 @@ its limits go in the ADR body); (2) mandates the vendor-conformance oracle
 (TS-1) as the standing complement — the model is permitted BECAUSE its
 agreement with the vendor is recomputed; (3) defines the dialect as the
 versioned declaration of supported Zod surface (TS-2) and the diagnostic
-contract for out-of-dialect input. Supersession notes on ADR-026/ADR-032
+contract for out-of-dialect input; (4) encodes the owner's 2026-08-31
+version contract — Zod input **>= 4.5**, output tracks **latest** Zod
+(zero external consumers; napkin part-6 verbatim) — amending
+ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
+adjudicates the dependency shape that follows (direct `zod` dependency
+vs `peerDependencies: ">=4.5"`). Supersession notes on ADR-026/ADR-032
 where their wording conflates the two decisions.
 
 Acceptance (`non-code`): ADR accepted per the estate's ADR lifecycle,

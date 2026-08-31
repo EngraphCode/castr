@@ -1147,7 +1147,11 @@ step cannot itself go red, which is the finding), then the three-way
 differential (installed-Zod verdict on
 emitted schema vs AJV verdict on the IR's JSON-Schema projection vs
 corpus expectation, drift DIRECTION named); the red-first proof is the
-oracle failing on the seeded vendor-drift and projection mutants. Design
+oracle failing on the seeded vendor-drift and projection mutants.
+Expectation frame (owner ruling 2026-08-31, napkin part-6 verbatim):
+Zod input contract is >= 4.5 and output tracks latest, so corpus
+expectations are authored to the current vendor's semantics outright —
+no compatibility bookkeeping against older 4.x behaviour. Design
 detail: the plan §TS-1. Non-goals: no new Zod API adoption; no
 parser/writer changes; the `z.toJSONSchema` differential is Q-27, not
 here. Acceptance (`integration`): oracle red on seeded vendor-drift and
@@ -1190,8 +1194,13 @@ a new ADR ratifying static ts-morph parsing from first principles (the
 runtime-introspection alternative weighed with the probe's def-stability
 evidence — ADR-032 §Context misattributes the no-runtime-execution choice
 to ADR-026, which ratified AST-over-string-heuristics only), mandating the
-Scenario 8 oracle as the standing complement, and defining the dialect as
-the versioned supported-surface declaration; supersession notes on
+Scenario 8 oracle as the standing complement, defining the dialect as
+the versioned supported-surface declaration, and encoding the owner's
+2026-08-31 version contract — Zod input >= 4.5, output tracks latest
+(zero external consumers; napkin part-6 verbatim) — with the narrowing
+amendments to ADR-031/ADR-032/requirements.md §9's generic "Zod 4"
+wording and the dependency-shape adjudication (direct `zod` dep vs
+`peerDependencies: ">=4.5"`); supersession notes on
 ADR-026/ADR-032 where wording conflates the decisions. Non-goals: no
 product code. Acceptance (`non-code`, QD-14 reading — no test exists for
 a doctrine surface): ADR accepted, indexes reconciled,
