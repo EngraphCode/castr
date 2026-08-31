@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner question: loop-resumption readiness — same session, part 9; Dolphin binds Trench / 013aPY)
+
+- **Owner asked whether Castr is ready to resume the ADR-051 autonomous loop.**
+  Evaluation ran with reason + metacognition; every condition verified firsthand.
+  **Repo side: drivable.** No STOP file; `zero_progress_streak: 0`; no
+  `in_progress` rows; no open programme PR; main green on merge tip 0db7e364
+  (CI run 563); queue head Q-18 claimable (safety instruments first, owner
+  sequencing 2026-08-26); one OPEN register row (QD-14), non-blocking by its own
+  text and the probe's precedence clause. **Account side: not yet.** The ratified
+  resumption ladder (thread record, 2026-08-27 compaction close) is
+  Phase C-pre → C → D, and: (1) the Phase C-pre verdict scorer — owner-ruled
+  pre-firing deliverable Phase C waits on — does not exist in the repo (grep:
+  "scorer" appears only in probe/plan/memory prose, no implementation);
+  (2) Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` is ABSENT from this session's
+  account trigger listing (limit 100, completed included — only oak-repo
+  check-ins present); the listing surface may not span every creation route, so
+  owner-UI verification decides — corroborating signal: the owner's adversarial
+  PR-evaluation Routine (fired on PR #68 pushes 2026-08-27) posted nothing on
+  any of today's five PRs (#73–#77); (3) Phases C (attended firing, honesty
+  probe, device-push receipt gate) and D (enable, cron 3/day) are owner acts by
+  ratified design. Verdict delivered: not yet — one seat deliverable (scorer),
+  one owner verification (trigger existence; recreate per runbook step 3 if
+  gone), then the owner-held C/D ladder; QD-14 worth ruling at the same sitting
+  since Q-18 is exactly its slice class.
+
 ## 2026-08-31 (owner question: local checks under HUSKY=0 — same session, part 8; Dolphin binds Trench / 013aPY)
 
 - **Owner asked whether the session's CI reds trace to checks running only in CI, and
