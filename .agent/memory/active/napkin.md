@@ -2,6 +2,31 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (PR #73 merged + Q-23 executed — same session, part 5; Dolphin binds Trench / 013aPY)
+
+- **PR #73 drive tally**: 6 review threads across two bots (Copilot round 1: 4 findings,
+  all verified real; Codex on the prior head: 2, both already cured), every one fixed at
+  source in `ce379e2`, replied with evidence, resolved; merged `4aafa3ee` at
+  `mergeable_state: clean` with Codex's re-review still running (the recorded race-window
+  disposition — any post-merge findings fold into the live follow-up PR). Best catch
+  became queue row Q-28: the Zod writer silently drops `contentEncoding` (no
+  base64 handling in any generator) — a content-loss defect invisible only because those
+  fixtures carry no parity payloads.
+- **Q-23 executed same session** (three proof-gated cycles + pins + close survey; detail
+  in the plan's §Part 1 close record). The cycle-2 first proof going RED is the keeper:
+  **a 0.x vendor minor relocated internals castr deep-imports** — parser 0.29.0 extracted
+  its bundled OpenAPI schemas to a new `@scalar/openapi-validator` package, breaking the
+  doctor preflight-validator's `dist/schemas/v*/schema.js` navigation (10 failures, one
+  root). The per-cycle consumer-side proof caught it locally before anything landed —
+  the skill's economics vindicated empirically. Cure shape: the coupled exact set GROWS
+  when castr starts consuming a vendor-internal surface (trio → quartet with
+  openapi-validator 0.1.0 declared directly), never a silent transitive reach. Same
+  family as the distilled embedded-compiler / deep-import entries.
+- **Process note (delivery cadence applied)**: gate-bearing operations backgrounded
+  throughout; HUSKY=0 landings in seconds; the stop-hook's mid-proof commit nags
+  declined each time with the proof-then-commit reason stated — the cadence that
+  emerged: one commit per proven cycle, ~40 minutes for the whole lane.
+
 ## 2026-08-31 (owner rulings: delivery cadence + session hook bypass — same session, part 4; Dolphin binds Trench / 013aPY)
 
 - **OWNER CORRECTION of my over-correction (verbatim substance): "at no point did I say
