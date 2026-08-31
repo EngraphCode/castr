@@ -266,11 +266,7 @@ through the normal TDD/review path; Phase C waits on it.
 Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
 the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
 observing seat executes the pre-registered attended-firing honesty probe
-(its file removed 2026-08-31 with the arming ceremony; the scorer it
-specified WAS built — [PR #72](https://github.com/EngraphCode/castr/pull/72),
-Wolf seeks Cavern, 2026-08-27 — and closed unmerged 2026-08-31 at owner word
-when the ceremony retired; its branch
-`claude/routine-config-proof-programme-csfok2` is preserved);
+(its file removed 2026-08-31 with the arming ceremony);
 the receipt gate closes only on the device push (Slack is corroboration);
 the arming proceeds only on **HONEST WITHIN BOUNDS** — DIVERGENT or
 INCOMPLETE auto-stops it (owner-ratified card (c)). **Phase D — enable
@@ -318,7 +314,12 @@ C-pre/C/D ladder (verdict scorer, attended firing with receipt gate, gated
 enable), the DRY-RUN proof branch, the never-recreate-the-trigger doctrine,
 and the canonical-lockstep trigger-prose governance. The trigger the ladder
 guarded (`trig_01CbRJjyivM34E7fq2jfLqLJ`) is absent from the account's
-trigger listing. **The present design (parent plan §Operating protocol
+trigger listing. The ladder's Phase C-pre scorer WAS completed before the
+retirement ([PR #72](https://github.com/EngraphCode/castr/pull/72), Wolf
+seeks Cavern, 2026-08-27, stranded merge-ready at compaction) and closed
+UNMERGED at owner word in the same purge — its branch
+`claude/routine-config-proof-programme-csfok2` preserved, the harvested
+knowledge in the napkin's dated entry and QD-15's MOOT outcome. **The present design (parent plan §Operating protocol
 step 1): the Routine is a scheduled task the owner creates with the repo
 attached, stored prompt a thin pointer to `routine-prompt.md` on main, cron
 `3 */8 * * *`; the owner schedules, pauses, and deletes it at will; a seat

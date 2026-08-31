@@ -84,9 +84,12 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   WAVE — before pushing, check for reviewers mid-review or own CI mid-run on the
   current head, and hold fixes locally until the wave completes; (2) never supersede
   your own green-path CI run — only a push fixing a failure already reported on that
-  head may interrupt it; (3) bookkeeping/continuity edits are committed locally and
-  ride the next necessary push, never their own CI-triggering push. Commits are free;
-  pushes cancel runners.
+  head may interrupt it; (3) while a wave is active, bookkeeping/continuity edits are
+  committed locally and ride the next necessary push; at session end with no wave in
+  flight, the terminal continuity push is normal operation and cancels nothing.
+  Commits are free; a push into a live wave cancels its runners. Promoted to the
+  always-applied rule `one-push-per-review-wave` at owner word (2026-08-31, PR #79
+  review wave).
 - **Session-shape note:** three successive owner pushes ("don't assume the stated
   process is right" → "why isn't a scheduled task enough" → "notifications work, are
   you suggesting we prove that?") were needed before this seat stopped defending
