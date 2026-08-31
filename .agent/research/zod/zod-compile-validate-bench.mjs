@@ -1,6 +1,44 @@
 // Probe A: z.compile() / z.validate() benchmark on castr-shaped schemas (zod 4.5.4).
-// Run from the zod-probe prefix (aliases installed): node bench-compile-validate.mjs
-import { z } from 'zod45';
+//
+// Reproducible from a clean checkout: run
+//   node zod-compile-validate-bench.mjs > zod-compile-validate-bench-<date>.run-N.out.jsonl
+// (commit each run as its own dated, run-numbered file). The script stages
+// itself into a temp prefix and npm-installs the probed zod version there
+// (same mechanism as zod-version-probe.mjs), so the bare alias import
+// resolves. Caveats: constant payloads and a single container overstate
+// absolutes; ratios are the finding. z.compile() generates code via
+// new Function, so compiled-mode results do not apply to jitless/CSP
+// no-eval runtimes (zod core config `jitless`).
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const PROBE_VERSIONS = { zod45: '4.5.4' };
+
+if (!process.env.ZOD_PROBE_STAGED) {
+  const prefix = mkdtempSync(join(tmpdir(), 'zod-compile-validate-bench-'));
+  writeFileSync(
+    join(prefix, 'package.json'),
+    JSON.stringify({ name: 'zod-compile-validate-bench', private: true, type: 'module' }),
+  );
+  const specs = Object.entries(PROBE_VERSIONS).map(([alias, v]) => `${alias}@npm:zod@${v}`);
+  execFileSync('npm', ['install', '--no-audit', '--no-fund', ...specs], {
+    cwd: prefix,
+    stdio: ['ignore', 'ignore', 'inherit'],
+  });
+  const staged = join(prefix, 'zod-compile-validate-bench.mjs');
+  copyFileSync(fileURLToPath(import.meta.url), staged);
+  execFileSync(process.execPath, [staged], {
+    cwd: prefix,
+    stdio: 'inherit',
+    env: { ...process.env, ZOD_PROBE_STAGED: '1' },
+  });
+  process.exit(0);
+}
+
+const { z } = await import('zod45');
 
 const Pet = z.strictObject({
   id: z.uuid(),

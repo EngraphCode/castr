@@ -6,24 +6,35 @@
   "behaviour": {
     "omitted": {
       "optional": true,
-      "exactOptional": true
+      "exactOptional": true,
+      "partial": true,
+      "exactPartial": true
     },
     "present": {
       "optional": true,
-      "exactOptional": true
+      "exactOptional": true,
+      "partial": true,
+      "exactPartial": true
     },
     "explicitUndefined": {
       "optional": true,
-      "exactOptional": false
+      "exactOptional": false,
+      "partial": true,
+      "exactPartial": false
     }
   },
   "wire": {
     "hasOwnA": false,
     "optional": true,
     "exactOptional": true,
+    "partial": true,
+    "exactPartial": true,
     "note": "JSON.parse can never produce an own undefined-valued key"
   },
-  "projectionIdentical": true,
+  "projectionIdentical": {
+    "optional_vs_exactOptional": true,
+    "partial_vs_exactPartial": true
+  },
   "projClassic": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",

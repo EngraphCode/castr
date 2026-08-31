@@ -1206,14 +1206,12 @@ the versioned supported-surface declaration, and encoding the owner's
 2026-08-31 version contract — Zod input >=4.5 <5 (`^4.5`), output
 tracks the latest release within the ratified major, a new major being
 its own ratification (zero external consumers; napkin part-6 verbatim;
-the <5 bound is confirmed by the owner's follow-up ruling — "latest
+the <5 bound is confirmed by the owner's follow-up rulings — "latest
 here means latest 4, with a tripwire to examine Zod 5 if and when it
-is released" — whose sensor is the OWNER, per the same-day superseding
-ruling "delete the routine, I will be well aware when zod 5 comes out"
-(the briefly-created Routine `trig_01V8gCESLRQGYJ9gWX4LM1yY` was
-deleted at owner word); the ADR encodes the EXAMINATION PROCEDURE run
-at owner word when Zod 5 ships — probe re-run with 5.x, dialect impact
-analysis, decision recorded in
+is released", with the owner as the tripwire's sensor (2026-08-31;
+history in the napkin's dated record); the ADR encodes the EXAMINATION
+PROCEDURE run at owner word when Zod 5 ships — probe re-run with 5.x,
+dialect impact analysis, decision recorded in
 [`queued-decisions.md`](./queued-decisions.md) — never a
 bump) — with the narrowing
 amendments to ADR-031/ADR-032/requirements.md §9's generic "Zod 4"
@@ -1265,23 +1263,34 @@ lane).
 **Q-29 — Zod runtime performance guidance (owner-commissioned opportunity
 probes, 2026-08-31).** Surface: a benchmark script + consumer docs; NO
 emission changes. Evidence base (committed beside the version probe:
-`zod-compile-validate-bench.mjs` + dated outputs, two stable runs):
-`z.compile()` is 4–8× faster on VALID data and ~1× on invalid;
-`z.validate()` is 2.3–4.2× faster on INVALID data and ~1× on valid —
-complementary wins; compile costs ~3–4.5 ms per schema one-time
-(negligible for a long-lived MCP server, real at one-shot CLI start;
-`zod/compile` auto-compile is lazy). The `exactOptional` probe is the
+`zod-compile-validate-bench.mjs` + two run-numbered dated outputs,
+ranges re-derivable from them): `z.compile()` is 4.7–8.1× faster on
+VALID data and ~0.9× on invalid; `z.validate()` is 2.1–7.0× faster on
+INVALID data (union highest) and ~1.1× on valid — complementary wins;
+compile costs ~3–4.5 ms per schema one-time (negligible for a
+long-lived MCP server, real at one-shot CLI start; `zod/compile`
+auto-compile is lazy) and generates code via `new Function`, so NONE of
+the compiled-mode guidance applies to jitless/CSP no-eval runtimes —
+the docs must carry that constraint. The `exactOptional`/
+`.exactPartial()` probe (both APIs probed directly) is the
 counter-finding: measured and DECLINED for emission (wire-invisible,
-projection byte-identical — plan §Opportunity probes). This row: (1)
-re-run the benchmark on a REAL generated module (petstore-expanded
-family) including cold-start under eager vs lazy compilation; (2) land
-consumer guidance docs (`zod/compile` for long-lived servers,
-`z.validate()` for reject-only gates); (3) route any emission change
-(compile preamble option, validate in generated MCP gates) to the owner
-as a decision card carrying the real-module measurements. Non-goals: no
-emission or dialect changes in this row. Acceptance (`integration` +
-`non-code`, QD-14 reading): benchmark + dated outputs committed; docs
-landed; decision card queued; gates green. Source: the plan §TS-5 +
+projections byte-identical — plan §Opportunity probes). This row
+executes the plan §TS-5 procedure exactly: (1) extend the committed
+bench (or a sibling beside it) to the real generated module
+`lib/tests-fixtures/zod-parser/happy-path/generated-petstore-expanded.zod4.ts`,
+measuring plain vs compiled parse throughput on its payload fixtures
+plus whole-module cold-start (eager `z.compile()` vs lazy
+`zod/compile`), two runs, run-numbered dated outputs committed; (2)
+apply the recorded criterion — real-module ratios ≥2× on either
+verdict branch → land the guidance docs with the jitless caveat;
+<1.5× → record the falsification in the plan and land no guidance; (3)
+queue the emission-change decision card (compile preamble option,
+`z.validate` in generated MCP gates) carrying the real-module
+measurements. Non-goals: no emission or dialect changes in this row.
+Acceptance (`integration` + `non-code`, QD-14 reading): benchmark + two
+run-numbered dated outputs committed; the criterion applied with its
+outcome recorded in the plan; docs landed or falsification recorded;
+decision card queued; gates green. Source: the plan §TS-5 +
 §Opportunity probes. Gate: `depends_on: [Q-25]` (guidance describes the
 post-manifest emission surface).
 
