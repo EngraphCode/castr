@@ -226,7 +226,10 @@ deps), and **(c)** the corpus's declared expectation. Disagreement fails
 with the drift DIRECTION named (toward or away from IR/JSON-Schema
 semantics). Owner ruling 2026-08-31 (napkin part-6 entry, verbatim there)
 simplifies the expectation frame: castr has zero external consumers, the
-Zod INPUT contract is **>= 4.5**, and OUTPUT tracks the **latest** Zod —
+Zod INPUT contract is **>=4.5 <5** (`^4.5`; a new major is its own
+ratification — PR #75 review bound, keeping the Zod-4 dialect and the
+shipped `^4.5.4` manifests honest), and OUTPUT tracks the **latest**
+release within that ratified major —
 so corpus expectations are authored to the current vendor's semantics
 outright (seconds-required datetimes, code-point lengths ARE the
 contract), with no compatibility bookkeeping against older 4.x
@@ -338,11 +341,13 @@ its limits go in the ADR body); (2) mandates the vendor-conformance oracle
 agreement with the vendor is recomputed; (3) defines the dialect as the
 versioned declaration of supported Zod surface (TS-2) and the diagnostic
 contract for out-of-dialect input; (4) encodes the owner's 2026-08-31
-version contract — Zod input **>= 4.5**, output tracks **latest** Zod
-(zero external consumers; napkin part-6 verbatim) — amending
+version contract — Zod input **>=4.5 <5** (`^4.5`), output tracks the
+**latest** release within the ratified major, and widening to a new
+major (Zod 5) is a separate ratification (zero external consumers;
+napkin part-6 verbatim; the <5 bound is the PR #75 review refinement) — amending
 ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
 adjudicates the dependency shape that follows (direct `zod` dependency
-vs `peerDependencies: ">=4.5"`). Supersession notes on ADR-026/ADR-032
+vs `peerDependencies: ">=4.5 <5"`). Supersession notes on ADR-026/ADR-032
 where their wording conflates the two decisions.
 
 Acceptance (`non-code`): ADR accepted per the estate's ADR lifecycle,
@@ -404,7 +409,7 @@ ingesting schemas castr cannot statically analyse.
 Aligned to `principles.md` (strict everywhere — the oracle extends
 strictness to the vendor boundary), `testing-strategy.md` (red-first
 cycles named per slice), `requirements.md` (its generic "Zod 4" input
-doctrine remains in force until TS-3 ratifies the >= 4.5 floor — TS-2's
+doctrine remains in force until TS-3 ratifies the `^4.5` floor — TS-2's
 diagnostics narrow error text only, never acceptance, and own no part of
 the contract transition). The
 `plan-body-first-principles-check` fires at each executing firing: re-derive
