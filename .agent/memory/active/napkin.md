@@ -6,7 +6,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 - **PR #73 drive tally**: 6 review threads across two bots (Copilot round 1: 4 findings,
   all verified real; Codex on the prior head: 2, both already cured), every one fixed at
-  source in `ce379e2`, replied with evidence, resolved; merged `4aafa3ee` at
+  source in `SHA:ce379e2`, replied with evidence, resolved; merged `SHA:4aafa3ee` at
   `mergeable_state: clean` with Codex's re-review still running (the recorded race-window
   disposition — any post-merge findings fold into the live follow-up PR). Best catch
   became queue row Q-28: the Zod writer silently drops `contentEncoding` (no
