@@ -2,6 +2,149 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (unknowns answered + two-part plan landed — same cloud session, part 2)
+
+Owner commission (verbatim substance): "explore and answer the unknowns, then draft a two
+part plan, part 1 a simple dependency currency pass, part two everything else above and
+your recommendation post uncertainty exploration… [the scheduled-slices plan] must be kept
+up to date. Use all relevant skills." All three unknowns from the part-1 entry are now
+MEASURED (probe script + outputs in the session scratchpad `zod-probe/`; substance
+conserved in the plan's evidence base):
+
+- **U1 ANSWERED — `_zod.def` shapes are byte-identical across zod 4.3.6 → 4.4.3 → 4.5.4**
+  for a 20-construct representative set (type/format/sorted def keys/check descriptors).
+  The core def contract is empirically stable across the 4.x line, which strengthens the
+  runtime-oracle option and the TS-3 ADR's revisit trigger (def drift = the detector).
+  Behavioural deltas confirmed firsthand in the same probe: 4.5.4 rejects seconds-less
+  `z.iso.datetime()` input that 4.3/4.4 accept; 4.5.4 counts string length in code points
+  (astral `length(1)` flips fail→pass, `min(2)` flips pass→fail) — Zod moving TOWARD JSON
+  Schema's minLength/maxLength semantics; all six new APIs present; `toJSONSchema`
+  emission unchanged while its runtime meaning shifted.
+- **U2 ANSWERED — the parity corpus cannot see the 4.5 changes at all**: all five datetime
+  payloads in `payloads.ts` carry seconds, zero astral/length-boundary payloads exist, and
+  `IsoDatetimeSchema` has NO parity payload entry. So (a) the zod bump is predicted
+  suite-green, and (b) the ADR-035 blind spot is empirical, not just structural — the
+  corpus is itself a hand-authored behavioural claim set missing exactly the changed
+  regions.
+- **U3 ANSWERED — manifest feasibility is HIGH for the table layer only**: parser
+  (`ZOD_PRIMITIVES`, `ZOD_PRIMITIVE_TYPES`, `FORMAT_MAP`/`ENCODING_MAP`) and writer
+  (`STRING_FORMAT_TO_ZOD`, `formatToValidation`, numeric switches) are already
+  table-shaped inverses; chain/AST machinery is structural and generic over
+  `zod-constants.ts` names, and stays code. Precedent in-tree: the parser already
+  generates a synthetic zod declaration from `ZOD_PRIMITIVES`.
+- **Survey (dependency-currency skill §1, run at plan-author time)**: small pass — tsx
+  patch, knip minor, zod 4.4.3→4.5.4, @scalar json-magic+openapi-parser coupled pair,
+  and two HOLDS (typescript 7.0.2 vs ts-morph-28-vendored TS 6.0.2; @types/node 26 vs
+  ADR-049 Node-24 coupling). `pnpm audit`: zero already. Container runs Node 22 against
+  engines 24.x (cloud-image artifact, noted not actioned).
+- **Landed**: `.agent/plans/current/zod-truth-surface-and-dependency-currency.md` (the
+  two-part plan: evidence base, Part 1 currency pass, Part 2 TS-1 Scenario-8
+  vendor-conformance oracle / TS-1b toJSONSchema differential / TS-2 dialect manifest +
+  diagnostics / TS-3 ratification ADR, recommendation Q-23→Q-24→Q-25→Q-26 with Q-27
+  after Q-24) + parent-plan edits (rows Q-23..Q-27, five briefs, both eligible-now
+  enumerations, §Reviewers record; appended at owner word, sequencing recommendation
+  owner-adjustable). The probe script and raw outputs are committed at
+  `.agent/research/zod/zod-version-probe.mjs` + `zod-version-probe-2026-08-31.out.jsonl`
+  (durable home per `important-state-not-in-temp-files`; TS-3's revisit trigger runs it).
+- **Plan-appending `assumptions-expert` review: 17 findings (1 blocking, 10 material,
+  6 minor), all applied in the same landing.** The sharpest catches, worth keeping: (a)
+  "derived from a manifest" without naming build-time-codegen vs runtime-derivation is
+  an architecture fork left to a zero-context firing — name the mechanism in the brief
+  (chosen: runtime derivation, the `zod-decl-builder.ts` precedent); (b) my
+  "writer tables are the parser's inverse" claim was FALSIFIED by the second parser
+  format map (`zod-parser.constraints.ts` yields cuid/cuid2/ulid/emoji/ip, all
+  writer-throws) — the same verify-firsthand discipline the session was preaching,
+  failed on my own evidence paragraph; (c) frontmatter queue order must be physically
+  re-sequenced when prose sequencing changes (the Q-22 precedent) — machine queue and
+  prose diverging is two firings claiming different rows; (d) "red-first corpus
+  extension" was not executable as a red step — the corpus cannot go red on vendor
+  drift, which was my own central finding turned against my own plan wording; (e) the
+  probe's shallow def-shape stability is measurably blind to the 4.5 semantic changes —
+  the stability claim needed its limit attached at first use.
+
+## 2026-08-31 (Zod 4.5 relevance + hand-authored-Zod-surface exploration — cloud Q&A session)
+
+Owner question session (no implementation commissioned): is the Zod 4.5 announcement
+relevant to Castr, and are there alternatives to Castr's hand-authored model of Zod that
+avoid disparate sources of truth? Cognitive stack invoked explicitly
+(metacognition / free-play / concept-exploration / reason / parallax). Findings captured
+here per owner word ("record the findings, but don't commit and push until we have more").
+
+- **Zod 4.5 relevance (measured, prior turn):** `lib` depends on `zod: ^4.3.6` (runtime
+  dep), so 4.5.x already satisfies the range on fresh installs; lockfile currently
+  resolves 4.4.3. Behavioural fixes change what generated schemas accept:
+  `z.iso.datetime()` now requires seconds (Castr emits it for `format: date-time`,
+  `writers/zod/generators/primitives.ts`); string `.min()`/`.max()` now count code
+  points — which ALIGNS Zod with JSON Schema's minLength/maxLength definition (fidelity
+  improvement, drift TOWARD the IR model). New surface (`z.creditCard()`,
+  `z.properties()`, `z.deepPartial()`, `.exactPartial()`, `z.validate()`, `z.compile()`,
+  `zod/compile`) is unknown to the Zod→IR parser, which hard-errors on unsupported
+  expressions. Castr's own source uses none of the changed APIs (codebase `creditCard`
+  hits are dependentSchemas test fixture names).
+- **FINDING (inherited-classification family): the static-vs-runtime parsing choice was
+  never ratified on its own.** ADR-032 §Context says "Static parsing: ADR-026 requires
+  ts-morph; no regex or runtime execution" — but ADR-026's actual decision and rationale
+  are AST-over-string-heuristics; it argues nowhere against runtime introspection.
+  ADR-032's Alternatives Considered does not include the runtime-introspection parser,
+  yet `.agent/research/zod/notes.md` §Implications sketches exactly that integration
+  surface (walk `schema._zod.def.type` + wrappers, respect registry meta). Researched,
+  never ratified against. Candidate ADR: ratify static parsing from first principles
+  (real warrants exist: no execution of user code, source-location diagnostics,
+  writer/parser symmetry over source text) WITH the runtime-oracle complement below.
+- **FINDING (blind spot in the proof layer): ADR-035's validation-parity harness cannot
+  see vendor semantic drift.** It executes original vs transformed schema under the SAME
+  installed Zod, so a Zod behaviour change moves both sides together and parity stays
+  green — the 4.5 `iso.datetime` seconds requirement passes every parity fixture while
+  silently changing what generated validators accept. Parity proves transform-internal
+  consistency, not Castr-model-vs-Zod agreement. The missing instrument is a THREE-WAY
+  differential oracle: for the same IR node + payload corpus, compare the installed
+  Zod's verdict (emitted schema, executed) against AJV's verdict on the IR's JSON-Schema
+  projection. All parts exist as runtime deps (ajv + ajv-formats; JSON Schema writer;
+  the ADR-035 `new Function` execution harness). A second cheap oracle: diff Castr's
+  IR→JSON-Schema output against Zod's own `z.toJSONSchema()` for the same schema — two
+  independent implementations of the same mapping that should agree on the shared
+  subset. Oracles must classify drift direction: 4.5's code-point change is drift
+  TOWARD the model, not away.
+- **FINDING (intra-Castr duplication is concrete and is the drift-detector-hand-edited-
+  literal class in product code):** the parser's `FORMAT_MAP`/`ENCODING_MAP`
+  (`parsers/zod/types/zod-parser.zod4-formats.ts`) and the writer's
+  `STRING_FORMAT_TO_ZOD` + `formatToValidation` (`writers/zod/generators/primitives.ts`)
+  are hand-maintained inverses in separate modules, with a third prose copy in ADR-031
+  §2 and soft copies in the zod-expert template/research notes. Cure shape per
+  `generator-first-mindset`: ONE dialect manifest (Castr's declared Zod-4 dialect:
+  construct name ↔ IR mapping ↔ canonical emission ↔ payload vectors) from which parser
+  dispatch, writer tables, docs tables, and conformance fixtures are generated —
+  parser/writer lockstep by construction instead of by review.
+- **Frame that survived challenge (parallax counterframe):** "disparate sources of truth"
+  is not cured by deferring to Zod, because Zod publishes no machine-readable spec — its
+  fluent surface's only truth is the executable implementation. Castr is a compiler for
+  an implementation-defined language; a compiler MUST model its target. The defect is
+  not the model's existence but (a) the model being written 3+ times inside Castr and
+  (b) its agreement with the vendor being unverified per version. Deferral alternatives
+  measured and rejected as the primary path: `z.toJSONSchema()` ingestion loses
+  first-class IR semantics ADR-032 §9/10 fought for (uuidVersion, int64/bigint
+  distinctions) and drops source-location diagnostics; an emitted adapter layer
+  (castr-owned wrappers) breaks ADR-031 idiomatic-output and merely relocates the
+  duality. Runtime `_zod.def` introspection remains attractive as a TEST-TIME oracle
+  (the estate already executes Zod in the ADR-035 sandbox) and as a possible future
+  secondary ingest path — smaller, more stable contract (`zod/v4/core` def
+  discriminants) than the churning fluent surface — but as the parser it costs
+  executing user code and expression-level diagnostics.
+- **Play harvest (associations, not findings):** (1) Zod's own shipped test suite is the
+  nearest thing to a Zod spec — reminded me of test262-as-spec; candidate oracle corpus
+  for the conformance suite. (2) Zod 4.5's release note "entire test suite runs twice —
+  normally and with auto-compilation — to ensure perfect fidelity" is the same
+  two-projections-one-truth instrument the dialect manifest would give parser/writer.
+  Discarded visibly: a genetic-code/codon-table analogy for executable-vs-declarative
+  truth — forced, added nothing.
+- **Unresolved evidence that could change the synthesis:** whether `zod/v4/core` def
+  shapes are semver-stable in practice across 4.x (drives the weight of the
+  runtime-oracle option); whether the ADR-035 payload corpus covers the 4.5-changed
+  behaviours at all (a seconds-less datetime payload may not exist — the corpus itself
+  is a hand-authored behavioural claim set, the third copy of "what Zod is"); cost of
+  generating parser dispatch from a manifest given the parser's AST-shape specificity
+  (chains/getters vs a flat name table).
+
 ## 2026-08-27 (PR #70 drive — Limpet guards Moorings / 01T962, part 3)
 
 - **OWNER CORRECTION (verbatim substance): "There are merge conflicts, always check the
