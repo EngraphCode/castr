@@ -2,6 +2,50 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner rulings: routine deleted + opportunity probes — same session, part 7; Dolphin binds Trench / 013aPY)
+
+- **OWNER RULING (verbatim): "delete the routine, I will be well aware when zod 5 comes
+  out."** Executed: `trig_01V8gCESLRQGYJ9gWX4LM1yY` deleted; the tripwire's sensor is the
+  owner, and the estate keeps only the examination procedure (probe re-run with 5.x,
+  dialect impact analysis, decision in queued-decisions.md). Supersedes the part-6
+  Routine-mechanism record; plan §TS-3 and the Q-26 brief updated in the same landing.
+- **Mistake (mine, metacognition pass): review-driven over-engineering.** The Routine
+  existed for under an hour. Copilot's finding ("the tripwire claim is not executable")
+  was real, but the cure menu had two exits — build machinery, or DE-CLAIM to the light
+  mechanism the owner actually wanted — and I built without weighing owner appetite: a
+  standing Routine occupies the owner's routines list and monthly attention, and the
+  owner's tripwire intent was simply their own awareness. Cure shape: when a reviewer
+  flags an aspirational mechanism, softening the claim to match reality is a first-class
+  fix; standing owner-facing machinery is created at owner word, not to satisfy a bot.
+  Same family as the no-manufactured-permission / carve-outs-vs-policy entries, on the
+  machinery axis.
+- **OWNER COMMISSION (verbatim substance): "run the opportunity probes and update the
+  plan as appropriate"** — both run on the shipped zod 4.5.4, scripts + dated outputs
+  committed beside the version probe, two stable runs each:
+  - **Compile/validate bench**: `z.compile()` 4–8× on VALID data (~1× invalid);
+    `z.validate()` 2.3–4.2× on INVALID data (~1× valid) — complementary, covering the
+    two verdict branches; compile ~3–4.5 ms/schema one-time (server-negligible,
+    CLI-cold-start-relevant; `zod/compile` is lazy). → new row Q-29 (real-module
+    benchmark + consumer docs; emission decisions to the owner with measurements).
+  - **exactOptional probe FALSIFIED my own pre-probe fidelity claim**: divergence from
+    `.optional()` exists only for in-memory `{a: undefined}`; JSON wire cannot express
+    it and `z.toJSONSchema` projects both forms byte-identically. Measured and DECLINED
+    for emission; revisit trigger = a TS-type-honesty requirement from an in-memory
+    `exactOptionalPropertyTypes` consumer. The probe-before-adopt discipline caught a
+    fluent claim I had already relayed to the owner as an "opportunity".
+- **Free-play harvest (bounded)**: kept — compile and validate as "a matched pair over
+  the verdict branches" (valid-path vs invalid-path), which is the shape the Q-29 docs
+  should teach; kept — constant-payload microbenchmarks overstate absolutes (the 14M
+  ops/s compiled union), so ratios are the finding, absolutes are not. Discarded
+  visibly: an analogy between exactOptional and the absence-encoded-state lesson —
+  decorative, no action. Concept-exploration verdict: "opportunity" for castr means
+  wire-observable fidelity or consumer-measurable performance; by that frame two of the
+  original six 4.5 opportunities survive as work (compile/validate → Q-29), one
+  dissolves (exactPartial), three stay non-opportunities (creditCard/properties/
+  deepPartial). Parallax: screening depth, provisional within microbenchmark limits;
+  falsifier for Q-29's premise = a real-generated-module bench contradicting the shaped
+  bench.
+
 ## 2026-08-31 (owner ruling: Zod version contract — same session, part 6; Dolphin binds Trench / 013aPY)
 
 - **OWNER RULING (verbatim substance): "those are good changes, we should have tests for

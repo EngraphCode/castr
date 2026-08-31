@@ -36,6 +36,10 @@ todos:
     content: 'Part 2c: ADR ratifying static parsing + vendor-oracle complement + dialect versioning — parent-plan row Q-26'
     status: pending
     depends_on: [TS-1, TS-2]
+  - id: TS-5
+    content: 'Part 2d: zod runtime performance guidance — real-generated-module benchmark + consumer docs (compile/validate), emission-option decision to owner — parent-plan row Q-29'
+    status: pending
+    depends_on: [TS-2]
 ---
 
 # Zod truth surface & dependency currency
@@ -118,6 +122,34 @@ at runtime from `ZOD_PRIMITIVES` + `ZOD_COMPOSITIONS`
 (`registry/zod-decl-builder.ts`, consumed at `ast/zod-ast.ts` — the
 in-tree precedent for table-driven runtime derivation, and a third
 consumer any manifest must feed).
+
+Opportunity probes (owner-commissioned, run 2026-08-31 post-Q-23 on the
+shipped zod 4.5.4; scripts + raw outputs committed beside the version
+probe: `zod-compile-validate-bench.mjs` / `zod-exact-optional-probe.mjs`
+with dated `.out` files, two runs each, ratios stable):
+
+- **`z.compile()` / `z.validate()` — measured complementary wins.** On a
+  castr-shaped strict object (8 fields, formats, nested object) and a
+  discriminated union: compiled `safeParse` is **4–8× faster on VALID
+  data** (~1× on invalid); `z.validate()` is **2.3–4.2× faster on
+  INVALID data** (~1× on valid). Compile is a one-time ~3–4.5 ms per
+  schema — negligible in a long-lived MCP server, real at one-shot CLI
+  start for a module with hundreds of schemas (`zod/compile` auto-compile
+  is lazy-on-first-use, which softens the CLI case). Microbenchmark
+  caveats apply (constant payloads, single Node 22 container); ratios,
+  not absolutes, are the finding. Routed to row Q-29.
+- **`exactOptional`/`.exactPartial()` — the pre-probe fidelity claim is
+  FALSIFIED for castr's wire path.** The behavioural divergence from
+  `.optional()` exists only for in-memory `{a: undefined}` (exactOptional
+  rejects, optional accepts); JSON-borne data can never carry an own
+  undefined-valued key, and `z.toJSONSchema` projects both forms
+  BYTE-IDENTICALLY. For a compiler whose truth is JSON Schema and whose
+  payloads are parsed JSON, switching emission to `exactOptional` changes
+  nothing observable on the wire or in projection while costing new
+  dialect surface (parser + writer + manifest lockstep). **Disposition:
+  measured and declined for emission** — revisit only if an in-memory
+  consumer with `exactOptionalPropertyTypes` raises a TS-type-honesty
+  requirement (the one axis the probe cannot measure at runtime).
 
 Doctrine finding (napkin 2026-08-31, feeds TS-3): ADR-032 §Context says
 "ADR-026 requires ts-morph; no regex or runtime execution", but ADR-026's
@@ -346,20 +378,16 @@ version contract — Zod input **>=4.5 <5** (`^4.5`), output tracks the
 major (Zod 5) is a separate ratification (zero external consumers;
 napkin part-6 verbatim; the <5 bound is the PR #75 review refinement,
 confirmed by the owner's follow-up ruling: "latest here means latest 4,
-with a tripwire to examine Zod 5 if and when it is released") — the ADR
-also encodes that tripwire's DURABLE mechanism (PR #76 review measured
-the survey-as-sensor draft non-executable: the currency skill is
-owner-invoked and the scheduled loop claims only pending rows, so no
-survey is guaranteed to run): the standing platform Routine
-`trig_01V8gCESLRQGYJ9gWX4LM1yY` ("Castr Zod 5 tripwire (monthly)")
-checks the npm registry monthly in a fresh session, is silent while
-latest is 4.x, and on a stable zod major >= 5 pushes an owner
-notification and — when the owner has attached the repo source in the
-Routine UI — lands the "examine Zod 5" row in the proof-programme's
-`queued-decisions.md`, the named owner-decision routing surface
-(examination: probe re-run with 5.x via `zod-version-probe.mjs`,
-dialect impact analysis, owner decision; any dependency-currency survey
-is a secondary sensor), never a bump — amending
+with a tripwire to examine Zod 5 if and when it is released") — the
+tripwire's sensor is the OWNER (ruling 2026-08-31, superseding the
+Routine mechanism: "delete the routine, I will be well aware when zod 5
+comes out" — the standing Routine `trig_01V8gCESLRQGYJ9gWX4LM1yY`
+briefly created for the PR #76 review's durability finding was deleted
+at owner word the same day); what the estate keeps is the EXAMINATION
+PROCEDURE, run at owner word when Zod 5 ships: probe re-run with 5.x
+via `zod-version-probe.mjs`, dialect impact analysis, owner decision
+recorded in the proof-programme's `queued-decisions.md`, never a
+bump — amending
 ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
 adjudicates the dependency shape that follows (direct `zod` dependency
 vs `peerDependencies: ">=4.5 <5"`). Supersession notes on ADR-026/ADR-032
@@ -367,6 +395,26 @@ where their wording conflates the two decisions.
 
 Acceptance (`non-code`): ADR accepted per the estate's ADR lifecycle,
 indexes reconciled, `docs-adr-expert` review recorded; gates green.
+
+### TS-5 / row Q-29 — zod runtime performance guidance
+
+Consumes the opportunity-probe evidence (above): compile and validate
+are measured, complementary wins for consumers of generated code —
+compile for valid-path throughput (long-lived MCP servers), validate
+for reject-only gates on hostile input. Scope, docs-first: (1) re-run
+the benchmark against a REAL generated module (the petstore-expanded
+fixture family) rather than shaped schemas, capturing cold-start cost
+for a full module under eager `z.compile()` vs lazy `zod/compile`
+auto-compilation; (2) land consumer guidance (README/generated-module
+docs): `import 'zod/compile'` recommended for long-lived servers,
+`z.validate()` for gate-only paths; (3) route any EMISSION change (a
+generated `zod/compile` preamble option, `z.validate` in generated MCP
+gates) to the owner as a decision with the real-module measurements
+attached — never adopted inside this row. Non-goals: no emission
+changes; no new dialect surface. Acceptance (`integration` +
+`non-code`, QD-14 reading): benchmark script + dated outputs committed
+beside the existing probes; docs landed; the emission decision card
+carries the measurements; gates green.
 
 ## Recommendation (post uncertainty exploration)
 

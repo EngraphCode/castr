@@ -57,6 +57,10 @@ todos:
     content: 'ADR: ratify static Zod parsing from first principles, with the vendor-oracle complement and dialect versioning'
     status: pending
     depends_on: [Q-24, Q-25]
+  - id: Q-29
+    content: 'Zod runtime performance guidance (opportunity probes 2026-08-31): real-generated-module compile/validate benchmark + consumer docs; emission-option decision routed to owner with measurements'
+    status: pending
+    depends_on: [Q-25]
   - id: Q-05
     content: 'Pre-02A defect slice F-04: placebo refinement fail-fast + nested Zod member loss'
     status: pending
@@ -133,7 +137,8 @@ now, in queue order: Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency dropped by
 owner card ruling 2026-08-27 — sequenced with the safety instruments), Q-23,
 then Q-05..Q-09, Q-13 (executes
 the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on
-Q-20), and Q-24..Q-28 follow their `depends_on` — Q-10 waits on the Q-14 doctrine
+Q-20), and Q-24..Q-29 follow their `depends_on` (Q-29 appended 2026-08-31
+at owner word — the opportunity-probe commission) — Q-10 waits on the Q-14 doctrine
 wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
 charter it implements.
 **Owner directive (2026-08-22):** turn the
@@ -1203,14 +1208,13 @@ tracks the latest release within the ratified major, a new major being
 its own ratification (zero external consumers; napkin part-6 verbatim;
 the <5 bound is confirmed by the owner's follow-up ruling — "latest
 here means latest 4, with a tripwire to examine Zod 5 if and when it
-is released" — whose tripwire the ADR encodes with its durable
-mechanism: the standing platform Routine
-`trig_01V8gCESLRQGYJ9gWX4LM1yY`, a monthly fresh-session npm-registry
-check that is silent on 4.x and on a stable zod major >= 5 pushes an
-owner notification and, with the repo source owner-attached in the
-Routine UI, lands the "examine Zod 5" row in
-[`queued-decisions.md`](./queued-decisions.md) — the named routing
-surface; a dependency-currency survey is a secondary sensor; never a
+is released" — whose sensor is the OWNER, per the same-day superseding
+ruling "delete the routine, I will be well aware when zod 5 comes out"
+(the briefly-created Routine `trig_01V8gCESLRQGYJ9gWX4LM1yY` was
+deleted at owner word); the ADR encodes the EXAMINATION PROCEDURE run
+at owner word when Zod 5 ships — probe re-run with 5.x, dialect impact
+analysis, decision recorded in
+[`queued-decisions.md`](./queued-decisions.md) — never a
 bump) — with the narrowing
 amendments to ADR-031/ADR-032/requirements.md §9's generic "Zod 4"
 wording and the dependency-shape adjudication (direct `zod` dep vs
@@ -1257,6 +1261,29 @@ post-fix; Scenario 2/4/6 round-trips preserve `contentEncoding`;
 `pnpm check` green. Source: PR #73 review thread + the plan §TS-4. Gate:
 `depends_on: [Q-23]` (lands on the post-bump vendor with the rest of the
 lane).
+
+**Q-29 — Zod runtime performance guidance (owner-commissioned opportunity
+probes, 2026-08-31).** Surface: a benchmark script + consumer docs; NO
+emission changes. Evidence base (committed beside the version probe:
+`zod-compile-validate-bench.mjs` + dated outputs, two stable runs):
+`z.compile()` is 4–8× faster on VALID data and ~1× on invalid;
+`z.validate()` is 2.3–4.2× faster on INVALID data and ~1× on valid —
+complementary wins; compile costs ~3–4.5 ms per schema one-time
+(negligible for a long-lived MCP server, real at one-shot CLI start;
+`zod/compile` auto-compile is lazy). The `exactOptional` probe is the
+counter-finding: measured and DECLINED for emission (wire-invisible,
+projection byte-identical — plan §Opportunity probes). This row: (1)
+re-run the benchmark on a REAL generated module (petstore-expanded
+family) including cold-start under eager vs lazy compilation; (2) land
+consumer guidance docs (`zod/compile` for long-lived servers,
+`z.validate()` for reject-only gates); (3) route any emission change
+(compile preamble option, validate in generated MCP gates) to the owner
+as a decision card carrying the real-module measurements. Non-goals: no
+emission or dialect changes in this row. Acceptance (`integration` +
+`non-code`, QD-14 reading): benchmark + dated outputs committed; docs
+landed; decision card queued; gates green. Source: the plan §TS-5 +
+§Opportunity probes. Gate: `depends_on: [Q-25]` (guidance describes the
+post-manifest emission surface).
 
 ## Operating protocol
 
@@ -1375,7 +1402,7 @@ landing.
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
 - **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), Q-23, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card; Q-23..Q-27 appended 2026-08-31 at owner word — zod truth-surface & dependency-currency plan; Q-28 appended at the PR #73 review — measured writer contentEncoding loss).
-- **Blocking for Q-24..Q-28**: their `depends_on` chain (Q-23 for all; Q-24 for Q-27; Q-24 AND Q-25 for Q-26) — the oracle pins the post-bump vendor, the ADR claims a complement and a dialect that exist, and the differential extends the oracle.
+- **Blocking for Q-24..Q-29**: their `depends_on` chain (Q-23 for all; Q-24 for Q-27; Q-24 AND Q-25 for Q-26; Q-25 for Q-29) — the oracle pins the post-bump vendor, the ADR claims a complement and a dialect that exist, the differential extends the oracle, and the performance guidance describes the post-manifest emission surface.
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: none — the Q-13 dependency was dropped by owner card ruling 2026-08-27, re-confirmed against the recorded never-a-second-skill-copy rationale: Q-21 proved the pr-lifecycle canonical safely editable ahead of Q-13, and Q-13's brief now carries the reconciliation duty (value-extract PR #23's skill content against the then-current canonical, never blind-resync).
 - **Beneficial**: none deferred beyond the gates above.
