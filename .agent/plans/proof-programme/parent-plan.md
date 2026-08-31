@@ -1278,12 +1278,17 @@ projections byte-identical — plan §Opportunity probes). This row
 executes the plan §TS-5 procedure exactly: (1) extend the committed
 bench (or a sibling beside it) to the real generated module
 `lib/tests-fixtures/zod-parser/happy-path/generated-petstore-expanded.zod4.ts`,
-measuring plain vs compiled parse throughput on its payload fixtures
-plus whole-module cold-start (eager `z.compile()` vs lazy
-`zod/compile`), two runs, run-numbered dated outputs committed; (2)
-apply the recorded criterion — real-module ratios ≥2× on either
-verdict branch → land the guidance docs with the jitless caveat;
-<1.5× → record the falsification in the plan and land no guidance; (3)
+measuring BOTH candidates on its payload fixtures — `safeParse` vs
+`z.compile()` on valid payloads AND `safeParse` vs `z.validate()` on
+invalid payloads — plus whole-module cold-start (eager `z.compile()`
+vs lazy `zod/compile`), two runs, run-numbered dated outputs
+committed; (2) apply the recorded criterion PER GUIDANCE LINE on that
+line's own claimed branch (compile→valid, validate→invalid), never
+aggregated: ratio ≥2× → that line's guidance lands with the jitless
+caveat; ≥1.5× and <2× → inconclusive, no guidance for that line, the
+measurement carried on the decision card; <1.5× → that line falsified,
+recorded in the plan, no guidance — three exhaustive, exclusive bands,
+the two lines landing or falling independently; (3)
 queue the emission-change decision card (compile preamble option,
 `z.validate` in generated MCP gates) carrying the real-module
 measurements. Non-goals: no emission or dialect changes in this row.

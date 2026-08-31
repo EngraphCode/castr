@@ -412,16 +412,24 @@ guidance MUST carry that constraint). Scope, docs-first: (1) extend
 load the schemas of
 `lib/tests-fixtures/zod-parser/happy-path/generated-petstore-expanded.zod4.ts`
 (the one real generated module in the fixture estate) and measure
-plain vs `z.compile()` parse throughput on its payload fixtures plus
+BOTH candidates on its payload fixtures — `safeParse` vs `z.compile()`
+on VALID payloads (compile's claimed branch) and `safeParse` vs
+`z.validate()` on INVALID payloads (validate's claimed branch) — plus
 whole-module cold-start under eager `z.compile()`-per-schema vs lazy
 `zod/compile` auto-compilation; run twice; commit run-numbered dated
 outputs beside the existing probe outputs (regeneration pipeline: node
-script > out, then prettier --write for .json). (2) Result criterion:
-real-module ratios ≥2× on either verdict branch confirm the shaped
-bench and the guidance lands (docs: `import 'zod/compile'` for
-long-lived non-CSP servers, `z.validate()` for reject-only gates, the
-jitless caveat verbatim); ratios <1.5× FALSIFY the premise — record
-that outcome in this section and land no guidance. (3) Either way,
+script > out, then prettier --write for .json). (2) Result criterion,
+applied PER GUIDANCE LINE on that line's own claimed branch only —
+never aggregated across branches, so the two lines land or fall
+independently: real-module ratio ≥2× → that line's guidance lands
+(compile line: `import 'zod/compile'` for long-lived non-CSP servers;
+validate line: `z.validate()` for reject-only gates; each carrying the
+jitless caveat verbatim); ratio ≥1.5× and <2× → INCONCLUSIVE: no
+guidance for that line, the measurement recorded in this section and
+carried on the decision card for owner adjudication; ratio <1.5× →
+that line's premise is FALSIFIED — record the outcome in this section,
+land no guidance for it. The three bands are exhaustive and exclusive
+over each line's ratio. (3) Either way,
 route any EMISSION change (a generated `zod/compile` preamble option,
 `z.validate` in generated MCP gates) to the owner as a decision card
 carrying the real-module measurements — never adopted inside this row.
