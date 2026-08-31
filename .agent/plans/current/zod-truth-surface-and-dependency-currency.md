@@ -403,8 +403,10 @@ ingesting schemas castr cannot statically analyse.
 
 Aligned to `principles.md` (strict everywhere — the oracle extends
 strictness to the vendor boundary), `testing-strategy.md` (red-first
-cycles named per slice), `requirements.md` (Zod input contract unchanged
-until TS-2's diagnostics, which narrow error text, not acceptance). The
+cycles named per slice), `requirements.md` (its generic "Zod 4" input
+doctrine remains in force until TS-3 ratifies the >= 4.5 floor — TS-2's
+diagnostics narrow error text only, never acceptance, and own no part of
+the contract transition). The
 `plan-body-first-principles-check` fires at each executing firing: re-derive
 each slice's shape from live code and this plan's evidence, not its
 summaries; vendor call shapes (zod probe results, AJV options, ts-morph)
