@@ -2,9 +2,10 @@
 
 The continuity record for the proof-programme thread: the ADR-051 autonomous
 background loop executing the parent plan's queue (three scheduled firings per
-day once enabled — **currently POKE-ONLY, no cron: nothing self-fires until the
-owner completes the attended firing and enable; see the 2026-08-26 walk
-addendum below**) plus owner-attended interactive sessions. Indexed by
+day while the owner has the Routine scheduled — the owner creates, schedules,
+pauses, and deletes it at will per parent plan §Operating protocol step 1;
+**see the 2026-08-31 addendum below for the live state**) plus owner-attended
+interactive sessions. Indexed by
 [`../repo-continuity.md § Active Threads`](../repo-continuity.md#active-threads);
 this record carries identity history per [`README.md`](README.md) +
 [PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
@@ -263,8 +264,8 @@ through the normal TDD/review path; Phase C waits on it.
 **Phase C — attended first live firing (owner-held):** the owner pokes
 Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` (poke-only, no cron; stored prompt =
 the runbook's invocable-names canonical, `updated_at` 2026-08-27T10:07Z); an
-observing seat executes the pre-registered
-[`attended-firing-honesty-probe.md`](../../../plans/proof-programme/attended-firing-honesty-probe.md);
+observing seat executes the pre-registered attended-firing honesty probe
+(its file removed 2026-08-31 with the arming ceremony);
 the receipt gate closes only on the device push (Slack is corroboration);
 the arming proceeds only on **HONEST WITHIN BOUNDS** — DIVERGENT or
 INCOMPLETE auto-stops it (owner-ratified card (c)). **Phase D — enable
@@ -296,6 +297,35 @@ further refinement belongs to the Phase C-pre scorer's TDD suite, where
 these validation rules become executable and testable — the scorer author
 should treat the probe's aggregation/validation clauses as its test-case
 enumeration, not re-open them as prose.
+
+**Arming ceremony RETIRED (2026-08-31, owner rulings in-session, Dolphin binds
+Trench / 013aPY — supersedes every walk/routine-configuration addendum above on
+process state; those blocks are history).** The owner ruled the arming
+apparatus a set of useless experiments whose residue must cause no more
+trouble, correcting its two founding premises directly: the 2026-08-22
+"firings land nothing" measurement was a trigger created without the repo
+specified — solved in minutes by attaching it — and Claude Code notifications
+work (the one incident was a one-time account misconfiguration, repaired
+2026-08-26 and proven by a test push). Retired with the ceremony: the arming
+runbook, the attended-firing honesty probe, the cloud-autonomy-trust frame
+node (all three files removed; git history preserves them), the Phase
+C-pre/C/D ladder (verdict scorer, attended firing with receipt gate, gated
+enable), the DRY-RUN proof branch, the never-recreate-the-trigger doctrine,
+and the canonical-lockstep trigger-prose governance. The trigger the ladder
+guarded (`trig_01CbRJjyivM34E7fq2jfLqLJ`) is absent from the account's
+trigger listing. **The present design (parent plan §Operating protocol
+step 1): the Routine is a scheduled task the owner creates with the repo
+attached, stored prompt a thin pointer to `routine-prompt.md` on main, cron
+`3 */8 * * *`; the owner schedules, pauses, and deletes it at will; a seat
+changes it only at owner word. The brakes are the STOP file, the owner's
+pause, and ADR-051 clause 6's three-idle self-disable; every firing's PR
+faces CI, the branch ruleset, review bots, and clause 3's condition-based
+merge — verification rides the flow (Q-18 attestation is the queue's own
+first slice) rather than gating the start.** Firing verification is
+observational: capabilities absent from a fired session are named in its
+completion summary (routine-prompt), never pre-probed. Next session act:
+whatever the queue and §Landing target say — the owner creates and schedules
+the Routine whenever they choose; nothing else is pending on any seat.
 
 Branch note (2026-08-25, Sardine turns Coral): the account-portability landing
 (owner-directed, outside the queue) landed via

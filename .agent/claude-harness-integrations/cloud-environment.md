@@ -49,13 +49,11 @@ Every session in this environment — scheduled Routine firings and
 interactive cloud seats alike — grounds with the `engraph-start-right-thorough`
 skill and carries the `engraph-plan` / `engraph-metacognition` /
 `engraph-proportionality` skill stack (the installed, invocable names)
-as mandatory working discipline (owner ruling, 2026-08-26 arming walk).
+as mandatory working discipline (owner ruling, 2026-08-26).
 A fresh container has no accumulated session context to lean on and no
 owner watching by default, so the full one-gate-at-a-time grounding and
 the cognitive stack are the substitute for the supervision an interactive
-local session gets for free. The strategic frame is
-`.agent/plans/proof-programme/cloud-autonomy-trust.md` (promoted from the
-future lane 2026-08-27).
+local session gets for free.
 
 ## Changing the environment
 

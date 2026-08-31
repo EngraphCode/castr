@@ -2,6 +2,90 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-08-31 (owner rulings: arming ceremony retired + residue purge — same session, part 10; Dolphin binds Trench / 013aPY)
+
+- **OWNER RULINGS (in-session, correcting the ceremony's founding premises).** On the
+  2026-08-22 "firings land nothing" measurement: **"The original routine didn't have a
+  repo specified, that's why it was read only, we solved that in minutes."** On the
+  notification incident: **"Claude code notifications work"** — proving it again is not
+  required. And the direction: **"identify the residue of the useless experiments and
+  assumptions that caused all this wasted time, we need to make sure these ideas cause
+  no more trouble."** Executed as an owner-directed curator pass (the record is the
+  landing commit plus the homed substance, per
+  `permanent-doc-is-the-consolidation-record`): arming runbook, attended-firing
+  honesty probe, and cloud-autonomy-trust node removed; routine-prompt and parent-plan
+  process surfaces rewritten to the present design (a scheduled task the owner creates
+  with the repo attached, thin-pointer prompt, cron 3/day; STOP file + owner pause +
+  clause 6 self-disable as brakes; verification riding CI/ruleset/review/clause-3 merge
+  and Q-18 in-flight attestation); every live poke-only/owner-held/receipt-gate claim
+  retargeted; dated history preserved.
+- **The root assumptions, named so they cause no more trouble** (an instance of the
+  existing pattern `workaround-debt-compounds-through-rationalisation` — second
+  instance, graduation candidate):
+  1. **A platform measurement is a snapshot, not a law.** A missing create-parameter
+     (no repo on the trigger) fossilised into "API triggers cannot carry sources" →
+     division-of-labour doctrine → a never-recreate rule → preservation ceremony.
+     The cure at write time: record the measured FIX ("specify the repo") beside the
+     measured failure, and date-stamp platform claims as re-testable.
+  2. **A one-time misconfiguration is not a standing gate.** One broken notification
+     config (repaired and re-proven the same day) became receipt gates on every
+     path and a hard stop between every phase.
+  3. **Verification belongs in the flow, not in front of it.** The pre-gate
+     instruments (dry-run proof, honesty probe, verdict scorer) decayed unused while
+     the in-flight instruments (CI, branch ruleset, review bots, condition-based
+     merge, counters) did all the real catching. Pre-gates rot; flow instruments
+     amortise.
+  4. **A non-converging instrument loop is a stop signal.** The probe's review loop
+     "was not shrinking", and the response was to compile it into a scorer instead of
+     stopping — apparatus begat apparatus until the ladder cost more than the loop it
+     guarded.
+- **Mistake (mine, caught by PR #78 review): wrote a per-pass curation ledger because
+  the curator-pass SKILL mandates one** — but PDR-081's amendment log superseded that
+  surface on 2026-06-14 (record = commit + homed substance), and
+  `permanent-doc-is-the-consolidation-record` says a skill instruction mandating a
+  ledger "is itself the anti-pattern; the instruction is not license". Deleted in the
+  same PR. Lesson: when a skill mandates an artifact-shaped output, check its governing
+  PDR's amendment log before authoring — inside a residue purge, of all places.
+- **OWNER RULING (review triage, verbatim): "always ask first if they should be fixed,
+  true is not the same as important."** Verified-true is the entry test only; whether a
+  finding earns an in-loop cure is a separate importance judgment, and when the owner
+  is present that judgment is theirs — present each verified finding with an importance
+  verdict and ask, never auto-fix the set. (The drive-to-green "bot findings are bug
+  reports" posture is for unattended drives; an attended session triages with the
+  owner.) Worked instance: of four verified-true PR #78 findings, the owner selected
+  three; the account-access citation nit was rejected as true-but-unimportant.
+- **Session-shape note:** three successive owner pushes ("don't assume the stated
+  process is right" → "why isn't a scheduled task enough" → "notifications work, are
+  you suggesting we prove that?") were needed before this seat stopped defending
+  trimmed versions of the inherited ladder. The metacognition cue that finally bit:
+  a runbook is a WORKAROUND DOCUMENT — re-measure its motivating constraint before
+  reusing any of it.
+
+## 2026-08-31 (owner question: loop-resumption readiness — same session, part 9; Dolphin binds Trench / 013aPY)
+
+- **Owner asked whether Castr is ready to resume the ADR-051 autonomous loop.**
+  Evaluation ran with reason + metacognition; every condition verified firsthand.
+  **Repo side: drivable.** No STOP file; `zero_progress_streak: 0`; no
+  `in_progress` rows; no open programme PR; main green on merge tip 0db7e364
+  (CI run 563); queue head Q-18 claimable (safety instruments first, owner
+  sequencing 2026-08-26); one OPEN register row (QD-14), non-blocking by its own
+  text and the probe's precedence clause. **Account side: not yet.** The ratified
+  resumption ladder (thread record, 2026-08-27 compaction close) is
+  Phase C-pre → C → D, and: (1) the Phase C-pre verdict scorer — owner-ruled
+  pre-firing deliverable Phase C waits on — does not exist in the repo (grep:
+  "scorer" appears only in probe/plan/memory prose, no implementation);
+  (2) Routine `trig_01CbRJjyivM34E7fq2jfLqLJ` is ABSENT from this session's
+  account trigger listing (limit 100, completed included — only oak-repo
+  check-ins present); the listing surface may not span every creation route, so
+  owner-UI verification decides — corroborating signal: the owner's adversarial
+  PR-evaluation Routine (fired on PR #68 pushes 2026-08-27) posted nothing on
+  any of today's five PRs (#73–#77); (3) Phases C (attended firing, honesty
+  probe, device-push receipt gate) and D (enable, cron 3/day) are owner acts by
+  ratified design. Verdict delivered: not yet — one seat deliverable (scorer),
+  one owner verification (trigger existence; recreate per runbook step 3 if
+  gone), then the owner-held C/D ladder; QD-14 worth ruling at the same sitting
+  since Q-18 is exactly its slice class.
+
 ## 2026-08-31 (owner question: local checks under HUSKY=0 — same session, part 8; Dolphin binds Trench / 013aPY)
 
 - **Owner asked whether the session's CI reds trace to checks running only in CI, and
