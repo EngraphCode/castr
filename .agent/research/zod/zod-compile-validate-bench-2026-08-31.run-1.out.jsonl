@@ -1,0 +1,15 @@
+{"api":{"compile":"function","validate":"function"}}
+{"label":"compile-once-ms","petCompileMs":4.214873,"shapeCompileMs":2.997066}
+{"label":"pet valid safeParse plain","iters":100000,"opsPerSec":387556}
+{"label":"pet valid safeParse compiled","iters":100000,"opsPerSec":1880514}
+{"label":"pet invalid-type plain","iters":100000,"opsPerSec":190342}
+{"label":"pet invalid-type compiled","iters":100000,"opsPerSec":176340}
+{"label":"pet unknown-key plain","iters":100000,"opsPerSec":163414}
+{"label":"pet unknown-key compiled","iters":100000,"opsPerSec":164696}
+{"label":"pet invalid-type z.validate","iters":100000,"opsPerSec":419875}
+{"label":"pet valid z.validate","iters":100000,"opsPerSec":450797}
+{"label":"shape valid plain","iters":100000,"opsPerSec":2552048}
+{"label":"shape valid compiled","iters":100000,"opsPerSec":20538086}
+{"label":"shape invalid z.validate","iters":100000,"opsPerSec":2285494}
+{"label":"shape invalid plain","iters":100000,"opsPerSec":327504}
+{"label":"ratios","compiled_over_plain_valid":4.85,"compiled_over_plain_invalidType":0.93,"validate_over_safeParse_invalid":2.21,"validate_over_safeParse_valid":1.16,"shape_compiled_over_plain":8.05,"shape_validate_over_safeParse_invalid":6.98}

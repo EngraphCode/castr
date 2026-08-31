@@ -36,13 +36,17 @@ todos:
     content: 'Part 2c: ADR ratifying static parsing + vendor-oracle complement + dialect versioning — parent-plan row Q-26'
     status: pending
     depends_on: [TS-1, TS-2]
+  - id: TS-5
+    content: 'Part 2d: zod runtime performance guidance — real-generated-module benchmark + consumer docs (compile/validate), emission-option decision to owner — parent-plan row Q-29'
+    status: pending
+    depends_on: [TS-2]
 ---
 
 # Zod truth surface & dependency currency
 
 The execution queue for this plan lives in the
 [proof-programme parent plan](../proof-programme/parent-plan.md) as rows
-Q-23..Q-28 (QD-6: queue briefs ARE the per-slice plans). This document is the
+Q-23..Q-29 (QD-6: queue briefs ARE the per-slice plans). This document is the
 evidence base and design detail those briefs cite; where a brief and this
 document disagree, the brief governs and this document is corrected.
 
@@ -53,8 +57,10 @@ Zod 4.5 behaviour deltas taken deliberately and on record rather than by
 range drift. Part 2: Castr's knowledge of Zod stops being three unverified
 hand-copies — it becomes one intra-repo authority (a dialect manifest)
 whose agreement with the installed Zod is recomputed by an executable
-oracle on every version bump, and the static-parsing architecture choice
-that makes the model necessary is ratified in an ADR instead of inherited.
+oracle on every version bump, the static-parsing architecture choice
+that makes the model necessary is ratified in an ADR instead of inherited,
+and the measured 4.5 runtime wins (compile/validate) reach consumers as
+evidence-backed guidance (TS-5).
 
 ## Evidence base (all measured firsthand, 2026-08-31)
 
@@ -118,6 +124,39 @@ at runtime from `ZOD_PRIMITIVES` + `ZOD_COMPOSITIONS`
 (`registry/zod-decl-builder.ts`, consumed at `ast/zod-ast.ts` — the
 in-tree precedent for table-driven runtime derivation, and a third
 consumer any manifest must feed).
+
+Opportunity probes (owner-commissioned, run 2026-08-31 post-Q-23 on the
+shipped zod 4.5.4; scripts + raw outputs committed beside the version
+probe: `zod-compile-validate-bench.mjs` / `zod-exact-optional-probe.mjs`
+with dated, run-numbered `.out` files — every range below re-derivable
+from the committed runs):
+
+- **`z.compile()` / `z.validate()` — measured complementary wins.** On a
+  castr-shaped strict object (8 fields, formats, nested object) and a
+  discriminated union, across the two committed runs: compiled
+  `safeParse` is **4.7–8.1× faster on VALID data** (~0.9× on invalid);
+  `z.validate()` is **2.1–7.0× faster on INVALID data** (union highest;
+  ~1.1× on valid). Compile is a one-time ~3–4.5 ms per
+  schema — negligible in a long-lived MCP server, real at one-shot CLI
+  start for a module with hundreds of schemas (`zod/compile` auto-compile
+  is lazy-on-first-use, which softens the CLI case). Microbenchmark
+  caveats apply (constant payloads, single Node 22 container); ratios,
+  not absolutes, are the finding — and compiled mode uses `new Function`,
+  so it does not apply to jitless/CSP no-eval runtimes (zod core config
+  `jitless`). Routed to row Q-29.
+- **`exactOptional` and `.exactPartial()` (both probed directly) — the
+  pre-probe fidelity claim is FALSIFIED for castr's wire path.** The
+  behavioural divergence from `.optional()`/`.partial()` exists only for
+  in-memory `{a: undefined}` (the exact forms reject, the classic forms
+  accept — measured for the wrapper AND the method); JSON-borne data can
+  never carry an own undefined-valued key, and `z.toJSONSchema` projects
+  each pair BYTE-IDENTICALLY. For a compiler whose truth is JSON Schema and whose
+  payloads are parsed JSON, switching emission to `exactOptional` changes
+  nothing observable on the wire or in projection while costing new
+  dialect surface (parser + writer + manifest lockstep). **Disposition:
+  measured and declined for emission** — revisit only if an in-memory
+  consumer with `exactOptionalPropertyTypes` raises a TS-type-honesty
+  requirement (the one axis the probe cannot measure at runtime).
 
 Doctrine finding (napkin 2026-08-31, feeds TS-3): ADR-032 §Context says
 "ADR-026 requires ts-morph; no regex or runtime execution", but ADR-026's
@@ -346,20 +385,13 @@ version contract — Zod input **>=4.5 <5** (`^4.5`), output tracks the
 major (Zod 5) is a separate ratification (zero external consumers;
 napkin part-6 verbatim; the <5 bound is the PR #75 review refinement,
 confirmed by the owner's follow-up ruling: "latest here means latest 4,
-with a tripwire to examine Zod 5 if and when it is released") — the ADR
-also encodes that tripwire's DURABLE mechanism (PR #76 review measured
-the survey-as-sensor draft non-executable: the currency skill is
-owner-invoked and the scheduled loop claims only pending rows, so no
-survey is guaranteed to run): the standing platform Routine
-`trig_01V8gCESLRQGYJ9gWX4LM1yY` ("Castr Zod 5 tripwire (monthly)")
-checks the npm registry monthly in a fresh session, is silent while
-latest is 4.x, and on a stable zod major >= 5 pushes an owner
-notification and — when the owner has attached the repo source in the
-Routine UI — lands the "examine Zod 5" row in the proof-programme's
-`queued-decisions.md`, the named owner-decision routing surface
-(examination: probe re-run with 5.x via `zod-version-probe.mjs`,
-dialect impact analysis, owner decision; any dependency-currency survey
-is a secondary sensor), never a bump — amending
+with a tripwire to examine Zod 5 if and when it is released"; the
+tripwire's sensor is the owner — ruling 2026-08-31, history in the
+napkin's dated record). The ADR encodes the EXAMINATION PROCEDURE, run
+at owner word when Zod 5 ships: probe re-run with 5.x via
+`zod-version-probe.mjs`, dialect impact analysis, owner decision
+recorded in the proof-programme's `queued-decisions.md`, never a
+bump — amending
 ADR-031/ADR-032/requirements.md §9's generic "Zod 4" wording, and
 adjudicates the dependency shape that follows (direct `zod` dependency
 vs `peerDependencies: ">=4.5 <5"`). Supersession notes on ADR-026/ADR-032
@@ -367,6 +399,45 @@ where their wording conflates the two decisions.
 
 Acceptance (`non-code`): ADR accepted per the estate's ADR lifecycle,
 indexes reconciled, `docs-adr-expert` review recorded; gates green.
+
+### TS-5 / row Q-29 — zod runtime performance guidance
+
+Consumes the opportunity-probe evidence (above): compile and validate
+are measured, complementary wins for consumers of generated code —
+compile for valid-path throughput (long-lived MCP servers), validate
+for reject-only gates on hostile input; neither applies to jitless/CSP
+no-eval runtimes (compile generates code via `new Function` — the
+guidance MUST carry that constraint). Scope, docs-first: (1) extend
+`zod-compile-validate-bench.mjs` (or a sibling committed beside it) to
+load the schemas of
+`lib/tests-fixtures/zod-parser/happy-path/generated-petstore-expanded.zod4.ts`
+(the one real generated module in the fixture estate) and measure
+BOTH candidates on its payload fixtures — `safeParse` vs `z.compile()`
+on VALID payloads (compile's claimed branch) and `safeParse` vs
+`z.validate()` on INVALID payloads (validate's claimed branch) — plus
+whole-module cold-start under eager `z.compile()`-per-schema vs lazy
+`zod/compile` auto-compilation; run twice; commit run-numbered dated
+outputs beside the existing probe outputs (regeneration pipeline: node
+script > out, then prettier --write for .json). (2) Result criterion,
+applied PER GUIDANCE LINE on that line's own claimed branch only —
+never aggregated across branches, so the two lines land or fall
+independently: real-module ratio ≥2× → that line's guidance lands
+(compile line: `import 'zod/compile'` for long-lived non-CSP servers;
+validate line: `z.validate()` for reject-only gates; each carrying the
+jitless caveat verbatim); ratio ≥1.5× and <2× → INCONCLUSIVE: no
+guidance for that line, the measurement recorded in this section and
+carried on the decision card for owner adjudication; ratio <1.5× →
+that line's premise is FALSIFIED — record the outcome in this section,
+land no guidance for it. The three bands are exhaustive and exclusive
+over each line's ratio. (3) Either way,
+route any EMISSION change (a generated `zod/compile` preamble option,
+`z.validate` in generated MCP gates) to the owner as a decision card
+carrying the real-module measurements — never adopted inside this row.
+Non-goals: no emission changes; no new dialect surface. Acceptance
+(`integration` + `non-code`, QD-14 reading): benchmark + two
+run-numbered dated outputs committed; the criterion applied with its
+outcome recorded here; docs landed (or the falsification recorded);
+the decision card queued; gates green.
 
 ## Recommendation (post uncertainty exploration)
 
@@ -383,7 +454,8 @@ differential) after Q-24 — currency first so the oracle pins the vendor
 castr actually ships against; the small Q-28 fidelity fix next so the
 corpus can cover the whole string-formats estate; oracle before manifest
 so manifest refactoring lands under cross-truth proof; ADR
-last-but-referencing-both so doctrine records what exists. Sequencing relative to the existing
+last-but-referencing-both so doctrine records what exists; Q-29 (runtime-performance guidance)
+follows Q-25 by `depends_on`, in the tail with Q-26/Q-27. Sequencing relative to the existing
 queue: after the safety instruments (Q-18/Q-20/Q-22/Q-19), ahead of
 Q-05..Q-09 — owner-adjustable; the rows carry no gates beyond `depends_on`
 within this plan.
