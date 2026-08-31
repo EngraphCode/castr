@@ -36,7 +36,7 @@ todos:
     status: pending
   - id: Q-23
     content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
-    status: pending
+    status: completed
   - id: Q-28
     content: 'Base64 writer-emission fidelity (PR #73 review finding, verified): writer emits z.base64()/z.base64url() from contentEncoding instead of silently dropping it; Base64Schema/Base64UrlSchema parity payloads land red-first inside this fix'
     status: pending
@@ -1120,6 +1120,17 @@ major; the zod cycle's PR body records both behaviour deltas TWO-SIDED
 directions) as the QD-10 release residue; `pnpm check:ci` green. Source:
 the plan §Part 1 + its measured evidence base. Gate: none (eligible
 immediately; recommended after Q-19, owner-adjustable).
+
+**Q-23 evidence record (completed 2026-08-31, owner-directed interactive
+session).** Three proof-gated cycles — `8ba53b2` (tsx/knip dev sweep),
+`514f956` (Scalar coupled set, whose red first proof surfaced parser
+0.29.0's schema extraction to `@scalar/openapi-validator`; fixed at
+source, quartet pinned), `ebd3813` (zod ^4.5.4, both suites
+baseline-identical, MCP peer re-resolved, two-sided behaviour deltas in
+the commit body per QD-10) — plus Actions pins verified current (no
+changes) and the close survey at audit-zero / holds-only. Full detail:
+the plan's §Part 1 close record. Q-28/Q-24/Q-25 are now unblocked by
+`depends_on`.
 
 **Q-24 — Scenario 8 vendor-conformance oracle.** Surface:
 `lib/tests-transforms` + the parity payload corpus + an ADR-035 amendment.

@@ -2,7 +2,9 @@
  * Preflight OpenAPI validator with `allErrors: true`.
  *
  * This module provides a repo-local AJV validator that uses the same OpenAPI 3.1.x
- * and 3.2.x JSON Schemas that `@scalar/openapi-parser` uses internally, but configured with
+ * and 3.2.x JSON Schemas that `@scalar/openapi-parser` uses internally (bundled in its
+ * `@scalar/openapi-validator` dependency as of parser 0.29.0, declared here as a direct
+ * exact-pinned member of the coupled Scalar set), but configured with
  * `allErrors: true` to harvest ALL validation errors in a single pass.
  *
  * This avoids the one-error-per-pass bottleneck of Scalar's validator (which uses
@@ -63,10 +65,12 @@ function hasDefaultExport(value: unknown): value is { readonly default: unknown 
 const cachedValidators: Partial<Record<OpenApiPreflightSchemaVersion, ValidateFunction>> = {};
 
 async function getOpenApiSchema(version: OpenApiPreflightSchemaVersion): Promise<AnySchemaObject> {
-  // Resolve the @scalar/openapi-parser package root via its public entrypoint,
-  // then navigate to the bundled OpenAPI schema on disk.
+  // Resolve the @scalar/openapi-validator package root via its public entrypoint,
+  // then navigate to the bundled OpenAPI schema on disk. (The schemas lived inside
+  // @scalar/openapi-parser's own dist until 0.28.x; parser 0.29.0 extracted them to
+  // its @scalar/openapi-validator dependency with the same schemas/v*/schema.js layout.)
   const require = createRequire(import.meta.url);
-  const scalarEntrypoint = require.resolve('@scalar/openapi-parser');
+  const scalarEntrypoint = require.resolve('@scalar/openapi-validator');
   const scalarDist = dirname(scalarEntrypoint);
   const schemaPath = resolve(scalarDist, 'schemas', `v${version}`, 'schema.js');
 
@@ -76,7 +80,7 @@ async function getOpenApiSchema(version: OpenApiPreflightSchemaVersion): Promise
   const moduleObj: unknown = hasDefaultExport(schemaModule) ? schemaModule.default : schemaModule;
 
   if (!isAnySchemaObject(moduleObj)) {
-    throw new Error(`Failed to load OpenAPI ${version} schema from @scalar/openapi-parser`);
+    throw new Error(`Failed to load OpenAPI ${version} schema from @scalar/openapi-validator`);
   }
   return moduleObj;
 }

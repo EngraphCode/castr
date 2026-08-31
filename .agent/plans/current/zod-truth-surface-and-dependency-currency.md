@@ -15,7 +15,7 @@ owner_directive: >-
 todos:
   - id: DC-1
     content: 'Part 1: whole-estate dependency-currency pass (zod 4.5.4 cycle headline) — parent-plan row Q-23'
-    status: pending
+    status: completed
   - id: TS-1
     content: 'Part 2a: Scenario 8 vendor-conformance oracle + corpus extension — parent-plan row Q-24'
     status: pending
@@ -185,6 +185,33 @@ type-affecting cycle with its proof stated in the body; GitHub Actions SHA
 pins verified against dereferenced stable tags; the workspace `overrides`
 TS cap re-verified against the vendored major; full `pnpm check:ci` green;
 the zod cycle's two-sided behaviour-delta record present in its PR body.
+
+**Part 1 close record (executed 2026-08-31, Dolphin binds Trench,
+owner-directed interactive session under the session-scoped HUSKY=0
+grant with GitHub CI as the aggregate detection surface).** Cycle 1
+(`8ba53b2`): tsx 4.23.13 + knip 6.33.0 in-range sweep; type-check, lint,
+knip, agent-tools suite (147/1627) green firsthand. Cycle 2 (`514f956`):
+the coupled Scalar set — parser 0.29.0 + json-magic 0.13.3, types
+staying 0.9.5 (exactly what parser 0.29.0 pins) — whose first proof run
+went RED: parser 0.29.0 extracted its bundled OpenAPI JSON Schemas to a
+new `@scalar/openapi-validator` dependency, breaking the doctor
+preflight-validator's deep schema path (10 failures, one root); fixed at
+source by declaring openapi-validator 0.1.0 as a direct exact member of
+the coupled set (trio → quartet) and repointing the resolver;
+re-proof green (132/1715). Cycle 3 (`ebd3813`): zod ^4.5.4 in lib +
+agent-tools; pre-bump baselines captured from the committed tree, both
+suites baseline-identical post-bump; MCP SDK peer re-resolved cleanly to
+`1.30.0(zod@4.5.4)`; the two-sided behaviour-delta record lives in the
+commit body and the PR (QD-10 residue). Actions pins: all five verified
+current at their claimed tags' commit SHAs (checkout v7.0.1,
+pnpm/action-setup v6.0.9, setup-node v7.0.0, cache v6.1.0,
+upload-code-coverage v1.4.2) — no changes. Close survey: `pnpm audit`
+zero; `pnpm -r outdated` shows only the two documented holds
+(typescript 7 vs ts-morph-vendored TS 6; @types/node 26 vs ADR-049
+Node-24 coupling). Cooldown honoured (zod 4.5.4 published
+2026-08-29T17:55Z, ~41 h before install). Environment disposition:
+container Node 22 vs `engines.node: 24.x` — proceeded with the engine
+warning named; GitHub CI runs the aggregate on Node 24.
 
 ## Part 2 — Zod truth-surface programme
 
