@@ -28,17 +28,21 @@ todos:
     content: 'Part 2b: Zod dialect manifest + unsupported-surface diagnostics — parent-plan row Q-25'
     status: pending
     depends_on: [DC-1]
+  - id: TS-4
+    content: 'Part 2a-iii: base64/base64url writer-emission fidelity (contentEncoding → z.base64()/z.base64url()) — parent-plan row Q-28'
+    status: pending
+    depends_on: [DC-1]
   - id: TS-3
     content: 'Part 2c: ADR ratifying static parsing + vendor-oracle complement + dialect versioning — parent-plan row Q-26'
     status: pending
-    depends_on: [TS-1]
+    depends_on: [TS-1, TS-2]
 ---
 
 # Zod truth surface & dependency currency
 
 The execution queue for this plan lives in the
 [proof-programme parent plan](../proof-programme/parent-plan.md) as rows
-Q-23..Q-27 (QD-6: queue briefs ARE the per-slice plans). This document is the
+Q-23..Q-28 (QD-6: queue briefs ARE the per-slice plans). This document is the
 evidence base and design detail those briefs cite; where a brief and this
 document disagree, the brief governs and this document is corrected.
 
@@ -200,11 +204,16 @@ strictening castr can adopt as the new expectation). Includes:
   datetimes, astral length boundaries, and a parity-payload entry for
   every string-formats fixture schema (the `IsoDatetimeSchema` gap — a
   fixture with no payload entry is silently skipped by
-  `assertValidationParity` today). This step alone cannot go red — the
-  parity harness moves both sides together, which is the finding — so the
-  RED-FIRST proof for this slice is the oracle failing on the seeded
-  vendor-drift and projection mutants below, with the corpus extension in
-  place before it.
+  `assertValidationParity` today) — EXCEPT `Base64Schema` and
+  `Base64UrlSchema`, which are excluded here and routed to TS-4/Q-28: the
+  parser records them as `contentEncoding` while the writer dispatches on
+  `format` only and emits bare `z.string()` (measured), so their invalid
+  payloads would fail EXISTING parity before any oracle exists; their
+  entries land red-first inside Q-28's writer-fidelity fix. This step
+  alone cannot go red — the parity harness moves both sides together,
+  which is the finding — so the RED-FIRST proof for this slice is the
+  oracle failing on the seeded vendor-drift and projection mutants below,
+  with the corpus extension in place before it.
 - **ADR-035 amendment** adding Scenario 8 with its blind-spot rationale.
 
 Acceptance (`integration`): oracle red on a seeded vendor-drift mutant
@@ -226,6 +235,28 @@ fails.
 Acceptance (`integration`): differential red on a seeded writer mutant and
 on an unlisted divergence, green on the real estate with the allowlist
 populated and each entry reasoned; wired into `pnpm check`; gates green.
+
+### TS-4 / row Q-28 — base64 writer-emission fidelity
+
+Measured gap (surfaced by PR #73 review, verified firsthand): the parser's
+`ENCODING_MAP` records `z.base64()`/`z.base64url()` as
+`contentEncoding: 'base64' | 'base64url'` on a string schema, but the Zod
+writer's `writeStringSchema` dispatches on `schema.format` only and emits
+bare `z.string()` when no format exists — the encoding constraint is
+silently dropped on emission (no `base64`/`contentEncoding` handling
+exists anywhere in `writers/zod/generators/`). This is silent content
+loss on the Zod→IR→Zod path, invisible today only because the fixtures
+carry no parity payloads. Fix: the writer emits `z.base64()` /
+`z.base64url()` from `contentEncoding` (the inverse of the parser's
+`ENCODING_MAP`, honouring the redundant-validation filter), red-first via
+the `Base64Schema`/`Base64UrlSchema` parity-payload entries TS-1 excludes
+and routes here — invalid-base64 payloads prove the loss on the pre-fix
+tree, then the emission fix turns them green.
+
+Acceptance (`integration`): the two fixtures' parity payloads (valid and
+invalid) red on the pre-fix tree and green post-fix; round-trip
+(Scenario 2/4/6) preserves `contentEncoding` through emission; `pnpm
+check` green.
 
 ### TS-2 / row Q-25 — dialect manifest + unsupported-surface diagnostics
 
@@ -290,11 +321,12 @@ never semantic drift; the oracle covers the latter), the corpus blind spot
 is real and total for the 4.5-changed regions (the oracle is necessary,
 not hypothetical), and the table layer is already half-manifest on both
 sides (TS-2 is a consolidation, not an invention). Recommended order:
-**Q-23 → Q-24 → Q-25 → Q-26**, with Q-27 (the split `toJSONSchema`
+**Q-23 → Q-28 → Q-24 → Q-25 → Q-26**, with Q-27 (the split `toJSONSchema`
 differential) after Q-24 — currency first so the oracle pins the vendor
-castr actually ships against; oracle before manifest so manifest
-refactoring lands under cross-truth proof; ADR last-but-referencing-both
-so doctrine records what exists. Sequencing relative to the existing
+castr actually ships against; the small Q-28 fidelity fix next so the
+corpus can cover the whole string-formats estate; oracle before manifest
+so manifest refactoring lands under cross-truth proof; ADR
+last-but-referencing-both so doctrine records what exists. Sequencing relative to the existing
 queue: after the safety instruments (Q-18/Q-20/Q-22/Q-19), ahead of
 Q-05..Q-09 — owner-adjustable; the rows carry no gates beyond `depends_on`
 within this plan.

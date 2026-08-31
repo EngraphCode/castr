@@ -1,5 +1,40 @@
 // Zod multi-version probe: behavioural claims + core def-shape stability.
-const versions = ['zod43', 'zod44', 'zod45'];
+//
+// Reproducible from a clean checkout: run `node zod-version-probe.mjs`.
+// The script stages itself into a temp prefix, npm-installs the compared
+// zod versions as aliases there, and re-executes from that prefix so the
+// bare alias imports below resolve. Change PROBE_VERSIONS to compare a
+// different set (e.g. a new 4.x release for the TS-3 revisit trigger).
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const PROBE_VERSIONS = { zod43: '4.3.6', zod44: '4.4.3', zod45: '4.5.4' };
+
+if (!process.env.ZOD_PROBE_STAGED) {
+  const prefix = mkdtempSync(join(tmpdir(), 'zod-version-probe-'));
+  writeFileSync(
+    join(prefix, 'package.json'),
+    JSON.stringify({ name: 'zod-version-probe', private: true, type: 'module' }),
+  );
+  const specs = Object.entries(PROBE_VERSIONS).map(([alias, v]) => `${alias}@npm:zod@${v}`);
+  execFileSync('npm', ['install', '--no-audit', '--no-fund', ...specs], {
+    cwd: prefix,
+    stdio: ['ignore', 'ignore', 'inherit'],
+  });
+  const staged = join(prefix, 'zod-version-probe.mjs');
+  copyFileSync(fileURLToPath(import.meta.url), staged);
+  execFileSync(process.execPath, [staged], {
+    cwd: prefix,
+    stdio: 'inherit',
+    env: { ...process.env, ZOD_PROBE_STAGED: '1' },
+  });
+  process.exit(0);
+}
+
+const versions = Object.keys(PROBE_VERSIONS);
 
 function defShape(schema) {
   // Shallow def discriminant + sorted own keys; recurse one level into checks.
