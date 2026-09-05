@@ -44,3 +44,5 @@ dist
 /.idea/
 tmp/
 .logs/
+
+*/worktrees/*
