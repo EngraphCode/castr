@@ -36,5 +36,14 @@
     "zodios"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.workingDirectories": [{ "directory": "lib", "changeProcessCWD": true }]
+  "eslint.workingDirectories": [
+    {
+      "directory": "lib",
+      "changeProcessCWD": true
+    }
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "engraphcode",
+    "projectKey": "EngraphCode_castr"
+  }
 }
