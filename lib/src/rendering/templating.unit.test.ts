@@ -185,5 +185,6 @@ describe('rendering/templating grouped determinism', () => {
     expect(firstRunResult.paths).toEqual(firstRunSortedFileKeys);
     expect(secondRunResult.paths).toEqual(secondRunSortedFileKeys);
     expect(firstRunResult.paths).toEqual(secondRunResult.paths);
+    expect(firstRunResult.files).toEqual(secondRunResult.files);
   });
 });

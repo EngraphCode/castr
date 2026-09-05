@@ -552,9 +552,11 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST NOT have validation helpers
-    expect(result).not.toContain('export function validateRequest');
-    expect(result).not.toContain('export function validateResponse');
+    expect(result.content).not.toContain('export function validateRequest');
+    expect(result.content).not.toContain('export function validateResponse');
   });
 });
 
@@ -629,8 +631,10 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST NOT have schema registry builder
-    expect(result).not.toContain('export function buildSchemaRegistry');
+    expect(result.content).not.toContain('export function buildSchemaRegistry');
   });
 });
 
