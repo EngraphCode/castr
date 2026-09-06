@@ -50,7 +50,8 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   assessed non-blocking Q-30/C05 correction, with its [mechanism and reopen condition](https://github.com/EngraphCode/castr/pull/83#discussion_r3943781123).
   C10 retains the observed review-wave supersession failure for the retrospective;
   later delivery must batch fixes after each running wave completes.
-- **C01R in preparation:** `codex/castr-custody-followup`, based on the C02 merge,
+- **C01R in progress:** [PR #84](https://github.com/EngraphCode/castr/pull/84),
+  branch `codex/castr-custody-followup`, based on the C02 merge,
   carries the remaining PR #82 custody corrections and records Q-19's integrated
   acceptance. No PR #82 post-merge finding is treated as settled before its
   corrective evidence is pushed and reviewed. The UUID finding is already fixed

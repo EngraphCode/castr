@@ -93,6 +93,16 @@ Every PR has a named shepherd, the PDR-132 default budget of at most two expecte
 review rounds, and its actual tally from first triage. Dataset volume is a size
 warning requiring review of the inventory method, never a correctness exemption.
 
+Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
+panel in normal and adversarial stances at substantive delivery and architectural
+boundaries, and before final closeout. Preserve verdicts and the coordinator’s
+accepted/rejected findings in the delivery evidence; never infer merge readiness
+from a panel verdict or reopen settled usefulness. Do not re-adjudicate an unchanged
+frame. The first full panel used the exact installed upstream roles through an
+ephemeral read-only dispatcher; C05 owns Castr’s missing templates/registrations
+and the coupled generator/validator repair. Future frames name exact governing
+rules and evidence paths; unavailable event identifiers remain explicitly missing.
+
 | Position           | Reviewable outcome and dependencies                                                                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                      |
