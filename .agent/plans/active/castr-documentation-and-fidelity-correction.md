@@ -64,7 +64,9 @@ need not wait for unrelated compiler repairs.
 Three manifests carry the bounded coverage appendix:
 
 - [Original source changes](../correction-manifests/castr-correction-source.json):
-  every original file/hunk, hash, destination and evidence.
+  membership records contain path, hunk, locator, hash and owning carrier.
+  Successor evidence accumulates separately as verified landings occur; an empty
+  or partial evidence entry retains its explicit outstanding disposition.
 - [Repository documents](../correction-manifests/castr-correction-documents.json):
   every baseline tracked path, including embedded/generated candidates; review
   state is separate from discovery. Baseline main has 1,270 document-like files;
@@ -90,6 +92,16 @@ foundational doctrine and integration; delegated workers own explicit files.
 Every PR has a named shepherd, the PDR-132 default budget of at most two expected
 review rounds, and its actual tally from first triage. Dataset volume is a size
 warning requiring review of the inventory method, never a correctness exemption.
+
+Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
+panel in normal and adversarial stances at substantive delivery and architectural
+boundaries, and before final closeout. Preserve verdicts and the coordinator’s
+accepted/rejected findings in the delivery evidence; never infer merge readiness
+from a panel verdict or reopen settled usefulness. Do not re-adjudicate an unchanged
+frame. The first full panel used the exact installed upstream roles through an
+ephemeral read-only dispatcher; C05 owns Castr’s missing templates/registrations
+and the coupled generator/validator repair. Future frames name exact governing
+rules and evidence paths; unavailable event identifiers remain explicitly missing.
 
 | Position           | Reviewable outcome and dependencies                                                                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -214,6 +226,22 @@ Existing admission/runtime semantics remain included. Threat-only future policy
 stays distinct; reproduced loader fail-fast/output-corruption defects are repaired.
 No scheduled experiment, arming/probe/scorer machinery or separate Routine is
 resumed or inferred. History rewriting remains owner-controlled.
+
+## Current integration and retained follow-ups
+
+Q-19's original non-code acceptance is proven on integrated main through PR #83;
+the [ledger](../delivery-ledger.md) owns the dated head, checks and review evidence.
+C01R is the bounded custody correction before the prepared C03a checkout slice.
+Earlier dated authoring records below preserve their checkpoint observations;
+they do not override current queue status or the ledger's delivery dispositions.
+
+Q-30/C05 additionally owns the PR skill's opening tally attribution: remove the
+Q-19 identifier and dates while retaining its upstream snapshot and local ADR-051
+distinctions. [Independent triage](https://github.com/EngraphCode/castr/pull/83#discussion_r3943781123)
+established that this wording changes no operative tally/counter/merge condition,
+data or proof outcome. Reopen as blocking if an operative condition or warrant
+depends on it. C10's bounded retrospective includes the observed Q-19 pushes that
+superseded running green-path waves and the subsequent corrected batching practice.
 
 ## Framing checkpoint C01
 

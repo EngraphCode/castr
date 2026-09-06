@@ -2,15 +2,21 @@
 
 ## Current continuation
 
-- Branch: `codex/castr-review-discipline` (fresh from main merge `SHA:b14caede`).
+- Branch: `codex/castr-custody-followup` (fresh from main merge `SHA:dd7e705d`).
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
 - Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
 - PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
-- Landing target: C02 makes Q-19 review history and non-convergence observable.
-- Next safe step: demonstrate the Q-19 first-triage tally and land C02, then C01R custody corrections and the smaller C03 local-entry slices.
+- Landing target: C01R repairs the remaining post-merge custody findings and records Q-19’s integrated acceptance.
+- Next safe step: land the bounded C01R correction, then the prepared C03a local-checkout slice; refresh its base before opening.
 - Team: root coordinates foundation/integration/gates; delegated source mapping has one owned manifest; reviewers are read-only. Re-read actual claims before writing.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 - Scheduled execution remains paused; interactive implementation and merges are authorised.
+
+Q-19 landed; the ledger carries exact proof. C05 owns the remaining opening
+attribution cleanup in the PR skill. C10 owns the observed review-wave
+supersession failure; batch any further fixes only after the current review and CI
+wave completes. The local-checkout source draft and extracted C03a worktree remain
+separate, with API/options and response/transport/MCP guides assigned to C03b/c.
 
 ## Preparation retained for later slices
 

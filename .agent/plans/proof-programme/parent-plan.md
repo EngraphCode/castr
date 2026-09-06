@@ -21,7 +21,7 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-30
-    content: 'Owner-directed interactive correction commission: split PR #81, correct the complete documentation estate and repair all known in-scope fidelity defects; acceptance and manifests in active/castr-documentation-and-fidelity-correction.md'
+    content: 'Owner-directed interactive correction commission: split PR #81, correct the complete documentation estate and repair all known in-scope fidelity defects; acceptance and manifests in .agent/plans/active/castr-documentation-and-fidelity-correction.md'
     status: in_progress
   - id: Q-18
     content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of recent expected slots (bounded lookback); a trace-less slot with no STOP file lands a neutral observation entry — a firing cannot distinguish an owner pause from a silent death, so the owner disambiguates from the notification — read and notified per the brief'
@@ -37,7 +37,7 @@ todos:
     status: pending
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card; Q-13 dependency dropped by owner card ruling 2026-08-27): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
-    status: pending
+    status: completed
   - id: Q-23
     content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
     status: completed
@@ -167,7 +167,8 @@ owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
 The commission's sequencing amendment takes precedence for interactive work:
-C01 custody → C02 Q-19 review discipline → C03 public entry → C04 ADR integrity →
+C01 custody → C02 Q-19 review discipline → C01R post-merge custody correction →
+C03 public entry → C04 ADR integrity →
 C05 authority/adapters → C06 coupled visions/PDR-135 → C07 doctrine propositions →
 C08 independently green fidelity repairs → C09 estate reconciliation → C10
 walkthroughs/retrospective/closeout. Families split into single-outcome PRs.
@@ -178,6 +179,12 @@ technical dependencies; Q-08/Q-14/Q-16/Q-20 complete only after integrated-main
 proof. The prior queue order and counters are otherwise unchanged. Q-18 remains
 the first dependency-eligible scheduled item if future owner authorisation resumes
 the experiment; Q-30 is an interactive commission, not a scheduled pickup.
+
+Any future owner-authorised resumption must first reconcile Q-30's interactive
+custody, open PRs and live claims. Establish from current evidence or an explicit
+owner reassignment that scheduled pickup will not overlap the interactive drive.
+Until that custody is reconciled, do not select a scheduled row. Dependency
+eligibility alone never authorises execution; no resumption is implied here.
 
 Settled premises: no published package is planned; there are no consumers yet;
 the owner has intended projects and usefulness is settled. Correctness, usability,
@@ -1111,14 +1118,19 @@ reconciliation duty); the D-10 merge-posture cure
 is NOT here (it is Q-21, independently landable). Acceptance (`non-code`): the skill
 and counter surfaces carry all three elements grep-checkably, and this row's own PR
 demonstrates the REVIEW-TALLY comment from its first triage onward; gates green.
-C02 implementation is being carried by Q-30, the sole in-progress queue row.
-Q-19 remains pending until its own first-triage tally and merged-head evidence
-prove acceptance; it is not a second independent pickup.
 Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a
 tally artefact means the entry contract is not working. Source: loop-review report
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second
 owner decision card 2026-08-24. Gate: none (the `depends_on: [Q-13]` gate was
 dropped by owner card ruling 2026-08-27).
+
+Integrated acceptance (6 September 2026): [PR #83](https://github.com/EngraphCode/castr/pull/83)
+landed all three procedural elements and demonstrated its durable tally from
+first triage, including the actual structural step-back. Main's merge tree equals
+the reviewed head; all checks passed. The [delivery ledger](../delivery-ledger.md)
+owns exact delivery proof. Q-30/C05 retains the independently assessed non-blocking
+attribution cleanup; it changes no operative Q-19 condition. The experiment remains
+paused, and no scheduled firing or counter increment is claimed by this proof.
 
 **Q-20 — Q-15 brief re-scope + D-9 correction (OP-5).** Surface: this file's Q-15
 row and brief text, plus the D-9 one-word correction in the Q-17 brief

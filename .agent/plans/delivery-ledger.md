@@ -37,10 +37,25 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   C05 owns the orphan-rule applicability/reference reconciliation. These later
   findings prevent an unqualified C01-complete claim. Compiler/document-correction
   acceptance remains open.
-- **C02 in progress:** `codex/castr-review-discipline`, fresh from the C01 merge,
-  owns Q-19's tally, structural step-back and observational drive-attempt contract,
-  plus the fired bot-citation graduation. Q-19 remains incomplete until its own
-  first-triage tally, gates and integrated-main evidence are available.
+- **C02 complete at its non-code acceptance:** [PR #83](https://github.com/EngraphCode/castr/pull/83)
+  merged on 6 September at 11:26:47 UTC, merge `dd7e705d6c6e81d45ef5cbdaf2547100f6376bf9`,
+  reviewed head `21b5ae2c4b48270d1b1941c20f24b65da4de2f71`. The merge tree equals that head.
+  All 16 checks passed; all 13 threads were settled, current-head Codex review was
+  complete and no reviewer request remained at the fresh 11:26:15 UTC observation.
+  Ruleset/scanning findings were clear. The [actual tally](https://github.com/EngraphCode/castr/pull/83#issuecomment-5558683768)
+  began before first triage and records five rounds, the counter-integrity
+  structural step-back and exact dispositions. Q-19's canonical tally/step-back/
+  counter procedures and the bot-citation check landed; scheduled execution stayed
+  paused. The attribution phrase in the tally section remains an independently
+  assessed non-blocking Q-30/C05 correction, with its [mechanism and reopen condition](https://github.com/EngraphCode/castr/pull/83#discussion_r3943781123).
+  C10 retains the observed review-wave supersession failure for the retrospective;
+  later delivery must batch fixes after each running wave completes.
+- **C01R in progress:** [PR #84](https://github.com/EngraphCode/castr/pull/84),
+  branch `codex/castr-custody-followup`, based on the C02 merge,
+  carries the remaining PR #82 custody corrections and records Q-19's integrated
+  acceptance. No PR #82 post-merge finding is treated as settled before its
+  corrective evidence is pushed and reviewed. The UUID finding is already fixed
+  by PR #83; the other source records and all nine programme identities are retained.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
