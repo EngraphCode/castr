@@ -101,5 +101,259 @@
     "disposition": "outstanding",
     "carrier": "castr-documentation-and-fidelity-correction"
   },
-  "reviews": {}
+  "reviews": {
+    ".agent/plans/proof-programme/parent-plan.md": {
+      "review_state": "reviewed-draft",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
+      "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+      "review_date": "2026-09-06",
+      "scope": "Interactive sequencing only: preserve sole queue, all acceptance/dependencies/counters/pause; independent security repair next, Q22 paired fix/output landing.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
+      ],
+      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage."
+    },
+    ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
+      "review_state": "reviewed-draft",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
+      "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+      "review_date": "2026-09-06",
+      "scope": "Recorded reflection and dependency-based sequencing, bounded work in progress and explicit C05/C07 doctrine describing surfaces; original A1-A6 unchanged. Subsequent owner-directed separate C05 Cricket task custody and its explicit parallel-work exception passed bounded recheck.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired documentation/onboarding follow-up passed at blob 5ff2e7b53b1adc6d06ba070243d5dc2190b531ba: explicit owner-authorised separate Cricket task, native Castr execution direction, unchanged root queue/ledger/manifest ownership and bounded parallel exception.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
+      ],
+      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage.",
+      "prior_reviewed_git_blob_hash": "5ff2e7b53b1adc6d06ba070243d5dc2190b531ba"
+    },
+    ".agent/plans/archive/correction-sequencing-2026-09-06.md": {
+      "review_state": "reviewed-draft",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "db7ccbb8714f8f1f2deb9ff85cccea575d11231e",
+      "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+      "review_date": "2026-09-06",
+      "scope": "Exact displaced parent and delivery-plan paragraphs preserved against the base revision; explicitly historical and linked to current authority.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
+      ],
+      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage.",
+      "prior_reviewed_git_blob_hash": "d75e076597fa2835126c41cf4c9c6e4714f6e385"
+    },
+    "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts": {
+      "review_state": "reviewed-draft",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "58978401b7b8db0aea2d236b5dc7aa6fd925bca2",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Adjacent implementation comment accurately distinguishes defined empty operation override from absent inheritance.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence."
+      ],
+      "remaining": "Integrate current main and complete required gates and PR delivery. A scoped review does not certify every historical or unrelated passage in this file."
+    },
+    "lib/tests-transforms/__tests__/security-formula.integration.test.ts": {
+      "review_state": "reviewed-draft",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "f75df058cb954b5e6a14876c8c946f5202d87c99",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Proof commentary accurately states operation-presence and independent anonymous-access observation, with explicit async-loader exclusion.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence."
+      ],
+      "remaining": "Integrate current main and complete required gates and PR delivery. A scoped review does not certify every historical or unrelated passage in this file."
+    },
+    "README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local entry, owner premises, bounded fidelity claims and durable contributor routing.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "CONTRIBUTING.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "496107e62870ac882d1b68e6df1b4259efc4a9c3",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Prerequisites, first action, bridge routing and actual gate effects.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/USAGE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "dfc662f4339b40460154a97cb2bb1f63f063419a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Fixture generation, compilation/runtime checks, repeatability, failure and durable authority route.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/API-REFERENCE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "05a4de48ae7d7795531b692f734ead9d36707dfb",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local package/CLI entry and output-file versus directory claim only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/DEFAULT-RESPONSE-BEHAVIOR.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c12a6fc7bd1b2a9a4652eb442cc3674ea5e4533c",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Replacement of registry CLI examples with local walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MIGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "f0b6b111441982b1129705916c6dc82a4fbcb3da",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local executable/build/root/input/output-directory prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/EXAMPLES.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c917e6dd5b1f626cfbce8454e37b0afc2aefac6a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Three local CLI blocks and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MCP_INTEGRATION_GUIDE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "296d2386347cd14ee65645c72960b618574b3436",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/OPENAPI-FETCH-INTEGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "3b571532cca50d41584831068858fb488d810e28",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "084fcfc360757eb82063cbaaa98811a38585db4e",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local checkout paragraph and walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    ".agent/directives/DEFINITION_OF_DONE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "fe91aed4a5c9b21dbc24aa29ce2a8226fc1975ec",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Aggregate mutation effects and bounded local packaging evidence.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/src/cli/index.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "ba2990233c647845b55cc3d32b41f35a50233dc7",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Help description and output-mode wording.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/tests-e2e/packaging-integrity.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "617b497da2055fa9800d279ef7157c77a7debdd0",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Packaging-proof commentary scope.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    }
+  }
 }

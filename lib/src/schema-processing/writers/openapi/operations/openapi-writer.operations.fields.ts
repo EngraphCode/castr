@@ -59,7 +59,8 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
     result.requestBody = writeRequestBody(operation.requestBody);
   }
 
-  if (operation.security !== undefined && operation.security.length > 0) {
+  // An explicit empty array removes inherited document security.
+  if (operation.security !== undefined) {
     result.security = writeSecurityRequirements(operation.security);
   }
 

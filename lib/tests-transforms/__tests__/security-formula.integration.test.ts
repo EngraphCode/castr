@@ -9,7 +9,7 @@
  * alternative (`{}`) survives, duplicate alternatives are not deduplicated,
  * and alternative order is preserved as document content.
  *
- * Each case runs through the artifact-agnostic semantic-outcome runner
+ * Each formula case runs through the artifact-agnostic semantic-outcome runner
  * (`../utils/semantic-outcome-runner.ts`), whose structural non-vacuity
  * precheck recomputes that the IR equality and both oracles genuinely
  * discriminate the case's `separatingSource` — a pipeline that collapses
@@ -23,10 +23,10 @@
  * - Sources are hand-authored canonical 3.2.0 documents fed straight to
  *   `buildIR` — the runner is synchronous, so the async
  *   `loadOpenApiDocument` preparation boundary is NOT exercised here.
- * - The writer's dropping of an explicit empty `security: []` (an
- *   operation-level public override) is a separate, still-live loss class
- *   owned by the security lane (report Tranche 06); nothing in this file
- *   asserts that behaviour as correct.
+ * - Operation-override cases separately prove absent security, `[]` and
+ *   `[{}]` under global authentication through explicit parse, persistence,
+ *   write and reparse boundaries, including authored property presence and
+ *   an independent observation of anonymous access.
  */
 
 import { isDeepStrictEqual } from 'node:util';
@@ -258,5 +258,61 @@ describe('security formula preservation (F-01): parse → write → reparse', ()
       oraclesAgree: true,
       nonVacuous: true,
     });
+  });
+});
+
+/**
+ * An independent observation of the OpenAPI document's anonymous-access
+ * contract, without Castr's IR or security projection helpers.
+ * @see https://spec.openapis.org/oas/v3.2.0.html#operation-object
+ * @see https://spec.openapis.org/oas/v3.2.0.html#security-requirement-object
+ */
+function permitsAnonymousAccess(
+  documentSecurity: SecurityRequirementObject[] | undefined,
+  operationSecurity: SecurityRequirementObject[] | undefined,
+): boolean {
+  const effectiveSecurity = operationSecurity ?? documentSecurity;
+  return (
+    effectiveSecurity === undefined ||
+    effectiveSecurity.length === 0 ||
+    effectiveSecurity.some((requirement) => Object.keys(requirement).length === 0)
+  );
+}
+
+function makeGlobalSecurityDoc(
+  operationSecurity: SecurityRequirementObject[] | undefined,
+): ProofDocument {
+  const security = [{ alphaAuth: [] }];
+  return operationSecurity === undefined
+    ? makeDocumentSecurityDoc(security)
+    : { ...makeOperationSecurityDoc(operationSecurity), security };
+}
+
+describe('operation security overrides: parse → persist → write → reparse', () => {
+  it.each([
+    { name: 'absent', security: undefined, own: false, anonymous: false },
+    { name: 'empty array', security: [], own: true, anonymous: true },
+    { name: 'anonymous alternative', security: [{}], own: true, anonymous: true },
+  ])('preserves $name under global authentication', ({ security, own, anonymous }) => {
+    const source = makeGlobalSecurityDoc(security);
+    const sourceOperation = source.paths['/items'].get;
+    const parsed = buildIR(source);
+    const serialized = serializeIR(parsed);
+    const restored = deserializeIR(serialized);
+    const output = writeOpenApi(restored);
+    const outputOperation = output.paths?.['/items']?.get;
+    const reparsed = buildIR(output);
+
+    expect(Object.hasOwn(sourceOperation, 'security')).toBe(own);
+    expect(Object.hasOwn(parsed.operations[0] ?? {}, 'security')).toBe(own);
+    expect(Object.hasOwn(restored.operations[0] ?? {}, 'security')).toBe(own);
+    expect(serializeIR(restored)).toBe(serialized);
+    expect(Object.hasOwn(outputOperation ?? {}, 'security')).toBe(own);
+    expect(outputOperation?.security).toStrictEqual(security);
+    expect(output.security).toStrictEqual(source.security);
+    expect(Object.hasOwn(reparsed.operations[0] ?? {}, 'security')).toBe(own);
+    expect(serializeIR(reparsed)).toBe(serialized);
+    expect(permitsAnonymousAccess(source.security, sourceOperation.security)).toBe(anonymous);
+    expect(permitsAnonymousAccess(output.security, outputOperation?.security)).toBe(anonymous);
   });
 });

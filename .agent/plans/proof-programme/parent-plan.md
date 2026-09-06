@@ -166,19 +166,27 @@ it does not resume the experiment or scheduled execution. The [delivery ledger](
 owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
-The commission's sequencing amendment takes precedence for interactive work:
-C01 custody → C02 Q-19 review discipline → C01R post-merge custody correction →
-C03 public entry → C04 ADR integrity →
-C05 authority/adapters → C06 coupled visions/PDR-135 → C07 doctrine propositions →
-C08 independently green fidelity repairs → C09 estate reconciliation → C10
-walkthroughs/retrospective/closeout. Families split into single-outcome PRs.
-Root-neutral repairs may precede the broad public-root migration; a repair that
-requires changed roots/facets follows those prerequisites. Q-22 lands before its
-dependent fixture work. Preserve each original queue brief's full acceptance and
-technical dependencies; Q-08/Q-14/Q-16/Q-20 complete only after integrated-main
-proof. The prior queue order and counters are otherwise unchanged. Q-18 remains
-the first dependency-eligible scheduled item if future owner authorisation resumes
-the experiment; Q-30 is an interactive commission, not a scheduled pickup.
+The commission's interactive sequencing is refined after the 6 September
+step-back: C03a is delivered through PR #85; now deliver the independently
+proven C08 operation-security-empty repair. Investigate Q-22's canonical generator
+and fixture integrity next, retaining its paired generator-fix/regenerated-output
+landing and repairing semantic prerequisites before accepting goldens. Continue remaining
+C03–C07 documentation and other independent C08 repairs by their actual technical
+prerequisites; outcome-family numbers do not impose a blanket documentation
+barrier on an existing-contract repair. The [delivery plan](../active/castr-documentation-and-fidelity-correction.md#6-september-delivery-step-back)
+records the reasoning and work-in-progress limit; the [former ordering](../archive/correction-sequencing-2026-09-06.md)
+is conserved as historical evidence.
+
+C01, C02, C01R and C03a are delivered at their bounded acceptance. Remaining
+C03b/c and C04–C10 outcomes retain their full acceptance. Repairs requiring changed roots, facets, object/processing doctrine or
+target profiles follow those prerequisites. Q-22's fix and regenerated outputs
+land together; it remains open until its full original acceptance is proven.
+A blocked Q-22 prerequisite does not hold other independent outcomes. Preserve every
+original queue brief's acceptance and technical dependencies;
+Q-08/Q-14/Q-16/Q-20 complete only after integrated-main proof. Queue rows and
+scheduled counters are unchanged. Q-18 remains the first dependency-eligible
+scheduled item only if future owner authorisation resumes the experiment; Q-30
+is the interactive commission, not a scheduled pickup.
 
 Any future owner-authorised resumption must first reconcile Q-30's interactive
 custody, open PRs and live claims. Establish from current evidence or an explicit

@@ -103,7 +103,16 @@ ephemeral read-only dispatcher; C05 owns Castr’s missing templates/registratio
 and the coupled generator/validator repair. Future frames name exact governing
 rules and evidence paths; unavailable event identifiers remain explicitly missing.
 
-| Position           | Reviewable outcome and dependencies                                                                                                                                                             |
+The owner subsequently commissioned a separate C05 Cricket repair task,
+initially “Repair Castr Cricket to OCE parity”, owned by Moon turns Apogee.
+The owner stopped that task and transferred the same preserved worktree to
+“Kite hunts Eyrie - Castr Cricket parity”; Kite hunts Eyrie now owns
+`codex/cricket-platform-parity`. The separate task owns the Cricket templates, registrations,
+generated adapters and coupled tooling/validation. OCE is a read-only source
+reference; further full panels execute from Castr. The coordinating agent retains
+this delivery plan, the parent queue, ledger and coverage manifests.
+
+| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                      |
 | C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                 |
@@ -116,11 +125,55 @@ rules and evidence paths; unavailable event identifiers remain explicitly missin
 | C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, in separate documentation PRs.                                                              |
 | C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                          |
 
-C08 follows prerequisite doctrine and review discipline, but root-neutral repairs
-may precede the broader root migration under the parent's sequencing amendment.
-Q-22 fixture generation precedes dependent fixture work. Q-28 includes every
+C08 repairs follow their actual prerequisites under the
+[parent's refined sequencing](../proof-programme/parent-plan.md#current-execution-state).
+An existing-contract repair with no dependency on new doctrine or public roots can
+land while other documentation families remain unfinished. Changes requiring new
+roots/facets, object/processing contracts or target profiles follow their coupled
+doctrine. Q-22's generator fix and regenerated outputs land together under its
+original brief; dependent fixture work follows that proof. Its full acceptance
+remains open until every original requirement is satisfied. Q-28 includes every
 intermediate encoding seam its original scenarios traverse. Neither smallness nor
 an administrative family label weakens original acceptance.
+
+## 6 September delivery step-back
+
+At main `3ad2ab5dbff006786394dd7689e892be412c1687`, PRs #82–#84 had delivered
+custody and review discipline; no compiler fidelity repair from this commission
+had merged. PR #85 remained open at `a772d5695904e3c0154aca581d91857327a42cd4`.
+Reviewed drafts were accumulating before integration. Its rounds three and four
+narrowed the same public-entry navigation concern: a two-file cure and review
+missed a JSON inventory link in USAGE. The PR's durable tally preserves the
+finding, earlier scoped PASS, complete-entry-target audit and resulting cure.
+Review counts do not establish the coverage of the review question.
+
+This coordinating-agent refinement applies the owner's small-PR and
+independently-green-repair instructions; it does not claim a new owner ruling.
+Keep one integrating PR and at most one independently prepared candidate in the
+coordinating task. The owner-commissioned C05 Cricket task is an explicit parallel
+workstream with separate custody; coordinate expensive aggregate runs across both.
+Preserve existing drafts and source custody; resume them when their delivery slot
+opens.
+Finish C03a, then the three-file operation-security-empty repair. Its behavioural
+proof distinguishes absent security, `[]` and `[{}]` through parse, canonical
+persistence, writing and reparse. It needs neither new public roots nor unfinished
+doctrine. Investigate Q-22's generator and fixture integrity next; preserve the
+paired fix/output landing and repair reproduced semantic failures before accepting
+changed goldens. If that candidate has blocking prerequisites, another independent
+documentation or repair outcome can integrate. A newly demonstrated technical
+dependency changes this order with recorded reasoning. No acceptance, gate,
+review condition or autonomous pause is weakened.
+
+The directive review names further describing surfaces within existing scope:
+C05 corrects testing-strategy's copied MCP-server system boundary; C07b corrects
+mandatory object closure against source semantics; C07c reconciles testing- and
+validation-strategy's downstream-consumer/Oak-harness framing. Independent authored
+corpora, source/target observations and isolated local workflows prove correctness
+and usability. Consumers, publication and usefulness validation are not gates.
+Test/evaluate/assure remains a useful distinction: Cricket and reviews challenge
+judgement but cannot replace executed compiler proofs or establish measured agent
+reliability. C10 retains the actual process observations without a fabricated
+fitness score.
 
 ## Fidelity repair families and describing surfaces
 
@@ -231,9 +284,11 @@ resumed or inferred. History rewriting remains owner-controlled.
 
 Q-19's original non-code acceptance is proven on integrated main through PR #83;
 the [ledger](../delivery-ledger.md) owns the dated head, checks and review evidence.
-C01R is merged and the eight late C01 findings are individually settled. C03a now
-delivers the prepared local-checkout slice from refreshed main; C03b/c retain the
-detailed API/options and response/transport/MCP documentation.
+C01R is merged and the eight late C01 findings are individually settled. C03a
+is delivered through PR #85 at its bounded local-checkout acceptance; the ledger
+records exact merge/review proof. The operation-security-empty repair now
+integrates on that main. C03b/c retain detailed API/options and
+response/transport/MCP documentation; C10 retains final isolated-pack acceptance.
 Earlier dated authoring records below preserve their checkpoint observations;
 they do not override current queue status or the ledger's delivery dispositions.
 
