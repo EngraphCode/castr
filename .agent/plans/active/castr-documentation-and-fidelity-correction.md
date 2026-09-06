@@ -224,7 +224,8 @@ would be cheaper. Rejected because its acceptance excludes current repairs and i
 completion predates integration. The bridge from split custody to impact is that
 reviewable, independently verified slices can land without losing original work.
 Independent inventory agents share the same Git sources and are not independent
-runtime oracles. Status: provisional until reviewers verify this custody slice.
+runtime oracles. Status: validated for custody framing by paired specialist review; the
+commission's unexecuted acceptance remains pending.
 Reopen its shape if mapping loses a hunk, a new carrier duplicates queue authority,
 or completion evidence relies on the unmerged source branch.
 
@@ -256,3 +257,8 @@ status is not a claim of reference closure.
 
 C01 remains unmerged until its PR meets the current-head merge conditions.
 A1–A6 are not complete merely because this custody record exists.
+
+Gateway review additionally caught formatter removal of a two-space hard break
+from one historical line. The archive now preserves raw fenced blocks through
+the standard Prettier preservation directive; exact bytes are rechecked after
+formatting. This is the same first-triage round, before PR opening.

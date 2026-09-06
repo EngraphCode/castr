@@ -7,11 +7,12 @@ in the correction delivery plan and proof-programme parent.
 
 ## .agent/plans/roadmap.md
 
+<!-- prettier-ignore -->
 ````text
 # Roadmap: @engraph/castr
 
 **Date:** January 24, 2026 (Updated April 16, 2026)
-**Status:** Active
+**Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
 ---
@@ -583,7 +584,8 @@ pnpm check
 
 ## .agent/memory/operational/repo-continuity.md
 
-```markdown
+<!-- prettier-ignore -->
+````text
 # Repo Continuity
 
 Canonical repo-level continuity contract — the operational answer to _"where
@@ -1169,11 +1171,12 @@ defects the green gates do not catch (packaging/types, security AND→OR, `$ref`
 round-trips, IR round-trip throw, Zod parser/writer losses). Start at
 [`.agent/report/initial-review/`](../../report/initial-review/); remediation
 backlog 02–07 is a required, unparked component.
-```
+````
 
 ## .agent/prompts/session-continuation.prompt.md
 
-```markdown
+<!-- prettier-ignore -->
+````text
 # Session Continuation: @engraph/castr
 
 **Last updated:** 2026-06-10
@@ -1622,11 +1625,12 @@ maintains → a Phase-9 back-flow improvement; then flip portability/subagents g
   reviewers review code / types / schema fidelity — point them at transplanted **code** changes (e.g. agent-tools), not at
   governance-doc edits. Carry the per-surface reconciliation lesson: Oak surfaces embed host-product specifics;
   bodies must be read, not classified.
-```
+````
 
 ## .agent/memory/operational/threads/proof-programme.next-session.md
 
-```markdown
+<!-- prettier-ignore -->
+````text
 # Next-Session Record — Proof programme (autonomous loop)
 
 The continuity record for the proof-programme thread: the ADR-051 autonomous
@@ -1970,4 +1974,4 @@ queue PR — ADR-051 clause 3 does not govern it; the owner invoked this drive t
 merge it. The arming runbook and portability register live at
 `.agent/plans/proof-programme/arming-runbook.md` and
 `.agent/claude-harness-integrations/account-portability-register.md`.
-```
+````

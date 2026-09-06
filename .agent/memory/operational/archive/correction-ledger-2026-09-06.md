@@ -4,6 +4,7 @@ Verbatim main ledger before correction. Current PR custody is owned by
 `.agent/plans/delivery-ledger.md`. Embedded relative paths belong to the original
 location; historical instructions confer no current execution authority.
 
+<!-- prettier-ignore -->
 ```text
 # Delivery Ledger
 
