@@ -352,3 +352,28 @@ response/transport/MCP/migration guides. Preserve the full local-entry draft and
 extract each coherent outcome into a fresh worktree; validate every executable
 example on its rebuilt target. Ignored-option leads extend the existing finding's
 case inventory and require discriminating runtime reproduction under C08.
+
+### C02 round-two structural step-back
+
+The first review pass on `49ad9e43` exposed drive-identity coverage; a subsequent
+review bound to `142b3980` exposed silent whole-map reset. These successively
+narrow the counter-integrity concern and trigger ADR-051 clause 4(c). The
+Parallax/proportionality step-back inspected the complete lifecycle instead of
+patching only the reported missing-map instance. Independent review found early
+STOP/bookkeeping drives could bypass the lifecycle and a delayed counter landing
+could resurrect a retired entry. The structural repair requires the map, retains
+zero only for absent PR entries, applies one common lifecycle to every actual
+authorised scheduled PR drive, and reconciles late observations into retired
+delivery evidence. No scheduler, service, threshold or new validator is added.
+
+The live harvest also distinguished a comment's current diff binding from its
+originating review commit; the canonical harvest now retains the latter. The
+actual tally remains one PR comment. Verification after this response is beyond
+the expected authoring budget and is recorded as such: the generator was
+incomplete path/state coverage in a human procedure, and the bounded lifecycle
+walkthrough addresses it. Neither the budget nor this step-back weakens correctness.
+
+The independent structural recheck verified map admission, new/adopted and
+STOP/bookkeeping drives, early endings, retries, late increments after merge,
+closed-unmerged custody and crash limits. No remaining procedural gap was found;
+this is non-code walkthrough evidence, not a scheduled firing or final-head gate.

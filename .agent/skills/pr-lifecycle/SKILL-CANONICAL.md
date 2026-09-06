@@ -116,7 +116,12 @@ Immediately after opening — and again after every push — pull all four
 surfaces. Partial reads produce false "no problems" verdicts:
 
 1. **Review threads (the authoritative comment surface)** — GraphQL
-   `pullRequest.reviewThreads { isResolved, path, comments }`. REST issue
+   `pullRequest.reviewThreads { isResolved, path, comments }`, retaining each
+   comment's originating `pullRequestReview { commit { oid } }` for the tally.
+   Review-body findings use that review's own `commit.oid`. Do not substitute
+   a comment's current diff-binding commit or the PR's current head for its
+   originating review commit. Exhaust pagination for threads and comments.
+   REST issue
    comments MISS inline bot threads (Copilot/Codex); a REST-only read is the
    canonical way to falsely conclude "no comments".
 2. **Issue comments and reviews** — full bodies, never truncated skims; a

@@ -22,6 +22,24 @@ enable instruction, the absence of STOP or a platform trigger arriving. Future
 scheduled work requires fresh owner authorisation recorded in the parent. This
 check precedes the STOP landing protocol below, which applies to authorised runs.
 
+## Common lifecycle for every authorised scheduled PR drive
+
+This contract applies whenever the protocol authorises an actual PR drive,
+including a new or adopted slice PR, a bookkeeping PR and a STOP landing that
+exits before the later numbered steps. It creates no permission beyond the
+execution-authorisation and STOP rules. A drive means taking responsibility for
+checks, review and merge; a permitted bookkeeping write on another driver's PR,
+an idle interval or a deferral without a drive is not itself a drive.
+
+Before every such drive, apply the overlap/head checks and `FIRING-LEASE` contract
+in step 4 and establish or reuse the PR lifecycle's `REVIEW-TALLY` before triage.
+On every exit from that drive, release the lease and apply the parent's
+[observational drive-attempt contract](./parent-plan.md#observational-pr-drive-attempt-counter),
+including cutoff, durable identity, retry reconciliation and fresh merge-state
+checks for publication or retirement. Early returns do not skip this lifecycle.
+An otherwise idle firing that drives a bookkeeping PR records that drive; it does
+not count mere bookkeeping activity as substantive progress.
+
 ## Exit criteria (declared before anything runs)
 
 - **This firing** ends when it has driven or advanced exactly one slice (or completed one
@@ -224,9 +242,11 @@ check precedes the STOP landing protocol below, which applies to authorised runs
    ends unmerged. Record firing identity and observation with the landing; a retry
    reuses that increment. Do not merge that target later in the same firing after
    recording an unmerged ending. Preserve peer entries; retire a count only after
-   an observed merge, preserving its final value in delivery evidence. Paused,
-   interactive, idle and never-started collision-deferral work does not increment
-   it. This observation is independent of substantive progress and creates no
+   an observed merge, reconciling pending landings and preserving its final value
+   in delivery evidence; a later landing for that merged target updates retired
+   evidence without resurrecting an active entry. Paused, interactive and
+   never-started drives do not increment it. An idle firing that actually drives
+   a bookkeeping PR follows the common lifecycle above. This observation is independent of substantive progress and creates no
    numeric response threshold. The authorisation guard above runs first.
 8. **Close**: run the `engraph-session-handoff` skill under the **firing-scoped profile
    (QD-6)** — the handoff's duties instantiated for a zero-context scheduled session,

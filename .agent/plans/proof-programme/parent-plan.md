@@ -272,12 +272,14 @@ of both counters.
 ### Observational PR drive-attempt counter
 
 `drive_attempts:` in this frontmatter maps programme PR numbers to non-negative
-integer counts. A missing map or PR entry means zero, as explicitly declared for
-this observational field; a malformed map or value is an error, never a reset.
+integer counts. The map is explicitly initialised in this frontmatter. A missing
+map or malformed map/value is an error, never a reset; only a missing PR entry
+defaults to zero.
 It records authorised **scheduled drives ending without a merge**, separately
 from slice failures, substantive progress and the review-round tally. Interactive
-work, intentionally paused intervals, idle firings and collision deferrals that
-never begin a drive do not increment it. No numeric threshold, retry cap or new
+work, intentionally paused intervals and firings that never begin a PR drive do
+not increment it. An otherwise idle firing that actually drives its bookkeeping
+PR is included; a permitted bookkeeping write alone is not a drive. No numeric threshold, retry cap or new
 kill switch is authorised; any proposed response belongs in
 [queued-decisions.md](./queued-decisions.md) as a named position.
 
@@ -293,11 +295,18 @@ For a future authorised scheduled drive:
    counter-landing commit. Use the existing uncontested-head or shared
    deferral-draft bookkeeping path. On retry or reconciliation, inspect those
    remote histories for this firing's increment and reuse it instead of counting
-   again. A local commit or completion summary alone is not durable landing proof.
+   again. Recheck target merge state when publishing: if it has merged since the
+   recorded ending, incorporate this distinct firing once into its retired count
+   and delivery evidence instead of resurrecting a live map entry. A local commit
+   or completion summary alone is not durable landing proof.
 4. A new head, shepherd, draft transition or cure does not reset the count. After
    an **observed merge**, retire the entry through the existing post-merge
    continuity/bookkeeping path, preserving the final count and merge evidence in
-   the delivery record. Never clear in anticipation of merge. A closure without
+   the delivery record. Reconcile known counter landings on the base and pending
+   bookkeeping/deferral heads before retirement. A later landing for an already
+   merged target must update that delivery evidence once, preserving its firing
+   identity and observed ending, rather than recreate the active entry. Never
+   clear in anticipation of merge. A closure without
    merge is not success; retain its count and disposition with its PR custody.
 
 This is a human-maintained record of observed drive endings, not crash-proof
