@@ -29,7 +29,7 @@ record carries only the repo-side state).
   (cron cannot express a true 72 h interval) — owner's call if the quirk ever
   matters. Fresh session per firing, repo source + Slack connector
   owner-attached, completion push notifications on; prompt hardened through
-  five verified bot-review rounds on PR #69 (merged `df734b4d`). Watcher
+  five verified bot-review rounds on PR #69 (merged `SHA:df734b4d`). Watcher
   tenure closed cleanly: 11 ticks + 2 catch-ups over ~2.6 h, canvas
   `F0BT7TXQ3PW` final-edited, wake chain deleted.
 - **Blockers / low-confidence areas**: unverified whether a Routine firing
@@ -42,4 +42,5 @@ record carries only the repo-side state).
   `slack-watcher` skill from the vacancy sign-off's sweep boundary.
 - **Active track links**: none.
 - **Promotion watchlist**: canvas-fallback amendment for the slack-watcher
-  skill; verify-bot-cited-SHA sharpening (both in pending-graduations).
+  skill remains in pending-graduations.
+- **Bot-cited commit checks**: use [PR lifecycle](../../../skills/pr-lifecycle/SKILL-CANONICAL.md#verify-a-bot-cited-commit-warrant).

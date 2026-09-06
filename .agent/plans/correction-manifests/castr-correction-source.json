@@ -9,5 +9,228 @@
   "file_records": 136,
   "hunk_records": 274,
   "disposition_default": "outstanding",
-  "successor_evidence": {}
+  "successor_evidence": {
+    "eedf223fdfb4470163be700accae79cd7a746656a80bddfd7edc8b76968ab324": {
+      "source_record": {
+        "path": ".agent/plans/proof-programme/parent-plan.md",
+        "hunk": 4
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 replaces the live/eligible-now execution implication with owner-confirmed platform-neutral pause, disabled Claude Routine, no counter changes, one parent queue and an explicitly separate interactive commission. PR81's claimed completed refresh is superseded by Q-30 custody.",
+      "evidence": [
+        {
+          "path": ".agent/plans/proof-programme/parent-plan.md",
+          "line": 151,
+          "git_blob_hash": "025d900141b181f8847121bcddc41e5ba5087591"
+        },
+        {
+          "path": ".agent/plans/active/castr-documentation-and-fidelity-correction.md",
+          "line": 54,
+          "git_blob_hash": "86dc610fd174ad384eeae9e067566699a8e538f7"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile the rest of the source hunk's authority/implementation-home split, historical mechanism framing and platform-adapter references; no completion of the original documentary refresh is inferred."
+        }
+      ]
+    },
+    "1bbc1acaaab1796285da8d5ef14ebb37bf6c2dec38f9ea33e71138c7e430fe45": {
+      "source_record": {
+        "path": ".agent/plans/proof-programme/routine-prompt.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01's entry authorisation guard implements the source hunk's pause-before-provisioning/claims/counters/PR-drive requirement, distinguishes owner confirmation from live observation and separates the interactive commission from scheduled execution.",
+      "evidence": [
+        {
+          "path": ".agent/plans/proof-programme/routine-prompt.md",
+          "line": 9,
+          "git_blob_hash": "2a314c3a9a6335face0332372667210889d6eda9"
+        },
+        {
+          "path": ".agent/plans/proof-programme/parent-plan.md",
+          "line": 151,
+          "git_blob_hash": "025d900141b181f8847121bcddc41e5ba5087591"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile the source hunk's platform-neutral title/introduction, accepted-design versus implementation split and Claude-adapter route; the older prompt body remains unreconciled by C01."
+        }
+      ]
+    },
+    "b7ddfd68645cc6becb5f8f978d4e6901088844de7226e319b521679d9b184be4": {
+      "source_record": {
+        "path": ".agent/practice-index.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 adds a current-work entry routing acceptance to the correction plan, sequencing/pause to the parent and PR custody to the ledger.",
+      "evidence": [
+        {
+          "path": ".agent/practice-index.md",
+          "line": 10,
+          "git_blob_hash": "b187fc117f90379df1bb7e48e195ce9339e6f513"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C06",
+          "obligation": "Deliver and index the coupled Castr/Practice visions; C01 does not apply the source hunk's new vision rows."
+        },
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile the remaining directive/ADR navigation and evidence-home changes in this same hunk."
+        }
+      ]
+    },
+    "b99fa8f76b2684f9468476ef3a133d016b74bdcadaa2bb0c6193a6d935697e02": {
+      "source_record": {
+        "path": ".agent/memory/operational/open-questions.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 resolves Q-016 to orchestration above low-level conversion, corrects the ADR-036/ADR-037 reference and conserves the original question with its dated diagnostic rather than asserting current boundary enforcement.",
+      "evidence": [
+        {
+          "path": ".agent/memory/operational/open-questions.md",
+          "line": 50,
+          "git_blob_hash": "112befb1babbebf72b2fd569e9b05a73377b7807"
+        },
+        {
+          "path": ".agent/memory/operational/archive/q016-direction-2026-09-06.md",
+          "line": 1,
+          "git_blob_hash": "662e0d03fb8cac174ed0e010245b7273f55a2e3e"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C08",
+          "obligation": "Implement and prove Q-016 resolver, dependency-policy and prohibited-import enforcement; the direction decision is not implementation evidence."
+        },
+        {
+          "carrier": "C06",
+          "obligation": "Conserve Q-012 to Q-015 decisions in the coupled visions/identity/PDR-135; C01 does not apply those source-hunk graduation claims."
+        },
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile the same hunk's stopped-transplant, privacy and remaining register-history wording."
+        }
+      ]
+    },
+    "1eb5d7570f265f1488cb2d9085e80bed9753c0f78e628a4d7e20f1e92425fa24": {
+      "source_record": {
+        "path": ".agent/memory/operational/repo-continuity.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 replaces the stale active-work narrative with the correction/parent/ledger entry route, records the pause and interactive authority, and conserves the displaced baseline narrative in an archive.",
+      "evidence": [
+        {
+          "path": ".agent/memory/operational/repo-continuity.md",
+          "line": 6,
+          "git_blob_hash": "c7c4b1209a1fa5f37aa880ca296a53bb5488ac1b"
+        },
+        {
+          "path": ".agent/memory/operational/archive/correction-entry-paths-2026-09-06.md",
+          "line": 63,
+          "git_blob_hash": "252fd9642165eba97e475986a7c3e1715113efe8"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C09",
+          "obligation": "Review the full source hunk's thread/plan/register and consolidation dispositions against their acceptance. Baseline history preservation and a repaired entry route do not establish the source refresh's completed lifecycle or doctrine claims."
+        }
+      ]
+    },
+    "984faada81715d0ef3019f7f38de000e875101efc076620c25b494a767d5b2df": {
+      "source_record": {
+        "path": ".agent/plans/roadmap.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 supplies one current parent queue, paused autonomous state, interactive correction ownership and retained-work navigation; the displaced baseline milestone narrative is conserved.",
+      "evidence": [
+        {
+          "path": ".agent/plans/roadmap.md",
+          "line": 17,
+          "git_blob_hash": "57b6decc1756f2a51a31c44c6d5bd48889a85c02"
+        },
+        {
+          "path": ".agent/memory/operational/archive/correction-entry-paths-2026-09-06.md",
+          "line": 8,
+          "git_blob_hash": "252fd9642165eba97e475986a7c3e1715113efe8"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile every source-hunk plan-family, dependency and lifecycle disposition; C01 explicitly leaves loop-review staging and retained strategic obligations outstanding."
+        },
+        {
+          "carrier": "C06",
+          "obligation": "Deliver the source hunk's coupled product/Practice direction and measurement-documentation substance before treating it as applied."
+        }
+      ]
+    },
+    "cdee4f6c0b580135df3fae99ca22630f03087d75fc6666fa80348274d7ea18a6": {
+      "source_record": {
+        "path": ".agent/plans/delivery-ledger.md",
+        "hunk": 1
+      },
+      "successor_pr": 82,
+      "successor_commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C01 establishes the ledger as PR-custody owner, freezes PR81 for extraction, refreshes the inherited open-PR observations and carries source-derived extraction guidance without claiming extraction or merge readiness.",
+      "evidence": [
+        {
+          "path": ".agent/plans/delivery-ledger.md",
+          "line": 9,
+          "git_blob_hash": "a1f872bb7958f1f63054cf707b5da0b003efbe49"
+        },
+        {
+          "path": ".agent/plans/delivery-ledger.md",
+          "line": 28,
+          "git_blob_hash": "a1f872bb7958f1f63054cf707b5da0b003efbe49"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C09",
+          "obligation": "Reconcile the source hunk's complete delivery/PR narrative and every surviving extraction obligation; PR81's completed-refresh claim is not accepted, and no inherited PR is closed by the refreshed census."
+        },
+        {
+          "carrier": "C08",
+          "obligation": "Preserve and prove the source hunk's named fidelity residuals through their owning repairs; dated Q-02/Q-03/Q-04 landings do not close them."
+        },
+        {
+          "carrier": ".agent/plans/current/zod-truth-surface-and-dependency-currency.md",
+          "obligation": "Freshly triage the carried qs/Dependabot-73 report and record its actual resolution; C01 retains the report without asserting current advisory status."
+        }
+      ]
+    }
+  }
 }

@@ -39,9 +39,12 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Continue [C01 custody](threads/castr-correction.next-session.md), then C02 Q-19
-review discipline, under the parent's explicit sequence. No per-PR owner approval
-wait is needed; correctness, review and gate conditions remain mandatory.
+Complete [C02 review discipline](threads/castr-correction.next-session.md), then
+C01R's post-merge custody corrections and C03's local-use slices under the
+[correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
+No per-PR owner approval wait is needed; correctness, review and gate conditions
+remain mandatory. C01 merged, but its later review findings remain explicitly
+owned until the corrective proof lands.
 
 ## Deep consolidation status
 

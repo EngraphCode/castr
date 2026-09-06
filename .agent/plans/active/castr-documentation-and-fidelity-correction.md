@@ -262,3 +262,118 @@ Gateway review additionally caught formatter removal of a two-space hard break
 from one historical line. The archive now preserves raw fenced blocks through
 the standard Prettier preservation directive; exact bytes are rechecked after
 formatting. This is the same first-triage round, before PR opening.
+
+## C02 framing and acceptance record — 6 September 2026
+
+C01 landed in PR #82 at `b14caede`; its detailed proof is in the delivery ledger.
+C02 is one procedural outcome: make review rounds and unfinished scheduled PR
+drives observable. Parallax core, reduced same-context inquiry: the counterframe
+is a new automatic service or imported OCE state machine. The existing durable
+PR comment and repository bookkeeping paths suffice; no new scheduler, thresholds
+or instrument framework is required. Proportionality retains the three ratified
+Q-19 elements together and includes the directing skill's contradictory local
+references. It does not reduce the correctness or human-review obligations.
+
+The bot-cited-SHA graduation fires because convergence doctrine is edited. Its
+permanent procedure preserves local-versus-remote evidence and independently
+reproducible defects; the pending entry is drained. Q-19 remains pending under Q-30 until
+its own PR demonstrates the tally from first triage and passes gates on main.
+The default two expected review rounds apply; the tally lives on that PR, not in
+a second local round store.
+
+Non-code procedure walkthrough (author inspection, not a simulated live firing):
+unchanged harvest → no new round; successor → same tally and ordinal; two rounds
+narrowing one concern → structural re-derivation; interactive/paused/never-started
+collision work → no drive increment; recorded unmerged scheduled ending → one
+identified increment, including after substantive progress; observed merge →
+retire only with retained final value. Local-missing/remote-present citation →
+valid repository evidence; lookup unavailable → unverified; confirmed local and
+repository absence → invalid warrant, with any reproducible defect still open.
+Specialist review and live PR demonstration remain to follow this author check.
+
+Architectural discovery custody: C08/Q-016 also owns boundary element-classification
+blindness reproduced by the read-only architecture review on `e025d233` (folder
+patterns missed direct children), context-to-parser and writer-to-context contract
+edges, and the production-to-test-helper dependency. Moving two wrappers alone
+cannot close Q-016; effective resolver/classification/policy and prohibited-import
+proof must land together, with preparatory contract separation if needed.
+
+C02 pre-PR validation: canonical `pnpm check`, skill parity, portability and
+repository validators passed on 6 September. The link validator's by-file report
+was inspected: 173 inherited entries remain; the edited ledger's reported archive
+target exists and is omitted by the validator's inventory. No new affected link
+failure was found; C09 owns the complete reference/validator correction. Adapter
+regeneration produced no tracked difference. PDR-132's size warning is acknowledged:
+the ninth file annotates seven partial C01 source dispositions, with immutable
+merge/blob evidence and explicit residual custody; none is silently marked complete.
+
+C02 round 1: PR #83's REVIEW-TALLY comment `5558683768` was created at
+10:41:49 UTC before specialist/GitHub triage. Paired documentation and onboarding
+reviews accepted the procedure; documentation review found a numeric-budget
+restatement contrary to PDR-132 clause 5. The template now points to PDR-132 and
+the bounded recheck settled it. No structural recurrence trigger fired. GitHub
+review and final-head checks remain live responsibilities of the PR shepherd.
+
+C02's initial asynchronous bot-review batch on `49ad9e43` also found a second
+in-progress queue row, missing lease creation on the new-PR path, incomplete
+upstream attribution and stale continuity/graduation pointers. The procedure now
+keeps Q-30 as the only in-progress row, establishes leases before triage for new
+as well as adopted PRs, and cites the verified upstream reference with local
+limitations. Continuity corrections land in a separate `chore(continuity)` commit.
+The earlier bundled continuity edit was a procedural deviation; pushed history
+will not be rewritten to fabricate compliance. C05 owns the rule's ambiguous
+applicability to deliberate documentary corrections and its broken authority links.
+The PR tally retains all findings and their separate dispositions.
+
+### C01R — bounded post-merge custody correction
+
+PR #82 received eight threads after its verified merge-time clean observation.
+C01R follows C02 and precedes C03; it is corrective custody within Q-30, not a new
+queue or compiler slice. Close the six current defects by adding Q-016 to the
+finding inventory (including the reproduced classification/context edges), the
+verified correction identity UUID, direct custody links for the consolidation,
+initial-review and loop-review threads, a complete paused proof-thread continuation,
+an unambiguous Q-30 plan path and accurate membership-versus-evidence wording.
+Clarify that any future resumption must reconcile interactive Q-30 custody before
+scheduled pickup. The separate consolidation Routine's platform state remains
+unverified. Preserve identities, historical facts and every outstanding obligation.
+
+Exact PR #82 comment custody: `3943677468` (Q-016 inventory), `3943677469` (UUID),
+`3943677471` (future resumption), `3943678006` (thread indexes), `3943678022`
+(proof continuation), `3943678035` (path), `3943678045` (evidence description).
+`3943677464` is the historical commit-policy deviation; record it and route the
+rule reconciliation to C05 without rewriting merged history. Full post-merge
+review connections were exhausted on 6 September; fixes and thread settlement
+remain pending this follow-up. Do not label C01 complete before that evidence.
+
+C03 is further sliced after inspecting the draft's roughly 1,800 changed lines:
+C03a local checkout/CLI walkthrough, C03b API and source-local examples, C03c
+response/transport/MCP/migration guides. Preserve the full local-entry draft and
+extract each coherent outcome into a fresh worktree; validate every executable
+example on its rebuilt target. Ignored-option leads extend the existing finding's
+case inventory and require discriminating runtime reproduction under C08.
+
+### C02 round-two structural step-back
+
+The first review pass on `49ad9e43` exposed drive-identity coverage; a subsequent
+review bound to `142b3980` exposed silent whole-map reset. These successively
+narrow the counter-integrity concern and trigger ADR-051 clause 4(c). The
+Parallax/proportionality step-back inspected the complete lifecycle instead of
+patching only the reported missing-map instance. Independent review found early
+STOP/bookkeeping drives could bypass the lifecycle and a delayed counter landing
+could resurrect a retired entry. The structural repair requires the map, retains
+zero only for absent PR entries, applies one common lifecycle to every actual
+authorised scheduled PR drive, and reconciles late observations into retired
+delivery evidence. No scheduler, service, threshold or new validator is added.
+
+The live harvest also distinguished a comment's current diff binding from its
+originating review commit; the canonical harvest now retains the latter. The
+actual tally remains one PR comment. Verification after this response is beyond
+the expected authoring budget and is recorded as such: the generator was
+incomplete path/state coverage in a human procedure, and the bounded lifecycle
+walkthrough addresses it. Neither the budget nor this step-back weakens correctness.
+
+The independent structural recheck verified map admission, new/adopted and
+STOP/bookkeeping drives, early endings, retries, late increments after merge,
+closed-unmerged custody and crash limits. No remaining procedural gap was found;
+this is non-code walkthrough evidence, not a scheduled firing or final-head gate.
