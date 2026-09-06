@@ -42,6 +42,5 @@ record carries only the repo-side state).
   `slack-watcher` skill from the vacancy sign-off's sweep boundary.
 - **Active track links**: none.
 - **Promotion watchlist**: canvas-fallback amendment for the slack-watcher
-  skill remains in pending-graduations. The bot-cited-SHA sharpening graduated on
-  6 September 2026 into [PR lifecycle](../../../skills/pr-lifecycle/SKILL-CANONICAL.md#verify-a-bot-cited-commit-warrant)
-  under C02/Q-19; it is no longer a pending entry.
+  skill remains in pending-graduations.
+- **Bot-cited commit checks**: use [PR lifecycle](../../../skills/pr-lifecycle/SKILL-CANONICAL.md#verify-a-bot-cited-commit-warrant).
