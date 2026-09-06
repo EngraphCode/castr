@@ -173,13 +173,6 @@ security or data-loss defect; investigate that mechanism at the actual head unde
 Phase 4. Apply the existing non-blocking convergence conditions only after that
 per-finding assessment.
 
-Graduated on 6 September 2026 when Q-19 edited convergence doctrine. Evidence:
-PR #69 round 6 cited `5b63e55f`; local absence and an independent repository lookup
-were recorded in PR #71 round 1. Provenance: PR #69 review thread
-[r3872515171](https://github.com/EngraphCode/castr/pull/69#discussion_r3872515171)
-and the 27 August pending-graduation record. These are dated observations, not a
-claim that every present lookup failure establishes absence.
-
 ## Phase 5 — Wait without burning budget
 
 Run the repo's budgeted watcher in the background:
