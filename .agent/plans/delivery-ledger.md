@@ -12,6 +12,26 @@ session-continuation, trackers) point here and never duplicate the table.
 
 Feature branches start from current `main`, one PR per delivery slice. When a slice is authorised, merge authority remains condition-based under [ADR-051](../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md): current-head CI must pass and review threads must be properly resolved with evidence. Updating this ledger neither extracts changes nor closes or establishes merge readiness for any inherited PR.
 
+## Documentation refresh delivery — 2026-09-06
+
+The completed refresh is published as **[draft PR #81](https://github.com/EngraphCode/castr/pull/81)**,
+on `codex/plan-estate-refresh`. This is the new delivery created by the commission,
+additional to the 15 inherited PRs in the frozen census below.
+
+| Observed head and state                                                                                                                                                                  | Review/check evidence                                                                                                                                                                                        | Value, overlap and owning acceptance                                                                                                                                                                                                         | Required delivery evidence                                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [28029cd51fafa8a30dd461d05c5bcff28423e99d](https://github.com/EngraphCode/castr/commit/28029cd51fafa8a30dd461d05c5bcff28423e99d), draft/open; GitHub merge state BLOCKED at observation. | Initial read: 12 reported checks, 2 successful, 1 neutral and 9 queued/in progress; 0 formal reviews and 0 review threads, pagination exhausted. Local canonical checks and intact commit/push hooks passed. | Q-08/Q-14/Q-16/Q-20 and the [completed refresh](./current/complete/plan-estate-and-documentation-refresh.md), including W1/W2/W3 documentary/W5 definitions. New documentary delta from the main baseline below; no inherited PR extraction. | Keep this PR as the documentation delivery; refresh its latest head, checks and review threads before a merge decision. The frozen initial observation does not certify later heads, including this ledger follow-up, and no merge-readiness claim is made. |
+
+GitHub also reported an open default-branch dependency advisory during the push.
+[Dependabot #73](https://github.com/EngraphCode/castr/security/dependabot/73) was
+verified open: `qs`, transitive runtime dependency in `pnpm-lock.yaml`,
+GHSA-x5fp-wj9c-mxmx, medium severity; affected versions are 6.14.2 through 6.15.3
+and the advisory identifies 6.16.0 as first patched. Its triage/remediation and
+closure proof are owned by the
+[current dependency-currency carrier](./current/zod-truth-surface-and-dependency-currency.md#qs-security-follow-up--2026-09-06).
+This docs delivery changes no dependency and does not reopen the historical
+Q-23 acceptance or resume autonomous work.
+
 ## Current PR dispositions
 
 **Snapshot: 2026-09-06, observed by 08:28 UTC.** GitHub's open-PR connection reports **15**, with pagination exhausted. The table below covers all 15. Main is [`e025d23316e4b175551711a32a09c0f4d492fd1a`](https://github.com/EngraphCode/castr/commit/e025d23316e4b175551711a32a09c0f4d492fd1a); its [CI run](https://github.com/EngraphCode/castr/actions/runs/33975450694) passed on 2026-09-05. This is evidence for that landed revision, not a test of the documentation refresh.

@@ -62,6 +62,27 @@ that makes the model necessary is ratified in an ADR instead of inherited,
 and the measured 4.5 runtime wins (compile/validate) reach consumers as
 evidence-backed guidance (TS-5).
 
+## qs security follow-up — 2026-09-06
+
+**QS-1 — outstanding dependency-security obligation.** GitHub's default-branch
+[Dependabot alert #73](https://github.com/EngraphCode/castr/security/dependabot/73)
+was read on September 6 and is open. It identifies `qs` as a transitive runtime
+dependency in `pnpm-lock.yaml`: GHSA-x5fp-wj9c-mxmx, medium severity,
+“qs array-limit bypass via bracket-key comma parsing”, affected versions
+6.14.2–6.15.3, first patched version 6.16.0.
+
+This is new dated evidence after the August 31 zero-findings audit below.
+DC-1/Q-23 remain complete for their historical acceptance. This section owns
+the follow-up without creating an independent execution queue: materialise a
+bounded corrective dependency slice in the parent on authorised resumption, or
+consume QS-1 in an explicit dependency-currency commission.
+
+Acceptance: establish the actual dependency/consumer path; update through its
+owning dependency boundary to a version outside the advisory range; prove the
+relevant behaviour and canonical gates; re-read the advisory and record closure
+or remaining exposure. The present documentation refresh does none of that
+implementation and makes no exploitability inference from severity alone.
+
 ## Evidence base (all measured firsthand, 2026-08-31)
 
 Probe: side-by-side zod 4.3.6 / 4.4.3 / 4.5.4, 20-construct representative
