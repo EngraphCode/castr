@@ -2,6 +2,13 @@
 
 This is the main library package for Castr, containing the core schema transformation engine.
 
+## Local checkout
+
+No published package is currently planned. From the repository root, follow the
+[local usage walkthrough](../docs/USAGE.md) to install the frozen dependencies,
+build the library and generate, compile and execute the committed User example.
+`@engraph/castr` remains the identifier for the local package and its imports.
+
 ## Package Structure
 
 ```text

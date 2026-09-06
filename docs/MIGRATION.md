@@ -45,10 +45,12 @@ await generateZodClientFromOpenAPI({
 
 ### CLI
 
-Use the published binary:
+Build the [local checkout](./USAGE.md#build-and-generate); no published package
+is currently planned. Run from the repository root with your input file and an
+existing output directory:
 
 ```bash
-castr ./openapi.yaml -o ./src/api.ts
+node lib/dist/cli/index.js ./openapi.yaml -o ./src/api.ts
 ```
 
 Supported built-in templates:

@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-06-09  
+**Last Updated:** 2026-09-06  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -11,11 +11,12 @@ Done means strict and complete everywhere, all the time: claimed supported behav
 
 ## Canonical Commands
 
-- **CI (non-mutating):** `pnpm check:ci`
-- **Local (may mutate to fix):** `pnpm check`
+- **CI (without formatting/lint autofixes):** `pnpm check:ci`
+- **Local (with formatting/lint autofixes):** `pnpm check`
 
-`pnpm check` is intentionally allowed to modify files (formatting, safe lint autofixes).  
-If you need a non-mutating verification run, use `pnpm check:ci`.
+Both commands clean generated output, install from the frozen lockfile and run
+the aggregate checks. They modify generated files and dependencies. `pnpm check`
+also runs formatting and safe lint autofixes; `pnpm check:ci` omits that fix step.
 Do not invoke `pnpm qg` directly. It may remain as a script implementation detail, but the canonical aggregate entrypoints are `pnpm check` and `pnpm check:ci`.
 
 ## Local Git Hook Contract
@@ -56,13 +57,14 @@ pnpm test:transforms
 pnpm test:e2e
 ```
 
-`pnpm packaging:check` (2026-06-09, remediation plan 01 / finding C1) verifies the **published package shape**:
+`pnpm packaging:check` (2026-06-09, remediation plan 01 / finding C1) verifies the **locally packed package shape**:
 `publint --strict` lints the packed tarball's manifest/field integrity, and `attw --pack . --profile esm-only`
 (`@arethetypeswrong/cli`) proves every `exports` target's types and runtime files resolve for ESM consumers and
 bundlers — the package is deliberately ESM-only (`"type": "module"`, Node 24 LTS), so the CJS/node10 resolution modes
 are declared out of the support matrix rather than shimmed. The companion e2e proof
-(`lib/tests-e2e/packaging-integrity.test.ts`) packs the real tarball and imports every entrypoint as a consumer
-would, including the README's `parseZodSource` example and the CLI bin.
+(`lib/tests-e2e/packaging-integrity.test.ts`) packs the real tarball and checks
+root and parser-subpath imports, parser invocation and the CLI bin using the
+checkout's dependencies. It does not establish dependency isolation or publication.
 
 ## Transitional gate states (owner, 2026-06-10)
 

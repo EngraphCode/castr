@@ -429,19 +429,9 @@ schemas.User.parse(data);
 
 ## CLI Usage
 
-### Default Behavior
-
-```bash
-npx @engraph/castr ./openapi.yaml -o ./generated.ts
-# [WARN] The following endpoints have no status code other than `default`...
-```
-
-### With Auto-Correct
-
-```bash
-npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior auto-correct
-# No warning, default-only endpoints are included
-```
+Build and run the local checkout using the [usage guide](./USAGE.md#build-and-generate).
+No published package is currently planned. The guide includes a committed input,
+generated TypeScript compilation, runtime validation and actionable failure.
 
 ---
 

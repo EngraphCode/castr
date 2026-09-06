@@ -23,20 +23,19 @@ unrelated compiler repairs after its own surviving substance is accounted for.
 
 ## Correction successors
 
-- **C01 partial landing; corrective follow-up pending:** [PR #82](https://github.com/EngraphCode/castr/pull/82) merged on
-  6 September 2026 at `b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93`, head
+- **C01 complete at custody acceptance, with a historical deviation recorded:** [PR #82](https://github.com/EngraphCode/castr/pull/82)
+  merged on 6 September 2026 at `b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93`, head
   `78c20a5e10aac3e27a1f99e9abd484e74571c2e2`. All 16 checks passed; paired
-  documentation/onboarding and gateway concerns settled; final full live harvest
-  found no unresolved threads or blocking ruleset findings at 10:33:02 UTC. The
-  [tally](https://github.com/EngraphCode/castr/pull/82#issuecomment-5558613853)
-  records the pre-open specialist round and merge evidence. Custody, inventories
-  and paused authority landed. Eight review threads arrived at 10:34:08–10:34:24,
-  after the 10:33:14 merge. Their full triage found six current record/coverage
-  defects, a future-resumption clarification and a historical commit-policy
-  deviation. C01R in the correction plan owns the bounded corrective follow-up;
-  C05 owns the orphan-rule applicability/reference reconciliation. These later
-  findings prevent an unqualified C01-complete claim. Compiler/document-correction
-  acceptance remains open.
+  documentation/onboarding and gateway concerns settled. The 10:33:02 UTC full
+  harvest preceded eight late review threads at 10:34:08–10:34:24, after the
+  10:33:14 merge. PR #83 supplied the missing UUID; reviewed PR #84 corrected the
+  remaining record/coverage defects and future-resumption ambiguity. Each thread
+  now has individual evidence and is settled. The merged commit-policy deviation
+  is acknowledged without rewriting history; subsequent continuity commits are
+  separate. C05 retains the imported orphan-rule applicability/reference correction.
+  The [tally](https://github.com/EngraphCode/castr/pull/82#issuecomment-5558613853)
+  preserves both the initial checkpoint and post-merge round. Comprehensive
+  document correction and fidelity acceptance remain open.
 - **C02 complete at its non-code acceptance:** [PR #83](https://github.com/EngraphCode/castr/pull/83)
   merged on 6 September at 11:26:47 UTC, merge `dd7e705d6c6e81d45ef5cbdaf2547100f6376bf9`,
   reviewed head `21b5ae2c4b48270d1b1941c20f24b65da4de2f71`. The merge tree equals that head.
@@ -50,12 +49,23 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   assessed non-blocking Q-30/C05 correction, with its [mechanism and reopen condition](https://github.com/EngraphCode/castr/pull/83#discussion_r3943781123).
   C10 retains the observed review-wave supersession failure for the retrospective;
   later delivery must batch fixes after each running wave completes.
-- **C01R in progress:** [PR #84](https://github.com/EngraphCode/castr/pull/84),
-  branch `codex/castr-custody-followup`, based on the C02 merge,
-  carries the remaining PR #82 custody corrections and records Q-19's integrated
-  acceptance. No PR #82 post-merge finding is treated as settled before its
-  corrective evidence is pushed and reviewed. The UUID finding is already fixed
-  by PR #83; the other source records and all nine programme identities are retained.
+- **C01R complete:** [PR #84](https://github.com/EngraphCode/castr/pull/84)
+  merged on 6 September at 12:02:18 UTC as `3ad2ab5dbff006786394dd7689e892be412c1687`.
+  Its tree equals reviewed head `a040e2622eae668aa6a1a1b7c3b9bc6e7c37eb05`. The fresh
+  12:02:00 UTC harvest found 16 successful checks, two settled threads, both
+  current-head reviews complete and no pending requests or scanning findings.
+  The [tally](https://github.com/EngraphCode/castr/pull/84#issuecomment-5558975931)
+  records two rounds within budget, individual dispositions and the full six-return
+  Cricket checkpoint. No running green CI/review wave was superseded. The original
+  96 findings and nine programme identities remain conserved; Q-016 has its own
+  97th record, and Q-19's separate queue carrier records integrated acceptance.
+- **C03a in progress:** branch `codex/castr-local-checkout`
+  ([PR lookup](https://github.com/EngraphCode/castr/pulls?q=is%3Apr+head%3Acodex%2Fcastr-local-checkout)),
+  refreshed onto the C01R merge, carries executable local-checkout instructions
+  and a small User fixture. Its PR owns only this entry workflow; C03b owns detailed
+  API/options documentation, and C03c owns response/transport/MCP guides. The full
+  preserved draft remains separate. Acceptance requires the reviewed merge and
+  its current-head gates; early isolated-pack reconnaissance does not complete C10.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.

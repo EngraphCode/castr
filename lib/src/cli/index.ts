@@ -45,12 +45,12 @@ function writeCliMessage(message: string): void {
 
 program
   .name('castr')
-  .description('Generate a type-safe API client with Zod validation from an OpenAPI specification')
+  .description('Generate Zod schemas and endpoint metadata from an OpenAPI specification')
   .version(getPackageVersion())
   .argument('<input>', 'path/url to OpenAPI/Swagger document as json/yaml')
   .option(
     '-o, --output <path>',
-    'Output path for the generated client ts file (defaults to `<input>.client.ts`)',
+    'Output TypeScript file, or directory for tag-file/method-file grouping (default: `<input>.client.ts`)',
   )
   .option(
     '-t, --template <name|path>',

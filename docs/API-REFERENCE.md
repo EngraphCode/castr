@@ -8,7 +8,7 @@ Where a public type is currently wider than the honest supported contract, this 
 
 ## Package Exports
 
-The package currently publishes:
+The local package exposes:
 
 - `@engraph/castr`
 - `@engraph/castr/cli`
@@ -18,10 +18,11 @@ The package currently publishes:
 
 ## CLI
 
-Published binary:
+Build the local checkout following the [usage guide](./USAGE.md#build-and-generate).
+No published package is currently planned. From the repository root:
 
 ```bash
-castr <input> -o <output> [options]
+node lib/dist/cli/index.js <input> -o <output> [options]
 ```
 
 `<input>` may be a local OpenAPI/Swagger file path or a URL.
@@ -30,7 +31,7 @@ castr <input> -o <output> [options]
 
 | Option                        | Meaning                                                                                                        |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `-o, --output <path>`         | Output file path                                                                                               |
+| `-o, --output <path>`         | Output file path, or a directory for `tag-file`/`method-file` grouping                                         |
 | `-t, --template <name\|path>` | Built-in template selector; non-built-in CLI values are accepted for compatibility but ignored by the renderer |
 | `-p, --prettier <path>`       | Prettier config path                                                                                           |
 | `-a, --with-alias`            | Include operation aliases derived from `operationId`                                                           |

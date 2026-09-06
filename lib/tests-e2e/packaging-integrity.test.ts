@@ -15,10 +15,11 @@ const libRoot = path.resolve(__dirname, '..');
 /**
  * Packaging integrity (deep-review finding C1).
  *
- * Proves the PUBLISHED package shape works: the tarball `pnpm pack` produces
+ * Checks the locally packed archive shape: the tarball `pnpm pack` produces
  * must carry type declarations at every declared `types` target, and every
  * documented entrypoint — `.`, `./cli`, `./parsers/zod` — must resolve and
- * import at runtime exactly as a consumer would experience it.
+ * run using the checkout dependencies described below.
+ * This does not prove dependency isolation or package publication.
  *
  * Mechanics: pack the workspace, extract the tarball into a scratch
  * `node_modules/@engraph/castr` nested inside `lib/` (so the package's own
@@ -105,7 +106,7 @@ describe('packaging integrity (C1)', () => {
     expect(stdout).toContain('Usage:');
   });
 
-  it('resolves ./parsers/zod and runs the README parseZodSource example', async () => {
+  it('resolves ./parsers/zod and invokes parseZodSource', async () => {
     const out = await importInChild(
       '@engraph/castr/parsers/zod',
       [
