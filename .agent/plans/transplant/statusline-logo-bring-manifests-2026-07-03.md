@@ -1,7 +1,7 @@
 ---
 title: Statusline + logo-handling bring-manifests (owner-directed, 2026-07-03)
-status: current
-lane: current
+status: historical
+lane: transplant
 created: 2026-07-03
 owner_directive: >-
   "I would like to bring over the in-repo enhanced statusline code and config, so I can
@@ -16,6 +16,17 @@ provenance: >-
 ---
 
 # Statusline + logo-handling bring-manifests (2026-07-03)
+
+**Historical scope, reconciled 2026-09-06:** the wholesale-transplant effort
+was stopped by the owner on 2026-08-26 ([QD-2](../proof-programme/queued-decisions.md)). Dated statuses,
+measurements, TODOs and execution language below describe the earlier effort;
+they do not form an active backlog or automatic resumption trigger.
+Surviving bilateral equality has a [named carrier](../current/paused/practice-equality-parity-follow-up.md);
+programme Q-13 separately owns selective canonical-delta evaluation.
+This document remains evidence for a newly bounded parity slice if commissioned.
+No unfinished historical task is marked delivered by this disposition.
+
+## Historical record
 
 > **✅ S1 LANDED (2026-07-03, Windswept Winging Cliff / 0ceb5f, `7a37dec`).** All S1 rows executed as
 > manifested; reviewers folded (code-reviewer APPROVED; test-reviewer Medium cured by extracting the

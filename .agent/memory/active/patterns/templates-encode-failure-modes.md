@@ -67,7 +67,7 @@ When sharpening a doctrine, principle, or rule:
 
 **TDD-as-pairs sharpening 2026-05-03**: the principles directive
 already said "Red, Green, Refactor". The
-`.agent/plans/templates/feature-workstream-template.md` and
+`.agent/plans/templates/delivery-plan-template.md` and
 `.agent/directives/tdd-phases.md` templates structurally encoded
 that as "WS1: RED commit; WS2: GREEN commit; WS3: REFACTOR commit".
 Six plans inherited that shape; one of them left four skipped
@@ -79,7 +79,7 @@ templates and the in-flight plans, not just the directive itself.
 The cure landed as a multi-file diff: the directive sharpening
 (`tdd-as-design.md` new directive carrying the
 load-bearing definition), template updates
-(`feature-workstream-template.md`, `tdd-phases.md`), and the in-flight
+(`delivery-plan-template.md`, `components/tdd-phases.md`), and the in-flight
 plan reshape so all six existing plans expressed work as cycle-pairs
 (test paired with product code in one commit, with named cycle-pair
 homes for each of the six skipped tests).

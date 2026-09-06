@@ -1,4 +1,4 @@
-# ADR-002: Scalar Pipeline Adoption
+# ADR-019: Scalar Pipeline Adoption
 
 **Date:** November 4, 2025  
 **Status:** Accepted  

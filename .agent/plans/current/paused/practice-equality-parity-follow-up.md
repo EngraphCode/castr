@@ -8,14 +8,14 @@ sequence_position: >-
   claims the PB batch; it becomes primary only then. Not a third entry point beside
   the primary active plan.
 created: 2026-08-25
-last_updated: 2026-08-25
+last_updated: 2026-09-06
 owner_directive: >-
   Standing equality directive (owner, 2026-08-24, verbatim): "piece by piece, I want the
   Practice in Castr and OCE to take the best of each other, until they are Equal in
   capability." Plus the owner's 2026-08-25 safe-stop instruction: record all context and
   code in pushed PRs so a different agent on a different account can pick the work up from
   the repo alone. This plan is that handoff record.
-evidence: >-
+historical_handoff_evidence: >-
   Instalment 1 (current/complete/practice-equality-identity-and-cognition.md) landed and
   merged in castr PR #54 (merge commit 54a7099) and is mid-flight in OCE PR #18
   (https://github.com/EngraphCode/oak-open-curriculum-ecosystem/pull/18, branch
@@ -133,6 +133,12 @@ todos:
 ---
 
 # Practice equality instalment 2 — cross-estate parity follow-up (handoff)
+
+**Current disposition, 2026-09-06:** HO-1 is complete (OCE PR #18 merged;
+its as-built is retained below). PB-1–PB-5 and HO-2 remain pending.
+This bilateral equality instalment is distinct from the stopped wholesale
+transplant. Its named pickup condition stands; this refresh does not activate it.
+The YAML handoff describes the earlier open-PR state, not current delivery status.
 
 Instalment 1 unified the identity seed rule and transplanted the cognition skill tree
 (castr PR #54, merged; OCE PR #18, open at handoff). Driving OCE #18 through review

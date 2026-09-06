@@ -1,5 +1,16 @@
 # Phase 2 sub-plan — `@engraph/agent-tools` build + gate integration
 
+**Historical scope, reconciled 2026-09-06:** the wholesale-transplant effort
+was stopped by the owner on 2026-08-26 ([QD-2](../proof-programme/queued-decisions.md)). Dated statuses,
+measurements, TODOs and execution language below describe the earlier effort;
+they do not form an active backlog or automatic resumption trigger.
+Surviving bilateral equality has a [named carrier](../current/paused/practice-equality-parity-follow-up.md);
+programme Q-13 separately owns selective canonical-delta evaluation.
+This document remains evidence for a newly bounded parity slice if commissioned.
+No unfinished historical task is marked delivered by this disposition.
+
+## Historical record
+
 **Source:** a dedicated design pass (Plan agent) + firsthand verification. **Status:** design captured 2026-06-05;
 execute in Phase 2. Items marked **⚠️verify** were asserted by the design pass and not yet independently read — verify at
 execution per the firsthand rule. Items marked **✅verified** I checked against source this session.

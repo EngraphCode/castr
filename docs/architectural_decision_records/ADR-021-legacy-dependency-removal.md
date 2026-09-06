@@ -1,4 +1,4 @@
-# ADR-004: Legacy Dependency Removal
+# ADR-021: Legacy Dependency Removal
 
 **Date:** November 4, 2025  
 **Status:** Accepted  

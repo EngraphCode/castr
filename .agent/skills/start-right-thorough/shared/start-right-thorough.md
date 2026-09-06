@@ -3,7 +3,7 @@ prompt_id: start-right-thorough
 title: 'Start Right (Thorough)'
 type: workflow
 status: active
-last_updated: 2026-04-26
+last_updated: 2026-09-06
 ---
 
 # Start Right (Thorough)
@@ -24,7 +24,7 @@ Read and internalise these documents:
 5. @.agent/directives/testing-strategy.md — test-type taxonomy and shape rules
 6. @.agent/directives/requirements.md + @.agent/directives/DEFINITION_OF_DONE.md — castr product doctrine and gate protocol
 7. @.agent/memory/operational/threads/README.md — thread convention + identity discipline (PDR-027)
-8. Open the [ADR index](../../../../docs/architectural_decision_records/README.md) and read any ADR (001–047) whose
+8. Open the [ADR index](../../../../docs/architectural_decision_records/README.md) and read the ADRs whose
    slug matches your current work area, plus the durable architecture docs under
    [`docs/architecture/`](../../../../docs/architecture/) named by the active plan.
 
@@ -67,7 +67,8 @@ When writing the thread identity row, prefer an existing owner-assigned
 identity block before both thread registration and shared-state writes:
 
 ```bash
-pnpm agent-tools:collaboration-state -- identity preflight --platform codex --model GPT-5
+# Set PRACTICE_MODEL_ID to this session's actual model identifier first.
+pnpm agent-tools:collaboration-state -- identity preflight --platform codex --model "$PRACTICE_MODEL_ID"
 ```
 
 For non-Codex platforms or name-only display, use
@@ -141,7 +142,7 @@ Check `.agent/practice-core/incoming/` for practice-core files. If present, aler
 
 ## castr Domain Grounding
 
-The **IR is the source of truth after parsing** (`Any Input → Parser → IR → Writers → Any Output`). Preserve IR honesty even when an interchange format is lossy; **fail fast rather than silently canonicalising away user-visible semantics**. Types and Zod flow from schema (see `requirements.md` and `principles.md`).
+The **IR is the source of truth after parsing** (`Admitted source grammar → Parser → IR → Writer → Declared target profile`). Preserve IR honesty even when an interchange format is lossy; **fail fast rather than silently canonicalising away user-visible semantics**. Types and Zod flow from schema (see `requirements.md` and `principles.md`).
 
 Frame the problem precisely: is it a **standards gap, an IR gap, a parser/writer contract issue, a canonicalisation choice, or an upstream runtime/dependency issue?** Name the input→output pair and the output format that constrains support.
 
@@ -167,7 +168,9 @@ Invoke the reviewer and domain-expert layer per [`invoke-reviewers.md`](../../..
 
 ## Process
 
-**Do not assume you know the initial step.** Discuss with the user first.
+Derive the initial step from the owner's current instruction and the accepted plan.
+Ask only for a missing decision that changes the authorised work; do not re-request
+permission for an already approved implementation.
 
 ## Quality Gates
 

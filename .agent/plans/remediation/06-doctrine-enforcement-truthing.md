@@ -1,5 +1,11 @@
 # Plan: Doctrine Enforcement Truthing (make the strict claims enforceable)
 
+**Current routing, 2026-09-06:** Q-14 owns documentary truthing. Object/Reflect is already lint-enforced; the no-rule premise and 148-use count below are historical. Remaining enforcement is Q-12; Q-016 architecture remains open.
+
+The [parent programme](../proof-programme/parent-plan.md) governs selection and
+execution state. The following original finding contract is an evidence base,
+not an independent execution order. Reproduce remaining cases on the chosen base.
+
 **Status:** Backlog (remediation) · **Findings:** M1, M2, M12, L1-L5 · **Risk:** Low (⚠️ doctrine edits need user approval)
 **References:** report `06-doctrine-conformance.md`; `principles.md`, ADR-026; `lib/eslint.config.ts`
 
@@ -12,7 +18,7 @@ the C6 reversal ship). Per the **strictest-of-three** rule, raise enforcement up
 
 ## Scope (per the strictest-normalisation rule)
 
-- **M1/M12:** `principles.md` declares `Object.*`/`Reflect.*` forbidden but no lint rule enforces it (148 uses). Add a
+- **M1/M12 (historical finding; no-rule premise discharged):** `principles.md` declares `Object.*`/`Reflect.*` forbidden but no lint rule enforces it (148 uses). Add a
   `no-restricted-syntax`/`no-restricted-properties` rule (at least for type-information-losing uses) and refactor; fix
   the `Reflect.get/set`-on-`deprecated` site (M12) to typed access.
 - **M2:** ADR-026's string-method ban is evaded via lodash function-call form (20 files, incl. ad-hoc `$ref` parsing).
@@ -27,15 +33,15 @@ Out of scope: relaxing any doctrine claim (forbidden by the strictest rule).
 
 ## Assumptions to validate
 
-1. The 148 `Object.*`/`Reflect.*` uses have typed alternatives (most do); some may need a narrow governed allowance.
-2. Editing `principles.md`/ADR-026 is **explicitly approved by the user first** (required by `principles.md`).
+1. The historical 148 `Object.*`/`Reflect.*` uses have typed alternatives (most do); some may need a narrow governed allowance.
+2. Q-14 carries B-09 and the approved staleness batch. New doctrine outside that grant still needs its own authority.
 
 ## Success criteria
 
 - ESLint fails on a new `Object.keys`/`Reflect.get`/lodash-`split`-in-`src` introduction (rule proven by a fixture).
-- The 148 uses are refactored or covered by a governed, documented allowance.
+- Re-measure surviving violations against the existing enforced ban; do not reuse the old count as today's remaining work.
 - `principles.md`/ADR-026 wording matches the enforced reality (after user approval).
-- `pnpm qg` green.
+- `pnpm check` green.
 
 ## TDD order
 

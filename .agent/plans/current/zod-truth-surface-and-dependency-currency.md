@@ -3,7 +3,7 @@ title: Zod truth surface & dependency currency — two-part plan
 status: current
 lane: current
 created: 2026-08-31
-last_updated: 2026-08-31
+last_updated: 2026-09-06
 owner_directive: >-
   "explore and answer the unknowns, then draft a two part plan, part 1 a
   simple dependency currency pass, part two everything else above and your
@@ -61,6 +61,27 @@ oracle on every version bump, the static-parsing architecture choice
 that makes the model necessary is ratified in an ADR instead of inherited,
 and the measured 4.5 runtime wins (compile/validate) reach consumers as
 evidence-backed guidance (TS-5).
+
+## qs security follow-up — 2026-09-06
+
+**QS-1 — outstanding dependency-security obligation.** GitHub's default-branch
+[Dependabot alert #73](https://github.com/EngraphCode/castr/security/dependabot/73)
+was read on September 6 and is open. It identifies `qs` as a transitive runtime
+dependency in `pnpm-lock.yaml`: GHSA-x5fp-wj9c-mxmx, medium severity,
+“qs array-limit bypass via bracket-key comma parsing”, affected versions
+6.14.2–6.15.3, first patched version 6.16.0.
+
+This is new dated evidence after the August 31 zero-findings audit below.
+DC-1/Q-23 remain complete for their historical acceptance. This section owns
+the follow-up without creating an independent execution queue: materialise a
+bounded corrective dependency slice in the parent on authorised resumption, or
+consume QS-1 in an explicit dependency-currency commission.
+
+Acceptance: establish the actual dependency/consumer path; update through its
+owning dependency boundary to a version outside the advisory range; prove the
+relevant behaviour and canonical gates; re-read the advisory and record closure
+or remaining exposure. The present documentation refresh does none of that
+implementation and makes no exploitability inference from severity alone.
 
 ## Evidence base (all measured firsthand, 2026-08-31)
 
@@ -439,26 +460,17 @@ run-numbered dated outputs committed; the criterion applied with its
 outcome recorded here; docs landed (or the falsification recorded);
 the decision card queued; gates green.
 
-## Recommendation (post uncertainty exploration)
+## Sequencing and current disposition
 
-The probes strengthened the pre-probe synthesis on every axis: the shallow
-def contract is empirically stable across 4.3→4.5 (the runtime oracle is
-cheap and durable — with the measured limit that shallow def shape did not
-move for the 4.5 behaviour changes, so it detects representation drift,
-never semantic drift; the oracle covers the latter), the corpus blind spot
-is real and total for the 4.5-changed regions (the oracle is necessary,
-not hypothetical), and the table layer is already half-manifest on both
-sides (TS-2 is a consolidation, not an invention). Recommended order:
-**Q-23 → Q-28 → Q-24 → Q-25 → Q-26**, with Q-27 (the split `toJSONSchema`
-differential) after Q-24 — currency first so the oracle pins the vendor
-castr actually ships against; the small Q-28 fidelity fix next so the
-corpus can cover the whole string-formats estate; oracle before manifest
-so manifest refactoring lands under cross-truth proof; ADR
-last-but-referencing-both so doctrine records what exists; Q-29 (runtime-performance guidance)
-follows Q-25 by `depends_on`, in the tail with Q-26/Q-27. Sequencing relative to the existing
-queue: after the safety instruments (Q-18/Q-20/Q-22/Q-19), ahead of
-Q-05..Q-09 — owner-adjustable; the rows carry no gates beyond `depends_on`
-within this plan.
+Part 1 / Q-23 completed in the 2026-08-31 currency landing. Its measurements and
+session-specific authorisation remain dated evidence, not a reusable hooks
+exception. All Part 2 rows remain pending.
+
+The [parent queue](../proof-programme/parent-plan.md) determines selection and
+ordering. Q-24/Q-25/Q-28 have their currency dependency satisfied; Q-27 waits
+for Q-24, Q-26 for Q-24/Q-25, and Q-29 for Q-25. Eligibility does not authorise
+autonomous execution while paused. The original recommendation is conserved in
+the dated estate archive.
 
 Runtime introspection (`_zod.def` walking) is deliberately NOT adopted as
 the parser: its costs (executing user code, expression-level diagnostics
@@ -493,12 +505,10 @@ ingesting schemas castr cannot statically analyse.
 
 ## Foundation alignment & lifecycle
 
-Aligned to `principles.md` (strict everywhere — the oracle extends
-strictness to the vendor boundary), `testing-strategy.md` (red-first
-cycles named per slice), `requirements.md` (its generic "Zod 4" input
-doctrine remains in force until TS-3 ratifies the `^4.5` floor — TS-2's
-diagnostics narrow error text only, never acceptance, and own no part of
-the contract transition). The
+Aligned to the engineering principles, testing strategy and requirements:
+the owner has ratified Zod input >=4.5 <5 and output tracking the ratified
+major. TS-3 owns the static-parsing/oracle decision and dependency-shape
+adjudication; TS-2 owns no contract widening. The
 `plan-body-first-principles-check` fires at each executing firing: re-derive
 each slice's shape from live code and this plan's evidence, not its
 summaries; vendor call shapes (zod probe results, AJV options, ts-morph)

@@ -65,7 +65,7 @@ If a conclusion is durable, promote it to permanent docs or ADRs before the plan
 
 When beginning a new workstream:
 
-- create the new plan in `active/`
+- move the ready executable plan from `current/` into `active/`
 - make sure it is the smallest useful atomic slice
 - link it from `roadmap.md`
 - if relevant, point `session-continuation.prompt.md` at it
@@ -171,8 +171,8 @@ repudiated the parking framing outright on 2026-06-09.)
 When a workstream is unfinished but not the next slice:
 
 - still name exactly one **primary** active plan in `session-continuation.prompt.md` and `roadmap.md`
-- move the non-primary workstream to `./current/paused/` carrying its **named position** in the roadmap's
-  plan-of-record sequence
+- move the non-primary workstream to `../current/paused/` carrying its **named position** in the roadmap's
+  programme queue or a named owner-directed sequence
 - never label work "parked", "untouched", or "resumes later" without a named sequence position
 - an attributed owner decision in any continuity surface is precedence, not approval — it must trace to the owner's
   actual words, and when the owner contradicts it, the record is wrong and gets fixed everywhere it propagated

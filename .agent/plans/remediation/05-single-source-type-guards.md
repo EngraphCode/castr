@@ -1,5 +1,11 @@
 # Plan: Single-Source Type Guards (`isRecord` / `isCastrSchema`)
 
+**Current routing, 2026-09-06:** Q-12 owns canonical guard/empty-record work and surviving PR #20 value. Other serialization changes do not establish this defect fixed.
+
+The [parent programme](../proof-programme/parent-plan.md) governs selection and
+execution state. The following original finding contract is an evidence base,
+not an independent execution order. Reproduce remaining cases on the chosen base.
+
 **Status:** Backlog (remediation) · **Findings:** M3, C4 · **Risk:** Low-Medium
 **References:** report `04-findings-medium.md` (M3), `02` (C4); `principles.md` §3 (single source of truth for types); `shared/type-utils/{types,type-guards}.ts`, `shared/openapi/version.ts`, `shared/load-openapi-document/additional-operations-validation/index.ts`, `ir/serialization.ts`
 
@@ -29,7 +35,7 @@ scope: broader IR validation redesign.
 - `isRecord({}) === true`, `isRecord([]) === false`, `isRecord(null) === false`; unit tests for each.
 - `buildIR({type:'object', properties:{}}) → serializeIR → deserializeIR` round-trips (C4 green) — add the fixture
   (shared with plan 02).
-- `pnpm qg` green; `knip`/`depcruise` clean after the deletions.
+- `pnpm check` green; `knip`/`depcruise` clean after the deletions.
 
 ## TDD order
 

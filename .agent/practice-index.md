@@ -7,20 +7,39 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).
 
 Local shorthand for this repo: strict and complete everywhere, all the time. Code, doctrine, plans, prompts, and proofs must agree before a support claim is honest.
 
+## Current work and evidence
+
+The [proof-programme parent](plans/proof-programme/parent-plan.md) owns the queue
+and the autonomous-development experiment's execution state. The experiment is
+owner-declared paused; its Claude Routine is disabled. Owner-directed
+documentation work has its completed
+[delivery record](plans/current/complete/plan-estate-and-documentation-refresh.md).
+
+The [delivery ledger](plans/delivery-ledger.md) owns dated PR observations and
+verified landings. The [roadmap](plans/roadmap.md) routes remaining work by impact;
+[repo continuity](memory/operational/repo-continuity.md) is the session-entry
+bridge. These are the current evidence homes, not further sources of doctrine.
+
 ## Directives
 
-| Directive                                                                                   | Purpose                                   |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [IDENTITY.md](IDENTITY.md)                                                                  | Canonical identity, semantics, and policy |
-| [AGENT.md](directives/AGENT.md)                                                             | Operational entry point for agents        |
-| [principles.md](directives/principles.md)                                                   | Authoritative engineering doctrine        |
-| [testing-strategy.md](directives/testing-strategy.md)                                       | Test methodology and TDD rules            |
-| [requirements.md](directives/requirements.md)                                               | Decision guidance and semantic contract   |
-| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md)                                   | Canonical quality-gate protocol           |
-| [metacognition.md](directives/metacognition.md)                                             | Reflection discipline before planning     |
-| [architectural-file-system-structure.md](directives/architectural-file-system-structure.md) | Structural repo architecture guidance     |
+| Directive                                                                                   | Purpose                                        |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [IDENTITY.md](IDENTITY.md)                                                                  | Canonical identity, semantics, and policy      |
+| [AGENT.md](directives/AGENT.md)                                                             | Operational entry point for agents             |
+| [VISION.md](directives/VISION.md)                                                           | Umbrella and Castr application-contract vision |
+| [PRACTICE-VISION.md](directives/PRACTICE-VISION.md)                                         | Practice beneficiaries, impact and fitness     |
+| [principles.md](directives/principles.md)                                                   | Authoritative engineering doctrine             |
+| [testing-strategy.md](directives/testing-strategy.md)                                       | Test methodology and TDD rules                 |
+| [requirements.md](directives/requirements.md)                                               | Decision guidance and semantic contract        |
+| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md)                                   | Canonical quality-gate protocol                |
+| [metacognition.md](directives/metacognition.md)                                             | Reflection discipline before planning          |
+| [architectural-file-system-structure.md](directives/architectural-file-system-structure.md) | Structural repo architecture guidance          |
 
 ## Architectural Decisions
+
+The [identity charter](IDENTITY.md) governs current object semantics. ADR-038
+and ADR-040 preserve superseded policy; the [ADR index](../docs/architectural_decision_records/README.md)
+records every status.
 
 | ADR                                                                                                                        | Subject                                    |
 | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
@@ -28,9 +47,9 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [ADR-031](../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)                                           | Zod 4 output strategy                      |
 | [ADR-032](../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)                                            | Zod 4 input strategy                       |
 | [ADR-035](../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)                                   | Transform validation parity                |
-| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)                                  | Object unknown-key semantics               |
+| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)                                  | Historical object semantics (superseded)   |
 | [ADR-039](../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)               | UUID subtype semantics                     |
-| [ADR-040](../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Strict object ingest/output doctrine       |
+| [ADR-040](../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)       | Historical strict-only policy (superseded) |
 | [ADR-041](../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md) | Native-capability seam doctrine            |
 | [ADR-042](../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md)                                | JSON Schema egress normal form             |
 | [ADR-043](../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)                                  | Core-vs-companion workspace boundary       |
@@ -75,3 +94,11 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 | [`.cursor/`](../.cursor/)                 | Cursor-specific wrappers and settings                                                    |
 | [`.codex/`](../.codex/)                   | Codex project-agent registration and thin reviewer/expert adapters                       |
 | [`.codex/agents/`](../.codex/agents/)     | Thin Codex project-agent adapters pointing back to canonical templates                   |
+
+## Verified-claims adoption
+
+[PDR-135](practice-core/decision-records/PDR-135-verified-claims-engineering.md)
+owns the portable verified-claims pattern. The two vision surfaces apply it to
+Castr and the Practice. Its owner-approved W1 graduation and current
+implementation evidence are recorded in the
+[documentation delivery](plans/current/complete/plan-estate-and-documentation-refresh.md).

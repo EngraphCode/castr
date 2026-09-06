@@ -1,5 +1,11 @@
 # Plan: IR Fidelity Proof Harness (round-trip + property proofs)
 
+**Review boundary, 2026-09-06:** Q-02/Q-03/Q-04 are bounded completed
+slices, not completion of this plan. The July re-verification below is historical;
+later repairs supersede its blanket claim that every finding still reproduces.
+Q-05 remains the placebo-refinement/nested-member-loss carrier. Use the parent
+queue's current dependency and execution state.
+
 > **⏸️ PAUSED — PARTIALLY ABSORBED (2026-08-22, B-11 RATIFY):** the owner ratified
 > [W-0 ballot item B-11](../../proof-programme/ballot-2026-08-owner-walk.md), so the
 > [proof-programme parent plan](../../proof-programme/parent-plan.md)'s queue supersedes
@@ -9,9 +15,9 @@
 >
 > | Finding                                                                              | Disposition                                                      |
 > | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-> | Harness shape (fixture corpus + machine-readable outcomes in `lib/tests-transforms`) | Queue slice Q-02                                                 |
-> | C2 / F-01 (security AND→OR flattening)                                               | Queue slice Q-03                                                 |
-> | F-03 (nested Boolean schema `false` → `{}`)                                          | Queue slice Q-04                                                 |
+> | Harness shape (fixture corpus + machine-readable outcomes in `lib/tests-transforms`) | Q-02 runner complete; full harness Q-11                          |
+> | C2 / F-01 (security AND→OR flattening)                                               | Q-03 conjunction repair complete; residual security Q-12         |
+> | F-03 (nested Boolean schema `false` → `{}`)                                          | Q-04 bounded cases complete; residual traversal Q-12             |
 > | F-04 (placebo refinements fail-fast + nested Zod member loss)                        | Queue slice Q-05                                                 |
 > | C3, C4, H1–H4, M10 (remaining success criteria below)                                | Owning tranches; mapped to concrete queue rows at the Q-12 split |
 >
@@ -44,7 +50,7 @@
 > `writers/zod/refinements/object.ts` (`:130` dependentSchemas, `:183–187` if/then/else); the
 > `unevaluatedProperties` and `additionalProperties` refinements are REAL — leave them alone.
 
-**Status:** Backlog (remediation) · **Findings:** H7 (root) + C2, C3, C4, H1, H2, H3, H4, M10 · **Risk:** Low (tests) → Medium (fixes)
+**Status:** Paused, partially absorbed; harness Q-11 and remaining tranches Q-12 · **Findings:** H7 (root) + C2, C3, C4, H1, H2, H3, H4, M10 · **Risk:** Low (tests) → Medium (fixes)
 **References:** report `02`/`03`/`04` and `07-test-quality-and-proof-gaps.md`; `DEFINITION_OF_DONE.md` (byte-for-byte determinism / persistence E2E); `architecture-review-packs.md` Pack 7 (already calls for an IR-fidelity suite)
 
 ---

@@ -1,6 +1,6 @@
 # Definition of Done
 
-**Last Updated:** 2026-06-09  
+**Last Updated:** 2026-09-06  
 **Purpose:** The canonical, strict and complete quality gate definition for this repository.
 
 All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
@@ -30,6 +30,11 @@ Do not invoke `pnpm qg` directly. It may remain as a script implementation detai
 
 ## Quality Gates (Expanded, Run From Repo Root)
 
+This sequence reflects the aggregate in root `package.json`. Invoke the canonical
+entrypoint rather than maintaining a separate local copy of this expanded list.
+The Markdown-link validator is a separate informational report; inspect its
+by-file findings, since exit zero does not prove that affected links resolve.
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -37,6 +42,7 @@ set -euo pipefail
 pnpm clean
 pnpm install --frozen-lockfile
 
+pnpm secrets:scan
 pnpm build
 pnpm format:check
 pnpm type-check
@@ -45,9 +51,12 @@ pnpm madge:circular
 pnpm madge:orphans
 pnpm depcruise
 pnpm knip
+pnpm markdownlint-check:root
 pnpm portability:check
 pnpm packaging:check
-
+pnpm skills:check
+pnpm agents:check
+pnpm repo-validators:check
 pnpm test
 pnpm character
 pnpm test:snapshot

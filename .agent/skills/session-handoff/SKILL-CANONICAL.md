@@ -16,8 +16,6 @@ napkin rotation, fitness management) belongs to
 thread-scoped.
 
 **Governance**: This workflow operationalises
-[ADR-150 (Continuity Surfaces, Session Handoff, and Surprise Pipeline)](../../../docs/architecture/architectural-decisions/150-continuity-surfaces-session-handoff-and-surprise-pipeline.md)
-(host architecture) and
 [PDR-011 (Continuity Surfaces and the Surprise Pipeline)](../../practice-core/decision-records/PDR-011-continuity-surfaces-and-surprise-pipeline.md)
 (portable Practice governance). These name the learning path for
 surprise and correction as `capture → distil → graduate → enforce`,

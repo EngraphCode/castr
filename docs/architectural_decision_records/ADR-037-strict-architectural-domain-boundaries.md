@@ -1,4 +1,4 @@
-# ADR-036: Strict Architectural Domain Boundaries
+# ADR-037: Strict Architectural Domain Boundaries
 
 ## Status
 

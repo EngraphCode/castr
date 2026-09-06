@@ -1,4 +1,4 @@
-# ADR-003: Intersection Type Strategy for Type System Boundaries
+# ADR-020: Intersection Type Strategy for Type System Boundaries
 
 **Date:** November 4, 2025  
 **Status:** Accepted  

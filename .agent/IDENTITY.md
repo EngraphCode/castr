@@ -1,443 +1,129 @@
 # Castr: Identity, Semantics, and Policy
 
-> [!IMPORTANT]
-> On 2026-04-16, product direction was clarified: Castr must accept and emit
-> explicit source `additionalProperties`, but must never invent
-> `additionalProperties` from input that did not declare them. Current
-> implementation is still stricter than that doctrine at some seams; the active
-> alignment slice is
-> [explicit-additional-properties-support.md](./plans/active/explicit-additional-properties-support.md).
->
-> This document records the canonical policy target. Temporary implementation
-> drift must be treated as work to close, not as the doctrine.
-
-## 1. Identity
-
-Castr is a **schema compiler**.
-
-It is **not**:
-
-- a tolerant schema adapter
-- a best-effort converter
-- a lossy interoperability layer
-- a runtime validation helper
-
-It **is**:
-
-- a **canonicalisation system** for data schemas
-- a **deterministic transformation engine**
-- a system that enforces **semantic stability across arbitrary format translation**
-
-Castr operates under compiler-like guarantees:
-
-- **admission is strict**
-- **semantics are canonical**
-- **round-trips are lossless (after admission)**
-- **outputs are stable and idempotent**
-
----
-
-## 2. Core Invariant
-
-> Once a schema is successfully ingested into Castr, its meaning is canonical, closed, deterministic, and preserved exactly under arbitrarily deep repeated transformations between all supported formats.
-
-Corollaries:
-
-- No silent data loss is permitted
-- No semantic broadening or narrowing is permitted post-ingestion
-- No backend-specific interpretation is allowed to alter meaning
-- No “best effort” interpretation exists
-
-### 2.1 Strict And Complete Everywhere, All The Time
-
-Castr's strictness is inseparable from completeness.
-
-- A feature is part of Castr only when parser, IR, runtime validation, writers, proofs, and docs all agree on it.
-- Partial validation, partial proof, partial documentation, or partially updated support claims are architecture drift, not an acceptable steady state.
-- If a surface is not complete yet, the honest state is unsupported, paused, or blocked until the gap is closed.
-
----
-
-## 3. Ontology
-
-### 3.1 Single Semantic Model
-
-Castr defines **one and only one object semantics model**:
-
-> **Explicit, deterministic object semantics with no invented openness**
-
-This means:
-
-- Every valid key must be explicitly declared
-- Unknown keys are **never implicitly accepted**
-- Unknown keys are **never implicitly preserved**
-- Unknown keys are **never implicitly typed**
-- If source input explicitly declares `additionalProperties`, that openness is
-  preserved as explicit source truth rather than invented by Castr
-
-There are no alternate **implicit** object modes in Castr.
-
----
-
-### 3.2 Rejected Ontologies
-
-The following are **not part of Castr semantics**:
-
-| Feature                                      | Status   | Reason                                                               |
-| -------------------------------------------- | -------- | -------------------------------------------------------------------- |
-| Strip (accept + drop unknown keys)           | Rejected | Implicit data loss violates determinism                              |
-| Passthrough (accept + preserve unknown keys) | Rejected | Backend/runtime-specific acceptance mode, not canonical object truth |
-| Invented catchall / `additionalProperties`   | Rejected | Semantic broadening from absent input is not allowed                 |
-
-Explicit source `additionalProperties` is different: it is admissible object
-truth when the source declared it and the relevant target can represent it
-honestly.
-
----
-
-## 4. Intermediate Representation (IR)
-
-### 4.1 Canonical IR
-
-The IR contains only constructs that are:
-
-- **fully explicit**
-- **deterministic**
-- **closed under transformation**
-
-For objects:
-
-- Only explicitly declared properties exist
-- No runtime unknown-key behaviour flags exist
-- No implicit acceptance rules exist
-- Explicit source `additionalProperties` may exist as carried schema truth; it
-  is never invented by Castr
-
-### 4.2 No Dual Semantics
-
-The IR does **not**:
-
-- encode multiple object modes
-- carry behavioural flags for unknown keys
-
-The IR **does** carry explicit source-truth `additionalProperties` when present.
-
-There is no “strict vs passthrough vs strip” in IR.
-
-There is only:
-
-> **object with explicit properties, optionally plus explicit declared
-> `additionalProperties`**
-
----
-
-## 5. Ingestion Policy
-
-### 5.1 Admission Principle
-
-A schema is admitted **if and only if** it can be transformed into canonical IR **without ambiguity, semantic drift, or loss of determinism**.
-
-Otherwise:
-
-> The schema is rejected.
-
----
-
-### 5.2 Non-Strict Source Constructs
-
-Source constructs that allow unknown keys are handled as follows:
-
-#### Strip semantics
-
-- Definition: accepts unknown keys and removes them
-- Status: **rejected**
-- Reason: changes observable behaviour (acceptance set differs from strict)
-
-#### Passthrough semantics
-
-- Definition: accepts and preserves unknown keys
-- Status: **rejected**
-- Reason: introduces non-canonical runtime behaviour not carried by the IR
-
-#### Catchall semantics
-
-- Definition: unknown keys are typed via a rule
-- Status: **admitted only when explicit in source input**
-- Reason: explicit source-truth `additionalProperties` can be carried honestly,
-  but Castr must never invent catchall openness from absent input
-
----
-
-### 5.3 Required Diagnostics
-
-All rejections must include:
-
-1. **Precise reason**
-2. **Location in schema**
-3. **Explanation of incompatibility with Castr semantics**
-4. **Actionable alternatives**
-
-Examples of alternatives:
-
-- Explicitly enumerate properties
-- Introduce a `metadata` / `extensions` / `attributes` field:
-
-  ```ts
-  metadata: Record<string, T>;
-  ```
-
-- Use unions to model variation
-- Use explicit map fields instead of open objects
-
----
-
-## 6. Canonical Guarantees
-
-### 6.1 Idempotence
-
-For any admitted schema:
-
-```text
-emit → parse → emit → parse → ...
-```
-
-must produce identical semantics indefinitely.
-
----
-
-### 6.2 Losslessness (Canonical)
-
-Losslessness is defined as:
-
-> No loss or change of meaning within canonical Castr semantics.
-
-Important:
-
-- This does **not** guarantee reconstruction of original source syntax
-- It guarantees preservation of canonical meaning only
-
----
-
-### 6.3 Determinism
-
-- No transformation may depend on runtime evaluation order
-- No transformation may depend on backend quirks
-- Output is uniquely determined by canonical IR
-
----
-
-## 7. Backend Policy
-
-### 7.1 Backend Role
-
-Backends (Zod, JSON Schema, OpenAPI, etc.) are **targets**, not authorities.
-
-They must:
-
-- faithfully represent canonical IR
-- not introduce semantic variation
-- not expand or reduce acceptance behaviour
-
----
-
-### 7.2 Capability Constraint
-
-If a backend cannot express canonical IR:
-
-- Emission must **fail explicitly**
-- No degraded or approximate output is allowed
-
----
-
-### 7.3 No Backend Leakage
-
-Backend-specific constructs must not:
-
-- influence IR design
-- redefine semantics
-- introduce alternate meanings
-
----
-
-## 8. Zod-Specific Policy
-
-### 8.1 Canonical Mapping
-
-Castr emits only closed-object semantics in Zod:
-
-```ts
-z.strictObject({...})
-```
-
-or equivalent canonical encoding.
-
----
-
-### 8.2 Explicit Non-Support
-
-The following Zod constructs are **not part of the canonical supported path**:
-
-| Construct            | Current status                                                                  |
-| -------------------- | ------------------------------------------------------------------------------- |
-| `.passthrough()`     | Rejected; non-canonical runtime behaviour                                       |
-| `z.looseObject()`    | Rejected; equivalent to passthrough                                             |
-| `.strip()` semantics | Rejected; implicit data loss                                                    |
-| `.catchall()`        | Currently rejected at ingest; active plan is aligning explicit catchall support |
-
----
-
-### 8.3 Recursive Objects
-
-Recursive schemas are supported **only in canonical closed form**.
-
-Any recursive schema relying on:
-
-- passthrough
-- catchall
-- loose object semantics
-
-is:
-
-> **currently rejected during ingestion**
-
-For passthrough / loose-object semantics, that is intentional doctrine. For
-explicit catchall semantics, the current rejection is the implementation state
-being aligned by the active explicit-`additionalProperties` slice.
-
----
-
-## 9. Parser / Writer Contract
-
-### 9.1 Scope
-
-Parser/writer guarantees apply to:
-
-> **canonical Castr semantics only**
-
-Not arbitrary source constructs.
-
----
-
-### 9.2 Guarantee
-
-If a schema is:
-
-- admitted into IR
-- emitted to a supported backend
-- re-parsed
-
-then:
-
-- it must remain semantically identical
-
----
-
-### 9.3 Non-Goal
-
-Castr does **not** guarantee:
-
-- round-tripping arbitrary source syntax
-- preserving source-specific features
-- supporting all backend constructs
-
----
-
-## 10. Error Philosophy
-
-Errors are:
-
-- **fail-fast**
-- **precise**
-- **actionable**
-
-Errors must never:
-
-- silently coerce meaning
-- degrade semantics
-- partially accept invalid constructs
-
----
-
-## 11. Design Principles
-
-### 11.1 No Implicit Behaviour
-
-All behaviour must be:
-
-- explicit
-- visible in the schema
-- representable in IR
-
----
-
-### 11.2 No Semantic Ambiguity
-
-If a construct has multiple interpretations:
-
-- it must be rejected
-
----
-
-### 11.3 No Silent Compatibility
-
-Compatibility transformations:
-
-- must be explicit
-- must be opt-in
-- must produce diagnostics
-
----
-
-### 11.4 Stability Over Convenience
-
-Castr prioritises:
-
-- correctness
-- predictability
-- reproducibility
-
-over:
-
-- convenience
-- permissiveness
-- ecosystem alignment
-
----
-
-## 12. What “Correct” Means
-
-A correct Castr system:
-
-- Accepts only schemas that can be canonicalised without ambiguity
-- Rejects all non-canonical constructs deterministically
-- Produces identical meaning across all supported formats
-- Maintains semantic stability under infinite round-trips
-- Never silently alters schema behaviour
-
----
-
-## 13. What “Good” Means
-
-A good Castr system:
-
-- Makes invalid constructs **obviously invalid**
-- Provides **clear migration paths** for rejected schemas
-- Produces **minimal, canonical, stable output**
-- Is **predictable without reading implementation details**
-- Does not leak backend-specific quirks into its model
-
----
-
-## 14. Final Statement
-
-Castr enforces a **closed, canonical schema universe**.
-
-It does not attempt to represent every schema expressible in external systems.  
-It accepts only those schemas that can exist **without ambiguity, without openness, and without semantic drift**.
-
-Everything else is either:
-
-- transformed explicitly, or
-- rejected with guidance.
-
-There are no exceptions.
+**Amended: 2026-09-06.** The ratified application-contract charter supersedes the
+closed, universal schema universe and blanket strict-object-only framing.
+Canonical IR, exact semantic preservation, deterministic output and explicit
+diagnostics are retained. This is policy direction, not certification that
+every required capability is implemented.
+
+## 1. Identity and products
+
+**Castr compiles application value and interaction contracts between compatible
+representations without silently changing their meaning.**
+
+Castr is a compiler, not a best-effort converter, HTTP client or opinionated SDK.
+[The umbrella vision](directives/VISION.md) names both products: Castr and
+[the Practice](directives/PRACTICE-VISION.md). The Practice supplies the shared
+engineering knowledge and operating mechanisms; it is not another Castr format.
+
+## 2. Semantic artifacts and facets
+
+Application-value and software-interaction contracts are distinct artifact
+kinds. The target public boundary has versioned discriminated
+`CastrValueContractDocument | CastrInteractionContractDocument` roots.
+The migration replaces `CastrDocument` outright; it must not invent an implicit
+legacy path or fabricate interaction context for a standalone value schema.
+
+The IR must persist five distinct facets:
+
+| Facet              | Meaning preserved                                                                                        |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| Accepted input     | The complete accepted-input language, including presence and any declared preprocessing/coercion.        |
+| Produced output    | Successful values and structures, including retention, stripping and transformed results.                |
+| Ordered processing | Ordered defaults, catches, refinements, transforms, codecs and their declared sync/async/effect posture. |
+| Annotation         | Descriptions, examples, metadata and scoped extension provenance.                                        |
+| Interaction        | Operations, protocol context, parameters, responses and exact security relationships.                    |
+
+Identity, references, artifact version and absent/false/null/undefined
+distinctions remain explicit. A source-chain string or renderer fragment cannot
+stand in for semantic carriage.
+
+## 3. Canonical IR and admission
+
+After parsing, the IR is authoritative; writers do not consult the discarded
+input to recover meaning. It represents the admitted application-contract
+domain, not arbitrary external languages.
+
+Every advertised source profile names its versions and bounded grammar.
+All valid constructs inside that grammar must parse completely into the
+appropriate artifact and facets. Invalid input, grammar-excluded syntax and
+incompatible artifact kinds fail at their owning boundary with a stable,
+located, actionable diagnostic. A missing implementation is planning debt,
+not a newly invented grammar exclusion.
+
+Same-family `x-*` and unknown normative extensions may be preserved in typed
+opaque carriers with key safety and stable provenance. Exact opaque round-trip
+carriage does not mean an unaware target applies the extension's semantics.
+Foreign graph semantics are not admitted through a generic bag. Cross-domain
+ingress requires a separately governed public projection.
+
+## 4. Object semantics
+
+Strictness means faithful enforcement of the declared contract; it does not mean
+rewriting every source into a closed object. Object input acceptance, produced
+output retention or stripping, catchall validation and unevaluated-property
+behaviour are distinct semantics to carry and prove.
+
+Absent, explicit `false`, explicit `true` and schema-valued
+`additionalProperties` remain distinct. Source-dialect defaults must be
+interpreted deliberately; missing syntax is not permission to invent openness
+or closure. Passthrough, stripping and catchall constructs within an admitted
+grammar cannot be flattened into one strict-object policy.
+
+A writer may use `z.strictObject()` for a genuinely closed contract. It must not
+substitute that encoding for a different accepted-input or produced-output
+contract. The existing implementation's narrower support is a gap to close,
+not a reason to reinstate the superseded doctrine.
+
+## 5. Target profiles and preservation
+
+For each admitted transformation obligation, the selected target has one
+disposition: exact native output; exact, behaviourally proven encoding;
+separately authorised governed projection/widening; or genuine impossibility
+with atomic rejection.
+
+Default exact conversion never silently widens or narrows semantics. A named
+projection selects its facets, reports its complete delta and proves the
+declared relation. It does not discharge an exact lossless certificate.
+TypeScript structural output and MCP tool projection particularly require this
+distinction.
+
+Semantic preservation includes validation outcomes, successful values,
+processing order, presence, wire identity, references, annotations and relevant
+interaction/security channels. Concrete source syntax is outside the guarantee
+unless the selected profile explicitly includes it.
+
+## 6. Determinism and diagnostics
+
+For a pinned profile and equivalent semantic input, output is deterministic.
+Repeated supported transformations preserve the declared semantic channels;
+idempotence claims name the normal form and proof domain they cover.
+
+Errors must identify the source/profile, construct and location, the reason
+processing cannot continue, and repair guidance. No swallowed errors, invented
+fallback output, placeholder validators or partial declaration acceptance.
+
+## 7. Zod and representation boundaries
+
+The intended Zod source dialect is standard Zod `>=4.5 <5`, parsed statically
+through its declared grammar; emitted code follows the supported current Zod 4
+surface. This is a contract to implement and prove, not blanket parser coverage.
+Runtime-evaluated source, Zod Mini and excluded syntax require explicit boundary
+diagnostics. The source grammar and static-parsing decisions have their own
+implementation and review obligations.
+
+JSON Schema and OpenAPI retain their source-dialect meanings. An OpenAPI
+document is an interaction artifact, not interchangeable with a standalone value
+schema. Swagger 2 has no retained ingress/upgrade promise under the charter.
+RDF, SHACL and JSON-LD graph semantics remain outside Castr.
+
+## 8. Honest support
+
+A supported profile requires parser, IR, runtime validation, writers, independent
+proofs and documentation to agree end to end. Requirements can be broader than
+the current implementation; completion claims cannot.
+
+[Requirements](directives/requirements.md) owns the detailed contract.
+The [Practice bridge](practice-index.md) leads to current implementation evidence,
+the controlling queue and the paused additional-properties work's re-entry route.
+A plan's placement or an old green check does not certify present support.

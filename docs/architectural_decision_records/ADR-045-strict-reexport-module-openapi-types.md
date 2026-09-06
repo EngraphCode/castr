@@ -83,3 +83,11 @@ This does not recreate the structural overlap problems caused by a general `[key
 
 - **Property drift:** upstream additions still require deliberate review and local updates; the drift harness reduces but does not eliminate this risk.
 - **Future vendor mismatches:** additional spec/runtime disagreements may still surface and will need explicit seam decisions.
+
+## Consolidation note (2026-09-06)
+
+The directive duplicate belonged to the OAS 3.2 Full Feature Support arc.
+Its strict import seam, boundary/canonical roles, vendor-extension access and
+risk discussion are represented in this record; the durable record additionally
+preserves the resolved schema-examples semantics. The duplicate was removed
+without retaining a second authority.

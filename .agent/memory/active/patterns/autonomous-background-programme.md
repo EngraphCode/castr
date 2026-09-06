@@ -1,7 +1,7 @@
 ---
 name: Autonomous Background Programme
 polarity: pattern
-use_this_when: Standing up a large piece of work that must proceed unattended — scheduled agent sessions executing a queue over days or weeks with the owner away — and you need to know what operating machinery to build before the first firing, not discover it by incident
+use_this_when: Designing bounded unattended work with independently grounded sessions, especially when successive sessions share only a repository remote; adapt the measured continuity and collision lessons to the actual execution environment
 category: agent
 related_pattern: owner-decision-ballot
 proven_in: '.agent/plans/proof-programme/parent-plan.md — one programme, W-0 ballot through the first firings (2026-08)'
@@ -13,24 +13,30 @@ barrier:
   stable: true
 ---
 
-> **POLARITY: PATTERN.** This is a shape to repeat: the operating machinery an
-> unattended agent programme needs, designed for ephemeral sessions sharing only
-> a repo remote — skipping any piece of it is paid for later as a live incident.
+> **POLARITY: PATTERN.** These are measured lessons from one programme using
+> ephemeral sessions and a shared repo remote. Adapt the relevant lessons to the
+> actual environment; the Claude implementation is not the definition of
+> autonomous development.
 
 ## Principle
 
-An unattended programme is a **distributed system whose nodes are ephemeral
-agent sessions and whose only shared memory is the repo remote**. Every piece
-of operating machinery must be designed for that shape from the start: state a
-later firing must read lands as tracked repo state on a surface that firing
-grounds on; authority the loop needs is converted from per-ask owner approvals
-into standing written conditions; every liveness assumption (who else is
-running, how long a firing lasts, who else can write a branch) is treated as
-false until a mechanism makes it observable.
+In the measured configuration, independently grounded agent sessions share
+durable state through the repo remote. State a successor needs must reach a
+surface it reads, authority must be explicit, and collision/duration claims
+need observable evidence. Other execution environments may share state
+differently; choose mechanisms from their actual ownership and lifetime
+boundaries rather than copying this configuration wholesale.
 
-The proof site is the castr proof programme: a cron Routine spawning three
-fresh cloud sessions per day against a queue, ratified in one owner ballot,
-which then ran — and whose first collision, overlap, and reporting failures
+The owner clarified on 2026-09-06 that the Castr autonomous-development
+experiment is platform-neutral and paused; its Claude Routine is disabled.
+Current state belongs to the parent plan. The 2026-08-31 retirement of the
+arming ceremony also stands: existing checks accompany execution, and this
+pattern does not prescribe a separate dry-fire, receipt or capability-probe
+programme before starting.
+
+The historical proof site is the castr proof programme's Claude implementation:
+a cron Routine spawned three fresh cloud sessions per day against a queue,
+ratified in one owner ballot, which then ran — and whose first collision, overlap, and reporting failures
 were each measured, cured, and folded back into the standing machinery within
 a day, the evidence trail living in the programme's own incident register,
 queued-decisions register, Q-01 evidence record, and the governing ADR's
@@ -57,9 +63,9 @@ not yet exercised by a subsequent firing.
    never read through an absence default.
 4. **One standing firing prompt, read from the base branch.** A zero-context
    firing's whole brief is one file: exit criteria first, protocol in order
-   (STOP check → ground/provision → claims + incident
-   read → WIP=1 drive-or-claim → slice → counters → handoff), every landing
-   rule stated with its route for every case.
+   (current execution-state/pause check → STOP check → ground/provision →
+   claims + incident read → WIP=1 drive-or-claim → slice → counters → handoff).
+   A known pause starts no work and creates no idle or failure count.
 5. **Queue briefs are the per-slice plans.** Each row's brief is a
    delegation contract (surface, non-goals, acceptance with proof level,
    source to re-derive from, premise re-verification duty). Separate
@@ -87,11 +93,11 @@ not yet exercised by a subsequent firing.
    block in every round. Measured: early rounds are real, later rounds
    sample an unbounded refinement space; on authority machinery nearly every
    round is real, so enumerate the defect surface deliberately up front.
-9. **A Routine without the repo attached lands nothing**: whenever creating
-   or recreating the Routine, specify the repo source and re-apply the
-   owner-side settings (model, connectors, behaviour toggles), then verify
-   them in a config re-read. The first firing observed end to end (spawn →
-   credentialed landing → notification receipt) is the mechanism proof.
+9. **The invocation needs its actual work context.** The measured Claude
+   Routine initially lacked the repo attachment; supplying it corrected the
+   problem. Observe the selected adapter's available configuration and actual
+   credentialed landing and notification delivery during authorised execution.
+   A successful platform run alone does not prove value or notification receipt.
 10. **Structured owner decisions while away**: the owner-decision-ballot
     pattern (sibling entry) — publish a tap-to-answer artifact, push-notify,
     and let any later session read the attributed answers. Composes with the
@@ -121,27 +127,23 @@ not yet exercised by a subsequent firing.
 - **Assuming a special bot identity** — the default credentials were fine;
   the identity convention was another host's. Verify, don't inherit.
 
-## Setup checklist for the next programme
+## Applying the measured lessons
 
-1. Ballot walked, one question at a time; every verdict recorded. Verify:
-   each gated queue row names its ballot items and their verdicts exist.
-2. Authority ADR Accepted, carrying merge conditions, cadence, duration
-   bound, escalation and kill switches. Verify: every "never/only" the loop
-   relies on is a clause it can cite, not conversation memory.
-3. Parent plan authored: queue frontmatter with `depends_on` and explicit
-   counters, each row's brief a delegation contract. Verify: no eligible row
-   lacks a brief; the kill-switch counter is initialised, not defaulted.
-4. Standing firing prompt on the base branch, every landing route stated
-   and contest-aware. Verify: walk each protocol branch and confirm its
-   landing has a route to the base in every case, kill-switch paths
-   included.
-5. Incident and queued-decisions registers seeded. Verify: the firing
-   prompt names a read duty for each, not just a write duty.
-6. End-to-end firing proof: spawn → credentialed landing → notification
-   receipts, observed firsthand. Verify: a pushed commit and a received
-   notification, never the platform's "run succeeded".
-7. The Routine carries the repo, model, connectors, and behaviour toggles
-   (a Routine missing the repo fires read-only sessions). Verify: re-read
-   the Routine's config after they are set.
-8. Arm — and fold every reviewer- or incident-found gap back into the
-   standing machinery in the same landing that fixes it.
+1. Name the beneficiary, work scope and actual session/state boundaries before
+   adopting machinery. This pattern's one-programme evidence is not a universal
+   specification for autonomous development.
+2. Record standing authority and current execution state separately. An accepted
+   design can be paused; only the owner resumes it. The queue remains durable
+   without manufacturing missed work during the pause.
+3. Keep one queue and one ordered invocation prompt. The prompt reads current
+   execution state before provisioning or claims; an eligible row is not an
+   independent grant to run.
+4. Preserve the checks that protect real value: current-head CI and review,
+   scope/ownership checks, durable reports, bounded execution and the applicable
+   stop conditions. Observe their actual outcomes during execution.
+5. Treat the platform recipe as an implementation: record its account-side
+   context and notification route without asserting other platforms share it.
+   Read available settings and verify actual receipt when work runs.
+6. Preserve dated incidents and authorisations. Correct a disproved premise at
+   its source; the 2026-08-31 arming retirement is an example of simplifying the
+   instrument without abandoning in-flow verification.

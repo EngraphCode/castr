@@ -3,6 +3,17 @@
 **Date:** 2026-01-21  
 **Status:** Accepted
 
+## Charter amendment — 2026-09-06
+
+The ratified application-contract charter, expressed in
+[IDENTITY.md](../../.agent/IDENTITY.md), supersedes the blanket strict-only,
+no-unknown-key-facets interpretation in this record. Input acceptance,
+produced-output retention/stripping, catchall validation and ordered processing
+are distinct semantics to preserve inside the admitted grammar. This amendment
+changes doctrine, not implementation coverage; narrower existing behaviour
+remains an obligation to close. Historical object-policy text below records its
+dated decision and is not a current rejection instruction.
+
 ---
 
 ## Context
@@ -13,7 +24,7 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio
 > **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser exists (Session 3.2) and must remain in lockstep with writer output; doc-level Zod ingestion beyond schema declarations is a separate future scope.
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object direction in this ADR. Default-path object output is strict-only. The strip-normalization compatibility mode from ADR-040 has been removed per IDENTITY.md; strip normalization belongs in the doctor only.
+> The former strict-only policy was historical. [IDENTITY.md](../../.agent/IDENTITY.md) now requires facet-preserving output for the admitted source contract; the removed compatibility option is not reinstated by that direction.
 
 ## Decisions
 
@@ -76,19 +87,13 @@ z.xor(schemaA, schemaB);
 
 **Rationale:** `z.xor()` enforces exactly-one semantics that matches `oneOf`.
 
-### 5. Object Output Is Strict-Only
+### 5. Object Output Preserves the Declared Contract
 
-Object output must be explicitly strict where Zod can represent that honestly and safely:
-
-```typescript
-z.strictObject({ ... });
-```
-
-Bare `z.object({ ... })` is not an acceptable generated stand-in for strict object semantics because bare `z.object()` is strip-mode at runtime.
-
-`.strip()`, `.passthrough()`, and `.catchall(...)` are no longer generated-object targets.
-
-**Rationale:** Generated object definitions are strict-only product scope, so output should state strictness directly instead of preserving non-strict runtime modes.
+Generate strict output for a genuinely closed object, and preserve admitted
+acceptance, output retention/stripping and catchall semantics distinctly for
+other contracts. `z.strictObject()` is an encoding of closed objects, not a
+substitute for every source object. A bare strip-mode object is not equivalent
+to a strict one. All claimed encodings require runtime proof.
 
 ### 6. Redundant Validation Filtering
 
@@ -112,7 +117,7 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 ### 8. Recursive Getter Wrapper Canonicalization
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) amends this section for object strictness.
+> [IDENTITY.md](../../.agent/IDENTITY.md) governs object facets; the closed-object examples below retain their bounded scope.
 
 Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form; writer output must not regress to `z.lazy()`.
 
@@ -123,7 +128,7 @@ Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form
 
 Writer output must treat these as **canonical recursive wrappers**, not as generic nullable compositions, so Scenario 2 / 4 / 6 round-trips remain lossless and idempotent.
 
-Recursive object schemas on the default path must also remain explicitly strict.
+Recursive contracts that are semantically closed must remain explicitly strict; other admitted object facets require their own safe encoding and proof.
 
 The chosen recursive strict construction must therefore satisfy all of:
 
@@ -133,7 +138,7 @@ The chosen recursive strict construction must therefore satisfy all of:
 
 Current local evidence shows that chained `.strict()` on getter-based `z.object({...})` is runtime-unsafe, so recursive strict output must use `z.strictObject({...})` and must not rely on chained `.strict()`.
 
-**Rationale:** Getter-wrapper canonicalization still matters, but it must now operate inside a strict-only object doctrine.
+**Rationale:** Getter-wrapper canonicalization still matters, but it must now operate without flattening the contract's distinct object facets.
 
 ### 9. Codecs (Deferred)
 

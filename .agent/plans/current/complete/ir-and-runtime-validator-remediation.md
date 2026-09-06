@@ -4,8 +4,8 @@
 **Created:** 2026-03-23
 **Completed:** 2026-03-24
 **Predecessor:** [proof-system-and-doctrine-remediation.md](./proof-system-and-doctrine-remediation.md)
-**Triage Source:** [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md)
-**Related:** [IDENTITY.md](../../IDENTITY.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [Pack 2 Note](../../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md)
+**Triage Source:** [cross-pack-triage.md](../../../research/architecture-review-packs/cross-pack-triage.md)
+**Related:** [IDENTITY.md](../../../IDENTITY.md), [ADR-040](../../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [Pack 2 Note](../../../research/architecture-review-packs/pack-2-canonical-ir-truth-and-runtime-validation.md)
 
 > [!NOTE]
 > **Completion deviation from original scope:** The plan proposed narrowing both `additionalProperties` and `unevaluatedProperties` to boolean-only in the TypeScript interface. During execution, codebase investigation found that schema-valued `unevaluatedProperties` is **legitimately and actively used** by the OpenAPI 3.1 parser (`builder.json-schema-2020-12.ts`) and JSON Schema parser (`json-schema-parser.2020-keywords.ts`). The validator now accepts schema-valued `unevaluatedProperties` when the value is a valid `CastrSchema`, while `additionalProperties` is enforced as boolean-only per IDENTITY doctrine. The TypeScript interface was **not narrowed** for either field to avoid breaking active parser code paths.
@@ -144,7 +144,7 @@ After this slice, the runtime IR boundary will honestly reject any schema shape 
 
 **Files changed:**
 
-- [MODIFY] [session-entry.prompt.md](../../../../.agent/prompts/session-entry.prompt.md)
+- [MODIFY] [session-entry.prompt.md](../../../archive/prompts/session-entry.prompt.md)
 - [MODIFY] [roadmap.md](../../../../.agent/plans/roadmap.md)
 
 ---

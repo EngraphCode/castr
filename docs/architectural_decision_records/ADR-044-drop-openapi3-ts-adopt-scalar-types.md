@@ -51,3 +51,18 @@ As of 2026-04-10:
 3. the stale `openapi-schema-extensions.d.ts` augmentation file is deleted
 4. the `openapi3-ts` dependency is removed from `lib/package.json`, and the targeted active-surface grep is clean
 5. protected layers now fail fast on direct `@scalar/openapi-types` imports, the backwards-compatible `OpenAPIObject` alias, and any future `openapi3-ts` reintroduction
+
+## Consolidated directive rationale (2026-09-06)
+
+The former directive copy's unique context is conserved here before its
+removal. At the April 2026 decision, the displaced dependency was
+`openapi3-ts` 4.5.0 and the available Scalar type dependency was 0.6.1.
+The former contributed one runtime guard, `isReferenceObject`, alongside
+type-only imports; a local guard replaced it. Roughly fifty import sites
+needed migration. Module augmentation had imposed ongoing manual verification.
+
+The alternatives considered then were retaining `openapi3-ts` with growing
+augmentation, adopting `oas-types` (judged immature and lacking the required
+3.2/Scalar fit at that decision), or adopting raw Scalar types without strictness
+restoration. The strict re-export seam was chosen instead. These are dated
+decision observations, not current vendor assessments.

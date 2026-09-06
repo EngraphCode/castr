@@ -17,9 +17,7 @@
 
 **Status:** STOPPED (owner ruling QD-2, 2026-08-26) — historical record, not a
 resumable position; parity remains a goal under the 2026-08-24 bidirectional-equality
-directive. QD-2 is RULED, no re-entry trigger stands. The file remains at this path
-only because the estate's class-tiered archive-move mechanism (PDR-094) is not yet
-built; discovery must treat the status line, not the directory, as authoritative.
+directive. QD-2 is RULED, no re-entry trigger stands. The file remains at this path as a stable historical reference; recognising the stop does not depend on future archive tooling. The surviving carrier is [the bilateral equality follow-up](./practice-equality-parity-follow-up.md).
 **Created/Promoted:** 2026-06-05
 **Branch:** ~~`feat/transplant-engraph-practice`~~ **MERGED to `main` in PR #3 (`5529436`, 2026-07-03); work now proceeds on feature branches off `main`, one PR per slice, merges condition-based (green and clean merges: all CI passing on the current head, every review thread properly resolved — fixed or rejected with evidence; owner ruling 2026-08-22, reaffirmed 2026-08-26 — no per-PR owner invocation)** (see the [`../delivery-ledger.md`](../../delivery-ledger.md) current-model banner). Era history (truthful for its dates): baseline tag `transplant/phase-0-baseline` = e0541f6; the single-branch mode (owner, 2026-06-15) held ALL work — its former base `docs/initial-deep-review` (the PRESERVE set) and the merged `fix/remediation-01-packaging-and-types` were fully subsumed and deleted (verified lossless); PR #1 closed; delivery ultimately landed as PR #3 rather than the once-planned split PRs.
 **Authoritative spec:** [`practice-alignment-brief.md`](../../practice-alignment-brief.md)
@@ -188,7 +186,7 @@ Relevance ledger (`.agent/report/` or `.agent/plans/transplant/relevance-ledger.
 `.agent/report/practice-integration-feedback.md`; updated `roadmap.md`, `session-continuation.prompt.md`, napkin;
 honest `provenance.yml` entry; the transplanted PDRs/practice-verification as durable governance.
 
-## Execution trigger / completion
+## Historical execution trigger / completion
 
 Approved 2026-06-05. Execute phases 1→9 with per-phase gate + reference-closure verification. Complete when all four
 success criteria hold and `pnpm check:ci` is green on the final close-out. Roll back **forward** only (revert commits,

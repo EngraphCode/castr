@@ -1,7 +1,8 @@
 # Thread: initial-castr-review
 
-Branch-scoped thread for the 2026-07-04 wide+deep review and the strategy-estate overhaul it
-mandated. Branch: `feat/initial-castr-review`.
+Continuity history for the 2026-07-04 wide+deep review and its strategy-estate
+overhaul. The original review branch was `feat/initial-castr-review`; current
+work and remaining obligations are reached through the continuation below.
 
 ## Participating agent identities (PDR-027, additive — never overwrite)
 
@@ -12,6 +13,38 @@ mandated. Branch: `feat/initial-castr-review`.
 | codex       | GPT-5.6        | Torrid Smouldering Forge    | 01a024            | completeness report publisher                                    | 2026-08-21    | 2026-08-21   |
 | claude-code | claude-fable-5 | Lucent Turning Compass      | 5aef07            | PR-30 reviewer + Revision-3 steward (owner handover)             | 2026-08-22    | 2026-08-22   |
 | claude-code | claude-fable-5 | Incandescent Charring Ember | 5aef07            | parent-plan author + loop architect (same session, hook-renamed) | 2026-08-22    | 2026-08-22   |
+| codex       | gpt-6-astra    | Bora seeks Turbulence       | 01a072            | documentation refresh coordinator                                | 2026-09-06    | 2026-09-06   |
+
+## Current continuation — 2026-09-06
+
+The original review is complete. Its remaining strategy work is carried by the
+[granular overhaul brief](../../../plans/future/strategy-vision-estate-overhaul.md):
+the documentary W1/W2/W3/W5 slices are being consumed by the owner-directed
+[documentation refresh](../../../plans/current/complete/plan-estate-and-documentation-refresh.md),
+whose acceptance determines their completion. The new
+[verified-claims PDR](../../../practice-core/decision-records/PDR-135-verified-claims-engineering.md)
+and [umbrella vision](../../../directives/VISION.md) are that authorised W1
+landing; the older W0/W3 graduation triggers below are historical.
+
+The overhaul brief retains the doctrine validator, directory reorganisation and
+first metric computation as separate unfinished obligations. Read its individual
+rows and consuming carriers instead of treating all W1–W5 as one pending or
+completed unit. This record owns no independent implementation queue.
+
+The [parent plan's current execution state](../../../plans/proof-programme/parent-plan.md#current-execution-state)
+owns the autonomous experiment's pause; the owner confirmed on 2026-09-06 that
+its Claude Routine is disabled. The experiment is platform-neutral, and this
+does not describe any other Routine. No queue eligibility or historical branch
+instruction authorises resumption. The separate documentary commission proceeds
+under its own acceptance. Remediation and PR value extraction follow the parent
+queue and [delivery ledger](../../../plans/delivery-ledger.md), not the old
+transplant-first or remediation-next instructions below.
+
+## Historical review and continuation record — 2026-07-04 to 2026-08-27
+
+Everything below is preserved as the dated review's evidence and instructions
+at that time. Its branch, current-state labels, next steps and promotion
+watchlist do not supersede the current continuation above.
 
 ## Lane state
 

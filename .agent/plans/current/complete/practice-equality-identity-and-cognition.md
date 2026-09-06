@@ -1,9 +1,9 @@
 ---
 title: Practice equality instalment 1 — identity unification and the cognition skill tree
-status: current
-lane: current
+status: complete
+lane: current/complete
 created: 2026-08-24
-last_updated: 2026-08-24
+last_updated: 2026-09-06
 owner_directive: >-
   Four owner directives, 2026-08-24, in the loop-review session's continuation, under the
   standing equality directive ("piece by piece, I want the Practice in Castr and OCE to take
@@ -122,9 +122,14 @@ todos:
 
 # Practice equality instalment 1 — identity unification and the cognition skill tree
 
+**Lifecycle reconciled 2026-09-06:** this instalment landed in Castr
+PR #54; the follow-up records OCE PR #18 merged as well. Remaining parity changes
+have a separate [paused instalment](../paused/practice-equality-parity-follow-up.md).
+This completion does not certify whole-estate equality.
+
 The first executable instalment of the owner's standing equality directive (conserved
 verbatim in the
-[castr–OCE loop comparison](../../analysis-and-reports/castr-oce-loop-comparison-2026-08-24.md)):
+[castr–OCE loop comparison](../../../analysis-and-reports/castr-oce-loop-comparison-2026-08-24.md)):
 unify Practice identity on one conceptual unit per seat and one naming model across both
 estates, and bring castr's cognition skill corpus up to OCE's.
 

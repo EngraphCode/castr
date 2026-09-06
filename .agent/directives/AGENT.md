@@ -1,6 +1,6 @@
 # AGENT.md
 
-**@engraph/castr** transforms data definitions between supported formats via a canonical Intermediate Representation (IR).
+**@engraph/castr** compiles application value and interaction contracts between compatible representations without silently changing their meaning. Canonical IR carries admitted semantics; the ratified target contract and demonstrated implementation are distinct.
 
 ## Grounding
 
@@ -12,7 +12,7 @@
 
 - Read [`practice-core/index.md`](../practice-core/index.md) for the portable Practice Core.
 - Read [`practice-index.md`](../practice-index.md) for the bridge into this repo's local Practice.
-- Use the `start-right-quick` skill at session start, or `start-right-thorough` after a context switch or long gap.
+- Use the `engraph-start-right-quick` skill at session start, or `engraph-start-right-thorough` after a context switch or long gap.
 - **Cloud sessions (fresh containers: routine firings and interactive cloud seats) ground with `engraph-start-right-thorough`**, and carry the `engraph-plan` / `engraph-metacognition` / `engraph-proportionality` skill stack (the installed, invocable names) as mandatory working discipline (owner ruling, 2026-08-26 arming walk; durable home: [cloud-environment.md §Cloud-session grounding contract](../claude-harness-integrations/cloud-environment.md)).
 
 ## First Question
@@ -23,12 +23,12 @@
 
 - Package manager: `pnpm`
 - Primary language: TypeScript
-- Core architecture: `Any Input Format -> Parser -> IR -> Writers -> Any Output Format`
+- Core architecture: `Admitted source grammar -> Parser -> IR -> Writer -> Declared target profile`
 - IR is the source of truth after parsing
 - OpenAPI output is a typed object model
 - TypeScript/Zod code generation uses `ts-morph`
 - Product doctrine is strict and complete everywhere, all the time: fail-fast, deterministic, lossless by default, and never only partially supported
-- **Input-output pair compatibility**: feature support is defined by input-output pairs, constrained by the output format; the IR is the format-independent superset; fail-fast is reserved for genuinely impossible output mappings (see [principles.md](./principles.md) § Input-Output Pair Compatibility Model)
+- **Input-output pair compatibility**: support is defined by a bounded source grammar and directed target profile, with artifact kind and semantic facets explicit. The IR carries the admitted application-contract domain independently of writer limitations (see [principles.md](./principles.md) § Input-Output Pair Compatibility Model).
 
 ## Principles
 
@@ -52,7 +52,7 @@
 - Rules: [`rules/`](../rules/)
 - Sub-agents: [`sub-agents/`](../sub-agents/)
 - Prompts: [`prompts/`](../prompts/)
-- Plans: `plans/`
+- Plans: current authority and execution state through the [Practice bridge](../practice-index.md)
 - Memory: [`memory/`](../memory/)
 - Experience: [`experience/`](../experience/)
 
@@ -151,7 +151,7 @@ Domain experts (castr schema surface):
 - `.agent/sub-agents/` — canonical reviewer and domain-expert templates
 - `.agent/practice-core/` — portable Core package
 - `.agent/claude-harness-integrations/` — account-side environment and Routine integration docs, plus the account-portability register
-- `.agent/plans/active/` — primary active plan plus any explicit parked-in-place exception
+- `.agent/plans/active/` — owner-directed work currently being implemented; programme execution state is reached through the [Practice bridge](../practice-index.md)
 - `.agent/plans/current/paused/` — incomplete but non-primary resumable workstreams
 - `.agent/plans/current/complete/` — completed atomic plans staged before archive
 - `.agents/skills/` — Codex skill and workflow wrappers

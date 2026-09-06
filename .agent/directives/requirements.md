@@ -21,19 +21,38 @@ If any conflict exists, **this requirements document is the source of truth**.
 
 ## Cross-Cutting Support Rule
 
-Castr must be strict and complete everywhere, all the time.
+**Amended: 2026-09-06.** Retain strictness, completeness and canonical IR;
+supersede universal-schema/superset and unconditional closed-object claims with
+the ratified application-contract charter. The requirements below describe
+obligations, not a blanket statement that the implementation already meets them.
 
-- A feature counts as supported only when parser, IR, runtime validation, writers, tests, and docs agree on it.
-- Partial implementation, stale docs, or incomplete proof coverage are drift, not support.
-- If a surface is not complete yet, mark it unsupported or paused rather than treating it as partially done.
+Castr compiles application value and interaction contracts between compatible
+representations without silently changing their meaning. Every advertised source
+grammar is bounded and versioned; every valid construct inside it must be parsed
+completely. Source admission and target capability are distinct decisions.
 
-**Input-Output Pair Compatibility** (see [principles.md § Input-Output Pair Compatibility Model](principles.md)):
+The target public boundary distinguishes
+`CastrValueContractDocument | CastrInteractionContractDocument`, replacing
+`CastrDocument` in one migration. The IR must persist accepted-input,
+produced-output, ordered-processing, annotation and interaction facets, including
+presence, identity and reference distinctions. This documentation does not
+perform that API migration.
 
-- Feature support is defined by **input-output pairs**, constrained primarily by the **output format**.
-- The IR MUST be a superset: capable of representing ALL valid features from ANY supported input format.
-- "Supported" means **semantic preservation through a round-trip** — not necessarily a 1:1 keyword mapping.
-- Fail-fast is ONLY acceptable when the output format **genuinely cannot** represent the semantics. It is NOT a placeholder for "not yet implemented."
-- When evaluating whether a feature needs implementation, always ask: "Can the output format express this semantics?" If yes, it must be implemented. If no, it must fail fast with a helpful error.
+[Input-output compatibility](principles.md#-input-output-pair-compatibility-model)
+requires exact native or behaviourally proven encoded output for the selected
+profile, or atomic rejection for genuine impossibility. Separately named,
+caller-authorised projections report complete semantic deltas and do not count
+as lossless. Missing implementation remains planning debt and blocks support.
+
+Object semantics preserve source-dialect defaults, explicit additional-property
+constraints, input acceptance, output stripping/retention and ordered processing;
+they are not reduced to one closed-object encoding. Same-family opaque extensions
+retain typed provenance without claiming target execution. Graph semantics remain
+outside the application-contract domain.
+
+A supported feature requires parser, IR, runtime validation, writers, independent
+proofs and documentation to agree end to end. Partial landings can be reported
+as delivery evidence; they do not establish complete support.
 
 ---
 
@@ -41,15 +60,15 @@ Castr must be strict and complete everywhere, all the time.
 
 The system is NOT ready for production until these criteria are met.
 
-### 1. Internal Representation (IR)
+### 1. Intermediate Representation and OpenAPI Target
 
-- **Version**: OpenAPI 3.2.0 (canonical target version)
-- **Coupling**: Decoupled from OpenAPI 3.0 semantics; optimized for generic validation, with OpenAPI 3.1.x accepted only as a Scalar bridge input and `3.2.0` retained as the canonical IR/output target.
+- **Artifact version**: independent of the source/target format version; preserve both.
+- **OpenAPI output profile**: the existing canonical writer targets `3.2.0`; that is not the universal IR version. OpenAPI 3.0/3.1 preparation and any version migration must preserve declared semantic channels.
 - **Completeness**: MUST support every concept in the currently claimed OpenAPI surface. Native 3.2 ingest/output at the version boundary is mandatory; the remaining 3.2-only expansion stays in the separately tracked parent slice, with the landed native 3.2 surface now including `pathItem.query`, hierarchical tags, Example Object `dataValue` / `serializedValue`, `oauth2.flows.deviceAuthorization`, `xml.nodeType`, and strict top-level path-templating validation.
 
-### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
+### 2. OpenAPI 3.0.x Profile Obligations
 
-The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specification:
+Within the declared OpenAPI interaction profile, admission and semantic carriage must cover the following fields completely. This inventory is an implementation/proof obligation, not a certification table:
 
 **Document Root**
 
@@ -105,7 +124,10 @@ The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specificatio
 
 - `description` (REQUIRED), `headers`, `content`, `links`, `x-*`
 
-**Schema (3.0.x = JSON Schema Draft 7 + OAS)**
+**Schema (the OpenAPI 3.0 Schema Object dialect)**
+
+The [OpenAPI 3.0 Schema Object](https://spec.openapis.org/oas/v3.0.4.html#schema-object)
+has its own restrictions; its `items` value is an object, not a tuple array.
 
 - Core: `type` (string), `allOf`, `oneOf`, `anyOf`, `not`, `items`, `properties`, `additionalProperties`
 - Validation: `multipleOf`, `maximum`, `minimum`, **`exclusiveMaximum` (boolean)**, **`exclusiveMinimum` (boolean)**, `maxLength`, `minLength`, `pattern`, `maxItems`, `minItems`, `uniqueItems`, `maxProperties`, `minProperties`, `required`, `enum`
@@ -139,7 +161,7 @@ The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specificatio
 - Callback: `{expression}` → PathItem, `x-*`
 - Example: `summary`, `description`, `value`, `externalValue`, `x-*`
 
-### 3. Input Support: ALL Valid OpenAPI 3.1.x Syntax
+### 3. OpenAPI 3.1.x Profile Obligations
 
 In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x additions. Native 3.2.x documents using this same field surface MUST also be accepted and canonicalised to `3.2.0`.
 
@@ -163,7 +185,8 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 - **NEW:** `const`, `prefixItems` (replaces tuple `items`), `$dynamicRef`, `$dynamicAnchor`
 - **NEW:** `unevaluatedProperties`, `unevaluatedItems`, `dependentSchemas`, `dependentRequired`, `minContains`, `maxContains`
 - **`exclusiveMaximum`, `exclusiveMinimum` are NUMBERS** (not booleans)
-- **REMOVED:** `nullable` (MUST reject in 3.1 input)
+- `nullable` has no OpenAPI-defined 3.1 nullability semantics; Castr's current
+  admission restriction is described below.
 
 **Security Schemes (3.1)**
 
@@ -173,7 +196,7 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit
 
 - **NEW:** `pathItems` (Map<string, PathItem>)
 
-### 3A. Input Support: Currently Claimed OpenAPI 3.2.x Additions
+### 3A. OpenAPI 3.2.x Addition Obligations
 
 In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept and preserve the currently claimed native OpenAPI 3.2-only additions below when the input document is truly 3.2.x:
 
@@ -202,7 +225,7 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 
 - valid top-level `paths` keys using balanced template expressions such as `/users/{userId}`
 
-### 4.Strict Validation & Rejection
+### 4. Strict Validation and Rejection
 
 **REJECT 3.0 specs with 3.1-only syntax:**
 
@@ -218,7 +241,13 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 - `tag.summary`, `tag.parent`, `tag.kind`
 - `example.dataValue`, `example.serializedValue`
 
-**REJECT 3.1/3.2 specs with 3.0-only syntax:**
+**Current admission restrictions for 3.1/3.2 input:**
+
+The following list records Castr's present profile restrictions, not a claim
+that every such property makes an arbitrary Schema Object invalid. OpenAPI
+3.1 permits additional Schema Object properties/vocabularies; complete dialect
+and unknown-keyword treatment remains an implementation/proof obligation.
+See the [OpenAPI 3.1 Schema Object](https://spec.openapis.org/oas/v3.1.2.html#schema-object).
 
 - `nullable: true` (MUST use `type: [..., "null"]`)
 - `exclusiveMinimum`/`exclusiveMaximum` as booleans
@@ -232,21 +261,24 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 - Malformed top-level path template syntax in `paths` keys (unbalanced braces, stray `}`, empty `{}`)
 - Missing REQUIRED fields
 
-### 5. Automatic Upgrade / Canonicalisation (3.0 → 3.2 target)
+### 5. Existing OpenAPI Preparation Profile (3.2 Target)
 
-ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as canonical `3.2.0`:
+The existing preparation/writer profile normalises accepted OpenAPI input to
+`3.2.0`. This describes that profile, not a universal requirement for all future
+edges. Same-version preservation and explicit migration policy remain staged
+consumer-charter obligations; this documentation does not pre-decide them:
 
-- OpenAPI 2.0 / 3.0.x input may bridge through Scalar's 3.1 upgrade semantics
+- Swagger/OpenAPI 2.0 ingress is rejected under the ratified charter; no legacy upgrade shim is promised.
+- OpenAPI 3.0.x input may bridge through the explicitly supported preparation path
 - OpenAPI 3.1.x input is accepted as a bridge version
 - Native OpenAPI 3.2.x input is accepted directly
-- The final IR and writer target version is always `3.2.0`
+- The existing OpenAPI writer target is `3.2.0`; artifact version and source-profile identity remain separate
 
 **Type System Upgrades**
 
 - `nullable: true` with `type: "string"` → `type: ["string", "null"]`
 - `exclusiveMinimum: true` + `minimum: 10` → `exclusiveMinimum: 10`
 - `exclusiveMaximum: true` + `maximum: 100` → `exclusiveMaximum: 100`
-- `items: [SchemaA, SchemaB]` → `prefixItems: [SchemaA, SchemaB]`
 
 **Example/Examples Normalization**
 
@@ -255,43 +287,43 @@ ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as c
 - For singular parameter raw-example derivation, prefer `parameter.example` -> `parameter.examples.default.value` -> `parameter.examples.default.dataValue` -> `schema.example`; do not derive from `serializedValue` or `externalValue` alone
 - Write to canonical 3.2 output using preferred `examples` format
 
-### 6. IR Completeness: Support ALL currently claimed OpenAPI 3.x concepts under a 3.2.0 target
+### 6. IR Carriage and End-to-End Proof Obligations
 
-The IR MUST be capable of representing EVERY field listed in sections 2, 3, and 3A while carrying `openApiVersion: '3.2.0'` as the canonical target marker.
+The admitted OpenAPI interaction profile must carry the fields listed in sections 2, 3 and 3A, with source version and target policy kept explicit. Existing `openApiVersion: '3.2.0'` storage does not define the new artifact-version contract.
 
-**Regression-critical fields (implemented):** these fields exist in IR and MUST remain supported end-to-end (parse → IR → write) with tests proving preservation.
+**Regression-critical field inventory:** field presence and historical tests identify obligations; neither proves all target edges or nested positions. Each claimed edge still requires independent end-to-end preservation evidence.
 
 **CastrSchema Interface:**
 
-- ✅ `xml` (XMLObject) — OpenAPI extension for XML serialization
-- ✅ `externalDocs` (ExternalDocumentationObject) — at schema level
-- ✅ `prefixItems` (SchemaObject[]) — JSON Schema 2020-12 tuple validation
-- ✅ `unevaluatedProperties` (boolean | SchemaObject) — JSON Schema 2020-12
-- ✅ `unevaluatedItems` (boolean | SchemaObject) — JSON Schema 2020-12
-- ✅ `dependentSchemas` (Record<string, SchemaObject>) — JSON Schema 2020-12
-- ✅ `dependentRequired` (Record<string, string[]>) — JSON Schema 2020-12
-- ✅ `minContains` (number) — JSON Schema 2020-12
-- ✅ `maxContains` (number) — JSON Schema 2020-12
+- `xml` (XMLObject) — OpenAPI extension for XML serialization
+- `externalDocs` (ExternalDocumentationObject) — at schema level
+- `prefixItems` (SchemaObject[]) — JSON Schema 2020-12 tuple validation
+- `unevaluatedProperties` (boolean | SchemaObject) — JSON Schema 2020-12
+- `unevaluatedItems` (boolean | SchemaObject) — JSON Schema 2020-12
+- `dependentSchemas` (Record<string, SchemaObject>) — JSON Schema 2020-12
+- `dependentRequired` (Record<string, string[]>) — JSON Schema 2020-12
+- `minContains` (number) — JSON Schema 2020-12
+- `maxContains` (number) — JSON Schema 2020-12
 
 **IRMediaType Interface:**
 
-- ✅ `encoding` (Record<string, EncodingObject>) — multipart/form-data support
+- `encoding` (Record<string, EncodingObject>) — multipart/form-data support
 
-**Verified Complete:**
+**Further preservation obligations (not a completion certificate):**
 
-- ✅ `info.summary`, `license.identifier` — uses explicit interfaces from our canonical shared module
-- ✅ `webhooks`, `jsonSchemaDialect`, `pathItems` — present in IR
-- ✅ `mutualTLS` — uses raw SecuritySchemeObject
-- ✅ `pathItem.query` — survives parser -> IR -> writer and downstream method consumers
-- ✅ `tag.summary`, `tag.parent`, `tag.kind` — explicitly proved through parser/writer round-trip coverage
-- ✅ Example Object `dataValue` / `serializedValue` — survive shared load boundary -> IR -> writer across component, parameter, response-header, and media-type carriers; singular parameter example derivation now falls back to `default.dataValue` but never `serializedValue` alone
-- ✅ `oauth2.flows.deviceAuthorization` — survives shared load boundary -> IR -> writer and MCP security consumers
-- ✅ `xml.nodeType` — survives shared load boundary -> IR -> writer on schema and property metadata
-- ✅ valid top-level path templating — survives shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, while malformed templates fail fast before upgrade
-- ✅ `externalDocs` — at document/operation level
-- ✅ All basic JSON Schema keywords — type, format, validation, composition
+- `info.summary`, `license.identifier` — uses explicit interfaces from our canonical shared module
+- `webhooks`, `jsonSchemaDialect`, `pathItems` — present in IR
+- `mutualTLS` — uses raw SecuritySchemeObject
+- `pathItem.query` — survives parser -> IR -> writer and downstream method consumers
+- `tag.summary`, `tag.parent`, `tag.kind` — explicitly proved through parser/writer round-trip coverage
+- Example Object `dataValue` / `serializedValue` — survive shared load boundary -> IR -> writer across component, parameter, response-header, and media-type carriers; singular parameter example derivation now falls back to `default.dataValue` but never `serializedValue` alone
+- `oauth2.flows.deviceAuthorization` — survives shared load boundary -> IR -> writer and MCP security consumers
+- `xml.nodeType` — survives shared load boundary -> IR -> writer on schema and property metadata
+- valid top-level path templating — survives shared load boundary -> IR -> writer -> endpoint/MCP consumers unchanged, while malformed templates fail fast before upgrade
+- `externalDocs` — at document/operation level
+- The declared JSON Schema keyword vocabularies — type, format, validation and composition — require complete recursive-position proof
 
-### 7. Output: ALL Valid OpenAPI 3.2.x Syntax
+### 7. OpenAPI 3.2.x Output Profile
 
 The writer MUST produce valid canonical 3.2.0 output containing ALL fields from the IR, including:
 
@@ -354,28 +386,37 @@ This keeps behavior strict, predictable, and lossless while still honoring expli
 
 ### 9. Zod Input (Idiomatic Zod 4 Only)
 
-**Non‑negotiable:** The parser MUST support idiomatic Zod 4 input and remain lossless.
+**Non-negotiable:** the intended source dialect is standard Zod `>=4.5 <5`, admitted through a declared static grammar with complete facet preservation. Output follows the supported current Zod 4 surface; the vendor-conformance corpus and dialect manifest must prove that claim.
 
 - **Zod 4 only** — reject Zod 3 syntax with actionable errors.
 - **Standard API only** — Zod 4 mini is out of scope.
 - **Static parsing only** — dynamic patterns (computed keys, spreads, runtime indirection) MUST fail fast.
-- **Getter‑based recursion only** — `z.lazy()` is not supported.
+- **Static recursive input** — getters and statically analysable `z.lazy()` reference forms are admitted under the bounded parser grammar; dynamic lazy bodies reject. Writer output uses the canonical getter form. See [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md).
 - **Metadata is preserved when present** using idiomatic Zod 4 mechanisms (see ADR‑032).
 
 ---
 
-## Current Focus: OpenAPI ↔ Zod Pipeline
+## Current Implementation and Proof Boundaries
 
-> [!NOTE]
-> **Phase 2 complete.** Now focused on strict bidirectional transforms and end-to-end transform validation with sample input (Session 3.3).
+The implementation contains OpenAPI, JSON Schema and Zod parser/writer paths and
+TypeScript/MCP output paths. Existence does not establish complete support for a
+format or every directed profile. The former Phase-2 completion table and
+JSON-Schema-deferred label are superseded.
 
-| Priority | Focus                                                           | Status      |
-| -------- | --------------------------------------------------------------- | ----------- |
-| 1        | OpenAPI → Zod                                                   | ✅ Complete |
-| 2        | Zod → IR (Parser)                                               | ✅ Complete |
-| 3        | ADR-026 + Strictness                                            | 🔄 Active   |
-| 4        | True Transform Validation (incl. round-trip/idempotence proofs) | 🔄 Active   |
-| 5        | JSON Schema                                                     | 🔲 Deferred |
+| Surface                       | Evidence boundary and outstanding obligation                                                                                                                                                                                       |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Semantic proof foundation     | The generic outcome runner and its independent-oracle tests exist; the complete profile-bearing harness and support inventory remain outstanding.                                                                                  |
+| Security requirements         | [Security-formula proofs](../../lib/tests-transforms/__tests__/security-formula.integration.test.ts) cover AND-groups, alternatives and anonymous entries. Explicit operation-level `security: []` remains an excluded loss class. |
+| Nested boolean schemas        | [Nested-boolean proofs](../../lib/tests-transforms/__tests__/nested-boolean-schema.integration.test.ts) cover their named regression corpus; they do not certify every keyword position or normalisation rule.                     |
+| Zod generated validation      | [Object refinement emission](../../lib/src/schema-processing/writers/zod/refinements/object.ts) still contains placebo conditional/dependent-schema predicates; generated syntax is not behavioural proof.                         |
+| JSON Schema                   | Parser and writer paths exist. Broader dialect, vocabulary and recursive-position fidelity still require their consuming proofs.                                                                                                   |
+| Architecture enforcement      | [Boundary configuration](../../lib/eslint.config.ts) records missing resolver wiring. A green aggregate does not prove this boundary rule is enforced.                                                                             |
+| Ratified artifact/facet model | The new roots and separated semantic facets are target requirements; the existing public model has not been migrated by this documentation work.                                                                                   |
+
+The [Practice bridge](../practice-index.md) locates the current queue, delivery
+evidence, profile contracts and outstanding decision carriers. No support
+percentage is asserted before the proof estate computes its complete denominator
+and discharged obligations.
 
 ---
 
@@ -384,7 +425,7 @@ This keeps behavior strict, predictable, and lossless while still honoring expli
 ### Input Handling
 
 - Accept OpenAPI via file path, URL, or in-memory object
-- Accept idiomatic Zod 4 schemas programmatically
+- Accept bounded standard Zod source through the documented public parsing API; do not evaluate arbitrary source at runtime
 - Dereference and bundle at load time
 - Validate before processing
 
@@ -404,7 +445,7 @@ This keeps behavior strict, predictable, and lossless while still honoring expli
 
 ## What This Library IS
 
-**Building blocks** for SDK construction:
+**Application-contract compiler building blocks** for compatible representation and SDK construction:
 
 - Zod schemas
 - Validation helpers
@@ -448,10 +489,10 @@ All test fixtures must have documented provenance:
 
 ## Related Documents
 
-| Document                           | Purpose                                 |
-| ---------------------------------- | --------------------------------------- |
-| `directives/VISION.md`             | Strategic direction and roadmap         |
-| `directives/principles.md`         | Engineering standards                   |
-| `directives/testing-strategy.md`   | Test methodology                        |
-| `directives/DEFINITION_OF_DONE.md` | Quality gates                           |
-| `.agent/research/feature-parity/*` | Parity research and integration targets |
+| Document                                       | Purpose                                 |
+| ---------------------------------------------- | --------------------------------------- |
+| [VISION.md](VISION.md)                         | Strategic direction and roadmap         |
+| [principles.md](principles.md)                 | Engineering standards                   |
+| [testing-strategy.md](testing-strategy.md)     | Test methodology                        |
+| [DEFINITION_OF_DONE.md](DEFINITION_OF_DONE.md) | Quality gates                           |
+| `.agent/research/feature-parity/*`             | Parity research and integration targets |

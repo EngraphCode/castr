@@ -1,6 +1,6 @@
 # openapi3-ts Dependency Exit
 
-**Status:** ~~DEFERRED~~ → **SUPERSEDED by [ADR-044](../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md)**  
+**Status:** ~~DEFERRED~~ → **SUPERSEDED by [ADR-044](../../../../docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md)**  
 **Created:** 2026-04-03  
 **Superseded:** 2026-04-03  
 **Revised:** 2026-04-10  

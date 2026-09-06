@@ -43,6 +43,54 @@ path (owner word 2026-08-24).
    below belong to Practice repos whose own hooks install browsers, per the
    hook-preflight contract.
 
+## Proof-programme Claude Routine adapter
+
+The autonomous-development experiment is platform-neutral. This section owns
+the Claude implementation recipe; the
+[parent plan's current execution state](../plans/proof-programme/parent-plan.md#current-execution-state)
+owns whether the experiment may run. The owner confirmed on **2026-09-06**
+that the experiment is paused and its Claude Routine disabled. This is an
+owner-confirmed fact, not a live settings read, and says nothing about other
+Routines or interactive Claude sessions.
+
+**Recorded configuration, not an active schedule:** the historical proof
+programme used fresh cloud sessions in "Practice Repos", the castr repository
+attached, cron `3 */8 * * *` (the accepted default of three daily invocations),
+model Fable, and "Auto-fix pull requests" OFF so the platform did not introduce
+a second branch writer. The latest recorded notification choice (2026-08-27)
+was push + Slack, no email; access and delivery details live in
+[account-access.md](./account-access.md). Re-read actual settings when the owner
+commissions a configuration change; these dated facts do not prove current
+account configuration beyond the owner's disabled-state statement.
+
+**Owner-authorised use:** the owner creates, schedules, pauses or deletes the
+Routine and attaches the repository. Its stored prompt is a thin pointer:
+read the parent plan's current execution state, then follow
+[`routine-prompt.md`](../plans/proof-programme/routine-prompt.md) on `main`.
+Changing this documentation never creates or enables a trigger. Observe
+credentialed landing and notification delivery during authorised execution;
+there is no separate arming, dry-fire, receipt or capability-probe ceremony.
+
+**Invocation provisioning recipe:** after the prompt's execution-state and STOP
+checks permit work, provision the repository through `pnpm install` and
+`pnpm --filter @engraph/agent-tools build`. Run
+`bash .claude/hooks/ensure-gitleaks.sh` unconditionally: the existing idempotent
+SessionStart provisioner resolves the repository pin, upgrades stale binaries
+and preserves its documented newer-version policy. Its PATH persistence uses
+`CLAUDE_ENV_FILE`, which tool shells may lack. In a fresh command shell,
+resolve `gitleaks version` and compare with
+`.claude/hooks/_lib/gitleaks-pin.env`; if unresolved, add the actual install
+directory reported by the hook to PATH. File or command presence alone is not
+validity. The pre-push secret scan remains mandatory; Q-15 owns future proof
+of the entire hook/guard chain, not this documentation refresh.
+
+**Standing self-disable:** during authorised active execution, ADR-051's
+three-idle rule removes the Routine's schedule through an available
+trigger-update operation. Record the observed result; unavailable tools or a
+failed update mean stop and report the failed disable, with the owner's UI
+pause/delete as the backstop. No disable or enabling operation is performed
+by reading or updating this recipe.
+
 ## Cloud-session grounding contract
 
 Every session in this environment — scheduled Routine firings and

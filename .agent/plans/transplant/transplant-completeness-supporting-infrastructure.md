@@ -1,7 +1,7 @@
 ---
 title: Transplant completeness — bring the iceberg, not the tip
-status: current
-lane: current
+status: historical
+lane: transplant
 created: 2026-06-26
 last_updated: 2026-06-26
 owner_directive: >-
@@ -45,7 +45,7 @@ todos:
       incl. quality-gates.md, lifecycle-triggers.md, foundation-alignment.md, risk-assessment.md)
       to .agent/plans/templates/. The transplanted plan skill already references them — all
       dangling today. Localise Oak tokens; verify every brought template's internal links resolve.
-    status: pending
+    status: completed # local templates landed in PR 54
     depends_on: [TC3a]
   - id: TC3a
     content: >-
@@ -81,6 +81,21 @@ todos:
 ---
 
 # Transplant completeness — bring the iceberg, not the tip
+
+**Historical scope, reconciled 2026-09-06:** the wholesale-transplant effort
+was stopped by the owner on 2026-08-26 ([QD-2](../proof-programme/queued-decisions.md)). Dated statuses,
+measurements, TODOs and execution language below describe the earlier effort;
+they do not form an active backlog or automatic resumption trigger.
+Surviving bilateral equality has a [named carrier](../current/paused/practice-equality-parity-follow-up.md);
+programme Q-13 separately owns selective canonical-delta evaluation.
+This document remains evidence for a newly bounded parity slice if commissioned.
+No unfinished historical task is marked delivered by this disposition.
+
+TC2's missing-template premise is discharged: PR #54 installed the local
+template estate (completed equality instalment 1, SK-4). Other TC tasks are
+not thereby completed; their original estimates are historical.
+
+## Historical record
 
 > **🧭 FOLDED (2026-06-28): next-step source is now [`oak-castr-gap-rescan-2026-06-28.md`](./oak-castr-gap-rescan-2026-06-28.md)** —
 > TC2/TC4/TC1b appear there as Tier-1/2 backlog entries. This plan is retained for the iceberg thesis + per-item

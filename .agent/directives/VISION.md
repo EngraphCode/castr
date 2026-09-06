@@ -1,248 +1,141 @@
-# Vision: Universal Schema Conversion
-
-**Last Updated:** 2026-04-02
-
-Castr is **strict and complete everywhere, all the time**. It **fails fast and hard**.
-
-- No silent information loss, no partial success, no swallowed errors, no permissive fallback output.
-- No partial support claims: a feature is only honestly supported when parser, IR, runtime validation, writers, proofs, and docs agree.
-- No type-system escape hatches in product code (non-const type assertions, `any`, `!`, `eslint-disable`); fix architecture or fix the rule.
-- Normalization/canonicalization is allowed only when it is **lossless** and **deterministic**, and the rule is explicit (example: documented OpenAPI 3.0 → 3.1 upgrade semantics in requirements).
-
-If something is wrong, the pipeline stops and reports exactly what happened and where.
-
----
-
-## The Goal
-
-Transform data definitions **between any supported format**, losslessly, deterministically, **strictly**, and **completely**, via an internal **Intermediate Representation (IR)** as the canonical source.
-
-```text
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   OpenAPI   │────▶│              │────▶│   OpenAPI   │
-│     Zod     │────▶│     IR       │────▶│     Zod     │
-│ JSON Schema │────▶│ (CastrDoc)   │────▶│ JSON Schema │
-│   (more)    │────▶│              │────▶│   (more)    │
-└─────────────┘     └──────────────┘     └─────────────┘
-     Input        Single Source of       Output (any)
-                       Truth
-```
-
-**Including same-format conversions** (OpenAPI→OpenAPI, Zod→Zod) for normalization, validation, and canonicalization.
-
----
-
-## The Core Principle: The IR is the Single Source of Truth
-
-> **The entire system architecture is built around the canonical IR.**  
-> Input formats are merely ingestion pathways. Output formats are merely rendering views.
-
-The IR (the data representation at the heart of the Caster Model architecture) is:
-
-1. **The single source of truth** - After parsing, the input document is discarded. Only the IR matters.
-2. **The canonical data model** - All schema concepts (types, constraints, references, composition) are expressed in IR types (`CastrSchema`, `CastrDocument`, etc.).
-3. **The architectural center** - All tools, transforms, and validations operate on the IR, never on raw input formats.
-4. **Format-agnostic** - The IR knows nothing about OpenAPI, Zod, or JSON Schema. It represents pure schema semantics.
-
-> **Note:** The IR is plain TypeScript interfaces. Writers use ts-morph for **code generation** only — the IR itself is not a ts-morph AST.
-
-### The Complexity Argument
-
-Without this principle:
-
-- Each format pair (OpenAPI→Zod, Zod→JSON Schema, etc.) needs separate conversion logic: **O(N²) complexity**
-- Edge cases multiply across converters
-- Format-specific quirks leak into the core
-
-With this principle:
-
-- Each format needs only two modules: parser (to IR) and writer (from IR): **O(N) complexity**
-- Edge cases are handled once, in the IR model
-- The core remains clean and format-agnostic
-
----
-
-## The Architecture
-
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                           INPUT LAYER                                │
-│  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐              │
-│  │ OpenAPI Parser│ │  Zod Parser   │ │ JSON Schema   │ ... more     │
-│  │  (3.0, 3.1)   │ │    (v4)       │ │   Parser      │    parsers   │
-│  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘              │
-│          │                 │                 │                       │
-│          └─────────────────┼─────────────────┘                       │
-│                            ▼                                         │
-├──────────────────────────────────────────────────────────────────────┤
-│                    Intermediate Representation (IR)                  │
-│                                                                      │
-│   • CastrDocument - Complete document with schemas, operations       │
-│   • CastrSchema - Type definitions, constraints, metadata            │
-│   • IROperation - API endpoints (for OpenAPI input)                  │
-│   • IRDependencyGraph - Reference tracking, circular detection       │
-│                                                                      │
-│   *** THIS IS THE ENTIRE SYSTEM'S CENTER OF GRAVITY ***              │
-│   *** All code that touches schema data works with this IR ***       │
-│                                                                      │
-├──────────────────────────────────────────────────────────────────────┤
-│                           OUTPUT LAYER                               │
-│          ┌─────────────────┼─────────────────┐                       │
-│          │                 │                 │                       │
-│  ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐              │
-│  │  Zod Writer   │ │   TS Types    │ │  JSON Schema  │ ... more     │
-│  │   (Zod 4)     │ │    Writer     │ │    Writer     │   writers    │
-│  └───────────────┘ └───────────────┘ └───────────────┘              │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-**Canonical Structure (see ADR-029):**
-
-1. **Parse** (`parsers/`) - Convert any input format to IR
-2. **IR** (`ir/`) - The single, canonical, type-safe representation
-3. **Write** (`writers/`) - Generate any output format from the IR
-
----
-
-## Workspace Model
-
-`lib` / `@engraph/castr` is the **core compiler workspace**. Its scope is:
-
-- parsers and document loading
-- canonical IR types and runtime validation
-- writers / emitters
-- metadata outputs needed to consume generated schemas and documents honestly
-
-Operational or framework-specific capabilities that consume Castr output but add transport, runtime, or authoring concerns belong in **companion workspaces**, not in core `@engraph/castr`.
-
-Examples of companion-workspace directions:
-
-- typed fetch harnesses and HTTP adapters
-- runtime handler generation and framework bindings
-- code-first / framework ingestion layers such as tRPC
-- end-to-end SDK or reference-implementation workspaces
-
-Companion workspaces may be strategically important, but they are **not** core-format promises for `lib`.
-
----
-
-## The Roadmap
-
-> **Rule:** ALL formats MUST be supported as both **input** and **output**, unless explicitly marked as an exception.
-
-### Core Target Formats (Vision)
-
-| #   | Format          | Input | Output | Notes                                                                                |
-| --- | --------------- | :---: | :----: | ------------------------------------------------------------------------------------ |
-| 1   | **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; older input bridges through 3.1 semantics, canonical target is 3.2.0 |
-| 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                                            |
-| 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                                                        |
-| 4   | **TypeScript**  |   —   |   ✅   | **Exception:** output-only (too broad for input parsing)                             |
-
-Companion-workspace directions such as tRPC ingestion or runtime handler generation may sit on top of these core formats, but they are not part of the core `lib` format contract.
-
-### Current Progress
-
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                                   |
-| ----------- | :-----------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | Core OpenAPI -> IR -> OpenAPI proofs exist; the live canonical output target is now 3.2.0, with 3.1.x retained only as an input bridge. |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; strict Zod-layer transform proofs are complete.                                                                |
-| JSON Schema |      ✅       |      ✅       | Full Draft 07 / 2020-12 parser and writer support now exist with explicit fail-fast boundaries.                                         |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                            |
-
-### Companion Workspace Roadmap
-
-Companion workspaces are the place for higher-level integrations that should not widen core `@engraph/castr`:
-
-- **Code-first / framework ingestion**
-  - tRPC or similar authored-operation ingestion for OpenAPI generation
-  - Zod metadata ingestion needed for code-first publishing flows
-- **Transport / runtime helpers**
-  - typed fetch harnesses
-  - framework handlers and middleware adapters
-  - lightweight runtime exposure packages
-- **Reference implementations**
-  - Oak-style replacement workspaces that prove end-to-end adoption paths
-  - an explicit Oak proving ladder:
-    - adapter boundary replacement first
-    - wider OpenAPI-stack replacement second
-    - code-first OpenAPI generation replacement as a distinct third programme
-
----
-
-## Adoption Goals (Ecosystem Replacement)
-
-To be practically useful in production pipelines, Castr targets replacement of existing schema tooling dependencies and workflows:
-
-- Replace **openapi-zod-client-style adapters** with native Zod v4 output from core Castr.
-- Replace wider **OpenAPI build boundaries** with core Castr plus companion workspaces where runtime or framework concerns arise.
-- Replace **code-first OpenAPI generation stacks** through companion-workspace ingestion layers that feed the IR.
-- Incorporate the **best practices of openapi-ts** (plugin surface, DX), with ethical reuse and attribution when code is reused.
-
-### Same-Format Normalization
-
-Once both parser and writer exist for a format, same-format conversions enable:
-
-| Conversion                | Purpose                        |
-| ------------------------- | ------------------------------ |
-| OpenAPI → OpenAPI         | Canonicalize, validate, bundle |
-| Zod → Zod                 | Optimize, deduplicate          |
-| JSON Schema → JSON Schema | Upgrade draft versions         |
-
-### Implementation Order
-
-The order of **core format** support is deliberate — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
-
-| Order | Transform                  | Rationale                                                                        |
-| ----- | -------------------------- | -------------------------------------------------------------------------------- |
-| 1     | **OpenAPI → Zod**          | Established baseline (current)                                                   |
-| 2     | **Zod → OpenAPI**          | Complete Zod transform validation; understand input/output commonality           |
-| 3     | **JSONSchema ↔ OpenAPI**   | Cross-format bridges with well-understood formats                                |
-| 4     | **JSONSchema ↔ Zod**       | Complete JSON Schema triangulation                                               |
-| 5     | **Companion integrations** | Layer code-first, runtime, and framework concerns on top of settled core formats |
-
-> **Note:** Roadmap _phases_ (delivery milestones) are tracked in `.agent/plans/roadmap.md`. The ordering above is a conceptual sequencing for format support, not a roadmap phase number.
-
-> **Pattern:** For each format, implement both directions before adding new formats. This reveals shared abstractions and prevents premature generalisation.
-
----
-
-## Why This Matters
-
-### For SDK Authors
-
-Generate type-safe validation from any API specification format.
-
-### For API Authors
-
-Validate and normalize specifications. Convert between formats without loss.
-
-### For AI Integration (MCP)
-
-Bridge any schema format to MCP tool definitions.
-
-### For Interoperability
-
-One tool that speaks all schema languages fluently.
-
----
-
-## Principles
-
-1. **IR is Truth** - The internal IR is authoritative; inputs are ingestion, outputs are views
-2. **Strict And Complete Conversion** - No silent coercion, no partial support claims, and no data loss without explicit handling
-3. **Type Safety** - TypeScript types flow through the entire pipeline
-4. **Fail Fast** - Invalid input rejected immediately with helpful errors
-5. **Format Agnostic Core** - The IR knows nothing about OpenAPI, Zod, or JSON Schema
-
----
-
-## Related Documents
-
-| Document                                                               | Purpose                                |
-| ---------------------------------------------------------------------- | -------------------------------------- |
-| `requirements.md`                                                      | Decision-making guidance for agents    |
-| `principles.md`                                                        | Engineering standards and code quality |
-| `testing-strategy.md`                                                  | How we verify correctness              |
-| `DEFINITION_OF_DONE.md`                                                | Quality gates and completion criteria  |
-| `docs/architectural_decision_records/ADR-023-ir-based-architecture.md` | IR architecture decision record        |
+# Vision: Castr and the Practice
+
+**Amended: 2026-09-06.** This document expresses the owner-ratified two-product
+direction and application-contract charter. The universal-schema-conversion
+framing and former progress checkmarks are superseded. Strictness, semantic
+preservation, deterministic output and the core/companion boundary are retained.
+
+## A shared principle
+
+A claim is only as strong as the evidence that proves its stated boundary.
+[Verified-claims engineering](../practice-core/decision-records/PDR-135-verified-claims-engineering.md)
+applies to both products: the compiler must prove preservation, and the Practice
+must prove that its operating mechanisms produce their claimed outcomes.
+A working mechanism, an adopted design and a completed programme are different
+claims.
+
+This umbrella names both products. The Castr vision follows below; the
+[Practice vision](PRACTICE-VISION.md) owns the second product's beneficiaries,
+impact and fitness frame. Current delivery observations belong in the
+[Practice bridge](../practice-index.md), not in permanent vision tables.
+
+## Castr: application-value and interaction contracts
+
+**Castr compiles application value and interaction contracts between compatible
+representations without silently changing their meaning.**
+
+Its beneficiaries are schema-tooling consumers, SDK authors, API authors and
+integration engineers who need dependable transformation, meaningful diagnostics
+and proofs they can inspect. Success means they can select a declared source
+grammar and target profile and trust the complete result, rather than discovering
+semantic loss in production.
+
+Castr owns two distinct kinds of semantic artifact:
+
+- **Application-value contracts:** what inputs are accepted, what successful
+  values are produced and what ordered processing relates them.
+- **Software-interaction contracts:** operations, parameters, responses, security,
+  protocol context and their relationships to value contracts.
+
+The target public model has versioned, discriminated
+`CastrValueContractDocument | CastrInteractionContractDocument` roots replacing
+`CastrDocument` in one deliberate migration. These are the ratified target
+contract, not a claim that the existing public API has already migrated.
+
+Five facets remain distinct persisted semantics: **accepted-input,
+produced-output, ordered-processing, annotation and interaction**. Defaults,
+coercion, stripping, retention and refinement cannot be flattened into a single
+validation schema. Source syntax and renderer fragments are not substitutes for
+these semantics.
+
+## Preservation and admission
+
+The canonical IR is the source of truth after parsing. Writers consume the
+semantic model, never discarded source documents. The IR serves the admitted
+application-contract domain, rather than claiming to encode every feature of
+every language.
+
+Each advertised source grammar is bounded and versioned. Every valid construct
+inside it must be parsed completely; unsupported source syntax fails at the
+boundary. For an admitted contract and selected target profile:
+
+- exact native or behaviourally proven encoded output must preserve every
+  declared channel;
+- genuinely impossible mappings reject atomically;
+- separately named, caller-authorised projections may report a complete
+  semantic delta, but do not earn an exact/lossless certificate;
+- unimplemented obligations block support and release claims.
+
+Same-family extensions may travel in typed opaque carriers with key safety and
+stable provenance. Opaque preservation does not imply that an unaware target
+executes their meaning. There is no generic foreign-artifact bag.
+
+Graph semantics such as RDF, SHACL and JSON-LD lie outside Castr's domain.
+Any future crossing requires an explicit public, versioned application-value
+projection. The existence or naming of a separate graph product is not decided
+by this vision.
+
+## Representations and product surfaces
+
+OpenAPI, JSON Schema and bounded Zod source are representation families with
+different semantic roles and directed edges. Naming a family does not claim
+universal coverage, symmetry or equivalence between its value and interaction
+artifacts. Swagger 2 ingress is rejected under the adopted target direction;
+a legacy upgrade shim is not a new support promise.
+
+TypeScript generation selects an explicit structural facet. A type declaration
+cannot certify all runtime assertions or processing. MCP tool generation is an
+interaction projection, not a lossless representation of an entire API document.
+
+The long-term surface direction distinguishes **doctor, upgrade, transform,
+validate and check** by the consumer task they perform. This is a direction for
+future API design, not a list of implemented commands. Same-format operations
+serve canonicalisation and declared migration, with deterministic output and
+semantic preservation under the chosen profile.
+
+## Core, companions and adoption
+
+The `lib` / `@engraph/castr` workspace owns loading, parsers, canonical IR and
+its runtime validation, writers and consumption metadata. Transport, framework
+binding, runtime handlers and code-first authoring integrations belong in
+companion workspaces that consume the core through public boundaries.
+[ADR-043](../../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)
+owns that boundary.
+
+Adoption progresses through demonstrable consumer outcomes: replace an adapter
+boundary, prove the wider OpenAPI-stack integration, and only then establish a
+distinct code-first generation capability. Typed fetch helpers, framework
+handlers, tRPC-style ingestion and reference implementations remain companion
+directions. They do not silently widen the core-format contract.
+
+## Headline measurement: preservation coverage
+
+**Preservation coverage** is adopted as Castr's headline metric, per declared
+source → target profile. Its denominator is the complete, version-pinned set of
+admitted transformation obligations for that profile; its numerator is the set
+whose required channels have independent, passing preservation proofs on the
+same integrated artifact. A source feature, nested position and selected facet
+may produce different obligations.
+
+The support-contract inventory owns the denominator and the semantic proof
+harness owns discharged obligations. The combined proof estate computes the
+metric and binds it to the tested revision, versions and profile. A governed
+projection has its own stated relation and certificate; it cannot be counted as
+exact preservation.
+
+No percentage is published before those instruments and their complete
+inventory exist. Counts of commits, green tests or completed plan rows are not
+substitutes. Current evidence and outstanding implementation are reached through
+the [Practice bridge](../practice-index.md).
+
+## Engineering requirements
+
+Strict and complete support, fail-fast errors, type safety, deterministic output
+and no silent semantic coercion remain requirements. A documentation correction
+does not relax them or certify current implementation.
+
+- [Requirements](requirements.md) defines the compiler contract and proof boundaries.
+- [Identity](../IDENTITY.md) defines domain, facets and semantic policy.
+- [Principles](principles.md) defines engineering standards.
+- [Testing strategy](testing-strategy.md) and [definition of done](DEFINITION_OF_DONE.md)
+  define evidence and verification.

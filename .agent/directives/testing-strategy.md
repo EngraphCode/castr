@@ -395,7 +395,10 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### 4) Writer Outputs (Zod + Metadata)
 
-- Zod schemas use `.strict()` for all object schemas
+- Zod schemas use `.strict()` for contracts that reject unknown keys; other admitted
+  modes need independent runtime witnesses for both accepted inputs and produced
+  outputs. A closed-object witness does not certify strip, passthrough, catchall
+  or unevaluated-property behaviour.
 - Required vs optional properties exactly match the spec
 - Literal types preserved in metadata maps and endpoint definitions
 - No `as`, `any`, `!`, or other type escape hatches

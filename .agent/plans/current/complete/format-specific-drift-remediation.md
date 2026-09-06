@@ -45,37 +45,37 @@ The parser's `FORMAT_MAP`/`ENCODING_MAP` is narrowed to the writer's canonical s
 
 **Files:**
 
-- [openapi-writer.components.ts](../../../lib/src/schema-processing/writers/openapi/components/openapi-writer.components.ts) — replace no-op `requestBody` handler with a real implementation
-- [openapi-writer.components.unit.test.ts](../../../lib/src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts) — TDD: requestBody component produces `requestBodies`
-- [writer-field-coverage.integration.test.ts](../../../lib/tests-transforms/__tests__/writer-field-coverage.integration.test.ts) — integration assertion
+- [openapi-writer.components.ts](../../../../lib/src/schema-processing/writers/openapi/components/openapi-writer.components.ts) — replace no-op `requestBody` handler with a real implementation
+- [openapi-writer.components.unit.test.ts](../../../../lib/src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts) — TDD: requestBody component produces `requestBodies`
+- [writer-field-coverage.integration.test.ts](../../../../lib/tests-transforms/__tests__/writer-field-coverage.integration.test.ts) — integration assertion
 
 ### RC-4.5: Zod contradictory strict-object chain rejection
 
 **Files:**
 
-- [zod-parser.object.ts](../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts) — after `isStrict`, scan for contradictory widening modifiers (`.passthrough()`, `.catchall()`, `.strip()`) and throw
-- [zod-parser.object.unit.test.ts](../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.unit.test.ts) — TDD: contradictory chains throw, non-contradictory accepted
+- [zod-parser.object.ts](../../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts) — after `isStrict`, scan for contradictory widening modifiers (`.passthrough()`, `.catchall()`, `.strip()`) and throw
+- [zod-parser.object.unit.test.ts](../../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.unit.test.ts) — TDD: contradictory chains throw, non-contradictory accepted
 
 ### RC-4.6: Zod unsupported nested member fail-fast
 
 **Files:**
 
-- [zod-parser.object.ts](../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts) — change silent `continue` on `!propSchema` to error
-- [zod-parser.composition.ts](../../../lib/src/schema-processing/parsers/zod/composition/zod-parser.composition.ts) — change silent `return undefined` on `!itemSchema` to error
+- [zod-parser.object.ts](../../../../lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts) — change silent `continue` on `!propSchema` to error
+- [zod-parser.composition.ts](../../../../lib/src/schema-processing/parsers/zod/composition/zod-parser.composition.ts) — change silent `return undefined` on `!itemSchema` to error
 - Unit tests for both — TDD: unsupported nested expressions throw
 
 ### RC-4.7: Zod reference declaration proof
 
 **Files:**
 
-- [zod-parser.references.ts](../../../lib/src/schema-processing/parsers/zod/registry/zod-parser.references.ts) — verify identifier declaration site is a Zod schema call before promoting to `$ref`
+- [zod-parser.references.ts](../../../../lib/src/schema-processing/parsers/zod/registry/zod-parser.references.ts) — verify identifier declaration site is a Zod schema call before promoting to `$ref`
 - Reference parser unit tests — TDD: non-Zod identifiers rejected, valid Zod identifiers accepted
 
 ### RC-4.8: Zod format lockstep closure
 
 **Files:**
 
-- [zod-parser.zod4-formats.ts](../../../lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts) — narrow `FORMAT_MAP` to writer's surface, add fail-fast for unadmitted methods
+- [zod-parser.zod4-formats.ts](../../../../lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts) — narrow `FORMAT_MAP` to writer's surface, add fail-fast for unadmitted methods
 - Format tests — TDD: admitted formats produce correct IR, unadmitted formats throw
 
 ---

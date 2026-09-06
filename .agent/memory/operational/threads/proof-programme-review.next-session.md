@@ -1,10 +1,41 @@
+> **COMPLETED — commissioned review executed 2026-08-24.**
+> The report and owner-ruling record conclude this review; implementation
+> follow-ups belong to the proof-programme parent. Retained as history.
+
 # Next-Session Record - `proof-programme-review` thread
+
+## Current continuation — 2026-09-06
+
+The [review plan](../../../plans/current/complete/proof-programme-loop-review.md)
+is complete; its R1–R6 findings and owner decisions are preserved in the
+[dated report](../../../analysis-and-reports/proof-programme-loop-review-2026-08-24.md)
+and the history below. This thread does not execute queue items or rerun the
+closed review.
+
+The [parent plan](../../../plans/proof-programme/parent-plan.md) owns the routed
+implementation rows and their acceptance; the
+[decision register](../../../plans/proof-programme/queued-decisions.md) owns
+the outcomes. Read those sources for current dispositions rather than the
+historical request to decide OP-3/OP-4. QD-14's general proof-policy question
+remains OPEN; the separate documentation commission does not decide it.
+
+The [parent's current execution state](../../../plans/proof-programme/parent-plan.md#current-execution-state)
+records the platform-neutral experiment as paused and its Claude Routine as
+disabled per the owner's 2026-09-06 statement. This is not live platform
+inspection or a statement about another Routine. Historical review references
+to a running loop or an active review plan are not resumption instructions.
+
+## Historical commissioned review — 2026-08-24
+
+Everything below conserves the original review brief, observations, owner
+rulings and identities. Its status labels, branch state and next-action
+instructions describe that review, not current work.
 
 Owner-commissioned review of the proof-programme autonomous loop (ADR-051):
 the parent plan and its queue, the queued decisions and ballot, the routine
 definition (file AND live trigger), the incident and loop-test records, and
 the skills the loop routes through. Plan:
-[`.agent/plans/active/proof-programme-loop-review.md`](../../../plans/active/proof-programme-loop-review.md)
+[`.agent/plans/current/complete/proof-programme-loop-review.md`](../../../plans/current/complete/proof-programme-loop-review.md)
 (status active — promoted current/ → active/ 2026-08-24 as the review
 session's first act; legs R1–R6; scope guard inside). Distinct from the
 `proof-programme` thread itself — that thread RUNS the loop; this one
@@ -47,7 +78,7 @@ addendum's "Second decision card" section. Main was merged forward
   tacit fixes → the state-file seed-shape correction and ceremony
   deviations are napkin-captured; index of homes → report at
   `.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md`,
-  plan at `.agent/plans/active/proof-programme-loop-review.md` (R1–R6
+  plan at `.agent/plans/current/complete/proof-programme-loop-review.md` (R1–R6
   completed), lessons in `.agent/memory/active/napkin.md` (three dated
   2026-08-24 entries), OCE retrospective read from the OCE `engraph`
   branch (scratchpad copy is deliberately ephemeral).
@@ -142,3 +173,4 @@ OP-4; the remaining OPs are queue-routable.
 | ------------------- | -------------- | ------------------------------------ | ------------------------------------ | ------------ |
 | claude-code (cloud) | claude-fable-5 | Buzzard weaves Airstream (01e90b)    | plan author (review not yet started) | 2026-08-24   |
 | claude-code (cloud) | claude-fable-5 | Flamebright Burning Caldera (01FV6r) | reviewer (executing legs R1–R6)      | 2026-08-24   |
+| codex               | gpt-6-astra    | Bora seeks Turbulence (01a072)       | documentation refresh coordinator    | 2026-09-06   |

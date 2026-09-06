@@ -4,6 +4,13 @@ Changes to the Practice Core files, newest first. Each entry records the repo
 that made the change and what was changed. This file travels with the
 Practice Core package.
 
+## [castr] 2026-09-06 — Verified-claims engineering
+
+- Added accepted pattern PDR-135, graduating the already-ratified verified-claims
+  principle with the accompanying two-product vision revision.
+- Updated the PDR index. Host-specific adoption and evidence remain in the stable
+  Practice bridge. No trinity file or trinity provenance chain changed.
+
 ## [castr] 2026-06-26 — Buffer-empty graduations (dedicated consolidation, Eclipsed Lurking Moth)
 
 - Authored **PDR-097** (`pdr_kind: pattern`) — "Dependency Currency for a Types/Codegen Library: Split by Risk, Classify by Call-Site, Prove Consumer-Side" — graduating the `dependency-currency-discipline` candidate. Owner brought the timing forward (from the DC3–DC5 lane-close gate to graduate-now) to empty the register; the method's core was proven across DC0–DC2 and later cycles apply the same moves (amend if they refine it). This empties `pending-graduations.md`.

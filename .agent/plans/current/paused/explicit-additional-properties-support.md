@@ -19,8 +19,8 @@
 **Status:** PAUSED — named position; sequencing governed by the proof-programme queue (was SEQUENCED #3 until 2026-08-22)  
 **Created:** 2026-04-16  
 **Promoted:** 2026-04-16  
-**Predecessor:** [eperusteet-real-spec-validation.md](../current/complete/eperusteet-real-spec-validation.md)  
-**Related:** [oas-3.2-full-feature-support.md](../current/complete/oas-3.2-full-feature-support.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
+**Predecessor:** [eperusteet-real-spec-validation.md](../complete/eperusteet-real-spec-validation.md)  
+**Related:** [oas-3.2-full-feature-support.md](../complete/oas-3.2-full-feature-support.md), [ADR-040](../../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-038](../../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 
 ---
 
@@ -109,7 +109,7 @@ Chosen. This matches the clarified product intent and the existing IR shape more
 
 ## Execution Trigger
 
-Execute immediately. The issue has already been reproduced and the user has clarified the intended product boundary.
+Execution enters through programme Q-12 or a separately bounded owner-directed slice. Ratified product direction does not override the parent's queue or paused autonomous-development state.
 
 ## Quality Gate Protocol
 

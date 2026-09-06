@@ -21,7 +21,7 @@ from the beginning.
 
 This sequence corresponds to the current `pnpm check` script — the canonical
 aggregate local proof gate (`pnpm check:ci` for a non-mutating rerun). See
-[`DEFINITION_OF_DONE.md`](../../../directives/DEFINITION_OF_DONE.md) for how this
+[`DEFINITION_OF_DONE.md`](../../directives/DEFINITION_OF_DONE.md) for how this
 relates to pre-commit, pre-push, and CI. Re-read `package.json` before editing
 this list; the root `qg` script is the source of truth when the gate graph changes.
 

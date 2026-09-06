@@ -1,5 +1,11 @@
 # Plan: Zod 2020-12 Keyword Semantics (execute ADR-047)
 
+**Current routing, 2026-09-06:** Q-05 owns placebo/nested-loss containment; Q-12 owns real keyword semantics. ADR-047 is Proposed, not authority for treating implementation gaps as supported output.
+
+The [parent programme](../proof-programme/parent-plan.md) governs selection and
+execution state. The following original finding contract is an evidence base,
+not an independent execution order. Reproduce remaining cases on the chosen base.
+
 **Status:** Backlog (remediation) · **Findings:** C6, H7 · **Risk:** Medium
 **References:** **ADR-047** (the governing decision); report `02-findings-critical.md` (C6); `principles.md` § Input-Output Pair Compatibility Model; `writers/zod/refinements/{object,array}.ts`, `writers/zod/fail-fast.unit.test.ts`
 
@@ -40,7 +46,7 @@ Out of scope: a governed opt-in lossy mode (may follow later per ADR-047); array
 - Refinement emission order is sorted (M7).
 - `roadmap.md:147` "semantic" wording, the three sub-plans, and `docs/architecture/zod-round-trip-limitations.md`
   reconciled to the actual per-keyword truth (ADR-047 Consequences).
-- `pnpm qg` green.
+- `pnpm check` green.
 
 ## TDD order
 
