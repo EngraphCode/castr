@@ -4,14 +4,20 @@ Current examples for `@engraph/castr`.
 
 ## 1. Generate Schemas And Metadata From OpenAPI
 
+Complete the [local checkout and build](./USAGE.md#build-and-generate) first.
+Run these commands from the checkout root, replacing `./openapi.yaml` with
+your OpenAPI document path.
+
 ```bash
-castr ./openapi.yaml -o ./src/api.ts
+mkdir -p src
+node lib/dist/cli/index.js ./openapi.yaml -o ./src/api.ts
 ```
 
 ## 2. Select The `schemas-only` Defaults
 
 ```bash
-castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
+mkdir -p src
+node lib/dist/cli/index.js ./openapi.yaml -o ./src/schemas.ts --template schemas-only
 ```
 
 Current truth: this selector suppresses endpoint metadata, MCP tool exports, and helper exports. Use the default template when you need manifest data or endpoint metadata.
@@ -19,7 +25,8 @@ Current truth: this selector suppresses endpoint metadata, MCP tool exports, and
 ## 3. Emit An MCP Manifest
 
 ```bash
-castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
+mkdir -p src
+node lib/dist/cli/index.js ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
 ```
 
 ## 4. Generate In Memory

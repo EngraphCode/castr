@@ -1,174 +1,53 @@
 # Castr
 
-> Transform schemas through a canonical IR with strict-by-default semantics.
+Castr is a schema compiler that transforms data definitions through a canonical
+Intermediate Representation (IR). Its existing entry points include OpenAPI
+input to generated Zod schemas and endpoint metadata, Zod source parsing, IR
+inspection and persistence, OpenAPI writing, and MCP tool projection.
 
-Castr is a schema compiler. Its public surface today focuses on:
+Castr currently has no consumers. Its owner has several intended projects and
+considers its usefulness settled. The current work verifies correctness and
+usability. No published package is currently planned; use a local checkout.
 
-- OpenAPI input to generated Zod schemas and endpoint metadata
-- Zod source parsing to canonical IR
-- IR utilities, validation helpers, MCP helpers, and OpenAPI writing
+## Local quick start
 
-It does not ship a built-in HTTP client. The standard path is to generate schemas and metadata, then compose your own transport layer.
-
-If typed transport or framework helpers are added later, they will ship as separate companion workspaces rather than inside core `@engraph/castr`.
-
-## Install
-
-```bash
-pnpm add @engraph/castr zod
-```
-
-If you want to compose Castr output with `openapi-fetch` or another HTTP client, install that separately.
-
-## CLI
-
-After installation, use the published binary:
+Use Node.js 24.x and the pnpm version declared in `package.json`. See
+[CONTRIBUTING.md](./CONTRIBUTING.md) for prerequisites, including the secret
+scanner required by repository checks and hooks.
 
 ```bash
-castr ./openapi.yaml -o ./src/api.ts
+git clone https://github.com/EngraphCode/castr.git
+cd castr
+pnpm install --frozen-lockfile
+pnpm --filter @engraph/castr build
+node lib/dist/cli/index.js --help
+mkdir -p lib/tmp
+node lib/dist/cli/index.js examples/local-user.json -o lib/tmp/local-user.ts
 ```
 
-Two built-in template selectors are currently exposed:
+The committed [User fixture](./examples/local-user.json) describes one explicit
+closed object: a required, non-empty string `id`. Generated output contains a
+`User` Zod schema and endpoint metadata. The [usage walkthrough](./docs/USAGE.md)
+compiles the output, executes positive and negative validation examples, and
+compares repeated generation. That proof covers this fixture's contract.
 
-| Template                | Output                              | Use case                           |
-| ----------------------- | ----------------------------------- | ---------------------------------- |
-| `schemas-with-metadata` | Zod schemas plus endpoint metadata  | Stable current generation path     |
-| `schemas-only`          | Zod schemas and exported types only | Honest schema-only generation path |
+## Fidelity contract
 
-Examples:
+Strictness, fail-fast behaviour and semantic fidelity are absolute requirements.
+Castr must preserve source-dialect acceptance and processing semantics, including
+object retention, stripping and catchalls. Strictness does not authorise closing
+an object whose source permits additional properties.
 
-```bash
-# Default: schemas + endpoint metadata
-castr ./openapi.yaml -o ./src/api.ts
+Known silent loss, ignored options and incorrect output are design or
+implementation defects requiring repair. An existing export or a green fixture
+does not prove every construct on that surface correct.
 
-# `schemas-only` selector
-castr ./openapi.yaml -o ./src/schemas.ts --template schemas-only
+Castr generates schemas and metadata. Applications compose their own HTTP
+transport; see [the integration guide](./docs/OPENAPI-FETCH-INTEGRATION.md).
 
-# Emit an MCP manifest alongside generated TypeScript
-castr ./openapi.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
-```
+## Contributing
 
-Current template truth:
-
-- prefer `schemas-with-metadata` when you need endpoint metadata or MCP manifest data
-- `schemas-only` now suppresses `endpoints`, `mcpTools`, and helper exports
-- custom template paths are not a supported extension seam; the CLI accepts non-built-in `--template` values for compatibility, but the renderer ignores them
-
-## Programmatic Generation
-
-Use `input` for a file path or URL, or `openApiDoc` for an in-memory document.
-
-```typescript
-import { generateZodClientFromOpenAPI, isSingleFileResult } from '@engraph/castr';
-
-const result = await generateZodClientFromOpenAPI({
-  input: './openapi.yaml',
-  disableWriteToFile: true,
-  template: 'schemas-with-metadata',
-  options: {
-    withAlias: true,
-    shouldExportAllSchemas: true,
-    shouldExportAllTypes: true,
-  },
-});
-
-if (isSingleFileResult(result)) {
-  console.log(result.content);
-}
-```
-
-`generateZodClientFromOpenAPI()` returns generated code only. It does not return an MCP manifest payload; use the template-context or IR APIs below for MCP tool data.
-
-In-memory input works too:
-
-```typescript
-import { generateZodClientFromOpenAPI } from '@engraph/castr';
-
-const openApiDoc = {
-  openapi: '3.1.0',
-  info: { title: 'Pets', version: '1.0.0' },
-  paths: {},
-};
-
-await generateZodClientFromOpenAPI({
-  openApiDoc,
-  distPath: './src/api.ts',
-});
-```
-
-Important current API truth:
-
-- `openApiFilePath` is no longer a valid argument; use `input`
-- `exportSchemas` / `exportTypes` are no longer the programmatic option names; use `shouldExportAllSchemas` / `shouldExportAllTypes`
-- `schemas-with-client`, `createApiClient()`, and `validationMode` are not part of the current public surface
-
-## Template Context And IR Access
-
-If you want the structured metadata rather than rendered TypeScript, use the template-context and IR exports directly:
-
-```typescript
-import { getZodClientTemplateContext, buildIR, writeOpenApi } from '@engraph/castr';
-
-const doc = {
-  openapi: '3.1.0',
-  info: { title: 'Pets', version: '1.0.0' },
-  paths: {},
-};
-
-const context = getZodClientTemplateContext(doc, {
-  withAlias: true,
-  shouldExportAllSchemas: true,
-});
-
-const ir = buildIR(doc);
-const roundTripped = writeOpenApi(ir);
-
-console.log(context.endpoints);
-console.log(context.mcpTools);
-console.log(roundTripped.openapi);
-```
-
-## Zod To OpenAPI
-
-The `./parsers/zod` subpath parses supported Zod 4 source into Castr's IR.
-
-```typescript
-import { parseZodSource } from '@engraph/castr/parsers/zod';
-import { writeOpenApi } from '@engraph/castr';
-
-const { ir } = await parseZodSource(`
-  import { z } from 'zod';
-
-  export const UserSchema = z.strictObject({
-    id: z.uuid(),
-    email: z.email(),
-  });
-`);
-
-const openApiDoc = writeOpenApi(ir);
-console.log(openApiDoc.openapi);
-```
-
-## Strictness
-
-Castr is strict by design:
-
-- object schemas are emitted as strict when the source does not explicitly
-  declare otherwise
-- Castr never invents object openness that the input did not declare
-- unsupported behaviour fails fast
-- support claims are only honest when code, proofs, and docs agree
-
-There is no public strictness toggle for object openness.
-
-## Build Your Own Client
-
-The supported pattern is:
-
-1. generate `schemas-with-metadata`
-2. use the generated schemas and endpoint metadata
-3. compose transport with `fetch`, `openapi-fetch`, `axios`, `ky`, or your own wrapper
-
-That boundary is deliberate: future fetch/runtime/framework helpers, if shipped, belong in companion workspaces rather than new core exports.
-
-See [docs/USAGE.md](./docs/USAGE.md), [docs/API-REFERENCE.md](./docs/API-REFERENCE.md), and [docs/OPENAPI-FETCH-INTEGRATION.md](./docs/OPENAPI-FETCH-INTEGRATION.md) for current examples.
+Start with [CONTRIBUTING.md](./CONTRIBUTING.md), the [Practice bridge](./.agent/practice-index.md)
+and the [verification contract](./.agent/directives/DEFINITION_OF_DONE.md). The
+bridge routes contributors to current work, governing authority, implementation
+evidence and repair ownership.

@@ -19,8 +19,13 @@ Manifest generation is IR-first: Castr derives tool metadata and schemas from th
 
 Generate TypeScript plus an MCP manifest sidecar:
 
+Complete the [local checkout and build](./USAGE.md#build-and-generate) first.
+Run these commands from the checkout root, replacing `./petstore.yaml` with
+your OpenAPI document path.
+
 ```bash
-castr ./petstore.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
+mkdir -p src
+node lib/dist/cli/index.js ./petstore.yaml -o ./src/api.ts --emit-mcp-manifest ./src/api.mcp.json
 ```
 
 Use the default template or `schemas-with-metadata` when you need manifest data. Selecting `schemas-only` suppresses MCP tool generation upstream and will therefore emit an empty manifest.

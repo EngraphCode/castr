@@ -231,7 +231,9 @@ resumed or inferred. History rewriting remains owner-controlled.
 
 Q-19's original non-code acceptance is proven on integrated main through PR #83;
 the [ledger](../delivery-ledger.md) owns the dated head, checks and review evidence.
-C01R is the bounded custody correction before the prepared C03a checkout slice.
+C01R is merged and the eight late C01 findings are individually settled. C03a now
+delivers the prepared local-checkout slice from refreshed main; C03b/c retain the
+detailed API/options and response/transport/MCP documentation.
 Earlier dated authoring records below preserve their checkpoint observations;
 they do not override current queue status or the ledger's delivery dispositions.
 
