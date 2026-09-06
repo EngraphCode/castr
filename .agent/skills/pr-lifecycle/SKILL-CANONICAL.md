@@ -73,7 +73,7 @@ shared. A minimal comment is:
 REVIEW-TALLY
 
 Outcome: <one reviewable result>. Shepherd: <identity>.
-Expected review budget: <PDR-132 budget, normally at most two rounds>.
+Expected review budget: <budget read from PDR-132>.
 
 | Round | Head | Concern/class narrowed | Blocking evidence | Disposition/proof/owner |
 | ----- | ---- | ---------------------- | ----------------- | ----------------------- |

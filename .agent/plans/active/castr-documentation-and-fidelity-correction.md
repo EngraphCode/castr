@@ -306,3 +306,10 @@ failure was found; C09 owns the complete reference/validator correction. Adapter
 regeneration produced no tracked difference. PDR-132's size warning is acknowledged:
 the ninth file annotates seven partial C01 source dispositions, with immutable
 merge/blob evidence and explicit residual custody; none is silently marked complete.
+
+C02 round 1: PR #83's REVIEW-TALLY comment `5558683768` was created at
+10:41:49 UTC before specialist/GitHub triage. Paired documentation and onboarding
+reviews accepted the procedure; documentation review found a numeric-budget
+restatement contrary to PDR-132 clause 5. The template now points to PDR-132 and
+the bounded recheck settled it. No structural recurrence trigger fired. GitHub
+review and final-head checks remain live responsibilities of the PR shepherd.
