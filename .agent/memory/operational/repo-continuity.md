@@ -49,7 +49,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Complete C01R's post-merge custody corrections, then C03's smaller local-use
+Deliver C03a’s local-checkout workflow, then the detailed C03b/c local-use
 slices under the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
 Q-19 is delivered; the [ledger](../../plans/delivery-ledger.md) owns its proof and
 C05 follow-up. No per-PR owner approval wait is needed; correctness, review and gate
