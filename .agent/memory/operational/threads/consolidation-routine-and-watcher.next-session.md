@@ -29,7 +29,7 @@ record carries only the repo-side state).
   (cron cannot express a true 72 h interval) — owner's call if the quirk ever
   matters. Fresh session per firing, repo source + Slack connector
   owner-attached, completion push notifications on; prompt hardened through
-  five verified bot-review rounds on PR #69 (merged `df734b4d`). Watcher
+  five verified bot-review rounds on PR #69 (merged `SHA:df734b4d`). Watcher
   tenure closed cleanly: 11 ticks + 2 catch-ups over ~2.6 h, canvas
   `F0BT7TXQ3PW` final-edited, wake chain deleted.
 - **Blockers / low-confidence areas**: unverified whether a Routine firing
