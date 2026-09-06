@@ -174,6 +174,10 @@ check precedes the STOP landing protocol below, which applies to authorised runs
    reviewer pass per `invoke-reviewers` → full gates → PR whose final commit carries the
    slice's state landing (row → `complete`, counters, delivery-ledger row, handoff
    surfaces) → green → merge under clause 3 → orphan continuity commit → stop.
+   Immediately after opening a new slice PR, post the same `FIRING-LEASE` defined
+   in step 4, before its first triage or drive, and create its `REVIEW-TALLY`.
+   Release that lease when the drive ends. The lease and its firing identity
+   therefore exist for both newly opened PRs and adopted PRs before step 7.
 6. **Branches** (each is normal operation, not an error):
    - **Red head on arrival** (gates failing for causes outside your slice): at most ONE
      bounded green-the-head repair slice through the normal TDD/gate/review path, recorded

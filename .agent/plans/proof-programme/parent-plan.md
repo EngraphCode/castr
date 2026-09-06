@@ -37,7 +37,7 @@ todos:
     status: pending
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card; Q-13 dependency dropped by owner card ruling 2026-08-27): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
-    status: in_progress
+    status: pending
   - id: Q-23
     content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
     status: completed
@@ -1102,8 +1102,9 @@ reconciliation duty); the D-10 merge-posture cure
 is NOT here (it is Q-21, independently landable). Acceptance (`non-code`): the skill
 and counter surfaces carry all three elements grep-checkably, and this row's own PR
 demonstrates the REVIEW-TALLY comment from its first triage onward; gates green.
-C02 implementation is in progress under Q-30; its own first-triage tally and merged
-head evidence remain required before Q-19 completion.
+C02 implementation is being carried by Q-30, the sole in-progress queue row.
+Q-19 remains pending until its own first-triage tally and merged-head evidence
+prove acceptance; it is not a second independent pickup.
 Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a
 tally artefact means the entry contract is not working. Source: loop-review report
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second

@@ -55,6 +55,13 @@ story materially changes (a reshaped scope, a new commit class).
 
 ## The review-round tally
 
+Provenance: Q-19's owner-approved 24 August brief adapts OCE's durable tally
+contract. The [upstream reference snapshot](https://github.com/EngraphCode/open-curriculum-ecosystem/blob/31e76a7237ee7aecb8adfca96e73b2d83b25be39/.agent/skills/change-custody/pr-lifecycle/SKILL-CANONICAL.md#the-review-round-state-machine-single-definition)
+was verified on 6 September 2026. Castr keeps one PR-comment tally and its own
+ADR-051 two-successive-round predicate; it does not import upstream four-round
+epochs, reset rules or response-pricing machinery. This attribution is not an
+upstream resynchronisation or a change to local authority.
+
 Before the first triage of an opened or adopted bot-reviewed PR, create one
 **REVIEW-TALLY** issue comment. The named shepherd maintains it across pushes and
 handoffs; a successor reads and updates that same comment. A tally-less PR is out

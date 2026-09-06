@@ -276,7 +276,7 @@ references. It does not reduce the correctness or human-review obligations.
 
 The bot-cited-SHA graduation fires because convergence doctrine is edited. Its
 permanent procedure preserves local-versus-remote evidence and independently
-reproducible defects; the pending entry is drained. Q-19 stays in progress until
+reproducible defects; the pending entry is drained. Q-19 remains pending under Q-30 until
 its own PR demonstrates the tally from first triage and passes gates on main.
 The default two expected review rounds apply; the tally lives on that PR, not in
 a second local round store.
@@ -313,3 +313,42 @@ reviews accepted the procedure; documentation review found a numeric-budget
 restatement contrary to PDR-132 clause 5. The template now points to PDR-132 and
 the bounded recheck settled it. No structural recurrence trigger fired. GitHub
 review and final-head checks remain live responsibilities of the PR shepherd.
+
+C02's initial asynchronous bot-review batch on `49ad9e43` also found a second
+in-progress queue row, missing lease creation on the new-PR path, incomplete
+upstream attribution and stale continuity/graduation pointers. The procedure now
+keeps Q-30 as the only in-progress row, establishes leases before triage for new
+as well as adopted PRs, and cites the verified upstream reference with local
+limitations. Continuity corrections land in a separate `chore(continuity)` commit.
+The earlier bundled continuity edit was a procedural deviation; pushed history
+will not be rewritten to fabricate compliance. C05 owns the rule's ambiguous
+applicability to deliberate documentary corrections and its broken authority links.
+The PR tally retains all findings and their separate dispositions.
+
+### C01R — bounded post-merge custody correction
+
+PR #82 received eight threads after its verified merge-time clean observation.
+C01R follows C02 and precedes C03; it is corrective custody within Q-30, not a new
+queue or compiler slice. Close the six current defects by adding Q-016 to the
+finding inventory (including the reproduced classification/context edges), the
+verified correction identity UUID, direct custody links for the consolidation,
+initial-review and loop-review threads, a complete paused proof-thread continuation,
+an unambiguous Q-30 plan path and accurate membership-versus-evidence wording.
+Clarify that any future resumption must reconcile interactive Q-30 custody before
+scheduled pickup. The separate consolidation Routine's platform state remains
+unverified. Preserve identities, historical facts and every outstanding obligation.
+
+Exact PR #82 comment custody: `3943677468` (Q-016 inventory), `3943677469` (UUID),
+`3943677471` (future resumption), `3943678006` (thread indexes), `3943678022`
+(proof continuation), `3943678035` (path), `3943678045` (evidence description).
+`3943677464` is the historical commit-policy deviation; record it and route the
+rule reconciliation to C05 without rewriting merged history. Full post-merge
+review connections were exhausted on 6 September; fixes and thread settlement
+remain pending this follow-up. Do not label C01 complete before that evidence.
+
+C03 is further sliced after inspecting the draft's roughly 1,800 changed lines:
+C03a local checkout/CLI walkthrough, C03b API and source-local examples, C03c
+response/transport/MCP/migration guides. Preserve the full local-entry draft and
+extract each coherent outcome into a fresh worktree; validate every executable
+example on its rebuilt target. Ignored-option leads extend the existing finding's
+case inventory and require discriminating runtime reproduction under C08.
