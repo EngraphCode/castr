@@ -6,7 +6,7 @@ general opportunities for improvement, alongside the plan's structured legs).
 **Reviewer:** Flamebright Burning Caldera (claude-code cloud, claude-fable-5,
 session prefix `01FV6r`), thread `proof-programme-review`.
 **Controlling plan:**
-[`proof-programme-loop-review.md`](../plans/active/proof-programme-loop-review.md)
+[`proof-programme-loop-review.md`](../plans/current/complete/proof-programme-loop-review.md)
 (promoted current/ → active/ as this session's first act; legs R1–R6).
 **Seat discipline:** review-only — this seat executes no queue items, amends no
 doctrine, and neither fires nor disarms the Routine; every opportunity below is

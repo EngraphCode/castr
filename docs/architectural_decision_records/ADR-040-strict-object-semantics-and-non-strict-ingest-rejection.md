@@ -1,7 +1,18 @@
 # ADR-040: Strict-By-Default Object Semantics With Optional Strip Normalization
 
 **Date:** 2026-03-11  
-**Status:** Accepted — historical record, superseded in part by [IDENTITY.md](../../.agent/IDENTITY.md) on 2026-03-21
+**Status:** Superseded — object-policy direction now owned by [IDENTITY.md](../../.agent/IDENTITY.md); historical amendments retained
+
+## Charter amendment — 2026-09-06
+
+The ratified application-contract charter, expressed in
+[IDENTITY.md](../../.agent/IDENTITY.md), supersedes the blanket strict-only,
+no-unknown-key-facets interpretation in this record. Input acceptance,
+produced-output retention/stripping, catchall validation and ordered processing
+are distinct semantics to preserve inside the admitted grammar. This amendment
+changes doctrine, not implementation coverage; narrower existing behaviour
+remains an obligation to close. Historical object-policy text below records its
+dated decision and is not a current rejection instruction.
 
 ---
 

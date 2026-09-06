@@ -5,13 +5,11 @@
 > is historical — its lanes are NOT pickup-able; parity's living frame is the
 > owner's 2026-08-24 bidirectional-equality directive. Do not resume work from here.
 
-The continuity record for the single deep-enhancement thread (owner: bring the
-full Practice / agentic framework / agent-tools over **and** fix castr's known
-issues — one goal, not competing priorities). Indexed by
-[`../repo-continuity.md § Active Threads`](../repo-continuity.md#active-threads),
-which stays the source of truth for thread status; this record carries identity
-history and lane state per [`README.md`](README.md) +
-[PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
+Historical continuity for the stopped deep-enhancement thread, whose original
+commission combined the Practice transplant and Castr fixes.
+[Repo continuity](../repo-continuity.md) indexes its status; this record
+conserves identity and lane history under [the thread convention](README.md)
+and [PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
 
 **Activated 2026-06-20** (Phase 8 task 5): per-thread records went live the moment
 the collaboration framework that makes a second stream safe landed — task 3b
@@ -25,27 +23,74 @@ constraint is now lifted, so the thread is recorded as a multi-lane container.
 Additive per PDR-027 — joining adds an identity; a matching platform/model/agent_name
 updates `last_session` rather than adding a row.
 
-| platform    | model              | session_id_prefix | agent_name                     | role         | first_session | last_session |
-| ----------- | ------------------ | ----------------- | ------------------------------ | ------------ | ------------- | ------------ |
-| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor     | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer  | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer  | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director     | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor     | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor     | 2026-06-20    | 2026-06-20   |
-| claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor     | 2026-06-21    | 2026-06-21   |
-| claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator | 2026-06-21    | 2026-06-21   |
-| claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor     | 2026-06-21    | 2026-06-21   |
-| claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor     | 2026-06-21    | 2026-06-21   |
-| claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor     | 2026-06-26    | 2026-06-26   |
-| claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor     | 2026-06-26    | 2026-06-27   |
-| claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator | 2026-06-26    | 2026-06-26   |
-| claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor     | 2026-06-27    | 2026-06-27   |
-| claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor     | 2026-06-27    | 2026-06-28   |
-| claude-code | claude-fable-5     | 540603            | Penumbral Slipping Moth        | executor     | 2026-07-03    | 2026-07-03   |
-| claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor     | 2026-07-03    | 2026-07-03   |
-| claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator | 2026-07-03    | 2026-07-03   |
-| claude-code | claude-fable-5     | 8bff79            | Cirrus Spiralling Airstream    | executor     | 2026-07-03    | 2026-07-03   |
+| platform    | model              | session_id_prefix | agent_name                     | role                              | first_session | last_session |
+| ----------- | ------------------ | ----------------- | ------------------------------ | --------------------------------- | ------------- | ------------ |
+| claude-code | claude-opus-4-8-1m | 10bc66            | Ethereal Weaving Star          | executor                          | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 328f4f            | Secret Watching Candle         | implementer                       | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 4aeee2            | Stratospheric Wheeling Horizon | implementer                       | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | fdb75b            | Briny Cresting Sextant         | director                          | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | cba47e            | Stormy Sailing Archipelago     | executor                          | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 8de446            | Clouded Floating Gust          | executor                          | 2026-06-20    | 2026-06-20   |
+| claude-code | claude-opus-4-8-1m | 611206            | Igneous Flaring Hearth         | executor                          | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | 89120c            | Volcanic Charring Hearth       | consolidator                      | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | dc3825            | Woodland Bending Glade         | executor                          | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | f7e30d            | Soaring Lifting Current        | executor                          | 2026-06-21    | 2026-06-21   |
+| claude-code | claude-opus-4-8-1m | 48b4a5            | Coppery Warming Magma          | executor                          | 2026-06-26    | 2026-06-26   |
+| claude-code | claude-opus-4-8-1m | c56a0f            | Stratospheric Kiting Breeze    | executor                          | 2026-06-26    | 2026-06-27   |
+| claude-code | claude-opus-4-8-1m | 1dfcd1            | Eclipsed Lurking Moth          | consolidator                      | 2026-06-26    | 2026-06-26   |
+| claude-code | claude-opus-4-8-1m | e8b57e            | Hidden Veiling Mirror          | executor                          | 2026-06-27    | 2026-06-27   |
+| claude-code | claude-opus-4-8-1m | c82112            | Open Lofting Feather           | executor                          | 2026-06-27    | 2026-06-28   |
+| claude-code | claude-fable-5     | 540603            | Penumbral Slipping Moth        | executor                          | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | 0ceb5f            | Windswept Winging Cliff        | executor                          | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | bafbac            | Fiery Flaring Bellows          | consolidator                      | 2026-07-03    | 2026-07-03   |
+| claude-code | claude-fable-5     | 8bff79            | Cirrus Spiralling Airstream    | executor                          | 2026-07-03    | 2026-07-03   |
+| codex       | gpt-6-astra        | 01a072            | Bora seeks Turbulence          | documentation refresh coordinator | 2026-09-06    | 2026-09-06   |
+
+## Current continuation and surviving intents — 2026-09-06
+
+The wholesale transplant remains stopped. Its detailed lane records below
+conserve decisions, unfinished work and evidence; none is an active-next
+instruction. This is not a claim that every recorded defect was fixed.
+
+- **Bilateral Practice equality:** the
+  [paused equality follow-up](../../../plans/current/paused/practice-equality-parity-follow-up.md)
+  owns the next bounded instalment and its stated pickup conditions. It is
+  independent of the stopped wholesale-transplant thread.
+- **Product remediation and additional-properties work:** their
+  [paused remediation carrier](../../../plans/current/paused/02-ir-fidelity-proof-harness.md)
+  and [additional-properties carrier](../../../plans/current/paused/explicit-additional-properties-support.md)
+  retain their boundaries; the
+  [programme parent](../../../plans/proof-programme/parent-plan.md) owns
+  sequencing. Its [current execution state](../../../plans/proof-programme/parent-plan.md#current-execution-state)
+  records the autonomous experiment's pause. The old transplant-first and
+  numbered-position instructions below do not choose the next product slice.
+- **Release automation:** the owner's changesets choice remains recorded in
+  the release-automation lane below, with the
+  [transplant tracker](../../../plans/transplant/README.md) retaining its
+  originating scope and the [delivery ledger](../../../plans/delivery-ledger.md)
+  retaining delivery observations. Release tooling remains an unimplemented
+  intent for a bounded authorised release-tooling slice. Resumed merge delivery
+  did not itself commission publishing or make the old
+  "delivery un-deprioritised" trigger an automatic instruction.
+- **Friction, matcher precision, loop-closure hardening and backflow:** the
+  [first-run inventory](../../../plans/transplant/first-run-friction-inventory.md),
+  hook-matcher lane below,
+  [loop-closure plan](../../../plans/transplant/practice-loop-closure-remediation.md)
+  and [backflow ledger](../../../plans/transplant/oak-backflow/castr-innovations-ledger.md)
+  preserve their concrete residuals. A newly commissioned bounded parity or
+  hardening slice must re-establish their current premises and explicitly
+  consume the relevant residuals; this refresh neither resumes those lanes nor
+  discards their intents.
+- **Archive privacy:** the independent
+  [archive scrub plan](../../../plans/current/archive-pii-scrub.md) remains a
+  current, unimplemented obligation. Stopping the transplant does not remove it.
+
+## Historical lanes and standing decisions — 2026-06-20 to 2026-08-26
+
+Everything below is the earlier thread's record, including its then-active
+labels, pickup triggers, branching instructions and sequencing. Those labels
+are dated history, not exceptions to the owner's stop. The current carriers
+above retain the surviving work without reviving the old programme.
 
 ## Lanes
 

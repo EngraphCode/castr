@@ -4,8 +4,8 @@
 **Created:** 2026-03-13
 **Last Updated:** 2026-03-20
 **Predecessor:** [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
-**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md)
-**Related:** [int64-bigint-semantics-investigation.md](./int64-bigint-semantics-investigation.md), [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md), [recursive-unknown-key-preserving-zod-emission-investigation.md](./recursive-unknown-key-preserving-zod-emission-investigation.md), [zod-round-trip-limitations.md](../../../../docs/architecture/zod-round-trip-limitations.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
+**Parent Context:** [transform-proof-budgeting-and-runtime-architecture-investigation.md](../../archive/zod-limitations-historical-cluster/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+**Related:** [int64-bigint-semantics-investigation.md](./int64-bigint-semantics-investigation.md), [zod-limitations-architecture-investigation.md](../../archive/zod-limitations-historical-cluster/zod-limitations-architecture-investigation.md), [recursive-unknown-key-preserving-zod-emission-investigation.md](../../archive/zod-limitations-historical-cluster/recursive-unknown-key-preserving-zod-emission-investigation.md), [zod-round-trip-limitations.md](../../../../docs/architecture/zod-round-trip-limitations.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
 ---
 

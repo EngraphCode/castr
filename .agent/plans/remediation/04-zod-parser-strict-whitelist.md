@@ -1,5 +1,11 @@
 # Plan: Zod Parser Strict Whitelist (fail-fast on unrecognised constructs)
 
+**Current routing, 2026-09-06:** Q-05 owns nested-member-loss containment; Q-12 owns broader parser work and surviving PR #13 value.
+
+The [parent programme](../proof-programme/parent-plan.md) governs selection and
+execution state. The following original finding contract is an evidence base,
+not an independent execution order. Reproduce remaining cases on the chosen base.
+
 **Status:** Backlog (remediation) · **Findings:** C5 · **Risk:** Medium
 **References:** report `02-findings-critical.md` (C5); ADR-032 (Zod input strategy — "content loss is not acceptable"); `principles.md` Fail-Fast; `parsers/zod/composition/{zod-parser.union,zod-parser.composition}.ts`, `parsers/zod/types/{zod-parser.primitives.chain,zod-parser.object}.ts`
 
@@ -38,7 +44,7 @@ fail-fast, not silently lossy.
   `errors`** (fail-fast), not silent loss.
 - No `return undefined`/`continue` path drops a construct without recording a `PARSE_ERROR`.
 - Behavioural tests assert the fail-fast for each (red first).
-- `pnpm qg` green.
+- `pnpm check` green.
 
 ## TDD order
 

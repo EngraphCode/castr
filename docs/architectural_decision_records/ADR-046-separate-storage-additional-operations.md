@@ -54,3 +54,12 @@ This was accepted because:
 ### Risks
 
 - if future work blurs the distinction between standard and custom methods, the split model will need discipline to stay lossless and easy to reason about
+
+## Consolidation note (2026-09-06)
+
+The directive duplicate's rejected combined-method design specifically named
+`VALID_HTTP_METHODS` and `PATH_ITEM_METHOD_SETTERS`, alongside exhaustive
+sorting/validation, as consumers that depend on the closed method union.
+Its custom-method validation and `allOperations()` rationale are retained above.
+This records the existing model; replacement document roots remain a separate
+artifact migration under the current charter.

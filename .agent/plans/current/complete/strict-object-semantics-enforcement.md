@@ -7,7 +7,7 @@
 **Status:** Complete  
 **Created:** 2026-03-11  
 **Last Updated:** 2026-03-12  
-**Predecessor:** [recursive-unknown-key-preserving-zod-emission-investigation.md](../paused/recursive-unknown-key-preserving-zod-emission-investigation.md)  
+**Predecessor:** [recursive-unknown-key-preserving-zod-emission-investigation.md](../../archive/zod-limitations-historical-cluster/recursive-unknown-key-preserving-zod-emission-investigation.md)  
 **Successor Active Slice:** [int64-bigint-semantics-investigation.md](./int64-bigint-semantics-investigation.md)  
 **Related:** `docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md`, `ADR-031`, `ADR-032`, `ADR-038`, `./int64-bigint-semantics-investigation.md`
 

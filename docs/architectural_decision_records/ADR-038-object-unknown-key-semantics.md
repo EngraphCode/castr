@@ -3,6 +3,17 @@
 **Date:** 2026-03-09  
 **Status:** Superseded by ADR-040 on 2026-03-11, then by [IDENTITY.md](../../.agent/IDENTITY.md) on 2026-03-21
 
+## Charter amendment — 2026-09-06
+
+The ratified application-contract charter, expressed in
+[IDENTITY.md](../../.agent/IDENTITY.md), supersedes the blanket strict-only,
+no-unknown-key-facets interpretation in this record. Input acceptance,
+produced-output retention/stripping, catchall validation and ordered processing
+are distinct semantics to preserve inside the admitted grammar. This amendment
+changes doctrine, not implementation coverage; narrower existing behaviour
+remains an obligation to close. Historical object-policy text below records its
+dated decision and is not a current rejection instruction.
+
 ---
 
 > [!IMPORTANT]

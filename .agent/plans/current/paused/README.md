@@ -1,6 +1,12 @@
 # Paused Workstreams
 
-**Purpose:** Define how incomplete but non-primary workstreams are parked while another active workstream becomes the repo's operational entry point.
+**Estate reconciliation, 2026-09-06:** the stopped
+[old transplant](./oak-practice-transplant.md) is historical, retained at its
+existing path rather than resumable. QD-2 governs its status. The harness and
+additional-properties briefs enter through the programme queue; the equality
+follow-up retains its specific bilateral pickup condition.
+
+**Purpose:** Define how incomplete but non-primary workstreams are sequenced while another active workstream becomes the repo's operational entry point.
 **Status:** Canonical lifecycle guide for paused-workstream usage.
 
 ---

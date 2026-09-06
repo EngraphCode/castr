@@ -6,6 +6,17 @@ castr to a fresh Oak branch off current main. Tracked in reference-closure.md §
 
 # Practice feedback from castr — transplant Phases 0–4 (2026-06-10)
 
+**Historical scope, reconciled 2026-09-06:** the wholesale-transplant effort
+was stopped by the owner on 2026-08-26 ([QD-2](../../proof-programme/queued-decisions.md)). Dated statuses,
+measurements, TODOs and execution language below describe the earlier effort;
+they do not form an active backlog or automatic resumption trigger.
+Surviving bilateral equality has a [named carrier](../../current/paused/practice-equality-parity-follow-up.md);
+programme Q-13 separately owns selective canonical-delta evaluation.
+This document remains evidence for a newly bounded parity slice if commissioned.
+No unfinished historical task is marked delivered by this disposition.
+
+## Historical record
+
 **From:** the castr transplant (`feat/transplant-engraph-practice`, Phases 0–4 complete; rules estate transplanted
 at the 2026-06-07 baseline). Delivered into the Practice Box per the inbound contract. Each item names the
 defect/enhancement, where it lives in Oak, and what castr did, so this repo can adopt or adapt with full context.

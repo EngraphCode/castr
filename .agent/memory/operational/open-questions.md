@@ -27,39 +27,43 @@ owning artefact / discussion home (if any), and a status line.
 
 <!-- Q-entries appended below by drains and consolidation passes. -->
 
-_Q-012..Q-015 drained 2026-08-27: all four were decided or acknowledged by the owner's
-2026-08-23 interactive walk. Verdicts (second product named "the Practice"; umbrella vision
-topology; preservation-coverage % adopted; `Object.*`/`Reflect.*` ban lint-enforced) ride
-the [overhaul plan](../../plans/future/strategy-vision-estate-overhaul.md) preamble +
-decision table as the interim record until W1 lands their durable doctrine homes —
-VISION.md/IDENTITY.md and the verified-claims pattern-PDR, which the owner held to ride W1
-(2026-08-27; that dependency is tracked owner-visibly in pending-graduations). The plan
-must not archive before W1 conserves the verdicts._
+Q-012–Q-015's owner decisions are conserved in the
+[umbrella/Castr vision](../../directives/VISION.md),
+[Practice vision](../../directives/PRACTICE-VISION.md),
+[identity](../../IDENTITY.md) and
+[PDR-135](../../practice-core/decision-records/PDR-135-verified-claims-engineering.md).
+The two-product name/topology and metric definitions are documentary landings;
+first computation remains with Q-10/Q-11/Q-12 and the named instrument owners.
+The Object/Reflect prohibition remains lint-enforced; wider proof and boundary
+gaps remain explicit implementation work, not a new claim of completeness.
 
 _Register emptied 2026-06-26 and again 2026-07-03. Q-006 graduated to ADR-049; Q-007 decided
 (markdown-links gate end-state → scoped-blocking, transplant-completeness plan TC3b); Q-009
 (PDR mapping-table) and Q-011 (Axis A first) decided and drained 2026-07-03 (homes: the
-gap-rescan doc; repo-continuity). Q-008 decided mechanise-now → owned by
-`plans/current/archive-pii-scrub.md` (full tool, two-layer publish precondition). Q-010 ruled
+historical gap-rescan and continuity archives; the Axis-A-first order is now
+superseded by the stopped transplant and programme queue). Q-008 decided mechanise-now → owned by
+`plans/current/archive-pii-scrub.md` (full tool, public-HEAD cleanup plus owner-controlled
+history treatment). Q-010 ruled
 by the owner — Result and fail-fast COMPOSE (`Result<T,E>` is the correct pattern, fail-fast
 required everywhere), FULL reach: the use-result-pattern bring + D4 seam migration are named
 items in the gap-rescan backlog §Owner-ruling additions. The permanent homes are the record,
 not a tombstone here. New questions are appended below by future drains and consolidation
 passes._
 
-### Q-016 — Un-blind the boundaries gate: restructure conversion, or widen ADR-036?
+### Q-016 — Un-blind the boundaries gate: restructure conversion, or widen ADR-037?
 
 Captured: 2026-08-26 (dependency-currency reopening, PR #62; measured firsthand at
-boundaries v6 AND v7). The ADR-036 "strict architectural domain boundaries" gate has
+boundaries v6 AND v7). The ADR-037 "strict architectural domain boundaries" gate has
 been blind since installation: the plugin reads the classic `import/resolver` settings
 key, castr sets only `import-x/resolver`, so ESM `.js`-suffixed imports never resolve
 and every intra-src dependency classifies as unknown. The one-line cure
 (`'import/resolver': { typescript: { alwaysTryTypes: true } }` in the boundaries
 settings block, documented in `lib/eslint.config.ts` beside the gap) un-blinds the
-gate — and the live gate then reports 3 real violations: `conversion/typescript`
+gate — and the August 26 diagnostic then reported 3 violations (not a fresh count):
+`conversion/typescript`
 imports parsers + writers, `conversion/zod` imports parsers (value imports; the
 conversion layer composes parser+writer against its declared allow-matrix). The fork:
-restructure the conversion layer to honour the declared matrix, or amend ADR-036's
+restructure the conversion layer to honour the declared matrix, or amend ADR-037's
 matrix to name conversion as a legitimate composition layer. Owner-shaped because
 either answer amends the architecture doctrine; not cheaply answerable in a
 dependency lane. Owning artefact: `lib/eslint.config.ts` settings-block comment +

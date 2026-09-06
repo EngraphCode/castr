@@ -56,8 +56,8 @@ wrap supplies the depth of the record it freezes.
 ## The Programme
 
 1. **Enter the modes.** Genuinely enter
-   [`metacognition`](../metacognition/SKILL-CANONICAL.md) (retrospective
-   mode) and [`reason`](../reason/SKILL-CANONICAL.md) — the whole wrap is
+   [`metacognition`](../cognition/metacognition/SKILL-CANONICAL.md) (retrospective
+   mode) and [`reason`](../cognition/reason/SKILL-CANONICAL.md) — the whole wrap is
    these modes wearing a sequence, and every claim below carries its
    warrant.
 2. **Record the safety baseline with evidence.** For work intended to
@@ -86,8 +86,8 @@ wrap supplies the depth of the record it freezes.
    consolidation a second time.
 5. **Check the arc.** If this session closed a significant arc (cost,
    length, or shape that surprised anyone), offer the owner a
-   retrospective — routed, not auto-run (this estate has no
-   retrospective skill yet; OCE's is the reference:
+   retrospective — routed, not auto-run (use the installed `engraph-retrospective` skill when
+   the owner takes up the offer; its upstream reference is:
    <https://github.com/EngraphCode/oak-open-curriculum-ecosystem/blob/engraph/.agent/skills/cognition/retrospective/SKILL-CANONICAL.md>).
    If the session graduated anything, confirm each graduation was routed
    per [`new-rule-vs-pdr-clause`](../../rules/new-rule-vs-pdr-clause.md),

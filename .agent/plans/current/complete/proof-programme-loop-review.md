@@ -1,9 +1,9 @@
 ---
 title: Proof-Programme Loop Review — general analysis, plan, queues, routine, skills, opportunities
-status: active
-lane: active
+status: complete
+lane: current/complete
 created: 2026-08-24
-last_updated: 2026-08-24
+last_updated: 2026-09-06
 owner_directive: >-
   "Review the Castr project including the plan, the queues, the routine
   definition, the associated skills. ... [the] work is not only about the
@@ -172,6 +172,15 @@ review_note: >-
 ---
 
 # Proof-Programme Loop Review
+
+**Closure reconciled 2026-09-06:** all six review legs completed on
+2026-08-24. Evidence: the
+[dated review report](../../../analysis-and-reports/proof-programme-loop-review-2026-08-24.md)
+and [review thread closeout](../../../memory/operational/threads/proof-programme-review.next-session.md).
+This is a completed review record. Its original operating assumptions describe
+the reviewed interval; subsequent owner decisions and the
+[parent programme](../../proof-programme/parent-plan.md) govern execution.
+Opportunities were routed, not implemented by completing this review.
 
 The plan is the frontmatter above: the owner's widened directive
 (general analysis of what has happened, general evaluation of the

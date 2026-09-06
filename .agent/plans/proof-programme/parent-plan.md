@@ -20,11 +20,11 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-18
-    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of recent expected slots (bounded lookback); a trace-less slot with no STOP file lands a neutral observation entry — a firing cannot distinguish an owner pause from a silent death, so the owner disambiguates from the notification — read and notified per the brief'
+    content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card; pause boundary clarified 2026-09-06): routine-prompt check of recent expected slots within established active intervals, excluding known pauses; a trace-less expected slot lands a neutral observation read and notified per the brief; uncertain execution history is named, never converted into a backlog'
     status: pending
   - id: Q-20
     content: 'Q-15 brief re-scope + D-9 correction (loop-review OP-5, owner-approved 2026-08-24 second decision card): rewrite the Q-15 brief to post-outage reality — named validity probes, identity-seed requirement, outcome-branch documentation; session capabilities are observed in live firings and named when absent, never pre-probed'
-    status: pending
+    status: completed
   - id: Q-21
     content: 'Merge-authority policy line in pr-lifecycle (loop-review D-10, owner-approved 2026-08-24 second decision card): replace the unconditional merge-is-owner-invoked line with the general merge-authority-follows-governing-authority policy'
     status: completed
@@ -75,7 +75,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-08
     content: 'ADR estate integrity (mechanical): delete the .agent/directives ADR duplicates (reconcile content into docs/ first), repoint referrers, reconcile both indexes, repair IDENTITY.md link'
-    status: pending
+    status: completed
   - id: Q-09
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: pending
@@ -97,14 +97,14 @@ todos:
     depends_on: [Q-11]
   - id: Q-14
     content: 'Doctrine amendment wave (B-09 APPROVE): rewrite principles.md, VISION.md, requirements.md, IDENTITY.md, and the input-output-pair-compatibility rule to the ratified charter, each landing recording retain/amend/supersede in the surface itself'
-    status: pending
+    status: completed
   - id: Q-15
     content: 'Fresh-container full-chain readiness: run the entire blocking gate chain unattended in a genuinely fresh container, fix or slice every gap found (measured 2026-08-22: unbuilt agent-tools/dist leaves PreToolUse guards failing OPEN for hours)'
     status: pending
     depends_on: [Q-20]
   - id: Q-16
     content: "Plan-architecture repair (narrowed 2026-08-25, premises moved — PR #54 landed the templates estate): replace the plan skill's declined-lineage ADR-117 citation with castr's real authority (PDR-018 + the templates README) and verify every remaining skill reference resolves"
-    status: pending
+    status: completed
   - id: Q-17
     content: 'Diagnostic-walker residual hardening (ADR-051 clause 4 carry-forward from PR #35): Proxy-inert snapshotting via node:util types.isProxy, and position-preserving placeholders for function-valued array slots'
     status: pending
@@ -112,34 +112,48 @@ todos:
 
 # Parent Plan: Castr Proof Programme
 
-**Status:** LIVE — the plan-of-record. The W-0 walk completed 2026-08-22 (interactive,
-in-session): all ten ballot decisions carry success verdicts, ADR-051 is **Accepted**
-(amended: three firings per day), and the [ballot](./ballot-2026-08-owner-walk.md) is
-CLOSED with the verdicts recorded. Q-01 completed 2026-08-22 (see the Q-01 evidence
-record; the Routine itself is owner-created platform state per §Operating protocol
-step 1 — this plan never mirrors its live schedule). Q-02 completed 2026-08-23 (see the Q-02 evidence record). Q-03
-completed 2026-08-24 (see the Q-03 evidence record). Q-04 completed 2026-08-25 (see the
-Q-04 evidence record). Q-21 completed 2026-08-26 (PR #64 landed its
-deliverable; see the Q-21 row). Q-18..Q-21 appended
-2026-08-24 at owner word (loop-review decision cards); Q-22 appended and the
-queue reordered 2026-08-26 at owner word (QD-11 ruling + arming-walk card:
-safety instruments first). Q-23..Q-27 appended
-2026-08-31 at owner word (the
-[zod truth-surface & dependency-currency plan](../current/zod-truth-surface-and-dependency-currency.md)
-is their evidence base and design detail; recommended sequencing recorded
-there — after the safety instruments, ahead of Q-05, owner-adjustable);
-Q-28 appended and Q-24..Q-27 physically re-sequenced behind Q-23 in this
-frontmatter at the PR #73 review (the scheduler claims in frontmatter
-order, so the machine queue must carry the documented sequencing itself;
-Q-28 = the measured writer `contentEncoding` loss). Eligible
-now, in queue order: Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency dropped by
-owner card ruling 2026-08-27 — sequenced with the safety instruments), Q-23,
-then Q-05..Q-09, Q-13 (executes
-the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on
-Q-20), and Q-24..Q-29 follow their `depends_on` (Q-29 appended 2026-08-31
-at owner word — the opportunity-probe commission) — Q-10 waits on the Q-14 doctrine
-wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
-charter it implements.
+**Status:** Plan-of-record; the autonomous-development experiment is **PAUSED**
+(owner correction, 2026-09-06). The experiment is platform-neutral. Its Claude
+Routine is **disabled**, as confirmed by the owner; this is not a claim of live
+platform inspection. No other Routine's state is inferred from that statement.
+
+### Current execution state
+
+This section owns the experiment's operational state. ADR-051 remains Accepted;
+the frontmatter owns queue order, row status, dependencies and counters.
+Dependency eligibility does not authorise autonomous execution while paused.
+Resumption and any execution-platform configuration require a further owner
+instruction. The pause creates no missed firings, failure increments or counter
+reset, and elapsed time is not permission to resume.
+
+The owner separately commissioned the
+[plan and documentation refresh](../current/complete/plan-estate-and-documentation-refresh.md)
+on 2026-09-06. That explicit documentation work may proceed while the autonomous
+experiment remains paused; it neither starts the loop nor executes the pending
+readiness, attestation or review-tally instruments.
+
+The W-0 walk and ballot closed on 2026-08-22 with success verdicts; their accepted
+decisions and the completed Q-01 mechanism evidence remain historical facts.
+Completed implementation rows retain their evidence below. Read the frontmatter
+and each remaining row's Gate line to derive eligibility when execution is
+authorised; no prose list mirrors that queue. The first pending eligible row is
+derived afresh rather than copied into another entrypoint.
+
+**Authority and implementation homes:**
+
+- This plan owns programme scope, accepted queue briefs, execution state and
+  counters; the [delivery ledger](../delivery-ledger.md) owns dated PR observations
+  and disposition carriers.
+- [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
+  owns standing design and authority. Accepted design is not an assertion that
+  an instrument is implemented or running.
+- [The invocation prompt](./routine-prompt.md) owns the ordered execution mechanics.
+- [Claude integration documentation](../../claude-harness-integrations/cloud-environment.md#proof-programme-claude-routine-adapter)
+  owns the Claude recipe and its dated platform facts. No alternative runtime is
+  selected or claimed operational by this refresh.
+- The [thread record](../../memory/operational/threads/proof-programme.next-session.md)
+  conserves identity and dated history and links here for current state.
+
 **Owner directive (2026-08-22):** turn the
 [proof-programme report (Revision 3)](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 into one parent plan and a series of incremental implementation plans; those plans include
@@ -164,19 +178,25 @@ programme earlier at a narrower ratified scope.
 
 ## Mechanism
 
-Small, independently green, TDD-first slices, executed one at a time by an autonomous
-background loop (fresh cloud session per firing; see §Operating protocol), against a queue this
-plan owns. Owner decisions are front-loaded into one ballot (W-0) and thereafter queued —
-never improvised — so the loop runs without the owner between ballots. The report's Section 6
+Small, independently green slices with the declared proof for their unit are
+executed by bounded, independently grounded invocations against the queue this
+plan owns. This autonomous-development experiment is platform-neutral and
+currently paused. Its accepted design uses serial invocations; Claude Routines
+are the historical implementation, not the definition of the experiment.
+Owner decisions are front-loaded into W-0 and thereafter queued, never improvised.
+The governing TDD obligations remain in force; QD-14's general non-code question
+remains OPEN, and this refresh relies on its explicit documentary commission. The report's Section 6
 dependency model orders the tranche tail; this plan does not restate it (document hierarchy:
 the report holds the tranche detail, this plan holds the queue and the operating contract).
 
 ## Means: the work queue
 
 The YAML frontmatter is the machine-readable queue; `depends_on` encodes hard ordering. One
-slice is in flight at any time (WIP = 1). Each firing either drives the open slice's PR to
-merged, or claims the next `pending` queue item whose dependencies are met and whose brief's
-gating note (below) is satisfied.
+slice is normally in flight (WIP = 1 is the ADR-051 best-efforts guideline).
+When execution is authorised, each invocation follows the standing prompt to
+drive an existing programme PR or claim the next `pending` item whose
+dependencies and brief's Gate line are satisfied. While the experiment is
+paused, none of these queue mechanics starts autonomously.
 
 **Gate semantics:** `depends_on: [Q-00]` is shorthand for "the specific ballot items named
 in this row's Gate line carry a **success verdict**" (RATIFY/ACCEPT/APPROVE, or AMEND in its
@@ -224,8 +244,10 @@ commit advancing a claimed slice, a queue row completed, a head-repair fix lande
 queued decision recorded; the bookkeeping every firing performs regardless of progress
 (completion notification, continuity/handoff, the counter landing itself) never resets it,
 so an idle firing always increments the streak and the clause 6 kill switch stays reachable.
-A row's success resets its `failures:` count. Q-01's dry run proves cross-session read/write
-of both counters.
+A row's success resets its `failures:` count. Q-01's dated evidence records the
+cross-session counter proof; later executions must still persist and read their
+actual counter state. The known owner pause is not an idle execution and changes
+neither counter.
 
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
@@ -253,7 +275,12 @@ only when that row's named Gate items carry success verdicts — a REJECT or DEF
 verdict leaves the row `blocked` for scheduled and owner-driven execution alike, pending
 re-ballot or re-plan. Source: report §7 T00a.
 
-**Q-01 — Loop readiness.** Surface: SessionStart hook / environment setup (pinned gitleaks
+**Q-01 — Loop readiness.**
+
+**Historical contract and evidence, completed 2026-08-22:** the following
+records the original Claude implementation and its acceptance. It is not a
+restart procedure. The current execution state above and the Claude adapter
+documentation govern any later owner-authorised use. Surface: SessionStart hook / environment setup (pinned gitleaks
 8.30.0 install), `routine-prompt.md` in this collection, the Routine itself. Non-goals: no
 product code; no queue slice execution during the dry run. Acceptance (`e2e`, observed): a
 fresh container completes the full blocking hook chain unattended; the cron Routine is
@@ -320,7 +347,8 @@ brief. Routine mechanism proven end to end across four firings:
   a re-arm applies the current ratified set per the runbook, never this historical
   one. The repeatable, account-portable form of this procedure was the arming
   runbook (owner-directed 2026-08-25; removed 2026-08-31 with the arming ceremony —
-  recreation is now §Operating protocol step 1's one-line procedure).
+  its historical replacement was the one-line Operating protocol; current
+  authorised setup is indexed by the Claude adapter).
 - Owner action completed (2026-08-23, QD-5 conversation): the Routine's session model is
   now Fable, changed in the Routine's own settings UI (the only safe route — recreating
   the trigger via API loses the owner-attached repo source, measured above). In the same
@@ -814,6 +842,10 @@ rows. Non-goals: `SUMMARY.md`'s universal-schema-conversion product claim is NOT
 re-adjudication. Acceptance (`non-code`): zero file/index status divergence (recompute, not
 eyeball); no dangling link introduced; gates green. Source: report §7 T00 instructions.
 
+Documentation carrier: [comprehensive refresh](../current/complete/plan-estate-and-documentation-refresh.md),
+acceptance A3-truth/A4-integrity plus A5-validation. **COMPLETE (2026-09-06):** the carrier records the
+full documentary acceptance, independent review and canonical gate proof.
+
 **Q-09 — PR closure wave 1.** Surface: #10 and #28 — commit/file-level patch-equivalence
 verification, surviving evidence migrated to its named home, closed with verification
 recorded. Non-goals: no wholesale branch merges; #23 is NOT this row (see Q-13). Acceptance
@@ -883,36 +915,70 @@ metric never becomes another asserted claim; the `Object.*`/`Reflect.*` doctrine
 written and is lint-enforced via a remediation lane entering at the Q-12 split — the
 doctrine wave must not soften that clause to match current code.
 
-**Q-15 — Fresh-container full-chain readiness.** Surface: the entire blocking gate chain
-(SessionStart hooks, PreToolUse guards, pre-commit, pre-push) run unattended in a genuinely
-fresh container; every gap fixed in-slice or spun into its own queue row. Measured evidence
-(2026-08-22, this container): unbuilt `agent-tools/dist` left the PreToolUse guards failing
-OPEN for hours (`.claude/logs/hook-errors.log` recorded ten fail-open entries) — the guards'
-fail-open posture on missing build artefacts is itself a candidate finding. Q-01 ships the
-gitleaks provisioning half and a dist-presence warning; this slice proves the rest. Q-01's
-firing evidence (2026-08-22, Kingfisher probe) adds three measured gaps to the list: a
-pristine checkout has **no git hooks wired until `pnpm install` runs**, so unattended
-commits bypass the entire blocking chain (the highest-order gap — the chain isn't merely
-degraded, it is absent); `agent-tools/dist` was unbuilt in the fired container (guards fail
-open, as measured before); and fired sessions derive their Practice identity from the raw
-`session_…` id, yielding the degenerate `sessio` prefix — the seed derivation must strip
-the platform prefix or take an injected seed at spawn. Carried forward from PR #34 review
-(clause 4 disposition, 2026-08-22): the `ensure-gitleaks.sh` version-classification
-branches (same-core prerelease vs higher-core prerelease vs older/newer stable) have only
-live-exercise evidence — this slice adds hermetic automated coverage (fake `gitleaks` on a
-crafted PATH, stubbed installer dependencies) so a regression cannot land while CI stays
-green. Incident I-1 (2026-08-23) adds cross-container claim visibility to the gap list:
-`active-claims.json` is per-container instance state, so the session-open claims scan
-cannot see a peer or concurrent writer in another container — the QD-5 pre-push head
-re-check is the standing mitigation, and a proactive cross-container claim signal revisits
-only with ADR-051's parallel-workers alternative. Session capabilities (artifact
-publish, push notification, Slack tools, trigger updates) are observed in live firings
-and any absence is named in the completion summary — routine-prompt §Slack and step 6
-already carry the degrade-gracefully behaviour, so no capability item sits in this row.
-Non-goals: no gate weakening; no moving the guards to fail-closed without an owner-visible
-proposal. Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit
-→ push unattended with every guard active, recorded in the slice PR. Source: Q-01
-pre-execution reviews (2026-08-22). Gate: none (eligible immediately).
+Documentation carrier: [comprehensive refresh](../current/complete/plan-estate-and-documentation-refresh.md),
+acceptance A2-authority/A3-truth plus A5-validation. **COMPLETE (2026-09-06):** the carrier records the
+full documentary acceptance, independent review and canonical gate proof.
+
+**Q-15 — Fresh-container full-chain readiness.** **Pending implementation.**
+Surface: the selected execution environment's entire blocking chain, exercised in
+a genuinely fresh checkout through ground → edit → commit → push. The historical
+Claude recipe lives in the integration documentation; this row does not select
+another runtime or enable the paused experiment.
+
+The executable obligations, re-scoped by Q-20, are:
+
+1. **Built-module validity:** after the repository's install/build path, execute
+   `node agent-tools/dist/src/bin/agent-tools.js --help` from the checkout root
+   and a harmless applicable guard invocation. Demonstrate module resolution and
+   successful execution, not merely that `dist` exists. A concurrent clean/build
+   can leave a present but unusable tree; observe the shared gate-runner window.
+2. **Pinned-version resolution:** invoke `gitleaks version` from a fresh command
+   shell and compare it to the repository's canonical pin and accepted
+   newer-version policy. Prove the intended binary resolves on PATH; a
+   `command -v` success alone does not establish the version or scan readiness.
+3. **Hook execution:** exercise the configured provisioning hook through its real
+   session entrypoint and demonstrate that applicable PreToolUse, pre-commit and
+   pre-push guards execute on the fresh checkout. Distinguish the session hook's
+   observed execution from a manual script run. Preserve the existing hook
+   failure policy; do not change it to fail-closed or weaken gates in this row.
+4. **Identity seed:** establish one canonical platform-session seed or injected
+   spawn seed, prove the derived Practice identity is non-degenerate, and record
+   the actual source. The historical raw `session_…` → `sessio` result is a
+   regression witness, not evidence that today's identity path is still broken.
+5. **Outcome branch:** document and exercise the selected adapter's actual branch
+   prefix and per-session suffix convention. For the Claude implementation,
+   reconcile the Routine's configured prefix with the branch the invocation
+   actually creates; do not infer an equivalent convention for another host.
+6. **Hermetic version-branch proof:** carry the PR #34 residual into automated
+   coverage of `ensure-gitleaks.sh` classification (same-core prerelease,
+   higher-core prerelease, older/newer stable) using a crafted PATH, fake binary
+   and stubbed installer dependencies. These tests belong to Q-15, not Q-20.
+
+Capabilities such as artifact publication, owner notification, Slack access and
+trigger updates are observed during authorised execution. Name absent capabilities
+in the completion summary and follow the existing notification/decision routes;
+do not create a capability-probe programme. Owner-alert obligations remain binding.
+Per-container claims cannot prove cross-container exclusion: the standing
+remote-head/lease checks remain the mitigation, with a proactive shared claim
+mechanism coupled to the separately owner-gated parallel-worker alternative.
+
+**Historical evidence (not current premises):** the 2026-08-22 container recorded
+ten fail-open hook entries with unbuilt guards; Kingfisher observed missing hook
+wiring before `pnpm install`, unbuilt `agent-tools/dist` and a degenerate seed.
+A 2026-08-24 concurrent pre-push clean window exposed transient module-resolution
+failure. These observations explain the validity probes above; each current
+premise must be re-established when this row executes.
+
+Non-goals: no runtime selection or enabling; no gate weakening; no claim that
+presence proves validity; no change to hook failure policy without an
+owner-visible proposal. Acceptance (`e2e`, observed, plus the hermetic tests):
+a fresh checkout completes ground → edit → commit → push with each applicable
+guard's execution evidenced, valid built modules and pinned-version resolution,
+a non-degenerate identity and the documented outcome branch; every gap is fixed
+in-slice or routed to an explicit queue owner. Evidence lands in the slice PR.
+Source: Q-01 evidence; PR #34 residual; loop-review OP-5 / D-4 / D-6 / F-R2-3 and
+the owner-approved 2026-08-24 decision card. Gate: `depends_on: [Q-20]`, with
+autonomous execution additionally subject to the programme's current pause.
 
 **Q-16 — Plan-architecture repair.** Premises re-adjudicated 2026-08-25 (arming
 review): the templates half is CURED — `.agent/plans/templates/` landed via PR #54
@@ -949,9 +1015,13 @@ the foundation-alignment note below; the napkin's transplant-gap entries; the
 2026-08-25 arming-review re-adjudication. Gate:
 none (eligible immediately).
 
+Documentation carrier: [comprehensive refresh](../current/complete/plan-estate-and-documentation-refresh.md),
+acceptance A3-truth/A4-integrity plus A5-validation. **COMPLETE (2026-09-06):** the carrier records the
+full documentary acceptance, independent review and canonical gate proof.
+
 **Q-17 — Diagnostic-walker residual hardening.** Surface:
 `lib/tests-transforms/utils/semantic-outcome-runner.ts` (`toSafeDiagnosticValue` /
-`resolveSafeDiagnosticMember`). The ADR-051 clause 4 carry-forward for the tenth-round
+`resolveSafeDiagnosticMember`). The ADR-051 clause 4 carry-forward for the seventeenth-round
 Codex P2 findings on PR #35 (both verified real against the landed code, both
 diagnostics-only — the proof verdicts are computed before any diagnostic formatting runs,
 so neither can change a proof outcome): (1) snapshotting a `Proxy`-backed artifact runs its
@@ -970,18 +1040,21 @@ green. Source: PR #35 review threads (carry-forward dispositions recorded on-thr
 
 **Q-18 — Predecessor-slot attestation (OP-1a).** Surface: `routine-prompt.md` — three
 touch points, the check and BOTH consumer halves: (1) step 2 (grounding) gains the
-check — derive each expected predecessor slot from your own spawn time minus whole
-cadence intervals (ADR-051 clause 2; 8 h — spawn-time arithmetic needs no platform
-read and works in every fired session), look back at most three expected slots (one
-cadence day — the owner schedules, pauses, and resumes the Routine at will, so an
-unbounded lookback across an intentional pause would manufacture a backlog), and for
-every expected slot in that window with no durable trace (no
+check — after an owner-authorised resumption, derive expected predecessor slots
+from the recorded active execution interval and its applicable cadence (ADR-051
+clause 2), looking back at most three expected slots. Exclude every known paused
+interval, including the owner-confirmed pause recorded on 2026-09-06: it creates
+no missing execution, failure, idle increment or backlog. Do not infer a
+resumption time or an active schedule from this brief. If the active interval
+cannot be established, record that evidence limit instead of inventing expected
+slots. For every expected slot in an established active interval with no durable trace (no
 `FIRING-LEASE`, no PR or branch activity, no counter or identity-row delta, and no open
 or draft bookkeeping/deferral PR carrying its increment) unexplained by a STOP file,
 append one `other`-class entry to `incidents.md` naming the unattested slots as a
-NEUTRAL observation — a firing cannot see the schedule, so an owner pause and a silent
-death read identically; the entry and the completion notification hand the
-disambiguation to the owner and never allege failure — landed
+NEUTRAL observation — an unobserved schedule change and a silent death can
+remain indistinguishable after known paused intervals have been excluded.
+The entry and completion notification hand that remaining uncertainty to the
+owner and never allege failure — landed
 via the normal counter-landing route; (2) step 3's incident-read semantics gain the
 entry's meaning for a reading firing (re-verify toolchain and gitleaks provisioning
 before trusting the chain — a predecessor that died silently may mean a broken
@@ -991,7 +1064,7 @@ slots" so the owner sees the signal. Non-goals: no external observer or watchdog
 platform-side work; no new mechanism beyond the existing register and landing paths.
 Acceptance (`non-code`): the prompt carries all three touch points with the trace
 classes enumerated, AND states the check's bounds — the bounded lookback, the
-neutral owner-pause/silent-death framing, and that it catches the intermittent case
+known-pause exclusion, evidence-limited schedule framing, and that it catches the intermittent case
 one slot late and does not observe sustained absence, an accepted risk at current
 stakes per the owner's decline; gates green. Source: loop-review report OP-1(a) and
 its 2026-08-24 addendum (`.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md`);
@@ -1039,8 +1112,8 @@ clean window; a pinned-version resolve for gitleaks; a hook-fires check for
 provisioning), never a presence assertion; promote the still-live items — the
 identity-seed requirement (one canonical seed source yielding a non-degenerate
 prefix — the mechanism is Q-15's to derive at execution) and the outcome-branch
-convention documentation (the Routine's configured branch prefix plus per-session
-suffix). Session capabilities (artifact publish, push notification, Slack tools,
+convention documentation (the selected adapter's actual prefix and per-session
+suffix; the Claude Routine's configuration is its historical implementation). Session capabilities (artifact publish, push notification, Slack tools,
 trigger updates) are observed in live firings and named in completion summaries
 when absent — no dedicated probe rows. Non-goals: no probe execution in this row
 (Q-15 executes when claimed); no gate weakening; **not a bookkeeping landing** — a
@@ -1050,7 +1123,17 @@ re-scoped list with each validity probe naming what it executes and the stale
 2026-08-22 measurements retired from premise to history; the Q-17 brief reads
 "seventeenth-round"; gates green. Source: loop-review report OP-5 + D-4 + D-6 +
 D-9 + F-R2-3 and the 2026-08-24 addendum; second owner decision card 2026-08-24.
-Gate: none (eligible immediately). Q-15 is ordered after this row by `depends_on`.
+Gate: none. Q-15 is ordered after this row by `depends_on`.
+
+Documentation carrier: [comprehensive refresh](../current/complete/plan-estate-and-documentation-refresh.md),
+acceptance A3-truth plus A5-validation. **COMPLETE (2026-09-06):** the carrier records the
+full documentary acceptance, independent review and canonical gate proof.
+
+**Documentation delivery complete (2026-09-06):** the commissioned refresh
+rewrote Q-15 to the six named obligations, conserved dated measurements and
+corrected Q-17's review ordinal. Independent documentation/onboarding review and
+canonical `pnpm check` passed. Q-20 is complete; Q-15, Q-18 and Q-19 remain pending.
+No readiness, attestation or tally instrument was executed by this delivery.
 
 **Q-21 — Merge-authority policy line in pr-lifecycle (D-10).** Surface: the merge
 step of `.agent/skills/pr-lifecycle/SKILL-CANONICAL.md`, whose text at review time
@@ -1327,68 +1410,25 @@ clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the
 firing cannot reasonably classify as programme work is not merged unattended,
 whatever best efforts concluded about counting it.
 
-1. **Trigger**: the Routine is a scheduled task that spawns a fresh cloud session per
-   firing at the ADR-051 clause 2 cadence (default cron `3 */8 * * *`, three per day),
-   with this repository attached and its stored prompt a thin pointer telling the
-   firing to read `routine-prompt.md` on main and follow it exactly. The owner
-   creates, schedules, pauses, and deletes it; a seat changes it only at owner word.
-   Fresh sessions re-ground via `start-right-thorough` with the plan /
-   metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
-   thread records, napkin) is the memory between firings.
-2. **Pre-flight**: check the `STOP` file and Routine state (ADR-051 clause 6); register
-   session identity and open the area claim per
-   [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
-   and scan `active-claims.json` for any live peer or owner claim — a collision defers the
-   firing with a note, it does not race. Read [`incidents.md`](./incidents.md) in the same
-   pre-flight — from the grounding base and, when a programme PR is open, from that PR's
-   fetched head too — for incident context binding this firing (QD-5).
-3. **WIP = 1 — every open non-draft programme PR counts**: if any non-draft programme PR is
-   open — a slice PR or a bookkeeping PR — drive it to merged (CI, review threads under
-   ADR-051 clause 4, merge under clause 3, which covers both PR kinds per the QD-3
-   amendment) and do nothing else; driving the
-   bookkeeping PR first is clause 6's own persistence mechanism completing under clause
-   1(b)'s single-open-PR guideline, graded best-efforts by the 2026-08-26 QD-13
-   amendment (an unmerged counter update would let later firings read
-   a stale streak). A firing whose only act is merging a bookkeeping PR is itself
-   zero-progress and pushes its own increment onto that PR's head branch before merging —
-   the every-firing counter duty is never waived by the drive. Pushes to a programme PR's
-   head re-verify the remote head SHA immediately beforehand and treat a second collision
-   in one firing as a contested branch (incident record + defer) — mechanics in the
-   [routine prompt](./routine-prompt.md) (QD-5).
-   Otherwise claim the next eligible brief, mark it
-   `in_progress` in this file's frontmatter, and re-verify its premises against live state.
-4. **Execute one atomic TDD slice**: pre-execution `code-expert` review of the slice intent
-   (two dispatches, per
-   [`pre-execution-code-expert-review-per-loop-cycle`](../../rules/pre-execution-code-expert-review-per-loop-cycle.md))
-   → failing proof → minimal product change → refactor → reviewer pass per
-   [`invoke-reviewers`](../../rules/invoke-reviewers.md) (`code-reviewer` always;
-   `test-reviewer` on test/harness surfaces; domain expert by surface; `docs-adr-expert` on
-   ADR/doctrine surfaces; `assumptions-expert` whenever the firing authors or splits a slice
-   plan) → full gates → PR, whose **final commit carries the slice's own state landing** (the
-   queue row flipped to `complete`, the counter updates, the delivery-ledger row, and the
-   handoff surfaces — so the merged base shows the row done the moment the PR lands, and no
-   fresh firing can reclaim finished work) → green → merge (clause 3 once Accepted; explicit
-   per-PR owner approval while Proposed) → orphan continuity commit → stop.
-5. **Blocked slices release their PR — and land the block on the shared base**: marking a
-   slice `blocked` (ADR-051 clause 6) converts its open PR to a draft with a comment naming
-   the block diagnosis — never closed, the work is preserved — **and, in the same firing,
-   lands the queue-state change via the bookkeeping path** (the row marked `blocked`, its
-   `failures:` count, and a pointer to the draft PR's diagnosis), so the next firing's
-   claims scan sees the block on the base rather than re-selecting a row whose state lives
-   only on an unmerged draft branch. Draft PRs are exempt from step 3's drive rule, so the
-   loop moves on instead of deadlocking; unblocking restores ready-for-review.
-6. **Owner decisions are queued, never made** (ADR-051 clause 5): a genuine fork goes to
-   [`queued-decisions.md`](./queued-decisions.md) with a recommendation; the firing reroutes
-   to the next unblocked item.
-7. **Red head found on arrival**: handled per ADR-051 clause 6's red-head policy (one
-   bounded out-of-queue repair slice, recorded in the delivery ledger, then stop-and-notify
-   if still red).
-8. **Session end**: every firing closes with the `session-handoff` skill; no firing leaves
-   the repo red without a B-16 record, a PR half-driven without the next firing scheduled, or
-   continuity drift uncommitted.
+The ordered mechanics live in [the invocation prompt](./routine-prompt.md):
+current execution-state and STOP checks precede provisioning or claims; active
+invocations then ground, inspect claims/incidents and remote ownership, drive or
+claim one eligible unit, execute its proof and review path, persist counters and
+close. This summary is a navigation aid, not a second algorithm.
 
-The Routine's standalone prompt is [`routine-prompt.md`](./routine-prompt.md) (authored and
-proven by Q-01).
+The programme is paused. No scheduling, resumption, platform change or instrument
+execution follows from queue eligibility or this documentation refresh. When the
+owner authorises execution, the selected platform uses a thin stored prompt
+pointing at the invocation prompt on `main`; the repo supplies the durable
+queue and continuity. Claude-specific setup, cadence encoding, provisioning,
+notification and disabling recipes live in the
+[Claude adapter](../../claude-harness-integrations/cloud-environment.md#proof-programme-claude-routine-adapter).
+
+The prompt implements ADR-051's existing merge, review, collision, duration and
+stand-down duties. The owner-decision register retains every unresolved fork;
+QD-14's general non-code proof question is not decided by this refresh. Each
+slice uses its declared proof and governing authority; the present documentary
+work has an explicit owner commission and its own acceptance record.
 
 ## Reviewers
 
@@ -1396,23 +1436,26 @@ Plan-readiness for this parent plan: `assumptions-expert` review completed 2026-
 (findings applied in the authoring landing); Q-18..Q-21 appending took its own
 `assumptions-expert` review 2026-08-24 (21 findings applied in the same landing);
 Q-23..Q-27 appending took its own `assumptions-expert` review 2026-08-31 (17
-findings applied in the same landing, the Q-27 split among them). Per-slice reviewer moments are protocol step 4
-above — the loop never authors, implements, self-approves, and merges without independent
+findings applied in the same landing, the Q-27 split among them). Per-slice
+reviewer moments live in [the invocation prompt](./routine-prompt.md#protocol-in-order),
+step 5 — the loop never authors, implements, self-approves, and merges without independent
 review dispatches. Ballot and ADR surfaces additionally take `docs-adr-expert` at their
 landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's operation**: none — Q-01 (completed 2026-08-22) proved the
-  firing mechanism end to end; the Routine is owner-created platform state per
-  §Operating protocol step 1.
+- **Autonomous execution is paused** by the owner (2026-09-06); the experiment's
+  Claude Routine is disabled. Q-01 remains completed historical mechanism evidence,
+  not authorisation to resume. The current-execution-state section is authoritative.
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), Q-23, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card; Q-23..Q-27 appended 2026-08-31 at owner word — zod truth-surface & dependency-currency plan; Q-28 appended at the PR #73 review — measured writer contentEncoding loss).
+- **Dependency eligibility:** derive it from the frontmatter and each brief's Gate line.
+  No eligible row starts autonomously during the pause.
 - **Blocking for Q-24..Q-29**: their `depends_on` chain (Q-23 for all; Q-24 for Q-27; Q-24 AND Q-25 for Q-26; Q-25 for Q-29) — the oracle pins the post-bump vendor, the ADR claims a complement and a dialect that exist, the differential extends the oracle, and the performance guidance describes the post-manifest emission surface.
-- **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
+- **Blocking for Q-15**: Q-20's completed documentary acceptance; the brief is now
+  re-scoped, but its implementation and readiness observations remain pending.
 - **Blocking for Q-19**: none — the Q-13 dependency was dropped by owner card ruling 2026-08-27, re-confirmed against the recorded never-a-second-skill-copy rationale: Q-21 proved the pr-lifecycle canonical safely editable ahead of Q-13, and Q-13's brief now carries the reconciliation duty (value-extract PR #23's skill content against the then-current canonical, never blind-resync).
 - **Beneficial**: none deferred beyond the gates above.
 
@@ -1440,7 +1483,8 @@ landing.
   failure becomes a queue slice, not a silent workaround.
 - **Red head outside the slice**: B-16 policy; without it the loop would stall (a red head
   blocks every item) — this is why B-16 exists.
-- **Queue rot**: premise re-verification is protocol step 3, not just a mitigation note.
+- **Queue rot**: premise re-verification is required when claiming a unit in the
+  [invocation prompt](./routine-prompt.md#protocol-in-order), step 4.
 - **Runaway firing scope**: one-slice-then-stop and WIP = 1 bound each firing; breaches are
   napkin-recorded corrections.
 - **Firing overlap** (measured 2026-08-23, incident I-1): the schedule spawns the next
@@ -1451,8 +1495,8 @@ landing.
 ## Non-goals
 
 - No parallel **workers** (single-worker WIP = 1 loop; the session-registration and claims
-  duties of `register-active-areas-at-session-open` still bind every firing — protocol
-  step 2).
+  duties of `register-active-areas-at-session-open` still bind every authorised
+  invocation; see the invocation prompt's grounding step).
 - No release or public-claim changes: release scope stays constitutively the owner's
   (report §15.5).
 - No self-ratification of any owner decision, ever — queued instead.

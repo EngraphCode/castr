@@ -3,8 +3,8 @@
 **Status:** Complete record — rewritten after Pack 4 `red` verdict on 2026-03-22, substantially addressed by follow-on work, and retained as historical parser-remediation context after recategorisation on 2026-04-02
 **Created:** 2026-03-21
 **Last Updated:** 2026-04-02
-**Predecessor:** [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
-**Related:** [architecture-review-packs.md](./architecture-review-packs.md), [phase-4-json-schema-and-parity.md](./phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
+**Predecessor:** [pack-4-json-schema-architecture.md](../../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
+**Related:** [architecture-review-packs.md](./architecture-review-packs.md), [phase-4-json-schema-and-parity.md](./phase-4-json-schema-and-parity.md), [json-schema-and-parity-acceptance-criteria.md](../../../acceptance-criteria/json-schema-and-parity-acceptance-criteria.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
 ---
 
@@ -24,7 +24,7 @@ Remaining open findings (future work tracked elsewhere or intentionally deferred
 
 - ✅ **`if`/`then`/`else` conditional applicator support** — resolved on 2026-03-27. Full-stack: IR model, parser, JSON Schema writer (round-trip), Zod/TS fail-fast, runtime validator.
 - `$dynamicRef`/`$dynamicAnchor` dynamic reference parser support
-- ✅ **Canonical JSON-Schema-shaped egress normal form alignment** — resolved on 2026-03-28. Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already correct. `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples`. See [ADR-042](../../../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md).
+- ✅ **Canonical JSON-Schema-shaped egress normal form alignment** — resolved on 2026-03-28. Audit confirmed nullability (`[type, "null"]`) and `$ref` sibling policy (bare `$ref`) were already correct. `example`/`examples` emission fixed: JSON Schema writer now suppresses OAS-only `example` and folds into `examples`. See [ADR-042](../../../../docs/architectural_decision_records/ADR-042-json-schema-egress-normal-form.md).
 - External `$ref` resolution
 - ✅ **Boolean schema support** (`true`/`false` as schema) — resolved on 2026-03-27, upgraded on 2026-03-28. `booleanSchema` added to IR model, parser handles boolean input, JSON Schema writer round-trips, Zod emits `z.never()`/`z.any()`, TS emits `never`/`unknown`, OpenAPI fail-fast.
 
@@ -32,7 +32,7 @@ This file is now a completed historical remediation-context record. It no longer
 
 ## Historical Context
 
-- Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict. See [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md).
+- Pack 4 completed on Sunday, 22 March 2026 with a `red` verdict. See [pack-4-json-schema-architecture.md](../../../research/architecture-review-packs/pack-4-json-schema-architecture.md).
 - JSON Schema parser, writer, and transform-proof code already exist in `lib/src/schema-processing/parsers/json-schema/`, `lib/src/schema-processing/writers/json-schema/`, and `lib/tests-transforms/__tests__/scenario-{5,6,7}-*.test.ts`.
 - The next honest work is not "build the parser". It is to remediate the public contract and proof gaps Pack 4 identified.
 - Pack 2's live philosophy still governs this workstream explicitly: strict and complete everywhere, all the time.

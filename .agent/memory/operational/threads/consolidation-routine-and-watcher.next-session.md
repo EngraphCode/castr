@@ -6,9 +6,60 @@ record carries only the repo-side state).
 
 ## Participating agent identities (PDR-027, additive)
 
-| platform    | model          | agent_name           | id                                     | session_id_prefix | role                     | first_session | last_session |
-| ----------- | -------------- | -------------------- | -------------------------------------- | ----------------- | ------------------------ | ------------- | ------------ |
-| claude-code | claude-fable-5 | Moon guards Solstice | `6f147296-2a3b-5a5f-bb69-648f27bcbb8b` | c395cb            | watcher + routine author | 2026-08-27    | 2026-08-27   |
+| platform    | model          | agent_name            | id                                     | session_id_prefix | role                              | first_session | last_session |
+| ----------- | -------------- | --------------------- | -------------------------------------- | ----------------- | --------------------------------- | ------------- | ------------ |
+| claude-code | claude-fable-5 | Moon guards Solstice  | `6f147296-2a3b-5a5f-bb69-648f27bcbb8b` | c395cb            | watcher + routine author          | 2026-08-27    | 2026-08-27   |
+| codex       | gpt-6-astra    | Bora seeks Turbulence | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2   | 01a072            | documentation refresh coordinator | 2026-09-06    | 2026-09-06   |
+
+## Current continuation and conditional intents — 2026-09-06
+
+This is a separate standing knowledge-curation commission. Its repository
+operating recipe is the
+[dedicated-consolidation prompt](../../../prompts/agentic-engineering/dedicated-consolidation-session.md#routine-unattended-scheduled);
+its exit contract remains the standing owner-authority rule. The
+[proof experiment's pause](../../../plans/proof-programme/parent-plan.md#current-execution-state)
+and disabled Claude Routine do not establish this Routine's state.
+
+**Last recorded observation, 2026-08-27:** the consolidation Routine was
+ENABLED and the Watcher mantle was VACANT. Neither has been inspected live
+for this refresh. The settings, trigger ID, sign-off and sweep boundary below
+are dated evidence; they do not prove a currently running Routine or an
+available Watcher. An elapsed due date is not evidence that a firing occurred.
+
+The conditional work remains:
+
+- **Consolidation execution:** follow the operating recipe when commissioned
+  or invoked under its standing authority, checking the actual invocation,
+  ownership and available capabilities. Do not recreate, enable or disable a
+  trigger merely to reconcile this record.
+- **Connector and notification evidence:** the August 27 uncertainty about
+  connector retention and the first expected firing remains an unverified
+  historical obligation. A future authorised invocation or investigation
+  records the actual durable result and notification evidence; the old
+  August 28 due date supplies neither.
+- **Watcher succession:** a future commissioned stand-up follows the
+  [Slack-watcher skill](../../../skills/slack-watcher/SKILL-CANONICAL.md),
+  rechecks live mantle ownership and selects the actual latest sweep boundary.
+  The archived sign-off below is a recovery reference, not an assertion that
+  no successor has served since.
+- **Event-driven Slack wake:** this thread carries the owner's August 27
+  future intent: an owner-provisioned custom Slack app with suitable scopes
+  plus repository listener tooling that turns events into agent wakes. The
+  [napkin](../../active/napkin.md) preserves the original instruction to record
+  it only; implementation needs a separately bounded commission and the
+  account-side prerequisite. No listener or app is delivered by this refresh.
+- **Graduations:** [pending-graduations](../pending-graduations.md) owns the
+  canvas/deadman fallback and bot-cited-SHA sharpening with their specific
+  triggers. It also owns the autonomous-pattern graduation, whose second
+  consumer evidence includes this Routine's selective use of the
+  collision/duration lesson. Consumption does not prove every pattern claim
+  or authorise a wider Core change.
+
+## Historical Routine and Watcher record — 2026-08-27
+
+Everything below preserves the configuration, observations, identity custody
+and next-step language recorded on that date. Current verification limits
+and surviving conditional intents are stated above.
 
 ## Lane state
 

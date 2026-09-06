@@ -2,6 +2,29 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-06 (plan-estate documentation refresh — Bora seeks Turbulence / 01a072)
+
+- **Surprise:** a zero-exit Markdown-link report included existing archive targets.
+  **Expectation:** report entries meant absent files. **Evidence:** its target
+  inventory excludes archives; filesystem classification distinguished existing
+  targets from inherited missing links. **Action:** read the by-file report,
+  verify targets, and keep the residual reference-closure carrier explicit.
+- **Correction:** doctrine wording had outpaced downstream examples and indexes.
+  Semantic and onboarding review caught strict-object defaults, nullable/version
+  policy and conceptual metric owners. The fixes live in the permanent charter,
+  ADR amendments, current entry routes and concrete computing contracts.
+- **Tooling:** validators based on Git's tracked list encounter unstaged deletions;
+  stage the intended removal through the commit workflow before interpreting that
+  error as a product failure. Commit-queue's full identity also needs the derived
+  UUID `--id`, despite its abbreviated help example. Both staging/identity
+  gotchas were already documented in the commit skill; my correction is to
+  read the complete operational sequence before mutation, not rediscover it.
+- **Conservation:** the owner-declared programme pause is distinct from accepted
+  platform-neutral design and dated Claude configuration. No observation here
+  establishes the state of the independent consolidation Routine or Watcher.
+  Remaining buffers and owner-gated graduations stay live; this session's bounded
+  consolidation does not imply a whole-estate drain.
+
 ## 2026-08-31 (PR #72 disposition: scorer harvested and closed — same session, part 11; Dolphin binds Trench / 013aPY)
 
 - **Correction (mine): "the scorer does not exist / was never built" was wrong.** It was

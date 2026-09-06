@@ -1,5 +1,11 @@
 # Plan (Future): Oak Adapter Boundary Replacement
 
+**Lifecycle review, 2026-09-06:** remains a future brief. This refresh
+does not adopt proposed interfaces or runtime support. Revalidate dated
+source/consumer assumptions at promotion; the
+[programme parent](../proof-programme/parent-plan.md) owns current sequencing
+and paused autonomous-development state.
+
 **Status:** ⚪ Planned
 **Created:** 2026-04-02
 **Related:** [roadmap.md](../roadmap.md), [phase-5-ecosystem-expansion.md](./phase-5-ecosystem-expansion.md), [oak-castr-integration-report.md](../../research/oak-open-curriculum-sdk/oak-castr-integration-report.md), [ADR-043](../../../docs/architectural_decision_records/ADR-043-core-vs-companion-workspaces.md)

@@ -9,7 +9,7 @@
 **Created:** 2026-03-21
 **Predecessor:** [identity-doctrine-alignment.md](./identity-doctrine-alignment.md)
 **Historical Parser Context:** [json-schema-parser.md](./json-schema-parser.md)
-**Related:** [IDENTITY.md](../../IDENTITY.md), [principles.md](../../directives/principles.md), [architecture-review-packs.prompt.md](../../prompts/architecture-review-packs.prompt.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
+**Related:** [IDENTITY.md](../../../IDENTITY.md), [principles.md](../../../directives/principles.md), [architecture-review-packs.prompt.md](../../../archive/prompts/architecture-review-packs.prompt.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-040](../../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md), [ADR-041](../../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
 ---
 
@@ -33,7 +33,7 @@ This sweep evaluates not only strictness but completeness: a surface is not heal
 - Pack 6 completed on Sunday, 22 March 2026 with a `red` verdict, partially remediated in RC-5: `schemas-only` template made genuinely schemas-only, dead `templatePath` removed, MCP Draft 07 allowlist implemented, generated-surface proof naming made honest, template-context post-IR mutation fixed.
 - Pack 7 completed on Sunday, 22 March 2026 with a `red` verdict: the canonical gate chain can stay green while a dedicated IR fidelity suite is red off-chain, generated-code and transform proofs still over-claim runtime and semantic breadth, and durable doctrine needed another honesty pass.
 - Final consolidation rerun on Monday, 23 March 2026 kept that verdict unchanged: `pnpm check:ci` green, `vitest.e2e` red, `test:scalar-guard` green.
-- The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](./proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../research/architecture-review-packs/cross-pack-triage.md).
+- The proof-system and durable-doctrine remediation plan (RC-1/RC-2) was opened and completed on Monday, 23 March 2026. See [proof-system-and-doctrine-remediation.md](./proof-system-and-doctrine-remediation.md) and [cross-pack-triage.md](../../../research/architecture-review-packs/cross-pack-triage.md).
 - The IR and runtime validator remediation plan (RC-3) was completed on Monday, 24 March 2026. See [ir-and-runtime-validator-remediation.md](./ir-and-runtime-validator-remediation.md).
 - The format-specific drift remediation plan (RC-4) was completed on Monday, 24 March 2026. See [format-specific-drift-remediation.md](./format-specific-drift-remediation.md).
 - The downstream surface drift remediation (RC-5) was completed on Monday, 24 March 2026, in-session.
@@ -47,9 +47,9 @@ Start from the written evidence:
 
 - use this file as the sweep-level map of the seven-pack verdict matrix
 - use the seven pack notes under `.agent/research/architecture-review-packs/` as the source findings
-- treat [pack-7-proof-system-and-durable-doctrine.md](../../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff
+- treat [pack-7-proof-system-and-durable-doctrine.md](../../../research/architecture-review-packs/pack-7-proof-system-and-durable-doctrine.md) as the current proof/gate/doctrine handoff
 
-1. Start from the [cross-pack triage](../../research/architecture-review-packs/cross-pack-triage.md) and the completed remediation plans.
+1. Start from the [cross-pack triage](../../../research/architecture-review-packs/cross-pack-triage.md) and the completed remediation plans.
 2. The next slice requires triage of remaining findings from Packs 1/3/4/5/7.
 3. Open one bounded successor remediation plan from that triage.
 4. Execute only that chosen slice; do not reopen general feature implementation in the same pass.
@@ -88,7 +88,7 @@ Out of scope:
 
 Write one note per completed pack under:
 
-- [`.agent/research/architecture-review-packs/README.md`](../../research/architecture-review-packs/README.md)
+- [`.agent/research/architecture-review-packs/README.md`](../../../research/architecture-review-packs/README.md)
 
 Use the naming convention:
 
@@ -215,7 +215,7 @@ Interpret verdicts as:
 
 ## Execution Method
 
-- Use [architecture-review-packs.prompt.md](../../prompts/architecture-review-packs.prompt.md) for historical review-sweep reconstruction or audit sessions.
+- Use [architecture-review-packs.prompt.md](../../../archive/prompts/architecture-review-packs.prompt.md) for historical review-sweep reconstruction or audit sessions.
 - Apply the in-session reviewer-template method where useful:
   - `code-reviewer.md`
   - `type-reviewer.md`

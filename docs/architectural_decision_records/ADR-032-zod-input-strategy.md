@@ -3,6 +3,17 @@
 **Date:** 2026-01-23  
 **Status:** Accepted
 
+## Charter amendment — 2026-09-06
+
+The ratified application-contract charter, expressed in
+[IDENTITY.md](../../.agent/IDENTITY.md), supersedes the blanket strict-only,
+no-unknown-key-facets interpretation in this record. Input acceptance,
+produced-output retention/stripping, catchall validation and ordered processing
+are distinct semantics to preserve inside the admitted grammar. This amendment
+changes doctrine, not implementation coverage; narrower existing behaviour
+remains an obligation to close. Historical object-policy text below records its
+dated decision and is not a current rejection instruction.
+
 ---
 
 ## Context
@@ -17,7 +28,10 @@ This decision must align with:
 - **Consistency with output**: Zod output strategy (ADR‑031) and input strategy must be compatible to enable round‑trip validation.
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object-ingest direction in this ADR. Non-strict object inputs are rejected unconditionally, and `unknownKeyBehavior` has been removed from the IR entirely.
+> The earlier ADR-040 strict-only restriction records a historical implementation
+> boundary. The current [identity](../../.agent/IDENTITY.md) requires faithful
+> acceptance and parsed-output facets within the admitted grammar; existing
+> rejection and IR limitations are implementation obligations, not universal policy.
 
 ---
 
@@ -53,28 +67,13 @@ This decision must align with:
 - Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
 - `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Object Parsing Is Reject-Only
+### 5. Object Input Preserves the Admitted Semantics
 
-> [!IMPORTANT]
-> Per [IDENTITY.md](../../.agent/IDENTITY.md), the strip-normalization compatibility mode described in the original version of this section has been removed. The core pipeline now exposes no compatibility knob for non-strict objects.
-
-Default supported direction:
-
-- `z.strictObject({...})`
-- `z.object({...}).strict()` when statically analyzable
-- OpenAPI / JSON Schema object schemas that explicitly reject unknown keys
-
-Rejected direction (no opt-out available):
-
-- bare `z.object({...})`
-- `z.looseObject({...})`
-- `.strip()`
-- `.passthrough()`
-- `.catchall(...)`
-- OpenAPI / JSON Schema object schemas that permit unknown keys
-- non-strict preservation extensions
-
-Invalid or non-strict object combinations must fail fast with actionable diagnostics.
+The bounded source grammar must preserve input acceptance, output retention or
+stripping, catchall validation and ordered processing distinctly. Blanket
+rejection of all non-strict forms is superseded by the charter. Current parser
+limitations remain implementation debt; widening admission requires the
+corresponding IR, writer and independent runtime proofs.
 
 ### 6. Union Semantics Must Be Preserved
 
@@ -145,7 +144,7 @@ Portable detours may later widen subtype semantics when the target format cannot
 
 - Some Zod patterns remain unsupported (dynamic schemas, Zod 3, non-statically-analyzable lazy patterns, standalone `z.undefined()`).
 - Users must adapt input to idiomatic Zod 4 conventions for lossless ingestion.
-- Non-strict object behavior is rejected unconditionally; callers must pre-normalize using the doctor if they need non-strict input to pass through.
+- Existing admission limitations must be reconciled with the charter; documentation does not certify the widened grammar.
 
 ---
 

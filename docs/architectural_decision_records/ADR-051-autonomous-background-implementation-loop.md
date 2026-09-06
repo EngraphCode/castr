@@ -26,7 +26,13 @@ amended 2026-08-24 by owner ruling — decision card, proof-programme loop revie
 OP-3, all three tightenings approved as recommended: clause 4 gains the
 per-finding demonstration requirement for non-blocking classification, the
 bounds-not-cures default for findings measured against unbounded external
-references, and the consecutive-rounds structural step-back trigger)
+references, and the consecutive-rounds structural step-back trigger;
+amended 2026-09-06 by the owner's platform-neutral experiment correction:
+the accepted contract is independent of the Claude Routine implementation;
+execution may be paused without rescinding this ADR or changing queue status.
+The 2026-08-31 owner retirement of the arming ceremony is reflected in the
+operative evidence clauses: verification accompanies authorised execution,
+with no separate dry-fire or receipt-gated arming procedure)
 **Date:** 2026-08-22
 **Related:** `.agent/rules/no-manufactured-permission.md`, `.agent/rules/owner-attention-at-action-moments.md`, `.agent/rules/no-unbounded-host-load.md`, `.agent/rules/loop-exit-criteria-required.md`. This record is self-contained per PDR-105: the proof-programme plan estate implements its contract and hosts the owner acceptance walk, and depends on this ADR — never the reverse. Acceptance is recorded in this file's Status line.
 
@@ -39,15 +45,23 @@ continually, in the background, without me, until the plan is complete". The rep
 forbids agents from manufacturing permission, and several programme decisions are
 constitutively the owner's. Autonomy therefore requires **standing, written authority** for
 the recurring judgement calls a background worker meets — merge, review-bot handling,
-escalation, pacing — decided once here rather than re-asked per slice. Cloud sessions are
-ephemeral; scheduled Routines can spawn a fresh session per firing, and the Practice estate
-(plans, thread records, napkin, handoff) is designed to be the memory between sessions.
+escalation, pacing — decided once here rather than re-asked per slice. The initial Claude implementation used ephemeral cloud sessions spawned by
+scheduled Routines. The experiment is platform-neutral (owner correction,
+2026-09-06); independently grounded invocations and the Practice estate's
+durable memory are the contract, while the selected platform supplies the
+invocation mechanism. An accepted contract does not assert active execution:
+the owner may pause it without withdrawing the accepted decisions.
 
 ## Decision
 
-1. **Mechanism.** A cron Routine spawns a **fresh cloud session per firing**. The protocol
-   invariants each firing obeys, in order: (a) check the kill switches (clause 6) and the
-   collaboration claims register before acting, deferring on any live collision; (b) enforce
+1. **Mechanism.** An owner-authorised executor starts a **fresh, independently
+   grounded session per invocation**. The programme records its current execution
+   state in one owning plan surface. Every invocation reads that state before
+   provisioning, claims or work: a recorded pause ends the invocation without
+   starting queue work, recording an idle failure or changing counters. Resumption
+   requires owner instruction; an elapsed schedule interval cannot authorise it.
+   When active, the protocol invariants apply in order: (a) check the kill switches
+   (clause 6) and collaboration claims before acting, deferring on any live collision; (b) enforce
    WIP = 1 (a guideline served by reasonable best efforts, per the QD-13 owner ruling
    2026-08-26 — never a hard limit) — drive the single open non-draft programme pull request (slice or bookkeeping;
    amended per QD-3, 2026-08-22) to merged, otherwise claim exactly one
@@ -56,10 +70,14 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    authors, implements, self-approves, and merges without independent review; (d) record
    continuity/handoff per standing practice and stop. No persistent worker session; no
    parallel workers. The programme's plan estate implements this contract and owns the
-   concrete queue. Evidence: the platform's fresh-session-per-fire Routine mode and
-   completion notifications are confirmed against the live platform API (2026-08-22); an
-   end-to-end dry firing (create → fire → fresh session → notification received) must pass
-   before any product slice runs through the loop.
+   concrete queue and current execution state. Historical evidence: the Claude
+   platform's fresh-session-per-fire mode and notifications were observed on
+   2026-08-22, followed by the programme's recorded execution proofs. That evidence
+   is scoped to its platform and date. During authorised execution, observe
+   grounding, credentialed landing and notification delivery and record their
+   actual outcomes. The owner retired the separate arming ceremony on 2026-08-31;
+   no dry-fire or receipt-gated activation procedure is imposed here. Existing
+   gate, review, reporting and collision requirements remain binding.
 2. **Cadence.** Default three firings per day (set by owner amendment at acceptance,
    2026-08-22; the proposal said two). The owner may change cadence at will; agents may
    lower it (never raise it) when firings repeatedly idle. Each firing is bounded to one
@@ -131,9 +149,14 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    that diagnosis (never closed — the work is preserved) so the WIP rule releases it, and
    unblocking restores it to ready-for-review. The failure and zero-progress counters this
    clause evaluates are durable repo state, persisted and reset by each firing in the plan
-   estate's queue (the plan estate owns the concrete surface); the loop-readiness proof must
-   demonstrate cross-session read/write before any product slice runs. Three consecutive zero-progress firings → the firing disables the
-   Routine and notifies the owner. Every firing-side loop exit — this zero-progress disable,
+   estate's queue (the plan estate owns the concrete surface). Each authorised
+   execution reads and lands the actual counter state so a successor can verify
+   continuity; a historic readiness proof does not replace that duty. Known
+   paused intervals are not firings and do not alter either counter.
+   Three consecutive zero-progress firings → the firing disables the selected
+   scheduled executor and notifies the owner. If its platform cannot perform
+   the disable, the firing stops, records that failure and alerts the owner;
+   it never claims the schedule was disabled without evidence. Every firing-side loop exit — this zero-progress disable,
    a STOP-file observation, and the terminal exit below — additionally records the
    stand-down broadcast `.agent/rules/loop-exit-criteria-required.md` §Stand-Down Broadcast
    Shape requires (loop identity, the exit criterion that fired, a one-line closeout
@@ -145,17 +168,20 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    agent-comms surface is instance-tier state that does not exist across containers, so
    for this loop's cross-container audience the tracked record is the broadcast; a comms
    event may accompany it as a best-effort same-instance echo, never the record); an owner
-   stop applied directly to the Routine needs no broadcast from the loop, as no firing may
+   stop applied directly to the selected executor needs no broadcast from the loop, as no firing may
    remain to post it. **Red head on arrival** (gates failing for causes outside
    the claimed slice): the firing takes at most one bounded out-of-queue green-the-head
    repair slice through the normal TDD/gate/review path, recorded in the delivery ledger and
    the completion notification; if the head is not green by the end of that firing, it stops
    and notifies, and subsequent firings attempt only head repair until green or the owner
    intervenes; no test is ever skipped, disabled, or quarantined to get green. The owner can
-   stop everything at any time by pausing/deleting the Routine or committing a `STOP` file in
-   the programme collection; every firing checks both before acting. The loop's terminal
+   stop everything at any time by pausing/deleting the selected executor or
+   recording a programme pause or `STOP` file; every invocation reads the
+   programme's execution state and STOP condition before acting. It observes
+   platform state when available and never invents a successful platform read. The loop's terminal
    exit: the queue empty and the programme-complete acceptance met, or an owner close.
-7. **Observability.** Fresh-session firings run with completion notifications on; queued
+7. **Observability.** Active invocations deliver completion notifications through
+   the selected implementation's configured owner route; queued
    decisions, blocked slices, and merges are named in the completion summary. The delivery
    ledger and PR history are the audit trail. **Reporting surfaces (amended per QD-5,
    2026-08-23):** a firing-side report intended for later firings or the owner is durable
@@ -167,10 +193,13 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
    firing, with the owner reading in batch, and the owner is interrupted (notification
    beyond the routine completion summary) only for clause 6 escalation events and for
    anything **blocked on the owner** — an owner-blocking question alerts on the owner's
-   mobile channel the moment the block exists (amended per QD-8, 2026-08-23; owner
-   direction, verbatim: "Whenever something is blocked on me, and an open question will
-   always become blocking at some point, assume I am not around, and that an alert must
-   be sent via the mobile claude app"). No
+   mobile channel the moment the block exists. Historical QD-8 direction
+   (2026-08-23), verbatim: "Whenever something is blocked on me, and an open
+   question will always become blocking at some point, assume I am not around,
+   and that an alert must be sent via the mobile claude app". The Claude adapter
+   implements that named route. A different platform needs an owner-agreed
+   delivery arrangement when it is commissioned; platform neutrality is not
+   evidence that an equivalent channel exists and does not reduce this duty. No
    additional live communication channel is introduced for the serialized loop: the shared
    remote is the channel, and its push-time compare-and-swap is the collision primitive,
    checked before every push under the plan estate's firing protocol. One owner-interaction
@@ -192,8 +221,10 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac
   the risk.
 - Review-bot feedback cannot stall the loop indefinitely (clause 4), at the cost of some
   valid bot findings landing later via the queue rather than in the originating PR.
-- If the Routine platform is unavailable or the subscription pauses, the loop suspends
-  safely: state is entirely in the repo, so any future firing resumes from the queue.
+- If the selected executor is unavailable or the owner pauses the experiment,
+  autonomous execution stops. Durable state remains in the repo; an
+  owner-authorised resumption re-grounds on the then-current queue and state,
+  without replaying known paused intervals as missed work.
 
 ## Alternatives considered
 

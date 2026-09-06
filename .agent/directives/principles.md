@@ -2,7 +2,7 @@
 
 This file MUST NOT be edited without prior and explicit user approval.
 
-**Date:** October 2025 (Updated: 2026-03-22)  
+**Date:** October 2025 (Charter amendment: 2026-09-06)  
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
 
@@ -79,9 +79,9 @@ the lenses, is owner-bound. Dissolution before escalation.
 
 **The internal representation (IR) is the single source of truth for all processed data.**
 
-This repository follows idiomatic Information Retrieval (IR) architecture. After parsing, the input document is **conceptually discarded**—only the Caster Model matters. See `VISION.md` for the strategic vision.
+This repository uses an intermediate representation of admitted application contracts. After parsing, the input document is conceptually discarded; the canonical semantic model is authoritative. See [VISION.md](VISION.md) for the two-product direction.
 
-This includes the constraint that NO CONTENT LOSS is ever acceptable. ALL of our transforms to and from the IR must preserve every aspect of the input document. The format can change, the content cannot.
+Exact transformations must preserve every semantic channel declared by their admitted source and selected target profile. No silent content loss is acceptable. Concrete source syntax is preserved only where the profile explicitly claims it; a separately authorised projection reports its semantic delta.
 
 ```mermaid
 graph LR
@@ -116,50 +116,74 @@ graph LR
 
 ## 🔀 Input-Output Pair Compatibility Model
 
-> **GOVERNING PRINCIPLE**: Feature support is defined by **input-output pairs**, and the constraints are primarily set by what the **output format** can represent. The IR is a format-independent superset.
+**Amendment disposition (2026-09-06):** retain canonical IR and exact semantic
+preservation; supersede the universal-format-superset interpretation with the
+ratified application-value and interaction-contract charter. Strictness is
+faithfulness to the admitted contract, not a blanket closed-object policy.
 
 ### The Model
 
-Castr transforms data between format pairs: `Input Format → IR → Output Format`. Each pair has its own compatibility surface:
+Castr compiles application value and interaction contracts between compatible
+representations without silently changing their meaning. Source admission and
+target capability are distinct decisions. Each directed input → output edge
+names its source version/grammar, artifact kind, target profile and semantic
+channels; a file format is not a promise that every possible edge exists.
 
-```text
-OpenAPI → Zod       (constrained by what Zod can express)
-OpenAPI → JSON Schema   (constrained by what JSON Schema can express)
-JSON Schema → OpenAPI   (constrained by what OpenAPI can express)
-Zod → TypeScript    (constrained by what TypeScript can express)
-```
+The target artifact boundary distinguishes
+`CastrValueContractDocument | CastrInteractionContractDocument`, replacing
+`CastrDocument` in its implementation migration. Accepted-input, produced-output,
+ordered-processing, annotation and interaction are distinct persisted facets.
+These are the ratified design requirements, not claims of a completed migration.
 
 ### The Four Rules
 
-1. **ALL features valid in Input Format X MUST be parseable into the IR.** The input constraint is simply "valid for that format." If an input document is valid per its specification, the parser must accept it.
+1. **Parse the entire advertised source grammar.** Every valid in-domain construct
+   in that bounded, versioned grammar must be admitted and carried completely.
+   Invalid input and grammar-excluded syntax reject at admission with located,
+   actionable diagnostics. An unimplemented admitted construct is a gap to close,
+   not grounds for silently narrowing the advertised grammar.
+2. **Preserve the selected target profile's meaning.** Exact output may be native
+   or use a documented, behaviourally proven encoding. Acceptance, successful
+   values and processing must be observed separately where the language changes
+   values; structural equality alone is not enough.
+3. **Keep the IR independent of writer limitations.** Carry the complete admitted
+   application-contract semantics, including facets, versions, presence,
+   identity, references and security. Typed, same-family opaque extension carriage
+   is bounded preservation, not target execution. Foreign graph semantics do not
+   enter through a universal IR or generic opaque bag.
+4. **Reject impossible exact output atomically.** A separately named,
+   caller-authorised projection/widening profile must declare selected channels
+   and a complete semantic delta; it never silently replaces default exact
+   conversion and never earns an exact lossless certificate. Unimplemented
+   obligations block support claims and release; placeholder predicates and
+   warning-and-continue are not target dispositions.
 
-2. **Feature support for a given input-output pair is defined by what the output format can represent.** "Supported" means semantic preservation through a round-trip — not necessarily a one-to-one mapping, but the meaning must be preserved. The output format is the binding constraint.
+### Object and Processing Semantics
 
-3. **The IR MUST be capable of representing ALL valid features from ANY supported format.** The IR is the superset. It must never be the bottleneck — if a feature exists in any supported input format, the IR must be able to carry it, regardless of which output format will ultimately consume it.
+Input acceptance, output retention/stripping, catchall validation and unevaluated
+behaviour must remain distinct. Absent, false, true and schema-valued
+`additionalProperties` are not interchangeable. A source-dialect default is
+interpreted under its profile, never replaced with invented openness or closure.
 
-4. **When the output format CANNOT represent a feature present in the IR, the writer MUST fail fast with a helpful, actionable error.** Fail-fast is reserved for genuinely impossible output mappings — features that the target format has no way to express. It is NOT acceptable as a placeholder for "not yet implemented."
+Defaults, coercion, preprocessing, catches, transforms and codecs carry ordered
+processing semantics when admitted. A transformation already specified by the
+source is not permission for the compiler to invent a different one.
 
-### What "Supported" Means
+### What Support Proves
 
-"Supported" does **not** require a one-to-one keyword mapping. It means **semantic preservation**:
+A claimed feature requires parser, IR, runtime validation, writers, independent
+proofs and documentation to agree for the complete obligation. A format-shaped
+IR field or a passing snapshot is not proof that a generated validator enforces it.
+An emitted conditional or `dependentSchemas` predicate must actually change
+validation outcomes on distinguishing inputs.
 
-- `if`/`then`/`else` in JSON Schema → might become a union with refinements in Zod → must preserve the conditional semantics
-- `patternProperties` in JSON Schema → might become `z.record()` with a `.refine()` in Zod → must preserve the pattern constraint semantics
-- `$anchor` in JSON Schema → must resolve references correctly in any output format
+TypeScript structural projections cannot stand in for runtime validation and
+processing. MCP tool projections do not preserve a complete OpenAPI interaction
+document. A round-trip assertion names its profile, revision and semantic
+channels; it does not establish arbitrary-format universality.
 
-### What Fail-Fast Means Under This Model
-
-Fail-fast is for **genuinely impossible** output mappings:
-
-- ✅ **Correct fail-fast**: `int64` semantics → JSON Schema has no native carrier → fail-fast with "JSON Schema cannot express int64 semantics"
-- ✅ **Correct fail-fast**: `patternProperties` → TypeScript → "genuinely impossible" — TypeScript has no regex-keyed index signatures; property names are static, not pattern-matched.
-- ✅ **Correct semantic output**: `patternProperties` → Zod → `.refine()` with runtime regex validation — Zod CAN express this semantically.
-- ✅ **Correct semantic output**: `booleanSchema: true` → Zod → `z.any()` — the accept-everything schema maps to z.any().
-- ❌ **Incorrect fail-fast**: Any IR keyword → Zod → "unsupported" when `.refine()` could express the semantics. This is an implementation gap, not an impossibility.
-
-### Implications for the IR
-
-The IR must never be designed around the limitations of any single output format. If JSON Schema has `$dynamicRef` and Zod cannot express it, the IR must still carry `$dynamicRef` — the Zod writer will fail-fast, but the JSON Schema writer will round-trip it.
+The adopted headline measurement is preservation coverage, defined in
+[VISION.md](VISION.md). Its computation must precede any published percentage.
 
 ---
 
@@ -180,10 +204,10 @@ Before any work, always ask:
 
 Every component must enforce the strictest possible validation:
 
-- **Objects**: Always strict — closed-world with explicit properties only (see [IDENTITY.md](../IDENTITY.md))
+- **Objects**: Enforce the complete declared acceptance, output-retention and processing contract; never invent openness, closure or discarded keys (see [IDENTITY.md](../IDENTITY.md)).
 - **Types**: Never allow unknown types to pass silently - validate everything
 - **Schemas**: Require all constraints to match exactly, not loosely
-- **No Coercion**: Never use implicit type coercion (`z.coerce`) unless explicitly requested
+- **No Invented Coercion**: Preserve admitted source coercion/preprocessing as ordered semantics; never introduce unrequested coercion.
 
 ### Fail-Fast
 
@@ -233,7 +257,7 @@ default:
 ```mermaid
 graph TD
     subgraph "Strategic Direction"
-        VISION[VISION.md<br/>N×M Conversion Goal]
+        VISION[VISION.md<br/>Application Contracts and the Practice]
     end
 
     subgraph "Decision Making"
@@ -1436,7 +1460,8 @@ if (Object.keys(schema).length === 0) continue;
  * - Auto-enables certain options when using schemas-with-metadata template
  * - `schemas-only` genuinely suppresses endpoint metadata, MCP tool exports, and helper exports
  * - custom template paths are not a supported extension seam; non-built-in CLI `--template` values are accepted for compatibility but ignored by the renderer
- * - Uses .strict() for objects by default (reject unknown keys)
+ * - Object handling preserves the admitted acceptance and parsed-output contract
+ * - Closed contracts reject unknown keys; other modes need their own runtime proofs
  * - All validation uses .parse() for fail-fast behavior
  *
  * @since 1.0.0
@@ -1730,14 +1755,12 @@ Before any major release or phase completion, a **comprehensive documentation sw
 
 ### **Tooling Integration**
 
-TSDoc enforcement is currently **review-time discipline, not an automated
-gate**: the [`documentation-hygiene`](../rules/documentation-hygiene.md)
-rule (presence and quality checked at edit time), the `tsdoc` skill (the
-authoring workflow), and the `code-reviewer` gateway (TSDoc completeness on
-every non-trivial change). No documentation generator or TSDoc lint plugin
-is wired today; adopting one (TypeDoc with warnings-as-errors, or
-`eslint-plugin-tsdoc`) is a recognised structural-hardening candidate, and
-when it lands this section names the real commands.
+TSDoc **syntax** is enforced by `tsdoc/syntax` at error in both workspace
+ESLint configurations; `pnpm lint` executes those checks. Presence, useful
+examples, semantic accuracy and completeness remain review responsibilities
+under [documentation hygiene](../rules/documentation-hygiene.md), the installed
+`engraph-tsdoc` skill and the `code-reviewer` gateway. Syntax-green does not
+prove documentation quality. No documentation-generation gate is claimed here.
 
 ---
 

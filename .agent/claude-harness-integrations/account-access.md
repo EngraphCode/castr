@@ -1,10 +1,14 @@
 # Account Access — GitHub and Owner Notification Delivery
 
-Account-side prerequisites shared by every session type this repo runs — interactive
-cloud sessions, scheduled Routine firings, and The Watcher alike. Indexed by the
+Account-side prerequisites for this repository's Claude implementation —
+interactive cloud sessions, scheduled Routine invocations and The Watcher.
+These recipes do not define the platform-neutral experiment or assert an
+equivalent setup on another platform. Indexed by the
 [account-portability register](./account-portability-register.md); the proof-programme
-parent plan's §Operating protocol step 1 cites this document for the Routine's GitHub
-and notification prerequisites. First recorded in the parent plan's Q-01 evidence
+[Claude adapter](./cloud-environment.md#proof-programme-claude-routine-adapter)
+cites this document for GitHub and notification details. Current experiment
+execution state lives in the parent plan; the owner confirmed on 2026-09-06
+that the experiment is paused and its Claude Routine disabled. First recorded in the parent plan's Q-01 evidence
 record (2026-08-22/23); consolidated here 2026-08-25 when the register became its second
 consumer.
 
@@ -29,8 +33,10 @@ consumer.
 - Validation (access): a fresh session reads the repo and pushes a branch — the Q-01
   Kingfisher proof shape (parent plan, Q-01 evidence record). A branch push verifies
   contents access only: it triggers no CI and exercises no pull-request permission, so
-  the draft-PR settings validation below is also the proof of PR-creation and CI
-  access — run it before enabling the Routine, not merely after recreating settings.
+  the work-PR settings validation below is also the proof of PR-creation and CI
+  access. Observe those permissions and checks on authorised work; these
+  validation recipes are not a separate arming prerequisite or permission to
+  create a scratch PR while the experiment is paused.
 
 ## Repository settings
 
@@ -49,18 +55,23 @@ in `repo-continuity.md`).
 - **CodeQL**: enabled via GitHub's **default setup** in the repository's Security
   settings, not as a workflow job — the `ci.yml` header records why (default setup
   rejects SARIF uploads from advanced-setup workflows for the same languages).
-- **Validation (settings)**: open a draft PR from a scratch branch, observe the full
-  check set report against it — the `quality-gates` fan-in, CodeQL, and the ruleset's
-  code-quality/coverage rules — then close the draft.
+- **Validation (settings)**: observe the full check set on the authorised work's
+  PR — the `quality-gates` fan-in, CodeQL and the ruleset's code-quality/coverage
+  rules. A separate scratch-PR exercise belongs only to an explicitly
+  commissioned settings diagnosis, not to a standing pre-enable ceremony.
 
 ## Owner notification delivery
 
-- The owner runs the Claude mobile app with push notifications enabled on their device:
+- The recorded Claude delivery arrangement uses the owner's mobile app with push
+  notifications enabled (account-side capture, 2026-08-25):
   push is the channel that owner-blocking alerts assume (ADR-051 clause 7 as amended per
   QD-8 — "assume I am not around, and that an alert must be sent via the mobile claude
   app").
-- The proof-programme Routine's completion-notification channel set is programme-owned
-  configuration the owner sets on the Routine (ballot B-15, as currently amended —
-  latest 2026-08-27: push + Slack, no email).
-- Validation: any scheduled firing's completion notification received on the owner's
-  device.
+- The proof-programme Routine's recorded completion-notification channel choice
+  (ballot B-15, latest amendment 2026-08-27) is push + Slack, no email. This is
+  historical configuration; the experiment's Routine is currently disabled
+  per the 2026-09-06 owner statement. No other Routine's state is inferred.
+- Validation accompanies authorised execution: observe the actual completion
+  notification received on the owner's device; a successful run alone does
+  not prove receipt. A future non-Claude implementation needs its own
+  owner-agreed delivery arrangement, without weakening the owner-alert duty.

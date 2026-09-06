@@ -2,7 +2,7 @@
 
 ## Status
 
-**Accepted** - October 23, 2025  
+**Superseded** — by ADR-044 (April 2026). Originally accepted October 23, 2025  
 **Superseded by** [ADR-044](./ADR-044-drop-openapi3-ts-adopt-scalar-types.md) - April 2026
 
 > [!IMPORTANT]

@@ -151,15 +151,17 @@ console.log(openApiDoc.openapi);
 
 ## Strictness
 
-Castr is strict by design:
+The ratified contract requires faithful preservation within each admitted source
+grammar and target profile: input acceptance, parsed-output retention or stripping,
+catchall validation and source-defined defaults are distinct semantics. Unsupported
+behaviour must fail fast; any lossy projection requires an explicit caller profile.
 
-- object schemas are emitted as strict when the source does not explicitly
-  declare otherwise
-- Castr never invents object openness that the input did not declare
-- unsupported behaviour fails fast
-- support claims are only honest when code, proofs, and docs agree
-
-There is no public strictness toggle for object openness.
+Current implementations remain narrower than that required contract, including
+closed-object defaults and non-strict input restrictions at existing boundaries.
+These are limitations to reconcile, not permission to change source semantics.
+The [requirements and evidence boundaries](.agent/directives/requirements.md)
+name remaining obligations. There is no public strictness toggle for object
+openness; proposed profiles and roots are not already shipped APIs.
 
 ## Build Your Own Client
 
@@ -172,3 +174,11 @@ The supported pattern is:
 That boundary is deliberate: future fetch/runtime/framework helpers, if shipped, belong in companion workspaces rather than new core exports.
 
 See [docs/USAGE.md](./docs/USAGE.md), [docs/API-REFERENCE.md](./docs/API-REFERENCE.md), and [docs/OPENAPI-FETCH-INTEGRATION.md](./docs/OPENAPI-FETCH-INTEGRATION.md) for current examples.
+
+## Contributing
+
+Start with the [Practice bridge](.agent/practice-index.md) for current plans,
+delivery evidence and contributor/agent guidance. Follow the
+[verification contract](.agent/directives/DEFINITION_OF_DONE.md); the canonical
+local aggregate is `pnpm check`. Requirements and future direction are distinct
+from the bounded capabilities established by the current proof estate.

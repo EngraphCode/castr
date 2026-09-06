@@ -1,5 +1,16 @@
 # Phase 6 sub-plan — Memory layout + generator (the opening consolidation pass)
 
+**Historical scope, reconciled 2026-09-06:** the wholesale-transplant effort
+was stopped by the owner on 2026-08-26 ([QD-2](../proof-programme/queued-decisions.md)). Dated statuses,
+measurements, TODOs and execution language below describe the earlier effort;
+they do not form an active backlog or automatic resumption trigger.
+Surviving bilateral equality has a [named carrier](../current/paused/practice-equality-parity-follow-up.md);
+programme Q-13 separately owns selective canonical-delta evaluation.
+This document remains evidence for a newly bounded parity slice if commissioned.
+No unfinished historical task is marked delivered by this disposition.
+
+## Historical record
+
 **Source:** owner-directed Phase-6 opener (2026-06-17) + firsthand measurement of the Oak `main` estate this session.
 **Status:** authored 2026-06-17; executing now. Items marked **✅measured** were checked against Oak source this session;
 items marked **⚠️execution-verify** are to be read firsthand at the moment of the edit per the firsthand rule.

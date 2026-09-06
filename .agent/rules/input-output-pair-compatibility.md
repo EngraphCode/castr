@@ -1,19 +1,40 @@
 # Input-Output Pair Compatibility
 
-All quality and feature-support decisions MUST be evaluated through the **Input-Output Pair Compatibility Model** (see [principles.md § Input-Output Pair Compatibility Model](../directives/principles.md)).
+**Amended: 2026-09-06.** Retain semantic preservation and canonical IR; supersede
+the universal-format-superset interpretation with the ratified application-value
+and interaction-contract boundary. See
+[principles](../directives/principles.md#-input-output-pair-compatibility-model)
+and [identity](../IDENTITY.md).
 
-## The Four Rules (summary)
+## The contract
 
-1. ALL features valid in the input format MUST be parseable into the IR.
-2. Feature support for a pair is defined by what the **output format** can represent — semantic preservation, not 1:1 mapping.
-3. The IR MUST carry ALL features from ANY supported format — it is the superset.
-4. Fail-fast is ONLY for genuinely impossible output mappings — never for unimplemented features.
+1. Every advertised, versioned source grammar is bounded to the application-contract
+   domain. All valid constructs inside it must parse completely into the appropriate
+   artifact and facets; invalid or grammar-excluded source fails at admission.
+2. The canonical IR carries accepted-input, produced-output, ordered-processing,
+   annotation and interaction semantics distinctly. It is not limited by a particular
+   writer and is not a universal carrier for foreign semantic domains.
+3. Support is defined by a directed source → target profile, including artifact
+   kind and selected channels. Exact native or proven encoded output preserves
+   those channels. A missing implementation blocks the support claim.
+4. Genuine target impossibility rejects atomically. A separately named,
+   caller-authorised projection may report a complete semantic delta; it is
+   never silently substituted for exact conversion or counted as lossless.
 
-## Reviewer Checkpoint
+## Reviewer checkpoint
 
-When reviewing any parser, writer, or IR change, verify:
-
-- **Parser changes**: Does the parser accept all valid input for that format? If a valid input keyword is rejected, is there an architectural reason or is it an implementation gap?
-- **Writer changes**: Does the writer preserve semantics for all IR features it encounters? If it throws on a keyword, is that keyword genuinely unrepresentable in the output format, or could it be expressed differently (e.g., via `.refine()`, union transforms, type narrowing)?
-- **IR changes**: Does the IR addition serve the superset principle? No IR field should be designed around the limitations of a single output format.
-- **Fail-fast guards**: Every fail-fast guard must justify _why_ the output format cannot express the semantics — not just that the mapping hasn't been built yet.
+- **Parser:** does every accepted declaration—including nested constructs—preserve
+  its complete meaning, or fail as a whole with a located diagnostic?
+- **IR:** are artifact kind, versions, facets, presence, identity and references
+  explicit? Has source text or a foreign opaque bag replaced semantic carriage?
+- **Writer:** does its output preserve both acceptance and successful values,
+  including ordered processing? A generated predicate must enforce the
+  represented constraint rather than merely look plausible.
+- **Object semantics:** are input acceptance, output retention/stripping,
+  catchall validation and unevaluated behaviour preserved independently?
+- **Boundary:** is the rejection invalid source, declared grammar exclusion,
+  incompatible artifact kind or proven target impossibility? Do not disguise
+  unimplemented admitted behaviour as an impossibility or unsupported grammar.
+- **Proof:** is each claim bounded to a profile, revision and independent
+  observation? A green structural or snapshot check alone does not prove
+  runtime semantic equivalence.

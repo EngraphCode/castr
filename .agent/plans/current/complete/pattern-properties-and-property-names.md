@@ -8,7 +8,7 @@
 **Status:** ✅ Complete — implemented and verified, all quality gates green (2026-03-26)
 **Created:** 2026-03-26
 **Predecessor:** [discovery-and-prioritisation.md](./discovery-and-prioritisation.md)
-**Related:** [json-schema-parser.md (historical remediation context)](./json-schema-parser.md), [pack-4-json-schema-architecture.md](../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
+**Related:** [json-schema-parser.md (historical remediation context)](./json-schema-parser.md), [pack-4-json-schema-architecture.md](../../../research/architecture-review-packs/pack-4-json-schema-architecture.md)
 
 ---
 

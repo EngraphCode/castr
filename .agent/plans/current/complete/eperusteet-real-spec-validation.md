@@ -44,4 +44,4 @@ Targeted verification ran green on Thursday, 16 April 2026:
 
 ## Next Entrypoint
 
-The direct successor primary active plan is [explicit-additional-properties-support.md](../../active/explicit-additional-properties-support.md). If a user reports a fresh gate or runtime issue, reproduce it first; otherwise execute that slice honestly.
+The direct successor primary active plan is [explicit-additional-properties-support.md](../paused/explicit-additional-properties-support.md). If a user reports a fresh gate or runtime issue, reproduce it first; otherwise execute that slice honestly.

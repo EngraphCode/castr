@@ -1,5 +1,11 @@
 # Plan (Future): `castr check` — the preservation-coverage verb
 
+**Lifecycle review, 2026-09-06:** remains a future brief. This refresh
+does not adopt proposed interfaces or runtime support. Revalidate dated
+source/consumer assumptions at promotion; the
+[programme parent](../proof-programme/parent-plan.md) owns current sequencing
+and paused autonomous-development state.
+
 **Status:** ⚪ Planned (Proposed — not yet executed; verify before acting)
 **Created:** 2026-06-19
 **Last Updated:** 2026-06-19

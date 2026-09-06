@@ -4,7 +4,7 @@
 **Created:** 2026-03-21
 **Last Updated:** 2026-03-21
 **Predecessor:** [doctor-rescue-loop-runtime-redesign.md](./doctor-rescue-loop-runtime-redesign.md)
-**Related:** [IDENTITY.md](../../IDENTITY.md), [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-040](../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)
+**Related:** [IDENTITY.md](../../../IDENTITY.md), [ADR-038](../../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-040](../../../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)
 **Successor:** [architecture-review-packs.md](./architecture-review-packs.md)
 **Historical Parser Context:** [json-schema-parser.md](./json-schema-parser.md)
 

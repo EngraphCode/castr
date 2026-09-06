@@ -9,8 +9,8 @@ description: Create or promote a plan following the plan architecture.
 Create a plan aligned with the foundation documents, the planning
 discipline in
 [PDR-018](../../practice-core/decision-records/PDR-018-planning-discipline.md),
-and the plan architecture defined in
-[ADR-117](../../../docs/architecture/architectural-decisions/117-plan-templates-and-components.md).
+and the local plan architecture in
+[the template inventory](../../plans/templates/README.md).
 
 ## Before Writing
 
@@ -257,9 +257,9 @@ EXECUTION`, milestone-complete, or workstream-complete language must
    validation commands.
 4. Keep a reference from the `current/` plan back to its source strategic brief.
 5. Move the executable plan into `active/` only when implementation starts.
-6. After completion, mine permanent documentation and archive per ADR-117.
+6. After completion, mine permanent documentation and move to `current/complete/` and archive in batches per the local template inventory and roadmap.
 
-## Document Hierarchy (ADR-117)
+## Document Hierarchy (PDR-018 and the Local Template Inventory)
 
 Plans are one layer in a multi-document hierarchy. Do not duplicate
 content across layers:

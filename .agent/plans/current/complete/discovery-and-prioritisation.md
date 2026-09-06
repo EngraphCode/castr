@@ -68,7 +68,7 @@ Use `jc-plan` to create a decision-complete plan for the highest-priority candid
 
 Start by reading:
 
-- [session-entry.prompt.md](../../prompts/session-entry.prompt.md)
+- [session-entry.prompt.md](../../../archive/prompts/session-entry.prompt.md)
 - [roadmap.md](../../roadmap.md)
 - [cross-pack-triage.md](../../../research/architecture-review-packs/cross-pack-triage.md)
 - [json-schema-parser.md (historical remediation context)](./json-schema-parser.md)

@@ -84,10 +84,13 @@ Source-history coupling is not an acceptable substitute.
 For each target, one of these outcomes must be chosen explicitly:
 
 1. exact native emission
-2. governed widening
-3. early rejection
+2. exact, documented and behaviourally proven encoding
+3. a separately named, caller-authorised projection with a complete semantic delta
+4. atomic rejection for genuine target impossibility
 
-No silent fourth mode exists.
+This 2026-09-06 charter alignment supersedes the earlier native-only choice list.
+It does not adopt a particular new encoding or projection. Missing implementation
+remains a support-blocking obligation, not another successful disposition.
 
 ### 5. Governed widening is allowed only when it is explicit and documented
 
@@ -95,6 +98,7 @@ Some seams can widen honestly when the target lacks the narrower semantic but st
 
 That widening is acceptable only when all of the following are true:
 
+- the widening is selected through a separately named, caller-authorised profile with complete findings; it is rejected in the default exact profile and earns no exact lossless certificate
 - the widening is explicit in durable docs
 - the widening is target-specific, not accidental
 - the widening does not rely on invented custom portable types
@@ -104,7 +108,7 @@ ADR-039 is the canonical example of a widening-allowed seam.
 
 ### 6. Otherwise, reject early
 
-If the target cannot represent the source semantic natively and no governed widening has been accepted, the transform must reject as early as possible.
+If the selected exact profile cannot represent the source semantic natively or through a proved exact encoding, the transform rejects atomically. A separately authorised projection has its own contract; it is never an implicit fallback.
 
 Rules:
 

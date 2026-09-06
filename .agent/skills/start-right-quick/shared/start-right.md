@@ -3,7 +3,7 @@ prompt_id: start-right-quick
 title: 'Start Right (Quick)'
 type: workflow
 status: active
-last_updated: 2026-04-26
+last_updated: 2026-09-06
 ---
 
 # Start Right (Quick)
@@ -42,7 +42,7 @@ inventory rather than copying the rule list here.
 
 ### 2. Start-here ADRs
 
-Open the [ADR index](../../../../docs/architectural_decision_records/README.md) and read any ADR (001–047) whose slug
+Open the [ADR index](../../../../docs/architectural_decision_records/README.md) and read the ADRs whose slug
 matches your current workstream, plus the durable architecture docs under
 [`docs/architecture/`](../../../../docs/architecture/) named by the active plan.
 
@@ -122,10 +122,11 @@ fallback.
 
 Before any Codex thread registration or shared collaboration-state write,
 run the PDR-027 identity preflight with the current platform and model values.
-For this repo's Codex GPT-5 sessions the command is:
+Use the actual model identity supplied by the current session:
 
 ```bash
-pnpm agent-tools:collaboration-state -- identity preflight --platform codex --model GPT-5
+# Set PRACTICE_MODEL_ID to this session's actual model identifier first.
+pnpm agent-tools:collaboration-state -- identity preflight --platform codex --model "$PRACTICE_MODEL_ID"
 ```
 
 Codex sessions with `CODEX_THREAD_ID` available must not write new thread rows
@@ -257,7 +258,7 @@ thinking.
 
 ## castr Domain Grounding
 
-The **IR is the source of truth after parsing** (`Any Input → Parser → IR → Writers → Any Output`). Preserve IR honesty
+The **IR is the source of truth after parsing** (`Admitted source grammar → Parser → IR → Writer → Declared target profile`). Preserve IR honesty
 even when an interchange format is lossy; **fail fast rather than silently canonicalising away user-visible semantics**.
 Types and Zod flow from schema (see `requirements.md` and `principles.md`).
 
@@ -282,8 +283,9 @@ the layer.
 
 ## Process
 
-**Do not assume you know the initial step.** Discuss with the user
-first.
+Derive the first step from current owner direction and the controlling plan.
+Resolve discoverable facts before asking; an approved implementation plan
+already supplies its execution authority.
 
 ## Quality Gates
 

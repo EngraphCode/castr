@@ -59,24 +59,11 @@ Live in `distilled.md` (two entries) + `practice-loop-closure-remediation.md`.
 `[captured: 2026-06-27 | source: distilled.md + practice-loop-closure-remediation.md]`
 trigger-condition: loop-closure lane completes (all of LC0–LC5 + LC-reopen done; as of
 2026-07-03 LC0/1/2/3a/3c are done — LC3b, LC3d, LC4, LC5 remain). status: pending.
-
-### Verified-claims engineering (the unifying thesis of both products)
-
-The 2026-07-04 review named the frame that unifies the compiler and the Practice: **a claim is
-only as good as its machine-checkable proof** — product level (lossless/fail-fast must be proven
-by round-trip + executed-validator suites; support claims computed as preservation coverage,
-never asserted) and process level (green-gates-mask-gaps, prove-it-fires, loop-closure,
-inherited-classifications are all instances of the same principle). Candidate permanent home: a
-**pattern-PDR** ("verified-claims engineering" — likely subsuming or federating the
-loop-closure/PDR-096 family) + the umbrella statement in the rebuilt VISION (overhaul plan §W1).
-`[captured: 2026-07-04 | source: wide-deep-review-2026-07-04.md §6.4]`
-trigger-condition: re-armed — **owner ruled 2026-08-27 (in-session, this consolidation
-pass): hold to ride the W1 vision rewrite** — the pattern-PDR and its companion umbrella
-statement land together when W1 runs. The 2026-08-23 walk's ratification stands as the
-substantive go-ahead; W1 is now the landing vehicle, not a new decision gate.
-status: pending (trigger: the W1 vision rebuild opens). Evidence a future agent can
-check — the PDR does not exist in `.agent/practice-core/decision-records/`, and
-`.agent/directives/VISION.md` does not yet describe both products.
+The [source lane](../../plans/transplant/practice-loop-closure-remediation.md) is
+historical under the stopped transplant. Programme Q-12 or an explicitly
+authorised bilateral-equality slice must re-assess and deliver its residuals
+before this completion trigger can fire. PDR-135's doctrinal graduation does not
+prove LC completion or resume that lane.
 
 ### Autonomous-programme operating pattern → PDR
 
@@ -88,9 +75,18 @@ collision machinery for a shared remote, and the tap-to-answer owner ballot. Can
 permanent home: a **PDR** once a second autonomous programme (or a second host repo)
 consumes the pattern, or on owner direction. Live in `.agent/memory/active/patterns/`.
 `[captured: 2026-08-23 | source: QD-6 landing (proof-programme)]`
-trigger-condition: a second autonomous programme is stood up, or the owner directs
-graduation.
-status: pending.
+trigger-condition: a second autonomous programme consumes the pattern, or the
+owner directs graduation. The consumer trigger is satisfied: the
+[dedicated-consolidation prompt](../../prompts/agentic-engineering/dedicated-consolidation-session.md)
+explicitly consumes the pattern's collision/duration lesson; its
+[thread](threads/consolidation-routine-and-watcher.next-session.md) records the
+second programme's August 27 configuration and PR #69.
+status: pending graduation, with reuse evidenced. This is selective consumption,
+not proof that every mechanism generalises. The present documentation commission
+authorises the verified-claims PDR; a separate bounded Practice graduation under
+programme Q-12 or explicit owner direction must adjudicate this broader Core
+change against the second consumer. The pattern remains its live substantive
+home; neither programme is enabled by recording this trigger.
 
 ### PDR-056 cloud-seat channel-availability extension
 

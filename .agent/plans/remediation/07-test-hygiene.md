@@ -1,5 +1,11 @@
 # Plan: Test Hygiene (no IO / no global-state mutation in in-process tests)
 
+**Current routing, 2026-09-06:** Q-07 owns bounded PR #21 logger/isolation extraction. Source scanners, scanner baselines and timeout widening are excluded; remaining enforcement belongs to Q-12.
+
+The [parent programme](../proof-programme/parent-plan.md) governs selection and
+execution state. The following original finding contract is an evidence base,
+not an independent execution order. Reproduce remaining cases on the chosen base.
+
 **Status:** Backlog (remediation) · **Findings:** M4, M5, H7 · **Risk:** Low
 **References:** report `07-test-quality-and-proof-gaps.md`; `testing-strategy.md` (integration tests do not trigger IO; no global-state mutation; no partial-proof posture); `parsers/zod/zod-parser.runner.integration.test.ts`, `shared/utils/logger.test.ts`
 
@@ -30,11 +36,11 @@ Out of scope: refinement-test correctness (plan 03); negative-assertion fix (pla
 ## Success criteria
 
 - No `fs.*` IO and no `vi.spyOn(console, …)`/global-state mutation in any `*.unit.test.ts`/`*.integration.test.ts` under
-  the `pnpm test` glob (add a lint/grep gate to keep it true).
+  the `pnpm test` glob (additional enforcement is separately scoped through Q-12).
 - `logger` accepts an injected sink; its test asserts on the fake, not global `console`.
-- `pnpm qg` green.
+- `pnpm check` green.
 
 ## TDD order
 
 1. Inject the logger sink; rewrite its test (red→green). 2. Relocate/inline the Zod runner fixtures; remove IO + soft-skip.
-2. Add the no-IO/no-global-mutation guard. 4. Gate green.
+2. Record additional enforcement under Q-12, outside Q-07. 4. Gate green.

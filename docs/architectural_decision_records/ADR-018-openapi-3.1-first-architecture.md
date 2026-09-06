@@ -1,4 +1,4 @@
-# ADR-001: OpenAPI 3.1-First Internal Type System
+# ADR-018: OpenAPI 3.1-First Internal Type System
 
 **Date:** November 4, 2025  
 **Status:** Accepted  

@@ -1,24 +1,20 @@
-# Next-Session Record — Proof programme (autonomous loop)
+# Next-Session Record — Proof programme
 
-The continuity record for the proof-programme thread: the ADR-051 autonomous
-background loop executing the parent plan's queue (three scheduled firings per
-day while the owner has the Routine scheduled — the owner creates, schedules,
-pauses, and deletes it at will per parent plan §Operating protocol step 1;
-**see the 2026-08-31 addendum below for the live state**) plus owner-attended
-interactive sessions. Indexed by
-[`../repo-continuity.md § Active Threads`](../repo-continuity.md#active-threads);
-this record carries identity history per [`README.md`](README.md) +
-[PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
+This record conserves the platform-neutral autonomous-development experiment's
+identity history and owner-attended sessions. Current execution state lives
+only in the [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state):
+the owner confirmed on **2026-09-06** that the experiment is paused and its
+Claude Routine disabled. This is owner-confirmed state, not platform inspection.
+It does not describe any other Routine.
 
-**Lane-state authority lives in the programme's own surfaces**, not here: the
-queue and counters in
-[`parent-plan.md`](../../../plans/proof-programme/parent-plan.md) frontmatter,
-incidents in [`incidents.md`](../../../plans/proof-programme/incidents.md),
-owner decisions in
-[`queued-decisions.md`](../../../plans/proof-programme/queued-decisions.md).
-This record adds only what those surfaces do not carry: the additive PDR-027
-identity table. Scheduled firings update their identity row here at close per
-the routine prompt's firing-scoped handoff profile (QD-6).
+Lane-state authorities: the parent frontmatter owns queue order, status and
+counters; [incidents](../../../plans/proof-programme/incidents.md) own incident
+evidence; [queued decisions](../../../plans/proof-programme/queued-decisions.md)
+own decision outcomes; the [delivery ledger](../../../plans/delivery-ledger.md)
+owns dated PR observations and disposition carriers. This record mirrors none
+of those inventories. It is indexed from
+[repo-continuity](../repo-continuity.md#paused-threads) and carries the additive
+identity table under [PDR-027](../../../practice-core/decision-records/PDR-027-threads-sessions-and-agent-identity.md).
 
 ## Participating agent identities
 
@@ -38,37 +34,29 @@ programme's delivery evidence rather than retro-filled here.)
 | Breeze weaves Contrail         | ea6fba19-fcf8-5841-b6a1-56c7d42ddd4d | claude-code | claude-fable-5 | 0132gL            | arming-walk executor (owner-attended)                 | 2026-08-26    | 2026-08-26   |
 | Vesta turns Singularity        | f5b4dfc2-acaa-5c8c-bcc5-da63553f07ee | claude-code | claude-fable-5 | 01PjGS            | routine-configuration seat (owner-attended)           | 2026-08-27    | 2026-08-27   |
 | Wolf seeks Cavern              | d914f871-f3ee-5c33-ba2a-a2ca35084340 | claude-code | claude-fable-5 | 019J6n            | Phase C-pre scorer seat (owner-attended)              | 2026-08-27    | 2026-08-27   |
+| Bora seeks Turbulence          | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | codex       | gpt-6-astra    | 01a072            | documentation refresh coordinator                     | 2026-09-06    | 2026-09-06   |
 
-## Next-session landing target
+## Next-session action
 
-Per PDR-026, externally verifiable, re-derived each session from the queue
-rather than trusted from this record: **drive the single open non-draft
-programme PR to merged, else claim the next eligible queue row** (as recorded
-2026-08-26, refreshed 2026-08-27: no programme PR is open, so the next firing claims the next
-eligible row IN QUEUE ORDER — Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency
-dropped by owner card ruling 2026-08-27; Q-21 completed 2026-08-26,
-PR #64), then Q-05..Q-09, Q-13,
-Q-14, Q-16 (re-adjudicated 2026-08-25, arming review — the narrowed brief in
-the parent plan is current: ADR-117 citation replacement only), Q-17 (safety
-instruments sequenced first at owner word, 2026-08-26 arming walk).
-Verification: the PR merged, or a row's state advanced on the base.
+Read the parent plan's current execution state and the latest owner instruction.
+The autonomous experiment is paused; queue eligibility authorises no execution
+or resumption. The separate 2026-09-06 documentation commission follows its own
+[delivery plan](../../../plans/current/complete/plan-estate-and-documentation-refresh.md)
+and does not execute pending instruments.
 
-## Session shape and grounding order
+For a future owner-authorised invocation, follow
+[the standing prompt](../../../plans/proof-programme/routine-prompt.md) from its
+entry guard and re-derive eligibility from the parent frontmatter. Use the
+applicable platform recipe and actual identity, not a historical Claude row.
+Q-15/Q-18/Q-19 are implementation obligations, not completed readiness evidence.
 
-Scheduled firings follow the routine prompt end to end (it is the grounding
-order; its step 3 now grounds `engraph-start-right-thorough`); owner-attended
-interactive cloud sessions likewise ground via `engraph-start-right-thorough`
-with the `engraph-plan` / `engraph-metacognition` / `engraph-proportionality`
-stack (the installed, invocable names; owner ruling, 2026-08-26)
-and then follow the parent plan's §Operating protocol. Either shape updates
-this record's identity table at close.
+## Historical session record
 
-## Standing decisions
-
-The governing ADR (autonomous-background-implementation-loop) and the
-programme's queued-decisions register carry every standing decision; this
-record points and never duplicates. The queue frontmatter and incident
-register are the live lane state.
+The dated records below preserve decisions, observations and identity custody.
+Their old "live", "next", arming and enabling language is historical and does
+not override the parent's current execution state. In particular, the
+2026-08-31 arming retirement remains a binding correction: it removed the
+ceremony while retaining checks during execution.
 
 Arming hold (2026-08-25 ~16:0xZ, Kraken calls Abyss 0178h2 — READ BEFORE ANY
 FIRING OR ENABLE ACT): the Routine was re-created on this account per the

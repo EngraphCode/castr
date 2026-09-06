@@ -1,10 +1,30 @@
-# Proof-Programme Firing Prompt
+# Proof-Programme Invocation Prompt
 
-This is the standing prompt each scheduled firing of the proof-programme Routine receives
-(ADR-051, Accepted 2026-08-22; fresh cloud session per firing, three per day). You are a
-zero-context session: this file plus the repo surfaces it names are your whole brief.
-Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating protocol) and
-[ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md).
+This is the standing execution brief for the platform-neutral autonomous-development
+experiment. A selected executor supplies an independently grounded session; this file
+and the repo surfaces it names supply the brief. Authority:
+[`parent-plan.md`](./parent-plan.md) (current execution state, queue and scope) and
+[ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md)
+(accepted design). Claude-specific setup and platform operations live in the
+[Claude adapter](../../claude-harness-integrations/cloud-environment.md#proof-programme-claude-routine-adapter).
+
+## Entry guard — before provisioning, claims or any programme action
+
+Read the parent plan's **Current execution state** first. If the experiment is
+paused, stop here: no install/build, claim, queue execution, PR drive, counter
+increment/reset or runtime change. State the pause in the session response; an
+owner-applied pause requires no firing-side stand-down landing. A scheduled
+invocation arriving during a known pause does not manufacture an idle failure or
+missed-slot backlog.
+
+The owner confirmed on 2026-09-06 that the experiment is paused and its Claude
+Routine is disabled. That dated statement is not a live platform read; the parent
+owns subsequent state. Never resume because a row is eligible or time has passed.
+A separately commissioned interactive task follows its own owner instruction and
+does not become an autonomous invocation by reading this file.
+
+The protocol below applies only to owner-authorised active execution. Its use of
+"firing" means one such invocation, independent of platform.
 
 ## Exit criteria (declared before anything runs)
 
@@ -20,12 +40,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
   predecessor still driving seven hours in when its successor spawned.
 - **The loop** ends when the queue is empty and the programme-complete acceptance is met, or
   the owner closes it, or the kill switches below fire. Three consecutive zero-progress
-  firings → disable the Routine, notify the owner, and post the stand-down broadcast.
-  The disable method is removing the Routine's schedule via the platform's
-  trigger-update surface; if the tools are absent or the update fails, record that
-  failure in the stand-down incident entry and the completion summary — the owner's
-  pause or delete is the backstop. A successful disable is recorded too: the
-  stand-down incident entry states that the schedule was removed.
+  firings → disable the selected scheduled executor, notify the owner, and post
+  the stand-down broadcast. Use its documented platform operation; the Claude
+  adapter describes the historical Routine operation. If the tools are absent or
+  the update fails, record that failure in the stand-down incident entry and
+  completion summary; the owner's pause or delete is the backstop. Record a
+  successful disable only with its observed result.
 
 ## Protocol, in order
 
@@ -47,20 +67,17 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
      wired and no built agent-tools until these run (measured, Q-01 evidence) — a commit
      made before this step bypasses every blocking gate, and the Practice CLIs (claims,
      comms, validators) fail for want of `agent-tools/dist`.
-   - **Provision gitleaks**: run `bash .claude/hooks/ensure-gitleaks.sh` unconditionally —
-     the idempotent SessionStart provisioner (sha256-pinned install; silent fast path when
-     the pinned version already resolves; upgrades a stale below-pin binary, which a mere
-     `command -v` presence check would wrongly accept; fired sessions may not surface
-     SessionStart hooks, so never assume it ran). Then confirm `command -v gitleaks`
-     resolves in a NEW shell command: the hook's PATH persistence needs `CLAUDE_ENV_FILE`,
-     which tool shells may lack — if unresolved, prepend the install directory the hook's
-     output names to `PATH` yourself before any commit. The blocking `pnpm secrets:scan`
-     must be able to pass BEFORE push; CI's copy of the scan runs after the push, which is
-     too late for a leaked secret — never skip, bypass, or defer it to CI.
+   - **Provision and resolve gitleaks** through the selected implementation's
+     documented recipe. The Claude recipe names the repository's existing hook
+     and its PATH-persistence limitation. Verify the resolved binary's version
+     against the canonical pin and accepted newer-version policy in a fresh
+     shell command; presence alone is insufficient. The blocking
+     `pnpm secrets:scan` must pass BEFORE push; never skip, bypass or defer it
+     to CI. Do not infer that an unconfigured platform has the Claude hook.
    - Ground with the `engraph-start-right-thorough` skill (owner ruling, 2026-08-26:
      cloud sessions ground thorough — full one-gate-at-a-time discipline);
      register identity per `register-active-areas-at-session-open`. The thorough
-     workflow's owner-interaction gates ("discuss with the user first") resolve against
+     workflow's initial-step and authorisation checks resolve against
      THIS BRIEF in an unattended firing: the routine prompt and the owner-ratified queue
      order ARE the owner's standing answer to the first-step discussion, so grounding
      never pauses to wait for a person — a genuine fork found during grounding routes
@@ -153,11 +170,19 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto
    queue row whose `depends_on` and Gate line are satisfied: mark it `in_progress` in the
    parent plan's frontmatter (rides in your slice PR) and re-verify the brief's premises
    against live state — premises moved means re-adjudicate, not execute.
-5. **Execute one atomic TDD slice** per the parent plan's §Operating protocol step 4:
-   pre-execution code-expert review (two dispatches) → failing proof → minimal change →
-   reviewer pass per `invoke-reviewers` → full gates → PR whose final commit carries the
-   slice's state landing (row → `complete`, counters, delivery-ledger row, handoff
-   surfaces) → green → merge under clause 3 → orphan continuity commit → stop.
+5. **Execute one atomic TDD slice**: pre-execution `code-expert` review
+   (two dispatches per
+   [the per-cycle rule](../../rules/pre-execution-code-expert-review-per-loop-cycle.md))
+   → failing proof → minimal change → refactor → reviewer pass per
+   [`invoke-reviewers`](../../rules/invoke-reviewers.md)
+   (`code-reviewer` always; `test-reviewer` on test/harness surfaces; domain
+   expert by surface; `docs-adr-expert` on ADR/doctrine surfaces;
+   `assumptions-expert` when authoring or splitting a slice plan) → full gates →
+   PR whose final commit carries the slice's state landing (row → `completed`,
+   counters, delivery-ledger row, handoff surfaces) → green → merge under
+   clause 3 → orphan continuity commit → stop. A separately commissioned
+   documentary unit follows its explicit acceptance; QD-14's general non-code
+   proof question remains OPEN.
 6. **Branches** (each is normal operation, not an error):
    - **Red head on arrival** (gates failing for causes outside your slice): at most ONE
      bounded green-the-head repair slice through the normal TDD/gate/review path, recorded
@@ -250,10 +275,13 @@ notification's OPEN-decisions list covers queued forks, and a fork worth immedia
 attention ships as a ballot (step 6). An owner-blocking question parked only in text
 nobody watches is unreported.
 
-**Slack and The Watcher (QD-7, owner-directed 2026-08-23).** The Routine may carry the
-Slack connector, and the owner runs an interactive Claude Cowork session watching the
-`remote-coding` Slack channel for messages addressed to **The Watcher**. Two uses, both
-subordinate to the doctrine above:
+**Slack and The Watcher (QD-7, owner-directed 2026-08-23).** The accepted
+owner-interaction role is advisory second opinions and owner-alert relay.
+The historical Claude implementation used an attached Slack connector and an
+owner-run interactive Cowork session watching `remote-coding` for messages
+addressed to **The Watcher**. This record does not assert a live Watcher or
+connector today; consult the applicable adapter and observe actual availability.
+Two uses remain subordinate to the doctrine above:
 
 - **Second opinion without the owner.** A judgment call that is not an owner fork — a
   review-disposition doubt, an ambiguous brief reading, a merge-instant hesitation — may
@@ -281,9 +309,9 @@ also post:
 
 ```bash
 pnpm agent-tools:collaboration-state -- comms send \
-  --title "STAND-DOWN proof-programme Routine" \
+  --title "STAND-DOWN proof-programme experiment" \
   --body "criterion: <which>; closeout: <one line of what the loop accomplished>" \
-  --platform claude-code --model <your model id>
+  --platform <actual platform> --model <actual model id>
 ```
 
 The echo needs the built `agent-tools/dist` artefact, which a pristine checkout lacks
@@ -294,6 +322,6 @@ broadcast. Only when the tracked record itself cannot land (push failure on ever
 bookkeeping route) does the completion summary carry the stand-down verbatim, with that
 landing failure named as a blocker — never skip the record silently.
 
-Post it on: STOP-file observation, the three-zero-progress disable, and the terminal
-queue-empty exit. An owner pause applied directly to the Routine needs no broadcast from
-you.
+Post it on: STOP-file observation during authorised execution, the
+three-zero-progress disable, and the terminal queue-empty exit. The entry guard's
+known owner pause requires no broadcast or counter landing from an invocation.
