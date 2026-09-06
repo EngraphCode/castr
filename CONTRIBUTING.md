@@ -25,11 +25,9 @@ bounded, repeatable first action without package publication.
 
 The [Practice bridge](.agent/practice-index.md) leads to the governing directives
 and [verification contract](.agent/directives/DEFINITION_OF_DONE.md).
-The [programme parent](.agent/plans/proof-programme/parent-plan.md#current-execution-state)
-controls the queue; the [correction plan](.agent/plans/active/castr-documentation-and-fidelity-correction.md)
-owns current acceptance and defects; the [delivery ledger](.agent/plans/delivery-ledger.md)
-records PR custody. The autonomous-development experiment remains paused and
-its Claude Routine disabled. Interactive work has separate authorisation.
+The [Practice bridge](.agent/practice-index.md) routes contributors to current
+work, governing authority, implementation evidence and repair ownership. Read
+those current records before choosing work or acting on its execution state.
 
 ## Quality gate
 

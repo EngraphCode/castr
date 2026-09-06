@@ -29,9 +29,7 @@ The committed [User fixture](./examples/local-user.json) describes one explicit
 closed object: a required, non-empty string `id`. Generated output contains a
 `User` Zod schema and endpoint metadata. The [usage walkthrough](./docs/USAGE.md)
 compiles the output, executes positive and negative validation examples, and
-compares repeated generation. That proof covers this fixture's contract; the
-[correction plan](./.agent/plans/active/castr-documentation-and-fidelity-correction.md)
-owns the remaining fidelity repairs.
+compares repeated generation. That proof covers this fixture's contract.
 
 ## Fidelity contract
 
@@ -41,20 +39,15 @@ object retention, stripping and catchalls. Strictness does not authorise closing
 an object whose source permits additional properties.
 
 Known silent loss, ignored options and incorrect output are design or
-implementation defects requiring repair. The [finding inventory](./.agent/plans/correction-manifests/castr-correction-findings.json)
-and [delivery plan](./.agent/plans/active/castr-documentation-and-fidelity-correction.md)
-name their evidence and owners. An existing export or a green fixture does not
-prove every construct on that surface correct.
+implementation defects requiring repair. An existing export or a green fixture
+does not prove every construct on that surface correct.
 
 Castr generates schemas and metadata. Applications compose their own HTTP
 transport; see [the integration guide](./docs/OPENAPI-FETCH-INTEGRATION.md).
 
-## Contributing and current work
+## Contributing
 
 Start with [CONTRIBUTING.md](./CONTRIBUTING.md), the [Practice bridge](./.agent/practice-index.md)
 and the [verification contract](./.agent/directives/DEFINITION_OF_DONE.md). The
-[programme parent](./.agent/plans/proof-programme/parent-plan.md#current-execution-state)
-is the controlling queue; the [delivery ledger](./.agent/plans/delivery-ledger.md)
-records PR custody. The platform-neutral autonomous-development experiment is
-paused, and its Claude Routine is disabled. Interactive correction work is
-separately authorised.
+bridge routes contributors to current work, governing authority, implementation
+evidence and repair ownership.
