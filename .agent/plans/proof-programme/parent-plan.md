@@ -1,5 +1,6 @@
 ---
 zero_progress_streak: 0
+drive_attempts: {}
 todos:
   - id: Q-00
     content: 'Owner walk W-0: ratify the ballot (T00a charter, standing authorisations, sequencing reconciliation)'
@@ -36,7 +37,7 @@ todos:
     status: pending
   - id: Q-19
     content: 'Review-round tally instrument (loop-review OP-2, owner-approved 2026-08-24 second decision card; Q-13 dependency dropped by owner card ruling 2026-08-27): REVIEW-TALLY PR-comment contract at PR-open + ADR-051 clause 4(c) two-round step-back reading + observational drive-attempt counter'
-    status: pending
+    status: in_progress
   - id: Q-23
     content: 'Dependency-currency pass 2026-08 (owner-commissioned 2026-08-31): whole-estate pass per the dependency-currency skill; zod 4.4.3→4.5.4 headline cycle with measured behaviour deltas on record; TS-7 and @types/node-26 holds recorded'
     status: completed
@@ -267,6 +268,43 @@ queued decision recorded; the bookkeeping every firing performs regardless of pr
 so an idle firing always increments the streak and the clause 6 kill switch stays reachable.
 A row's success resets its `failures:` count. Q-01's dry run proves cross-session read/write
 of both counters.
+
+### Observational PR drive-attempt counter
+
+`drive_attempts:` in this frontmatter maps programme PR numbers to non-negative
+integer counts. A missing map or PR entry means zero, as explicitly declared for
+this observational field; a malformed map or value is an error, never a reset.
+It records authorised **scheduled drives ending without a merge**, separately
+from slice failures, substantive progress and the review-round tally. Interactive
+work, intentionally paused intervals, idle firings and collision deferrals that
+never begin a drive do not increment it. No numeric threshold, retry cap or new
+kill switch is authorised; any proposed response belongs in
+[queued-decisions.md](./queued-decisions.md) as a named position.
+
+For a future authorised scheduled drive:
+
+1. Read the fresh base and relevant open-PR/deferral-head state, retaining the
+   firing identity from its lease. Preserve other PR entries and peer increments.
+2. At the end-of-drive landing cutoff, stop substantive driving and inspect the
+   target PR. If merged, record the observed merge and do not increment. If still
+   unmerged, record that observation's time and end the drive: do not subsequently
+   attempt to merge that target in the same firing.
+3. Increment that PR once, identifying the PR, firing and observation in the same
+   counter-landing commit. Use the existing uncontested-head or shared
+   deferral-draft bookkeeping path. On retry or reconciliation, inspect those
+   remote histories for this firing's increment and reuse it instead of counting
+   again. A local commit or completion summary alone is not durable landing proof.
+4. A new head, shepherd, draft transition or cure does not reset the count. After
+   an **observed merge**, retire the entry through the existing post-merge
+   continuity/bookkeeping path, preserving the final count and merge evidence in
+   the delivery record. Never clear in anticipation of merge. A closure without
+   merge is not success; retain its count and disposition with its PR custody.
+
+This is a human-maintained record of observed drive endings, not crash-proof
+exactly-once instrumentation. A firing killed before persisting its observation
+leaves missing evidence; do not invent its increment. Another seat merging after
+an unmerged handoff does not invalidate the recorded observation. The
+[current pause](#current-execution-state) precedes every counter action.
 
 **Why the Q-00 gates exist:** Q-02–Q-07 are gated by the **standing 2026-06-19 roadmap
 sequencing order** (transplant first), which only ballot item B-11 may supersede — NOT by
@@ -1064,6 +1102,8 @@ reconciliation duty); the D-10 merge-posture cure
 is NOT here (it is Q-21, independently landable). Acceptance (`non-code`): the skill
 and counter surfaces carry all three elements grep-checkably, and this row's own PR
 demonstrates the REVIEW-TALLY comment from its first triage onward; gates green.
+C02 implementation is in progress under Q-30; its own first-triage tally and merged
+head evidence remain required before Q-19 completion.
 Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a
 tally artefact means the entry contract is not working. Source: loop-review report
 OP-2 and its 2026-08-24 addendum; OCE retrospective proposal 2 (background); second

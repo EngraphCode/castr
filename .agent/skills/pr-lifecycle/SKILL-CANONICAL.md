@@ -53,6 +53,56 @@ what reviewers should focus on, what was deliberately left out, and what
 evidence supports merge readiness. Update the description whenever the review
 story materially changes (a reshaped scope, a new commit class).
 
+## The review-round tally
+
+Before the first triage of an opened or adopted bot-reviewed PR, create one
+**REVIEW-TALLY** issue comment. The named shepherd maintains it across pushes and
+handoffs; a successor reads and updates that same comment. A tally-less PR is out
+of contract: establish the record before continuing triage. When adopting an older
+untallied PR, reconstruct the earlier rounds from full review history and label
+that part reconstructed; never claim the tally existed at first triage.
+
+Start with the PR outcome, shepherd, PDR-132 expected review-round budget and an
+empty table. Record each round's ordinal, reviewed head, concern/class narrowed,
+blocking determination, disposition/evidence and any remaining owning slice or
+reopen condition. Link the tally from the PR description so a successor can find
+it. Multiple findings in one round need separate dispositions; the ordinal is
+shared. A minimal comment is:
+
+```markdown
+REVIEW-TALLY
+
+Outcome: <one reviewable result>. Shepherd: <identity>.
+Expected review budget: <PDR-132 budget, normally at most two rounds>.
+
+| Round | Head | Concern/class narrowed | Blocking evidence | Disposition/proof/owner |
+| ----- | ---- | ---------------------- | ----------------- | ----------------------- |
+
+Current state: awaiting first triage.
+```
+
+A round is one triaged feedback batch and the response to its concerns. Parallel
+specialist findings on the same review pass share a round. Pushes, comments,
+reviewers and unchanged harvests are not rounds. Record later narrowing of a
+concern in the next round; do not merge rounds retrospectively to evade a trigger.
+A new head or shepherd never resets the ordinal or hides earlier concerns.
+
+Before choosing a cure, compare the last two rounds. **Two successive rounds each
+narrowing the same concern require a structural step-back** under
+[ADR-051 clause 4(c)](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md).
+Re-derive the cause and close its class, rather than applying another instance
+cure. Use `engraph-parallax` and `engraph-proportionality` to reconsider the frame
+and slice; record the re-derivation, class-level proof and resulting disposition
+in the tally. A new label or another push does not discharge the trigger.
+
+PDR-132's authoring budget is separate from this recurrence predicate. If the
+budget is exceeded, reconsider the generator and scope before continuing; neither
+budget nor recurrence permits a blocking defect through merge. ADR-051 clause 4
+owns the per-finding demonstration and carry-forward conditions for non-blocking
+bot refinements. Human comments remain uncapped. Any adjacent work taking that
+route needs a named owning slice and evidence explaining why it does not block
+this outcome; a generic backlog pointer is insufficient.
+
 ## Phase 3 — Harvest EVERY feedback surface (the step most often botched)
 
 Immediately after opening — and again after every push — pull all four
@@ -90,6 +140,33 @@ surfaces. Partial reads produce false "no problems" verdicts:
 - Scanning surfaces reflect fixes only after the next pushed run — verify
   fixes with local gates at source; never poll the server surface immediately
   after an edit.
+
+### Verify a bot-cited commit warrant
+
+When a bot cites a commit as evidence, establish that the cited object is a commit
+in the named repository before relying on the argument. First use
+`git cat-file -t <sha>` locally. A missing local object proves only local absence:
+a shallow or partially fetched clone can lack a valid remote commit. If missing,
+check the named repository through a GitHub commit lookup or fetch the referenced
+object and verify its type. Also establish repository provenance when it is
+unclear; a commit in another repository is not evidence about this one.
+
+Reject a citation **as nonexistent** only after verified local **and repository**
+absence.
+Authentication, transport, rate-limit or ambiguous lookup failures leave it
+unverified, not absent. A non-commit object does not satisfy a commit citation.
+Record the checks, repository, result and reopen condition with the disposition.
+An invalid warrant never dismisses an independently reproducible correctness,
+security or data-loss defect; investigate that mechanism at the actual head under
+Phase 4. Apply the existing non-blocking convergence conditions only after that
+per-finding assessment.
+
+Graduated on 6 September 2026 when Q-19 edited convergence doctrine. Evidence:
+PR #69 round 6 cited `5b63e55f`; local absence and an independent repository lookup
+were recorded in PR #71 round 1. Provenance: PR #69 review thread
+[r3872515171](https://github.com/EngraphCode/castr/pull/69#discussion_r3872515171)
+and the 27 August pending-graduation record. These are dated observations, not a
+claim that every present lookup failure establishes absence.
 
 ## Phase 5 — Wait without burning budget
 

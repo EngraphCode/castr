@@ -262,3 +262,47 @@ Gateway review additionally caught formatter removal of a two-space hard break
 from one historical line. The archive now preserves raw fenced blocks through
 the standard Prettier preservation directive; exact bytes are rechecked after
 formatting. This is the same first-triage round, before PR opening.
+
+## C02 framing and acceptance record — 6 September 2026
+
+C01 landed in PR #82 at `b14caede`; its detailed proof is in the delivery ledger.
+C02 is one procedural outcome: make review rounds and unfinished scheduled PR
+drives observable. Parallax core, reduced same-context inquiry: the counterframe
+is a new automatic service or imported OCE state machine. The existing durable
+PR comment and repository bookkeeping paths suffice; no new scheduler, thresholds
+or instrument framework is required. Proportionality retains the three ratified
+Q-19 elements together and includes the directing skill's contradictory local
+references. It does not reduce the correctness or human-review obligations.
+
+The bot-cited-SHA graduation fires because convergence doctrine is edited. Its
+permanent procedure preserves local-versus-remote evidence and independently
+reproducible defects; the pending entry is drained. Q-19 stays in progress until
+its own PR demonstrates the tally from first triage and passes gates on main.
+The default two expected review rounds apply; the tally lives on that PR, not in
+a second local round store.
+
+Non-code procedure walkthrough (author inspection, not a simulated live firing):
+unchanged harvest → no new round; successor → same tally and ordinal; two rounds
+narrowing one concern → structural re-derivation; interactive/paused/never-started
+collision work → no drive increment; recorded unmerged scheduled ending → one
+identified increment, including after substantive progress; observed merge →
+retire only with retained final value. Local-missing/remote-present citation →
+valid repository evidence; lookup unavailable → unverified; confirmed local and
+repository absence → invalid warrant, with any reproducible defect still open.
+Specialist review and live PR demonstration remain to follow this author check.
+
+Architectural discovery custody: C08/Q-016 also owns boundary element-classification
+blindness reproduced by the read-only architecture review on `e025d233` (folder
+patterns missed direct children), context-to-parser and writer-to-context contract
+edges, and the production-to-test-helper dependency. Moving two wrappers alone
+cannot close Q-016; effective resolver/classification/policy and prohibited-import
+proof must land together, with preparatory contract separation if needed.
+
+C02 pre-PR validation: canonical `pnpm check`, skill parity, portability and
+repository validators passed on 6 September. The link validator's by-file report
+was inspected: 173 inherited entries remain; the edited ledger's reported archive
+target exists and is omitted by the validator's inventory. No new affected link
+failure was found; C09 owns the complete reference/validator correction. Adapter
+regeneration produced no tracked difference. PDR-132's size warning is acknowledged:
+the ninth file annotates seven partial C01 source dispositions, with immutable
+merge/blob evidence and explicit residual custody; none is silently marked complete.

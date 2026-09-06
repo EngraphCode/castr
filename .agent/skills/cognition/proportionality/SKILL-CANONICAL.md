@@ -82,22 +82,21 @@ violation [§Documentation Is Infrastructure](../../../directives/principles.md#
 names as a real defect.
 
 - **Review loops** —
-  [`pr-lifecycle`](../../pr-lifecycle/SKILL-CANONICAL.md) §"The review-round state machine"
-  item 2 owns convergence: the tally store, the mechanical step-back predicate, the epoch
-  reset, and the generator-recurrence classification. It is the fully-worked instrument;
-  build the tally, or the trigger cannot fire.
+  [`pr-lifecycle`](../../pr-lifecycle/SKILL-CANONICAL.md#the-review-round-tally)
+  owns the durable tally and the operational two-successive-round structural
+  step-back under local ADR-051 clause 4(c). Build and maintain the tally so the
+  predicate can be observed. New heads and shepherds do not reset its history.
 - **Changeset size** —
   [PDR-132](../../../practice-core/decision-records/PDR-132-changeset-health-round-budgets-bind-at-authoring-time.md)
   owns the round budget and binds it at authoring time.
-- **Absorbing adjacent findings** — `pr-lifecycle`'s two-class disposition ruling
-  (owner-ratified 2026-07-25) owns the in-flight recovery: CLASS F cures in the PR, CLASS P
-  is replied to with its owning ticket and resolved without growing the diff. Its general
-  form is
-  [`concept-exploration`](../concept-exploration/SKILL-CANONICAL.md) §Loop Dynamics
-  (owner-ratified 2026-07-27), which binds every iterative loop: work the current story does
-  not require is routed to a named home, never absorbed, and **individual validity is not
-  sufficiency** — correct, relevant, and proportionate are separate conjuncts, tested
-  separately.
+- **Absorbing adjacent findings** — `pr-lifecycle` applies local ADR-051's
+  per-finding blocking determination and named carry-forward route. Correctness,
+  security and data-loss defects remain blocking in every round. Its general form
+  is [`concept-exploration`](../concept-exploration/SKILL-CANONICAL.md) §Loop Dynamics:
+  work the current story does not require is routed to a named home, and
+  **individual validity is not sufficiency** — correct, relevant and proportionate
+  are separate conjuncts, tested separately. Imported CLASS F/P labels are not a
+  substitute for the local demonstration.
 - **Judgement pipelines** —
   [`agentic-judgment-conserve-by-default`](../../../rules/agentic-judgment-conserve-by-default.md)
   places rigour on the irreversible side. That is this gate's instrument axis with the
@@ -113,16 +112,20 @@ has none.
 
 ## Worked instance — ten rounds that a live trigger would have stopped at four
 
+The following is upstream historical evidence, not Castr's operating threshold.
 PR #570 (MCP-189) ran ten review rounds and twelve cure commits, four of which introduced
 new defects. Three of those four sat in security hardening the ticket had never asked for;
 one, report-provenance verification, had already been ticketed as sequenced-out and was then
 built into the same PR anyway.
 
-The instructive part is not the count. `pr-lifecycle`'s step-back predicate would have
+The instructive part is not the count. The upstream `pr-lifecycle` step-back predicate would have
 fired around round four — _"4 total settled rounds in the epoch"_ — and the two-class
 disposition ruling would have homed the adjacent findings from the first round. **Both
-existed. Neither ran, because no tally store was ever built**, so nothing counted and
+existed upstream. Neither ran there, because no tally store was ever built**, so nothing counted and
 non-convergence had no observable surface.
+
+Castr uses the two-successive-round predicate linked above; it does not import
+that four-round epoch threshold or reset mechanism.
 
 The shepherd then escalated two questions to the owner: how to dispose of the PR, and
 whether the cure-defect pattern signalled a personal reliability problem. Applying this

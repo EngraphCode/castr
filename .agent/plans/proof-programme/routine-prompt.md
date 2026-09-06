@@ -214,6 +214,16 @@ check precedes the STOP landing protocol below, which applies to authorised runs
    no product code; the ADR-051 clause 6 persistence mechanism, merged unattended at the clause 3 bar,
    which covers bookkeeping PRs per the QD-3 amendment; not a slice PR, never substantive
    progress).
+   Also apply the parent's [observational drive-attempt contract](./parent-plan.md#observational-pr-drive-attempt-counter):
+   read `drive_attempts:` from fresh shared state and, at the recorded end-of-drive
+   cutoff, increment the target PR once only if this authorised scheduled drive
+   ends unmerged. Record firing identity and observation with the landing; a retry
+   reuses that increment. Do not merge that target later in the same firing after
+   recording an unmerged ending. Preserve peer entries; retire a count only after
+   an observed merge, preserving its final value in delivery evidence. Paused,
+   interactive, idle and never-started collision-deferral work does not increment
+   it. This observation is independent of substantive progress and creates no
+   numeric response threshold. The authorisation guard above runs first.
 8. **Close**: run the `engraph-session-handoff` skill under the **firing-scoped profile
    (QD-6)** — the handoff's duties instantiated for a zero-context scheduled session,
    never narrowed: the

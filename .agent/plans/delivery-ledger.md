@@ -21,9 +21,23 @@ with content-preservation evidence or an explicit evidenced supersession before
 #81 closes. Do not rewrite or force-push its branch. Closure does not wait for
 unrelated compiler repairs after its own surviving substance is accounted for.
 
-C01 is being implemented on `codex/castr-correction-custody`; its PR and merge
-proof are recorded here when available. No Q-08/Q-14/Q-16/Q-20 completion is
-claimed by establishing custody. Those rows retain their original acceptance.
+## Correction successors
+
+- **C01 complete:** [PR #82](https://github.com/EngraphCode/castr/pull/82) merged on
+  6 September 2026 at `b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93`, head
+  `78c20a5e10aac3e27a1f99e9abd484e74571c2e2`. All 16 checks passed; paired
+  documentation/onboarding and gateway concerns settled; final full live harvest
+  found no unresolved threads or blocking ruleset findings. The
+  [tally](https://github.com/EngraphCode/castr/pull/82#issuecomment-5558613853)
+  records the pre-open specialist round and merge evidence. Custody, inventories
+  and paused authority landed; compiler/document-correction acceptance remains open.
+- **C02 in progress:** `codex/castr-review-discipline`, fresh from the C01 merge,
+  owns Q-19's tally, structural step-back and observational drive-attempt contract,
+  plus the fired bot-citation graduation. Q-19 remains incomplete until its own
+  first-triage tally, gates and integrated-main evidence are available.
+
+No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
+Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
