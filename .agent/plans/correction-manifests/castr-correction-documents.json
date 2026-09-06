@@ -1,0 +1,105 @@
+{
+  "purpose": "Discovery inventory for the Castr documentation and fidelity correction. Inclusion, tags and source relationships do not certify documentation or implementation correctness.",
+  "carrier": "castr-documentation-and-fidelity-correction",
+  "source": {
+    "base_revision": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+    "path_scope": "Every recursive tracked blob at the base revision; index and working-tree changes are not substituted for baseline contents.",
+    "enumeration_command": "git ls-tree -r -z e025d23316e4b175551711a32a09c0f4d492fd1a",
+    "content_command": "git cat-file --batch",
+    "blob_hash": "Git object ID supplied by ls-tree, not a separately computed content checksum.",
+    "inventory_self_inclusion": "This new inventory is outside the baseline. Later additions and removals require a subsequent coverage reconciliation."
+  },
+  "method": {
+    "ordering": "Repository-relative paths, sorted lexically.",
+    "document_like": "Suffix in .md, .mdx, .mdc, .rst or .txt.",
+    "embedded_candidates": "JavaScript/TypeScript-family source containing /** or a .description(, .option( or .addHelpText( call; JSON/TOML/YAML containing a description, instructions or prompt word.",
+    "generated": "Only established reviewer, rule and skill adapter families are labelled generated; other generated-looking files remain undecided unless another discovery tag applies.",
+    "ordinary_undecided": "No positive discovery signal matched; this is not a determination that the file contains no documentation.",
+    "source_paths": "Established canonical/template/registration paths for generated adapters and resolved repository-relative symbolic-link targets, verified to exist at the same baseline; empty elsewhere means not established.",
+    "symbolic_links": "Classify and hash the tracked link blob itself without dereferencing its content. Record its established target in source_paths; the target has its own inventory row.",
+    "counts": "Tags can overlap. Counts describe discovery only. Archive, upstream and other lifecycle/provenance dispositions remain to be reviewed.",
+    "review_state": "All entries start unreviewed with disposition outstanding; no absence of a finding or passing count constitutes correctness evidence.",
+    "review_records": "Immutable CSV membership is separate from mutable reviews keyed by path here. Missing review inherits unreviewed/outstanding defaults; overrides require blob-bound evidence. Semicolon joins tag and source path arrays."
+  },
+  "generation_sources": [
+    {
+      "family": "reviewer-adapters",
+      "implementation": "agent-tools/src/agent-adapter-generate/generator.ts",
+      "source_scope": [
+        ".codex/config.toml",
+        ".codex/agents/*.toml",
+        ".agent/sub-agents/templates/*.md"
+      ],
+      "generation_commands": ["pnpm agents:adapter-generate"],
+      "check_commands": ["pnpm agents:check"]
+    },
+    {
+      "family": "cursor-rule-adapters",
+      "implementation": "agent-tools/src/agent-adapter-generate/generator.ts",
+      "source_scope": [".agent/rules/*.md"],
+      "generation_commands": ["pnpm agents:adapter-generate"],
+      "check_commands": ["pnpm agents:check"]
+    },
+    {
+      "family": "rule-pointers",
+      "implementation": "agent-tools/src/validators/portability/validate-portability.ts",
+      "source_scope": [".agent/rules/*.md"],
+      "generation_commands": ["pnpm portability:check --fix"],
+      "check_commands": ["pnpm portability:check"],
+      "qualification": "Fix mode creates missing Claude/Agents pointers; it does not establish bytewise freshness of all existing pointers."
+    },
+    {
+      "family": "skill-adapters",
+      "implementation": "agent-tools/src/skills-adapter-generate/generator.ts",
+      "source_scope": [".agent/skills/**/SKILL-CANONICAL.md"],
+      "generation_commands": [
+        "pnpm agent-tools:build",
+        "node agent-tools/dist/src/bin/skills-adapter-generate.js --prefix=engraph-"
+      ],
+      "check_commands": ["pnpm skills:check"],
+      "qualification": "Run the commands sequentially from the repository root. Canonical skill discovery is recursive."
+    }
+  ],
+  "counts": {
+    "tracked_files": 2622,
+    "document_like": 1270,
+    "embedded_candidates": 779,
+    "generated": 405,
+    "ordinary_undecided": 573,
+    "document_extensions": {
+      ".md": 1171,
+      ".mdc": 97,
+      ".txt": 2
+    },
+    "discovery_signals": {
+      "cli-or-option-description-call": 1,
+      "configuration-documentation-keyword": 150,
+      "document-extension": 1270,
+      "documentation-comment-marker": 629,
+      "established-adapter-generation-family": 405,
+      "tracked-symbolic-link": 11
+    },
+    "generation_families": {
+      "cursor-rule-adapters": 97,
+      "reviewer-adapters": 36,
+      "rule-pointers": 194,
+      "skill-adapters": 78
+    }
+  },
+  "coverage_check": {
+    "expected_baseline_paths": 2622,
+    "inventoried_paths": 2622,
+    "duplicate_paths": 0,
+    "missing_baseline_paths": [],
+    "unexpected_baseline_paths": [],
+    "result": "exact-baseline-set-equality",
+    "qualification": "This check establishes discovery coverage only."
+  },
+  "membership_file": "castr-correction-documents.csv",
+  "review_defaults": {
+    "review_state": "unreviewed",
+    "disposition": "outstanding",
+    "carrier": "castr-documentation-and-fidelity-correction"
+  },
+  "reviews": {}
+}

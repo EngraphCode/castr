@@ -19,6 +19,9 @@ todos:
     content: 'Pre-02A defect slice F-03: nested Boolean schema false becomes {}'
     status: completed
     depends_on: [Q-00]
+  - id: Q-30
+    content: 'Owner-directed interactive correction commission: split PR #81, correct the complete documentation estate and repair all known in-scope fidelity defects; acceptance and manifests in active/castr-documentation-and-fidelity-correction.md'
+    status: in_progress
   - id: Q-18
     content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of recent expected slots (bounded lookback); a trace-less slot with no STOP file lands a neutral observation entry — a firing cannot distinguish an owner pause from a silent death, so the owner disambiguates from the notification — read and notified per the brief'
     status: pending
@@ -131,15 +134,8 @@ there — after the safety instruments, ahead of Q-05, owner-adjustable);
 Q-28 appended and Q-24..Q-27 physically re-sequenced behind Q-23 in this
 frontmatter at the PR #73 review (the scheduler claims in frontmatter
 order, so the machine queue must carry the documented sequencing itself;
-Q-28 = the measured writer `contentEncoding` loss). Eligible
-now, in queue order: Q-18, Q-20, Q-22, Q-19 (its Q-13 dependency dropped by
-owner card ruling 2026-08-27 — sequenced with the safety instruments), Q-23,
-then Q-05..Q-09, Q-13 (executes
-the B-11 RATIFY outcome), Q-14, Q-16, Q-17; Q-10..Q-12, Q-15 (waits on
-Q-20), and Q-24..Q-29 follow their `depends_on` (Q-29 appended 2026-08-31
-at owner word — the opportunity-probe commission) — Q-10 waits on the Q-14 doctrine
-wave, so a charter-consuming firing never grounds in doctrine surfaces that contradict the
-charter it implements.
+Q-28 = the measured writer `contentEncoding` loss). Current execution authority is defined below. Derive dependency eligibility from
+frontmatter; no separately maintained eligibility list is authoritative.
 **Owner directive (2026-08-22):** turn the
 [proof-programme report (Revision 3)](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md)
 into one parent plan and a series of incremental implementation plans; those plans include
@@ -151,6 +147,50 @@ own header, per [`orientation.md`](../../directives/orientation.md)); this plan 
 recommendations become commitments, one ratified slice at a time.
 
 ---
+
+## Current execution state
+
+**Owner-confirmed 6 September 2026:** the platform-neutral autonomous-development
+experiment is **paused** and its Claude Routine is **disabled**. This is the
+owner's report, not live platform inspection; it says nothing about separate
+Routines. Scheduled execution must stop before provisioning, claims, bookkeeping,
+queue work or PR driving. Intentionally paused intervals are neither missed nor
+failed runs, and do not change failure or zero-progress counters.
+
+**Interactive commission — Q-30 (owner-approved 6 September 2026).** Execute the
+[correction delivery plan](../active/castr-documentation-and-fidelity-correction.md)
+in small coherent PRs, merging each by merge commit when all current-head checks,
+reviews and ruleset conditions hold. This authorises interactive work and merges;
+it does not resume the experiment or scheduled execution. The [delivery ledger](../delivery-ledger.md)
+owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
+this frontmatter remains the sole execution queue.
+
+The commission's sequencing amendment takes precedence for interactive work:
+C01 custody → C02 Q-19 review discipline → C03 public entry → C04 ADR integrity →
+C05 authority/adapters → C06 coupled visions/PDR-135 → C07 doctrine propositions →
+C08 independently green fidelity repairs → C09 estate reconciliation → C10
+walkthroughs/retrospective/closeout. Families split into single-outcome PRs.
+Root-neutral repairs may precede the broad public-root migration; a repair that
+requires changed roots/facets follows those prerequisites. Q-22 lands before its
+dependent fixture work. Preserve each original queue brief's full acceptance and
+technical dependencies; Q-08/Q-14/Q-16/Q-20 complete only after integrated-main
+proof. The prior queue order and counters are otherwise unchanged. Q-18 remains
+the first dependency-eligible scheduled item if future owner authorisation resumes
+the experiment; Q-30 is an interactive commission, not a scheduled pickup.
+
+Settled premises: no published package is planned; there are no consumers yet;
+the owner has intended projects and usefulness is settled. Correctness, usability,
+strictness, fail-fast behaviour and semantic fidelity require proof and repair.
+Q-016 direction is resolved: orchestration above parsers/writers, low-level
+conversion dependencies downward, resolver/policy/prohibited-import proof together.
+Q-30 is complete only when its linked acceptance is proven on main, including all
+known in-scope defects; it does not complete the broader programme.
+
+The August 31 retirement of arming/probe/scorer machinery remains in force.
+Earlier readiness/dry-run/enable descriptions below are historical evidence or
+future validity obligations, never permission to recreate retired machinery or
+resume the paused experiment. The operating protocol applies only to authorised
+firings after this execution-state check.
 
 ## End goal
 
@@ -164,9 +204,10 @@ programme earlier at a narrower ratified scope.
 
 ## Mechanism
 
-Small, independently green, TDD-first slices, executed one at a time by an autonomous
-background loop (fresh cloud session per firing; see §Operating protocol), against a queue this
-plan owns. Owner decisions are front-loaded into one ballot (W-0) and thereafter queued —
+Small, independently green, TDD-first slices against the queue this plan owns.
+Q-30 is the current interactive commission. Autonomous execution is paused; the
+accepted loop design is available only under future owner authorisation (see
+§Current execution state and §Operating protocol). Owner decisions are front-loaded into one ballot (W-0) and thereafter queued —
 never improvised — so the loop runs without the owner between ballots. The report's Section 6
 dependency model orders the tranche tail; this plan does not restate it (document hierarchy:
 the report holds the tranche detail, this plan holds the queue and the operating contract).
@@ -1335,7 +1376,8 @@ whatever best efforts concluded about counting it.
    Fresh sessions re-ground via `start-right-thorough` with the plan /
    metacognition / proportionality stack (owner ruling, 2026-08-26); repo state (this plan,
    thread records, napkin) is the memory between firings.
-2. **Pre-flight**: check the `STOP` file and Routine state (ADR-051 clause 6); register
+2. **Pre-flight**: first apply §Current execution state; while paused, stop before
+   all installation, claims, bookkeeping and PR work. Otherwise check the `STOP` file and Routine state (ADR-051 clause 6); register
    session identity and open the area claim per
    [`register-active-areas-at-session-open`](../../rules/register-active-areas-at-session-open.md)
    and scan `active-claims.json` for any live peer or owner claim — a collision defers the
@@ -1403,14 +1445,14 @@ landing.
 
 ## Prerequisites
 
-- **Blocking for the loop's operation**: none — Q-01 (completed 2026-08-22) proved the
-  firing mechanism end to end; the Routine is owner-created platform state per
-  §Operating protocol step 1.
+- **Execution authorisation**: the experiment is paused. Q-01's historical
+  mechanism proof does not authorise operation; §Current execution state governs.
 - **Blocking for remediation-family slices (Q-02–Q-07, Q-13)**: ballot B-11 — satisfied
   (RATIFY recorded 2026-08-22).
 - **Blocking for the tranche spine (Q-10 onward)**: the T00a charter verdicts — satisfied
   (recorded 2026-08-22) — **and Q-14** (the B-09 doctrine wave), per Q-10's `depends_on`.
-- **Eligible now, in queue order**: Q-18, Q-20, Q-22, Q-19 (dependency dropped 2026-08-27), Q-23, then Q-05..Q-09, Q-13, Q-14, Q-16, Q-17 (Q-02 completed 2026-08-23; Q-03 completed 2026-08-24; Q-04 completed 2026-08-25; Q-21 completed 2026-08-26 — PR #64; Q-18..Q-21 appended 2026-08-24 at owner word — loop-review decision cards; Q-22 appended and the safety instruments sequenced first 2026-08-26 at owner word — QD-11 ruling + arming-walk card; Q-23..Q-27 appended 2026-08-31 at owner word — zod truth-surface & dependency-currency plan; Q-28 appended at the PR #73 review — measured writer contentEncoding loss).
+- **Dependency eligibility**: derive it from the frontmatter and brief gates;
+  execution additionally requires the authority in §Current execution state.
 - **Blocking for Q-24..Q-29**: their `depends_on` chain (Q-23 for all; Q-24 for Q-27; Q-24 AND Q-25 for Q-26; Q-25 for Q-29) — the oracle pins the post-bump vendor, the ADR claims a complement and a dialect that exist, the differential extends the oracle, and the performance guidance describes the post-manifest emission surface.
 - **Blocking for Q-15**: Q-20 (the brief re-scope) — Q-15's 2026-08-22 premises are measured stale (loop review D-4), so the rewrite lands before the row is claimable.
 - **Blocking for Q-19**: none — the Q-13 dependency was dropped by owner card ruling 2026-08-27, re-confirmed against the recorded never-a-second-skill-copy rationale: Q-21 proved the pr-lifecycle canonical safely editable ahead of Q-13, and Q-13's brief now carries the reconciliation duty (value-extract PR #23's skill content against the then-current canonical, never blind-resync).
