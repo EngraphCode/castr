@@ -49,12 +49,15 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Deliver C03a’s local-checkout workflow, then the detailed C03b/c local-use
-slices under the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
-Q-19 is delivered; the [ledger](../../plans/delivery-ledger.md) owns its proof and
-C05 follow-up. No per-PR owner approval wait is needed; correctness, review and gate
-conditions remain mandatory. Preserve completed review waves: batch fixes before
-the next push. The correction thread identifies the current branch and next action.
+C03a is delivered; the [ledger](../../plans/delivery-ledger.md) owns its exact
+merge/review evidence. Integrate the operation-security-empty repair under the
+[correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md),
+then investigate Q-22's paired generator/output repair and its actual semantic
+prerequisites. C03b/c and other prepared drafts retain their bounded carriers.
+Kite hunts Eyrie owns the separate Cricket tooling task; coordinate aggregate runs.
+Q-19 is delivered and C05 retains its attribution cleanup. Correctness, review and
+gate conditions remain mandatory; batch fixes after the running review/CI wave.
+The correction thread identifies the current branch and next action.
 
 ## Deep consolidation status
 

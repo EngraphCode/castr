@@ -2,21 +2,22 @@
 
 ## Current continuation
 
-- Branch: `codex/castr-local-checkout` (refreshed onto main merge `SHA:3ad2ab5d`).
+- Branch: `codex/castr-security-empty-delivery`, based on main merge `SHA:6c3b18f0`.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
 - Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
 - PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
-- Landing target: C03a documents and demonstrates the local-checkout workflow, publication state and actual entry surface.
-- Next safe step: validate and deliver C03a through the reviewed PR lifecycle; preserve C03b/c as distinct subsequent outcomes.
-- Team: root coordinates foundation/integration/gates; delegated source mapping has one owned manifest; reviewers are read-only. Re-read actual claims before writing.
+- Landing target: preserve explicit operation `security: []` through writing and canonical persistence, with absent/empty/anonymous-alternative witnesses under required global authentication.
+- Next safe step: validate the integrated repair, finish specialist review, then deliver through current-head PR conditions. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites.
+- Team: root owns compiler/foundational documentation and integration; Kite hunts Eyrie owns the separate Cricket tooling worktree. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
-- Scheduled execution remains paused; interactive implementation and merges are authorised.
 
-C01R and Q-19 landed, and PR #82’s late findings are settled; the ledger carries exact proof. C05 owns the remaining opening
-attribution cleanup in the PR skill. C10 owns the observed review-wave
-supersession failure; batch any further fixes only after the current review and CI
-wave completes. The local-checkout source draft and extracted C03a worktree remain
-separate, with API/options and response/transport/MCP guides assigned to C03b/c.
+C01R, Q-19 and C03a are delivered at their bounded acceptance; the ledger owns
+exact proof. C03a's five actual review rounds and class-level navigation cures
+remain in its tally. C05 retains the PR skill attribution and rule/reference
+cleanup; C10 retains observed review/continuity-authoring failures. C03b/c source
+drafts remain preserved for their separate API/options and guide outcomes.
+The operation repair does not close PR #18; newly reproduced document-level empty
+security declaration loss has its own finding and repair carrier.
 
 ## Preparation retained for later slices
 
