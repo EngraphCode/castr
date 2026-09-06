@@ -8,7 +8,7 @@
   },
   "schema_contract": {
     "record_key": "findings[].id is unique; original_id preserves the source identifier or null for explicitly locally keyed carry-forwards.",
-    "source_locations": "Every source points to a repository-relative path, verified one-based line and immutable baseline commit.",
+    "source_locations": "Every source points to a repository-relative path, verified one-based line and named immutable revision. Baseline records retain their original revision; post-baseline discoveries identify their own decision and observation revisions.",
     "original_acceptance": "Quoted or directly extracted historical proposal/proof obligation. A source report is evidence, not fresh authority; the correction plan and owner direction govern current execution.",
     "reproduction": "current_reproduction is pending until the actual behavioural counterexample or applicable non-code check is executed on a named revision.",
     "dependencies": "original_dependencies records inherited queue ordering; technical_dependencies contains separately justified repair dependencies. Absence of an entry is not a claim that the entire implementation has no dependencies.",
@@ -21,7 +21,8 @@
       "All F-01 through F-25, including conditional risks explicitly excluded where appropriate",
       "All nine original rejected/downgraded candidates retained without reclassifying them as open defects",
       "Later queue findings and explicit Q-03/Q-04 carry-forwards, including full owner-directed Q-19 implementation and actual demonstration, Q-22 fixture repair, and applicable vendor/differential oracles",
-      "Strict/fail-fast repairs and the proof/doc/enforcement changes necessary to establish them"
+      "Strict/fail-fast repairs and the proof/doc/enforcement changes necessary to establish them",
+      "Post-baseline discoveries within the approved commission, counted separately from the original 96 records; Q-016 architectural enforcement is the first added record"
     ],
     "excluded": [
       "npm registry publication and external-consumer acquisition",
@@ -67,6 +68,10 @@
     "packaging_evidence": {
       "path": ".agent/plans/current/complete/01-packaging-and-types-integrity.md",
       "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a"
+    },
+    "q016_decision": {
+      "path": ".agent/memory/operational/open-questions.md",
+      "commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93"
     }
   },
   "shared_closing_proofs": {
@@ -94,7 +99,8 @@
     "diagnostic-position": "Rendering [value, function, value] preserves array positions while retaining the intended object-property omission behaviour.",
     "historical-disposition": "Preserve the original verified rejection/downgrade and its rationale. Reopen only on a fresh reachable counterexample; alias related surviving findings instead of counting the candidate twice.",
     "conditional-graph": "No implementation in this commission. Preserve the conditional risk and public non-support boundary; graph adapter/certificate work requires a separately authorised capability.",
-    "fixture-generator": "Fix the normalised-fixture generator, regenerate through that generator only, prove exact reproducibility on a clean tree and pass the eleven previously broken parity cases against the regenerated estate."
+    "fixture-generator": "Fix the normalised-fixture generator, regenerate through that generator only, prove exact reproducibility on a clean tree and pass the eleven previously broken parity cases against the regenerated estate.",
+    "q016-architecture": "Separate orchestration above parsers/writers from downward-only conversion utilities. Land actual resolver wiring, complete domain classification, dependency policy and executable prohibited-import proof together. Exercise direct and nested files, re-exports and type-only imports; permit orchestration -> parser/writer and conversion -> shared, reject conversion -> parser/writer/orchestration, writer -> orchestration and production -> test-helper. Removing the resolver or regressing a descriptor must fail the proof. Preserve public conversion behaviour while moving orchestration; run the unchanged repository gates."
   },
   "delivery_evidence_requirements": {
     "code": [
@@ -120,7 +126,9 @@
     "original_rejected_or_downgraded_candidates": 9,
     "later_findings_and_carry_forwards": 16,
     "queue_carriers": 30,
-    "total_finding_records": 96
+    "total_finding_records": 97,
+    "baseline_finding_records": 96,
+    "post_baseline_discoveries": 1
   },
   "queue_carriers": [
     {
@@ -500,8 +508,25 @@
       "original_acceptance": "Acceptance (`non-code`): the skill and counter surfaces carry all three elements grep-checkably, and this row's own PR demonstrates the REVIEW-TALLY comment from its first triage onward; gates green. Watch (falsifier, not acceptance): a bot-reviewed PR opened after landing without a tally artefact means the entry contract is not working.",
       "commission_scope": "in_scope_implementation_and_demonstration",
       "scope_reason": "Explicitly authorised as C02 and required by A4: implement durable REVIEW-TALLY, structural step-back and observational drive-attempt counters, and demonstrate all three on C02's own PR. Owner-directed tally execution is included while autonomous scheduling remains paused.",
-      "current_reproduction": "pending",
-      "proposed_closing_proof": "Demonstrate durable REVIEW-TALLY from the first triage onward, structural step-back and observational drive-attempt counters on C02's own PR. Preserve actual review-round and drive-attempt evidence, correct governing skill/counter surfaces, pass applicable gates and merge with reviewed evidence; prose-only changes do not complete this row."
+      "current_reproduction": "verified_non_code_on_main",
+      "proposed_closing_proof": "Demonstrate durable REVIEW-TALLY from the first triage onward, structural step-back and observational drive-attempt counters on C02's own PR. Preserve actual review-round and drive-attempt evidence, correct governing skill/counter surfaces, pass applicable gates and merge with reviewed evidence; prose-only changes do not complete this row.",
+      "disposition": "applied",
+      "closing_evidence": {
+        "integrated_commit": "dd7e705d6c6e81d45ef5cbdaf2547100f6376bf9",
+        "reviewed_head": "21b5ae2c4b48270d1b1941c20f24b65da4de2f71",
+        "tree_equality_verified": true,
+        "original_acceptance_result": "The canonical PR skill and parent/routine counter surfaces carry all three elements. PR83 REVIEW-TALLY was created at 2026-09-06T10:41:49Z before its first triage and records the actual structural step-back. All 16 current-head checks passed; 13 threads were settled before merge.",
+        "review_tally": "https://github.com/EngraphCode/castr/pull/83#issuecomment-5558683768",
+        "merge_observed_at": "2026-09-06T11:26:47Z",
+        "proof_boundary": "Non-code procedure and actual interactive review evidence. No scheduled execution or drive_attempts increment is claimed.",
+        "remaining_nonblocking_followup": {
+          "owner": "Q-30/C05",
+          "surface": ".agent/skills/pr-lifecycle/SKILL-CANONICAL.md: The review-round tally opening attribution",
+          "action": "Remove Q-19/date provenance wording; retain the immutable upstream snapshot and local ADR-051 distinctions.",
+          "evidence": "https://github.com/EngraphCode/castr/pull/83#discussion_r3943781123",
+          "reopen_condition": "An operative condition or evidence warrant depends on the removed wording, or the snapshot does not substantiate the distinction."
+        }
+      }
     },
     {
       "id": "Q-20",
@@ -3573,6 +3598,203 @@
         }
       ],
       "bounded_historical_evidence": []
+    },
+    {
+      "id": "Q-016",
+      "original_id": "Q-016",
+      "kind": "post_baseline_architecture_finding",
+      "title": "The architectural gate is blind to unresolved imports and misclassified domain files; orchestration remains in downward-only conversion utilities",
+      "source": {
+        "register": "q016_decision",
+        "path": ".agent/memory/operational/open-questions.md",
+        "line": 50,
+        "commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+        "url": "https://github.com/EngraphCode/castr/blob/b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93/.agent/memory/operational/open-questions.md#L50"
+      },
+      "historical_source": {
+        "path": ".agent/memory/operational/archive/q016-direction-2026-09-06.md",
+        "line": 6,
+        "commit": "b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93",
+        "url": "https://github.com/EngraphCode/castr/blob/b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93/.agent/memory/operational/archive/q016-direction-2026-09-06.md#L6"
+      },
+      "original_acceptance": "Owner decision, 6 September 2026: separate orchestration from low-level conversion utilities, then make the architectural gate effective. Resolver wiring, dependency policy and prohibited-import proof land together.",
+      "queue_carriers": ["Q-30"],
+      "delivery_carrier": "C08 architectural repair in .agent/plans/active/castr-documentation-and-fidelity-correction.md; the parent remains the sole execution queue",
+      "closing_proof_ids": ["q016-architecture", "enforcement"],
+      "related_ids": ["R9"],
+      "related_scope_note": "R9 retains its original rejected/downgraded disposition. This distinct record concerns concrete resolver, domain-classification and dependency edges observed in Q-016; it does not silently reopen every historical architectural hypothesis.",
+      "current_reproduction": "architecture_probe_observed",
+      "reproduction_note": "Read-only ESLint API probes and a source census were performed by architecture-expert-barney (q016_architecture_map) on 6 September 2026 at e025d23316e4b175551711a32a09c0f4d492fd1a and relayed by the coordinating agent. This inventory update verified source locations and unchanged source bodies at b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93; it did not rerun those probes. No product-runtime proof, aggregate gate or implementation repair is claimed.",
+      "observation": {
+        "date": "2026-09-06",
+        "revision": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+        "method": "ESLint API with in-memory configuration overrides; no repository configuration or source files changed",
+        "resolver_probe": {
+          "source": {
+            "path": "lib/eslint.config.ts",
+            "line": 454,
+            "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+            "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/eslint.config.ts#L454"
+          },
+          "override": "settings['import/resolver'] = { typescript: { alwaysTryTypes: true } }",
+          "result": "Exposed conversion/typescript/index.ts:3 -> parsers, :4 -> writers and conversion/zod/index.ts:2 -> parsers, previously hidden by unresolved ESM .js imports"
+        },
+        "classification_probe": {
+          "source": {
+            "path": "lib/eslint.config.ts",
+            "line": 466,
+            "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+            "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/eslint.config.ts#L466"
+          },
+          "original_context_pattern": "src/schema-processing/context/**/*",
+          "original_result": "context/template-context.ts was classified isUnknown: true",
+          "in_memory_context_pattern": "src/schema-processing/context",
+          "result": "Actual-domain-root descriptors exposed context/template-context.ts:20 -> parser buildIR, context/index.ts:21 -> parser re-export and writers/zod/index.ts:4 -> context TemplateContextOptions"
+        },
+        "dependency_edges": [
+          {
+            "kind": "conversion_to_parser",
+            "source": {
+              "path": "lib/src/schema-processing/conversion/typescript/index.ts",
+              "line": 3,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/conversion/typescript/index.ts#L3"
+            },
+            "target_specifier": "../../parsers/openapi/index.js"
+          },
+          {
+            "kind": "conversion_to_writer",
+            "source": {
+              "path": "lib/src/schema-processing/conversion/typescript/index.ts",
+              "line": 4,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/conversion/typescript/index.ts#L4"
+            },
+            "target_specifier": "../../writers/typescript/index.js"
+          },
+          {
+            "kind": "conversion_to_parser",
+            "source": {
+              "path": "lib/src/schema-processing/conversion/zod/index.ts",
+              "line": 2,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/conversion/zod/index.ts#L2"
+            },
+            "target_specifier": "../../parsers/openapi/index.js"
+          },
+          {
+            "kind": "context_to_parser",
+            "source": {
+              "path": "lib/src/schema-processing/context/template-context.ts",
+              "line": 20,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/context/template-context.ts#L20"
+            },
+            "target_specifier": "../parsers/openapi/index.js"
+          },
+          {
+            "kind": "context_parser_reexport",
+            "source": {
+              "path": "lib/src/schema-processing/context/index.ts",
+              "line": 21,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/context/index.ts#L21"
+            },
+            "target_specifier": "../parsers/openapi/index.js"
+          },
+          {
+            "kind": "production_to_test_helper",
+            "source": {
+              "path": "lib/src/schema-processing/conversion/zod/index.ts",
+              "line": 3,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/conversion/zod/index.ts#L3"
+            },
+            "target_specifier": "../../../test-helpers/generate-zod-schema.js"
+          }
+        ],
+        "writer_context_type_edges": [
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/zod/index.ts",
+              "line": 4,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/zod/index.ts#L4"
+            },
+            "symbol": "TemplateContextOptions",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          },
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/zod/generators/collections.ts",
+              "line": 3,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/zod/generators/collections.ts#L3"
+            },
+            "symbol": "TemplateContextOptions",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          },
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/zod/generators/composition.ts",
+              "line": 15,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/zod/generators/composition.ts#L15"
+            },
+            "symbol": "TemplateContextOptions",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          },
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/typescript/index.ts",
+              "line": 2,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/typescript/index.ts#L2"
+            },
+            "symbol": "TemplateContext",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          },
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/typescript/endpoints.ts",
+              "line": 4,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/typescript/endpoints.ts#L4"
+            },
+            "symbol": "TemplateContextOptions",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          },
+          {
+            "source": {
+              "path": "lib/src/schema-processing/writers/typescript/mcp.ts",
+              "line": 2,
+              "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+              "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/lib/src/schema-processing/writers/typescript/mcp.ts#L2"
+            },
+            "symbol": "TemplateContextMcpTool",
+            "target": "lib/src/schema-processing/context/index.ts",
+            "import_kind": "type-only"
+          }
+        ],
+        "remaining_classification_and_proof_gaps": [
+          "Production conversion/zod imports test-helpers/generate-zod-schema, while test helpers have no boundary classification",
+          "Existing dependency-cruiser rules check encapsulation rather than the complete downward dependency direction",
+          "The existing architecture test does not execute the ESLint boundaries matrix"
+        ],
+        "limitations": "The configuration overrides diagnose current enforcement blindness. They are not a committed policy, an exhaustive repaired architecture or proof that merely moving two conversion wrappers closes the finding."
+      },
+      "disposition": "in_scope_repair_outstanding",
+      "scope_reason": "Q-016 direction is owner-resolved; implementation and effective enforcement are explicitly included in C08. The autonomous pause does not prohibit the authorised interactive repair.",
+      "original_dependencies": [],
+      "technical_dependencies": [],
+      "bounded_historical_evidence": [],
+      "closing_evidence": "pending: actual-config red/green prohibited-import tests, positive downward/orchestration cases, resolver/descriptor regression sensitivity, preserved conversion behaviour and repository gates",
+      "implementation_sequence": "Prepare writer contracts below context orchestration and remove the production-to-test-helper dependency as required. Land resolver wiring, domain classification, dependency policy and executable positive/negative import proof together. Preparatory contract moves may be incremental, but do not complete architectural acceptance."
     }
   ],
   "scope_audit": {
@@ -3607,6 +3829,6 @@
       "New formats/new runtime products and optional lossy expansion",
       "Autonomous scheduling/resumption and recreation of retired arming/probe/scorer machinery"
     ],
-    "preserved": "Original source IDs, immutable baseline locations, original acceptance/dependencies and all pending current-reproduction states are unchanged."
+    "preserved": "The original 96 finding records retain their source IDs, immutable baseline locations, original acceptance/dependencies and current-reproduction states. The added Q-016 record carries its own architectural observation and outstanding closure; 46 original findings, 25 programme findings/risks, nine rejected/downgraded candidates and 16 later baseline records remain the baseline counts."
   }
 }
