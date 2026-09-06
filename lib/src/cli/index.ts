@@ -45,7 +45,7 @@ function writeCliMessage(message: string): void {
 
 program
   .name('castr')
-  .description('Generate Zod schemas and endpoint metadata from an OpenAPI specification')
+  .description('Generate Zod schemas from OpenAPI, with endpoint metadata by default')
   .version(getPackageVersion())
   .argument('<input>', 'path/url to OpenAPI/Swagger document as json/yaml')
   .option(

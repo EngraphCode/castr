@@ -77,8 +77,9 @@ That command intentionally fails. Do not treat an error as generated output.
 Strictness, fail-fast behaviour and source-dialect fidelity are required in every
 path. They include accepted values and produced values, object openness and
 catchalls, and ordered processing. Current violations require repair; this
-walkthrough proves only its explicit fixture contract. Remaining findings live
-in the [correction inventory](../.agent/plans/correction-manifests/castr-correction-findings.json).
+walkthrough proves only its explicit fixture contract. The
+[Practice bridge](../.agent/practice-index.md) routes current implementation
+evidence and repair ownership.
 
 - [API reference](./API-REFERENCE.md)
 - [Examples](./EXAMPLES.md)
