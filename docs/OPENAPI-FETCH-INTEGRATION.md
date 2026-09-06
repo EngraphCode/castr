@@ -14,8 +14,13 @@ That boundary is deliberate. If first-party transport or framework helpers are a
 
 ## Generate The Building Blocks
 
+Complete the [local checkout and build](./USAGE.md#build-and-generate) first.
+Run these commands from the checkout root, replacing `./openapi.yaml` with
+your OpenAPI document path.
+
 ```bash
-castr ./openapi.yaml -o ./src/api.ts --with-validation-helpers --with-schema-registry
+mkdir -p src
+node lib/dist/cli/index.js ./openapi.yaml -o ./src/api.ts --with-validation-helpers --with-schema-registry
 ```
 
 That gives you:
