@@ -27,6 +27,16 @@ C09 reconciles every thread and plan against its acceptance; the former thread
 inventory and all prior next-step narratives are [conserved verbatim](archive/correction-entry-paths-2026-09-06.md).
 The loop-review record's completed rows await evidence-based lifecycle staging.
 
+The retained thread index below preserves direct custody until C09 reconciles
+acceptance, current framing and lifecycle. A dated thread claim is historical
+evidence; this index does not declare these threads retired or reactivate them.
+
+| Thread                                                                                         | Retained custody and next check                                                                                                                                                               |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Consolidation Routine and Watcher](threads/consolidation-routine-and-watcher.next-session.md) | Separate knowledge-curation Routine and Watcher history. Current platform state is unverified; the proof-programme pause does not establish it. C09 owns record and lifecycle reconciliation. |
+| [Initial Castr review](threads/initial-castr-review.next-session.md)                           | Initial review evidence and strategy-estate intentions. C09 reconciles surviving obligations with the correction plan before changing lifecycle.                                              |
+| [Proof-programme loop review](threads/proof-programme-review.next-session.md)                  | Review evidence, routed findings and additive identities. C09 verifies original acceptance before completion staging; this review record does not authorise queue execution.                  |
+
 ## Repo-wide invariants
 
 Use fresh feature branches/worktrees from current main, one coherent outcome per
@@ -39,12 +49,12 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Complete [C02 review discipline](threads/castr-correction.next-session.md), then
-C01R's post-merge custody corrections and C03's local-use slices under the
-[correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
-No per-PR owner approval wait is needed; correctness, review and gate conditions
-remain mandatory. C01 merged, but its later review findings remain explicitly
-owned until the corrective proof lands.
+Complete C01R's post-merge custody corrections, then C03's smaller local-use
+slices under the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
+Q-19 is delivered; the [ledger](../../plans/delivery-ledger.md) owns its proof and
+C05 follow-up. No per-PR owner approval wait is needed; correctness, review and gate
+conditions remain mandatory. Preserve completed review waves: batch fixes before
+the next push. The correction thread identifies the current branch and next action.
 
 ## Deep consolidation status
 

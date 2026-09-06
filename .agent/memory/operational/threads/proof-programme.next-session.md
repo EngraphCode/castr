@@ -14,6 +14,26 @@ and PR state in the [ledger](../../../plans/delivery-ledger.md). Read these befo
 work. Do not derive execution permission from historical firing or arming records.
 The former record is [conserved verbatim](../archive/correction-entry-paths-2026-09-06.md).
 
+- **Branch and invocation:** the [correction thread](castr-correction.next-session.md)
+  owns the current interactive branch and continuation pointer. Begin an
+  authorised interactive continuation with `engraph-start-right-thorough` and
+  that record. Scheduled invocation is prohibited while the experiment is
+  paused; the [standing prompt](../../../plans/proof-programme/routine-prompt.md)
+  is an inspection surface, not permission to run it.
+- **Next safe action:** read the parent's execution state, the correction
+  continuation, the current delivery plan and ledger; reconcile live claims
+  before taking the next authorised interactive slice. Future resumption must
+  follow the parent's authority and reconcile interactive custody first.
+- **Team expectation:** no scheduled execution team is active by this record.
+  Interactive coordination follows the correction thread and live claims; the
+  coordinator owns final integration and aggregate checks, with bounded
+  specialist work assigned explicitly.
+- **Acceptance:** preserve the pause, the sole queue authority and every
+  outstanding obligation. Interactive delivery satisfies the correction plan's
+  acceptance on integrated main; a resolved design direction or a historical
+  firing does not prove implementation complete. C09 owns this record's final
+  lifecycle reconciliation and retains the identities below.
+
 ## Participating agent identities
 
 Additive per PDR-027 — joining adds an identity; a matching platform/model/agent_name
