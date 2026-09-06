@@ -1,0 +1,13 @@
+{
+  "base": "e025d23316e4b175551711a32a09c0f4d492fd1a",
+  "head": "33be633862864ce8efb22e70abbbe9bce863c510",
+  "source_pr": 81,
+  "source_branch": "codex/plan-estate-refresh",
+  "scope": "All original diff file records and hunks with rename detection disabled; mode-only diffs use their header as the single record. Every record starts outstanding.",
+  "command": "git diff --no-renames --unified=3 e025d23316e4b175551711a32a09c0f4d492fd1a 33be633862864ce8efb22e70abbbe9bce863c510",
+  "membership_file": "castr-correction-source.csv",
+  "file_records": 136,
+  "hunk_records": 274,
+  "disposition_default": "outstanding",
+  "successor_evidence": {}
+}

@@ -6,6 +6,22 @@ zero-context session: this file plus the repo surfaces it names are your whole b
 Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating protocol) and
 [ADR-051](../../../docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md).
 
+## Execution authorisation — before every other instruction
+
+Read the parent plan's [current execution state](./parent-plan.md#current-execution-state)
+first. The platform-neutral autonomous-development experiment is paused and its
+Claude Routine disabled, owner-confirmed on 6 September 2026. While that state
+holds, stop: no provisioning/install, claim, counter/bookkeeping write, queue
+pickup, PR drive or platform-state change. A brief response may report the pause;
+it is not a failed or missed firing. Do not treat intentionally paused intervals
+as missing predecessor slots or increment any counter for them.
+
+Q-30 authorises a separate interactive commission; it cannot be claimed by this
+scheduled prompt. Do not infer permission from dependency eligibility, an old
+enable instruction, the absence of STOP or a platform trigger arriving. Future
+scheduled work requires fresh owner authorisation recorded in the parent. This
+check precedes the STOP landing protocol below, which applies to authorised runs.
+
 ## Exit criteria (declared before anything runs)
 
 - **This firing** ends when it has driven or advanced exactly one slice (or completed one

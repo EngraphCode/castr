@@ -7,6 +7,13 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).
 
 Local shorthand for this repo: strict and complete everywhere, all the time. Code, doctrine, plans, prompts, and proofs must agree before a support claim is honest.
 
+## Current work
+
+The [correction plan](plans/active/castr-documentation-and-fidelity-correction.md)
+owns the interactive commission's acceptance. The [parent queue](plans/proof-programme/parent-plan.md#current-execution-state)
+owns sequencing and records the autonomous experiment's pause. PR custody lives
+in the [delivery ledger](plans/delivery-ledger.md).
+
 ## Directives
 
 | Directive                                                                                   | Purpose                                   |

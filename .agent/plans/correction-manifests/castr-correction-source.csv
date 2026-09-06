@@ -1,0 +1,275 @@
+path,hunk,locator,sha256,carrier
+.agent/IDENTITY.md,1,"@@ -1,443 +1,129 @@",5a04f3a5b8209894592790c1a1400f0d3d7c6ae8271e163251edfaa350144623,C07
+.agent/README.md,1,"@@ -1,7 +1,7 @@",0945d0644042dec072e32724b47db31d031ad2a9abf578e16fcf9bbf152a9970,C09
+.agent/README.md,2,"@@ -28,50 +28,31 @@ Then use:",033d298e3a0ba78566208b89ace13be99f8e45f6a2214244e9fcd7e7e5155abd,C09
+.agent/README.md,3,"@@ -80,7 +61,8 @@ Then use:",3c7942dd5564eef30f88e7bf0cce76fbe750e2f15f475dbb650740a50ec147fe,C09
+.agent/README.md,4,"@@ -104,7 +86,7 @@ Then use:",1ba718d3f88c03097156a1ea3f1e826e324596d319ec235b215b570bb4c6319b,C09
+.agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md,1,"@@ -6,7 +6,7 @@ general opportunities for improvement, alongside the plan's structured legs).",a32fb558ae2862d5f87467147b1eb14677ee376dbf429ef05ff791fedcb3b34a,C09
+.agent/claude-harness-integrations/account-access.md,1,"@@ -1,10 +1,14 @@",8ac050c968a8eb09ca46a1ecb38f2784b8941d00fab2050ef3ca053910bf4892,C09
+.agent/claude-harness-integrations/account-access.md,2,"@@ -29,8 +33,10 @@ consumer.",715343ec3f65ab641481b64c009ff4f87a3ac6063fdb6874374c328c4a5660d7,C09
+.agent/claude-harness-integrations/account-access.md,3,"@@ -49,18 +55,23 @@ in `repo-continuity.md`).",aad3f6b06a9278228f1537240dc7b62cd79d188dcd41b28cc65622f2b12ad00a,C09
+.agent/claude-harness-integrations/account-portability-register.md,1,"@@ -15,21 +15,21 @@ restart on a new account hitting an account-side dependency this table does not",9976626819ca80458925926a5b7eae488cf06ab539ae48f6ed9a57ec9a4cd9c2,C09
+.agent/claude-harness-integrations/account-portability-register.md,2,"@@ -53,9 +53,13 @@ same arc.",09b6ac04e704118fee9a26572206c3dbc78d9f90c33a3677711cb7da7d8791a1,C09
+.agent/claude-harness-integrations/cloud-environment.md,1,"@@ -43,6 +43,54 @@ path (owner word 2026-08-24).",07012f68a34ad9d796570abd2412d211dd1188657ea8823ed7b41ef1bd2b80c2,C09
+.agent/directives/ADR-044-drop-openapi3-ts-adopt-scalar-types.md,1,"@@ -1,55 +0,0 @@",ca8375b1ba0f58aba804952e83805816ad784802d5cd3ee70848aba8c36eb24c,C04
+.agent/directives/ADR-045-strict-reexport-module-openapi-types.md,1,"@@ -1,79 +0,0 @@",572a54a2902e343f147cfb8e71d8b09fb929595c724b2fdbcf96fe57094e11fc,C04
+.agent/directives/ADR-046-separate-storage-additional-operations.md,1,"@@ -1,45 +0,0 @@",c2eda4e26c6bb2606b603117df4ebb90055046da2ba73aea1f59e3c223f4a3b5,C04
+.agent/directives/AGENT.md,1,"@@ -1,6 +1,6 @@",b0cc3e3a754adbe1fdcc4fb085e2a5a646904f8377ca35e2c53a2e7aa8a02021,C09
+.agent/directives/AGENT.md,2,"@@ -12,7 +12,7 @@",db5550db8e4508160d18a4bae19d4e8d9c1e5fc5a4cf6e263d47af5ae7a417fd,C09
+.agent/directives/AGENT.md,3,"@@ -23,12 +23,12 @@",cb373b1f88176598b4acb63a8a40274416e677268dbb43dd9ac0e7293236a434,C09
+.agent/directives/AGENT.md,4,"@@ -52,7 +52,7 @@",8f85a3b1e69b119159678ea209576c54188894e30141d60c9b71086dce05df70,C09
+.agent/directives/AGENT.md,5,"@@ -151,7 +151,7 @@ Domain experts (castr schema surface):",356fce0e8f66e6e8849be6c1a1603bd6ec8cbb2816f558cf506802e99cbc09df,C09
+.agent/directives/DEFINITION_OF_DONE.md,1,"@@ -1,6 +1,6 @@",4fde2a1665ceac84848314fef62d3ac9bed978df3dfd42c298943f31dd21b62e,C07
+.agent/directives/DEFINITION_OF_DONE.md,2,"@@ -30,6 +30,11 @@ Do not invoke `pnpm qg` directly. It may remain as a script implementation detai",a678676ab754d7476d5b6f095c111f44b3cdee02a7993cafd765ea91920cd277,C07
+.agent/directives/DEFINITION_OF_DONE.md,3,"@@ -37,6 +42,7 @@ set -euo pipefail",b600dd15bc4e55ee16e3db5cf6015b6ed29137c84b0d6ecc96dd9b8233b94ccb,C07
+.agent/directives/DEFINITION_OF_DONE.md,4,"@@ -45,9 +51,12 @@ pnpm madge:circular",ff47db41fb8584f2fb11185ca643ad8f094169393498342f2ca43016251bc31e,C07
+.agent/directives/PRACTICE-VISION.md,1,"@@ -0,0 +1,66 @@",ca40c040910cca1bc4227449188617e9b5a23e9eb54d976017923ef37239f9a4,C06
+.agent/directives/VISION.md,1,"@@ -1,248 +1,141 @@",9773c6e86ae2df3ce1accb36555305bca145ceb460cb2d3c419794e03f64b2b2,C06
+.agent/directives/principles.md,1,"@@ -2,7 +2,7 @@",56678fc7b83e30b971f417d60f7752b05ed1a5d2aa858ae5625dc6dcc38f06fc,C07
+.agent/directives/principles.md,2,"@@ -79,9 +79,9 @@ the lenses, is owner-bound. Dissolution before escalation.",e11a6724348d2868169bff0f4540c04ca2726b73c5bfe2e3734fa6425f957d91,C07
+.agent/directives/principles.md,3,"@@ -116,50 +116,74 @@ graph LR",c5a4d165ad6cced96d8303ee4ce489be2bd0f35fbc47cea8d43dfead06f336cd,C07
+.agent/directives/principles.md,4,"@@ -180,10 +204,10 @@ Before any work, always ask:",26f28d5e6d95fa3f75fcc7e4cef48a9f51714af8c1005a949819d27b943614d0,C07
+.agent/directives/principles.md,5,"@@ -233,7 +257,7 @@ default:",fe9cac1efaf2333bb7d1681bfda854b7f6c0ab6b82cacc8ddd00e9ec864519e7,C07
+.agent/directives/principles.md,6,"@@ -1436,7 +1460,8 @@ if (Object.keys(schema).length === 0) continue;",dbc60b0360183718e26f9cf4303133da117212fa1ec27a1d53bf27eee1b72fdb,C07
+.agent/directives/principles.md,7,"@@ -1730,14 +1755,12 @@ Before any major release or phase completion, a **comprehensive documentation sw",d29aceda0eafa31e0ced8b576e44bb85441b4908af3848ab4cdc84f989ad2195,C07
+.agent/directives/requirements.md,1,"@@ -21,19 +21,38 @@ If any conflict exists, **this requirements document is the source of truth**.",e5d54f7a4876ae0e351fbf0f83c1199dea264a1566768962ea553c1a44c26848,C07
+.agent/directives/requirements.md,2,"@@ -41,15 +60,15 @@ Castr must be strict and complete everywhere, all the time.",6a52260f89a241fec6970f0eda0e77d46293987f08a1bf8587982c55158a80e9,C07
+.agent/directives/requirements.md,3,"@@ -105,7 +124,10 @@ The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specificatio",433ebea60caa5c44a8fa5e9309b3850a18d17019af69e70d7934698827a0510c,C07
+.agent/directives/requirements.md,4,"@@ -139,7 +161,7 @@ The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specificatio",386842b38ddbcfee35ecab61d07fd9b6a339a8a29732bad281bd77c780e0b88b,C07
+.agent/directives/requirements.md,5,"@@ -163,7 +185,8 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit",8ade12366cf8a03c662819bbd6ddcb72cecbcaf7dde7f562bb0291d7f94cd29f,C07
+.agent/directives/requirements.md,6,"@@ -173,7 +196,7 @@ In addition to 3.0.x syntax (with upgrades), the system MUST support 3.1.x addit",95add2135a5d2b2ec1c6f0b55de802b75f0d37c7922677fefb68d112efcabe64,C07
+.agent/directives/requirements.md,7,"@@ -202,7 +225,7 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept",97e6b0b8289b2d5c3a8f33735f5779ce53fba11bae0fa907ed8e1b31cf597ff1,C07
+.agent/directives/requirements.md,8,"@@ -218,7 +241,13 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept",6bbd12cd6faa7f8a1566c77bc2fa2c396e5584b3a20352cd568cd8dc92792050,C07
+.agent/directives/requirements.md,9,"@@ -232,21 +261,24 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept",6dd74512017da9198a5a23da80b0d459b16f2093ff0214f93619c10ff0aa1397,C07
+.agent/directives/requirements.md,10,"@@ -255,43 +287,43 @@ ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as c",18d8da9f2db3458d2a9f5d7ce78e854c3dff41c5fc776066ec38f7543c5bdfa0,C07
+.agent/directives/requirements.md,11,"@@ -354,28 +386,37 @@ This keeps behavior strict, predictable, and lossless while still honoring expli",bca9689468793c651f151e1df8b1eb951f37af58589517500e1b8810ab915965,C07
+.agent/directives/requirements.md,12,"@@ -384,7 +425,7 @@ This keeps behavior strict, predictable, and lossless while still honoring expli",57936bd2f24fee083cd1d6b5089cdd45195533fa97d9799ef7b9035f8558d27c,C07
+.agent/directives/requirements.md,13,"@@ -404,7 +445,7 @@ This keeps behavior strict, predictable, and lossless while still honoring expli",50de323b001815004aae62d253a32a633e328916e505b9455e8b76600ffaf2c7,C07
+.agent/directives/requirements.md,14,"@@ -448,10 +489,10 @@ All test fixtures must have documented provenance:",304a237395ac33993009fb0cbb52e5c158579760297be1e6430904793a6a0997,C07
+.agent/directives/testing-strategy.md,1,"@@ -395,7 +395,10 @@ These layers define the structured acceptance criteria for the Castr pipeline. E",6d3db2ace15ba0dce821a567bbc11fd9ad250f130cd34f6aa300607baeda5cf1,C07
+.agent/memory/active/napkin.md,1,"@@ -2,6 +2,29 @@",961c102d2c7511a57e8a5a1c350dfbb79202f3d1be9b61f8bc8f8a4309816b2c,C09
+.agent/memory/active/patterns/README.md,1,"@@ -305,7 +305,7 @@ drifts. Do not edit the region between the sentinels by hand.",caaab0d6d9738988e7e0a4a634f1f0144f7bcb0a91284c431065dc4a6c0b9bb9,C09
+.agent/memory/active/patterns/autonomous-background-programme.md,1,"@@ -1,7 +1,7 @@",0862246baa8e05772f9fc940970a0a333b3de66970319f4de4cea8b4587f23a3,C09
+.agent/memory/active/patterns/autonomous-background-programme.md,2,"@@ -13,24 +13,30 @@ barrier:",ed8e110a601522a795796c4a93bf4618bd937710e8a76912bb34c634a2f43077,C09
+.agent/memory/active/patterns/autonomous-background-programme.md,3,"@@ -57,9 +63,9 @@ not yet exercised by a subsequent firing.",82e604fdb99f33a496cd0ee3aba9956a503fb2b14cc53d7bcf2fd1fa291607b7,C09
+.agent/memory/active/patterns/autonomous-background-programme.md,4,"@@ -87,11 +93,11 @@ not yet exercised by a subsequent firing.",07bb93937799e050409ce6d8e43c6b2392aa60f9db23d3a07832e27d7a7571fe,C09
+.agent/memory/active/patterns/autonomous-background-programme.md,5,"@@ -121,27 +127,23 @@ not yet exercised by a subsequent firing.",b6cffc2a0a7e706accad2b9a29089397ae07393888e559f24156300bea712fd1,C09
+.agent/memory/active/patterns/templates-encode-failure-modes.md,1,"@@ -67,7 +67,7 @@ When sharpening a doctrine, principle, or rule:",fc644ada8cd592637fea4e64277bab04754d4b7f43d641564ba7be60fb93a7c0,C09
+.agent/memory/active/patterns/templates-encode-failure-modes.md,2,"@@ -79,7 +79,7 @@ templates and the in-flight plans, not just the directive itself.",2bcd3397ea58bcdfcb76ad4d20836aed28b894e9a8c1775ef595cafdbcec6d6a,C09
+.agent/memory/operational/archive/entry-paths-2026-09-06.md,1,"@@ -0,0 +1,1210 @@",9b2013ff8c6a590c04f6b0451a9a9d380216b4c7c3278b351efcbc77b5221966,C09
+.agent/memory/operational/archive/plan-estate-2026-09-06.md,1,"@@ -0,0 +1,1654 @@",ad55cfa9941757edc4389ab41e86231620a32cd053c85fb60868476dce16d1f8,C09
+.agent/memory/operational/open-questions.md,1,"@@ -27,39 +27,43 @@ owning artefact / discussion home (if any), and a status line.",b99fa8f76b2684f9468476ef3a133d016b74bdcadaa2bb0c6193a6d935697e02,C09
+.agent/memory/operational/pending-graduations.md,1,"@@ -59,24 +59,11 @@ Live in `distilled.md` (two entries) + `practice-loop-closure-remediation.md`.",c366b0aa42b9362fce12a7a8e045d8f69048934fe5d9b1894c60b13725aecb3a,C09
+.agent/memory/operational/pending-graduations.md,2,"@@ -88,9 +75,18 @@ collision machinery for a shared remote, and the tap-to-answer owner ballot. Can",294c6bc426557917b69526b9fe1efd13140464070723f9257191ec50a73bf50b,C09
+.agent/memory/operational/repo-continuity.md,1,"@@ -1,585 +1,90 @@",1eb5d7570f265f1488cb2d9085e80bed9753c0f78e628a4d7e20f1e92425fa24,C09
+.agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md,1,"@@ -6,9 +6,60 @@ record carries only the repo-side state).",56e14a05eb3cd13fd0f02572d54ea9e1fbaed339411099fa337da6b786f66d51,C09
+.agent/memory/operational/threads/initial-castr-review.next-session.md,1,"@@ -1,7 +1,8 @@",172ee6a405dfbeba49f295ddd43977b3fc95bea6627f89d1aca47450733534e2,C09
+.agent/memory/operational/threads/initial-castr-review.next-session.md,2,"@@ -12,6 +13,38 @@ mandated. Branch: `feat/initial-castr-review`.",5fa239e15a9552cef49d959964be272ad44017fe7012f5a632adab4cad7bb9f9,C09
+.agent/memory/operational/threads/plan-estate-refresh.next-session.md,1,"@@ -0,0 +1,36 @@",ab829807e12e885b7522f99c019b16e9fab9ea31f2f454480ebc9d2c363347d7,C09
+.agent/memory/operational/threads/practice-transplant.next-session.md,1,"@@ -5,13 +5,11 @@",3df3ae6a41c8fc85f75d365bcd19dff9f5222d0cf98aec41362758429b5e08dc,C09
+.agent/memory/operational/threads/practice-transplant.next-session.md,2,"@@ -25,27 +23,74 @@ constraint is now lifted, so the thread is recorded as a multi-lane container.",8f8390c4d7f6f2ef9b5745e6c2596f4d6e05a6711363eaf5353e518dda400114,C09
+.agent/memory/operational/threads/proof-programme-review.next-session.md,1,"@@ -1,10 +1,41 @@",cd122389704761a4f5180b1d40d8caf17c8cba3c4fa124d24e64b7c93554ff81,C09
+.agent/memory/operational/threads/proof-programme-review.next-session.md,2,"@@ -47,7 +78,7 @@ addendum's ""Second decision card"" section. Main was merged forward",4c0fc3e556aad21192d6302016b0c53025517987dadfb8f68417c3acd1a37f44,C09
+.agent/memory/operational/threads/proof-programme-review.next-session.md,3,"@@ -142,3 +173,4 @@ OP-4; the remaining OPs are queue-routable.",fb1e41722815572de4f6e3728eb0b4c822901a26c28539fcda5998dc2cb07c9b,C09
+.agent/memory/operational/threads/proof-programme.next-session.md,1,"@@ -1,24 +1,20 @@",aea3a6508a670f9e912dfd5be74f2b702e7705971b5bcdb7b295516bf3dd698a,C09
+.agent/memory/operational/threads/proof-programme.next-session.md,2,"@@ -38,37 +34,29 @@ programme's delivery evidence rather than retro-filled here.)",b79813895dcbc5e8fac2439ef64c94913714b9936bd43c2d4b4ad12b30cc4dfe,C09
+.agent/plans/active/README.md,1,"@@ -65,7 +65,7 @@ If a conclusion is durable, promote it to permanent docs or ADRs before the plan",5e71cfd6a1dfaa0f04cce7f03f6bd9c6ab410028b91e28e9807908d4cad53696,C09
+.agent/plans/active/README.md,2,"@@ -171,8 +171,8 @@ repudiated the parking framing outright on 2026-06-09.)",d959d32ac2b5451cbaccfaa0f219f8bb164fbda8fa3c3e34dd2fbab13aefaeb3,C09
+.agent/plans/active/proof-programme-loop-review.md,1,"@@ -1,185 +0,0 @@",22ee86643761b934916eed490d894ea86521ad6efc0aa1401b93cee7a34d8ec9,C09
+.agent/plans/current/archive-pii-scrub.md,1,"@@ -1,25 +1,34 @@",c1b4a3adadd2f5faaf22fdbb7bf885a2b47d3d046b6299be703aac660f93e0e7,C09
+.agent/plans/current/archive-pii-scrub.md,2,"@@ -28,7 +37,7 @@ pattern set that `policy.json` single-sources (the validator and the write-time",d4a5567cb483fd741920723877f633b614b2e81f26959fe8cbaa056fc0ae8653,C09
+.agent/plans/current/archive-pii-scrub.md,3,"@@ -39,18 +48,30 @@ share it — one pattern set, three consumers, no drift):",104926c9f2334ec720f9208b50008ba512445c6f077bd2f4d0b59347dc643680,C09
+.agent/plans/current/complete/3.3a-02-eslint-enforcement-redesign.md,1,"@@ -22,7 +22,7 @@ Enable ADR-026 strict enforcement with ABSOLUTE strictness — no grey areas, no",ff9cbfd4f739ed259576d3218cc7a60625846b2279947c707d4fd681a5ebd6d5,C09
+.agent/plans/current/complete/3.3a-02-eslint-enforcement-redesign.md,2,"@@ -135,7 +135,7 @@ Invalid (should report):",b5f388f3a1d98b298ef0f2745f04aeb869433c975435c507575831ece8598b24,C09
+.agent/plans/current/complete/3.3a-03-zod-parser-semantic-parsing.md,1,"@@ -28,7 +28,7 @@ This is an architectural correctness change, not a style cleanup.",a5de4628941a967d16a11281b48333e7af98f3382599c80ac7bdee17edb1c359,C09
+.agent/plans/current/complete/3.3a-03-zod-parser-semantic-parsing.md,2,"@@ -499,5 +499,5 @@ pnpm character && pnpm test:transforms",92e7b0e7fde1ce6d1114746bff22d1bd7f12cf48eb5a5ff6806e9f9856973c90,C09
+.agent/plans/current/complete/3.3b-04-format-parity-hostname-float.md,1,"@@ -1,14 +1,19 @@",02c203a7f7bfcc8f68d6c76f10bc2687f4fa84e295be5a7d940bfb7fcaa63a04,C09
+.agent/plans/current/complete/anchor-and-dynamic-references.md,1,"@@ -92,5 +92,5 @@ These are **IR Rule 3 violations**: features that exist in JSON Schema 2020-12 (",e7a528de147476050c7d6d34e75d8ab628f6cc7a422291e5666e2957d292f3e7,C09
+.agent/plans/current/complete/architecture-review-packs.md,1,"@@ -9,7 +9,7 @@",d1d413f793ad111e53ae8a56e09319ad6b9ac962bed3aea0fb125d769698e92e,C09
+.agent/plans/current/complete/architecture-review-packs.md,2,"@@ -33,7 +33,7 @@ This sweep evaluates not only strictness but completeness: a surface is not heal",26c8e0322bd2cd22e101241290f3eb4e7eb5bd82c29097f5c74d8f69ef6ac7ff,C09
+.agent/plans/current/complete/architecture-review-packs.md,3,"@@ -47,9 +47,9 @@ Start from the written evidence:",7a15c18a2f58fb6ed5061493db76ac732bb37da007713be5781f061aa1b442c6,C09
+.agent/plans/current/complete/architecture-review-packs.md,4,"@@ -88,7 +88,7 @@ Out of scope:",9a7bb71dfbcd2ddf953f07e8f0f95b775a6da9c9cd32ea2ecded4fa580c76d4f,C09
+.agent/plans/current/complete/architecture-review-packs.md,5,"@@ -215,7 +215,7 @@ Interpret verdicts as:",227ec66b5f8134ce952ae578745fb52f72b969c6f90484840e0a61cc554496bd,C09
+.agent/plans/current/complete/discovery-and-prioritisation.md,1,"@@ -68,7 +68,7 @@ Use `jc-plan` to create a decision-complete plan for the highest-priority candid",f28de72084dc7ffdbc39f6bd6eb1447c06fc174a4feeb67949f5d6cc1b8bc2bd,C09
+.agent/plans/current/complete/doctor-rescue-loop-runtime-redesign.md,1,"@@ -4,8 +4,8 @@",86645e9334bb56238ae0c460684ef6139267bb3bea65fac07565b41df6f59431,C09
+.agent/plans/current/complete/eperusteet-real-spec-validation.md,1,"@@ -44,4 +44,4 @@ Targeted verification ran green on Thursday, 16 April 2026:",4a527b8d7b472f43c9472fb02e21e6c33d8ad21bf6fb9e284af9ef5e9640e86d,C09
+.agent/plans/current/complete/format-specific-drift-remediation.md,1,"@@ -45,37 +45,37 @@ The parser's `FORMAT_MAP`/`ENCODING_MAP` is narrowed to the writer's canonical s",408a5db5b9de25dcfc75ae34aa1d779a1bc51271a3da1191240056c0d784657e,C09
+.agent/plans/current/complete/identity-doctrine-alignment.md,1,"@@ -4,7 +4,7 @@",9376c2def6c02f0b583582f147d4d5ea4622ffd616bb172f200fcaf69c3c89da,C09
+.agent/plans/current/complete/ir-and-runtime-validator-remediation.md,1,"@@ -4,8 +4,8 @@",7f9603abae57cac8256f3beef099ce8af185a525f369d29961c6ffc535433ccf,C09
+.agent/plans/current/complete/ir-and-runtime-validator-remediation.md,2,"@@ -144,7 +144,7 @@ After this slice, the runtime IR boundary will honestly reject any schema shape",a108100afe3d1e7d41a44392c22ec7b30887fb8c31edfbe127cffdfc3228d041,C09
+.agent/plans/current/complete/json-schema-parser.md,1,"@@ -3,8 +3,8 @@",01059d9397fdbbb67215463541870787d7a217e71bfc5aad1a0f83851cacc883,C09
+.agent/plans/current/complete/json-schema-parser.md,2,"@@ -24,7 +24,7 @@ Remaining open findings (future work tracked elsewhere or intentionally deferred",6d3f4c1f2b090c5a10ad75fb6482c61e11fe74a9cc4c3ce81aca1a67f93a1571,C09
+.agent/plans/current/complete/json-schema-parser.md,3,"@@ -32,7 +32,7 @@ This file is now a completed historical remediation-context record. It no longer",ec42943552fe50440cdb35b766abc379226982f4131227f714b2b5df1399ce36,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,1,"@@ -164,7 +164,7 @@ Ordered by dependency and increasing complexity:",7905b6018827dbf53a0b79de7132072b900ee269be49c08488fd33454af6c375,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,2,"@@ -209,7 +209,7 @@ A deeper code audit already established why the earlier slices had to land first",f3cd664038668615b2c909f4e76c3e95e9a444b82a4b1e1450a0da67d0ea55b8,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,3,"@@ -241,7 +241,7 @@ A deeper code audit already established why the earlier slices had to land first",e835da73cc8c43cdebab134c07044cc1fc5651eb257bcbee083cae0c2726c224,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,4,"@@ -272,7 +272,7 @@ A deeper code audit already established why the earlier slices had to land first",ea290490b3e2e20b1bc7a2eab0f4b65a64ce98ea372f0b9915a16343cfeef332,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,5,"@@ -295,14 +295,14 @@ A deeper code audit already established why the earlier slices had to land first",90982e4085e1e17b969a71d5dddf87c05fe6dca84eede82cf9f27ed68533314d,C09
+.agent/plans/current/complete/oas-3.2-full-feature-support.md,6,"@@ -321,7 +321,7 @@ A deeper code audit already established why the earlier slices had to land first",c021c1638363e3323aef1559b1a75e081bda189637c1f463ed66427824cdf3dc,C09
+.agent/plans/current/complete/openapi3-ts-dependency-exit.md,1,"@@ -1,6 +1,6 @@",29cc417603512b134ded815ba83375277f95016364de343dd5dd689fbeb23306,C09
+.agent/plans/current/complete/pattern-properties-and-property-names.md,1,"@@ -8,7 +8,7 @@",88e330bf0aa237a39ddfb65e4df02f589e964d2b8c83c22939df4c57f7c23215,C09
+.agent/plans/current/complete/plan-estate-and-documentation-refresh.md,1,"@@ -0,0 +1,465 @@",28e16676a8aff51d32f50c50bca4ea358d236c3369ed851404c8aa47ef12d933,C09
+.agent/plans/current/complete/practice-equality-identity-and-cognition.md,1,"@@ -1,9 +1,9 @@",d151d3b8415daa2766ceb86ed7206db0c84b255d835242ec024ec03eea9885c9,C09
+.agent/plans/current/complete/practice-equality-identity-and-cognition.md,2,"@@ -122,9 +122,14 @@ todos:",da300113ccac77fcdfb2706a1e6136b4e9541d3c9290f163b8399977e7afa75c,C09
+.agent/plans/current/complete/prefixitems-tuple-and-contains.md,1,"@@ -8,7 +8,7 @@",4ab145ba03dc938bee5c8cc6e39b14aa20c004a4eab9106e737ea1d810ad8611,C09
+.agent/plans/current/complete/proof-programme-loop-review.md,1,"@@ -0,0 +1,194 @@",455cd7ce88b81200ecd0258a7d9efc322c5d97e15f6e532d34ee4abcb53fddcc,C09
+.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md,1,"@@ -4,7 +4,7 @@",9201fe1c8596c41ed54e50e53d8a1a49f1ee04df131c6ac8b82b91642fd98c77,C07
+.agent/plans/current/complete/recursive-wrapper-remediation.md,1,"@@ -9,10 +9,10 @@",ce1747a447aac9356d656be9d13254868180f904e5f86b50a21ba0ee701061ad,C09
+.agent/plans/current/complete/strict-object-semantics-enforcement.md,1,"@@ -7,7 +7,7 @@",5d850427832e6908109addbe46c20e75e2b5dcda6e24c193a1cef5dc7fc10645,C09
+.agent/plans/current/complete/type-safety-remediation.md,1,"@@ -107,4 +107,4 @@ Delivered outputs:",0b99664b802d8228ea96dbede1411b55614f0a9fb13fccc1b1ea9ac30bcc55d2,C09
+.agent/plans/current/complete/zod-defect-quarantine-remediation.md,1,"@@ -103,7 +103,7 @@ Two parser defects fixed before this session:",6f23f1d0377321e165c6e519481f2aff13800d9a0ef93351913364b38875b7e9,C09
+.agent/plans/current/paused/02-ir-fidelity-proof-harness.md,1,"@@ -1,5 +1,11 @@",a097307c5215877d51386ac370d95f82cc0850650c716bd84c2ae22cbb335ab3,C09
+.agent/plans/current/paused/02-ir-fidelity-proof-harness.md,2,"@@ -9,9 +15,9 @@",018d983aa9e9d5fa007abb29c171ab80877aa889b62f0f9b0a7bbc9316cef91c,C09
+.agent/plans/current/paused/02-ir-fidelity-proof-harness.md,3,"@@ -44,7 +50,7 @@",ffce4c5c4596cbbd1d071d1f59533dffa9a9c4283b78f3f3b3b8de7b497ed0bd,C09
+.agent/plans/current/paused/README.md,1,"@@ -1,6 +1,12 @@",631b7dd37e99eaf43163c2fca8ada58c804f22fc851e1acd5e5cd833f6fee0fd,C09
+.agent/plans/current/paused/explicit-additional-properties-support.md,1,"@@ -19,8 +19,8 @@",dfd86b06d4d9bed8531ca67fa6fd7a365716bce4b3884336269e33f247c795c0,C09
+.agent/plans/current/paused/explicit-additional-properties-support.md,2,"@@ -109,7 +109,7 @@ Chosen. This matches the clarified product intent and the existing IR shape more",b9664632c022df7acc500bbbd817b1f0f691840f9264643c4e7be81a71cec27f,C09
+.agent/plans/current/paused/oak-practice-transplant.md,1,"@@ -17,9 +17,7 @@",924d0f26c07976ce115c8b201d0cc61a1aefded4425c1c777383037d579b16d2,C09
+.agent/plans/current/paused/oak-practice-transplant.md,2,"@@ -188,7 +186,7 @@ Relevance ledger (`.agent/report/` or `.agent/plans/transplant/relevance-ledger.",424497ca9513076cc75039358c2a6c4d7e876946956064c66e5d7d83de1ac7a4,C09
+.agent/plans/current/paused/practice-equality-parity-follow-up.md,1,"@@ -8,14 +8,14 @@ sequence_position: >-",7274bd13272addcca2458e46423888b7f8a5e12011ca3f0b9913cdf36323bc94,C09
+.agent/plans/current/paused/practice-equality-parity-follow-up.md,2,"@@ -134,6 +134,12 @@ todos:",f73f3414fea7c6665caa870faeffd8467ed82b05b3a5e2a1f7779048254b6cb0,C09
+.agent/plans/current/zod-truth-surface-and-dependency-currency.md,1,"@@ -3,7 +3,7 @@ title: Zod truth surface & dependency currency — two-part plan",6e322f3497e72d86d8303751d2eae8b23c386fae8e5517b4dd2cbee3d1d838fe,C09
+.agent/plans/current/zod-truth-surface-and-dependency-currency.md,2,"@@ -62,6 +62,27 @@ that makes the model necessary is ratified in an ADR instead of inherited,",07a0314f7f91c1c923dc1af93f2796c23b23ef042b0eeeda1ab1a846ec902ce1,C09
+.agent/plans/current/zod-truth-surface-and-dependency-currency.md,3,"@@ -439,26 +460,17 @@ run-numbered dated outputs committed; the criterion applied with its",258d6ab5c31b31c9dc647624ec80d8b0e8cec83afd7b42a56270ed5173e86aa2,C09
+.agent/plans/current/zod-truth-surface-and-dependency-currency.md,4,"@@ -493,12 +505,10 @@ ingesting schemas castr cannot statically analyse.",5ac338a549a972f1d84b1c3665df80a8ddff6ba2d6c9d8e92accf9c1e5e396ca,C09
+.agent/plans/delivery-ledger.md,1,"@@ -6,6 +6,84 @@ plan's outcome to reach its beneficiary (per PDR-085, value that has not reached",cdee4f6c0b580135df3fae99ca22630f03087d75fc6666fa80348274d7ea18a6,C01/C02/C09
+.agent/plans/future/castr-check-verb.md,1,"@@ -1,5 +1,11 @@",e3178f017ad8f447a6d3262f4dc98a94d0b14561e43e467784d2f98f6a401f51,C09
+.agent/plans/future/castr-surface-architecture-and-verb-model.md,1,"@@ -1,5 +1,11 @@",179e9807c49b2ed13317d526451641f404329c40405386ea2c590336003582f2,C09
+.agent/plans/future/gemini-antigravity-agentic-platform-support.md,1,"@@ -1,5 +1,11 @@",66af0193ddf2fc051e99f2f9056af5222d723d00c633073a6c0af09b1004f029,C09
+.agent/plans/future/oak-adapter-boundary-replacement.md,1,"@@ -1,5 +1,11 @@",512e3ab0dc32c3747dd992d513e6e086006a66d125f357fa10f83e4e6c091d1d,C09
+.agent/plans/future/oak-code-first-openapi-generation-replacement.md,1,"@@ -1,5 +1,11 @@",5aed05a5cce60158abb952c381587a87bbdfd8c8ba095af0f156493814462ffc,C09
+.agent/plans/future/oak-wider-openapi-stack-replacement.md,1,"@@ -1,5 +1,11 @@",45bf47756ac402ba5cd1f47c3a8d991c7e9a7a5ce13fed03410fbb7354b9a8a8,C09
+.agent/plans/future/phase-5-ecosystem-expansion.md,1,"@@ -1,5 +1,11 @@",6f2a354422c4181a10a7d49130d2efb33be34bc56bf8b1ae380928b58aa7c5c0,C09
+.agent/plans/future/strategy-vision-estate-overhaul.md,1,"@@ -1,247 +1,146 @@",e4393e38eebdd684be55b3a57877293cbc9a9c035d2195a66989a418ed7a1662,C09
+.agent/plans/future/temporal-first-js-ts-date-time-doctrine.md,1,"@@ -1,5 +1,11 @@",b3d26222ac6bfb0495b230a25b0c6390e4dea6e4f13d552821d30b2be5856fe2,C09
+.agent/plans/practice-alignment-brief.md,1,"@@ -1,196 +1,18 @@",be41b516bc496551cca49adac553120cae41631393d66dac52bd5a4e4d938ec5,C09
+.agent/plans/proof-programme/parent-plan.md,1,"@@ -20,11 +20,11 @@ todos:",52735bd3b26534cc93b3bf96f6538c63908e145ca3b09a7f0d98345855fbe47e,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,2,"@@ -75,7 +75,7 @@ todos:",00cddb1f336e3372bf7bfc5900edc2428231bee1bbb391228ee32d97906e078d,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,3,"@@ -97,14 +97,14 @@ todos:",7150783f4db244ea8e2b874332ea459440210c447091f8fccddd2cd959d2b03d,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,4,"@@ -112,34 +112,48 @@ todos:",eedf223fdfb4470163be700accae79cd7a746656a80bddfd7edc8b76968ab324,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,5,"@@ -164,19 +178,25 @@ programme earlier at a narrower ratified scope.",fd83d1b9a325c1ebcb2609b95938f22c6490f436f4a1c46d37ce5fc016b12881,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,6,"@@ -224,8 +244,10 @@ commit advancing a claimed slice, a queue row completed, a head-repair fix lande",9bce4329f314f190f0eb13055e60b5ad3e2733281d19d84de6f892139d1eff42,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,7,"@@ -253,7 +275,12 @@ only when that row's named Gate items carry success verdicts — a REJECT or DEF",7a431a7e8888945687270442249e9609ef72a51635a4409319ec73653f85e934,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,8,"@@ -320,7 +347,8 @@ brief. Routine mechanism proven end to end across four firings:",dbce66664aad6c5e9523c5bf517aa28880ef6ed7e53b1d0fcd766113cbbc9c4b,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,9,"@@ -814,6 +842,10 @@ rows. Non-goals: `SUMMARY.md`'s universal-schema-conversion product claim is NOT",7e1b200521adce068194b85db85231f770ced3bae3ce9d4e32679847a437e0b8,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,10,"@@ -883,36 +915,70 @@ metric never becomes another asserted claim; the `Object.*`/`Reflect.*` doctrine",548f6c2b70167504d4ef8d765c8a8db811302712ff3c67a73d202619803a833b,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,11,"@@ -949,9 +1015,13 @@ the foundation-alignment note below; the napkin's transplant-gap entries; the",614ec4720322a342802fec37bab52505f0a9e17b23c56f66275c1c9e17952960,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,12,"@@ -970,18 +1040,21 @@ green. Source: PR #35 review threads (carry-forward dispositions recorded on-thr",920e747e7a951f6ac6c0d6c22edd3f3ee1aea9fec7c6e4348ba9d18edc23f5b3,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,13,"@@ -991,7 +1064,7 @@ slots"" so the owner sees the signal. Non-goals: no external observer or watchdog",2c7d059732e6487385887b1dda1dba5878880f24625c0494f45acee906b44f69,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,14,"@@ -1039,8 +1112,8 @@ clean window; a pinned-version resolve for gitleaks; a hook-fires check for",648bc656ebf4846ccb9a306e334853c2ab5f30bb7d722b5e57d2267db71a50bd,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,15,"@@ -1050,7 +1123,17 @@ re-scoped list with each validity probe naming what it executes and the stale",18f2d4a810caca1a56f613d2b097b2a6457f135abefb2c08ad644c25d8814ec8,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,16,"@@ -1327,68 +1410,25 @@ clause 3's unattended-merge grant**: authority grants read narrowly, so a PR the",834171b7dc16d6b974b7185309d488a546a4decb6028358b20da301bb9ed8647,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,17,"@@ -1396,23 +1436,26 @@ Plan-readiness for this parent plan: `assumptions-expert` review completed 2026-",74955197d92bb7589de66af3bc6ca5f55eb78740d1047190951e03a5a8e3b44a,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,18,"@@ -1440,7 +1483,8 @@ landing.",9d3f5362fcf3fd5c89fccb2f7d23f7f684cc96e4f18b58c8e4ddee1f440b2d61,C01/C02/C09
+.agent/plans/proof-programme/parent-plan.md,19,"@@ -1451,8 +1495,8 @@ landing.",fc754bf8fe14092c49146ad1418dfbe69d2466f1a3326abe1b5baa0bd4f655bc,C01/C02/C09
+.agent/plans/proof-programme/queued-decisions.md,1,"@@ -12,20 +12,20 @@ not an authority (contract added after the 2026-08-26 arming-walk re-read measur",8dbafaff540e44bb4314649e7349d452df1402bc621c6490bc853366543b2d8a,C09
+.agent/plans/proof-programme/routine-prompt.md,1,"@@ -1,10 +1,30 @@",1bbc1acaaab1796285da8d5ef14ebb37bf6c2dec38f9ea33e71138c7e430fe45,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,2,"@@ -20,12 +40,12 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto",bc05a35564080b25a6094f1803207d989d1e6ef18e8c6bb73ddb168d627ed663,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,3,"@@ -47,20 +67,17 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto",484b997650b810904b73fa63cbaa96ac8c78d5a01c4ab74492d905195139b622,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,4,"@@ -153,11 +170,19 @@ Authority: [`parent-plan.md`](./parent-plan.md) (the queue and §Operating proto",e3ff4b3ae83f75919d20fa2a759e10236a2dd81a0c5411b3837a765222db6658,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,5,"@@ -250,10 +275,13 @@ notification's OPEN-decisions list covers queued forks, and a fork worth immedia",961571ebf1ad53fb9d326f5e7ecbb3b2726eec09b849b2392f4604f2ddc4d63f,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,6,"@@ -281,9 +309,9 @@ also post:",d67422ace0bb8b5f45c0aed9061548ec164af97f47f580b5029ad4e52f741f3b,C01/C02/C09
+.agent/plans/proof-programme/routine-prompt.md,7,"@@ -294,6 +322,6 @@ broadcast. Only when the tracked record itself cannot land (push failure on ever",6fe7d9057eb8b36069f43866902ec78b91a1e20133923888f9fdcb7844942e63,C01/C02/C09
+.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md,1,"@@ -1,5 +1,11 @@",c8e59807b16bdd6520ea60cf576756c07eb57433abf6e170994c565f79337696,C09
+.agent/plans/remediation/03-zod-2020-12-keyword-semantics.md,2,"@@ -40,7 +46,7 @@ Out of scope: a governed opt-in lossy mode (may follow later per ADR-047); array",bbd4fd3db9b596801182fd85ba59eee4e02d614ad391dc9a03ced4e725ea7fe6,C09
+.agent/plans/remediation/04-zod-parser-strict-whitelist.md,1,"@@ -1,5 +1,11 @@",9f702ce501f66b14d5eb64d25af39bd2d190224a2ebac0f47868403556e71f61,C09
+.agent/plans/remediation/04-zod-parser-strict-whitelist.md,2,"@@ -38,7 +44,7 @@ fail-fast, not silently lossy.",10d91a79eda6f743e7ff74d09bbfd2622195a37867f8ad96f16092ed16e058ee,C09
+.agent/plans/remediation/05-single-source-type-guards.md,1,"@@ -1,5 +1,11 @@",76820578ed80ff9cdf7185c47b341b6f481a5610c1587601e3cf0912591ad482,C09
+.agent/plans/remediation/05-single-source-type-guards.md,2,"@@ -29,7 +35,7 @@ scope: broader IR validation redesign.",0d0531e69b39dc58c242fee0e348b83b858a2ab76ee0d2f5aebca9aff92ff8bd,C09
+.agent/plans/remediation/06-doctrine-enforcement-truthing.md,1,"@@ -1,5 +1,11 @@",73adc73e2842ff3e141e3746b4d5e2673a5d1ca334ccb0154c678d4fcdfa0588,C09
+.agent/plans/remediation/06-doctrine-enforcement-truthing.md,2,"@@ -12,7 +18,7 @@ the C6 reversal ship). Per the **strictest-of-three** rule, raise enforcement up",7781c2639e6bde101b05778ec3c602c8797b95cf598f13c0e6879f6a0758665a,C09
+.agent/plans/remediation/06-doctrine-enforcement-truthing.md,3,"@@ -27,15 +33,15 @@ Out of scope: relaxing any doctrine claim (forbidden by the strictest rule).",0621836e2b92e73387daaa7ae8c538eb4d445a223b5bf3cd3070991f33bb2ba0,C09
+.agent/plans/remediation/07-test-hygiene.md,1,"@@ -1,5 +1,11 @@",63f997a63b07e2ce647dfc01fb27374811639bc0f54ccc25ba363d6bd846823c,C09
+.agent/plans/remediation/07-test-hygiene.md,2,"@@ -30,11 +36,11 @@ Out of scope: refinement-test correctness (plan 03); negative-assertion fix (pla",adf5cca75d1fbe57daee85b21c2602fea997d43c6b8f8f194909af026c6cdf92,C09
+.agent/plans/remediation/README.md,1,"@@ -1,37 +1,27 @@",c6c24158270989725a9d4949d8ee4b92fbb222ce1abf94ac677bc1a824d6a9a6,C09
+.agent/plans/roadmap.md,1,"@@ -1,571 +1,94 @@",984faada81715d0ef3019f7f38de000e875101efc076620c25b494a767d5b2df,C09
+.agent/plans/transplant/02-agent-tools-build-design.md,1,"@@ -1,5 +1,16 @@",e0e18c041a12b0eb449b5ee159dff18973487b0ce713367504abb069b6429dff,C09
+.agent/plans/transplant/06-memory-and-generator-consolidation.md,1,"@@ -1,5 +1,16 @@",0f102841edc6e6df5ddd7cf94877835fcc8117bfe9d1d623935f53eebfde4adc,C09
+.agent/plans/transplant/07-adapters-and-gate-flips.md,1,"@@ -1,5 +1,16 @@",54575dcd85dfdd506482e01d89b7355743ee7e11546a823799f50cbefd3bff53,C09
+.agent/plans/transplant/08-collaboration-active.md,1,"@@ -1,5 +1,16 @@",1c279fc80328995347bdb7e63f8138220615d8d2afc6f02ee327e5ccad60bccb,C09
+.agent/plans/transplant/README.md,1,"@@ -1,5 +1,16 @@",106b5459002402b223101e423adeeb8b9403e3f8fac49d2d4a4c8fc2588f7f0e,C09
+.agent/plans/transplant/corpus-analysis-suite-bring.md,1,"@@ -1,7 +1,7 @@",78088539e7451506ca9c7f366599022c60d76ae7760328e37b138338032179e4,C09
+.agent/plans/transplant/corpus-analysis-suite-bring.md,2,"@@ -11,6 +11,17 @@ owner_directive: >-",825b1013dde8ed80ab53ef487d468b794540c6870c2b3793e6a84f0ab137c63f,C09
+.agent/plans/transplant/d1-sonarjs-findings.md,1,"@@ -1,5 +1,16 @@",86426eb0470e91a3097a4d2d485c8584dd4a1722e450cb03e5a967b78e43d70a,C09
+.agent/plans/transplant/dangling-reference-census.md,1,"@@ -1,5 +1,16 @@",ef0e3e27781687422fe9d8e6da3b31c5a94ab5a7c307652fd2e70b8dacf90b52,C09
+.agent/plans/transplant/first-run-friction-inventory.md,1,"@@ -1,5 +1,16 @@",2b9c9482e9fdeda6e3977253598cce4c7b60502d6834ed99e30c21161881a8cd,C09
+.agent/plans/transplant/oak-backflow/castr-feedback-2026-06-10.md,1,"@@ -6,6 +6,17 @@ castr to a fresh Oak branch off current main. Tracked in reference-closure.md §",57b620c69bab41c7f1d4b547cbab93642fe69dd9151cb0e2886fbf28055d7263,C09
+.agent/plans/transplant/oak-backflow/castr-innovations-ledger.md,1,"@@ -1,5 +1,16 @@",148ff030765599184ffb87eafb0a783bf1d08c2cb57f3af48c5996188651e236,C09
+.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md,1,"@@ -1,7 +1,7 @@",5a863b3b9a0b29c6ae5b5f4b4fa0e74e82f88af1f639e8e714586b9544aa7a8c,C09
+.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md,2,"@@ -59,6 +59,17 @@ todos:",5e0c5dd3a5d0a5c6d49cc5a3f8eb3fb8ba85f5797f2efdba0a513db6d2ba002d,C09
+.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md,1,"@@ -1,7 +1,7 @@",a0519657c444acf45f764cb1b4eacfb28ae00ff8adf90ae3db3fdc4391d51058,C09
+.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md,2,"@@ -27,6 +27,17 @@ read_model_note: >-",1b1794cf3fc5ac6f005a97ce7c37835da07e62725b0b86dda54cf6eec8a97119,C09
+.agent/plans/transplant/oak-parity-program.md,1,"@@ -1,7 +1,7 @@",a39bacc7a252828ecff71f38c98c9dc9a9caebd8c39a4ee9292b18ce8bf4bd36,C09
+.agent/plans/transplant/oak-parity-program.md,2,"@@ -85,6 +85,17 @@ todos:",acc5585eccff663dfb71e0e845630c1e55167c753bba0a3f5f24b6631b3171e0,C09
+.agent/plans/transplant/practice-loop-closure-remediation.md,1,"@@ -1,7 +1,7 @@",0d4063f22dac2045fc247014541c7ef43a475f41a79977712aa16b8c19ff2056,C09
+.agent/plans/transplant/practice-loop-closure-remediation.md,2,"@@ -192,6 +192,17 @@ todos:",9c9a89f32016552b03bb4586d0b66460ec602230e113a73e64da38b4d3a5e617,C09
+.agent/plans/transplant/reason-skill-parity-bring.md,1,"@@ -1,7 +1,7 @@",e47304f2d536d1e4a276a139fd9d5b80b000a1d5444131602d8d4ea2225ccd58,C09
+.agent/plans/transplant/reason-skill-parity-bring.md,2,"@@ -60,6 +60,17 @@ todos:",9cc2c7de5d573fe4e4069a03548a4fea92aba0262523b645bc7190502e0a719c,C09
+.agent/plans/transplant/reference-closure.md,1,"@@ -1,5 +1,16 @@",e5a8cd71a8128e3f32eac754f38dcfd984800f6f4e77ba40d898bd15095d720e,C09
+.agent/plans/transplant/relevance-ledger.md,1,"@@ -1,5 +1,16 @@",f019b5137ee31474ecbfd0950df29fe460be5460e6039b6c7e4ed5810e017f88,C09
+.agent/plans/transplant/statusline-logo-bring-manifests-2026-07-03.md,1,"@@ -1,7 +1,7 @@",1865530bcf24eef87bffd1a2c8169d5f39bc8a14cd50f48b44f4cc8876133821,C09
+.agent/plans/transplant/statusline-logo-bring-manifests-2026-07-03.md,2,"@@ -17,6 +17,17 @@ provenance: >-",6c58ed5f885508a1e2c1e95f62e0943623b4c9040cf2d1751a0d0d8e30db7677,C09
+.agent/plans/transplant/transplant-completeness-supporting-infrastructure.md,1,"@@ -1,7 +1,7 @@",05dc54d70c3a0d0405044651e20a79d3015c7378f1d3e11b548c736088944e50,C09
+.agent/plans/transplant/transplant-completeness-supporting-infrastructure.md,2,"@@ -45,7 +45,7 @@ todos:",3e23a8b7e26f3a229c05f61193e14e875859c97337497a7c78b9192208605356,C09
+.agent/plans/transplant/transplant-completeness-supporting-infrastructure.md,3,"@@ -82,6 +82,21 @@ todos:",86592ca3a8cfd2320b1a1345ab104aa3fb1a84ac9cd40eecd3ca12ecc39d0dfc,C09
+.agent/practice-core/CHANGELOG.md,1,"@@ -4,6 +4,13 @@ Changes to the Practice Core files, newest first. Each entry records the repo",c0387ee16a1f993edba8ded0b99e8ab41906437de21da1c63703c3aa1e4a4bf7,C06
+.agent/practice-core/decision-records/PDR-135-verified-claims-engineering.md,1,"@@ -0,0 +1,77 @@",cee68b8ed23731ca957edaa6e3c1f729b81c3bf26257437f9c55e6c36ce5d70f,C06
+.agent/practice-core/decision-records/README.md,1,"@@ -222,3 +222,4 @@ Practice-Core portability ratifies both — see the bridge index",4c49cd9f40f3ee330d685c950fc3c623a4df4e449f353cb3ede633b544776dff,C09
+.agent/practice-index.md,1,"@@ -7,30 +7,49 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).",b7ddfd68645cc6becb5f8f978d4e6901088844de7226e319b521679d9b184be4,C09
+.agent/practice-index.md,2,"@@ -75,3 +94,11 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod",1389297c4f7c88cd133df70f55d4c21a6d274281a4afee1c378b1f8038d2aa25,C09
+.agent/prompts/session-continuation.prompt.md,1,"@@ -1,448 +1,38 @@",e0aae321d4be024998f062b471ac5b8fbb7f6c2b660deab76bdf40a5a23c0974,C09
+.agent/rules/input-output-pair-compatibility.md,1,"@@ -1,19 +1,40 @@",a9eb7a88da890d630f41ecff989d19a96d793e00c463a30d91dfef7cf9910a68,C07
+.agent/skills/gates/SKILL-CANONICAL.md,1,"@@ -21,7 +21,7 @@ from the beginning.",d735805f7c690204f6609130a345cbde5c2d0bd9cf28cfeea854cf619e908f8d,C09
+.agent/skills/napkin/SKILL-CANONICAL.md,1,"@@ -155,15 +155,15 @@ governance update, or an ADR.",3098584626530e4052b05482d5091bd4909cddeb878b0e150743eb08277ab25b,C09
+.agent/skills/plan/SKILL-CANONICAL.md,1,"@@ -9,8 +9,8 @@ description: Create or promote a plan following the plan architecture.",49dc54dc31f2f24759c6c6a2034093c1971739b30a91ce4f31b58a76921dfa00,C05
+.agent/skills/plan/SKILL-CANONICAL.md,2,"@@ -257,9 +257,9 @@ EXECUTION`, milestone-complete, or workstream-complete language must",c5b58dea20c4f7aeee8416efdd89db160429cc16196c0ff6dba970ef867c4588,C05
+.agent/skills/session-handoff/SKILL-CANONICAL.md,1,"@@ -16,8 +16,6 @@ napkin rotation, fitness management) belongs to",5b86d977bb93e390dd87b2773f500f71620883661923044cafe91ca5ec840bac,C09
+.agent/skills/start-right-quick/shared/start-right.md,1,"@@ -3,7 +3,7 @@ prompt_id: start-right-quick",eeade2063af872c6369f53e8ef235b33a2efb3514aea5967644108eb4ca6020c,C05
+.agent/skills/start-right-quick/shared/start-right.md,2,"@@ -42,7 +42,7 @@ inventory rather than copying the rule list here.",6d9ae8f192c5c277c8af7db95ac1b8c22a40993daf9e21c0f47405e328bef1b5,C05
+.agent/skills/start-right-quick/shared/start-right.md,3,"@@ -122,10 +122,11 @@ fallback.",11ac58b7e636bd1f0f04869031f74603fcf89aff850f018d797b3787bec08d2a,C05
+.agent/skills/start-right-quick/shared/start-right.md,4,"@@ -257,7 +258,7 @@ thinking.",9e9b1271a827195e955861580a07174d1ad8c79ef4a8d6cff6b4b030e2e32767,C05
+.agent/skills/start-right-quick/shared/start-right.md,5,"@@ -282,8 +283,9 @@ the layer.",d7fc8c3dc4071036e6581ce23bee1452fa3f3a12716ba6d36d267fb7a50e1e20,C05
+.agent/skills/start-right-thorough/shared/start-right-thorough.md,1,"@@ -3,7 +3,7 @@ prompt_id: start-right-thorough",3a1d5de7f3b5ad42edcbd2bc14b4efad02c8fe0efcbc3abb8f5663a483996f56,C05
+.agent/skills/start-right-thorough/shared/start-right-thorough.md,2,"@@ -24,7 +24,7 @@ Read and internalise these documents:",ccae0057d481c816e6f0162a01295e886f5dcda79fd1f3f7e02d89de468cd631,C05
+.agent/skills/start-right-thorough/shared/start-right-thorough.md,3,"@@ -67,7 +67,8 @@ When writing the thread identity row, prefer an existing owner-assigned",db3cda3706a4aea27fc0d0113df382ca04dd8537819095d3c4809acb9ee13784,C05
+.agent/skills/start-right-thorough/shared/start-right-thorough.md,4,"@@ -141,7 +142,7 @@ Check `.agent/practice-core/incoming/` for practice-core files. If present, aler",0531ce38420d8c41648ed26953d823e34d3a9fb86da0f8ab417d3638542258dc,C05
+.agent/skills/start-right-thorough/shared/start-right-thorough.md,5,"@@ -167,7 +168,9 @@ Invoke the reviewer and domain-expert layer per [`invoke-reviewers.md`](../../..",f64c45c4ebb234ee151c817707dc41bcbdd8786df6892f10d18e56c739616cbf,C05
+.agent/skills/wrap/SKILL-CANONICAL.md,1,"@@ -56,8 +56,8 @@ wrap supplies the depth of the record it freezes.",c89960c27ae3e5d25d79640a30f9a26abcb082fdce12bdc81c03ef4c5370fc65,C09
+.agent/skills/wrap/SKILL-CANONICAL.md,2,"@@ -86,8 +86,8 @@ wrap supplies the depth of the record it freezes.",4d2ee9d27aacea4592cfb5fc097a52961a6f7e487288f76cb31fc29040ee697f,C09
+README.md,1,"@@ -151,15 +151,17 @@ console.log(openApiDoc.openapi);",7b47e29996441b378438b9c3228e27b9cdb16662c9295c56b618daaca373d0da,C03
+README.md,2,"@@ -172,3 +174,11 @@ The supported pattern is:",fe04da973aa83727a4897453a91e9d3e663973906c41f2dfa87e6b682baaa955,C03
+docs/architectural_decision_records/ADR-002-defer-types-to-openapi3-ts.md,1,"@@ -2,7 +2,7 @@",0b2e07a3349c743aaa43af9d3fe2c1505513f2477fa1325cdcf6b483b5cf1b8a,C04
+docs/architectural_decision_records/ADR-018-openapi-3.1-first-architecture.md,1,"@@ -1,4 +1,4 @@",396d82f98381eefb0d52b8ba28c53e49379cb3f13b5f82c9bcc94172e4bb38fe,C04
+docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md,1,"@@ -1,4 +1,4 @@",9f4a8fa24c813ed5898069fc54385a49e60f247cdece55131662f74199f85bb0,C04
+docs/architectural_decision_records/ADR-020-intersection-type-strategy.md,1,"@@ -1,4 +1,4 @@",2d5aee9b490ae4cce49eb28b5a2bf9984c9a72ab63ca70eeb63dffcf8062143d,C04
+docs/architectural_decision_records/ADR-021-legacy-dependency-removal.md,1,"@@ -1,4 +1,4 @@",a85fb6f88a7c9b9b15a3de9f3046ee735c9debca051e5125458b94586af6711e,C04
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,1,"@@ -3,6 +3,17 @@",9c249f1a4c207286319dc64289a5b96fbf55d9281a42aec49bb5381e0f652de6,C07
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,2,"@@ -13,7 +24,7 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio",d29909efaae4d072cf1e14821f6ffccd1db2a0493fd91661ec2bc5922ba6e604,C07
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,3,"@@ -76,19 +87,13 @@ z.xor(schemaA, schemaB);",a3d319daa3a60b597a442e5d740c58ee49d5b3f9d2178d462e71e54a488a69a6,C07
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,4,"@@ -112,7 +117,7 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null",d90b2b82fec3c72374c9c3828e6d0d3c70eb566126e2debcc977a8b48d3f24a7,C07
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,5,"@@ -123,7 +128,7 @@ Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form",a92e2bbe0a30608ae4afa54fc9e9da679a5d132f94cd865175e7292f8761b2b0,C07
+docs/architectural_decision_records/ADR-031-zod-output-strategy.md,6,"@@ -133,7 +138,7 @@ The chosen recursive strict construction must therefore satisfy all of:",3493470f168ac3205d56476919f9d3088fc37c5d86a5763b15a17cb84e5f8802,C07
+docs/architectural_decision_records/ADR-032-zod-input-strategy.md,1,"@@ -3,6 +3,17 @@",04b71937fbd69edbab95b2fed1e04dcc4f481e23f27c3600febacf5598fee0ec,C07
+docs/architectural_decision_records/ADR-032-zod-input-strategy.md,2,"@@ -17,7 +28,10 @@ This decision must align with:",149299a51be936efc330285d8dd4444ba02f377c8462b6df87d041d026bfe524,C07
+docs/architectural_decision_records/ADR-032-zod-input-strategy.md,3,"@@ -53,28 +67,13 @@ This decision must align with:",303ee759d8c6e63771fa380e4ef64faa3aa576992ac8a999b2a38a5f04dff131,C07
+docs/architectural_decision_records/ADR-032-zod-input-strategy.md,4,"@@ -145,7 +144,7 @@ Portable detours may later widen subtype semantics when the target format cannot",b6c4ec4e58b2a7d7ae151b67e6df32558628ee69df0775006ab2b0b6ad421ba3,C07
+docs/architectural_decision_records/ADR-037-strict-architectural-domain-boundaries.md,1,"@@ -1,4 +1,4 @@",132bb0520f47ceb0ac5c0d81edaf9fd6095af0dc5840cef3af47b5504dd58a15,C04
+docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md,1,"@@ -3,6 +3,17 @@",e600ae467c3a08bab04b27807daaa7d06bce0740e5a76b48f748f25b44804d74,C07
+docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md,1,"@@ -1,7 +1,18 @@",69d9269f4f8359b198cdebd1fca7ce73b7a268bceb240beae195515500621d95,C07
+docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md,1,"@@ -84,10 +84,13 @@ Source-history coupling is not an acceptable substitute.",016cc872947e5c55051a4c7493174d816bc13972affce5ebfd4a575ec6dd8146,C07
+docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md,2,"@@ -95,6 +98,7 @@ Some seams can widen honestly when the target lacks the narrower semantic but st",856420d5f4cb2879df796a27c30045046fbe9fc3cd0e41907783e68c929a7135,C07
+docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md,3,"@@ -104,7 +108,7 @@ ADR-039 is the canonical example of a widening-allowed seam.",ad405308abfa117f097cd24ca37f4641845ea9d908c3a1a8f5b695288d87b6dd,C07
+docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md,1,"@@ -51,3 +51,18 @@ As of 2026-04-10:",4947786d9d6aa8bcaad23248b680fe2d15fed264bc13a150ced583ac06d9f561,C04
+docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md,1,"@@ -83,3 +83,11 @@ This does not recreate the structural overlap problems caused by a general `[key",8d3c38e758bb048d0fe78fb1ffa0b58d9b828afa3d1362e0b2941516e4b65234,C04
+docs/architectural_decision_records/ADR-046-separate-storage-additional-operations.md,1,"@@ -54,3 +54,12 @@ This was accepted because:",bcbad722a2045766e46b966d52c2f31d45e999bf0f56079b050191bab1726fec,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,1,"@@ -26,7 +26,13 @@ amended 2026-08-24 by owner ruling — decision card, proof-programme loop revie",e54053acc2b58617f284688fbc4fb62be307478a66f1a093eb38e2cd9f9ea03f,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,2,"@@ -39,15 +45,23 @@ continually, in the background, without me, until the plan is complete"". The rep",aa6e83f6a3acb36dd338d2bb0c6584974c6ab72566678c81712b93426ec98dd8,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,3,"@@ -56,10 +70,14 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac",21823b67f2e1dad6f527cf4854a2c8e77a13cb4a2c3082689f65b1ffa071b777,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,4,"@@ -131,9 +149,14 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac",34f67d1721e8b9f474f493ceca4aa0d1382dfc76fe5531b9f1da22615f8b7077,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,5,"@@ -145,17 +168,20 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac",928094212f2ecc98868a670f0c1423f68df33dee6a47eccb84cb297847dbd9ed,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,6,"@@ -167,10 +193,13 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac",a9f5cbe6545a4cee53f5d9cd6ffccd4de9328c56af82d73668a9087a823aee33,C04
+docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md,7,"@@ -192,8 +221,10 @@ ephemeral; scheduled Routines can spawn a fresh session per firing, and the Prac",bf253ad3efcdbb0b86cefe22dcb53e1c8d7d10b53f8e0619636aee03b0a0364c,C04
+docs/architectural_decision_records/README.md,1,"@@ -1,125 +1,88 @@",53a9f798ff2eac1a98787d320ae1f804662359da3ae0ae5e2b4cc0a8b4d4e3e5,C04
+docs/architectural_decision_records/README.md,2,"@@ -153,105 +116,43 @@ The dependency graph below captures the historical 3.1-first / `openapi3-ts` era",16d0e00f65b432cb1cfa7cfdb59dad2300f72d2d588986ef65cad9861d5586d5,C04
+docs/architectural_decision_records/SUMMARY.md,1,"@@ -1,20 +1,24 @@",6c1fecb3e5a8d17ae6fdf5be158b81ffadfe7bd79117a75fe49a72639128b921,C09
+docs/architectural_decision_records/SUMMARY.md,2,"@@ -44,110 +48,80 @@ This library implements an **Intermediate Representation (IR) architecture** for",e2c8fb38ac7f0329591e41c2257af05dea183f2b6c071f3ef80493843d8e1c7b,C09
