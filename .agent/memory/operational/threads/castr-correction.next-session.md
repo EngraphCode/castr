@@ -7,7 +7,7 @@
 - Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
 - PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
 - Landing target: C02 makes Q-19 review history and non-convergence observable.
-- Next safe step: demonstrate the Q-19 first-triage tally and land C02, then C03 local entry instructions.
+- Next safe step: demonstrate the Q-19 first-triage tally and land C02, then C01R custody corrections and the smaller C03 local-entry slices.
 - Team: root coordinates foundation/integration/gates; delegated source mapping has one owned manifest; reviewers are read-only. Re-read actual claims before writing.
 - Source: PR #81 at `33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 - Scheduled execution remains paused; interactive implementation and merges are authorised.
@@ -30,6 +30,6 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform | Model       | Session prefix | Role                        | First session | Last session |
-| --------------------- | -------- | ----------- | -------------- | --------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | coordinator and PR shepherd | 2026-09-06    | 2026-09-06   |
+| Agent                 | Platform | Model       | Session prefix | Agent UUID                           | Role                        | First session | Last session |
+| --------------------- | -------- | ----------- | -------------- | ------------------------------------ | --------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-06   |
