@@ -59,13 +59,20 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   Cricket checkpoint. No running green CI/review wave was superseded. The original
   96 findings and nine programme identities remain conserved; Q-016 has its own
   97th record, and Q-19's separate queue carrier records integrated acceptance.
-- **C03a in progress:** branch `codex/castr-local-checkout`
-  ([PR lookup](https://github.com/EngraphCode/castr/pulls?q=is%3Apr+head%3Acodex%2Fcastr-local-checkout)),
+- **C03a in progress:** [PR #85](https://github.com/EngraphCode/castr/pull/85),
+  branch `codex/castr-local-checkout`,
   refreshed onto the C01R merge, carries executable local-checkout instructions
   and a small User fixture. Its PR owns only this entry workflow; C03b owns detailed
   API/options documentation, and C03c owns response/transport/MCP guides. The full
   preserved draft remains separate. Acceptance requires the reviewed merge and
   its current-head gates; early isolated-pack reconnaissance does not complete C10.
+  First-wave review correctly identified that the separate continuity commit
+  `e43e06af171ba1e46b595bb66c34d806fd1a038e` omitted the required `continuity`
+  subject scope. Its file separation is verified and its pushed history is
+  preserved. The earlier separate continuity commits use the required scope;
+  subsequent continuity commits must again use `chore(continuity)`.
+  C05 retains the rule/reference reconciliation; C10 records this authoring
+  failure alongside the review-wave failure. This does not weaken merge checks.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
