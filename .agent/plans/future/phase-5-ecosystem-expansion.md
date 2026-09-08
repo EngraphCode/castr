@@ -2,7 +2,7 @@
 
 **Status:** ⚪ Planned  
 **Created:** 2026-02-13  
-**Last Updated:** 2026-04-02
+**Last Updated:** 2026-09-08
 
 > **Update 2026-04-02:** Older wording grouped tRPC, SDK work, and HTTP adapters under a loose "ecosystem expansion" label. The current boundary is explicit: `lib` / `@engraph/castr` stays the core compiler, while code-first, transport, runtime, and framework capabilities live in companion workspaces that consume Castr output.
 
@@ -39,6 +39,17 @@ Expand beyond the strict core compiler into companion workspaces and reference i
   - Use Case 2 high-level plan: replace the wider OpenAPI third-party stack in `oak-mcp-ecosystem`, including an explicit `openapi-fetch` decision gate.
 - [oak-code-first-openapi-generation-replacement.md](./oak-code-first-openapi-generation-replacement.md)
   - Use Case 3 high-level plan: replace `oak-openapi`'s code-first OpenAPI generation stack through companion-workspace layering.
+
+## Graph integration boundary
+
+The [RDF, JSON-LD and YAML-LD research](../../research/rdf-jsonld-yamlld-standards-and-contract-boundaries-2026-09-08.md)
+adds standards evidence for a separate graph/application projection adapter. RDF and
+linked-data processing remain outside core Castr; neither a JSON/YAML carrier nor a
+transport companion supplies graph semantics. A prospective adapter must consume versioned
+public graph and Castr artefacts and compose graph, projection and Castr certificates under
+[conditional Tranche 09G](../../report/castr-completeness-losslessness-proof-programme-2026-08-21.md#conditional-tranche-09g--projected-application-contract-boundary-and-graph-interoperability).
+The sibling graph product remains a proposal; this reference does not add an execution
+track, promote this plan or change the parent queue.
 
 ## Out Of Scope
 

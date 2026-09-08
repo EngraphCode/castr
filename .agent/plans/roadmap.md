@@ -79,6 +79,15 @@ examines compiler fidelity, runtime responsibilities and possible companion
 integration. It separates inspected implementation from ratified requirements
 and proposals; it does not add implementation scope or alter the execution queue.
 
+The [RDF, JSON-LD and YAML-LD standards research](../research/rdf-jsonld-yamlld-standards-and-contract-boundaries-2026-09-08.md)
+records the standards position checked on 8 September 2026 and graph-projection proof
+requirements. The [Castr direction](../research/castr-future-direction-application-contract-compiler-2026-08-21.md)
+and [candidate graph-system direction](../research/semantic-graph-contract-system-future-direction-2026-08-21.md)
+are reconciled to the ratified application-contract boundary and longstanding replacement
+principle. Graph interpretation belongs outside Castr; any advertised interoperation
+requires the separate certificates in conditional Tranche 09G. This is supporting research,
+not a plan promotion, native graph-format commitment or change to full JSON Schema scope.
+
 ## Retained work and lifecycle
 
 - The correction plan owns comprehensive document/finding/source-change coverage,

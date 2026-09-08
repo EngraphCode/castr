@@ -28,7 +28,7 @@ The comparison uses:
 | Adjacent graph direction | User-supplied _Future direction for the semantic-graph contract system_, 21 August 2026; SHA-256 `d6b3d42dc7128668a0b8f80ff44f76910cd0651778f3429f086a2c9db775dc14`.                                                                          |
 | OCE methods              | Engraph default branch at `3864af2253a1a00feb4850a7594bee18dc4072d0`. The old repository address resolves to `EngraphCode/open-curriculum-ecosystem`.                                                                                         |
 
-The two August direction documents were supplied as background and are not reproduced here. Their hashes identify the sources but do not provide access to them. Ratified requirements are separately linked to repository evidence; interpretations of the graph direction remain background context.
+The source hashes above identify the original August direction documents used for this comparison. The subsequently amended [Castr direction](castr-future-direction-application-contract-compiler-2026-08-21.md) and [graph-system direction](semantic-graph-contract-system-future-direction-2026-08-21.md) are available alongside this report; they include the 8 September standards follow-through and authority reconciliation and are not byte-identical to those historical inputs. Ratified requirements remain separately linked to repository evidence.
 
 Current code establishes implementation facts; current accepted decisions and the September correction commission establish intended requirements. The August documents remain dated proposals in their own right. Historical notes are context rather than proof of present upstream behaviour.
 
@@ -146,6 +146,8 @@ The relevant ecosystem choice is not “own everything or accept every dependenc
 The accompanying graph proposal remains a separate boundary. RDF/SHACL concerns identified graph entities, relationships and graph constraints; tRPC can transport an application projection but does not acquire graph semantics by doing so. Castr can compile a projected application contract once identity, multiplicity, ordering and mapping have been explicitly fixed.
 
 Consequently, introducing tRPC would not justify a universal Castr/RDF/router IR. Graph projection, application-contract compilation and procedure execution remain separable responsibilities. This is an interpretation of the two supplied direction documents, not a claim that their integration is implemented.
+
+**Standards follow-through, 8 September 2026:** [RDF, JSON-LD and YAML-LD standards and contract boundaries](rdf-jsonld-yamlld-standards-and-contract-boundaries-2026-09-08.md) and the amended [semantic-graph direction](semantic-graph-contract-system-future-direction-2026-08-21.md)/[Castr direction](castr-future-direction-application-contract-compiler-2026-08-21.md) extend this boundary to RDF 1.2 and new/planned JSON-LD/YAML-LD. Transporting a linked-data document or validating its JSON/YAML carrier structure does not establish graph interpretation. For an advertised graph projection, preserve or explicitly classify assertion/reifier identity and language/direction, detect upstream processing loss, reproduce context resolution and compose graph/projection/Castr evidence. This adds conditions to a prospective graph integration; it does not change the source-bound tRPC comparison, adoption recommendation or implementation evidence above. The source hashes in Section 2 still identify the original August direction documents.
 
 ## 10. What would prove a useful integration
 

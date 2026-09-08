@@ -2,6 +2,7 @@
 
 **Status:** dated evidence and recommended implementation guidance — not a proof certificate and not the plan-of-record
 **Revision:** 3 — authority demotion, reconciliation-ledger completion, support-contract type repair, and graph reconciliation (2026-08-22); Revision 2 was the application-contract and semantic-graph boundary amendment
+**Last amended:** 8 September 2026 — standards/projection supplement and correction of incompatible legacy-preservation recommendations; historical source baselines and review cut-off retained.
 **Review cut-off:** 21 August 2026
 **Castr baseline:** [`main@63a7e675caa438d98df5d36ee4ba4f76ef962d08`](https://github.com/EngraphCode/castr/commit/63a7e675caa438d98df5d36ee4ba4f76ef962d08)
 **Canonical OCE baseline:** [`main@1173c1adf252eab2dbe7d95f2494139f51504243`](https://github.com/EngraphCode/oak-open-curriculum-ecosystem/commit/1173c1adf252eab2dbe7d95f2494139f51504243)
@@ -32,6 +33,25 @@ The owner directed on 2026-08-22:
   [`roadmap.md`](../plans/roadmap.md) (practice transplant first, then remediation, then
   explicit-`additionalProperties`) is **not** superseded by this report. The parent plan must
   reconcile or explicitly supersede it, in the owner's words, when it is authored.
+
+## Authority and standards correction (8 September 2026)
+
+Castr's [longstanding principles](../directives/principles.md) require replacing old
+with new and prohibit compatibility layers. This report's original prescriptions for
+legacy adapters and staged deprecation were defects when written; the affected live
+instructions below now require outright replacement. [Owner ballot B-01/B-07](../plans/proof-programme/ballot-2026-08-owner-walk.md)
+ratified the application-contract and negative graph boundaries on 22 August 2026 and
+reinforced the existing replacement rule; it did not introduce that prohibition. The
+[parent plan](../plans/proof-programme/parent-plan.md#current-execution-state) owns the
+queue and the active correction commission; historical sequencing prose in this report
+does not reopen completed decisions or authorise execution.
+
+The [dated standards research](../research/rdf-jsonld-yamlld-standards-and-contract-boundaries-2026-09-08.md)
+and amended [Castr](../research/castr-future-direction-application-contract-compiler-2026-08-21.md)/[graph-system](../research/semantic-graph-contract-system-future-direction-2026-08-21.md)
+directions add proposed RDF 1.2, JSON-LD and YAML-LD profile and projection proofs to
+conditional Tranche 09G. Their standards check is 8 September 2026; the implementation
+observations and original source hashes in this report keep their historical baselines.
+This supplement adds no native Castr graph-format claim, API implementation or queue change.
 
 ## Executive verdict
 
@@ -110,9 +130,9 @@ Two strategic reports supplied after Revision 1 were read in full:
 | _Castr future direction: an application-contract compiler_ | `1f7b0302b2f35792423c52102b9ced5494b2f93c9b4a58daf6d489237ec1892f` | Narrows Castr to application values and software interactions; introduces discriminated artifact roots, explicit runtime-processing facets, governed widening, and typed format admission. |
 | _Future direction for the semantic-graph contract system_  | `d6b3d42dc7128668a0b8f80ff44f76910cd0651778f3429f086a2c9db775dc14` | Assigns RDF/SHACL/JSON-LD semantics to a sibling system; makes cross-domain projection an explicit adapter concern with separately composed evidence.                                      |
 
-Both inputs are strategic proposals, not adopted ADRs. This programme uses them as the forward design target because they resolve the universal-IR problem, but Tranche 00 must still ratify, amend, or reject that target. Until then the product domain is unresolved and certification remains blocked.
+Both original inputs were strategic proposals, not adopted ADRs. The application-contract and negative graph boundaries were subsequently ratified by [owner ballot B-01/B-07](../plans/proof-programme/ballot-2026-08-owner-walk.md). Their amended research editions are linked in the 8 September correction above; the hashes in this table identify the original inputs. The sibling graph product remains proposed. Certification still requires the applicable implementation and proof tranches; this historical report is not evidence that they are complete.
 
-The proposed ownership boundary is:
+The ownership boundary ratified for Castr, with the graph product still proposed, is:
 
 | Class                                                       | Castr status                                                        | Proof owner                              |
 | ----------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------- |
@@ -123,7 +143,7 @@ The proposed ownership boundary is:
 | RDF datasets, SHACL, RDF syntaxes, JSON-LD graph processing | Outside Castr's native domain                                       | Semantic-graph system                    |
 | Graph ↔ application mapping                                 | Versioned projection contract and adapter                           | Separate integration package/application |
 
-The recommended product statement to be ratified is:
+The product statement subsequently ratified in B-01 is:
 
 > **Castr compiles application value and interaction contracts between compatible representations without silently changing their meaning.**
 
@@ -306,10 +326,10 @@ Three rows are **already owner-adjudicated in direction** and must not be re-lit
 | Generated-code token/snapshot presence proves correctness                        | Placebo `.refine()` functions and invalid literals pass this style of proof.                                                                                                                                  | Compile with the TypeScript machinery and execute generated validators against positive/negative witnesses.                                                                                                 |
 | Existing official-suite exclusions can be inherited                              | Optional/pending/non-scored often describes suite maturity, not an acceptable Castr gap.                                                                                                                      | Every excluded case gets an explicit adjudication; Castr challenge cases may intentionally exceed the upstream scoring set.                                                                                 |
 | Every language called a schema belongs to one Castr semantic domain              | Application values, software interactions, RDF graphs, relational schemas, policies, and theorem languages describe different semantic objects.                                                               | Ratify the application-value/interaction boundary. Admit formats by semantic-object fit; keep graph semantics in the sibling system.                                                                        |
-| `CastrDocument` is the universal canonical root                                  | It can force standalone JSON Schema/Zod values to carry fabricated OpenAPI identity and mix values with interactions.                                                                                         | Replace canonical truth with versioned `value-contract` and `interaction-contract` roots. Retain `CastrDocument` only behind an explicit compatibility/migration adapter.                                   |
+| `CastrDocument` is the universal canonical root                                  | It can force standalone JSON Schema/Zod values to carry fabricated OpenAPI identity and mix values with interactions.                                                                                         | Replace canonical truth with versioned `value-contract` and `interaction-contract` roots. Remove `CastrDocument` and update its callers in the same replacement landing.                                    |
 | Accepted input, produced output, and runtime processing are one schema node      | Zod coercion, defaults, catches, transforms, codecs, async work, and effects can change successful output independently of accepted input.                                                                    | Model and persist the three facets separately; prove their observable relations and ordered processing.                                                                                                     |
 | Retained Zod source chains or renderer strings are sufficient semantic truth     | Source-shaped strings can be incomplete, target-specific, non-executable, or used to recover meaning discarded by the IR.                                                                                     | Parse supported runtime semantics into typed processing steps. Source syntax is diagnostic provenance only and writers never use it as hidden truth.                                                        |
-| Current exports and CLI modes define the desired product                         | The shipped surface contains historical accidents, missing surfaces, and pre-boundary architecture.                                                                                                           | Product charter and ADRs choose the desired surface. Classify each current surface retain/adapt/deprecate/internalise/remove, then prove the ratified result.                                               |
+| Current exports and CLI modes define the desired product                         | The shipped surface contains historical accidents, missing surfaces, and pre-boundary architecture.                                                                                                           | Product charter and ADRs choose the desired surface. Classify each current surface retain unchanged/replace/internalise/remove, then prove the ratified result.                                             |
 | Every format participates in a Cartesian source-target matrix                    | Value representations, interactions, static projections, tool projections, migrations, and documentation are not reversible peers.                                                                            | Use a typed directed transformation graph. No edge is valid unless its semantic role and selected facets are explicit.                                                                                      |
 | Documentation is a reversible semantic target                                    | Documentation describes contracts but generally cannot carry their executable semantics.                                                                                                                      | Treat it as descriptive rendering with executable examples and claim-truth assurance, never a lossless round-trip peer.                                                                                     |
 | Governed widening may appear under a lossless claim                              | Caller-authorised weakening is useful but the target accepts or guarantees something different.                                                                                                               | Separate exact and projection certificates; zero widening rows are permitted in a lossless certificate.                                                                                                     |
@@ -556,7 +576,7 @@ Do not hand-maintain a list that can omit an unknown feature undetected. Derive 
 - the dated MCP schema/spec;
 - the ratified product charter, artifact ADRs, and profile registry;
 - the desired public package/API/CLI surface derived from those profiles;
-- current package exports, CLI modes, writers, and templates as migration evidence to classify retain/adapt/deprecate/internalise/remove—not as authority that chooses the product;
+- current package exports, CLI modes, writers, and templates as migration evidence to classify retain unchanged/replace/internalise/remove—not as authority that chooses the product;
 - a deliberately bounded, published Zod AST grammar. “Zod 4 source” cannot honestly mean arbitrary executable TypeScript.
 
 Do not add RDF, SHACL, RDFS/OWL, SPARQL, or JSON-LD graph-processing constructs to Castr's source inventory. If a public integration exists, Castr's first source obligation is the versioned projected application-value artifact; graph and projection obligations remain in their owning certificates.
@@ -722,7 +742,7 @@ Record one decision for every item below before changing the associated model or
 1. adoption/amendment/rejection of the application-contract product boundary and candidate product statement;
 2. `value-contract` versus `interaction-contract` artifact roots and the artifact-schema version;
 3. accepted-input, produced-output, ordered-processing, annotation, and interaction facets;
-4. compatibility/deprecation path from legacy `CastrDocument`;
+4. direct replacement of `CastrDocument` and its callers, removing the old root in the same landing;
 5. exact source versions/dialects/profiles and desired public entrypoints;
 6. exact target versions, roles, profiles, and independently admitted ingress/egress versions;
 7. native representation, explicit projection, descriptive rendering, migration, and absent-edge meanings;
@@ -750,7 +770,7 @@ The recommended governing decisions are those in the challenge register: choose 
 - Add a reviewed semantic overlay for requirements official schemas cannot express.
 - Define the Zod static AST grammar explicitly by syntax form and chaining rules. Arbitrary executable TypeScript remains outside this parser grammar unless a separate runtime-object entrypoint is provided.
 - Define all semantic positions once. Do not let each recursive parser/writer keep a local, incomplete list.
-- Compare the current shipped surface with the ratified desired surface. Classify every export, CLI mode, template, and writer as retain, adapt, deprecate, internalise, or remove; current configuration does not choose the product.
+- Compare the current shipped surface with the ratified desired surface. Classify every export, CLI mode, template, and writer as retain unchanged, replace, internalise, or remove; current configuration does not choose the product.
 - Define a typed directed transformation graph. Do not manufacture edges for Cartesian symmetry.
 - Classify every authoritative source feature as admitted or out-of-scope with its proof/diagnostic; only then populate every obligation on every ratified directed edge with one target disposition and its witness/diagnostic.
 - Give every historical compromise a disposition: retain with normative/user-value warrant, replace, or delete.
@@ -861,7 +881,7 @@ Make the IR a lossless, backend-neutral carrier **within Castr's application-val
 Execute this tranche in three green internal stages:
 
 - **02A — fidelity foundation:** make current transformations fail on known silent loss, establish semantic-equality/persistence conventions, and extract only root-neutral primitives through current public seams without asserting that the legacy root is the desired architecture;
-- **02B — discriminated artifact roots and compatibility:** introduce the versioned value/interaction union, migrate current semantics behind it, and prove the legacy adapter/deprecation path; and
+- **02B — discriminated artifact-root replacement:** introduce the versioned value/interaction union, update callers and remove `CastrDocument` in the same landing, proving the replacement through public seams; and
 - **02C — semantic-facet migration:** extract #27's application-value algebra and replace source-shaped Zod/OpenAPI metadata with accepted-input, produced-output, processing, annotation, identity, and reference semantics.
 
 02A permits urgent silent-loss fixes to land; it does not claim that the full value/processing algebra already exists. 02B follows 02A, and 02C follows 02B, matching the future-direction migration phases. Only 02C completes the product foundation required by the format lanes and final certificate.
@@ -899,7 +919,7 @@ Prove through runtime construction, validation, persistence, and public parse se
 - processing order, sync/async posture, and declared effect dependencies remain observable where claimed;
 - the source is discarded after parsing and no writer recovers semantics from retained source syntax/provenance;
 - artifact schema version is explicit and migrations are transformation edges;
-- legacy `CastrDocument` input maps exactly to the new artifacts or returns structured findings/rejection; it is never the new canonical root.
+- the replacement public surface uses the new artefacts, and the old `CastrDocument` root and compatibility path are absent after the same landing.
 
 Use `tsc`—not Vitest—to prove static discriminated-union exhaustiveness.
 
@@ -969,7 +989,7 @@ Scope note: this tranche's guard acceptance covers the artifact roots, discrimin
 - Own-key APIs agree for every adversarial key; no inherited key is reported as owned.
 - Same value serializes deterministically without relying on insertion accident.
 - The IR carries no mandatory backend rendering string, fabricated foreign document identity, graph-semantic payload, or private sibling-core type.
-- The legacy compatibility adapter has complete migration findings and cannot become a writer dependency.
+- The new roots and updated callers replace `CastrDocument` completely; no compatibility layer remains or becomes a writer dependency.
 
 ## Tranche 03 — Wire identity, references, security algebra, and safe literals
 
@@ -1235,7 +1255,7 @@ The OpenAPI project states that its schemas are non-normative and cannot express
 Tranche 00 must also make Swagger/OpenAPI 2.0 a hard profile decision because the current product advertises it as ingress-only:
 
 - **Retain:** define a named `swagger-2.0-ingress` profile pinned to the normative [`versions/2.0.md`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/versions/2.0.md) and archived official [`schema.json`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/_archive_/schemas/v2.0/schema.json) at `OAI/OpenAPI-Specification@46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886` (Apache-2.0). Build a fixed-field and clause-linked corpus because no comprehensive official 2.0 conformance suite exists. Prove every public entry form and the explicit migration edge, including `definitions`, `host`/`basePath`/`schemes`, `consumes`/`produces`, body/form-data parameters, `collectionFormat`, file schemas, security definitions, and response schemas.
-- **Remove/deprecate:** reject 2.0 stably before IR construction at every public entrypoint and synchronise the support contract, Vision, API, CLI, and docs. Do not leave an advertised but uncertified ingress.
+- **Remove:** reject 2.0 stably before IR construction at every public entrypoint and synchronise the support contract, Vision, API, CLI, and docs. Do not leave an advertised but uncertified ingress.
 
 Likewise, broad “3.0.x” or “3.1.x” wording is valid only if every included patch profile is inventoried; otherwise public claims name the exact certified versions.
 
@@ -1529,6 +1549,27 @@ This tranche is conditional on a public graph-interoperation claim. It is owned 
 
 Neither core imports the other's private IR. Import direction is unambiguous: the adapter depends on the versioned public APIs/artifacts of `graph-core` and `castr-core`; neither core imports the adapter or the sibling core. Castr's native theorem begins at the projected application-value artifact; it does not prove the RDF/SHACL interpretation that produced it.
 
+### Dated standards and preservation profiles
+
+The [8 September 2026 standards research](../research/rdf-jsonld-yamlld-standards-and-contract-boundaries-2026-09-08.md)
+refines this conditional tranche's proposed proof inputs. A graph/profile certificate must
+name RDF version and Basic/Full conformance, dated syntax and processor specifications,
+JSON-LD/YAML-LD processing options, context-resolution inputs, stream policy, preservation
+scope and the canonicalisation algorithm's admitted data-model domain. RDF 1.2 and the
+new/planned linked-data versions do not share one implied conformance level.
+
+Prove assertion membership separately from merely referenced propositions; preserve
+independent reifier identities, nested triple terms and literal direction. For JSON-LD and
+YAML-LD, detect unmapped/dropped content and reproduce exact context resolution. Dataset
+equality alone does not preserve complete JSON-LD document information such as ordinary
+`@index`, and authoring comments/layout/anchors require a separate claim. Record each
+preserved, widened or rejected channel in the owning certificate. Safe processing does not
+replace graph/application validation; deterministic output does not establish RDFC-1.0
+support for data beyond its RDF 1.1 domain.
+
+These requirements belong to graph and projection evidence before the Castr certificate;
+they do not move RDF/SHACL/JSON-LD/YAML-LD semantics into Castr's native IR.
+
 ### Certificate composition
 
 For graph input `G`, projection contract `P`, projected application artifact `A`, and Castr target `T`:
@@ -1604,12 +1645,18 @@ Castr normally consumes only the validated public `valueContract`; the adapter r
 For every versioned projection concern, provide exact/widen/reject cases covering:
 
 - selected root nodes;
-- IRI and blank-node identity representation;
+- IRI, blank-node and independent reifier identity representation;
+- referenced proposition versus asserted-triple membership by graph, including nested triple terms;
 - predicate IRI ↔ application property mapping;
 - scalar, array, set, and container multiplicity;
 - unordered values versus RDF-list/external ordering;
 - RDF lexical/datatype conversion;
 - language tags and text direction;
+- explicit RDF Basic/Full and dated JSON-LD/YAML-LD processing profiles;
+- reproducible context content, base/resolve policy and imports;
+- RDF-dataset versus linked-data-document versus authoring-syntax preservation, including ordinary `@index`;
+- YAML scalar/key, alias-cycle/expansion and all/first-document processing behaviour;
+- canonicalisation admission and profile-transform proofs independently from deterministic output;
 - embed/reference nesting;
 - shared nodes and cycles;
 - absence, null, defaults, and invalidity;
@@ -1733,7 +1780,7 @@ Classify each edge as:
 - `descriptive-rendering`: non-reversible human-facing view;
 - `migration`: explicit version/artifact-schema transformation.
 
-No edge is manufactured for symmetry. “No edge” is a ratified product-design decision when source and target describe different objects; it is not `unimplemented`. Conversely, every desired/retained public entrypoint must appear or be deprecated/removed—“not applicable” cannot hide a reachable edge.
+No edge is manufactured for symmetry. “No edge” is a ratified product-design decision when source and target describe different objects; it is not `unimplemented`. Conversely, every desired/retained public entrypoint must appear or be removed—“not applicable” cannot hide a reachable edge.
 
 ### Directed-edge obligation execution
 
@@ -1928,7 +1975,7 @@ This is smoke, not an in-process Vitest test. It may perform the required packag
 
 - A cold consumer with the source repo absent can install, import, compile, and execute every claimed public surface.
 - JSON Schema/OpenAPI/TypeScript/MCP writers are either exported and proved or removed from public claims.
-- Public surfaces expose the two artifact kinds and typed transformation roles; legacy `CastrDocument` compatibility is clearly versioned/deprecated rather than presented as universal truth.
+- Public surfaces expose the two artifact kinds and typed transformation roles; `CastrDocument` and its compatibility path are removed in the replacement landing.
 - CLI/help/docs examples match observable shipped behaviour.
 - Licence and provenance exist in the packed artifact.
 - Release tag, package version, registry result, and GitHub release are linked or public-release wording is absent.
@@ -1984,7 +2031,7 @@ Emit a machine-readable and human-readable record containing:
 
 - Castr commit, dirty-state assertion, Node/pnpm/platform/tool versions;
 - ratified product-boundary/artifact/profile ADRs;
-- Castr product profile ID/version, artifact-schema version, semantic domain, artifact kinds/facets, transformation-edge roles, source/target profile versions, trust/resource profile, and compatibility/deprecation status;
+- Castr product profile ID/version, artifact-schema version, semantic domain, artifact kinds/facets, transformation-edge roles, source/target profile versions, trust/resource profile, and replacement/removal status;
 - governed-widening policy/findings and separate lossless/projection certificate type;
 - projection-boundary version/outcome and upstream graph/adapter certificate digests when interoperation is claimed;
 - official corpus revisions, selected paths and exclusion decisions;
@@ -2028,7 +2075,7 @@ Evidence classes follow the artifact model: JSON Schema and Zod cases exercise v
 | P0       | [MCP spec tag `2026-07-28`](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/2026-07-28/docs/specification/2026-07-28/server/tools.mdx), official [`2026-07-28` JSON schema](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/2026-07-28/schema/2026-07-28/schema.json), [SEP-2106](https://modelcontextprotocol.io/seps/2106-json-schema-2020-12), official [conformance `74edef34d674f563537be8c6587cebaa58e830ca`](https://github.com/modelcontextprotocol/conformance/tree/74edef34d674f563537be8c6587cebaa58e830ca), package `0.2.0-alpha.11` | Conformance package declares MIT; preserve exact repository transition notices | Dated official schema; deterministic preservation/no-network challenge cases; official runner for any real Castr protocol surface.                                                 | Full MCP transport/auth/client/server conformance from schema generation, or full conformance when scenarios are pending/non-scored.                                          | Requirements mark server preservation pending and client preservation post-release/non-scored. Keep them as Castr challenge cases and report status. Re-pin on every dated MCP release/conformance version. |
 | P0       | [TypeScript `v6.0.3`](https://github.com/microsoft/TypeScript/tree/v6.0.3) and its [`tests/cases/conformance`](https://github.com/microsoft/TypeScript/tree/v6.0.3/tests/cases/conformance) as reference                                                                                                                                                                                                                                                                                                                                                                             | Apache-2.0                                                                     | Use installed compiler/`tsc` with strict positive/negative generated consumer projects; derive only targeted lexical/type fixture ideas from upstream.                             | Runtime validation or semantic equivalence; running the whole upstream suite would test TypeScript, not Castr.                                                                | Update on compiler lock change. Do not vendor the very large upstream corpus.                                                                                                                               |
 | P1       | Normative [OAS 3.0.4](https://spec.openapis.org/oas/v3.0.4.html), [3.1.2](https://spec.openapis.org/oas/v3.1.2.html), [3.2.0](https://spec.openapis.org/oas/v3.2.0.html); official schemas [`OAI/spec.openapis.org@ff18fbf54d8cdb721f0bf26e317f5ad4090f3da8`](https://github.com/OAI/spec.openapis.org/tree/ff18fbf54d8cdb721f0bf26e317f5ad4090f3da8); official examples [`OAI/learn.openapis.org@43756549c27cbf84107b190b82c65e0336f2f09f`](https://github.com/OAI/learn.openapis.org/tree/43756549c27cbf84107b190b82c65e0336f2f09f/examples)                                       | Specification/schema Apache-2.0; Learn examples CC-BY-4.0                      | Validate exact-version source/output structure; derive fixed-field inventory; use examples as positive seeds; author clause-linked negative/semantic cases.                        | Comprehensive OpenAPI conformance. Official schemas are expressly non-normative and cannot encode every cross-field rule; examples carry no negative oracle.                  | No official full OAS conformance corpus exists. Human-review the clause manifest quarterly and on OAS/schema release. Vendor only chosen schemas/examples with attribution.                                 |
-| P1       | Conditional Swagger/OpenAPI 2.0 sources: normative [`versions/2.0.md`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/versions/2.0.md) and archived official [`schema.json`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/_archive_/schemas/v2.0/schema.json) at `OAI/OpenAPI-Specification@46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886`                                                                                                                                                      | Apache-2.0                                                                     | If ingress is retained, derive fixed-field inventory, validate structure, and author clause-linked semantic/migration cases for all 2.0-only constructs.                           | Comprehensive 2.0 conformance; the archived schema is non-normative and no official transformation corpus exists.                                                             | T00 must either activate the pinned `swagger-2.0-ingress` profile or remove/deprecate it everywhere with stable rejection.                                                                                  |
+| P1       | Conditional Swagger/OpenAPI 2.0 sources: normative [`versions/2.0.md`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/versions/2.0.md) and archived official [`schema.json`](https://github.com/OAI/OpenAPI-Specification/blob/46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886/_archive_/schemas/v2.0/schema.json) at `OAI/OpenAPI-Specification@46c1076ba6f9a7a09ecaa6b740ab603cf6cc9886`                                                                                                                                                      | Apache-2.0                                                                     | If ingress is retained, derive fixed-field inventory, validate structure, and author clause-linked semantic/migration cases for all 2.0-only constructs.                           | Comprehensive 2.0 conformance; the archived schema is non-normative and no official transformation corpus exists.                                                             | T00 must either activate the pinned `swagger-2.0-ingress` profile or remove it everywhere with stable rejection.                                                                                            |
 | P1       | [Zod `v4.4.3`](https://github.com/colinhacks/zod/tree/v4.4.3), especially public classic tests for objects, strings, numbers, unions, discriminated unions, tuples, recursion, refinements, and JSON Schema                                                                                                                                                                                                                                                                                                                                                                          | MIT                                                                            | Derive version-matched grammar/witness cases; execute original reviewed fixtures and generated schemas; compare success and parsed values; compile input/output consumer fixtures. | A neutral standard or full arbitrary-TypeScript grammar. Upstream tests prove Zod's implementation, not Castr's transformer.                                                  | Every higher-order effect gets explicit source admission, then preserve/widen/reject adjudication per edge. Update on resolved Zod lock change. Use installed package, do not vendor repo.                  |
 | P1       | [Test262 `3655e7464de3d52643ecddd4b5f9f4f3e7f62398`](https://github.com/tc39/test262/tree/3655e7464de3d52643ecddd4b5f9f4f3e7f62398)                                                                                                                                                                                                                                                                                                                                                                                                                                                  | BSD-3-Clause-style terms plus patent grant; preserve notices                   | Derive a small, attributed lexical corpus for strings, property names, identifiers, escapes, Unicode and comments; compile/evaluate Castr-generated artifacts.                     | General JavaScript-engine conformance or complete injection safety.                                                                                                           | Select only cases that discriminate Castr emitters. Review on emitter/toolchain change.                                                                                                                     |
 | P2       | [fast-check `v4.9.0`](https://github.com/dubzzz/fast-check/tree/v4.9.0)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | MIT                                                                            | Bounded generators behind Vitest, fixed seeds, shrink/replay, deterministic regressions from failures.                                                                             | Domain authority, conformance, or universal proof.                                                                                                                            | Bias to high-risk structures; never use it to waive a missing deterministic obligation. Update with dependency lock.                                                                                        |
@@ -2191,7 +2238,7 @@ Close without merging only after a commit/file-level patch-equivalence check con
 flowchart TD
     X["Dependency-only #14: independent early slice"]
     B["Reworked agnostic harness from #11 (01)"] --> C["02A Current-fidelity foundation"]
-    A["Boundary and artifact ADRs (T00a)"] --> D["Value/interaction roots + legacy adapter (02B)"]
+    A["Boundary and artifact ADRs (T00a)"] --> D["Value/interaction root replacement (02B)"]
     C --> D
     D --> E["Value and processing facets #27 (02C)"]
     E --> F["Identity/ref half #18 (03)"]
@@ -2214,7 +2261,7 @@ flowchart TD
     M --> J
 ```
 
-This graph is **derived from the Section 6 dependency model** — the bracketed tranche numbers are the correspondence, and any future edit changes Section 6 first and rederives this view; the two graphs must never be maintained independently. It is semantic, not a command to merge the named branches unchanged. The admission-boundary node (Tranche 04) has no current PR: like the artifact ADRs, discriminated roots, compatibility adapter, processing algebra, typed profile registry, and graph projection boundary, it is new work. Guards deliberately land after the identity/reference primitives (see the Tranche 02 scope note). The dependency-only extraction from #14 is an independent early slice, not a prerequisite edge from the boundary/harness work. #21's hygiene rework may proceed in parallel but must validate the new estate before fan-in. #10 and #23 sit outside as migration sources; #28 closes only after patch-equivalence verification.
+This graph is **derived from the Section 6 dependency model** — the bracketed tranche numbers are the correspondence, and any future edit changes Section 6 first and rederives this view; the two graphs must never be maintained independently. It is semantic, not a command to merge the named branches unchanged. The admission-boundary node (Tranche 04) has no current PR: like the artifact ADRs, discriminated-root replacement, processing algebra, typed profile registry, and graph projection boundary, it is new work. Guards deliberately land after the identity/reference primitives (see the Tranche 02 scope note). The dependency-only extraction from #14 is an independent early slice, not a prerequisite edge from the boundary/harness work. #21's hygiene rework may proceed in parallel but must validate the new estate before fan-in. #10 and #23 sit outside as migration sources; #28 closes only after patch-equivalence verification.
 
 ### 11.6 Duplicate and conflicting proof ownership
 
@@ -2252,7 +2299,7 @@ This graph is **derived from the Section 6 dependency model** — the bracketed 
 | F-15 | Test temp-state leakage and timeout sensitivity undermine hermeticity                   |   Medium | 01, 12          | Unique explicit directories, shuffled/repeated/fresh-process suite runs, no gated wall-clock assertions.       |
 | F-16 | Documentation/claims/licence state is stale or absent                                   |     High | 13, 14          | Human-reviewed claim generation from certificate, licence/provenance checks, published-support table.          |
 | F-17 | Universal-schema identity gives the proof an incoherent semantic subject                | Critical | 00, 11, 13, 14  | Ratified application-contract charter, format-admission decisions, typed transformation graph, bounded claims. |
-| F-18 | One OpenAPI-shaped root conflates value and interaction artifacts                       | Critical | 02, 04, 06, 11  | Discriminated roots, standalone-value cases, interaction→value references, legacy migration proof.             |
+| F-18 | One OpenAPI-shaped root conflates value and interaction artifacts                       | Critical | 02, 04, 06, 11  | Discriminated roots, standalone-value cases, interaction→value references, direct replacement proof.           |
 | F-19 | Zod accepted-input, produced-output, and processing semantics hide in source strings    | Critical | 02, 07, 08, 11  | Typed ordered processing algebra, persistence and source/generated runtime plus compiler witnesses.            |
 | F-20 | Cartesian pair accounting treats projections/renderings as lossless peers               | Critical | 00, 04, 11, 14  | Directed edge roles, selected facets, absent-edge decisions and profile-specific certificates.                 |
 | F-21 | Governed widening is laundered into a lossless certificate                              | Critical | 00, 11, 13, 14  | Exact-profile rejection, explicit policy/findings, separate projection certificate and zero-widening gate.     |
@@ -2544,7 +2591,7 @@ These reviews attack different premises. Their agreement is more important than 
 
 **Verdict:** sustained; this is the principal new blocker introduced by the future-direction work.
 
-**Required defence:** charter/ADRs precede the desired surface; the harness is artifact-agnostic; Tranche 02B establishes discriminated roots and a legacy adapter before final guards/format lanes; current exports are migration hypotheses, not product authority.
+**Required defence:** charter/ADRs precede the desired surface; the harness is artifact-agnostic; Tranche 02B replaces the old root with discriminated roots and updates callers in the same landing before final guards/format lanes; current exports are migration hypotheses, not product authority.
 
 ### Adversarial review N — semantic-category error and domain-boundary gaming
 
@@ -2646,10 +2693,10 @@ This sequence is a recommendation to the parent plan, not self-executing policy 
 authority note at the top of this report).
 
 1. Author the parent plan and its series of incremental implementation plans from this report (owner directive, 2026-08-22). The plans include extracting the value from all existing open PRs per Section 11 and then closing them, and explicitly reconcile the owner's 2026-06-19 roadmap sequencing decision.
-2. Open the T00a owner charter walk (product boundary, artifact roots, legacy path, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, run only the two Section 6 spine exceptions — the pre-T01 harness-extraction slice from #11 and the pre-02A defect slice (F-01, F-03, F-04 on the current root) — plus #14's dependency-only fix and #21's concrete isolation/E2E repairs; none of these slices may pre-empt the pending product boundary, and Tranche 01 itself lands only after T00a closes.
-3. Ratify the remaining T00a decisions — the application-contract domain, discriminated artifact roots and facets, the legacy compatibility path, opaque-carriage and extension policy (decisions 14–15), and graph ownership and the projected-value boundary (decisions 19–20) — adjudicating historical-compromise rows per-landing as their subjects are touched. Profile/version, widening, public-surface, and certification policies are ratified later at their assigned T00b/T00c gates, not here. Re-plan if the boundary is rejected.
+2. Open the T00a owner charter walk (product boundary, artifact-root replacement, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, run only the two Section 6 spine exceptions — the pre-T01 harness-extraction slice from #11 and the pre-02A defect slice (F-01, F-03, F-04 on the current root) — plus #14's dependency-only fix and #21's concrete isolation/E2E repairs; none of these slices may pre-empt the pending product boundary, and Tranche 01 itself lands only after T00a closes.
+3. Ratify the remaining T00a decisions — the application-contract domain, discriminated artifact roots and facets, the direct root replacement, opaque-carriage and extension policy (decisions 14–15), and graph ownership and the projected-value boundary (decisions 19–20) — adjudicating historical-compromise rows per-landing as their subjects are touched. Profile/version, widening, public-surface, and certification policies are ratified later at their assigned T00b/T00c gates, not here. Re-plan if the boundary is rejected.
 4. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
-5. Introduce versioned value/interaction artifacts and the legacy `CastrDocument` adapter.
+5. Introduce versioned value/interaction artefacts, update callers and remove `CastrDocument` in the same landing.
 6. Extract #27's application-value input/output/catchall semantics into the new facets, then split the identity/provenance/reference half of #18.
 7. Rederive #20 guards and #12 traversal from the new artifacts, and land the unified admission boundary and fail-closed preflight (Tranche 04), opening with its T00b charter (decision 5 and the error-code/atomicity half of decision 21).
 8. Run independent JSON #16, Zod #13, OpenAPI interaction #17/#18-security, codegen #15/#26, and MCP projection lanes, each opening with its T00b lane charter.
@@ -2663,4 +2710,4 @@ Release scope is constitutively an owner decision; this section records the evid
 
 **No current Castr commit or open PR set proves the revised bounded theorem. The evidence therefore does not support universal or unprofiled “complete/lossless” claims—including Castr's currently advertised broad version of those claims.** A narrower release is not categorically forbidden: it must remove or unadvertise unsupported surfaces and pass Tranches 13 and 14 for the exact narrower profile. The repository has a strong base of tests and substantial repair work, but it still lacks adopted product/artifact/profile ADRs, the discriminated root/processing model, an approved support contract, independent all-channel oracles, a zero-gap typed transformation graph, correct integration of conflicting PR semantics, and a current shipped-artifact certificate.
 
-The shortest credible path is not to merge all remediation branches and not to extend Castr into RDF/SHACL. It is to ratify the application-contract boundary, establish the artifact-agnostic harness, introduce value/interaction roots and the legacy adapter, extract #27's value semantics ahead of #13/#16, integrate the remaining typed lanes, and require one final all-green profile certificate. Graph interoperation remains a separately composed adapter claim.
+The shortest credible path is not to merge all remediation branches and not to extend Castr into RDF/SHACL. It is to ratify the application-contract boundary, establish the artifact-agnostic harness, replace the old root with value/interaction roots and update callers in the same landing, extract #27's value semantics ahead of #13/#16, integrate the remaining typed lanes, and require one final all-green profile certificate. Graph interoperation remains a separately composed adapter claim.
