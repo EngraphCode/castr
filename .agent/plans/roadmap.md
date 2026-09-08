@@ -72,6 +72,13 @@ public workflows, full dialect inventories, behavioural proofs and support
 documentation agree, under the
 [verification contract](../directives/DEFINITION_OF_DONE.md).
 
+## Supporting research
+
+The dated [Castr and tRPC comparison](../research/castr-versus-trpc-2026-09-08.md)
+examines compiler fidelity, runtime responsibilities and possible companion
+integration. It separates inspected implementation from ratified requirements
+and proposals; it does not add implementation scope or alter the execution queue.
+
 ## Retained work and lifecycle
 
 - The correction plan owns comprehensive document/finding/source-change coverage,
