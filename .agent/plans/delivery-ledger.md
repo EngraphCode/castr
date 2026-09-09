@@ -132,7 +132,7 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   and health checks share strict platform and canonical-source contracts. The
   coordinating agent accepted full custody of the dependent native Cricket
   installation after this merge.
-- **C05 Cricket repository delivery complete; final native proof outstanding:** PR #88
+- **C05 Cricket final native proof complete; lifecycle PR delivery pending:** PR #88
   delivered the strict platform contract as
   `bd115294`; PR #91 delivered the installation from reviewed head `48e2194d` as merge
   commit `af840d9b`. All 17 exact-head check runs passed: 16 repository, security and
@@ -140,34 +140,31 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   resolved, Codex completed without a further finding and Copilot reported no additional
   change. Gateway, documentation and onboarding reviewers approved. The merge commit's
   second parent and tree exactly match the reviewed head. T1/T2 and I1 are delivered;
-  documentation evidence is retained in the [active plan](current/cricket-platform-parity.md).
-  Its earlier six-return panel predates material changes to the final templates, so it is
-  dated invocation evidence rather than final I2 proof. The later attempt produced no
-  observable registered-role dispatch or return. Final I2 and atomic
-  lifecycle completion remain outstanding.
+  documentation and final native evidence are retained in the
+  [completed atomic plan](current/complete/cricket-platform-parity.md).
+  The 10 September final-main run delivered all six substantive registered-role returns,
+  including same-agent adversarial follow-ups. Earlier dated and UNDELIVERED attempts
+  remain historical evidence. I2 is complete; the small evidence/lifecycle PR remains
+  pending delivery. PR #14 extraction follows its merge; broader C05 remains open.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
-The durable post-PR-91 estate contains 16 open PRs: the fourteen inherited open PRs
-below, frozen source #81 and current #87. This self-referential lifecycle delivery is
-[PR #92](https://github.com/EngraphCode/castr/pull/92) at opening head `79cb1fcd`; while
-it remains open, GitHub's live total is 17. PR #91 merged as `af840d9b`; PR #90
-previously merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28
-closed without merge and retained its recovery branch. The other 16 open PRs remain
-integration risk, not delivered value. PR #92 now corrects its premature closeout and
-records final I2 as outstanding. The final-template native panel and lifecycle
-reconciliation precede PR #14 under the parent plan's sequence. The remaining source PRs
-close only when their recorded extraction or supersession conditions are verified. The
-following 6 September checks and review states are historical observations, not fresh
-merge readiness.
+Verified on 10 September 2026 with `gh pr list --state open --limit 100`: 15 older
+PRs remain open, comprising the fourteen inherited rows below and frozen source #81.
+PR #87 merged as `c1e73c1a` and PR #92 as `8deca63f`. This count excludes the new final
+I2 evidence/lifecycle PR until it opens. PR #91 merged as `af840d9b`; PR #90 previously
+merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28 closed without
+merge and retained its recovery branch. The remaining source PRs close only when their
+recorded extraction or supersession conditions are verified. PR #14 extraction follows
+the final evidence/lifecycle PR merge. The following 6 September check and review states
+are historical observations, not fresh merge readiness.
 
-PR #92's published opening commit bundled `repo-continuity.md` and the correction thread
-record with lifecycle documents, contrary to the continuity-surface orphan-commit rule.
-The published history remains intact; the corrected current observations receive their
-own `chore(continuity)` commit before merge.
+PR #92's opening commit bundled continuity records with lifecycle documents; that
+historical deviation remains recorded. This final proof delivery keeps continuity
+observations in their own `chore(continuity)` commit within the same bounded PR.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.
@@ -282,4 +279,4 @@ not authorise another shepherd to resolve review or merge conditions.
 | PR and observed head                                                                            | Recorded state                                                                                                                            | Value, overlap and owner                                                                                                                                                                                   | Required disposition evidence                                                                                                                                                                                                                      |
 | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [#87](https://github.com/EngraphCode/castr/pull/87), `4326876a9e67320a4580481f615ca7121a220e9c` | Open; 16 successful checks; four unresolved review threads in the 9 September full harvest, including owner questions on two P1 warrants. | Separately shepherded JSON Schema roadmap and interoperability research; C09 reconciles its direction and C06/C07 overlap against main. Broader graph intentions do not implicitly expand this commission. | Its shepherd must settle the owner questions and all review findings, verify current-head conditions and record the actual merge or surviving-value disposition. Root must compare its integrated doctrine before extracting prepared vision work. |
-| [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 Cricket platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                               | PR #91 subsequently delivered the repository installation as `af840d9b`; the active atomic plan linked above retains final I2 and lifecycle acceptance.                                                                                            |
+| [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 Cricket platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                               | PR #91 subsequently delivered the repository installation as `af840d9b`; the completed atomic plan linked above retains final I2 evidence and lifecycle acceptance.                                                                                |

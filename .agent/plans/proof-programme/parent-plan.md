@@ -174,12 +174,11 @@ delivered the dependent installation as
 `af840d9b68e9b4ef00813a2af97675c7abca3c33`. Its reviewed head was the merge
 commit's second parent and the trees are identical; all 17 exact-head check runs passed,
 including the successful Copilot review run, and all eight review threads were resolved.
-The C05 Cricket implementation and installation are delivered, but its
-[atomic plan](../current/cricket-platform-parity.md) remains open for final-template I2
-proof. The retained six-return run predates material template changes; the later attempt
-produced no observable registered-role dispatch or return.
-PR #92 corrects the premature closeout. Six substantive final-template returns and the
-resulting lifecycle reconciliation precede PR #14's dependency-ownership extraction.
+The C05 Cricket [atomic plan](../current/complete/cricket-platform-parity.md) is now
+in completion staging: the final-main native record contains all three normal and
+same-agent adversarial registered-role returns. Earlier dated and UNDELIVERED records
+remain preserved. PR #92 corrected the premature closeout; the final evidence/lifecycle
+PR must merge before PR #14's dependency-ownership extraction.
 The broader C05 family retains its other documented obligations. Q-09 remains pending
 for PR #10. When Q-22 resumes, migrate
 the integer contract coherently across its live consumers and doctrine, then land

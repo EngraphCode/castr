@@ -1,0 +1,186 @@
+{
+  "evidence_kind": "final-main native registered invocation and semantic spot check",
+  "date": "2026-09-10",
+  "timezone": "Europe/London",
+  "parent_session": "01a08877-7825-7bb2-be19-a51d3b1563d1",
+  "coordinating_session": "01a0722e-0cec-7cf1-a67b-a8787ac9b2d0",
+  "head_before_changes": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+  "candidate_status": "clean fetched origin/main before evidence/lifecycle edits",
+  "runtime_surface": "Fresh trusted Castr Codex task; all three registered roles exposed in live collaboration schema and accepted by typed spawn. No CLI substitute or fourth seat.",
+  "schema_evidence": "Parent-observed tool schema and retained typed dispatch metadata; not a machine-exported schema or independent model attestation.",
+  "frame_provenance": "The parent supplied one identical six-field frame to all three spawn calls, then changed only STANCE for followup_task calls on the same returned task names. Stored tool message arguments are encrypted at rest, so no byte-equality readback proof is claimed. Dispatch metadata and all six final returns are extracted verbatim from persisted session records.",
+  "commission_event_id": "MISSING",
+  "configured_roles": {
+    "cricket-judgement-low": "name = \"cricket-judgement-low\"\ndescription = \"Fast low-effort conscience check using contextual judgement. Use for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting. Do not use for artefact or plan review, or to repeat a known verdict. Good: test whether a named next action serves its consumer. Bad: ask Cricket to review an artefact. Returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.\"\nmodel = \"gpt-5.6-sol\"\nmodel_reasoning_effort = \"low\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-judgement.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: a single fast pass — judge from the supplied context, honour the\ntemplate's speed contract, and report only. Do not modify anything.\n\"\"\"\n",
+    "cricket-judgement-medium": "name = \"cricket-judgement-medium\"\ndescription = \"Fast medium-effort conscience check using contextual judgement. Use for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting. Do not use for artefact or plan review, or to repeat a known verdict. Good: test whether a named next action serves its consumer. Bad: ask Cricket to review an artefact. Returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.\"\nmodel = \"gpt-5.6-terra\"\nmodel_reasoning_effort = \"medium\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-judgement.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: a single fast pass — judge from the supplied context, honour the\ntemplate's speed contract, and report only. Do not modify anything.\n\"\"\"\n",
+    "cricket-procedure-xhigh": "name = \"cricket-procedure-xhigh\"\ndescription = \"Fast xhigh-effort conscience check using a compiled decision procedure with quote-anchored evidence and a mechanical verdict table. Use for a reproducible second opinion when priority, proportion, or a wait/gate may be drifting. Do not use for frame-free perspectives or artefact and plan review. Good: supply the exact six-field frame for a mechanical verdict. Bad: ask it to explore a repository or review an artefact. Returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with one redirection.\"\nmodel = \"gpt-5.6-luna\"\nmodel_reasoning_effort = \"xhigh\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-procedure.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: execute the template's compiled decision procedure exactly in a single\nfast pass, using at most its two targeted verification Reads when the speed\ncontract permits them. Never explore; report only. Do not modify anything.\n\"\"\"\n"
+  },
+  "source_sha256": {
+    ".codex/agents/cricket-judgement-low.toml": "fafc540485054da2ff8192ba52998bca48c2ed22317dc1ae25a28ab9f99e95f7",
+    ".codex/agents/cricket-judgement-medium.toml": "6768fdaa8ae235693359aa687857d79c0fca11d1f1be53f9d53a01e9e6928c94",
+    ".codex/agents/cricket-procedure-xhigh.toml": "64882bca2b9ed522b1f7c9ca412b32c8b1ee1f9e5121709c174a1f23693ac5d3",
+    ".agent/sub-agents/templates/cricket-judgement.md": "52aef8b4a5e16bdc073ee02913f1382a9f5628e1351bce2476c99becfbce3387",
+    ".agent/sub-agents/templates/cricket-procedure.md": "a7e8caf65d23446bdb1c2ca3190a3286ba0f517281e6a46acecc2d246eb4ad42",
+    ".agent/skills/cognition/cricket/SKILL-CANONICAL.md": "5ba6697848f1e6d6b8dbe0ee61f77cd9312dfde34ffef2ff5288f861d75b23bb"
+  },
+  "dispatches": [
+    {
+      "timestamp": "2026-09-09T23:19:29.390Z",
+      "tool": "spawn_agent",
+      "call_id": "call_3S0jJEGuNowdfgTEvGB8OYI7",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_low",
+        "agent_type": "cricket-judgement-low",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:19:42.069Z",
+      "tool": "spawn_agent",
+      "call_id": "call_IEomzBRhaR6pDOgquYOfPRne",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_medium",
+        "agent_type": "cricket-judgement-medium",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:19:54.794Z",
+      "tool": "spawn_agent",
+      "call_id": "call_PzK55I8qlB6asiAf6qsoMPxJ",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_procedure",
+        "agent_type": "cricket-procedure-xhigh",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:21:31.120Z",
+      "tool": "followup_task",
+      "call_id": "call_fanAhgClnHG6QMsB8aEiVgUq",
+      "arguments_without_encrypted_message": {
+        "target": "/root/cricket_low"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:21:44.125Z",
+      "tool": "followup_task",
+      "call_id": "call_x2QyFaGowtLL5SnyFQIEY7hL",
+      "arguments_without_encrypted_message": {
+        "target": "/root/cricket_medium"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T23:21:56.809Z",
+      "tool": "followup_task",
+      "call_id": "call_dHAuQ6sGcuVGEASpjBs99mzw",
+      "arguments_without_encrypted_message": {
+        "target": "/root/cricket_procedure"
+      }
+    }
+  ],
+  "dispatch_results": [
+    {
+      "timestamp": "2026-09-09T23:19:29.523Z",
+      "call_id": "call_3S0jJEGuNowdfgTEvGB8OYI7",
+      "output": "{\"task_name\":\"/root/cricket_low\"}"
+    },
+    {
+      "timestamp": "2026-09-09T23:19:42.247Z",
+      "call_id": "call_IEomzBRhaR6pDOgquYOfPRne",
+      "output": "{\"task_name\":\"/root/cricket_medium\"}"
+    },
+    {
+      "timestamp": "2026-09-09T23:19:54.976Z",
+      "call_id": "call_PzK55I8qlB6asiAf6qsoMPxJ",
+      "output": "{\"task_name\":\"/root/cricket_procedure\"}"
+    },
+    {
+      "timestamp": "2026-09-09T23:21:31.193Z",
+      "call_id": "call_fanAhgClnHG6QMsB8aEiVgUq",
+      "output": ""
+    },
+    {
+      "timestamp": "2026-09-09T23:21:44.157Z",
+      "call_id": "call_x2QyFaGowtLL5SnyFQIEY7hL",
+      "output": ""
+    },
+    {
+      "timestamp": "2026-09-09T23:21:56.847Z",
+      "call_id": "call_dHAuQ6sGcuVGEASpjBs99mzw",
+      "output": ""
+    }
+  ],
+  "returns": [
+    {
+      "role": "cricket-judgement-low",
+      "stance": "normal",
+      "timestamp": "2026-09-09T23:19:47.845Z",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast priority and proportionality check\nSummary: I judge whether the primary agent’s next action serves the stated critical path.\n\nSTANCE: normal  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- The plan explicitly makes final I2 proof and lifecycle reconciliation the prerequisite consumer for PR #14 extraction.\n- Fresh native proof is proportionate because the previous record predates material template changes; six registered-role returns directly test the changed boundary.\n- No invented gate appears: the merge prohibition comes from the commissioning instruction, while failure terminates as `UNDELIVERED` under the named Cricket skill.\n\nREDIRECTION: Run the registered panel immediately; record the commission’s missing event ID as ungrounded rather than delaying proof or inventing provenance.\n\nUNGROUNDED: The commissioning event ID is missing; coordinator activity and the plan quotation were supplied but not independently verified."
+    },
+    {
+      "role": "cricket-judgement-low",
+      "stance": "adversarial",
+      "timestamp": "2026-09-09T23:21:35.844Z",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast priority and proportionality check\nSummary: I judge whether the primary agent’s next action serves the stated critical path.\n\nSTANCE: adversarial  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- Counterfactual: begin PR #14 extraction now, avoiding further process work. This fails because the controlling plan explicitly places final I2 proof and lifecycle reconciliation before extraction, and PR #14 implementation remains coordinator-owned.\n- The native proof has a concrete consumer: validating materially changed registered-role templates and closing the pending lifecycle boundary.\n- The work is bounded to six returns, one atomic reconciliation, named checks, and one merge-ready PR; the explicit no-merge instruction prevents scope expansion.\n\nREDIRECTION: Run the panel now and limit concurrent preparation to evidence and lifecycle records consumed by successful returns.\n\nUNGROUNDED: The commission lacks an event ID; coordinator activity, template materiality, plan quotation, and GitHub state were supplied rather than independently verified."
+    },
+    {
+      "role": "cricket-judgement-medium",
+      "stance": "normal",
+      "timestamp": "2026-09-09T23:19:58.899Z",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I assess whether the primary’s next action serves the stated critical path.\n\nSTANCE: normal  \nVERDICT: DRIFTING  \nEVIDENCE:\n- The plan explicitly makes final I2 proof and lifecycle reconciliation precede PR #14, so the proposed native panel serves the coordinator’s downstream dependency-ownership extraction.\n- The critical-path owner is named and actively positioned to execute the bounded proof; no invented approval wait is proposed.\n- The commissioning source is explicitly `event id MISSING`; the frame’s load-bearing priority and stop boundary therefore lack the provenance required by the Cricket template.\n\nREDIRECTION: Record the commissioning event ID alongside the objective before treating its ordered boundary as controlling, then run the native panel immediately.\n\nUNGROUNDED: The cited plan’s current wording, the asserted clean/head/PR state, and the coordinator’s current activity were supplied but not independently verified."
+    },
+    {
+      "role": "cricket-judgement-medium",
+      "stance": "adversarial",
+      "timestamp": "2026-09-09T23:21:50.925Z",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I assess whether the primary’s next action serves the stated critical path.\n\nSTANCE: adversarial  \nVERDICT: DRIFTING  \nEVIDENCE:\n- Counterfactual: begin PR #14 extraction now, serving the coordinator’s dependency-ownership queue. Its refutation is the supplied current plan, which explicitly orders final I2 proof and lifecycle reconciliation first.\n- The native panel is therefore the right operational action if that ordering is authoritative, and the named primary owns it.\n- That authority remains unproven: its commissioning event ID is `MISSING`, despite the template requiring provenance for a ruling that controls priority and the no-fallback/stop boundary.\n\nREDIRECTION: Attach the commissioning event ID to the ordered I2-before-PR #14 ruling, then execute the six-return native panel immediately.\n\nUNGROUNDED: Current plan wording; the asserted clean/head/PR state; and the coordinator’s current activity were supplied, not independently verified."
+    },
+    {
+      "role": "cricket-procedure-xhigh",
+      "stance": "normal",
+      "timestamp": "2026-09-09T23:21:17.730Z",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate audit  \nSummary: I execute Cricket’s fixed decision procedure against the supplied frame.  \nSTANCE: normal  \nSTAKES: “Run this registered three-role normal panel then adversarial follow-ups on the same agents, per .agent/skills/cognition/cricket/SKILL-CANONICAL.md.”  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- CONSUMER: PASS — “Report exact PR/head/check/review state to coordinator for subsequent PR #14 extraction.”\n- DISPLACEMENT: PASS — “Run this registered three-role normal panel then adversarial follow-ups on the same agents”; owner “owns final I2 proof”.\n- GATES: PASS — “If native roles fail, record UNDELIVERED and stop without fallback” is backed by the named Cricket skill; “Do not merge this PR” is the commissioned task directive (01a0722e-0cec-7cf1-a67b-a8787ac9b2d0).\n- PROPORTION: PASS — “prepare evidence/lifecycle record boundaries” and “Report exact PR/head/check/review state to coordinator” tie the work to named downstream consumers.\nREDIRECTION: none  \nUNGROUNDED: No five-field item missing/vague. On-trust claims: event id MISSING; six returns; owner activity status; reported HEAD/PR/open-list/clean-tree/prior-I2/template assertions."
+    },
+    {
+      "role": "cricket-procedure-xhigh",
+      "stance": "adversarial",
+      "timestamp": "2026-09-09T23:22:31.450Z",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate audit  \nSummary: I apply Cricket’s fixed procedure to the supplied frame.  \nSTANCE: adversarial  \nSTAKES: “Run this registered three-role normal panel then adversarial follow-ups on the same agents, per .agent/skills/cognition/cricket/SKILL-CANONICAL.md.”  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- CONSUMER: PASS — “Report exact PR/head/check/review state to coordinator for subsequent PR #14 extraction.” Counter-evidence: “not independently observed current activity”; this limits status evidence, but coordinator is explicitly named.\n- DISPLACEMENT: PASS — “Run this registered three-role normal panel then adversarial follow-ups on the same agents”; owner “owns final I2 proof”. Counter-evidence: “PR #14 implementation remain coordinator-owned”; that scope leaves final proof as the current owner’s action.\n- GATES: PASS — “If native roles fail, record UNDELIVERED and stop without fallback”; “Do not merge this PR”. Counter-evidence: “No owner-approval wait is added”; that removes an extra wait, not the named directives.\n- PROPORTION: PASS — “prepare evidence/lifecycle record boundaries” and “Report exact PR/head/check/review state to coordinator”. Counter-evidence: “broader programme closeout ... remain coordinator-owned”; current work prepares its handoff.\nREDIRECTION: none  \nUNGROUNDED: No five-field item missing/vague. On-trust claims: event id MISSING; six returns; owner activity status; reported HEAD/PR/open-list/clean-tree/prior-I2/template assertions."
+    }
+  ],
+  "delivery_result": {
+    "cricket-judgement-low-normal": "DELIVERED",
+    "cricket-judgement-low-adversarial": "DELIVERED",
+    "cricket-judgement-medium-normal": "DELIVERED",
+    "cricket-judgement-medium-adversarial": "DELIVERED",
+    "cricket-procedure-xhigh-normal": "DELIVERED",
+    "cricket-procedure-xhigh-adversarial": "DELIVERED"
+  },
+  "verification": {
+    "method": "git fetch origin main; git rev-parse HEAD origin/main; git status --short; gh pr view 87/92 --json number,state,mergedAt,mergeCommit; gh pr list --state open --limit 100 --json number,title,headRefName",
+    "head_equals_origin_main": true,
+    "pr_87": {
+      "state": "MERGED",
+      "merged_at": "2026-09-09T23:16:15Z",
+      "merge_commit": "c1e73c1ae1f26ee97af603e45df78be1e775884a"
+    },
+    "pr_92": {
+      "state": "MERGED",
+      "merged_at": "2026-09-09T22:41:52Z",
+      "merge_commit": "8deca63ffdbd2c26b6e2a46a30ab7e6f93c43ce8"
+    },
+    "open_prs": [81, 27, 26, 23, 21, 20, 18, 17, 16, 15, 14, 13, 12, 11, 10]
+  },
+  "adjudication": {
+    "convergence": "All roles identify final native I2 and atomic lifecycle reconciliation as serving the supplied PR #14 extraction sequence. Low and procedure return ON-TRACK in both stances.",
+    "divergence": "Medium returns DRIFTING in both stances solely because the commission event ID is MISSING; it otherwise endorses the operational sequence.",
+    "accepted": "Retain missing provenance explicitly, keep the scope bounded, and preserve exact evidence before moving to PR #14.",
+    "rejected": "Do not invent an event ID or delay the authorised probe to obtain one. The parent directly received the commission and verified the current plan ordering. The coordinator explicitly reaffirmed continuation with MISSING on 10 September 2026. Missing metadata does not invalidate that observed instruction.",
+    "semantic_spot_check": "All six returns identify their role and stance and substantively assess ownership, priority and gates. The procedure emits four question bullets and adversarial counter-evidence. This satisfies the plan I2 invocation and limited semantic spot-check criterion.",
+    "procedural_limits": "The procedure STAKES quotes NEXT rather than OBJECTIVE FRAME. Its adversarial PROPORTION counter-evidence abbreviates a supplied phrase with an ellipsis. These are observable instruction-adherence defects; the record does not claim perfect adherence or a reliability benchmark. No template repair or new benchmark is included.",
+    "scope_limit": "This closes final-template native proof only. Repository checks and PR delivery must be reported separately; broader C05, correction commission and compiler programme remain unfinished."
+  },
+  "frame_normal": "OBJECTIVE FRAME: Complete final native Codex Cricket I2 proof, reconcile the atomic Cricket lifecycle, then extract/land PR #14 for Castr dependency ownership. Source: coordinating task 01a0722e-0cec-7cf1-a67b-a8787ac9b2d0 commissioned this fresh task on 10 September 2026; event id MISSING. Current .agent/plans/current/cricket-platform-parity.md says: \"This bounded proof and its lifecycle reconciliation precede PR #14's dependency-ownership extraction.\"\nCRITICAL-PATH OWNER: Me, the primary agent in this fresh Castr task, owns final I2 proof and a small lifecycle PR through merge-ready. Coordinating task 01a0722e-0cec-7cf1-a67b-a8787ac9b2d0 owns the broader delivery queue and subsequent PR #14 extraction; last known status is this explicit commission, not independently observed current activity.\nINTENT: Establish whether completing this bounded final Cricket lifecycle and then extracting/landing PR #14 is the right current delivery priority. ABSORBED: six substantive native registered-role returns, exact evidence retention, atomic lifecycle reconciliation if successful. ROUTED-AWAY: compiler implementation, broader programme closeout and PR #14 implementation remain coordinator-owned.\nRECENT ACTIONS: Read AGENT.md, installed Cricket skill, final role adapters/templates and atomic plan. Fetched origin/main and verified HEAD equals origin/main c1e73c1ae1f26ee97af603e45df78be1e775884a with git rev-parse. GitHub gh pr view verified PR #87 merged at 2026-09-09T23:16:15Z as c1e73c1ae1f26ee97af603e45df78be1e775884a and PR #92 merged at 2026-09-09T22:41:52Z as 8deca63ffdbd2c26b6e2a46a30ab7e6f93c43ce8. gh pr list --state open --limit 100 returned 15 older open PRs: 81,27,26,23,21,20,18,17,16,15,14,13,12,11,10. Working tree is clean. Prior I2 record predates material template changes, per the plan; this final-boundary native proof remains pending.\nNEXT: Run this registered three-role normal panel then adversarial follow-ups on the same agents, per .agent/skills/cognition/cricket/SKILL-CANONICAL.md. While returns run, prepare evidence/lifecycle record boundaries. If all six substantive returns arrive, retain exact evidence, reconcile atomic records, run documentation/portability/repository checks, commit with intact hooks, push one codex/ branch and shepherd one small PR to merge-ready. Report exact PR/head/check/review state to coordinator for subsequent PR #14 extraction. Do not merge this PR: the commissioning instruction explicitly says \"Do not merge it yourself\". If native roles fail, record UNDELIVERED and stop without fallback, as commissioned. No owner-approval wait is added.\nSTANCE: normal",
+  "frame_adversarial": "OBJECTIVE FRAME: Complete final native Codex Cricket I2 proof, reconcile the atomic Cricket lifecycle, then extract/land PR #14 for Castr dependency ownership. Source: coordinating task 01a0722e-0cec-7cf1-a67b-a8787ac9b2d0 commissioned this fresh task on 10 September 2026; event id MISSING. Current .agent/plans/current/cricket-platform-parity.md says: \"This bounded proof and its lifecycle reconciliation precede PR #14's dependency-ownership extraction.\"\nCRITICAL-PATH OWNER: Me, the primary agent in this fresh Castr task, owns final I2 proof and a small lifecycle PR through merge-ready. Coordinating task 01a0722e-0cec-7cf1-a67b-a8787ac9b2d0 owns the broader delivery queue and subsequent PR #14 extraction; last known status is this explicit commission, not independently observed current activity.\nINTENT: Establish whether completing this bounded final Cricket lifecycle and then extracting/landing PR #14 is the right current delivery priority. ABSORBED: six substantive native registered-role returns, exact evidence retention, atomic lifecycle reconciliation if successful. ROUTED-AWAY: compiler implementation, broader programme closeout and PR #14 implementation remain coordinator-owned.\nRECENT ACTIONS: Read AGENT.md, installed Cricket skill, final role adapters/templates and atomic plan. Fetched origin/main and verified HEAD equals origin/main c1e73c1ae1f26ee97af603e45df78be1e775884a with git rev-parse. GitHub gh pr view verified PR #87 merged at 2026-09-09T23:16:15Z as c1e73c1ae1f26ee97af603e45df78be1e775884a and PR #92 merged at 2026-09-09T22:41:52Z as 8deca63ffdbd2c26b6e2a46a30ab7e6f93c43ce8. gh pr list --state open --limit 100 returned 15 older open PRs: 81,27,26,23,21,20,18,17,16,15,14,13,12,11,10. Working tree is clean. Prior I2 record predates material template changes, per the plan; this final-boundary native proof remains pending.\nNEXT: Run this registered three-role normal panel then adversarial follow-ups on the same agents, per .agent/skills/cognition/cricket/SKILL-CANONICAL.md. While returns run, prepare evidence/lifecycle record boundaries. If all six substantive returns arrive, retain exact evidence, reconcile atomic records, run documentation/portability/repository checks, commit with intact hooks, push one codex/ branch and shepherd one small PR to merge-ready. Report exact PR/head/check/review state to coordinator for subsequent PR #14 extraction. Do not merge this PR: the commissioning instruction explicitly says \"Do not merge it yourself\". If native roles fail, record UNDELIVERED and stop without fallback, as commissioned. No owner-approval wait is added.\nSTANCE: adversarial"
+}
