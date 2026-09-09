@@ -168,13 +168,22 @@ this frontmatter remains the sole execution queue.
 
 The commission's interactive sequencing follows the [9 September prerequisite
 sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
-C03a and the bounded operation-security repair are delivered. Strengthen Q-22's
-Error validation oracles first, then migrate the integer contract coherently across
-its live consumers and doctrine. Q-22 subsequently lands the generator fix and all
-regenerated outputs together, including the fixed-fixture export imports. Its full
-original acceptance remains mandatory. Other independent C03–C08 outcomes can
-integrate when their actual technical prerequisites hold; the delivery plan owns
-the reasoning and work-in-progress limit. Displaced instructions are
+C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
+are delivered. PR #88 also delivered C05's platform reviewer-contract tooling;
+the root coordinating agent, Bora seeks Turbulence, holds custody of the dependent
+native installation on branch `codex/cricket-installation`. No PR has been opened
+for that installation; it may be opened only after the PR #28 transition described
+below completes.
+Follow the [Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
+land its record if absent; if the record is on main and #28 remains open, refresh
+PR #27/#28 heads and close #28 without merging or deleting its recovery branch;
+once both are done, proceed to PR #14's dependency-ownership extraction. Q-09
+remains pending for PR #10. When Q-22 resumes, migrate
+the integer contract coherently across its live consumers and doctrine, then land
+the generator fix and all regenerated outputs together, including the fixed-fixture
+export imports. Its full original acceptance remains mandatory. Other independent
+C03–C08 outcomes can integrate when their actual technical prerequisites hold; the
+delivery plan owns the reasoning and work-in-progress limit. Displaced instructions are
 [conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 C01, C02, C01R and C03a are delivered at their bounded acceptance. Remaining
@@ -921,7 +930,10 @@ eyeball); no dangling link introduced; gates green. Source: report §7 T00 instr
 verification, surviving evidence migrated to its named home, closed with verification
 recorded. Non-goals: no wholesale branch merges; #23 is NOT this row (see Q-13). Acceptance
 (`non-code`): each closed PR's closure note names what moved where and what was retired.
-Source: report §11.3.
+Source: report §11.3. The [PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+accounts for all 849 original hunks and finds no unique value requiring extraction.
+Its repository landing and verified PR closure remain the PR #28 transition; PR #10
+remains wholly outstanding. Q-09 therefore stays pending.
 
 **Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
 practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —
