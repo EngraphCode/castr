@@ -132,12 +132,12 @@ Castr. Bora merged current main `cb73c4de` into the installation branch as
 the narrow generator-source correction that makes Cursor's unpinned reasoning
 effort explicit; PR #88's platform-contract tooling remains delivered separately.
 [PR #91](https://github.com/EngraphCode/castr/pull/91) is the open installation
-delivery. Its opening review wave repairs the compiled-procedure intake,
-decision-table and output contracts, the incomplete routing descriptions across all
-Cricket roles and all stale pre-opening routes together before exact-head re-review
-and merge. The final decision-contract corrections reject an invalid stance before
-either method produces a verdict and require a complete five-field context before the
-compiled procedure can take an ON-TRACK row.
+delivery. Its review waves repair the compiled-procedure intake, decision-table and
+output contracts, the incomplete routing descriptions across all Cricket roles and all
+stale pre-opening routes together before exact-head re-review and merge. The final
+decision-contract corrections reject an invalid stance before either method produces a
+verdict, require a complete five-field context before the compiled procedure can take an
+ON-TRACK row, and prevent the brevity target from forcing silent evidence loss.
 The coordinating agent retains this delivery plan, the parent queue, ledger and
 coverage manifests.
 

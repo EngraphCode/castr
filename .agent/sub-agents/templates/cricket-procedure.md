@@ -153,7 +153,11 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
   `STANCE:`. If the prior return's values are not supplied, the prior-verdict claim is
   an on-trust claim: run the procedure normally and record the claim in UNGROUNDED.
 
-## Output Contract (your entire return, under 200 words)
+## Output Contract
+
+Target under 200 words for the entire return. Complete, attributable evidence is mandatory and
+takes precedence over that brevity target: never omit, truncate, or distort a required field,
+claim, or exact quote to stay below 200 words.
 
 For a valid frame:
 

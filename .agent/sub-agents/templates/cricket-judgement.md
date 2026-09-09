@@ -132,7 +132,11 @@ instead of reading to resolve them.
 - PROPORTION: is rigour risk-tiered — or is ceremony being spent on crossings with no
   consumer, or groundless claims shaping routing and owner attention?
 
-## Output Contract (your entire return, under 200 words)
+## Output Contract
+
+Target under 200 words for the entire return. Complete, attributable evidence is mandatory and
+takes precedence over that brevity target: never omit, truncate, or distort a required field,
+claim, or citation to stay below 200 words.
 
 For a valid frame:
 
