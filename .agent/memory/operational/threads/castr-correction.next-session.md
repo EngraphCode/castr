@@ -7,7 +7,7 @@
 - Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
 - PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
 - Landing target: preserve explicit operation `security: []` through writing and canonical persistence, with absent/empty/anonymous-alternative witnesses under required global authentication.
-- Next safe step: validate the integrated repair, finish specialist review, then deliver through current-head PR conditions. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites.
+- Next safe step: continue PR #86 delivery from the ledger and linked tally for outstanding findings and current-head conditions; completed integration/review proof remains recorded there. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites. The prior instruction is [conserved verbatim](../../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-continuation-correction).
 - Team: root owns compiler/foundational documentation and integration; Kite hunts Eyrie owns the separate Cricket tooling worktree. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
@@ -40,4 +40,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 | Agent                 | Platform | Model       | Session prefix | Agent UUID                           | Role                        | First session | Last session |
 | --------------------- | -------- | ----------- | -------------- | ------------------------------------ | --------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-06   |
+| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-09   |
