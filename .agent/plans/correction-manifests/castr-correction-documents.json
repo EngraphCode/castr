@@ -106,18 +106,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "71a195c47abb4ce84bcf2cb9a8f754357e827ed2",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Current next-safe-step route only: PR88 and PR90 delivery, PR28 closure, current C05 installation ownership and branch, narrow generator-source disclosure correction, PR14 successor and retained Q09/Q22 obligations.",
+      "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "c715affd61909adfcfbf6d18d7c542bd00ea8421",
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "prior_reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
       "review_history": [
         {
           "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
@@ -142,6 +141,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "Current next-safe-step route only: PR89 and PR88 delivery, bounded PR28 disposition and closure, PR10 residual, PR14 successor assessment, retained Q22 prerequisites and separately sequenced Cricket installation whose PR opens only after the PR28 transition completes."
+        },
+        {
+          "reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: PR88 and PR90 delivery, PR28 closure, current C05 installation ownership and branch, narrow generator-source disclosure correction, PR14 successor and retained Q09/Q22 obligations."
         }
       ]
     },
@@ -149,18 +154,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "1d20af66dd130a1d6074b44cd71ace44f63e4bae",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Current correction continuation route only: delivered prerequisites, Bora custody of the integrated C05 installation, exact landing action, PR14 successor and retained broader correction obligations.",
+      "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "2f7992d87e4cec686bf76fc0a38f0b28d8ff3b7f",
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "prior_reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
@@ -179,6 +183,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "State-conditional continuation, acceptance and landing route plus delivered/residual correction-family routing after PR88, including the unopened Cricket installation PR and exact PR28-transition opening condition."
+        },
+        {
+          "reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: delivered prerequisites, Bora custody of the integrated C05 installation, exact landing action, PR14 successor and retained broader correction obligations."
         }
       ]
     },
@@ -186,18 +196,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "c67c9b757621e3862c6f9773b29ae1c485670826",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "90aeae7ae7c517fa7b87ec3cde42bdc57ee85caa",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Current C05 delivery record, exact PR88/PR90/PR28 state, live 16-open-PR census, integrated branch boundary, narrow generator-source disclosure correction and remaining merge evidence.",
+      "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the first review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "18d1b9815487da467ffed12b43cf3260a4624ac8",
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "prior_reviewed_git_blob_hash": "c67c9b757621e3862c6f9773b29ae1c485670826",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -222,6 +231,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row, complete 849-hunk preservation disposition against bd115294 and the exact instruction to open the later installation PR after the PR28 transition completes."
+        },
+        {
+          "reviewed_git_blob_hash": "c67c9b757621e3862c6f9773b29ae1c485670826",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 delivery record, exact PR88/PR90/PR28 state, live 16-open-PR census, integrated branch boundary, narrow generator-source disclosure correction and remaining merge evidence."
         }
       ]
     },
@@ -229,18 +244,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "1f4dfaa64e78ae97b1439d6eab1af34b65fb5ad8",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Current interactive execution sequence only: completed PR28 transition, C05 installation as the current delivery under Bora, PR14 next, and retained Q09/Q22 acceptance and queue authority.",
+      "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "81f99ad54f8f9b348caa08532c0a511507a57e78",
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "prior_reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -301,6 +315,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit custody of the separate Cricket installation by the root coordinating agent, Bora seeks Turbulence, its branch location, unopened PR state, exact PR28-transition opening condition and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: completed PR28 transition, C05 installation as the current delivery under Bora, PR14 next, and retained Q09/Q22 acceptance and queue authority."
         }
       ]
     },
@@ -308,18 +328,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "da2dae67a74a4ae02a400f23eb10bdd2afa0ad12",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "45da9c6d05e2d04c94aa82bbc87166664b4ec8e4",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Current owner-corrected delivery sequence only: merge-first discipline, C05 tooling delivered separately, installation custody and integrated boundary, narrow generator-source disclosure correction and PR14 successor.",
+      "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its first review-wave classes are repaired together, and PR14 remains the successor.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "e4d20cede1fb594738aca3a1cf0212592064aeae",
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "prior_reviewed_git_blob_hash": "da2dae67a74a4ae02a400f23eb10bdd2afa0ad12",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -362,6 +381,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries, the separate Cricket installation, its PR-opening action after the PR28 transition and the later integer/generator sequence, scoped beneath the current Q09 PR-risk reduction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "da2dae67a74a4ae02a400f23eb10bdd2afa0ad12",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: merge-first discipline, C05 tooling delivered separately, installation custody and integrated boundary, narrow generator-source disclosure correction and PR14 successor."
         }
       ]
     },
@@ -683,33 +708,49 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Complete current-authority section plus the installation acceptance, historical boundary and evidence links. Earlier dated execution sections remain historical evidence rather than current instructions.",
+      "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its first live review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "C05 repository delivery remains pending commit, push, exact-head PR review, merge and lifecycle closeout. Complete-document and whole-estate reconciliation remains with C09/C10."
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus the installation acceptance, historical boundary and evidence links. Earlier dated execution sections remain historical evidence rather than current instructions."
+        }
+      ],
+      "prior_reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c",
-      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58",
+      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
       "review_date": "2026-09-09",
-      "scope": "Complete current continuation route: integrated base, custody, exact retained and UNDELIVERED proof boundaries, final gate/review/merge sequence and lifecycle closeout.",
+      "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
-      "remaining": "Commit, push, exact-head PR review, merge and C05 lifecycle closeout remain; replace this continuation route during that closeout."
+      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain; replace this continuation route during closeout.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: integrated base, custody, exact retained and UNDELIVERED proof boundaries, final gate/review/merge sequence and lifecycle closeout."
+        }
+      ],
+      "prior_reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c"
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
@@ -742,14 +783,14 @@
           "classification": "document-like",
           "disposition": "current-acceptance",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3"
+          "reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
           "classification": "document-like",
           "disposition": "current-continuation",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c"
+          "reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
@@ -798,7 +839,7 @@
           "classification": "document-like",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "65f395bcb46ec2650ab8a1a55f2359ccd10f6a6f"
+          "reviewed_git_blob_hash": "56487683ba427857a09c8a1f503fa047577b9dfc"
         },
         {
           "path": ".claude/agents/cricket-judgement-high.md",

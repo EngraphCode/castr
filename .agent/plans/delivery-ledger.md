@@ -143,20 +143,26 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   delivered separately. Generator comparison, portability, strict subagent
   validation, focused tests and the canonical `pnpm check` pass on the integrated
   working candidate; that aggregate includes 1,718 Castr tests, 1,875 agent-tools
-  tests, ten Castr E2E tests and 159 agent-tools E2E tests. Commit hooks, exact-head
-  pre-push/PR checks, review and merge evidence remain required. The retained native record proves six
-  substantive returns at its stated scope and does not claim judgement reliability.
+  tests, ten Castr E2E tests and 159 agent-tools E2E tests. Commit and full pre-push
+  hooks passed at `3b568416`, which opened
+  [PR #91](https://github.com/EngraphCode/castr/pull/91). Its first live review
+  wave found one compiled-procedure output-contract contradiction and stale
+  pre-opening instructions across current routes; the active candidate repairs
+  both classes. Exact-head re-review, checks, ruleset and merge evidence remain
+  required. The retained native record proves six substantive returns at its
+  stated scope and does not claim judgement reliability.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
-The 9 September 2026 19:03 UTC live census contains 16 open PRs: the fourteen
-inherited open PRs below, frozen source #81 and current #87. PR #90 merged the
+The 9 September 2026 19:45 UTC live census contains 17 open PRs: the fourteen
+inherited open PRs below, frozen source #81, current #87 and current delivery #91.
+PR #90 merged the
 bounded Q-09/#28 disposition as `cb73c4de`; PR #28 then closed without merge and
 retained its recovery branch. This unfinished estate remains integration risk,
-not delivered value. The prepared C05 installation is the current delivery;
+not delivered value. PR #91 is the current C05 installation delivery;
 PR #14 follows it under the parent plan's sequence. The remaining source PRs
 close only when their recorded extraction or supersession conditions are verified. The following
 6 September checks and review states are historical observations, not fresh merge

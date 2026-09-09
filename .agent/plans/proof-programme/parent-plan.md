@@ -175,9 +175,10 @@ native installation on branch `codex/cricket-installation`. PR #90 merged the
 [Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
 as `cb73c4deaae9eecdbe406f28304314c71e339e02`; PR #28 then closed without
 merge while its recovery branch remained intact. That transition is complete.
-The current delivery is the prepared C05 installation: reconcile its current
-authority, validate the installed panel and merge its one coherent PR. Proceed to
-PR #14's dependency-ownership extraction after that delivery. Q-09 remains pending
+The current delivery is the C05 installation in
+[PR #91](https://github.com/EngraphCode/castr/pull/91): settle its current-head
+review and checks, then merge its one coherent outcome. Proceed to PR #14's
+dependency-ownership extraction after that delivery. Q-09 remains pending
 for PR #10. When Q-22 resumes, migrate
 the integer contract coherently across its live consumers and doctrine, then land
 the generator fix and all regenerated outputs together, including the fixed-fixture

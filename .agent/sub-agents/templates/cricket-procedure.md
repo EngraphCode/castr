@@ -148,9 +148,11 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
   replay path; every other field then carries the prior return's values verbatim
 - `STAKES:` the Step-1 line, verbatim
 - `VERDICT:` ON-TRACK | DRIFTING | WRONG-PRIORITY
-- `EVIDENCE:` up to 3 bullets — each is one Step-3 answer with its anchoring quote;
-  under STANCE adversarial each bullet also carries its question's counter-evidence
-  line (the disconfirming quote or `NO COUNTER-EVIDENCE IN SUPPLIED CONTEXT`)
+- `EVIDENCE:` exactly 4 bullets — one Step-3 answer per named question, each with
+  its anchoring quote; under STANCE adversarial every PASS bullet also carries its
+  question's counter-evidence line (the disconfirming quote or
+  `NO COUNTER-EVIDENCE IN SUPPLIED CONTEXT`) and the required explanation of why
+  that counter-evidence does not flip the answer
 - `REDIRECTION:` from Step 5 — or "none"
 - `UNGROUNDED:` the Step-2 MISSING items, the Step-2 on-trust claims inside supplied
   fields, and the Step-3 UNVERIFIABLE questions, verbatim

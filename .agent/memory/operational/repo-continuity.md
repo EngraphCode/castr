@@ -58,9 +58,9 @@ retains Q-22's integer-contract and paired generator/output prerequisites. C03b/
 and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
 PR #88; the coordinating agent accepted the dependent native Cricket
 installation at `codex/cricket-installation` commit `2af22e0f` and Bora integrated
-current main as `7967ff92`. Land that installation with its current authority,
-full validation and exact-head review before beginning PR #14's dependency-ownership
-extraction. Earlier continuation
+current main as `7967ff92`. [PR #91](https://github.com/EngraphCode/castr/pull/91)
+is open for that installation; settle its current-head review and checks, then merge
+it before beginning PR #14's dependency-ownership extraction. Earlier continuation
 instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status

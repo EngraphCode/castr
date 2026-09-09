@@ -131,6 +131,9 @@ Castr. Bora merged current main `cb73c4de` into the installation branch as
 `7967ff92`, after PR #90 merged and PR #28 closed. Its current delta also carries
 the narrow generator-source correction that makes Cursor's unpinned reasoning
 effort explicit; PR #88's platform-contract tooling remains delivered separately.
+[PR #91](https://github.com/EngraphCode/castr/pull/91) is the open installation
+delivery. Its first live review wave repairs the compiled-procedure output contract
+and all stale pre-opening routes together before exact-head re-review and merge.
 The coordinating agent retains this delivery plan, the parent queue, ledger and
 coverage manifests.
 

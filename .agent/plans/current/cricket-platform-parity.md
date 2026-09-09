@@ -38,11 +38,15 @@ descriptions implied a runtime effort pin; the generator now states that Cursor
 preserves the stable method role while leaving reasoning effort unpinned, and all
 four Cursor Cricket wrappers were regenerated. Existing behavioural tests prove
 the absence of Cursor model, effort and tool pins; human review owns the wording.
-Paired documentation and onboarding review pass on the integrated candidate. The
-canonical `pnpm check` then completed with exit 0: 1,718 Castr tests, 1,875
-agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including
-the 158-case adapter checker. Commit hooks, exact-head pre-push/PR checks, review and
-merge remain required.
+Paired documentation and onboarding review passed on the integrated opening
+candidate. The canonical `pnpm check` then completed with exit 0: 1,718 Castr
+tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests
+passed, including the 158-case adapter checker. Commit and full pre-push hooks
+passed at `3b568416`, and [PR #91](https://github.com/EngraphCode/castr/pull/91)
+opened from that head. Its first live review wave found one compiled-procedure
+output-contract contradiction and stale pre-opening instructions across the
+current routes; the active candidate repairs both classes. Exact-head re-review,
+checks and merge remain required.
 
 The retained native record establishes I2 at its stated boundary: three exact
 registered roles were dispatched with `fork_turns: "none"`, and the same three
@@ -74,8 +78,8 @@ Current acceptance state:
   the current-boundary rerun is recorded `UNDELIVERED` because its host task exposed
   no observable role dispatches or returns.
 - D1's documentation/onboarding review and the integrated working-candidate
-  aggregate pass; repository delivery remains pending commit, push, exact-head
-  PR-surface review and merge.
+  aggregate pass; PR #91 is open and repository delivery remains pending its
+  current-head review/check harvest, any resulting fixes and merge.
 
 The execution record below is historical evidence. Status statements in it describe
 the observed boundary at the time and do not override this section.

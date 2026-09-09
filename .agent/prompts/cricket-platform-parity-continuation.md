@@ -21,10 +21,14 @@ The earlier combined candidate's canonical `pnpm check` passed with observed exi
 results did not prove the integrated installation candidate. Its own canonical
 `pnpm check` now passes with 1,718 Castr tests, 1,875 agent-tools tests, ten Castr
 E2E tests and 159 agent-tools E2E tests, including the 158-case adapter checker.
-Paired documentation/onboarding review also passes. Require commit hooks,
-exact-head pre-push/PR checks and a fresh PR harvest for delivery. Preserve the
-inherited review history in the installation REVIEW-TALLY; resumption and a new
-head never reset its ordinal.
+Paired documentation/onboarding review also passed on the opening candidate.
+[PR #91](https://github.com/EngraphCode/castr/pull/91) opened at `3b568416` after
+commit and pre-push hooks passed. Its first live review wave found one compiled
+procedure output-contract contradiction and stale pre-opening instructions across
+the current routes; the active candidate repairs both classes. Require exact-head
+checks and a fresh PR harvest after every push. Preserve the inherited review
+history in the installation REVIEW-TALLY; resumption and a new head never reset
+its ordinal.
 
 Native invocation is already established in the
 [six-return record](../reports/agentic-engineering/cricket-castr-native-2026-09-09.json).
@@ -48,9 +52,9 @@ delivered value. Bora seeks Turbulence owns this installation and the current
 parent, ledger, manifest and continuity corrections. Kite hunts Eyrie retains the
 historical implementation and native-invocation evidence but no delivery custody.
 
-Finish one outcome: commit and push with hooks intact, open one installation PR,
-maintain its actual tally, harvest all comments/reviews/threads/checks/scanning/
-ruleset findings, fix every correctness issue, and merge by merge commit at the
-exact eligible head. Then move this plan through completion staging and reconcile
-the shared delivery records on main. Keep PR #81 and unrelated compiler/source-PR
-work untouched.
+Finish one outcome: drive PR #91 from its current head, maintain its actual tally,
+harvest all comments/reviews/threads/checks/scanning/ruleset findings after every
+push, fix every correctness issue, and merge by merge commit at the exact eligible
+head. Then move this plan through completion staging and reconcile the shared
+delivery records on main. Keep PR #81 and unrelated compiler/source-PR work
+untouched.

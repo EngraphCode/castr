@@ -12,8 +12,9 @@
 - Team: root owns compiler/foundational documentation, integration and the
   dependent native Cricket installation at `codex/cricket-installation`; Kite hunts
   Eyrie delivered its tooling prerequisite as PR #88, and Bora integrated current
-  main as `7967ff92`. Land the installation with current authority, full validation
-  and exact-head review, then proceed to PR #14's dependency-ownership extraction.
+  main as `7967ff92`. [PR #91](https://github.com/EngraphCode/castr/pull/91) is
+  open for the installation; settle its current-head review and checks, then merge
+  it before proceeding to PR #14's dependency-ownership extraction.
   Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
