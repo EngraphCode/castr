@@ -128,21 +128,25 @@ describe('Error Schema Validation (petstore-expanded)', () => {
   });
 
   describe('invalid data produces validation issues', () => {
-    it.each([
-      [
-        'rejects object missing required field: code',
-        { message: 'error' },
-        [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
-      ],
-      [
-        'rejects object with non-integer code (float)',
-        { code: 1.5, message: 'error' },
-        [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
-      ],
-    ])('%s', (name, value, issues) => {
-      expect(ErrorSchema.safeParse(value), name).toMatchObject({
+    it('rejects object missing required field: code', () => {
+      const invalidError = { message: 'error' };
+
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
         success: false,
-        error: { issues },
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+        },
+      });
+    });
+
+    it('rejects object with non-integer code (float)', () => {
+      const invalidError = { code: 1.5, message: 'error' };
+
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
+        },
       });
     });
   });

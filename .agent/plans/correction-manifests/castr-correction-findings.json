@@ -3143,7 +3143,7 @@
       "closing_proof_ids": ["security"],
       "related_ids": ["C2", "F-01"],
       "current_reproduction": "verified-green",
-      "reproduction_note": "On the named main base, the parser and canonical persistence preserve an explicit operation security array, while the writer drops [] and wrongly restores inherited authentication. One unit and one integration counterexample fail; absent and [{}] controls pass.",
+      "reproduction_note": "Historical RED on base 3ad2ab5: the writer dropped [] and wrongly restored inherited authentication while absent and [{}] controls passed. PR86 merged the bounded repair as 92ada698; 19 unit and 8 integration cases now pass, including the absent, [], [{}] and five unchanged Q-03 formula witnesses.",
       "disposition": "bounded_repair_delivered",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
@@ -3962,8 +3962,8 @@
         "remaining": "Current delivery actions and gate evidence belong to .agent/plans/delivery-ledger.md. Q22 regeneration, integer/export repair and untouched Pet/Pets/NewPet rejection oracles remain outstanding with their named families.",
         "refactor_evidence": {
           "date": "2026-09-09",
-          "reason": "PR89 Sonar reports repeated assertion bodies; use literal case tables without changing case membership or expected observations.",
-          "method": "Fresh focused suite and isolated mutants against the table refactor. The final name-to-assertion-message delta receives a fresh focused run and explicit source comparison; earlier mutants remain tied to the table-refactor blobs below.",
+          "reason": "PR89 Sonar reports repeated assertion bodies. Keep the larger five-case group as a literal table and the smaller two-case group as direct assertions, without changing case membership or expected observations.",
+          "method": "Fresh focused suite and isolated mutants against the table refactor. The final name-to-assertion-message delta and the structural restoration of the smaller expanded group receive fresh focused runs and explicit source comparison; earlier mutants remain tied to the table-refactor blobs below.",
           "results": {
             "checked_in": "91 passed, all 91 full test names preserved",
             "regenerated": "73 passed, 18 failed",
@@ -3978,10 +3978,10 @@
           },
           "final_git_blobs": {
             "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
-            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "a97ba65adf9333c7d254fe6f254fa13f003a2061"
+            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5"
           },
           "preservation": "Both 37-entry fixture estates and all 145 original evidence files unchanged; everything outside the two Error describe groups is byte-identical to the pushed head.",
-          "review": "Independent test review verified literal expectations, mutation construction, all names and extra-issue cardinality. Gateway review approved the final assertion-message delta at the recorded final blobs. Sonar success and merge remain pending in the delivery ledger."
+          "review": "Independent test review verified literal expectations, mutation construction, all names and extra-issue cardinality. Test and gateway reviewers approved the structural restoration of the two-case expanded group to its previously reviewed direct-assertion blob; the five-case main group retains the table. Sonar success and merge remain pending in the delivery ledger."
         }
       }
     }

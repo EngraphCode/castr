@@ -105,14 +105,18 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   owns acceptance; the [finding register](correction-manifests/castr-correction-findings.json)
   retains red/green/mutation evidence and exact test blobs. Test, gateway and paired
   documentation/onboarding reviews passed at the initial candidate. Canonical
-  `pnpm check`, both commits and full pre-push `check:ci` passed with intact hooks.
-  The 9 September 14:28 UTC harvest at
-  `3b8abb1530520ebe9323546cf45bd177fad42153` found 15 successful checks, completed
-  Copilot/Codex reviews, no review threads or pending requests, and one failing
-  Sonar condition: 39 of 65 new lines duplicated (60%, required at most 3%).
-  Consolidate repeated Error assertions while preserving every witness and its
-  mutation strength. The [actual tally](https://github.com/EngraphCode/castr/pull/89#issuecomment-5600446743)
-  owns round 1's disposition and subsequent current-head actions. The by-file link
+  `pnpm check`, all commits through `0ec6893288f15b2673989f2a1159f5b0ec38d41f`
+  and its full pre-push `check:ci` passed with intact hooks. The 9 September 15:06
+  UTC harvest at that head found 15 successful checks, completed current-head
+  Copilot/Codex reviews, two unresolved threads and one failing Sonar condition:
+  22 of 64 new lines duplicated (34.4%, required at most 3%). Round 2 triggers the
+  structural step-back: retain a literal table for the larger five-case group and
+  restore the smaller two-case group to its exact previously reviewed direct form.
+  Fresh focused tests pass 91/91, focused lint passes and independent test/gateway
+  reviewers found no material blocker. This update also replaces the ledger's stale
+  next action and distinguishes Q-03/security-empty's historical RED from its merged
+  GREEN. Fresh current-head Sonar and review remain required. The [actual tally](https://github.com/EngraphCode/castr/pull/89#issuecomment-5600446743)
+  owns both rounds and subsequent current-head actions. The by-file link
   report lists 177 entries across 794 files; changed archive links resolve but are
   omitted by the validator inventory (C09). This repairs proof quality against
   unchanged fixtures; Q-22 remains open and no merge readiness is claimed.

@@ -422,14 +422,15 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "a97ba65adf9333c7d254fe6f254fa13f003a2061",
+      "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
       "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
       "review_date": "2026-09-09",
       "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
       "evidence": [
         "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
         "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
-        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest."
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest.",
+        "The second Sonar step-back restores this smaller two-case group to its exact initially reviewed direct-assertion blob while the larger group retains its table. Fresh focused tests and lint pass; independent test/gateway re-review found no material blocker."
       ],
       "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
       "review_history": [
@@ -438,6 +439,12 @@
           "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
           "review_date": "2026-09-09",
           "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        },
+        {
+          "reviewed_git_blob_hash": "a97ba65adf9333c7d254fe6f254fa13f003a2061",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Intermediate two-case table with case-name assertion context; superseded by the proportionate direct-assertion restoration after current-head Sonar still reported cross-file duplication."
         }
       ]
     }
