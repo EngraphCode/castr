@@ -132,23 +132,24 @@ Castr. Bora merged current main `cb73c4de` into the installation branch as
 the narrow generator-source correction that makes Cursor's unpinned reasoning
 effort explicit; PR #88's platform-contract tooling remains delivered separately.
 [PR #91](https://github.com/EngraphCode/castr/pull/91) is the open installation
-delivery. Its first live review wave repairs the compiled-procedure output contract
-and all stale pre-opening routes together before exact-head re-review and merge.
+delivery. Its opening review wave repairs the compiled-procedure output contracts,
+the incomplete routing descriptions across all Cricket roles and all stale
+pre-opening routes together before exact-head re-review and merge.
 The coordinating agent retains this delivery plan, the parent queue, ledger and
 coverage manifests.
 
-| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                             |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                      |
-| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                 |
-| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                 |
-| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                           |
-| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                        |
-| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                       |
-| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition. |
-| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                   |
-| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, in separate documentation PRs.                                                              |
-| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                          |
+| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                                                                                                                                                 |
+| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                                                                                                                                            |
+| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                                                                                                                                            |
+| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                                                                                                                                                      |
+| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                                                                                                                                                   |
+| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                                                                                                                                                  |
+| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition.                                                                                                                            |
+| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                                                                                                                                              |
+| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, plus agentic-surface validator strictness in separate PRs. The validator slice enforces the existing 1,024-character description bound; semantic routing quality remains review-owned until trigger evaluations exist. |
+| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                                                                                                                                                     |
 
 C08 repairs follow their actual prerequisites under the
 [parent's refined sequencing](../proof-programme/parent-plan.md#current-execution-state).

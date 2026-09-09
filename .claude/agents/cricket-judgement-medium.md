@@ -1,6 +1,6 @@
 ---
 name: cricket-judgement-medium
-description: Fast medium-effort conscience check using contextual judgement. Call directly for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.
+description: 'Fast medium-effort conscience check using contextual judgement. Use for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting. Do not use for artefact or plan review, or to repeat a known verdict. Good: test whether a named next action serves its consumer. Bad: ask Cricket to review an artefact. Returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.'
 model: opus
 effort: medium
 tools: Read

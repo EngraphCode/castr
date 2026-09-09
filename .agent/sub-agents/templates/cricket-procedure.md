@@ -67,10 +67,11 @@ item that the supplied context cannot itself substantiate is marked on-trust and
 to UNGROUNDED (the PAIR-2 lesson: treating every supplied claim as grounded is the
 failure this step exists to catch).
 
-**Step 3 — The four questions.** Answer each PASS / FAIL / UNVERIFIABLE with a one-line
-justification that QUOTES at least one exact phrase from the supplied context. A
-justification you cannot anchor to a quote makes that question UNVERIFIABLE and adds a
-line to UNGROUNDED.
+**Step 3 — The four questions.** Answer each PASS or FAIL with a one-line
+justification that QUOTES at least one exact phrase from the supplied context. When no
+phrase can anchor the answer, write
+`UNVERIFIABLE — NO ANCHORING QUOTE IN SUPPLIED CONTEXT` for that question and add the
+missing grounding to UNGROUNDED. This literal is the only quote-free Step-3 answer.
 
 - **CONSUMER**: does NEXT name (or directly serve) a consumer on the OBJECTIVE FRAME's
   critical path? No namable consumer = FAIL.
@@ -127,7 +128,9 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
 
 - The words "assume", "assuming", "presumably", "likely", "probably" applied to any gap
   in the supplied context. Gaps are UNGROUNDED entries, never bridges.
-- An EVIDENCE bullet with no exact quote from the supplied context.
+- A PASS or FAIL EVIDENCE bullet with no exact quote from the supplied context. The
+  Step-3 `UNVERIFIABLE — NO ANCHORING QUOTE IN SUPPLIED CONTEXT` literal is the sole
+  quote-free exception.
 - A Read beyond the two-Read budget to resolve something the invoker should have
   supplied.
 - Improvising verdict logic outside the Step-4 table.
@@ -148,9 +151,10 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
   replay path; every other field then carries the prior return's values verbatim
 - `STAKES:` the Step-1 line, verbatim
 - `VERDICT:` ON-TRACK | DRIFTING | WRONG-PRIORITY
-- `EVIDENCE:` exactly 4 bullets — one Step-3 answer per named question, each with
-  its anchoring quote; under STANCE adversarial every PASS bullet also carries its
-  question's counter-evidence line (the disconfirming quote or
+- `EVIDENCE:` exactly 4 bullets — one Step-3 answer per named question; each PASS or
+  FAIL carries its anchoring quote, while an answer with no available anchor uses the
+  exact `UNVERIFIABLE — NO ANCHORING QUOTE IN SUPPLIED CONTEXT` literal; under STANCE
+  adversarial every PASS bullet also carries its question's counter-evidence line (the disconfirming quote or
   `NO COUNTER-EVIDENCE IN SUPPLIED CONTEXT`) and the required explanation of why
   that counter-evidence does not flip the answer
 - `REDIRECTION:` from Step 5 — or "none"

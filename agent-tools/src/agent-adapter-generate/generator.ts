@@ -350,7 +350,8 @@ export function planAgentAdapters(
     ? CRICKET_ROLES.filter((role) => role.codexModel === null).map((role) => ({
         name: role.name,
         templatePath: role.templatePath,
-        description: 'Cricket judgement conscience check — high effort.',
+        description:
+          'Fast high-effort conscience check using contextual judgement. Use for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting. Do not use for artefact or plan review, or to repeat a known verdict. Good: test whether a named next action serves its consumer. Bad: ask Cricket to review an artefact. Returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.',
       }))
     : [];
   for (const entry of [...roster, ...extraRoles]) {

@@ -23,9 +23,10 @@ results did not prove the integrated installation candidate. Its own canonical
 E2E tests and 159 agent-tools E2E tests, including the 158-case adapter checker.
 Paired documentation/onboarding review also passed on the opening candidate.
 [PR #91](https://github.com/EngraphCode/castr/pull/91) opened at `3b568416` after
-commit and pre-push hooks passed. Its first live review wave found one compiled
-procedure output-contract contradiction and stale pre-opening instructions across
-the current routes; the active candidate repairs both classes. Require exact-head
+commit and pre-push hooks passed. Its opening review wave found compiled-procedure
+output-contract contradictions, incomplete routing descriptions across all Cricket
+roles, and stale pre-opening instructions across the current routes; the active
+candidate repairs all three classes at their canonical sources. Require exact-head
 checks and a fresh PR harvest after every push. Preserve the inherited review
 history in the installation REVIEW-TALLY; resumption and a new head never reset
 its ordinal.
@@ -42,8 +43,11 @@ delivery boundary is preserved in the [dated attempt record](../reports/agentic-
 The target task returned only `Session stopped.` and `Session remains closed.`,
 with no registered-role dispatch, follow-up or Cricket return observable. All six
 requested returns are therefore `UNDELIVERED`; no generic roles may substitute.
-The Codex invocation boundary is unchanged, while the subsequent generated-adapter
-repair only makes Cursor's unpinned reasoning-effort status explicit.
+Registered role names, bindings, model/effort/tool pins, dispatch and same-agent
+follow-up remain unchanged. Subsequent changes correct routing descriptions and the
+compiled procedure's output contract; exact-source review and generated validation
+cover those semantics, while the retained native run remains evidence only for its
+dated template revision.
 
 ## Delivery and custody
 

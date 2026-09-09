@@ -111,8 +111,8 @@
       "review_date": "2026-09-09",
       "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
@@ -159,8 +159,8 @@
       "review_date": "2026-09-09",
       "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
@@ -196,17 +196,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "90aeae7ae7c517fa7b87ec3cde42bdc57ee85caa",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "reviewed_git_blob_hash": "87d05b2da738791ecf0bad5456f5e804cc88be58",
+      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
       "review_date": "2026-09-09",
-      "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the first review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
+      "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete opening review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "c67c9b757621e3862c6f9773b29ae1c485670826",
+      "prior_reviewed_git_blob_hash": "90aeae7ae7c517fa7b87ec3cde42bdc57ee85caa",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -249,8 +249,8 @@
       "review_date": "2026-09-09",
       "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
@@ -328,17 +328,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "45da9c6d05e2d04c94aa82bbc87166664b4ec8e4",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "reviewed_git_blob_hash": "a9cb092946074c7424cac0ef9655d247e376299a",
+      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
       "review_date": "2026-09-09",
-      "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its first review-wave classes are repaired together, and PR14 remains the successor.",
+      "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete opening review-wave classes are repaired together, and PR14 remains the successor.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "da2dae67a74a4ae02a400f23eb10bdd2afa0ad12",
+      "prior_reviewed_git_blob_hash": "45da9c6d05e2d04c94aa82bbc87166664b4ec8e4",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -708,13 +708,13 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8",
+      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
       "review_date": "2026-09-09",
-      "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its first live review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
+      "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete opening review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
@@ -726,19 +726,19 @@
           "scope": "Complete current-authority section plus the installation acceptance, historical boundary and evidence links. Earlier dated execution sections remain historical evidence rather than current instructions."
         }
       ],
-      "prior_reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3"
+      "prior_reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39",
+      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
       "review_date": "2026-09-09",
       "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its first live Copilot review found the compiled-procedure output contract could not represent four mandatory answers; paired documentation/onboarding review found the current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs both complete classes: the procedure now requires four named answers and the full adversarial no-flip explanation; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
+        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
         "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain; replace this continuation route during closeout.",
@@ -750,7 +750,7 @@
           "scope": "Complete current continuation route: integrated base, custody, exact retained and UNDELIVERED proof boundaries, final gate/review/merge sequence and lifecycle closeout."
         }
       ],
-      "prior_reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c"
+      "prior_reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58"
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
@@ -783,14 +783,14 @@
           "classification": "document-like",
           "disposition": "current-acceptance",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b"
+          "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
           "classification": "document-like",
           "disposition": "current-continuation",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58"
+          "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
@@ -839,14 +839,16 @@
           "classification": "document-like",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "56487683ba427857a09c8a1f503fa047577b9dfc"
+          "reviewed_git_blob_hash": "e9174ce223776f187c282da02653f94bdec99fd2",
+          "prior_reviewed_git_blob_hash": "56487683ba427857a09c8a1f503fa047577b9dfc"
         },
         {
           "path": ".claude/agents/cricket-judgement-high.md",
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "a29a7cce31171303ce38ad1b715198b2499414e2",
+          "reviewed_git_blob_hash": "f73df5d82862d84b6ca1636e19534a8bce658875",
+          "prior_reviewed_git_blob_hash": "a29a7cce31171303ce38ad1b715198b2499414e2",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -859,7 +861,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "34f71b01446d9bfd38fff44865c0ece14e2f1f57",
+          "reviewed_git_blob_hash": "38b08b3fa4713ba07a2cae361ebd133c627542da",
+          "prior_reviewed_git_blob_hash": "34f71b01446d9bfd38fff44865c0ece14e2f1f57",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -872,7 +875,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "976be7f58d17c7a8ff697ac9ef789136bbc4a34a",
+          "reviewed_git_blob_hash": "1410fa564e83871a729f4779657b4a699347a6e1",
+          "prior_reviewed_git_blob_hash": "976be7f58d17c7a8ff697ac9ef789136bbc4a34a",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -885,7 +889,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "d706736b17c619af9d3bd545a784b1627fabc50c",
+          "reviewed_git_blob_hash": "930e7a897e8f4c892b23a19c2dfd02c7d3ec44fd",
+          "prior_reviewed_git_blob_hash": "d706736b17c619af9d3bd545a784b1627fabc50c",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -898,28 +903,32 @@
           "classification": "embedded-documentation",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "0aa54c22401a620bcaa38638e9ae39fe4b6af1be"
+          "reviewed_git_blob_hash": "a712788f17595d65b050096d37bc42c85c31d041",
+          "prior_reviewed_git_blob_hash": "0aa54c22401a620bcaa38638e9ae39fe4b6af1be"
         },
         {
           "path": ".codex/agents/cricket-judgement-medium.toml",
           "classification": "embedded-documentation",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "92630506482763f36f3bf6ce42a710f683b0619d"
+          "reviewed_git_blob_hash": "ee15ca44a47623d25cf5d4520a857c84a1352217",
+          "prior_reviewed_git_blob_hash": "92630506482763f36f3bf6ce42a710f683b0619d"
         },
         {
           "path": ".codex/agents/cricket-procedure-xhigh.toml",
           "classification": "embedded-documentation",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "954919ff2c749c994f66176cff8910f6eef68199"
+          "reviewed_git_blob_hash": "277d4122cf76f19613421caa5aec48176a842b06",
+          "prior_reviewed_git_blob_hash": "954919ff2c749c994f66176cff8910f6eef68199"
         },
         {
           "path": ".cursor/agents/cricket-judgement-high.md",
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "5b5396fe0b5eb88009bd5748bc5d1b001b0738fa",
+          "reviewed_git_blob_hash": "da504d530fb40f62df98503905aacf06cdb1a6e1",
+          "prior_reviewed_git_blob_hash": "5b5396fe0b5eb88009bd5748bc5d1b001b0738fa",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -932,7 +941,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "7df327544e11d5dcb390c171ee0e03d14e39e94d",
+          "reviewed_git_blob_hash": "0ca1eef6190c2f74dc3361c894c76515a4bcd0f7",
+          "prior_reviewed_git_blob_hash": "7df327544e11d5dcb390c171ee0e03d14e39e94d",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -945,7 +955,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "bca9fbd34543b213fb02c7a0a12449d2ac6de56e",
+          "reviewed_git_blob_hash": "e8799b134fccbe91349222fd9353d282974647f4",
+          "prior_reviewed_git_blob_hash": "bca9fbd34543b213fb02c7a0a12449d2ac6de56e",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",
@@ -958,7 +969,8 @@
           "classification": "document-like",
           "disposition": "current-generated",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "00694fd21df2c9e2022833b43bcc3900b96ac815",
+          "reviewed_git_blob_hash": "b696c6e73c18e70d9960feae15e914441e528beb",
+          "prior_reviewed_git_blob_hash": "00694fd21df2c9e2022833b43bcc3900b96ac815",
           "source_paths": [
             ".codex/config.toml",
             ".codex/agents/*.toml",

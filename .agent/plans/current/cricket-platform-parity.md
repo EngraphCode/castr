@@ -43,24 +43,28 @@ candidate. The canonical `pnpm check` then completed with exit 0: 1,718 Castr
 tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests
 passed, including the 158-case adapter checker. Commit and full pre-push hooks
 passed at `3b568416`, and [PR #91](https://github.com/EngraphCode/castr/pull/91)
-opened from that head. Its first live review wave found one compiled-procedure
-output-contract contradiction and stale pre-opening instructions across the
-current routes; the active candidate repairs both classes. Exact-head re-review,
+opened from that head. Its opening review wave found compiled-procedure
+output-contract contradictions, incomplete routing descriptions across all Cricket
+roles, and stale pre-opening instructions across the current routes; the active
+candidate repairs all three classes at their canonical sources. Exact-head re-review,
 checks and merge remain required.
 
 The retained native record establishes I2 at its stated boundary: three exact
 registered roles were dispatched with `fork_turns: "none"`, and the same three
-agents returned the adversarial follow-ups. The tested config, templates, skill and
-Codex adapters are byte-identical on this integrated branch. A fresh full panel was
+agents returned the adversarial follow-ups. The record embeds its tested Codex
+adapters and dated template outputs; the current candidate retains the invocation
+boundary while correcting descriptions and the compiled output contract. A fresh full panel was
 requested from the existing trusted Castr task because Bora's older task schema
 cannot reload newly installed roles. The [dated attempt record](../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
 preserves both exact requests, turn identifiers and the task's terminal messages:
 `Session stopped.` and `Session remains closed.` No registered-role dispatch,
 follow-up or Cricket return is observable, so all six requested returns are
 `UNDELIVERED`. No generic agent substitutes for them. This delivery failure does
-not invalidate the retained I2 proof because the Codex invocation boundary is
-unchanged; the only subsequent adapter change corrects Cursor's unpinned-effort
-disclosure.
+not invalidate the retained I2 invocation proof because registered role names,
+bindings, model/effort/tool pins, dispatch and same-agent follow-up remain unchanged.
+Subsequent changes correct routing descriptions and the compiled procedure's output
+contract; exact-source review and generated validation cover those semantics, while
+the retained native run remains evidence only for its dated template revision.
 
 Parallax revision cricket/3 and the proportionality check keep one coherent
 installation outcome. Splitting current authority from the definitions would
