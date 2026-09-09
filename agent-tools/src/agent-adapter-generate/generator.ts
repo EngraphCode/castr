@@ -157,9 +157,9 @@ export function toTitleCase(id: string): string {
 }
 
 /** Preserve string meaning and continuation indentation within a YAML mapping. */
-function yamlDescription(description: string): string {
+function yamlStringField(field: 'name' | 'description', value: string): string {
   // The surrounding frontmatter adds the terminating newline; retain all value whitespace.
-  return stringify({ description }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
+  return stringify({ [field]: value }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
 }
 
 function renderAgentFrontmatter(
@@ -169,15 +169,15 @@ function renderAgentFrontmatter(
 ): string[] {
   if (surface === 'cursor') {
     return [
-      `name: ${entry.name}`,
+      yamlStringField('name', entry.name),
       ...(role === undefined ? [`model: ${CURSOR_AGENT_MODEL}`] : []),
-      yamlDescription(entry.description),
+      yamlStringField('description', entry.description),
       'readonly: true',
     ];
   }
   return [
-    `name: ${entry.name}`,
-    yamlDescription(entry.description),
+    yamlStringField('name', entry.name),
+    yamlStringField('description', entry.description),
     `model: ${role?.claudeModel ?? CLAUDE_AGENT_MODEL}`,
     ...(role === undefined
       ? [
@@ -249,7 +249,7 @@ export function deriveRuleDescription(ruleText: string): string {
 export function renderCursorRule(ruleName: string, description: string): string {
   return [
     '---',
-    yamlDescription(description),
+    yamlStringField('description', description),
     'alwaysApply: true',
     '---',
     '',

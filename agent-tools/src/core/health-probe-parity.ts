@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { CODEX_CONFIG_PATH, readCodexAgentRegistrations } from './codex-project-agent-registry.js';
+import { completeReviewerNames, supportsReviewer } from './reviewer-adapter-platform-contract.js';
 import {
   CLAUDE_AGENTS_DIR,
   CODEX_AGENTS_DIR,
@@ -18,9 +19,7 @@ function evaluateReviewerAdapterParity(repoRoot: string): HealthCheckResult {
   const cursorAgents = listBasenames(repoRoot, CURSOR_AGENTS_DIR, '.md');
   const claudeAgents = listBasenames(repoRoot, CLAUDE_AGENTS_DIR, '.md');
   const codexAgents = listBasenames(repoRoot, CODEX_AGENTS_DIR, '.toml');
-  const allAgentNames = [...new Set([...cursorAgents, ...claudeAgents, ...codexAgents])].sort(
-    (a, b) => a.localeCompare(b),
-  );
+  const allAgentNames = completeReviewerNames([...cursorAgents, ...claudeAgents, ...codexAgents]);
   const details = collectReviewerAdapterParityDetails(allAgentNames, {
     cursorAgents,
     claudeAgents,
@@ -46,7 +45,13 @@ function evaluateReviewerAdapterParity(repoRoot: string): HealthCheckResult {
   };
 }
 
-function collectReviewerAdapterParityDetails(
+/**
+ * Compare installed reviewer names against each platform's supported roster.
+ * @param allAgentNames - Complete canonical reviewer names to assess.
+ * @param platformAgents - Installed reviewer names grouped by platform.
+ * @returns Operator-facing parity diagnostics; empty means the rosters align.
+ */
+export function collectReviewerAdapterParityDetails(
   allAgentNames: readonly string[],
   platformAgents: {
     readonly cursorAgents: readonly string[];
@@ -63,7 +68,12 @@ function collectReviewerAdapterParityDetails(
     if (!platformAgents.claudeAgents.includes(agentName)) {
       details.push(`Claude Code is missing reviewer adapter ${agentName}.`);
     }
-    if (!platformAgents.codexAgents.includes(agentName)) {
+    if (!supportsReviewer(agentName, 'codex') && platformAgents.codexAgents.includes(agentName)) {
+      details.push(`Codex has unsupported reviewer adapter ${agentName}.`);
+    } else if (
+      supportsReviewer(agentName, 'codex') &&
+      !platformAgents.codexAgents.includes(agentName)
+    ) {
       details.push(`Codex is missing reviewer adapter ${agentName}.`);
     }
   }

@@ -162,6 +162,17 @@ config_file = "agents/code-reviewer.toml"
     );
   });
 
+  it('rejects a whitespace-only registration description before projection', () => {
+    const config = CONFIG_TEXT.replace(
+      'description = "Gateway reviewer for non-trivial changes."',
+      'description = "   "',
+    );
+
+    expect(() =>
+      buildAgentRoster(config, new Map([['code-reviewer', CODE_REVIEWER_TOML]])),
+    ).toThrow(/missing a description/u);
+  });
+
   it('rejects duplicate top-level settings', () => {
     const content = CODE_REVIEWER_TOML + 'sandbox_mode = "workspace-write"\n';
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
@@ -242,6 +253,16 @@ describe('renderAgentAdapter', () => {
     const tricky = { ...codeReviewer, description: "Reviewer: gateway, it's #1." };
     const out = renderAgentAdapter(tricky, 'cursor');
     expect(parseDocument(out.split('---\n')[1] ?? '').get('description')).toBe(tricky.description);
+  });
+
+  it.each(
+    (['cursor', 'claude'] as const).flatMap((surface) =>
+      ['true', 'null', '123'].map((name) => [name, surface] as const),
+    ),
+  )('preserves scalar-like reviewer name %j on the %s surface', (name, surface) => {
+    const out = renderAgentAdapter({ ...codeReviewer, name }, surface);
+
+    expect(parseDocument(out.split('---\n')[1] ?? '').get('name')).toBe(name);
   });
 });
 

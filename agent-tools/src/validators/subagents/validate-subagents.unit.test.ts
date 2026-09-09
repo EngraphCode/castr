@@ -48,6 +48,20 @@ describe('Codex subagent helper coverage', () => {
     expect(issues).toStrictEqual([]);
   });
 
+  it('rejects a whitespace-only registration description', () => {
+    const { issues } = getCodexRegistrationValidation({
+      registrations: [
+        {
+          name: 'code-expert',
+          description: '   ',
+          configFile: 'agents/code-expert.toml',
+        },
+      ],
+    });
+
+    expect(issues).toContain('.codex/config.toml: agent "code-expert" is missing a description');
+  });
+
   it('rejects repo-root adapter paths that repeat .codex inside config_file', () => {
     const { issues } = getCodexRegistrationValidation({
       registrations: [

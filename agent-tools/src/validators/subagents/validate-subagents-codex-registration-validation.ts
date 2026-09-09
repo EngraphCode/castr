@@ -88,7 +88,7 @@ function validateSingleRegistration(
   registrationsByName: Map<string, CodexRegistration>,
   issues: string[],
 ): void {
-  if (!registration.description) {
+  if (registration.description.trim().length === 0) {
     issues.push(`${configPath}: agent "${registration.name}" is missing a description`);
   }
   if (!registration.configFile) {

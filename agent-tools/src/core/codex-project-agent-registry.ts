@@ -21,7 +21,7 @@ export interface CodexAgentRegistration {
 export function parseCodexAgentRegistrations(content: string): CodexAgentRegistration[] {
   const entries = readAgentRegistrations(content);
   for (const entry of entries) {
-    if (!entry.description)
+    if (entry.description.trim().length === 0)
       throw new Error("Codex agent '" + entry.name + "' is missing a description.");
     if (!entry.configFile)
       throw new Error("Codex agent '" + entry.name + "' is missing a config_file.");

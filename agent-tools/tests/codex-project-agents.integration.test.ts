@@ -112,6 +112,15 @@ config_file = "agents/code-expert.toml"
       },
     ]);
   });
+
+  it('rejects a whitespace-only registration description', () => {
+    expect(() =>
+      parseCodexAgentRegistrations(`[agents."code-expert"]
+description = "   "
+config_file = "agents/code-expert.toml"
+`),
+    ).toThrow(/missing a description/u);
+  });
 });
 
 describe('resolveCodexProjectAgent', () => {
