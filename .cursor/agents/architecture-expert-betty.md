@@ -3,7 +3,6 @@ name: architecture-expert-betty
 model: gpt-5.5
 description: Systems-thinking architecture reviewer — cohesion, coupling, and change-cost trade-offs.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Architecture Expert Betty

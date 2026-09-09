@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-06
+last_updated: 2026-09-09
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -93,34 +93,161 @@ Every PR has a named shepherd, the PDR-132 default budget of at most two expecte
 review rounds, and its actual tally from first triage. Dataset volume is a size
 warning requiring review of the inventory method, never a correctness exemption.
 
+Owner correction, 9 September 2026: work is not delivered until its PR is merged.
+Open PRs accumulate integration and review risk. Complete the coordinating task's
+current PR before opening another repair PR; use waits for review, extraction
+comparison and evidence gathering that do not create another integration branch.
+Select subsequent slices to deliver their acceptance on main and discharge the
+corresponding inherited-PR obligations. Close a source PR promptly once every
+surviving delta has a verified destination or evidenced supersession. Preserve its
+source and the full acceptance; reducing the count by unverified closure is not
+progress. The ledger owns the live census and closure evidence. PR #88 delivered
+the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
+delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
+implementation and installation are delivered, but final-template I2 proof remains
+outstanding. PR #92 corrects the premature lifecycle closeout. Its six-return native
+proof and reconciliation precede PR #14; the broader C05 family retains its other
+obligations.
+
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
 boundaries, and before final closeout. Preserve verdicts and the coordinator’s
 accepted/rejected findings in the delivery evidence; never infer merge readiness
 from a panel verdict or reopen settled usefulness. Do not re-adjudicate an unchanged
 frame. The first full panel used the exact installed upstream roles through an
-ephemeral read-only dispatcher; C05 owns Castr’s missing templates/registrations
-and the coupled generator/validator repair. Future frames name exact governing
-rules and evidence paths; unavailable event identifiers remain explicitly missing.
+ephemeral read-only dispatcher. PR #88 delivered C05's coupled
+generator/validator/runtime contract; the dependent installation retains Castr's
+templates, registrations, generated adapters and native rerun. Future frames name
+exact governing rules and evidence paths; unavailable event identifiers remain
+explicitly missing.
 
-| Position           | Reviewable outcome and dependencies                                                                                                                                                             |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                      |
-| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                 |
-| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                 |
-| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                           |
-| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                        |
-| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                       |
-| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition. |
-| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                   |
-| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, in separate documentation PRs.                                                              |
-| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                          |
+The owner subsequently commissioned a separate C05 Cricket repair task. Moon turns
+Apogee began it; Kite hunts Eyrie delivered the coupled tooling and validation as PR #88;
+Bora seeks Turbulence delivered the dependent installation as PR #91. Its reviewed head
+`48e2194d` merged as `af840d9b`; all 17 exact-head check runs passed, including the
+successful Copilot review run, all eight review threads were resolved, and exact-head
+Codex/Copilot plus gateway, documentation and onboarding review found no remaining
+blocker. The active C05 plan preserves the dated native proof and the later
+`UNDELIVERED` task-runtime attempt. Because the retained six-return run predates material
+changes to the final templates, it cannot close final I2. The atomic plan remains open for
+a fresh final-template panel and lifecycle reconciliation; PR #14
+follows that merge. The broader C05 family remains open, and the coordinating agent
+retains this commission, parent queue, ledger and coverage manifests.
 
-C08 follows prerequisite doctrine and review discipline, but root-neutral repairs
-may precede the broader root migration under the parent's sequencing amendment.
-Q-22 fixture generation precedes dependent fixture work. Q-28 includes every
+| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                                                                                                                                                 |
+| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                                                                                                                                            |
+| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                                                                                                                                            |
+| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                                                                                                                                                      |
+| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                                                                                                                                                   |
+| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                                                                                                                                                  |
+| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition.                                                                                                                            |
+| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                                                                                                                                              |
+| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, plus agentic-surface validator strictness in separate PRs. The validator slice enforces the existing 1,024-character description bound; semantic routing quality remains review-owned until trigger evaluations exist. |
+| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                                                                                                                                                     |
+
+C08 repairs follow their actual prerequisites under the
+[parent's refined sequencing](../proof-programme/parent-plan.md#current-execution-state).
+An existing-contract repair with no dependency on new doctrine or public roots can
+land while other documentation families remain unfinished. Changes requiring new
+roots/facets, object/processing contracts or target profiles follow their coupled
+doctrine. Q-22's generator fix and regenerated outputs land together under its
+original brief; dependent fixture work follows that proof. Its full acceptance
+remains open until every original requirement is satisfied. Q-28 includes every
 intermediate encoding seam its original scenarios traverse. Neither smallness nor
 an administrative family label weakens original acceptance.
+
+## 6 September delivery step-back
+
+At main `3ad2ab5dbff006786394dd7689e892be412c1687`, PRs #82–#84 had delivered
+custody and review discipline; no compiler fidelity repair from this commission
+had merged. PR #85 remained open at `a772d5695904e3c0154aca581d91857327a42cd4`.
+Reviewed drafts were accumulating before integration. Its rounds three and four
+narrowed the same public-entry navigation concern: a two-file cure and review
+missed a JSON inventory link in USAGE. The PR's durable tally preserves the
+finding, earlier scoped PASS, complete-entry-target audit and resulting cure.
+Review counts do not establish the coverage of the review question.
+
+This coordinating-agent refinement applies the owner's small-PR and
+independently-green-repair instructions; it does not claim a new owner ruling.
+Keep one integrating PR and at most one independently prepared candidate in the
+coordinating task. The owner-commissioned C05 Cricket task is an explicit parallel
+workstream with separate custody; coordinate expensive aggregate runs across both.
+Preserve existing drafts and source custody; resume them when their delivery slot
+opens.
+The [9 September prerequisite sequence](#9-september-q-22-prerequisite-sequence)
+supersedes the initial next-action ordering below this step-back. Its displaced
+paragraph is [conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
+No acceptance, gate or review condition is weakened.
+
+The directive review names further describing surfaces within existing scope:
+C05 corrects testing-strategy's copied MCP-server system boundary; C07b corrects
+mandatory object closure against source semantics; C07c reconciles testing- and
+validation-strategy's downstream-consumer/Oak-harness framing. Independent authored
+corpora, source/target observations and isolated local workflows prove correctness
+and usability. Consumers, publication and usefulness validation are not gates.
+Test/evaluate/assure remains a useful distinction: Cricket and reviews challenge
+judgement but cannot replace executed compiler proofs or establish measured agent
+reliability. C10 retains the actual process observations without a fabricated
+fitness score.
+
+## 9 September Q-22 prerequisite sequence
+
+PR #86 delivered the operation-security repair on main
+`92ada69892c42a69a3ae5431c1793bbee61b46c1`; the ledger owns its merge evidence.
+PR #89 then delivered the bounded **C08/Q22-oracles** repair as
+`d18e5b406d468218e0bf5d32f478725f9eef8399`; the [ledger](../delivery-ledger.md#correction-successors)
+owns its exact-head review and merge evidence. The 6 September reproduction at
+`6c3b18f0e97d4d93eca14ab67c2b0c79bc304119` used unchanged inputs and tests:
+91 baseline passes; canonical generator exit zero; then 80 passes and 11 failures.
+Eight failures concern number/bigint input; three concern the missing `Error`
+export. Seven negative Error tests still passed on the unrelated `TypeError`.
+The original eleven historical failure titles were not recorded, so numerical
+agreement does not prove historical identity.
+
+The merged oracle slice keeps the existing fixtures, imports and case membership.
+Its seven existing Error negatives require the intended validation issue paths
+and codes, its three positives compare parsed values, and missing-schema,
+unrelated-error and representative semantic/output mutants fail. The finding
+register retains RED observations against the reproduced failure and GREEN against
+the unchanged checked-in fixtures. These validator tests do not execute
+regeneration or certify all fidelity. No generator or generated output changed;
+Q-22 remains open.
+
+When Q-22 resumes after the current PR-risk reductions, migrate the integer
+contract as one coherent semantic outcome: distinguish
+numeric signed64 from native bigint signed64/unbounded through parser authors,
+canonical validation/versioned persistence, all active writers/projections and
+coupled doctrine. The bounded primitive facet describes identity processing;
+it does not complete the general value/interaction roots or F-18/F-19. Host-number
+validation and exact mathematical JSON tokens are distinct proof obligations.
+Do not repair numeric positives by changing them to bigint, narrow the source
+range to safe integers, or misdescribe JSON Schema as unable to express bounds.
+Current persistence tests do not read Q-22's generated IR snapshots, so the live
+IR migration can precede their refresh without adding a legacy compatibility path.
+
+Q-22 subsequently lands its generator fix and all regenerated outputs together,
+including the corrected fixed-fixture `ErrorSchema` imports. Its full original
+acceptance, clean regeneration and semantic prerequisites remain mandatory.
+Naming collisions, alias admission, skipped parity payloads and traversal-dependent
+enum catalogue metadata retain their existing fidelity-family owners. A green
+old snapshot is not evidence that those obligations or Q-22 are complete.
+
+### Adjacent observations retained on 9 September
+
+These observations name the remaining work; they do not extend this oracle PR's
+acceptance or certify an unexecuted behavioural proof.
+
+| Observation                                                                                                                                      | Computing or repair owner and closing condition                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Seven Error false passes are reproduced and repaired in the candidate; other Pet/Pets/NewPet negatives still accept any exception.               | C08 proof-integrity owns discriminating rejection and parsed-value witnesses for those remaining schema cases, with semantic mutants. Q-22 retains its full regeneration acceptance.                                                                                                                                                             |
+| Runtime probes at `6c3b18f0` show name collisions, reference mismatch and disappearing components; bare Zod aliases are also omitted on reparse. | C3/F-08 own injective wire/symbol identity; C08 Zod admission owns alias recognition or actionable whole-declaration rejection. Reconstruct retained red-first cases at those seams; inline probe output alone is not regression proof.                                                                                                          |
+| Source inspection finds Scenario 3's five case keys absent from the parity payload harness; the helper returns without validation.               | C08 proof-integrity must reproduce missing-harness failure and prove each intended case executes its oracle. The four-file parity run does not exercise Scenario 3.                                                                                                                                                                              |
+| IR round-trip inspection finds traversal-dependent metadata for the named `type` enum; operation contexts remain present.                        | C08 identity/emitted-documentation owns enum catalogue context preservation and an executed Markdown witness. Anonymous catalogue order and debug Map serialization alone do not prove canonical persistence loss.                                                                                                                               |
+| `principles.md` equates fail-fast with `.parse()` everywhere.                                                                                    | C07 reconciles that proposition across current surfaces: a proof asserting structured rejection is compatible with absolute strictness. Product admission must still fail actionably.                                                                                                                                                            |
+| Sonar main analysis `9605deb3-6bb1-4acd-a16f-70e65c3dc36d` at `6c3b18f0` reports 400 open issues, plus five removed historical rows.             | C09 owns per-issue reconciliation of the captured 405-key census with existing C05/C08 carriers. The security reviewer inspected selected classes, leaving 344 rows individually unadjudicated. Counts and a green new-code gate are not semantic proof; no issue was administratively suppressed. Current PR findings stay with their shepherd. |
+| Dependabot #74 adds `GHSA-4mjr-xmp4-gh2g` for `qs`, alongside #73.                                                                               | Existing QS1 dependency-currency custody owns verified resolution and aggregate proof. Neither alert is closed by this oracle or Sonar review.                                                                                                                                                                                                   |
 
 ## Fidelity repair families and describing surfaces
 
@@ -229,11 +356,10 @@ resumed or inferred. History rewriting remains owner-controlled.
 
 ## Current integration and retained follow-ups
 
-Q-19's original non-code acceptance is proven on integrated main through PR #83;
-the [ledger](../delivery-ledger.md) owns the dated head, checks and review evidence.
-C01R is merged and the eight late C01 findings are individually settled. C03a now
-delivers the prepared local-checkout slice from refreshed main; C03b/c retain the
-detailed API/options and response/transport/MCP documentation.
+The [ledger](../delivery-ledger.md) owns dated delivery and current PR actions.
+C01R, Q-19, C03a and operation-security-empty are delivered at their bounded
+acceptance. C03b/c retain detailed API/options and response/transport/MCP
+documentation; C10 retains final isolated-pack acceptance.
 Earlier dated authoring records below preserve their checkpoint observations;
 they do not override current queue status or the ledger's delivery dispositions.
 

@@ -3,7 +3,6 @@ name: test-reviewer
 model: gpt-5.5
 description: Test quality and TDD compliance reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Test Reviewer

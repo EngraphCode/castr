@@ -16,9 +16,10 @@
 
 import {
   type CodexRegistration,
-  readTomlBasicStringValue,
   resolveCodexConfigFilePath,
 } from './validate-subagents-codex-toml.js';
+import type { CodexAdapterDocument } from '../../core/codex-adapter-document.js';
+import { tomlString } from '../../core/toml-document.js';
 
 // ---------------------------------------------------------------------------
 // Basename helper
@@ -46,21 +47,21 @@ export function stripBasename(filePath: string, extension: string): string {
 
 /**
  * Validates that each required TOML setting key in `requiredSettings` is
- * present in `content` with exactly the expected value.
+ * present in `document` with exactly the expected value.
  *
  * @param adapterFile - Repository-relative path to the adapter (for messages).
- * @param content - Full text content of the adapter TOML file.
+ * @param document - Parsed adapter table after complete shape validation.
  * @param requiredSettings - Pairs of `[settingKey, expectedValue]` to verify.
  * @returns Array of issue strings for any settings that are missing or wrong.
  */
 function validateRequiredSettings(
   adapterFile: string,
-  content: string,
+  document: CodexAdapterDocument,
   requiredSettings: readonly (readonly [string, string])[],
 ): string[] {
   const issues: string[] = [];
   for (const [settingKey, expectedValue] of requiredSettings) {
-    const actualValue = readTomlBasicStringValue(content, settingKey);
+    const actualValue = tomlString(document, settingKey);
     if (actualValue !== expectedValue) {
       issues.push(
         `${adapterFile}: ${settingKey} must be "${expectedValue}" (found: ${actualValue ?? 'missing'})`,
@@ -147,7 +148,7 @@ function validateRegistrationSync(
  * @param declaredDescription - The `description` value from the adapter TOML,
  *   or `null`.
  * @param registeredAgent - The matching registry entry, or `null`.
- * @param content - Full text content of the adapter TOML file.
+ * @param document - Parsed adapter table after complete shape validation.
  * @param requiredSettings - Settings pairs to validate.
  * @param configPath - Repository-relative path to the Codex config file.
  * @returns Array of issue strings collected from all field checks.
@@ -158,7 +159,7 @@ export function validateAdapterFields(
   declaredName: string | null,
   declaredDescription: string | null,
   registeredAgent: CodexRegistration | null,
-  content: string,
+  document: CodexAdapterDocument,
   requiredSettings: readonly (readonly [string, string])[],
   configPath: string,
 ): string[] {
@@ -183,6 +184,6 @@ export function validateAdapterFields(
       registeredAgent,
       configPath,
     ),
-    ...validateRequiredSettings(adapterFile, content, requiredSettings),
+    ...validateRequiredSettings(adapterFile, document, requiredSettings),
   ];
 }

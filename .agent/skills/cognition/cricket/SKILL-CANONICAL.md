@@ -13,11 +13,18 @@ description: >-
 
 Cricket is the conscience-check panel: a deliberately varied set of fast second opinions about
 whether the primary agent is doing the right work now. It is useful for priority, framing,
-displacement, invented gates, and proportion. It is not an approval gate.
+displacement, invented gates, and proportion. It is not an approval gate. It does not
+establish the correctness of the method used or the provenance of evidence; use expert
+reviewers and first-hand reads for those questions. The
+[upstream Cricket skill](https://github.com/EngraphCode/open-curriculum-ecosystem/blob/31e76a7237ee7aecb8adfca96e73b2d83b25be39/.agent/skills/cognition/cricket/SKILL-CANONICAL.md)
+records three OCE ON-TRACK verdicts
+across a window of owner corrections about tools and evidence on 2 September 2026.
+That observation is upstream provenance, not a Castr experiment or reliability result.
 
 Typing `$engraph-cricket` asks the current seat to run the whole panel for its platform. The invoker
-builds the frame from live context and starts immediately; missing information is labelled
-`MISSING`, not silently invented.
+builds the frame from live context and starts immediately. Missing context is labelled `MISSING`,
+not silently invented. `STANCE` is a mandatory control input: a missing or invalid stance is
+rejected before either Cricket method produces a verdict.
 
 ## When to call the panel
 
@@ -100,6 +107,14 @@ Supply every role with the same six fields:
 5. **NEXT** — the next planned action or actions.
 6. **STANCE** — `normal` or `adversarial`.
 
+The first five fields are required context. `STANCE` is the required control that selects the
+method branch. If it is absent or is not exactly `normal` or `adversarial`, the role returns
+`INVALID FRAME — STANCE must be exactly normal or adversarial` and stops before producing a
+verdict. That response is delivered diagnostic evidence, but it is not a substantive Cricket
+return and does not count toward the platform's six- or eight-return panel result. Retry only with
+the corrected frame; because its stance has changed, this is not re-adjudication of an identical
+frame.
+
 Quote forcing facts. Give owner rulings their author, date, and event id when available. Put the
 verification method beside any load-bearing conclusion. Keep `ABSORBED` and `ROUTED-AWAY`
 findings as separate labelled lists. Name the rule or mechanical fact behind every wait or hold.
@@ -117,7 +132,7 @@ On Claude, run the four registered Cricket roles as a panel:
 
 ## Codex dispatch
 
-Oak adapts [OpenAI's Codex subagent workflow](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+Castr adapts [OpenAI's Codex subagent workflow](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 into a fixed registered-role panel: unlike the upstream's general orchestration pattern, role TOML
 owns model and effort here, dispatch forks no parent context, and the adversarial wave reuses the
 same agents.

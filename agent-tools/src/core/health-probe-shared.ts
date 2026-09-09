@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { listRequiredRepositorySourcesSync } from './required-repository-source.js';
 
 export const CLAUDE_HOOK_COMMAND =
   'node "${CLAUDE_PROJECT_DIR}/agent-tools/dist/src/hook-policy/check-blocked-patterns.js"';
@@ -23,15 +24,9 @@ export const FRESHNESS_WARNING_DAYS = 7;
 type JsonLikeObject = Readonly<Record<PropertyKey, unknown>>;
 
 export function listBasenames(repoRoot: string, relativeDir: string, extension: string): string[] {
-  const absoluteDir = join(repoRoot, relativeDir);
-  if (!existsSync(absoluteDir)) {
-    return [];
-  }
-
-  return readdirSync(absoluteDir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
-    .map((entry) => entry.name.slice(0, -extension.length))
-    .sort((a, b) => a.localeCompare(b));
+  return listRequiredRepositorySourcesSync(repoRoot, relativeDir, extension).map((reference) =>
+    reference.slice(relativeDir.length + 1, -extension.length),
+  );
 }
 
 export function countPracticeBoxFiles(repoRoot: string): number {

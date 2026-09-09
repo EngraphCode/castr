@@ -12,8 +12,10 @@ and the domain-specialist pattern is
 
 ## The roster
 
-15 canonical templates. `architecture-expert` is one template invoked through four
-persona adapters (`-barney`, `-betty`, `-fred`, `-wilma`).
+17 canonical templates: 15 artefact-review templates plus two Cricket methods.
+`architecture-expert` is one template invoked through four persona adapters
+(`-barney`, `-betty`, `-fred`, `-wilma`). Cricket adds three Codex roles and four
+Claude/Cursor roles; the installed totals are 21 Codex and 22 per Markdown platform.
 
 | Reviewer                                        | Owns                                                                                                          | Invoke when the change touches…                                   |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -50,8 +52,9 @@ persona adapters (`-barney`, `-betty`, `-fred`, `-wilma`).
 
 ## How to invoke
 
-castr's only installed sub-agent adapter layer is **Codex** project agents
-(`.codex/config.toml` + `.codex/agents/*.toml`). When direct project-agent
+Castr installs **Codex** project agents (`.codex/config.toml` + `.codex/agents/*.toml`)
+and generated **Claude Code** / **Cursor** wrappers (`.claude/agents/*.md` and
+`.cursor/agents/*.md`). When direct project-agent
 fan-out is unavailable or not producing useful signal (per
 `invoke-reviewers.md`), do the review **in the current session**:
 
@@ -60,9 +63,14 @@ fan-out is unavailable or not producing useful signal (per
 3. Review the scoped diff only, read-only unless fixes were separately asked for.
 4. Record the outcome in the active session artefacts (no hidden review debt).
 
-Claude / Cursor / Gemini have **no** sub-agent adapter yet (see
-[`cross-platform-agent-surface-matrix.md`](cross-platform-agent-surface-matrix.md));
-on those platforms the in-session template fallback above is the path.
+Gemini has no sub-agent adapter; the in-session template review above is its path
+(see [`cross-platform-agent-surface-matrix.md`](cross-platform-agent-surface-matrix.md)).
+
+For direction, priority or proportionality, invoke `$engraph-cricket` using the
+[Cricket dispatch contract](../../skills/cognition/cricket/SKILL-CANONICAL.md).
+Its exact registered panel and same-agent Codex follow-up are required; the generic
+artefact-review fallback above does not satisfy a missing Cricket return. File
+installation and configured model names do not establish native runtime admission.
 
 ## Worked examples
 

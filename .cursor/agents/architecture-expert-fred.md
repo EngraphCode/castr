@@ -3,7 +3,6 @@ name: architecture-expert-fred
 model: gpt-5.5
 description: Principles-first architecture reviewer — decision-record compliance and boundary discipline.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Architecture Expert Fred

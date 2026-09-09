@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -112,6 +112,27 @@ config_file = "agents/code-expert.toml"
       },
     ]);
   });
+
+  it('rejects a whitespace-only registration description', () => {
+    expect(() =>
+      parseCodexAgentRegistrations(`[agents."code-expert"]
+description = "   "
+config_file = "agents/code-expert.toml"
+`),
+    ).toThrow(/missing a description/u);
+  });
+
+  it.each(['agents/./code-expert.toml', 'other/code-expert.toml'])(
+    'rejects noncanonical runtime config_file %s',
+    (configFile) => {
+      expect(() =>
+        parseCodexAgentRegistrations(`[agents."code-expert"]
+description = "Gateway reviewer."
+config_file = "${configFile}"
+`),
+      ).toThrow(/config_file.*agents\/code-expert\.toml/u);
+    },
+  );
 });
 
 describe('resolveCodexProjectAgent', () => {
@@ -145,9 +166,30 @@ config_file = ".codex/agents/code-expert.toml"
     );
 
     expect(() => resolveCodexProjectAgent(repoRoot, 'code-expert')).toThrow(
-      /missing adapter \.codex\/\.codex\/agents\/code-expert\.toml/u,
+      /config_file.*agents\/code-expert\.toml/u,
     );
   });
+
+  it.each(['.codex/config.toml', '.codex/agents/code-expert.toml'])(
+    'rejects a linked runtime source %s',
+    (source) => {
+      const repoRoot = createTempRepoRoot();
+      writeFixtureRepo(repoRoot);
+      const target = join(
+        repoRoot,
+        `linked-${source.endsWith('config.toml') ? 'config' : 'adapter'}.toml`,
+      );
+      renameSync(join(repoRoot, source), target);
+      symlinkSync(target, join(repoRoot, source), 'file');
+
+      expect(() => resolveCodexProjectAgent(repoRoot, 'code-expert')).toThrow(
+        new RegExp(
+          `${source.replaceAll('.', '\\.')}: required source must not traverse symbolic link`,
+          'u',
+        ),
+      );
+    },
+  );
 
   it('fails when adapter metadata drifts from the central registry', () => {
     const repoRoot = createTempRepoRoot();

@@ -3,7 +3,6 @@ name: architecture-expert-barney
 model: gpt-5.5
 description: Simplification-first architecture reviewer — boundary and dependency mapping.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Architecture Expert Barney

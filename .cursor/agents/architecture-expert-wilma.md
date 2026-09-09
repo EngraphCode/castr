@@ -3,7 +3,6 @@ name: architecture-expert-wilma
 model: gpt-5.5
 description: Adversarial architecture reviewer — resilience, failure modes, and hidden coupling risks.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Architecture Expert Wilma

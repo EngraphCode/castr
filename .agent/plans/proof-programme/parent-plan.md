@@ -166,19 +166,39 @@ it does not resume the experiment or scheduled execution. The [delivery ledger](
 owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
-The commission's sequencing amendment takes precedence for interactive work:
-C01 custody → C02 Q-19 review discipline → C01R post-merge custody correction →
-C03 public entry → C04 ADR integrity →
-C05 authority/adapters → C06 coupled visions/PDR-135 → C07 doctrine propositions →
-C08 independently green fidelity repairs → C09 estate reconciliation → C10
-walkthroughs/retrospective/closeout. Families split into single-outcome PRs.
-Root-neutral repairs may precede the broad public-root migration; a repair that
-requires changed roots/facets follows those prerequisites. Q-22 lands before its
-dependent fixture work. Preserve each original queue brief's full acceptance and
-technical dependencies; Q-08/Q-14/Q-16/Q-20 complete only after integrated-main
-proof. The prior queue order and counters are otherwise unchanged. Q-18 remains
-the first dependency-eligible scheduled item if future owner authorisation resumes
-the experiment; Q-30 is an interactive commission, not a scheduled pickup.
+The commission's interactive sequencing follows the [9 September prerequisite
+sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
+C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
+are delivered. PR #88 delivered C05's platform reviewer-contract tooling as `bd115294`; PR #91
+delivered the dependent installation as
+`af840d9b68e9b4ef00813a2af97675c7abca3c33`. Its reviewed head was the merge
+commit's second parent and the trees are identical; all 17 exact-head check runs passed,
+including the successful Copilot review run, and all eight review threads were resolved.
+The C05 Cricket implementation and installation are delivered, but its
+[atomic plan](../current/cricket-platform-parity.md) remains open for final-template I2
+proof. The retained six-return run predates material template changes; the later attempt
+produced no observable registered-role dispatch or return.
+PR #92 corrects the premature closeout. Six substantive final-template returns and the
+resulting lifecycle reconciliation precede PR #14's dependency-ownership extraction.
+The broader C05 family retains its other documented obligations. Q-09 remains pending
+for PR #10. When Q-22 resumes, migrate
+the integer contract coherently across its live consumers and doctrine, then land
+the generator fix and all regenerated outputs together, including the fixed-fixture
+export imports. Its full original acceptance remains mandatory. Other independent
+C03–C08 outcomes can integrate when their actual technical prerequisites hold; the
+delivery plan owns the reasoning and work-in-progress limit. Displaced instructions are
+[conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
+
+C01, C02, C01R and C03a are delivered at their bounded acceptance. Remaining
+C03b/c and C04–C10 outcomes retain their full acceptance. Repairs requiring changed roots, facets, object/processing doctrine or
+target profiles follow those prerequisites. Q-22's fix and regenerated outputs
+land together; it remains open until its full original acceptance is proven.
+A blocked Q-22 prerequisite does not hold other independent outcomes. Preserve every
+original queue brief's acceptance and technical dependencies;
+Q-08/Q-14/Q-16/Q-20 complete only after integrated-main proof. Queue rows and
+scheduled counters are unchanged. Q-18 remains the first dependency-eligible
+scheduled item only if future owner authorisation resumes the experiment; Q-30
+is the interactive commission, not a scheduled pickup.
 
 Any future owner-authorised resumption must first reconcile Q-30's interactive
 custody, open PRs and live claims. Establish from current evidence or an explicit
@@ -913,7 +933,10 @@ eyeball); no dangling link introduced; gates green. Source: report §7 T00 instr
 verification, surviving evidence migrated to its named home, closed with verification
 recorded. Non-goals: no wholesale branch merges; #23 is NOT this row (see Q-13). Acceptance
 (`non-code`): each closed PR's closure note names what moved where and what was retired.
-Source: report §11.3.
+Source: report §11.3. The [PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+accounts for all 849 original hunks and finds no unique value requiring extraction.
+Its repository landing and verified PR closure remain the PR #28 transition; PR #10
+remains wholly outstanding. Q-09 therefore stays pending.
 
 **Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
 practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —

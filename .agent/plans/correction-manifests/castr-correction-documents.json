@@ -101,5 +101,1113 @@
     "disposition": "outstanding",
     "carrier": "castr-documentation-and-fidelity-correction"
   },
-  "reviews": {}
+  "reviews": {
+    ".agent/memory/operational/repo-continuity.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "e02467ddeb00694c430f38926480564b85b578e1",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current next-safe-step route only: PR92 corrects the premature C05 Cricket closeout; final-template I2 proof and lifecycle reconciliation precede PR14 while Q09/Q22 remain routed.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "627936ad9beba23e7083b33013283af58ae4798a",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: PR89 delivery, bounded Q-09/PR28 disposition and closure, PR10 residual, PR14 successor assessment and retained Q22 prerequisites."
+        },
+        {
+          "reviewed_git_blob_hash": "ceb2a0a89cf622835ab130498eca4f279be996f4",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route before PR90's terminology step-back: PR89 and PR88 delivery, bounded Q-09/PR28 disposition and closure, PR10 residual, PR14 successor assessment, retained Q22 prerequisites and separately sequenced Cricket installation using ambiguous publish wording."
+        },
+        {
+          "reviewed_git_blob_hash": "593cd15d281ead19dc3fdcdc9f64b05ae38327d8",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route during PR90's terminology step-back: the installation action used open-PR terminology but retained the ambiguous Q-09 closure-slice condition; superseded by the exact PR28-transition condition."
+        },
+        {
+          "reviewed_git_blob_hash": "c715affd61909adfcfbf6d18d7c542bd00ea8421",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: PR89 and PR88 delivery, bounded PR28 disposition and closure, PR10 residual, PR14 successor assessment, retained Q22 prerequisites and separately sequenced Cricket installation whose PR opens only after the PR28 transition completes."
+        },
+        {
+          "reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: PR88 and PR90 delivery, PR28 closure, current C05 installation ownership and branch, narrow generator-source disclosure correction, PR14 successor and retained Q09/Q22 obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "71a195c47abb4ce84bcf2cb9a8f754357e827ed2",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "627936ad9beba23e7083b33013283af58ae4798a",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: The C05 Cricket atomic plan is complete and in completion staging; begin PR14 from current origin/main while retaining Q09/Q22 obligations."
+        }
+      ]
+    },
+    ".agent/memory/operational/threads/castr-correction.next-session.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "db61894d78dddbc10ef133dbb1d4c533ee1116e3",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current correction continuation route only: obtain or retain UNDELIVERED for the final-template Cricket panel, reconcile its atomic lifecycle, then begin PR14 while broader obligations remain routed.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "eba723fe726223c82bde31845575a7cbf898dcde",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current branch, acceptance and landing target plus delivered/residual correction-family routing."
+        },
+        {
+          "reviewed_git_blob_hash": "3fa397c7ebb807f0cfbcffc682ca5a34b29d71e3",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "State-conditional continuation and landing route after PR88 before the structural custody-routing step-back made the installation PR state and exact PR28-transition condition explicit."
+        },
+        {
+          "reviewed_git_blob_hash": "2f7992d87e4cec686bf76fc0a38f0b28d8ff3b7f",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "State-conditional continuation, acceptance and landing route plus delivered/residual correction-family routing after PR88, including the unopened Cricket installation PR and exact PR28-transition opening condition."
+        },
+        {
+          "reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: delivered prerequisites, Bora custody of the integrated C05 installation, exact landing action, PR14 successor and retained broader correction obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "1d20af66dd130a1d6074b44cd71ace44f63e4bae",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "eba723fe726223c82bde31845575a7cbf898dcde",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: The C05 Cricket atomic plan is delivered and in completion staging; PR14 is next and broader correction obligations remain routed."
+        }
+      ]
+    },
+    ".agent/plans/delivery-ledger.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "bf9af88cb5ff2a7170f5a9c186627ec2414799b9",
+      "base_revision": "1f29d21fa78bd6bbc0297e66b488b78a3640fc1b",
+      "review_date": "2026-09-09",
+      "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, explicit PR88-row residual acceptance, and final I2 before PR14.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "PR89 bounded delivery record, live open-count framing, PR28 row and complete 849-hunk preservation disposition."
+        },
+        {
+          "reviewed_git_blob_hash": "e6f83ec06f3b612d0be611ef39121b3cccc7f205",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row and complete 849-hunk preservation disposition before the installation-PR terminology audit."
+        },
+        {
+          "reviewed_git_blob_hash": "3a5008c28ef75be14ed4c059ac1359794bd2ac3b",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row and complete 849-hunk preservation disposition during the installation-PR terminology audit, before the opening condition named the PR28 transition exactly."
+        },
+        {
+          "reviewed_git_blob_hash": "18d1b9815487da467ffed12b43cf3260a4624ac8",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row, complete 849-hunk preservation disposition against bd115294 and the exact instruction to open the later installation PR after the PR28 transition completes."
+        },
+        {
+          "reviewed_git_blob_hash": "c67c9b757621e3862c6f9773b29ae1c485670826",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 delivery record, exact PR88/PR90/PR28 state, live 16-open-PR census, integrated branch boundary, narrow generator-source disclosure correction and remaining merge evidence."
+        },
+        {
+          "reviewed_git_blob_hash": "87d05b2da738791ecf0bad5456f5e804cc88be58",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete opening review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "6fdba9e6fca9007a2aff883d0fb466e870cb52b5",
+          "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete opening review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "9a8fe6fca81f78babcb22c199cee657cc075c50b",
+          "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "045b9a6689457bd35efa016c6437a9d501735b7c",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "8a66dccaaf5a4e02320eecd7ff873a3f0feb8b5f",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "87851a953573fff47e614fae2879e9e618c3c098",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 16 open PRs and PR14 as the next delivery."
+        },
+        {
+          "reviewed_git_blob_hash": "2951b57d7748834b1c32eb200d0768c99fc0d175",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 Cricket disposition and census only: PR91 exact-head delivery evidence, completed atomic-plan acceptance, the 16-PR durable estate plus self-referential PR92 while open, and PR14 as the next substantive delivery."
+        },
+        {
+          "reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
+          "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, and final I2 before PR14."
+        }
+      ]
+    },
+    ".agent/plans/proof-programme/parent-plan.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "f0639306a6c7bafb6b553d4f39a3c936c73b3a92",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current interactive execution sequence only: C05 Cricket implementation and installation are delivered, final-template I2 remains outstanding, and its lifecycle reconciliation precedes PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "209607fd982744950cfb6f1daaff708bfe91c3f5",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-06",
+          "scope": "Interactive sequencing only: preserve sole queue, all acceptance/dependencies/counters/pause; independent security repair next, Q22 paired fix/output landing."
+        },
+        {
+          "reviewed_git_blob_hash": "18ebc825041ca09277e8ffaa54053575d44ee5d7",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence only: delivered security repair, bounded Q22 oracle prerequisite, coherent integer migration and paired generator/output landing; queue/counters/original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "60e8487ecaafe8f09c837314c464039d80a38463",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle delivery, bounded PR28 disposition/closure first, PR10 residual, and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "888043b8874730f83edb5a5ba5809cb06182ed22",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence before PR90 review: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, separate but unnamed Cricket-installation custody and later Q22 resumption; superseded by the exact-head explicit-custody correction."
+        },
+        {
+          "reviewed_git_blob_hash": "22f54ec653943e9d1bc8d675d5ba4524adb7468c",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's first review cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody named only by identity and later Q22 resumption; superseded by the role-and-identity clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "9c6043d0acdd8ca0d1bd93445dddcf0f1dbd29aa",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence during PR90's custody-class cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by coordinating role and identity and later Q22 resumption; superseded by the root-role clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "55c1974f24eee3a91b2d7af24225b5e67f8dc839",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's root-role clarification: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by root role, coordinating role and identity and later Q22 resumption; superseded only by the semicolon-continuation capitalisation correction."
+        },
+        {
+          "reviewed_git_blob_hash": "8b3a781edbbc6f8ac387855d2f870c873fbf6629",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence at PR90 head 1c819960: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by root role, coordinating role and identity and later Q22 resumption; superseded by the custody-and-location wording cure."
+        },
+        {
+          "reviewed_git_blob_hash": "ead8ec03b13daceeb7a306821c3db88dd0f8b85b",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence during PR90's structural custody-routing step-back: installation custody, branch location and unopened PR state were explicit, but the parent did not yet name the later opening condition; superseded by the exact PR28-transition condition."
+        },
+        {
+          "reviewed_git_blob_hash": "81f99ad54f8f9b348caa08532c0a511507a57e78",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit custody of the separate Cricket installation by the root coordinating agent, Bora seeks Turbulence, its branch location, unopened PR state, exact PR28-transition opening condition and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: completed PR28 transition, C05 installation as the current delivery under Bora, PR14 next, and retained Q09/Q22 acceptance and queue authority."
+        },
+        {
+          "reviewed_git_blob_hash": "1f4dfaa64e78ae97b1439d6eab1af34b65fb5ad8",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "648349060ec1c01f07ec0980789ea78fcb2c2992",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "209607fd982744950cfb6f1daaff708bfe91c3f5",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        }
+      ]
+    },
+    ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "1e02fcab3aee802032104352b82f309778024c69",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current owner-corrected delivery sequence only: PR88/PR91 delivered C05 Cricket tooling and installation; PR92 reopens final I2 and routes its proof before PR14 without changing broader commission acceptance.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "9d3a6b5e6e8385a0d2fa7e559ad6f116bfe701f1",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-06",
+          "scope": "Recorded reflection and dependency-based sequencing, bounded work in progress and explicit C05/C07 doctrine describing surfaces; original A1-A6 unchanged. Subsequent owner-directed separate C05 Cricket task custody and its explicit parallel-work exception passed bounded recheck."
+        },
+        {
+          "reviewed_git_blob_hash": "c4596dfaff19e8c59ee75b22c2e78402aa0dfeb4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "9 September prerequisite reasoning, oracle acceptance and named custody of adjacent observations; corrected current delivery routes and conserved displaced instructions. Original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "9c994cbbffa3e5cfadc55d2c73b917bba909fe95",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Owner merge-first amendment, current ledger/tally routes, conserved acceptance and mutation/final-source evidence distinction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "41c6d0129be99da1bb88f8174dc0baf456e49d18",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle delivery and later integer/generator sequence, scoped beneath the current Q09 PR-risk reduction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "2a3975a88884d932f6909dcec251a06e4ab27204",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries, the separate Cricket installation and later integer/generator sequence before the installation-PR terminology audit; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "1b4e4a689b82048749bf9110d76d778a718650b6",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries during PR90's terminology step-back, when the later installation action used open-PR wording but retained the ambiguous Q-09 closure-slice condition; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "e4d20cede1fb594738aca3a1cf0212592064aeae",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries, the separate Cricket installation, its PR-opening action after the PR28 transition and the later integer/generator sequence, scoped beneath the current Q09 PR-risk reduction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "da2dae67a74a4ae02a400f23eb10bdd2afa0ad12",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: merge-first discipline, C05 tooling delivered separately, installation custody and integrated boundary, narrow generator-source disclosure correction and PR14 successor."
+        },
+        {
+          "reviewed_git_blob_hash": "a9cb092946074c7424cac0ef9655d247e376299a",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete opening review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "18165b3c668fd6e595be295ade8f4784be1a08b0",
+          "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete opening review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "68dd547fddbd7feea191a28d0c357ee0100c59be",
+          "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "80b14ef8a298d49d22b30c726e3a0c36e57512a7",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "25b3a964eb92b9b22b45b04daba93c40175a18dd",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "3ff5db6dce657b52a39cfabd6e288aec8fe043ed",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "6941a7181e4de0cd99c035ed1d9360186f26ceff",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "9d3a6b5e6e8385a0d2fa7e559ad6f116bfe701f1",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor."
+        }
+      ]
+    },
+    ".agent/plans/correction-manifests/castr-correction-findings.json": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals.",
+      "evidence": [
+        "Paired documentation/onboarding review verified that Q-22/error-negative-oracles moved from reproduced RED to bounded delivered GREEN only, with PR89 exact head/merge/tree evidence and the remaining generator, integer/export and Pet/Pets/NewPet obligations retained.",
+        "Copilot's exact-head PR90 review found that the delivered bounded oracle row still named the future fixture-generator proof. The finding was accepted; closing proof now names only oracle while the separate generator/regeneration acceptance remains outstanding in the row and Q22 carrier."
+      ],
+      "remaining": "All other finding rows retain their existing state and carrier; Q22 remains open at its full original acceptance.",
+      "prior_reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Finding Q-22/error-negative-oracles delivery state before PR90 review: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof and retained Q22 residuals; superseded because its closing-proof list still included the future fixture generator."
+        }
+      ]
+    },
+    ".agent/plans/archive/correction-sequencing-2026-09-06.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "888095d4777ff917f4e7ebb2e1033cc241785026",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Unchanged prior archive prefix plus six verbatim displaced blocks from 92ada69892c42a69a3ae5431c1793bbee61b46c1; current authority links are framing, not rewritten history.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
+        "Historical 6 September review: blob db7ccbb8714f8f1f2deb9ff85cccea575d11231e; scope: Exact displaced parent and delivery-plan paragraphs preserved against the base revision; explicitly historical and linked to current authority.",
+        "On 9 September both reviewers verified the unchanged original archive prefix and exact added blocks. Current continuation blobs eaf19fcd233f9666e36e8ba04bae11d0367842b6 (repo) and 03a2413e894621bc918bbe399fae9c3de6cb0341 (thread) route PR86 delivery to ledger/tally while retaining Q22 and Kite custody. This scoped review does not certify whole-document accuracy or merge readiness.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows."
+      ],
+      "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
+      "prior_reviewed_git_blob_hash": "d75e076597fa2835126c41cf4c9c6e4714f6e385",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "dc1426fd955de16f19fda0ef7736f9d2f7324d56",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-09",
+          "scope": "Paired documentation/onboarding review of preserved archive prefix, two verbatim continuation blocks from 1fc652343c99b597216e5de98edcf188b36367aa, and current ledger/tally routes."
+        }
+      ]
+    },
+    "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "58978401b7b8db0aea2d236b5dc7aa6fd925bca2",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Adjacent implementation comment accurately distinguishes defined empty operation override from absent inheritance.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation.",
+        "Bounded repair delivered in PR86 merge 92ada69892c42a69a3ae5431c1793bbee61b46c1; exact behavioural blobs preserved. The ledger records merge/review/check evidence."
+      ],
+      "remaining": "Unrelated or historical passages are not certified; complete-document acceptance remains open under the correction plan."
+    },
+    "lib/tests-transforms/__tests__/security-formula.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "f75df058cb954b5e6a14876c8c946f5202d87c99",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Proof commentary accurately states operation-presence and independent anonymous-access observation, with explicit async-loader exclusion.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation.",
+        "Bounded repair delivered in PR86 merge 92ada69892c42a69a3ae5431c1793bbee61b46c1; exact behavioural blobs preserved. The ledger records merge/review/check evidence."
+      ],
+      "remaining": "Unrelated or historical passages are not certified; complete-document acceptance remains open under the correction plan."
+    },
+    "README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local entry, owner premises, bounded fidelity claims and durable contributor routing.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "CONTRIBUTING.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "496107e62870ac882d1b68e6df1b4259efc4a9c3",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Prerequisites, first action, bridge routing and actual gate effects.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/USAGE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "dfc662f4339b40460154a97cb2bb1f63f063419a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Fixture generation, compilation/runtime checks, repeatability, failure and durable authority route.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/API-REFERENCE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "05a4de48ae7d7795531b692f734ead9d36707dfb",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local package/CLI entry and output-file versus directory claim only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/DEFAULT-RESPONSE-BEHAVIOR.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c12a6fc7bd1b2a9a4652eb442cc3674ea5e4533c",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Replacement of registry CLI examples with local walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MIGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "f0b6b111441982b1129705916c6dc82a4fbcb3da",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local executable/build/root/input/output-directory prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/EXAMPLES.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c917e6dd5b1f626cfbce8454e37b0afc2aefac6a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Three local CLI blocks and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MCP_INTEGRATION_GUIDE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "296d2386347cd14ee65645c72960b618574b3436",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/OPENAPI-FETCH-INTEGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "3b571532cca50d41584831068858fb488d810e28",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "084fcfc360757eb82063cbaaa98811a38585db4e",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local checkout paragraph and walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    ".agent/directives/DEFINITION_OF_DONE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "fe91aed4a5c9b21dbc24aa29ce2a8226fc1975ec",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Aggregate mutation effects and bounded local packaging evidence.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/src/cli/index.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "ba2990233c647845b55cc3d32b41f35a50233dc7",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Help description and output-mode wording.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/tests-e2e/packaging-integrity.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "617b497da2055fa9800d279ef7157c77a7debdd0",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Packaging-proof commentary scope.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
+      "evidence": [
+        "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest."
+      ],
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        }
+      ]
+    },
+    "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
+      "evidence": [
+        "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest.",
+        "The second Sonar step-back restores this smaller two-case group to its exact initially reviewed direct-assertion blob while the larger group retains its table. Fresh focused tests and lint pass; independent test/gateway re-review found no material blocker."
+      ],
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        },
+        {
+          "reviewed_git_blob_hash": "a97ba65adf9333c7d254fe6f254fa13f003a2061",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Intermediate two-case table with case-name assertion context; superseded by the proportionate direct-assertion restoration after current-head Sonar still reported cross-file duplication."
+        }
+      ]
+    },
+    ".agent/plans/current/cricket-platform-parity.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current C05 Cricket atomic acceptance and preserved history: T1/T2, I1 and documented installation are delivered; the dated native panel predates material final-template changes, so final I2 remains outstanding.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus the installation acceptance, historical boundary and evidence links. Earlier dated execution sections remain historical evidence rather than current instructions."
+        },
+        {
+          "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete opening review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "6688a640b36885951538f2999f2fb3434c8866a4",
+          "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete opening review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "785bf5f221c57b752143aa10e1a988a99957ee5d",
+          "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "cd01de5beadfbca745411e7de1f8c19a45b804ca",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical."
+        },
+        {
+          "reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical."
+        }
+      ],
+      "prior_reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0"
+    },
+    ".agent/prompts/cricket-platform-parity-continuation.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "review_date": "2026-09-09",
+      "scope": "Current final-native-proof route: load the installed registered roles in a fresh trusted Castr task, retain three normal and same-agent adversarial returns or UNDELIVERED, then reconcile the atomic lifecycle before PR14.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c",
+          "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: integrated base, custody, exact retained and UNDELIVERED proof boundaries, final gate/review/merge sequence and lifecycle closeout."
+        },
+        {
+          "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries."
+        },
+        {
+          "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728",
+          "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries."
+        },
+        {
+          "reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Complete former continuation route: it now records C05 completion, directs work to the parent queue, ledger and current correction route, and preserves the dated native and UNDELIVERED boundaries."
+        }
+      ],
+      "prior_reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a"
+    },
+    ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
+      "review_state": "partially-reviewed",
+      "disposition": "historical",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
+      "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "review_date": "2026-09-09",
+      "scope": "Complete dated attempt record: exact task and turn identifiers, both requests, persisted terminal messages, absence of observable dispatch/tool/return markers, six UNDELIVERED results and inference limits.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
+    },
+    ".agent/skills/cognition/cricket/SKILL-CANONICAL.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "applied",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+      "review_date": "2026-09-09",
+      "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
+      "evidence": [
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
+      ],
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
+    }
+  },
+  "post_baseline_reconciliations": [
+    {
+      "record_id": "C05/cricket-installation",
+      "comparison_base": "cb73c4deaae9eecdbe406f28304314c71e339e02",
+      "integrated_merge": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+      "review_date": "2026-09-09",
+      "scope": "The 20 C05 document-like or embedded-documentation paths newly added after the original inventory baseline and enumerated below, reconciled through the PR91 merge and the PR92 truth correction.",
+      "method": "Explicit new-path enumeration against the original inventory baseline, canonical source/generated classification, exact-head review and checks, merge-parent/tree verification, then paired lifecycle reconciliation. This record does not claim complete re-review of baseline inventory members later modified by C05.",
+      "candidate_additions": [
+        {
+          "path": ".agent/plans/current/cricket-platform-parity.md",
+          "classification": "document-like",
+          "disposition": "outstanding",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f",
+          "prior_reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0"
+        },
+        {
+          "path": ".agent/prompts/cricket-platform-parity-continuation.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8",
+          "prior_reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a"
+        },
+        {
+          "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
+          "classification": "embedded-documentation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "ddb413853697838796e6a19d6234b734de8152cc"
+        },
+        {
+          "path": ".agent/reports/agentic-engineering/cricket-castr-final-review-evidence-2026-09-09.json",
+          "classification": "embedded-documentation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "e56e54f220cb496abb0767b5ebcb855e9f8c348b"
+        },
+        {
+          "path": ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json",
+          "classification": "embedded-documentation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69"
+        },
+        {
+          "path": ".agent/reports/agentic-engineering/cricket-castr-native-2026-09-09.json",
+          "classification": "embedded-documentation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "7eb952d3279eb3fb2e820a4418be50e75d251164"
+        },
+        {
+          "path": ".agent/reports/agentic-engineering/cricket-castr-review-evidence-2026-09-06.json",
+          "classification": "embedded-documentation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "a85248c8528ce3b6fde87f2d768919360a45e6c5"
+        },
+        {
+          "path": ".agent/sub-agents/templates/cricket-judgement.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "eabbda197745b6c204a986f4a28b3b2a4fa27037",
+          "prior_reviewed_git_blob_hash": "477929a2f13270d895499bae888d35dc9fe458fa"
+        },
+        {
+          "path": ".agent/sub-agents/templates/cricket-procedure.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "d37e89a6b9ae076ac697ac446e6afff241651f36",
+          "prior_reviewed_git_blob_hash": "06fb904ba9e1604a77baf0cd1348958c8256b42e"
+        },
+        {
+          "path": ".claude/agents/cricket-judgement-high.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "f73df5d82862d84b6ca1636e19534a8bce658875",
+          "prior_reviewed_git_blob_hash": "a29a7cce31171303ce38ad1b715198b2499414e2",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".claude/agents/cricket-judgement-low.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "38b08b3fa4713ba07a2cae361ebd133c627542da",
+          "prior_reviewed_git_blob_hash": "34f71b01446d9bfd38fff44865c0ece14e2f1f57",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".claude/agents/cricket-judgement-medium.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "1410fa564e83871a729f4779657b4a699347a6e1",
+          "prior_reviewed_git_blob_hash": "976be7f58d17c7a8ff697ac9ef789136bbc4a34a",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".claude/agents/cricket-procedure-xhigh.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "930e7a897e8f4c892b23a19c2dfd02c7d3ec44fd",
+          "prior_reviewed_git_blob_hash": "d706736b17c619af9d3bd545a784b1627fabc50c",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".codex/agents/cricket-judgement-low.toml",
+          "classification": "embedded-documentation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "a712788f17595d65b050096d37bc42c85c31d041",
+          "prior_reviewed_git_blob_hash": "0aa54c22401a620bcaa38638e9ae39fe4b6af1be"
+        },
+        {
+          "path": ".codex/agents/cricket-judgement-medium.toml",
+          "classification": "embedded-documentation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "ee15ca44a47623d25cf5d4520a857c84a1352217",
+          "prior_reviewed_git_blob_hash": "92630506482763f36f3bf6ce42a710f683b0619d"
+        },
+        {
+          "path": ".codex/agents/cricket-procedure-xhigh.toml",
+          "classification": "embedded-documentation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "277d4122cf76f19613421caa5aec48176a842b06",
+          "prior_reviewed_git_blob_hash": "954919ff2c749c994f66176cff8910f6eef68199"
+        },
+        {
+          "path": ".cursor/agents/cricket-judgement-high.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "da504d530fb40f62df98503905aacf06cdb1a6e1",
+          "prior_reviewed_git_blob_hash": "5b5396fe0b5eb88009bd5748bc5d1b001b0738fa",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".cursor/agents/cricket-judgement-low.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "0ca1eef6190c2f74dc3361c894c76515a4bcd0f7",
+          "prior_reviewed_git_blob_hash": "7df327544e11d5dcb390c171ee0e03d14e39e94d",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".cursor/agents/cricket-judgement-medium.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "e8799b134fccbe91349222fd9353d282974647f4",
+          "prior_reviewed_git_blob_hash": "bca9fbd34543b213fb02c7a0a12449d2ac6de56e",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        },
+        {
+          "path": ".cursor/agents/cricket-procedure-xhigh.md",
+          "classification": "document-like",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "b696c6e73c18e70d9960feae15e914441e528beb",
+          "prior_reviewed_git_blob_hash": "00694fd21df2c9e2022833b43bcc3900b96ac815",
+          "source_paths": [
+            ".codex/config.toml",
+            ".codex/agents/*.toml",
+            ".agent/sub-agents/templates/*.md",
+            "agent-tools/src/agent-adapter-generate/generator.ts"
+          ]
+        }
+      ],
+      "result": "20 post-baseline files accounted for; generated adapters retain canonical source paths, repository delivery is complete and final-template I2 remains outstanding.",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. Baseline inventory members modified by C05 retain their existing path-level review or default outstanding disposition; their complete estate reconciliation remains with C09/C10. The broader C05 family and Q-09/Q-22 obligations remain open in their named homes."
+    }
+  ]
 }

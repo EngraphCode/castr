@@ -3,7 +3,6 @@ name: docs-adr-expert
 model: gpt-5.5
 description: Documentation drift, TSDoc, and decision-record completeness reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Docs Adr Expert

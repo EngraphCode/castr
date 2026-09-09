@@ -18,6 +18,10 @@ import {
   type CodexRegistration,
   resolveCodexConfigFilePath,
 } from './validate-subagents-codex-toml.js';
+import {
+  expectedCodexAgentConfigFile,
+  isCanonicalCodexAgentName,
+} from '../../core/codex-agent-registration-contract.js';
 
 // ---------------------------------------------------------------------------
 // I/O shape interfaces
@@ -53,10 +57,11 @@ export interface CodexRegistrationValidationResult {
 
   /**
    * Map from agent name to its registration record, for agents whose
-   * `config_file` field was present (even if the target file was missing).
+   * name and `config_file` spelling satisfy the canonical registration contract
+   * (even if the target file was missing).
    *
-   * Agents with no `config_file` are excluded, so callers can reliably use
-   * this map to look up fully-declared registrations.
+   * Invalid declarations are excluded, so callers can reliably use this map
+   * to look up registrations that are safe to resolve.
    */
   readonly registrationsByName: Map<string, CodexRegistration>;
 }
@@ -72,6 +77,7 @@ export interface CodexRegistrationValidationResult {
  * Checks performed:
  * - The registration has a non-empty `description`.
  * - The registration has a non-empty `config_file`.
+ * - The registration owns `.codex/agents/<registration-name>.toml` exactly.
  * - The resolved adapter file path exists (via `fileExists`).
  *
  * @param registration - The registration to validate.
@@ -88,13 +94,28 @@ function validateSingleRegistration(
   registrationsByName: Map<string, CodexRegistration>,
   issues: string[],
 ): void {
-  if (!registration.description) {
+  const hasCanonicalName = isCanonicalCodexAgentName(registration.name);
+  if (!hasCanonicalName) {
+    issues.push(
+      `${configPath}: agent registration name "${registration.name}" must be a lowercase, hyphen-delimited token`,
+    );
+  }
+  if (registration.description.trim().length === 0) {
     issues.push(`${configPath}: agent "${registration.name}" is missing a description`);
   }
   if (!registration.configFile) {
     issues.push(`${configPath}: agent "${registration.name}" is missing a config_file`);
     return;
   }
+  const expectedConfigFile = expectedCodexAgentConfigFile(registration.name);
+  if (registration.configFile !== expectedConfigFile) {
+    issues.push(
+      `${configPath}: agent "${registration.name}" config_file must be "${expectedConfigFile}" (found "${registration.configFile}")`,
+    );
+    return;
+  }
+  if (!hasCanonicalName) return;
+
   registrationsByName.set(registration.name, registration);
   const adapterPath = resolveCodexConfigFilePath(registration.configFile, configPath);
   if (!fileExists(adapterPath)) {
@@ -114,7 +135,8 @@ function validateSingleRegistration(
  *
  * For each registration, checks that:
  * - A `description` field is present.
- * - A `config_file` field is present and points to an existing adapter file.
+ * - A `config_file` field is present, names the registration's own adapter,
+ *   and points to an existing adapter file.
  *
  * @param input - Registrations to validate plus optional overrides for the
  *   config path and the filesystem existence predicate.

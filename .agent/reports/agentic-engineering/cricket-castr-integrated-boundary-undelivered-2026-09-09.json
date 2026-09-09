@@ -1,0 +1,51 @@
+{
+  "evidence_kind": "integrated-boundary native Cricket delivery attempt",
+  "date": "2026-09-09",
+  "requesting_session": "01a0722e-0cec-7cf1-a67b-a8787ac9b2d0",
+  "target_task": {
+    "thread_id": "01a07706-7939-7553-b935-fb1061a7b4e9",
+    "title": "Kite hunts Eyrie - Castr Cricket parity",
+    "working_directory": "Castr installation worktree"
+  },
+  "candidate": {
+    "branch": "codex/cricket-installation",
+    "integrated_merge": "7967ff92479697610bda30c69ffca0b7071941d3",
+    "main_parent": "cb73c4deaae9eecdbe406f28304314c71e339e02"
+  },
+  "attempts": [
+    {
+      "turn_id": "01a08790-273a-7c80-85c1-d818d94424ef",
+      "started_at": "2026-09-09T19:06:06Z",
+      "completed_at": "2026-09-09T19:06:15Z",
+      "request": "Run a fresh full native Cricket panel on the current integrated `codex/cricket-installation` branch at `7967ff92`, now based on main `cb73c4de`. Use the exact registered `cricket-judgement-low`, `cricket-judgement-medium`, and `cricket-procedure-xhigh` roles; dispatch all three with `fork_turns: \"none\"` and the same six-field frame in normal stance, then reuse those same three agents with `followup_task` for the identical adversarial frame. Do not substitute roles; report unavailable returns as UNDELIVERED. Frame the decision as: objective is to land the Cricket installation PR, recent actions are PR #90 merged and PR #28 closed, the installation branch has been merged with current main, next is to reconcile stale current docs/evidence, run full validation and specialist reviews, then open and merge one coherent installation PR. Treat existing reports as evidence, not authority. Make no file edits and no commits; return all six verbatim verdicts plus a short adjudication to this task, then stop.",
+      "assistant_message": "Session stopped.",
+      "observed_role_dispatches": [],
+      "observed_tool_markers": [],
+      "observed_role_returns": []
+    },
+    {
+      "turn_id": "01a08796-cb4d-7040-88f1-c643c48189ef",
+      "started_at": "2026-09-09T19:13:21Z",
+      "completed_at": "2026-09-09T19:13:25Z",
+      "request": "The previous current-boundary Cricket request completed with no assistant message and no visible tool markers. Do not re-adjudicate the frame. Inspect only that attempted delivery: report whether any of the three registered-role dispatches occurred and whether any normal/adversarial returns exist. If the panel was not dispatched or any return is absent, label those returns UNDELIVERED and give the concrete runtime reason if available. Make no edits, then stop.",
+      "assistant_message": "Session remains closed.",
+      "observed_role_dispatches": [],
+      "observed_tool_markers": [],
+      "observed_role_returns": []
+    }
+  ],
+  "delivery_result": {
+    "cricket-judgement-low-normal": "UNDELIVERED",
+    "cricket-judgement-medium-normal": "UNDELIVERED",
+    "cricket-procedure-xhigh-normal": "UNDELIVERED",
+    "cricket-judgement-low-adversarial": "UNDELIVERED",
+    "cricket-judgement-medium-adversarial": "UNDELIVERED",
+    "cricket-procedure-xhigh-adversarial": "UNDELIVERED"
+  },
+  "interpretation": "The target task returned only terminal session-state messages. No registered-role dispatch, follow-up or Cricket return was observable, so all six requested returns are UNDELIVERED. The host record supplied no more specific runtime cause.",
+  "evidence_limits": [
+    "The first follow-up request described the prior turn as having no assistant message; the persisted task record shows the assistant text `Session stopped.`. This report preserves the persisted record rather than the request's premise.",
+    "Absence of observable dispatch markers establishes non-delivery at this task boundary; it does not prove which internal runtime condition prevented dispatch.",
+    "This record does not replace or weaken the earlier six-return native invocation record."
+  ]
+}
