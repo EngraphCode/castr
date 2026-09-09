@@ -5,14 +5,13 @@
  * JSON Schema 2020-12 output. Supports both standalone single-schema mode
  * and bundled multi-schema mode using `$defs`.
  *
- * @example
- * ```typescript
- * import {
- *   writeJsonSchema,
- *   writeJsonSchemaDocument,
- *   writeJsonSchemaBundle,
- * } from '@engraph/castr/writers/json-schema';
+ * This is currently a repository-internal module. The package does not yet
+ * export a standalone JSON Schema writer entry point; that public surface is
+ * an explicit future delivery obligation.
  *
+ * @example Repository-internal use
+ * ```typescript
+ * // Functions exported by this internal module:
  * // Single schema (no $schema header)
  * const schema = writeJsonSchema(irSchema);
  *
@@ -22,6 +21,7 @@
  * // Bundled document (all components under $defs)
  * const bundle = writeJsonSchemaBundle(components);
  * ```
+ * @internal
  */
 
 export { writeJsonSchema } from './json-schema-writer.schema.js';

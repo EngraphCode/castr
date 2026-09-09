@@ -514,7 +514,7 @@ The new repository has established its intended direction when:
 - [ ] Experimental graph profiles preserve assertions, reifier identity and directional literals without implying unsupported canonicalization.
 - [ ] Interoperation with Castr requires a complete projection contract.
 - [ ] Neither core repository imports or exposes the other's internal IR as universal truth.
-- [ ] The integration adapter proves useful workflows while preserving exact/widen/reject evidence.
+- [ ] The integration adapter proves its named interoperation scenarios while preserving exact/widen/reject evidence; adoption and usefulness are not acceptance conditions.
 
 ## 17. Naming criteria
 

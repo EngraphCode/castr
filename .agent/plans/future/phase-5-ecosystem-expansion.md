@@ -27,9 +27,10 @@ Expand beyond the strict core compiler into companion workspaces and reference i
   - typed fetch harnesses
   - framework handlers / middleware adapters
   - lightweight runtime exposure packages that consume Castr metadata and generated artefacts
-- **Reference implementations and adoption proofs**:
+- **Reference implementations and interoperation proofs**:
   - demonstrate end-to-end composition without widening core `@engraph/castr`
-  - prove the Oak adoption ladder: adapter replacement, wider OpenAPI-stack replacement, then `oak-openapi` generation-stack replacement
+  - prove the three named Oak replacement scenarios independently: adapter boundary, wider OpenAPI stack, then `oak-openapi` generation stack
+  - classify every mapping as exact, widened or rejected with behavioural evidence; adoption is not an acceptance condition
 
 ## Planned Use-Case Tracks
 

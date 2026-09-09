@@ -48,7 +48,7 @@ const JSON_SCHEMA_2020_12_DIALECT = 'https://json-schema.org/draft/2020-12/schem
  * // { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', ... }
  * ```
  *
- * @public
+ * @internal
  */
 export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaNode | boolean {
   const result = writeJsonSchema(schema);
@@ -83,7 +83,7 @@ export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaNode | b
  * // }
  * ```
  *
- * @public
+ * @internal
  */
 export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonSchemaNode {
   assertSchemaComponentsSupportIntegerTargetCapabilities(components, 'JSON Schema 2020-12');

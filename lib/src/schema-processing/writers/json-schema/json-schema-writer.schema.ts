@@ -40,7 +40,7 @@ import { writeAllJsonSchemaFields } from '../shared/json-schema-fields.js';
  * // { type: ['string', 'null'], format: 'email' }
  * ```
  *
- * @public
+ * @internal
  */
 export function writeJsonSchema(schema: CastrSchema): JsonSchemaNode | boolean {
   if (schema.booleanSchema !== undefined) {

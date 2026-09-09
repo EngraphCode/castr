@@ -1,5 +1,5 @@
 /**
- * Unit tests for JSON Schema parser public API.
+ * Unit tests for the repository-internal JSON Schema parser module exports.
  *
  * Tests the composed pipeline: Draft 07 normalization → core parsing → IR.
  * Also tests document-level parsing (extracting $defs as components).

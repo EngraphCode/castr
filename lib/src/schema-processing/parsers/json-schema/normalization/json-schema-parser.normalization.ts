@@ -21,7 +21,7 @@ import {
 import { rewriteRef } from './json-schema-parser.normalization.refs.js';
 
 // ---------------------------------------------------------------------------
-// Public API
+// Internal module exports
 // ---------------------------------------------------------------------------
 
 /**
@@ -30,11 +30,11 @@ import { rewriteRef } from './json-schema-parser.normalization.refs.js';
  * Accepts Draft 07 input (with `definitions`, `dependencies`, boolean
  * exclusive bounds, tuple `items`) and returns a clean 2020-12 schema.
  * Object schemas only: a boolean schema is already a complete 2020-12
- * schema, so the public parse seams pass booleans straight to the parser
+ * schema, so the parse seams pass booleans straight to the parser
  * and nested booleans short-circuit in the recursion helpers — spreading
  * one into an object would silently turn `false` into `{}` (defect F-03).
  *
- * @public
+ * @internal
  */
 export function normalizeDraft07(input: Draft07Input): JsonSchema2020 {
   let result: Draft07Input = { ...input };

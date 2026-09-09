@@ -508,7 +508,7 @@ describe('normalizeDraft07', () => {
   });
 });
 
-// Root-level booleans never reach the normalizer: the public parse seams
+// Root-level booleans never reach the normalizer: the higher-level parse seams
 // short-circuit them (proven in the F-03 integration suite). These tests
 // cover NESTED booleans at every position the normalizer recurses into.
 describe('boolean schema pass-through (F-03)', () => {
