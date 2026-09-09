@@ -1,5 +1,5 @@
 ---
-description: '--no-verify Requires Fresh Authorisation'
+description: --no-verify Requires Fresh Authorisation
 alwaysApply: true
 ---
 

@@ -3,7 +3,6 @@ name: release-readiness-expert
 model: gpt-5.5
 description: Release-boundary go/no-go reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Release Readiness Expert

@@ -3,7 +3,6 @@ name: onboarding-expert
 model: gpt-5.5
 description: Onboarding-path accuracy and first-success reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Onboarding Expert

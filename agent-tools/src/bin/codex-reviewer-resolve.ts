@@ -14,7 +14,7 @@ Resolve a repo-local Codex project-agent definition and print the exact
 .codex adapter and canonical .agent files that should ground the review.
 
 Examples:
-  pnpm agent-tools:codex-reviewer-resolve code-expert
+  pnpm agent-tools:codex-reviewer-resolve code-reviewer
   pnpm agent-tools:codex-reviewer-resolve architecture-expert-fred --json`;
 
 interface CommandLineOptions {
@@ -88,6 +88,7 @@ function writeHumanReadableOutput(resolvedAgent: CodexProjectAgent): void {
   writeLine(`description: ${resolvedAgent.description}`);
   writeLine(`registry: ${resolvedAgent.configPath}`);
   writeLine(`adapter: ${resolvedAgent.adapterPath}`);
+  writeLine(`configured model: ${resolvedAgent.model ?? 'inherited (unpinned)'}`);
   writeLine(
     `mode: reasoning=${resolvedAgent.modelReasoningEffort}, sandbox=${resolvedAgent.sandboxMode}, approval=${resolvedAgent.approvalPolicy}`,
   );

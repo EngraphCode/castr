@@ -3,7 +3,6 @@ name: type-reviewer
 model: gpt-5.5
 description: Type flow and strictness reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Type Reviewer

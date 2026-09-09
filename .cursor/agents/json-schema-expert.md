@@ -3,7 +3,6 @@ name: json-schema-expert
 model: gpt-5.5
 description: Draft 07 and 2020-12 JSON Schema fidelity expert.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Json Schema Expert
