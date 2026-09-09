@@ -9,13 +9,16 @@
 - Transition: PR #90 merged the complete PR #28 preservation record as
   `cb73c4de`; PR #28 then closed without merge and retained its recovery branch.
   Q-09 remains pending for PR #10.
-- Team: root owns compiler/foundational documentation, integration and the
-  dependent native Cricket installation at `codex/cricket-installation`; Kite hunts
-  Eyrie delivered its tooling prerequisite as PR #88, and Bora integrated current
-  main as `7967ff92`. [PR #91](https://github.com/EngraphCode/castr/pull/91) is
-  open for the installation; settle its current-head review and checks, then merge
-  it before proceeding to PR #14's dependency-ownership extraction.
-  Coordinate expensive aggregate runs and re-read actual claims before edits.
+- Team: root owns compiler/foundational documentation and integration. Kite hunts
+  Eyrie delivered C05 Cricket tooling in PR #88; Bora seeks Turbulence delivered its
+  installation in PR #91 as `af840d9b`. PR #92 corrects the premature atomic closeout.
+  Final I2 remains open because the retained native run predates material final-template
+  changes and the later current-boundary run was `UNDELIVERED`. In a freshly loaded
+  trusted Castr task, obtain all three normal and same-agent adversarial registered-role
+  returns with `fork_turns: "none"`, or retain `UNDELIVERED` without substitutes. Land
+  the resulting lifecycle reconciliation, then begin PR #14's dependency-ownership
+  extraction from current `origin/main`. The broader C05 family retains the obligations
+  named below. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
 The ledger records delivered C01R, Q-19, C03a, operation-security, Error-oracle

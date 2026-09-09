@@ -55,13 +55,16 @@ as `cb73c4de`; PR #28 then closed without merge while its recovery branch remain
 intact. Q-09 remains pending for PR #10. PR #89 delivered the Error-oracle prerequisite;
 the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
 retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
-and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
-PR #88; the coordinating agent accepted the dependent native Cricket
-installation at `codex/cricket-installation` commit `2af22e0f` and Bora integrated
-current main as `7967ff92`. [PR #91](https://github.com/EngraphCode/castr/pull/91)
-is open for that installation; settle its current-head review and checks, then merge
-it before beginning PR #14's dependency-ownership extraction. Earlier continuation
-instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
+and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered PR #88; Bora seeks Turbulence delivered the dependent
+Cricket installation in PR #91 as `af840d9b`. PR #92 corrects the premature C05 Cricket
+lifecycle closeout: the implementation, installation, T1/T2, I1 and documentation are
+delivered, while the retained six-return run predates material final-template changes.
+Run the full registered panel in a freshly loaded trusted Castr task, with normal and
+same-agent adversarial returns from all three roles. Keep final I2 and the atomic plan
+open on any missing return. Reconcile that evidence in a small lifecycle PR, then begin
+PR #14's dependency-ownership extraction from current `origin/main`. The broader C05
+family retains its other obligations. Earlier
+continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status
 

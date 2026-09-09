@@ -16,78 +16,52 @@ Original shepherd: Moon turns Apogee, Codex gpt-6-astra, session prefix 01a076,
 identity a9c4176b-2675-5890-bf98-420f545b146e; started 6 September 2026.
 Parent plans, ledger, manifests and shared continuity remain coordinator-owned.
 
-## Current integrated delivery — 9 September 2026
+## Current delivery state — 9 September 2026
 
-Bora seeks Turbulence now owns the remaining installation and its repository
-delivery. PR #88 merged the platform contract as
-`bd115294cd545db6d6e64f6c4629a5a583e5ded3`. PR #90 then merged the complete
-PR #28 preservation disposition as `cb73c4deaae9eecdbe406f28304314c71e339e02`,
-and PR #28 closed without merge while its recovery branch remained intact. The
-opening condition for this installation is therefore satisfied.
+Bora seeks Turbulence completed the installation's repository delivery.
+PR #88 delivered the platform contract as
+`bd115294cd545db6d6e64f6c4629a5a583e5ded3`. PR #91 then delivered the two
+canonical templates, three registered Codex roles, generated Claude/Cursor quartets,
+adjacent operating documentation, retained native evidence and the Cursor disclosure
+correction. Its exact reviewed head
+`48e2194d38cdf387a39411610146c2071067e80b` merged by merge commit as
+`af840d9b68e9b4ef00813a2af97675c7abca3c33`.
 
-Branch `codex/cricket-installation` merged that current main at
-`7967ff92479697610bda30c69ffca0b7071941d3`. Its remaining delta is the Cricket
-templates, registrations, generated adapters, adjacent operating documentation,
-retained execution evidence and one narrow generator-source correction for Cursor
-Cricket disclosure. PR #88's delivered platform-contract tooling is no longer part
-of this changeset. On the integrated tree, `pnpm agents:check`, portability and
-subagent validation pass; the installed inventory is 17 templates, 21 Codex roles
-and 22 Claude/22 Cursor wrappers; 120 focused adapter, registry and portability
-tests pass. Configuration review exposed that generated Cursor discovery
-descriptions implied a runtime effort pin; the generator now states that Cursor
-preserves the stable method role while leaving reasoning effort unpinned, and all
-four Cursor Cricket wrappers were regenerated. Existing behavioural tests prove
-the absence of Cursor model, effort and tool pins; human review owns the wording.
-Paired documentation and onboarding review passed on the integrated opening
-candidate. The canonical `pnpm check` then completed with exit 0: 1,718 Castr
-tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests
-passed, including the 158-case adapter checker. Commit and full pre-push hooks
-passed at `3b568416`, and [PR #91](https://github.com/EngraphCode/castr/pull/91)
-opened from that head. Its review waves found compiled-procedure intake,
-decision-table and output-contract contradictions, incomplete routing descriptions
-across all Cricket roles, and stale pre-opening instructions across the current routes.
-The active candidate repairs the complete classes at their canonical sources, including
-fail-fast invalid-stance handling across both methods, an explicit complete-frame guard,
-an explicit no-change redirection for both ON-TRACK rows, field-by-field replay proof,
-current-contract validation of prior returns, and a satisfiable brevity contract that
-cannot silently truncate required evidence.
-Exact-head re-review, checks and merge remain required.
+All 17 exact-head check runs passed: 16 repository, security and quality runs plus the
+successful Copilot review run. They include the quality-gates aggregate, proof suites,
+CodeQL, SonarCloud and secret scanning. All eight review threads were resolved. Codex
+completed its exact-head review without another finding; Copilot reported no additional
+change. Gateway, documentation and onboarding reviewers approved the final candidate.
+The merge commit's second parent is the reviewed head and their trees are identical.
+The PR's durable review tally preserves all nine rounds and the structural step-backs.
 
-The retained native record establishes I2 at its stated boundary: three exact
-registered roles were dispatched with `fork_turns: "none"`, and the same three
-agents returned the adversarial follow-ups. The record embeds its tested Codex
-adapters and dated template outputs; the current candidate retains the invocation
-boundary while correcting descriptions and the compiled output contract. A fresh full panel was
-requested from the existing trusted Castr task because Bora's older task schema
-cannot reload newly installed roles. The [dated attempt record](../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
-preserves both exact requests, turn identifiers and the task's terminal messages:
-`Session stopped.` and `Session remains closed.` No registered-role dispatch,
-follow-up or Cricket return is observable, so all six requested returns are
-`UNDELIVERED`. No generic agent substitutes for them. This delivery failure does
-not invalidate the retained I2 invocation proof because registered role names,
-bindings, model/effort/tool pins, dispatch and same-agent follow-up remain unchanged.
-Subsequent changes correct routing descriptions and the compiled procedure's output
-contract; exact-source review and generated validation cover those semantics, while
-the retained native run remains evidence only for its dated template revision.
+Acceptance is complete for the delivered implementation and documentation scopes:
 
-Parallax revision cricket/3 and the proportionality check keep one coherent
-installation outcome. Splitting current authority from the definitions would
-create an installed panel whose entry routes still point to completed transitions;
-combining unrelated compiler or source-PR extraction work would broaden the story.
-The next value boundary is therefore one reviewed installation PR, current-head
-checks and merge. PR #14 follows after that delivery.
+- T1 and T2 were delivered by PR #88 with strict generation, validation and ordinary
+  reviewer restrictions.
+- I1 is delivered on `main`: generator comparison, strict roster validation, portability
+  and adapter checks pass for 17 templates, 21 Codex roles and 22 Claude/22 Cursor
+  wrappers.
+- I2 is partial. The retained six-return native record proves registered invocation,
+  `fork_turns: "none"` and same-agent adversarial follow-ups at its dated template
+  revision. PR #91 subsequently changed intake, verdict, replay, redirection and output
+  semantics. The plan requires a fresh full panel at that material delivery boundary;
+  source review and generated-surface validation cannot supply its native semantic proof.
+- D1 is delivered by the executable installed invocation guidance, paired
+  documentation/onboarding review, exact limitations and the merged current-head gates.
 
-Current acceptance state:
+The current task's later full-panel attempt is `UNDELIVERED`: no registered-role
+dispatch, follow-up or return was observable, and the internal runtime cause is not
+established. The
+[dated attempt record](../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
+preserves that boundary without substituting generic agents.
 
-- T1 and T2 are delivered by PR #88.
-- I1 passes on the integrated tree through generator comparison and strict roster
-  validation.
-- I2 is established by the retained six-return native record at its stated scope;
-  the current-boundary rerun is recorded `UNDELIVERED` because its host task exposed
-  no observable role dispatches or returns.
-- D1's documentation/onboarding review and the integrated working-candidate
-  aggregate pass; PR #91 is open and repository delivery remains pending its
-  current-head review/check harvest, any resulting fixes and merge.
+The C05 Cricket atomic plan remains open only for six substantive returns from the final
+installed templates: three registered-role dispatches in a freshly loaded Castr task,
+then adversarial follow-ups to those same agents. PR #92 corrects the premature lifecycle
+closeout. This bounded proof and its lifecycle reconciliation precede PR #14's
+dependency-ownership extraction. The broader C05 family, correction commission and
+compiler programme remain unfinished; Q-09 remains pending for PR #10.
 
 The execution record below is historical evidence. Status statements in it describe
 the observed boundary at the time and do not override this section.

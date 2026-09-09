@@ -105,18 +105,18 @@
     ".agent/memory/operational/repo-continuity.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "71a195c47abb4ce84bcf2cb9a8f754357e827ed2",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "e02467ddeb00694c430f38926480564b85b578e1",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations.",
+      "scope": "Current next-safe-step route only: PR92 corrects the premature C05 Cricket closeout; final-template I2 proof and lifecycle reconciliation precede PR14 while Q09/Q22 remain routed.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "627936ad9beba23e7083b33013283af58ae4798a",
       "review_history": [
         {
           "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
@@ -147,24 +147,36 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Current next-safe-step route only: PR88 and PR90 delivery, PR28 closure, current C05 installation ownership and branch, narrow generator-source disclosure correction, PR14 successor and retained Q09/Q22 obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "71a195c47abb4ce84bcf2cb9a8f754357e827ed2",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "627936ad9beba23e7083b33013283af58ae4798a",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: The C05 Cricket atomic plan is complete and in completion staging; begin PR14 from current origin/main while retaining Q09/Q22 obligations."
         }
       ]
     },
     ".agent/memory/operational/threads/castr-correction.next-session.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "1d20af66dd130a1d6074b44cd71ace44f63e4bae",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "db61894d78dddbc10ef133dbb1d4c533ee1116e3",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations.",
+      "scope": "Current correction continuation route only: obtain or retain UNDELIVERED for the final-template Cricket panel, reconcile its atomic lifecycle, then begin PR14 while broader obligations remain routed.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "eba723fe726223c82bde31845575a7cbf898dcde",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
@@ -189,24 +201,36 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Current correction continuation route only: delivered prerequisites, Bora custody of the integrated C05 installation, exact landing action, PR14 successor and retained broader correction obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "1d20af66dd130a1d6074b44cd71ace44f63e4bae",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations."
+        },
+        {
+          "reviewed_git_blob_hash": "eba723fe726223c82bde31845575a7cbf898dcde",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current correction continuation route only: The C05 Cricket atomic plan is delivered and in completion staging; PR14 is next and broader correction obligations remain routed."
         }
       ]
     },
     ".agent/plans/delivery-ledger.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "87851a953573fff47e614fae2879e9e618c3c098",
-      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "bf9af88cb5ff2a7170f5a9c186627ec2414799b9",
+      "base_revision": "1f29d21fa78bd6bbc0297e66b488b78a3640fc1b",
       "review_date": "2026-09-09",
-      "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
+      "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, explicit PR88-row residual acceptance, and final I2 before PR14.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "8a66dccaaf5a4e02320eecd7ff873a3f0feb8b5f",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -267,24 +291,48 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "87851a953573fff47e614fae2879e9e618c3c098",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 16 open PRs and PR14 as the next delivery."
+        },
+        {
+          "reviewed_git_blob_hash": "2951b57d7748834b1c32eb200d0768c99fc0d175",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 Cricket disposition and census only: PR91 exact-head delivery evidence, completed atomic-plan acceptance, the 16-PR durable estate plus self-referential PR92 while open, and PR14 as the next substantive delivery."
+        },
+        {
+          "reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
+          "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, and final I2 before PR14."
         }
       ]
     },
     ".agent/plans/proof-programme/parent-plan.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "1f4dfaa64e78ae97b1439d6eab1af34b65fb5ad8",
-      "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "f0639306a6c7bafb6b553d4f39a3c936c73b3a92",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
+      "scope": "Current interactive execution sequence only: C05 Cricket implementation and installation are delivered, final-template I2 remains outstanding, and its lifecycle reconciliation precedes PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "209607fd982744950cfb6f1daaff708bfe91c3f5",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -351,24 +399,42 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Current interactive execution sequence only: completed PR28 transition, C05 installation as the current delivery under Bora, PR14 next, and retained Q09/Q22 acceptance and queue authority."
+        },
+        {
+          "reviewed_git_blob_hash": "1f4dfaa64e78ae97b1439d6eab1af34b65fb5ad8",
+          "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "648349060ec1c01f07ec0980789ea78fcb2c2992",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "209607fd982744950cfb6f1daaff708bfe91c3f5",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged."
         }
       ]
     },
     ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "3ff5db6dce657b52a39cfabd6e288aec8fe043ed",
-      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "1e02fcab3aee802032104352b82f309778024c69",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor.",
+      "scope": "Current owner-corrected delivery sequence only: PR88/PR91 delivered C05 Cricket tooling and installation; PR92 reopens final I2 and routes its proof before PR14 without changing broader commission acceptance.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "25b3a964eb92b9b22b45b04daba93c40175a18dd",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
+      "prior_reviewed_git_blob_hash": "9d3a6b5e6e8385a0d2fa7e559ad6f116bfe701f1",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -447,6 +513,24 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "3ff5db6dce657b52a39cfabd6e288aec8fe043ed",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "6941a7181e4de0cd99c035ed1d9360186f26ceff",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "9d3a6b5e6e8385a0d2fa7e559ad6f116bfe701f1",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor."
         }
       ]
     },
@@ -767,17 +851,17 @@
     ".agent/plans/current/cricket-platform-parity.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
-      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
+      "scope": "Current C05 Cricket atomic acceptance and preserved history: T1/T2, I1 and documented installation are delivered; the dated native panel predates material final-template changes, so final I2 remains outstanding.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
       "review_history": [
         {
           "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
@@ -814,24 +898,42 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical."
+        },
+        {
+          "reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0",
+          "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
+          "review_date": "2026-09-09",
+          "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical."
         }
       ],
-      "prior_reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af"
+      "prior_reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728",
-      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+      "carrier": "C05/cricket-final-native-proof",
+      "reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8",
+      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
       "review_date": "2026-09-09",
-      "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries.",
+      "scope": "Current final-native-proof route: load the installed registered roles in a fresh trusted Castr task, retain three normal and same-agent adversarial returns or UNDELIVERED, then reconcile the atomic lifecycle before PR14.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain; replace this continuation route during closeout.",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
       "review_history": [
         {
           "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c",
@@ -844,122 +946,134 @@
           "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
           "review_date": "2026-09-09",
           "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries."
+        },
+        {
+          "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728",
+          "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries."
+        },
+        {
+          "reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Complete former continuation route: it now records C05 completion, directs work to the parent queue, ledger and current correction route, and preserves the dated native and UNDELIVERED boundaries."
         }
       ],
-      "prior_reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39"
+      "prior_reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a"
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
-      "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
+      "disposition": "historical",
+      "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
       "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
       "review_date": "2026-09-09",
       "scope": "Complete dated attempt record: exact task and turn identifiers, both requests, persisted terminal messages, absence of observable dispatch/tool/return markers, six UNDELIVERED results and inference limits.",
       "evidence": [
-        "Paired documentation and onboarding review verified exact PR88, PR90 and PR28 state; current C05 custody and sequence; the narrow generator-source Cursor disclosure correction; historical/current plan separation; the retained six-return native proof; and the observable-only UNDELIVERED boundary of the fresh attempt.",
-        "Configuration, gateway and test review verified the generator-owned Cursor wording, generated parity, absence of Cursor model/effort/tool pins, 17/21/22/22 installed inventory and 120 focused adapter, registry and portability tests.",
-        "The Markdown-link by-file report found no broken link in the Cricket plan or continuation prompt. Its archive-target findings resolve on disk and remain a known C09 inventory limitation.",
-        "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "Historical evidence after C05 delivery; it neither replaces the earlier six-return record nor establishes an internal runtime cause."
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
     },
     ".agent/skills/cognition/cricket/SKILL-CANONICAL.md": {
       "review_state": "partially-reviewed",
-      "disposition": "outstanding",
-      "carrier": "C05/cricket-installation",
+      "disposition": "applied",
+      "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
       "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
       "review_date": "2026-09-09",
       "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
+        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+        "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
-      "remaining": "PR #91 exact-candidate source review, checks, ruleset harvest, merge and C05 lifecycle closeout remain."
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
     }
   },
   "post_baseline_reconciliations": [
     {
       "record_id": "C05/cricket-installation",
       "comparison_base": "cb73c4deaae9eecdbe406f28304314c71e339e02",
-      "integrated_merge": "7967ff92479697610bda30c69ffca0b7071941d3",
+      "integrated_merge": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
       "review_date": "2026-09-09",
-      "scope": "Every document-like or embedded-documentation file added by the C05 Cricket installation candidate relative to current main.",
-      "method": "Explicit candidate-path comparison against current main, followed by source/generated classification and paired documentation/onboarding review.",
+      "scope": "The 20 C05 document-like or embedded-documentation paths newly added after the original inventory baseline and enumerated below, reconciled through the PR91 merge and the PR92 truth correction.",
+      "method": "Explicit new-path enumeration against the original inventory baseline, canonical source/generated classification, exact-head review and checks, merge-parent/tree verification, then paired lifecycle reconciliation. This record does not claim complete re-review of baseline inventory members later modified by C05.",
       "candidate_additions": [
         {
           "path": ".agent/plans/current/cricket-platform-parity.md",
           "classification": "document-like",
-          "disposition": "current-acceptance",
-          "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
-          "prior_reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af"
+          "disposition": "outstanding",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f",
+          "prior_reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
           "classification": "document-like",
-          "disposition": "current-continuation",
-          "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728"
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
+          "reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8",
+          "prior_reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
-          "carrier": "C05/cricket-installation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "ddb413853697838796e6a19d6234b734de8152cc"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-final-review-evidence-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
-          "carrier": "C05/cricket-installation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "e56e54f220cb496abb0767b5ebcb855e9f8c348b"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "current-evidence",
-          "carrier": "C05/cricket-installation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-native-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
-          "carrier": "C05/cricket-installation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "7eb952d3279eb3fb2e820a4418be50e75d251164"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-review-evidence-2026-09-06.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
-          "carrier": "C05/cricket-installation",
+          "disposition": "historical",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "a85248c8528ce3b6fde87f2d768919360a45e6c5"
         },
         {
           "path": ".agent/sub-agents/templates/cricket-judgement.md",
           "classification": "document-like",
-          "disposition": "current-source",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "eabbda197745b6c204a986f4a28b3b2a4fa27037",
           "prior_reviewed_git_blob_hash": "477929a2f13270d895499bae888d35dc9fe458fa"
         },
         {
           "path": ".agent/sub-agents/templates/cricket-procedure.md",
           "classification": "document-like",
-          "disposition": "current-source",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "d37e89a6b9ae076ac697ac446e6afff241651f36",
           "prior_reviewed_git_blob_hash": "06fb904ba9e1604a77baf0cd1348958c8256b42e"
         },
         {
           "path": ".claude/agents/cricket-judgement-high.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "f73df5d82862d84b6ca1636e19534a8bce658875",
           "prior_reviewed_git_blob_hash": "a29a7cce31171303ce38ad1b715198b2499414e2",
           "source_paths": [
@@ -972,8 +1086,8 @@
         {
           "path": ".claude/agents/cricket-judgement-low.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "38b08b3fa4713ba07a2cae361ebd133c627542da",
           "prior_reviewed_git_blob_hash": "34f71b01446d9bfd38fff44865c0ece14e2f1f57",
           "source_paths": [
@@ -986,8 +1100,8 @@
         {
           "path": ".claude/agents/cricket-judgement-medium.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "1410fa564e83871a729f4779657b4a699347a6e1",
           "prior_reviewed_git_blob_hash": "976be7f58d17c7a8ff697ac9ef789136bbc4a34a",
           "source_paths": [
@@ -1000,8 +1114,8 @@
         {
           "path": ".claude/agents/cricket-procedure-xhigh.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "930e7a897e8f4c892b23a19c2dfd02c7d3ec44fd",
           "prior_reviewed_git_blob_hash": "d706736b17c619af9d3bd545a784b1627fabc50c",
           "source_paths": [
@@ -1014,32 +1128,32 @@
         {
           "path": ".codex/agents/cricket-judgement-low.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "a712788f17595d65b050096d37bc42c85c31d041",
           "prior_reviewed_git_blob_hash": "0aa54c22401a620bcaa38638e9ae39fe4b6af1be"
         },
         {
           "path": ".codex/agents/cricket-judgement-medium.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "ee15ca44a47623d25cf5d4520a857c84a1352217",
           "prior_reviewed_git_blob_hash": "92630506482763f36f3bf6ce42a710f683b0619d"
         },
         {
           "path": ".codex/agents/cricket-procedure-xhigh.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "277d4122cf76f19613421caa5aec48176a842b06",
           "prior_reviewed_git_blob_hash": "954919ff2c749c994f66176cff8910f6eef68199"
         },
         {
           "path": ".cursor/agents/cricket-judgement-high.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "da504d530fb40f62df98503905aacf06cdb1a6e1",
           "prior_reviewed_git_blob_hash": "5b5396fe0b5eb88009bd5748bc5d1b001b0738fa",
           "source_paths": [
@@ -1052,8 +1166,8 @@
         {
           "path": ".cursor/agents/cricket-judgement-low.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "0ca1eef6190c2f74dc3361c894c76515a4bcd0f7",
           "prior_reviewed_git_blob_hash": "7df327544e11d5dcb390c171ee0e03d14e39e94d",
           "source_paths": [
@@ -1066,8 +1180,8 @@
         {
           "path": ".cursor/agents/cricket-judgement-medium.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "e8799b134fccbe91349222fd9353d282974647f4",
           "prior_reviewed_git_blob_hash": "bca9fbd34543b213fb02c7a0a12449d2ac6de56e",
           "source_paths": [
@@ -1080,8 +1194,8 @@
         {
           "path": ".cursor/agents/cricket-procedure-xhigh.md",
           "classification": "document-like",
-          "disposition": "current-generated",
-          "carrier": "C05/cricket-installation",
+          "disposition": "applied",
+          "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "b696c6e73c18e70d9960feae15e914441e528beb",
           "prior_reviewed_git_blob_hash": "00694fd21df2c9e2022833b43bcc3900b96ac815",
           "source_paths": [
@@ -1092,8 +1206,8 @@
           ]
         }
       ],
-      "result": "20 candidate additions accounted for; generated adapters retain canonical source paths.",
-      "remaining": "This bounded record does not rewrite the immutable e025d233 baseline CSV or claim all repository additions and removals since that baseline are reconciled. C09/C10 retain the complete final-main coverage reconciliation."
+      "result": "20 post-baseline files accounted for; generated adapters retain canonical source paths, repository delivery is complete and final-template I2 remains outstanding.",
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. Baseline inventory members modified by C05 retain their existing path-level review or default outstanding disposition; their complete estate reconciliation remains with C09/C10. The broader C05 family and Q-09/Q-22 obligations remain open in their named homes."
     }
   ]
 }

@@ -102,10 +102,12 @@ corresponding inherited-PR obligations. Close a source PR promptly once every
 surviving delta has a verified destination or evidenced supersession. Preserve its
 source and the full acceptance; reducing the count by unverified closure is not
 progress. The ledger owns the live census and closure evidence. PR #88 delivered
-the C05 tooling contract; the coordinating agent now owns its dependent native
-installation. PR #90 delivered the preservation record and PR #28 then closed
-without merge, satisfying the installation's opening condition. Land that prepared
-installation before beginning another repair PR; PR #14 follows.
+the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
+delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
+implementation and installation are delivered, but final-template I2 proof remains
+outstanding. PR #92 corrects the premature lifecycle closeout. Its six-return native
+proof and reconciliation precede PR #14; the broader C05 family retains its other
+obligations.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -119,30 +121,18 @@ templates, registrations, generated adapters and native rerun. Future frames nam
 exact governing rules and evidence paths; unavailable event identifiers remain
 explicitly missing.
 
-The owner subsequently commissioned a separate C05 Cricket repair task,
-initially “Repair Castr Cricket to OCE parity”, owned by Moon turns Apogee.
-The owner stopped that task and transferred the same preserved worktree to
-“Kite hunts Eyrie - Castr Cricket parity”. Kite hunts Eyrie delivered the coupled
-tooling and validation as PR #88, then transferred the remaining installation at
-`codex/cricket-installation` commit `2af22e0f` to the coordinating agent. That
-boundary owns the Cricket templates, registrations, generated adapters and native
-panel proof. OCE is a read-only source reference; further full panels execute from
-Castr. Bora merged current main `cb73c4de` into the installation branch as
-`7967ff92`, after PR #90 merged and PR #28 closed. Its current delta also carries
-the narrow generator-source correction that makes Cursor's unpinned reasoning
-effort explicit; PR #88's platform-contract tooling remains delivered separately.
-[PR #91](https://github.com/EngraphCode/castr/pull/91) is the open installation
-delivery. Its review waves repair the compiled-procedure intake, decision-table and
-output contracts, the incomplete routing descriptions across all Cricket roles and all
-stale pre-opening routes together before exact-head re-review and merge. The final
-decision-contract corrections reject an invalid stance before either method produces a
-verdict, require a complete five-field context before the compiled procedure can take an
-ON-TRACK row, define `REDIRECTION: none` for both ON-TRACK rows, and prevent the brevity
-target from forcing silent evidence loss. Replay requires the prior return, its prior
-six-field frame, exact field-by-field equality with the current invocation and a prior
-return that satisfies the current output contract.
-The coordinating agent retains this delivery plan, the parent queue, ledger and
-coverage manifests.
+The owner subsequently commissioned a separate C05 Cricket repair task. Moon turns
+Apogee began it; Kite hunts Eyrie delivered the coupled tooling and validation as PR #88;
+Bora seeks Turbulence delivered the dependent installation as PR #91. Its reviewed head
+`48e2194d` merged as `af840d9b`; all 17 exact-head check runs passed, including the
+successful Copilot review run, all eight review threads were resolved, and exact-head
+Codex/Copilot plus gateway, documentation and onboarding review found no remaining
+blocker. The active C05 plan preserves the dated native proof and the later
+`UNDELIVERED` task-runtime attempt. Because the retained six-return run predates material
+changes to the final templates, it cannot close final I2. The atomic plan remains open for
+a fresh final-template panel and lifecycle reconciliation; PR #14
+follows that merge. The broader C05 family remains open, and the coordinating agent
+retains this commission, parent queue, ledger and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
