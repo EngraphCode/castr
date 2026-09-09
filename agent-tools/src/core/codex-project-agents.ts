@@ -1,5 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import {
   CODEX_CONFIG_PATH,
   readCodexAgentRegistrations,
@@ -14,6 +12,7 @@ import {
   extractCanonicalAgentPaths,
   readCanonicalAgentFileSync,
 } from './canonical-agent-reference.js';
+import { readRequiredRepositorySourceSync } from './required-repository-source.js';
 
 export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
 
@@ -122,12 +121,14 @@ function findRegistrationOrThrow(
 }
 
 function readAdapterContent(repoRoot: string, adapterPath: string, agentName: string): string {
-  const adapterAbsolutePath = join(repoRoot, adapterPath);
-  if (!existsSync(adapterAbsolutePath)) {
-    throw new Error(`Codex project agent '${agentName}' points at missing adapter ${adapterPath}.`);
+  try {
+    return readRequiredRepositorySourceSync(repoRoot, adapterPath);
+  } catch (error) {
+    throw new Error(
+      `Codex project agent '${agentName}' points at missing adapter ${adapterPath}. ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error },
+    );
   }
-
-  return readFileSync(adapterAbsolutePath, 'utf8');
 }
 
 function readAdapterMetadata(

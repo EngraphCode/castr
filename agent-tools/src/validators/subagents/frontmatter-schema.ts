@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { parseDocument } from 'yaml';
 import { z } from 'zod';
+import { isCanonicalAgentTemplateReference } from '../../core/canonical-agent-reference.js';
 import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platform-contract.js';
 
 /** Markdown harnesses whose reviewer contracts are validated here. */
@@ -146,7 +147,7 @@ export function validateMarkdownWrapper(
     issues.push(`${file}: exactly one required template loading line is required`);
   const role = cricketRole(path.basename(file, '.md'));
   for (const template of templatePaths) {
-    if (!/^\.agent\/sub-agents\/templates\/[a-z0-9-]+\.md$/u.test(template))
+    if (!isCanonicalAgentTemplateReference(template))
       issues.push(`${file}: template path must be inside .agent/sub-agents/templates`);
     if (role && template !== role.templatePath)
       issues.push(`${file}: Cricket template must match ${role.templatePath}`);

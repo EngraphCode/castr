@@ -279,6 +279,120 @@ it('recovers from surplus adapters and nested rules using the advertised clear c
   expect(readFileSync(join(root, '.cursor/rules/notes.txt'), 'utf8')).toBe('Retained notes\n');
 });
 
+it.each([
+  { label: '--help', args: ['--help'], expectedStatus: 0, expectedStream: 'stdout' },
+  { label: 'an unknown flag', args: ['--chek'], expectedStatus: 1, expectedStream: 'stderr' },
+  {
+    label: 'a duplicated flag',
+    args: ['--check', '--check'],
+    expectedStatus: 1,
+    expectedStream: 'stderr',
+  },
+  {
+    label: '--help with another flag',
+    args: ['--help', '--check'],
+    expectedStatus: 1,
+    expectedStream: 'stderr',
+  },
+  {
+    label: '--check with --clear',
+    args: ['--check', '--clear'],
+    expectedStatus: 1,
+    expectedStream: 'stderr',
+  },
+] as const)(
+  'handles $label without changing generated files',
+  ({ args, expectedStatus, expectedStream }) => {
+    const root = generatedRepository();
+    writeFileSync(join(root, '.cursor/rules/example.mdc'), 'Original rule work\n');
+    const original = generatedFiles(root);
+
+    const result = spawnSync(execPath, [...cliArguments, ...args], {
+      cwd: root,
+      encoding: 'utf8',
+    });
+
+    expect(result.status).toBe(expectedStatus);
+    expect(result[expectedStream]).toContain('agent-adapter-generate');
+    expect(result[expectedStream]).toContain('--check');
+    expect(result[expectedStream]).toContain('--clear');
+    expect(result[expectedStream]).toContain('--help');
+    expect(result[expectedStream]).toContain('Example:');
+    expect(generatedFiles(root)).toEqual(original);
+  },
+);
+
+it('rejects an alias registration through the running subagent validator', () => {
+  const root = generatedRepository();
+  const config = join(root, '.codex/config.toml');
+  writeFileSync(
+    config,
+    `${readFileSync(config, 'utf8')}\n[agents.alias-reviewer]\ndescription = "Conscience check."\nconfig_file = "agents/cricket-judgement-low.toml"\n`,
+  );
+
+  const result = spawnSync(execPath, validatorCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+    env: { CLAUDE_PROJECT_DIR: root },
+  });
+
+  expect(result.status).toBe(1);
+  expect(result.stderr).toContain(
+    'resolves "alias-reviewer" to .codex/agents/cricket-judgement-low.toml; expected .codex/agents/alias-reviewer.toml',
+  );
+});
+
+it('rejects a linked Codex registry through the running subagent validator', () => {
+  const root = generatedRepository();
+  const source = '.codex/config.toml';
+  const target = join(root, 'linked-config.toml');
+  renameSync(join(root, source), target);
+  symlinkSync(target, join(root, source), 'file');
+
+  const result = spawnSync(execPath, validatorCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+    env: { CLAUDE_PROJECT_DIR: root },
+  });
+
+  expect(result.status).toBe(1);
+  expect(result.stderr).toContain(
+    '.codex/config.toml: required source must not traverse symbolic link .codex/config.toml',
+  );
+});
+
+it.each([
+  '.agent/sub-agents/components/behaviours/subagent-identity.md',
+  '.agent/sub-agents/components/behaviours',
+])(
+  'rejects a linked required identity source %s through the running subagent validator',
+  (source) => {
+    const root = generatedPersonaRepository();
+    const identityPath = join(root, '.agent/sub-agents/components/behaviours/subagent-identity.md');
+    mkdirSync(join(root, '.agent/sub-agents/components/behaviours'), { recursive: true });
+    writeFileSync(identityPath, '# Subagent identity\n');
+    const outside = mkdtempSync(join(tmpdir(), 'castr-external-identity-source-'));
+    directories.push(outside);
+    const target = join(
+      outside,
+      source.endsWith('.md') ? 'linked-identity.md' : 'linked-behaviours',
+    );
+    renameSync(join(root, source), target);
+    symlinkSync(target, join(root, source), source.endsWith('.md') ? 'file' : 'dir');
+
+    const result = spawnSync(execPath, validatorCliArguments, {
+      cwd: root,
+      encoding: 'utf8',
+      env: { CLAUDE_PROJECT_DIR: root },
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      `.agent/sub-agents/components/behaviours/subagent-identity.md: required source must not traverse symbolic link ${source}`,
+    );
+  },
+);
+
 describe.each([
   { label: 'generate', args: [] },
   { label: 'clear', args: ['--clear'] },
@@ -380,6 +494,49 @@ describe.each([
     expect(directorySnapshot(outside)).toEqual(externalOriginal);
   });
 
+  it('rejects a canonical rule symbolic link before changing outputs', () => {
+    const root = generatedPersonaRepository();
+    const original = generatedFiles(root);
+    const source = '.agent/rules/example.md';
+    const outside = mkdtempSync(join(tmpdir(), 'castr-external-canonical-rule-'));
+    directories.push(outside);
+    const target = join(outside, 'example.md');
+    renameSync(join(root, source), target);
+    symlinkSync(target, join(root, source), 'file');
+    const externalOriginal = directorySnapshot(outside);
+
+    const result = spawnSync(execPath, [...cliArguments, ...args], { cwd: root, encoding: 'utf8' });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(source);
+    expect(result.stderr).toContain('symbolic link');
+    expect(generatedFiles(root)).toEqual(original);
+    expect(directorySnapshot(outside)).toEqual(externalOriginal);
+  });
+
+  it.each([
+    { source: '.agent/rules', linkType: 'dir' as const },
+    { source: '.codex/agents', linkType: 'dir' as const },
+    { source: '.codex/config.toml', linkType: 'file' as const },
+  ])('rejects linked required source $source before changing outputs', ({ source, linkType }) => {
+    const root = generatedPersonaRepository();
+    const original = generatedFiles(root);
+    const outside = mkdtempSync(join(tmpdir(), 'castr-external-required-source-'));
+    directories.push(outside);
+    const target = join(outside, linkType === 'dir' ? 'linked-directory' : 'linked-file');
+    renameSync(join(root, source), target);
+    symlinkSync(target, join(root, source), linkType);
+    const externalOriginal = directorySnapshot(outside);
+
+    const result = spawnSync(execPath, [...cliArguments, ...args], { cwd: root, encoding: 'utf8' });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(source);
+    expect(result.stderr).toContain('symbolic link');
+    expect(generatedFiles(root)).toEqual(original);
+    expect(directorySnapshot(outside)).toEqual(externalOriginal);
+  });
+
   it('rejects an absent Codex adapter directory even with an empty registry', () => {
     const root = generatedPersonaRepository();
     const original = generatedFiles(root);
@@ -441,6 +598,11 @@ it.each([
   expect(validation.status).toBe(1);
   expect(validation.stderr).toContain(source);
   expect(validation.stderr).toContain('symbolic link');
+  if (source === '.agent/sub-agents/templates') {
+    expect(validation.stderr).toContain(
+      '.agent/sub-agents/templates: required source must not traverse symbolic link .agent/sub-agents/templates',
+    );
+  }
   expect(() => resolveCodexProjectAgent(root, 'architecture-expert-barney')).toThrow(
     /symbolic link/u,
   );

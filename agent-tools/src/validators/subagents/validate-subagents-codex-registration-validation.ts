@@ -72,6 +72,7 @@ export interface CodexRegistrationValidationResult {
  * Checks performed:
  * - The registration has a non-empty `description`.
  * - The registration has a non-empty `config_file`.
+ * - The registration owns `.codex/agents/<registration-name>.toml` exactly.
  * - The resolved adapter file path exists (via `fileExists`).
  *
  * @param registration - The registration to validate.
@@ -97,6 +98,12 @@ function validateSingleRegistration(
   }
   registrationsByName.set(registration.name, registration);
   const adapterPath = resolveCodexConfigFilePath(registration.configFile, configPath);
+  const expectedPath = resolveCodexConfigFilePath(`agents/${registration.name}.toml`, configPath);
+  if (adapterPath !== expectedPath) {
+    issues.push(
+      `${configPath}: resolves "${registration.name}" to ${adapterPath}; expected ${expectedPath}`,
+    );
+  }
   if (!fileExists(adapterPath)) {
     issues.push(
       `${configPath}: agent "${registration.name}" references missing adapter ${adapterPath}`,
@@ -114,7 +121,8 @@ function validateSingleRegistration(
  *
  * For each registration, checks that:
  * - A `description` field is present.
- * - A `config_file` field is present and points to an existing adapter file.
+ * - A `config_file` field is present, names the registration's own adapter,
+ *   and points to an existing adapter file.
  *
  * @param input - Registrations to validate plus optional overrides for the
  *   config path and the filesystem existence predicate.

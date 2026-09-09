@@ -48,6 +48,23 @@ describe('Codex subagent helper coverage', () => {
     expect(issues).toStrictEqual([]);
   });
 
+  it('rejects a registration whose name does not own its adapter path', () => {
+    const { issues } = getCodexRegistrationValidation({
+      registrations: [
+        {
+          name: 'alias-reviewer',
+          description: 'Gateway reviewer.',
+          configFile: 'agents/code-expert.toml',
+        },
+      ],
+      fileExists: () => true,
+    });
+
+    expect(issues).toContain(
+      '.codex/config.toml: resolves "alias-reviewer" to .codex/agents/code-expert.toml; expected .codex/agents/alias-reviewer.toml',
+    );
+  });
+
   it('rejects a whitespace-only registration description', () => {
     const { issues } = getCodexRegistrationValidation({
       registrations: [
@@ -146,6 +163,31 @@ Read and follow \`.agent/sub-agents/templates/code-expert.md\`.
     );
     expect(issues).toContain(
       '.codex/agents/code-expert.toml: description must match .codex/config.toml registration for "code-expert"',
+    );
+  });
+
+  it.each([
+    '.agent/sub-agents/templates/nested/code-expert.md',
+    '.agent/sub-agents/templates/code-expert.txt',
+  ])('rejects a template path outside the canonical template-file contract: %s', (templatePath) => {
+    const { issues } = getCodexAdapterValidation({
+      codexAdapterFile: '.codex/agents/code-expert.toml',
+      registeredAgent: {
+        name: 'code-expert',
+        description: 'Gateway reviewer.',
+        configFile: 'agents/code-expert.toml',
+      },
+      content: `name = "code-expert"
+description = "Gateway reviewer."
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "never"
+developer_instructions = "Read \`${templatePath}\`."
+`,
+    });
+
+    expect(issues).toContain(
+      '.codex/agents/code-expert.toml: developer_instructions must reference exactly one canonical template inside .agent/sub-agents/templates',
     );
   });
 

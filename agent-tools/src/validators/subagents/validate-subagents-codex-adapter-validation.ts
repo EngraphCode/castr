@@ -28,6 +28,7 @@ import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platf
 import {
   canonicalAgentReferenceIssue,
   isCanonicalAgentReferenceInside,
+  isCanonicalAgentTemplateReference,
 } from '../../core/canonical-agent-reference.js';
 
 // ---------------------------------------------------------------------------
@@ -189,7 +190,7 @@ function validateCodexAdapter({
     (path) => canonicalAgentReferenceIssue(path) === null,
   );
   const templatePaths = canonicalPaths.filter((path) =>
-    isCanonicalAgentReferenceInside(path, templateDir),
+    isCanonicalAgentTemplateReference(path, templateDir),
   );
   const personaPaths = canonicalPaths.filter((path) =>
     isCanonicalAgentReferenceInside(path, DEFAULT_PERSONA_DIR),

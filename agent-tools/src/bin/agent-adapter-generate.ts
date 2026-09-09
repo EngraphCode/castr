@@ -17,10 +17,47 @@ import { generateAdapters } from '../agent-adapter-generate/generator.js';
 interface CliFlags {
   readonly clear: boolean;
   readonly check: boolean;
+  readonly help: boolean;
 }
 
+const USAGE = `Usage: agent-adapter-generate [--check | --clear]
+
+Generate Claude and Cursor adapters from the repository's canonical Codex sources.
+
+Options:
+  --check  Exit non-zero when generated adapters or rules are stale.
+  --clear  Remove the generated estate before writing validated outputs.
+  --help   Show this complete help text and exit.
+
+Example:
+  pnpm agents:adapter-generate --check
+`;
+
+class CliUsageError extends Error {}
+
 function parseFlags(args: readonly string[]): CliFlags {
-  return { clear: args.includes('--clear'), check: args.includes('--check') };
+  const supported = new Set(['--check', '--clear', '--help']);
+  const unsupported = args.filter((arg) => !supported.has(arg));
+  if (unsupported.length > 0) {
+    throw new CliUsageError(`Unsupported argument(s): ${unsupported.join(', ')}`);
+  }
+  if (new Set(args).size !== args.length) {
+    throw new CliUsageError('Each option may be supplied at most once.');
+  }
+  if (args.includes('--help')) {
+    if (args.length !== 1) {
+      throw new CliUsageError('`--help` cannot be combined with another option.');
+    }
+    return { clear: false, check: false, help: true };
+  }
+  if (args.includes('--clear') && args.includes('--check')) {
+    throw new CliUsageError('`--check` and `--clear` cannot be combined.');
+  }
+  return {
+    clear: args.includes('--clear'),
+    check: args.includes('--check'),
+    help: false,
+  };
 }
 
 function writeDiagnostics(label: string, paths: readonly string[]): void {
@@ -63,6 +100,10 @@ async function runGenerate(repoRoot: string, flags: CliFlags): Promise<number> {
 
 async function main(): Promise<number> {
   const flags = parseFlags(argv.slice(2));
+  if (flags.help) {
+    stdout.write(USAGE);
+    return 0;
+  }
   const repoRoot = cwd();
   return flags.check ? await runCheck(repoRoot) : await runGenerate(repoRoot, flags);
 }
@@ -70,6 +111,10 @@ async function main(): Promise<number> {
 try {
   exit(await main());
 } catch (error: unknown) {
-  stderr.write(`agent-adapter-generate failed: ${String(error)}\n`);
+  if (error instanceof CliUsageError) {
+    stderr.write(`agent-adapter-generate failed: ${error.message}\n\n${USAGE}`);
+  } else {
+    stderr.write(`agent-adapter-generate failed: ${String(error)}\n`);
+  }
   exit(1);
 }

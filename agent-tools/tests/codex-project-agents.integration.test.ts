@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -157,6 +157,27 @@ config_file = ".codex/agents/code-expert.toml"
       /missing adapter \.codex\/\.codex\/agents\/code-expert\.toml/u,
     );
   });
+
+  it.each(['.codex/config.toml', '.codex/agents/code-expert.toml'])(
+    'rejects a linked runtime source %s',
+    (source) => {
+      const repoRoot = createTempRepoRoot();
+      writeFixtureRepo(repoRoot);
+      const target = join(
+        repoRoot,
+        `linked-${source.endsWith('config.toml') ? 'config' : 'adapter'}.toml`,
+      );
+      renameSync(join(repoRoot, source), target);
+      symlinkSync(target, join(repoRoot, source), 'file');
+
+      expect(() => resolveCodexProjectAgent(repoRoot, 'code-expert')).toThrow(
+        new RegExp(
+          `${source.replaceAll('.', '\\.')}: required source must not traverse symbolic link`,
+          'u',
+        ),
+      );
+    },
+  );
 
   it('fails when adapter metadata drifts from the central registry', () => {
     const repoRoot = createTempRepoRoot();

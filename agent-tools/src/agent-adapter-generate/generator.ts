@@ -19,7 +19,7 @@
  * Pure render/derive functions are exported so the drift checker and unit
  * tests can exercise them without filesystem I/O.
  */
-import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import { stringify } from 'yaml';
 import {
@@ -36,13 +36,16 @@ import {
   getCodexRegistrationValidation,
   extractCanonicalPaths,
   readCodexDeveloperInstructions,
-  resolveCodexConfigFilePath,
 } from '../validators/subagents/validate-subagents-helpers.js';
 import { inspectGeneratedEstate } from './generated-estate.js';
 import {
   isCanonicalAgentReferenceInside,
   readCanonicalAgentFile,
 } from '../core/canonical-agent-reference.js';
+import {
+  listRequiredRepositorySources,
+  readRequiredRepositorySource,
+} from '../core/required-repository-source.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -96,16 +99,6 @@ export function buildAgentRoster(
   if (registrationValidation.issues.length > 0) {
     throw new Error(registrationValidation.issues.join('\n'));
   }
-  for (const registration of registrations) {
-    const adapterPath = resolveCodexConfigFilePath(registration.configFile);
-    const expectedPath = `${CODEX_ADAPTER_DIR}/${registration.name}.toml`;
-    if (adapterPath !== expectedPath) {
-      throw new Error(
-        `${CODEX_CONFIG_FILE}: resolves "${registration.name}" to ${adapterPath}; expected ${expectedPath}`,
-      );
-    }
-  }
-
   const entries: AgentRosterEntry[] = [];
   for (const [name, content] of [...adapterTextByName].toSorted(([a], [b]) => a.localeCompare(b))) {
     const registeredAgent = registrationValidation.registrationsByName.get(name);
@@ -278,11 +271,9 @@ function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
 
 /** Lists files in a required source directory; filesystem failures propagate. */
 async function listNames(repoRoot: string, relDir: string, extension: string): Promise<string[]> {
-  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
-    .map((entry) => basename(entry.name, extension))
-    .toSorted((a, b) => a.localeCompare(b));
+  return (await listRequiredRepositorySources(repoRoot, relDir, extension)).map((sourcePath) =>
+    basename(sourcePath, extension),
+  );
 }
 
 /**
@@ -290,13 +281,13 @@ async function listNames(repoRoot: string, relDir: string, extension: string): P
  * consumed by callers with in-memory sources.
  */
 async function readAgentGeneration(repoRoot: string): Promise<GenerationUnit[]> {
-  const configText = await readFile(join(repoRoot, CODEX_CONFIG_FILE), 'utf8');
+  const configText = await readRequiredRepositorySource(repoRoot, CODEX_CONFIG_FILE);
   const adapterNames = await listNames(repoRoot, CODEX_ADAPTER_DIR, '.toml');
   const adapterTextByName = new Map<string, string>();
   for (const name of adapterNames) {
     adapterTextByName.set(
       name,
-      await readFile(join(repoRoot, CODEX_ADAPTER_DIR, `${name}.toml`), 'utf8'),
+      await readRequiredRepositorySource(repoRoot, `${CODEX_ADAPTER_DIR}/${name}.toml`),
     );
   }
   const units = planAgentAdapters(repoRoot, configText, adapterTextByName);
@@ -363,7 +354,10 @@ export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]
   const units = await readAgentGeneration(repoRoot);
   const ruleNames = await listNames(repoRoot, CANONICAL_RULES_DIR, '.md');
   for (const ruleName of ruleNames) {
-    const ruleText = await readFile(join(repoRoot, CANONICAL_RULES_DIR, `${ruleName}.md`), 'utf8');
+    const ruleText = await readRequiredRepositorySource(
+      repoRoot,
+      `${CANONICAL_RULES_DIR}/${ruleName}.md`,
+    );
     units.push({
       target: cursorRuleTargetPath(repoRoot, ruleName),
       content: renderCursorRule(ruleName, deriveRuleDescription(ruleText)),

@@ -3,6 +3,7 @@ import { lstat, readFile, realpath } from 'node:fs/promises';
 import { isAbsolute, join, posix, relative, resolve, sep } from 'node:path';
 
 const CANONICAL_AGENT_ROOT = '.agent';
+const CANONICAL_TEMPLATE_DIR = '.agent/sub-agents/templates';
 const CANONICAL_PATH_PATTERN = /`(\.agent\/[^`]+)`/gu;
 
 /** Extract the unique, sorted `.agent/...` references from instruction prose. */
@@ -40,6 +41,21 @@ export function isCanonicalAgentReferenceInside(reference: string, directory: st
     pathFromDirectory !== '..' &&
     !pathFromDirectory.startsWith('../') &&
     !posix.isAbsolute(pathFromDirectory)
+  );
+}
+
+/**
+ * Whether a reference names a direct Markdown file in the canonical template directory.
+ * This predicate is shared by Codex source validation and generated wrapper validation.
+ */
+export function isCanonicalAgentTemplateReference(
+  reference: string,
+  directory = CANONICAL_TEMPLATE_DIR,
+): boolean {
+  return (
+    canonicalAgentReferenceIssue(reference) === null &&
+    posix.dirname(reference) === directory &&
+    posix.extname(reference) === '.md'
   );
 }
 
