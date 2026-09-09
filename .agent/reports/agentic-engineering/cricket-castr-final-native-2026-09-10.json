@@ -158,7 +158,7 @@
     "cricket-procedure-xhigh-adversarial": "DELIVERED"
   },
   "verification": {
-    "method": "git fetch origin main; git rev-parse HEAD origin/main; git status --short; gh pr view 87/92 --json number,state,mergedAt,mergeCommit; gh pr list --state open --limit 100 --json number,title,headRefName",
+    "method": "git fetch origin main; git rev-parse HEAD origin/main; git status --short; gh pr view 87 --json number,state,mergedAt,mergeCommit; gh pr view 92 --json number,state,mergedAt,mergeCommit; gh pr list --state open --limit 100 --json number,title,headRefName",
     "head_equals_origin_main": true,
     "pr_87": {
       "state": "MERGED",
