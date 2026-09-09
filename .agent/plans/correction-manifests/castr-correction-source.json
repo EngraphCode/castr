@@ -231,6 +231,65 @@
           "obligation": "Freshly triage the carried qs/Dependabot-73 report and record its actual resolution; C01 retains the report without asserting current advisory status."
         }
       ]
+    },
+    "7b47e29996441b378438b9c3228e27b9cdb16662c9295c56b618daaca373d0da": {
+      "source_record": {
+        "path": "README.md",
+        "hunk": 1
+      },
+      "successor_pr": 85,
+      "successor_commit": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+      "reviewed_head": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "coverage": "partial",
+      "disposition": "outstanding",
+      "applied_content": "C03a establishes absolute fidelity and fail-fast requirements, source acceptance/processing semantics and bounded implemented exports/User-fixture evidence. Silent loss and ignored options are defects; strictness does not authorise invented object closure.",
+      "evidence": [
+        {
+          "path": "README.md",
+          "line": 28,
+          "git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118"
+        },
+        {
+          "path": "README.md",
+          "line": 50,
+          "git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118"
+        }
+      ],
+      "remaining": [
+        {
+          "carrier": "C07a/C07b/C07c",
+          "obligation": "Reconcile admitted grammars, object/default semantics, target profiles and intended roots across canonical authority. The frozen lossy-profile wording requires evidenced supersession under the owner absolute-fidelity correction, not verbatim adoption."
+        },
+        {
+          "carrier": "C03b/C03c and C08",
+          "obligation": "Detailed API/options/guide truthing and corresponding implementation repairs remain open."
+        }
+      ]
+    },
+    "fe04da973aa83727a4897453a91e9d3e663973906c41f2dfa87e6b682baaa955": {
+      "source_record": {
+        "path": "README.md",
+        "hunk": 2
+      },
+      "successor_pr": 85,
+      "successor_commit": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+      "reviewed_head": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "coverage": "full",
+      "disposition": "applied",
+      "applied_content": "The source hunk added contributor routing: README now links the Practice bridge and verification contract; CONTRIBUTING supplies canonical check guidance; README distinguishes requirements from bounded demonstrated capabilities. Full coverage is for this added hunk only, not README, C03 or PR81.",
+      "evidence": [
+        {
+          "path": "README.md",
+          "line": 28,
+          "git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118"
+        },
+        {
+          "path": "README.md",
+          "line": 50,
+          "git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118"
+        }
+      ],
+      "remaining": []
     }
   }
 }

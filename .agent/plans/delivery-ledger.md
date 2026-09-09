@@ -59,20 +59,49 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   Cricket checkpoint. No running green CI/review wave was superseded. The original
   96 findings and nine programme identities remain conserved; Q-016 has its own
   97th record, and Q-19's separate queue carrier records integrated acceptance.
-- **C03a in progress:** [PR #85](https://github.com/EngraphCode/castr/pull/85),
-  branch `codex/castr-local-checkout`,
-  refreshed onto the C01R merge, carries executable local-checkout instructions
-  and a small User fixture. Its PR owns only this entry workflow; C03b owns detailed
-  API/options documentation, and C03c owns response/transport/MCP guides. The full
-  preserved draft remains separate. Acceptance requires the reviewed merge and
-  its current-head gates; early isolated-pack reconnaissance does not complete C10.
-  First-wave review correctly identified that the separate continuity commit
-  `e43e06af171ba1e46b595bb66c34d806fd1a038e` omitted the required `continuity`
-  subject scope. Its file separation is verified and its pushed history is
-  preserved. The earlier separate continuity commits use the required scope;
-  subsequent continuity commits must again use `chore(continuity)`.
-  C05 retains the rule/reference reconciliation; C10 records this authoring
-  failure alongside the review-wave failure. This does not weaken merge checks.
+- **C03a complete at local-checkout acceptance:** [PR #85](https://github.com/EngraphCode/castr/pull/85)
+  merged on 6 September 2026 at 14:26:10 UTC as `6c3b18f0e97d4d93eca14ab67c2b0c79bc304119`.
+  Its tree equals reviewed head `1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3`.
+  The fresh pre-merge harvest found all 16 checks successful, all six threads
+  settled, current-head Copilot/Codex review complete, no pending reviewer request
+  and no blocking ruleset/scanning finding. The [actual tally](https://github.com/EngraphCode/castr/pull/85#issuecomment-5559144676)
+  records five rounds, the exceeded budget, structural navigation re-derivations
+  and their class-level cures. Canonical `pnpm check` and intact hooks passed.
+  The committed User workflow executes the real CLI twice, compares output bytes,
+  compiles generated TypeScript, checks successful parsed values and four invalid
+  witnesses, and proves actionable missing-input failure. The test also kills the
+  minimum-length mutant and reaps an uncooperative child in its bounded-run proof.
+  C03b/c retain detailed API/options and response/transport/MCP guide semantics;
+  C10 retains the final isolated local-pack walkthrough. The four C03a claims are
+  closed. No source-PR or whole-document completion follows from this slice.
+  The pushed continuity commit `e43e06af171ba1e46b595bb66c34d806fd1a038e`
+  omitted the required subject scope; its verified file separation and history
+  remain preserved. Subsequent continuity commits use `chore(continuity)`.
+  C05 owns the rule/reference reconciliation and C10 records the authoring failure.
+- **C08 operation-security-empty in progress:** branch
+  `codex/castr-security-empty-delivery`, based on the C03a merge, integrates the
+  reviewed three-file repair. Emit every defined operation security array. The
+  red-first unit and integration witnesses distinguish absence, `[]` and `[{}]`
+  under required document authentication through parse, canonical persistence,
+  writing and reparse. The prior five Q-03 AND/OR cases remain unchanged.
+  Canonical `pnpm check` passed on 6 September, including the integrated 19 unit
+  and eight security-transform cases and the existing E2E suites. OpenAPI and paired
+  documentation/onboarding reviews passed; the latter corrected the parent's stale
+  C03a continuation. The 6 September Markdown-link by-file report listed 174 entries across
+  794 files, including existing archive targets omitted by its inventory; C09 owns
+  that outstanding validator/reference repair. Both 6 September commits
+  (`f4661eb555acf4dfbd2e4345af9967566dce6579` and
+  `1fc652343c99b597216e5de98edcf188b36367aa`) and their push passed with intact
+  hooks, including pre-push `check:ci`. These are dated observations, not proof
+  for a later head. [PR #86](https://github.com/EngraphCode/castr/pull/86) is the
+  delivery carrier; its [actual tally](https://github.com/EngraphCode/castr/pull/86#issuecomment-5559978100)
+  owns review rounds and current-head actions. The 9 September harvest at
+  `1fc652343c99b597216e5de98edcf188b36367aa` found all 16 checks successful,
+  completed Copilot/Codex review and three unresolved stale-record findings.
+  Those findings, subsequent head verification and merge remain open at that
+  observation; no merge readiness is claimed. The [finding record](correction-manifests/castr-correction-findings.json)
+  carries exact candidate blobs and bounded proof. This does not close wider security,
+  identity, loader or MCP obligations.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
@@ -112,6 +141,23 @@ interactive sequencing of these obligations without silently completing old rows
 
 Each row needs exact extraction or supersession evidence before closure. Updating
 this ledger does not extract code, close a PR or establish merge readiness.
+
+## PR #18 selective security value — 6 September 2026
+
+The operation override candidate preserves the writer-condition value from
+[commit 89035ac2](https://github.com/EngraphCode/castr/commit/89035ac2ca0bb96d27d39505657533c6a2c92669),
+retained at the observed PR #18 head above, with new persistence and independent
+anonymous-access witnesses against current code. This is prepared extraction;
+merged-successor evidence is still required. The old loader/MCP coverage and
+identity, description, reference and hostile-key deltas remain outstanding.
+
+A separate probe reproduced document-level `security: []` declaration loss from
+writing, with absence preserved as the control. Both authorise anonymous access;
+the defect loses authored presence. That surviving value from
+[commit 1a2058d8](https://github.com/EngraphCode/castr/commit/1a2058d898570ab06cc38d10d43ec3358c2d3e24)
+is `PR18/document-security-empty` in the findings manifest and has a separate
+C08/identity-interactions repair carrier. Neither this record nor the operation
+repair closes PR #18 or certifies all of its surviving deltas.
 
 ## Historical delivery and follow-up
 
