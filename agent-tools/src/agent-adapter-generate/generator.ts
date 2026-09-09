@@ -157,6 +157,14 @@ function yamlStringField(field: 'name' | 'description', value: string): string {
   return stringify({ [field]: value }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
 }
 
+/** Describe a stable Cricket method role without implying a Cursor runtime-effort pin. */
+function cursorCricketDescription(entry: AgentRosterEntry, role: CricketRoleContract): string {
+  const method = role.name.startsWith('cricket-procedure-')
+    ? 'compiled-procedure'
+    : 'contextual-judgement';
+  return `Cursor adapter for the ${role.effort}-effort ${method} role; Cursor does not pin reasoning effort. ${entry.description}`;
+}
+
 function renderAgentFrontmatter(
   entry: AgentRosterEntry,
   surface: AgentSurface,
@@ -166,7 +174,10 @@ function renderAgentFrontmatter(
     return [
       yamlStringField('name', entry.name),
       ...(role === undefined ? [`model: ${CURSOR_AGENT_MODEL}`] : []),
-      yamlStringField('description', entry.description),
+      yamlStringField(
+        'description',
+        role === undefined ? entry.description : cursorCricketDescription(entry, role),
+      ),
       'readonly: true',
     ];
   }
@@ -219,6 +230,12 @@ export function renderAgentAdapter(entry: AgentRosterEntry, surface: AgentSurfac
       : []),
     `Your first action MUST be to read and internalise \`${entry.templatePath}\`.`,
     '',
+    ...(surface === 'cursor' && role !== undefined
+      ? [
+          `This adapter preserves the ${role.effort}-effort role's semantics, but the suffix does not claim a Cursor reasoning-effort pin.`,
+          '',
+        ]
+      : []),
     'Review or recommend; do not modify code. The calling agent executes any changes you propose.',
     '',
   ];

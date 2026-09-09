@@ -103,7 +103,9 @@ surviving delta has a verified destination or evidenced supersession. Preserve i
 source and the full acceptance; reducing the count by unverified closure is not
 progress. The ledger owns the live census and closure evidence. PR #88 delivered
 the C05 tooling contract; the coordinating agent now owns its dependent native
-installation and will open its PR only after the PR #28 transition completes.
+installation. PR #90 delivered the preservation record and PR #28 then closed
+without merge, satisfying the installation's opening condition. Land that prepared
+installation before beginning another repair PR; PR #14 follows.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -125,8 +127,12 @@ tooling and validation as PR #88, then transferred the remaining installation at
 `codex/cricket-installation` commit `2af22e0f` to the coordinating agent. That
 boundary owns the Cricket templates, registrations, generated adapters and native
 panel proof. OCE is a read-only source reference; further full panels execute from
-Castr. The coordinating agent retains this delivery plan, the parent queue, ledger
-and coverage manifests.
+Castr. Bora merged current main `cb73c4de` into the installation branch as
+`7967ff92`, after PR #90 merged and PR #28 closed. Its current delta also carries
+the narrow generator-source correction that makes Cursor's unpinned reasoning
+effort explicit; PR #88's platform-contract tooling remains delivered separately.
+The coordinating agent retains this delivery plan, the parent queue, ledger and
+coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

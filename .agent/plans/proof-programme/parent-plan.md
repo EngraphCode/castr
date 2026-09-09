@@ -171,14 +171,14 @@ sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q
 C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
 are delivered. PR #88 also delivered C05's platform reviewer-contract tooling;
 the root coordinating agent, Bora seeks Turbulence, holds custody of the dependent
-native installation on branch `codex/cricket-installation`. No PR has been opened
-for that installation; it may be opened only after the PR #28 transition described
-below completes.
-Follow the [Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
-land its record if absent; if the record is on main and #28 remains open, refresh
-PR #27/#28 heads and close #28 without merging or deleting its recovery branch;
-once both are done, proceed to PR #14's dependency-ownership extraction. Q-09
-remains pending for PR #10. When Q-22 resumes, migrate
+native installation on branch `codex/cricket-installation`. PR #90 merged the
+[Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+as `cb73c4deaae9eecdbe406f28304314c71e339e02`; PR #28 then closed without
+merge while its recovery branch remained intact. That transition is complete.
+The current delivery is the prepared C05 installation: reconcile its current
+authority, validate the installed panel and merge its one coherent PR. Proceed to
+PR #14's dependency-ownership extraction after that delivery. Q-09 remains pending
+for PR #10. When Q-22 resumes, migrate
 the integer contract coherently across its live consumers and doctrine, then land
 the generator fix and all regenerated outputs together, including the fixed-fixture
 export imports. Its full original acceptance remains mandatory. Other independent

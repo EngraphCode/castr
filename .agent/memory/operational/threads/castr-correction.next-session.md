@@ -6,22 +6,21 @@
 - Acceptance: [Q-09 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
   and [PR #28 disposition](../../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
-- Transition: land the complete PR #28 preservation record if it is absent from
-  main; if the record is present and #28 remains open, refresh PR #27/#28 heads and
-  close #28 without merging or deleting its recovery branch; after both steps,
-  proceed to PR #14's dependency-ownership extraction.
+- Transition: PR #90 merged the complete PR #28 preservation record as
+  `cb73c4de`; PR #28 then closed without merge and retained its recovery branch.
+  Q-09 remains pending for PR #10.
 - Team: root owns compiler/foundational documentation, integration and the
-  dependent native Cricket installation at `codex/cricket-installation` commit
-  `2af22e0f`; no installation PR is open, and it may be opened only after the
-  PR #28 transition completes. Kite hunts Eyrie delivered its tooling prerequisite
-  as PR #88.
+  dependent native Cricket installation at `codex/cricket-installation`; Kite hunts
+  Eyrie delivered its tooling prerequisite as PR #88, and Bora integrated current
+  main as `7967ff92`. Land the installation with current authority, full validation
+  and exact-head review, then proceed to PR #14's dependency-ownership extraction.
   Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
 The ledger records delivered C01R, Q-19, C03a, operation-security, Error-oracle
 and C05 platform-tooling repairs. Q-22 remains open for its integer,
 generator/output and remaining oracle
-obligations. Q-09 remains open for PR #10 after the PR #28 transition. C05 retains
+obligations. Q-09 remains open for PR #10. C05 retains
 PR skill attribution and rule/reference cleanup; C10 retains
 observed review/continuity-authoring failures and final isolated-pack acceptance.
 C03b/c source drafts remain preserved. PR #18's document-security presence and
