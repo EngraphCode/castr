@@ -13,7 +13,13 @@ description: >-
 
 Cricket is the conscience-check panel: a deliberately varied set of fast second opinions about
 whether the primary agent is doing the right work now. It is useful for priority, framing,
-displacement, invented gates, and proportion. It is not an approval gate.
+displacement, invented gates, and proportion. It is not an approval gate. It does not
+establish the correctness of the method used or the provenance of evidence; use expert
+reviewers and first-hand reads for those questions. The
+[upstream Cricket skill](https://github.com/EngraphCode/open-curriculum-ecosystem/blob/31e76a7237ee7aecb8adfca96e73b2d83b25be39/.agent/skills/cognition/cricket/SKILL-CANONICAL.md)
+records three OCE ON-TRACK verdicts
+across a window of owner corrections about tools and evidence on 2 September 2026.
+That observation is upstream provenance, not a Castr experiment or reliability result.
 
 Typing `$engraph-cricket` asks the current seat to run the whole panel for its platform. The invoker
 builds the frame from live context and starts immediately; missing information is labelled
@@ -117,7 +123,7 @@ On Claude, run the four registered Cricket roles as a panel:
 
 ## Codex dispatch
 
-Oak adapts [OpenAI's Codex subagent workflow](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+Castr adapts [OpenAI's Codex subagent workflow](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 into a fixed registered-role panel: unlike the upstream's general orchestration pattern, role TOML
 owns model and effort here, dispatch forks no parent context, and the adversarial wave reuses the
 same agents.

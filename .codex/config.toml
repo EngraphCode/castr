@@ -72,3 +72,15 @@ config_file = "agents/security-expert.toml"
 [agents."subagent-architect"]
 description = "Meta-agent for sub-agent definition design and review."
 config_file = "agents/subagent-architect.toml"
+
+[agents."cricket-judgement-low"]
+description = "Fast low-effort conscience check using contextual judgement. Call directly for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection."
+config_file = "agents/cricket-judgement-low.toml"
+
+[agents."cricket-judgement-medium"]
+description = "Fast medium-effort conscience check using contextual judgement. Call directly for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection."
+config_file = "agents/cricket-judgement-medium.toml"
+
+[agents."cricket-procedure-xhigh"]
+description = "Fast xhigh-effort conscience check using a compiled decision procedure with quote-anchored evidence and a mechanical verdict table. Call directly for a reproducible second opinion when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with one redirection."
+config_file = "agents/cricket-procedure-xhigh.toml"

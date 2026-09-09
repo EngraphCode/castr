@@ -11,8 +11,11 @@ This directory is Castr's canonical agent layer.
 Current installed consumer layer:
 
 - Codex project agents via `.codex/config.toml` and `.codex/agents/*.toml`
+- Generated Claude Code wrappers in `.claude/agents/*.md`
+- Generated Cursor wrappers in `.cursor/agents/*.md`
 
-Future consumer layers may be added for Cursor, Claude, Gemini, and other platforms, but the canonical instructions remain here.
+Gemini uses the in-session template review described in
+[`invoke-code-experts.md`](../memory/executive/invoke-code-experts.md).
 
 ## Dependency Rules
 
@@ -23,9 +26,11 @@ Future consumer layers may be added for Cursor, Claude, Gemini, and other platfo
 
 ## Installed Roster
 
-15 canonical templates. The architecture reviewer is one template (`architecture-expert`)
+17 canonical templates. The architecture reviewer is one template (`architecture-expert`)
 invoked through four persona adapters (`-barney`, `-betty`, `-fred`, `-wilma`), so the
-Codex layer registers 18 agents against 15 templates.
+ordinary reviewer layer has 18 agents against 15 templates. Cricket adds two templates,
+three Codex roles and four roles on each of Claude/Cursor: 21 Codex registrations and
+22 wrappers on each Markdown platform.
 
 Generic reviewers: `code-reviewer`, `test-reviewer`, `type-reviewer`, `config-expert`,
 `docs-adr-expert`, `onboarding-expert`, `release-readiness-expert`, `security-expert`.
@@ -35,6 +40,19 @@ Architecture reviewers: `architecture-expert` → `architecture-expert-{barney,b
 Meta and plan reviewers: `assumptions-expert`, `subagent-architect`.
 
 Domain experts: `openapi-expert`, `zod-expert`, `json-schema-expert`, `mcp-expert`.
+
+Cricket direction panel: `cricket-judgement-low`, `cricket-judgement-medium`,
+`cricket-procedure-xhigh`; Claude/Cursor also have `cricket-judgement-high`.
+Run the full platform panel with `$engraph-cricket`; its
+[canonical skill](../skills/cognition/cricket/SKILL-CANONICAL.md) owns the six-field
+frame, normal/adversarial dispatch and exact platform bindings. Cricket is a direction
+check; use the artefact reviewers above for code, configuration and evidence scrutiny.
+
+After modifying Codex registrations or adapters, run `pnpm agents:adapter-generate`,
+`pnpm agents:check` and `pnpm portability:check`. Generated wrappers are never edited
+directly. Start a fresh trusted Castr Codex session after role changes. File parity
+does not establish runtime admission: collect all native panel returns and report
+missing roles or rejected admission explicitly, without a substitute agent.
 
 ## Consistency Checklist
 

@@ -6,12 +6,12 @@ adapter parity or adding a new platform**. The canonical content for every
 class lives once under `.agent/`; the cells below record only the **thin
 adapter** coverage. ⚠️ marks a known gap with a named position.
 
-| Artefact class | Claude Code                                                                                                                     | Cursor                                           | Codex                                          | Gemini                                         |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------- |
-| **Skills**     | ✅ `.claude/skills/engraph-<name>/SKILL.md` (generated, 18)                                                                     | ✅ via `.agents/skills/` (cross-tool, generated) | ✅ via `.agents/skills/`                       | ✅ via `.agents/skills/`                       |
-| **Rules**      | ✅ `.claude/rules/<name>.md` (generated, 87) + auto-load via `CLAUDE.md` → `AGENT.md`                                           | ✅ `.cursor/rules/<name>.mdc` (generated, 87)    | reads `RULES_INDEX.md` + `.agents/rules/` (87) | reads `RULES_INDEX.md` + `.agents/rules/` (87) |
-| **Sub-agents** | ✅ `.claude/agents/<name>.md` (generated, 18)                                                                                   | ✅ `.cursor/agents/<name>.md` (generated, 18)    | ✅ `.codex/agents/<name>.toml` (18→15 tmpl)    | ⚠️ none — in-session template fallback         |
-| **Hooks**      | policy `unsupported` as portable canonical; activated natively via `.claude/settings.json` (tracked project `PreToolUse` guard) | ⚠️ none                                          | ⚠️ none                                        | ⚠️ none                                        |
+| Artefact class | Claude Code                                                                                                                     | Cursor                                           | Codex                                            | Gemini                                    |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ----------------------------------------- |
+| **Skills**     | ✅ `.claude/skills/engraph-<name>/SKILL.md` (generated)                                                                         | ✅ via `.agents/skills/` (cross-tool, generated) | ✅ via `.agents/skills/`                         | ✅ via `.agents/skills/`                  |
+| **Rules**      | ✅ `.claude/rules/<name>.md` (generated) + auto-load via `CLAUDE.md` → `AGENT.md`                                               | ✅ `.cursor/rules/<name>.mdc` (generated)        | reads `RULES_INDEX.md` + `.agents/rules/`        | reads `RULES_INDEX.md` + `.agents/rules/` |
+| **Sub-agents** | ✅ `.claude/agents/<name>.md` (generated, 22)                                                                                   | ✅ `.cursor/agents/<name>.md` (generated, 22)    | ✅ `.codex/agents/<name>.toml` (21→17 templates) | ⚠️ none — in-session template fallback    |
+| **Hooks**      | policy `unsupported` as portable canonical; activated natively via `.claude/settings.json` (tracked project `PreToolUse` guard) | ⚠️ none                                          | ⚠️ none                                          | ⚠️ none                                   |
 
 ## Reading the matrix
 
@@ -27,12 +27,18 @@ adapter** coverage. ⚠️ marks a known gap with a named position.
   read `RULES_INDEX.md` directly. Every canonical `.agent/rules/<name>.md` is
   mirrored across all three forwarder estates, gate-enforced by the blocking
   `portability` validator.
-- **Sub-agents** now have **full reviewer-adapter parity** across Claude,
-  Cursor, and Codex (18 adapters each, projected from the 15 canonical
-  templates with the four `architecture-expert` persona expansions). The
+- **Sub-agents** have **platform-specific reviewer-adapter parity** across Claude,
+  Cursor and Codex. Eighteen ordinary reviewer adapters per platform use fifteen
+  templates, including four `architecture-expert` persona expansions. Two Cricket
+  templates add three Codex roles and four Claude/Cursor roles: 21 Codex and
+  22 Claude/22 Cursor adapters against 17 templates. Codex deliberately excludes
+  `cricket-judgement-high`. The
   Claude/Cursor wrappers are generated from the Codex layer by
   `pnpm agents:adapter-generate`; parity is gate-enforced by the blocking
-  `portability` + `subagents` validators. Gemini sub-agent adapters remain a
+  `portability` + `subagents` validators. Native panel admission and substantive
+  returns are separate evidence; follow the
+  [Cricket skill](../../skills/cognition/cricket/SKILL-CANONICAL.md), including its
+  fresh trusted-project Codex session boundary. Gemini sub-agent adapters remain a
   named future item (the in-session template fallback documented in
   [`invoke-code-experts.md`](invoke-code-experts.md) and
   [`invoke-reviewers`](../../rules/invoke-reviewers.md) applies there).

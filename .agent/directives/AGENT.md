@@ -72,7 +72,8 @@ The cross-platform `.cursor/agents` + `.claude/agents` wrappers and the `.cursor
 or rule, regenerate and verify with `pnpm portability:check` (the blocking `portability` + `subagents` gates enforce
 parity; `pnpm agents:check` fails on drift).
 
-Installed roster (15 templates; the architecture reviewer ships as four persona adapters):
+Installed roster (17 templates; 21 Codex roles and 22 Claude/22 Cursor wrappers;
+the architecture reviewer ships as four persona adapters):
 
 Generic reviewers:
 
@@ -96,6 +97,14 @@ Meta and plan reviewers:
 
 - `assumptions-expert` — meta-level plan and proportionality reviewer
 - `subagent-architect` — meta-agent for sub-agent definition design and review
+
+Direction checks:
+
+- `cricket-judgement-low`, `cricket-judgement-medium`, `cricket-procedure-xhigh` —
+  the Codex Cricket panel; Claude/Cursor also have `cricket-judgement-high`
+- Invoke `$engraph-cricket` for the whole platform panel in normal and adversarial
+  stances; the [Cricket skill](../skills/cognition/cricket/SKILL-CANONICAL.md) owns
+  bindings and dispatch. Start a fresh trusted Codex session after role changes.
 
 Domain experts (castr schema surface):
 
