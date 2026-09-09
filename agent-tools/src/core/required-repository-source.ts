@@ -42,14 +42,19 @@ function assertEntryType(
       `${reference}: required source must not traverse symbolic link ${traversedReference}`,
     );
   }
-  const validType = isTarget
-    ? expectedType === 'file'
-      ? metadata.isFile()
-      : metadata.isDirectory()
-    : metadata.isDirectory();
+  let validType = metadata.isDirectory();
+  if (isTarget && expectedType === 'file') {
+    validType = metadata.isFile();
+  }
   if (!validType) {
     throw new Error(`${reference}: required source must be a ${expectedType}`);
   }
+}
+
+function compareCodeUnits(left: string, right: string): number {
+  if (left === right) return 0;
+  if (left < right) return -1;
+  return 1;
 }
 
 async function inspectRequiredSource(
@@ -168,7 +173,7 @@ export async function listRequiredRepositorySources(
   const target = await inspectRequiredSource(repoRoot, directory, 'directory');
   const names = (await readdir(target))
     .filter((name) => name.endsWith(extension))
-    .toSorted((left, right) => (left === right ? 0 : left < right ? -1 : 1));
+    .toSorted(compareCodeUnits);
   const references = names.map((name) => `${directory}/${name}`);
   for (const reference of references) {
     await inspectRequiredSource(repoRoot, reference, 'file');
