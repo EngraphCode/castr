@@ -141,6 +141,21 @@ describe('buildAgentRoster', () => {
     ).toThrow(/resolves "code-reviewer".*expected .codex\/agents\/code-reviewer.toml/u);
   });
 
+  it.each(['before', 'after'])(
+    'rejects an alias registered %s the real role for the same adapter',
+    (position) => {
+      const alias = `
+[agents.alias-reviewer]
+description = "Gateway reviewer for non-trivial changes."
+config_file = "agents/code-reviewer.toml"
+`;
+      const config = position === 'before' ? alias + CONFIG_TEXT : CONFIG_TEXT + alias;
+      expect(() =>
+        buildAgentRoster(config, new Map([['code-reviewer', CODE_REVIEWER_TOML]])),
+      ).toThrow(/alias-reviewer.*expected .codex\/agents\/alias-reviewer.toml/u);
+    },
+  );
+
   it('rejects multiple templates instead of silently selecting the first', () => {
     const content = CODE_REVIEWER_TOML.replace(
       'Read and follow',
@@ -164,12 +179,12 @@ describe('buildAgentRoster', () => {
     );
   });
 
-  it('does not satisfy top-level settings with nested fields', () => {
+  it('rejects an unsupported metadata table containing a safety setting', () => {
     const content =
       CODE_REVIEWER_TOML.replace('sandbox_mode = "read-only"\n', '') +
       '\n[metadata]\nsandbox_mode = "read-only"\n';
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
-      /sandbox_mode/u,
+      /metadata/u,
     );
   });
 

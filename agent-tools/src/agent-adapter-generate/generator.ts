@@ -19,10 +19,9 @@
  * Pure render/derive functions are exported so the drift checker and unit
  * tests can exercise them without filesystem I/O.
  */
-import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
-import { basename, dirname, join } from 'node:path';
+import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { basename, dirname, join, resolve } from 'node:path';
 import { stringify } from 'yaml';
-import { isErrnoCode } from '../core/errno.js';
 import {
   CRICKET_ROLES,
   completeReviewerNames,
@@ -35,7 +34,11 @@ import {
   parseCodexRegistrations,
   getCodexAdapterValidation,
   getCodexRegistrationValidation,
+  extractCanonicalPaths,
+  readCodexDeveloperInstructions,
+  resolveCodexConfigFilePath,
 } from '../validators/subagents/validate-subagents-helpers.js';
+import { inspectGeneratedEstate } from './generated-estate.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -88,6 +91,15 @@ export function buildAgentRoster(
   });
   if (registrationValidation.issues.length > 0) {
     throw new Error(registrationValidation.issues.join('\n'));
+  }
+  for (const registration of registrations) {
+    const adapterPath = resolveCodexConfigFilePath(registration.configFile);
+    const expectedPath = `${CODEX_ADAPTER_DIR}/${registration.name}.toml`;
+    if (adapterPath !== expectedPath) {
+      throw new Error(
+        `${CODEX_CONFIG_FILE}: resolves "${registration.name}" to ${adapterPath}; expected ${expectedPath}`,
+      );
+    }
   }
 
   const entries: AgentRosterEntry[] = [];
@@ -260,14 +272,9 @@ function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
   return join(repoRoot, CURSOR_RULES_DIR, `${ruleName}.mdc`);
 }
 
-/** Lists source or output files; absent directories are empty, other failures propagate. */
+/** Lists files in a required source directory; filesystem failures propagate. */
 async function listNames(repoRoot: string, relDir: string, extension: string): Promise<string[]> {
-  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true }).catch((error) => {
-    if (isErrnoCode(error, 'ENOENT')) {
-      return [];
-    }
-    throw error;
-  });
+  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true });
   return entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
     .map((entry) => basename(entry.name, extension))
@@ -288,7 +295,20 @@ async function readAgentGeneration(repoRoot: string): Promise<GenerationUnit[]> 
       await readFile(join(repoRoot, CODEX_ADAPTER_DIR, `${name}.toml`), 'utf8'),
     );
   }
-  return planAgentAdapters(repoRoot, configText, adapterTextByName);
+  const units = planAgentAdapters(repoRoot, configText, adapterTextByName);
+  const canonicalPaths = new Set(
+    [...adapterTextByName.values()].flatMap((content) =>
+      extractCanonicalPaths(readCodexDeveloperInstructions(content)),
+    ),
+  );
+  for (const path of canonicalPaths) {
+    const target = join(repoRoot, path);
+    if (!(await stat(target)).isFile()) {
+      throw new Error(`${path}: canonical reference must be a readable file`);
+    }
+    await readFile(target, 'utf8');
+  }
+  return units;
 }
 
 /** A single (target path, rendered content) generation unit. */
@@ -334,7 +354,11 @@ export function planAgentAdapters(
   return units;
 }
 
-/** Computes every validated adapter and canonical-rule target/content pair. */
+/**
+ * Computes every validated adapter and canonical-rule target/content pair.
+ * Required source directories and every referenced canonical file must be readable
+ * before this plan can be written or used to clear existing outputs.
+ */
 export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]> {
   const units = await readAgentGeneration(repoRoot);
   const ruleNames = await listNames(repoRoot, CANONICAL_RULES_DIR, '.md');
@@ -361,15 +385,22 @@ export interface GenerateOutcome {
  * @param repoRoot - Repository root containing Codex sources and canonical rules.
  * @param options - Whether to clear generated surfaces before writing validated outputs.
  * @returns Paths written from the validated generation plan.
- * @throws If a source contract is invalid or a filesystem operation fails.
+ * @throws If a source contract or existing output estate is invalid, or a filesystem operation fails.
+ * @remarks Generated paths must not be concurrently replaced between output
+ * inspection and writing; generation does not lock the filesystem.
  */
 export async function generateAdapters(
   repoRoot: string,
   { clear = false }: { readonly clear?: boolean } = {},
 ): Promise<GenerateOutcome> {
-  const units = await planGeneration(repoRoot);
+  const root = resolve(repoRoot);
+  const units = await planGeneration(root);
+  const generatedPaths = await inspectGeneratedEstate(
+    root,
+    units.map((unit) => unit.target),
+  );
   if (clear) {
-    await clearGeneratedAdapters(repoRoot);
+    await clearGeneratedAdapters(root, generatedPaths);
   }
   const written: string[] = [];
   for (const unit of units) {
@@ -380,12 +411,19 @@ export async function generateAdapters(
   return { written };
 }
 
-/** Removes generated surfaces after their replacement plan has passed validation. */
-async function clearGeneratedAdapters(repoRoot: string): Promise<void> {
+/**
+ * Removes the generated estate only for an explicit clear request, after source validation.
+ * Cursor rule cleanup follows the checker's recursive `.mdc` estate and preserves
+ * other documents and directories under `.cursor/rules`.
+ */
+async function clearGeneratedAdapters(
+  repoRoot: string,
+  generatedPaths: readonly string[],
+): Promise<void> {
   for (const dir of [CURSOR_AGENTS_DIR, CLAUDE_AGENTS_DIR]) {
     await rm(join(repoRoot, dir), { recursive: true, force: true });
   }
-  for (const ruleName of await listNames(repoRoot, CURSOR_RULES_DIR, '.mdc')) {
-    await rm(cursorRuleTargetPath(repoRoot, ruleName), { force: true });
+  for (const rulePath of generatedPaths.filter((path) => path.endsWith('.mdc'))) {
+    await rm(rulePath, { force: true });
   }
 }

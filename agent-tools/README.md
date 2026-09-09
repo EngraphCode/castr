@@ -475,9 +475,11 @@ pnpm --filter @engraph/agent-tools validate-subagents
 
 The generator reads the Codex registry and validates each adapter before
 projecting Claude and Cursor wrappers. Registration, filename, description,
-execution settings and canonical method must agree. Invalid or incomplete
-sources fail before generated files are written. Ordinary reviewers retain
-their required reasoning and read-only settings.
+execution settings and canonical method must agree. Each registration must map
+to the adapter with the same name. Required source directories and every
+referenced canonical file must exist and be readable before generation clears
+or writes outputs. Ordinary reviewers retain their required reasoning and
+read-only settings.
 
 Cricket has an explicit platform contract: a complete Codex trio projects to
 Claude and Cursor quartets, including the high-judgement seat supported only
@@ -493,10 +495,20 @@ their canonical source disappears. Regeneration updates expected files; it
 does not silently delete surplus work. Inspect and reconcile those paths before
 using the explicit `--clear` operation on a generated estate.
 
-TOML is parsed structurally, so settings inside instruction prose or nested
-tables cannot satisfy top-level adapter requirements. Markdown wrappers use
-strict YAML frontmatter validation, including duplicate keys, platform-specific
-fields, safe tool sets and a single required canonical-template loading line.
+Generation, clearing and checking inspect the same output directories before
+changing or reading generated files. They reject symbolic links below the
+repository anchor, invalid output roots and directories occupying planned file
+paths. Explicit clearing replaces the generated agent directories and removes
+nested `.mdc` rule files while preserving other documents under `.cursor/rules`.
+Run these commands without concurrent changes to the output directories.
+
+TOML is parsed structurally against Castr's closed adapter shape: unknown fields
+and tables are rejected, and settings inside instruction prose cannot satisfy
+top-level requirements. Markdown wrappers use strict YAML frontmatter
+validation, including duplicate keys, platform-specific fields, unpadded
+identity tokens and safe tool sets. The required canonical-template loading
+instruction must occur exactly once as a standalone top-level Markdown
+paragraph; comments, code examples and quotations do not satisfy it.
 
 ## Repo gate status
 

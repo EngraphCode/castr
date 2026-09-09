@@ -1,6 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { TomlTable } from 'smol-toml';
 import {
   CODEX_CONFIG_PATH,
   readCodexAgentRegistrations,
@@ -8,7 +7,8 @@ import {
   resolveCodexAgentConfigFilePath,
 } from './codex-project-agent-registry.js';
 import type { CodexAgentRegistration } from './codex-project-agent-registry.js';
-import { readTomlDocument, tomlString } from './toml-document.js';
+import { tomlString } from './toml-document.js';
+import { readCodexAdapterDocument, type CodexAdapterDocument } from './codex-adapter-document.js';
 
 export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
 
@@ -57,7 +57,7 @@ export function resolveCodexProjectAgent(repoRoot: string, agentName: string): C
  * @param adapterContent - Source of the adapter named by the registration.
  * @returns Exact configured metadata and canonical reference paths. A null model
  * means inheritance; it does not identify a model observed at runtime.
- * @throws When TOML is malformed, required fields are missing/wrongly typed,
+ * @throws When TOML is malformed, undeclared fields occur, required fields are missing/wrongly typed,
  * identity disagrees with the registry, or canonical references are absent.
  * @see {@link resolveCodexProjectAgent} for filesystem-backed resolution.
  * @example
@@ -71,7 +71,7 @@ export function parseCodexProjectAgent(
   adapterContent: string,
 ): CodexProjectAgent {
   const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
-  const document = readTomlDocument(adapterContent);
+  const document = readCodexAdapterDocument(adapterContent);
   const adapterMetadata = readAdapterMetadata(
     registration,
     adapterPath,
@@ -126,7 +126,7 @@ function readAdapterContent(repoRoot: string, adapterPath: string, agentName: st
 function readAdapterMetadata(
   registration: CodexAgentRegistration,
   adapterPath: string,
-  document: TomlTable,
+  document: CodexAdapterDocument,
   agentName: string,
 ): AdapterMetadata {
   const name = readRequiredTomlValue(document, 'name', adapterPath);

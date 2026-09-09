@@ -23,6 +23,12 @@ function parseFlags(args: readonly string[]): CliFlags {
   return { clear: args.includes('--clear'), check: args.includes('--check') };
 }
 
+function writeDiagnostics(label: string, paths: readonly string[]): void {
+  if (paths.length === 0) return;
+  stderr.write(`${label} adapters:\n`);
+  for (const path of paths) stderr.write(`  ${path}\n`);
+}
+
 async function runCheck(repoRoot: string): Promise<number> {
   const result = await checkAdapters(repoRoot);
   if (
@@ -33,16 +39,16 @@ async function runCheck(repoRoot: string): Promise<number> {
     stdout.write('All agent adapters and cursor rules are up to date.\n');
     return 0;
   }
-  if (result.missing.length > 0) {
-    stderr.write(`Missing adapters:\n${result.missing.map((p) => `  ${p}`).join('\n')}\n`);
-  }
-  if (result.drifted.length > 0) {
-    stderr.write(`Drifted adapters:\n${result.drifted.map((p) => `  ${p}`).join('\n')}\n`);
-  }
+  writeDiagnostics('Missing', result.missing);
+  writeDiagnostics('Drifted', result.drifted);
+  writeDiagnostics('Unexpected', result.unexpected);
   if (result.unexpected.length > 0) {
-    stderr.write(`Unexpected adapters:\n${result.unexpected.map((p) => `  ${p}`).join('\n')}\n`);
+    stderr.write(
+      'Inspect the listed unexpected files, then run `pnpm agents:adapter-generate --clear` to replace generated outputs.\n',
+    );
+  } else {
+    stderr.write('Run `pnpm agents:adapter-generate` to regenerate.\n');
   }
-  stderr.write('Run `pnpm agents:adapter-generate` to regenerate.\n');
   return 1;
 }
 

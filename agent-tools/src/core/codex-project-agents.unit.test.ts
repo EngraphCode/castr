@@ -25,10 +25,10 @@ it('represents inherited models as null without claiming an observed model', () 
   expect(parseCodexProjectAgent(registration, adapter).model).toBeNull();
 });
 
-it('does not promote a nested model into the runtime model binding', () => {
-  expect(
-    parseCodexProjectAgent(registration, `${adapter}[nested]\nmodel = "decoy"`).model,
-  ).toBeNull();
+it('rejects an undeclared nested model table', () => {
+  expect(() => parseCodexProjectAgent(registration, `${adapter}[nested]\nmodel = "decoy"`)).toThrow(
+    /unrecognized key.*nested/iu,
+  );
 });
 
 it('does not promote instruction-body model text into the runtime binding', () => {

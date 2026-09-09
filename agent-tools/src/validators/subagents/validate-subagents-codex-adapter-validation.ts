@@ -14,16 +14,11 @@
  * All logic is I/O-free — callers supply content as strings.
  */
 
-import {
-  CODEX_CONFIG_PATH,
-  type CodexRegistration,
-  readTomlBasicStringValue,
-} from './validate-subagents-codex-toml.js';
+import { CODEX_CONFIG_PATH, type CodexRegistration } from './validate-subagents-codex-toml.js';
 
-import {
-  extractCanonicalPaths,
-  readCodexDeveloperInstructions,
-} from './validate-subagents-codex-instructions.js';
+import { extractCanonicalPaths } from './validate-subagents-codex-instructions.js';
+import { readCodexAdapterDocument } from '../../core/codex-adapter-document.js';
+import { tomlString } from '../../core/toml-document.js';
 
 import {
   stripBasename,
@@ -123,6 +118,7 @@ export interface CodexAdapterValidationResult {
  * Validates a single Codex subagent adapter TOML file.
  *
  * Checks performed:
+ * - The complete TOML document contains only declared reviewer string fields.
  * - Required TOML keys `name` and `description` are present.
  * - The `name` value matches the adapter's filename (without `.toml`).
  * - A matching entry exists in `.codex/config.toml`, and both `name` and
@@ -147,6 +143,7 @@ function validateCodexAdapter({
   requiredSettings,
   configPath = CODEX_CONFIG_PATH,
 }: CodexAdapterValidationInput): CodexAdapterValidationResult {
+  const document = readCodexAdapterDocument(content);
   const adapterBasename = stripBasename(codexAdapterFile, '.toml');
   const role = cricketRole(adapterBasename);
   const roleSettings = role?.codexModel
@@ -157,23 +154,21 @@ function validateCodexAdapter({
         ['approval_policy', 'never'] as const,
       ]
     : REQUIRED_CODEX_SETTINGS;
-  const declaredName = readTomlBasicStringValue(content, 'name');
-  const declaredDescription = readTomlBasicStringValue(content, 'description');
-  // Ordinary reviewers may inherit a model, but an explicit value must be a string.
-  readTomlBasicStringValue(content, 'model');
+  const declaredName = tomlString(document, 'name');
+  const declaredDescription = tomlString(document, 'description');
   const issues: string[] = validateAdapterFields(
     codexAdapterFile,
     adapterBasename,
     declaredName,
     declaredDescription,
     registeredAgent,
-    content,
+    document,
     requiredSettings ?? roleSettings,
     configPath,
   );
   if (!supportsReviewer(adapterBasename, 'codex'))
     issues.push(`${codexAdapterFile}: unsupported Codex role`);
-  const developerInstructions = readCodexDeveloperInstructions(content);
+  const developerInstructions = tomlString(document, 'developer_instructions')?.trim() ?? '';
   if (!developerInstructions) {
     issues.push(`${codexAdapterFile}: missing non-empty developer_instructions string`);
     return { issues, templatePaths: [], canonicalPaths: [] };
@@ -198,7 +193,7 @@ function validateCodexAdapter({
  *
  * @param input - Adapter path/source, matching registration and optional contract overrides.
  * @returns File-scoped issues plus canonical/template paths found in instructions.
- * TOML parsing and field-type errors become issues with empty path lists rather
+ * TOML parsing, undeclared-field and field-type errors become issues with empty path lists rather
  * than escaping as exceptions. Ordinary models may be omitted; explicit values
  * must be strings. Cricket requires its exact supported role bindings and method.
  * This pure boundary does not check whether referenced files exist.
