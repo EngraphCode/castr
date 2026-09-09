@@ -1,5 +1,6 @@
 import { parse, type TomlTable } from 'smol-toml';
 import { z } from 'zod';
+import { isCanonicalCodexAgentName } from './codex-agent-registration-contract.js';
 
 /**
  * Parse TOML while preserving integer/float distinctions and integer precision.
@@ -81,6 +82,11 @@ export function readAgentRegistrations(content: string) {
     if (setting.success) {
       settingsSchema.shape[setting.data].parse(value);
       return [];
+    }
+    if (!isCanonicalCodexAgentName(name)) {
+      throw new Error(
+        `Codex agent registration name '${name}' must be a lowercase, hyphen-delimited token.`,
+      );
     }
     const registration = registrationSchema.parse(value);
     return [

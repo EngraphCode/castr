@@ -46,6 +46,7 @@ import {
   listRequiredRepositorySources,
   readRequiredRepositorySource,
 } from '../core/required-repository-source.js';
+import { parseCodexProjectAgent } from '../core/codex-project-agents.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -113,6 +114,7 @@ export function buildAgentRoster(
     if (validation.issues.length > 0) {
       throw new Error(validation.issues.join('\n'));
     }
+    const resolvedAgent = parseCodexProjectAgent(registeredAgent, content);
     const [templatePath] = validation.templatePaths;
     if (validation.templatePaths.length !== 1 || templatePath === undefined) {
       throw new Error(
@@ -124,8 +126,8 @@ export function buildAgentRoster(
     );
 
     entries.push({
-      name,
-      description: registeredAgent.description,
+      name: resolvedAgent.name,
+      description: resolvedAgent.description,
       templatePath,
       ...(personaPath === undefined ? {} : { personaPath }),
     });

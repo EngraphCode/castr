@@ -138,7 +138,7 @@ describe('buildAgentRoster', () => {
           ['architecture-expert-barney', BARNEY_TOML],
         ]),
       ),
-    ).toThrow(/resolves "code-reviewer".*expected .codex\/agents\/code-reviewer.toml/u);
+    ).toThrow(/code-reviewer.*config_file.*agents\/code-reviewer\.toml/u);
   });
 
   it.each(['before', 'after'])(
@@ -152,7 +152,7 @@ config_file = "agents/code-reviewer.toml"
       const config = position === 'before' ? alias + CONFIG_TEXT : CONFIG_TEXT + alias;
       expect(() =>
         buildAgentRoster(config, new Map([['code-reviewer', CODE_REVIEWER_TOML]])),
-      ).toThrow(/alias-reviewer.*expected .codex\/agents\/alias-reviewer.toml/u);
+      ).toThrow(/alias-reviewer.*config_file.*agents\/alias-reviewer\.toml/u);
     },
   );
 

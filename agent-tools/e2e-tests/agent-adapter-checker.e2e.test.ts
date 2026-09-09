@@ -22,6 +22,8 @@ const cli = resolve('src/bin/agent-adapter-generate.ts');
 const cliArguments = ['--import', import.meta.resolve('tsx'), cli];
 const validatorCli = resolve('src/validators/subagents/validate-subagents.ts');
 const validatorCliArguments = ['--import', import.meta.resolve('tsx'), validatorCli];
+const healthCli = resolve('src/bin/claude-agent-ops.ts');
+const healthCliArguments = ['--import', import.meta.resolve('tsx'), healthCli, 'health'];
 const templatePath = '.agent/sub-agents/templates/architecture-expert.md';
 const personaPath = '.agent/sub-agents/components/personas/barney.md';
 
@@ -338,7 +340,7 @@ it('rejects an alias registration through the running subagent validator', () =>
 
   expect(result.status).toBe(1);
   expect(result.stderr).toContain(
-    'resolves "alias-reviewer" to .codex/agents/cricket-judgement-low.toml; expected .codex/agents/alias-reviewer.toml',
+    'agent "alias-reviewer" config_file must be "agents/alias-reviewer.toml" (found "agents/cricket-judgement-low.toml")',
   );
 });
 
@@ -359,6 +361,83 @@ it('rejects a linked Codex registry through the running subagent validator', () 
   expect(result.stderr).toContain(
     '.codex/config.toml: required source must not traverse symbolic link .codex/config.toml',
   );
+});
+
+it('rejects a linked Codex adapter directory through the running health probe', () => {
+  const root = generatedRepository();
+  const externalRoot = mkdtempSync(join(tmpdir(), 'castr-health-adapters-'));
+  directories.push(externalRoot);
+  const externalAgents = join(externalRoot, 'agents');
+  renameSync(join(root, '.codex/agents'), externalAgents);
+  symlinkSync(externalAgents, join(root, '.codex/agents'), 'dir');
+  execFileSync('git', ['init', '--quiet'], { cwd: root });
+
+  const result = spawnSync(execPath, healthCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+  });
+
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain('Reviewer registration parity');
+  expect(result.stdout).toContain('required source must not traverse symbolic link');
+});
+
+it('rejects an unregistered linked Codex adapter through the running health probe', () => {
+  const root = generatedRepository();
+  const externalRoot = mkdtempSync(join(tmpdir(), 'castr-health-adapter-'));
+  directories.push(externalRoot);
+  const externalAdapter = join(externalRoot, 'ghost.toml');
+  writeFileSync(externalAdapter, 'not valid TOML');
+  symlinkSync(externalAdapter, join(root, '.codex/agents/ghost.toml'), 'file');
+  execFileSync('git', ['init', '--quiet'], { cwd: root });
+
+  const result = spawnSync(execPath, healthCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+  });
+
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain('Reviewer adapter parity');
+  expect(result.stdout).toContain(
+    '.codex/agents/ghost.toml: required source must not traverse symbolic link',
+  );
+});
+
+it('rejects invalid registered adapter TOML through the running health probe', () => {
+  const root = generatedRepository();
+  writeFileSync(join(root, '.codex/agents/cricket-judgement-low.toml'), 'not valid TOML');
+  execFileSync('git', ['init', '--quiet'], { cwd: root });
+
+  const result = spawnSync(execPath, healthCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+  });
+
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain('Reviewer registration parity');
+  expect(result.stdout).toMatch(/Invalid TOML|Expected newline or end of document/u);
+});
+
+it('rejects unsafe registered adapter settings through the running health probe', () => {
+  const root = generatedRepository();
+  const adapterPath = join(root, '.codex/agents/cricket-judgement-low.toml');
+  writeFileSync(
+    adapterPath,
+    readFileSync(adapterPath, 'utf8').replace(
+      'sandbox_mode = "read-only"',
+      'sandbox_mode = "workspace-write"',
+    ),
+  );
+  execFileSync('git', ['init', '--quiet'], { cwd: root });
+
+  const result = spawnSync(execPath, healthCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+  });
+
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain('Reviewer registration parity');
+  expect(result.stdout).toContain('sandbox_mode must be "read-only"');
 });
 
 it.each([

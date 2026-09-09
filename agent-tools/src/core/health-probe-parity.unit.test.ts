@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { collectReviewerAdapterParityDetails } from './health-probe-parity.js';
+import {
+  collectReviewerAdapterParityDetails,
+  collectReviewerRegistrationDetails,
+} from './health-probe-parity.js';
 
 describe('collectReviewerAdapterParityDetails', () => {
   it('accepts the supported three-seat Codex and four-seat Claude/Cursor Cricket rosters', () => {
@@ -36,4 +39,39 @@ describe('collectReviewerAdapterParityDetails', () => {
       }),
     ).toEqual(['Codex has unsupported reviewer adapter cricket-judgement-high.']);
   });
+});
+
+it('resolves registered adapter paths relative to .codex/config.toml', () => {
+  expect(
+    collectReviewerRegistrationDetails(
+      ['code-reviewer'],
+      [
+        {
+          name: 'code-reviewer',
+          description: 'Review changes.',
+          configFile: 'agents/code-reviewer.toml',
+        },
+      ],
+      (relativePath) =>
+        relativePath === '.codex/agents/code-reviewer.toml' ? null : 'unexpected path',
+    ),
+  ).toEqual([]);
+});
+
+it('surfaces a complete adapter-resolution failure as registration parity detail', () => {
+  expect(
+    collectReviewerRegistrationDetails(
+      ['code-reviewer'],
+      [
+        {
+          name: 'code-reviewer',
+          description: 'Review changes.',
+          configFile: 'agents/code-reviewer.toml',
+        },
+      ],
+      () => 'adapter contract rejected workspace-write',
+    ),
+  ).toEqual([
+    '.codex/config.toml cannot resolve adapter agents/code-reviewer.toml. adapter contract rejected workspace-write',
+  ]);
 });

@@ -1,5 +1,5 @@
 import type { Stats } from 'node:fs';
-import { lstatSync, readFileSync, realpathSync } from 'node:fs';
+import { lstatSync, readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { lstat, readFile, readdir, realpath } from 'node:fs/promises';
 import { isAbsolute, join, posix, relative, resolve, sep } from 'node:path';
 
@@ -177,6 +177,23 @@ export async function listRequiredRepositorySources(
   const references = names.map((name) => `${directory}/${name}`);
   for (const reference of references) {
     await inspectRequiredSource(repoRoot, reference, 'file');
+  }
+  return references;
+}
+
+/** Synchronous strict directory enumeration for health and runtime admission paths. */
+export function listRequiredRepositorySourcesSync(
+  repoRoot: string,
+  directory: string,
+  extension: string,
+): string[] {
+  const target = inspectRequiredSourceSync(repoRoot, directory, 'directory');
+  const names = readdirSync(target)
+    .filter((name) => name.endsWith(extension))
+    .toSorted(compareCodeUnits);
+  const references = names.map((name) => `${directory}/${name}`);
+  for (const reference of references) {
+    inspectRequiredSourceSync(repoRoot, reference, 'file');
   }
   return references;
 }

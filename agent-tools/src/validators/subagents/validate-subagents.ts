@@ -123,7 +123,6 @@ for (const codexAdapterFile of codexAdapterFiles) {
     codexAdapterFile,
     content,
     registeredAgent,
-    templateDir: TEMPLATE_DIR,
   });
   for (const issue of codexAdapterIssues) {
     addIssue(issue);

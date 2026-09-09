@@ -39,6 +39,17 @@ it('rejects duplicate role registrations', () => {
   ).toThrow();
 });
 
+it.each(['', ' reviewer', 'reviewer ', '../reviewer', 'nested/reviewer', 'reviewer\\nested'])(
+  'rejects an invalid role registration name: %j',
+  (name) => {
+    expect(() =>
+      readAgentRegistrations(
+        `[agents.${JSON.stringify(name)}]\ndescription = "Review"\nconfig_file = "agents/reviewer.toml"`,
+      ),
+    ).toThrow(/registration name/u);
+  },
+);
+
 it.each([
   'max_threads = 3',
   'max_concurrent_threads_per_session = 3',

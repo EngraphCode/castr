@@ -74,6 +74,11 @@ describe('shared Codex adapter shape', () => {
       issue: 'must reference at most one canonical persona',
     },
     {
+      label: 'no canonical template',
+      references: 'Read `.agent/rules/example.md`.',
+      issue: 'must reference exactly one canonical template',
+    },
+    {
       label: 'a parent segment inside the template prefix',
       references: 'Read `.agent/sub-agents/templates/../rules/example.md`.',
       issue: 'must be a normalized path beneath .agent',
@@ -93,5 +98,6 @@ describe('shared Codex adapter shape', () => {
 
     expect(validation.issues.join('\n')).toContain(issue);
     expect(() => buildAgentRoster(config, new Map([['code-reviewer', content]]))).toThrow(issue);
+    expect(() => parseCodexProjectAgent(registration, content)).toThrow(issue);
   });
 });

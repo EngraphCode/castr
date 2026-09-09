@@ -10,9 +10,13 @@ import { readCodexAdapterDocument, type CodexAdapterDocument } from './codex-ada
 import {
   canonicalAgentReferenceIssue,
   extractCanonicalAgentPaths,
+  isCanonicalAgentReferenceInside,
+  isCanonicalAgentTemplateReference,
   readCanonicalAgentFileSync,
 } from './canonical-agent-reference.js';
 import { readRequiredRepositorySourceSync } from './required-repository-source.js';
+import { assertCanonicalCodexAgentRegistration } from './codex-agent-registration-contract.js';
+import { cricketRole, supportsReviewer } from './reviewer-adapter-platform-contract.js';
 
 export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
 
@@ -46,10 +50,19 @@ export function listCodexProjectAgentNames(repoRoot: string): string[] {
 export function resolveCodexProjectAgent(repoRoot: string, agentName: string): CodexProjectAgent {
   const registrations = readCodexAgentRegistrations(repoRoot);
   const registration = findRegistrationOrThrow(registrations, agentName);
+  return resolveRegisteredCodexProjectAgent(repoRoot, registration);
+}
+
+/** Resolve one already-validated registry entry without reparsing the complete registry. */
+export function resolveRegisteredCodexProjectAgent(
+  repoRoot: string,
+  registration: CodexAgentRegistration,
+): CodexProjectAgent {
+  assertCanonicalCodexAgentRegistration(registration);
   const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
-  const adapterContent = readAdapterContent(repoRoot, adapterPath, agentName);
+  const adapterContent = readAdapterContent(repoRoot, adapterPath, registration.name);
   const agent = parseCodexProjectAgent(registration, adapterContent);
-  ensureCanonicalFilesExist(repoRoot, agentName, agent.referencedCanonicalFiles);
+  ensureCanonicalFilesExist(repoRoot, registration.name, agent.referencedCanonicalFiles);
   return agent;
 }
 
@@ -72,6 +85,7 @@ export function parseCodexProjectAgent(
   registration: CodexAgentRegistration,
   adapterContent: string,
 ): CodexProjectAgent {
+  assertCanonicalCodexAgentRegistration(registration);
   const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
   const document = readCodexAdapterDocument(adapterContent);
   const adapterMetadata = readAdapterMetadata(
@@ -95,6 +109,7 @@ export function parseCodexProjectAgent(
     const issue = canonicalAgentReferenceIssue(referencedFile);
     if (issue !== null) throw new Error(`${adapterPath}: ${issue}`);
   }
+  assertAdapterPolicy(registration.name, adapterPath, adapterMetadata, referencedCanonicalFiles);
 
   return {
     ...adapterMetadata,
@@ -103,6 +118,65 @@ export function parseCodexProjectAgent(
     developerInstructions,
     referencedCanonicalFiles,
   };
+}
+
+function assertAdapterPolicy(
+  agentName: string,
+  adapterPath: string,
+  metadata: AdapterMetadata,
+  canonicalPaths: readonly string[],
+): void {
+  const role = cricketRole(agentName);
+  if (!supportsReviewer(agentName, 'codex')) {
+    throw new Error(`${adapterPath}: unsupported Codex role`);
+  }
+
+  const expectedSettings: readonly (readonly [keyof AdapterMetadata, string])[] = [
+    ['modelReasoningEffort', role?.effort ?? 'high'],
+    ['sandboxMode', 'read-only'],
+    ['approvalPolicy', 'never'],
+  ];
+  for (const [key, expected] of expectedSettings) {
+    const actual = metadata[key];
+    if (actual !== expected) {
+      const tomlKey =
+        key === 'modelReasoningEffort'
+          ? 'model_reasoning_effort'
+          : key === 'sandboxMode'
+            ? 'sandbox_mode'
+            : 'approval_policy';
+      throw new Error(`${adapterPath}: ${tomlKey} must be "${expected}" (found: ${actual})`);
+    }
+  }
+  if (role?.codexModel !== undefined && metadata.model !== role.codexModel) {
+    throw new Error(
+      `${adapterPath}: model must be "${role.codexModel}" (found: ${metadata.model ?? 'missing'})`,
+    );
+  }
+
+  const templateDir = '.agent/sub-agents/templates';
+  const personaDir = '.agent/sub-agents/components/personas';
+  const templatePaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentTemplateReference(path, templateDir),
+  );
+  if (role && (templatePaths.length !== 1 || templatePaths[0] !== role.templatePath)) {
+    throw new Error(
+      `${adapterPath}: developer_instructions must reference exactly ${role.templatePath} for its Cricket method contract`,
+    );
+  }
+  if (!role && templatePaths.length !== 1) {
+    throw new Error(
+      `${adapterPath}: developer_instructions must reference exactly one canonical template inside ${templateDir}`,
+    );
+  }
+  const personaPaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentReferenceInside(path, personaDir),
+  );
+  if (personaPaths.length > 1) {
+    throw new Error(
+      `${adapterPath}: developer_instructions must reference at most one canonical persona inside ${personaDir}`,
+    );
+  }
 }
 
 function findRegistrationOrThrow(

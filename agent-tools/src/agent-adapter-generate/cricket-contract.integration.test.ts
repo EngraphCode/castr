@@ -3,6 +3,7 @@ import { parse, parseDocument } from 'yaml';
 import { buildAgentRoster, planAgentAdapters, renderAgentAdapter } from './generator.js';
 import { getCodexAdapterValidation } from '../validators/subagents/validate-subagents-codex-adapter-validation.js';
 import { getReviewerAdapterParityIssues } from '../validators/portability/reviewer-adapter-parity.js';
+import { parseCodexProjectAgent } from '../core/codex-project-agents.js';
 
 const roles = [
   {
@@ -51,6 +52,14 @@ function registration(name: string): string {
   return `[agents."${name}"]\ndescription = "Conscience check."\nconfig_file = "agents/${name}.toml"\n`;
 }
 
+function registrationRecord(name: string) {
+  return {
+    name,
+    description: 'Conscience check.',
+    configFile: `agents/${name}.toml`,
+  };
+}
+
 const cricketConfig = roles.map(({ name }) => registration(name)).join('\n');
 
 function cricketAdapters(): Map<string, string> {
@@ -73,6 +82,9 @@ describe('Cricket generation boundary', () => {
     ({ name, effort, method }) => {
       const adapters = cricketAdapters().set(name, adapter(name, 'substitute', effort, method));
       expect(() => buildAgentRoster(cricketConfig, adapters)).toThrow(/model must be/u);
+      expect(() =>
+        parseCodexProjectAgent(registrationRecord(name), adapters.get(name) ?? ''),
+      ).toThrow(/model must be/u);
     },
   );
 
@@ -83,6 +95,9 @@ describe('Cricket generation boundary', () => {
       expect(() => buildAgentRoster(cricketConfig, adapters)).toThrow(
         /model_reasoning_effort must be/u,
       );
+      expect(() =>
+        parseCodexProjectAgent(registrationRecord(name), adapters.get(name) ?? ''),
+      ).toThrow(/model_reasoning_effort must be/u);
     },
   );
 
@@ -91,6 +106,9 @@ describe('Cricket generation boundary', () => {
     ({ name, model, effort }) => {
       const adapters = cricketAdapters().set(name, adapter(name, model, effort, 'other'));
       expect(() => buildAgentRoster(cricketConfig, adapters)).toThrow(/method contract/u);
+      expect(() =>
+        parseCodexProjectAgent(registrationRecord(name), adapters.get(name) ?? ''),
+      ).toThrow(/method contract/u);
     },
   );
 

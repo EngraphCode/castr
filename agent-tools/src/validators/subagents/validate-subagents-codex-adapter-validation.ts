@@ -30,6 +30,8 @@ import {
   isCanonicalAgentReferenceInside,
   isCanonicalAgentTemplateReference,
 } from '../../core/canonical-agent-reference.js';
+import { parseCodexProjectAgent } from '../../core/codex-project-agents.js';
+import { assertCanonicalCodexAgentRegistration } from '../../core/codex-agent-registration-contract.js';
 
 // ---------------------------------------------------------------------------
 // Module-private constants
@@ -236,7 +238,32 @@ export function getCodexAdapterValidation(
   input: CodexAdapterValidationInput,
 ): CodexAdapterValidationResult {
   try {
-    return validateCodexAdapter(input);
+    const result = validateCodexAdapter(input);
+    if (input.registeredAgent != null) {
+      try {
+        assertCanonicalCodexAgentRegistration(input.registeredAgent);
+      } catch (error) {
+        result.issues.push(
+          `${input.codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+    if (
+      result.issues.length === 0 &&
+      input.registeredAgent != null &&
+      (input.templateDir ?? DEFAULT_TEMPLATE_DIR) === DEFAULT_TEMPLATE_DIR &&
+      input.requiredSettings === undefined &&
+      (input.configPath ?? CODEX_CONFIG_PATH) === CODEX_CONFIG_PATH
+    ) {
+      try {
+        parseCodexProjectAgent(input.registeredAgent, input.content);
+      } catch (error) {
+        result.issues.push(
+          `${input.codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+    return result;
   } catch (error) {
     return {
       issues: [

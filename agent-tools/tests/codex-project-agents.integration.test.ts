@@ -121,6 +121,18 @@ config_file = "agents/code-expert.toml"
 `),
     ).toThrow(/missing a description/u);
   });
+
+  it.each(['agents/./code-expert.toml', 'other/code-expert.toml'])(
+    'rejects noncanonical runtime config_file %s',
+    (configFile) => {
+      expect(() =>
+        parseCodexAgentRegistrations(`[agents."code-expert"]
+description = "Gateway reviewer."
+config_file = "${configFile}"
+`),
+      ).toThrow(/config_file.*agents\/code-expert\.toml/u);
+    },
+  );
 });
 
 describe('resolveCodexProjectAgent', () => {
@@ -154,7 +166,7 @@ config_file = ".codex/agents/code-expert.toml"
     );
 
     expect(() => resolveCodexProjectAgent(repoRoot, 'code-expert')).toThrow(
-      /missing adapter \.codex\/\.codex\/agents\/code-expert\.toml/u,
+      /config_file.*agents\/code-expert\.toml/u,
     );
   });
 

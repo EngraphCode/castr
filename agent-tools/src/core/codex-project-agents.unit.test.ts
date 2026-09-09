@@ -66,3 +66,53 @@ it('rejects a canonical reference containing a parent segment', () => {
     ),
   ).toThrow(/must be a normalized path beneath .agent/u);
 });
+
+it('rejects a non-canonical registration name at the in-memory runtime boundary', () => {
+  expect(() =>
+    parseCodexProjectAgent(
+      {
+        ...registration,
+        name: ' reviewer',
+        configFile: 'agents/ reviewer.toml',
+      },
+      adapter.replace('name = "reviewer"', 'name = " reviewer"'),
+    ),
+  ).toThrow(/lowercase, hyphen-delimited token/u);
+});
+
+it('rejects a normalised alias of the canonical config_file spelling', () => {
+  expect(() =>
+    parseCodexProjectAgent(
+      {
+        ...registration,
+        configFile: 'agents/./reviewer.toml',
+      },
+      adapter,
+    ),
+  ).toThrow(/config_file must be 'agents\/reviewer\.toml'/u);
+});
+
+it.each([
+  {
+    key: 'model_reasoning_effort',
+    expected: 'high',
+    actual: 'low',
+  },
+  {
+    key: 'sandbox_mode',
+    expected: 'read-only',
+    actual: 'workspace-write',
+  },
+  {
+    key: 'approval_policy',
+    expected: 'never',
+    actual: 'on-request',
+  },
+])('rejects an ordinary reviewer with $key set to $actual', ({ key, expected, actual }) => {
+  expect(() =>
+    parseCodexProjectAgent(
+      registration,
+      adapter.replace(`${key} = "${expected}"`, `${key} = "${actual}"`),
+    ),
+  ).toThrow(`${key} must be "${expected}" (found: ${actual})`);
+});
