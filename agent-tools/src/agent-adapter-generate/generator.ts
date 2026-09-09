@@ -19,7 +19,7 @@
  * Pure render/derive functions are exported so the drift checker and unit
  * tests can exercise them without filesystem I/O.
  */
-import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import { stringify } from 'yaml';
 import {
@@ -39,6 +39,10 @@ import {
   resolveCodexConfigFilePath,
 } from '../validators/subagents/validate-subagents-helpers.js';
 import { inspectGeneratedEstate } from './generated-estate.js';
+import {
+  isCanonicalAgentReferenceInside,
+  readCanonicalAgentFile,
+} from '../core/canonical-agent-reference.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -122,8 +126,8 @@ export function buildAgentRoster(
         `${CODEX_ADAPTER_DIR}/${name}.toml: must reference exactly one canonical template under ${TEMPLATE_DIR}`,
       );
     }
-    const personaPath = validation.canonicalPaths.find((path) =>
-      path.startsWith(`${PERSONA_DIR}/`),
+    const [personaPath] = validation.canonicalPaths.filter((path) =>
+      isCanonicalAgentReferenceInside(path, PERSONA_DIR),
     );
 
     entries.push({
@@ -302,11 +306,7 @@ async function readAgentGeneration(repoRoot: string): Promise<GenerationUnit[]> 
     ),
   );
   for (const path of canonicalPaths) {
-    const target = join(repoRoot, path);
-    if (!(await stat(target)).isFile()) {
-      throw new Error(`${path}: canonical reference must be a readable file`);
-    }
-    await readFile(target, 'utf8');
+    await readCanonicalAgentFile(repoRoot, path);
   }
   return units;
 }

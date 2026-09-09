@@ -54,3 +54,15 @@ it('retains the adapter path and canonical references in the resolved descriptor
   expect(resolved.adapterPath).toBe('.codex/agents/reviewer.toml');
   expect(resolved.referencedCanonicalFiles).toEqual(['.agent/sub-agents/templates/reviewer.md']);
 });
+
+it('rejects a canonical reference containing a parent segment', () => {
+  expect(() =>
+    parseCodexProjectAgent(
+      registration,
+      adapter.replace(
+        '.agent/sub-agents/templates/reviewer.md',
+        '.agent/sub-agents/templates/../../rules/example.md',
+      ),
+    ),
+  ).toThrow(/must be a normalized path beneath .agent/u);
+});

@@ -15,10 +15,13 @@ import { join, relative, resolve } from 'node:path';
 import { execPath } from 'node:process';
 import { afterEach, describe, expect, it } from 'vitest';
 import { parseDocument } from 'yaml';
+import { resolveCodexProjectAgent } from '../src/core/codex-project-agents.js';
 
 const directories: string[] = [];
 const cli = resolve('src/bin/agent-adapter-generate.ts');
 const cliArguments = ['--import', import.meta.resolve('tsx'), cli];
+const validatorCli = resolve('src/validators/subagents/validate-subagents.ts');
+const validatorCliArguments = ['--import', import.meta.resolve('tsx'), validatorCli];
 const templatePath = '.agent/sub-agents/templates/architecture-expert.md';
 const personaPath = '.agent/sub-agents/components/personas/barney.md';
 
@@ -51,6 +54,7 @@ function generatedRepository(): string {
   mkdirSync(join(root, '.codex/agents'), { recursive: true });
   mkdirSync(join(root, '.agent/rules'), { recursive: true });
   mkdirSync(join(root, '.agent/sub-agents/templates'), { recursive: true });
+  writeFileSync(join(root, 'pnpm-workspace.yaml'), 'packages: []\n');
   const registrations = codexSeats.map(
     ({ name }) =>
       `[agents.${name}]\ndescription = "Conscience check."\nconfig_file = "agents/${name}.toml"\n`,
@@ -278,6 +282,7 @@ it('recovers from surplus adapters and nested rules using the advertised clear c
 describe.each([
   { label: 'generate', args: [] },
   { label: 'clear', args: ['--clear'] },
+  { label: 'check', args: ['--check'] },
 ])('$label source-failure preservation', ({ args }) => {
   it.each([
     '.agent/rules',
@@ -322,19 +327,57 @@ describe.each([
     const root = generatedPersonaRepository();
     const original = generatedFiles(root);
     const adapterPath = join(root, '.codex/agents/architecture-expert-barney.toml');
-    const missingPersona = '.agent/sub-agents/components/personas/wilma.md';
+    const missingComponent = '.agent/sub-agents/components/behaviours/missing.md';
     writeFileSync(
       adapterPath,
       readFileSync(adapterPath, 'utf8').replace(
         `and \`${personaPath}\``,
-        `and \`${personaPath}\` and \`${missingPersona}\``,
+        `and \`${personaPath}\` and \`${missingComponent}\``,
       ),
     );
 
     const result = spawnSync(execPath, [...cliArguments, ...args], { cwd: root, encoding: 'utf8' });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain(missingPersona);
+    expect(result.stderr).toContain(missingComponent);
     expect(generatedFiles(root)).toEqual(original);
+  });
+
+  it('rejects a canonical reference that escapes the .agent tree before changing outputs', () => {
+    const root = generatedPersonaRepository();
+    const original = generatedFiles(root);
+    const adapterPath = join(root, '.codex/agents/architecture-expert-barney.toml');
+    writeFileSync(join(root, 'outside.md'), '# Outside\n');
+    writeFileSync(
+      adapterPath,
+      readFileSync(adapterPath, 'utf8').replace(personaPath, '.agent/../outside.md'),
+    );
+
+    const result = spawnSync(execPath, [...cliArguments, ...args], { cwd: root, encoding: 'utf8' });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('.agent/../outside.md');
+    expect(result.stderr).toContain('normalized path beneath .agent');
+    expect(generatedFiles(root)).toEqual(original);
+  });
+
+  it.each([
+    { label: 'leaf file', source: personaPath },
+    { label: 'intermediate directory', source: '.agent/sub-agents/templates' },
+  ])('rejects a canonical $label symbolic link before changing outputs', ({ source }) => {
+    const root = generatedPersonaRepository();
+    const original = generatedFiles(root);
+    const outside = mkdtempSync(join(tmpdir(), 'castr-external-canonical-source-'));
+    directories.push(outside);
+    const target = join(outside, 'linked-source');
+    renameSync(join(root, source), target);
+    symlinkSync(target, join(root, source), source === personaPath ? 'file' : 'dir');
+    const externalOriginal = directorySnapshot(outside);
+
+    const result = spawnSync(execPath, [...cliArguments, ...args], { cwd: root, encoding: 'utf8' });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(source);
+    expect(result.stderr).toContain('symbolic link');
+    expect(generatedFiles(root)).toEqual(original);
+    expect(directorySnapshot(outside)).toEqual(externalOriginal);
   });
 
   it('rejects an absent Codex adapter directory even with an empty registry', () => {
@@ -376,6 +419,32 @@ describe.each([
     expect(result.stderr).toContain('alias-reviewer');
     expect(generatedFiles(root)).toEqual(original);
   });
+});
+
+it.each([
+  { label: 'leaf file', source: personaPath },
+  { label: 'intermediate directory', source: '.agent/sub-agents/templates' },
+])('validator and resolver reject a canonical $label symbolic link', ({ source }) => {
+  const root = generatedPersonaRepository();
+  const outside = mkdtempSync(join(tmpdir(), 'castr-external-canonical-consumer-'));
+  directories.push(outside);
+  const target = join(outside, 'linked-source');
+  renameSync(join(root, source), target);
+  symlinkSync(target, join(root, source), source === personaPath ? 'file' : 'dir');
+  const externalOriginal = directorySnapshot(outside);
+
+  const validation = spawnSync(execPath, validatorCliArguments, {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...process.env, CLAUDE_PROJECT_DIR: root },
+  });
+  expect(validation.status).toBe(1);
+  expect(validation.stderr).toContain(source);
+  expect(validation.stderr).toContain('symbolic link');
+  expect(() => resolveCodexProjectAgent(root, 'architecture-expert-barney')).toThrow(
+    /symbolic link/u,
+  );
+  expect(directorySnapshot(outside)).toEqual(externalOriginal);
 });
 
 it('reports missing and drifted Cursor rules', () => {

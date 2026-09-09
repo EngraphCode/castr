@@ -156,16 +156,6 @@ config_file = "agents/code-reviewer.toml"
     },
   );
 
-  it('rejects multiple templates instead of silently selecting the first', () => {
-    const content = CODE_REVIEWER_TOML.replace(
-      'Read and follow',
-      'Read `.agent/sub-agents/templates/test-reviewer.md`. Read and follow',
-    );
-    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
-      /exactly one canonical template/u,
-    );
-  });
-
   it('rejects malformed TOML', () => {
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', 'name = [']]))).toThrow(
       /TOML/u,

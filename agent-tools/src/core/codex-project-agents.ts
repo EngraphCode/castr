@@ -9,10 +9,13 @@ import {
 import type { CodexAgentRegistration } from './codex-project-agent-registry.js';
 import { tomlString } from './toml-document.js';
 import { readCodexAdapterDocument, type CodexAdapterDocument } from './codex-adapter-document.js';
+import {
+  canonicalAgentReferenceIssue,
+  extractCanonicalAgentPaths,
+  readCanonicalAgentFileSync,
+} from './canonical-agent-reference.js';
 
 export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
-
-const CANONICAL_PATH_PATTERN = /`(\.agent\/[^`]+)`/gu;
 
 interface AdapterMetadata {
   readonly model: string | null;
@@ -83,11 +86,15 @@ export function parseCodexProjectAgent(
     'developer_instructions',
     adapterPath,
   ).trim();
-  const referencedCanonicalFiles = extractCanonicalPaths(developerInstructions);
+  const referencedCanonicalFiles = extractCanonicalAgentPaths(developerInstructions);
   if (referencedCanonicalFiles.length === 0) {
     throw new Error(
       `Codex project agent '${registration.name}' does not reference any canonical .agent files in ${adapterPath}.`,
     );
+  }
+  for (const referencedFile of referencedCanonicalFiles) {
+    const issue = canonicalAgentReferenceIssue(referencedFile);
+    if (issue !== null) throw new Error(`${adapterPath}: ${issue}`);
   }
 
   return {
@@ -179,23 +186,13 @@ function ensureCanonicalFilesExist(
   referencedCanonicalFiles: readonly string[],
 ): void {
   for (const referencedFile of referencedCanonicalFiles) {
-    const referencedAbsolutePath = join(repoRoot, referencedFile);
-    if (existsSync(referencedAbsolutePath)) {
-      continue;
-    }
-
-    throw new Error(
-      `Codex project agent '${agentName}' references missing canonical file ${referencedFile}.`,
-    );
-  }
-}
-
-function extractCanonicalPaths(developerInstructions: string): string[] {
-  const referencedFiles = new Set<string>();
-  for (const match of developerInstructions.matchAll(CANONICAL_PATH_PATTERN)) {
-    if (match[1]) {
-      referencedFiles.add(match[1]);
+    try {
+      readCanonicalAgentFileSync(repoRoot, referencedFile);
+    } catch (error) {
+      throw new Error(
+        `Codex project agent '${agentName}' cannot read canonical file ${referencedFile}: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error },
+      );
     }
   }
-  return [...referencedFiles].sort((a, b) => a.localeCompare(b));
 }

@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { readCanonicalAgentFile } from '../../core/canonical-agent-reference.js';
 import { validateMarkdownWrapper, type SubagentPlatform } from './frontmatter-schema.js';
 
 import {
@@ -37,6 +38,14 @@ async function exists(relPath: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function validateCanonicalReference(owner: string, relPath: string): Promise<void> {
+  try {
+    await readCanonicalAgentFile(repoRoot, relPath);
+  } catch (error) {
+    addIssue(`${owner}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -84,8 +93,7 @@ async function validateWrappers(
     for (const issue of result.issues) addIssue(issue);
     for (const templatePath of result.templatePaths) {
       referencedTemplates.add(templatePath);
-      if (!(await exists(templatePath)))
-        addIssue(`${file}: referenced template does not exist (${templatePath})`);
+      await validateCanonicalReference(file, templatePath);
     }
   }
 }
@@ -129,9 +137,7 @@ for (const codexAdapterFile of codexAdapterFiles) {
     addIssue(issue);
   }
   for (const canonicalPath of canonicalPaths) {
-    if (!(await exists(canonicalPath))) {
-      addIssue(`${codexAdapterFile}: referenced canonical file does not exist (${canonicalPath})`);
-    }
+    await validateCanonicalReference(codexAdapterFile, canonicalPath);
   }
   for (const templatePath of templatePaths) {
     codexReferencedTemplates.add(templatePath);

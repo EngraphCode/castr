@@ -25,6 +25,10 @@ import {
   validateAdapterFields,
 } from './validate-subagents-codex-adapter-field-checks.js';
 import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platform-contract.js';
+import {
+  canonicalAgentReferenceIssue,
+  isCanonicalAgentReferenceInside,
+} from '../../core/canonical-agent-reference.js';
 
 // ---------------------------------------------------------------------------
 // Module-private constants
@@ -32,6 +36,9 @@ import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platf
 
 /** Default base directory for Codex agent template files. */
 const DEFAULT_TEMPLATE_DIR = '.agent/sub-agents/templates';
+
+/** Default base directory for optional reviewer persona files. */
+const DEFAULT_PERSONA_DIR = '.agent/sub-agents/components/personas';
 
 // ---------------------------------------------------------------------------
 // Public constants
@@ -173,16 +180,33 @@ function validateCodexAdapter({
     issues.push(`${codexAdapterFile}: missing non-empty developer_instructions string`);
     return { issues, templatePaths: [], canonicalPaths: [] };
   }
-  const canonicalPaths = extractCanonicalPaths(developerInstructions);
-  const templatePaths = canonicalPaths.filter((p) => p.startsWith(`${templateDir}/`));
+  const extractedCanonicalPaths = extractCanonicalPaths(developerInstructions);
+  for (const path of extractedCanonicalPaths) {
+    const pathIssue = canonicalAgentReferenceIssue(path);
+    if (pathIssue !== null) issues.push(`${codexAdapterFile}: ${pathIssue}`);
+  }
+  const canonicalPaths = extractedCanonicalPaths.filter(
+    (path) => canonicalAgentReferenceIssue(path) === null,
+  );
+  const templatePaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentReferenceInside(path, templateDir),
+  );
+  const personaPaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentReferenceInside(path, DEFAULT_PERSONA_DIR),
+  );
   if (role && (templatePaths.length !== 1 || templatePaths[0] !== role.templatePath)) {
     issues.push(
       `${codexAdapterFile}: developer_instructions must reference exactly ${role.templatePath} for its Cricket method contract`,
     );
   }
-  if (templatePaths.length === 0) {
+  if (!role && templatePaths.length !== 1) {
     issues.push(
-      `${codexAdapterFile}: developer_instructions must reference at least one canonical template inside ${templateDir}`,
+      `${codexAdapterFile}: developer_instructions must reference exactly one canonical template inside ${templateDir}`,
+    );
+  }
+  if (personaPaths.length > 1) {
+    issues.push(
+      `${codexAdapterFile}: developer_instructions must reference at most one canonical persona inside ${DEFAULT_PERSONA_DIR}`,
     );
   }
   return { issues, templatePaths, canonicalPaths };
