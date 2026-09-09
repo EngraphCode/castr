@@ -27,7 +27,8 @@ correction. Its exact reviewed head
 `48e2194d38cdf387a39411610146c2071067e80b` merged by merge commit as
 `af840d9b68e9b4ef00813a2af97675c7abca3c33`.
 
-All 16 exact-head checks passed, including the quality-gates aggregate, proof suites,
+All 17 exact-head check runs passed: 16 repository, security and quality runs plus the
+successful Copilot review run. They include the quality-gates aggregate, proof suites,
 CodeQL, SonarCloud and secret scanning. All eight review threads were resolved. Codex
 completed its exact-head review without another finding; Copilot reported no additional
 change. Gateway, documentation and onboarding reviewers approved the final candidate.

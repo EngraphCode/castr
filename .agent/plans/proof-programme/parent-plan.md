@@ -172,8 +172,9 @@ C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisit
 are delivered. PR #88 delivered C05's platform reviewer-contract tooling as `bd115294`; PR #91
 delivered the dependent installation as
 `af840d9b68e9b4ef00813a2af97675c7abca3c33`. Its reviewed head was the merge
-commit's second parent and the trees are identical; all 16 exact-head checks passed and
-all eight review threads were resolved. The C05 Cricket atomic plan is complete and
+commit's second parent and the trees are identical; all 17 exact-head check runs passed,
+including the successful Copilot review run, and all eight review threads were resolved.
+The C05 Cricket atomic plan is complete and
 [in completion staging](../current/complete/cricket-platform-parity.md); the broader C05
 family retains its other documented obligations.
 PR #14's dependency-ownership extraction is now the next delivery. Q-09 remains pending

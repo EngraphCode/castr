@@ -112,7 +112,7 @@
       "scope": "Current next-safe-step route only: The C05 Cricket atomic plan is complete and in completion staging; begin PR14 from current origin/main while retaining Q09/Q22 obligations.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "The C05 Cricket atomic plan has no remaining acceptance; the broader C05 family remains open for its other documented obligations. Complete-document and whole-estate reconciliation remains with C09/C10; PR #14 is the next delivery and Q-09 remains pending for PR #10.",
@@ -166,7 +166,7 @@
       "scope": "Current correction continuation route only: The C05 Cricket atomic plan is delivered and in completion staging; PR14 is next and broader correction obligations remain routed.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "The C05 Cricket atomic plan has no remaining acceptance; the broader C05 family remains open for its other documented obligations. Complete-document and whole-estate reconciliation remains with C09/C10; PR #14 is the next delivery and Q-09 remains pending for PR #10.",
@@ -208,17 +208,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-completed",
-      "reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
-      "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+      "reviewed_git_blob_hash": "2951b57d7748834b1c32eb200d0768c99fc0d175",
+      "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
       "review_date": "2026-09-09",
-      "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 16 open PRs and PR14 as the next delivery.",
+      "scope": "Current C05 Cricket disposition and census only: PR91 exact-head delivery evidence, completed atomic-plan acceptance, the 16-PR durable estate plus self-referential PR92 while open, and PR14 as the next substantive delivery.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "The C05 Cricket atomic plan has no remaining acceptance; the broader C05 family remains open for its other documented obligations. Complete-document and whole-estate reconciliation remains with C09/C10; PR #14 is the next delivery and Q-09 remains pending for PR #10.",
-      "prior_reviewed_git_blob_hash": "87851a953573fff47e614fae2879e9e618c3c098",
+      "prior_reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -285,6 +285,12 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 16 open PRs and PR14 as the next delivery."
         }
       ]
     },
@@ -292,17 +298,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-completed",
-      "reviewed_git_blob_hash": "648349060ec1c01f07ec0980789ea78fcb2c2992",
-      "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+      "reviewed_git_blob_hash": "209607fd982744950cfb6f1daaff708bfe91c3f5",
+      "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
       "review_date": "2026-09-09",
       "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "The C05 Cricket atomic plan has no remaining acceptance; the broader C05 family remains open for its other documented obligations. Complete-document and whole-estate reconciliation remains with C09/C10; PR #14 is the next delivery and Q-09 remains pending for PR #10.",
-      "prior_reviewed_git_blob_hash": "1f4dfaa64e78ae97b1439d6eab1af34b65fb5ad8",
+      "prior_reviewed_git_blob_hash": "648349060ec1c01f07ec0980789ea78fcb2c2992",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -375,6 +381,12 @@
           "base_revision": "3b568416bfa162c25b8c00e8aa3fcef742e4e084",
           "review_date": "2026-09-09",
           "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "648349060ec1c01f07ec0980789ea78fcb2c2992",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive execution sequence only: The C05 Cricket delivery is complete through PR88/PR91 and in completion staging; PR14 is next; Q09/Q22 acceptance and sole queue authority remain unchanged."
         }
       ]
     },
@@ -382,17 +394,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-completed",
-      "reviewed_git_blob_hash": "6941a7181e4de0cd99c035ed1d9360186f26ceff",
-      "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+      "reviewed_git_blob_hash": "9d3a6b5e6e8385a0d2fa7e559ad6f116bfe701f1",
+      "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
       "review_date": "2026-09-09",
       "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "The C05 Cricket atomic plan has no remaining acceptance; the broader C05 family remains open for its other documented obligations. Complete-document and whole-estate reconciliation remains with C09/C10; PR #14 is the next delivery and Q-09 remains pending for PR #10.",
-      "prior_reviewed_git_blob_hash": "3ff5db6dce657b52a39cfabd6e288aec8fe043ed",
+      "prior_reviewed_git_blob_hash": "6941a7181e4de0cd99c035ed1d9360186f26ceff",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -477,6 +489,12 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "6941a7181e4de0cd99c035ed1d9360186f26ceff",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: C05 Cricket tooling and installation are delivered through PR88/PR91; its evidence boundary is retained and PR14 is the successor."
         }
       ]
     },
@@ -798,13 +816,13 @@
       "review_state": "reviewed",
       "disposition": "completed",
       "carrier": "C05/cricket-completed",
-      "reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac",
-      "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+      "reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0",
+      "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
       "review_date": "2026-09-09",
       "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "No C05 Cricket acceptance remains; the broader C05 family remains open for its other documented obligations. C09/C10 retain complete-document and final-main estate reconciliation.",
@@ -850,9 +868,15 @@
           "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac",
+          "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
+          "review_date": "2026-09-09",
+          "scope": "Complete C05 Cricket atomic plan, acceptance and lifecycle disposition: T1/T2, I1, bounded I2 and D1 are evidenced; the plan is in completion staging and its dated execution record remains historical."
         }
       ],
-      "prior_reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1"
+      "prior_reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "reviewed",
@@ -864,7 +888,7 @@
       "scope": "Complete former continuation route: it now records C05 completion, directs work to the parent queue, ledger and current correction route, and preserves the dated native and UNDELIVERED boundaries.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "No C05 Cricket continuation remains; the prompt is a completed redirect to PR #14 and current authority.",
@@ -900,7 +924,7 @@
       "scope": "Complete dated attempt record: exact task and turn identifiers, both requests, persisted terminal messages, absence of observable dispatch/tool/return markers, six UNDELIVERED results and inference limits.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "No C05 Cricket acceptance remains; the broader C05 family remains open for its other documented obligations. Any whole-document or whole-estate reconciliation remains with C09/C10."
@@ -915,7 +939,7 @@
       "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
+        "All 17 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",
         "T1/T2, I1, bounded I2 and D1 are complete at their stated scopes. The retained dated native record proves six registered-role returns and same-agent adversarial follow-ups at that revision; the later current-task panel attempt remains UNDELIVERED at its observable runtime boundary."
       ],
       "remaining": "No C05 Cricket acceptance remains; the broader C05 family remains open for its other documented obligations. Any whole-document or whole-estate reconciliation remains with C09/C10."
@@ -935,8 +959,8 @@
           "classification": "document-like",
           "disposition": "completed-acceptance",
           "carrier": "C05/cricket-completed",
-          "reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac",
-          "prior_reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1"
+          "reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0",
+          "prior_reviewed_git_blob_hash": "3392c1b9a1ad123e47dda6994d575b6dff77a7ac"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",

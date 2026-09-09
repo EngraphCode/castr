@@ -122,9 +122,10 @@ explicitly missing.
 The owner subsequently commissioned a separate C05 Cricket repair task. Moon turns
 Apogee began it; Kite hunts Eyrie delivered the coupled tooling and validation as PR #88;
 Bora seeks Turbulence delivered the dependent installation as PR #91. Its reviewed head
-`48e2194d` merged as `af840d9b`; all 16 exact-head checks passed, all eight review
-threads were resolved, and exact-head Codex/Copilot plus gateway, documentation and
-onboarding review found no remaining blocker. The completed C05 plan preserves the
+`48e2194d` merged as `af840d9b`; all 17 exact-head check runs passed, including the
+successful Copilot review run, all eight review threads were resolved, and exact-head
+Codex/Copilot plus gateway, documentation and onboarding review found no remaining
+blocker. The completed C05 plan preserves the
 bounded native proof and the later `UNDELIVERED` task-runtime attempt. The C05 Cricket
 atomic plan is complete; the broader C05 family remains open. PR #14's
 dependency-ownership extraction is the next delivery; the coordinating agent retains

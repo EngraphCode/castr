@@ -134,11 +134,12 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   installation after this merge.
 - **C05 Cricket delivery complete:** PR #88 delivered the strict platform contract as
   `bd115294`; PR #91 delivered the installation from reviewed head `48e2194d` as merge
-  commit `af840d9b`. All 16 exact-head checks passed, all eight review threads were
+  commit `af840d9b`. All 17 exact-head check runs passed: 16 repository, security and
+  quality runs plus the successful Copilot review run. All eight review threads were
   resolved, Codex completed without a further finding and Copilot reported no additional
   change. Gateway, documentation and onboarding reviewers approved. The merge commit's
-  second parent and tree exactly match the reviewed head. T1/T2, I1, bounded I2 and D1
-  are evidenced in the [completed plan](current/complete/cricket-platform-parity.md).
+  second parent and tree exactly match the reviewed head. T1/T2, I1, bounded I2 and D1 are
+  evidenced in the [completed plan](current/complete/cricket-platform-parity.md).
   The later `UNDELIVERED` attempt remains a truthful task-runtime boundary and does not
   extend or erase the dated native proof.
 
@@ -147,15 +148,16 @@ Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
-The 9 September 2026 post-PR-91 live census contains 16 open PRs: the fourteen
-inherited open PRs below, frozen source #81 and current #87. PR #91 merged as
-`af840d9b`; PR #90 previously merged the bounded Q-09/#28 disposition as `cb73c4de`,
-after which PR #28 closed without merge and retained its recovery branch. This
-unfinished estate remains integration risk, not delivered value. PR #14 is the next
-delivery under the parent plan's sequence. The remaining source PRs close only when
-their recorded extraction or supersession conditions are verified. The following
-6 September checks and review states are historical observations, not fresh merge
-readiness.
+The durable post-PR-91 estate contains 16 open PRs: the fourteen inherited open PRs
+below, frozen source #81 and current #87. This self-referential lifecycle delivery is
+[PR #92](https://github.com/EngraphCode/castr/pull/92) at opening head `79cb1fcd`; while
+it remains open, GitHub's live total is 17. PR #91 merged as `af840d9b`; PR #90
+previously merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28
+closed without merge and retained its recovery branch. The other 16 open PRs remain
+integration risk, not delivered value. PR #14 is the next substantive delivery under
+the parent plan's sequence. The remaining source PRs close only when their recorded
+extraction or supersession conditions are verified. The following 6 September checks
+and review states are historical observations, not fresh merge readiness.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.
