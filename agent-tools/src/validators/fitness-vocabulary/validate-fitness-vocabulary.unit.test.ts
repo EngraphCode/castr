@@ -2,9 +2,43 @@ import { describe, expect, it } from 'vitest';
 
 import {
   findForbiddenPhrases,
+  parseTrackedFiles,
+  sanitiseGitEnvironment,
   shouldInspectFile,
   shouldReportMatch,
 } from './validate-fitness-vocabulary.js';
+
+describe('sanitiseGitEnvironment', () => {
+  it('removes every case variant of Git process controls without dropping ordinary variables', () => {
+    expect(
+      sanitiseGitEnvironment({
+        GIT_DIR: '/redirected/repository',
+        git_index_file: '/redirected/index',
+        LANG: 'en_GB.UTF-8',
+        PATH: '/usr/bin',
+      }),
+    ).toStrictEqual({ LANG: 'en_GB.UTF-8', PATH: '/usr/bin' });
+  });
+});
+
+describe('parseTrackedFiles', () => {
+  it('preserves NUL-delimited paths containing spaces and tabs', () => {
+    const objectId = 'a'.repeat(40);
+
+    expect(
+      parseTrackedFiles(`100644 ${objectId} 0\ttracked note\twith tab.md\u0000`),
+    ).toStrictEqual([{ mode: '100644', objectId, path: 'tracked note\twith tab.md' }]);
+  });
+
+  it('rejects malformed records and unresolved merge stages', () => {
+    expect(() => parseTrackedFiles('malformed\u0000')).toThrow(
+      'Cannot parse a tracked-file record',
+    );
+    expect(() => parseTrackedFiles(`100644 ${'b'.repeat(40)} 2\tconflicted.md\u0000`)).toThrow(
+      "Cannot validate 'conflicted.md' while the Git index contains unresolved merge stages",
+    );
+  });
+});
 
 describe('shouldReportMatch', () => {
   it('reports non-filename matches of two-threshold', () => {
