@@ -239,30 +239,8 @@ export function getCodexAdapterValidation(
 ): CodexAdapterValidationResult {
   try {
     const result = validateCodexAdapter(input);
-    if (input.registeredAgent != null) {
-      try {
-        assertCanonicalCodexAgentRegistration(input.registeredAgent);
-      } catch (error) {
-        result.issues.push(
-          `${input.codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    }
-    if (
-      result.issues.length === 0 &&
-      input.registeredAgent != null &&
-      (input.templateDir ?? DEFAULT_TEMPLATE_DIR) === DEFAULT_TEMPLATE_DIR &&
-      input.requiredSettings === undefined &&
-      (input.configPath ?? CODEX_CONFIG_PATH) === CODEX_CONFIG_PATH
-    ) {
-      try {
-        parseCodexProjectAgent(input.registeredAgent, input.content);
-      } catch (error) {
-        result.issues.push(
-          `${input.codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    }
+    appendCanonicalRegistrationIssue(input, result);
+    appendRuntimeContractIssue(input, result);
     return result;
   } catch (error) {
     return {
@@ -272,5 +250,52 @@ export function getCodexAdapterValidation(
       templatePaths: [],
       canonicalPaths: [],
     };
+  }
+}
+
+function appendCanonicalRegistrationIssue(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): void {
+  const registeredAgent = input.registeredAgent;
+  if (registeredAgent == null) return;
+  appendValidationIssue(input.codexAdapterFile, result.issues, () => {
+    assertCanonicalCodexAgentRegistration(registeredAgent);
+  });
+}
+
+function appendRuntimeContractIssue(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): void {
+  if (!shouldValidateRuntimeContract(input, result)) return;
+  const { registeredAgent } = input;
+  appendValidationIssue(input.codexAdapterFile, result.issues, () => {
+    parseCodexProjectAgent(registeredAgent, input.content);
+  });
+}
+
+function shouldValidateRuntimeContract(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): input is CodexAdapterValidationInput & { readonly registeredAgent: CodexRegistration } {
+  return (
+    result.issues.length === 0 &&
+    input.registeredAgent != null &&
+    (input.templateDir ?? DEFAULT_TEMPLATE_DIR) === DEFAULT_TEMPLATE_DIR &&
+    input.requiredSettings === undefined &&
+    (input.configPath ?? CODEX_CONFIG_PATH) === CODEX_CONFIG_PATH
+  );
+}
+
+function appendValidationIssue(
+  codexAdapterFile: string,
+  issues: string[],
+  validate: () => void,
+): void {
+  try {
+    validate();
+  } catch (error) {
+    issues.push(`${codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

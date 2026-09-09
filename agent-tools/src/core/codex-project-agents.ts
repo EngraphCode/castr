@@ -29,6 +29,8 @@ interface AdapterMetadata {
   readonly approvalPolicy: string;
 }
 
+type AdapterPolicyMetadataKey = 'modelReasoningEffort' | 'sandboxMode' | 'approvalPolicy';
+
 export interface CodexProjectAgent {
   /** Configured binding; null means inheritance, not an observed runtime model. */
   model: string | null;
@@ -131,7 +133,7 @@ function assertAdapterPolicy(
     throw new Error(`${adapterPath}: unsupported Codex role`);
   }
 
-  const expectedSettings: readonly (readonly [keyof AdapterMetadata, string])[] = [
+  const expectedSettings: readonly (readonly [AdapterPolicyMetadataKey, string])[] = [
     ['modelReasoningEffort', role?.effort ?? 'high'],
     ['sandboxMode', 'read-only'],
     ['approvalPolicy', 'never'],
@@ -139,12 +141,7 @@ function assertAdapterPolicy(
   for (const [key, expected] of expectedSettings) {
     const actual = metadata[key];
     if (actual !== expected) {
-      const tomlKey =
-        key === 'modelReasoningEffort'
-          ? 'model_reasoning_effort'
-          : key === 'sandboxMode'
-            ? 'sandbox_mode'
-            : 'approval_policy';
+      const tomlKey = adapterPolicyTomlKey(key);
       throw new Error(`${adapterPath}: ${tomlKey} must be "${expected}" (found: ${actual})`);
     }
   }
@@ -176,6 +173,17 @@ function assertAdapterPolicy(
     throw new Error(
       `${adapterPath}: developer_instructions must reference at most one canonical persona inside ${personaDir}`,
     );
+  }
+}
+
+function adapterPolicyTomlKey(key: AdapterPolicyMetadataKey): string {
+  switch (key) {
+    case 'modelReasoningEffort':
+      return 'model_reasoning_effort';
+    case 'sandboxMode':
+      return 'sandbox_mode';
+    case 'approvalPolicy':
+      return 'approval_policy';
   }
 }
 
