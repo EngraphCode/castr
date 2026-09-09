@@ -170,9 +170,10 @@ The commission's interactive sequencing follows the [9 September prerequisite
 sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
 C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
 are delivered. PR #88 also delivered C05's platform reviewer-contract tooling;
-the root coordinating agent, Bora seeks Turbulence, holds its dependent
-native-installation custody on
-`codex/cricket-installation`, which remains unpublished.
+the root coordinating agent, Bora seeks Turbulence, holds custody of the dependent
+native installation on branch `codex/cricket-installation`. No PR has been opened
+for that installation; it may be opened only after the PR #28 transition described
+below completes.
 Follow the [Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
 land its record if absent; if the record is on main and #28 remains open, refresh
 PR #27/#28 heads and close #28 without merging or deleting its recovery branch;

@@ -103,7 +103,7 @@ surviving delta has a verified destination or evidenced supersession. Preserve i
 source and the full acceptance; reducing the count by unverified closure is not
 progress. The ledger owns the live census and closure evidence. PR #88 delivered
 the C05 tooling contract; the coordinating agent now owns its dependent native
-installation and will publish that PR only after the current Q-09 closure slice.
+installation and will open its PR only after the PR #28 transition completes.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural

@@ -58,8 +58,8 @@ the [correction plan](../../plans/active/castr-documentation-and-fidelity-correc
 retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
 and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
 PR #88; the coordinating agent accepted the dependent native Cricket
-installation at `codex/cricket-installation` commit `2af22e0f`. Publish that
-installation only after the current Q-09 closure slice. Earlier continuation
+installation at `codex/cricket-installation` commit `2af22e0f`. Open its PR only
+after the PR #28 transition completes. Earlier continuation
 instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status

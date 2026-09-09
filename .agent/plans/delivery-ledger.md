@@ -145,9 +145,9 @@ the dated records in this ledger. This is unfinished work and integration risk,
 not delivered value. The coordinating task has prepared the bounded Q-09/#28
 disposition. If its repository record is absent, land it; if the record is on main
 and #28 remains open, refresh #27/#28 and close #28 without merge; after both steps,
-follow the parent plan's current sequence. Do not publish the dependent C05
-installation PR before this transition completes. The remaining source PRs close only when
-their recorded extraction or supersession conditions are verified. The following
+follow the parent plan's current sequence. Do not open the dependent C05
+installation PR before the PR #28 transition completes. The remaining source PRs
+close only when their recorded extraction or supersession conditions are verified. The following
 6 September checks and review states are historical observations, not fresh merge
 readiness.
 

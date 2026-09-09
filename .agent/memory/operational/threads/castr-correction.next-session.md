@@ -12,7 +12,9 @@
   proceed to PR #14's dependency-ownership extraction.
 - Team: root owns compiler/foundational documentation, integration and the
   dependent native Cricket installation at `codex/cricket-installation` commit
-  `2af22e0f`; Kite hunts Eyrie delivered its tooling prerequisite as PR #88.
+  `2af22e0f`; no installation PR is open, and it may be opened only after the
+  PR #28 transition completes. Kite hunts Eyrie delivered its tooling prerequisite
+  as PR #88.
   Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
