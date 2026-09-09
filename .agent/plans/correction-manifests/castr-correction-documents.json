@@ -208,10 +208,10 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-completed",
-      "reviewed_git_blob_hash": "6df920d022e91f1d5d026200279ab21a523bac3c",
+      "reviewed_git_blob_hash": "45d80fc48bdc91ca44d562f829252011e0de2d92",
       "base_revision": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
       "review_date": "2026-09-09",
-      "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 16 open PRs and PR14 as the next delivery.",
+      "scope": "Current C05 disposition and live census only: PR91 exact-head delivery evidence, completed C05 Cricket acceptance, 17 open PRs including closeout PR92, and PR14 as the next delivery.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
         "All 16 exact-head checks passed, all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved the final candidate.",

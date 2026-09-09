@@ -147,15 +147,15 @@ Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
-The 9 September 2026 post-PR-91 live census contains 16 open PRs: the fourteen
-inherited open PRs below, frozen source #81 and current #87. PR #91 merged as
-`af840d9b`; PR #90 previously merged the bounded Q-09/#28 disposition as `cb73c4de`,
-after which PR #28 closed without merge and retained its recovery branch. This
-unfinished estate remains integration risk, not delivered value. PR #14 is the next
-delivery under the parent plan's sequence. The remaining source PRs close only when
-their recorded extraction or supersession conditions are verified. The following
-6 September checks and review states are historical observations, not fresh merge
-readiness.
+The 9 September 2026 post-PR-91 live census contains 17 open PRs: the fourteen
+inherited open PRs below, frozen source #81, current #87 and current closeout #92.
+PR #91 merged as `af840d9b`; PR #90 previously merged the bounded Q-09/#28
+disposition as `cb73c4de`, after which PR #28 closed without merge and retained its
+recovery branch. This unfinished estate remains integration risk, not delivered value.
+PR #14 is the next delivery under the parent plan's sequence. The remaining source
+PRs close only when their recorded extraction or supersession conditions are verified.
+The following 6 September checks and review states are historical observations, not
+fresh merge readiness.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.
@@ -269,5 +269,6 @@ not authorise another shepherd to resolve review or merge conditions.
 
 | PR and observed head                                                                            | Recorded state                                                                                                                            | Value, overlap and owner                                                                                                                                                                                   | Required disposition evidence                                                                                                                                                                                                                      |
 | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#92](https://github.com/EngraphCode/castr/pull/92), `79cb1fcd28c42c37e4c265292d5a585be7fd5db3` | Open at this record; 17 successful exact-head checks plus one in-progress Copilot run (18 total check runs observed).                  | Current C05 Cricket atomic closeout. It records PR #91 installation acceptance and routes the next delivery to PR #14 while preserving broader C05/Q-09/Q-22/C09/C10 obligations.                      | Harvest exact-head checks, review threads, specialist reviews and merge evidence at merge time; keep the record scoped to atomic C05 Cricket completion and preserve separate broader C05 obligations.                                           |
 | [#87](https://github.com/EngraphCode/castr/pull/87), `4326876a9e67320a4580481f615ca7121a220e9c` | Open; 16 successful checks; four unresolved review threads in the 9 September full harvest, including owner questions on two P1 warrants. | Separately shepherded JSON Schema roadmap and interoperability research; C09 reconciles its direction and C06/C07 overlap against main. Broader graph intentions do not implicitly expand this commission. | Its shepherd must settle the owner questions and all review findings, verify current-head conditions and record the actual merge or surviving-value disposition. Root must compare its integrated doctrine before extracting prepared vision work. |
 | [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 Cricket platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                               | Its separate installation acceptance was subsequently delivered through PR #91 as `af840d9b`; the completed atomic plan is linked above.                                                                                                           |
