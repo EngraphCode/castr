@@ -1,12 +1,8 @@
 /**
- * Validation Parity Integration Tests - Petstore Expanded (allOf Composition)
- *
- * PROVES that generated Zod schemas for allOf composition validate data correctly.
- * The Pet schema uses allOf composition: `NewPet.and(z.object({ id }))`
- *
- * Key tests:
- * - Intersection types require ALL properties from ALL schemas
- * - NewPet (name required, tag optional) + `{ id required }`
+ * Exercises checked-in expanded Petstore Zod validators, including Pet allOf.
+ * Error cases assert the intended validation issues and exact parsed values.
+ * Other cases observe acceptance or rejection only. This suite does not run
+ * regeneration or establish complete composition, object or int64 fidelity.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -127,21 +123,31 @@ describe('Error Schema Validation (petstore-expanded)', () => {
     it('accepts object with all required fields', () => {
       const validError = { code: 404, message: 'Not found' };
 
-      expect(() => ErrorSchema.parse(validError)).not.toThrow();
+      expect(ErrorSchema.parse(validError)).toStrictEqual(validError);
     });
   });
 
-  describe('invalid data throws', () => {
-    it('throws for object missing required field: code', () => {
+  describe('invalid data produces validation issues', () => {
+    it('rejects object missing required field: code', () => {
       const invalidError = { message: 'error' };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+        },
+      });
     });
 
-    it('throws for object with non-integer code (float)', () => {
+    it('rejects object with non-integer code (float)', () => {
       const invalidError = { code: 1.5, message: 'error' };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
+        },
+      });
     });
   });
 });

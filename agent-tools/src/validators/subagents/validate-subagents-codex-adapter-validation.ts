@@ -14,22 +14,24 @@
  * All logic is I/O-free — callers supply content as strings.
  */
 
-import {
-  CODEX_CONFIG_PATH,
-  type CodexRegistration,
-  readTomlBasicStringValue,
-} from './validate-subagents-codex-toml.js';
+import { CODEX_CONFIG_PATH, type CodexRegistration } from './validate-subagents-codex-toml.js';
 
-import {
-  extractCanonicalPaths,
-  readCodexDeveloperInstructions,
-} from './validate-subagents-codex-instructions.js';
+import { extractCanonicalPaths } from './validate-subagents-codex-instructions.js';
+import { readCodexAdapterDocument } from '../../core/codex-adapter-document.js';
+import { tomlString } from '../../core/toml-document.js';
 
 import {
   stripBasename,
   validateAdapterFields,
 } from './validate-subagents-codex-adapter-field-checks.js';
 import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platform-contract.js';
+import {
+  canonicalAgentReferenceIssue,
+  isCanonicalAgentReferenceInside,
+  isCanonicalAgentTemplateReference,
+} from '../../core/canonical-agent-reference.js';
+import { parseCodexProjectAgent } from '../../core/codex-project-agents.js';
+import { assertCanonicalCodexAgentRegistration } from '../../core/codex-agent-registration-contract.js';
 
 // ---------------------------------------------------------------------------
 // Module-private constants
@@ -37,6 +39,9 @@ import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platf
 
 /** Default base directory for Codex agent template files. */
 const DEFAULT_TEMPLATE_DIR = '.agent/sub-agents/templates';
+
+/** Default base directory for optional reviewer persona files. */
+const DEFAULT_PERSONA_DIR = '.agent/sub-agents/components/personas';
 
 // ---------------------------------------------------------------------------
 // Public constants
@@ -123,6 +128,7 @@ export interface CodexAdapterValidationResult {
  * Validates a single Codex subagent adapter TOML file.
  *
  * Checks performed:
+ * - The complete TOML document contains only declared reviewer string fields.
  * - Required TOML keys `name` and `description` are present.
  * - The `name` value matches the adapter's filename (without `.toml`).
  * - A matching entry exists in `.codex/config.toml`, and both `name` and
@@ -147,6 +153,7 @@ function validateCodexAdapter({
   requiredSettings,
   configPath = CODEX_CONFIG_PATH,
 }: CodexAdapterValidationInput): CodexAdapterValidationResult {
+  const document = readCodexAdapterDocument(content);
   const adapterBasename = stripBasename(codexAdapterFile, '.toml');
   const role = cricketRole(adapterBasename);
   const roleSettings = role?.codexModel
@@ -157,37 +164,52 @@ function validateCodexAdapter({
         ['approval_policy', 'never'] as const,
       ]
     : REQUIRED_CODEX_SETTINGS;
-  const declaredName = readTomlBasicStringValue(content, 'name');
-  const declaredDescription = readTomlBasicStringValue(content, 'description');
-  // Ordinary reviewers may inherit a model, but an explicit value must be a string.
-  readTomlBasicStringValue(content, 'model');
+  const declaredName = tomlString(document, 'name');
+  const declaredDescription = tomlString(document, 'description');
   const issues: string[] = validateAdapterFields(
     codexAdapterFile,
     adapterBasename,
     declaredName,
     declaredDescription,
     registeredAgent,
-    content,
+    document,
     requiredSettings ?? roleSettings,
     configPath,
   );
   if (!supportsReviewer(adapterBasename, 'codex'))
     issues.push(`${codexAdapterFile}: unsupported Codex role`);
-  const developerInstructions = readCodexDeveloperInstructions(content);
+  const developerInstructions = tomlString(document, 'developer_instructions')?.trim() ?? '';
   if (!developerInstructions) {
     issues.push(`${codexAdapterFile}: missing non-empty developer_instructions string`);
     return { issues, templatePaths: [], canonicalPaths: [] };
   }
-  const canonicalPaths = extractCanonicalPaths(developerInstructions);
-  const templatePaths = canonicalPaths.filter((p) => p.startsWith(`${templateDir}/`));
+  const extractedCanonicalPaths = extractCanonicalPaths(developerInstructions);
+  for (const path of extractedCanonicalPaths) {
+    const pathIssue = canonicalAgentReferenceIssue(path);
+    if (pathIssue !== null) issues.push(`${codexAdapterFile}: ${pathIssue}`);
+  }
+  const canonicalPaths = extractedCanonicalPaths.filter(
+    (path) => canonicalAgentReferenceIssue(path) === null,
+  );
+  const templatePaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentTemplateReference(path, templateDir),
+  );
+  const personaPaths = canonicalPaths.filter((path) =>
+    isCanonicalAgentReferenceInside(path, DEFAULT_PERSONA_DIR),
+  );
   if (role && (templatePaths.length !== 1 || templatePaths[0] !== role.templatePath)) {
     issues.push(
       `${codexAdapterFile}: developer_instructions must reference exactly ${role.templatePath} for its Cricket method contract`,
     );
   }
-  if (templatePaths.length === 0) {
+  if (!role && templatePaths.length !== 1) {
     issues.push(
-      `${codexAdapterFile}: developer_instructions must reference at least one canonical template inside ${templateDir}`,
+      `${codexAdapterFile}: developer_instructions must reference exactly one canonical template inside ${templateDir}`,
+    );
+  }
+  if (personaPaths.length > 1) {
+    issues.push(
+      `${codexAdapterFile}: developer_instructions must reference at most one canonical persona inside ${DEFAULT_PERSONA_DIR}`,
     );
   }
   return { issues, templatePaths, canonicalPaths };
@@ -198,7 +220,7 @@ function validateCodexAdapter({
  *
  * @param input - Adapter path/source, matching registration and optional contract overrides.
  * @returns File-scoped issues plus canonical/template paths found in instructions.
- * TOML parsing and field-type errors become issues with empty path lists rather
+ * TOML parsing, undeclared-field and field-type errors become issues with empty path lists rather
  * than escaping as exceptions. Ordinary models may be omitted; explicit values
  * must be strings. Cricket requires its exact supported role bindings and method.
  * This pure boundary does not check whether referenced files exist.
@@ -216,7 +238,10 @@ export function getCodexAdapterValidation(
   input: CodexAdapterValidationInput,
 ): CodexAdapterValidationResult {
   try {
-    return validateCodexAdapter(input);
+    const result = validateCodexAdapter(input);
+    appendCanonicalRegistrationIssue(input, result);
+    appendRuntimeContractIssue(input, result);
+    return result;
   } catch (error) {
     return {
       issues: [
@@ -225,5 +250,52 @@ export function getCodexAdapterValidation(
       templatePaths: [],
       canonicalPaths: [],
     };
+  }
+}
+
+function appendCanonicalRegistrationIssue(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): void {
+  const registeredAgent = input.registeredAgent;
+  if (registeredAgent == null) return;
+  appendValidationIssue(input.codexAdapterFile, result.issues, () => {
+    assertCanonicalCodexAgentRegistration(registeredAgent);
+  });
+}
+
+function appendRuntimeContractIssue(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): void {
+  if (!shouldValidateRuntimeContract(input, result)) return;
+  const { registeredAgent } = input;
+  appendValidationIssue(input.codexAdapterFile, result.issues, () => {
+    parseCodexProjectAgent(registeredAgent, input.content);
+  });
+}
+
+function shouldValidateRuntimeContract(
+  input: CodexAdapterValidationInput,
+  result: CodexAdapterValidationResult,
+): input is CodexAdapterValidationInput & { readonly registeredAgent: CodexRegistration } {
+  return (
+    result.issues.length === 0 &&
+    input.registeredAgent != null &&
+    (input.templateDir ?? DEFAULT_TEMPLATE_DIR) === DEFAULT_TEMPLATE_DIR &&
+    input.requiredSettings === undefined &&
+    (input.configPath ?? CODEX_CONFIG_PATH) === CODEX_CONFIG_PATH
+  );
+}
+
+function appendValidationIssue(
+  codexAdapterFile: string,
+  issues: string[],
+  validate: () => void,
+): void {
+  try {
+    validate();
+  } catch (error) {
+    issues.push(`${codexAdapterFile}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

@@ -1,7 +1,8 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { isAbsolute, join, posix } from 'node:path';
+import { isAbsolute, posix } from 'node:path';
 import type { TomlTable } from 'smol-toml';
+import { assertCanonicalCodexAgentRegistration } from './codex-agent-registration-contract.js';
 import { readAgentRegistrations, tomlString } from './toml-document.js';
+import { readRequiredRepositorySourceSync } from './required-repository-source.js';
 
 export const CODEX_CONFIG_PATH = '.codex/config.toml';
 
@@ -21,10 +22,7 @@ export interface CodexAgentRegistration {
 export function parseCodexAgentRegistrations(content: string): CodexAgentRegistration[] {
   const entries = readAgentRegistrations(content);
   for (const entry of entries) {
-    if (!entry.description)
-      throw new Error("Codex agent '" + entry.name + "' is missing a description.");
-    if (!entry.configFile)
-      throw new Error("Codex agent '" + entry.name + "' is missing a config_file.");
+    assertCanonicalCodexAgentRegistration(entry);
   }
   return entries.toSorted((a, b) => a.name.localeCompare(b.name));
 }
@@ -36,10 +34,16 @@ export function parseCodexAgentRegistrations(content: string): CodexAgentRegistr
  * @throws If the registry cannot be read or fails {@link parseCodexAgentRegistrations}.
  */
 export function readCodexAgentRegistrations(repoRoot: string): CodexAgentRegistration[] {
-  const configPath = join(repoRoot, CODEX_CONFIG_PATH);
-  if (!existsSync(configPath))
-    throw new Error('Missing Codex project-agent registry: ' + CODEX_CONFIG_PATH);
-  return parseCodexAgentRegistrations(readFileSync(configPath, 'utf8'));
+  try {
+    return parseCodexAgentRegistrations(
+      readRequiredRepositorySourceSync(repoRoot, CODEX_CONFIG_PATH),
+    );
+  } catch (error) {
+    throw new Error(
+      `Missing or unreadable Codex project-agent registry: ${CODEX_CONFIG_PATH}. ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error },
+    );
+  }
 }
 
 /**

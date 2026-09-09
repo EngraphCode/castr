@@ -396,6 +396,31 @@ describe('writeOpenApiPaths', () => {
   });
 
   describe('security', () => {
+    it('omits security when the operation inherits the document requirements', () => {
+      const result = writeOpenApiPaths([createOperation()]);
+      const operation = result['/test']?.get;
+
+      expect(operation).toBeDefined();
+      expect(Object.hasOwn(operation ?? {}, 'security')).toBe(false);
+      expect(operation?.security).toBeUndefined();
+    });
+
+    it('preserves an explicit empty array that removes document security', () => {
+      const result = writeOpenApiPaths([createOperation({ security: [] })]);
+      const operation = result['/test']?.get;
+
+      expect(Object.hasOwn(operation ?? {}, 'security')).toBe(true);
+      expect(operation?.security).toStrictEqual([]);
+    });
+
+    it('preserves an anonymous alternative as an authored empty requirement', () => {
+      const result = writeOpenApiPaths([createOperation({ security: [{ schemes: [] }] })]);
+      const operation = result['/test']?.get;
+
+      expect(Object.hasOwn(operation ?? {}, 'security')).toBe(true);
+      expect(operation?.security).toStrictEqual([{}]);
+    });
+
     it('converts security requirements', () => {
       const operations: CastrOperation[] = [
         createOperation({

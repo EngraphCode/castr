@@ -1,7 +1,10 @@
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-
-import { CODEX_CONFIG_PATH, readCodexAgentRegistrations } from './codex-project-agent-registry.js';
+import {
+  CODEX_CONFIG_PATH,
+  readCodexAgentRegistrations,
+  resolveCodexAgentConfigFilePath,
+} from './codex-project-agent-registry.js';
+import { resolveRegisteredCodexProjectAgent } from './codex-project-agents.js';
+import { completeReviewerNames, supportsReviewer } from './reviewer-adapter-platform-contract.js';
 import {
   CLAUDE_AGENTS_DIR,
   CODEX_AGENTS_DIR,
@@ -15,12 +18,23 @@ export function evaluateParityChecks(repoRoot: string): readonly HealthCheckResu
 }
 
 function evaluateReviewerAdapterParity(repoRoot: string): HealthCheckResult {
-  const cursorAgents = listBasenames(repoRoot, CURSOR_AGENTS_DIR, '.md');
-  const claudeAgents = listBasenames(repoRoot, CLAUDE_AGENTS_DIR, '.md');
-  const codexAgents = listBasenames(repoRoot, CODEX_AGENTS_DIR, '.toml');
-  const allAgentNames = [...new Set([...cursorAgents, ...claudeAgents, ...codexAgents])].sort(
-    (a, b) => a.localeCompare(b),
-  );
+  let cursorAgents: string[];
+  let claudeAgents: string[];
+  let codexAgents: string[];
+  try {
+    cursorAgents = listBasenames(repoRoot, CURSOR_AGENTS_DIR, '.md');
+    claudeAgents = listBasenames(repoRoot, CLAUDE_AGENTS_DIR, '.md');
+    codexAgents = listBasenames(repoRoot, CODEX_AGENTS_DIR, '.toml');
+  } catch (error) {
+    return {
+      key: 'reviewer-adapter-parity',
+      label: 'Reviewer adapter parity',
+      status: 'fail',
+      summary: 'Reviewer adapter estates could not be enumerated safely.',
+      details: [error instanceof Error ? error.message : String(error)],
+    };
+  }
+  const allAgentNames = completeReviewerNames([...cursorAgents, ...claudeAgents, ...codexAgents]);
   const details = collectReviewerAdapterParityDetails(allAgentNames, {
     cursorAgents,
     claudeAgents,
@@ -46,7 +60,13 @@ function evaluateReviewerAdapterParity(repoRoot: string): HealthCheckResult {
   };
 }
 
-function collectReviewerAdapterParityDetails(
+/**
+ * Compare installed reviewer names against each platform's supported roster.
+ * @param allAgentNames - Complete canonical reviewer names to assess.
+ * @param platformAgents - Installed reviewer names grouped by platform.
+ * @returns Operator-facing parity diagnostics; empty means the rosters align.
+ */
+export function collectReviewerAdapterParityDetails(
   allAgentNames: readonly string[],
   platformAgents: {
     readonly cursorAgents: readonly string[];
@@ -63,7 +83,12 @@ function collectReviewerAdapterParityDetails(
     if (!platformAgents.claudeAgents.includes(agentName)) {
       details.push(`Claude Code is missing reviewer adapter ${agentName}.`);
     }
-    if (!platformAgents.codexAgents.includes(agentName)) {
+    if (!supportsReviewer(agentName, 'codex') && platformAgents.codexAgents.includes(agentName)) {
+      details.push(`Codex has unsupported reviewer adapter ${agentName}.`);
+    } else if (
+      supportsReviewer(agentName, 'codex') &&
+      !platformAgents.codexAgents.includes(agentName)
+    ) {
       details.push(`Codex is missing reviewer adapter ${agentName}.`);
     }
   }
@@ -72,11 +97,21 @@ function collectReviewerAdapterParityDetails(
 }
 
 function evaluateReviewerRegistrationParity(repoRoot: string): HealthCheckResult {
-  const codexAdapterNames = listBasenames(repoRoot, CODEX_AGENTS_DIR, '.toml');
-
   try {
+    const codexAdapterNames = listBasenames(repoRoot, CODEX_AGENTS_DIR, '.toml');
     const registrations = readCodexAgentRegistrations(repoRoot);
-    const details = collectReviewerRegistrationDetails(repoRoot, codexAdapterNames, registrations);
+    const details = collectReviewerRegistrationDetails(
+      codexAdapterNames,
+      registrations,
+      (_adapterPath, registration) => {
+        try {
+          resolveRegisteredCodexProjectAgent(repoRoot, registration);
+          return null;
+        } catch (error) {
+          return error instanceof Error ? error.message : String(error);
+        }
+      },
+    );
 
     if (details.length > 0) {
       return {
@@ -106,16 +141,19 @@ function evaluateReviewerRegistrationParity(repoRoot: string): HealthCheckResult
   }
 }
 
-function collectReviewerRegistrationDetails(
-  repoRoot: string,
+export function collectReviewerRegistrationDetails(
   codexAdapterNames: readonly string[],
-  registrations: readonly { name: string; configFile: string }[],
+  registrations: readonly { name: string; description: string; configFile: string }[],
+  getSourceIssue: (
+    relativePath: string,
+    registration: { name: string; description: string; configFile: string },
+  ) => string | null,
 ): string[] {
-  const registrationNames = registrations.map((registration) => registration.name);
+  const registrationNames = new Set(registrations.map((registration) => registration.name));
   const details: string[] = [];
 
   for (const adapterName of codexAdapterNames) {
-    if (!registrationNames.includes(adapterName)) {
+    if (!registrationNames.has(adapterName)) {
       details.push(
         `Codex adapter ${adapterName} is missing a registry entry in ${CODEX_CONFIG_PATH}.`,
       );
@@ -123,8 +161,12 @@ function collectReviewerRegistrationDetails(
   }
 
   for (const registration of registrations) {
-    if (!existsSync(join(repoRoot, registration.configFile))) {
-      details.push(`${CODEX_CONFIG_PATH} points at missing adapter ${registration.configFile}.`);
+    const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
+    const sourceIssue = getSourceIssue(adapterPath, registration);
+    if (sourceIssue) {
+      details.push(
+        `${CODEX_CONFIG_PATH} cannot resolve adapter ${registration.configFile}. ${sourceIssue}`,
+      );
     }
   }
 

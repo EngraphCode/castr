@@ -13,7 +13,7 @@
     "reproduction": "current_reproduction is pending until the actual behavioural counterexample or applicable non-code check is executed on a named revision.",
     "dependencies": "original_dependencies records inherited queue ordering; technical_dependencies contains separately justified repair dependencies. Absence of an entry is not a claim that the entire implementation has no dependencies.",
     "proofs": "closing_proof_ids resolves in shared_closing_proofs. A proof description is proposed acceptance, never executed evidence.",
-    "closure": "No finding is closed by this inventory. Historical bounded landings, exclusions, reproductions, repairs and merged delivery remain separate facts."
+    "closure": "Inventory membership never closes a finding. Closure requires explicit bounded acceptance and merged evidence; historical landings, exclusions, reproductions and prepared repairs remain separate facts."
   },
   "scope": {
     "included": [
@@ -126,9 +126,9 @@
     "original_rejected_or_downgraded_candidates": 9,
     "later_findings_and_carry_forwards": 16,
     "queue_carriers": 30,
-    "total_finding_records": 97,
+    "total_finding_records": 99,
     "baseline_finding_records": 96,
-    "post_baseline_discoveries": 1
+    "post_baseline_discoveries": 3
   },
   "queue_carriers": [
     {
@@ -144,7 +144,7 @@
       "baseline_status": "completed",
       "original_depends_on": [],
       "original_gate": "See source brief.",
-      "original_acceptance": "Acceptance (`non-code`): every ballot item carries a verdict; ADR-051 status updated per the atomic B-12 rule; affected surfaces (roadmap, prompts, active-lane banners) synchronised in the same landing; ballot marked CLOSED; and every success-gated queue row whose required Gate items lack a success verdict is marked `blocked` in this frontmatter with the declining verdict named. **Closure is not ratification**: Q-00 reaching `complete` unlocks a dependent row only when that row's named Gate items carry success verdicts — a REJECT or DEFER on a required verdict leaves the row `blocked` for scheduled and owner-driven execution alike, pending re-ballot or re-plan.",
+      "original_acceptance": "Acceptance (`non-code`): every ballot item carries a verdict; ADR-051 status updated per the atomic B-12 rule; affected surfaces (roadmap, prompts, active-lane banners) synchronised in the same landing; ballot marked CLOSED; and every success-gated queue row whose required Gate items lack a success verdict is marked `blocked` in this frontmatter with the declining verdict named. **Closure is not ratification**: Q-00 reaching `complete` unlocks a dependent row only when that row's named Gate items carry success verdicts \u2014 a REJECT or DEFER on a required verdict leaves the row `blocked` for scheduled and owner-driven execution alike, pending re-ballot or re-plan.",
       "commission_scope": "historical_evidence_and_documentary_reconciliation",
       "scope_reason": "Retain the completed historical owner walk and reconcile its current framing; do not reopen product usefulness or approvals already supplied by the owner.",
       "current_reproduction": "pending",
@@ -163,7 +163,7 @@
       "baseline_status": "completed",
       "original_depends_on": [],
       "original_gate": "See source brief.",
-      "original_acceptance": "Acceptance (`e2e`, observed): a fresh container completes the full blocking hook chain unattended; the cron Routine is created **disabled** in fresh-session mode and fired once manually; the spawned session executes the prompt's no-op path (STOP-check → report → handoff), posts the dry-run's stand-down broadcast (loop identity, criterion \"dry-run complete\", one-line closeout) per `loop-exit-criteria-required` — proving the comms-echo half of the broadcast path ADR-051 clause 6 requires on every firing-side loop exit (the tracked-record half postdates this proof: QD-5, 2026-08-23, under which dry runs stay comms-echo + completion-summary only) — and the completion notification reaches the owner. (Platform premise verified live 2026-08-22: create_trigger → immediate disable → manual fire_trigger spawned a fresh session while the Routine stayed disabled for scheduled firings.) The Routine then stays **disabled** until Q-00 closes — or, when Q-00 is already `complete` with success verdicts on B-12, B-13, and B-16, is **enabled** under the ballot's after-walk rule instead: the enable is order-independent, performed by whichever of Q-00 closure and this slice's proof lands second, so neither ordering strands the Routine disabled after full authorisation. **Enabling sequences strictly after this slice's own PR merges**: an enabled Routine with Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step (with the B-15 notification configuration re-checked against the ballot's B-15 as currently amended — 2026-08-27 second amendment: push + Slack, no email, device-push-only receipt gate; the ratified set is always the ballot's latest amendment) is the last act of the Q-01 firing, performed only once the merged base carries the row's `complete` state. The enable step applies the recorded B-15 outcome to the Routine's notification configuration **before** enabling — including disabling routine completion-notification delivery on a B-15 REJECT — so the running loop's channels always match the accepted ADR's clause 7. A B-15 REJECT strikes clause 7's routine notifications only: the escalation notifications accepted clause 6 itself mandates (the zero-progress disable, a failed red-head repair, a blocked-slice stop) keep their delivery channel regardless, because striking clause 7 does not strike clause 6's notify duties. The pre-verdict dry run may prove the notification mechanism with delivery on, as a bounded one-firing proof, without pre-empting that verdict. Evidence note: the platform surface (fresh-session-per-fire Routines with completion notifications) is confirmed against the live platform API in the authoring session; this slice proves the end-to-end behaviour.",
+      "original_acceptance": "Acceptance (`e2e`, observed): a fresh container completes the full blocking hook chain unattended; the cron Routine is created **disabled** in fresh-session mode and fired once manually; the spawned session executes the prompt's no-op path (STOP-check \u2192 report \u2192 handoff), posts the dry-run's stand-down broadcast (loop identity, criterion \"dry-run complete\", one-line closeout) per `loop-exit-criteria-required` \u2014 proving the comms-echo half of the broadcast path ADR-051 clause 6 requires on every firing-side loop exit (the tracked-record half postdates this proof: QD-5, 2026-08-23, under which dry runs stay comms-echo + completion-summary only) \u2014 and the completion notification reaches the owner. (Platform premise verified live 2026-08-22: create_trigger \u2192 immediate disable \u2192 manual fire_trigger spawned a fresh session while the Routine stayed disabled for scheduled firings.) The Routine then stays **disabled** until Q-00 closes \u2014 or, when Q-00 is already `complete` with success verdicts on B-12, B-13, and B-16, is **enabled** under the ballot's after-walk rule instead: the enable is order-independent, performed by whichever of Q-00 closure and this slice's proof lands second, so neither ordering strands the Routine disabled after full authorisation. **Enabling sequences strictly after this slice's own PR merges**: an enabled Routine with Q-01's PR still open could drive or re-claim the very slice arming it, so the enable step (with the B-15 notification configuration re-checked against the ballot's B-15 as currently amended \u2014 2026-08-27 second amendment: push + Slack, no email, device-push-only receipt gate; the ratified set is always the ballot's latest amendment) is the last act of the Q-01 firing, performed only once the merged base carries the row's `complete` state. The enable step applies the recorded B-15 outcome to the Routine's notification configuration **before** enabling \u2014 including disabling routine completion-notification delivery on a B-15 REJECT \u2014 so the running loop's channels always match the accepted ADR's clause 7. A B-15 REJECT strikes clause 7's routine notifications only: the escalation notifications accepted clause 6 itself mandates (the zero-progress disable, a failed red-head repair, a blocked-slice stop) keep their delivery channel regardless, because striking clause 7 does not strike clause 6's notify duties. The pre-verdict dry run may prove the notification mechanism with delivery on, as a bounded one-firing proof, without pre-empting that verdict. Evidence note: the platform surface (fresh-session-per-fire Routines with completion notifications) is confirmed against the live platform API in the authoring session; this slice proves the end-to-end behaviour.",
       "commission_scope": "historical_evidence_and_documentary_reconciliation",
       "scope_reason": "Retain historical loop-readiness evidence and correct its current documentation. Scheduled experiment enablement and recreation of retired arming/probe machinery remain excluded; this does not bar separately authorised interactive repairs or proofs.",
       "current_reproduction": "pending",
@@ -190,7 +190,7 @@
     },
     {
       "id": "Q-03",
-      "title": "F-01 security AND→OR",
+      "title": "F-01 security AND\u2192OR",
       "source": {
         "register": "queue",
         "path": ".agent/plans/proof-programme/parent-plan.md",
@@ -201,7 +201,7 @@
       "baseline_status": "completed",
       "original_depends_on": ["Q-00"],
       "original_gate": "B-11 (success verdict).",
-      "original_acceptance": "Acceptance (`integration`): red-first formula-preserving proof through public parse/write seams — `{A AND B}` vs `A OR B` distinguishable end to end; `pnpm check` green.",
+      "original_acceptance": "Acceptance (`integration`): red-first formula-preserving proof through public parse/write seams \u2014 `{A AND B}` vs `A OR B` distinguishable end to end; `pnpm check` green.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
       "current_reproduction": "pending",
@@ -333,7 +333,7 @@
       },
       "baseline_status": "pending",
       "original_depends_on": ["Q-00"],
-      "original_gate": "B-11 **(outcome gate)** — eligible on any recorded verdict except DEFER, exempt from the success-verdict rule; it executes whichever outcome was recorded.",
+      "original_gate": "B-11 **(outcome gate)** \u2014 eligible on any recorded verdict except DEFER, exempt from the success-verdict rule; it executes whichever outcome was recorded.",
       "original_acceptance": "Acceptance (`non-code`): #23 closed with the verification recorded and the transplant plan's disposition banner resolved.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
@@ -352,7 +352,7 @@
       },
       "baseline_status": "pending",
       "original_depends_on": ["Q-00", "Q-14"],
-      "original_gate": "B-01, B-07, B-09, and B-10 (success verdicts — all recorded 2026-08-22; the former B-02..B-06 and B-08 are folded into B-01/B-07 per the ballot's reduction log, so they gate through those two items). Ordered after Q-14 (`depends_on`): the B-09 doctrine wave lands first, so this charter-consuming slice never grounds in doctrine surfaces that contradict the charter it implements.",
+      "original_gate": "B-01, B-07, B-09, and B-10 (success verdicts \u2014 all recorded 2026-08-22; the former B-02..B-06 and B-08 are folded into B-01/B-07 per the ballot's reduction log, so they gate through those two items). Ordered after Q-14 (`depends_on`): the B-09 doctrine wave lands first, so this charter-consuming slice never grounds in doctrine surfaces that contradict the charter it implements.",
       "original_acceptance": "Acceptance (`unit` + `integration`): validator rejects vacuous/duplicate/ownerless rows; `tsc` exhaustiveness green on the contract types; gates green.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
@@ -372,7 +372,7 @@
       "baseline_status": "pending",
       "original_depends_on": ["Q-10", "Q-02"],
       "original_gate": "See source brief.",
-      "original_acceptance": "Acceptance (`integration`): report §7 Tranche 01 acceptance list.",
+      "original_acceptance": "Acceptance (`integration`): report \u00a77 Tranche 01 acceptance list.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
       "current_reproduction": "pending",
@@ -409,7 +409,7 @@
       },
       "baseline_status": "pending",
       "original_depends_on": [],
-      "original_gate": "B-09 (success verdict — recorded 2026-08-22). Decided inputs (owner interactive walk, 2026-08-23, recorded in `.agent/memory/operational/open-questions.md` Q-012/Q-014/Q-015): the second product's name is **\"the Practice\"** (VISION/IDENTITY describe both products by name); **preservation-coverage %** is the compiler's adopted headline metric — the vision rewrite names it as the metric whose value the proof estate computes (Q-10/Q-11, remediation-02 family) and publishes **no percentage before the computation exists**, so the adopted metric never becomes another asserted claim; the `Object.*`/`Reflect.*` doctrine stands as written and is lint-enforced via a remediation lane entering at the Q-12 split — the doctrine wave must not soften that clause to match current code.",
+      "original_gate": "B-09 (success verdict \u2014 recorded 2026-08-22). Decided inputs (owner interactive walk, 2026-08-23, recorded in `.agent/memory/operational/open-questions.md` Q-012/Q-014/Q-015): the second product's name is **\"the Practice\"** (VISION/IDENTITY describe both products by name); **preservation-coverage %** is the compiler's adopted headline metric \u2014 the vision rewrite names it as the metric whose value the proof estate computes (Q-10/Q-11, remediation-02 family) and publishes **no percentage before the computation exists**, so the adopted metric never becomes another asserted claim; the `Object.*`/`Reflect.*` doctrine stands as written and is lint-enforced via a remediation lane entering at the Q-12 split \u2014 the doctrine wave must not soften that clause to match current code.",
       "original_acceptance": "Acceptance (`non-code`): every named surface expresses the charter with its disposition recorded; no surface still asserts the universal-IR framing; gates green (including `validate-reference-direction`).",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
@@ -429,7 +429,7 @@
       "baseline_status": "pending",
       "original_depends_on": ["Q-20"],
       "original_gate": "none (eligible immediately).",
-      "original_acceptance": "Acceptance (`e2e`, observed): a fresh container completes ground → edit → commit → push unattended with every guard active, recorded in the slice PR.",
+      "original_acceptance": "Acceptance (`e2e`, observed): a fresh container completes ground \u2192 edit \u2192 commit \u2192 push unattended with every guard active, recorded in the slice PR.",
       "commission_scope": "retained_runtime_obligation_and_documentary_reconciliation",
       "scope_reason": "Q-20's approved documentary work rewrites this readiness brief and names future validity checks; that documentation landing does not execute or discharge Q-15's runtime acceptance. Retain the named runtime obligation and any current implementation defects. The scheduling pause is not a blanket prohibition on owner-directed execution; its eventual execution or separate scope disposition remains explicit.",
       "current_reproduction": "pending",
@@ -448,7 +448,7 @@
       "baseline_status": "pending",
       "original_depends_on": [],
       "original_gate": "none (eligible immediately).",
-      "original_acceptance": "Acceptance (`non-code`): every reference in the skill file resolves, recomputed rather than eyeballed — note the tool's real contract: `validate-markdown-links` takes no file arguments (it scans the whole repo) and currently exits 0 regardless (`BLOCKING = false` pending the census remediation), so **the signal is the plan skill's path being absent from the validator's by-file report, never the exit code**; the two prose-only ADR-117 sites (lines 260/262) are grep-checked since no link validator sees them; gates green.",
+      "original_acceptance": "Acceptance (`non-code`): every reference in the skill file resolves, recomputed rather than eyeballed \u2014 note the tool's real contract: `validate-markdown-links` takes no file arguments (it scans the whole repo) and currently exits 0 regardless (`BLOCKING = false` pending the census remediation), so **the signal is the plan skill's path being absent from the validator's by-file report, never the exit code**; the two prose-only ADR-117 sites (lines 260/262) are grep-checked since no link validator sees them; gates green.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
       "current_reproduction": "pending",
@@ -486,7 +486,7 @@
       "baseline_status": "pending",
       "original_depends_on": [],
       "original_gate": "none (eligible immediately).",
-      "original_acceptance": "Acceptance (`non-code`): the prompt carries all three touch points with the trace classes enumerated, AND states the check's bounds — the bounded lookback, the neutral owner-pause/silent-death framing, and that it catches the intermittent case one slot late and does not observe sustained absence, an accepted risk at current stakes per the owner's decline; gates green.",
+      "original_acceptance": "Acceptance (`non-code`): the prompt carries all three touch points with the trace classes enumerated, AND states the check's bounds \u2014 the bounded lookback, the neutral owner-pause/silent-death framing, and that it catches the intermittent case one slot late and does not observe sustained absence, an accepted risk at current stakes per the owner's decline; gates green.",
       "commission_scope": "in_scope_documentary_carrier",
       "scope_reason": "The original Q-18 acceptance is prompt/documentary correction and remains included in comprehensive documentation work. Preserve all three touch points and the bounded historical observation contract; known pauses create no expected autonomous slots or retrospective firing backlog.",
       "current_reproduction": "pending",
@@ -654,8 +654,8 @@
       },
       "baseline_status": "pending",
       "original_depends_on": ["Q-24", "Q-25"],
-      "original_gate": "`depends_on: [Q-24, Q-25]` (the complement AND the dialect exist before the doctrine claims them — Q-25 added at PR #73 review: the ADR's clause (3) defines the dialect Q-25 builds).",
-      "original_acceptance": "Acceptance (`non-code`, QD-14 reading — no test exists for a doctrine surface): ADR accepted, indexes reconciled, `docs-adr-expert` review recorded; gates green.",
+      "original_gate": "`depends_on: [Q-24, Q-25]` (the complement AND the dialect exist before the doctrine claims them \u2014 Q-25 added at PR #73 review: the ADR's clause (3) defines the dialect Q-25 builds).",
+      "original_acceptance": "Acceptance (`non-code`, QD-14 reading \u2014 no test exists for a doctrine surface): ADR accepted, indexes reconciled, `docs-adr-expert` review recorded; gates green.",
       "commission_scope": "in_scope_documentary_carrier",
       "scope_reason": "Reconcile the static-parsing doctrine with its implemented dialect and vendor-oracle complement, preserving original dependencies and truthful distinctions between intended and demonstrated behaviour.",
       "current_reproduction": "pending",
@@ -732,7 +732,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L8"
       },
-      "original_acceptance": "**Suggested fix** — (a) Override `noEmit:false` in `lib/tsconfig.json` (or add `--noEmit false` to the build, or use tsup `dts:true`); (b) set `declarationDir`/`rootDir` so `.d.ts` land at the `types` paths (or use `tsup --dts` which mirrors the JS layout); (c) repoint `./parsers/zod` to `./dist/schema-processing/parsers/zod/index.{js,d.ts}` **or** add a real `src/parsers/zod/index.ts` re-export entry; (d) add a packaging gate — `publint` + `@arethetypeswrong/cli` — which would have caught all three (see `09`).",
+      "original_acceptance": "**Suggested fix** \u2014 (a) Override `noEmit:false` in `lib/tsconfig.json` (or add `--noEmit false` to the build, or use tsup `dts:true`); (b) set `declarationDir`/`rootDir` so `.d.ts` land at the `types` paths (or use `tsup --dts` which mirrors the JS layout); (c) repoint `./parsers/zod` to `./dist/schema-processing/parsers/zod/index.{js,d.ts}` **or** add a real `src/parsers/zod/index.ts` re-export entry; (d) add a packaging gate \u2014 `publint` + `@arethetypeswrong/cli` \u2014 which would have caught all three (see `09`).",
       "queue_carriers": [],
       "closing_proof_ids": ["packaging"],
       "related_ids": [],
@@ -768,7 +768,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L73"
       },
-      "original_acceptance": "**Suggested fix** — Model `IRSecurityRequirement` as a requirement **set** (`{ schemeName, scopes }[]`), build it without flattening the inner object, and reconstruct one `SecurityRequirementObject` per AND-set in `writeSecurity` and in the MCP `resolveOperationSecurityFromIR`. Add a multi-scheme round-trip test.",
+      "original_acceptance": "**Suggested fix** \u2014 Model `IRSecurityRequirement` as a requirement **set** (`{ schemeName, scopes }[]`), build it without flattening the inner object, and reconstruct one `SecurityRequirementObject` per AND-set in `writeSecurity` and in the MCP `resolveOperationSecurityFromIR`. Add a multi-scheme round-trip test.",
       "queue_carriers": ["Q-03", "Q-12"],
       "closing_proof_ids": ["security"],
       "related_ids": ["F-01"],
@@ -814,13 +814,13 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L112"
       },
-      "original_acceptance": "**Suggested fix** — Keep the original component name as the IR identity (the round-trip key) and apply `toIdentifier` only when generating code symbols; or rewrite every emitted `$ref` to the sanitised name consistently.",
+      "original_acceptance": "**Suggested fix** \u2014 Keep the original component name as the IR identity (the round-trip key) and apply `toIdentifier` only when generating code symbols; or rewrite every emitted `$ref` to the sanitised name consistently.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["identity"],
       "related_ids": ["F-08"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "9 September inline runtime probes against unchanged product sources at 6c3b18f0 reproduced duplicate User identities and collapsed references from User/UserSchema; duplicate ErrorSchema declarations from Error/ErrorSchema; UseError type/value mismatch; and disappearance of class/Basic.Thing during public generation.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -829,13 +829,20 @@
         }
       ],
       "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Direct public parseZodSource/writeOpenApi/generation probes via node --import tsx; tool output inspected by the coordinator. No executable probe artifact was retained; reconstruct red-first behavioural cases at the owning seam before repair.",
+        "limits": "This is runtime observation, not retained regression proof, compiler success or full original-finding closure. Bare alias omission also remains under Zod admission; no fallback symbol reconstruction is authorised."
+      },
+      "delivery_carrier": "C08/identity-references; paired with C07 identity doctrine where needed"
     },
     {
       "id": "C4",
       "original_id": "C4",
       "kind": "initial_finding",
-      "title": "IR `serialize → deserialize` throws for an object schema with empty `properties`",
+      "title": "IR `serialize \u2192 deserialize` throws for an object schema with empty `properties`",
       "source": {
         "register": "critical",
         "path": ".agent/report/initial-review/02-findings-critical.md",
@@ -843,7 +850,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L150"
       },
-      "original_acceptance": "**Suggested fix** — Make `isRecord` a plain non-null, non-array object check (`typeof v === 'object' && v !== null && !Array.isArray(v)`); drop `hasKeys`/`hasValues`/`hasStringKey`. Consolidate to a single `isRecord` (see M3). Add a round-trip fixture for `{type:'object',properties:{}}`.",
+      "original_acceptance": "**Suggested fix** \u2014 Make `isRecord` a plain non-null, non-array object check (`typeof v === 'object' && v !== null && !Array.isArray(v)`); drop `hasKeys`/`hasValues`/`hasStringKey`. Consolidate to a single `isRecord` (see M3). Add a round-trip fixture for `{type:'object',properties:{}}`.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["persistence"],
       "related_ids": ["M3", "F-10"],
@@ -872,7 +879,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L189"
       },
-      "original_acceptance": "**Suggested fix** — Replace the per-kind blacklists with explicit whitelists; any unrecognised union/tuple/enum member or chained method must `throw` a `PARSE_ERROR` naming the offending construct and location, rather than being skipped or text-captured.",
+      "original_acceptance": "**Suggested fix** \u2014 Replace the per-kind blacklists with explicit whitelists; any unrecognised union/tuple/enum member or chained method must `throw` a `PARSE_ERROR` naming the offending construct and location, rather than being skipped or text-captured.",
       "queue_carriers": ["Q-05", "Q-12"],
       "closing_proof_ids": ["zod-admission"],
       "related_ids": ["F-04"],
@@ -905,7 +912,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/02-findings-critical.md#L232"
       },
-      "original_acceptance": "**Suggested fix** — Recurse the sub-schema through the Zod writer and validate via `<subSchema>.safeParse(x).success` (map types correctly: `integer → Number.isInteger`, `array → Array.isArray`, `null → === null`); implement real `if/then/else` and `dependentSchemas` validation, or **fail-fast** for any keyword that cannot yet be expressed. Never emit `return true` or `typeof x === '<jsonSchemaType>'`. Replace the substring tests with behavioural ones (H7).",
+      "original_acceptance": "**Suggested fix** \u2014 Recurse the sub-schema through the Zod writer and validate via `<subSchema>.safeParse(x).success` (map types correctly: `integer \u2192 Number.isInteger`, `array \u2192 Array.isArray`, `null \u2192 === null`); implement real `if/then/else` and `dependentSchemas` validation, or **fail-fast** for any keyword that cannot yet be expressed. Never emit `return true` or `typeof x === '<jsonSchemaType>'`. Replace the substring tests with behavioural ones (H7).",
       "queue_carriers": ["Q-05", "Q-12"],
       "closing_proof_ids": ["zod-runtime"],
       "related_ids": ["H7", "F-04"],
@@ -938,7 +945,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L5"
       },
-      "original_acceptance": "**Suggested fix** — Drive normalisation recursion from the full set of 2020-12 sub-schema-bearing keywords via one keyword-classification table (avoiding the two hand-maintained lists). Rewrite `$ref`s by swapping the leading `#/definitions/` prefix for `#/$defs/` regardless of remaining depth. Add Draft-07-nested-in-each-keyword tests.",
+      "original_acceptance": "**Suggested fix** \u2014 Drive normalisation recursion from the full set of 2020-12 sub-schema-bearing keywords via one keyword-classification table (avoiding the two hand-maintained lists). Rewrite `$ref`s by swapping the leading `#/definitions/` prefix for `#/$defs/` regardless of remaining depth. Add Draft-07-nested-in-each-keyword tests.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["json-dialect"],
       "related_ids": ["F-03b"],
@@ -967,7 +974,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L41"
       },
-      "original_acceptance": "**Suggested fix** — Emit `contentEncoding` (and `contentMediaType` once carried, see H4) in the shared field writers; normalise boolean `exclusiveMinimum`/`exclusiveMaximum` to numeric form using the companion `minimum`/`maximum`, or fail-fast. Add round-trip proofs.",
+      "original_acceptance": "**Suggested fix** \u2014 Emit `contentEncoding` (and `contentMediaType` once carried, see H4) in the shared field writers; normalise boolean `exclusiveMinimum`/`exclusiveMaximum` to numeric form using the companion `minimum`/`maximum`, or fail-fast. Add round-trip proofs.",
       "queue_carriers": ["Q-12", "Q-28"],
       "closing_proof_ids": ["json-dialect", "encoding"],
       "related_ids": ["Q-28", "H4"],
@@ -1000,7 +1007,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L76"
       },
-      "original_acceptance": "**Suggested fix** — Preserve wildcard tokens (widen `EndpointError.status` to allow the range strings, mirroring `CastrResponse.statusCode`) or fail-fast on unsupported tokens. Add `4XX`/`5XX` tests.",
+      "original_acceptance": "**Suggested fix** \u2014 Preserve wildcard tokens (widen `EndpointError.status` to allow the range strings, mirroring `CastrResponse.statusCode`) or fail-fast on unsupported tokens. Add `4XX`/`5XX` tests.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["interactions"],
       "related_ids": [],
@@ -1029,7 +1036,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L104"
       },
-      "original_acceptance": "**Suggested fix** — Carry `$ref` siblings and `contentMediaType`/`contentSchema` into the IR (preferred), or fail-fast with an actionable \"unsupported keyword/sibling\" error. Do not silently discard.",
+      "original_acceptance": "**Suggested fix** \u2014 Carry `$ref` siblings and `contentMediaType`/`contentSchema` into the IR (preferred), or fail-fast with an actionable \"unsupported keyword/sibling\" error. Do not silently discard.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["json-dialect", "encoding"],
       "related_ids": [],
@@ -1058,7 +1065,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L142"
       },
-      "original_acceptance": "**Suggested fix** — Implement the behaviour (e.g. the `spec-compliant`/`auto-correct` default-response filtering) or remove the options and CLI flags and document that the behaviour is not configurable. (Note: this also neutralises the `complexityThreshold` \"no NaN guard\" concern — see L-series — because nothing consumes the value.)",
+      "original_acceptance": "**Suggested fix** \u2014 Implement the behaviour (e.g. the `spec-compliant`/`auto-correct` default-response filtering) or remove the options and CLI flags and document that the behaviour is not configurable. (Note: this also neutralises the `complexityThreshold` \"no NaN guard\" concern \u2014 see L-series \u2014 because nothing consumes the value.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["configuration"],
       "related_ids": [],
@@ -1087,7 +1094,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L176"
       },
-      "original_acceptance": "**Suggested fix** — Narrow the IR type to match the enforced closed-world reality (`additionalProperties?: false` or `boolean`), delete the TSDoc schema bullet and the dead object-valued branches; or implement and prove schema-valued catchall end-to-end. (Directly related to L8, which is the latent writer-narrowing of this same field.)",
+      "original_acceptance": "**Suggested fix** \u2014 Narrow the IR type to match the enforced closed-world reality (`additionalProperties?: false` or `boolean`), delete the TSDoc schema bullet and the dead object-valued branches; or implement and prove schema-valued catchall end-to-end. (Directly related to L8, which is the latent writer-narrowing of this same field.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["object-semantics"],
       "related_ids": ["L8", "F-06"],
@@ -1116,7 +1123,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/03-findings-high.md#L209"
       },
-      "original_acceptance": "**Suggested fix** — Negative assertions: `assertSingleFileResult(result)` then assert on `result.content`. Refinement tests: build/execute the generated Zod and assert valid data is accepted and invalid data rejected (these would go red, exposing C6). See `07` and `09`.",
+      "original_acceptance": "**Suggested fix** \u2014 Negative assertions: `assertSingleFileResult(result)` then assert on `result.content`. Refinement tests: build/execute the generated Zod and assert valid data is accepted and invalid data rejected (these would go red, exposing C6). See `07` and `09`.",
       "queue_carriers": ["Q-02", "Q-07", "Q-11", "Q-12"],
       "closing_proof_ids": ["oracle"],
       "related_ids": [],
@@ -1149,7 +1156,7 @@
       "id": "M1",
       "original_id": "M1",
       "kind": "initial_finding",
-      "title": "Doctrine bans `Object.*`/`Reflect.*` that are not lint-enforced and are used 148× in product code",
+      "title": "Doctrine bans `Object.*`/`Reflect.*` that are not lint-enforced and are used 148\u00d7 in product code",
       "source": {
         "register": "medium",
         "path": ".agent/report/initial-review/04-findings-medium.md",
@@ -1157,7 +1164,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/04-findings-medium.md#L7"
       },
-      "original_acceptance": "- **Fix (normalise to the strictest = the doc):** `principles.md` is the strict party here, so raise enforcement and code up to it — add a `no-restricted-syntax`/`no-restricted-properties` lint rule banning `Object.*`/`Reflect.*` (at least the type-information-losing uses such as `Object.keys`) and refactor the 148 usages to typed alternatives, making the strict claim machine-enforced. Do **not** soften the doctrine. (Fixes M12 as a by-product.)",
+      "original_acceptance": "- **Fix (normalise to the strictest = the doc):** `principles.md` is the strict party here, so raise enforcement and code up to it \u2014 add a `no-restricted-syntax`/`no-restricted-properties` lint rule banning `Object.*`/`Reflect.*` (at least the type-information-losing uses such as `Object.keys`) and refactor the 148 usages to typed alternatives, making the strict claim machine-enforced. Do **not** soften the doctrine. (Fixes M12 as a by-product.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["enforcement"],
       "related_ids": [],
@@ -1683,7 +1690,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L13"
       },
-      "original_acceptance": "Reads `openApiDoc.paths?.[…]` (the \"reach back into the original doc\" pattern the Cardinal Rule forbids) and has no callers. Delete it.",
+      "original_acceptance": "Reads `openApiDoc.paths?.[\u2026]` (the \"reach back into the original doc\" pattern the Cardinal Rule forbids) and has no callers. Delete it.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["enforcement"],
       "related_ids": [],
@@ -1733,7 +1740,7 @@
       "id": "L8",
       "original_id": "L8",
       "kind": "initial_finding",
-      "title": "`additionalProperties` writer narrows `true`/schema → `false`; stale \"Always emits `additionalProperties: false`\" comment",
+      "title": "`additionalProperties` writer narrows `true`/schema \u2192 `false`; stale \"Always emits `additionalProperties: false`\" comment",
       "source": {
         "register": "low",
         "path": ".agent/report/initial-review/05-findings-low-and-nit.md",
@@ -1741,7 +1748,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L15"
       },
-      "original_acceptance": "**Latent** — the parser fail-fasts on `additionalProperties:true` (🟢 reproduced), so unreachable today; becomes live if the IR is built directly or parsers align. Emit faithfully; update the comment to the IDENTITY preserve-explicit policy. (Pairs with H6; this is the downgraded R7.)",
+      "original_acceptance": "**Latent** \u2014 the parser fail-fasts on `additionalProperties:true` (\ud83d\udfe2 reproduced), so unreachable today; becomes live if the IR is built directly or parsers align. Emit faithfully; update the comment to the IDENTITY preserve-explicit policy. (Pairs with H6; this is the downgraded R7.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["object-semantics"],
       "related_ids": ["R7", "H6", "F-06"],
@@ -1857,7 +1864,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L19"
       },
-      "original_acceptance": "`parseJsonSchema({patternProperties:{'^x-':{type:'string'}}})` → IR `type:undefined, additionalProperties:undefined` (open), unlike properties-bearing objects which get `additionalProperties:false`. Include `patternProperties`/`propertyNames` in object-keyword detection.",
+      "original_acceptance": "`parseJsonSchema({patternProperties:{'^x-':{type:'string'}}})` \u2192 IR `type:undefined, additionalProperties:undefined` (open), unlike properties-bearing objects which get `additionalProperties:false`. Include `patternProperties`/`propertyNames` in object-keyword detection.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["object-semantics"],
       "related_ids": ["F-06"],
@@ -1907,7 +1914,7 @@
       "id": "L14",
       "original_id": "L14",
       "kind": "initial_finding",
-      "title": "Draft-07 converter silently remaps `unevaluatedProperties` → `additionalProperties` (semantic change)",
+      "title": "Draft-07 converter silently remaps `unevaluatedProperties` \u2192 `additionalProperties` (semantic change)",
       "source": {
         "register": "low",
         "path": ".agent/report/initial-review/05-findings-low-and-nit.md",
@@ -1915,7 +1922,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L21"
       },
-      "original_acceptance": "`unevaluatedProperties` is composition-aware; `additionalProperties` is local-only — not equivalent. Internal/test-facing converter (not on the canonical pipeline), so Low. Fail-fast on the downgrade or document it as lossy best-effort.",
+      "original_acceptance": "`unevaluatedProperties` is composition-aware; `additionalProperties` is local-only \u2014 not equivalent. Internal/test-facing converter (not on the canonical pipeline), so Low. Fail-fast on the downgrade or document it as lossy best-effort.",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["json-dialect"],
       "related_ids": [],
@@ -1973,7 +1980,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L23"
       },
-      "original_acceptance": "When `schema.items` is an array, the `else` branch emits `z.unknown()`, discarding positional schemas. Normalisation converts array `items` → `prefixItems`, so likely unreachable; assert/throw rather than widen if it ever occurs. (Distinct from the _absent-items_ case, which is correctly `z.array(z.unknown())` — see R2.)",
+      "original_acceptance": "When `schema.items` is an array, the `else` branch emits `z.unknown()`, discarding positional schemas. Normalisation converts array `items` \u2192 `prefixItems`, so likely unreachable; assert/throw rather than widen if it ever occurs. (Distinct from the _absent-items_ case, which is correctly `z.array(z.unknown())` \u2014 see R2.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["zod-runtime"],
       "related_ids": [],
@@ -2031,7 +2038,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L25"
       },
-      "original_acceptance": "Strict-letter `principles.md` §8 (\"declare what you import in the consuming manifest\"). It is genuinely used (so not dead — see R6) and `knip` ignores it for sub-path-resolution reasons. Nit; add to `lib/package.json` devDeps for honesty.",
+      "original_acceptance": "Strict-letter `principles.md` \u00a78 (\"declare what you import in the consuming manifest\"). It is genuinely used (so not dead \u2014 see R6) and `knip` ignores it for sub-path-resolution reasons. Nit; add to `lib/package.json` devDeps for honesty.",
       "queue_carriers": ["Q-06"],
       "closing_proof_ids": ["packaging"],
       "related_ids": ["R6", "Q-06"],
@@ -2060,7 +2067,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/05-findings-low-and-nit.md#L26"
       },
-      "original_acceptance": "A value the user explicitly set but mistyped is ignored silently. Distinguish \"not provided\" from \"provided-but-invalid\"; throw an actionable error listing allowed values. (`--complexity-threshold abc` → `NaN` is moot — the option is unused; see H5/R8.)",
+      "original_acceptance": "A value the user explicitly set but mistyped is ignored silently. Distinguish \"not provided\" from \"provided-but-invalid\"; throw an actionable error listing allowed values. (`--complexity-threshold abc` \u2192 `NaN` is moot \u2014 the option is unused; see H5/R8.)",
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["configuration"],
       "related_ids": [],
@@ -2081,7 +2088,7 @@
       "id": "N1",
       "original_id": "N1",
       "kind": "initial_finding",
-      "title": "TypeScript type writer widens `enum`→`string`, `const`→`string`, `['string','number']`→`unknown`",
+      "title": "TypeScript type writer widens `enum`\u2192`string`, `const`\u2192`string`, `['string','number']`\u2192`unknown`",
       "source": {
         "register": "low",
         "path": ".agent/report/initial-review/05-findings-low-and-nit.md",
@@ -2119,7 +2126,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L11"
       },
       "original_acceptance": "These fire for an **empty `allOf`** (or all-null members). An empty `allOf` imposes no constraints = accept anything, so `z.unknown()` is the _correct_ semantic mapping, not a fail-fast violation.",
-      "original_disposition": "**Rejected — correct behaviour** 🔵",
+      "original_disposition": "**Rejected \u2014 correct behaviour** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2143,8 +2150,8 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L12"
       },
-      "original_acceptance": "An array schema with no `items` permits any element; `z.array(z.unknown())` is the correct mapping. (The _array-valued_ `items` case is a separate, latent concern — see **L16**.)",
-      "original_disposition": "**Rejected — correct behaviour** 🔵",
+      "original_acceptance": "An array schema with no `items` permits any element; `z.array(z.unknown())` is the correct mapping. (The _array-valued_ `items` case is a separate, latent concern \u2014 see **L16**.)",
+      "original_disposition": "**Rejected \u2014 correct behaviour** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2169,7 +2176,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L13"
       },
       "original_acceptance": "Both are type-guard/predicate bodies: `isValidMediaTypeReference` returns `false` when `parseComponentRef` throws; `isRemoteUrl` returns `false` when `new URL()` throws. Returning `false` from a guard is correct, not error-swallowing.",
-      "original_disposition": "**Rejected — legitimate predicates** 🔵",
+      "original_disposition": "**Rejected \u2014 legitimate predicates** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2185,7 +2192,7 @@
       "id": "R4",
       "original_id": "R4",
       "kind": "initial_candidate",
-      "title": "CLI `getPackageVersion` `catch → '0.0.0'` (`cli/helpers.ts:42`) violates fail-fast",
+      "title": "CLI `getPackageVersion` `catch \u2192 '0.0.0'` (`cli/helpers.ts:42`) violates fail-fast",
       "source": {
         "register": "rejected",
         "path": ".agent/report/initial-review/08-rejected-and-downgraded.md",
@@ -2194,7 +2201,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L14"
       },
       "original_acceptance": "Reads the tool's _own_ `package.json` for a cosmetic `--version` display; a non-fatal fallback for a missing version string is reasonable and not user-data processing.",
-      "original_disposition": "**Rejected — defensible** 🔵",
+      "original_disposition": "**Rejected \u2014 defensible** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2210,7 +2217,7 @@
       "id": "R5",
       "original_id": "R5",
       "kind": "initial_candidate",
-      "title": "Markdown `getTypeName` `catch → 'Ref'` fallback (`writers/markdown/index.ts:127`)",
+      "title": "Markdown `getTypeName` `catch \u2192 'Ref'` fallback (`writers/markdown/index.ts:127`)",
       "source": {
         "register": "rejected",
         "path": ".agent/report/initial-review/08-rejected-and-downgraded.md",
@@ -2219,7 +2226,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L15"
       },
       "original_acceptance": "A malformed `$ref` reaching the writer would indicate an upstream IR bug; the fallback is defensive-dead given a valid IR. Documentation surface, low blast radius. Worth tidying, not a real fail-fast hole.",
-      "original_disposition": "**Downgraded to Low** 🔵",
+      "original_disposition": "**Downgraded to Low** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2243,8 +2250,8 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L16"
       },
-      "original_acceptance": "It **is** imported — `tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts:20` (`ajv-draft-04/dist/index.js`). The `knip` ignore is a deep-sub-path-resolution workaround, not dead-code masking. (Residual nit only: declared at root, not `lib/` — see **L18**.)",
-      "original_disposition": "**Refuted** 🔵",
+      "original_acceptance": "It **is** imported \u2014 `tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts:20` (`ajv-draft-04/dist/index.js`). The `knip` ignore is a deep-sub-path-resolution workaround, not dead-code masking. (Residual nit only: declared at root, not `lib/` \u2014 see **L18**.)",
+      "original_disposition": "**Refuted** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2260,7 +2267,7 @@
       "id": "R7",
       "original_id": "R7",
       "kind": "initial_candidate",
-      "title": "`additionalProperties: true`/schema → `false` writer narrowing is _live_ silent data loss (High)",
+      "title": "`additionalProperties: true`/schema \u2192 `false` writer narrowing is _live_ silent data loss (High)",
       "source": {
         "register": "rejected",
         "path": ".agent/report/initial-review/08-rejected-and-downgraded.md",
@@ -2268,8 +2275,8 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L17"
       },
-      "original_acceptance": "`buildIR({…, additionalProperties:true})` **throws** at the parser gate (reproduced), so the writer-narrowing path is unreachable through the supported pipeline today. Real, but latent — becomes live only via direct IR construction or future parser alignment.",
-      "original_disposition": "**Downgraded to Low (latent) → L8** 🟢",
+      "original_acceptance": "`buildIR({\u2026, additionalProperties:true})` **throws** at the parser gate (reproduced), so the writer-narrowing path is unreachable through the supported pipeline today. Real, but latent \u2014 becomes live only via direct IR construction or future parser alignment.",
+      "original_disposition": "**Downgraded to Low (latent) \u2192 L8** \ud83d\udfe2",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2294,7 +2301,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L18"
       },
       "original_acceptance": "The value is parsed and assigned to `generationOptions`, but **nothing consumes `complexityThreshold`** (see H5). So there are no \"downstream complexity decisions\" to corrupt. The residual issue is only an unvalidated, unused boundary (minor).",
-      "original_disposition": "**Downgraded — impact false** 🔵",
+      "original_disposition": "**Downgraded \u2014 impact false** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2319,7 +2326,7 @@
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/initial-review/08-rejected-and-downgraded.md#L19"
       },
       "original_acceptance": "`eslint-plugin-boundaries` constrains dependency _direction_ among the classified domains, and those four dirs are unclassified. But **`depcruise` (ADR-036) still gates internal-import _encapsulation_ for `ir`/`parsers`/`writers`/`context`/`conversion` regardless of the importing directory** (its rules key on the _imported_ path). So internals remain protected; the only gap is direction-checking among a few leaf/composition dirs. Completeness nit, not a hole.",
-      "original_disposition": "**Downgraded — covered elsewhere** 🔵",
+      "original_disposition": "**Downgraded \u2014 covered elsewhere** \ud83d\udd35",
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
@@ -2596,9 +2603,9 @@
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["identity"],
       "related_ids": ["C3"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "9 September inline runtime probes against unchanged product sources at 6c3b18f0 reproduced duplicate User identities and collapsed references from User/UserSchema; duplicate ErrorSchema declarations from Error/ErrorSchema; UseError type/value mismatch; and disappearance of class/Basic.Thing during public generation.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -2607,7 +2614,14 @@
         }
       ],
       "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Direct public parseZodSource/writeOpenApi/generation probes via node --import tsx; tool output inspected by the coordinator. No executable probe artifact was retained; reconstruct red-first behavioural cases at the owning seam before repair.",
+        "limits": "This is runtime observation, not retained regression proof, compiler success or full original-finding closure. Bare alias omission also remains under Zod admission; no fallback symbol reconstruction is authorised."
+      },
+      "delivery_carrier": "C08/identity-references; paired with C07 identity doctrine where needed"
     },
     {
       "id": "F-09",
@@ -2899,7 +2913,7 @@
         "commit": "e025d23316e4b175551711a32a09c0f4d492fd1a",
         "url": "https://github.com/EngraphCode/castr/blob/e025d23316e4b175551711a32a09c0f4d492fd1a/.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md#L2255"
       },
-      "original_acceptance": "Discriminated roots, standalone-value cases, interaction→value references, legacy migration proof.",
+      "original_acceptance": "Discriminated roots, standalone-value cases, interaction\u2192value references, legacy migration proof.",
       "original_tranches": ["02", "04", "06", "11"],
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["artifact-model"],
@@ -3128,9 +3142,9 @@
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["security"],
       "related_ids": ["C2", "F-01"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "current_reproduction": "verified-green",
+      "reproduction_note": "Historical RED on base 3ad2ab5: the writer dropped [] and wrongly restored inherited authentication while absent and [{}] controls passed. PR86 merged the bounded repair as 92ada698; 19 unit and 8 integration cases now pass, including the absent, [], [{}] and five unchanged Q-03 formula witnesses.",
+      "disposition": "bounded_repair_delivered",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -3141,7 +3155,70 @@
       "technical_dependencies": [],
       "bounded_historical_evidence": [],
       "id_note": "This slash-separated key is assigned by this inventory; the source did not give the carry-forward a separate finding ID.",
-      "original_acceptance_note": "The source supplies an unfixed carry-forward and consuming tranche, not a separately ratified atomic acceptance. The referenced historical carrier is preserved; the proposed closing proof makes the bounded repair reviewable."
+      "original_acceptance_note": "The source supplies an unfixed carry-forward and consuming tranche, not a separately ratified atomic acceptance. The referenced historical carrier is preserved; the proposed closing proof makes the bounded repair reviewable.",
+      "reproduction_evidence": {
+        "date": "2026-09-06",
+        "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+        "unit_result": {
+          "failed": 1,
+          "passed": 18
+        },
+        "integration_result": {
+          "failed": 1,
+          "passed": 7
+        },
+        "independent_observation": "With document alphaAuth required, anonymous access is false for absent operation security and true for [] or [{}]. Source/output observations use OpenAPI requirements directly, independently of Castr IR/security projection helpers.",
+        "authority": [
+          "https://spec.openapis.org/oas/v3.2.0.html#operation-object",
+          "https://spec.openapis.org/oas/v3.2.0.html#security-requirement-object"
+        ]
+      },
+      "repair_evidence": {
+        "carrier": "Q-30/C08/security-empty",
+        "state": "Bounded acceptance delivered in PR86; exact merge/check/review proof is in .agent/plans/delivery-ledger.md.",
+        "change": "Emit every defined operation security array, including an empty array.",
+        "scope": "Canonical 3.2.0 in-memory parse -> serialize/deserialize -> write -> reparse; authored property presence and anonymous-access meaning. Excludes async loading, rebuilt package entrypoints and HTTP enforcement.",
+        "tests": [
+          {
+            "path": "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts",
+            "command_from_lib": "pnpm exec vitest run src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts",
+            "result": "19 passed"
+          },
+          {
+            "path": "lib/tests-transforms/__tests__/security-formula.integration.test.ts",
+            "command_from_lib": "pnpm exec vitest run --config vitest.transforms.config.ts tests-transforms/__tests__/security-formula.integration.test.ts",
+            "result": "8 passed, including the five unchanged Q-03 AND/OR formula cases"
+          }
+        ],
+        "review": "Independent openapi-expert, test-reviewer and code-reviewer inspected exact candidate blobs and returned no actionable finding.",
+        "working_git_blobs": {
+          "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts": "58978401b7b8db0aea2d236b5dc7aa6fd925bca2",
+          "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts": "b9bd7425915faf9ff34bd166c2def0b09353f14c",
+          "lib/tests-transforms/__tests__/security-formula.integration.test.ts": "f75df058cb954b5e6a14876c8c946f5202d87c99"
+        },
+        "remaining": "The delivery ledger and its linked PR86 tally own current-head review, checks, ruleset and merge evidence. This bounded repair does not close wider C2/F-01 or Q-03 residuals; their existing finding records retain acceptance and ownership.",
+        "existing_pr_value": {
+          "pull_request": "https://github.com/EngraphCode/castr/pull/18",
+          "observed_head": "9c93ccaaa888fb07f77a2b16a8d245f355e936fd",
+          "origin_commit": "89035ac2ca0bb96d27d39505657533c6a2c92669",
+          "path": "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts",
+          "value": "The same defined-array writer condition survives in PR18. PR86 independently delivered that value with canonical persistence and a distinguishing required-global-authentication witness.",
+          "limits": "This is bounded merged overlap evidence, not full PR18 disposition. Loader/MCP coverage and remaining identity, document-security, description/reference/own-key deltas retain their owners; do not copy obsolete sorting or anonymous-access expectations."
+        },
+        "integration_recheck": {
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "date": "2026-09-06",
+          "results": "19 unit and 8 integration cases passed on the fresh integration worktree; all three behavioural blobs equal the reviewed source candidate.",
+          "review": "Independent OpenAPI integration recheck passed at the unchanged three blobs; prior test/gateway proof remains at that same code scope."
+        },
+        "delivery": {
+          "pull_request": "https://github.com/EngraphCode/castr/pull/86",
+          "date": "2026-09-09",
+          "reviewed_head": "812c2850b3013d0d18be8c77bcbdc06e4f644dc8",
+          "merge_commit": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "proof": "Merge tree equals reviewed head and retains all three exact behavioural blobs below. Scope exclusions and wider findings remain unchanged."
+        }
+      }
     },
     {
       "id": "Q-03/raw-resolver-duplication",
@@ -3464,10 +3541,10 @@
       "original_acceptance": "Acceptance (`integration`): a clean-tree regeneration run reproduces the checked-in estate exactly, the 11 previously-breaking validation-parity tests pass against the regenerated outputs, and `pnpm check` is green.",
       "queue_carriers": ["Q-22"],
       "closing_proof_ids": ["fixture-generator"],
-      "related_ids": ["F-15"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "related_ids": ["F-15", "Q-22/error-negative-oracles"],
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "Unchanged four-file parity suite passed 91/91 before canonical regeneration at 6c3b18f0; generator exited zero, changed 30 generated files, then parity passed 80/91. Eight failures concern number/bigint input and three a missing Error export. The original historical eleven failure titles were not recorded; equal counts do not establish identity.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Explicitly included in the approved C08 proof-integrity family: implement and execute the original bounded correctness proof or fixture repair. The autonomous scheduling pause is not an exclusion.",
       "original_dependencies": [
         {
@@ -3475,8 +3552,18 @@
           "depends_on": []
         }
       ],
-      "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "technical_dependencies": [
+        "C08/Q22-oracles establishes discriminating Error rejection and parsed-value assertions first.",
+        "C07/C08 integer contract separates JSON-number acceptance from native bigint through canonical IR and all live consumers.",
+        "Fix fixed-fixture ErrorSchema imports with the paired Q22 generator/output landing; preserve the full original acceptance."
+      ],
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "reproduction_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Inspected preserved 6 September baseline/generator/parity logs and 37-entry generated hash/symlink inventory; reran original test copies against both fixture estates. Strengthened Error oracles produce 73 passes/18 failures against the same regenerated outputs, exposing seven false passes. Both estates remain unchanged.",
+        "limits": "The saved generator output is uncommitted reproduction evidence. No generator fix or new golden acceptance is claimed."
+      }
     },
     {
       "id": "Q-24",
@@ -3795,6 +3882,116 @@
       "bounded_historical_evidence": [],
       "closing_evidence": "pending: actual-config red/green prohibited-import tests, positive downward/orchestration cases, resolver/descriptor regression sensitivity, preserved conversion behaviour and repository gates",
       "implementation_sequence": "Prepare writer contracts below context orchestration and remove the production-to-test-helper dependency as required. Land resolver wiring, domain classification, dependency policy and executable positive/negative import proof together. Preparatory contract moves may be incremental, but do not complete architectural acceptance."
+    },
+    {
+      "id": "PR18/document-security-empty",
+      "original_id": null,
+      "kind": "post_baseline_fidelity_finding",
+      "title": "Explicit document-level empty security declaration is omitted during writing",
+      "source": {
+        "register": "pr18_surviving_value",
+        "path": "lib/src/schema-processing/writers/openapi/openapi-writer.ts",
+        "line": 104,
+        "commit": "9c93ccaaa888fb07f77a2b16a8d245f355e936fd",
+        "url": "https://github.com/EngraphCode/castr/blob/9c93ccaaa888fb07f77a2b16a8d245f355e936fd/lib/src/schema-processing/writers/openapi/openapi-writer.ts#L104"
+      },
+      "original_acceptance": "Preserve an explicitly authored document-level security array, including [], through writing; retain absence as absent. This bounded declaration-preservation obligation is surviving PR18 value under the correction commission, not a claim that [] changes document-level anonymous-access semantics.",
+      "original_dependencies": [],
+      "technical_dependencies": [],
+      "queue_carriers": ["Q-12", "Q-30"],
+      "delivery_carrier": "C08/identity-interactions document-security-presence repair; separate from the prepared operation override repair",
+      "closing_proof_ids": ["security"],
+      "related_ids": ["Q-03/security-empty", "F-01"],
+      "current_reproduction": "reproduced-red",
+      "disposition": "in_scope_repair_outstanding",
+      "reproduction_note": "Fresh source-level probe on 6 September: explicit [] remains an own property through buildIR and canonical persistence, then becomes absent in writeOpenApi and reparsing. The absent control remains absent. Both authorize anonymous access and emit identical output bytes; the loss concerns authored declaration presence, not authorization.",
+      "observation": {
+        "date": "2026-09-06",
+        "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+        "method": "Minimal canonical OpenAPI3.2 absent/[] documents, direct TypeScript source via node --import tsx; buildIR -> serialize/deserialize -> writeOpenApi -> buildIR. No product, test or fixture edits.",
+        "source_fix_commit": "1a2058d898570ab06cc38d10d43ec3358c2d3e24",
+        "scope_limit": "Operation-empty candidate was present; document writer source equals the named main base. This is no loader, MCP or HTTP proof."
+      },
+      "proposed_closing_proof": "Separate red-first behavioural case for absent versus explicit [] through parse, persistence, writing and reparse, asserting declaration presence independently of equivalent anonymous-access outcomes; intact aggregate/review/merge proof.",
+      "bounded_historical_evidence": [],
+      "id_note": "Locally assigned finding key for freshly reproduced surviving PR18 declaration-preservation value; no original numbered finding ID was supplied."
+    },
+    {
+      "id": "Q-22/error-negative-oracles",
+      "original_id": null,
+      "kind": "post_baseline_proof_finding",
+      "title": "Error validation negatives accept missing exports and unrelated exceptions as successful rejection",
+      "source": {
+        "register": "q22_oracle_observation",
+        "path": "lib/tests-transforms/__tests__/validation-parity.integration.test.ts",
+        "line": 120,
+        "commit": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "url": "https://github.com/EngraphCode/castr/blob/6c3b18f0e97d4d93eca14ab67c2b0c79bc304119/lib/tests-transforms/__tests__/validation-parity.integration.test.ts#L120"
+      },
+      "original_acceptance": "The seven existing Error negatives require the intended validation issue paths/codes; the three positives compare parsed values. Missing exports, unrelated exceptions and representative semantic/output mutants must fail while unchanged checked-in fixtures pass. This is a bounded prerequisite and does not close Q22.",
+      "original_dependencies": [],
+      "technical_dependencies": [],
+      "queue_carriers": ["Q-22", "Q-30"],
+      "delivery_carrier": "C08/Q22-oracles",
+      "closing_proof_ids": ["oracle"],
+      "related_ids": ["Q-22"],
+      "current_reproduction": "verified-green",
+      "disposition": "bounded_repair_delivered",
+      "reproduction_note": "Historical RED against the preserved regenerated estate: old tests passed seven negative Error cases on TypeError, while strengthened tests rejected those false passes (73/91 versus 80/91). PR89 merged the bounded oracle repair as d18e5b40; the unchanged checked-in fixture estate passes 91/91.",
+      "bounded_historical_evidence": [],
+      "repair_evidence": {
+        "date": "2026-09-09",
+        "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+        "method": "Existing four-file validation-parity suite and configuration; unchanged fixture imports and case membership. Mutants run in isolated temporary copies of the two generated Error modules, without modifying either retained fixture estate.",
+        "results": {
+          "original_checked_in": "91 passed",
+          "original_regenerated": "80 passed, 11 failed",
+          "strengthened_regenerated_RED": "73 passed, 18 failed",
+          "strengthened_checked_in_GREEN": "91 passed; direct worktree run also 91 passed",
+          "missing_export_or_unrelated_exception": "Each causes all 10 Error cases to fail; old suite missed seven negatives.",
+          "integer_constraint_removed_or_message_optional": "Each mutant causes two failures.",
+          "wrong_issue_code_or_path": "Each mutant causes seven failures.",
+          "successful_output_corruption": "Three positives fail; old suite missed all three."
+        },
+        "working_git_blobs": {
+          "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+          "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5"
+        },
+        "preservation": "All 37 hashes/symlink entries in each fixture estate unchanged; reproduced estate matches its saved 6 September inventory and retains exactly 30 modified files.",
+        "review": "Independent test and gateway reviewers inspected exact blobs, probe construction/results and preservation evidence; bounded PASS. Paired documentation/onboarding review and current-head GitHub review passed before merge.",
+        "remaining": "Exact PR89 delivery and gate evidence belongs to .agent/plans/delivery-ledger.md and its linked tally. Q22 regeneration, integer/export repair and untouched Pet/Pets/NewPet rejection oracles remain outstanding with their named families.",
+        "refactor_evidence": {
+          "date": "2026-09-09",
+          "reason": "PR89 Sonar reports repeated assertion bodies. Keep the larger five-case group as a literal table and the smaller two-case group as direct assertions, without changing case membership or expected observations.",
+          "method": "Fresh focused suite and isolated mutants against the table refactor. The final name-to-assertion-message delta and the structural restoration of the smaller expanded group receive fresh focused runs and explicit source comparison; earlier mutants remain tied to the table-refactor blobs below.",
+          "results": {
+            "checked_in": "91 passed, all 91 full test names preserved",
+            "regenerated": "73 passed, 18 failed",
+            "missing_export_or_unrelated_exception": "Each causes 10 failures",
+            "removed_integer_or_optional_message": "Each causes two failures",
+            "corrupted_output": "Three failures",
+            "wrong_issue_path_or_code_or_extra_issue": "Each causes seven failures"
+          },
+          "mutation_git_blobs": {
+            "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "9d639b1889f8a89fbd20ca65db5bcf78c592ebdf",
+            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "743278c4b06181f58123df89e5372b575418c5be"
+          },
+          "final_git_blobs": {
+            "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
+            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5"
+          },
+          "preservation": "Both 37-entry fixture estates and all 145 original evidence files unchanged; everything outside the two Error describe groups is byte-identical to the pushed head.",
+          "review": "Independent test review verified literal expectations, mutation construction, all names and extra-issue cardinality. Test and gateway reviewers approved the structural restoration of the two-case expanded group to its previously reviewed direct-assertion blob; the five-case main group retains the table. Fresh Sonar reported zero new issues and 0.0% duplication on new code before merge."
+        },
+        "delivery": {
+          "pull_request": "https://github.com/EngraphCode/castr/pull/89",
+          "date": "2026-09-09",
+          "reviewed_head": "ee31de44ea53ea5abcc26adddef316a146fa9f0b",
+          "merge_commit": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "tree": "7bc7b6931a0de69dfb99956b6a93048c63d4b4f8",
+          "proof": "The merge commit's second parent is the exact reviewed head and both trees are equal. The delivery ledger and PR89 review tally retain the full checks, review rounds and scope limits."
+        }
+      }
     }
   ],
   "scope_audit": {
@@ -3829,6 +4026,6 @@
       "New formats/new runtime products and optional lossy expansion",
       "Autonomous scheduling/resumption and recreation of retired arming/probe/scorer machinery"
     ],
-    "preserved": "The original 96 finding records retain their source IDs, immutable baseline locations, original acceptance/dependencies and current-reproduction states. The added Q-016 record carries its own architectural observation and outstanding closure; 46 original findings, 25 programme findings/risks, nine rejected/downgraded candidates and 16 later baseline records remain the baseline counts."
+    "preserved": "The original 96 finding records retain source IDs, immutable baseline locations, original acceptance and dependencies. Later dated evidence can update reproduction/disposition without replacing history. Baseline counts remain 46 original, 25 programme, nine rejected/downgraded and 16 later records. Three post-baseline records own Q-016 enforcement, PR18 document-security presence and Q22 Error oracles; each retains its separate acceptance."
   }
 }

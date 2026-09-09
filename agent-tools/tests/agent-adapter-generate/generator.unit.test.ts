@@ -138,23 +138,39 @@ describe('buildAgentRoster', () => {
           ['architecture-expert-barney', BARNEY_TOML],
         ]),
       ),
-    ).toThrow(/resolves "code-reviewer".*expected .codex\/agents\/code-reviewer.toml/u);
+    ).toThrow(/code-reviewer.*config_file.*agents\/code-reviewer\.toml/u);
   });
 
-  it('rejects multiple templates instead of silently selecting the first', () => {
-    const content = CODE_REVIEWER_TOML.replace(
-      'Read and follow',
-      'Read `.agent/sub-agents/templates/test-reviewer.md`. Read and follow',
-    );
-    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
-      /exactly one canonical template/u,
-    );
-  });
+  it.each(['before', 'after'])(
+    'rejects an alias registered %s the real role for the same adapter',
+    (position) => {
+      const alias = `
+[agents.alias-reviewer]
+description = "Gateway reviewer for non-trivial changes."
+config_file = "agents/code-reviewer.toml"
+`;
+      const config = position === 'before' ? alias + CONFIG_TEXT : CONFIG_TEXT + alias;
+      expect(() =>
+        buildAgentRoster(config, new Map([['code-reviewer', CODE_REVIEWER_TOML]])),
+      ).toThrow(/alias-reviewer.*config_file.*agents\/alias-reviewer\.toml/u);
+    },
+  );
 
   it('rejects malformed TOML', () => {
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', 'name = [']]))).toThrow(
       /TOML/u,
     );
+  });
+
+  it('rejects a whitespace-only registration description before projection', () => {
+    const config = CONFIG_TEXT.replace(
+      'description = "Gateway reviewer for non-trivial changes."',
+      'description = "   "',
+    );
+
+    expect(() =>
+      buildAgentRoster(config, new Map([['code-reviewer', CODE_REVIEWER_TOML]])),
+    ).toThrow(/missing a description/u);
   });
 
   it('rejects duplicate top-level settings', () => {
@@ -164,12 +180,12 @@ describe('buildAgentRoster', () => {
     );
   });
 
-  it('does not satisfy top-level settings with nested fields', () => {
+  it('rejects an unsupported metadata table containing a safety setting', () => {
     const content =
       CODE_REVIEWER_TOML.replace('sandbox_mode = "read-only"\n', '') +
       '\n[metadata]\nsandbox_mode = "read-only"\n';
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
-      /sandbox_mode/u,
+      /metadata/u,
     );
   });
 
@@ -237,6 +253,16 @@ describe('renderAgentAdapter', () => {
     const tricky = { ...codeReviewer, description: "Reviewer: gateway, it's #1." };
     const out = renderAgentAdapter(tricky, 'cursor');
     expect(parseDocument(out.split('---\n')[1] ?? '').get('description')).toBe(tricky.description);
+  });
+
+  it.each(
+    (['cursor', 'claude'] as const).flatMap((surface) =>
+      ['true', 'null', '123'].map((name) => [name, surface] as const),
+    ),
+  )('preserves scalar-like reviewer name %j on the %s surface', (name, surface) => {
+    const out = renderAgentAdapter({ ...codeReviewer, name }, surface);
+
+    expect(parseDocument(out.split('---\n')[1] ?? '').get('name')).toBe(name);
   });
 });
 

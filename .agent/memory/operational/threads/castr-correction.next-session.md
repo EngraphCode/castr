@@ -1,22 +1,32 @@
 # Castr correction
 
-## Current continuation
+## Continuation route
 
-- Branch: `codex/castr-local-checkout` (refreshed onto main merge `SHA:3ad2ab5d`).
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
-- PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
-- Landing target: C03a documents and demonstrates the local-checkout workflow, publication state and actual entry surface.
-- Next safe step: validate and deliver C03a through the reviewed PR lifecycle; preserve C03b/c as distinct subsequent outcomes.
-- Team: root coordinates foundation/integration/gates; delegated source mapping has one owned manifest; reviewers are read-only. Re-read actual claims before writing.
+- Acceptance: [Q-09 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
+  and [PR #28 disposition](../../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026).
+- PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
+- Transition: land the complete PR #28 preservation record if it is absent from
+  main; if the record is present and #28 remains open, refresh PR #27/#28 heads and
+  close #28 without merging or deleting its recovery branch; after both steps,
+  proceed to PR #14's dependency-ownership extraction.
+- Team: root owns compiler/foundational documentation, integration and the
+  dependent native Cricket installation at `codex/cricket-installation` commit
+  `2af22e0f`; no installation PR is open, and it may be opened only after the
+  PR #28 transition completes. Kite hunts Eyrie delivered its tooling prerequisite
+  as PR #88.
+  Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
-- Scheduled execution remains paused; interactive implementation and merges are authorised.
 
-C01R and Q-19 landed, and PR #82’s late findings are settled; the ledger carries exact proof. C05 owns the remaining opening
-attribution cleanup in the PR skill. C10 owns the observed review-wave
-supersession failure; batch any further fixes only after the current review and CI
-wave completes. The local-checkout source draft and extracted C03a worktree remain
-separate, with API/options and response/transport/MCP guides assigned to C03b/c.
+The ledger records delivered C01R, Q-19, C03a, operation-security, Error-oracle
+and C05 platform-tooling repairs. Q-22 remains open for its integer,
+generator/output and remaining oracle
+obligations. Q-09 remains open for PR #10 after the PR #28 transition. C05 retains
+PR skill attribution and rule/reference cleanup; C10 retains
+observed review/continuity-authoring failures and final isolated-pack acceptance.
+C03b/c source drafts remain preserved. PR #18's document-security presence and
+identity obligations remain open. Displaced continuation text is
+[conserved verbatim](../../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Preparation retained for later slices
 
@@ -39,4 +49,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 | Agent                 | Platform | Model       | Session prefix | Agent UUID                           | Role                        | First session | Last session |
 | --------------------- | -------- | ----------- | -------------- | ------------------------------------ | --------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-06   |
+| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-09   |

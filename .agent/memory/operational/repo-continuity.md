@@ -49,12 +49,18 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Deliver C03a’s local-checkout workflow, then the detailed C03b/c local-use
-slices under the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
-Q-19 is delivered; the [ledger](../../plans/delivery-ledger.md) owns its proof and
-C05 follow-up. No per-PR owner approval wait is needed; correctness, review and gate
-conditions remain mandatory. Preserve completed review waves: batch fixes before
-the next push. The correction thread identifies the current branch and next action.
+Follow the bounded [Q-09 PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
+land its repository record if absent; if that record is on main and #28 remains
+open, refresh PR #27/#28 heads and close #28 without merge or recovery-branch
+deletion; once both are done, proceed to PR #14's dependency-ownership extraction.
+Q-09 remains pending for PR #10. PR #89 has delivered the Error-oracle prerequisite;
+the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
+retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
+and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
+PR #88; the coordinating agent accepted the dependent native Cricket
+installation at `codex/cricket-installation` commit `2af22e0f`. Open its PR only
+after the PR #28 transition completes. Earlier continuation
+instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status
 

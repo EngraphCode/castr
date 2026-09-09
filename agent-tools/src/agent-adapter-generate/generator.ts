@@ -19,10 +19,9 @@
  * Pure render/derive functions are exported so the drift checker and unit
  * tests can exercise them without filesystem I/O.
  */
-import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
-import { basename, dirname, join } from 'node:path';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { basename, dirname, join, resolve } from 'node:path';
 import { stringify } from 'yaml';
-import { isErrnoCode } from '../core/errno.js';
 import {
   CRICKET_ROLES,
   completeReviewerNames,
@@ -35,7 +34,19 @@ import {
   parseCodexRegistrations,
   getCodexAdapterValidation,
   getCodexRegistrationValidation,
+  extractCanonicalPaths,
+  readCodexDeveloperInstructions,
 } from '../validators/subagents/validate-subagents-helpers.js';
+import { inspectGeneratedEstate } from './generated-estate.js';
+import {
+  isCanonicalAgentReferenceInside,
+  readCanonicalAgentFile,
+} from '../core/canonical-agent-reference.js';
+import {
+  listRequiredRepositorySources,
+  readRequiredRepositorySource,
+} from '../core/required-repository-source.js';
+import { parseCodexProjectAgent } from '../core/codex-project-agents.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const PERSONA_DIR = '.agent/sub-agents/components/personas';
@@ -89,7 +100,6 @@ export function buildAgentRoster(
   if (registrationValidation.issues.length > 0) {
     throw new Error(registrationValidation.issues.join('\n'));
   }
-
   const entries: AgentRosterEntry[] = [];
   for (const [name, content] of [...adapterTextByName].toSorted(([a], [b]) => a.localeCompare(b))) {
     const registeredAgent = registrationValidation.registrationsByName.get(name);
@@ -104,6 +114,7 @@ export function buildAgentRoster(
     if (validation.issues.length > 0) {
       throw new Error(validation.issues.join('\n'));
     }
+    const resolvedAgent = parseCodexProjectAgent(registeredAgent, content);
     const [templatePath] = validation.templatePaths;
     if (validation.templatePaths.length !== 1 || templatePath === undefined) {
       throw new Error(
@@ -111,12 +122,12 @@ export function buildAgentRoster(
       );
     }
     const personaPath = validation.canonicalPaths.find((path) =>
-      path.startsWith(`${PERSONA_DIR}/`),
+      isCanonicalAgentReferenceInside(path, PERSONA_DIR),
     );
 
     entries.push({
-      name,
-      description: registeredAgent.description,
+      name: resolvedAgent.name,
+      description: resolvedAgent.description,
       templatePath,
       ...(personaPath === undefined ? {} : { personaPath }),
     });
@@ -141,9 +152,9 @@ export function toTitleCase(id: string): string {
 }
 
 /** Preserve string meaning and continuation indentation within a YAML mapping. */
-function yamlDescription(description: string): string {
+function yamlStringField(field: 'name' | 'description', value: string): string {
   // The surrounding frontmatter adds the terminating newline; retain all value whitespace.
-  return stringify({ description }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
+  return stringify({ [field]: value }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
 }
 
 function renderAgentFrontmatter(
@@ -153,15 +164,15 @@ function renderAgentFrontmatter(
 ): string[] {
   if (surface === 'cursor') {
     return [
-      `name: ${entry.name}`,
+      yamlStringField('name', entry.name),
       ...(role === undefined ? [`model: ${CURSOR_AGENT_MODEL}`] : []),
-      yamlDescription(entry.description),
+      yamlStringField('description', entry.description),
       'readonly: true',
     ];
   }
   return [
-    `name: ${entry.name}`,
-    yamlDescription(entry.description),
+    yamlStringField('name', entry.name),
+    yamlStringField('description', entry.description),
     `model: ${role?.claudeModel ?? CLAUDE_AGENT_MODEL}`,
     ...(role === undefined
       ? [
@@ -233,7 +244,7 @@ export function deriveRuleDescription(ruleText: string): string {
 export function renderCursorRule(ruleName: string, description: string): string {
   return [
     '---',
-    yamlDescription(description),
+    yamlStringField('description', description),
     'alwaysApply: true',
     '---',
     '',
@@ -260,18 +271,11 @@ function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
   return join(repoRoot, CURSOR_RULES_DIR, `${ruleName}.mdc`);
 }
 
-/** Lists source or output files; absent directories are empty, other failures propagate. */
+/** Lists files in a required source directory; filesystem failures propagate. */
 async function listNames(repoRoot: string, relDir: string, extension: string): Promise<string[]> {
-  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true }).catch((error) => {
-    if (isErrnoCode(error, 'ENOENT')) {
-      return [];
-    }
-    throw error;
-  });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
-    .map((entry) => basename(entry.name, extension))
-    .toSorted((a, b) => a.localeCompare(b));
+  return (await listRequiredRepositorySources(repoRoot, relDir, extension)).map((sourcePath) =>
+    basename(sourcePath, extension),
+  );
 }
 
 /**
@@ -279,16 +283,25 @@ async function listNames(repoRoot: string, relDir: string, extension: string): P
  * consumed by callers with in-memory sources.
  */
 async function readAgentGeneration(repoRoot: string): Promise<GenerationUnit[]> {
-  const configText = await readFile(join(repoRoot, CODEX_CONFIG_FILE), 'utf8');
+  const configText = await readRequiredRepositorySource(repoRoot, CODEX_CONFIG_FILE);
   const adapterNames = await listNames(repoRoot, CODEX_ADAPTER_DIR, '.toml');
   const adapterTextByName = new Map<string, string>();
   for (const name of adapterNames) {
     adapterTextByName.set(
       name,
-      await readFile(join(repoRoot, CODEX_ADAPTER_DIR, `${name}.toml`), 'utf8'),
+      await readRequiredRepositorySource(repoRoot, `${CODEX_ADAPTER_DIR}/${name}.toml`),
     );
   }
-  return planAgentAdapters(repoRoot, configText, adapterTextByName);
+  const units = planAgentAdapters(repoRoot, configText, adapterTextByName);
+  const canonicalPaths = new Set(
+    [...adapterTextByName.values()].flatMap((content) =>
+      extractCanonicalPaths(readCodexDeveloperInstructions(content)),
+    ),
+  );
+  for (const path of canonicalPaths) {
+    await readCanonicalAgentFile(repoRoot, path);
+  }
+  return units;
 }
 
 /** A single (target path, rendered content) generation unit. */
@@ -334,12 +347,19 @@ export function planAgentAdapters(
   return units;
 }
 
-/** Computes every validated adapter and canonical-rule target/content pair. */
+/**
+ * Computes every validated adapter and canonical-rule target/content pair.
+ * Required source directories and every referenced canonical file must be readable
+ * before this plan can be written or used to clear existing outputs.
+ */
 export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]> {
   const units = await readAgentGeneration(repoRoot);
   const ruleNames = await listNames(repoRoot, CANONICAL_RULES_DIR, '.md');
   for (const ruleName of ruleNames) {
-    const ruleText = await readFile(join(repoRoot, CANONICAL_RULES_DIR, `${ruleName}.md`), 'utf8');
+    const ruleText = await readRequiredRepositorySource(
+      repoRoot,
+      `${CANONICAL_RULES_DIR}/${ruleName}.md`,
+    );
     units.push({
       target: cursorRuleTargetPath(repoRoot, ruleName),
       content: renderCursorRule(ruleName, deriveRuleDescription(ruleText)),
@@ -361,15 +381,22 @@ export interface GenerateOutcome {
  * @param repoRoot - Repository root containing Codex sources and canonical rules.
  * @param options - Whether to clear generated surfaces before writing validated outputs.
  * @returns Paths written from the validated generation plan.
- * @throws If a source contract is invalid or a filesystem operation fails.
+ * @throws If a source contract or existing output estate is invalid, or a filesystem operation fails.
+ * @remarks Generated paths must not be concurrently replaced between output
+ * inspection and writing; generation does not lock the filesystem.
  */
 export async function generateAdapters(
   repoRoot: string,
   { clear = false }: { readonly clear?: boolean } = {},
 ): Promise<GenerateOutcome> {
-  const units = await planGeneration(repoRoot);
+  const root = resolve(repoRoot);
+  const units = await planGeneration(root);
+  const generatedPaths = await inspectGeneratedEstate(
+    root,
+    units.map((unit) => unit.target),
+  );
   if (clear) {
-    await clearGeneratedAdapters(repoRoot);
+    await clearGeneratedAdapters(root, generatedPaths);
   }
   const written: string[] = [];
   for (const unit of units) {
@@ -380,12 +407,19 @@ export async function generateAdapters(
   return { written };
 }
 
-/** Removes generated surfaces after their replacement plan has passed validation. */
-async function clearGeneratedAdapters(repoRoot: string): Promise<void> {
+/**
+ * Removes the generated estate only for an explicit clear request, after source validation.
+ * Cursor rule cleanup follows the checker's recursive `.mdc` estate and preserves
+ * other documents and directories under `.cursor/rules`.
+ */
+async function clearGeneratedAdapters(
+  repoRoot: string,
+  generatedPaths: readonly string[],
+): Promise<void> {
   for (const dir of [CURSOR_AGENTS_DIR, CLAUDE_AGENTS_DIR]) {
     await rm(join(repoRoot, dir), { recursive: true, force: true });
   }
-  for (const ruleName of await listNames(repoRoot, CURSOR_RULES_DIR, '.mdc')) {
-    await rm(cursorRuleTargetPath(repoRoot, ruleName), { force: true });
+  for (const rulePath of generatedPaths.filter((path) => path.endsWith('.mdc'))) {
+    await rm(rulePath, { force: true });
   }
 }

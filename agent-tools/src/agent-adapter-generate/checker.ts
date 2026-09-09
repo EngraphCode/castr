@@ -7,10 +7,10 @@
  * sources (Codex layer + `.agent/rules`) and their generated projections.
  */
 import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { glob } from 'tinyglobby';
+import { resolve } from 'node:path';
 
 import { planGeneration, type GenerationUnit } from './generator.js';
+import { inspectGeneratedEstate } from './generated-estate.js';
 
 /** Differences between the complete generated estate and its expected projection. */
 export interface CheckOutcome {
@@ -20,6 +20,12 @@ export interface CheckOutcome {
   readonly missing: readonly string[];
   /** Generated paths with no canonical source remaining. */
   readonly unexpected: readonly string[];
+}
+
+/** Preserve code-unit path ordering independently of the host's locale. */
+function comparePaths(left: string, right: string): number {
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
 }
 
 /**
@@ -50,9 +56,9 @@ export function compareAdapters(
   }
   const unexpected = [...actual.keys()].filter((path) => !expectedPaths.has(path));
   return {
-    drifted: drifted.toSorted(),
-    missing: missing.toSorted(),
-    unexpected: unexpected.toSorted(),
+    drifted: drifted.toSorted(comparePaths),
+    missing: missing.toSorted(comparePaths),
+    unexpected: unexpected.toSorted(comparePaths),
   };
 }
 
@@ -61,18 +67,20 @@ export function compareAdapters(
  *
  * @param repoRoot - Repository directory containing the canonical Codex sources.
  * @returns The complete bytewise parity result, including surplus nested files.
- * @throws If canonical sources are invalid or an enumerated file cannot be read.
+ * @throws If canonical sources or existing output paths are invalid, or a file cannot be read.
  * @remarks No files are changed; the CLI fails when any difference is reported.
+ * Generated paths must not be concurrently replaced between inspection and reading;
+ * the checker does not lock the filesystem.
  */
 export async function checkAdapters(repoRoot: string): Promise<CheckOutcome> {
-  const expected = await planGeneration(repoRoot);
-  const paths = await glob(
-    ['.cursor/agents/**/*.md', '.claude/agents/**/*.md', '.cursor/rules/**/*.mdc'],
-    { cwd: repoRoot, dot: true },
+  const root = resolve(repoRoot);
+  const expected = await planGeneration(root);
+  const paths = await inspectGeneratedEstate(
+    root,
+    expected.map((unit) => unit.target),
   );
   const actual = new Map<string, string>();
-  for (const path of paths.toSorted()) {
-    const target = join(repoRoot, path);
+  for (const target of paths.toSorted(comparePaths)) {
     actual.set(target, await readFile(target, 'utf8'));
   }
   return compareAdapters(expected, actual);

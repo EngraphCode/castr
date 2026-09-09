@@ -101,5 +101,559 @@
     "disposition": "outstanding",
     "carrier": "castr-documentation-and-fidelity-correction"
   },
-  "reviews": {}
+  "reviews": {
+    ".agent/memory/operational/repo-continuity.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/PR28-disposition",
+      "reviewed_git_blob_hash": "c715affd61909adfcfbf6d18d7c542bd00ea8421",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "Current next-safe-step route only: PR89 and PR88 delivery, bounded PR28 disposition and closure, PR10 residual, PR14 successor assessment, retained Q22 prerequisites and separately sequenced Cricket installation whose PR opens only after the PR28 transition completes.",
+      "evidence": [
+        "Paired documentation/onboarding review followed the state-conditional entry route through the parent, active plan and ledger against bd115294. It verified the 17-open live census, PR89/PR88 delivery, PR28 record-to-closure transition, PR10 residual, PR14 successor and separate Cricket installation; all 70 affected local links and fragments resolve.",
+        "PR90's exact-head Copilot review found that publish/open wording could obscure the installation PR state. The successive custody-routing round triggered a class-level step-back and replaced the ambiguous verb on this route.",
+        "Follow-up documentation review found that the remaining Q-09 closure-slice condition could mean either the PR28 transition or full Q-09 completion. This route now uses the exact PR28-transition condition shared by every current entrypoint."
+      ],
+      "remaining": "Other thread, lifecycle and whole-estate reconciliation remains with C09/C10 and the correction plan.",
+      "prior_reviewed_git_blob_hash": "593cd15d281ead19dc3fdcdc9f64b05ae38327d8",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route only: PR89 delivery, bounded Q-09/PR28 disposition and closure, PR10 residual, PR14 successor assessment and retained Q22 prerequisites."
+        },
+        {
+          "reviewed_git_blob_hash": "ceb2a0a89cf622835ab130498eca4f279be996f4",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route before PR90's terminology step-back: PR89 and PR88 delivery, bounded Q-09/PR28 disposition and closure, PR10 residual, PR14 successor assessment, retained Q22 prerequisites and separately sequenced Cricket installation using ambiguous publish wording."
+        },
+        {
+          "reviewed_git_blob_hash": "593cd15d281ead19dc3fdcdc9f64b05ae38327d8",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current next-safe-step route during PR90's terminology step-back: the installation action used open-PR terminology but retained the ambiguous Q-09 closure-slice condition; superseded by the exact PR28-transition condition."
+        }
+      ]
+    },
+    ".agent/memory/operational/threads/castr-correction.next-session.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/PR28-disposition",
+      "reviewed_git_blob_hash": "2f7992d87e4cec686bf76fc0a38f0b28d8ff3b7f",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "State-conditional continuation, acceptance and landing route plus delivered/residual correction-family routing after PR88, including the unopened Cricket installation PR and exact PR28-transition opening condition.",
+      "evidence": [
+        "Paired documentation/onboarding review confirmed one controlling queue, PR89/PR88 delivered, Q09 and Q22 still open at their actual scopes, PR10 remaining, a non-expiring Q09 acceptance route and separate later Cricket installation.",
+        "PR90's structural custody-routing step-back made the continuation route explicit: no installation PR is open, and it may be opened only after the PR28 transition completes."
+      ],
+      "remaining": "Prepared later-slice context is not certified as present execution authority; complete thread reconciliation remains with C09.",
+      "prior_reviewed_git_blob_hash": "3fa397c7ebb807f0cfbcffc682ca5a34b29d71e3",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current branch, acceptance and landing target plus delivered/residual correction-family routing."
+        },
+        {
+          "reviewed_git_blob_hash": "3fa397c7ebb807f0cfbcffc682ca5a34b29d71e3",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "State-conditional continuation and landing route after PR88 before the structural custody-routing step-back made the installation PR state and exact PR28-transition condition explicit."
+        }
+      ]
+    },
+    ".agent/plans/delivery-ledger.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/PR28-disposition",
+      "reviewed_git_blob_hash": "18d1b9815487da467ffed12b43cf3260a4624ac8",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row, complete 849-hunk preservation disposition against bd115294 and the exact instruction to open the later installation PR after the PR28 transition completes.",
+      "evidence": [
+        "Paired documentation/onboarding review verified PR89/PR88 exact delivery evidence, all 849 PR28 hunk dispositions, zero intersection between the PR88 main delta and the 104 audited paths, fresh PR27/PR28 heads, and retained PR10, PR27 and Q22 obligations without a premature closure claim.",
+        "PR90's successive custody-routing review triggered a class-level terminology audit; this route now says to open the later installation PR.",
+        "Follow-up documentation review required one exact condition across the class; the ledger now names the PR28 transition, matching the parent, correction plan, continuity and continuation thread."
+      ],
+      "remaining": "Continue the PR28 transition by repository state: land the record if absent, close #28 if the record is on main and the PR remains open, then follow the parent plan's current sequence. PR10 keeps Q09 pending; other PR rows retain their dated evidence and individual closure conditions.",
+      "prior_reviewed_git_blob_hash": "3a5008c28ef75be14ed4c059ac1359794bd2ac3b",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "PR89 bounded delivery record, live open-count framing, PR28 row and complete 849-hunk preservation disposition."
+        },
+        {
+          "reviewed_git_blob_hash": "e6f83ec06f3b612d0be611ef39121b3cccc7f205",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row and complete 849-hunk preservation disposition before the installation-PR terminology audit."
+        },
+        {
+          "reviewed_git_blob_hash": "3a5008c28ef75be14ed4c059ac1359794bd2ac3b",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89 and PR88 bounded delivery records, 17-open live census, PR28 row and complete 849-hunk preservation disposition during the installation-PR terminology audit, before the opening condition named the PR28 transition exactly."
+        }
+      ]
+    },
+    ".agent/plans/proof-programme/parent-plan.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/PR28-disposition",
+      "reviewed_git_blob_hash": "81f99ad54f8f9b348caa08532c0a511507a57e78",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit custody of the separate Cricket installation by the root coordinating agent, Bora seeks Turbulence, its branch location, unopened PR state, exact PR28-transition opening condition and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "The Q-09 paired review found the stale Q22-first current-execution paragraph; after correction both specialists verified PR28-first routing, PR10 and Q22 residuals, exact PR89 delivery and the complete 849-hunk disposition.",
+        "Fresh paired documentation/onboarding review against bd115294 verified PR88's bounded delivery, separately sequenced installation, the state-conditional PR28 transition and all 70 affected links without changing queue acceptance or counters.",
+        "Copilot's exact-head PR90 review required explicit installation custody. The finding was accepted; a specialist recheck verified Bora seeks Turbulence and codex/cricket-installation against the current records and confirmed queue authority and sequencing remain unchanged.",
+        "Copilot's following exact-head review found that role-based and identity-based custody wording could be read as conflicting. The full current custody class was audited; the parent now binds the root role, coordinating role and Bora seeks Turbulence identity together, while the active plan, ledger and continuation routes keep the same owner and branch.",
+        "The next exact-head review found the custody preposition ambiguous and two related publish/open terminology refinements. Because this was the second successive custody-routing round, the structural step-back audited the complete current class and now states custody of the installation, its branch location and its unopened PR state.",
+        "Follow-up documentation review found that the later opening condition was still incomplete or ambiguous across entrypoints. Every current route now uses the exact condition: the installation PR may be opened only after the PR28 transition completes."
+      ],
+      "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
+      "prior_reviewed_git_blob_hash": "ead8ec03b13daceeb7a306821c3db88dd0f8b85b",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-06",
+          "scope": "Interactive sequencing only: preserve sole queue, all acceptance/dependencies/counters/pause; independent security repair next, Q22 paired fix/output landing."
+        },
+        {
+          "reviewed_git_blob_hash": "18ebc825041ca09277e8ffaa54053575d44ee5d7",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence only: delivered security repair, bounded Q22 oracle prerequisite, coherent integer migration and paired generator/output landing; queue/counters/original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "60e8487ecaafe8f09c837314c464039d80a38463",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle delivery, bounded PR28 disposition/closure first, PR10 residual, and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "888043b8874730f83edb5a5ba5809cb06182ed22",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence before PR90 review: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, separate but unnamed Cricket-installation custody and later Q22 resumption; superseded by the exact-head explicit-custody correction."
+        },
+        {
+          "reviewed_git_blob_hash": "22f54ec653943e9d1bc8d675d5ba4524adb7468c",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's first review cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody named only by identity and later Q22 resumption; superseded by the role-and-identity clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "9c6043d0acdd8ca0d1bd93445dddcf0f1dbd29aa",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence during PR90's custody-class cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by coordinating role and identity and later Q22 resumption; superseded by the root-role clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "55c1974f24eee3a91b2d7af24225b5e67f8dc839",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's root-role clarification: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by root role, coordinating role and identity and later Q22 resumption; superseded only by the semicolon-continuation capitalisation correction."
+        },
+        {
+          "reviewed_git_blob_hash": "8b3a781edbbc6f8ac387855d2f870c873fbf6629",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence at PR90 head 1c819960: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by root role, coordinating role and identity and later Q22 resumption; superseded by the custody-and-location wording cure."
+        },
+        {
+          "reviewed_git_blob_hash": "ead8ec03b13daceeb7a306821c3db88dd0f8b85b",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence during PR90's structural custody-routing step-back: installation custody, branch location and unopened PR state were explicit, but the parent did not yet name the later opening condition; superseded by the exact PR28-transition condition."
+        }
+      ]
+    },
+    ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/PR28-disposition",
+      "reviewed_git_blob_hash": "e4d20cede1fb594738aca3a1cf0212592064aeae",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries, the separate Cricket installation, its PR-opening action after the PR28 transition and the later integer/generator sequence, scoped beneath the current Q09 PR-risk reduction; original A1-A6 unchanged.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired documentation/onboarding follow-up passed at blob 5ff2e7b53b1adc6d06ba070243d5dc2190b531ba: explicit owner-authorised separate Cricket task, native Castr execution direction, unchanged root queue/ledger/manifest ownership and bounded parallel exception.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Paired documentation/onboarding review passed on 9 September: owner merge-first amendment, current ledger/tally routes, all 20 scoped hashes, conserved acceptance and mutation/final-source evidence distinction. No whole-document or merge-readiness claim follows.",
+        "The Q-09 paired review verified the merged PR89 acceptance, preserved Q22 residuals and corrected the initially conflicting integer-next wording to a later Q22 resumption.",
+        "Fresh paired documentation/onboarding review against bd115294 verified PR88's bounded tooling delivery and exact remaining installation custody while retaining Q09, Q22 and all original outcome acceptance.",
+        "PR90's successive custody-routing review triggered a class-level terminology audit; the plan now uses the concrete GitHub action to open the later installation PR.",
+        "Follow-up documentation review found that Q-09 closure-slice wording could also mean completion of the separate PR10 residual. The plan now names the PR28 transition as the exact opening condition."
+      ],
+      "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
+      "prior_reviewed_git_blob_hash": "1b4e4a689b82048749bf9110d76d778a718650b6",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-06",
+          "scope": "Recorded reflection and dependency-based sequencing, bounded work in progress and explicit C05/C07 doctrine describing surfaces; original A1-A6 unchanged. Subsequent owner-directed separate C05 Cricket task custody and its explicit parallel-work exception passed bounded recheck."
+        },
+        {
+          "reviewed_git_blob_hash": "c4596dfaff19e8c59ee75b22c2e78402aa0dfeb4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "9 September prerequisite reasoning, oracle acceptance and named custody of adjacent observations; corrected current delivery routes and conserved displaced instructions. Original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "9c994cbbffa3e5cfadc55d2c73b917bba909fe95",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Owner merge-first amendment, current ledger/tally routes, conserved acceptance and mutation/final-source evidence distinction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "41c6d0129be99da1bb88f8174dc0baf456e49d18",
+          "base_revision": "d18e5b406d468218e0bf5d32f478725f9eef8399",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle delivery and later integer/generator sequence, scoped beneath the current Q09 PR-risk reduction; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "2a3975a88884d932f6909dcec251a06e4ab27204",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries, the separate Cricket installation and later integer/generator sequence before the installation-PR terminology audit; original A1-A6 unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "1b4e4a689b82048749bf9110d76d778a718650b6",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "PR89's bounded Q22-oracle and PR88's platform-tooling deliveries during PR90's terminology step-back, when the later installation action used open-PR wording but retained the ambiguous Q-09 closure-slice condition; original A1-A6 unchanged."
+        }
+      ]
+    },
+    ".agent/plans/correction-manifests/castr-correction-findings.json": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
+      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+      "review_date": "2026-09-09",
+      "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals.",
+      "evidence": [
+        "Paired documentation/onboarding review verified that Q-22/error-negative-oracles moved from reproduced RED to bounded delivered GREEN only, with PR89 exact head/merge/tree evidence and the remaining generator, integer/export and Pet/Pets/NewPet obligations retained.",
+        "Copilot's exact-head PR90 review found that the delivered bounded oracle row still named the future fixture-generator proof. The finding was accepted; closing proof now names only oracle while the separate generator/regeneration acceptance remains outstanding in the row and Q22 carrier."
+      ],
+      "remaining": "All other finding rows retain their existing state and carrier; Q22 remains open at its full original acceptance.",
+      "prior_reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Finding Q-22/error-negative-oracles delivery state before PR90 review: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof and retained Q22 residuals; superseded because its closing-proof list still included the future fixture generator."
+        }
+      ]
+    },
+    ".agent/plans/archive/correction-sequencing-2026-09-06.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "888095d4777ff917f4e7ebb2e1033cc241785026",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Unchanged prior archive prefix plus six verbatim displaced blocks from 92ada69892c42a69a3ae5431c1793bbee61b46c1; current authority links are framing, not rewritten history.",
+      "evidence": [
+        "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
+        "Historical 6 September review: blob db7ccbb8714f8f1f2deb9ff85cccea575d11231e; scope: Exact displaced parent and delivery-plan paragraphs preserved against the base revision; explicitly historical and linked to current authority.",
+        "On 9 September both reviewers verified the unchanged original archive prefix and exact added blocks. Current continuation blobs eaf19fcd233f9666e36e8ba04bae11d0367842b6 (repo) and 03a2413e894621bc918bbe399fae9c3de6cb0341 (thread) route PR86 delivery to ledger/tally while retaining Q22 and Kite custody. This scoped review does not certify whole-document accuracy or merge readiness.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows."
+      ],
+      "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
+      "prior_reviewed_git_blob_hash": "d75e076597fa2835126c41cf4c9c6e4714f6e385",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "dc1426fd955de16f19fda0ef7736f9d2f7324d56",
+          "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+          "review_date": "2026-09-09",
+          "scope": "Paired documentation/onboarding review of preserved archive prefix, two verbatim continuation blocks from 1fc652343c99b597216e5de98edcf188b36367aa, and current ledger/tally routes."
+        }
+      ]
+    },
+    "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "58978401b7b8db0aea2d236b5dc7aa6fd925bca2",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Adjacent implementation comment accurately distinguishes defined empty operation override from absent inheritance.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation.",
+        "Bounded repair delivered in PR86 merge 92ada69892c42a69a3ae5431c1793bbee61b46c1; exact behavioural blobs preserved. The ledger records merge/review/check evidence."
+      ],
+      "remaining": "Unrelated or historical passages are not certified; complete-document acceptance remains open under the correction plan."
+    },
+    "lib/tests-transforms/__tests__/security-formula.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/security-empty",
+      "reviewed_git_blob_hash": "f75df058cb954b5e6a14876c8c946f5202d87c99",
+      "base_revision": "3ad2ab5dbff006786394dd7689e892be412c1687",
+      "review_date": "2026-09-06",
+      "scope": "Proof commentary accurately states operation-presence and independent anonymous-access observation, with explicit async-loader exclusion.",
+      "evidence": [
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation.",
+        "Bounded repair delivered in PR86 merge 92ada69892c42a69a3ae5431c1793bbee61b46c1; exact behavioural blobs preserved. The ledger records merge/review/check evidence."
+      ],
+      "remaining": "Unrelated or historical passages are not certified; complete-document acceptance remains open under the correction plan."
+    },
+    "README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "923e29258937f711641938d2e935e1c1c1268118",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local entry, owner premises, bounded fidelity claims and durable contributor routing.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "CONTRIBUTING.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "496107e62870ac882d1b68e6df1b4259efc4a9c3",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Prerequisites, first action, bridge routing and actual gate effects.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/USAGE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "dfc662f4339b40460154a97cb2bb1f63f063419a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Fixture generation, compilation/runtime checks, repeatability, failure and durable authority route.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/API-REFERENCE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "05a4de48ae7d7795531b692f734ead9d36707dfb",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local package/CLI entry and output-file versus directory claim only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/DEFAULT-RESPONSE-BEHAVIOR.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c12a6fc7bd1b2a9a4652eb442cc3674ea5e4533c",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Replacement of registry CLI examples with local walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MIGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "f0b6b111441982b1129705916c6dc82a4fbcb3da",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local executable/build/root/input/output-directory prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/EXAMPLES.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "c917e6dd5b1f626cfbce8454e37b0afc2aefac6a",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Three local CLI blocks and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/MCP_INTEGRATION_GUIDE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "296d2386347cd14ee65645c72960b618574b3436",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "docs/OPENAPI-FETCH-INTEGRATION.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "3b571532cca50d41584831068858fb488d810e28",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local CLI block and prerequisites only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/README.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "084fcfc360757eb82063cbaaa98811a38585db4e",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Local checkout paragraph and walkthrough route only.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    ".agent/directives/DEFINITION_OF_DONE.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "fe91aed4a5c9b21dbc24aa29ce2a8226fc1975ec",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Aggregate mutation effects and bounded local packaging evidence.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/src/cli/index.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "ba2990233c647845b55cc3d32b41f35a50233dc7",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Help description and output-mode wording.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/tests-e2e/packaging-integrity.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C03b/C03c/C07/C09 as applicable; correction plan owns complete document review",
+      "reviewed_git_blob_hash": "617b497da2055fa9800d279ef7157c77a7debdd0",
+      "base_revision": "1da974f5c907bc8d08eafa381ebeac7f2dcaa0a3",
+      "review_date": "2026-09-06",
+      "scope": "Packaging-proof commentary scope.",
+      "evidence": [
+        "PR85 paired documentation/onboarding, complete entry-target audit, output-mode source comparison and five-command/directory cure review at their recorded scopes.",
+        "Delivered in PR85 merge 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119; merge tree equals reviewed head."
+      ],
+      "remaining": "Unrelated passages and detailed API/guide/architectural claims are not certified. Re-review after a blob change; full commission acceptance remains open."
+    },
+    "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
+      "evidence": [
+        "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest."
+      ],
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        }
+      ]
+    },
+    "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C08/Q22-oracles",
+      "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+      "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+      "review_date": "2026-09-09",
+      "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
+      "evidence": [
+        "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest.",
+        "The second Sonar step-back restores this smaller two-case group to its exact initially reviewed direct-assertion blob while the larger group retains its table. Fresh focused tests and lint pass; independent test/gateway re-review found no material blocker."
+      ],
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        },
+        {
+          "reviewed_git_blob_hash": "a97ba65adf9333c7d254fe6f254fa13f003a2061",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Intermediate two-case table with case-name assertion context; superseded by the proportionate direct-assertion restoration after current-head Sonar still reported cross-file duplication."
+        }
+      ]
+    }
+  }
 }

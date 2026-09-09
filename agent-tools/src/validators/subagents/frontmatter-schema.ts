@@ -1,32 +1,75 @@
 import path from 'node:path';
+import { fromMarkdown } from 'mdast-util-from-markdown';
 import { parseDocument } from 'yaml';
 import { z } from 'zod';
+import { isCanonicalAgentTemplateReference } from '../../core/canonical-agent-reference.js';
 import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platform-contract.js';
 
 /** Markdown harnesses whose reviewer contracts are validated here. */
 export type SubagentPlatform = 'claude' | 'cursor';
 
-const text = z.string().trim().min(1);
+const text = z.string().refine((value) => value.trim().length > 0, 'must not be blank');
+const token = z
+  .string()
+  .min(1)
+  .refine((value) => value === value.trim(), 'must not have leading or trailing whitespace');
 const toolList = z
-  .union([text, z.array(text).min(1)])
+  .union([text, z.array(token).min(1)])
   .transform((value) =>
-    (typeof value === 'string' ? value.split(',').map((tool) => tool.trim()) : value).toSorted(),
+    typeof value === 'string' ? value.split(',').map((tool) => tool.trim()) : value,
   );
 const claudeSchema = z.strictObject({
-  name: text,
+  name: token,
   description: text,
-  model: text,
-  effort: text.optional(),
+  model: token,
+  effort: token.optional(),
   tools: toolList,
   disallowedTools: toolList,
   permissionMode: z.literal('plan').optional(),
 });
 const cursorSchema = z.strictObject({
-  name: text,
+  name: token,
   description: text,
-  model: text.optional(),
+  model: token.optional(),
   readonly: z.literal(true),
 });
+
+/** Compare against a unique expected tool list without accepting duplicates or requiring source order. */
+function matchesTools(actual: readonly string[], expected: readonly string[]): boolean {
+  return actual.length === expected.length && expected.every((tool) => actual.includes(tool));
+}
+
+/** Validate Claude's restricted tools and the model, effort, and permission binding for each role. */
+function validateClaudeContract(file: string, value: z.output<typeof claudeSchema>): string[] {
+  const issues: string[] = [];
+  const role = cricketRole(value.name);
+  const expectedTools = role ? ['Read'] : ['Read', 'Grep', 'Glob', 'Bash', 'WebFetch', 'WebSearch'];
+  const expectedDenied = role
+    ? ['Write', 'Edit', 'Bash', 'Grep', 'Glob']
+    : ['Write', 'Edit', 'NotebookEdit'];
+  if (!matchesTools(value.tools, expectedTools))
+    issues.push(`${file}: tools must preserve the reviewer safe posture`);
+  if (!matchesTools(value.disallowedTools, expectedDenied))
+    issues.push(`${file}: disallowedTools must preserve the reviewer safe posture`);
+  if (role && (value.model !== role.claudeModel || value.effort !== role.effort))
+    issues.push(`${file}: Cricket model and effort must match its registered role`);
+  if (!role && value.permissionMode !== 'plan')
+    issues.push(`${file}: ordinary Claude reviewer requires permissionMode plan`);
+  if (!role && value.effort !== undefined)
+    issues.push(`${file}: ordinary Claude reviewer must retain its default effort`);
+  return issues;
+}
+
+/** Validate Cursor's deliberate distinction between unpinned Cricket and named ordinary reviewer models. */
+function validateCursorContract(file: string, value: z.output<typeof cursorSchema>): string[] {
+  const issues: string[] = [];
+  const role = cricketRole(value.name);
+  if (role && value.model !== undefined)
+    issues.push(`${file}: Cursor Cricket model must be unpinned`);
+  if (!role && (!value.model || ['auto', 'fast'].includes(value.model)))
+    issues.push(`${file}: ordinary Cursor reviewer requires a model`);
+  return issues;
+}
 
 /** Validate parsed external YAML against the installed reviewer contract, not the full vendor API. */
 function validateFrontmatter(platform: SubagentPlatform, file: string, input: unknown): string[] {
@@ -39,35 +82,29 @@ function validateFrontmatter(platform: SubagentPlatform, file: string, input: un
   }
   const value = result.data;
   const issues: string[] = [];
-  const role = cricketRole(value.name);
   if (value.name !== path.basename(file, '.md'))
     issues.push(`${file}: frontmatter name must match filename`);
   if (!supportsReviewer(value.name, platform)) issues.push(`${file}: unsupported ${platform} role`);
-  if (platform === 'cursor') {
-    if (role && value.model !== undefined)
-      issues.push(`${file}: Cursor Cricket model must be unpinned`);
-    if (!role && (!value.model || ['auto', 'fast'].includes(value.model)))
-      issues.push(`${file}: ordinary Cursor reviewer requires a model`);
-  }
-  if ('tools' in value) {
-    const expectedTools = role
-      ? ['Read']
-      : ['Read', 'Grep', 'Glob', 'Bash', 'WebFetch', 'WebSearch'];
-    const expectedDenied = role
-      ? ['Write', 'Edit', 'Bash', 'Grep', 'Glob']
-      : ['Write', 'Edit', 'NotebookEdit'];
-    if (JSON.stringify(value.tools) !== JSON.stringify(expectedTools.toSorted()))
-      issues.push(`${file}: tools must preserve the reviewer safe posture`);
-    if (JSON.stringify(value.disallowedTools) !== JSON.stringify(expectedDenied.toSorted()))
-      issues.push(`${file}: disallowedTools must preserve the reviewer safe posture`);
-    if (role && (value.model !== role.claudeModel || value.effort !== role.effort))
-      issues.push(`${file}: Cricket model and effort must match its registered role`);
-    if (!role && value.permissionMode !== 'plan')
-      issues.push(`${file}: ordinary Claude reviewer requires permissionMode plan`);
-    if (!role && value.effort !== undefined)
-      issues.push(`${file}: ordinary Claude reviewer must retain its default effort`);
-  }
-  return issues;
+  const contractIssues =
+    'tools' in value ? validateClaudeContract(file, value) : validateCursorContract(file, value);
+  return [...issues, ...contractIssues];
+}
+
+/** Read exact standalone instruction paragraphs, excluding examples, quotations, and inline mimics. */
+function templateInstructions(body: string): string[] {
+  return fromMarkdown(body).children.flatMap((node) => {
+    if (node.type !== 'paragraph' || node.children.length !== 3) return [];
+    const [prefix, template, suffix] = node.children;
+    if (
+      prefix?.type !== 'text' ||
+      prefix.value !== 'Your first action MUST be to read and internalise ' ||
+      template?.type !== 'inlineCode' ||
+      suffix?.type !== 'text' ||
+      suffix.value !== '.'
+    )
+      return [];
+    return [template.value];
+  });
 }
 
 /**
@@ -78,8 +115,9 @@ function validateFrontmatter(platform: SubagentPlatform, file: string, input: un
  * @param content - Full Markdown source, including its leading YAML frontmatter.
  * @returns File-scoped issues and template paths found in the instruction body.
  * Missing/malformed frontmatter and contract violations are returned as issues;
- * metadata never satisfies the required body instruction. Referenced files are
- * not read here, so callers must separately verify their existence.
+ * only exact standalone top-level Markdown instruction paragraphs count.
+ * Metadata, quotations, comments, and code examples never satisfy the instruction.
+ * Referenced files are not read here, so callers must separately verify their existence.
  * @throws If YAML conversion rejects an unresolved alias or excessive alias expansion.
  * @example
  * ```typescript
@@ -104,16 +142,12 @@ export function validateMarkdownWrapper(
     };
   const issues = validateFrontmatter(platform, file, document.toJS());
   const body = content.slice(frontmatter[0].length);
-  const templatePaths = [
-    ...body.matchAll(/Your first action MUST be to read and internalise `([^`]+)`\./gu),
-  ]
-    .map((match) => match[1])
-    .filter((value): value is string => value !== undefined);
+  const templatePaths = templateInstructions(body);
   if (templatePaths.length !== 1)
     issues.push(`${file}: exactly one required template loading line is required`);
   const role = cricketRole(path.basename(file, '.md'));
   for (const template of templatePaths) {
-    if (!/^\.agent\/sub-agents\/templates\/[a-z0-9-]+\.md$/u.test(template))
+    if (!isCanonicalAgentTemplateReference(template))
       issues.push(`${file}: template path must be inside .agent/sub-agents/templates`);
     if (role && template !== role.templatePath)
       issues.push(`${file}: Cricket template must match ${role.templatePath}`);

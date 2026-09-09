@@ -15,15 +15,7 @@
  */
 
 import { readTomlDocument, tomlString } from '../../core/toml-document.js';
-
-/**
- * Matches backtick-delimited `.agent/...` paths referenced inside developer
- * instructions, e.g. the path in a line like:
- * `read .agent/sub-agents/templates/foo.md`.
- *
- * Captures the path in group 1.
- */
-const CANONICAL_PATH_REGEX = /`(\.agent\/[^`]+)`/gu;
+import { extractCanonicalAgentPaths } from '../../core/canonical-agent-reference.js';
 
 // ---------------------------------------------------------------------------
 // Developer instructions extraction
@@ -60,11 +52,5 @@ export function readCodexDeveloperInstructions(content: string): string {
  * @returns A sorted array of unique `.agent/...` path strings.
  */
 export function extractCanonicalPaths(developerInstructions: string): string[] {
-  const paths = new Set<string>();
-  for (const match of developerInstructions.matchAll(CANONICAL_PATH_REGEX)) {
-    if (match[1] !== undefined) {
-      paths.add(match[1]);
-    }
-  }
-  return [...paths].toSorted((left, right) => left.localeCompare(right));
+  return extractCanonicalAgentPaths(developerInstructions);
 }
