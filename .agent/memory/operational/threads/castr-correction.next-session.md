@@ -2,22 +2,20 @@
 
 ## Current continuation
 
-- Branch: `codex/castr-security-empty-delivery`, based on main merge `SHA:6c3b18f0`.
+- Branch: `codex/castr-validation-oracles`, based on main merge `SHA:92ada698`.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
-- PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
-- Landing target: preserve explicit operation `security: []` through writing and canonical persistence, with absent/empty/anonymous-alternative witnesses under required global authentication.
-- Next safe step: continue PR #86 delivery from the ledger and linked tally for outstanding findings and current-head conditions; completed integration/review proof remains recorded there. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites. The prior instruction is [conserved verbatim](../../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-continuation-correction).
+- Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
+- PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md) and its linked tally.
+- Landing target: C08/Q22-oracles strengthens existing Error witnesses without changing fixtures, imports or case membership.
 - Team: root owns compiler/foundational documentation and integration; Kite hunts Eyrie owns the separate Cricket tooling worktree. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
-C01R, Q-19 and C03a are delivered at their bounded acceptance; the ledger owns
-exact proof. C03a's five actual review rounds and class-level navigation cures
-remain in its tally. C05 retains the PR skill attribution and rule/reference
-cleanup; C10 retains observed review/continuity-authoring failures. C03b/c source
-drafts remain preserved for their separate API/options and guide outcomes.
-The operation repair does not close PR #18; newly reproduced document-level empty
-security declaration loss has its own finding and repair carrier.
+The ledger records delivered C01R, Q-19, C03a and the bounded operation-security
+repair. C05 retains PR skill attribution and rule/reference cleanup; C10 retains
+observed review/continuity-authoring failures and final isolated-pack acceptance.
+C03b/c source drafts remain preserved. PR #18's document-security presence and
+identity obligations remain open. Displaced continuation text is
+[conserved verbatim](../../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Preparation retained for later slices
 
