@@ -52,6 +52,10 @@ Parent/ledger/continuity edits are confined to this atomic lifecycle transition.
 
 ## Previous delivery state — 9 September 2026 (historical)
 
+All following execution and transfer sections retain their dated observations and
+superseded instructions. Do not execute them as current direction; the final native
+proof and delivery route above control.
+
 Bora seeks Turbulence completed the installation's repository delivery.
 PR #88 delivered the platform contract as
 `bd115294cd545db6d6e64f6c4629a5a583e5ded3`. PR #91 then delivered the two

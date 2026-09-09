@@ -154,8 +154,8 @@ Those rows retain their original acceptance.
 
 Verified on 10 September 2026 with `gh pr list --state open --limit 100`: 15 older
 PRs remain open, comprising the fourteen inherited rows below and frozen source #81.
-PR #87 merged as `c1e73c1a` and PR #92 as `8deca63f`. This count excludes the new final
-I2 evidence/lifecycle PR until it opens. PR #91 merged as `af840d9b`; PR #90 previously
+PR #87 merged as `c1e73c1a` and PR #92 as `8deca63f`. This is the pre-opening census for final
+I2 evidence/lifecycle PR #93; that PR is additional while open. PR #91 merged as `af840d9b`; PR #90 previously
 merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28 closed without
 merge and retained its recovery branch. The remaining source PRs close only when their
 recorded extraction or supersession conditions are verified. PR #14 extraction follows
@@ -271,9 +271,11 @@ PR #81 also recorded a qs dependency advisory (Dependabot #73); its dated report
 is source evidence awaiting fresh triage in the dependency-currency carrier.
 This is not a new assertion of advisory status or licence to drop the follow-up.
 
-## Additional PR observations: 9 September 2026
+## Historical PR observations: 9 September 2026
 
-These observations supplement the immutable inherited-PR snapshot above. They do
+These dated observations are historical, including PR #87's then-open state; the
+10 September census above records its later merge. They supplement the immutable
+inherited-PR snapshot above. They do
 not authorise another shepherd to resolve review or merge conditions.
 
 | PR and observed head                                                                            | Recorded state                                                                                                                            | Value, overlap and owner                                                                                                                                                                                   | Required disposition evidence                                                                                                                                                                                                                      |

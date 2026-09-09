@@ -232,7 +232,7 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "da84cb4b1db7aa4e22c1f1d3a1821e2f38a60f19",
+      "reviewed_git_blob_hash": "75dc2d768d12bc7d0093a1db4e5dae98af81de2f",
       "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
       "review_date": "2026-09-10",
       "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
@@ -242,7 +242,7 @@
         "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
       ],
       "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "bf9af88cb5ff2a7170f5a9c186627ec2414799b9",
+      "prior_reviewed_git_blob_hash": "da84cb4b1db7aa4e22c1f1d3a1821e2f38a60f19",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -333,6 +333,12 @@
           "base_revision": "1f29d21fa78bd6bbc0297e66b488b78a3640fc1b",
           "review_date": "2026-09-09",
           "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, explicit PR88-row residual acceptance, and final I2 before PR14."
+        },
+        {
+          "reviewed_git_blob_hash": "da84cb4b1db7aa4e22c1f1d3a1821e2f38a60f19",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
@@ -882,7 +888,7 @@
       "review_state": "partially-reviewed",
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "30986b0768f36af98897df51fba1ce63d97bf408",
+      "reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
       "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
       "review_date": "2026-09-10",
       "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
@@ -922,9 +928,15 @@
           "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
           "review_date": "2026-09-09",
           "scope": "Current final-native-proof route: load the installed registered roles in a fresh trusted Castr task, retain three normal and same-agent adversarial returns or UNDELIVERED, then reconcile the atomic lifecycle before PR14."
+        },
+        {
+          "reviewed_git_blob_hash": "30986b0768f36af98897df51fba1ce63d97bf408",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ],
-      "prior_reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8"
+      "prior_reviewed_git_blob_hash": "30986b0768f36af98897df51fba1ce63d97bf408"
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
@@ -960,7 +972,7 @@
       "review_state": "partially-reviewed",
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "cb88d29183bea4207295b91356b26b008a0a4153",
+      "reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69",
       "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
       "review_date": "2026-09-10",
       "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
@@ -1030,15 +1042,21 @@
           "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
           "review_date": "2026-09-09",
           "scope": "Current C05 Cricket atomic acceptance and preserved history: T1/T2, I1 and documented installation are delivered; the dated native panel predates material final-template changes, so final I2 remains outstanding."
+        },
+        {
+          "reviewed_git_blob_hash": "cb88d29183bea4207295b91356b26b008a0a4153",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ],
-      "prior_reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f"
+      "prior_reviewed_git_blob_hash": "cb88d29183bea4207295b91356b26b008a0a4153"
     },
     ".agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json": {
       "review_state": "partially-reviewed",
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "fd13548d46a040d25f207ac4ed48c7041313db34",
+      "reviewed_git_blob_hash": "3a3ed6ce41ce3836fc9a2802950b08109fb552f8",
       "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
       "review_date": "2026-09-10",
       "scope": "Complete dated native invocation record and limited semantic spot check; no reliability or perfect adherence claim.",
@@ -1276,14 +1294,14 @@
           "classification": "document-like",
           "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
-          "reviewed_git_blob_hash": "cb88d29183bea4207295b91356b26b008a0a4153"
+          "reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json",
           "classification": "embedded-documentation",
           "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
-          "reviewed_git_blob_hash": "fd13548d46a040d25f207ac4ed48c7041313db34"
+          "reviewed_git_blob_hash": "3a3ed6ce41ce3836fc9a2802950b08109fb552f8"
         }
       ]
     }

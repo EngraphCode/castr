@@ -13,6 +13,9 @@ Broader C05 and correction-programme obligations remain in their controlling pla
 
 ## Previous continuation — retained history
 
+Do not execute the superseded instructions below. They describe the earlier
+unproved boundary; the current route above controls.
+
 ### Continue Castr C05 Cricket final native proof
 
 Read the [controlling plan and preserved history](../plans/current/complete/cricket-platform-parity.md)
