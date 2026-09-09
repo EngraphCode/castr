@@ -114,7 +114,7 @@
         "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
         "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
       ],
-      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage."
+      "remaining": "Current PR delivery evidence and actions belong to .agent/plans/delivery-ledger.md and its linked PR86 tally. This scoped review does not certify unrelated or historical passages; the correction plan retains complete-document acceptance."
     },
     ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
       "review_state": "reviewed-draft",
@@ -129,22 +129,24 @@
         "Paired documentation/onboarding follow-up passed at blob 5ff2e7b53b1adc6d06ba070243d5dc2190b531ba: explicit owner-authorised separate Cricket task, native Castr execution direction, unchanged root queue/ledger/manifest ownership and bounded parallel exception.",
         "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
       ],
-      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage.",
+      "remaining": "Current PR delivery evidence and actions belong to .agent/plans/delivery-ledger.md and its linked PR86 tally. This scoped review does not certify unrelated or historical passages; the correction plan retains complete-document acceptance.",
       "prior_reviewed_git_blob_hash": "5ff2e7b53b1adc6d06ba070243d5dc2190b531ba"
     },
     ".agent/plans/archive/correction-sequencing-2026-09-06.md": {
       "review_state": "reviewed-draft",
       "disposition": "outstanding",
       "carrier": "C08/security-empty",
-      "reviewed_git_blob_hash": "db7ccbb8714f8f1f2deb9ff85cccea575d11231e",
+      "reviewed_git_blob_hash": "dc1426fd955de16f19fda0ef7736f9d2f7324d56",
       "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
-      "review_date": "2026-09-06",
-      "scope": "Exact displaced parent and delivery-plan paragraphs preserved against the base revision; explicitly historical and linked to current authority.",
+      "review_date": "2026-09-09",
+      "scope": "Paired documentation/onboarding review of preserved archive prefix, two verbatim continuation blocks from 1fc652343c99b597216e5de98edcf188b36367aa, and current ledger/tally routes.",
       "evidence": [
         "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
-        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks."
+        "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
+        "Historical 6 September review: blob db7ccbb8714f8f1f2deb9ff85cccea575d11231e; scope: Exact displaced parent and delivery-plan paragraphs preserved against the base revision; explicitly historical and linked to current authority.",
+        "On 9 September both reviewers verified the unchanged original archive prefix and exact added blocks. Current continuation blobs eaf19fcd233f9666e36e8ba04bae11d0367842b6 (repo) and 03a2413e894621bc918bbe399fae9c3de6cb0341 (thread) route PR86 delivery to ledger/tally while retaining Q22 and Kite custody. This scoped review does not certify whole-document accuracy or merge readiness."
       ],
-      "remaining": "Intact hooks and reviewed merged delivery remain required; the review is scoped to sequencing, delivery continuation and preserved history, not every historical or unrelated passage.",
+      "remaining": "Current PR delivery evidence and actions belong to .agent/plans/delivery-ledger.md and its linked PR86 tally. This scoped review does not certify unrelated or historical passages; the correction plan retains complete-document acceptance.",
       "prior_reviewed_git_blob_hash": "d75e076597fa2835126c41cf4c9c6e4714f6e385"
     },
     "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts": {
@@ -156,9 +158,10 @@
       "review_date": "2026-09-06",
       "scope": "Adjacent implementation comment accurately distinguishes defined empty operation override from absent inheritance.",
       "evidence": [
-        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence."
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation."
       ],
-      "remaining": "Integrate current main and complete required gates and PR delivery. A scoped review does not certify every historical or unrelated passage in this file."
+      "remaining": "Current PR delivery evidence and actions belong to .agent/plans/delivery-ledger.md and its linked PR86 tally. This scoped review does not certify unrelated or historical passages; the correction plan retains complete-document acceptance."
     },
     "lib/tests-transforms/__tests__/security-formula.integration.test.ts": {
       "review_state": "reviewed-draft",
@@ -169,9 +172,10 @@
       "review_date": "2026-09-06",
       "scope": "Proof commentary accurately states operation-presence and independent anonymous-access observation, with explicit async-loader exclusion.",
       "evidence": [
-        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence."
+        "Applicable OpenAPI, test and gateway reviews verified the exact code/test candidate and retained RED/GREEN evidence.",
+        "On 6 September 2026 the candidate was integrated onto 6c3b18f0e97d4d93eca14ab67c2b0c79bc304119 and the three unchanged behavioural blobs passed the OpenAPI integration recheck; 19 unit and eight integration cases passed. The finding record preserves this dated observation."
       ],
-      "remaining": "Integrate current main and complete required gates and PR delivery. A scoped review does not certify every historical or unrelated passage in this file."
+      "remaining": "Current PR delivery evidence and actions belong to .agent/plans/delivery-ledger.md and its linked PR86 tally. This scoped review does not certify unrelated or historical passages; the correction plan retains complete-document acceptance."
     },
     "README.md": {
       "review_state": "partially-reviewed",

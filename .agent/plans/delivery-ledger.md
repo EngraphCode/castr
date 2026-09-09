@@ -87,10 +87,19 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   Canonical `pnpm check` passed on 6 September, including the integrated 19 unit
   and eight security-transform cases and the existing E2E suites. OpenAPI and paired
   documentation/onboarding reviews passed; the latter corrected the parent's stale
-  C03a continuation. The Markdown-link by-file report still lists 174 entries across
+  C03a continuation. The 6 September Markdown-link by-file report listed 174 entries across
   794 files, including existing archive targets omitted by its inventory; C09 owns
-  that outstanding validator/reference repair. Intact hooks and reviewed merge
-  remain required. The [finding record](correction-manifests/castr-correction-findings.json)
+  that outstanding validator/reference repair. Both 6 September commits
+  (`f4661eb555acf4dfbd2e4345af9967566dce6579` and
+  `1fc652343c99b597216e5de98edcf188b36367aa`) and their push passed with intact
+  hooks, including pre-push `check:ci`. These are dated observations, not proof
+  for a later head. [PR #86](https://github.com/EngraphCode/castr/pull/86) is the
+  delivery carrier; its [actual tally](https://github.com/EngraphCode/castr/pull/86#issuecomment-5559978100)
+  owns review rounds and current-head actions. The 9 September harvest at
+  `1fc652343c99b597216e5de98edcf188b36367aa` found all 16 checks successful,
+  completed Copilot/Codex review and three unresolved stale-record findings.
+  Those findings, subsequent head verification and merge remain open at that
+  observation; no merge readiness is claimed. The [finding record](correction-manifests/castr-correction-findings.json)
   carries exact candidate blobs and bounded proof. This does not close wider security,
   identity, loader or MCP obligations.
 

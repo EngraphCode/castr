@@ -3161,7 +3161,7 @@
       },
       "repair_evidence": {
         "carrier": "Q-30/C08/security-empty",
-        "state": "prepared; aggregate and merged delivery pending",
+        "state": "Bounded repair and integration proof recorded on 6 September 2026; current delivery disposition belongs to .agent/plans/delivery-ledger.md.",
         "change": "Emit every defined operation security array, including an empty array.",
         "scope": "Canonical 3.2.0 in-memory parse -> serialize/deserialize -> write -> reparse; authored property presence and anonymous-access meaning. Excludes async loading, rebuilt package entrypoints and HTTP enforcement.",
         "tests": [
@@ -3182,7 +3182,7 @@
           "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts": "b9bd7425915faf9ff34bd166c2def0b09353f14c",
           "lib/tests-transforms/__tests__/security-formula.integration.test.ts": "f75df058cb954b5e6a14876c8c946f5202d87c99"
         },
-        "remaining": "Integrate current main, pass aggregate and intact hooks, complete fresh PR reviews/checks/ruleset conditions, merge, then record actual merge evidence in the delivery ledger. Related wider C2/F-01 and Q-03 residuals are not closed by this bounded repair.",
+        "remaining": "The delivery ledger and its linked PR86 tally own current-head review, checks, ruleset and merge evidence. This bounded repair does not close wider C2/F-01 or Q-03 residuals; their existing finding records retain acceptance and ownership.",
         "existing_pr_value": {
           "pull_request": "https://github.com/EngraphCode/castr/pull/18",
           "observed_head": "9c93ccaaa888fb07f77a2b16a8d245f355e936fd",

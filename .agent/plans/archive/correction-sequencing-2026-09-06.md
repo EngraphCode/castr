@@ -96,3 +96,30 @@ supersession failure; batch any further fixes only after the current review and 
 wave completes. The local-checkout source draft and extracted C03a worktree remain
 separate, with API/options and response/transport/MCP guides assigned to C03b/c.
 ``````
+
+## 9 September PR86 continuation correction
+
+The following 6 September instructions are conserved verbatim from commit
+`1fc652343c99b597216e5de98edcf188b36367aa`. They are historical: integration
+and the recorded specialist/aggregate checks had completed. Current PR delivery
+actions belong to the [ledger](../delivery-ledger.md) and its linked tally.
+
+### Repo continuity: Next safe steps
+
+```text
+C03a is delivered; the [ledger](../../plans/delivery-ledger.md) owns its exact
+merge/review evidence. Integrate the operation-security-empty repair under the
+[correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md),
+then investigate Q-22's paired generator/output repair and its actual semantic
+prerequisites. C03b/c and other prepared drafts retain their bounded carriers.
+Kite hunts Eyrie owns the separate Cricket tooling task; coordinate aggregate runs.
+Q-19 is delivered and C05 retains its attribution cleanup. Correctness, review and
+gate conditions remain mandatory; batch fixes after the running review/CI wave.
+The correction thread identifies the current branch and next action.
+```
+
+### Correction thread: Next safe step
+
+```text
+- Next safe step: validate the integrated repair, finish specialist review, then deliver through current-head PR conditions. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites.
+```
