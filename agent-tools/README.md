@@ -62,7 +62,7 @@ pnpm agent-tools context-cost --glob '.agent/rules/*.md'
 pnpm agent-tools:claude-agent-ops status
 pnpm agent-tools:claude-agent-ops health
 pnpm agent-tools:cursor-session-from-claude-session find --last-hours 2
-pnpm agent-tools:codex-reviewer-resolve code-expert
+pnpm agent-tools:codex-reviewer-resolve code-reviewer
 ```
 
 ## Unified entrypoint
@@ -452,13 +452,51 @@ pnpm agent-tools:cursor-session-from-claude-session takeover 143494d9 --output .
 The resolver expects the live repo pattern: a central `.codex/config.toml`
 registration plus a self-describing `.codex/agents/*.toml` adapter whose
 `name` and `description` match the registry entry.
+The report includes the configured `model` (or `null` for inherited selection)
+and reasoning effort. These describe configuration, not verified runtime identity.
 
 Examples:
 
 ```bash
-pnpm agent-tools:codex-reviewer-resolve sentry-expert
+pnpm agent-tools:codex-reviewer-resolve code-reviewer
 pnpm agent-tools:codex-reviewer-resolve architecture-expert-fred --json
 ```
+
+## Reviewer adapter generation and validation
+
+Run these commands from the repository root:
+
+```bash
+pnpm agents:adapter-generate
+pnpm agents:check
+pnpm portability:check
+pnpm --filter @engraph/agent-tools validate-subagents
+```
+
+The generator reads the Codex registry and validates each adapter before
+projecting Claude and Cursor wrappers. Registration, filename, description,
+execution settings and canonical method must agree. Invalid or incomplete
+sources fail before generated files are written. Ordinary reviewers retain
+their required reasoning and read-only settings.
+
+Cricket has an explicit platform contract: a complete Codex trio projects to
+Claude and Cursor quartets, including the high-judgement seat supported only
+on those platforms. Claude receives its configured model/effort bindings;
+Cursor Cricket wrappers leave both unpinned. This tooling capability does not
+establish that Cricket definitions are installed or that a native panel ran.
+The [Cricket skill](../.agent/skills/cognition/cricket/SKILL-CANONICAL.md)
+owns the panel and its execution evidence requirements.
+
+The read-only check compares the whole generated estate, reporting missing,
+drifted and unexpected files separately. Surplus wrappers no longer pass when
+their canonical source disappears. Regeneration updates expected files; it
+does not silently delete surplus work. Inspect and reconcile those paths before
+using the explicit `--clear` operation on a generated estate.
+
+TOML is parsed structurally, so settings inside instruction prose or nested
+tables cannot satisfy top-level adapter requirements. Markdown wrappers use
+strict YAML frontmatter validation, including duplicate keys, platform-specific
+fields, safe tool sets and a single required canonical-template loading line.
 
 ## Repo gate status
 

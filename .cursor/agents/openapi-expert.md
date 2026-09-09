@@ -3,7 +3,6 @@ name: openapi-expert
 model: gpt-5.5
 description: OpenAPI 3.0/3.1 semantics and IR fidelity expert.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Openapi Expert

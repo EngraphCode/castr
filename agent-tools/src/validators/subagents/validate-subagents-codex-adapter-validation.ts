@@ -29,6 +29,7 @@ import {
   stripBasename,
   validateAdapterFields,
 } from './validate-subagents-codex-adapter-field-checks.js';
+import { cricketRole, supportsReviewer } from '../../core/reviewer-adapter-platform-contract.js';
 
 // ---------------------------------------------------------------------------
 // Module-private constants
@@ -42,7 +43,7 @@ const DEFAULT_TEMPLATE_DIR = '.agent/sub-agents/templates';
 // ---------------------------------------------------------------------------
 
 /**
- * The required TOML settings for every Codex subagent adapter file.
+ * The required TOML settings for ordinary Codex subagent adapter files.
  *
  * Each entry is a `[key, expectedValue]` pair.  An adapter file must declare
  * all of these keys with exactly these values to be considered valid.
@@ -82,7 +83,8 @@ export interface CodexAdapterValidationInput {
   /**
    * List of required `[key, expectedValue]` TOML basic-string settings that
    * must be present in the adapter file.
-   * Defaults to {@link REQUIRED_CODEX_SETTINGS}.
+   * Defaults to the exact model, effort and safety settings for a supported
+   * Cricket role; ordinary reviewers use {@link REQUIRED_CODEX_SETTINGS}.
    */
   readonly requiredSettings?: readonly (readonly [string, string])[];
 
@@ -127,7 +129,7 @@ export interface CodexAdapterValidationResult {
  *   `description` are consistent with that registration.
  * - All required settings (e.g. `model_reasoning_effort`, `sandbox_mode`,
  *   `approval_policy`) are set to their mandated values.
- * - A `developer_instructions` triple-quoted block is present.
+ * - A non-empty top-level `developer_instructions` string is present.
  * - The `developer_instructions` body references at least one canonical
  *   template path inside `templateDir`.
  *
@@ -137,17 +139,28 @@ export interface CodexAdapterValidationResult {
  * @returns A result object with collected issues, the template paths
  *   referenced in `developer_instructions`, and all canonical paths found.
  */
-export function getCodexAdapterValidation({
+function validateCodexAdapter({
   codexAdapterFile,
   content,
   registeredAgent = null,
   templateDir = DEFAULT_TEMPLATE_DIR,
-  requiredSettings = REQUIRED_CODEX_SETTINGS,
+  requiredSettings,
   configPath = CODEX_CONFIG_PATH,
 }: CodexAdapterValidationInput): CodexAdapterValidationResult {
   const adapterBasename = stripBasename(codexAdapterFile, '.toml');
+  const role = cricketRole(adapterBasename);
+  const roleSettings = role?.codexModel
+    ? [
+        ['model', role.codexModel] as const,
+        ['model_reasoning_effort', role.effort] as const,
+        ['sandbox_mode', 'read-only'] as const,
+        ['approval_policy', 'never'] as const,
+      ]
+    : REQUIRED_CODEX_SETTINGS;
   const declaredName = readTomlBasicStringValue(content, 'name');
   const declaredDescription = readTomlBasicStringValue(content, 'description');
+  // Ordinary reviewers may inherit a model, but an explicit value must be a string.
+  readTomlBasicStringValue(content, 'model');
   const issues: string[] = validateAdapterFields(
     codexAdapterFile,
     adapterBasename,
@@ -155,20 +168,62 @@ export function getCodexAdapterValidation({
     declaredDescription,
     registeredAgent,
     content,
-    requiredSettings,
+    requiredSettings ?? roleSettings,
     configPath,
   );
+  if (!supportsReviewer(adapterBasename, 'codex'))
+    issues.push(`${codexAdapterFile}: unsupported Codex role`);
   const developerInstructions = readCodexDeveloperInstructions(content);
   if (!developerInstructions) {
-    issues.push(`${codexAdapterFile}: missing triple-quoted developer_instructions block`);
+    issues.push(`${codexAdapterFile}: missing non-empty developer_instructions string`);
     return { issues, templatePaths: [], canonicalPaths: [] };
   }
   const canonicalPaths = extractCanonicalPaths(developerInstructions);
   const templatePaths = canonicalPaths.filter((p) => p.startsWith(`${templateDir}/`));
+  if (role && (templatePaths.length !== 1 || templatePaths[0] !== role.templatePath)) {
+    issues.push(
+      `${codexAdapterFile}: developer_instructions must reference exactly ${role.templatePath} for its Cricket method contract`,
+    );
+  }
   if (templatePaths.length === 0) {
     issues.push(
       `${codexAdapterFile}: developer_instructions must reference at least one canonical template inside ${templateDir}`,
     );
   }
   return { issues, templatePaths, canonicalPaths };
+}
+
+/**
+ * Validate an adapter's TOML, registered identity, safety settings and canonical method.
+ *
+ * @param input - Adapter path/source, matching registration and optional contract overrides.
+ * @returns File-scoped issues plus canonical/template paths found in instructions.
+ * TOML parsing and field-type errors become issues with empty path lists rather
+ * than escaping as exceptions. Ordinary models may be omitted; explicit values
+ * must be strings. Cricket requires its exact supported role bindings and method.
+ * This pure boundary does not check whether referenced files exist.
+ * @example
+ * ```typescript
+ * const result = getCodexAdapterValidation({
+ *   codexAdapterFile: '.codex/agents/code-reviewer.toml',
+ *   content: adapterSource,
+ *   registeredAgent: registration,
+ * });
+ * if (result.issues.length > 0) throw new Error(result.issues.join('\n'));
+ * ```
+ */
+export function getCodexAdapterValidation(
+  input: CodexAdapterValidationInput,
+): CodexAdapterValidationResult {
+  try {
+    return validateCodexAdapter(input);
+  } catch (error) {
+    return {
+      issues: [
+        `${input.codexAdapterFile}: invalid TOML: ${error instanceof Error ? error.message : String(error)}`,
+      ],
+      templatePaths: [],
+      canonicalPaths: [],
+    };
+  }
 }

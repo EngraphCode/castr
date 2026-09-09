@@ -3,7 +3,6 @@ name: assumptions-expert
 model: gpt-5.5
 description: Meta-level plan and proportionality reviewer.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Assumptions Expert

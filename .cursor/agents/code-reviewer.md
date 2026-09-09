@@ -3,7 +3,6 @@ name: code-reviewer
 model: gpt-5.5
 description: Gateway reviewer for non-trivial changes.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Code Reviewer

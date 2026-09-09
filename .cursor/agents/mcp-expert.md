@@ -3,7 +3,6 @@ name: mcp-expert
 model: gpt-5.5
 description: castr MCP tool-emission fidelity specialist.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Mcp Expert

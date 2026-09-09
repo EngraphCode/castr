@@ -1,166 +1,72 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, join, posix } from 'node:path';
+import type { TomlTable } from 'smol-toml';
+import { readAgentRegistrations, tomlString } from './toml-document.js';
 
 export const CODEX_CONFIG_PATH = '.codex/config.toml';
-const CODEX_CONFIG_DIR = posix.dirname(CODEX_CONFIG_PATH);
 
-const AGENT_SECTION_PATTERN = /^\[agents\."([^"]+)"\]$/u;
-const TOML_BASIC_STRING_PATTERN = /^([a-z_]+)\s*=\s*"([^"\\]*(?:\\.[^"\\]*)*)"$/u;
-
-interface MutableCodexAgentRegistration {
-  readonly name: string;
-  description?: string;
-  configFile?: string;
-}
-
-interface TomlStringAssignment {
-  readonly key: string;
-  readonly value: string;
-}
-
+/** A complete registered role ready for runtime resolution. */
 export interface CodexAgentRegistration {
   name: string;
   description: string;
   configFile: string;
 }
 
+/**
+ * Parse complete runtime registrations using actual TOML semantics.
+ * @param content - Full project configuration source.
+ * @returns Registrations sorted by name; reserved agent settings are excluded.
+ * @throws For malformed TOML, invalid settings/role fields, or missing registration metadata.
+ */
 export function parseCodexAgentRegistrations(content: string): CodexAgentRegistration[] {
-  const entries: CodexAgentRegistration[] = [];
-  let current: MutableCodexAgentRegistration | null = null;
-
-  for (const line of readRelevantTomlLines(content)) {
-    const sectionName = readAgentSectionName(line);
-    if (sectionName) {
-      flushRegistration(entries, current);
-      current = { name: sectionName };
-      continue;
-    }
-
-    current = applyRegistrationLine(current, line);
+  const entries = readAgentRegistrations(content);
+  for (const entry of entries) {
+    if (!entry.description)
+      throw new Error("Codex agent '" + entry.name + "' is missing a description.");
+    if (!entry.configFile)
+      throw new Error("Codex agent '" + entry.name + "' is missing a config_file.");
   }
-
-  flushRegistration(entries, current);
-  return entries.sort((left, right) => left.name.localeCompare(right.name));
+  return entries.toSorted((a, b) => a.name.localeCompare(b.name));
 }
 
+/**
+ * Read and validate the project's own registry.
+ * @param repoRoot - Filesystem root containing the project's .codex directory.
+ * @returns Complete registrations sorted by name.
+ * @throws If the registry cannot be read or fails {@link parseCodexAgentRegistrations}.
+ */
 export function readCodexAgentRegistrations(repoRoot: string): CodexAgentRegistration[] {
-  const configAbsolutePath = join(repoRoot, CODEX_CONFIG_PATH);
-  if (!existsSync(configAbsolutePath)) {
-    throw new Error(`Missing Codex project-agent registry: ${CODEX_CONFIG_PATH}`);
-  }
-
-  return parseCodexAgentRegistrations(readFileSync(configAbsolutePath, 'utf8'));
+  const configPath = join(repoRoot, CODEX_CONFIG_PATH);
+  if (!existsSync(configPath))
+    throw new Error('Missing Codex project-agent registry: ' + CODEX_CONFIG_PATH);
+  return parseCodexAgentRegistrations(readFileSync(configPath, 'utf8'));
 }
 
+/**
+ * Resolve an adapter path relative to the registry directory.
+ * @param configFile - Registry config_file value; absolute paths remain absolute.
+ * @returns Normalised repo-relative path for relative values, otherwise the supplied path.
+ */
 export function resolveCodexAgentConfigFilePath(configFile: string): string {
-  if (isAbsolute(configFile)) {
-    return configFile;
-  }
-
-  return posix.normalize(posix.join(CODEX_CONFIG_DIR, configFile));
+  return isAbsolute(configFile)
+    ? configFile
+    : posix.normalize(posix.join(posix.dirname(CODEX_CONFIG_PATH), configFile));
 }
 
-export function readRequiredTomlValue(content: string, key: string, adapterPath: string): string {
-  for (const rawLine of content.split(/\r?\n/u)) {
-    const line = rawLine.trim();
-    const assignment = parseTomlStringAssignment(line);
-    if (!assignment || assignment.key !== key) {
-      continue;
-    }
-
-    return assignment.value;
-  }
-
-  throw new Error(`${adapterPath} is missing required TOML key '${key}'.`);
-}
-
-function parseTomlBasicString(rawValue: string): string {
-  const parsedValue: unknown = JSON.parse(`"${rawValue}"`);
-  if (typeof parsedValue !== 'string') {
-    throw new Error('Expected TOML basic string value to parse as a string.');
-  }
-
-  return parsedValue;
-}
-
-function readRelevantTomlLines(content: string): string[] {
-  return content
-    .split(/\r?\n/u)
-    .map((rawLine) => rawLine.trim())
-    .filter((line) => line.length > 0 && !line.startsWith('#'));
-}
-
-function readAgentSectionName(line: string): string | null {
-  const match = line.match(AGENT_SECTION_PATTERN);
-  return match?.[1] ?? null;
-}
-
-function applyRegistrationLine(
-  current: MutableCodexAgentRegistration | null,
-  line: string,
-): MutableCodexAgentRegistration | null {
-  if (!current) {
-    return current;
-  }
-
-  const assignment = parseTomlStringAssignment(line);
-  if (!assignment) {
-    return current;
-  }
-
-  assignRegistrationValue(current, assignment);
-  return current;
-}
-
-function parseTomlStringAssignment(line: string): TomlStringAssignment | null {
-  const match = line.match(TOML_BASIC_STRING_PATTERN);
-  if (!match?.[1] || match[2] === undefined) {
-    return null;
-  }
-
-  return {
-    key: match[1],
-    value: parseTomlBasicString(match[2]),
-  };
-}
-
-function assignRegistrationValue(
-  current: MutableCodexAgentRegistration,
-  assignment: TomlStringAssignment,
-): void {
-  if (assignment.key === 'description') {
-    current.description = assignment.value;
-    return;
-  }
-
-  if (assignment.key === 'config_file') {
-    current.configFile = assignment.value;
-  }
-}
-
-function flushRegistration(
-  entries: CodexAgentRegistration[],
-  current: MutableCodexAgentRegistration | null,
-): void {
-  if (!current) {
-    return;
-  }
-
-  entries.push(finalizeRegistration(current));
-}
-
-function finalizeRegistration(current: MutableCodexAgentRegistration): CodexAgentRegistration {
-  if (!current.description) {
-    throw new Error(`Codex agent '${current.name}' is missing a description.`);
-  }
-
-  if (!current.configFile) {
-    throw new Error(`Codex agent '${current.name}' is missing a config_file.`);
-  }
-
-  return {
-    name: current.name,
-    description: current.description,
-    configFile: current.configFile,
-  };
+/**
+ * Require a top-level runtime string from an already parsed adapter document.
+ * @param document - Parsed TOML adapter.
+ * @param key - Required top-level field.
+ * @param adapterPath - Path used in missing-field diagnostics.
+ * @returns The exact string value, including any whitespace.
+ * @throws If the field is missing or its TOML value is not a string.
+ */
+export function readRequiredTomlValue(
+  document: TomlTable,
+  key: string,
+  adapterPath: string,
+): string {
+  const value = tomlString(document, key);
+  if (value === null) throw new Error(adapterPath + " is missing required TOML key '" + key + "'.");
+  return value;
 }

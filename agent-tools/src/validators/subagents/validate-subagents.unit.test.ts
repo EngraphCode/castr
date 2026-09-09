@@ -101,7 +101,7 @@ describe('Codex subagent helper coverage', () => {
       '.codex/agents/code-expert.toml: model_reasoning_effort must be "high" (found: missing)',
     );
     expect(issues).toContain(
-      '.codex/agents/code-expert.toml: missing triple-quoted developer_instructions block',
+      '.codex/agents/code-expert.toml: missing non-empty developer_instructions string',
     );
   });
 

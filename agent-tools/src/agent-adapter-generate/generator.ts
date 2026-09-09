@@ -2,17 +2,18 @@
  * Native cross-platform agent-adapter + cursor-rule generator.
  *
  * Emits the platform adapter surfaces that the portability and subagents
- * validators require, deriving everything from already-gate-checked sources so
- * nothing is hand-maintained:
+ * validators require, validating the Codex source contract before projection:
  *
- *   - `.cursor/agents/<name>.md`  — Cursor reviewer wrapper (18)
- *   - `.claude/agents/<name>.md`  — Claude Code reviewer wrapper (18)
+ *   - `.cursor/agents/<name>.md`  — Cursor reviewer wrapper
+ *   - `.claude/agents/<name>.md`  — Claude Code reviewer wrapper
  *   - `.cursor/rules/<name>.mdc`  — Cursor rule trigger (one per canonical rule)
  *
  * The reviewer roster is projected from the Codex layer — `.codex/config.toml`
  * (names + descriptions) and each `.codex/agents/<name>.toml`
  * (`developer_instructions` template + persona references). The Codex adapters
  * remain the hand-authored source of truth; this generator never writes them.
+ * A complete three-seat Codex Cricket panel expands to four Claude/Cursor seats
+ * according to the shared platform contract.
  * Cursor rule triggers are projected from the canonical `.agent/rules/*.md`.
  *
  * Pure render/derive functions are exported so the drift checker and unit
@@ -20,11 +21,20 @@
  */
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
+import { stringify } from 'yaml';
+import { isErrnoCode } from '../core/errno.js';
+import {
+  CRICKET_ROLES,
+  completeReviewerNames,
+  cricketRole,
+  supportsReviewer,
+  type CricketRoleContract,
+} from '../core/reviewer-adapter-platform-contract.js';
 
 import {
-  extractCanonicalPaths,
   parseCodexRegistrations,
-  readCodexDeveloperInstructions,
+  getCodexAdapterValidation,
+  getCodexRegistrationValidation,
 } from '../validators/subagents/validate-subagents-helpers.js';
 
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
@@ -53,49 +63,71 @@ export interface AgentRosterEntry {
 export type AgentSurface = 'cursor' | 'claude';
 
 /**
- * Projects the reviewer roster from the Codex config text and a map of Codex
- * adapter file contents keyed by agent name. Pure — no filesystem access.
+ * Validates and projects the reviewer roster from Codex source strings without
+ * filesystem access. Every adapter must match its registration, declared
+ * identity, safety settings and platform-specific model/effort/method contract.
+ * Installing any Cricket seat requires the complete supported Codex trio.
  *
  * @param configText - Full text of `.codex/config.toml`.
  * @param adapterTextByName - Map of agent name to its `.codex/agents/<name>.toml` text.
  * @returns Roster entries sorted by agent name.
- * @throws If an adapter has no matching config registration, or references no
- *   canonical template under {@link TEMPLATE_DIR}.
+ * @throws If the source TOML or registration mapping is invalid, an adapter
+ *   violates its contract, it references other than one canonical template,
+ *   or the supported Cricket roster is incomplete.
  */
 export function buildAgentRoster(
   configText: string,
   adapterTextByName: ReadonlyMap<string, string>,
 ): AgentRosterEntry[] {
-  const descriptionByName = new Map(
-    parseCodexRegistrations(configText).map((registration) => [
-      registration.name,
-      registration.description,
-    ]),
-  );
+  const registrations = parseCodexRegistrations(configText);
+  const adapterNames = [...adapterTextByName.keys()];
+  const adapterPaths = new Set(adapterNames.map((name) => `${CODEX_ADAPTER_DIR}/${name}.toml`));
+  const registrationValidation = getCodexRegistrationValidation({
+    registrations,
+    fileExists: (path) => adapterPaths.has(path),
+  });
+  if (registrationValidation.issues.length > 0) {
+    throw new Error(registrationValidation.issues.join('\n'));
+  }
 
   const entries: AgentRosterEntry[] = [];
-  for (const name of [...adapterTextByName.keys()].toSorted((a, b) => a.localeCompare(b))) {
-    const adapterText = adapterTextByName.get(name) ?? '';
-    const canonicalPaths = extractCanonicalPaths(readCodexDeveloperInstructions(adapterText));
-    const templatePath = canonicalPaths.find((p) => p.startsWith(`${TEMPLATE_DIR}/`));
-    const personaPath = canonicalPaths.find((p) => p.startsWith(`${PERSONA_DIR}/`));
-
-    if (templatePath === undefined) {
+  for (const [name, content] of [...adapterTextByName].toSorted(([a], [b]) => a.localeCompare(b))) {
+    const registeredAgent = registrationValidation.registrationsByName.get(name);
+    if (registeredAgent === undefined) {
+      throw new Error(`${name}: no matching agent registration in ${CODEX_CONFIG_FILE}`);
+    }
+    const validation = getCodexAdapterValidation({
+      codexAdapterFile: `${CODEX_ADAPTER_DIR}/${name}.toml`,
+      content,
+      registeredAgent,
+    });
+    if (validation.issues.length > 0) {
+      throw new Error(validation.issues.join('\n'));
+    }
+    const [templatePath] = validation.templatePaths;
+    if (validation.templatePaths.length !== 1 || templatePath === undefined) {
       throw new Error(
-        `${CODEX_ADAPTER_DIR}/${name}.toml: references no canonical template under ${TEMPLATE_DIR}`,
+        `${CODEX_ADAPTER_DIR}/${name}.toml: must reference exactly one canonical template under ${TEMPLATE_DIR}`,
       );
     }
-    const description = descriptionByName.get(name);
-    if (description === undefined || description === '') {
-      throw new Error(`${name}: no registration with a description in ${CODEX_CONFIG_FILE}`);
-    }
+    const personaPath = validation.canonicalPaths.find((path) =>
+      path.startsWith(`${PERSONA_DIR}/`),
+    );
 
     entries.push({
       name,
-      description,
+      description: registeredAgent.description,
       templatePath,
       ...(personaPath === undefined ? {} : { personaPath }),
     });
+  }
+  const missingRoles = completeReviewerNames(adapterNames).filter(
+    (name) => supportsReviewer(name, 'codex') && !adapterTextByName.has(name),
+  );
+  if (missingRoles.length > 0) {
+    throw new Error(
+      `${CODEX_CONFIG_FILE}: missing supported Codex Cricket roles: ${missingRoles.join(', ')}`,
+    );
   }
   return entries;
 }
@@ -108,57 +140,42 @@ export function toTitleCase(id: string): string {
     .join(' ');
 }
 
-/**
- * Returns true when a YAML plain scalar would be ambiguous or invalid and the
- * value must be quoted.
- */
-function needsYamlQuoting(value: string): boolean {
-  if (value === '' || value !== value.trim()) {
-    return true;
-  }
-  if (/^[-?:,[\]{}#&*!|>'"%@`]/u.test(value)) {
-    return true;
-  }
-  if (/:(\s|$)/u.test(value) || /\s#/u.test(value) || value.includes('"')) {
-    return true;
-  }
-  return false;
+/** Preserve string meaning and continuation indentation within a YAML mapping. */
+function yamlDescription(description: string): string {
+  // The surrounding frontmatter adds the terminating newline; retain all value whitespace.
+  return stringify({ description }, { singleQuote: true, lineWidth: 0 }).slice(0, -1);
 }
 
-/**
- * Renders a YAML scalar, quoting only when the plain form would be unsafe.
- * Uses single quotes (Prettier's YAML default) with YAML single-quote escaping
- * so generated frontmatter stays Prettier-stable.
- */
-function yamlScalar(value: string): string {
-  return needsYamlQuoting(value) ? `'${value.replaceAll("'", "''")}'` : value;
-}
-
-interface SurfaceShape {
-  readonly frontmatter: (entry: AgentRosterEntry) => string[];
-}
-
-const SURFACE_SHAPES: Record<AgentSurface, SurfaceShape> = {
-  cursor: {
-    frontmatter: (entry) => [
+function renderAgentFrontmatter(
+  entry: AgentRosterEntry,
+  surface: AgentSurface,
+  role: CricketRoleContract | undefined,
+): string[] {
+  if (surface === 'cursor') {
+    return [
       `name: ${entry.name}`,
-      `model: ${CURSOR_AGENT_MODEL}`,
-      `description: ${yamlScalar(entry.description)}`,
+      ...(role === undefined ? [`model: ${CURSOR_AGENT_MODEL}`] : []),
+      yamlDescription(entry.description),
       'readonly: true',
-      'tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch',
-    ],
-  },
-  claude: {
-    frontmatter: (entry) => [
-      `name: ${entry.name}`,
-      `description: ${yamlScalar(entry.description)}`,
-      `model: ${CLAUDE_AGENT_MODEL}`,
-      'tools: Read, Grep, Glob, Bash, WebFetch, WebSearch',
-      'disallowedTools: Write, Edit, NotebookEdit',
-      'permissionMode: plan',
-    ],
-  },
-};
+    ];
+  }
+  return [
+    `name: ${entry.name}`,
+    yamlDescription(entry.description),
+    `model: ${role?.claudeModel ?? CLAUDE_AGENT_MODEL}`,
+    ...(role === undefined
+      ? [
+          'tools: Read, Grep, Glob, Bash, WebFetch, WebSearch',
+          'disallowedTools: Write, Edit, NotebookEdit',
+        ]
+      : [
+          `effort: ${role.effort}`,
+          'tools: Read',
+          'disallowedTools: Write, Edit, Bash, Grep, Glob',
+        ]),
+    'permissionMode: plan',
+  ];
+}
 
 /**
  * Renders a Cursor or Claude reviewer adapter for a roster entry. The output is
@@ -166,7 +183,8 @@ const SURFACE_SHAPES: Record<AgentSurface, SurfaceShape> = {
  * the subagents validator requires.
  */
 export function renderAgentAdapter(entry: AgentRosterEntry, surface: AgentSurface): string {
-  const frontmatter = SURFACE_SHAPES[surface].frontmatter(entry);
+  const role = cricketRole(entry.name);
+  const frontmatter = renderAgentFrontmatter(entry, surface, role);
   const personaBlock =
     entry.personaPath === undefined
       ? []
@@ -182,6 +200,12 @@ export function renderAgentAdapter(entry: AgentRosterEntry, surface: AgentSurfac
     'All file paths in this document are relative to the repository root.',
     '',
     ...personaBlock,
+    ...(surface === 'claude' && role !== undefined
+      ? [
+          'Reading-discipline grounding is waived for this bounded panel; retain the template identity requirements.',
+          '',
+        ]
+      : []),
     `Your first action MUST be to read and internalise \`${entry.templatePath}\`.`,
     '',
     'Review or recommend; do not modify code. The calling agent executes any changes you propose.',
@@ -209,7 +233,7 @@ export function deriveRuleDescription(ruleText: string): string {
 export function renderCursorRule(ruleName: string, description: string): string {
   return [
     '---',
-    `description: ${yamlScalar(description)}`,
+    yamlDescription(description),
     'alwaysApply: true',
     '---',
     '',
@@ -236,9 +260,14 @@ function cursorRuleTargetPath(repoRoot: string, ruleName: string): string {
   return join(repoRoot, CURSOR_RULES_DIR, `${ruleName}.mdc`);
 }
 
-/** Lists files with a given extension in a repo-relative directory. */
+/** Lists source or output files; absent directories are empty, other failures propagate. */
 async function listNames(repoRoot: string, relDir: string, extension: string): Promise<string[]> {
-  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true }).catch(() => []);
+  const entries = await readdir(join(repoRoot, relDir), { withFileTypes: true }).catch((error) => {
+    if (isErrnoCode(error, 'ENOENT')) {
+      return [];
+    }
+    throw error;
+  });
   return entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
     .map((entry) => basename(entry.name, extension))
@@ -246,9 +275,10 @@ async function listNames(repoRoot: string, relDir: string, extension: string): P
 }
 
 /**
- * Reads the Codex layer from disk and projects the reviewer roster.
+ * Reads the Codex layer and delegates to the same pure generation boundary
+ * consumed by callers with in-memory sources.
  */
-async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
+async function readAgentGeneration(repoRoot: string): Promise<GenerationUnit[]> {
   const configText = await readFile(join(repoRoot, CODEX_CONFIG_FILE), 'utf8');
   const adapterNames = await listNames(repoRoot, CODEX_ADAPTER_DIR, '.toml');
   const adapterTextByName = new Map<string, string>();
@@ -258,7 +288,7 @@ async function readAgentRoster(repoRoot: string): Promise<AgentRosterEntry[]> {
       await readFile(join(repoRoot, CODEX_ADAPTER_DIR, `${name}.toml`), 'utf8'),
     );
   }
-  return buildAgentRoster(configText, adapterTextByName);
+  return planAgentAdapters(repoRoot, configText, adapterTextByName);
 }
 
 /** A single (target path, rendered content) generation unit. */
@@ -267,12 +297,33 @@ export interface GenerationUnit {
   readonly content: string;
 }
 
-/** Computes every (target, content) pair the generator would write. */
-export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]> {
+/**
+ * Computes Cursor and Claude adapter targets and contents from Codex sources
+ * without reading or writing files. The same validated boundary drives
+ * {@link planGeneration}; the complete Codex Cricket trio produces each
+ * platform's quartet, including the Claude/Cursor-only high judgement seat.
+ *
+ * @param repoRoot - Repository root used to resolve generated target paths.
+ * @param configText - Full text of `.codex/config.toml`.
+ * @param adapterTextByName - Codex adapter contents keyed by filename without `.toml`.
+ * @returns Deterministic target/content pairs for both Markdown platforms.
+ * @throws If {@link buildAgentRoster} rejects any Codex source or roster constraint.
+ */
+export function planAgentAdapters(
+  repoRoot: string,
+  configText: string,
+  adapterTextByName: ReadonlyMap<string, string>,
+): GenerationUnit[] {
   const units: GenerationUnit[] = [];
-
-  const roster = await readAgentRoster(repoRoot);
-  for (const entry of roster) {
+  const roster = buildAgentRoster(configText, adapterTextByName);
+  const extraRoles = roster.some((entry) => cricketRole(entry.name) !== undefined)
+    ? CRICKET_ROLES.filter((role) => role.codexModel === null).map((role) => ({
+        name: role.name,
+        templatePath: role.templatePath,
+        description: 'Cricket judgement conscience check — high effort.',
+      }))
+    : [];
+  for (const entry of [...roster, ...extraRoles]) {
     for (const surface of ['cursor', 'claude'] as const) {
       units.push({
         target: agentTargetPath(repoRoot, entry.name, surface),
@@ -280,7 +331,12 @@ export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]
       });
     }
   }
+  return units;
+}
 
+/** Computes every validated adapter and canonical-rule target/content pair. */
+export async function planGeneration(repoRoot: string): Promise<GenerationUnit[]> {
+  const units = await readAgentGeneration(repoRoot);
   const ruleNames = await listNames(repoRoot, CANONICAL_RULES_DIR, '.md');
   for (const ruleName of ruleNames) {
     const ruleText = await readFile(join(repoRoot, CANONICAL_RULES_DIR, `${ruleName}.md`), 'utf8');
@@ -297,9 +353,24 @@ export interface GenerateOutcome {
   readonly written: readonly string[];
 }
 
-/** Generates every adapter + cursor-rule surface, writing them to disk. */
-export async function generateAdapters(repoRoot: string): Promise<GenerateOutcome> {
+/**
+ * Validates all sources before changing any generated adapter or Cursor rule.
+ * When clearing is requested, removes the previous outputs only after the full
+ * generation plan has passed validation, then writes that same plan.
+ *
+ * @param repoRoot - Repository root containing Codex sources and canonical rules.
+ * @param options - Whether to clear generated surfaces before writing validated outputs.
+ * @returns Paths written from the validated generation plan.
+ * @throws If a source contract is invalid or a filesystem operation fails.
+ */
+export async function generateAdapters(
+  repoRoot: string,
+  { clear = false }: { readonly clear?: boolean } = {},
+): Promise<GenerateOutcome> {
   const units = await planGeneration(repoRoot);
+  if (clear) {
+    await clearGeneratedAdapters(repoRoot);
+  }
   const written: string[] = [];
   for (const unit of units) {
     await mkdir(dirname(unit.target), { recursive: true });
@@ -309,8 +380,8 @@ export async function generateAdapters(repoRoot: string): Promise<GenerateOutcom
   return { written };
 }
 
-/** Removes the generated agent + cursor-rule surfaces before a fresh pass. */
-export async function clearGeneratedAdapters(repoRoot: string): Promise<void> {
+/** Removes generated surfaces after their replacement plan has passed validation. */
+async function clearGeneratedAdapters(repoRoot: string): Promise<void> {
   for (const dir of [CURSOR_AGENTS_DIR, CLAUDE_AGENTS_DIR]) {
     await rm(join(repoRoot, dir), { recursive: true, force: true });
   }

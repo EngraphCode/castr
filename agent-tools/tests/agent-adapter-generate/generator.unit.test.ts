@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { parseDocument } from 'yaml';
 
 import {
   buildAgentRoster,
@@ -13,11 +14,13 @@ multi_agent = true
 
 [agents."code-reviewer"]
 description = "Gateway reviewer for non-trivial changes."
-config_file = ".codex/agents/code-reviewer.toml"
+config_file = "agents/code-reviewer.toml"
+`;
 
+const BARNEY_CONFIG = `
 [agents."architecture-expert-barney"]
 description = "Simplification-first architecture reviewer."
-config_file = ".codex/agents/architecture-expert-barney.toml"
+config_file = "agents/architecture-expert-barney.toml"
 `;
 
 const CODE_REVIEWER_TOML = `name = "code-reviewer"
@@ -62,7 +65,7 @@ describe('buildAgentRoster', () => {
 
   it('captures the persona path when present', () => {
     const roster = buildAgentRoster(
-      CONFIG_TEXT,
+      BARNEY_CONFIG,
       new Map([['architecture-expert-barney', BARNEY_TOML]]),
     );
     expect(roster).toEqual([
@@ -77,7 +80,7 @@ describe('buildAgentRoster', () => {
 
   it('returns entries sorted by name', () => {
     const roster = buildAgentRoster(
-      CONFIG_TEXT,
+      CONFIG_TEXT + BARNEY_CONFIG,
       new Map([
         ['code-reviewer', CODE_REVIEWER_TOML],
         ['architecture-expert-barney', BARNEY_TOML],
@@ -95,7 +98,7 @@ describe('buildAgentRoster', () => {
       '.agent/sub-agents/components/personas/barney.md',
     );
     expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', badToml]]))).toThrow(
-      /no canonical template/,
+      /canonical template/,
     );
   });
 
@@ -105,7 +108,79 @@ describe('buildAgentRoster', () => {
         '[features]\nmulti_agent = true\n',
         new Map([['code-reviewer', CODE_REVIEWER_TOML]]),
       ),
-    ).toThrow(/no registration/);
+    ).toThrow(/no matching agent registration/);
+  });
+
+  it.each([
+    ['name', 'another-reviewer'],
+    ['description', 'A different description.'],
+    ['model_reasoning_effort', 'low'],
+    ['sandbox_mode', 'workspace-write'],
+    ['approval_policy', 'on-request'],
+  ])('rejects an ordinary reviewer with invalid %s before projection', (key, value) => {
+    const content = CODE_REVIEWER_TOML.replace(
+      new RegExp(`${key} = "[^"]*"`, 'u'),
+      `${key} = "${value}"`,
+    );
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(key);
+  });
+
+  it('rejects a registration that points at another existing adapter', () => {
+    const config = (CONFIG_TEXT + BARNEY_CONFIG).replace(
+      'config_file = "agents/code-reviewer.toml"',
+      'config_file = "agents/architecture-expert-barney.toml"',
+    );
+    expect(() =>
+      buildAgentRoster(
+        config,
+        new Map([
+          ['code-reviewer', CODE_REVIEWER_TOML],
+          ['architecture-expert-barney', BARNEY_TOML],
+        ]),
+      ),
+    ).toThrow(/resolves "code-reviewer".*expected .codex\/agents\/code-reviewer.toml/u);
+  });
+
+  it('rejects multiple templates instead of silently selecting the first', () => {
+    const content = CODE_REVIEWER_TOML.replace(
+      'Read and follow',
+      'Read `.agent/sub-agents/templates/test-reviewer.md`. Read and follow',
+    );
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
+      /exactly one canonical template/u,
+    );
+  });
+
+  it('rejects malformed TOML', () => {
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', 'name = [']]))).toThrow(
+      /TOML/u,
+    );
+  });
+
+  it('rejects duplicate top-level settings', () => {
+    const content = CODE_REVIEWER_TOML + 'sandbox_mode = "workspace-write"\n';
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
+      /TOML/u,
+    );
+  });
+
+  it('does not satisfy top-level settings with nested fields', () => {
+    const content =
+      CODE_REVIEWER_TOML.replace('sandbox_mode = "read-only"\n', '') +
+      '\n[metadata]\nsandbox_mode = "read-only"\n';
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
+      /sandbox_mode/u,
+    );
+  });
+
+  it('does not satisfy top-level settings with instruction prose', () => {
+    const content = CODE_REVIEWER_TOML.replace('approval_policy = "never"\n', '').replace(
+      'Read and follow',
+      'approval_policy = "never"\nRead and follow',
+    );
+    expect(() => buildAgentRoster(CONFIG_TEXT, new Map([['code-reviewer', content]]))).toThrow(
+      /approval_policy/u,
+    );
   });
 });
 
@@ -158,10 +233,10 @@ describe('renderAgentAdapter', () => {
     expect(renderAgentAdapter(barney, 'claude')).toBe(renderAgentAdapter(barney, 'claude'));
   });
 
-  it('single-quotes descriptions that contain YAML-significant characters', () => {
+  it('preserves description strings containing YAML-significant characters', () => {
     const tricky = { ...codeReviewer, description: "Reviewer: gateway, it's #1." };
     const out = renderAgentAdapter(tricky, 'cursor');
-    expect(out).toContain("description: 'Reviewer: gateway, it''s #1.'");
+    expect(parseDocument(out.split('---\n')[1] ?? '').get('description')).toBe(tricky.description);
   });
 });
 
@@ -198,10 +273,13 @@ describe('renderCursorRule', () => {
     expect(contentLines).toHaveLength(1);
   });
 
-  it('quotes descriptions containing a colon', () => {
-    const out = renderCursorRule('foo', 'Do this: then that');
-    expect(out).toContain("description: 'Do this: then that'");
-  });
+  it.each(['Do this: then that', 'Review changes.\nKeep review bounded.', 'true', 'null', '123'])(
+    'preserves rule description %j as a YAML string',
+    (description) => {
+      const out = renderCursorRule('foo', description);
+      expect(parseDocument(out.split('---\n')[1] ?? '').get('description')).toBe(description);
+    },
+  );
 });
 
 describe('toTitleCase', () => {

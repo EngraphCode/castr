@@ -12,7 +12,7 @@
 import { argv, cwd, exit, stderr, stdout } from 'node:process';
 
 import { checkAdapters } from '../agent-adapter-generate/checker.js';
-import { clearGeneratedAdapters, generateAdapters } from '../agent-adapter-generate/generator.js';
+import { generateAdapters } from '../agent-adapter-generate/generator.js';
 
 interface CliFlags {
   readonly clear: boolean;
@@ -25,7 +25,11 @@ function parseFlags(args: readonly string[]): CliFlags {
 
 async function runCheck(repoRoot: string): Promise<number> {
   const result = await checkAdapters(repoRoot);
-  if (result.drifted.length === 0 && result.missing.length === 0) {
+  if (
+    result.drifted.length === 0 &&
+    result.missing.length === 0 &&
+    result.unexpected.length === 0
+  ) {
     stdout.write('All agent adapters and cursor rules are up to date.\n');
     return 0;
   }
@@ -35,16 +39,18 @@ async function runCheck(repoRoot: string): Promise<number> {
   if (result.drifted.length > 0) {
     stderr.write(`Drifted adapters:\n${result.drifted.map((p) => `  ${p}`).join('\n')}\n`);
   }
+  if (result.unexpected.length > 0) {
+    stderr.write(`Unexpected adapters:\n${result.unexpected.map((p) => `  ${p}`).join('\n')}\n`);
+  }
   stderr.write('Run `pnpm agents:adapter-generate` to regenerate.\n');
   return 1;
 }
 
 async function runGenerate(repoRoot: string, flags: CliFlags): Promise<number> {
+  const outcome = await generateAdapters(repoRoot, { clear: flags.clear });
   if (flags.clear) {
-    await clearGeneratedAdapters(repoRoot);
     stdout.write('Cleared generated adapter directories.\n');
   }
-  const outcome = await generateAdapters(repoRoot);
   stdout.write(`Wrote ${String(outcome.written.length)} adapter files.\n`);
   return 0;
 }

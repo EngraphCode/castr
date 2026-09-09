@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { TomlTable } from 'smol-toml';
 import {
   CODEX_CONFIG_PATH,
   readCodexAgentRegistrations,
@@ -7,13 +8,14 @@ import {
   resolveCodexAgentConfigFilePath,
 } from './codex-project-agent-registry.js';
 import type { CodexAgentRegistration } from './codex-project-agent-registry.js';
+import { readTomlDocument, tomlString } from './toml-document.js';
 
 export { parseCodexAgentRegistrations } from './codex-project-agent-registry.js';
 
-const DEVELOPER_INSTRUCTIONS_PATTERN = /^developer_instructions\s*=\s*"""\r?\n([\s\S]*?)\r?\n"""/mu;
 const CANONICAL_PATH_PATTERN = /`(\.agent\/[^`]+)`/gu;
 
 interface AdapterMetadata {
+  readonly model: string | null;
   readonly name: string;
   readonly description: string;
   readonly modelReasoningEffort: string;
@@ -22,6 +24,8 @@ interface AdapterMetadata {
 }
 
 export interface CodexProjectAgent {
+  /** Configured binding; null means inheritance, not an observed runtime model. */
+  model: string | null;
   name: string;
   description: string;
   configPath: string;
@@ -42,14 +46,49 @@ export function resolveCodexProjectAgent(repoRoot: string, agentName: string): C
   const registration = findRegistrationOrThrow(registrations, agentName);
   const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
   const adapterContent = readAdapterContent(repoRoot, adapterPath, agentName);
-  const adapterMetadata = readAdapterMetadata(registration, adapterPath, adapterContent, agentName);
-  const developerInstructions = readDeveloperInstructions(adapterContent, adapterPath);
-  const referencedCanonicalFiles = readReferencedCanonicalFiles(
-    repoRoot,
-    agentName,
-    developerInstructions,
+  const agent = parseCodexProjectAgent(registration, adapterContent);
+  ensureCanonicalFilesExist(repoRoot, agentName, agent.referencedCanonicalFiles);
+  return agent;
+}
+
+/**
+ * Resolve a registered adapter into its runtime descriptor without filesystem IO.
+ * @param registration - Complete Castr registry entry.
+ * @param adapterContent - Source of the adapter named by the registration.
+ * @returns Exact configured metadata and canonical reference paths. A null model
+ * means inheritance; it does not identify a model observed at runtime.
+ * @throws When TOML is malformed, required fields are missing/wrongly typed,
+ * identity disagrees with the registry, or canonical references are absent.
+ * @see {@link resolveCodexProjectAgent} for filesystem-backed resolution.
+ * @example
+ * ```typescript
+ * const agent = parseCodexProjectAgent(registration, adapterSource);
+ * console.log(agent.model, agent.modelReasoningEffort);
+ * ```
+ */
+export function parseCodexProjectAgent(
+  registration: CodexAgentRegistration,
+  adapterContent: string,
+): CodexProjectAgent {
+  const adapterPath = resolveCodexAgentConfigFilePath(registration.configFile);
+  const document = readTomlDocument(adapterContent);
+  const adapterMetadata = readAdapterMetadata(
+    registration,
     adapterPath,
+    document,
+    registration.name,
   );
+  const developerInstructions = readRequiredTomlValue(
+    document,
+    'developer_instructions',
+    adapterPath,
+  ).trim();
+  const referencedCanonicalFiles = extractCanonicalPaths(developerInstructions);
+  if (referencedCanonicalFiles.length === 0) {
+    throw new Error(
+      `Codex project agent '${registration.name}' does not reference any canonical .agent files in ${adapterPath}.`,
+    );
+  }
 
   return {
     ...adapterMetadata,
@@ -87,11 +126,11 @@ function readAdapterContent(repoRoot: string, adapterPath: string, agentName: st
 function readAdapterMetadata(
   registration: CodexAgentRegistration,
   adapterPath: string,
-  adapterContent: string,
+  document: TomlTable,
   agentName: string,
 ): AdapterMetadata {
-  const name = readRequiredTomlValue(adapterContent, 'name', adapterPath);
-  const description = readRequiredTomlValue(adapterContent, 'description', adapterPath);
+  const name = readRequiredTomlValue(document, 'name', adapterPath);
+  const description = readRequiredTomlValue(document, 'description', adapterPath);
 
   validateAdapterValue('name', name, registration.name, registration, agentName);
   validateAdapterValue(
@@ -105,13 +144,10 @@ function readAdapterMetadata(
   return {
     name,
     description,
-    modelReasoningEffort: readRequiredTomlValue(
-      adapterContent,
-      'model_reasoning_effort',
-      adapterPath,
-    ),
-    sandboxMode: readRequiredTomlValue(adapterContent, 'sandbox_mode', adapterPath),
-    approvalPolicy: readRequiredTomlValue(adapterContent, 'approval_policy', adapterPath),
+    model: tomlString(document, 'model'),
+    modelReasoningEffort: readRequiredTomlValue(document, 'model_reasoning_effort', adapterPath),
+    sandboxMode: readRequiredTomlValue(document, 'sandbox_mode', adapterPath),
+    approvalPolicy: readRequiredTomlValue(document, 'approval_policy', adapterPath),
   };
 }
 
@@ -137,23 +173,6 @@ function validateAdapterValue(
   );
 }
 
-function readReferencedCanonicalFiles(
-  repoRoot: string,
-  agentName: string,
-  developerInstructions: string,
-  adapterPath: string,
-): string[] {
-  const referencedCanonicalFiles = extractCanonicalPaths(developerInstructions);
-  if (referencedCanonicalFiles.length === 0) {
-    throw new Error(
-      `Codex project agent '${agentName}' does not reference any canonical .agent files in ${adapterPath}.`,
-    );
-  }
-
-  ensureCanonicalFilesExist(repoRoot, agentName, referencedCanonicalFiles);
-  return referencedCanonicalFiles;
-}
-
 function ensureCanonicalFilesExist(
   repoRoot: string,
   agentName: string,
@@ -169,15 +188,6 @@ function ensureCanonicalFilesExist(
       `Codex project agent '${agentName}' references missing canonical file ${referencedFile}.`,
     );
   }
-}
-
-function readDeveloperInstructions(content: string, adapterPath: string): string {
-  const developerInstructionsMatch = content.match(DEVELOPER_INSTRUCTIONS_PATTERN);
-  if (!developerInstructionsMatch?.[1]) {
-    throw new Error(`${adapterPath} is missing a triple-quoted developer_instructions block.`);
-  }
-
-  return developerInstructionsMatch[1].trim();
 }
 
 function extractCanonicalPaths(developerInstructions: string): string[] {

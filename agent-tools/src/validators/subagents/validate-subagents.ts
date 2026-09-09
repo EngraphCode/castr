@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { validateMarkdownWrapper, type SubagentPlatform } from './frontmatter-schema.js';
 
 import {
   CODEX_CONFIG_PATH,
@@ -16,12 +17,11 @@ import {
 const repoRoot = resolveRepoRoot(import.meta.url);
 
 const CURSOR_WRAPPER_DIR = '.cursor/agents';
+const CLAUDE_WRAPPER_DIR = '.claude/agents';
 const CODEX_ADAPTER_DIR = '.codex/agents';
 const TEMPLATE_DIR = '.agent/sub-agents/templates';
 const IDENTITY_COMPONENT_PATH = '.agent/sub-agents/components/behaviours/subagent-identity.md';
 
-const REQUIRED_FRONTMATTER_FIELDS = ['name', 'model', 'description'];
-const TEMPLATE_LOAD_REGEX = /Your first action MUST be to read and internalise `([^`]+)`\./;
 const REQUIRED_IDENTITY_LINE = `Read and apply \`${IDENTITY_COMPONENT_PATH}\`.`;
 
 /** Read a file relative to the repo root as a UTF-8 string. */
@@ -38,20 +38,6 @@ async function exists(relPath: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
-
-/** Extract the YAML frontmatter block content from a markdown file. */
-function extractFrontmatter(content: string): string | null {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  return match?.[1] ?? null;
-}
-
-/** Read a value from a YAML frontmatter block by key. */
-function getFrontmatterValue(frontmatter: string, key: string): string {
-  const escapedKey = key.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
-  const regex = new RegExp(String.raw`^${escapedKey}:\s*(.+)$`, 'm');
-  const match = frontmatter.match(regex);
-  return match?.[1]?.trim() ?? '';
 }
 
 /** List markdown files in a directory relative to the repo root. */
@@ -80,58 +66,32 @@ if (!(await exists(IDENTITY_COMPONENT_PATH))) {
 }
 
 const wrapperFiles = await listMarkdownFiles(CURSOR_WRAPPER_DIR);
+const claudeWrapperFiles = await listMarkdownFiles(CLAUDE_WRAPPER_DIR);
 const codexAdapterFiles = await listFiles(CODEX_ADAPTER_DIR, '.toml');
 const templateFiles = await listMarkdownFiles(TEMPLATE_DIR);
 const cursorReferencedTemplates = new Set<string>();
+const claudeReferencedTemplates = new Set<string>();
 const codexReferencedTemplates = new Set<string>();
 const codexRegistrationsByName = new Map<string, CodexRegistration>();
 
-for (const wrapperFile of wrapperFiles) {
-  const content = await readText(wrapperFile);
-  const frontmatter = extractFrontmatter(content);
-  const wrapperBasename = path.basename(wrapperFile, '.md');
-
-  if (!frontmatter) {
-    addIssue(`${wrapperFile}: missing YAML frontmatter block`);
-    continue;
-  }
-
-  for (const field of REQUIRED_FRONTMATTER_FIELDS) {
-    const value = getFrontmatterValue(frontmatter, field);
-    if (!value) {
-      addIssue(`${wrapperFile}: missing required frontmatter field "${field}"`);
+async function validateWrappers(
+  platform: SubagentPlatform,
+  files: string[],
+  referencedTemplates: Set<string>,
+): Promise<void> {
+  for (const file of files) {
+    const result = validateMarkdownWrapper(platform, file, await readText(file));
+    for (const issue of result.issues) addIssue(issue);
+    for (const templatePath of result.templatePaths) {
+      referencedTemplates.add(templatePath);
+      if (!(await exists(templatePath)))
+        addIssue(`${file}: referenced template does not exist (${templatePath})`);
     }
   }
-
-  const declaredName = getFrontmatterValue(frontmatter, 'name');
-  if (declaredName && declaredName !== wrapperBasename) {
-    addIssue(
-      `${wrapperFile}: frontmatter name "${declaredName}" must match filename "${wrapperBasename}"`,
-    );
-  }
-
-  const templateLoadMatch = content.match(TEMPLATE_LOAD_REGEX);
-  if (!templateLoadMatch?.[1]) {
-    addIssue(
-      `${wrapperFile}: missing required template loading line ("Your first action MUST be to read and internalise ...")`,
-    );
-    continue;
-  }
-
-  const templatePath = templateLoadMatch[1];
-  cursorReferencedTemplates.add(templatePath);
-
-  if (!templatePath.startsWith(`${TEMPLATE_DIR}/`)) {
-    addIssue(
-      `${wrapperFile}: template path must be inside ${TEMPLATE_DIR} (found: ${templatePath})`,
-    );
-    continue;
-  }
-
-  if (!(await exists(templatePath))) {
-    addIssue(`${wrapperFile}: referenced template does not exist (${templatePath})`);
-  }
 }
+
+await validateWrappers('claude', claudeWrapperFiles, claudeReferencedTemplates);
+await validateWrappers('cursor', wrapperFiles, cursorReferencedTemplates);
 
 if (await exists(CODEX_CONFIG_PATH)) {
   const codexRegistrations = parseCodexRegistrations(await readText(CODEX_CONFIG_PATH));
@@ -201,6 +161,12 @@ for (const templateFile of templateFiles) {
     );
   }
 
+  if (!claudeReferencedTemplates.has(templateFile)) {
+    addIssue(
+      `${templateFile}: no wrapper in ${CLAUDE_WRAPPER_DIR} currently references this template`,
+    );
+  }
+
   if (!codexReferencedTemplates.has(templateFile)) {
     addIssue(
       `${templateFile}: no adapter in ${CODEX_ADAPTER_DIR} currently references this template`,
@@ -219,5 +185,5 @@ if (issues.length > 0) {
 }
 
 process.stdout.write(
-  `Sub-agent standards validation passed: ${wrapperFiles.length} Cursor wrappers, ${codexAdapterFiles.length} Codex adapters, and ${templateFiles.length} template files are compliant.\n`,
+  `Sub-agent standards validation passed: ${claudeWrapperFiles.length} Claude wrappers, ${wrapperFiles.length} Cursor wrappers, ${codexAdapterFiles.length} Codex adapters, and ${templateFiles.length} template files are compliant.\n`,
 );

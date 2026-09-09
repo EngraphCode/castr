@@ -3,7 +3,6 @@ name: zod-expert
 model: gpt-5.5
 description: Zod parser/writer lockstep and ts-morph expert.
 readonly: true
-tools: Read, Glob, Grep, LS, Shell, ReadLints, WebFetch, WebSearch
 ---
 
 # Zod Expert
