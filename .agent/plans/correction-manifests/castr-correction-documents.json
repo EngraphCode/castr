@@ -172,20 +172,21 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "Q-09/PR28-disposition",
-      "reviewed_git_blob_hash": "22f54ec653943e9d1bc8d675d5ba4524adb7468c",
+      "reviewed_git_blob_hash": "8b3a781edbbc6f8ac387855d2f870c873fbf6629",
       "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
       "review_date": "2026-09-09",
-      "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, Bora seeks Turbulence's explicit custody of the separate Cricket installation and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged.",
+      "scope": "Current interactive sequence and Q-09 brief backlink only: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit custody of the separate Cricket installation by the root coordinating agent, Bora seeks Turbulence, and later Q22 resumption; queue frontmatter, counters and original acceptance unchanged.",
       "evidence": [
         "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
         "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
         "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
         "The Q-09 paired review found the stale Q22-first current-execution paragraph; after correction both specialists verified PR28-first routing, PR10 and Q22 residuals, exact PR89 delivery and the complete 849-hunk disposition.",
         "Fresh paired documentation/onboarding review against bd115294 verified PR88's bounded delivery, separately sequenced installation, the state-conditional PR28 transition and all 70 affected links without changing queue acceptance or counters.",
-        "Copilot's exact-head PR90 review required explicit installation custody. The finding was accepted; a specialist recheck verified Bora seeks Turbulence and codex/cricket-installation against the current records and confirmed queue authority and sequencing remain unchanged."
+        "Copilot's exact-head PR90 review required explicit installation custody. The finding was accepted; a specialist recheck verified Bora seeks Turbulence and codex/cricket-installation against the current records and confirmed queue authority and sequencing remain unchanged.",
+        "Copilot's following exact-head review found that role-based and identity-based custody wording could be read as conflicting. The full current custody class was audited; the parent now binds the root role, coordinating role and Bora seeks Turbulence identity together, while the active plan, ledger and continuation routes keep the same owner and branch."
       ],
       "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
-      "prior_reviewed_git_blob_hash": "888043b8874730f83edb5a5ba5809cb06182ed22",
+      "prior_reviewed_git_blob_hash": "55c1974f24eee3a91b2d7af24225b5e67f8dc839",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -210,6 +211,24 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "Current interactive sequence before PR90 review: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, separate but unnamed Cricket-installation custody and later Q22 resumption; superseded by the exact-head explicit-custody correction."
+        },
+        {
+          "reviewed_git_blob_hash": "22f54ec653943e9d1bc8d675d5ba4524adb7468c",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's first review cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody named only by identity and later Q22 resumption; superseded by the role-and-identity clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "9c6043d0acdd8ca0d1bd93445dddcf0f1dbd29aa",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence during PR90's custody-class cure: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by coordinating role and identity and later Q22 resumption; superseded by the root-role clarification."
+        },
+        {
+          "reviewed_git_blob_hash": "55c1974f24eee3a91b2d7af24225b5e67f8dc839",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Current interactive sequence after PR90's root-role clarification: PR89/Error-oracle and PR88/tooling delivery, bounded PR28 disposition/closure first, PR10 residual, explicit installation custody unified by root role, coordinating role and identity and later Q22 resumption; superseded only by the semicolon-continuation capitalisation correction."
         }
       ]
     },
