@@ -12,12 +12,11 @@
 - Team: root owns compiler/foundational documentation and integration. Kite hunts
   Eyrie delivered C05 Cricket tooling in PR #88; Bora seeks Turbulence delivered its
   installation in PR #91 as `af840d9b`. PR #92 corrects the premature atomic closeout.
-  Final I2 remains open because the retained native run predates material final-template
-  changes and the later current-boundary run was `UNDELIVERED`. In a freshly loaded
-  trusted Castr task, obtain all three normal and same-agent adversarial registered-role
-  returns with `fork_turns: "none"`, or retain `UNDELIVERED` without substitutes. Land
-  the resulting lifecycle reconciliation, then begin PR #14's dependency-ownership
-  extraction from current `origin/main`. The broader C05 family retains the obligations
+  Final I2 is now complete: the fresh trusted task retained all six final-template
+  native returns with `fork_turns: "none"` and same-agent adversarial follow-ups.
+  Merge the bounded evidence/lifecycle PR after current-head checks and reviews, then
+  begin PR #14's dependency-ownership extraction from current `origin/main`.
+  The broader C05 family retains the obligations
   named below. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
@@ -53,3 +52,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Agent                 | Platform | Model       | Session prefix | Agent UUID                           | Role                        | First session | Last session |
 | --------------------- | -------- | ----------- | -------------- | ------------------------------------ | --------------------------- | ------------- | ------------ |
 | Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-09   |
+| Foxglove weaves Acorn | codex    | gpt-6-astra | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof      | 2026-09-10    | 2026-09-10   |
