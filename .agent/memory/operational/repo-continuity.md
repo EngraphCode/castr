@@ -49,13 +49,18 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Continue the current bounded slice from the [ledger](../../plans/delivery-ledger.md)
-and its linked tally. The [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
-owns Q-22's oracle, integer-contract and paired generator/output prerequisites;
-no green checked-in snapshot closes regeneration acceptance. C03b/c and other
-prepared drafts retain their bounded carriers. Kite hunts Eyrie owns the separate
-Cricket tooling task; coordinate aggregate runs. Earlier continuation instructions
-are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
+Follow the bounded [Q-09 PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
+land its repository record if absent; if that record is on main and #28 remains
+open, refresh PR #27/#28 heads and close #28 without merge or recovery-branch
+deletion; once both are done, proceed to PR #14's dependency-ownership extraction.
+Q-09 remains pending for PR #10. PR #89 has delivered the Error-oracle prerequisite;
+the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
+retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
+and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
+PR #88; the coordinating agent accepted the dependent native Cricket
+installation at `codex/cricket-installation` commit `2af22e0f`. Publish that
+installation only after the current Q-09 closure slice. Earlier continuation
+instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status
 

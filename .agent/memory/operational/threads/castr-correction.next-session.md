@@ -1,17 +1,26 @@
 # Castr correction
 
-## Current continuation
+## Continuation route
 
-- Branch: `codex/castr-validation-oracles`, based on main merge `SHA:92ada698`.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
-- PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md) and its linked tally.
-- Landing target: C08/Q22-oracles strengthens existing Error witnesses without changing fixtures, imports or case membership.
-- Team: root owns compiler/foundational documentation and integration; Kite hunts Eyrie owns the separate Cricket tooling worktree. Coordinate expensive aggregate runs and re-read actual claims before edits.
+- Acceptance: [Q-09 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
+  and [PR #28 disposition](../../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026).
+- PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
+- Transition: land the complete PR #28 preservation record if it is absent from
+  main; if the record is present and #28 remains open, refresh PR #27/#28 heads and
+  close #28 without merging or deleting its recovery branch; after both steps,
+  proceed to PR #14's dependency-ownership extraction.
+- Team: root owns compiler/foundational documentation, integration and the
+  dependent native Cricket installation at `codex/cricket-installation` commit
+  `2af22e0f`; Kite hunts Eyrie delivered its tooling prerequisite as PR #88.
+  Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
 
-The ledger records delivered C01R, Q-19, C03a and the bounded operation-security
-repair. C05 retains PR skill attribution and rule/reference cleanup; C10 retains
+The ledger records delivered C01R, Q-19, C03a, operation-security, Error-oracle
+and C05 platform-tooling repairs. Q-22 remains open for its integer,
+generator/output and remaining oracle
+obligations. Q-09 remains open for PR #10 after the PR #28 transition. C05 retains
+PR skill attribution and rule/reference cleanup; C10 retains
 observed review/continuity-authoring failures and final isolated-pack acceptance.
 C03b/c source drafts remain preserved. PR #18's document-security presence and
 identity obligations remain open. Displaced continuation text is
