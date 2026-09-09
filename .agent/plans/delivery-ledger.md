@@ -132,44 +132,28 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   and health checks share strict platform and canonical-source contracts. The
   coordinating agent accepted full custody of the dependent native Cricket
   installation after this merge.
-- **C05 native Cricket installation in active delivery:** branch
-  `codex/cricket-installation` began at
-  `2af22e0fe2ad1a9d53c9de52e10d66e2ed2cd6e1` and merged current main
-  `cb73c4deaae9eecdbe406f28304314c71e339e02` as `7967ff92`. Its bounded delta
-  contains the two canonical templates, three registered Codex roles, generated
-  Claude/Cursor quartets, adjacent operating documentation, retained native
-  evidence and the narrow generator-source correction that makes Cursor's
-  unpinned reasoning effort explicit. PR #88's platform-contract tooling remains
-  delivered separately. Generator comparison, portability, strict subagent
-  validation, focused tests and the canonical `pnpm check` pass on the integrated
-  working candidate; that aggregate includes 1,718 Castr tests, 1,875 agent-tools
-  tests, ten Castr E2E tests and 159 agent-tools E2E tests. Commit and full pre-push
-  hooks passed at `3b568416`, which opened
-  [PR #91](https://github.com/EngraphCode/castr/pull/91). Its review waves
-  found compiled-procedure intake, decision-table and output-contract contradictions,
-  incomplete routing descriptions across all Cricket roles and stale pre-opening
-  instructions across current routes. The active candidate repairs the complete classes
-  at their canonical sources, including fail-fast invalid-stance handling across both
-  methods, an explicit complete-frame guard, a deterministic no-change redirection for
-  both ON-TRACK rows, field-by-field replay proof, current-contract validation of prior
-  returns and a satisfiable brevity contract that cannot silently truncate required
-  evidence. Exact-head re-review, checks, ruleset and merge evidence remain required.
-  The retained native record proves six substantive returns at its
-  stated scope and does not claim judgement reliability.
+- **C05 Cricket delivery complete:** PR #88 delivered the strict platform contract as
+  `bd115294`; PR #91 delivered the installation from reviewed head `48e2194d` as merge
+  commit `af840d9b`. All 16 exact-head checks passed, all eight review threads were
+  resolved, Codex completed without a further finding and Copilot reported no additional
+  change. Gateway, documentation and onboarding reviewers approved. The merge commit's
+  second parent and tree exactly match the reviewed head. T1/T2, I1, bounded I2 and D1
+  are evidenced in the [completed plan](current/complete/cricket-platform-parity.md).
+  The later `UNDELIVERED` attempt remains a truthful task-runtime boundary and does not
+  extend or erase the dated native proof.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
 
 ## Open PR dispositions
 
-The 9 September 2026 19:45 UTC live census contains 17 open PRs: the fourteen
-inherited open PRs below, frozen source #81, current #87 and current delivery #91.
-PR #90 merged the
-bounded Q-09/#28 disposition as `cb73c4de`; PR #28 then closed without merge and
-retained its recovery branch. This unfinished estate remains integration risk,
-not delivered value. PR #91 is the current C05 installation delivery;
-PR #14 follows it under the parent plan's sequence. The remaining source PRs
-close only when their recorded extraction or supersession conditions are verified. The following
+The 9 September 2026 post-PR-91 live census contains 16 open PRs: the fourteen
+inherited open PRs below, frozen source #81 and current #87. PR #91 merged as
+`af840d9b`; PR #90 previously merged the bounded Q-09/#28 disposition as `cb73c4de`,
+after which PR #28 closed without merge and retained its recovery branch. This
+unfinished estate remains integration risk, not delivered value. PR #14 is the next
+delivery under the parent plan's sequence. The remaining source PRs close only when
+their recorded extraction or supersession conditions are verified. The following
 6 September checks and review states are historical observations, not fresh merge
 readiness.
 
@@ -286,4 +270,4 @@ not authorise another shepherd to resolve review or merge conditions.
 | PR and observed head                                                                            | Recorded state                                                                                                                            | Value, overlap and owner                                                                                                                                                                                   | Required disposition evidence                                                                                                                                                                                                                      |
 | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [#87](https://github.com/EngraphCode/castr/pull/87), `4326876a9e67320a4580481f615ca7121a220e9c` | Open; 16 successful checks; four unresolved review threads in the 9 September full harvest, including owner questions on two P1 warrants. | Separately shepherded JSON Schema roadmap and interoperability research; C09 reconciles its direction and C06/C07 overlap against main. Broader graph intentions do not implicitly expand this commission. | Its shepherd must settle the owner questions and all review findings, verify current-head conditions and record the actual merge or surviving-value disposition. Root must compare its integrated doctrine before extracting prepared vision work. |
-| [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                                       | Merge evidence is recorded above. Native Cricket templates, registrations, generated adapters and panel rerun remain a separate installation acceptance at `2af22e0f`, now in root custody.                                                        |
+| [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 Cricket platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                               | Its separate installation acceptance was subsequently delivered through PR #91 as `af840d9b`; the completed atomic plan is linked above.                                                                                                           |

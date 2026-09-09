@@ -169,16 +169,14 @@ this frontmatter remains the sole execution queue.
 The commission's interactive sequencing follows the [9 September prerequisite
 sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
 C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
-are delivered. PR #88 also delivered C05's platform reviewer-contract tooling;
-the root coordinating agent, Bora seeks Turbulence, holds custody of the dependent
-native installation on branch `codex/cricket-installation`. PR #90 merged the
-[Q-09 PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
-as `cb73c4deaae9eecdbe406f28304314c71e339e02`; PR #28 then closed without
-merge while its recovery branch remained intact. That transition is complete.
-The current delivery is the C05 installation in
-[PR #91](https://github.com/EngraphCode/castr/pull/91): settle its current-head
-review and checks, then merge its one coherent outcome. Proceed to PR #14's
-dependency-ownership extraction after that delivery. Q-09 remains pending
+are delivered. PR #88 delivered C05's platform reviewer-contract tooling as `bd115294`; PR #91
+delivered the dependent installation as
+`af840d9b68e9b4ef00813a2af97675c7abca3c33`. Its reviewed head was the merge
+commit's second parent and the trees are identical; all 16 exact-head checks passed and
+all eight review threads were resolved. The C05 Cricket atomic plan is complete and
+[in completion staging](../current/complete/cricket-platform-parity.md); the broader C05
+family retains its other documented obligations.
+PR #14's dependency-ownership extraction is now the next delivery. Q-09 remains pending
 for PR #10. When Q-22 resumes, migrate
 the integer contract coherently across its live consumers and doctrine, then land
 the generator fix and all regenerated outputs together, including the fixed-fixture

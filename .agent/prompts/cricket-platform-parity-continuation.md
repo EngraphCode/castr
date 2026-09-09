@@ -1,66 +1,13 @@
-# Continue Castr C05 Cricket delivery
+# Castr C05 Cricket delivery — completed
 
-Read [the controlling plan and preserved history](../plans/current/cricket-platform-parity.md)
-before continuing. Preserve hooks and the exact evidence boundary in the retained
-reports.
+The [completed plan and preserved history](../plans/current/complete/cricket-platform-parity.md)
+records the C05 result. PR #88 delivered the platform contract as `bd115294`; PR #91
+delivered the installed definitions and operating documentation as merge commit
+`af840d9b68e9b4ef00813a2af97675c7abca3c33` from exact reviewed head `48e2194d`.
 
-## Current boundary — 9 September 2026
-
-PR #88 delivered the strict platform contract as
-`bd115294cd545db6d6e64f6c4629a5a583e5ded3`. PR #90 delivered the complete
-preservation record as `cb73c4deaae9eecdbe406f28304314c71e339e02`, and PR #28
-then closed without merge. Branch `codex/cricket-installation` merged that current
-main at `7967ff92479697610bda30c69ffca0b7071941d3` and contains the dependent
-definitions, generated adapters, documentation, current authority corrections,
-evidence and the narrow generator-source correction that makes Cursor's unpinned
-reasoning effort explicit. PR #88's platform-contract tooling remains delivered
-separately. Refresh actual branch, process and remote state before acting.
-
-The earlier combined candidate's canonical `pnpm check` passed with observed exit
-0 on 9 September, and PR #88 separately passed its full delivery checks. Those
-results did not prove the integrated installation candidate. Its own canonical
-`pnpm check` now passes with 1,718 Castr tests, 1,875 agent-tools tests, ten Castr
-E2E tests and 159 agent-tools E2E tests, including the 158-case adapter checker.
-Paired documentation/onboarding review also passed on the opening candidate.
-[PR #91](https://github.com/EngraphCode/castr/pull/91) opened at `3b568416` after
-commit and pre-push hooks passed. Its opening review wave found compiled-procedure
-intake, decision-table and output-contract contradictions, incomplete routing
-descriptions across all Cricket roles, and stale pre-opening instructions across the
-current routes; the active candidate repairs all three classes at their canonical
-sources, including fail-fast invalid-stance handling and an explicit complete-frame
-guard. Require exact-head
-checks and a fresh PR harvest after every push. Preserve the inherited review
-history in the installation REVIEW-TALLY; resumption and a new head never reset
-its ordinal.
-
-Native invocation is already established in the
-[six-return record](../reports/agentic-engineering/cricket-castr-native-2026-09-09.json).
-The refreshed live task schema exposed the exact three roles; no separate CLI
-process or new task identifier was needed. Both judgement roles returned ON-TRACK
-in both stances; the procedure returned DRIFTING over evidence provenance in both.
-Retain the adjudication, same-agent follow-ups and frame-readback limitation.
-This proves invocation and a limited semantic spot check, not reliable judgement
-quality or model self-reports. A fresh full panel requested at the integrated
-delivery boundary is preserved in the [dated attempt record](../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json).
-The target task returned only `Session stopped.` and `Session remains closed.`,
-with no registered-role dispatch, follow-up or Cricket return observable. All six
-requested returns are therefore `UNDELIVERED`; no generic roles may substitute.
-Registered role names, bindings, model/effort/tool pins, dispatch and same-agent
-follow-up remain unchanged. Subsequent changes correct routing descriptions and the
-compiled procedure's output contract; exact-source review and generated validation
-cover those semantics, while the retained native run remains evidence only for its
-dated template revision.
-
-## Delivery and custody
-
-Jim's commission requires small PRs merged regularly; an open PR is risk, not
-delivered value. Bora seeks Turbulence owns this installation and the current
-parent, ledger, manifest and continuity corrections. Kite hunts Eyrie retains the
-historical implementation and native-invocation evidence but no delivery custody.
-
-Finish one outcome: drive PR #91 from its current head, maintain its actual tally,
-harvest all comments/reviews/threads/checks/scanning/ruleset findings after every
-push, fix every correctness issue, and merge by merge commit at the exact eligible
-head. Then move this plan through completion staging and reconcile the shared
-delivery records on main. Keep PR #81 and unrelated compiler/source-PR work
-untouched.
+Do not resume the Cricket installation from this prompt. Start the next authorised
+correction slice from the [parent queue](../plans/proof-programme/parent-plan.md#current-execution-state),
+the [delivery ledger](../plans/delivery-ledger.md) and the
+[current correction route](../memory/operational/threads/castr-correction.next-session.md).
+PR #14's dependency-ownership extraction is next. Preserve the dated native and
+`UNDELIVERED` reports at their stated boundaries.
