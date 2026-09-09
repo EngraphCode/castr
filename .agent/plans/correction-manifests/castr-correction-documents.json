@@ -999,8 +999,8 @@
       "comparison_base": "cb73c4deaae9eecdbe406f28304314c71e339e02",
       "integrated_merge": "af840d9b68e9b4ef00813a2af97675c7abca3c33",
       "review_date": "2026-09-09",
-      "scope": "Every C05 document-like or embedded-documentation file in this bounded post-baseline set, reconciled through the PR91 merge and the PR92 truth correction.",
-      "method": "Explicit candidate-path comparison, canonical source/generated classification, exact-head review and checks, merge-parent/tree verification, then paired lifecycle reconciliation.",
+      "scope": "The 20 C05 document-like or embedded-documentation paths newly added after the original inventory baseline and enumerated below, reconciled through the PR91 merge and the PR92 truth correction.",
+      "method": "Explicit new-path enumeration against the original inventory baseline, canonical source/generated classification, exact-head review and checks, merge-parent/tree verification, then paired lifecycle reconciliation. This record does not claim complete re-review of baseline inventory members later modified by C05.",
       "candidate_additions": [
         {
           "path": ".agent/plans/current/cricket-platform-parity.md",
@@ -1207,7 +1207,7 @@
         }
       ],
       "result": "20 post-baseline files accounted for; generated adapters retain canonical source paths, repository delivery is complete and final-template I2 remains outstanding.",
-      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
+      "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. Baseline inventory members modified by C05 retain their existing path-level review or default outstanding disposition; their complete estate reconciliation remains with C09/C10. The broader C05 family and Q-09/Q-22 obligations remain open in their named homes."
     }
   ]
 }
