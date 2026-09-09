@@ -45,12 +45,16 @@ Acceptance requires all of the following:
   scope where the dialect defines them. Make dialect selection, vocabulary
   requirements, extension handling and reference resolution explicit, with
   bounded, injected I/O and actionable diagnostics. Unrecognised required
-  vocabularies and unresolved references must fail without partial IR or output.
+  vocabularies must fail without partial IR or output. A same-dialect operation
+  that can preserve an unresolved reference together with its base and resource
+  identity must do so; an operation that requires dereferencing must fail
+  atomically and contextually when the target is unavailable.
 - **Usable public entry points:** expose and document standalone parsing and
   writing through supported package exports and CLI operations. Prove the built
   API and CLI from a local checkout or packed artefact, including types,
-  successful conversions, invalid-input failures and diagnostics. Package
-  publication is not a prerequisite.
+  successful conversions, invalid-input failures and diagnostics. The supported
+  workflow is a local checkout or packed artefact; package publication is not
+  planned.
 - **Losslessness and pair compatibility:** prove same-dialect semantic round
   trips, IR serialisation/deserialisation and deterministic output. Dialect
   migrations must be explicit, never silent upgrades or downgrades. For

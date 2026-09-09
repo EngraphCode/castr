@@ -13,8 +13,9 @@
 This document lives in `.agent/report/` and is **evidence, not plan authority**. Under
 [`orientation.md`](../directives/orientation.md) the plan estate owns scope, sequencing, and
 acceptance; nothing in this report supersedes a live plan, directive, rule, or accepted ADR by
-its own force. Sections 6–9, 11.5, 13, and 15.4–15.5 are **recommended inputs** to planning,
-pending ratification through the decision process they themselves describe.
+its own force. Sections 6–9, 11.5, 13, and 15.4–15.5 are **recommended inputs** to planning.
+T00a and B-01/B-07 have since completed; remaining T00b/T00c decisions retain their named
+triggers, and this report does not reopen or pre-empt them.
 
 The owner directed on 2026-08-22:
 
@@ -55,9 +56,9 @@ This supplement adds no native Castr graph-format claim, API implementation or q
 
 ## Executive verdict
 
-Castr cannot be proved “complete and lossless” by adding more examples to its present round-trip suites. A parser and writer can agree perfectly after the parser has already discarded meaning. Current main demonstrates that failure mode: nested `false` becomes `{}`, OpenAPI security `AND` becomes `OR`, omitted `additionalProperties` becomes `false`, unsupported nested Zod members can disappear, and some generated refinements accept everything.
+Castr cannot be proved “complete and lossless” by adding more examples to its present round-trip suites. A parser and writer can agree perfectly after the parser has already discarded meaning. The reviewed baseline demonstrated that failure mode: nested `false` became `{}`, OpenAPI security `AND` became `OR`, omitted `additionalProperties` became `false`, unsupported nested Zod members could disappear, and some generated refinements accepted everything. Later bounded repairs do not change the historical finding or prove the remaining profiles; the live finding register owns their current dispositions.
 
-The two future-direction reports make a further, non-trivial correction: the theorem's **semantic domain** must be bounded as well as its versions. Castr's proposed centre is application value contracts and software interaction contracts. RDF datasets, SHACL graph constraints/processing, JSON-LD graph processing, and graph-to-application projection belong to a sibling graph system and a separate adapter. Castr must not become a universal schema/graph IR.
+The two future-direction reports make a further, non-trivial correction: the theorem's **semantic domain** must be bounded as well as its versions. B-01/B-07 ratified Castr's centre as application value contracts and software interaction contracts. RDF datasets, SHACL graph constraints/processing, JSON-LD graph processing, and graph-to-application projection belong to a sibling graph system and a separate adapter. Castr must not become a universal schema/graph IR.
 
 The defensible theorem is bounded and executable:
 
@@ -74,9 +75,9 @@ That theorem needs three things before most repairs land:
 2. independent behavioural oracles at source and target boundaries; and
 3. an explicit adjudication of historical Castr compromises so old tests do not turn accidental or undesirable behaviour into the new contract.
 
-The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create — and its decision court is itself staged (T00a/T00b/T00c, Section 7) so each remaining decision is ratified at the latest gate preceding its first consumer rather than in one global gate. The already-reproduced silent-loss defects (F-01, F-03, F-04) form a named **pre-02A defect slice** that may land in parallel with the T00a walk — one of the two explicit spine exceptions defined in Section 6, alongside the pre-T01 harness-extraction slice — and are not serialised behind the root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
+The work is organised into 15 Castr-core tranches (00–14; Tranche 02 lands in three staged sub-tranches 02A–02C) plus one conditional graph-interoperation tranche owned primarily by the separate adapter. Tranches 00–04 form the foundational spine, but Tranche 00 adopts only the decisions and planning contract needed to activate that spine; it does not demand proofs that later tranches must create. Its decision court is staged (T00a/T00b/T00c, Section 7): T00a completed on 22 August 2026, while each remaining decision is ratified at the latest gate preceding its first consumer. The already-reproduced silent-loss defects (F-01, F-03, F-04) formed a named **pre-02A defect slice** that could land while the T00a walk ran — one of the two explicit spine exceptions defined in Section 6, alongside the pre-T01 harness-extraction slice. That historical exception does not defer implementation of the ratified root replacement. The format, code-generation, MCP, resource, and edge lanes then follow the explicit dependency graph in Section 6 rather than an assumed five-way parallel fan-out. Each product change follows OCE's atomic TDD rule: failing behavioural proof first, minimal product correction, refactor, and a green landing in one commit. No deliberately red proof PR remains open across landings.
 
-No release may carry a complete/lossless claim broader than its current certificate. Castr's currently advertised broad surface remains blocked until the final certification tranche generates a zero-gap proof record on one integrated current-main commit, or until unsupported surfaces are explicitly removed/unadvertised and a narrower profile passes the shipped-product and certification gates. The present 4,124 passing tests and individually green remediation branches are useful evidence, but they are not that record.
+No release may carry a complete/lossless claim broader than its current certificate. Castr's currently advertised broad surface remains blocked until the final certification tranche generates a zero-gap proof record on one integrated current-main commit, or until unsupported surfaces are explicitly removed/unadvertised and a narrower profile passes the packed-artifact and certification gates. At the 21 August review cut-off, 4,124 passing tests and individually green remediation branches were useful evidence, but they were not that record.
 
 ## 1. Problem frame and OCE governance
 
@@ -84,7 +85,7 @@ No release may carry a complete/lossless claim broader than its current certific
 
 **Observed gap:** Castr's current universal, strict, lossless multi-format framing is both too broad and under-proved. The proposed forward identity narrows it to application value and interaction contracts, while current tests can still remain green after meaning inside that domain has been discarded.
 
-**Who is harmed:** downstream users and generated-code consumers receive contracts weaker, stronger, malformed, or differently shaped from their sources; the most asymmetric cases affect authentication, validation, and trusted code generation.
+**Who is harmed:** maintainers now, and callers in the owner's intended projects once integrated, can receive contracts weaker, stronger, malformed, or differently shaped from their sources; the most asymmetric cases affect authentication, validation, and trusted code generation. Castr has no current consumers, and neither usefulness nor adoption is an acceptance gate.
 
 **Causal mechanism:** the estate relies heavily on Castr-to-Castr round trips, snapshots, token presence, selected fixtures, and hand-maintained policy. These instruments can prove stability or presentation while missing source-versus-target meaning. Historical decisions also rejected or normalised valid constructs for architectural convenience, creating a risk that regression tests will preserve the compromise.
 
@@ -139,7 +140,7 @@ The ownership boundary ratified for Castr, with the graph product still proposed
 | JSON Schema and Zod application-value contracts             | Native value artifacts                                              | Castr                                    |
 | TypeScript structural types                                 | Explicit value-facet projection/code target                         | Castr                                    |
 | OpenAPI and MCP tool interactions                           | Native interaction artifacts containing/referencing value contracts | Castr                                    |
-| Documentation                                               | Derived descriptive rendering, not a reversible semantic peer       | Castr shipped-product assurance          |
+| Documentation                                               | Derived descriptive rendering, not a reversible semantic peer       | Castr packed-artifact assurance          |
 | RDF datasets, SHACL, RDF syntaxes, JSON-LD graph processing | Outside Castr's native domain                                       | Semantic-graph system                    |
 | Graph ↔ application mapping                                 | Versioned projection contract and adapter                           | Separate integration package/application |
 
@@ -208,7 +209,7 @@ No finite suite proves correctness for all future standards, all JavaScript prog
 | Annotation          | Title, description, examples, default, deprecated, read/write flags, XML, external docs, and extensions.                             |
 | API operation       | Paths, methods, parameters, serialization, content, responses, links, callbacks, webhooks, servers, and tags.                        |
 | Security            | Exact Boolean formula, inheritance, overrides, schemes, and scopes.                                                                  |
-| Artifact            | Files, paths, imports, exports, manifest relationships, ordering policy, atomicity, and shipped-form viability.                      |
+| Artifact            | Files, paths, imports, exports, manifest relationships, ordering policy, atomicity, and packed-form viability.                       |
 | Diagnostic          | Stable code, source dialect, target, construct, source/IR path, cause chain, and repair guidance.                                    |
 | Resource policy     | Scheme/host/root rules and byte, node, depth, ref, redirect, deadline, output, and diagnostic budgets.                               |
 | Projection evidence | Selected profile/policy, exact/widen/reject outcome, complete findings, provenance, and any location-mapping reference.              |
@@ -325,11 +326,11 @@ Three rows are **already owner-adjudicated in direction** and must not be re-lit
 | Scalar `x-ext` hash paths can replace external identity                          | Bundler paths are a dependency mechanism, not source identity.                                                                                                                                                | Preserve source base URI and wire identity separately; prove bundled/unbundled schema/document-reference equivalence.                                                                                       |
 | Generated-code token/snapshot presence proves correctness                        | Placebo `.refine()` functions and invalid literals pass this style of proof.                                                                                                                                  | Compile with the TypeScript machinery and execute generated validators against positive/negative witnesses.                                                                                                 |
 | Existing official-suite exclusions can be inherited                              | Optional/pending/non-scored often describes suite maturity, not an acceptable Castr gap.                                                                                                                      | Every excluded case gets an explicit adjudication; Castr challenge cases may intentionally exceed the upstream scoring set.                                                                                 |
-| Every language called a schema belongs to one Castr semantic domain              | Application values, software interactions, RDF graphs, relational schemas, policies, and theorem languages describe different semantic objects.                                                               | Ratify the application-value/interaction boundary. Admit formats by semantic-object fit; keep graph semantics in the sibling system.                                                                        |
+| Every language called a schema belongs to one Castr semantic domain              | Application values, software interactions, RDF graphs, relational schemas, policies, and theorem languages describe different semantic objects.                                                               | Apply the ratified application-value/interaction boundary. Admit formats by semantic-object fit; keep graph semantics in the sibling system.                                                                |
 | `CastrDocument` is the universal canonical root                                  | It can force standalone JSON Schema/Zod values to carry fabricated OpenAPI identity and mix values with interactions.                                                                                         | Replace canonical truth with versioned `value-contract` and `interaction-contract` roots. Remove `CastrDocument` and update its callers in the same replacement landing.                                    |
 | Accepted input, produced output, and runtime processing are one schema node      | Zod coercion, defaults, catches, transforms, codecs, async work, and effects can change successful output independently of accepted input.                                                                    | Model and persist the three facets separately; prove their observable relations and ordered processing.                                                                                                     |
 | Retained Zod source chains or renderer strings are sufficient semantic truth     | Source-shaped strings can be incomplete, target-specific, non-executable, or used to recover meaning discarded by the IR.                                                                                     | Parse supported runtime semantics into typed processing steps. Source syntax is diagnostic provenance only and writers never use it as hidden truth.                                                        |
-| Current exports and CLI modes define the desired product                         | The shipped surface contains historical accidents, missing surfaces, and pre-boundary architecture.                                                                                                           | Product charter and ADRs choose the desired surface. Classify each current surface retain unchanged/replace/internalise/remove, then prove the ratified result.                                             |
+| Current exports and CLI modes define the desired product                         | The current surface contains historical accidents, missing surfaces, and pre-boundary architecture.                                                                                                           | Product charter and ADRs choose the desired surface. Classify each current surface retain unchanged/replace/internalise/remove, then prove the ratified result.                                             |
 | Every format participates in a Cartesian source-target matrix                    | Value representations, interactions, static projections, tool projections, migrations, and documentation are not reversible peers.                                                                            | Use a typed directed transformation graph. No edge is valid unless its semantic role and selected facets are explicit.                                                                                      |
 | Documentation is a reversible semantic target                                    | Documentation describes contracts but generally cannot carry their executable semantics.                                                                                                                      | Treat it as descriptive rendering with executable examples and claim-truth assurance, never a lossless round-trip peer.                                                                                     |
 | Governed widening may appear under a lossless claim                              | Caller-authorised weakening is useful but the target accepts or guarantees something different.                                                                                                               | Separate exact and projection certificates; zero widening rows are permitted in a lossless certificate.                                                                                                     |
@@ -364,7 +365,7 @@ Three rows are **already owner-adjudicated in direction** and must not be re-lit
 | Graph ↔ application projection     | Separate adapter integration/conformance estate plus graph and Castr certificates                         | Prove public composition, mapping outcomes, identity/location fidelity, and certificate linkage outside either core.                                              |
 | Cross-core dependency direction    | dependency-cruiser/ESLint/Knip plus architectural review                                                  | Prove the adapter imports only the public APIs of both cores; neither core imports the adapter or its sibling. Do not scan imports in Vitest or share private IR. |
 | Docs examples                      | Compile/run the examples through their real public package surface                                        | Do not grep prose or pin content. Human review owns wording truth.                                                                                                |
-| Licence/provenance/claims          | SBOM/licence tooling, release workflow, human review                                                      | Not a runtime Vitest property. Registry availability is a release smoke observation.                                                                              |
+| Licence/provenance/claims          | SBOM/licence tooling, packed-artifact workflow, human review                                              | Not a runtime Vitest property. Package publication and registry installation are outside the current programme.                                                   |
 
 ### 4.2 Prohibited proof proxies
 
@@ -575,7 +576,7 @@ Do not hand-maintain a list that can omit an unknown feature undetected. Derive 
 - fixed fields and object inventories from the exact official OpenAPI schemas, with a reviewed normative overlay;
 - the dated MCP schema/spec;
 - the ratified product charter, artifact ADRs, and profile registry;
-- the desired public package/API/CLI surface derived from those profiles;
+- the desired local package/API/CLI surface derived from those profiles;
 - current package exports, CLI modes, writers, and templates as migration evidence to classify retain unchanged/replace/internalise/remove—not as authority that chooses the product;
 - a deliberately bounded, published Zod AST grammar. “Zod 4 source” cannot honestly mean arbitrary executable TypeScript.
 
@@ -693,14 +694,14 @@ flowchart TD
     D5 --> T11
     T10 --> T12["12 Meta-quality"]
     T11 --> T12
-    T12 --> T13["13 Shipped product"]
+    T12 --> T13["13 Packed artifact"]
     T13 --> T14["14 Certification"]
     G["Graph certificate"] --> GA["Conditional adapter"]
     T14 --> GA
     GA --> GC["Composed claim"]
 ```
 
-Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. Exactly two named exceptions precede the spine; nothing else may run ahead of a predecessor. The **pre-02A defect slice** — failing-proof-first fixes for the already-reproduced silent-loss defects F-01, F-03, and F-04 on the current root, through current public seams — may land in parallel with T00a because it needs neither the ratified boundary nor the shared harness and blesses nothing about the legacy root. The **pre-T01 harness-extraction slice** — the artifact-agnostic rework of #11's runner mechanics (outcome records, non-vacuity checks, mutant-bite proofs) — may likewise proceed in parallel because it binds to no product profile or artifact kind; Tranche 01 itself, whose case metadata names ratified profiles and artifact kinds, still lands only after T00a closes. 02A's remaining scope (semantic-equality and persistence conventions, harness integration) keeps the full `T00 → T01 → 02A` dependency. Dashed edges are conditional: they bind only while their labelled condition holds, and an unmet condition removes the edge rather than blocking the chain — Tranche 10's loader/ref and generated-output stages are unconditional, so the certification spine (`T10 → T12 → T13 → T14`) never waits on an MCP runtime surface that does not ship. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
+Every tranche is independently reviewable and leaves main green. A tranche may depend only on landed predecessors, never on another open remediation branch. While T00a was open, exactly two named exceptions could precede the spine: the **pre-02A defect slice**, covering failing-proof-first fixes for the reviewed-baseline F-01/F-03/F-04 defects through public seams, and the **pre-T01 harness-extraction slice**, covering the artifact-agnostic rework of #11's outcome, non-vacuity and mutant-bite mechanics. T00a closed on 22 August 2026, so those historical exceptions no longer control current sequencing; the live parent queue does. Tranche 01 still requires ratified profile/artifact metadata, and 02A's remaining semantic-equality, persistence and harness scope keeps the `T00 → T01 → 02A` dependency. Dashed edges are conditional: they bind only while their labelled condition holds, and an unmet condition removes the edge rather than blocking the chain — Tranche 10's loader/ref and generated-output stages are unconditional, so the certification spine (`T10 → T12 → T13 → T14`) never waits on an MCP runtime surface that does not ship. JSON Schema, OpenAPI, and Zod lanes may proceed in parallel after Tranche 04. General code generation depends on all three semantic producers; MCP projection depends on JSON Schema and OpenAPI, plus Zod while Zod-origin MCP remains claimed. Tranche 10 lands loader/ref budgets after 03+04, generated-file/output budgets after 08, and protocol-runtime budgets only when a real MCP runtime surface exists. All five semantic lanes fan into Tranche 11. Their shared file ownership must be resolved through the landed application-contract IR and support contract, not cross-branch assumptions. The conditional adapter consumes public, certified outputs from both cores and does not block a Castr-only release unless Castr advertises graph interoperation.
 
 ## 7. Foundational tranches
 
@@ -715,12 +716,12 @@ Make the completeness claim finite, resolve contradictory doctrine, and prevent 
 The court is **staged**; one global gate holding all 22 decisions plus the whole authoritative
 inventory would be the programme's single largest executability risk. The stages are:
 
-- **T00a — owner charter (gates everything):** decisions 1–4, 14, 15, 19, and 20, plus the
-  Section 1.4 product statement. Decisions 14 (opaque round-trip preservation) and 15 (normative
-  extensions and unknown fields) sit here because they shape the artifact/extension model that
-  Tranche 02C builds and every format lane consumes — they are cross-lane, not lane-local. This
-  is one owner walk over questions the challenge register already answers with recommendations;
-  it requires no inventory work.
+- **T00a — owner charter (completed 22 August 2026):** decisions 1–4, 14, 15, 19, and 20, plus
+  the Section 1.4 product statement. Decisions 14 (opaque round-trip preservation) and 15
+  (normative extensions and unknown fields) sit here because they shape the artifact/extension
+  model that Tranche 02C builds and every format lane consumes — they are cross-lane, not
+  lane-local. The owner walk recorded its verdicts; current execution consumes them rather than
+  reopening the questions.
 - **T00b — consumer-head charters:** each remaining decision is ratified at the latest gate that
   still precedes its **first consumer** — never later. Concretely: decision 5 (exact source
   versions/profiles and public entrypoints) and the error-code/atomicity half of decision 21 are
@@ -734,10 +735,12 @@ inventory would be the programme's single largest executability risk. The stages
   consumer is a defect.
 - **T00c — certification policy (gates Tranches 11, 13, and 14):** decisions 11 and 22.
 
-Inventory closure follows the same staging: T00a closes with `planned` rows naming owning
-tranches; each lane resolves its own rows at its T00b head. The decisions themselves:
+Inventory closure follows the same staging: T00a closed with `planned` rows naming owning
+tranches; each lane resolves its own rows at its T00b head. The complete decision inventory is
+retained below:
 
-Record one decision for every item below before changing the associated model or tests:
+T00a items below already have recorded verdicts. Record each remaining T00b/T00c decision before
+changing its associated model or tests:
 
 1. adoption/amendment/rejection of the application-contract product boundary and candidate product statement;
 2. `value-contract` versus `interaction-contract` artifact roots and the artifact-schema version;
@@ -760,7 +763,7 @@ Record one decision for every item below before changing the associated model or
 19. RDF/SHACL/JSON-LD graph ownership, format-admission criteria, and direct graph non-support wording;
 20. versioned projected-value boundary, certificate-composition rules, and whether Castr imports it directly or only through an adapter;
 21. error codes, atomicity, resource policy, and supported trust profiles;
-22. output canonicalisation/ordering rules and public package/CLI/template surfaces intended for release.
+22. output canonicalisation/ordering rules and local package/API/CLI/template surfaces intended for supported use.
 
 The recommended governing decisions are those in the challenge register: choose the application-value/interaction domain; parse and carry all valid constructs in each declared in-domain grammar; preserve versions, facets, and presence distinctions; make migration/projection/widening explicit; separate native meaning from opaque carriage; keep graph semantics behind a public projection boundary; and reserve failure for invalid source, bounded out-of-scope grammar, incompatible artifact kind, or proven target impossibility.
 
@@ -770,12 +773,12 @@ The recommended governing decisions are those in the challenge register: choose 
 - Add a reviewed semantic overlay for requirements official schemas cannot express.
 - Define the Zod static AST grammar explicitly by syntax form and chaining rules. Arbitrary executable TypeScript remains outside this parser grammar unless a separate runtime-object entrypoint is provided.
 - Define all semantic positions once. Do not let each recursive parser/writer keep a local, incomplete list.
-- Compare the current shipped surface with the ratified desired surface. Classify every export, CLI mode, template, and writer as retain unchanged, replace, internalise, or remove; current configuration does not choose the product.
+- Compare the current surface with the ratified desired surface. Classify every export, CLI mode, template, and writer as retain unchanged, replace, internalise, or remove; current configuration does not choose the product.
 - Define a typed directed transformation graph. Do not manufacture edges for Cartesian symmetry.
 - Classify every authoritative source feature as admitted or out-of-scope with its proof/diagnostic; only then populate every obligation on every ratified directed edge with one target disposition and its witness/diagnostic.
 - Give every historical compromise a disposition: retain with normative/user-value warrant, replace, or delete.
 - Reconcile every challenged live authority, recording retain/amend/supersede **in the authority surface itself** — the ADR file, its indexes, and the landing commit are the record (`permanent-doc-is-the-consolidation-record`); no separate persisted ledger file is created. Reconciliation is **per-landing**, as Section 3.1 already requires: each ADR or directive is adjudicated in the landing that first touches its subject, not in one batch. The full reconciliation surface, in authority order:
-  - **Directives (outrank ADRs; owner-gated):** `.agent/directives/principles.md` — its §Input-Output Pair Compatibility Model and §Strict-By-Default ("Objects: Always strict") are directly reversed by this programme's recommendations, and the file's own header requires **prior explicit owner approval** to edit, so its amendment is a named T00a owner decision, not an agent action; `.agent/directives/VISION.md` ("Universal Schema Conversion … between any supported format" — the identity F-17 retires); `.agent/directives/requirements.md`; `.agent/IDENTITY.md`; and `.agent/rules/input-output-pair-compatibility.md`, which operationalises the superseded model as a reviewer checkpoint.
+  - **Directives (outrank ADRs; owner-gated):** `.agent/directives/principles.md` — its §Input-Output Pair Compatibility Model and §Strict-By-Default ("Objects: Always strict") are directly reversed by this programme's recommendations. T00a recorded the required owner approval; the owning doctrine landing must apply it with `.agent/directives/VISION.md` ("Universal Schema Conversion … between any supported format" — the identity F-17 retires), `.agent/directives/requirements.md`, `.agent/IDENTITY.md`, and `.agent/rules/input-output-pair-compatibility.md`, which operationalises the superseded model as a reviewer checkpoint.
   - **ADRs whose theses this programme overturns or amends:** ADR-017 (bundle-only pipeline vs bundled/unbundled reference-graph equivalence), ADR-018 (3.1-first unconditional normalisation vs same-version-by-default with explicit migration edges — until reconciled, Tranches 05 and 06 are unlandable under Section 3.1's own rule), ADR-019 (Scalar `upgrade()` adoption and `x-ext` metadata), **ADR-027** (round-trip validation as correctness proof — the most load-bearing collision in the estate; Section 4.2 and adversarial review B retire its thesis), ADR-028 (IR/OpenAPI consolidation that the discriminated roots replace), ADR-029 and ADR-037 (source structure and domain boundaries, both predating the proposed `lib/src/contracts/` domain and new test roots), plus ADR-011 (AJV runtime validation, renamed as one independent oracle among several) and the originally listed ADR-023, ADR-024, ADR-030, ADR-031, ADR-032, ADR-035, ADR-038, ADR-039, ADR-040, ADR-041, ADR-042, ADR-043, ADR-044, ADR-045, ADR-046, ADR-047, and ADR-048. ADR-047/048 are currently **Proposed** and ADR-038 **Superseded**; their dispositions record that starting state rather than treating all rows as accepted live authority.
   - **Estate integrity defects to repair in the same reconciliation:** the ADR estate is forked — `.agent/directives/ADR-044/045/046` are divergent duplicates of the `docs/architectural_decision_records/` copies and must collapse to the `docs/` originals with pointers; reconcile file `Status:` lines against **both** indexes (`README.md` and `SUMMARY.md`), fixing the ADR-038 mismatch (file Superseded, indexes Accepted), the inverse ADR-002 mismatch (file Accepted, indexes Superseded), the wrong H1 numbers inside ADR-018 and ADR-019, and `SUMMARY.md`'s staleness (missing rows, non-canonical statuses, and its "universal schema conversion" claim).
   - When a decision changes, update its status, indexes, and backlinks and synchronise affected acceptance criteria, `VISION.md`, `roadmap.md`, and `SUMMARY.md` in the same landing. No implementation may contradict a still-authoritative decision first.
@@ -794,17 +797,17 @@ describe.each(runtimeObligations)('$id', (obligation) => {
 });
 ```
 
-The inventory generator/validator is a separate build/static gate. It fails if an official inventory item or shipped public surface lacks a disposition. That is validation of the generated contract, not a test of documentation configuration.
+The inventory generator/validator is a separate build/static gate. It fails if an official inventory item or supported public surface lacks a disposition. That is validation of the generated contract, not a test of documentation configuration.
 
 ### Acceptance
 
-- Acceptance is per stage: T00a closes on the owner charter alone; each T00b lane charter closes at its lane head; T00c closes before certification-facing tranches. "Complete" below means all stages have closed.
+- Acceptance is per stage: T00a closed on the owner charter on 22 August 2026; each T00b lane charter closes at its lane head; T00c closes before certification-facing tranches. "Complete" below means all stages have closed.
 - Zero contradictory live decisions on any landed surface; every affected doctrine surface and ADR has an explicit, synchronised retain/amend/supersede outcome recorded in the surface itself by the landing that touched it. The `principles.md` amendment carries explicit owner approval.
 - Product boundary, artifact-root, facet, profile/version, widening, and graph-ownership ADRs adopted.
 - Every authoritative inventory item has either a fully classified obligation or an explicit `planned` row naming its owning tranche and unresolved fields.
 - Contract schema and planning-mode validator reject missing, duplicate, orphaned, or ownerless inventory rows.
 - No T00 acceptance claim treats a `planned` row, proof ID placeholder, or future harness as behavioural evidence.
-- Adoption or amendment of the application-contract boundary activates Tranches 02B onward; rejection terminates this execution graph and triggers an explicit re-plan rather than silently retaining its downstream assumptions.
+- The recorded application-contract boundary activates Tranches 02B onward. A future owner change to that boundary would require an explicit re-plan rather than silently retaining downstream assumptions.
 - Every challenge-register item has a ratified forward disposition.
 - Public claims name the semantic domain, artifact/profile/version, transformation-edge role, and selected facets; the unqualified phrase “all schemas/formats/Zod/OpenAPI/JSON Schema” does not appear.
 
@@ -1154,6 +1157,11 @@ For every IR construct and target:
 
 ### Goal
 
+The [roadmap commitment](../plans/roadmap.md#full-json-schema-support) is a mandatory acceptance
+input: standalone Draft 2020-12 and Draft-07 parsing and writing must be exposed and proved through
+the local package API and CLI. This outcome cannot be satisfied by removing the JSON Schema writer
+from public claims.
+
 Prove complete `value-contract` source admission, IR carriage, same-dialect output, explicit dialect migration, and target projection for every claimed JSON Schema vocabulary and recursive position.
 
 ### Declare the dialects first
@@ -1468,7 +1476,7 @@ Do not spawn these tools from Vitest. The aggregate gate invokes each instrument
 - Single-file and grouped output behave equivalently where both are public.
 - Adding an unrelated name cannot change an existing symbol/import.
 - Failure in any file prevents the whole artifact set from being committed.
-- Importing sentinel fixtures cannot perform an injected action; run that assertion in an isolated shipped-form smoke process, not by mutating the Vitest global.
+- Importing sentinel fixtures cannot perform an injected action; run that assertion in an isolated packed-form smoke process, not by mutating the Vitest global.
 
 ### Acceptance
 
@@ -1687,7 +1695,7 @@ Required semantic mutants include erasing graph identity, collapsing a shared no
 - RDF dataset isomorphism/canonicalisation and SHACL engines are graph-side semantic oracles.
 - W3C RDF/SHACL/JSON-LD/canonicalisation runners stay in the graph repository.
 - dependency-cruiser/ESLint/Knip and architecture review own dependency direction.
-- packed multi-package smoke owns shipped composition.
+- packed multi-package smoke owns built composition.
 - human review owns projection-contract meaning and any irreversible policy.
 
 ## 9. Fan-in tranches
@@ -1769,7 +1777,7 @@ Build a typed directed graph, not a Cartesian matrix. Every edge records product
 
 **Value-contract sources:** JSON Schema Draft-07/2020-12 profiles, bounded Zod 4.4.3 source, constructed Zod runtime objects if admitted, versioned persisted value artifacts, and a versioned projected application-value boundary artifact if publicly admitted.
 
-**Interaction-contract sources:** retained Swagger/OpenAPI ingress profiles, OpenAPI 3.0.4/3.1.2/3.2.0 as independently admitted, MCP input only if separately shipped/proved, and versioned persisted interaction artifacts.
+**Interaction-contract sources:** retained Swagger/OpenAPI ingress profiles, OpenAPI 3.0.4/3.1.2/3.2.0 as independently admitted, MCP input only if separately supported/proved, and versioned persisted interaction artifacts.
 
 **Target roles:** peer value representations (JSON Schema/Zod), peer interaction representations (advertised OpenAPI outputs), explicit migrations, accepted-input or produced-output TypeScript structural projections, MCP tool projections, descriptive documentation, and persisted artifacts.
 
@@ -1916,7 +1924,7 @@ The hard gate is zero surviving required semantic mutants. Overall mutation scor
 - Move filesystem/process/tooling tests to the correct smoke/validation home.
 - Remove known-violation baselines.
 - Use OS-owned temp roots only in smoke/tool scripts with `finally` cleanup.
-- Run suites in several orders; after each shipped-form job, assert only its observable cleanup contract, not internal temp implementation.
+- Run suites in several orders; after each packed-form job, assert only its observable cleanup contract, not internal temp implementation.
 - Do not increase timeouts to hide contention. Diagnose shared state or reclassify a performance observation to benchmarks.
 
 ### Acceptance
@@ -1928,11 +1936,11 @@ The hard gate is zero surviving required semantic mutants. Overall mutation scor
 - No temp, global, cwd, env, cache, or target-order contamination is observed.
 - Coverage reports remain non-gating evidence unless tied to a separate justified routing policy; semantic obligations, not percentages, govern completion.
 
-## Tranche 13 — Public package, CLI, docs examples, and release viability
+## Tranche 13 — Local package, CLI, docs examples, and packed-artifact viability
 
 ### Goal
 
-Prove the product users actually receive, not the source-tree graph that Vitest/Vite happens to resolve.
+Prove the built and packed product, not the source-tree graph that Vitest/Vite happens to resolve.
 
 ### Packed-package smoke
 
@@ -1956,7 +1964,7 @@ This is smoke, not an in-process Vitest test. It may perform the required packag
 - invalid/unknown arguments exit non-zero with guidance on stderr and no stack trace;
 - every supported generation mode completes one trivial example;
 - unsupported template/option values reject rather than succeed with no effect;
-- output confinement and atomicity hold in the shipped binary.
+- output confinement and atomicity hold in the built CLI.
 
 ### Docs and claims
 
@@ -1966,19 +1974,19 @@ This is smoke, not an in-process Vitest test. It may perform the required packag
 - Human review owns clarity and claim truth; do not add grep/hash/config tests.
 - Generate the support matrix from the Tranche 00/11 contract and proof certificate.
 - Every public TSDoc import path must exist in the tarball.
-- Package name/version/repository/licence/release notes/tags/provenance agree.
-- If npm remains unavailable, outward surfaces state pre-release/private/source-only truth. If public release is intended, registry availability is a release smoke observation, not a permanent Vitest assertion.
+- Package name/version/repository/licence/provenance agree.
+- Outward surfaces state local-checkout and packed-artifact truth. Package publication is not planned; registry availability and registry installation are outside this programme.
 - Do not claim all schema languages, all source-target combinations, RDF/SHACL/JSON-LD semantics, reversible documentation, runtime-lossless TypeScript, or whole-API losslessness from an MCP tool projection.
 - Any graph-interoperation claim links a current conditional-Tranche-09G certificate whose `exact`, `widened`, or `rejected` outcome matches the wording. A graph-interoperation **lossless** claim additionally requires exact graph, projection, and Castr certificates over the same channels; Castr's local certificate alone is insufficient.
 
 ### Acceptance
 
-- A cold consumer with the source repo absent can install, import, compile, and execute every claimed public surface.
-- JSON Schema/OpenAPI/TypeScript/MCP writers are either exported and proved or removed from public claims.
+- An isolated test project with the source repo absent can install the local tarball, import, compile, and execute every claimed public surface.
+- The standalone JSON Schema writer is exported and proved. OpenAPI/TypeScript/MCP writers are exported and proved when retained as supported surfaces, otherwise removed from public claims.
 - Public surfaces expose the two artifact kinds and typed transformation roles; `CastrDocument` and its compatibility path are removed in the replacement landing.
-- CLI/help/docs examples match observable shipped behaviour.
+- CLI/help/docs examples match observable built behaviour.
 - Licence and provenance exist in the packed artifact.
-- Release tag, package version, registry result, and GitHub release are linked or public-release wording is absent.
+- Packed-artifact version, repository, licence and recorded digest agree, and public-release wording is absent.
 
 ## Tranche 14 — Integrated certification and release gate
 
@@ -2041,12 +2049,12 @@ Emit a machine-readable and human-readable record containing:
 - required mutation survivors (must be zero);
 - unexplained exclusions, unimplemented obligations, skips and conditional cases (all must be zero);
 - known upstream defects with separate evidence and no weakened Castr claim;
-- release artifact digest, package/version/tag/provenance links;
+- packed-artifact digest, package version and provenance links;
 - expiry/update triggers when any pinned standard/tool changes.
 
-### Release acceptance
+### Certification acceptance
 
-Release can proceed only when one current integrated commit has:
+Certification can proceed only when one current integrated commit has:
 
 - zero planned, unclassified, or unimplemented release obligations;
 - all exact/encoded rows independently proved across applicable channels;
@@ -2238,7 +2246,7 @@ Close without merging only after a commit/file-level patch-equivalence check con
 flowchart TD
     X["Dependency-only #14: independent early slice"]
     B["Reworked agnostic harness from #11 (01)"] --> C["02A Current-fidelity foundation"]
-    A["Boundary and artifact ADRs (T00a)"] --> D["Value/interaction root replacement (02B)"]
+    A["Ratified boundary plus required artifact ADRs"] --> D["Value/interaction root replacement (02B)"]
     C --> D
     D --> E["Value and processing facets #27 (02C)"]
     E --> F["Identity/ref half #18 (03)"]
@@ -2288,13 +2296,13 @@ This graph is **derived from the Section 6 dependency model** — the bracketed 
 | F-04 | Zod nested constructs can disappear; placeholder refinements accept everything          | Critical | 04, 07, 08      | Source runtime versus generated runtime outcomes and values; seeded refinement mutants killed.                 |
 | F-05 | External strings reach generated source through unsafe or inconsistent emitters         | Critical | 03, 08, 10      | Single sink inventory, hostile lexical corpus, `tsc`, clean-process import, and code-injection negative cases. |
 | F-06 | Omitted `additionalProperties` is normalised to `false`                                 |     High | 00, 02, 05, 07  | Omitted/true/false/schema-valued separation in IR and validators.                                              |
-| F-07 | No verified public npm release/consumer viability                                       |     High | 13, 14          | Exact tarball pack/install/import/CLI/type smoke and registry/release evidence.                                |
+| F-07 | No verified isolated local packed-artifact viability                                    |     High | 13, 14          | Exact tarball pack/install/import/CLI/type smoke outside the producer checkout.                                |
 | F-08 | Component wire names and generated symbols are conflated/collide                        |     High | 03, 06, 08      | Injective deterministic symbol mapping and adversarial collision corpus preserving wire keys.                  |
 | F-09 | `__proto__` and inherited-key handling can lose or misclassify data                     |     High | 02, 03, 10      | Own-key, null-prototype, persistence, and generated-runtime cases for hostile keys.                            |
 | F-10 | Empty IR property collections can fail deserialisation                                  |     High | 02              | Constructor/persist/restore/public-round-trip proof for empty and singleton boundaries.                        |
 | F-11 | Direct `buildIR()` can accept/stamp versions differently from the canonical loader      |     High | 04, 06          | One admission boundary; entrypoint-equivalence matrix and explicit migration tests.                            |
 | F-12 | IR carries backend-contaminated or nonuniform representations                           |     High | 00, 02, 11      | Typed application-artifact algebra inventory and directed-edge separation/persistence proofs.                  |
-| F-13 | Claimed writers/entrypoints are not all exported or shipped                             |     High | 11, 13          | Generated public-surface inventory and packed-consumer smoke.                                                  |
+| F-13 | Claimed writers/entrypoints are not all exported or supported                           |     High | 11, 13          | Generated public-surface inventory and packed-consumer smoke.                                                  |
 | F-14 | Loader has no complete host/size/time/depth/ref policy                                  |     High | 10              | Deterministic logical-budget boundary cases and isolated transport smoke.                                      |
 | F-15 | Test temp-state leakage and timeout sensitivity undermine hermeticity                   |   Medium | 01, 12          | Unique explicit directories, shuffled/repeated/fresh-process suite runs, no gated wall-clock assertions.       |
 | F-16 | Documentation/claims/licence state is stale or absent                                   |     High | 13, 14          | Human-reviewed claim generation from certificate, licence/provenance checks, published-support table.          |
@@ -2328,7 +2336,7 @@ projection obligations
 
 descriptive-rendering assurances
   = Σ advertised rendering edges, each citing its RenderingAssuranceId
-  (reported separately; discharged through the Tranche 13 shipped-product
+  (reported separately; discharged through the Tranche 13 packed-artifact
   assurance gate, never through the semantic-edge sums below)
 
 discharged
@@ -2456,16 +2464,16 @@ The test double above models an injected output transaction in memory. Actual fi
 
 ### 13.5 Non-Vitest gates that must accompany the tranches
 
-| Gate                           | Subject                                              | Minimum required invocation/result                                                                                                      |
-| ------------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `tsc` compiler fixtures        | Generated types/source                               | Strict positive consumers compile; negative consumers fail for the expected semantic reason; no unrelated diagnostic.                   |
-| ESLint/dependency-cruiser/Knip | Structure/dependency/public surface                  | No new violation/baseline; dependency and export inventories match the product design.                                                  |
-| Stryker                        | Test sensitivity                                     | Zero surviving required seeded mutants; measured score reported separately, never used to waive a survivor.                             |
-| Official runner                | MCP or other actual protocol surface                 | Exact version, role, scenario IDs and scoring state recorded; no claim broader than executed scenarios.                                 |
-| Packed/build smoke             | Shipped form, CLI, process isolation, file atomicity | Run against `pnpm --dir lib pack` output in a clean consumer, explicit input/output paths, clean environment, bounded external harness. |
-| Benchmark                      | Performance observation                              | Report distribution and regression investigation; no flaky wall-clock correctness ceiling in Vitest.                                    |
-| Security assurance             | Generated-code/loader threat model                   | Manual review plus suitable SAST/dependency/secret/provenance tools; runtime hostile cases remain in Vitest.                            |
-| Human review                   | Spec interpretation, exclusions, claims, licences    | Named reviewer, version/clauses, dispositions, unresolved questions, and approval in the certificate.                                   |
+| Gate                           | Subject                                             | Minimum required invocation/result                                                                                                      |
+| ------------------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `tsc` compiler fixtures        | Generated types/source                              | Strict positive consumers compile; negative consumers fail for the expected semantic reason; no unrelated diagnostic.                   |
+| ESLint/dependency-cruiser/Knip | Structure/dependency/public surface                 | No new violation/baseline; dependency and export inventories match the product design.                                                  |
+| Stryker                        | Test sensitivity                                    | Zero surviving required seeded mutants; measured score reported separately, never used to waive a survivor.                             |
+| Official runner                | MCP or other actual protocol surface                | Exact version, role, scenario IDs and scoring state recorded; no claim broader than executed scenarios.                                 |
+| Packed/build smoke             | Packed form, CLI, process isolation, file atomicity | Run against `pnpm --dir lib pack` output in a clean consumer, explicit input/output paths, clean environment, bounded external harness. |
+| Benchmark                      | Performance observation                             | Report distribution and regression investigation; no flaky wall-clock correctness ceiling in Vitest.                                    |
+| Security assurance             | Generated-code/loader threat model                  | Manual review plus suitable SAST/dependency/secret/provenance tools; runtime hostile cases remain in Vitest.                            |
+| Human review                   | Spec interpretation, exclusions, claims, licences   | Named reviewer, version/clauses, dispositions, unresolved questions, and approval in the certificate.                                   |
 
 ### 13.6 Proof maintenance triggers
 
@@ -2551,7 +2559,7 @@ These reviews attack different premises. Their agreement is more important than 
 
 **Verdict:** sustained and directionally resolved. The future-direction proposal supplies the narrower application-value/interaction domain and discriminated roots that Revision 1 lacked. A universal schema/graph IR is not an acceptable fallback.
 
-**Required defence:** Tranche 00 must ratify or reject that boundary explicitly. Build a rich neutral algebra only within the selected application-contract domain; use layered/typed extensions demanded by declared obligations and keep graph semantics behind the adapter boundary.
+**Required defence:** B-01 and B-07 ratified that boundary on 22 August 2026. Build a rich neutral algebra only within the selected application-contract domain; use layered/typed extensions demanded by declared obligations and keep graph semantics behind the adapter boundary.
 
 ### Adversarial review I — dependency/specification skew
 
@@ -2647,14 +2655,14 @@ These reviews attack different premises. Their agreement is more important than 
 
 All reviewers converge on eight non-negotiable conclusions:
 
-1. **The semantic domain must be bounded.** If ratified, Castr owns application value and software interaction contracts—not every language called a schema and not RDF/SHACL/JSON-LD graph processing.
+1. **The semantic domain must be bounded.** Under ratified B-01/B-07, Castr owns application value and software interaction contracts—not every language called a schema and not RDF/SHACL/JSON-LD graph processing.
 2. **Artifact kind and facet are part of the theorem.** Value and interaction roots, accepted input, produced output, ordered processing, annotations, and interaction semantics cannot be collapsed into one legacy document/schema node.
 3. **The claim remains version/profile bounded.** “All future inputs and systems” is unprovable; exact product/artifact/source/target profiles, positions, facets, channels, and finite bounds can be certified.
 4. **Behaviour needs independent witnesses.** Castr-to-Castr round trips, IR equality, token tests, and snapshots cannot establish semantic preservation alone.
 5. **Completeness is a typed-inventory property.** Every authoritative source feature must be admitted or rejected at the source boundary as bounded out-of-scope. Every obligation generated from an admitted feature on a declared directed edge must then be exact, exactly encoded, governed widening, or normatively impossible; an empty, accidental, or unimplemented row blocks its profile.
 6. **Governed widening is not losslessness.** It needs explicit authorisation, exact-profile rejection, complete findings, and a separate projection certificate.
 7. **Cross-domain evidence composes; it does not blur.** A Castr-local exact proof cannot rescue a lossy graph projection. End-to-end losslessness requires exact graph, projection, and Castr certificates over the same channels.
-8. **Evidence must compose on one shipped commit.** Current PRs contain substantial useful work; #28 is the only candidate for whole supersession, subject to commit/file patch-equivalence verification; #10 and #23 are branch-superseded migration sources; all compiler lanes need ordered integration and upgraded proof.
+8. **Evidence must compose on one integrated commit.** Current PRs contain substantial useful work; #28 is the only candidate for whole supersession, subject to commit/file patch-equivalence verification; #10 and #23 are branch-superseded migration sources; all compiler lanes need ordered integration and upgraded proof.
 
 The report therefore rejects three easy extremes: adding more examples to the existing circular estate, rejecting every difficult feature in the name of strictness, and proving every mechanically connectable format pair. It recommends a typed application-contract compiler that preserves declared meaning, visibly widens only under a separate authorised projection profile, or fails closed according to the bounded target contract.
 
@@ -2680,7 +2688,7 @@ It cannot establish:
 - equivalence for every unbounded recursive schema, regular expression, Unicode string, arbitrary executable Zod/TypeScript program, or environment;
 - correctness of future specification/dependency versions;
 - absence of every security vulnerability or resource attack;
-- permanent registry/network availability;
+- permanent network availability;
 - normative truth where the standards themselves are ambiguous;
 - quality of human-facing documentation or licences without human/legal review.
 - native RDF/SHACL/JSON-LD semantic correctness from Castr's core suite, or any graph-projection outcome whose independent certificate is missing; a non-exact certificate cannot support a lossless claim.
@@ -2690,11 +2698,13 @@ Those limits must appear beside public claims, not only in internal notes.
 ### 15.4 First safe execution sequence
 
 This sequence is a recommendation to the parent plan, not self-executing policy (see the
-authority note at the top of this report).
+authority note at the top of this report). Steps 1–3 are completed prerequisites: the parent
+plan exists and the T00a owner walk closed on 22 August 2026 with B-01 and B-07 ratified. The
+remaining recommendation therefore begins at step 4, subject to the live parent queue.
 
-1. Author the parent plan and its series of incremental implementation plans from this report (owner directive, 2026-08-22). The plans include extracting the value from all existing open PRs per Section 11 and then closing them, and explicitly reconcile the owner's 2026-06-19 roadmap sequencing decision.
-2. Open the T00a owner charter walk (product boundary, artifact-root replacement, graph ownership, and the owner-gated `principles.md` amendment) and establish the planning contract/schema. In parallel, run only the two Section 6 spine exceptions — the pre-T01 harness-extraction slice from #11 and the pre-02A defect slice (F-01, F-03, F-04 on the current root) — plus #14's dependency-only fix and #21's concrete isolation/E2E repairs; none of these slices may pre-empt the pending product boundary, and Tranche 01 itself lands only after T00a closes.
-3. Ratify the remaining T00a decisions — the application-contract domain, discriminated artifact roots and facets, the direct root replacement, opaque-carriage and extension policy (decisions 14–15), and graph ownership and the projected-value boundary (decisions 19–20) — adjudicating historical-compromise rows per-landing as their subjects are touched. Profile/version, widening, public-surface, and certification policies are ratified later at their assigned T00b/T00c gates, not here. Re-plan if the boundary is rejected.
+1. **Completed 22 August 2026:** author the parent plan and its incremental implementation structure from this report, including extraction and closure of existing open PR value.
+2. **Completed 22 August 2026:** close the T00a owner charter walk over the product boundary, artifact-root replacement, graph ownership and owner-gated doctrine amendment.
+3. **Completed 22 August 2026:** ratify the application-contract domain, discriminated artifact roots and facets, direct root replacement, opaque-carriage and extension policy, and graph ownership/projected-value boundary through B-01 and B-07. Profile/version, widening, public-surface and certification policies remain at their assigned T00b/T00c gates.
 4. Land the 02A fidelity foundation: make current transformations detect known silent loss and establish semantic-equality and persistence conventions without blessing the legacy root.
 5. Introduce versioned value/interaction artefacts, update callers and remove `CastrDocument` in the same landing.
 6. Extract #27's application-value input/output/catchall semantics into the new facets, then split the identity/provenance/reference half of #18.
@@ -2702,12 +2712,12 @@ authority note at the top of this report).
 8. Run independent JSON #16, Zod #13, OpenAPI interaction #17/#18-security, codegen #15/#26, and MCP projection lanes, each opening with its T00b lane charter.
 9. Execute the typed transformation graph, resource/hostile layer, mutation layer, packed-product smoke, and exact/projection certificates, gated by the T00c certification-policy decisions.
 10. If graph interoperation is advertised, execute conditional Tranche 09G and compose graph/projection/Castr certificates whose exact/widen/reject outcome matches each claim; require all three to be exact for a lossless claim.
-11. Publish only the profile-specific claims generated from the applicable green certificate.
+11. State only the profile-specific claims generated from the applicable green certificate.
 
 ### 15.5 Present release decision
 
 Release scope is constitutively an owner decision; this section records the evidence basis for it, not a standing prohibition this report could impose.
 
-**No current Castr commit or open PR set proves the revised bounded theorem. The evidence therefore does not support universal or unprofiled “complete/lossless” claims—including Castr's currently advertised broad version of those claims.** A narrower release is not categorically forbidden: it must remove or unadvertise unsupported surfaces and pass Tranches 13 and 14 for the exact narrower profile. The repository has a strong base of tests and substantial repair work, but it still lacks adopted product/artifact/profile ADRs, the discriminated root/processing model, an approved support contract, independent all-channel oracles, a zero-gap typed transformation graph, correct integration of conflicting PR semantics, and a current shipped-artifact certificate.
+**No current Castr commit or open PR set proves the revised bounded theorem. The evidence therefore does not support universal or unprofiled “complete/lossless” claims—including Castr's currently advertised broad version of those claims.** A narrower release is not categorically forbidden: it must remove or unadvertise unsupported surfaces and pass Tranches 13 and 14 for the exact narrower profile. The repository has a strong base of tests and substantial repair work, but it still lacks adopted product/artifact/profile ADRs, the discriminated root/processing model, an approved support contract, independent all-channel oracles, a zero-gap typed transformation graph, correct integration of conflicting PR semantics, and a current packed-artifact certificate.
 
-The shortest credible path is not to merge all remediation branches and not to extend Castr into RDF/SHACL. It is to ratify the application-contract boundary, establish the artifact-agnostic harness, replace the old root with value/interaction roots and update callers in the same landing, extract #27's value semantics ahead of #13/#16, integrate the remaining typed lanes, and require one final all-green profile certificate. Graph interoperation remains a separately composed adapter claim.
+The shortest credible path is not to merge all remediation branches and not to extend Castr into RDF/SHACL. It is to implement the ratified application-contract boundary, establish the artifact-agnostic harness, replace the old root with value/interaction roots and update callers in the same landing, extract #27's value semantics ahead of #13/#16, integrate the remaining typed lanes, and require one final all-green profile certificate. Graph interoperation remains a separately composed adapter claim.

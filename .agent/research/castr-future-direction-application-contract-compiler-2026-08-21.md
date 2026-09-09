@@ -3,7 +3,10 @@
 **Status:** Strategic direction proposal  
 **Date:** 21 August 2026  
 **Last updated:** 8 September 2026  
-**Related work:** _What Castr would require to fully support SHACL_  
+**Related work:** _What Castr would require to fully support SHACL_ was external input whose
+original report is unavailable in this repository; the inspected Castr revision is retained in
+the reference basis below, and the graph-boundary conclusions are restated in the linked,
+reviewable repository research.
 **Decision posture:** This remains the dated strategic proposal, with the authority reconciliation below; it is not a new ADR or implementation plan.
 
 **Authority update (8 September 2026):** Castr's application-value/interaction boundary was ratified on 22 August 2026 in [owner ballot B-01 and B-07](https://github.com/EngraphCode/castr/blob/f168c177faba0b0e512f2d40f7c9801c9a53b799/.agent/plans/proof-programme/ballot-2026-08-owner-walk.md). The [longstanding principles](https://github.com/EngraphCode/castr/blob/f168c177faba0b0e512f2d40f7c9801c9a53b799/.agent/directives/principles.md) require replacing old with new and forbid compatibility layers; the ballot reinforces that rule for outright `CastrDocument` replacement and keeps the sibling graph product's existence/name open. Those ratified decisions govern over this proposal. The remaining graph-system architecture and emerging-standard profiles are proposals, with no implementation commitment.
@@ -402,7 +405,7 @@ This direction is established when:
 - [ ] Cross-domain conversion requires an explicit projection contract.
 - [ ] The two repositories remain independently useful and do not share internal IRs.
 
-## 13. Decisions requiring ADRs
+## 13. Architecture records required
 
 1. Trace the already-ratified application-contract product boundary and mission into the durable architecture record; do not reopen B-01 by treating this proposal as authority.
 2. The value-contract versus interaction-contract artifact split.
