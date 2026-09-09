@@ -53,7 +53,7 @@ type ReDeclaredSchemaKeys =
  * per the 2020-12 specification — which is why this is an Omit-based
  * alias rather than a `SchemaObject` subtype.
  *
- * @public
+ * @internal
  */
 export type JsonSchema2020 = Omit<SchemaObject, ReDeclaredSchemaKeys> & {
   $id?: string;

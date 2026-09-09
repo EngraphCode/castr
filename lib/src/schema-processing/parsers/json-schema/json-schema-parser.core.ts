@@ -28,13 +28,13 @@ import {
 import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 
-// Re-export for public API compatibility
+// Re-export for internal module compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE = 'null';
 
 // ---------------------------------------------------------------------------
-// Public API
+// Internal module exports
 // ---------------------------------------------------------------------------
 
 /**
@@ -45,7 +45,7 @@ const NULL_TYPE = 'null';
  * root and at every recursive position, since the function is its own
  * recursion callback (one code path for root and nested schemas).
  *
- * @public
+ * @internal
  */
 export function parseJsonSchemaObject(input: JsonSchema2020 | boolean): CastrSchema {
   if (typeof input === 'boolean') {

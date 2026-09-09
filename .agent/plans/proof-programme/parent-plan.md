@@ -970,11 +970,15 @@ report §7 Tranche 01 acceptance list. Source: report §7 Tranche 01.
 **Q-12 — Tranche tail.** 02A conventions → 02B roots (+ boundary ADRs) → 02C facets (#27
 extraction) → 03 → 04 → lanes 05–09 → 10–14, per the report's §6 graph and §15.4 sequence,
 with each remaining open PR's extraction-and-closure woven into its consuming slice (§11.3)
-and each lane opening with its T00b charter. When Q-12 is reached, the executing session
-splits it into concrete queue rows with briefs for the next horizon and updates this file —
-that split is a slice-plan authoring act and takes the assumptions-expert review like any
-other (per-slice detail is deliberately NOT pre-authored here: the report already carries the
-per-tranche instructions, and duplicating them would rot).
+and each lane opening with its T00b charter. The roadmap's
+[full JSON Schema commitment](../roadmap.md#full-json-schema-support) is a mandatory authoring
+input and acceptance boundary for those slices: standalone Draft 2020-12 and Draft-07 parsing
+and writing remain public local-checkout and packed-artefact outcomes, so the report's former
+option to remove the JSON Schema writer from public claims is superseded. When Q-12 is reached,
+the executing session splits it into concrete queue rows with briefs for the next horizon and
+updates this file — that split is a slice-plan authoring act and takes the assumptions-expert
+review like any other (per-slice detail is deliberately NOT pre-authored here: the report and
+roadmap carry the governing acceptance, and duplicating it would rot).
 
 **Q-14 — Doctrine amendment wave (B-09 APPROVE).** Surface: `principles.md` (§Input-Output
 Pair Compatibility Model, §Strict-By-Default's object clause, **and the approved

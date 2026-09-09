@@ -6,10 +6,13 @@
  * `patternProperties` and `propertyNames` are supported.
  * `if`/`then`/`else` conditional applicators are supported.
  *
- * @example
- * ```typescript
- * import { parseJsonSchema, parseJsonSchemaDocument } from '@engraph/castr';
+ * This is currently a repository-internal module. The package does not yet
+ * export standalone JSON Schema parser entry points; that public surface is
+ * an explicit future delivery obligation.
  *
+ * @example Repository-internal use
+ * ```typescript
+ * // Functions exported by this internal module:
  * const irSchema = parseJsonSchema({ type: 'object', properties: { ... } });
  *
  * // Standalone schema, $defs bundle, or both:
@@ -20,6 +23,7 @@
  *   $defs: { Item: { type: 'object', ... } },
  * });
  * ```
+ * @internal
  */
 
 export type { JsonSchema2020 } from './json-schema-parser.core.js';
@@ -44,7 +48,7 @@ import type { Draft07Input } from './normalization/index.js';
  *
  * @param input - A JSON Schema 2020-12 value (possibly with Draft 07 constructs)
  * @returns CastrSchema IR node
- * @public
+ * @internal
  */
 export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
   return parseJsonSchemaObject(typeof input === 'boolean' ? input : normalizeDraft07(input));
@@ -63,7 +67,7 @@ export function parseJsonSchema(input: Draft07Input | boolean): CastrSchema {
  * @param input - A JSON Schema document (Draft 07 or 2020-12)
  * @returns Array of IR schema components (root first if present, then `$defs`)
  * @throws `UnsupportedJsonSchemaKeywordError` if unsupported top-level keywords are present
- * @public
+ * @internal
  */
 export function parseJsonSchemaDocument(input: Draft07Input | boolean): CastrSchemaComponent[] {
   if (typeof input === 'boolean') {
@@ -241,7 +245,7 @@ const UNSUPPORTED_DOCUMENT_KEYWORDS = new Set<string>([
  * Error thrown when `parseJsonSchemaDocument()` encounters top-level keywords
  * outside the governed allowlist.
  *
- * @public
+ * @internal
  */
 export class UnsupportedJsonSchemaKeywordError extends Error {
   readonly unsupportedKeywords: string[];

@@ -1,7 +1,7 @@
 {
   "name": "@engraph/castr",
   "version": "1.18.3",
-  "description": "Transform schemas between formats using a canonical internal representation. OpenAPI, Zod, TypeScript, JSON Schema, and MCP tools.",
+  "description": "Schema compiler with OpenAPI input, Zod parsing, IR persistence, OpenAPI writing, and MCP tool projection.",
   "type": "module",
   "repository": {
     "type": "git",
