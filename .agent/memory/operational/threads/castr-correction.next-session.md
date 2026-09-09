@@ -14,8 +14,9 @@
   installation in PR #91 as `af840d9b`. PR #92 corrects the premature atomic closeout.
   Final I2 is now complete: the fresh trusted task retained all six final-template
   native returns with `fork_turns: "none"` and same-agent adversarial follow-ups.
-  Merge the bounded evidence/lifecycle PR after current-head checks and reviews, then
-  begin PR #14's dependency-ownership extraction from current `origin/main`.
+  The coordinator owns the evidence/lifecycle PR merge after current-head checks and
+  reviews. The commissioned proof task reports merge-ready and must not merge. The
+  coordinator then begins PR #14's dependency-ownership extraction from current `origin/main`.
   The broader C05 family retains the obligations
   named below. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.

@@ -60,8 +60,9 @@ Cricket installation in PR #91 as `af840d9b`. PR #92 corrected the premature C05
 lifecycle closeout. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
 now retains all six substantive final-template returns from the fresh trusted Castr
 task, with normal and same-agent adversarial stances. The atomic plan is in completion
-staging. Merge the bounded evidence/lifecycle PR after current-head checks and reviews,
-then begin PR #14's dependency-ownership extraction from current `origin/main`.
+staging. The coordinator owns the bounded evidence/lifecycle PR merge after current-head
+checks and reviews; the commissioned proof task reports merge-ready and must not merge.
+The coordinator then begins PR #14's dependency-ownership extraction from current `origin/main`.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
