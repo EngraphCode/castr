@@ -301,7 +301,7 @@ function readIndexFiles(
       throw new Error(`Cannot parse indexed content header for '${file.path}'.`);
     }
     const header = output.subarray(offset, headerEnd).toString('utf8');
-    const match = /^(?<objectId>[0-9a-f]{40,64}) blob (?<size>[0-9]+)$/u.exec(header);
+    const match = /^(?<objectId>[\da-f]{40,64}) blob (?<size>\d+)$/u.exec(header);
     const size = Number(match?.groups?.size);
     if (match?.groups?.objectId !== file.objectId || !Number.isSafeInteger(size) || size < 0) {
       throw new Error(`Cannot parse indexed content header for '${file.path}'.`);
@@ -336,62 +336,61 @@ function formatFileFindings(
   return lines;
 }
 
-/**
- * Validate the tracked live-document vocabulary of one repository.
- *
- * @param root - absolute repository path whose tracked files are validated
- * @param output - output sink for the human-readable report
- * @returns zero when clean, otherwise one when forbidden vocabulary is found
- * @throws when Git enumeration or a tracked-file read fails
- */
-export async function validateFitnessVocabulary(
-  root: string,
-  output: (line: string) => void = writeLine,
-  environment: Readonly<NodeJS.ProcessEnv> = process.env,
-): Promise<number> {
-  const files = listScanCandidates(root, environment);
-  const indexContents = readIndexFiles(root, files, environment);
-  const allFindings: { file: string; findings: readonly ForbiddenPhraseMatch[] }[] = [];
+type FileFindings = {
+  readonly file: string;
+  readonly findings: readonly ForbiddenPhraseMatch[];
+};
 
-  for (const file of files) {
-    let worktreeContent: string;
-    try {
-      const filePath = path.join(root, file.path);
-      const status = await lstat(filePath);
-      if (!status.isFile() || status.isSymbolicLink()) {
-        throw new Error('the working-tree entry is not a regular file');
-      }
-      worktreeContent = await readFile(filePath, 'utf8');
-    } catch (error) {
-      throw new Error(
-        `Cannot read tracked file '${file.path}' for the fitness-vocabulary scan. ` +
-          'Restore it or commit its deletion; tracked files cannot be skipped.',
-        { cause: error },
-      );
+async function readWorktreeFile(root: string, file: TrackedFile): Promise<string> {
+  try {
+    const filePath = path.join(root, file.path);
+    const status = await lstat(filePath);
+    if (!status.isFile() || status.isSymbolicLink()) {
+      throw new Error('the working-tree entry is not a regular file');
     }
-    const indexContent = indexContents.get(file.path);
-    if (indexContent === undefined) {
-      throw new Error(`Indexed content is missing for tracked file '${file.path}'.`);
-    }
+    return await readFile(filePath, 'utf8');
+  } catch (error) {
+    throw new Error(
+      `Cannot read tracked file '${file.path}' for the fitness-vocabulary scan. ` +
+        'Restore it or commit its deletion; tracked files cannot be skipped.',
+      { cause: error },
+    );
+  }
+}
 
-    if (indexContent === worktreeContent) {
-      const findings = findForbiddenPhrases(worktreeContent);
-      if (findings.length > 0) {
-        allFindings.push({ file: file.path, findings });
-      }
-      continue;
-    }
+function requireIndexContent(indexContents: ReadonlyMap<string, string>, file: string): string {
+  const content = indexContents.get(file);
+  if (content === undefined) {
+    throw new Error(`Indexed content is missing for tracked file '${file}'.`);
+  }
+  return content;
+}
 
-    const worktreeFindings = findForbiddenPhrases(worktreeContent);
-    if (worktreeFindings.length > 0) {
-      allFindings.push({ file: `${file.path} (working tree)`, findings: worktreeFindings });
-    }
-    const indexFindings = findForbiddenPhrases(indexContent);
-    if (indexFindings.length > 0) {
-      allFindings.push({ file: `${file.path} (Git index)`, findings: indexFindings });
-    }
+function contentFindings(file: string, content: string): FileFindings | undefined {
+  const findings = findForbiddenPhrases(content);
+  return findings.length === 0 ? undefined : { file, findings };
+}
+
+function trackedFileFindings(
+  file: string,
+  worktreeContent: string,
+  indexContent: string,
+): readonly FileFindings[] {
+  if (indexContent === worktreeContent) {
+    const findings = contentFindings(file, worktreeContent);
+    return findings === undefined ? [] : [findings];
   }
 
+  return [
+    contentFindings(`${file} (working tree)`, worktreeContent),
+    contentFindings(`${file} (Git index)`, indexContent),
+  ].filter((findings): findings is FileFindings => findings !== undefined);
+}
+
+function reportFindings(
+  allFindings: readonly FileFindings[],
+  output: (line: string) => void,
+): number {
   output('\nFitness Vocabulary Consistency Check (ADR-144)');
   output('════════════════════════════════════════════════\n');
 
@@ -400,7 +399,7 @@ export async function validateFitnessVocabulary(
     return 0;
   }
 
-  const totalOccurrences = allFindings.reduce((sum, f) => sum + f.findings.length, 0);
+  const totalOccurrences = allFindings.reduce((sum, item) => sum + item.findings.length, 0);
   output(
     `\x1b[31m✗ Found ${totalOccurrences} retired-vocabulary occurrence${totalOccurrences === 1 ? '' : 's'} across ${allFindings.length} file${allFindings.length === 1 ? '' : 's'}:\x1b[0m\n`,
   );
@@ -415,6 +414,33 @@ export async function validateFitnessVocabulary(
     '\x1b[33mRemediation: translate each occurrence to the three-zone vocabulary.\nSee ADR-144 §Decision for the canonical zone names.\x1b[0m\n',
   );
   return 1;
+}
+
+/**
+ * Validate the tracked live-document vocabulary of one repository.
+ *
+ * @param root - absolute repository path whose tracked files are validated
+ * @param output - output sink for the human-readable report
+ * @param environment - process environment supplied to Git after sanitisation
+ * @returns zero when clean, otherwise one when forbidden vocabulary is found
+ * @throws when Git enumeration or a tracked-file read fails
+ */
+export async function validateFitnessVocabulary(
+  root: string,
+  output: (line: string) => void = writeLine,
+  environment: Readonly<NodeJS.ProcessEnv> = process.env,
+): Promise<number> {
+  const files = listScanCandidates(root, environment);
+  const indexContents = readIndexFiles(root, files, environment);
+  const allFindings: FileFindings[] = [];
+
+  for (const file of files) {
+    const worktreeContent = await readWorktreeFile(root, file);
+    const indexContent = requireIndexContent(indexContents, file.path);
+    allFindings.push(...trackedFileFindings(file.path, worktreeContent, indexContent));
+  }
+
+  return reportFindings(allFindings, output);
 }
 
 /**
