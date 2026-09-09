@@ -964,7 +964,7 @@
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
-      "disposition": "completed",
+      "disposition": "historical",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
       "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
@@ -979,7 +979,7 @@
     },
     ".agent/skills/cognition/cricket/SKILL-CANONICAL.md": {
       "review_state": "partially-reviewed",
-      "disposition": "completed",
+      "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
       "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
@@ -1005,7 +1005,7 @@
         {
           "path": ".agent/plans/current/cricket-platform-parity.md",
           "classification": "document-like",
-          "disposition": "outstanding-acceptance",
+          "disposition": "outstanding",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "627d16e8aedab9d44d3cd86ba7245fa1af89864f",
           "prior_reviewed_git_blob_hash": "7190203dbc4141f5949b9c6a78230af9f90248f0"
@@ -1013,7 +1013,7 @@
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
           "classification": "document-like",
-          "disposition": "current-route",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "a4405c3cc266e7922a3179e1dbc83525b3d8abf8",
           "prior_reviewed_git_blob_hash": "e092d848fb686caa39b58d61342007e48fb6542a"
@@ -1021,42 +1021,42 @@
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
+          "disposition": "historical",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "ddb413853697838796e6a19d6234b734de8152cc"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-final-review-evidence-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
+          "disposition": "historical",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "e56e54f220cb496abb0767b5ebcb855e9f8c348b"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
+          "disposition": "historical",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-native-2026-09-09.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
+          "disposition": "historical",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "7eb952d3279eb3fb2e820a4418be50e75d251164"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-review-evidence-2026-09-06.json",
           "classification": "embedded-documentation",
-          "disposition": "historical-evidence",
+          "disposition": "historical",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "a85248c8528ce3b6fde87f2d768919360a45e6c5"
         },
         {
           "path": ".agent/sub-agents/templates/cricket-judgement.md",
           "classification": "document-like",
-          "disposition": "current-source",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "eabbda197745b6c204a986f4a28b3b2a4fa27037",
           "prior_reviewed_git_blob_hash": "477929a2f13270d895499bae888d35dc9fe458fa"
@@ -1064,7 +1064,7 @@
         {
           "path": ".agent/sub-agents/templates/cricket-procedure.md",
           "classification": "document-like",
-          "disposition": "current-source",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "d37e89a6b9ae076ac697ac446e6afff241651f36",
           "prior_reviewed_git_blob_hash": "06fb904ba9e1604a77baf0cd1348958c8256b42e"
@@ -1072,7 +1072,7 @@
         {
           "path": ".claude/agents/cricket-judgement-high.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "f73df5d82862d84b6ca1636e19534a8bce658875",
           "prior_reviewed_git_blob_hash": "a29a7cce31171303ce38ad1b715198b2499414e2",
@@ -1086,7 +1086,7 @@
         {
           "path": ".claude/agents/cricket-judgement-low.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "38b08b3fa4713ba07a2cae361ebd133c627542da",
           "prior_reviewed_git_blob_hash": "34f71b01446d9bfd38fff44865c0ece14e2f1f57",
@@ -1100,7 +1100,7 @@
         {
           "path": ".claude/agents/cricket-judgement-medium.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "1410fa564e83871a729f4779657b4a699347a6e1",
           "prior_reviewed_git_blob_hash": "976be7f58d17c7a8ff697ac9ef789136bbc4a34a",
@@ -1114,7 +1114,7 @@
         {
           "path": ".claude/agents/cricket-procedure-xhigh.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "930e7a897e8f4c892b23a19c2dfd02c7d3ec44fd",
           "prior_reviewed_git_blob_hash": "d706736b17c619af9d3bd545a784b1627fabc50c",
@@ -1128,7 +1128,7 @@
         {
           "path": ".codex/agents/cricket-judgement-low.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "a712788f17595d65b050096d37bc42c85c31d041",
           "prior_reviewed_git_blob_hash": "0aa54c22401a620bcaa38638e9ae39fe4b6af1be"
@@ -1136,7 +1136,7 @@
         {
           "path": ".codex/agents/cricket-judgement-medium.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "ee15ca44a47623d25cf5d4520a857c84a1352217",
           "prior_reviewed_git_blob_hash": "92630506482763f36f3bf6ce42a710f683b0619d"
@@ -1144,7 +1144,7 @@
         {
           "path": ".codex/agents/cricket-procedure-xhigh.toml",
           "classification": "embedded-documentation",
-          "disposition": "current-source",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "277d4122cf76f19613421caa5aec48176a842b06",
           "prior_reviewed_git_blob_hash": "954919ff2c749c994f66176cff8910f6eef68199"
@@ -1152,7 +1152,7 @@
         {
           "path": ".cursor/agents/cricket-judgement-high.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "da504d530fb40f62df98503905aacf06cdb1a6e1",
           "prior_reviewed_git_blob_hash": "5b5396fe0b5eb88009bd5748bc5d1b001b0738fa",
@@ -1166,7 +1166,7 @@
         {
           "path": ".cursor/agents/cricket-judgement-low.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "0ca1eef6190c2f74dc3361c894c76515a4bcd0f7",
           "prior_reviewed_git_blob_hash": "7df327544e11d5dcb390c171ee0e03d14e39e94d",
@@ -1180,7 +1180,7 @@
         {
           "path": ".cursor/agents/cricket-judgement-medium.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "e8799b134fccbe91349222fd9353d282974647f4",
           "prior_reviewed_git_blob_hash": "bca9fbd34543b213fb02c7a0a12449d2ac6de56e",
@@ -1194,7 +1194,7 @@
         {
           "path": ".cursor/agents/cricket-procedure-xhigh.md",
           "classification": "document-like",
-          "disposition": "current-generated",
+          "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
           "reviewed_git_blob_hash": "b696c6e73c18e70d9960feae15e914441e528beb",
           "prior_reviewed_git_blob_hash": "00694fd21df2c9e2022833b43bcc3900b96ac815",
